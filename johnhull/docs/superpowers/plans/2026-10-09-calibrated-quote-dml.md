@@ -301,7 +301,7 @@ spot scaleも同一trainデータから求める。特徴stdゼロなら1、pric
 `replay.nn_predict(exported,x,A) -> dict`、`replay.ridge_predict(exported,dataset) -> dict` は価格/quote勾配を同じshapeで返す。
 reference artifactのreplayはtorchやlearnerをimportしない。
 
-- [ ] **RED：** monomialが20項で、3変数の全total degree≤3を含むこと、feature derivativeと物理Greekの一致をtest。
+- [x] **RED：** monomialが20項で、3変数の全total degree≤3を含むこと、feature derivativeと物理Greekの一致をtest。
 
 ```python
 powers = [(i, j, k) for i in range(4) for j in range(4) for k in range(4)
@@ -316,14 +316,14 @@ np.testing.assert_allclose(replayed["price"], torch_pred["price"], atol=1e-12, r
 np.testing.assert_allclose(replayed["g_quote"], torch_pred["g_quote"], atol=1e-10, rtol=1e-9)
 ```
 
-- [ ] scoped testで未実装FAILを確認。
-- [ ] **GREEN：** u=(log(S/K),R_T,logT)をtrain-only標準化し、20項の値と解析特徴微分を作る。
+- [x] scoped testで未実装FAILを確認。
+- [x] **GREEN：** u=(log(S/K),R_T,logT)をtrain-only標準化し、20項の値と解析特徴微分を作る。
   physical derivativeは ∂u0/∂S=1/S、∂u1/∂q=a_q、他のspot/quote成分0。Tは固定する。
   price回帰は価格行、differential回帰は同じ価格行＋6Greek行を同じ価格/RMS尺度でstackする。
   行の平均を揃える係数は価格1/√n、Greek1/√(6n)。罰則sqrt(1e-8)×Iを追加し切片列は罰しない。`np.linalg.lstsq`を使う。
-- [ ] NumPy NN replayは保存済み2層tanh/線形出力、train尺度、tanh導関数のchain ruleを実装。
+- [x] NumPy NN replayは保存済み2層tanh/線形出力、train尺度、tanh導関数のchain ruleを実装。
   Q/Theta全5方式のexport→replay価格/勾配を許容差で検査。bit一致は要求しない。
-- [ ] 新test＋ruff/format、索引を確認し、commit：`feat(deep-hedge): add reduced differential regression and replay`。
+- [x] 新test＋ruff/format、索引を確認し、commit：`feat(deep-hedge): add reduced differential regression and replay`。
 
 ## Task 6：固定契約ヘッジ、shock、費用、OOD
 
@@ -339,7 +339,7 @@ np.testing.assert_allclose(replayed["g_quote"], torch_pred["g_quote"], atol=1e-1
   contextはstrike/sigma、pillar/schedule/interpolationの宣言。省略時はprotocolと同じ固定条件。
   exportedのkind（NN/ridge）でreplayを選び、同じdomain・bounds・fallback規則を全学習近似へ適用する。
 
-- [ ] **RED：** 5年quote+1bpで元coupon3.6%のPVが−451.6857814、新par3.61%ではほぼ0になる負の対照をtest。
+- [x] **RED：** 5年quote+1bpで元coupon3.6%のPVが−451.6857814、新par3.61%ではほぼ0になる負の対照をtest。
 
 ```python
 shifted = q.copy()
@@ -351,20 +351,20 @@ assert held == pytest.approx(-451.6857813536834, abs=1e-6, rel=1e-9)
 assert reset == pytest.approx(0., abs=1e-6)
 ```
 
-- [ ] 新testを実行してFAILを確認。
-- [ ] **GREEN：** 設計§4.4の固定CFを実装し、自作CFのcomplex-step＋独立Jでriskを照合する。
+- [x] 新testを実行してFAILを確認。
+- [x] **GREEN：** 設計§4.4の固定CFを実装し、自作CFのcomplex-step＋独立Jでriskを照合する。
   Bの列順=株式/預金/FRA/2/3/5y。L=diag(1,1e-4,...,1e-4)を掛けて `np.linalg.solve(L @ B, -L @ g)`。
   正規化行列のSVDでrank不足を検出しValueErrorを返す。raw condition numberを単独停止閾値にしない。
-- [ ] notional1m→2mではrate数量半分、同じcashflows・残余になることをtest。
+- [x] notional1m→2mではrate数量半分、同じcashflows・残余になることをtest。
   ゼロshockの残余0、参照Greekの単独微小shockで一次項消去／2次縮小、二重保有や符号反転の負の対照を検査。
-- [ ] test中心の単独/parallel/steepener±1/10bp、spot±1%、組合せ4本を再評価する。Tとcouponは固定。
+- [x] test中心の単独/parallel/steepener±1/10bp、spot±1%、組合せ4本を再評価する。Tとcouponは固定。
   費用はrateの自bucketabs(B[i+1,i+1])*1e-4×半spread0/.1/.5/1bp、株式spot×半spread0/1/5bp×1e-4。
   費用は数量絶対値で合計し、残余と別の指標で保存する。
-- [ ] 数学的には有効なnegative rate、domain外q±100bp/S70/130/T.01/6、sigma/strike/schedule/pillar/interpolation変更をOODに分類。
+- [x] 数学的には有効なnegative rate、domain外q±100bp/S70/130/T.01/6、sigma/strike/schedule/pillar/interpolation変更をOODに分類。
   q/spot/TのOOD、対応済みstrike/sigma変更、増幅>10、NN価格が[0,D]外は、較正可能なら全価格・Greekを解析へfallback。
   pillar/schedule/interpolation変更は `unsupported_context` として価格を返さない。数学的に無効なS/T/sigma、較正不能・rank不足はfailure。
   生NN結果・fallback結果・件数を別に記録し、clipしないtestを作る。
-- [ ] 新teacher/hedge/research tests＋ruff/format、索引guard後、commit：`feat(johnhull): compare frozen-contract quote hedges`。
+- [x] 新teacher/hedge/research tests＋ruff/format、索引guard後、commit：`feat(johnhull): compare frozen-contract quote hedges`。
 
 ## Task 7：一括実験、保存配列、改変検査
 
@@ -462,3 +462,10 @@ ruff format --checkは同じ対象Pythonへ実行する。notebook builderの既
 - 割引欠落、契約reset、rare event、漏洩、改変、rank不足の負の対照を用意した。
 - 文献の公開性能は未再現。研究新規性・本番採用・実市場の優位を完了条件へ入れていない。
 - 初回の完了範囲は調査・計画。その後の完遂指示によりTask1の教師と独立参照から実装を開始。
+
+## 実行時の具体化（2026-10-09）
+
+- Task5–6は並行で実装後、独立レビューと一括scoped gateで閉じる。安全wrapperをpolicy.py、MC診断をdiagnostics.py、計時をbenchmark.pyへ分離し、runnerから呼ぶ。各専用testも最終scoped gateへ追加する。
+- 群ID・shock/cost軸・train尺度・fit registryを保存フラグとは独立に再検査する。較正/fit例外では入力と部分成果を返して保存する。
+- 1方式導入のoffline費用はサイズ別train教師＋setup/fit/export、全比較費用は全分割教師＋全fitとし、評価oracle費用を混同しない。
+- main本学習・本計時・教材・最終レビューは未完了。smokeは30本各2updates＋4ridgeで、性能採用へ用いない。

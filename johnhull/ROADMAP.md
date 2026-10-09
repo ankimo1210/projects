@@ -34,7 +34,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 101 priv
 | Beyond Hull（vol13–28） | 完了 | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 研究track #1 | RB-F07 v1完了 | [研究資料](research/RB-F07/README.md)。private単一曲線・解析Jacobian・随伴リスク、独立レビュー済み。v2/v3は別承認 |
 | 研究track #2 | RB-F05 digital v1完了 | [研究資料](research/RB-F05/README.md)。DMLは全seed改善、解析・補間には精度/費用で劣り、速度昇格は不採用。次は離散バリアの契約/独立参照を固定 |
-| 統合研究 | quote DMLの実装開始、全工程未完了 | [設計](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)／[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)。2026-10-09の「研究ロードマップを完遂せよ」に従い着手。解析/LRM/conditioning教師と独立brentq/complex-step/密度積分を実装、教師41 tests PASS。学習本実験・固定契約ヘッジ・研究成果は後続 |
+| 統合研究 | quote DMLの実装開始、全工程未完了 | [設計](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)／[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)。2026-10-09の「研究ロードマップを完遂せよ」に従い着手。Tasks1–6のprivate教師・5NN/ridge・NumPy replay・固定契約hedge/OODを実装。smoke34方式と配列改変検査、索引を含む956 tests PASS。MC診断18 testsもPASS。本学習・本計時・教材・最終レビューは未完了 |
 | 実装前の準備 | 完了 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で製品受入と区別 |
 
 `done`・`accepted`・PASSは宣言した計算・再現性・integrationの範囲を示し、市場性能の承認ではない。
@@ -116,7 +116,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 | 順 | 研究 | 完了を示す主な証拠 | 現在の状態 |
 |---|---|---|---|
 | 既存 | RB-F07 v1 / RB-F05 digital v1 | 保存済み研究成果・再計算・レビュー・採否 | 完了。F05全体の完了とは区別 |
-| 1 | F07＋F05 quote DML | 8工程、30NN fits＋4ridge、全入力/重み/予測/hedge/費用、再計算・改変検査・3図・レビュー | Tasks1–4教師/独立参照・固定protocol/群分割・5NN/ridge実装。教師41＋分割12＋学習22 tests PASS。replay・ヘッジ・成果は未完了 |
+| 1 | F07＋F05 quote DML | 8工程、30NN fits＋4ridge、全入力/重み/予測/hedge/費用、再計算・改変検査・3図・レビュー | Tasks1–6コード/独立参照/固定protocol/群分割/replay/hedge/OOD実装。956 scoped tests PASS、MC診断18件PASS。Task7 smoke完了、本学習・計時とTask8教材/最終レビュー未完了 |
 | 2 | RB-F05離散バリア | 監視契約、独立離散参照、教師bias/SE、学習比較・総費用・3図・レビュー・採否 | 未着手 |
 | 3 | RB-F04モデル比較 | Heston→Dupire、vanilla再価格/収束、月次12観測Asian・二時点差、paired SE・3図・レビュー | 未着手。[設計](docs/prep/design/RB-F04_DESIGN.md) |
 | 4 | RB-F08 MLMC / RQMC CI | GBM Euler粗細結合、bias/sampling、費用、独立scramble被覆率・4図・レビュー | 未着手。[設計](docs/prep/design/RB-F08_DESIGN.md) |

@@ -278,3 +278,34 @@ def test_differential_ridge_minimizes_price_plus_mean_of_six_risk_errors():
         minus["coefficients"][column] -= 1e-6
         derivative = (objective(plus) - objective(minus)) / 2e-6
         assert derivative == pytest.approx(0.0, abs=1e-7)
+
+
+def test_cpu_fit_ignores_global_default_device_and_restores_cpu_rng():
+    train = tiny_train()
+    old_device = torch.get_default_device()
+    before_rng = torch.get_rng_state().clone()
+    try:
+        torch.set_default_device("meta")
+        fit = learner.fit_nn(train, mode="q_dml", seed=11, updates=2)
+        assert all(parameter.device.type == "cpu" for parameter in fit.model.parameters())
+        assert all(buffer.device.type == "cpu" for buffer in fit.model.buffers())
+        predicted = learner.predict_nn(fit, train["x_quote"], train["A"])
+        assert np.all(np.isfinite(predicted["price"]))
+        assert torch.get_default_device().type == "meta"
+        assert torch.equal(torch.get_rng_state(), before_rng)
+    finally:
+        torch.set_default_device(old_device)
+
+
+def test_cpu_fit_does_not_detect_or_seed_accelerators(monkeypatch):
+    train = tiny_train()
+    before_rng = torch.get_rng_state().clone()
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("CPU learner must not inspect or seed accelerators")
+
+    monkeypatch.setattr(torch.cuda, "manual_seed_all", forbidden)
+    monkeypatch.setattr(torch.cuda, "device_count", forbidden)
+    fit = learner.fit_nn(train, mode="q_dml", seed=11, updates=2)
+    assert fit.stats["updates"] == 2
+    assert torch.equal(torch.get_rng_state(), before_rng)

@@ -53,9 +53,11 @@ class _QuoteNet(nn.Module):
     def __init__(self, scale):
         super().__init__()
         self.register_buffer(
-            "feature_mean", torch.tensor(scale["feature_mean"], dtype=torch.float64)
+            "feature_mean", torch.tensor(scale["feature_mean"], dtype=torch.float64, device="cpu")
         )
-        self.register_buffer("feature_std", torch.tensor(scale["feature_std"], dtype=torch.float64))
+        self.register_buffer(
+            "feature_std", torch.tensor(scale["feature_std"], dtype=torch.float64, device="cpu")
+        )
         self.price_mean = scale["price_mean"]
         self.price_scale = scale["price_scale"]
         self.layers = nn.ModuleList(
@@ -130,8 +132,10 @@ def fit_nn(train, *, mode, seed, updates=512, budget_s=120.0):
     old_threads = torch.get_num_threads()
     torch.set_num_threads(1)
     try:
-        with torch.random.fork_rng(devices=[]):
-            torch.manual_seed(seed)
+        # The local device context also covers Adam's internal scalar state,
+        # whose allocation otherwise inherits an application's default device.
+        with torch.device("cpu"), torch.random.fork_rng(devices=[]):
+            torch.random.default_generator.manual_seed(seed)
             model = _QuoteNet(scale)
             optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
             xx = torch.tensor(x, dtype=torch.float64, device="cpu")
@@ -155,7 +159,7 @@ def fit_nn(train, *, mode, seed, updates=512, budget_s=120.0):
                     risk_loss = (((predicted - gg[indices]) / ss) ** 2).mean()
                 return price_loss, risk_loss
 
-            full = torch.arange(n)
+            full = torch.arange(n, device="cpu")
             initial_parts = objective(full)
             initial_price, initial_risk = (float(part.detach()) for part in initial_parts)
             setup_s = perf_counter() - start
@@ -164,7 +168,7 @@ def fit_nn(train, *, mode, seed, updates=512, budget_s=120.0):
             for _ in range(updates):
                 if perf_counter() - start >= budget_s:
                     break
-                indices = torch.randperm(n, generator=batch_rng)[: min(256, n)]
+                indices = torch.randperm(n, generator=batch_rng, device="cpu")[: min(256, n)]
                 optimizer.zero_grad(set_to_none=True)
                 price_loss, risk_loss = objective(indices)
                 loss = price_loss + risk_loss
