@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "checked_date": "2026-10-09",
+  "base_commit": "e803e00bc72ec79b840cb083654d55f6715d6b0b",
+  "scope": "private RB-F04 research; existing released financial sources unchanged",
+  "existing_d1_preflight": "johnhull/docs/validation/d1-preflight/README.md",
+  "existing_d1_status": "previous approved PASS; original record retained, not rerun",
+  "source_dependencies": [
+    {
+      "path": "johnhull/hullkit/src/hullkit/__init__.py",
+      "sha256": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+      "matches_base": true
+    },
+    {
+      "path": "johnhull/hullkit/src/hullkit/heston.py",
+      "sha256": "cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+      "matches_base": true
+    },
+    {
+      "path": "johnhull/hullkit/src/hullkit/stochastic_volatility.py",
+      "sha256": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+      "matches_base": true
+    },
+    {
+      "path": "johnhull/hullkit/src/hullkit/local_volatility.py",
+      "sha256": "c6ac1f3fe096ed5761b47649366975b4dfd529f7e9f27522491e1744f785eb8d",
+      "matches_base": true
+    },
+    {
+      "path": "johnhull/scripts/evidence_store.py",
+      "sha256": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+      "matches_base": true
+    },
+    {
+      "path": "johnhull/scripts/evidence_fingerprint.py",
+      "sha256": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+      "matches_base": true
+    },
+    {
+      "path": "johnhull/docs/validation/d1-preflight/README.md",
+      "sha256": "c71ff2e5014ad98e688e51e3a05acbe7bca38d62bec34539564fa2244d3c4a2d",
+      "matches_base": true
+    }
+  ],
+  "stores": [
+    {
+      "role": "primary",
+      "path": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",
+      "marker_valid": true,
+      "windows_disk_number": 0
+    },
+    {
+      "role": "mirror",
+      "path": "/mnt/f/ProjectArtifacts/projects-backup",
+      "marker_valid": true,
+      "windows_disk_number": 1
+    }
+  ],
+  "physical_storage_check": "Get-Partition -DriveLetter C,F: C DiskNumber0, F DiskNumber1",
+  "new_artifacts_restore": {
+    "pilot": {
+      "bytes": 28967239,
+      "primary_restored": true,
+      "mirror_restored": true,
+      "proof": "pilot_review.json verification.independent_cas_copies"
+    },
+    "main": {
+      "primary": {
+        "passed": true,
+        "bytes": 192772222,
+        "sha256": "26f18ffd5768e919b8ccca45f6a4e1e42fab3dea64c68e44ac803f9717573078",
+        "arrays": 1393,
+        "numeric_check_passed": true,
+        "wall_s": 3.8563037699786946
+      },
+      "mirror": {
+        "passed": true,
+        "bytes": 192772222,
+        "sha256": "26f18ffd5768e919b8ccca45f6a4e1e42fab3dea64c68e44ac803f9717573078",
+        "arrays": 1393,
+        "numeric_check_passed": true,
+        "wall_s": 3.9503689740085974
+      }
+    }
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.4.6"
+  },
+  "required_next": [
+    "tracked release gate",
+    "main integration/push"
+  ],
+  "core_artifact_baseline": "validation.json.core_artifact_comparison; baseline main 69 existing fingerprint errors, research adds 89 missing ignored Book HTML entries; no new full core acceptance claim"
+}

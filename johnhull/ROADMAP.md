@@ -19,7 +19,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 101 private modules in the integrated tree as of 2026-10-08, including P3–P7 logic, accepted BGM/business models, and RB-F07/RB-F05 v1. The catalogue is `MODEL_INDEX.md`; earlier development branches are retained.
+Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 106 private modules in this research branch as of 2026-10-09, including two validated RB-F04 private modules ready for main integration. P3–P7 logic, accepted BGM/business models, and completed RB-F07/RB-F05 studies are retained. The catalogue is `MODEL_INDEX.md`; earlier development branches are retained.
 
 ## 現在地（2026-10-09、全306節の統合完了・次の研究計画）
 
@@ -35,11 +35,14 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 101 priv
 | 研究track #1 | RB-F07 v1完了 | [研究資料](research/RB-F07/README.md)。private単一曲線・解析Jacobian・随伴リスク、独立レビュー済み。v2/v3は別承認 |
 | 研究track #2 | RB-F05 digital v1・離散バリアv1完了 | [離散研究](research/RB-F05/discrete/README.md)／[独立レビュー](research/RB-F05/discrete/REVIEW.md)。主6fits、fresh独立PDE200点・実MC116比較、32計時/会計と100loadの再検査、artifact-only3図実行/目視を完了。関連3suiteは7104 PASS/6 skip（366.24秒）。DMLは全seedでprice-only改善、強Hermiteには精度で劣るため教材保持・標準高速器不採用。main統合済み。09b8c1af統合後のrelease gateと主成果/計時・会計の再検査PASS |
 | 統合研究 | quote DML v1完了・main統合済み | [結果](research/RB-F07/quote_dml/README.md)／[独立レビュー](research/RB-F07/quote_dml/REVIEW.md)。30NN＋4ridge、fresh独立再計算、310計時、288費用対照、最終23,498,066 bytesの両保管庫復元、artifact-only3図実行/目視・最終レビューを完了。`a25345e1`をmainへfast-forward統合後、関連3suiteを全再実行し6919 PASS/6 skip（334.02秒）、`verify_release.py --require-tracked` PASS。教材保持・標準器昇格不採用 |
+| 研究track #3 | RB-F04 v1完了・独立レビュー承認、main反映準備 | [研究状態](research/RB-F04/README.md)。Fourier/支持域・固定月次の共通乱数経路・独立PDE/積分・paired集計を実装。初期8192 pathsではAsian差−0.00487、SE0.02163、失敗0。包括収束pilot・独立レビューを完了し、129×161点の面と精度予算を主実験前に固定。3seed主比較196608 paths・fresh再計算・193MBの両復元・3図を完了。Asian差0.003673/paired SE0.004387で未識別。独立レビューapproved・関連3suite7316 PASS/6 skip・ruff/format PASS。tracked release/main反映を残す |
 | 実装前の準備 | 完了 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で製品受入と区別 |
 
 `done`・`accepted`・PASSは宣言した計算・再現性・integrationの範囲を示し、市場性能の承認ではない。
 §33.2のstrike/date/MC規約、§36.4の会計/ESO条件不足による原典未再現値は保持する。
 fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画像・両保管庫復元を統合時に再実施したとは主張しない。
+
+追加照合（2026-10-09、F04）：本編artifact gateは基点main e803e00bでも既存の依存指紋69件がFAIL。研究worktreeの追加89件はGit管理外Book HTMLの欠如。本編source/証跡/台帳は不変で、F04の完了を全306節の新しい全面再受入PASSとは扱わない。[比較記録](research/RB-F04/validation.json)。
 
 ## 完了までの計画（2026-09-27 策定）
 
@@ -100,7 +103,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 
 保管庫は環境変数 `PROJECTS_ARTIFACT_STORE`・`PROJECTS_ARTIFACT_MIRROR` で渡す（WSL では `/mnt/c/Users/<user>/ProjectArtifacts/projects`・`/mnt/f/ProjectArtifacts/projects-backup`）。未設定・未接続・marker なしは明示的なエラーで、空のフォルダーを自動作成しない。
 
-### 本編の外の研究・拡張（完了条件に含めない）
+### 本編の外の研究・拡張（本編の完了条件に含めない）
 
 [研究バックログ計画](docs/superpowers/plans/2026-09-27-research-backlog.md)（2026-09-27）は、
 外部の[提案書](docs/RESEARCH_HANDOFF_2026-09-27.md)にある 94 件を次の4つに振り分けた：
@@ -118,7 +121,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 | 既存 | RB-F07 v1 / RB-F05 digital v1 | 保存済み研究成果・再計算・レビュー・採否 | 完了。F05全体の完了とは区別 |
 | 1 | F07＋F05 quote DML | 34 fits、310計時/288原価、fresh数値/改変検査、最終両復元・3図・独立最終レビュー | 完了・main統合済み。H1改善・H2優位不支持、rate-only残余改善/spot・混合悪化、全面速度優位なし。教材保持、標準器へ昇格しない。統合後6919 tests PASS/6 skip・release PASS |
 | 2 | RB-F05離散バリア | 監視契約、独立離散参照、教師bias/SE、学習比較・総費用・3図・レビュー・採否 | v1完了・main統合済み。[結果](research/RB-F05/discrete/README.md)／[独立レビュー](research/RB-F05/discrete/REVIEW.md)。主6fits・fresh MC/PDE200点（最大price差1.54e-4/Delta3.12e-5）・32計時/費用/100load再検査・3図を完了。関連3suite7104 PASS/6 skip。DML全seed改善、Hermiteの精度/準備費用を理由に標準高速器は不採用。158,401,006 bytesのpilot両復元済み。0DTE/roughの完了とは区別 |
-| 3 | RB-F04モデル比較 | Heston→Dupire、vanilla再価格/収束、月次12観測Asian・二時点差、paired SE・3図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F04_DESIGN.md)に現行コード監査を反映。scalar Dupireと終端Heston MCだけでは面・局所ボラ経路/PDE・Asianを満たさない |
+| 3 | RB-F04モデル比較 | Heston→Dupire、vanilla再価格/収束、月次12観測Asian・二時点差、paired SE・3図・レビュー | v1完了、main反映準備。[研究状態](research/RB-F04/README.md)。private面/行支持端・月次経路・独立PDE/積分・paired比集計を追加。初期8192 pathsを保存し、包括pilot/独立レビュー/条件固定は完了。主3seed/3図/採否・fresh/両復元は完了。独立最終レビューapproved・関連3suite7316 PASS/6 skip。tracked release/main反映は未完了 |
 | 4 | RB-F08 MLMC / RQMC CI | GBM Euler粗細結合、bias/sampling、費用、独立scramble被覆率・4図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F08_DESIGN.md)に既存private独立scramble推定の再利用と、Euler/観測点の指定を追記。Student CI・被覆率・MLMCは追加が必要 |
 | 5 | RB-F06識別可能性 | 固定β SABR、削減/疎/noisy quote、多点初期化、scaled J/profile・3図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F06_DESIGN.md)にraw較正の制限、scaled J・再最適化profile・解析的な未識別fixtureを追記 |
 | 後続 | RB-F05短期/0DTE | 短期契約・calendar・教師分散/共通乱数・独立参照・比較・採否 | 未設計。digital結果を短期へ外挿しない |

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": "reference.npz",
+      "ref": "artifact:sha256:26f18ffd5768e919b8ccca45f6a4e1e42fab3dea64c68e44ac803f9717573078",
+      "bytes": 192772222,
+      "mime": "application/octet-stream"
+    }
+  ]
+}

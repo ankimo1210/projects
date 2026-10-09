@@ -1,0 +1,453 @@
+{
+  "schema": 1,
+  "study": "RB-F04-final-review-v1",
+  "status": "approved",
+  "reviewed_by": "independent f04_final_review",
+  "approval_scope": "The exact frozen synthetic study, raw-evidence consistency, saved main acceptance and the artifact-only three-figure teaching notebook. No entire-surface equality, certified bias bound, parameter robustness, market performance ranking or deployment approval is implied. This approval does not assert a new full-core reacceptance PASS for all 306 sections: the additional core artifact comparison failed and is recorded separately.",
+  "main_results_reviewed": true,
+  "research_acceptance": true,
+  "difference_identified": false,
+  "conclusion": "difference_not_identified",
+  "source_provenance": {
+    "base_commit": "e803e00bc72ec79b840cb083654d55f6715d6b0b",
+    "working_tree_sources_uncommitted": true,
+    "source_sha256": {
+      "research/RB-F04/analytics.py": "b0b0e1b545364614018a49906a17205704b09e673497a88596839a169f7c847e",
+      "research/RB-F04/pilot.py": "7bec9443b0721f9252fed1b3c4f9f8ba8c85770e9ac4869d18977ad5acc46536",
+      "research/RB-F04/reference_methods.py": "03ebf1efc80e3d6bc9894fc2f30122e73be56f1dd19adf125687df038e918b27",
+      "research/RB-F04/build_reference.py": "a259830345db5305502ede7e67f8ad0ad93b16ef075c5edb9b47641d7fced8dd",
+      "research/RB-F04/build_notebook.py": "e2d800ff10c66ff2003f4dc8e17b1641be9719fa94e433cba773418eb37510d3",
+      "hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622",
+      "hullkit/src/hullkit/_model_dynamics.py": "4e1dda51023e5a44978761e030728453304a1b96afb68cfbbf0e2db37633c10d"
+    },
+    "reference_json_sha256": "58556f65bd21b43657cf0491bb37a5414e39f7a77b27433a232861a1e70adb05",
+    "protocol_sha256": "b1ae6b490ab58687693933aaec69f2132e0618a62b037594222152fb6d0a6c61",
+    "sha_role": "Blob/source identity only; numerical claims were independently recomputed."
+  },
+  "main_evidence": {
+    "combined_paths": 196608,
+    "raw_array_count": 1393,
+    "asian": [
+      {
+        "steps": 192,
+        "heston": {
+          "mean": 5.551945284285495,
+          "standard_error": 0.01573487454704302
+        },
+        "local": {
+          "mean": 5.556946261818083,
+          "standard_error": 0.01568453037530645
+        },
+        "difference": {
+          "mean": 0.005000977532587451,
+          "standard_error": 0.0044106259951094875
+        }
+      },
+      {
+        "steps": 384,
+        "heston": {
+          "mean": 5.551391794077912,
+          "standard_error": 0.01573012316335278
+        },
+        "local": {
+          "mean": 5.555353601890983,
+          "standard_error": 0.01567164955986254
+        },
+        "difference": {
+          "mean": 0.003961807813071432,
+          "standard_error": 0.00439479769146774
+        }
+      },
+      {
+        "steps": 768,
+        "heston": {
+          "mean": 5.550845294188803,
+          "standard_error": 0.015728616152081844
+        },
+        "local": {
+          "mean": 5.554518175598305,
+          "standard_error": 0.01566506791125393
+        },
+        "difference": {
+          "mean": 0.0036728814095026113,
+          "standard_error": 0.004387432048701895
+        }
+      }
+    ],
+    "refinements": [
+      {
+        "coarse": 192,
+        "fine": 384,
+        "heston": {
+          "mean": -0.0005534902075833279,
+          "standard_error": 0.0006047286720483292
+        },
+        "local": {
+          "mean": -0.001592659927099349,
+          "standard_error": 0.00027052710940901284
+        },
+        "difference": {
+          "mean": -0.0010391697195160214,
+          "standard_error": 0.0004968489576331972
+        }
+      },
+      {
+        "coarse": 384,
+        "fine": 768,
+        "heston": {
+          "mean": -0.0005464998891094298,
+          "standard_error": 0.00042211589794252674
+        },
+        "local": {
+          "mean": -0.0008354262926782499,
+          "standard_error": 0.00018957822491307935
+        },
+        "difference": {
+          "mean": -0.0002889264035688202,
+          "standard_error": 0.00034621733011686295
+        }
+      }
+    ],
+    "conditional": [
+      {
+        "bin": 0,
+        "heston_denominator": 14040,
+        "local_denominator": 14005,
+        "heston_successes": 95,
+        "local_successes": 130,
+        "difference": 0.0025160173767813905,
+        "standard_error": 0.0009129659730416592
+      },
+      {
+        "bin": 1,
+        "heston_denominator": 25074,
+        "local_denominator": 25006,
+        "heston_successes": 1073,
+        "local_successes": 1473,
+        "difference": 0.016112530854922327,
+        "standard_error": 0.001439990882068113
+      },
+      {
+        "bin": 2,
+        "heston_denominator": 45474,
+        "local_denominator": 45408,
+        "heston_successes": 7480,
+        "local_successes": 8186,
+        "difference": 0.015787004789856923,
+        "standard_error": 0.001490379957383869
+      },
+      {
+        "bin": 3,
+        "heston_denominator": 56200,
+        "local_denominator": 56422,
+        "heston_successes": 23921,
+        "local_successes": 23111,
+        "difference": -0.01603084269266769,
+        "standard_error": 0.0015786195717936561
+      },
+      {
+        "bin": 4,
+        "heston_denominator": 40489,
+        "local_denominator": 40430,
+        "heston_successes": 28276,
+        "local_successes": 27562,
+        "difference": -0.016641024274680283,
+        "standard_error": 0.0018953585458131906
+      },
+      {
+        "bin": 5,
+        "heston_denominator": 15331,
+        "local_denominator": 15337,
+        "heston_successes": 13431,
+        "local_successes": 13739,
+        "difference": 0.019739426968513052,
+        "standard_error": 0.00254944658800152
+      }
+    ],
+    "joint_count_sums": [
+      196608,
+      196608
+    ],
+    "finest_diagnostics": {
+      "heston": {
+        "failed_paths": 0,
+        "negative_variance_states": 2096,
+        "surface_visits": {},
+        "surface_visited_paths": {}
+      },
+      "local": {
+        "failed_paths": 0,
+        "negative_variance_states": 0,
+        "surface_visits": {
+          "wing_left": 60492,
+          "interior": 150737844,
+          "initial_state": 196608
+        },
+        "surface_visited_paths": {
+          "wing_left": 779,
+          "interior": 196608,
+          "initial_state": 196608
+        }
+      }
+    },
+    "error_components": {
+      "sampling_95_half_width": 0.008599366815455714,
+      "heston_step_empirical_refinement": 0.0013738470490767822,
+      "local_step_empirical_refinement": 0.0012069996135078854,
+      "pilot_surface_empirical_refinement": 0.00035120490318460597
+    },
+    "empirical_identification_threshold": 0.011531418381224987,
+    "vanilla_guard_all_passed": true,
+    "vanilla_guard_max_residual_fraction": 0.2946960612199973
+  },
+  "verification": {
+    "independent_numeric_recalculation": {
+      "passed": true,
+      "comparison_groups": 201,
+      "rtol": 1e-11,
+      "atol": 1e-12,
+      "scope": "All seed/level Asian means and paired SEs; pooled refinements; all 36 joint cells; six own conditional denominators/ratios and independent four-primitive covariance delta-method SEs; finest quotes/holdouts and model/seed/pooled MC guards; pilot surface contribution and main threshold. Array comparisons count as groups."
+    },
+    "independent_checker_tamper": {
+      "baseline_consistency_check_passed": true,
+      "tamper_cases_rejected": 9,
+      "tamper_failures": {
+        "asian_se": [
+          "ValueError: saved combined.levels[2].asian.difference.standard_error: evidence differs from recomputation"
+        ],
+        "joint_count": [
+          "ValueError: saved combined.levels[2].two_date.joint_counts_heston[0][0]: metadata/status differs"
+        ],
+        "conditional_denominator": [
+          "ValueError: saved combined.levels[2].two_date.conditional_counts_local[0]: metadata/status differs"
+        ],
+        "conditional_se": [
+          "ValueError: saved combined.levels[2].two_date.conditional_standard_error[0]: evidence differs from recomputation"
+        ],
+        "decision": [
+          "ValueError: saved decision.status: metadata/status differs"
+        ],
+        "research_acceptance": [
+          "ValueError: saved research_acceptance: boolean status differs"
+        ],
+        "one_original_path": [
+          "ValueError: saved seeds[0].metrics.levels[2].asian.local.mean: evidence differs from recomputation"
+        ],
+        "drop_path": [
+          "ValueError: all original paths and per-path failure evidence must be retained"
+        ],
+        "raw_surface_density": [
+          "ValueError: source density support: evidence differs from recomputation"
+        ]
+      }
+    },
+    "independent_cas_copies": {
+      "primary": {
+        "bytes": 192772222,
+        "sha256": "26f18ffd5768e919b8ccca45f6a4e1e42fab3dea64c68e44ac803f9717573078",
+        "array_count": 1393,
+        "combined_asian_difference": 0.0036728814095026113,
+        "combined_paired_se": 0.004387432048701895,
+        "passed": true
+      },
+      "mirror": {
+        "bytes": 192772222,
+        "sha256": "26f18ffd5768e919b8ccca45f6a4e1e42fab3dea64c68e44ac803f9717573078",
+        "array_count": 1393,
+        "combined_asian_difference": 0.0036728814095026113,
+        "combined_paired_se": 0.004387432048701895,
+        "passed": true
+      }
+    },
+    "notebook": {
+      "notebook_sha256": "f9eebc83b13af4b7ac12b0fbbf50f2a692bd5c04dc144d6889c489faa8dbc874",
+      "figures": [
+        {
+          "id": "model-dynamics-v1-03",
+          "execution_count": 2,
+          "image_sha256": "6f088bee294bc85b668a5c0673a09e3cb92ab6373320c35b00cda977c35f1afd",
+          "asian_decision_label": true
+        },
+        {
+          "id": "model-dynamics-v1-05",
+          "execution_count": 3,
+          "image_sha256": "99157b5decfa94c0c5fcc0ce5c96872043c46d0755e5368c6c87318cc04b24b2",
+          "asian_decision_label": true
+        },
+        {
+          "id": "model-dynamics-v1-07",
+          "execution_count": 4,
+          "image_sha256": "a5bc581d25f9f4222499dec42a662680247d43d391934adac6684f7b26831826",
+          "asian_decision_label": true
+        }
+      ],
+      "pngs": 3,
+      "errors": 0,
+      "stderr": 0,
+      "independent_visual_review": true
+    },
+    "targeted_regression_after_root_repair": {
+      "test": "test_fixture_keeps_all_seeds_and_fixed_monthly_contract",
+      "passed": 1,
+      "failed": 0,
+      "elapsed_s": 0.44
+    },
+    "supporting_independent_math_audit": {
+      "reviewer": "f04_final_review/math_contract_audit",
+      "blocking_defects": [],
+      "nonzero_dividend_dupire_identity_max_abs_error": 1.18e-15,
+      "independent_cf_price_max_abs_difference": 7.82e-14,
+      "conditional_delta_method_se_max_abs_difference": 3.47e-18,
+      "paired_covariance_identity_max_abs_difference": 3.47e-17,
+      "pde_time_dependent_variance_example": "v(t)=0.04+0.02t, nonzero dividend; maximum analytic-price residual fell from 0.000647 at 601 space nodes to 0.000164 at 1201; 768 time steps gave 0.000162; domain enlargement preserved the result."
+    },
+    "root_fresh_receipt": {
+      "passed": true,
+      "failures": [],
+      "fresh_regenerated": true,
+      "wall_s": 115.26819338300265,
+      "rtol": 1e-09,
+      "atol": 1e-10,
+      "source_unchanged": true
+    },
+    "root_complete_dual_restore_checks": {
+      "primary": {
+        "passed": true,
+        "bytes": 192772222,
+        "sha256": "26f18ffd5768e919b8ccca45f6a4e1e42fab3dea64c68e44ac803f9717573078",
+        "arrays": 1393,
+        "numeric_check_passed": true,
+        "wall_s": 3.8563037699786946
+      },
+      "mirror": {
+        "passed": true,
+        "bytes": 192772222,
+        "sha256": "26f18ffd5768e919b8ccca45f6a4e1e42fab3dea64c68e44ac803f9717573078",
+        "arrays": 1393,
+        "numeric_check_passed": true,
+        "wall_s": 3.9503689740085974
+      }
+    },
+    "related_suites": {
+      "passed": 7316,
+      "skipped": 6,
+      "warnings": 2,
+      "exit_code": 0,
+      "pytest_elapsed_s": 374.77,
+      "wrapper_elapsed_s": 377.7304838739801,
+      "command": "pytest -q johnhull/hullkit/tests johnhull/report/tests deep_hedge_price/tests",
+      "evidence": "validation.json.related_suites; final execution log inspected"
+    },
+    "core_artifact_comparison": {
+      "passed": false,
+      "same_as_baseline": false,
+      "baseline_commit": "e803e00bc72ec79b840cb083654d55f6715d6b0b",
+      "research_exit_code": 1,
+      "baseline_exit_code": 1,
+      "research_errors": 158,
+      "baseline_errors": 69,
+      "common_dependency_fingerprint_errors": 69,
+      "additional_missing_ignored_book_html_errors": 89,
+      "baseline_only_errors": 0,
+      "classification_independently_verified": true,
+      "missing_ignored_html_files": [
+        "book/_build/html/notebooks/06_numerical.html",
+        "book/_build/html/notebooks/10_exotics.html",
+        "book/_build/html/notebooks/12_qualitative_summary.html"
+      ],
+      "core_sources_evidence_ledger_init_and_book_inputs_differs_from_baseline": false,
+      "scoped_tracked_diff_at_supplement": [
+        "johnhull/MODEL_INDEX.md",
+        "johnhull/ROADMAP.md"
+      ],
+      "evidence": "validation.json.core_artifact_comparison; reviewer independently compared raw error sets, checked missing HTML existence/gitignore, and inspected scoped git diff e803e00b.",
+      "interpretation": "F04 numerical/replay/dual-restore/test acceptance remains approved within its exact research scope. This nonpassing core gate does not establish a new full-core reacceptance or an all-gates-PASS result."
+    }
+  },
+  "defects": {
+    "blocking_open": [],
+    "resolved": [
+      {
+        "priority": "P2",
+        "issue": "A research test fixture inherited newly frozen numerical_precision and changed its expected pending state.",
+        "resolution": "Root explicitly removed freeze and set numerical_precision=None in the test fixture; no financial source/protocol change.",
+        "verified": "Independent reproduction: one failure in 0.40s. Independent repaired rerun: one passed in 0.44s. Related suites subsequently passed."
+      },
+      {
+        "priority": "P3",
+        "issue": "Notebook step-refinement ticks read coarse_steps/fine_steps but actual saved keys are coarse/fine; title could imply all internal observations are averaged.",
+        "resolution": "Root switched to actual coarse/fine keys and clarified fixed monthly observations across integration levels.",
+        "verified": "Executed real main PNGs show 192 to 384 / 384 to 768; regression tests and independent visual review."
+      },
+      {
+        "priority": "P3",
+        "issue": "Decision reason fallback was absent from actual runner records; unqualified difference_not_identified could be read as a joint-distribution decision.",
+        "resolution": "Root displays saved precision checks and the empirical threshold, gives an Asian-specific explanation, and labels every figure title Asian decision.",
+        "verified": "Latest notebook has three executed PNGs with explicit Asian decision labels, no errors or stderr; independent byte and visual inspection."
+      }
+    ]
+  },
+  "interpretation_limits": [
+    "Price and refinement quantities are currency with S0=100; time is years; probability arrays use fractions and figures use percentage points.",
+    "The Asian sampling interval is approximate pointwise normal sampling uncertainty only. Empirical coupled step/surface changes are diagnostics, not rigorous discretization-bias bounds.",
+    "The threshold adds the Asian sampling half width, each model's Asian step refinement and the pilot Asian surface change. PDE vanilla residual is a separate vanilla diagnostic and is not added as an Asian error bound.",
+    "Finite 20 quotes plus 8 holdouts and stochastic vanilla guards do not prove equality of the entire vanilla surface or all one-time marginals.",
+    "Two-date differences are descriptive pointwise comparisons; main automated identification/acceptance concerns the Asian price. No simultaneous bin coverage, equality of joint laws, or market superiority is asserted.",
+    "Constant-edge wings and minimum-time proxy are explicit numerical extensions. Unsupported source cells retain NaN, wing paths remain included, and negative full-truncation variance states are counted.",
+    "Conditional minimum denominator support does not guarantee normal-interval reliability; sparse successes or joint SE=0 cannot establish probability zero.",
+    "With constant r,q and square-integrable stock-martingale assumptions, exact same one-time marginals imply equal fixed arithmetic-average mean and variance; an Asian call difference depends on other distributional features. This theorem is distinct from the finite numerical checks.",
+    "The additional core artifact comparison is FAIL (158 research errors versus 69 baseline errors); the same 69 dependency-fingerprint failures were observed in the current e803e00b baseline, and the extra 89 are missing ignored generated Book HTML. No new full-core 306-section reacceptance PASS is claimed."
+  ],
+  "reviewer_changes": [
+    "research/RB-F04/REVIEW.md",
+    "research/RB-F04/review.json"
+  ],
+  "integration_at_review_time": "Commit, tracked release checks and main integration are the root agent's subsequent responsibilities; this reviewer made no implementation edits, commits or pushes.",
+  "reviewed_at_utc": "2026-10-09T04:10:04.076088+00:00",
+  "main": {
+    "block_size": 2048,
+    "paths": 65536,
+    "seeds": [
+      9017,
+      9029,
+      9047
+    ],
+    "steps": [
+      192,
+      384,
+      768
+    ],
+    "surface": {
+      "allow_row_wings": true,
+      "density_floor": 1e-10,
+      "frequency_scale": 512,
+      "order": 1024,
+      "time_nodes": 129,
+      "times_min": 0.000244140625,
+      "z_nodes": 161,
+      "z_width": 5.0
+    }
+  },
+  "numerical_precision": {
+    "fourier_vanilla_residual": 1e-09,
+    "heston_step_empirical_refinement": 0.006,
+    "local_step_empirical_refinement": 0.003,
+    "pde_vanilla_residual": 0.001,
+    "pilot_surface_empirical_refinement": 0.0005,
+    "sampling_95_half_width": 0.01,
+    "vanilla_mc_empirical_step_allowance": 0.015,
+    "vanilla_mc_sampling_multiplier": 6.0
+  },
+  "freeze": {
+    "reviewed": true,
+    "pilot_mode": "full",
+    "pilot_path": "pilot.json",
+    "pilot_sha256": "a08d24eba6ff896dd2a00dedcba2909a576aa1c57e64e0a77072a4674fa0e2c6",
+    "selected_surface": "joint_refined",
+    "reviewed_by": "independent f04_pilot_review",
+    "review_record": "pilot_review.json",
+    "review_sha256": "44f5240d77e5798f164b880b36929b31ab303dd5d5da68de780bf2a9431bb688"
+  },
+  "core_full_reacceptance_passed": false,
+  "scope_supplemented_at_utc": "2026-10-09T04:15:51.979520+00:00"
+}
