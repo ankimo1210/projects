@@ -123,22 +123,22 @@ assert fitted["q"] == pytest.approx(np.dot(fitted["scaled_residual"], fitted["sc
 
 ## Task 2: protocol・pilot・主実験前固定
 
-**Files:** research/RB-F06/protocol.json、protocol.py、pilot.json、pilot_review.json、build_reference.py、hullkit/tests/test_sabr_identifiability_research.py。
+**Files:** research/RB-F06/protocol.json、protocol.py、pilot/reference.json/.npz、pilot_review.json、build_reference.py、hullkit/tests/test_sabr_identifiability_research.py。
 **Interfaces:** run_study(protocol,phase,output)、check_record(record,arrays,fresh=False)。JSONはmetadata/slot、NPZはnon-object数値。source_registryはsabr.py/private module/reference/runner/protocol/analyticsを含む。
-- [ ] RED: fixed seedsにより全群が同じmaster noiseをsubselectすること、fixture slot/失敗保持とraw array改変でcheckerが落ちることを検査。
+- [x] RED: fixed seedsにより全群が同じmaster noiseをsubselectすること、fixture slot/失敗保持とraw array改変でcheckerが落ちることを検査。
 ```python
 assert np.allclose(atm_noise, full_noise[atm_indices])
 assert result["attempted_slots"] == len(result["fits"])
 ```
-- [ ] GREEN: noiseless＋別pilot4 noisy反復、全9starts、代表profileの費用・差分安定性を保存。holdout/main noiseは見ない。
+- [x] GREEN: noiseless＋別pilot4 noisy反復、全9starts、代表profileの費用・差分安定性を保存。holdout/main noiseは見ない。
 - [ ] 独立pilotレビュー後にstarts/grid/seed/予算/許容差/全financial sourceを固定し、固定前の成果をmainへ昇格しない。
 - [ ] rootが条件固定・ROADMAP状態をcommitする。
 
 ## Task 3: 918 main fits・profile・独立数値検算
 
-**Files:** research/RB-F06/reference.json/.npz、analytics.py、fresh_check.json、cost.json、hullkit/tests/test_sabr_identifiability_analytics.py。
+**Files:** research/RB-F06/reference.json/.npz、analytics.py、fresh_check.json、serialization_cost.json/process_cost.json、hullkit/tests/test_sabr_identifiability_analytics.py。
 **Interfaces:** summarize(record,arrays)、mainは6x17x9 fit、profile全attemptとcostを別計上。
-- [ ] RED: best finiteとbest converged、negative ΔQのdataset伝播、unknown分離、nonconnected支持格子とbound打切りを固定する。
+- [x] RED: best finiteとbest converged、negative ΔQのdataset伝播、unknown分離、nonconnected支持格子とbound打切りを固定する。
 ```python
 assert support["included"] + support["excluded"] + support["unknown"] == 16
 assert bad_profile_dataset["support_status"] == "unsupported"
@@ -158,3 +158,12 @@ assert bad_profile_dataset["support_status"] == "unsupported"
 - [ ] rootがmainへfast-forward/pushし、mainのrelease/保存数値checkerを確認。ROADMAPを更新し、次の研究を保持する。
 
 Nu=0の解析Jacobian列をprivate診断に使う（publicの小z/log取消しを修正しない）。rho=0/nu=0のrank1と弱方向を独立検算する。main918、代表profile最大1200、noiseless profile408、truth固定1152、細分化1152の最大4830 solver callsを本前固定し、重複省略も元rosterとの対応を保持する。
+
+
+### Pilot検査の修正（2026-10-09）
+
+- 初回pilotは30dataset/386solver callsを完了したが、JSON canonical保存のgroup順序でcheckerがFAIL。原始成果はpilot-initial/へ不変保持し、条件固定には使わない。
+- group rosterを固定順にし、typed pilot approvalを候補全条件・record・typed arrays・全金融sourceへbindした。freeze/load/main開始前に実pilotの数値checkerを必須化。fixture/不完全pilot/古い条件の承認は拒否。
+- 修正後のpilot/は30dataset/270 unrestricted＋116profile、saved/fresh checker PASS（元8noise vectorsと10selected fit再計算）。protocol22＋runner34＋core22＋analytics12＋reference22＋教材builder8の対象120 PASS、変更8Python ruff/format PASS。
+- 独立pilotレビューは進行中。主noise/holdoutはpilotの生成・評価には使用していない。
+- 無効slotのNaN/±Inf分類・有限値の数値照合と実master quoteからの無効判定を修正。正常quoteをinvalidとして隠す対照も拒否し、修正前の数値PASS成果はpilot-pre-invalid-fix/に保持した。新pilot saved/fresh PASS。\n

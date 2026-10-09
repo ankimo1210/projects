@@ -1,0 +1,18 @@
+{
+  "evidence_status": "not accepted: original saved roster checker failed",
+  "protocol_digest": "ef74f705deee2b8bc47dd7344dc20cb560bd0e890bd81ce2c7479cb655383b9b",
+  "reference_record_digest": "6178164817648b49967796595d0b2d74d9676a8981915a9882bb4863f404076c",
+  "schema": "RB-F06-process-cost-v1",
+  "scope": "whole original CLI including imports, calculation, checkpoints, serialization and receipt writes; subprocess timer precision 0.01 seconds",
+  "seconds": 8.5,
+  "source_registry": {
+    "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+    "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+    "research/RB-F06/analytics.py": "9d6076382a9dd1c308248c6dcf07e7218b3954bd80a62da8795c5e7aea97d135",
+    "research/RB-F06/build_reference.py": "d9c163f8d9c62855baae36485f9455b3be7f24fedb2288ace223925130e4f201",
+    "research/RB-F06/protocol.py": "5b6e47c39f6c7ac0b009027883e29186b8f385961e99e2f622ae6b035d8d632d",
+    "research/RB-F06/reference_methods.py": "d8e76a9a4e73beba393a4290c3f9d0448138603fa79e96e0ef8ec28432bec497"
+  },
+  "system_seconds": 0.3,
+  "user_seconds": 7.99
+}

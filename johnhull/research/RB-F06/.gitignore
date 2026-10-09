@@ -1,0 +1,6 @@
+# Resumable local checkpoints; finalized evidence is retained separately.
+/checkpoints/
+/pilot/checkpoints/
+/__pycache__/
+/pilot-initial/checkpoints/
+/pilot-pre-invalid-fix/checkpoints/
