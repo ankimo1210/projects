@@ -1,0 +1,208 @@
+{
+  "schema": "RB-F08-mlmc-rqmc-v1",
+  "revision": 1,
+  "state": "candidate",
+  "parameters": {
+    "spot": 100.0,
+    "strike": 100.0,
+    "rate": 0.03,
+    "sigma": 0.2,
+    "maturity": 1.0,
+    "yield_rate": 0.0
+  },
+  "product": {
+    "kind": "european_call",
+    "payment": "expiry",
+    "units": "currency/year"
+  },
+  "scheme": "ordinary_euler",
+  "base_steps": 4,
+  "epsilon": [
+    0.4,
+    0.2,
+    0.1
+  ],
+  "pilot": {
+    "levels": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "streams": 3,
+    "paths_per_stream": 16384,
+    "exact_cv_paths_per_stream": 16384,
+    "bias_confidence": 0.99,
+    "minimum_main_level": 2,
+    "alpha_signal_multiplier": 3.0,
+    "alpha_consecutive_levels": 3,
+    "negative_path_rate_cap": 1e-05
+  },
+  "allocation": {
+    "minimum_paths": 32,
+    "variance_floor": 1e-12,
+    "sampling_variance_fraction": 0.5,
+    "bias_fraction_sqrt": 0.5,
+    "cost_basis": "isolated_median_seconds_per_pair",
+    "rounding": "ceil"
+  },
+  "caps": {
+    "paths_per_run": 2000000,
+    "steps_per_run": 100000000
+  },
+  "main": {
+    "outer_runs": 256,
+    "methods": [
+      "mlmc",
+      "plain_euler",
+      "exact_plain",
+      "exact_cv"
+    ],
+    "confidence": 0.95,
+    "levels_reserved": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "mlmc_df": "Satterthwaite",
+    "failed_path_rule": "retain negative; nonfinite fails original run",
+    "cv_control": "exp(-rT)*ST",
+    "cv_expectation": "S0*exp(-qT)",
+    "cv_beta": "independent pilot only",
+    "selected_allocations": null
+  },
+  "rqmc": {
+    "strikes": [
+      80.0,
+      100.0,
+      120.0
+    ],
+    "powers": [
+      8,
+      10
+    ],
+    "scrambles": [
+      8,
+      16,
+      32
+    ],
+    "outer_runs": 512,
+    "confidence": 0.95,
+    "dimensions": 1,
+    "scheme": "exact_terminal",
+    "interval": "approximate Student",
+    "sampling_unit": "independent scramble estimates",
+    "df": "R-1",
+    "sobol": "scipy LMS+shift; random_base2; retain point zero",
+    "clip": {
+      "lower": 5e-324,
+      "upper": 0.9999999999999999,
+      "lower_hex": "0x0.0000000000001p-1022",
+      "upper_hex": "0x1.fffffffffffffp-1"
+    },
+    "truths": [
+      "BSM",
+      "independent_clipped_integral"
+    ],
+    "coverage_uncertainty": "Wilson 95%"
+  },
+  "fresh_review": {
+    "strikes": [
+      80.0,
+      100.0,
+      120.0
+    ],
+    "runs_per_case": 1,
+    "paths_per_level": 256,
+    "coverage_replay_runs": [
+      0,
+      255,
+      511
+    ],
+    "rqmc_reserved_runs": 1
+  },
+  "timing": {
+    "pairs_per_level": 4096,
+    "warmup_repetitions": 1,
+    "measured_repetitions": 7,
+    "statistics": [
+      "median",
+      "p95"
+    ]
+  },
+  "bootstrap": {
+    "resamples": 2000,
+    "confidence": 0.95,
+    "unit": "paired main run ratios"
+  },
+  "method_order": "seeded balanced permutations per epsilon",
+  "phase_roots": {
+    "pilot": 83101,
+    "main": 83201,
+    "coverage": 83301,
+    "fresh_review": 83401,
+    "timing": 83501,
+    "method_order": 83601,
+    "bootstrap": 83701
+  },
+  "seed_rule": "phase/case/budget/run/method/level/scramble fixed ordinals; uint32 retry child",
+  "seed_independence": "unique physical seeds prevent reuse; do not prove independence",
+  "block_size": 2048,
+  "single_process": true,
+  "threads": {
+    "OPENBLAS_NUM_THREADS": 1,
+    "OMP_NUM_THREADS": 1,
+    "MKL_NUM_THREADS": 1
+  },
+  "cost_definition": {
+    "level_zero": {
+      "updates": "M0*N",
+      "normals": "M0*N",
+      "payoffs": "N",
+      "coarse_aggregation": "0"
+    },
+    "level_positive": {
+      "updates": "(M_l+M_l/2)*N",
+      "normals": "M_l*N",
+      "payoffs": "2*N",
+      "coarse_aggregation": "M_l/2*N"
+    },
+    "wall_scope": "RNG+path+payoff+summary; import setup separate",
+    "expense_rule": "sum unique expense_id once; method cold includes required shared expenses",
+    "euler_pilot_rule": "all candidate levels, not selected prefix only",
+    "exact_pilot_rule": "own necessary pilot/CV cost, no mandatory Euler-only pilot"
+  },
+  "amortizations": [
+    1,
+    10,
+    100
+  ],
+  "acceptance": {
+    "teaching": "valid coupling/full roster/recomputation/4 figures/independent review",
+    "speedup_epsilon_cells": 2,
+    "rmse_rule": "rmse<=epsilon",
+    "main_ratio_median_cap": 1.0,
+    "bootstrap_ratio_upper_cap": 1.0,
+    "exact_terminal_win_required": false,
+    "report_cold_disadvantage": true
+  },
+  "constraints": {
+    "cpu": true,
+    "torch": false,
+    "public_api_changes": false,
+    "production_dependencies": false,
+    "external_data": false
+  },
+  "seed_ledger_meta": null
+}
