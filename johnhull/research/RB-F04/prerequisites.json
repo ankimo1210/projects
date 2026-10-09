@@ -87,9 +87,11 @@
     "python": "3.12.3",
     "numpy": "2.4.6"
   },
-  "required_next": [
-    "tracked release gate",
-    "main integration/push"
-  ],
-  "core_artifact_baseline": "validation.json.core_artifact_comparison; baseline main 69 existing fingerprint errors, research adds 89 missing ignored Book HTML entries; no new full core acceptance claim"
+  "required_next": [],
+  "core_artifact_baseline": "validation.json.core_artifact_comparison; baseline main 69 existing fingerprint errors, research adds 89 missing ignored Book HTML entries; no new full core acceptance claim",
+  "main_integration": {
+    "source_commit": "c4430dfaadd1c9b1a613b45d278f98512c807908",
+    "tracked_release_passed": true,
+    "original_array_check_passed": true
+  }
 }

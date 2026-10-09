@@ -86,7 +86,7 @@ Create build_reference.py、analytics.py、build_notebook.pyと対応test。
 - [x] checkerは保存配列から数値/件数/SE/採否を再計算し、freshは固定seedから再生成する。SHAはblob来歴だけ。
 - [x] 20MB超は既存C/Fの両保管庫へ置き、各copyから復元する。
 - [x] artifact-only3図: vanilla残差/面、二時点分布、Asian差と誤差内訳。実行・目視。
-- [ ] 対象test/ruff、索引guard、独立最終レビュー、関連suite/release、ROADMAP更新、main統合/push。
+- [x] 対象test/ruff、索引guard、独立最終レビュー、関連suite/release、ROADMAP更新、main統合/push。
 
 ## 実装時の設計判断（2026-10-09）
 
