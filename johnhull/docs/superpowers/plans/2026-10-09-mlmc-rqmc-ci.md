@@ -200,7 +200,7 @@ def allocate_paths(variances: np.ndarray, costs: np.ndarray, *,
 
 各moments dictは`count, mean, m2`（m2=sum((x-mean)**2)）を持つ。mergeはdelta=mean_b-mean_a、M2=M2a+M2b+delta² n_a n_b/(n_a+n_b)を使用。summaryは`price, variance, standard_error, confidence_level, interval, df, degenerate, level_counts`。
 
-- [ ] **Step 1: 以下のRED testを保存する。**
+- [x] **Step 1: 以下のRED testを保存する。**
 
 ```python
 def test_pair_uses_sum_of_fine_brownian_and_euler_not_exact():
@@ -236,10 +236,10 @@ def test_mlmc_variance_uses_independent_level_sample_counts():
     assert out["level_counts"] == [4, 4]
 ```
 
-- [ ] **Step 2: 未存在moduleによるREDを確認する。** Run `... pytest -q johnhull/hullkit/tests/test_multilevel_mc.py`。数値違いでREDになったら期待式を独立に確認する。
-- [ ] **Step 3: 最小実装を加える。** coarse=`z.reshape(N,M//2,2).sum(axis=2)/sqrt(2)`。fine/coarseは既存`gbm_paths_from_normals(..., scheme="euler")`、exact biasはfineのnormal和/sqrt(M)で1step exactを再生。負状態はpayoffの前に数える。配分は§1.1の式を直接実装する。
-- [ ] **Step 4: invalid shape/奇数step/NaN/overflow/level0/sigma0、stable merge、整数ceil/floorを追加してGREEN。** 配分fixture V=[4,1], C=[1,4], v_target=.5, minimum=2, floor=0ではN=[16,4]、sum(V/N)=.5。全V=0は全minimumで`floor_used`を保存する。
-- [ ] **Step 5: 索引登録と対象ruff。** Euler粗細と独立level統計を索引の検証列に記載。新private部品をfresh subprocessでimportし、`assert "torch" not in sys.modules`を固定する。全追加関数/classのdocstringを記す。失敗を既存F04の同時変更へ帰属させず、必要な基線を比較する。
+- [x] **Step 2: 未存在moduleによるREDを確認する。** Run `... pytest -q johnhull/hullkit/tests/test_multilevel_mc.py`。数値違いでREDになったら期待式を独立に確認する。
+- [x] **Step 3: 最小実装を加える。** coarse=`z.reshape(N,M//2,2).sum(axis=2)/sqrt(2)`。fine/coarseは既存`gbm_paths_from_normals(..., scheme="euler")`、exact biasはfineのnormal和/sqrt(M)で1step exactを再生。負状態はpayoffの前に数える。配分は§1.1の式を直接実装する。
+- [x] **Step 4: invalid shape/奇数step/NaN/overflow/level0/sigma0、stable merge、整数ceil/floorを追加してGREEN。** 配分fixture V=[4,1], C=[1,4], v_target=.5, minimum=2, floor=0ではN=[16,4]、sum(V/N)=.5。全V=0は全minimumで`floor_used`を保存する。
+- [x] **Step 5: 索引登録と対象ruff。** Euler粗細と独立level統計を索引の検証列に記載。新private部品をfresh subprocessでimportし、`assert "torch" not in sys.modules`を固定する。全追加関数/classのdocstringを記す。失敗を既存F04の同時変更へ帰属させず、必要な基線を比較する。
 
 ## Task 2: 独立scramble Student型CIとseed/clip記録
 
@@ -259,7 +259,7 @@ def rqmc_gbm_call_from_seeds(contract: GBMCall, *, power: int,
 
 `rqmc_gbm_call_from_seeds`はR=len(child_seeds)とし、重複のない確定uint32列と対応metadataをそのまま消費する。内部でspawn/retryを行わない。metadataがある場合は同じRで`seed`がchild_seedsに一致することを検証し、raw_seed/retry_count/実spawn_keyを結果へ保存する。legacy`rqmc_gbm_call`は従来の`SeedSequence(seed).spawn(R)`列をseamへ渡して互換testを維持する。研究mainはfrom_seedsだけを使う。
 
-- [ ] **Step 1: RED test。**
+- [x] **Step 1: RED test。**
 
 ```python
 def test_t_interval_uses_scrambles_not_raw_sobol_points():
@@ -302,10 +302,10 @@ def test_research_primitive_consumes_frozen_child_seeds_without_respawning():
     assert out["child_seeds"] == seeds
 ```
 
-- [ ] **Step 2: 対象testのREDを確認。** 小さい2**4点×4scrambleのみ。
-- [ ] **Step 3: 確定childseed seamを実装し、legacy wrapperは`SeedSequence(seed).spawn(R)`をseamへ渡す。** 各childseedで既存`numerical.sobol_normal_points`を再生する。子seed、uniform0/1と逆CDFclip件数を保存する。CIは`scipy.stats.t.ppf`で計算する。[t公式仕様](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html)。公開`qmc_price`や既存normal CIを変更しない。
-- [ ] **Step 4: R=1/非integer/bool/非finite、全estimate同値、replay、別seedをGREEN。** 全0ではwidth0・degenerate=trueを保ち、被覆保証を付けない。powerはboolでない0…20のint、seedはboolでない0…2**32-1のint、scramblesは2…1024のintとする。
-- [ ] **Step 5: 索引登録・対象ruff・既存`test_randomized_qmc_se_from_independent_scrambles`を実行。**
+- [x] **Step 2: 対象testのREDを確認。** 小さい2**4点×4scrambleのみ。
+- [x] **Step 3: 確定childseed seamを実装し、legacy wrapperは`SeedSequence(seed).spawn(R)`をseamへ渡す。** 各childseedで既存`numerical.sobol_normal_points`を再生する。子seed、uniform0/1と逆CDFclip件数を保存する。CIは`scipy.stats.t.ppf`で計算する。[t公式仕様](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html)。公開`qmc_price`や既存normal CIを変更しない。
+- [x] **Step 4: R=1/非integer/bool/非finite、全estimate同値、replay、別seedをGREEN。** 全0ではwidth0・degenerate=trueを保ち、被覆保証を付けない。powerはboolでない0…20のint、seedはboolでない0…2**32-1のint、scramblesは2…1024のintとする。
+- [x] **Step 5: 索引登録・対象ruff・既存`test_randomized_qmc_se_from_independent_scrambles`を実行。**
 
 ## Task 3: 独立参照・固定protocol・stream台帳
 
@@ -336,9 +336,9 @@ protocol schema=`RB-F08-mlmc-rqmc-v1`, state=`candidate|frozen`, §1の全候補
 
 `build_seed_ledger`は固定全phase/全候補slotのlogical_rowsを作り、一度`resolve_seed_roster`へ渡す。各rowは`logical_id, phase, entropy, logical_spawn_key`とcase/budget/run/method/level/scramble ordinalを持つ。`_candidate_seed(row,k)`は`np.random.SeedSequence(row["entropy"], spawn_key=tuple(row["logical_spawn_key"])+(k,)).generate_state(1)[0]`をintへ変換する。resolutionは固定順序のused-seed setに対してkを増やし、重複logical_idまたは同じentropy/logical_spawn_keyは拒否する。`seed_roster`は保存されたp["seed_ledger"]をphaseでfilterする読取関数とし、再resolutionしない。final ledgerの全uint32一意性、172,032 coverage slot、全候補levelのmain予約、raw/retry/実spawn_keyの一致をfreezeで検査する。
 
-- [ ] **Step 1: 独立参照のRED test。** one-step Eulerはa=S0(1+(r-q)T)-K、b=S0 sigma sqrt(T)、d=a/b、e^-rT[a Phi(d)+b phi(d)]（b=0はdeterministic）。own math.erfのBSMと既存bsmをK80/100/120・q0/.02・sigma0で1e-11照合。scalar loopとTask1 pairを手指定2/4stepで1e-12照合する。
-- [ ] **Step 2: 最小参照実装とGREEN。** clip積分は端点質量l*g(l)+(1-h)*g(h)と、z∈[max(Phi^-1(l),z_K),Phi^-1(h)]のlognormal partial expectationを足す。高tailはsfを使い桁落ちを避ける。clip=(1e-3,1-1e-3)を独立`scipy.integrate.quad`のu積分と1e-9照合し、主nextafter clipと公開1e-10との差を保存する。
-- [ ] **Step 3: protocol/streamのRED test。**
+- [x] **Step 1: 独立参照のRED test。** one-step Eulerはa=S0(1+(r-q)T)-K、b=S0 sigma sqrt(T)、d=a/b、e^-rT[a Phi(d)+b phi(d)]（b=0はdeterministic）。own math.erfのBSMと既存bsmをK80/100/120・q0/.02・sigma0で1e-11照合。scalar loopとTask1 pairを手指定2/4stepで1e-12照合する。
+- [x] **Step 2: 最小参照実装とGREEN。** clip積分は端点質量l*g(l)+(1-h)*g(h)と、z∈[max(Phi^-1(l),z_K),Phi^-1(h)]のlognormal partial expectationを足す。高tailはsfを使い桁落ちを避ける。clip=(1e-3,1-1e-3)を独立`scipy.integrate.quad`のu積分と1e-9照合し、主nextafter clipと公開1e-10との差を保存する。
+- [x] **Step 3: protocol/streamのRED test。**
 
 ```python
 def test_candidate_cannot_run_main_and_mutated_frozen_roster_is_rejected():
@@ -383,8 +383,8 @@ def test_uint32_collision_is_resolved_before_results_and_audited():
     assert rows == protocol.resolve_seed_roster(logical, candidate_seed_fn=forced_candidate)
 ```
 
-- [ ] **Step 4: validator実装・GREEN。** r/q finite、sigma0を許容、T0を拒否、epsilon順序・case roster・m/R/B integer/bool・phase root重複・解決済み台帳のseed重複・raw/retry/spawn_key矛盾・CI alpha/clip/上限・cost定義の欠損を具体的に拒否する。強制衝突fixtureでは正常resolutionを確認し、frozen seed/coverage512/main256/capの各改変はfingerprint不一致として拒否する。exact terminal/control期待値にqが落ちた対照testを追加する。
-- [ ] **Step 5: READMEへcandidate状態・次のレビュー条件を記す。** 現時点の数値候補は結果ではない。root .venvがworktreeにない場合にuvが空envを作らないよう、次節の共通環境指定を使う。
+- [x] **Step 4: validator実装・GREEN。** r/q finite、sigma0を許容、T0を拒否、epsilon順序・case roster・m/R/B integer/bool・phase root重複・解決済み台帳のseed重複・raw/retry/spawn_key矛盾・CI alpha/clip/上限・cost定義の欠損を具体的に拒否する。強制衝突fixtureでは正常resolutionを確認し、frozen seed/coverage512/main256/capの各改変はfingerprint不一致として拒否する。exact terminal/control期待値にqが落ちた対照testを追加する。
+- [x] **Step 5: READMEへcandidate状態・次のレビュー条件を記す。** 現時点の数値候補は結果ではない。root .venvがworktreeにない場合にuvが空envを作らないよう、次節の共通環境指定を使う。
 
 ## Task 4: fixed pilot、cost calibration、review後freeze
 
@@ -420,7 +420,7 @@ def cost_account(pilot: dict, runs: list[dict], *, amortizations=(1, 10, 100)) -
 def decision(record: dict, arrays: dict) -> dict: ...
 ```
 
-- [ ] **Step 1: 手計算fixtureのRED test。**
+- [x] **Step 1: 手計算fixtureのRED test。**
 
 ```python
 def test_rmse_is_across_runs_and_coverage_uses_original_trials():
@@ -445,9 +445,9 @@ def test_shared_pilot_is_not_multiplied_by_main_run_count():
     assert out["amortized_mean_s"]["10"] == pytest.approx(5.375)
 ```
 
-- [ ] **Step 2: RED後、独立run誤差・被覆率の式を実装。** MSE=mean((price-truth)**2)、bias=mean(price)-truth、empirical variance=mean((price-mean(price))**2)、MSE=bias²+empirical varianceを同じ分母Bで固定する。ddof1のsample varianceは別列。coverage端点はinclusive。
-- [ ] **Step 3: Wilson 95%を実装してGREEN。** z=norm.ppf(.975)、p=hits/B、den=1+z²/B、center=(p+z²/(2B))/den、half=z*sqrt(p*(1-p)/B+z²/(4B²))/den。hits0/B・allhits/Bも有効区間になる。B<1、NaN、逆順CI、missing runは拒否し、退化区間も元のtrialsへ含める。
-- [ ] **Step 4: 費用会計と採否をfixtureで固定する。** `experiment_s=pilot+calibration+allocation+freeze+sum(main)`、cold/amortizedはmethod/epsilonごとの必要expense_idを明記する。重複expense_idの異なる金額、欠損offline費用、negative secondsを拒否する。saved採否フラグを引数にせず、固定rosterの誤差・費用・couplingから`decision`を再計算する。全cost ratio=.5 / 1.2の2fixturesで固定bootstrapと速度採否を確認する。未有効cellは理由ごとに数える。
+- [x] **Step 2: RED後、独立run誤差・被覆率の式を実装。** MSE=mean((price-truth)**2)、bias=mean(price)-truth、empirical variance=mean((price-mean(price))**2)、MSE=bias²+empirical varianceを同じ分母Bで固定する。ddof1のsample varianceは別列。coverage端点はinclusive。
+- [x] **Step 3: Wilson 95%を実装してGREEN。** z=norm.ppf(.975)、p=hits/B、den=1+z²/B、center=(p+z²/(2B))/den、half=z*sqrt(p*(1-p)/B+z²/(4B²))/den。hits0/B・allhits/Bも有効区間になる。B<1、NaN、逆順CI、missing runは拒否し、退化区間も元のtrialsへ含める。
+- [x] **Step 4: 費用会計と採否をfixtureで固定する。** `experiment_s=pilot+calibration+allocation+freeze+sum(main)`、cold/amortizedはmethod/epsilonごとの必要expense_idを明記する。重複expense_idの異なる金額、欠損offline費用、negative secondsを拒否する。saved採否フラグを引数にせず、固定rosterの誤差・費用・couplingから`decision`を再計算する。全cost ratio=.5 / 1.2の2fixturesで固定bootstrapと速度採否を確認する。未有効cellは理由ごとに数える。
 
 ## Task 6: frozen main・compact証拠・改変/fresh checker
 
