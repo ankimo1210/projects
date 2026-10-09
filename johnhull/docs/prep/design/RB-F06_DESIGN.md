@@ -1,6 +1,6 @@
 # RB-F06：逆問題の識別可能性（軽い設計メモ）
 
-- 日付：2026-09-27。状態：設計案。RB-F08の採否記録後、rough版はR1解決後。
+- 日付：2026-09-27。状態：GBM F08採否・main統合完了後、固定beta v1実装へ着手。rough版はR1解決後。
 - 問い：価格残差が小さくても、パラメータと下流価格がどこまで安定して決まるか。
 - 置き場：`research/RB-F06/`、数値実験はhullkit非公開モジュール。学習する場合だけdeep_hedge_price。
 
@@ -60,3 +60,9 @@ nu=0はboundaryであり、公開calibrate_sabrの正のnu下限とは区別す�
 教材採用には、どの条件で何が決まらないかを説明できることを求める。
 速い点推定でも不安定・過信・費用劣後なら標準器には昇格しない。
 未決はparameter/quote範囲、ノイズモデル、multi-start予算と許容差。pilot後・本実験前に固定する。
+
+## 2026-10-09の実施
+
+[実施計画](../../superpowers/plans/2026-10-09-sabr-identifiability.md)で条件候補・全失敗/unknown・pointwise profile・原価・独立参照を具体化した。
+2真値×3quote群×17dataset×9startsを候補とし、別pilotの検証後にmain条件を固定する。
+主実験は未実施。exact SABR/dynamicsとHagan写像の識別性を区別する。
