@@ -1,0 +1,383 @@
+{
+  "schema": "RB-F05-short-foundation-smoke-v1",
+  "smoke": true,
+  "can_freeze": false,
+  "main_performance": false,
+  "conditions_digest": "9db9c8ff53314333fec503813eabbbc7539ca52563dfacec31533dc3940128e9",
+  "source_registry_partial_not_frozen": {
+    "johnhull/hullkit/src/hullkit/_short_maturity_teachers.py": "a51a5850fa11666e07019af5efd644124be2f36f7396d84a8292bc7755879b37",
+    "deep_hedge_price/src/deep_hedge_price/_short_maturity_dml.py": "bf28b110f1706668d8d206651a7ceafd8c58ad637c7279355e1f738ea17a720b",
+    "johnhull/research/RB-F05/short_maturity/reference_methods.py": "125a6ff0b15e1576f40b5084f21b45a0e43c94a120b8db8519ef401f042ca165",
+    "johnhull/research/RB-F05/short_maturity/protocol.py": "02b705d568e1fa04f76541f3f263a99979982e2962e55dcf0e2c359ede65dbdf",
+    "johnhull/research/RB-F05/short_maturity/analytics.py": "ef428d8991c4eba251560dbd79d06b29a21712a37217e258af621f32aafd13e6",
+    "johnhull/hullkit/src/hullkit/zero_dte.py": "e8f99291613b17e0ffb6a29535d9ea08a2ab604e7116513164e91eca6dc07265",
+    "johnhull/hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+    "johnhull/hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d"
+  },
+  "teacher_s": 0.00540524598909542,
+  "sample_count": 16384,
+  "scenarios": [
+    [
+      103.42691938387118,
+      1491.3168771637065,
+      0.0
+    ],
+    [
+      96.1582908474543,
+      17466.26878246185,
+      1.0
+    ],
+    [
+      99.96087210274297,
+      316.14828482282064,
+      0.0
+    ],
+    [
+      100.25058935857945,
+      1042.9779512659807,
+      1.0
+    ],
+    [
+      100.61685693302056,
+      897.2066758096831,
+      0.0
+    ],
+    [
+      101.38258700560763,
+      12564.085658923172,
+      1.0
+    ],
+    [
+      95.13624940476828,
+      1342.2729396711982,
+      0.0
+    ],
+    [
+      99.79595322929202,
+      333.9339428593311,
+      1.0
+    ],
+    [
+      97.18315592488374,
+      8834.605623078123,
+      0.0
+    ],
+    [
+      97.75162363378327,
+      2909.0977145675547,
+      1.0
+    ],
+    [
+      101.07006497550435,
+      791.1217427505874,
+      0.0
+    ],
+    [
+      100.54416093107727,
+      139.50857363141756,
+      1.0
+    ],
+    [
+      101.55634602849628,
+      7690.485745233505,
+      0.0
+    ],
+    [
+      104.07003497153664,
+      21968.10621798731,
+      1.0
+    ],
+    [
+      103.24091711775274,
+      11725.660250944728,
+      0.0
+    ],
+    [
+      101.79706042074955,
+      22550.629782653432,
+      1.0
+    ]
+  ],
+  "moments": [
+    {
+      "index": 0,
+      "count": 0,
+      "status": "analytic_deterministic",
+      "active_count": 0,
+      "actual_random_draws": 0,
+      "se": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 1,
+      "count": 16384,
+      "status": "ready",
+      "active_count": 447,
+      "actual_random_draws": 16831,
+      "se": [
+        0.004761191556431832,
+        0.000613069521202541,
+        0.00011279939013917035
+      ]
+    },
+    {
+      "index": 2,
+      "count": 0,
+      "status": "analytic_deterministic",
+      "active_count": 0,
+      "actual_random_draws": 0,
+      "se": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 3,
+      "count": 16384,
+      "status": "ready",
+      "active_count": 270,
+      "actual_random_draws": 16654,
+      "se": [
+        0.0050091354687730495,
+        0.0006709257265463996,
+        0.0007135272655241677
+      ]
+    },
+    {
+      "index": 4,
+      "count": 0,
+      "status": "analytic_deterministic",
+      "active_count": 0,
+      "actual_random_draws": 0,
+      "se": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 5,
+      "count": 16384,
+      "status": "ready",
+      "active_count": 488,
+      "actual_random_draws": 16872,
+      "se": [
+        0.007019210636323405,
+        0.0010058418561070584,
+        0.00016144703439414902
+      ]
+    },
+    {
+      "index": 6,
+      "count": 0,
+      "status": "analytic_deterministic",
+      "active_count": 0,
+      "actual_random_draws": 0,
+      "se": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 7,
+      "count": 16384,
+      "status": "rare_event_unresolved",
+      "active_count": 78,
+      "actual_random_draws": 16462,
+      "se": [
+        0.002359145391509931,
+        0.000272034257955239,
+        0.0006901956126651696
+      ]
+    },
+    {
+      "index": 8,
+      "count": 0,
+      "status": "analytic_deterministic",
+      "active_count": 0,
+      "actual_random_draws": 0,
+      "se": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 9,
+      "count": 16384,
+      "status": "ready",
+      "active_count": 438,
+      "actual_random_draws": 16822,
+      "se": [
+        0.004029812928906598,
+        0.0006141105888630528,
+        0.00014646915233904306
+      ]
+    },
+    {
+      "index": 10,
+      "count": 0,
+      "status": "analytic_deterministic",
+      "active_count": 0,
+      "actual_random_draws": 0,
+      "se": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 11,
+      "count": 16384,
+      "status": "rare_event_unresolved",
+      "active_count": 27,
+      "actual_random_draws": 16411,
+      "se": [
+        0.0020180937299929015,
+        0.0002622848721818428,
+        0.00016473978737440763
+      ]
+    },
+    {
+      "index": 12,
+      "count": 0,
+      "status": "analytic_deterministic",
+      "active_count": 0,
+      "actual_random_draws": 0,
+      "se": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 13,
+      "count": 16384,
+      "status": "ready",
+      "active_count": 426,
+      "actual_random_draws": 16810,
+      "se": [
+        0.007433284572615052,
+        0.0009073647975199756,
+        0.00010932671605560206
+      ]
+    },
+    {
+      "index": 14,
+      "count": 0,
+      "status": "analytic_deterministic",
+      "active_count": 0,
+      "actual_random_draws": 0,
+      "se": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 15,
+      "count": 16384,
+      "status": "ready",
+      "active_count": 444,
+      "actual_random_draws": 16828,
+      "se": [
+        0.006287403378907961,
+        0.00093602444541506,
+        0.00012693883821942797
+      ]
+    }
+  ],
+  "fits": [
+    {
+      "dml": false,
+      "updates": 32,
+      "status": "completed",
+      "training_s": 0.7561556259752251,
+      "replay_max_abs_C_D_G": [
+        4.718447854656915e-16,
+        1.1102230246251565e-16,
+        4.163336342344337e-17
+      ],
+      "training_only_error_not_main": {
+        "original_count": 16,
+        "failed_rows": 0,
+        "units": [
+          "currency",
+          "currency/spot",
+          "K*currency/spot^2"
+        ],
+        "status": "complete",
+        "rmse": [
+          0.4982517091538392,
+          0.4572773038481819,
+          58.005332156952306
+        ],
+        "p99": [
+          0.990238026613092,
+          0.7283664863758542,
+          170.99091820251866
+        ],
+        "max": [
+          1.021506801214672,
+          0.7405967621860432,
+          179.33729398726607
+        ]
+      }
+    },
+    {
+      "dml": true,
+      "updates": 32,
+      "status": "completed",
+      "training_s": 0.0333653170382604,
+      "replay_max_abs_C_D_G": [
+        4.996003610813204e-16,
+        1.1102230246251565e-16,
+        3.469446951953614e-17
+      ],
+      "training_only_error_not_main": {
+        "original_count": 16,
+        "failed_rows": 0,
+        "units": [
+          "currency",
+          "currency/spot",
+          "K*currency/spot^2"
+        ],
+        "status": "complete",
+        "rmse": [
+          0.48450171393104113,
+          0.3616709759887659,
+          56.76176807259062
+        ],
+        "p99": [
+          1.1286273719207927,
+          0.5906300421702421,
+          167.89484334510183
+        ],
+        "max": [
+          1.1746589596166965,
+          0.6041920189778766,
+          176.1846442153769
+        ]
+      }
+    }
+  ],
+  "paired_batch_equal": true,
+  "replay_max_abs": [
+    [
+      4.718447854656915e-16,
+      1.1102230246251565e-16,
+      4.163336342344337e-17
+    ],
+    [
+      4.996003610813204e-16,
+      1.1102230246251565e-16,
+      3.469446951953614e-17
+    ]
+  ],
+  "statement": "Tiny pilot-only connectivity; not precision selection, main evaluation, adoption or acceptance."
+}
