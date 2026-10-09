@@ -46,6 +46,30 @@ spec = importlib.util.spec_from_file_location("rbf06_notebook_saved_loader", sou
 loader = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = loader
 spec.loader.exec_module(loader)
+
+def artifact_forbidden(*args, **kwargs):
+    raise RuntimeError("Artifact-only guard: RNG, optimization and fresh work are forbidden")
+
+# Install before saved checking: the kernel may read/revalue but must not draw or fit.
+import scipy.optimize as _optimizer
+artifact_guard_rng = ["default_rng", "RandomState", "SeedSequence", "seed", "rand", "randn",
+                      "random", "random_sample", "normal", "standard_normal", "uniform",
+                      "poisson", "choice", "permutation", "shuffle"]
+artifact_guard_optimizer = ["least_squares", "minimize", "differential_evolution",
+                            "dual_annealing", "basinhopping"]
+for _name in artifact_guard_rng:
+    setattr(np.random, _name, artifact_forbidden)
+for _name in artifact_guard_optimizer:
+    setattr(_optimizer, _name, artifact_forbidden)
+if hasattr(loader, "core"):
+    loader.core.fit_smile = artifact_forbidden
+    if hasattr(loader.core, "least_squares"):
+        loader.core.least_squares = artifact_forbidden
+for _name in ["run_study", "_fresh"]:
+    if hasattr(loader, _name):
+        setattr(loader, _name, artifact_forbidden)
+print("Artifact guard active before saved checking:",
+      len(artifact_guard_rng), "RNG entries and", len(artifact_guard_optimizer), "optimizer entries")
 record, arrays = loader.load_result(artifact_dir)
 if record["phase"] not in {"main", "fixture"}:
     raise ValueError("pilot has no held-out study and cannot populate this notebook")
@@ -185,8 +209,9 @@ for dataset in record["datasets"]:
             len(segments.get("unknown_brackets", [])), number(curve["threshold"]),
         ])
 table(["truth", "group", "rep", "axis", "support", "visited points", "failed/unknown",
-       "sampled accepted components", "bound censor L/U", "unknown brackets", "reference delta Q"], profile_table)
-print("表は全curve・全3軸を収録します。sampled accepted componentsは区間全体の支持を保証しません。")
+       "sampled components (ΔQ-only)", "bound censor L/U", "unknown brackets", "reference delta Q"], profile_table)
+print("表は全curve・全3軸を収録します。sampled componentsは区間全体の支持を保証しません。")
+print("Noiseless curve/table: ΔQ-only sampled components; noiseless same-fit price visits additionally require max IV residual<=1e-9.")
 print("Noisy curves use pointwise descriptive chi-square reference; noiseless curves use their separate tiny delta-Q tolerance.")
 print("Missing curve stays missing. A feasible slice can remain finite when the profile optimizer fails.")
 """
@@ -210,7 +235,14 @@ for index, dataset in enumerate(representatives):
     projection[index] = np.sum(subspace**2, axis=0)
     stability = fit.get("numerical_stability")
     if stability is not None:
-        axes[0, 1].plot(protocol["jacobian_steps_u"], stability["relative_matrix_change"],
+        step_jacobians = np.asarray(arrays[fit["stability_jacobians_key"]], dtype=float)
+        if step_jacobians.ndim != 3 or len(step_jacobians) != len(protocol["jacobian_steps_u"]):
+            raise ValueError("Saved stability Jacobian steps do not match the protocol")
+        middle_jacobian = step_jacobians[len(step_jacobians)//2]
+        middle_norm = max(float(np.linalg.norm(middle_jacobian, 2)), np.finfo(float).tiny)
+        relative_changes_by_step = [float(np.linalg.norm(j-middle_jacobian, 2))/middle_norm
+                                    for j in step_jacobians]
+        axes[0, 1].plot(protocol["jacobian_steps_u"], relative_changes_by_step,
                         "o-", label=labels[index].replace("\n", " / "))
         axes[1, 1].plot(protocol["jacobian_steps_u"], stability["direction_projector_changes"],
                         "o-", label=labels[index].replace("\n", " / "))
@@ -218,6 +250,7 @@ for index, dataset in enumerate(representatives):
         labels[index].replace("\n", "/"), fit["rank"], number(fit["condition"]),
         "unknown" if stability is None else stability["status"],
         "unknown" if stability is None else stability["ranks"],
+        "unknown" if stability is None else number(stability["relative_matrix_change"]),
         "unknown" if stability is None else number(stability["smallest_nonzero_to_estimated_error"]),
         np.asarray(arrays[keys["boundary_flags"]]).tolist(),
     ])
@@ -235,7 +268,7 @@ for ax in [axes[0, 0], axes[1, 0]]:
     tick_cells(ax)
     ax.legend(fontsize=8)
 for ax, title, ylabel in [
-    (axes[0, 1], "Saved Jacobian step perturbation", "Relative matrix change"),
+    (axes[0, 1], "Saved per-step Jacobian perturbation", "||J_h - J_middle||2 / ||J_middle||2"),
     (axes[1, 1], "Saved right-subspace step perturbation", "Projector change (operator norm)")]:
     ax.set_xscale("log")
     ax.set_yscale("symlog", linthresh=1e-9)
@@ -250,7 +283,10 @@ for ax, title, ylabel in [
 finish_figure(fig, "2. Scaled SVDと弱方向の数値安定性",
               "Step perturbations estimate numerical uncertainty, not structural/global identification.")
 table(["truth/group", "numerical rank", "scaled condition", "step stability", "ranks by step",
-       "smallest nonzero SV / estimated error", "boundary flags a/rho/nu"], stability_table)
+       "maximum relative change (scalar)", "smallest nonzero SV / estimated error",
+       "boundary flags a/rho/nu"], stability_table)
+print("図の3点は保存済みJacobian行列から各stepの相対差を計算した表示値です。")
+print("summary relative_matrix_changeは3点の最大値1個で、数値安定性の判定に使うscalarです。")
 print("右特異ベクトルの符号は同定しません。欠損rankではnullspace全体のprojectorを表示します。")
 print("rank<2では単一の弱方向は一意ではありません。scaled conditionのunknownを有限値へ置換しません。")
 print("安定な数値推定もglobal identificationの証明ではありません。nu=0境界とtiny-positive nuを区別します。")
@@ -380,7 +416,7 @@ LIMITS = r"""## 解釈と限界
 - \(\theta=(a,\rho,\nu)\)、\(a=\alpha/F^{1-\beta}\)。scaled Jacobianはノイズと座標の単位を固定します。
 - fixed sliceとnuisanceを再最適化したprofileを分けます。各点の失敗はNaNの切れ目とunknownに残します。
 - χ²の閾値はpointwise descriptive referenceです。境界・非識別条件での尤度比の被覆保証は未検証です。
-- observed componentsは訪れた点の集計です。unexplored gapsの内部に追加の交差・支持成分があり得ます。境界打切りも保持します。
+- observed componentsは訪れた点の集計です。noiseless curve/tableのsampled componentsはΔQ-onlyです。noiseless same-fit price visitsにはmax IV residual<=1e-9も必要で、両者は同じフィット集合ではありません。unexplored gapsの内部に追加の交差・支持成分があり得ます。境界打切りも保持します。
 - ν=0境界とtiny-positive νを区別し、stepによるSVD/右部分空間の変動を数値不確実性として残します。nullspaceの次元が2以上なら単一の弱方向は一意ではありません。
 - parameter scatterは元のnoisy反復を使います。較正失敗、unknown、unsupported、境界、未解決の数値rankを表示します。
 - holdout価格幅は有限個の訪問済み解の幅です。not a joint confidence envelope。95%価格区間ではありません。

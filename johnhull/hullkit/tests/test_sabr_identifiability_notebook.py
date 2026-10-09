@@ -53,6 +53,9 @@ def toy(tmp_path, monkeypatch):
         "seed_ledger": [{"phase": "fixture", "seed": 123}],
         "claims": {"hagan": "approximate map only"},
     }
+    spec = importlib.util.spec_from_file_location("rbf06_actual_analytics", HERE / "analytics.py")
+    actual_analytics = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(actual_analytics)
     datasets = []
     for ti, group, rep, success in [
         (0, "full", 0, True),
@@ -74,6 +77,12 @@ def toy(tmp_path, monkeypatch):
         for key, value in values.items():
             keys[key] = fid + "_" + key
             arrays[keys[key]] = np.asarray(value)
+        jacobian_key = fid + "_stability_jacobians"
+        base_jacobian = np.diag(values["singular_values"])
+        factors = [1.00001, 1.0, 1.00002] if ti == 0 else [1.002, 1.0, 1.004]
+        arrays[jacobian_key] = np.stack([base_jacobian * value for value in factors])
+        actual_stability = actual_analytics.jacobian_stability(arrays[jacobian_key])
+        assert isinstance(actual_stability["relative_matrix_change"], float)
         fit = {
             "fit_id": fid,
             "kind": "unrestricted",
@@ -86,13 +95,8 @@ def toy(tmp_path, monkeypatch):
             "diagnostic_calls": 1,
             "scalar_iv_evaluations": 6,
             "seconds": 0.01,
-            "numerical_stability": {
-                "status": "stable_estimate" if ti == 0 else "numerical_unresolved",
-                "relative_matrix_change": [0.00001, 0.0, 0.00002],
-                "direction_projector_changes": [0.01, 0.0, 0.02],
-                "smallest_nonzero_to_estimated_error": 12.0,
-                "ranks": [3, 3, 3] if ti == 0 else [1, 1, 1],
-            },
+            "stability_jacobians_key": jacobian_key,
+            "numerical_stability": actual_stability,
         }
         points, curves = [], []
         for axis, grid in enumerate([[0.1, 0.2, 0.3], [-0.6, -0.3, 0.3], [0.0, 0.4, 1.5]]):
@@ -203,11 +207,32 @@ def module(name):
     # Toy loader guards global APIs; restore them automatically after each test.
     import scipy.optimize
 
-    monkeypatch.setattr(np.random, "default_rng", np.random.default_rng)
-    monkeypatch.setattr(np.random, "normal", np.random.normal)
-    monkeypatch.setattr(np.random, "seed", np.random.seed)
-    monkeypatch.setattr(scipy.optimize, "least_squares", scipy.optimize.least_squares)
-    monkeypatch.setattr(scipy.optimize, "minimize", scipy.optimize.minimize)
+    for name in [
+        "default_rng",
+        "RandomState",
+        "SeedSequence",
+        "seed",
+        "rand",
+        "randn",
+        "random",
+        "random_sample",
+        "normal",
+        "standard_normal",
+        "uniform",
+        "poisson",
+        "choice",
+        "permutation",
+        "shuffle",
+    ]:
+        monkeypatch.setattr(np.random, name, getattr(np.random, name))
+    for name in [
+        "least_squares",
+        "minimize",
+        "differential_evolution",
+        "dual_annealing",
+        "basinhopping",
+    ]:
+        monkeypatch.setattr(scipy.optimize, name, getattr(scipy.optimize, name))
     return artifacts, source, record, arrays
 
 
@@ -329,3 +354,31 @@ def test_zero_holdout_width_is_a_visible_observation(toy, monkeypatch):
     zeros = [line for line in ax.lines if line.get_label() == "zero visited width"]
     assert zeros and len(zeros[0].get_ydata()) == 2
     assert ax.get_ylim()[0] == 0
+
+
+def test_actual_stability_scalar_schema_displays_saved_step_matrices(toy, monkeypatch):
+    artifacts, source, record, arrays = toy
+    saved_fit = record["datasets"][0]["fits"][0]
+    stability = saved_fit["numerical_stability"]
+    assert isinstance(stability["relative_matrix_change"], float)
+    figures, messages, _ = execute_cells(builder(), artifacts, source, monkeypatch)
+    saved_js = arrays[saved_fit["stability_jacobians_key"]]
+    middle = saved_js[1]
+    expected = np.array(
+        [np.linalg.norm(j - middle, 2) / np.linalg.norm(middle, 2) for j in saved_js]
+    )
+    line = figures[1].axes[1].lines[0]
+    assert np.allclose(line.get_ydata(), expected, rtol=1e-12, atol=1e-15)
+    assert max(line.get_ydata()) == pytest.approx(stability["relative_matrix_change"])
+    assert any("maximum relative change (scalar)" in value for value in messages)
+
+
+def test_notebook_cells_install_their_own_artifact_guard(toy, monkeypatch):
+    artifacts, source, _, _ = toy
+    _, _, namespace = execute_cells(builder(), artifacts, source, monkeypatch)
+    with pytest.raises(RuntimeError, match="Artifact-only guard"):
+        namespace["np"].random.default_rng(1)
+    import scipy.optimize
+
+    with pytest.raises(RuntimeError, match="Artifact-only guard"):
+        scipy.optimize.least_squares(lambda x: x, [1.0])

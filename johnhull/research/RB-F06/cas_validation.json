@@ -1,0 +1,45 @@
+{
+  "copies": {
+    "mirror": {
+      "bytes": 23154318,
+      "checks": {
+        "dataset_slots": 102,
+        "fresh": false,
+        "original_attempts": 4398,
+        "passed": true,
+        "scope": "saved Hagan-map/Black revaluation; not exact SABR validation"
+      },
+      "passed": true,
+      "seconds": 5.287939784990158
+    },
+    "primary": {
+      "bytes": 23154318,
+      "checks": {
+        "dataset_slots": 102,
+        "fresh": false,
+        "original_attempts": 4398,
+        "passed": true,
+        "scope": "saved Hagan-map/Black revaluation; not exact SABR validation"
+      },
+      "passed": true,
+      "seconds": 5.328594550956041
+    }
+  },
+  "manifest": {
+    "entries": [
+      {
+        "bytes": 23154318,
+        "mime": "application/octet-stream",
+        "path": "reference.npz",
+        "ref": "artifact:sha256:eebb2b12ac737da8e790df9d943fedf4c43173d2b317d566882a9e751e6c9e86"
+      }
+    ],
+    "kind": "johnhull-evidence-manifest",
+    "schema_version": 1
+  },
+  "passed": true,
+  "protocol_digest": "54fccc16e344f2a1221c477f637f75b556c759c8e28bedcea77ddc0d4c891e7e",
+  "reference_record_digest": "1cc8f49bdd2d03a966b4c0e74b0f0f0df9e444d99503a4d9f4ee39dc703ba95b",
+  "schema": "RB-F06-cas-semantic-check-v1",
+  "scope": "independently restored physical CAS blobs and all saved numerical evidence; numeric checks use tolerances"
+}
