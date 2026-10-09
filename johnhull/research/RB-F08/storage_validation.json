@@ -1,0 +1,280 @@
+{
+  "schema": "RB-F08-storage-validation-v1",
+  "decision": "passed_storage_gate",
+  "started_at_utc": "2026-10-09T05:29:38.797996+00:00",
+  "completed_at_utc": "2026-10-09T05:30:34.556537+00:00",
+  "scope": "independent single-store restores plus full saved-observation financial semantic checker; current physical disk mapping",
+  "root_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F08/reference_manifest.json",
+    "bytes": 292,
+    "sha256": "3e7bed6e0bfdb604b0b55a8d361b839a26bc691d1074796056b63da05a4a7d19"
+  },
+  "root_manifest_contents": {
+    "schema_version": 1,
+    "kind": "johnhull-evidence-manifest",
+    "entries": [
+      {
+        "path": "reference.npz",
+        "ref": "artifact:sha256:fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3",
+        "bytes": 22255119,
+        "mime": "application/octet-stream"
+      }
+    ]
+  },
+  "root_manifest_canonical_digest": "dfdc45469c42853db13765491a469afb1226ad86966b36419fed0f0b7bce8b82",
+  "reference_record": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F08/reference.json",
+    "bytes": 15780767,
+    "sha256": "a99bd26f7bfbf515af675da17f8eaf148ca822910dd6c5724576c3b8798c938f"
+  },
+  "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+  "full_artifact": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F08/reference.npz",
+    "bytes": 22255119,
+    "sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3"
+  },
+  "expected_artifact_sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3",
+  "expected_artifact_bytes": 22255119,
+  "source": {
+    "files": {
+      "hullkit/src/hullkit/_multilevel_mc.py": "7104b480a0e4ea872bbf44acc18c6bdb939da3678b9db26f8908337c2fefbfc3",
+      "hullkit/src/hullkit/_rqmc_ci.py": "a36c08e1b55e92189d84319099fb634ef6bf3eff0799ea770c66d41e0d36c43d",
+      "hullkit/src/hullkit/_numerical_mc.py": "6292bb6a4797cb85bf42e4b57d8f7ae68d11af16828ae08206669300bb5515ee",
+      "hullkit/src/hullkit/_stochastic_foundations.py": "a34ddeba7249af129aba83171f9c1a720067fd7b6a812ae0386ba79b180d28f2",
+      "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+      "research/RB-F08/reference_methods.py": "6a3b112b0686068fe5452f24ecba590c7457ca7859dd7c6195ab8bfeb36a50ca",
+      "research/RB-F08/protocol.py": "3b26af1239232c7f99873a326a74117ac41a81b43bc8a7bc31eb25b4d24958ed",
+      "research/RB-F08/pilot.py": "5b8676df6f3266fc6cfc907b1cd2486d9c48df9fb8ad4a3d834eaaaabef75b2b",
+      "research/RB-F08/analytics.py": "9cbccf4336977a621ac9ea179fa4c0543313f66cee79b00642aa6947f21ef44d",
+      "research/RB-F08/build_reference.py": "50e28c8789857aa9981d43a59891528c1c352f16fefb4f0daba179539adb2992"
+    },
+    "dependencies": {
+      "python": "3.12.3",
+      "numpy": "2.4.6",
+      "scipy": "1.17.1"
+    },
+    "digest": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004"
+  },
+  "storage_source": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/scripts/evidence_store.py",
+    "bytes": 21481,
+    "sha256": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3"
+  },
+  "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+  "runtime": {
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+    "python_executable": "/home/kazumasa/projects/.venv/bin/python",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "PYTHONPATH": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src",
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    }
+  },
+  "copies": [
+    {
+      "role": "primary",
+      "store_env": "PROJECTS_ARTIFACT_STORE",
+      "store_root": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",
+      "resolved_store_root": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",
+      "windows_drive": "C",
+      "marker": {
+        "path": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects/.projects-artifact-store.json",
+        "bytes": 82,
+        "sha256": "f563fcc69be28ba9185ead8944e8dac3da028ed609e277a2a67dfce4354ab3e7"
+      },
+      "marker_contents": {
+        "schema_version": 1,
+        "role": "primary",
+        "layout": "sha256/<2>/<sha256>"
+      },
+      "source_blob": {
+        "path": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects/sha256/fb/fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3",
+        "bytes": 22255119,
+        "sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3"
+      },
+      "source_blob_unchanged": true,
+      "restored_directory": "/tmp/rbf08-primary-restore-23hva1nk",
+      "restored_archive": {
+        "path": "/tmp/rbf08-primary-restore-23hva1nk/reference.npz",
+        "bytes": 22255119,
+        "sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3"
+      },
+      "restore_api": "evidence_store.restore([selected_store], manifest, fresh_destination)",
+      "store_candidates": [
+        "primary"
+      ],
+      "fallback_possible": false,
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "reference.npz",
+            "sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "restore_s": 0.0855850949883461,
+      "record_json_origin": "byte-identical copy of original research reference.json",
+      "record_json": {
+        "path": "/tmp/rbf08-primary-restore-23hva1nk/reference.json",
+        "bytes": 15780767,
+        "sha256": "a99bd26f7bfbf515af675da17f8eaf148ca822910dd6c5724576c3b8798c938f"
+      },
+      "manifest_origin": "byte-identical copy of original research reference_manifest.json",
+      "manifest": {
+        "path": "/tmp/rbf08-primary-restore-23hva1nk/reference_manifest.json",
+        "bytes": 292,
+        "sha256": "3e7bed6e0bfdb604b0b55a8d361b839a26bc691d1074796056b63da05a4a7d19"
+      },
+      "loader": "original HERE build_reference.load_result -> existing artifacts.load_bundle; allow_pickle=False",
+      "loaded_array_count": 26417,
+      "all_arrays_non_object": true,
+      "load_s": 1.0522965170093812,
+      "financial_semantic_checker": "original HERE build_reference.check_record(record, arrays, fresh=False)",
+      "financial_semantic_check": {
+        "passed": true,
+        "fixture": false,
+        "main_runs": 3072,
+        "coverage_cells": 18,
+        "fresh": false
+      },
+      "financial_semantic_check_s": 26.6880135529791,
+      "frozen_source_pilot_review_and_conditions_binding": "verified by real check_record + protocol.verify_frozen_evidence",
+      "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+      "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957"
+    },
+    {
+      "role": "mirror",
+      "store_env": "PROJECTS_ARTIFACT_MIRROR",
+      "store_root": "/mnt/f/ProjectArtifacts/projects-backup",
+      "resolved_store_root": "/mnt/f/ProjectArtifacts/projects-backup",
+      "windows_drive": "F",
+      "marker": {
+        "path": "/mnt/f/ProjectArtifacts/projects-backup/.projects-artifact-store.json",
+        "bytes": 81,
+        "sha256": "577b9ab4fa428c1138ee91ec9d98a79ce268ba22442678abc4701b40e91ae902"
+      },
+      "marker_contents": {
+        "schema_version": 1,
+        "role": "mirror",
+        "layout": "sha256/<2>/<sha256>"
+      },
+      "source_blob": {
+        "path": "/mnt/f/ProjectArtifacts/projects-backup/sha256/fb/fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3",
+        "bytes": 22255119,
+        "sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3"
+      },
+      "source_blob_unchanged": true,
+      "restored_directory": "/tmp/rbf08-mirror-restore-ko85e0k9",
+      "restored_archive": {
+        "path": "/tmp/rbf08-mirror-restore-ko85e0k9/reference.npz",
+        "bytes": 22255119,
+        "sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3"
+      },
+      "restore_api": "evidence_store.restore([selected_store], manifest, fresh_destination)",
+      "store_candidates": [
+        "mirror"
+      ],
+      "fallback_possible": false,
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "reference.npz",
+            "sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "restore_s": 0.07961045898264274,
+      "record_json_origin": "byte-identical copy of original research reference.json",
+      "record_json": {
+        "path": "/tmp/rbf08-mirror-restore-ko85e0k9/reference.json",
+        "bytes": 15780767,
+        "sha256": "a99bd26f7bfbf515af675da17f8eaf148ca822910dd6c5724576c3b8798c938f"
+      },
+      "manifest_origin": "byte-identical copy of original research reference_manifest.json",
+      "manifest": {
+        "path": "/tmp/rbf08-mirror-restore-ko85e0k9/reference_manifest.json",
+        "bytes": 292,
+        "sha256": "3e7bed6e0bfdb604b0b55a8d361b839a26bc691d1074796056b63da05a4a7d19"
+      },
+      "loader": "original HERE build_reference.load_result -> existing artifacts.load_bundle; allow_pickle=False",
+      "loaded_array_count": 26417,
+      "all_arrays_non_object": true,
+      "load_s": 1.0022253940114751,
+      "financial_semantic_checker": "original HERE build_reference.check_record(record, arrays, fresh=False)",
+      "financial_semantic_check": {
+        "passed": true,
+        "fixture": false,
+        "main_runs": 3072,
+        "coverage_cells": 18,
+        "fresh": false
+      },
+      "financial_semantic_check_s": 26.117100538045634,
+      "frozen_source_pilot_review_and_conditions_binding": "verified by real check_record + protocol.verify_frozen_evidence",
+      "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+      "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957"
+    }
+  ],
+  "both_copies_restored_and_semantically_valid": true,
+  "physical_disk_read_only_verification": {
+    "captured_at_utc": "2026-10-09T05:28:07.5997709Z",
+    "method": "Get-Partition -DriveLetter C,F followed by Get-Disk for the actual mapped DiskNumber",
+    "partitions": [
+      {
+        "DriveLetter": "F",
+        "DiskNumber": 1,
+        "PartitionNumber": 3,
+        "PartitionSize": 999269859328,
+        "DiskFriendlyName": "ASMT 2462 NVME",
+        "DiskSerialNumber": "250417851BFC",
+        "DiskUniqueId": "5000000000000001",
+        "DiskBusType": "USB",
+        "DiskSize": 1000204886016,
+        "DiskOperationalStatus": [
+          "Online"
+        ]
+      },
+      {
+        "DriveLetter": "C",
+        "DiskNumber": 0,
+        "PartitionNumber": 4,
+        "PartitionSize": 1994222755840,
+        "DiskFriendlyName": "Samsung SSD 990 PRO 2TB",
+        "DiskSerialNumber": "0025_3848_51A2_2427.",
+        "DiskUniqueId": "eui.0025384851A22427",
+        "DiskBusType": "NVMe",
+        "DiskSize": 2000398934016,
+        "DiskOperationalStatus": [
+          "Online"
+        ]
+      }
+    ],
+    "distinct_disk_numbers": true,
+    "distinct_disk_unique_ids": true,
+    "both_online": true,
+    "CAS_roots_mapped_by_verified_mnt_drive_paths": true,
+    "verification_is_current": true,
+    "F04_historical_measurement_reused": false
+  },
+  "original_research_reference_and_source_unchanged": true,
+  "research_main_accepted": false,
+  "speedup_accepted": false,
+  "limitations": [
+    "fresh=False recomputes financial summaries/rosters/costs from restored saved observations and verifies frozen provenance; it does not generate fresh Monte Carlo/Sobol random observations",
+    "This storage gate does not grant final main experiment, teaching or speedup acceptance; the independent final research review decides those",
+    "Only reference.npz is contained in the CAS manifest; JSON record and manifest are original research metadata copied byte-identically into each restore directory",
+    "Current C/F physical mapping and two independent readable blobs do not test future drive failure, offline retention or disaster recovery",
+    "Timing values describe this storage verification with concurrent review/test work; they are not isolated method timing measurements or replacements for saved research timings",
+    "No prior F04 measurement is presented as a new verification"
+  ]
+}

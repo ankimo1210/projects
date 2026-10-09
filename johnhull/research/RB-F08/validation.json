@@ -1,0 +1,64 @@
+{
+  "schema": "RB-F08-validation-v1",
+  "validated_at_utc": "2026-10-09T05:38:06.896494+00:00",
+  "source_fingerprint": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004",
+  "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+  "related_suites": {
+    "command": "pytest -q johnhull/hullkit/tests johnhull/report/tests deep_hedge_price/tests",
+    "passed": 7616,
+    "skipped": 6,
+    "warnings": 2,
+    "pytest_seconds": 415.43,
+    "process_wall_seconds": 418.53071626799647,
+    "exit_code": 0,
+    "scope": "three related project suites once, not every workspace project",
+    "skip_reason": "lookback closed form is undefined at r=q"
+  },
+  "changed_python_style": {
+    "files": 16,
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS"
+  },
+  "fresh": {
+    "schema": "RB-F08-fresh-check-v1",
+    "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+    "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+    "seconds": 26.187586626969278,
+    "checks": {
+      "passed": true,
+      "fixture": false,
+      "main_runs": 3072,
+      "coverage_cells": 18,
+      "fresh": {
+        "passed": true,
+        "replayed_groups": 105,
+        "independent_paths_per_level": 256,
+        "main_pooled": false,
+        "timing_reproduction_required": false
+      }
+    },
+    "scope": "saved evidence load/check and selected fresh replay; separate research reproducibility cost"
+  },
+  "storage": "storage_validation.json",
+  "visual": "visual_validation.json",
+  "pilot_review": "pilot_review.json",
+  "final_review": {
+    "file": "review.json",
+    "sha256": "d6f75ad1ee06a23ad6fc84d912fab51c8ce37c5b08a37deb987729e28f26b7f6",
+    "decision": "approved",
+    "research_main_accepted": true,
+    "unresolved_counts": {
+      "Critical": 0,
+      "Important": 0,
+      "Minor": 0
+    }
+  },
+  "release": "pending",
+  "main_integration": "pending",
+  "limitations": [
+    "Core accepted sections were not fully reaccepted by this research gate.",
+    "Existing core artifact dependency fingerprint failures (69 on F04 baseline) are recorded in F04 validation; F08 does not repair or claim a new full 306-section artifact PASS.",
+    "Financial source registry is unchanged after the frozen main. Notebook display annotations were verified by a separate latest guarded fixture test.",
+    "Student confidence intervals are approximate; recorded coverage is not a guarantee."
+  ]
+}

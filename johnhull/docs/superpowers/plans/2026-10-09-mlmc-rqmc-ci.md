@@ -468,9 +468,9 @@ main modeはfrozen/review/source/全数値条件/最終seed台帳/rosterが全�
 - [x] **Step 1: Tiny fixtureのRED。** B=4、m=3、R=4、L=2、N_l=[16,8,4]のfixtureを使う。これはmain protocolと別schemaで`fixture`と明示。JSONのprice/SE/coverage/decision、N_l、clip、子seed、review digest、level M2を1つずつ改変してcheckerが拒否するtestを書く。
 - [x] **Step 2: main配線を最小実装してGREEN。** per-run independentlevels、fixed allocations、block generator、plain Euler/exact/CVを配線。RQMCはfrozen台帳の当該R行を`rqmc_gbm_call_from_seeds(..., child_seeds=..., child_metadata=...)`へ渡す。legacy wrapperとcandidate resolutionをmainでmonkeypatchして例外にし、mainが呼ばないtestを追加する。RNG/engine/summary timerを保存。partial runで例外が出たら失敗recordを保存し、completed rosterへ補充しない。
 - [x] **Step 3: 保存checker。** NPZ `allow_pickle=False`、array registry/shape/dtype、n/M2>=0、nのint、negative<=paths/states、price/SE/df/CI/費用/roster/採否を再計算する。fingerprintが合ってもstatistical summary改変は通さない。
-- [ ] **Step 4: fresh検証と独立参照。** 固定seedから代表caseごとの最初/最後runと全levelを再生成しblockmomentsを1e-10相対/1e-12絶対で照合。全scramble推定値はsmall referenceの全件、full mainは全seed台帳＋各18cellの3代表outerrunを再生成する。fresh-review rootは追加の独立256pair/caseでscalar Euler replayとcouplingを照合し、主反復へpoolしない。
-- [ ] **Step 5: F04採否後に全mainを実行。** B=256 Euler系列、B=512の18RQMCcellを満たす。smokeをmainへ昇格しない。frozen未支持cell・失敗件数も保存する。明らかな負荷競合/バックエンド変更があった計時は理由付きで別revisionへ再計測し、良い時間だけ選ばない。
-- [ ] **Step 6: 保管。** 20MB以下は小さなsynthetic bundleを研究資料へ保持。超える場合は既存`artifacts.store_large(output, stem="reference")`でprimary/mirrorを使い、各copyから独立復元とSHA/数値checkerを実施する。保管庫marker未接続を空folder作成で迂回しない。
+- [x] **Step 4: fresh検証と独立参照。** 固定seedから代表caseごとの最初/最後runと全levelを再生成しblockmomentsを1e-10相対/1e-12絶対で照合。全scramble推定値はsmall referenceの全件、full mainは全seed台帳＋各18cellの3代表outerrunを再生成する。fresh-review rootは追加の独立256pair/caseでscalar Euler replayとcouplingを照合し、主反復へpoolしない。
+- [x] **Step 5: F04採否後に全mainを実行。** B=256 Euler系列、B=512の18RQMCcellを満たす。smokeをmainへ昇格しない。frozen未支持cell・失敗件数も保存する。明らかな負荷競合/バックエンド変更があった計時は理由付きで別revisionへ再計測し、良い時間だけ選ばない。
+- [x] **Step 6: 保管。** 20MB以下は小さなsynthetic bundleを研究資料へ保持。超える場合は既存`artifacts.store_large(output, stem="reference")`でprimary/mirrorを使い、各copyから独立復元とSHA/数値checkerを実施する。保管庫marker未接続を空folder作成で迂回しない。
 
 ## Task 7: artifact-only 4図・教材・独立最終レビュー・採否
 
@@ -487,9 +487,9 @@ main modeはfrozen/review/source/全数値条件/最終seed台帳/rosterが全�
 
 - [x] **Step 1: artifact-onlyのRED test。** fixture bundleからbuilderを実行し、PNG display_dataのあるfigure cellが4個、seed/clip/CI近似/bias/費用/失敗理由/採否が本文に現れることを固定する。主計算関数をmonkeypatchして例外にし、notebookを実行しても呼ばれないことを確かめる。
 - [x] **Step 2: builderの最小実装・GREEN。** nbformat deterministic cell-id、`hullkit.nbplot.setup()`またはjapanize_matplotlib、matplotlib、保存配列checkerのみ。欠損/壊れたbundleは明示エラー。計測秒数の再現をnotebook実行で要求しない。
-- [ ] **Step 3: 4図を実行・render・目視。** 日本語glyph、軸/legend/CIラベルの衝突、log軸で0/unsupported点を隠していないか、cost内訳が表と一致するかを確認する。HTMLを付ける場合はworkspaceの`docs/templates/claude-report/`を適用する。
-- [ ] **Step 4: 独立最終レビュー。** fresh reviewerが原始block/scramble観測から配分、bias/SE、RMSE/coverage、費用・採否を再計算し、代表fresh replay、source snapshot、clip bias、4図を確認。Critical/Importantは修正して再検査する。reviewerの自前Black/Euler計算を証跡に残す。
-- [ ] **Step 5: 完了記録。** READMEに問い・固定条件・反復roster・有効/失敗cell・検証・採否・限界・後続Hestonを保存する。ROADMAPは実測を根拠にF08 v1完了として更新し、未実装Hestonを完了に数えない。勝利・理論改善率・公開API昇格を完了条件にしない。
+- [x] **Step 3: 4図を実行・render・目視。** 日本語glyph、軸/legend/CIラベルの衝突、log軸で0/unsupported点を隠していないか、cost内訳が表と一致するかを確認する。HTMLを付ける場合はworkspaceの`docs/templates/claude-report/`を適用する。
+- [x] **Step 4: 独立最終レビュー。** fresh reviewerが原始block/scramble観測から配分、bias/SE、RMSE/coverage、費用・採否を再計算し、代表fresh replay、source snapshot、clip bias、4図を確認。Critical/Importantは修正して再検査する。reviewerの自前Black/Euler計算を証跡に残す。
+- [x] **Step 5: 完了記録。** READMEに問い・固定条件・反復roster・有効/失敗cell・検証・採否・限界・後続Hestonを保存する。ROADMAPは実測を根拠にF08 v1完了として更新し、未実装Hestonを完了に数えない。勝利・理論改善率・公開API昇格を完了条件にしない。
 
 ## Task 8: Heston算術Asianの次段階を保持する
 
@@ -587,3 +587,5 @@ ruffは今回追加/変更したPythonだけに`uv run --no-sync ruff check <fil
 2026-10-09実装時の補完：固定seed clip診断の専用slotをfullpilot前に追加。freeze/fresh費用は承認済み観測を変更しない別receiptに記録。基礎独立レビューの3件（epsilon重複、offline原価欠落、精度未達比較器の速度理由）とCI confidence渡しは対象RED→GREENで修正。
 
 2026-10-09 full pilot後の計測解釈補足：coldは凍結研究pipelineの検証込み初回費用。個別exact/解析器の必須起動費用とは呼ばない。C_lはpilot較正集計workloadを含むため主runの実時間を厳密に最小化する配分とは主張しない。原始費用・固定配分・主runの実測速度比を保持する。BLAS backendはpilot時直接記録の欠如をレビュー時捕捉で補足し、時点の差を残す。
+
+2026-10-09 GBM v1完了：主3072run・全18×512RQMC・105group rootfresh・独立28,990数値比較・22MB両CAS復元semantic・artifact-only4図・関連3suite7616 PASS/6skipを確認。標準高速器には不採用、教材採用。Heston Task8は未実装の専用revisionとして保持する。

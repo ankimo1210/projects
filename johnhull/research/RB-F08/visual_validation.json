@@ -1,0 +1,87 @@
+{
+  "figures": [
+    {
+      "figure": 1,
+      "path": "/tmp/rbf08-main-figures/figure-1.png",
+      "bytes": 169463,
+      "sha256": "71d1094d63c14a2e6d84f80d2b2f52333f6cd9a4d92b520f7603ab4e9f8bebca"
+    },
+    {
+      "figure": 2,
+      "path": "/tmp/rbf08-main-figures/figure-2.png",
+      "bytes": 165684,
+      "sha256": "21428eca4ff23aa13e5d70b215bc2320691a02b912d9dd7117834df987057bf4"
+    },
+    {
+      "figure": 3,
+      "path": "/tmp/rbf08-main-figures/figure-3.png",
+      "bytes": 210129,
+      "sha256": "7fa43e70e528064ba3ace058ebf12edfc50b6578271d9f0c6c8576b99d0dded6"
+    },
+    {
+      "figure": 4,
+      "path": "/tmp/rbf08-main-figures/figure-4.png",
+      "bytes": 165658,
+      "sha256": "9750f2cff89d889b6d4fcd74dcabb19fb33a6cc90db9eff0547363a5832a9eb7"
+    }
+  ],
+  "checks": {
+    "notebook_format": true,
+    "code_errors": 0,
+    "stderr": [],
+    "four_single_png_outputs": true,
+    "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+    "wall_receipt_bound": true,
+    "wall_s": 88.81395976000931,
+    "unaccounted_overhead_s": 25.813992273877375,
+    "cost_table_rows_reconciled": 12,
+    "cost_identities_reconciled": true,
+    "main_repetitions": 256,
+    "coverage_cells": 18,
+    "coverage_repetitions": 512
+  },
+  "schema": "RB-F08-visual-validation-v1",
+  "validated_at_utc": "2026-10-09T05:33:54.141028+00:00",
+  "scope": "Executed saved-artifact notebook and visual inspection only; independent numerical/final acceptance review is recorded separately.",
+  "status": "passed",
+  "notebook": "mlmc_rqmc_ci.ipynb",
+  "notebook_sha256": "5e3e56d5189d48ca7ddfe51f8f74bea3a7c60d6992ca080eca4efbdb3915578b",
+  "source_fingerprint": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004",
+  "execution": {
+    "command": "build_notebook.py --artifacts research/RB-F08 --execute",
+    "exit_code": 0,
+    "saved_checker_fresh": false,
+    "new_financial_sampling": false,
+    "new_bootstrap_rng": false
+  },
+  "visual_checks": {
+    "all_four_rendered_pngs_viewed": true,
+    "japanese_glyphs_readable": true,
+    "axes_tick_legend_and_caption_collisions": false,
+    "zero_negative_paths_explicit": true,
+    "original_pilot_paths_per_level": 49152,
+    "zero_degenerate_counts_explicit": true,
+    "original_rqmc_outer_runs_per_cell": 512,
+    "failed_or_unsupported_hidden": false,
+    "main_cold_amortized_and_formula_time_scopes_explicit": true,
+    "alpha_unresolved_preserved": true,
+    "beta_0_to_1_not_asymptotic_caption": true,
+    "student_approximation_and_BSM_vs_clipped_truth_distinct": true
+  },
+  "guarded_fixture_validation": {
+    "tests_passed": 5,
+    "guards": [
+      "default_rng",
+      "Sobol sampler",
+      "GBM paths",
+      "RQMC wrappers",
+      "MLMC samples",
+      "run_reference"
+    ],
+    "expected_png_count": 4
+  },
+  "limitations": [
+    "inspection of final embedded PNGs and bounded notebook outputs; no browser HTML/mobile rendering",
+    "this visual record does not approve Heston or standard-accelerator deployment"
+  ]
+}

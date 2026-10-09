@@ -1,0 +1,949 @@
+{
+  "schema": "RB-F08-final-review-v1",
+  "review_date": "2026-10-09",
+  "reviewed_at_utc": "2026-10-09T05:40:34.961987+00:00",
+  "reviewer": "independent /root/f08_execution_review",
+  "decision": "approved",
+  "basis_quality_verdict": "approved",
+  "spec_compliance_verdict": "approved",
+  "research_main_accepted": true,
+  "scope": "Frozen GBM Euler MLMC / exact terminal plain and independent-pilot CV main, separate scramble RQMC CI research, saved artifacts and four teaching figures. No Heston, public API promotion or deployment acceptance.",
+  "workspace_head_at_review": "d914949cc7c79b3a1c54b9a0876898cc522fe163",
+  "source": {
+    "files": {
+      "hullkit/src/hullkit/_multilevel_mc.py": "7104b480a0e4ea872bbf44acc18c6bdb939da3678b9db26f8908337c2fefbfc3",
+      "hullkit/src/hullkit/_rqmc_ci.py": "a36c08e1b55e92189d84319099fb634ef6bf3eff0799ea770c66d41e0d36c43d",
+      "hullkit/src/hullkit/_numerical_mc.py": "6292bb6a4797cb85bf42e4b57d8f7ae68d11af16828ae08206669300bb5515ee",
+      "hullkit/src/hullkit/_stochastic_foundations.py": "a34ddeba7249af129aba83171f9c1a720067fd7b6a812ae0386ba79b180d28f2",
+      "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+      "research/RB-F08/reference_methods.py": "6a3b112b0686068fe5452f24ecba590c7457ca7859dd7c6195ab8bfeb36a50ca",
+      "research/RB-F08/protocol.py": "3b26af1239232c7f99873a326a74117ac41a81b43bc8a7bc31eb25b4d24958ed",
+      "research/RB-F08/pilot.py": "5b8676df6f3266fc6cfc907b1cd2486d9c48df9fb8ad4a3d834eaaaabef75b2b",
+      "research/RB-F08/analytics.py": "9cbccf4336977a621ac9ea179fa4c0543313f66cee79b00642aa6947f21ef44d",
+      "research/RB-F08/build_reference.py": "50e28c8789857aa9981d43a59891528c1c352f16fefb4f0daba179539adb2992"
+    },
+    "dependencies": {
+      "python": "3.12.3",
+      "numpy": "2.4.6",
+      "scipy": "1.17.1"
+    },
+    "digest": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004"
+  },
+  "source_fingerprint": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004",
+  "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+  "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+  "artifact": {
+    "bytes": 22255119,
+    "sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3",
+    "storage": "reference_manifest.json"
+  },
+  "acceptance": {
+    "teaching_retained": true,
+    "speedup_supported_vs_euler": true,
+    "supported_epsilon_count": 3,
+    "standard_accelerator_rejected": true,
+    "standard_accelerator_reasons": [
+      "epsilon=0.4: exact terminal comparator is faster",
+      "epsilon=0.4: cold pilot-inclusive cost loses to exact terminal",
+      "epsilon=0.2: exact terminal comparator is faster",
+      "epsilon=0.2: cold pilot-inclusive cost loses to exact terminal",
+      "epsilon=0.1: exact terminal comparator is faster",
+      "epsilon=0.1: cold pilot-inclusive cost loses to exact terminal"
+    ],
+    "rqmc_finite_R_exact_95_percent_guarantee": false,
+    "heston_complete": false,
+    "public_api_promoted": false
+  },
+  "acceptance_note": "Final teaching acceptance is recorded here separately; the immutable raw reference decision was generated before independent final review and is unchanged.",
+  "checks": {
+    "source_snapshot_matches_frozen": true,
+    "frozen_protocol_pilot_review_and_main_binding": true,
+    "all_3072_main_runs_retained": true,
+    "all_18_coverage_cells_512_each_retained": true,
+    "all_raw_blocks_and_moments_reconciled": true,
+    "raw_run_and_block_timing_reconciled": true,
+    "all_seed_phases_unique_and_collision_replayed": true,
+    "pilot_bias_cv_beta_and_fixed_allocations_recomputed": true,
+    "main_rmse_and_sampling_bias_aware_intervals_recomputed": true,
+    "rqmc_student_wilson_width_and_both_truths_recomputed": true,
+    "unique_expenses_and_main_cold_amortized_costs_recomputed": true,
+    "fixed_2000_resample_bootstrap_indices_and_decision_recomputed": true,
+    "independent_main_and_rqmc_fresh_representatives_replayed": true,
+    "independent_scalar_euler_coupling_replayed": true,
+    "main_observations_not_pooled": true,
+    "nonfresh_checker_financial_rng_and_paths_forbidden": true,
+    "four_embedded_pngs_format_hash_and_visual_checks_passed": true,
+    "both_single_store_cas_restorations_passed": true,
+    "whole_cli_wall_receipts_bound_and_reconciled": true
+  },
+  "unresolved_counts": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0
+  },
+  "issues": [],
+  "numerical_tolerance": {
+    "rtol": 1e-10,
+    "atol": 1e-12,
+    "scope": "all independent numerical comparisons; reported maxima are absolute differences, large centered M2 may exceed atol while passing relative tolerance"
+  },
+  "independent_algorithms": {
+    "normal_integral": "BSM truth from independent quadrature of discounted lognormal payoff against standard normal density; clipped truth adds endpoint masses below/above fixed clip. Own main value 9.413403383853009 agrees with saved independent Black within tolerance.",
+    "centered_moments": "n=sum(n_b); mean=sum(n_b*mean_b)/n; M2=sum(M2_b+n_b*(mean_b-mean)^2); no unweighted block averaging.",
+    "ordinary_euler": "S[j+1]=S[j]*(1+(r-q)*dt+sigma*sqrt(dt)*z[j]); negative states retained; z_coarse=(z_even+z_odd)/sqrt(2). Own scalar and vector implementations.",
+    "exact_cv": "Discounted call minus frozen beta times (exp(-r*T)*S_T-S0*exp(-q*T)); no main beta refit.",
+    "rqmc": "Independent SciPy Sobol d=1, scramble=True, fixed integer child seed, random_base2(m), point zero retained; ndtri with frozen nextafter clips. SciPy LMS+shift is not represented as full Owen nested scrambling.",
+    "uncertainty": "Own centered sample variance, Student/Satterthwaite SE and intervals, B-denominator MSE/RMSE, Wilson hit intervals; all run/bootstrap seeds fixed before main."
+  },
+  "all_observations_audit": {
+    "passed": true,
+    "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+    "source_fingerprint": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004",
+    "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+    "artifact": {
+      "bytes": 22255119,
+      "sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3",
+      "storage": "reference_manifest.json"
+    },
+    "truth": 9.413403383853009,
+    "comparisons": {
+      "comparisons": 28693,
+      "maximum_abs_difference": 3.725290298461914e-09
+    },
+    "seed_phases": {
+      "pilot": 31,
+      "main": 9216,
+      "coverage": 172032,
+      "fresh_review": 372,
+      "timing": 72,
+      "method_order": 3,
+      "bootstrap": 3
+    },
+    "physical_seed_count": 181729,
+    "seed_collision_audit": [
+      {
+        "logical_id": "coverage.0.1.368.rqmc_r16.-1.14",
+        "raw": 3937525580,
+        "seed": 2131282462,
+        "retry": 1
+      },
+      {
+        "logical_id": "coverage.2.0.146.rqmc_r8.-1.0",
+        "raw": 2296480862,
+        "seed": 2122498564,
+        "retry": 1
+      }
+    ],
+    "main_runs": 3072,
+    "main_levels": 4608,
+    "main_blocks": 24064,
+    "main_failed_runs": 0,
+    "coverage_cells": 18,
+    "coverage_outer_runs": 9216,
+    "main_summary": [
+      {
+        "epsilon": 0.4,
+        "method": "mlmc",
+        "rmse": 0.2921429342529013,
+        "main_mean_s": 0.0006801680658554687,
+        "main_median_s": 0.0006701480015181005
+      },
+      {
+        "epsilon": 0.4,
+        "method": "plain_euler",
+        "rmse": 0.2790943502205151,
+        "main_mean_s": 0.0007132294160783204,
+        "main_median_s": 0.0007006805099081248
+      },
+      {
+        "epsilon": 0.4,
+        "method": "exact_plain",
+        "rmse": 0.2740746798115777,
+        "main_mean_s": 0.00017916744627655135,
+        "main_median_s": 0.0001745375047903508
+      },
+      {
+        "epsilon": 0.4,
+        "method": "exact_cv",
+        "rmse": 0.29333827469083884,
+        "main_mean_s": 0.00011896795899701829,
+        "main_median_s": 0.00011485198047012091
+      },
+      {
+        "epsilon": 0.2,
+        "method": "mlmc",
+        "rmse": 0.12840398703816652,
+        "main_mean_s": 0.0016578701088292291,
+        "main_median_s": 0.0016305125027429312
+      },
+      {
+        "epsilon": 0.2,
+        "method": "plain_euler",
+        "rmse": 0.15062903399446914,
+        "main_mean_s": 0.0023226528012401104,
+        "main_median_s": 0.0023216964909806848
+      },
+      {
+        "epsilon": 0.2,
+        "method": "exact_plain",
+        "rmse": 0.12861322771813516,
+        "main_mean_s": 0.00036262846288082073,
+        "main_median_s": 0.00035301101161167026
+      },
+      {
+        "epsilon": 0.2,
+        "method": "exact_cv",
+        "rmse": 0.1435300494017129,
+        "main_mean_s": 0.00014336054437080747,
+        "main_median_s": 0.00013833152479492128
+      },
+      {
+        "epsilon": 0.1,
+        "method": "mlmc",
+        "rmse": 0.07195630535530521,
+        "main_mean_s": 0.005350476891180733,
+        "main_median_s": 0.005331566004315391
+      },
+      {
+        "epsilon": 0.1,
+        "method": "plain_euler",
+        "rmse": 0.07081956531444959,
+        "main_mean_s": 0.008738948610925945,
+        "main_median_s": 0.008737265510717407
+      },
+      {
+        "epsilon": 0.1,
+        "method": "exact_plain",
+        "rmse": 0.0692666888558214,
+        "main_mean_s": 0.0011067947150422697,
+        "main_median_s": 0.0010917909967247397
+      },
+      {
+        "epsilon": 0.1,
+        "method": "exact_cv",
+        "rmse": 0.06965795176999676,
+        "main_mean_s": 0.00031064432369021233,
+        "main_median_s": 0.0003046815108973533
+      }
+    ],
+    "coverage_summary": [
+      {
+        "strike": 80.0,
+        "power": 8,
+        "scrambles": 8,
+        "hits": 460,
+        "trials": 512,
+        "coverage": 0.8984375,
+        "wilson95": [
+          0.8692344473259713,
+          0.9217062438948566
+        ],
+        "mean_width": 0.06595127971940926,
+        "median_width": 0.06295039564216509,
+        "p95_width": 0.1137184230466552,
+        "degenerate": 0,
+        "rmse": 0.014979434045848868
+      },
+      {
+        "strike": 80.0,
+        "power": 8,
+        "scrambles": 16,
+        "hits": 473,
+        "trials": 512,
+        "coverage": 0.923828125,
+        "wilson95": [
+          0.8975633728664396,
+          0.9437804016184606
+        ],
+        "mean_width": 0.04496541782250624,
+        "median_width": 0.04405763865519319,
+        "p95_width": 0.06818889696713697,
+        "degenerate": 0,
+        "rmse": 0.009882233757095493
+      },
+      {
+        "strike": 80.0,
+        "power": 8,
+        "scrambles": 32,
+        "hits": 477,
+        "trials": 512,
+        "coverage": 0.931640625,
+        "wilson95": [
+          0.9064124998359672,
+          0.9504399156532629
+        ],
+        "mean_width": 0.03104274778568092,
+        "median_width": 0.03040815799263541,
+        "p95_width": 0.042826347872630066,
+        "degenerate": 0,
+        "rmse": 0.0076864484914878385
+      },
+      {
+        "strike": 80.0,
+        "power": 10,
+        "scrambles": 8,
+        "hits": 460,
+        "trials": 512,
+        "coverage": 0.8984375,
+        "wilson95": [
+          0.8692344473259713,
+          0.9217062438948566
+        ],
+        "mean_width": 0.016300414193220092,
+        "median_width": 0.015108432382444192,
+        "p95_width": 0.03073894418117646,
+        "degenerate": 0,
+        "rmse": 0.003685843679024893
+      },
+      {
+        "strike": 80.0,
+        "power": 10,
+        "scrambles": 16,
+        "hits": 475,
+        "trials": 512,
+        "coverage": 0.927734375,
+        "wilson95": [
+          0.9019787977852332,
+          0.9471192972018321
+        ],
+        "mean_width": 0.010770448399148147,
+        "median_width": 0.01023596505028479,
+        "p95_width": 0.016843509785773134,
+        "degenerate": 0,
+        "rmse": 0.0025444068087697048
+      },
+      {
+        "strike": 80.0,
+        "power": 10,
+        "scrambles": 32,
+        "hits": 490,
+        "trials": 512,
+        "coverage": 0.95703125,
+        "wilson95": [
+          0.9358001975831783,
+          0.9714553011701242
+        ],
+        "mean_width": 0.0075275638990773275,
+        "median_width": 0.0074021878146766085,
+        "p95_width": 0.010465990374695621,
+        "degenerate": 0,
+        "rmse": 0.001814878617301419
+      },
+      {
+        "strike": 100.0,
+        "power": 8,
+        "scrambles": 8,
+        "hits": 462,
+        "trials": 512,
+        "coverage": 0.90234375,
+        "wilson95": [
+          0.8735560090639636,
+          0.9251390026590292
+        ],
+        "mean_width": 0.06664669718941796,
+        "median_width": 0.06397147896852395,
+        "p95_width": 0.11457765206899174,
+        "degenerate": 0,
+        "rmse": 0.015111106645615905
+      },
+      {
+        "strike": 100.0,
+        "power": 8,
+        "scrambles": 16,
+        "hits": 476,
+        "trials": 512,
+        "coverage": 0.9296875,
+        "wilson95": [
+          0.9041932796740074,
+          0.9487819755641401
+        ],
+        "mean_width": 0.0432647497243027,
+        "median_width": 0.04167396496427145,
+        "p95_width": 0.06706138618666628,
+        "degenerate": 0,
+        "rmse": 0.010346083752520333
+      },
+      {
+        "strike": 100.0,
+        "power": 8,
+        "scrambles": 32,
+        "hits": 476,
+        "trials": 512,
+        "coverage": 0.9296875,
+        "wilson95": [
+          0.9041932796740074,
+          0.9487819755641401
+        ],
+        "mean_width": 0.03126215166975654,
+        "median_width": 0.030657546163057603,
+        "p95_width": 0.04272743118428721,
+        "degenerate": 0,
+        "rmse": 0.007581279359768943
+      },
+      {
+        "strike": 100.0,
+        "power": 10,
+        "scrambles": 8,
+        "hits": 466,
+        "trials": 512,
+        "coverage": 0.91015625,
+        "wilson95": [
+          0.8822365395187666,
+          0.9319671132085561
+        ],
+        "mean_width": 0.016046791522140183,
+        "median_width": 0.015084638793295468,
+        "p95_width": 0.028790287574790165,
+        "degenerate": 0,
+        "rmse": 0.003459687741427612
+      },
+      {
+        "strike": 100.0,
+        "power": 10,
+        "scrambles": 16,
+        "hits": 468,
+        "trials": 512,
+        "coverage": 0.9140625,
+        "wilson95": [
+          0.8865969291864807,
+          0.935361044043007
+        ],
+        "mean_width": 0.010852452932081175,
+        "median_width": 0.010469091428941368,
+        "p95_width": 0.016661479128036304,
+        "degenerate": 0,
+        "rmse": 0.002713728932961135
+      },
+      {
+        "strike": 100.0,
+        "power": 10,
+        "scrambles": 32,
+        "hits": 480,
+        "trials": 512,
+        "coverage": 0.9375,
+        "wilson95": [
+          0.9131004927359689,
+          0.9553834035065087
+        ],
+        "mean_width": 0.007516404566529314,
+        "median_width": 0.0074132150033996425,
+        "p95_width": 0.010613618202400765,
+        "degenerate": 0,
+        "rmse": 0.0018805491199026625
+      },
+      {
+        "strike": 120.0,
+        "power": 8,
+        "scrambles": 8,
+        "hits": 473,
+        "trials": 512,
+        "coverage": 0.923828125,
+        "wilson95": [
+          0.8975633728664396,
+          0.9437804016184606
+        ],
+        "mean_width": 0.0696406658991647,
+        "median_width": 0.06575897830535027,
+        "p95_width": 0.12477902035183613,
+        "degenerate": 0,
+        "rmse": 0.015709387798993134
+      },
+      {
+        "strike": 120.0,
+        "power": 8,
+        "scrambles": 16,
+        "hits": 471,
+        "trials": 512,
+        "coverage": 0.919921875,
+        "wilson95": [
+          0.8931649760362443,
+          0.9404244779464908
+        ],
+        "mean_width": 0.043612104782992385,
+        "median_width": 0.04184822121965848,
+        "p95_width": 0.06721142556715777,
+        "degenerate": 0,
+        "rmse": 0.010226023227756405
+      },
+      {
+        "strike": 120.0,
+        "power": 8,
+        "scrambles": 32,
+        "hits": 481,
+        "trials": 512,
+        "coverage": 0.939453125,
+        "wilson95": [
+          0.915340639807479,
+          0.957020416686081
+        ],
+        "mean_width": 0.031004865690123742,
+        "median_width": 0.030493200569473355,
+        "p95_width": 0.04225285040167046,
+        "degenerate": 0,
+        "rmse": 0.007980662958717364
+      },
+      {
+        "strike": 120.0,
+        "power": 10,
+        "scrambles": 8,
+        "hits": 456,
+        "trials": 512,
+        "coverage": 0.890625,
+        "wilson95": [
+          0.86062566245746,
+          0.9148063877590378
+        ],
+        "mean_width": 0.016167329036878425,
+        "median_width": 0.014974112598115319,
+        "p95_width": 0.030221701792625438,
+        "degenerate": 0,
+        "rmse": 0.0036968476352309174
+      },
+      {
+        "strike": 120.0,
+        "power": 10,
+        "scrambles": 16,
+        "hits": 483,
+        "trials": 512,
+        "coverage": 0.943359375,
+        "wilson95": [
+          0.9198386034432544,
+          0.9602767735524707
+        ],
+        "mean_width": 0.01110811155492305,
+        "median_width": 0.01079489496307362,
+        "p95_width": 0.017051307270685576,
+        "degenerate": 0,
+        "rmse": 0.0025766114688936643
+      },
+      {
+        "strike": 120.0,
+        "power": 10,
+        "scrambles": 32,
+        "hits": 478,
+        "trials": 512,
+        "coverage": 0.93359375,
+        "wilson95": [
+          0.9086366418684898,
+          0.9520929338718228
+        ],
+        "mean_width": 0.007475115173232742,
+        "median_width": 0.007318982373751393,
+        "p95_width": 0.010311520568159826,
+        "degenerate": 0,
+        "rmse": 0.0017949256155195866
+      }
+    ],
+    "truth_integral_summary": [
+      {
+        "strike": 80.0,
+        "BSM": 23.223991292486733,
+        "clip": 23.223991292486737
+      },
+      {
+        "strike": 80.0,
+        "BSM": 23.223991292486733,
+        "clip": 23.223991292486737
+      },
+      {
+        "strike": 80.0,
+        "BSM": 23.223991292486733,
+        "clip": 23.223991292486737
+      },
+      {
+        "strike": 80.0,
+        "BSM": 23.223991292486733,
+        "clip": 23.223991292486737
+      },
+      {
+        "strike": 80.0,
+        "BSM": 23.223991292486733,
+        "clip": 23.223991292486737
+      },
+      {
+        "strike": 80.0,
+        "BSM": 23.223991292486733,
+        "clip": 23.223991292486737
+      },
+      {
+        "strike": 100.0,
+        "BSM": 9.413403383853009,
+        "clip": 9.413403383853009
+      },
+      {
+        "strike": 100.0,
+        "BSM": 9.413403383853009,
+        "clip": 9.413403383853009
+      },
+      {
+        "strike": 100.0,
+        "BSM": 9.413403383853009,
+        "clip": 9.413403383853009
+      },
+      {
+        "strike": 100.0,
+        "BSM": 9.413403383853009,
+        "clip": 9.413403383853009
+      },
+      {
+        "strike": 100.0,
+        "BSM": 9.413403383853009,
+        "clip": 9.413403383853009
+      },
+      {
+        "strike": 100.0,
+        "BSM": 9.413403383853009,
+        "clip": 9.413403383853009
+      },
+      {
+        "strike": 120.0,
+        "BSM": 2.7665576398914222,
+        "clip": 2.766557639891423
+      },
+      {
+        "strike": 120.0,
+        "BSM": 2.7665576398914222,
+        "clip": 2.766557639891423
+      },
+      {
+        "strike": 120.0,
+        "BSM": 2.7665576398914222,
+        "clip": 2.766557639891423
+      },
+      {
+        "strike": 120.0,
+        "BSM": 2.7665576398914222,
+        "clip": 2.766557639891423
+      },
+      {
+        "strike": 120.0,
+        "BSM": 2.7665576398914222,
+        "clip": 2.766557639891423
+      },
+      {
+        "strike": 120.0,
+        "BSM": 2.7665576398914222,
+        "clip": 2.766557639891423
+      }
+    ],
+    "cost_accounts": [
+      {
+        "epsilon": 0.4,
+        "method": "mlmc",
+        "offline_s": 57.55133430333808,
+        "cold_s": 57.552014471403936
+      },
+      {
+        "epsilon": 0.4,
+        "method": "plain_euler",
+        "offline_s": 55.914591948036104,
+        "cold_s": 55.91530517745218
+      },
+      {
+        "epsilon": 0.4,
+        "method": "exact_plain",
+        "offline_s": 53.73152749071596,
+        "cold_s": 53.73170665816224
+      },
+      {
+        "epsilon": 0.4,
+        "method": "exact_cv",
+        "offline_s": 53.73152409069007,
+        "cold_s": 53.73164305864907
+      },
+      {
+        "epsilon": 0.2,
+        "method": "mlmc",
+        "offline_s": 57.551295020384714,
+        "cold_s": 57.55295289049354
+      },
+      {
+        "epsilon": 0.2,
+        "method": "plain_euler",
+        "offline_s": 55.91455266508274,
+        "cold_s": 55.91687531788398
+      },
+      {
+        "epsilon": 0.2,
+        "method": "exact_plain",
+        "offline_s": 53.73152442474384,
+        "cold_s": 53.73188705320672
+      },
+      {
+        "epsilon": 0.2,
+        "method": "exact_cv",
+        "offline_s": 53.731523899768945,
+        "cold_s": 53.731667260313316
+      },
+      {
+        "epsilon": 0.1,
+        "method": "mlmc",
+        "offline_s": 57.55129562836373,
+        "cold_s": 57.55664610525491
+      },
+      {
+        "epsilon": 0.1,
+        "method": "plain_euler",
+        "offline_s": 55.914553273061756,
+        "cold_s": 55.92329222167268
+      },
+      {
+        "epsilon": 0.1,
+        "method": "exact_plain",
+        "offline_s": 53.73152414272772,
+        "cold_s": 53.732630937442764
+      },
+      {
+        "epsilon": 0.1,
+        "method": "exact_cv",
+        "offline_s": 53.73152391577605,
+        "cold_s": 53.73183456009974
+      }
+    ],
+    "expense_count": 331,
+    "offline_unique_s": 65.9413943940308,
+    "main_total_s": 5.551336792414077,
+    "coverage_main_s": 30.961114228586666,
+    "recorded_research_before_fresh_s": 105.72166927711805,
+    "wall_receipt": {
+      "schema": "RB-F08-main-cli-wall-v1",
+      "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+      "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+      "wall_s": 88.81395976000931,
+      "accounted_current_cli_s": 62.999967486131936,
+      "unaccounted_overhead_s": 25.813992273877375,
+      "accounted_components": {
+        "main_setup_validation_s": 23.219692603044678,
+        "iid_main_s": 5.551336792414077,
+        "coverage_main_s": 30.961114228586666,
+        "diagnostic_s": 0.003980436071287841,
+        "analytic_reference_s": 0.0002716059680096805,
+        "serialization_s": 3.2635718200472184
+      },
+      "scope": "whole main subprocess. Residual includes post-run checks/decision, metadata JSON, startup and other uninstrumented overhead; excludes prior pilot/freeze and planning/reviewer labour."
+    },
+    "speed_ratios": [
+      {
+        "epsilon": 0.4,
+        "both_euler_accurate": true,
+        "median_ratio": 0.9590877671073671,
+        "interval95": [
+          0.9478588034970236,
+          0.9680473352853834
+        ],
+        "supported": true
+      },
+      {
+        "epsilon": 0.2,
+        "both_euler_accurate": true,
+        "median_ratio": 0.7023436769494662,
+        "interval95": [
+          0.6978877273459025,
+          0.7052024496806646
+        ],
+        "supported": true
+      },
+      {
+        "epsilon": 0.1,
+        "both_euler_accurate": true,
+        "median_ratio": 0.6099149226082574,
+        "interval95": [
+          0.6066939043675549,
+          0.6126307351787132
+        ],
+        "supported": true
+      }
+    ],
+    "recomputed_decision": {
+      "speedup_supported_vs_euler": true,
+      "standard_accelerator_rejected": true,
+      "supported_epsilon_count": 3,
+      "rejection_reasons": [
+        "epsilon=0.4: exact terminal comparator is faster",
+        "epsilon=0.4: cold pilot-inclusive cost loses to exact terminal",
+        "epsilon=0.2: exact terminal comparator is faster",
+        "epsilon=0.2: cold pilot-inclusive cost loses to exact terminal",
+        "epsilon=0.1: exact terminal comparator is faster",
+        "epsilon=0.1: cold pilot-inclusive cost loses to exact terminal"
+      ]
+    },
+    "elapsed_s": 3.870673455996439
+  },
+  "independent_fresh_replay": {
+    "passed": true,
+    "main_fresh_groups": 24,
+    "main_fresh_blocks": 188,
+    "main_fresh_paths": 345188,
+    "coverage_fresh_groups": 54,
+    "rqmc_scrambles": 1008,
+    "rqmc_points": 645120,
+    "independent_scalar_groups": 27,
+    "independent_paths": 6912,
+    "comparisons": 297,
+    "maximum_abs_differences": {
+      "moments_abs": 6.402842700481415e-10,
+      "payoffs_abs": 8.526512829121202e-14,
+      "normals_abs": 0.0,
+      "rqmc_abs": 0.0
+    },
+    "nonfresh_rng_guard": {
+      "passed": true,
+      "fixture": false,
+      "main_runs": 3072,
+      "coverage_cells": 18,
+      "fresh": false
+    },
+    "method": "own scalar/vector ordinary Euler recurrence, own GBM terminal/CV formula, independently constructed SciPy Sobol and inverse transform; no hullkit pricing primitives in fresh replay",
+    "main_pooled": false,
+    "timing_reproduction_required": false,
+    "elapsed_s": 27.965932247054297
+  },
+  "rqmc_findings": {
+    "fixed_cells": 18,
+    "outer_runs_per_cell": 512,
+    "minimum_coverage": 0.890625,
+    "maximum_coverage": 0.95703125,
+    "cells_with_individual_wilson95_upper_below_nominal95": 12,
+    "degenerate_runs": 0,
+    "BSM_and_clipped_targets_checked": true,
+    "cell_selection_from_main_results": false,
+    "interpretation": "Undercoverage is a retained research result. Wilson intervals are individual, not a simultaneous multiple-cell guarantee. No additional skewness/tail-cause diagnosis was performed."
+  },
+  "cost_scope": {
+    "cold": "Validated initial cost of this frozen research pipeline, including separately identified full-ledger/pilot validation expenses shared by methods; not mathematical minimum startup cost of a standalone exact or analytic pricing routine.",
+    "allocation_cost": "C_l is the pilot calibration workload with five moments and covariance; main runs compute difference moments. Fixed allocation is not claimed to minimize actual main wall time.",
+    "single_BSM_seconds": 0.0002716059680096805,
+    "single_BSM_time_is_robust_benchmark": false,
+    "recorded_categories_before_fresh_s": 105.72166927711805,
+    "recorded_categories_equal_all_cli_wall": false,
+    "whole_pilot_freeze_main_cli_wall_s": 137.73501750198193,
+    "prior_pilot_and_freeze_double_counted_in_main_receipt": false,
+    "root_fresh_separate_s": 26.187586626969278,
+    "independent_audit_program_elapsed_s": 31.836605703050736,
+    "reviewer_elapsed_scope": "After imports; excludes interpreter/import startup, scripting, human/LLM review, visual and storage verification. Does not replace original isolated timing.",
+    "pilot_wall": {
+      "schema": "RB-F08-pilot-cli-wall-v1",
+      "pilot_record_digest": "0efc23f768fe1c11a887ce595d8c9ec2b7fe70b66845973c60feeca44f416788",
+      "pilot_arrays_digest": "a6aabfbc80064f4e4c9a829ed52da08c34be6aa851061dc033df86ff398248e7",
+      "wall_s": 23.682436066970695,
+      "recorded_total_measured_s": 21.7376072909683,
+      "unaccounted_overhead_s": 1.944828776002396,
+      "scope": "whole original full pilot subprocess; stopwatch output preserved by root tool; not a repeat-selected timing"
+    },
+    "freeze_wall": {
+      "schema": "RB-F08-freeze-cli-wall-v1",
+      "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+      "wall_s": 25.238621675001923,
+      "recorded_freeze_validation_s": 20.984094500017818,
+      "unaccounted_overhead_s": 4.254527174984105,
+      "scope": "whole freeze subprocess including interpreter startup/CLI and receipt JSON write"
+    },
+    "main_wall": {
+      "schema": "RB-F08-main-cli-wall-v1",
+      "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+      "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+      "wall_s": 88.81395976000931,
+      "accounted_current_cli_s": 62.999967486131936,
+      "unaccounted_overhead_s": 25.813992273877375,
+      "accounted_components": {
+        "main_setup_validation_s": 23.219692603044678,
+        "iid_main_s": 5.551336792414077,
+        "coverage_main_s": 30.961114228586666,
+        "diagnostic_s": 0.003980436071287841,
+        "analytic_reference_s": 0.0002716059680096805,
+        "serialization_s": 3.2635718200472184
+      },
+      "scope": "whole main subprocess. Residual includes post-run checks/decision, metadata JSON, startup and other uninstrumented overhead; excludes prior pilot/freeze and planning/reviewer labour."
+    }
+  },
+  "figure_validation": {
+    "independent_nbformat_and_embedded_png_hash_check": true,
+    "all_four_pngs_independently_viewed": true,
+    "nbformat_valid": true,
+    "png_count": 4,
+    "error_outputs": 0,
+    "stderr_outputs": 0,
+    "notebook_sha256": "5e3e56d5189d48ca7ddfe51f8f74bea3a7c60d6992ca080eca4efbdb3915578b",
+    "figures": [
+      {
+        "figure": 1,
+        "path": "/tmp/rbf08-main-figures/figure-1.png",
+        "bytes": 169463,
+        "sha256": "71d1094d63c14a2e6d84f80d2b2f52333f6cd9a4d92b520f7603ab4e9f8bebca"
+      },
+      {
+        "figure": 2,
+        "path": "/tmp/rbf08-main-figures/figure-2.png",
+        "bytes": 165684,
+        "sha256": "21428eca4ff23aa13e5d70b215bc2320691a02b912d9dd7117834df987057bf4"
+      },
+      {
+        "figure": 3,
+        "path": "/tmp/rbf08-main-figures/figure-3.png",
+        "bytes": 210129,
+        "sha256": "7fa43e70e528064ba3ace058ebf12edfc50b6578271d9f0c6c8576b99d0dded6"
+      },
+      {
+        "figure": 4,
+        "path": "/tmp/rbf08-main-figures/figure-4.png",
+        "bytes": 165658,
+        "sha256": "9750f2cff89d889b6d4fcd74dcabb19fb33a6cc90db9eff0547363a5832a9eb7"
+      }
+    ],
+    "referenced_visual_validation_file": "visual_validation.json",
+    "referenced_visual_validation_sha256": "4ac202ba5d58c1ffdaadb6e367b0291c6cb2d65b38130a3313702c61d74d38c8",
+    "zero_counts_original_denominators_visible": true,
+    "unsupported_or_failed_roster_hidden": false
+  },
+  "storage_gate": {
+    "file": "storage_validation.json",
+    "file_sha256": "f825d7cb6170aabe13e7b0dbafbdaa680631882534e15d60178935f2aef07ed7",
+    "canonical_digest": "5f437a0e93cc7c60045cc1b2d2d3db7244e196c8e5ab7c61079ecd30fd5c26df",
+    "verified_by": "independent /root/f08_foundation_review; receipt bindings checked by final reviewer",
+    "both_single_store_restores_semantically_valid": true,
+    "arrays_per_copy": 26417,
+    "fallback_possible": false,
+    "current_C_F_physical_disks_distinct": true,
+    "future_failure_or_offline_retention_tested": false
+  },
+  "reported_suite_evidence": {
+    "source": "root final execution notification, 2026-10-09; not rerun by this reviewer",
+    "related_suite_passed": 7616,
+    "related_suite_skipped": 6,
+    "pytest_reported_s": 415.43,
+    "whole_process_s": 418.53,
+    "changed_python_files_ruff_check_and_format_passed": 16,
+    "notebook_guard_tests_passed": 5
+  },
+  "limitations": [
+    "Single frozen GBM call study and measured hardware/runtime; no extrapolation of speed to other products, machines or Heston.",
+    "Pilot weak rate alpha remains unresolved; empirical paired bias envelope is not an unconditional analytic bias guarantee. MLMC sampling CI targets E(P_L); its BSM hit rate is a bias-including diagnostic.",
+    "Physical seed uniqueness prevents repeated initialization; it does not mathematically prove independence of PRNG or scrambles.",
+    "Student scramble intervals are approximate for this nonbounded call integrand; no EBCI/HBCI guarantee implemented.",
+    "Pilot BLAS backend was not captured contemporaneously; pilot_backend_review.json is a later same-source/dependency observation, not proof of the original pilot runtime backend.",
+    "Original financial timings are retained. Fresh review verifies representative numerical replay, not timing reproduction."
+  ],
+  "pilot_backend_review": {
+    "file": "pilot_backend_review.json",
+    "file_sha256": "116af6ff4c8b9e070c53d22ee08963b92900839e0270623a650f59f46d989fbe",
+    "capture_scope": "pilot時直接記録なし。同一source/Python/NumPy/SciPyの独立レビュー時捕捉。元pilot計時の直接観測を置き換えない。",
+    "captured_at_utc": "2026-10-09T05:14:27.621703+00:00",
+    "same_source_and_dependencies": true
+  },
+  "reviewer_programs": {
+    "all_observations": {
+      "sha256": "c3f85299bc902a7d47b6d272061350bc1589847551f931502c717e379959a8e3",
+      "source": "import json, math, hashlib, importlib.util, sys, time\nfrom pathlib import Path\nfrom collections import Counter\nimport numpy as np\nfrom scipy.stats import t, qmc\nfrom scipy.special import ndtri\nfrom scipy.integrate import quad\nSTART=time.perf_counter()\nROOT=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')\nHERE=ROOT/'johnhull/research/RB-F08'\nr=json.loads((HERE/'reference.json').read_text())\nwith np.load(HERE/'reference.npz',allow_pickle=False) as saved: a={k:saved[k] for k in saved.files}\np=r['protocol']; par=p['parameters']; stats={'comparisons':0,'maximum_abs_difference':0.0}\ndef close(x,y):\n    x=np.asarray(x,dtype=float); y=np.asarray(y,dtype=float)\n    assert x.shape==y.shape,(x.shape,y.shape)\n    if x.size: stats['maximum_abs_difference']=max(stats['maximum_abs_difference'],float(np.max(np.abs(x-y))))\n    np.testing.assert_allclose(x,y,rtol=1e-10,atol=1e-12)\n    stats['comparisons']+=1\ndef digest(x): return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()\ndef pooled(ns,means,m2):\n    ns=np.asarray(ns); means=np.asarray(means); m2=np.asarray(m2)\n    n=int(ns.sum()); mu=float(np.dot(ns,means)/n)\n    ss=float(np.sum(m2+ns*(means-mu)**2)); return n,mu,ss\n\ndef price_integral(d,clip=None):\n    s,k,rr,sig,tt,qq=[d[z] for z in ['spot','strike','rate','sigma','maturity','yield_rate']]\n    if sig==0:return max(s*math.exp(-qq*tt)-k*math.exp(-rr*tt),0.)\n    width=sig*math.sqrt(tt); scale=s*math.exp((rr-qq-sig*sig/2)*tt); disc=math.exp(-rr*tt)\n    zk=math.log(k/scale)/width\n    def payoff(z):return disc*max(scale*math.exp(width*z)-k,0.)\n    def integrand(z):return disc*max(scale*math.exp(width*z-z*z/2)-k*math.exp(-z*z/2),0.)/math.sqrt(2*math.pi)\n    if clip is None:return quad(integrand,zk,np.inf,epsabs=1e-11,epsrel=1e-12)[0]\n    lo,hi=clip; zl,zh=ndtri(lo),ndtri(hi)\n    return lo*payoff(zl)+(1-hi)*payoff(zh)+quad(integrand,max(zl,zk),zh,epsabs=1e-11,epsrel=1e-12)[0]\ntruth=price_integral(par); close(truth,r['analytic_reference']['price'])\nassert r['mode']=='main' and r['schema']=='RB-F08-reference-v1' and p['state']=='frozen'\nassert p['epsilon']==[.4,.2,.1] and p['main']['outer_runs']==256 and p['rqmc']['outer_runs']==512\nassert p['rqmc']['strikes']==[80.,100.,120.] and p['rqmc']['powers']==[8,10] and p['rqmc']['scrambles']==[8,16,32]\nassert len(a['seed_ledger_seed'])==181729 and len(set(map(int,a['seed_ledger_seed'])))==181729\nassert len(set(a['seed_ledger_logical_id']))==181729\nphases=Counter(a['seed_ledger_phase'].tolist()); assert phases['coverage']==172032 and phases['main']==9216\nused=set(); collisions=[]\nfor i in range(len(a['seed_ledger_seed'])):\n    def rag(name):\n        off=a['seed_ledger_'+name+'_offsets']; return a['seed_ledger_'+name+'_values'][off[i]:off[i+1]].astype(int).tolist()\n    entropy,logical,candidates,spawn=[rag(k) for k in ['entropy','logical_spawn_key','candidate_seeds','spawn_key']]\n    retry=int(a['seed_ledger_retry_count'][i]); seed=int(a['seed_ledger_seed'][i])\n    assert spawn==logical+[retry] and retry==len(candidates)-1 and candidates[-1]==seed and candidates[0]==int(a['seed_ledger_raw_seed'][i])\n    for j,candidate in enumerate(candidates):\n        assert int(np.random.SeedSequence(entropy,spawn_key=tuple(logical)+(j,)).generate_state(1)[0])==candidate\n        assert (candidate in used)==(j<retry)\n    used.add(seed)\n    if retry:collisions.append({'logical_id':str(a['seed_ledger_logical_id'][i]),'raw':candidates[0],'seed':seed,'retry':retry})\nassert len(collisions)==2\npilot=json.loads(a['pilot_record_snapshot'].item()); levelstats=[]\nfor level in range(9):\n    mask=a['pilot_euler.level']==level; ns=a['pilot_euler.count'][mask]; row={}\n    assert int(ns.sum())==49152\n    for name in ['fine','coarse','difference','bias','exact']:\n        n,mu,m2=pooled(ns,a['pilot_euler.'+name+'.mean'][mask],a['pilot_euler.'+name+'.m2'][mask]); var=m2/(n-1)\n        row[name]={'mean':mu,'variance':var,'m2':m2,'count':n,'standard_error':math.sqrt(var/n)}\n        old=pilot['level_summaries'][level][name]\n        close([mu,m2,var,row[name]['standard_error']],[old[k] for k in ['mean','m2','variance','standard_error']])\n    row['bound']=abs(row['bias']['mean'])+float(t.ppf(.995,n-1))*row['bias']['standard_error']\n    close(row['bound'],pilot['level_summaries'][level]['bias_bound']); levelstats.append(row)\nns=a['pilot_exact.count']; na,ma,m2a=pooled(ns,a['pilot_exact.payoff.mean'],a['pilot_exact.payoff.m2'])\nnb,mb,m2b=pooled(ns,a['pilot_exact.control.mean'],a['pilot_exact.control.m2'])\ncross=float(np.sum(a['pilot_exact.payoff_control_c2']+ns*(a['pilot_exact.payoff.mean']-ma)*(a['pilot_exact.control.mean']-mb)))\nbeta=cross/m2b if m2b else 0.; cv=(m2a+beta*beta*m2b-2*beta*cross)/(na-1); close(beta,r['cv_beta'])\nfor al in r['allocations']:\n    assert al['level']==2 and al['status']=='ready' and all(v=='ready' for v in al['method_status'].values())\n    var=np.array([levelstats[l]['difference']['variance'] for l in range(3)]); cs=[]\n    for l in range(3):\n        mask=(a['pilot_calibration.level']==l)&~a['pilot_calibration.warmup']; cs.append(float(np.median(a['pilot_calibration.total_s'][mask]/a['pilot_calibration.count'][mask])))\n    cs=np.array(cs); target=al['epsilon']**2/2\n    expected=np.maximum(32,np.ceil(np.sqrt(np.maximum(var,1e-12)/cs)*np.sum(np.sqrt(np.maximum(var,1e-12)*cs))/target)).astype(int)\n    assert expected.tolist()==al['mlmc_paths']; close(al['bias_bound'],levelstats[2]['bound'])\n    assert math.ceil(levelstats[2]['fine']['variance']/target)==al['plain_euler_paths']\n    assert max(32,math.ceil(m2a/(na-1)/target))==al['exact_plain_paths'] and max(32,math.ceil(cv/target))==al['exact_cv_paths']\n\ndef error(x,truth):\n    mu=float(np.mean(x)); mse=float(np.mean((x-truth)**2)); return {'trials':len(x),'mean':mu,'truth':truth,'bias':mu-truth,'mse':mse,'rmse':math.sqrt(mse),'empirical_variance':float(np.mean((x-mu)**2)),'sample_variance':float(np.var(x,ddof=1))}\ndef coverage(intervals,truth):\n    hit=int(np.count_nonzero((intervals[:,0]<=truth)&(truth<=intervals[:,1]))); n=len(intervals); prob=hit/n; z=1.959963984540054; den=1+z*z/n; center=(prob+z*z/(2*n))/den; half=z*math.sqrt(prob*(1-prob)/n+z*z/(4*n*n))/den; w=intervals[:,1]-intervals[:,0]\n    return {'hits':hit,'trials':n,'coverage':prob,'wilson95':[max(0,center-half),min(1,center+half)],'mean_width':float(w.mean()),'median_width':float(np.median(w)),'p95_width':float(np.quantile(w,.95)),'degenerate':int(np.count_nonzero(w==0))}\ndef compare_dict(actual,expected):\n    assert set(actual)==set(expected)\n    for k in expected:close(actual[k],expected[k])\nmain_rows=[]; nlevels=0; nblocks=0; failed=0\nfor ci,cell in enumerate(r['budget_cells']):\n    assert cell['status']=='valid' and cell['epsilon']==p['epsilon'][ci]\n    for name,method in cell['methods'].items():\n        assert len(method['runs'])==256\n        for run in method['runs']:\n            failed+=run['status']!='complete'; assert run['status']=='complete'\n            moments=[]\n            for lev in run['levels']:\n                ns=a[lev['counts_key']]; values=a[lev['moments_key']]; n,mu,m2=pooled(ns,values[:,0],values[:,1]); assert n==lev['paths']; assert np.all(ns>=2) and np.all(values[:,1]>=0)\n                idx=lev['ledger_index']; assert lev['seed']==int(a['seed_ledger_seed'][idx]) and lev['logical_id']==a['seed_ledger_logical_id'][idx]\n                core=lev['core_level']; steps=lev['steps']; coarse=steps//2 if name=='mlmc' and core else 0\n                counters=np.column_stack([(steps+coarse)*ns,steps*ns,(1+(coarse>0))*ns,coarse*ns,ns,np.zeros(len(ns),int),ns,steps*ns]) if name in ['mlmc','plain_euler'] else np.column_stack([ns,ns,ns,np.zeros((len(ns),5),int)])\n                assert np.array_equal(a[lev['counters_key']],counters)\n                assert np.all(a[lev['negatives_key']]>=0) and np.all(a[lev['negatives_key']]<=ns[:,None]*[steps,coarse,1])\n                moments.append((n,mu,m2)); nlevels+=1; nblocks+=len(ns)\n            components=np.array([m2/((n-1)*n) for n,mu,m2 in moments]); variance=float(components.sum()); price=math.fsum(mu for n,mu,m2 in moments); df=variance**2/sum(v*v/(moments[j][0]-1) for j,v in enumerate(components)); se=math.sqrt(variance); interval=[price-float(t.ppf(.975,df))*se,price+float(t.ppf(.975,df))*se]\n            sm=run['summary']; close([price,variance,se,df,*interval],[sm['price'],sm['variance'],sm['standard_error'],sm['df'],*sm['interval']])\n            ti=a[run['timing_key']]; raw=np.sum([a[x['timings_key']].sum(axis=0) for x in run['levels']],axis=0); raw[2]+=ti[5]; close(raw,ti[:3]); close(ti[:4].sum(),ti[4]); close(run['main_s'],ti[4]); close(a[method['prices_key']][run['run']],price); close(a[method['intervals_key']][run['run']],interval)\n        x=a[method['prices_key']]; intervals=a[method['intervals_key']]; compare_dict(method['errors'],error(x,truth)); compare_dict(method['coverage'],coverage(intervals,truth)); bound=r['allocations'][ci]['bias_bound'] if name in ['mlmc','plain_euler'] else 0.; close(a[method['bias_intervals_key']],intervals+[-bound,bound]); compare_dict(method['bias_aware_coverage'],coverage(intervals+[-bound,bound],truth))\n        main_rows.append({'epsilon':cell['epsilon'],'method':name,'rmse':error(x,truth)['rmse'],'main_mean_s':float(a[method['seconds_key']].mean()),'main_median_s':float(np.median(a[method['seconds_key']]))})\ncoverage_rows=[]; truth_rows=[]\nassert len(r['coverage_cells'])==18\nfor cell in r['coverage_cells']:\n    pars={**par,'strike':cell['strike']}; true=price_integral(pars); clipped=price_integral(pars,[p['rqmc']['clip']['lower'],p['rqmc']['clip']['upper']]); close(true,cell['truth_BSM']); close(clipped,cell['truth_clip']); truth_rows.append({'strike':cell['strike'],'BSM':true,'clip':clipped})\n    vals=a[cell['estimates_key']]; assert vals.shape==(512,cell['scrambles']) and len(cell['runs'])==512 and np.isfinite(vals).all()\n    mu=vals.mean(axis=1); se=vals.std(axis=1,ddof=1)/math.sqrt(cell['scrambles']); half=float(t.ppf(.975,cell['scrambles']-1))*se; intervals=np.column_stack([mu-half,mu+half]); close(intervals,a[cell['intervals_key']]); assert np.array_equal(a[cell['child_seeds_key']],a['seed_ledger_seed'][a[cell['ledger_indices_key']]])\n    for run in cell['runs']:\n        assert run['status']=='complete'; sm=run['summary']; ix=run['run']; close([sm['price'],sm['standard_error'],*sm['interval']],[mu[ix],se[ix],*intervals[ix]]); assert sm['df']==cell['scrambles']-1 and sm['approximate'] is True\n    for label,target in [('BSM',true),('clip',clipped)]:compare_dict(cell['coverage_'+label],coverage(intervals,target)); compare_dict(cell['errors_'+label],error(mu,target))\n    coverage_rows.append({'strike':cell['strike'],'power':cell['power'],'scrambles':cell['scrambles'],**coverage(intervals,true),'rmse':error(mu,true)['rmse']})\nunique={}\nfor e in r['offline_expenses']:\n    if e['expense_id'] in unique:assert e==unique[e['expense_id']]\n    unique[e['expense_id']]=e\nassert len(unique)==len(r['offline_expenses'])\naccounts=[]\nfor cell in r['budget_cells']:\n    for name,method in cell['methods'].items():\n        selected=[e for e in unique.values() if ('all' in e['methods'] or name in e['methods']) and cell['epsilon'] in e['epsilons']]; offline=math.fsum(e['seconds'] for e in selected); elapsed=a[method['seconds_key']]; account=r['costs']['methods'][str(cell['epsilon'])][name]\n        close([offline,float(elapsed.sum()),float(elapsed.mean()),offline+float(elapsed.mean())],[account[k] for k in ['offline_s','main_total_s','main_mean_s','cold_mean_s']]); assert account['expense_ids']==[e['expense_id'] for e in selected]\n        for kk in [1,10,100]:close(account['amortized_mean_s'][str(kk)],offline/kk+elapsed.mean())\n        if name.startswith('exact'):assert not any(e['expense_id'].startswith(('pilot.euler.','calibration.','allocation.select.','allocation.euler_')) for e in selected)\n        accounts.append({'epsilon':cell['epsilon'],'method':name,'offline_s':offline,'cold_s':offline+elapsed.mean()})\nmain_total=math.fsum(float(a[m['seconds_key']].sum()) for c in r['budget_cells'] for m in c['methods'].values()); offline=math.fsum(e['seconds'] for e in unique.values()); cov_time=math.fsum(float(a[c['timings_key']][:,5].sum()) for c in r['coverage_cells']); close(r['costs']['total']['experiment_s'],offline+main_total); close(r['costs']['coverage_main_s'],cov_time); close(r['costs']['full_research_s_before_fresh'],offline+main_total+cov_time+r['diagnostic_s']+r['analytic_reference']['seconds']+r['serialization_s'])\nratios=[]; support=0; expected_reasons=[]\nfor cell in r['budget_cells']:\n    mt=a[cell['methods']['mlmc']['seconds_key']]; pt=a[cell['methods']['plain_euler']['seconds_key']]; ratio=mt/pt; indices=np.random.default_rng(cell['bootstrap_seed']).integers(0,256,size=(2000,256),dtype=np.int64); assert np.array_equal(indices,a[cell['bootstrap_indices_key']]); interval=np.quantile(np.median(ratio[indices],axis=1),[.025,.975]); median=float(np.median(ratio)); old=r['decision']['cells'][len(ratios)]['cost_ratio']; close([median,*interval],[old['median_ratio'],*old['interval95']]); accurate=all(error(a[cell['methods'][name]['prices_key']],truth)['rmse']<=cell['epsilon'] for name in ['mlmc','plain_euler']); supported=accurate and median<1 and interval[1]<1; support+=int(supported); assert r['decision']['cells'][len(ratios)]['speedup_supported']==supported\n    exact=[name for name in ['exact_plain','exact_cv'] if error(a[cell['methods'][name]['prices_key']],truth)['rmse']<=cell['epsilon']]; assert exact\n    if min(np.median(a[cell['methods'][name]['seconds_key']]) for name in exact)<=np.median(mt):expected_reasons.append(f\"epsilon={cell['epsilon']}: exact terminal comparator is faster\")\n    if min(r['costs']['methods'][str(cell['epsilon'])][name]['cold_mean_s'] for name in exact)<=r['costs']['methods'][str(cell['epsilon'])]['mlmc']['cold_mean_s']:expected_reasons.append(f\"epsilon={cell['epsilon']}: cold pilot-inclusive cost loses to exact terminal\")\n    ratios.append({'epsilon':cell['epsilon'],'both_euler_accurate':bool(accurate),'median_ratio':median,'interval95':interval.tolist(),'supported':bool(supported)})\nassert support==3 and r['decision']['supported_epsilon_count']==3 and r['decision']['speedup_supported_vs_euler'] is True and r['decision']['standard_accelerator_rejected'] is True and r['decision']['rejection_reasons']==expected_reasons\nwall=json.loads((HERE/'main_execution_wall.json').read_text()); close(sum(wall['accounted_components'].values()),wall['accounted_current_cli_s']); close(wall['accounted_current_cli_s']+wall['unaccounted_overhead_s'],wall['wall_s']); assert wall['reference_record_digest']==digest(r) and wall['protocol_frozen_digest']==p['frozen']['digest']\nsummary={'passed':True,'reference_record_digest':digest(r),'source_fingerprint':r['source']['digest'],'protocol_frozen_digest':p['frozen']['digest'],'artifact':r['artifact'],'truth':truth,'comparisons':stats,'seed_phases':dict(phases),'physical_seed_count':len(used),'seed_collision_audit':collisions,'main_runs':3072,'main_levels':nlevels,'main_blocks':nblocks,'main_failed_runs':failed,'coverage_cells':18,'coverage_outer_runs':9216,'main_summary':main_rows,'coverage_summary':coverage_rows,'truth_integral_summary':truth_rows,'cost_accounts':accounts,'expense_count':len(unique),'offline_unique_s':offline,'main_total_s':main_total,'coverage_main_s':cov_time,'recorded_research_before_fresh_s':r['costs']['full_research_s_before_fresh'],'wall_receipt':wall,'speed_ratios':ratios,'recomputed_decision':{'speedup_supported_vs_euler':support>=2,'standard_accelerator_rejected':bool(expected_reasons),'supported_epsilon_count':support,'rejection_reasons':expected_reasons},'elapsed_s':time.perf_counter()-START}\nPath('/tmp/f08_execution_all_observations.json').write_text(json.dumps(summary,indent=2,allow_nan=False)+'\\n')\nprint(json.dumps({k:summary[k] for k in ['passed','main_runs','main_levels','main_blocks','coverage_cells','physical_seed_count','comparisons','speed_ratios','recorded_research_before_fresh_s','elapsed_s']},indent=2))",
+      "runtime": "/home/kazumasa/projects/.venv/bin/python; OPENBLAS_NUM_THREADS=OMP_NUM_THREADS=MKL_NUM_THREADS=1; PYTHONPATH=ROOT/johnhull/hullkit/src",
+      "path_note": "Embedded reviewer code is the durable evidence; original /tmp path is temporary. ROOT in the code names this reviewed worktree."
+    },
+    "fresh_replay_and_nonfresh_guard": {
+      "sha256": "bc7336a6361f2c3c27ec53f5d481e0ed0ddaa4cb44134440e3e5f75ec5990854",
+      "source": "import json,math,hashlib,time,importlib.util,sys\nfrom pathlib import Path\nimport numpy as np\nfrom scipy.stats import qmc\nfrom scipy.special import ndtri\nSTART=time.perf_counter(); ROOT=Path('/home/kazumasa/worktrees/johnhull-research-roadmap'); HERE=ROOT/'johnhull/research/RB-F08'\nr=json.loads((HERE/'reference.json').read_text())\nwith np.load(HERE/'reference.npz',allow_pickle=False) as npz:a={k:npz[k] for k in npz.files}\np=r['protocol']; par=p['parameters']; errors={'moments_abs':0.,'payoffs_abs':0.,'normals_abs':0.,'rqmc_abs':0.}; checks=0\ndef close(actual,expected,key):\n    global checks\n    actual=np.asarray(actual);expected=np.asarray(expected)\n    assert actual.shape==expected.shape\n    errors[key]=max(errors[key],float(np.max(np.abs(actual-expected))))\n    np.testing.assert_allclose(actual,expected,rtol=1e-10,atol=1e-12);checks+=1\n\ndef euler(z,params,scalar=False):\n    dt=params['maturity']/z.shape[1]; drift=(params['rate']-params['yield_rate'])*dt; dif=params['sigma']*math.sqrt(dt); disc=math.exp(-params['rate']*params['maturity'])\n    if scalar:\n        payoffs=[];negstates=0;negpaths=0\n        for row in z:\n            stock=params['spot']; negative=False\n            for shock in row:\n                stock=stock*(1+drift+dif*float(shock));negstates+=int(stock<0);negative|=stock<0\n            payoffs.append(disc*max(stock-params['strike'],0.));negpaths+=int(negative)\n        return np.asarray(payoffs),negstates,negpaths\n    stock=np.full(len(z),params['spot'],float);negative=np.zeros(len(z),bool);negstates=0\n    for j in range(z.shape[1]):\n        stock*=1+drift+dif*z[:,j];negative|=stock<0;negstates+=int(np.count_nonzero(stock<0))\n    return disc*np.maximum(stock-params['strike'],0.),negstates,negative\n\ndef moment(x):\n    mean=float(np.mean(x)); return np.array([mean,np.sum((x-mean)**2)])\nmain_groups=0;main_blocks=0;main_samples=0\nfor cell in r['budget_cells']:\n    for name,method in cell['methods'].items():\n        for nr in [0,255]:\n            run=method['runs'][nr]\n            for lev in run['levels']:\n                rng=np.random.default_rng(lev['seed']); counts=a[lev['counts_key']]\n                for bi,n in enumerate(counts):\n                    z=rng.standard_normal((int(n),lev['steps']))\n                    if name in ['mlmc','plain_euler']:\n                        fine,fn,fpaths=euler(z,par)\n                        if name=='mlmc' and lev['level']:\n                            zc=(z[:,::2]+z[:,1::2])/math.sqrt(2);coarse,cn,cpaths=euler(zc,par);samples=fine-coarse;npth=int(np.count_nonzero(fpaths|cpaths))\n                        else:samples=fine;cn=0;npth=int(np.count_nonzero(fpaths))\n                        assert np.array_equal(a[lev['negatives_key']][bi],[fn,cn,npth])\n                    else:\n                        terminal=par['spot']*np.exp((par['rate']-par['yield_rate']-.5*par['sigma']**2)*par['maturity']+par['sigma']*math.sqrt(par['maturity'])*z[:,0]); samples=math.exp(-par['rate']*par['maturity'])*np.maximum(terminal-par['strike'],0.)\n                        if name=='exact_cv':samples-=r['cv_beta']*(math.exp(-par['rate']*par['maturity'])*terminal-par['spot']*math.exp(-par['yield_rate']*par['maturity']))\n                    close(moment(samples),a[lev['moments_key']][bi],'moments_abs');main_blocks+=1;main_samples+=int(n)\n            main_groups+=1\nrqmc_groups=0;scramble_count=0;points_count=0\nclip=[p['rqmc']['clip']['lower'],p['rqmc']['clip']['upper']]\nfor cell in r['coverage_cells']:\n    for nr in [0,255,511]:\n        estimates=[];endpoints=[]\n        for seed in a[cell['child_seeds_key']][nr]:\n            u=qmc.Sobol(d=1,scramble=True,seed=int(seed)).random_base2(cell['power'])[:,0]\n            z=ndtri(np.clip(u,*clip));terminal=par['spot']*np.exp((par['rate']-par['yield_rate']-.5*par['sigma']**2)*par['maturity']+par['sigma']*math.sqrt(par['maturity'])*z)\n            estimates.append(float(math.exp(-par['rate']*par['maturity'])*np.maximum(terminal-cell['strike'],0.).mean()));endpoints.append([int(np.count_nonzero((u<clip[0])|(u>clip[1]))),int(np.count_nonzero(u==0)),int(np.count_nonzero(u==1))]);scramble_count+=1;points_count+=len(u)\n        close(estimates,a[cell['estimates_key']][nr],'rqmc_abs');assert np.array_equal(endpoints,a[cell['endpoints_key']][nr]);rqmc_groups+=1\n# Additional fresh-review streams: a scalar recurrence for every candidate grid and K.\nindependent_groups=0;independent_paths=0\nids=a['seed_ledger_logical_id'].tolist();lookup={v:i for i,v in enumerate(ids)}\nfor case,strike in enumerate([80.,100.,120.]):\n    for level in range(9):\n        idx=lookup[f'fresh_review.{case}.0.0.mlmc.{level}.-1'];z=np.random.default_rng(int(a['seed_ledger_seed'][idx])).standard_normal((256,4*2**level));params={**par,'strike':strike}\n        scalar,ns,npth=euler(z,params,scalar=True);vect,vns,vpaths=euler(z,params);close(scalar,vect,'payoffs_abs');assert ns==vns and npth==np.count_nonzero(vpaths)\n        if level:\n            coarse=(z[:,::2]+z[:,1::2])/math.sqrt(2);cs,cn,cp=euler(coarse,params,scalar=True);cv,cvn,cvp=euler(coarse,params);close(cs,cv,'payoffs_abs');assert cn==cvn and cp==np.count_nonzero(cvp)\n        if case==0 and level==1:\n            proof=r['coupling_diagnostic'];close(z,a[proof['fine_normals_key']],'normals_abs');close((z[:,::2]+z[:,1::2])/math.sqrt(2),a[proof['coarse_normals_key']],'normals_abs');ownfine=euler(z,par,scalar=True)[0];owncoarse=euler(coarse,par,scalar=True)[0];close(ownfine,a[proof['fine_payoffs_key']],'payoffs_abs');close(owncoarse,a[proof['coarse_payoffs_key']],'payoffs_abs')\n        independent_groups+=1;independent_paths+=len(z)\n# The actual nonfresh checker, with all financial RNG/path generation forbidden.\nspec=importlib.util.spec_from_file_location('f08_execution_reviewer_checker',HERE/'build_reference.py');builder=importlib.util.module_from_spec(spec);sys.modules[spec.name]=builder;spec.loader.exec_module(builder)\nfrom hullkit import _numerical_mc,_multilevel_mc,_rqmc_ci\npatches=[(np.random,'default_rng'),(_numerical_mc,'sobol_normal_points'),(_numerical_mc,'gbm_paths_from_normals'),(_numerical_mc,'randomized_qmc_price'),(_multilevel_mc,'gbm_level_samples'),(_rqmc_ci,'rqmc_gbm_call'),(_rqmc_ci,'rqmc_gbm_call_from_seeds'),(builder,'run_reference')]\nprevious=[getattr(obj,name) for obj,name in patches]\ndef forbidden(*args,**kwargs):raise AssertionError('Nonfresh checker attempted financial randomness or path generation')\ntry:\n    for obj,name in patches:setattr(obj,name,forbidden)\n    checked=builder.check_record(r,a,fresh=False)\nfinally:\n    for (obj,name),old in zip(patches,previous):setattr(obj,name,old)\nassert checked['passed'] is True and checked['fresh'] is False\nout={'passed':True,'main_fresh_groups':main_groups,'main_fresh_blocks':main_blocks,'main_fresh_paths':main_samples,'coverage_fresh_groups':rqmc_groups,'rqmc_scrambles':scramble_count,'rqmc_points':points_count,'independent_scalar_groups':independent_groups,'independent_paths':independent_paths,'comparisons':checks,'maximum_abs_differences':errors,'nonfresh_rng_guard':checked,'method':'own scalar/vector ordinary Euler recurrence, own GBM terminal/CV formula, independently constructed SciPy Sobol and inverse transform; no hullkit pricing primitives in fresh replay','main_pooled':False,'timing_reproduction_required':False,'elapsed_s':time.perf_counter()-START}\nPath('/tmp/f08_execution_fresh_independent.json').write_text(json.dumps(out,indent=2,allow_nan=False)+'\\n');print(json.dumps(out,indent=2))",
+      "runtime": "/home/kazumasa/projects/.venv/bin/python; OPENBLAS_NUM_THREADS=OMP_NUM_THREADS=MKL_NUM_THREADS=1; PYTHONPATH=ROOT/johnhull/hullkit/src",
+      "path_note": "Embedded reviewer code is the durable evidence; original /tmp path is temporary. ROOT in the code names this reviewed worktree."
+    }
+  },
+  "financial_record_modified_by_review": false,
+  "production_source_modified_by_review": false
+}

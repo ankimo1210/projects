@@ -1,0 +1,17 @@
+{
+  "schema": "RB-F08-main-cli-wall-v1",
+  "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+  "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+  "wall_s": 88.81395976000931,
+  "accounted_current_cli_s": 62.999967486131936,
+  "unaccounted_overhead_s": 25.813992273877375,
+  "accounted_components": {
+    "main_setup_validation_s": 23.219692603044678,
+    "iid_main_s": 5.551336792414077,
+    "coverage_main_s": 30.961114228586666,
+    "diagnostic_s": 0.003980436071287841,
+    "analytic_reference_s": 0.0002716059680096805,
+    "serialization_s": 3.2635718200472184
+  },
+  "scope": "whole main subprocess. Residual includes post-run checks/decision, metadata JSON, startup and other uninstrumented overhead; excludes prior pilot/freeze and planning/reviewer labour."
+}

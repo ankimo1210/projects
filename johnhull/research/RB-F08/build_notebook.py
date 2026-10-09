@@ -162,6 +162,11 @@ else:
     axes[1, 0].set_title("Euler negative incidence (paths retained)")
     axes[1, 0].set_ylabel("Observed negative path rate")
     axes[1, 0].set_ylim(bottom=0)
+    if all(row["negative_paths"] == 0 for row in levels):
+        denominators = sorted({row["count"] for row in levels})
+        axes[1, 0].text(.5, .5, "Observed negative paths = 0 at all levels\n"
+                        + "Original paths per level: " + str(denominators),
+                        ha="center", va="center", transform=axes[1, 0].transAxes)
     axes[1, 0].legend(fontsize=8)
     axes[1, 1].plot(x, [abs(row["bias"]["mean"]) for row in levels], "o-", label="abs(paired bias mean)")
     axes[1, 1].plot(x, [row["bias_bound"] for row in levels], "s-", label="99% empirical bias envelope")
@@ -368,6 +373,11 @@ axes[1, 0].set_title("degenerate intervals remain in original denominator")
 axes[1, 0].set_ylabel("Original trial count")
 finite_degenerate = [value for value in degenerate if np.isfinite(value)]
 axes[1, 0].set_ylim(0, max(1, max(finite_degenerate, default=0)*1.1))
+if cells and len(finite_degenerate) == len(cells) and all(value == 0 for value in finite_degenerate):
+    original_trials = sorted({cell["outer_runs"] for cell in cells})
+    axes[1, 0].text(.5, .5, "All " + str(len(cells)) + " cells: observed degenerate count = 0\n"
+                   + "Original outer trials per cell: " + str(original_trials),
+                   ha="center", va="center", transform=axes[1, 0].transAxes)
 axes[1, 0].legend(fontsize=8)
 for target, marker in [("BSM", "o-"), ("clip", "s-")]:
     values = [np.nan if cell["errors_"+target] is None else cell["errors_"+target]["rmse"] for cell in cells]
