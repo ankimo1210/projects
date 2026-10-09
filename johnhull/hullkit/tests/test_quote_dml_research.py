@@ -141,3 +141,86 @@ def test_protocol_cannot_claim_unimplemented_training_or_contract(section, key, 
     path.write_text(json.dumps(config))
     with pytest.raises(ValueError, match="protocol"):
         run.load_protocol(path)
+
+
+@pytest.fixture(scope="module")
+def smoke_result():
+    run = runner()
+    record, arrays = run.run_experiment(protocol(), smoke=True)
+    return run, record, arrays
+
+
+def test_smoke_is_labelled_and_saved_predictions_replay(smoke_result):
+    run, record, arrays = smoke_result
+    assert record["experiment"] == "smoke"
+    assert len(arrays["model_ids"]) == 34
+    assert all(fit["updates"] == 2 for fit in record["fits"] if fit["kind"] == "nn")
+    run.check_record(record, arrays, fresh=False)
+
+
+@pytest.mark.parametrize("field", ["price", "g_quote", "coupon"])
+def test_saved_prediction_risk_or_coupon_tamper_fails(smoke_result, field):
+    run, record, original = smoke_result
+    arrays = {key: value.copy() for key, value in original.items()}
+    model = str(arrays["model_ids"][0])
+    key = "contract_quotes" if field == "coupon" else f"pred__{model}__{field}"
+    arrays[key].flat[0] += 0.001
+    with pytest.raises((AssertionError, ValueError), match=r"replay|risk|contract|held|coupon"):
+        run.check_record(record, arrays, fresh=False)
+
+
+def test_saved_pass_flags_do_not_determine_numeric_acceptance(smoke_result):
+    run, original, arrays = smoke_result
+    record = copy.deepcopy(original)
+    record["checks"] = {"arbitrary": "FAIL"}
+    run.check_record(record, arrays, fresh=False)
+
+
+def test_check_never_calls_training(smoke_result, monkeypatch):
+    from deep_hedge_price import _quote_dml as learner
+
+    run, record, arrays = smoke_result
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("check started training")
+
+    monkeypatch.setattr(learner, "fit_nn", forbidden)
+    monkeypatch.setattr(learner, "fit_ridge", forbidden)
+    run.check_record(record, arrays, fresh=True)
+
+
+@pytest.mark.parametrize(
+    "key", ["test_market_id", "test_contract_id", "shock_dq", "cost_rate_bp", "reference_residual"]
+)
+def test_fixed_experiment_arrays_cannot_be_relabelled(smoke_result, key):
+    run, record, original = smoke_result
+    arrays = {name: value.copy() for name, value in original.items()}
+    arrays[key].flat[0] += 1
+    with pytest.raises((AssertionError, ValueError)):
+        run.check_record(record, arrays, fresh=False)
+
+
+def test_training_scales_cannot_be_changed_even_with_consistent_predictions(smoke_result):
+    run, record, original = smoke_result
+    arrays = {name: value.copy() for name, value in original.items()}
+    model = str(arrays["model_ids"][0])
+    arrays[f"weights__{model}__price_scale"] *= 2
+    prediction = run._prediction(run._restore(arrays, model), run._dataset(arrays, "test"))
+    arrays[f"pred__{model}__price"] = prediction["price"]
+    arrays[f"pred__{model}__g_quote"] = prediction["g_quote"]
+    with pytest.raises((AssertionError, ValueError), match="scale"):
+        run.check_record(record, arrays, fresh=False)
+
+
+def test_experiment_returns_failed_inputs_instead_of_discarding_them(monkeypatch):
+    run = runner()
+
+    def failed(q):
+        raise RuntimeError("forced calibration failure")
+
+    monkeypatch.setattr(teacher, "prepare_market", failed)
+    record, arrays = run.run_experiment(protocol(), smoke=True)
+    assert not record["complete_fits"]
+    assert all("forced calibration failure" in value for value in arrays["train_failure_reason"])
+    assert len(arrays["train_x_quote"]) == 32
+    assert record["fits"] == []
