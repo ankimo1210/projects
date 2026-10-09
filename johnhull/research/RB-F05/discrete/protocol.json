@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "study": "RB-F05-discrete-v1",
+  "contract": {
+    "model": "GBM",
+    "strike": 100,
+    "barrier": 120,
+    "rate": 0.03,
+    "volatility": 0.2,
+    "rebate": 0,
+    "dividend": 0,
+    "positive_monitoring": 12,
+    "include_zero": true,
+    "include_maturity": true,
+    "touch": "S>=H knocks out",
+    "delta": "fixed strike/barrier/rate/volatility/T/m; undefined at initial S=H"
+  },
+  "domain": {
+    "spot": [
+      80,
+      119
+    ],
+    "maturity": [
+      0.25,
+      2
+    ]
+  },
+  "splits": {
+    "train": 512,
+    "validation": 128,
+    "test_spots": 25,
+    "test_times": [
+      0.25,
+      0.3333333333333333,
+      0.5,
+      0.75,
+      1,
+      1.25,
+      1.5,
+      2
+    ],
+    "train_scenarios": 3017,
+    "validation_scenarios": 3029,
+    "train_paths": 4017,
+    "validation_paths": 4029,
+    "paths_per_scenario": 4096
+  },
+  "reference": {
+    "order": 128,
+    "check_order": 256,
+    "tail_sigma": 12,
+    "pde_space": 4800,
+    "pde_steps": 256,
+    "pde_half_width": 1.5,
+    "pde_phase": 0.5,
+    "price_tolerance": 0.0005,
+    "delta_tolerance": 0.0002,
+    "quadrature_price_tolerance": 1e-07,
+    "quadrature_delta_tolerance": 1e-08
+  },
+  "pilot": {
+    "seed": 6017,
+    "paths": 32768,
+    "spots": [
+      80,
+      100,
+      115,
+      119
+    ],
+    "times": [
+      0.25,
+      1,
+      2
+    ],
+    "iid_se_multiplier": 6
+  },
+  "diagnostic": {
+    "seed": 1107,
+    "paths": 65536,
+    "iid_se_multiplier": 6,
+    "monitoring": [
+      1,
+      4,
+      12,
+      48
+    ]
+  },
+  "learning": {
+    "seeds": [
+      11,
+      29,
+      47
+    ],
+    "updates": 512,
+    "budget_s": 120,
+    "batch_size": 128,
+    "lr": 0.003,
+    "architecture": [
+      2,
+      32,
+      32,
+      1
+    ],
+    "dtype": "float64",
+    "device": "cpu",
+    "modes": [
+      "price",
+      "dml"
+    ],
+    "teacher": "last-increment conditional payoff and first-transition LRM",
+    "delta_weight": 1
+  },
+  "interpolation": {
+    "spots": 65,
+    "times": 33,
+    "spot_method": "CubicHermiteSpline",
+    "time_method": "linear in log(T)",
+    "delta": "same interpolated price derivative"
+  },
+  "timing": {
+    "warmups": 3,
+    "repeats": 20,
+    "batches": [
+      1,
+      32
+    ],
+    "operation": "price+spot Delta",
+    "quantiles": [
+      0.5,
+      0.95
+    ],
+    "cache": "fixed contract only; no result/input memoization"
+  },
+  "quality": {
+    "price_ratio_max": 1.1,
+    "delta_ratio_max": 1,
+    "paired_seeds_required": "all three",
+    "standard_speed_adoption": "requires all-seed quality, no material interpolation accuracy loss, positive full-cost advantage including labels/setup/fit/export/load/OOD/fallback"
+  },
+  "state": "frozen",
+  "freeze_evidence": {
+    "date": "2026-10-09",
+    "pilot_artifact_sha256": "6aad080f509535394db544782caafa51196b1f88ae7f5e40f2202d35317492aa",
+    "independent_review": "full saved pilot recomputed; no objection to fixed phase=.5 refinement/tolerances",
+    "max_pde_price_difference": 0.0001555958876160446,
+    "max_pde_delta_difference": 3.118991531209092e-05,
+    "unbiased_mc_checks": {
+      "main": 72,
+      "frequency_excluding_m1_analytic": 44
+    },
+    "oss_failures": 0,
+    "scope": "fixed pilot points and midpoint phase; dense independent test verification remains required",
+    "node_phase_zero": "diagnostic only; not an equally accurate oracle",
+    "training_budget_selection": "predeclared before main fit; no test-based selection"
+  }
+}
