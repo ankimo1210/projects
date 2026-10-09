@@ -1,0 +1,58 @@
+{
+  "kind": "B design independent concrete source probes",
+  "full_original_fit": {
+    "status": "unknown",
+    "reason": "nonunique",
+    "roots": [
+      0.6000000000000006,
+      1.2000000000000037,
+      3.0000000000000004
+    ]
+  },
+  "incorrect_narrowed_fit": {
+    "status": "ok",
+    "reason": "",
+    "roots": [
+      0.6000000000000006
+    ],
+    "state": 0.6000000000000005
+  },
+  "default_dense_missing_blocks": {
+    "status": "ok",
+    "value": 23.80687187374068,
+    "standard_errors": [
+      {
+        "__nonfinite__": "nan"
+      },
+      {
+        "__nonfinite__": "nan"
+      },
+      {
+        "__nonfinite__": "nan"
+      }
+    ],
+    "scope": "current historical default behavior preserved; new explicit domain mode must mark required CV-block evidence unavailable"
+  },
+  "linear_with_all_nan_cache_and_unknown_state": {
+    "value": 57.89819358546163,
+    "spot_derivative": 0.4968892742210276,
+    "state_derivative": 0.0,
+    "status": "not_required_linear_claim",
+    "reason": "",
+    "error": 0.0
+  },
+  "settled_with_all_nan_cache_and_unknown_state": {
+    "value": 8.333333333333329,
+    "spot_derivative": 0.0,
+    "state_derivative": 0.0,
+    "status": "not_required_settled_claim",
+    "reason": "",
+    "error": 0.0
+  },
+  "source_bindings": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "fff3bc88d497210a846956d464317d5ddb00941a1e3ef25193f9cbaa26a8c406",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "d52ac6ee48b9eb638701f35d08732fcfe9ada436c4d0f31a2d47cfb170589b61",
+    "johnhull/research/RB-F04/dynamic_hedging/PREFREEZE_REVISION.md": "3728b09ab65b0960a13bc54309dee13f476c606c36c6ce9b6cbcc10281ea271b"
+  }
+}

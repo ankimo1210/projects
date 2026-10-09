@@ -1,0 +1,64 @@
+{
+  "kind": "independent B fixed-domain design review",
+  "date": "2026-10-10",
+  "decision": "approved_for_B_private_implementation_with_attached_interface_test_and_freeze_contract",
+  "approval_scope": [
+    "B fixed date/model Cartesian evaluation domain architecture",
+    "same-price not-a-knot tensor cubic inside declared box",
+    "private optional-interface design and original-default preservation"
+  ],
+  "excluded": [
+    "specific box bounds qualification",
+    "financial SE/Greeks/independent oracle certification",
+    "formal pilot",
+    "source implementation approval",
+    "source/readiness freeze",
+    "A full-validator review",
+    "main",
+    "full test suites"
+  ],
+  "proposal_sha256": "3728b09ab65b0960a13bc54309dee13f476c606c36c6ce9b6cbcc10281ea271b",
+  "unresolved_design_blockers": [],
+  "resolved_important_findings": [
+    {
+      "id": "B-root-domain",
+      "description": "Narrowing call roots to Asian patch hides original nonunique roots",
+      "resolution": "proposal line32 explicitly retains original common full call root domain then checks Asian patch",
+      "independent_counterexample": "task-5-fixed-domain-design-review-probes.json"
+    }
+  ],
+  "required_implementation_contracts": [
+    "old default None unchanged",
+    "explicit per-date JSON half-open ranges >=4 contiguous nodes per axis",
+    "explicit None date means unavailable not fallback",
+    "full original arrays statuses N and 16blocks retained",
+    "mean and all16 necessary CV block arrays available",
+    "raw price-bound failures preserved unmodified",
+    "same subaxes price all derivatives and16block operator",
+    "local logS/logell chain incl fz and dedicatedt0",
+    "linear/settled branches unchanged",
+    "full original call roots first then Asian support",
+    "inside C1/C2 no unknown-gap continuity claim",
+    "saved generation/replay domain config identical",
+    "pilot-only deterministic selector bindings no main selection",
+    "qualification and readiness distinct",
+    "source scopedTDD independent review required"
+  ],
+  "source_bindings": {
+    "johnhull/research/RB-F04/dynamic_hedging/PREFREEZE_REVISION.md": "3728b09ab65b0960a13bc54309dee13f476c606c36c6ce9b6cbcc10281ea271b",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "fff3bc88d497210a846956d464317d5ddb00941a1e3ef25193f9cbaa26a8c406",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py": "55071a03a936b89a26a85bed5531f31a515d04d041491a3c737d28c2613da825",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "d52ac6ee48b9eb638701f35d08732fcfe9ada436c4d0f31a2d47cfb170589b61",
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "f96d768f5f4755d1495170b61f9e86e82413ee48498b30127d95050f77de94cd",
+    "johnhull/research/RB-F04/dynamic_hedging/preflight-diagnostics/task-5-cache-domain-report.md": "c61e0c20635a5dc846e9fa39708ae7549ca14da087717b76c81b270cb217e4a1",
+    "johnhull/research/RB-F04/dynamic_hedging/preflight-diagnostics/task-5-cache-cartesian-boundary-details.json": "87f655c34fe9f11e18012fe7d404b76d65cb44fca8206eaefc06f4b740609e98"
+  },
+  "evidence": [
+    "task-5-fixed-domain-design-review-probes.py",
+    "task-5-fixed-domain-design-review-probes.json",
+    "task-5-fixed-domain-design-review-probes.txt",
+    "task-5-fixed-domain-design-review-run.json"
+  ],
+  "canonical_or_source_mutations": false
+}
