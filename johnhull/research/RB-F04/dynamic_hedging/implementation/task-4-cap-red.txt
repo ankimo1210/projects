@@ -1,0 +1,21 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_final_diagnostic_cap_overrun_is_not_complete _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7095f22b5a00>
+
+    def test_final_diagnostic_cap_overrun_is_not_complete(monkeypatch):
+        from deep_hedge_price import _dynamic_hedging_policy as policy
+        clock = iter([0., .1, .2, 2.])
+        monkeypatch.setattr(policy, "perf_counter", lambda: next(clock))
+        result = fit_policy(
+            dataset(), universe="U2", seed=11, updates=1, batch_size=4,
+            learning_rate=.003, cap_seconds=1.,
+        )
+>       assert not result["complete"]
+E       assert not True
+
+deep_hedge_price/tests/test_dynamic_hedging_policy.py:253: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_policy.py::test_final_diagnostic_cap_overrun_is_not_complete
+1 failed in 1.30s

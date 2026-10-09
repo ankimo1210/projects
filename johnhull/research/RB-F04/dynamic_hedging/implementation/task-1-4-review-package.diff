@@ -1,0 +1,1858 @@
+# Task1 + Task4 source review package
+Base: d71b25f3; uncommitted additions against /dev/null; scope core, risk, policy.
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py
+new file mode 100644
+index 00000000..caddc8cd
+--- /dev/null
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py
+@@ -0,0 +1,445 @@
++"""Private calendar simulation and self-financing accounting for RB-F04.
++
++All shocks are caller supplied. Failures retain the original path denominator;
++no variance/price clipping or replacement holdings repair invalid paths.
++"""
++
++from __future__ import annotations
++
++import math
++
++import numpy as np
++
++from hullkit._heston_local_surface import HestonParameters, LocalVarianceGrid
++
++
++def cir_implicit_step(
++    v: np.ndarray, z_v: np.ndarray, dt: float, parameters: HestonParameters
++) -> np.ndarray:
++    """Positive Lamperti drift-implicit CIR step, exact deterministic xi=0 branch."""
++    v, z_v = np.broadcast_arrays(np.asarray(v, dtype=float), np.asarray(z_v, dtype=float))
++    if not math.isfinite(dt) or dt <= 0 or np.any(~np.isfinite(v)) or np.any(v < 0):
++        raise ValueError("require finite dt>0 and finite v>=0")
++    if parameters.xi == 0:
++        return parameters.theta + (v - parameters.theta) * math.exp(-parameters.kappa * dt)
++    if np.any(~np.isfinite(z_v)):
++        raise ValueError("variance shocks must be finite")
++    a = (4 * parameters.kappa * parameters.theta - parameters.xi**2) / 8
++    if a <= 0:
++        raise ValueError("positive CIR scheme requires 4*kappa*theta > xi**2")
++    d = 1 + parameters.kappa * dt / 2
++    u = np.sqrt(v) + parameters.xi / 2 * math.sqrt(dt) * z_v
++    # hypot avoids squaring very large u; negative root is rationalized.
++    root = np.hypot(u, math.sqrt(4 * d * a * dt))
++    y = np.empty(u.shape)
++    positive = u >= 0
++    y[positive] = (u[positive] + root[positive]) / (2 * d)
++    y[~positive] = 2 * a * dt / (root[~positive] - u[~positive])
++    return y**2
++
++
++def moment_certificate(
++    parameters: HestonParameters, horizon: float, p: int = 4, epsilon: float = 0.01
++) -> dict:
++    """Sufficient finite-grid stock moment bound, without a convergence assertion.
++
++    Gaussian coefficient bounds the strict-lower-triangle Frobenius bound for
++    every uniform finite grid. Backward MGF evidence is provided independently
++    for the four protocol step levels, using lambda=2*p**2-p.
++    """
++    if not math.isfinite(horizon) or horizon <= 0 or p < 1 or int(p) != p:
++        raise ValueError("require horizon>0 and positive integer moment p")
++    if not math.isfinite(epsilon) or epsilon <= 0:
++        raise ValueError("epsilon must be finite and positive")
++    a = (4 * parameters.kappa * parameters.theta - parameters.xi**2) / 8
++    c = parameters.xi / 2
++    lam = 2 * p**2 - p
++    coefficient = lam * (1 + epsilon) * c**2 * horizon**2
++    rows = []
++    for level in (192, 384, 768, 1536):
++        steps = math.ceil(level * horizon)
++        dt = horizon / steps
++        d = 1 + parameters.kappa * dt / 2
++        eta = 0.0
++        denominators = []
++        constant = 0.0
++        for _ in range(steps):
++            denominator = d**2 - 2 * c**2 * dt * eta
++            denominators.append(denominator)
++            if denominator <= 0 or not math.isfinite(denominator):
++                eta = math.nan
++                constant = math.nan
++                break
++            constant += 2 * a * dt * eta / d - 0.5 * math.log(denominator / d**2)
++            eta = lam * dt + eta / denominator
++        rows.append(
++            {
++                "steps_per_year": level,
++                "steps": steps,
++                "dt": dt,
++                "denominators": np.asarray(denominators),
++                "min_denominator": min(denominators),
++                "eta": eta,
++                "log_bound_at_v0": constant + eta * parameters.v0,
++                "qualified": bool(math.isfinite(eta) and min(denominators) > 0),
++            }
++        )
++    scheme_valid = parameters.xi == 0 or a > 0
++    return {
++        "qualified": bool(
++            scheme_valid and coefficient < 1 and all(row["qualified"] for row in rows)
++        ),
++        "scope": "fixed_finite_grid_sufficient_bound",
++        "p": p,
++        "epsilon": epsilon,
++        "horizon": horizon,
++        "lambda": lam,
++        "gaussian_quadratic_coefficient": coefficient,
++        "backward_mgf": rows,
++        "positive_scheme_admissible": scheme_valid,
++        "continuous_model_or_uniform_convergence_certified": False,
++        "excluded_cm2_lognormal": "positive exponential moments of nondegenerate lognormal variance diverge",
++    }
++
++
++def _times_axis(times, minimum=2):
++    times = np.asarray(times, dtype=float)
++    if (
++        times.ndim != 1
++        or times.size < minimum
++        or np.any(~np.isfinite(times))
++        or times[0] < 0
++        or np.any(np.diff(times) <= 0)
++    ):
++        raise ValueError(
++            "times must be finite nonnegative strictly increasing dates, length too short"
++        )
++    return times
++
++
++def _recorder_inputs(normals, times, record_indices):
++    times = _times_axis(times)
++    normals = np.asarray(normals, dtype=float)
++    indices = np.asarray(record_indices)
++    if normals.ndim != 3 or normals.shape[1:] != (times.size - 1, 2) or normals.shape[0] == 0:
++        raise ValueError("normals must have shape (N,steps,2), N>0")
++    if (
++        indices.ndim != 1
++        or indices.size == 0
++        or indices.dtype.kind not in "iu"
++        or np.any(indices < 0)
++        or np.any(indices >= times.size)
++        or np.any(np.diff(indices) <= 0)
++    ):
++        raise ValueError("record_indices must be strictly increasing indices inside times")
++    return normals, times, indices
++
++
++def _initial_vector(value, default, n):
++    return np.array(
++        np.broadcast_to(np.asarray(default if value is None else value, dtype=float), (n,)),
++        copy=True,
++    )
++
++
++def _failure(mask, reasons, failed, reason):
++    fresh = mask & failed
++    reasons[fresh] = reason if isinstance(reason, str) else reason[fresh]
++    mask[fresh] = False
++
++
++def _records_result(spots, variances, indices, mask, reasons, diagnostics):
++    diagnostics.update(original_path_count=len(mask), failed_path_count=int(np.sum(~mask)))
++    return {
++        "spot": spots[:, indices],
++        "variance": variances[:, indices],
++        "path_mask": mask,
++        "reasons": reasons,
++        "diagnostics": diagnostics,
++    }
++
++
++def heston_records(
++    parameters: HestonParameters,
++    normals: np.ndarray,
++    times: np.ndarray,
++    record_indices: np.ndarray,
++    *,
++    spot=None,
++    variance=None,
++) -> dict:
++    """Record adapted old-v stock and positive CIR on absolute calendar dates."""
++    normals, times, indices = _recorder_inputs(normals, times, record_indices)
++    if parameters.xi > 0 and 4 * parameters.kappa * parameters.theta <= parameters.xi**2:
++        raise ValueError("positive CIR scheme requires 4*kappa*theta > xi**2")
++    n = len(normals)
++    spots = np.full((n, len(indices)), np.nan)
++    variances = np.full_like(spots, np.nan)
++    current_s = _initial_vector(spot, parameters.spot, n)
++    current_v = _initial_vector(variance, parameters.v0, n)
++    mask = np.ones(n, dtype=bool)
++    reasons = np.full(n, "ok", dtype="<U64")
++    _failure(
++        mask,
++        reasons,
++        ~np.isfinite(current_s) | (current_s <= 0) | ~np.isfinite(current_v) | (current_v < 0),
++        "invalid_initial_state",
++    )
++    current_s[~mask] = current_v[~mask] = np.nan
++    record_map = {int(date): j for j, date in enumerate(indices)}
++    if 0 in record_map:
++        spots[:, record_map[0]] = current_s
++        variances[:, record_map[0]] = current_v
++    for i, dt in enumerate(np.diff(times)):
++        _failure(mask, reasons, ~np.isfinite(normals[:, i]).all(axis=1), "nonfinite_normal")
++        active = np.flatnonzero(mask)
++        zs = normals[active, i, 0]
++        zv = parameters.rho * zs + math.sqrt(1 - parameters.rho**2) * normals[active, i, 1]
++        old_v = current_v[active]
++        with np.errstate(over="ignore", invalid="ignore", under="ignore"):
++            current_s[active] *= np.exp(
++                (parameters.rate - parameters.dividend_yield - old_v / 2) * dt
++                + np.sqrt(old_v * dt) * zs
++            )
++            current_v[active] = cir_implicit_step(old_v, zv, float(dt), parameters)
++        _failure(
++            mask,
++            reasons,
++            ~np.isfinite(current_s)
++            | (current_s <= 0)
++            | ~np.isfinite(current_v)
++            | ((current_v <= 0) if parameters.xi else (current_v < 0)),
++            "nonfinite_transition",
++        )
++        current_s[~mask] = current_v[~mask] = np.nan
++        if i + 1 in record_map:
++            spots[:, record_map[i + 1]] = current_s
++            variances[:, record_map[i + 1]] = current_v
++    return _records_result(
++        spots,
++        variances,
++        np.arange(len(indices)),
++        mask,
++        reasons,
++        {"unsupported_count": 0, "wing_count": 0, "early_proxy_count": 0},
++    )
++
++
++def local_records(
++    parameters: HestonParameters,
++    surface: LocalVarianceGrid,
++    normals: np.ndarray,
++    times: np.ndarray,
++    record_indices: np.ndarray,
++    *,
++    spot=None,
++    multiplier=1.0,
++) -> dict:
++    """Calendar midpoint/left-spot simulation with labelled local field support.
++
++    Recorded variance at a left date is the effective outgoing interval
++    variance; the terminal date carries the last interval's effective variance.
++    Counts cover all original path/step evaluations; local_status covers the
++    recorded dates only. Internal states are not retained.
++    """
++    normals, times, indices = _recorder_inputs(normals, times, record_indices)
++    if not math.isfinite(multiplier) or multiplier <= 0:
++        raise ValueError("multiplier must be finite and positive")
++    n = len(normals)
++    spots = np.full((n, len(indices)), np.nan)
++    variances = np.full_like(spots, np.nan)
++    statuses = np.full((n, len(indices)), "not_evaluated", dtype="<U32")
++    current_s = _initial_vector(spot, parameters.spot, n)
++    mask = np.ones(n, dtype=bool)
++    reasons = np.full(n, "ok", dtype="<U64")
++    _failure(mask, reasons, ~np.isfinite(current_s) | (current_s <= 0), "invalid_initial_state")
++    current_s[~mask] = np.nan
++    record_map = {int(date): j for j, date in enumerate(indices)}
++    diagnostics = {"unsupported_count": 0, "wing_count": 0, "early_proxy_count": 0}
++    for i, dt in enumerate(np.diff(times)):
++        if i in record_map:
++            spots[:, record_map[i]] = current_s
++        _failure(mask, reasons, ~np.isfinite(normals[:, i, 0]), "nonfinite_normal")
++        active = np.flatnonzero(mask)
++        evaluated = surface.evaluate(float((times[i] + times[i + 1]) / 2), current_s[active])
++        status = np.full(n, "not_evaluated", dtype="<U32")
++        effective = np.full(n, np.nan)
++        status[active] = evaluated["status"]
++        effective[active] = multiplier * evaluated["variance"]
++        unsupported = np.char.startswith(status, "unsupported")
++        diagnostics["unsupported_count"] += int(np.sum(unsupported))
++        diagnostics["wing_count"] += int(np.sum(np.char.find(status, "wing") >= 0))
++        diagnostics["early_proxy_count"] += int(np.sum(np.char.startswith(status, "early_time")))
++        _failure(mask, reasons, unsupported, status)
++        _failure(
++            mask, reasons, ~np.isfinite(effective) | (effective <= 0), "invalid_local_variance"
++        )
++        effective[~mask] = np.nan
++        if i in record_map:
++            variances[:, record_map[i]] = effective
++            statuses[:, record_map[i]] = status
++        active = np.flatnonzero(mask)
++        with np.errstate(over="ignore", invalid="ignore", under="ignore"):
++            current_s[active] *= np.exp(
++                (parameters.rate - parameters.dividend_yield - effective[active] / 2) * dt
++                + np.sqrt(effective[active] * dt) * normals[active, i, 0]
++            )
++        _failure(mask, reasons, ~np.isfinite(current_s) | (current_s <= 0), "nonfinite_transition")
++        current_s[~mask] = np.nan
++    if len(times) - 1 in record_map:
++        j = record_map[len(times) - 1]
++        spots[:, j] = current_s
++        effective[~mask] = np.nan
++        variances[:, j] = effective
++        statuses[:, j] = status
++    diagnostics["local_status"] = statuses
++    return _records_result(spots, variances, np.arange(len(indices)), mask, reasons, diagnostics)
++
++
++def asian_memory(
++    record_spots: np.ndarray, record_times: np.ndarray, fixing_times: np.ndarray
++) -> dict:
++    """Observed sum A and scheduled counts n,m, adding fixing before rebalance.
++
++    Initial spot is excluded unless explicitly listed as a fixing. Every past
++    fixing must be represented by a recorded date; future fixing dates remain
++    pending. A missing observation is never interpolated.
++    """
++    times = _times_axis(record_times, minimum=1)
++    spots = np.asarray(record_spots, dtype=float)
++    fixings = np.asarray(fixing_times, dtype=float)
++    if spots.ndim != 2 or spots.shape[1] != times.size:
++        raise ValueError("record_spots must have shape (N,record dates)")
++    if (
++        fixings.ndim != 1
++        or fixings.size == 0
++        or np.any(~np.isfinite(fixings))
++        or np.any(fixings <= 0)
++        or np.any(np.diff(fixings) <= 0)
++    ):
++        raise ValueError("fixing_times must be finite positive increasing dates")
++    increments = np.zeros_like(spots)
++    counts = np.zeros(len(times), dtype=int)
++    for fixing in fixings[fixings <= times[-1] + 1e-12]:
++        matches = np.flatnonzero(np.isclose(times, fixing, rtol=0.0, atol=1e-12))
++        if len(matches) != 1:
++            raise ValueError("every past fixing requires one recorded observation")
++        i = matches[0]
++        increments[:, i] = np.where(
++            np.isfinite(spots[:, i]) & (spots[:, i] > 0), spots[:, i], np.nan
++        )
++        counts[i] += 1
++    n = np.cumsum(counts)
++    A = np.cumsum(increments, axis=1)
++    return {"A": A, "n": n, "m": len(fixings) - n}
++
++
++def cash_account(
++    times: np.ndarray,
++    prices: np.ndarray,
++    holdings: np.ndarray,
++    payoff: np.ndarray,
++    *,
++    premium: float,
++    rate: float,
++    cashflows=None,
++    cost_rates=None,
++) -> dict:
++    """Cash recursion plus independent discounted gains, including one liquidation.
++
++    Holdings apply on each following interval. At event i>0 the previous
++    holding receives cashflows[:,i] before trading. Cashflows at the initial
++    date have zero entitled holding. Prices are ex-dividend, and terminal
++    traded-call mid recovery is not a traded-call payoff. Claim is paid once.
++    Discounting is relative to times[0]; units are the reporting currency.
++    """
++    times = _times_axis(times)
++    prices, holdings, payoff = (np.asarray(x, dtype=float) for x in (prices, holdings, payoff))
++    if (
++        prices.ndim != 3
++        or prices.shape[0] == 0
++        or prices.shape[1] != len(times)
++        or prices.shape[2] == 0
++    ):
++        raise ValueError("prices must have shape (N,m+1,d)")
++    n, dates, d = prices.shape
++    if holdings.shape != (n, dates - 1, d) or payoff.shape != (n,):
++        raise ValueError("holdings/payoff shapes must be (N,m,d)/(N,)")
++    if not math.isfinite(premium) or not math.isfinite(rate):
++        raise ValueError("premium and rate must be finite")
++    cf = np.zeros_like(prices) if cashflows is None else np.asarray(cashflows, dtype=float)
++    fees = np.zeros(d) if cost_rates is None else np.asarray(cost_rates, dtype=float)
++    if (
++        cf.shape != prices.shape
++        or fees.shape != (d,)
++        or np.any(~np.isfinite(fees))
++        or np.any(fees < 0)
++    ):
++        raise ValueError(
++            "cashflows must match prices and cost_rates must be finite nonnegative (d,)"
++        )
++    cash = np.full((n, dates), np.nan)
++    costs = np.full_like(cash, np.nan)
++    mask = np.ones(n, dtype=bool)
++    reasons = np.full(n, "ok", dtype="<U64")
++    previous = np.zeros((n, d))
++    balance = np.full(n, premium)
++    for i in range(dates):
++        current = holdings[:, i] if i < dates - 1 else np.zeros((n, d))
++        invalid = (~np.isfinite(prices[:, i]) | (prices[:, i] < 0)).any(axis=1) | ~np.isfinite(
++            current
++        ).all(axis=1)
++        if i:
++            invalid |= ~np.isfinite(cf[:, i]).all(axis=1)
++        if i == dates - 1:
++            invalid |= ~np.isfinite(payoff)
++        _failure(mask, reasons, invalid, "invalid_cash_event")
++        with np.errstate(over="ignore", invalid="ignore"):
++            if i:
++                balance = balance * np.exp(rate * (times[i] - times[i - 1])) + np.sum(
++                    previous * cf[:, i], axis=1
++                )
++            change = current - previous
++            costs[:, i] = np.sum(fees * prices[:, i] * np.abs(change), axis=1)
++            balance = balance - np.sum(change * prices[:, i], axis=1) - costs[:, i]
++            if i == dates - 1:
++                balance = balance - payoff
++        _failure(mask, reasons, ~np.isfinite(balance), "nonfinite_cash_balance")
++        balance[~mask] = np.nan
++        cash[:, i] = balance
++        costs[~mask, i] = np.nan
++        previous = current
++    with np.errstate(over="ignore", invalid="ignore"):
++        discount = np.exp(-rate * (times - times[0]))
++    # Recompute from discounted ex-dividend increments rather than cash recursion.
++    with np.errstate(over="ignore", invalid="ignore"):
++        increments = (
++            discount[None, 1:, None] * (prices[:, 1:] + cf[:, 1:])
++            - discount[None, :-1, None] * prices[:, :-1]
++        )
++        extended = np.concatenate([np.zeros((n, 1, d)), holdings, np.zeros((n, 1, d))], axis=1)
++        gain_costs = np.sum(fees * prices * np.abs(np.diff(extended, axis=1)), axis=2)
++        gain_pnl = (
++            premium
++            + np.sum(holdings * increments, axis=(1, 2))
++            - np.sum(discount * gain_costs, axis=1)
++            - discount[-1] * payoff
++        )
++        discounted_pnl = discount[-1] * cash[:, -1]
++    _failure(
++        mask,
++        reasons,
++        ~np.isfinite(gain_pnl) | ~np.isfinite(discounted_pnl),
++        "nonfinite_discounted_account",
++    )
++    gain_pnl[~mask] = discounted_pnl[~mask] = cash[~mask, -1] = np.nan
++    return {
++        "cash": cash,
++        "costs": costs,
++        "pnl": cash[:, -1],
++        "discounted_pnl": discounted_pnl,
++        "discounted_gain_pnl": gain_pnl,
++        "path_mask": mask,
++        "reasons": reasons,
++        "diagnostics": {"original_path_count": n, "failed_path_count": int(np.sum(~mask))},
++    }
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_core.py b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_core.py
+new file mode 100644
+index 00000000..eff358b5
+--- /dev/null
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_core.py
+@@ -0,0 +1,339 @@
++"""Independent accounting, calendar and positivity checks for dynamic research core."""
++
++from dataclasses import replace
++
++import numpy as np
++import pytest
++from hullkit._dynamic_hedging_core import (
++    asian_memory,
++    cash_account,
++    cir_implicit_step,
++    heston_records,
++    local_records,
++    moment_certificate,
++)
++from hullkit._heston_local_surface import HestonParameters, LocalVarianceGrid
++
++
++@pytest.fixture
++def parameters():
++    return HestonParameters(100.0, 0.03, 0.0, 0.04, 2.0, 0.04, 0.3, -0.7)
++
++
++def test_constant_variance_is_exact_gbm_with_supplied_normals(parameters):
++    p = replace(parameters, xi=0.0)
++    times = np.array([0.4, 0.5, 0.8])
++    normals = np.array([[[0.2, 99.0], [-0.7, 99.0]], [[-0.4, -99.0], [0.8, -99.0]]])
++    out = heston_records(p, normals, times, np.arange(3), spot=np.array([90.0, 110.0]))
++    logs = (p.rate - 0.5 * 0.04) * np.diff(times) + 0.2 * np.sqrt(np.diff(times)) * normals[:, :, 0]
++    expected = np.array([90.0, 110.0])[:, None] * np.exp(
++        np.c_[np.zeros(2), np.cumsum(logs, axis=1)]
++    )
++    np.testing.assert_allclose(out["spot"], expected, rtol=1e-14)
++    np.testing.assert_allclose(out["variance"], 0.04)
++    assert out["path_mask"].all()
++
++
++def test_xi_zero_cir_transition_is_exact_for_nonconstant_variance(parameters):
++    p = replace(parameters, xi=0.0)
++    out = cir_implicit_step(np.array([0.0, 0.09]), np.array([-1e9, 1e9]), 0.3, p)
++    np.testing.assert_allclose(out, 0.04 + (np.array([0.0, 0.09]) - 0.04) * np.exp(-0.6))
++
++
++def test_positive_cir_satisfies_quadratic_even_for_large_negative_normal(parameters):
++    v = np.array([0.0, 0.04, 0.09])
++    z = np.array([-1e5, -3.0, 4.0])
++    dt = 0.1
++    result = cir_implicit_step(v, z, dt, parameters)
++    assert np.all(np.isfinite(result) & (result > 0))
++    y = np.sqrt(result)
++    u = np.sqrt(v) + 0.15 * np.sqrt(dt) * z
++    a = (4 * 2 * 0.04 - 0.3**2) / 8
++    np.testing.assert_allclose(1.1 * y**2 - u * y, a * dt, rtol=1e-12, atol=1e-16)
++
++
++def test_heston_stock_uses_old_variance_and_correlated_variance_shock(parameters):
++    normals = np.array([[[0.8, -0.2]]])
++    out = heston_records(parameters, normals, np.array([0.0, 0.25]), np.array([0, 1]))
++    assert out["spot"][0, 1] == pytest.approx(100 * np.exp((0.03 - 0.02) * 0.25 + 0.2 * 0.5 * 0.8))
++    zv = -0.7 * 0.8 + np.sqrt(1 - 0.7**2) * -0.2
++    assert out["variance"][0, 1] == pytest.approx(
++        cir_implicit_step(np.array([0.04]), np.array([zv]), 0.25, parameters)[0]
++    )
++
++
++def test_moment_certificate_contains_independent_fixed_grid_evidence(parameters):
++    c = moment_certificate(parameters, 1.25)
++    assert c["qualified"]
++    assert c["gaussian_quadratic_coefficient"] == pytest.approx(0.99421875)
++    assert c["scope"] == "fixed_finite_grid_sufficient_bound"
++    for row in c["backward_mgf"]:
++        n = row["steps"]
++        dt = 1.25 / n
++        eta = 0.0
++        denominators = []
++        for _ in range(n):
++            denominator = (1 + dt) ** 2 - 2 * 0.15**2 * dt * eta
++            denominators.append(denominator)
++            eta = 28 * dt + eta / denominator
++        assert row["min_denominator"] == pytest.approx(min(denominators))
++        assert row["eta"] == pytest.approx(eta)
++        assert row["qualified"]
++    assert not moment_certificate(parameters, 2.0)["qualified"]
++
++
++def test_local_restart_uses_absolute_calendar_midpoint(parameters):
++    surface = LocalVarianceGrid(
++        np.array([0.1, 0.5, 1.0]),
++        np.array([-10.0, 10.0]),
++        np.array([[0.01, 0.01], [0.05, 0.05], [0.10, 0.10]]),
++        parameters,
++    )
++    times = np.array([0.5, 0.7, 0.9])
++    normals = np.zeros((2, 2, 2))
++    out = local_records(
++        parameters,
++        surface,
++        normals,
++        times,
++        np.arange(3),
++        spot=np.array([90.0, 110.0]),
++        multiplier=2.0,
++    )
++    variance = np.array([0.12, 0.16])
++    expected = np.array([90.0, 110.0]) * np.exp(np.sum((0.03 - variance / 2) * 0.2))
++    np.testing.assert_allclose(out["spot"][:, -1], expected)
++    np.testing.assert_allclose(out["variance"][:, :2], np.tile(variance, (2, 1)))
++    assert out["diagnostics"]["original_path_count"] == 2
++
++
++def test_local_preserves_unsupported_path_and_original_count(parameters):
++    surface = LocalVarianceGrid(
++        np.array([0.1, 0.5]), np.array([-2.0, 2.0]), np.full((2, 2), 0.04), parameters
++    )
++    out = local_records(
++        parameters, surface, np.zeros((2, 1, 2)), np.array([0.5, 0.7]), np.arange(2)
++    )
++    assert out["spot"].shape == (2, 2)
++    assert not out["path_mask"].any()
++    assert np.isnan(out["spot"][:, -1]).all()
++    assert list(out["reasons"]) == ["unsupported_time", "unsupported_time"]
++    assert out["diagnostics"]["original_path_count"] == 2
++    assert out["diagnostics"]["unsupported_count"] == 2
++
++
++def test_local_preserves_wing_and_early_proxy_status(parameters):
++    surface = LocalVarianceGrid(
++        np.array([0.1, 0.5]), np.array([-1.0, 1.0]), np.full((2, 2), 0.04), parameters
++    )
++    out = local_records(
++        parameters,
++        surface,
++        np.zeros((2, 1, 2)),
++        np.array([0.0, 0.1]),
++        np.arange(2),
++        spot=np.array([100.0, 200.0]),
++    )
++    assert out["path_mask"].all()
++    assert out["diagnostics"]["wing_count"] == 1
++    assert out["diagnostics"]["early_proxy_count"] == 2
++
++
++def test_nonfinite_heston_path_is_retained_without_repair(parameters):
++    normals = np.zeros((2, 2, 2))
++    normals[1, 0, 0] = np.nan
++    out = heston_records(parameters, normals, np.array([0.0, 0.1, 0.2]), np.arange(3))
++    assert out["path_mask"].tolist() == [True, False]
++    assert np.isnan(out["spot"][1, 1:]).all()
++    assert out["diagnostics"]["original_path_count"] == 2
++
++
++def test_asian_memory_adds_fixing_before_rebalance_and_excludes_initial_spot():
++    times = np.array([0.0, 1 / 24, 1 / 12, 2 / 12])
++    spots = np.array([[100.0, 999.0, 110.0, 90.0], [100.0, 999.0, 80.0, 120.0]])
++    fixings = np.arange(1, 13) / 12
++    out = asian_memory(spots, times, fixings)
++    np.testing.assert_array_equal(out["A"], [[0.0, 0.0, 110.0, 200.0], [0.0, 0.0, 80.0, 200.0]])
++    np.testing.assert_array_equal(out["n"], [0, 0, 1, 2])
++    np.testing.assert_array_equal(out["m"], [12, 12, 11, 10])
++
++
++def test_asian_memory_rejects_missing_observation():
++    with pytest.raises(ValueError, match="fixing"):
++        asian_memory(np.array([[100.0, 120.0]]), np.array([0.0, 1.0]), np.array([0.5, 1.0]))
++
++
++def independent_gain(times, prices, holdings, payoff, premium, rate, cf, fees):
++    discount = np.exp(-rate * (times - times[0]))
++    costs = np.sum(
++        fees
++        * prices
++        * np.abs(
++            np.diff(
++                np.concatenate(
++                    [np.zeros_like(holdings[:, :1]), holdings, np.zeros_like(holdings[:, :1])],
++                    axis=1,
++                ),
++                axis=1,
++            )
++        ),
++        axis=2,
++    )
++    gains = np.sum(
++        holdings
++        * (
++            discount[None, 1:, None] * (prices[:, 1:] + cf[:, 1:])
++            - discount[None, :-1, None] * prices[:, :-1]
++        ),
++        axis=(1, 2),
++    )
++    return premium + gains - np.sum(discount * costs, axis=1) - discount[-1] * payoff
++
++
++def test_two_asset_cash_matches_independent_discounted_gain():
++    times = np.array([0.0, 0.5, 1.0])
++    prices = np.array([[[100.0, 6.0], [104.0, 8.0], [102.0, 5.0]]])
++    holdings = np.array([[[0.4, 0.5], [0.6, 0.2]]])
++    out = cash_account(
++        times,
++        prices,
++        holdings,
++        np.array([3.0]),
++        premium=7.0,
++        rate=0.05,
++        cost_rates=np.array([0.001, 0.005]),
++    )
++    assert out["discounted_pnl"][0] == pytest.approx(2.2171179961044647, abs=1e-12)
++    np.testing.assert_allclose(out["costs"][0], [0.055, 0.0328, 0.0662], atol=1e-12)
++    expected = independent_gain(
++        times,
++        prices,
++        holdings,
++        np.array([3.0]),
++        7.0,
++        0.05,
++        np.zeros_like(prices),
++        np.array([0.001, 0.005]),
++    )
++    np.testing.assert_allclose(out["discounted_pnl"], expected, atol=1e-12)
++    np.testing.assert_allclose(out["discounted_gain_pnl"], expected, atol=1e-12)
++
++
++def test_cashflow_received_by_previous_holdings_at_event_and_terminal_once():
++    times = np.array([0.2, 0.5, 1.0])
++    prices = np.array([[[100.0, 6.0], [98.0, 8.0], [99.0, 5.0]]])
++    holdings = np.array([[[2.0, 1.0], [-1.0, 0.5]]])
++    cf = np.array([[[999.0, 999.0], [2.0, 0.3], [1.0, 0.2]]])
++    out = cash_account(
++        times,
++        prices,
++        holdings,
++        np.array([4.0]),
++        premium=10.0,
++        rate=0.0,
++        cashflows=cf,
++        cost_rates=np.array([0.01, 0.02]),
++    )
++    # Cash: 10-206-2.12=-198.12; receive4.3, trade receipts=298-3.02;
++    # terminal CF=-.9, liquidation=-96.5; terminal fee=1.04; claim4.
++    assert out["cash"][0, 0] == pytest.approx(-198.12)
++    assert out["cash"][0, 1] == pytest.approx(101.16)
++    assert out["cash"][0, 2] == pytest.approx(-1.28)
++    expected = independent_gain(
++        times, prices, holdings, np.array([4.0]), 10.0, 0.0, cf, np.array([0.01, 0.02])
++    )
++    np.testing.assert_allclose(out["discounted_pnl"], expected)
++
++
++def test_dividend_event_preserves_discounted_total_return():
++    times = np.array([0.0, 0.4, 1.0])
++    rate = 0.03
++    dividend = 2.0
++    p0 = 100.0
++    p1 = p0 * np.exp(rate * 0.4) - dividend
++    p2 = p1 * np.exp(rate * 0.6)
++    prices = np.array([[[p0], [p1], [p2]]])
++    cf = np.array([[[0.0], [dividend], [0.0]]])
++    out = cash_account(
++        times, prices, np.ones((1, 2, 1)), np.zeros(1), premium=0.0, rate=rate, cashflows=cf
++    )
++    assert out["discounted_pnl"][0] == pytest.approx(0.0, abs=3e-14)
++
++
++def test_cash_failure_retains_original_path_and_nan_after_failed_event():
++    prices = np.full((2, 3, 1), 100.0)
++    prices[1, 1, 0] = np.nan
++    out = cash_account(
++        np.array([0.0, 0.5, 1.0]), prices, np.ones((2, 2, 1)), np.zeros(2), premium=0.0, rate=0.03
++    )
++    assert out["path_mask"].tolist() == [True, False]
++    assert np.isfinite(out["cash"][1, 0])
++    assert np.isnan(out["cash"][1, 1:]).all()
++    assert np.isnan(out["discounted_pnl"][1])
++    assert out["diagnostics"]["original_path_count"] == 2
++
++
++@pytest.mark.parametrize(
++    "times", [np.array([0.0, 0.0]), np.array([0.5, 0.0]), np.array([0.0, np.nan])]
++)
++def test_recorder_rejects_invalid_calendar(parameters, times):
++    with pytest.raises(ValueError, match="times"):
++        heston_records(parameters, np.zeros((1, 1, 2)), times, np.arange(2))
++
++
++def test_zero_variance_underflow_is_a_heston_transition_failure(parameters):
++    normals = np.array([[[0.0, -1e200]]])
++    out = heston_records(parameters, normals, np.array([0.0, 0.1]), np.arange(2))
++    assert not out["path_mask"][0]
++    assert np.isnan(out["variance"][0, -1])
++
++
++def test_discount_overflow_retains_failure_status_in_cash():
++    out = cash_account(
++        np.array([0.0, 1.0]),
++        np.ones((1, 2, 1)),
++        np.zeros((1, 1, 1)),
++        np.zeros(1),
++        premium=0.0,
++        rate=-1000.0,
++    )
++    assert not out["path_mask"][0]
++    assert out["reasons"][0] == "nonfinite_discounted_account"
++    assert np.isnan(out["discounted_pnl"][0])
++
++
++def test_asian_memory_accepts_a_single_recorded_state():
++    out = asian_memory(np.array([[100.0]]), np.array([0.0]), np.arange(1, 13) / 12)
++    np.testing.assert_array_equal(out["A"], [[0.0]])
++    np.testing.assert_array_equal(out["n"], [0])
++
++
++def test_integer_initial_spot_is_a_valid_mathematical_state(parameters):
++    p = replace(parameters, spot=100)
++    out = heston_records(p, np.zeros((1, 1, 2)), np.array([0.0, 0.1]), np.arange(2))
++    assert out["path_mask"][0]
++    assert out["spot"][0, 1] > 0
++
++
++@pytest.mark.parametrize("moment", [2, 3, 4])
++@pytest.mark.parametrize("horizon", [1.0, 1.25])
++def test_protocol_moment_cells_have_positive_backward_denominators(parameters, moment, horizon):
++    certificate = moment_certificate(parameters, horizon, p=moment)
++    assert certificate["qualified"]
++    for row in certificate["backward_mgf"]:
++        assert row["qualified"]
++        assert np.all(row["denominators"] > 0)
++        assert np.isfinite(row["log_bound_at_v0"])
++    assert not certificate["continuous_model_or_uniform_convergence_certified"]
++
++
++def test_excluded_cm2_lognormal_has_divergent_positive_exponential_moment(parameters):
++    # Conditional second stock moment contains exp(dt*v1). If v1 is a
++    # nondegenerate lognormal, its Gaussian-integral log integrand tends to
++    # +infinity: dt*exp(mu+sigma*z) - z**2/2. The quadratic Gaussian tail
++    # cannot dominate the exponential-of-exponential payoff.
++    z = np.array([40.0, 80.0, 160.0])
++    log_integrand = 0.1 * np.exp(-3.0 + 0.3 * z) - z**2 / 2
++    assert np.all(np.diff(log_integrand) > 0)
++    assert log_integrand[-1] > 1e15
++    assert "diverge" in moment_certificate(parameters, 1.0)["excluded_cm2_lognormal"]
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py
+new file mode 100644
+index 00000000..1a3f9387
+--- /dev/null
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py
+@@ -0,0 +1,222 @@
++"""Private, Torch-free quote risk and paired scores for dynamic hedging.
++
++Unknown numerical results remain NaN. The only holding projection is the
++declared legal portfolio constraint of [-2, 2] contracts per asset; raw
++targets and band holdings are retained. No calibration or bootstrap is run.
++"""
++
++from __future__ import annotations
++
++import numpy as np
++
++
++def _broadcast(*values):
++    return np.broadcast_arrays(*(np.asarray(value, dtype=float) for value in values))
++
++
++def _model_parameters(model, spot, xi, rho):
++    if model not in {"heston", "local"}:
++        raise ValueError("model must be heston or local")
++    if np.any(spot <= 0) or np.any(xi < 0) or np.any(np.abs(rho) > 1):
++        raise ValueError("spot must be positive, xi nonnegative and |rho| <= 1")
++
++
++def quote_positions(v_s, v_theta, c_s, c_theta, *, denominator_error=0.0) -> dict:
++    """Return stock/call IFT targets in observable (S, Q) coordinates.
++
++    Inputs broadcast to a common shape, retained by every output array.
++    Derivatives hold time and Asian memory fixed. ``denominator_error`` is
++    an independently assessed absolute error in C_theta, in the same state
++    coordinate. |C_theta| <= 3 error and nonfinite ratios are unknown; the
++    denominator and its error remain available for downstream qualification.
++    State-scale, support and root-uniqueness gates belong to the fit caller.
++    """
++    vs, vt, cs, ct, error = _broadcast(v_s, v_theta, c_s, c_theta, denominator_error)
++    if np.any(error < 0):
++        raise ValueError("denominator_error must be nonnegative")
++    valid = np.logical_and.reduce([np.isfinite(x) for x in (vs, vt, cs, ct, error)])
++    valid &= np.abs(ct) > 3 * error
++    call = np.full(ct.shape, np.nan)
++    with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
++        np.divide(vt, ct, out=call, where=valid)
++        stock = vs - call * cs
++    valid &= np.isfinite(stock) & np.isfinite(call)
++    return {
++        "stock": np.where(valid, stock, np.nan),
++        "call": np.where(valid, call, np.nan),
++        "denominator": ct.copy(),
++        "denominator_error": error.copy(),
++        "valid": valid,
++        "status": np.where(valid, "ok", "unknown"),
++    }
++
++
++def stock_only_target(positions: dict, c_s, c_theta, *, model, spot, xi=0.0, rho=0.0):
++    """Project quote exposure into the minimum-variance stock hedge.
++
++    For Heston C_theta is the physical C_v derivative, even if the supplied
++    quote positions were computed in log-state coordinates. Local forecasts
++    freeze their multiplier, so beta = C_s. Return a broadcast array of raw
++    targets; unknown inputs remain NaN and no holding constraints are applied.
++    """
++    hs, hq, cs, ct, s, volvol, corr = _broadcast(
++        positions["stock"], positions["call"], c_s, c_theta, spot, xi, rho
++    )
++    _model_parameters(model, s, volvol, corr)
++    with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
++        beta = cs + ct * corr * volvol / s if model == "heston" else cs
++        target = hs + hq * beta
++    valid = np.logical_and.reduce([np.isfinite(x) for x in (hs, hq, cs, ct, s, volvol, corr)])
++    valid &= np.asarray(positions["valid"], dtype=bool) & np.isfinite(target)
++    return np.where(valid, target, np.nan)
++
++
++def price_covariance(model, spot, state, c_s, c_theta, dt, *, xi=0.0, rho=0.0, base_variance=None):
++    """Return the local stock/call diffusion covariance in currency squared.
++
++    Heston state is physical current variance and C_theta is C_v. Local state
++    is the frozen forecast variance multiplier; base_variance is the local
++    base field at this calendar/spot state. The interval dt is in years.
++    Output covariance has broadcast input shape + (2, 2); rank/valid/status
++    retain that input shape. The local matrix has rank <= 1 with no ridge.
++    This is a continuous diffusion approximation, not finite-step covariance.
++    """
++    if model == "local" and base_variance is None:
++        raise ValueError("local covariance requires base_variance")
++    s, theta, cs, ct, interval, volvol, corr, base = _broadcast(
++        spot, state, c_s, c_theta, dt, xi, rho, 1.0 if base_variance is None else base_variance
++    )
++    _model_parameters(model, s, volvol, corr)
++    if np.any(theta < 0) or np.any(base < 0) or np.any(interval < 0):
++        raise ValueError("variance, multiplier, base_variance and dt must be nonnegative")
++    if model == "local" and np.any(theta == 0):
++        raise ValueError("local forecast multiplier must be positive")
++    valid = np.logical_and.reduce(
++        [np.isfinite(x) for x in (s, theta, cs, ct, interval, volvol, corr, base)]
++    )
++    with np.errstate(over="ignore", invalid="ignore"):
++        variance = theta if model == "heston" else theta * base
++        first = s * cs + corr * volvol * ct if model == "heston" else s * cs
++        second = volvol * np.sqrt(1 - corr**2) * ct if model == "heston" else np.zeros(s.shape)
++        covariance = np.empty((*s.shape, 2, 2))
++        covariance[..., 0, 0] = variance * interval * s**2
++        covariance[..., 0, 1] = covariance[..., 1, 0] = variance * interval * s * first
++        covariance[..., 1, 1] = variance * interval * (first**2 + second**2)
++    valid &= np.isfinite(covariance).all(axis=(-2, -1))
++    covariance = np.where(valid[..., None, None], covariance, np.nan)
++    rank = np.full(s.shape, -1, dtype=int)
++    rank[valid] = np.linalg.matrix_rank(covariance[valid])
++    return {
++        "covariance": covariance,
++        "rank": rank,
++        "valid": valid,
++        "status": np.where(valid, "ok", "unknown"),
++    }
++
++
++def band_holdings(old, target, covariance, width: float) -> dict:
++    """Apply the covariance SD band, then the legal [-2, 2] action constraint.
++
++    Holdings have shape (..., assets), assets is one or two. Covariance has
++    shape (..., assets, assets) and broadcasts over portfolio rows. The band
++    holds old at sd <= width, including a rank-deficient null direction.
++    Raw target, raw band holdings, per-component constraints, row counts and
++    total count are saved. Nonfinite rows remain unknown, never implicit hold.
++    A finite asymmetric or materially indefinite covariance is a caller error;
++    tiny negative eigenvalues are tolerated as arithmetic error without repair.
++    """
++    if not np.isfinite(width) or width < 0:
++        raise ValueError("width must be finite and nonnegative")
++    old, target = _broadcast(old, target)
++    if old.ndim < 1 or old.shape[-1] not in {1, 2}:
++        raise ValueError("holdings must have a final axis of one or two assets")
++    assets = old.shape[-1]
++    cov = np.asarray(covariance, dtype=float)
++    if cov.shape[-2:] != (assets, assets):
++        raise ValueError("covariance asset axes must match holdings")
++    shape = np.broadcast_shapes(old.shape[:-1], cov.shape[:-2])
++    old = np.broadcast_to(old, (*shape, assets))
++    target = np.broadcast_to(target, old.shape)
++    cov = np.broadcast_to(cov, (*shape, assets, assets))
++    finite_cov = np.isfinite(cov).all(axis=(-2, -1))
++    finite_matrices = cov[finite_cov]
++    tolerance = 16 * np.finfo(float).eps * np.max(np.abs(finite_matrices), axis=(-2, -1))
++    asymmetric = np.max(np.abs(finite_matrices - finite_matrices.swapaxes(-1, -2)), axis=(-2, -1))
++    eigenvalues = np.linalg.eigvalsh(finite_matrices)
++    if np.any(asymmetric > tolerance) or np.any(eigenvalues[..., 0] < -tolerance):
++        raise ValueError("covariance must be symmetric positive semidefinite")
++    valid = finite_cov & np.isfinite(old).all(axis=-1) & np.isfinite(target).all(axis=-1)
++    with np.errstate(over="ignore", invalid="ignore"):
++        delta = old - target
++        squared_sd = np.einsum("...i,...ij,...j->...", delta, cov, delta)
++    valid &= np.isfinite(squared_sd) & (squared_sd >= 0)
++    sd = np.full(shape, np.nan)
++    np.sqrt(squared_sd, out=sd, where=valid)
++    raw = np.full(old.shape, np.nan)
++    hold = valid & (sd <= width)
++    trade = valid & (sd > width)
++    raw[hold] = old[hold]
++    with np.errstate(over="ignore", invalid="ignore"):
++        raw[trade] = target[trade] + (width / sd[trade])[..., None] * delta[trade]
++    valid &= np.isfinite(raw).all(axis=-1)
++    raw = np.where(valid[..., None], raw, np.nan)
++    holdings = np.clip(raw, -2.0, 2.0)
++    constrained = valid[..., None] & (holdings != raw)
++    counts = constrained.sum(axis=-1)
++    return {
++        "raw_target": target.copy(),
++        "raw_holdings": raw,
++        "holdings": holdings,
++        "sd": sd,
++        "constrained": constrained,
++        "constraint_counts": counts,
++        "constraint_count": int(counts.sum()),
++        "valid": valid,
++        "status": np.where(valid, "ok", "unknown"),
++    }
++
++
++def improvement_scores(base_squared, candidate_squared, relative_improvement: float = 0.05) -> dict:
++    """Retain paired absolute/relative scores on every original path.
++
++    d = candidate_squared - base_squared; r = candidate_squared -
++    (1-relative_improvement)*base_squared. Both contain the random original
++    baseline. Inputs must have identical nonempty shape; no pair is filtered.
++    Means and IID sample SEs use original_count. Any nonfinite original pair
++    makes all aggregate statistics unknown. Singleton SEs are unknown too.
++    These are raw scores and descriptive IID summaries, not a support decision
++    or a bootstrap confidence interval. Scores are in currency squared.
++    """
++    base, candidate = (
++        np.asarray(base_squared, dtype=float),
++        np.asarray(candidate_squared, dtype=float),
++    )
++    if base.shape != candidate.shape or base.size == 0:
++        raise ValueError("nonempty original paired arrays must have identical shapes")
++    if not np.isfinite(relative_improvement) or not 0 <= relative_improvement <= 1:
++        raise ValueError("relative_improvement must be between zero and one")
++    if np.any(base < 0) or np.any(candidate < 0):
++        raise ValueError("squared losses must be nonnegative")
++    with np.errstate(over="ignore", invalid="ignore"):
++        d = candidate - base
++        r = candidate - (1 - relative_improvement) * base
++    valid = np.isfinite(base) & np.isfinite(candidate) & np.isfinite(d) & np.isfinite(r)
++    count = base.size
++    complete = bool(valid.all())
++    result = {
++        "d": d,
++        "r": r,
++        "absolute": d,
++        "relative": r,
++        "original_count": count,
++        "valid_count": int(valid.sum()),
++        "invalid_count": int(count - valid.sum()),
++        "valid": valid,
++        "status": "ok" if complete and count > 1 else "unknown",
++    }
++    for name, score in (("d", d), ("r", r)):
++        result[f"{name}_mean"] = float(np.mean(score)) if complete else np.nan
++        result[f"{name}_se"] = (
++            float(np.std(score, ddof=1) / np.sqrt(count)) if complete and count > 1 else np.nan
++        )
++    return result
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_risk.py b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_risk.py
+new file mode 100644
+index 00000000..1a90a926
+--- /dev/null
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_risk.py
+@@ -0,0 +1,210 @@
++"""Independent algebra and refit checks for private dynamic hedge risk."""
++
++import importlib
++
++import numpy as np
++import pytest
++from scipy.optimize import brentq
++
++
++def risk_module():
++    """Fail explicitly at RED when the implementation has not been created."""
++    name = "hullkit._dynamic_hedging_risk"
++    assert importlib.util.find_spec(name) is not None, "dynamic hedge risk is not implemented"
++    return importlib.import_module(name)
++
++
++def test_ift_two_asset_coordinates():
++    result = risk_module().quote_positions(0.7, 5.0, 0.6, 10.0)
++    assert result["stock"] == pytest.approx(0.4)
++    assert result["call"] == pytest.approx(0.5)
++    assert result["valid"]
++    assert result["status"] == "ok"
++
++
++def test_quote_ift_matches_independent_nonlinear_quote_and_spot_refits():
++    # C = .3 S + S theta^2 + 2 theta^3; V = .01 S^2 + theta S + 3 theta^2.
++    # A wrong frozen-theta Delta fails the fully re-fitted spot comparison.
++    risk = risk_module()
++    spot, theta = 100.0, 0.4
++
++    def call(s, state):
++        return 0.3 * s + s * state**2 + 2.0 * state**3
++
++    def value(s, state):
++        return 0.01 * s**2 + state * s + 3.0 * state**2
++
++    quote = call(spot, theta)
++
++    def refitted_value(s, q):
++        state = brentq(lambda z: call(s, z) - q, 0.1, 0.8, xtol=1e-14)
++        return value(s, state)
++
++    positions = risk.quote_positions(2.4, 102.4, 0.46, 80.96)
++    for step in (0.01, 0.005, 0.0025):
++        q_bump = refitted_value(spot, quote + step) - refitted_value(spot, quote - step)
++        s_bump = refitted_value(spot + step, quote) - refitted_value(spot - step, quote)
++        assert positions["call"] == pytest.approx(q_bump / (2 * step), abs=1e-7)
++        assert positions["stock"] == pytest.approx(s_bump / (2 * step), abs=1e-7)
++
++
++def test_quote_positions_are_invariant_under_log_state_coordinates():
++    risk = risk_module()
++    physical = risk.quote_positions([0.7, 2.4], [5.0, 102.4], [0.6, 0.46], [10.0, 80.96])
++    logstate = risk.quote_positions(
++        [0.7, 2.4],
++        np.array([5.0, 102.4]) * [0.04, 0.4],
++        [0.6, 0.46],
++        np.array([10.0, 80.96]) * [0.04, 0.4],
++    )
++    assert logstate["stock"] == pytest.approx(physical["stock"])
++    assert logstate["call"] == pytest.approx(physical["call"])
++
++
++def test_quote_positions_keep_bad_denominator_unknown_and_raw_error():
++    result = risk_module().quote_positions(
++        0.7, 5.0, 0.6, [0.0, 0.3, 0.31, np.nan], denominator_error=0.1
++    )
++    assert result["valid"].tolist() == [False, False, True, False]
++    assert np.isnan(result["stock"][[0, 1, 3]]).all()
++    assert np.isnan(result["call"][[0, 1, 3]]).all()
++    assert result["status"].tolist() == ["unknown", "unknown", "ok", "unknown"]
++    assert result["denominator"][:3] == pytest.approx([0.0, 0.3, 0.31])
++    assert result["denominator_error"] == pytest.approx(np.full(4, 0.1))
++
++
++def test_stock_only_uses_minimum_variance_projection_including_heston_correlation():
++    risk = risk_module()
++    positions = risk.quote_positions(0.7, 5.0, 0.6, 10.0)
++    heston = risk.stock_only_target(
++        positions, 0.6, 10.0, model="heston", spot=100.0, xi=0.3, rho=-0.7
++    )
++    local = risk.stock_only_target(positions, 0.6, 10.0, model="local", spot=100.0)
++    assert heston == pytest.approx(0.6895)
++    assert local == pytest.approx(0.7)
++
++
++def test_unknown_positions_propagate_to_stock_only():
++    risk = risk_module()
++    positions = risk.quote_positions(0.7, 5.0, 0.6, 0.0)
++    target = risk.stock_only_target(positions, 0.6, 0.0, model="heston", spot=100.0)
++    assert np.isnan(target)
++
++
++def test_heston_covariance_matches_hand_values_and_scales_with_time():
++    risk = risk_module()
++    result = risk.price_covariance("heston", 100.0, 0.04, 0.6, 10.0, 0.25, xi=0.3, rho=-0.7)
++    # Brownian loading rows sqrt(v) * [100, 0] and sqrt(v) * [57.9, 3 sqrt(.51)].
++    assert result["covariance"] == pytest.approx(np.array([[100.0, 57.9], [57.9, 33.57]]))
++    assert np.linalg.eigvalsh(result["covariance"]).min() > 0
++    assert result["rank"] == 2
++    doubled = risk.price_covariance("heston", 100.0, 0.04, 0.6, 10.0, 0.5, xi=0.3, rho=-0.7)
++    assert doubled["covariance"] == pytest.approx(2 * result["covariance"])
++
++
++def test_local_covariance_has_multiplier_and_rank_one_without_ridge():
++    risk = risk_module()
++    local = risk.price_covariance("local", 100.0, 1.5, 0.6, 99.0, 0.25, base_variance=0.04)
++    deterministic_heston = risk.price_covariance("heston", 100.0, 0.06, 0.6, 99.0, 0.25)
++    assert local["covariance"] == pytest.approx(np.array([[150.0, 90.0], [90.0, 54.0]]))
++    assert local["covariance"] == pytest.approx(deterministic_heston["covariance"])
++    assert local["rank"] == 1
++    assert np.linalg.det(local["covariance"]) == pytest.approx(0.0, abs=1e-11)
++
++
++def test_covariance_broadcasts_and_marks_nonfinite_states_unknown():
++    result = risk_module().price_covariance(
++        "heston", [100.0, 100.0], [0.04, np.nan], 0.6, 10.0, 0.0
++    )
++    assert result["covariance"][0] == pytest.approx(np.zeros((2, 2)))
++    assert result["rank"][0] == 0
++    assert result["valid"].tolist() == [True, False]
++    assert np.isnan(result["covariance"][1]).all()
++
++
++@pytest.mark.parametrize("kwargs", [{"state": -0.1}, {"rho": 1.1}, {"xi": -0.1}, {"dt": -0.1}])
++def test_covariance_rejects_impossible_diffusion_parameters(kwargs):
++    inputs = dict(model="heston", spot=100.0, state=0.04, c_s=0.6, c_theta=10.0, dt=0.25)
++    inputs.update(kwargs)
++    with pytest.raises(ValueError):
++        risk_module().price_covariance(**inputs)
++
++
++def test_band_rank_one_no_costly_null_trade():
++    old = np.array([[0.0, 0.0]])
++    result = risk_module().band_holdings(old, [[1.0, -2.0]], [[[1.0, 0.5], [0.5, 0.25]]], 0.01)
++    assert result["holdings"] == pytest.approx(old)
++    assert result["sd"] == pytest.approx([0.0])
++
++
++def test_band_width_and_zero_width_follow_covariance_geometry():
++    risk = risk_module()
++    old, target = [[0.0, 0.0]], [[0.6, 0.8]]
++    interior = risk.band_holdings(old, target, np.eye(2), 0.25)
++    assert interior["sd"] == pytest.approx([1.0])
++    assert interior["holdings"] == pytest.approx(np.array([[0.45, 0.6]]))
++    assert risk.band_holdings(old, target, np.eye(2), 1.0)["holdings"] == pytest.approx(
++        np.array(old)
++    )
++    assert risk.band_holdings(old, target, np.eye(2), 0.0)["holdings"] == pytest.approx(
++        np.array(target)
++    )
++    assert risk.band_holdings(old, target, np.zeros((2, 2)), 0.0)["holdings"] == pytest.approx(
++        np.array(old)
++    )
++
++
++def test_band_saves_raw_targets_and_raw_holdings_before_legal_constraint():
++    result = risk_module().band_holdings([[0.0, 0.0]], [[3.0, -4.0]], np.eye(2), 0.0)
++    assert result["raw_target"] == pytest.approx(np.array([[3.0, -4.0]]))
++    assert result["raw_holdings"] == pytest.approx(np.array([[3.0, -4.0]]))
++    assert result["holdings"] == pytest.approx(np.array([[2.0, -2.0]]))
++    assert result["constrained"].tolist() == [[True, True]]
++    assert result["constraint_count"] == 2
++
++
++def test_band_unknown_does_not_fallback_to_old_or_zero():
++    result = risk_module().band_holdings([[1.0]], [[np.nan]], [[[1.0]]], 0.1)
++    assert result["status"].tolist() == ["unknown"]
++    assert np.isnan(result["holdings"]).all()
++    assert np.isnan(result["raw_target"]).all()
++
++
++def test_band_rejects_indefinite_covariance_and_negative_width():
++    risk = risk_module()
++    with pytest.raises(ValueError):
++        risk.band_holdings([0.0, 0.0], [1.0, 1.0], [[1.0, 2.0], [2.0, 1.0]], 0.1)
++    with pytest.raises(ValueError):
++        risk.band_holdings([0.0], [1.0], [[1.0]], -0.1)
++
++
++def test_improvement_scores_preserve_random_baseline_paired_uncertainty():
++    result = risk_module().improvement_scores([1.0, 100.0], [0.95, 95.0])
++    assert result["d"] == pytest.approx([-0.05, -5.0])
++    assert result["r"] == pytest.approx([0.0, 0.0])
++    assert result["absolute"] == pytest.approx(result["d"])
++    assert result["relative"] == pytest.approx(result["r"])
++    assert result["r_se"] == pytest.approx(0.0, abs=1e-14)
++    assert result["d_mean"] == pytest.approx(-2.525)
++    assert result["d_se"] == pytest.approx(2.475)
++    assert result["original_count"] == 2
++
++
++def test_improvement_unknown_keeps_original_n_and_nan_scores():
++    result = risk_module().improvement_scores([1.0, 4.0, 9.0], [0.9, np.nan, 8.0])
++    assert result["original_count"] == 3
++    assert result["valid_count"] == 2
++    assert result["invalid_count"] == 1
++    assert result["status"] == "unknown"
++    assert result["d"].shape == (3,)
++    assert np.isnan(result["d"][1])
++    assert np.isnan(result["d_mean"])
++    assert np.isnan(result["r_se"])
++
++
++def test_improvement_requires_original_pairs_and_nonnegative_squared_losses():
++    risk = risk_module()
++    with pytest.raises(ValueError):
++        risk.improvement_scores([1.0, 2.0], [1.0])
++    with pytest.raises(ValueError):
++        risk.improvement_scores([1.0, -1.0], [0.9, 1.0])
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py b/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py
+new file mode 100644
+index 00000000..cacba9d3
+--- /dev/null
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py
+@@ -0,0 +1,356 @@
++"""Private observable CPU policy for the fixed monthly K100/T1 Asian study.
++
++Finance prices and cashflows are caller-owned constants. Gradients flow through
++bounded actions, previous holdings and self-financing cash, including liquidation.
++No generator state, latent variance, test scaler or future payoff enters features.
++"""
++
++from time import perf_counter
++
++import numpy as np
++import torch
++from torch import nn
++
++
++def observable_features(spot, time, memory_sum, memory_count, quote, old_holdings, spreads):
++    """Return the nine declared physical features for K100/T1/12 fixings."""
++    old = np.asarray(old_holdings, dtype=float)
++    fee = np.asarray(spreads, dtype=float)
++    if old.shape[-1:] != (2,) or fee.shape != (2,):
++        raise ValueError("two previous holdings and two spreads required")
++    s, t, a, n, q, hs, hq, fs, fq = np.broadcast_arrays(
++        spot,
++        time,
++        memory_sum,
++        memory_count,
++        quote,
++        old[..., 0],
++        old[..., 1],
++        fee[0],
++        fee[1],
++    )
++    if np.any(s <= 0) or np.any((t < 0) | (t > 1)) or np.any((n < 0) | (n > 12)):
++        raise ValueError("positive spot, time in [0,1], memory count in [0,12] required")
++    return np.stack([np.log(s / 100), t, a / 1200, n / 12, q / 100, hs, hq, fs, fq], axis=-1)
++
++
++def _universe(universe):
++    if universe not in ("U1", "U2"):
++        raise ValueError("universe must be U1 or U2")
++
++
++def numpy_policy(weights, features, scaler, *, universe):
++    """Replay exported 9→32→32→2 tanh CPU weights without RNG or Torch calls."""
++    _universe(universe)
++    x = (np.asarray(features, dtype=float) - scaler["mean"]) / scaler["std"]
++    x = np.tanh(x @ weights["w1"] + weights["b1"])
++    x = np.tanh(x @ weights["w2"] + weights["b2"])
++    actions = 2 * np.tanh(x @ weights["w3"] + weights["b3"])
++    if universe == "U1":
++        actions[..., 1] = 0.0
++    return actions
++
++
++class _PolicyNet(nn.Module):
++    def __init__(self):
++        super().__init__()
++        self.first = nn.Linear(9, 32, dtype=torch.float64, device="cpu")
++        self.second = nn.Linear(32, 32, dtype=torch.float64, device="cpu")
++        self.last = nn.Linear(32, 2, dtype=torch.float64, device="cpu")
++
++    def forward(self, inputs):
++        return 2 * torch.tanh(self.last(torch.tanh(self.second(torch.tanh(self.first(inputs))))))
++
++
++def _weights(model):
++    return {
++        "w1": model.first.weight.detach().numpy().T.copy(),
++        "b1": model.first.bias.detach().numpy().copy(),
++        "w2": model.second.weight.detach().numpy().T.copy(),
++        "b2": model.second.bias.detach().numpy().copy(),
++        "w3": model.last.weight.detach().numpy().T.copy(),
++        "b3": model.last.bias.detach().numpy().copy(),
++    }
++
++
++def _restore_weights(model, weights):
++    with torch.no_grad():
++        for layer, index in [(model.first, 1), (model.second, 2), (model.last, 3)]:
++            layer.weight.copy_(torch.as_tensor(weights[f"w{index}"].T, dtype=torch.float64))
++            layer.bias.copy_(torch.as_tensor(weights[f"b{index}"], dtype=torch.float64))
++
++
++def _dataset(data):
++    times = np.asarray(data["times"], dtype=float)
++    prices = np.asarray(data["prices"], dtype=float)
++    if (
++        times.ndim != 1
++        or len(times) < 2
++        or times[0] != 0
++        or times[-1] > 1
++        or not np.isfinite(times).all()
++        or np.any(np.diff(times) <= 0)
++        or prices.ndim != 3
++        or prices.shape[1:] != (len(times), 2)
++        or len(prices) == 0
++        or not np.isfinite(prices).all()
++        or np.any(prices[..., 0] <= 0)
++        or np.any(prices[..., 1] < 0)
++    ):
++        raise ValueError("finite two-asset paths on increasing time-zero grid required")
++    n, m = len(prices), len(times) - 1
++    memory = np.asarray(data["memory_sum"], dtype=float)
++    counts = np.asarray(data["memory_count"], dtype=float)
++    if memory.shape not in ((n, m), (n, m + 1)):
++        raise ValueError("memory sum must match path/rebalance dates")
++    if counts.shape not in ((m,), (m + 1,), (n, m), (n, m + 1)):
++        raise ValueError("memory count must match rebalance dates")
++    memory = memory[:, :m]
++    counts = np.broadcast_to(counts[..., :m], (n, m))
++    payoff = np.asarray(data["payoff"], dtype=float)
++    cf = np.asarray(data.get("cashflows", np.zeros_like(prices)), dtype=float)
++    fees = np.asarray(data["cost_rates"], dtype=float)
++    premium, rate = float(data["premium"]), float(data["rate"])
++    if (
++        payoff.shape != (n,)
++        or cf.shape != prices.shape
++        or fees.shape != (2,)
++        or np.any(fees < 0)
++        or not all(np.isfinite(a).all() for a in [memory, counts, payoff, cf, fees])
++        or not np.isfinite([premium, rate]).all()
++    ):
++        raise ValueError("finite matching payoff, CF, costs and cash conventions required")
++    return {
++        "times": times,
++        "prices": prices,
++        "memory_sum": memory,
++        "memory_count": counts,
++        "payoff": payoff,
++        "cashflows": cf,
++        "cost_rates": fees,
++        "premium": premium,
++        "rate": rate,
++    }
++
++
++def _normalization(data):
++    prices, times = data["prices"], data["times"]
++    zero = np.zeros((len(prices), len(times) - 1, 2))
++    features = observable_features(
++        prices[:, :-1, 0],
++        times[:-1],
++        data["memory_sum"],
++        data["memory_count"],
++        prices[:, :-1, 1],
++        zero,
++        data["cost_rates"],
++    ).reshape(-1, 9)
++    deviation = features.std(axis=0)
++    return {
++        "mean": features.mean(axis=0),
++        "std": np.where(deviation > 1e-12, deviation, 1.0),
++        "source": "training_paths_only; previous holdings anchored at zero",
++        "training_path_count": len(prices),
++    }
++
++
++def _torch_rollout(model, dataset, scaler, *, universe):
++    """Roll all dates with old-holding BPTT and caller prices kept constant."""
++    _universe(universe)
++    data = _dataset(dataset)
++
++    def to_tensor(x):
++        return torch.as_tensor(x, dtype=torch.float64, device="cpu")
++
++    prices, cf, fees = (to_tensor(data[key]) for key in ["prices", "cashflows", "cost_rates"])
++    times = data["times"]
++    n, m, _ = prices.shape
++    mean, scale = to_tensor(scaler["mean"]), to_tensor(scaler["std"])
++    constants = observable_features(
++        data["prices"][:, :-1, 0],
++        times[:-1],
++        data["memory_sum"],
++        data["memory_count"],
++        data["prices"][:, :-1, 1],
++        np.zeros((n, m - 1, 2)),
++        data["cost_rates"],
++    )
++    constants = to_tensor(constants)
++    old = torch.zeros((n, 2), dtype=torch.float64, device="cpu")
++    cash = torch.full((n,), data["premium"], dtype=torch.float64, device="cpu")
++    holdings, costs, cash_history = [], [], []
++    for j in range(m - 1):
++        if j:
++            cash = cash * np.exp(data["rate"] * (times[j] - times[j - 1]))
++        cash = cash + torch.sum(old * cf[:, j], dim=1)
++        features = torch.cat([constants[:, j, :5], old, constants[:, j, 7:]], dim=1)
++        action = model((features - mean) / scale)
++        if universe == "U1":
++            action = action * to_tensor([1.0, 0.0])
++        trade = action - old
++        cost = torch.sum(fees * prices[:, j] * torch.abs(trade), dim=1)
++        cash = cash - torch.sum(trade * prices[:, j], dim=1) - cost
++        holdings.append(action)
++        costs.append(cost)
++        cash_history.append(cash)
++        old = action
++    cash = cash * np.exp(data["rate"] * (times[-1] - times[-2]))
++    cash = cash + torch.sum(old * cf[:, -1], dim=1)
++    terminal_cost = torch.sum(fees * prices[:, -1] * torch.abs(old), dim=1)
++    cash = cash + torch.sum(old * prices[:, -1], dim=1) - terminal_cost - to_tensor(data["payoff"])
++    costs.append(terminal_cost)
++    cash_history.append(cash)
++    return {
++        "holdings": torch.stack(holdings, dim=1),
++        "costs": torch.stack(costs, dim=1),
++        "cash": torch.stack(cash_history, dim=1),
++        "pnl": cash,
++        "discounted_pnl": cash * np.exp(-data["rate"] * times[-1]),
++    }
++
++
++def fit_policy(dataset, *, universe, seed, updates, batch_size, learning_rate, cap_seconds):
++    """Fit training-only net-P&L MSE and retain every attempted batch/failure.
++
++    CPU RNG and thread count are restored. The time cap includes validation,
++    setup and final diagnostic replay; it is checked before each optimizer
++    update, so one update and final evaluation may overrun. Last finite weights
++    remain available with an explicit incomplete status when any attempt fails.
++    """
++    start = perf_counter()
++    _universe(universe)
++    data = _dataset(dataset)
++    if (
++        updates < 1
++        or int(updates) != updates
++        or batch_size < 1
++        or int(batch_size) != batch_size
++        or not np.isfinite([learning_rate, cap_seconds]).all()
++        or learning_rate <= 0
++        or cap_seconds < 0
++    ):
++        raise ValueError("positive update/batch/rate and nonnegative finite cap required")
++    updates, batch_size = int(updates), int(batch_size)
++    scaler = _normalization(data)
++    old_threads = torch.get_num_threads()
++    losses, batches, attempt_events = [], [], []
++    done, status, reason = 0, "time_cap", "time cap before first update"
++    initial_loss = final_loss = None
++    torch.set_num_threads(1)
++    try:
++        with torch.device("cpu"), torch.enable_grad(), torch.random.fork_rng(devices=[]):
++            torch.random.default_generator.manual_seed(seed)
++            model = _PolicyNet()
++            optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
++            batch_rng = np.random.default_rng(np.random.SeedSequence([seed, 1937]))
++            last_finite = _weights(model)
++            if perf_counter() - start < cap_seconds:
++                initial_loss = float(
++                    _torch_rollout(model, data, scaler, universe=universe)["discounted_pnl"]
++                    .square()
++                    .mean()
++                    .detach()
++                )
++                if not np.isfinite(initial_loss):
++                    status, reason = "nonfinite_loss", "nonfinite initial training objective"
++                else:
++                    for _ in range(updates):
++                        if perf_counter() - start >= cap_seconds:
++                            status, reason = "time_cap", "time cap before next update"
++                            break
++                        rows = batch_rng.integers(
++                            0, len(data["prices"]), size=batch_size, dtype=np.int32
++                        )
++                        batches.append(rows)
++                        batch = {
++                            key: value[rows]
++                            if isinstance(value, np.ndarray)
++                            and key
++                            in ("prices", "memory_sum", "memory_count", "payoff", "cashflows")
++                            else value
++                            for key, value in data.items()
++                        }
++                        optimizer.zero_grad(set_to_none=True)
++                        loss = (
++                            _torch_rollout(model, batch, scaler, universe=universe)[
++                                "discounted_pnl"
++                            ]
++                            .square()
++                            .mean()
++                        )
++                        losses.append(float(loss.detach()))
++                        event = {"attempt": len(batches), "status": "pending"}
++                        attempt_events.append(event)
++                        if not torch.isfinite(loss):
++                            status, reason = "nonfinite_loss", "nonfinite batch objective"
++                            event["status"] = status
++                            break
++                        loss.backward()
++                        if any(
++                            p.grad is not None and not torch.isfinite(p.grad).all()
++                            for p in model.parameters()
++                        ):
++                            status, reason = "nonfinite_gradient", "nonfinite gradient"
++                            event["status"] = status
++                            break
++                        try:
++                            optimizer.step()
++                        except RuntimeError as exc:
++                            status, reason = "optimizer_error", str(exc)
++                            event["status"] = status
++                            break
++                        done += 1
++                        if any(not torch.isfinite(p).all() for p in model.parameters()):
++                            status, reason = (
++                                "nonfinite_parameters",
++                                "nonfinite weights after update",
++                            )
++                            event["status"] = status
++                            break
++                        last_finite = _weights(model)
++                        event["status"] = "completed"
++                    else:
++                        status, reason = "completed", None
++            _restore_weights(model, last_finite)
++            with torch.no_grad():
++                result = _torch_rollout(model, data, scaler, universe=universe)
++                final_loss = float(result["discounted_pnl"].square().mean())
++                train_holdings = result["holdings"].numpy().copy()
++                train_pnl = result["discounted_pnl"].numpy().copy()
++            if not np.isfinite(final_loss) and status == "completed":
++                status, reason = "nonfinite_loss", "nonfinite final training objective"
++    finally:
++        torch.set_num_threads(old_threads)
++    elapsed = perf_counter() - start
++    return {
++        "weights": last_finite,
++        "scaler": scaler,
++        "status": status,
++        "complete": status == "completed",
++        "reason": reason,
++        "updates": done,
++        "requested_updates": updates,
++        "attempt_count": len(batches),
++        "attempt_events": attempt_events,
++        "batch_indices": np.stack(batches)
++        if batches
++        else np.empty((0, batch_size), dtype=np.int32),
++        "losses": np.asarray(losses),
++        "initial_loss": initial_loss,
++        "final_loss": final_loss,
++        "train_holdings": train_holdings,
++        "train_discounted_pnl": train_pnl,
++        "original_path_count": len(data["prices"]),
++        "universe": universe,
++        "seed": int(seed),
++        "batch_seed_components": [int(seed), 1937],
++        "batch_size": batch_size,
++        "learning_rate": float(learning_rate),
++        "cap_seconds": float(cap_seconds),
++        "elapsed_seconds": elapsed,
++        "overrun_seconds": max(0.0, elapsed - cap_seconds),
++        "cost_scope": "validation/setup/train/final diagnostics/CPU thread restore; excludes import",
++        "threads": 1,
++        "dtype": "float64",
++        "device": "cpu",
++    }
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_policy.py b/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_policy.py
+new file mode 100644
+index 00000000..c9adeb3d
+--- /dev/null
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_policy.py
+@@ -0,0 +1,242 @@
++"""Independent observables, cash, gradients and CPU-state tests for dynamic policy."""
++
++import numpy as np
++import pytest
++import torch
++
++from deep_hedge_price._dynamic_hedging_policy import (
++    _PolicyNet,
++    _torch_rollout,
++    _weights,
++    fit_policy,
++    numpy_policy,
++    observable_features,
++)
++
++
++def dataset():
++    prices = np.array(
++        [
++            [[100.0, 6.0], [104.0, 8.0], [102.0, 5.0]],
++            [[100.0, 6.0], [96.0, 4.0], [99.0, 5.0]],
++            [[100.0, 6.0], [102.0, 7.0], [106.0, 9.0]],
++            [[100.0, 6.0], [99.0, 5.0], [95.0, 3.0]],
++        ]
++    )
++    return {
++        "times": np.array([0.0, 0.5, 1.0]),
++        "prices": prices,
++        "memory_sum": np.column_stack([np.zeros(4), 6 * prices[:, 1, 0]]),
++        "memory_count": np.array([0, 6]),
++        "payoff": np.array([3.0, 1.0, 6.0, 0.0]),
++        "premium": 7.0,
++        "rate": 0.05,
++        "cost_rates": np.array([0.001, 0.005]),
++        "cashflows": np.tile(np.array([[0.0, 0.0], [0.4, 0.2], [0.3, 0.1]]), (4, 1, 1)),
++    }
++
++
++def test_observables_are_exactly_nine_declared_features():
++    got = observable_features(
++        np.array([100.0, 110.0]),
++        0.5,
++        np.array([600.0, 650.0]),
++        6,
++        np.array([6.0, 8.0]),
++        np.array([[0.4, 0.5], [0.2, -0.1]]),
++        [0.0005, 0.005],
++    )
++    expected = np.array(
++        [
++            [0.0, 0.5, 0.5, 0.5, 0.06, 0.4, 0.5, 0.0005, 0.005],
++            [np.log(1.1), 0.5, 650 / 1200, 0.5, 0.08, 0.2, -0.1, 0.0005, 0.005],
++        ]
++    )
++    assert got.shape == (2, 9)
++    assert got == pytest.approx(expected)
++    with pytest.raises(ValueError):
++        observable_features(0.0, 0.0, 0.0, 0, 6.0, [0.0, 0.0], [0.0005, 0.005])
++
++
++def test_numpy_export_matches_torch_bounded_actions_without_rng():
++    with torch.random.fork_rng(devices=[]):
++        torch.random.default_generator.manual_seed(29)
++        model = _PolicyNet()
++    features = np.linspace(-0.8, 0.9, 45).reshape(5, 9)
++    scaler = {"mean": np.linspace(-0.2, 0.3, 9), "std": np.linspace(0.5, 1.5, 9)}
++    z = (features - scaler["mean"]) / scaler["std"]
++    expected = model(torch.tensor(z, dtype=torch.float64)).detach().numpy()
++    rng = np.random.get_state()
++    got = numpy_policy(_weights(model), features, scaler, universe="U2")
++    after = np.random.get_state()
++    assert got == pytest.approx(expected, abs=1e-13)
++    assert np.max(np.abs(got)) <= 2.0
++    assert rng[0] == after[0] and np.array_equal(rng[1], after[1])
++    one = numpy_policy(_weights(model), features, scaler, universe="U1")
++    assert one[:, 0] == pytest.approx(expected[:, 0])
++    assert one[:, 1] == pytest.approx(np.zeros(5))
++
++
++def test_torch_cash_matches_independent_discounted_gain_and_core():
++    data = dataset()
++    with torch.random.fork_rng(devices=[]):
++        torch.random.default_generator.manual_seed(11)
++        model = _PolicyNet()
++    scaler = {"mean": np.zeros(9), "std": np.ones(9)}
++    got = _torch_rollout(model, data, scaler, universe="U2")
++    h = got["holdings"].detach().numpy()
++    prices, times, cf, fees = (data["prices"], data["times"], data["cashflows"], data["cost_rates"])
++    disc = np.exp(-data["rate"] * times)
++    discounted_prices = prices * disc[None, :, None]
++    gains = np.sum(h * np.diff(discounted_prices, axis=1), axis=(1, 2))
++    dividends = np.sum(h * cf[:, 1:] * disc[None, 1:, None], axis=(1, 2))
++    trades = np.concatenate([h[:, :1], np.diff(h, axis=1), -h[:, -1:]], axis=1)
++    costs = np.sum(fees * prices * np.abs(trades), axis=2)
++    expected = data["premium"] + gains + dividends - costs @ disc - data["payoff"] * disc[-1]
++    assert got["discounted_pnl"].detach().numpy() == pytest.approx(expected, abs=2e-12)
++    assert got["costs"].detach().numpy() == pytest.approx(costs, abs=1e-13)
++    from hullkit._dynamic_hedging_core import cash_account
++
++    core = cash_account(
++        times,
++        prices,
++        h,
++        data["payoff"],
++        premium=data["premium"],
++        rate=data["rate"],
++        cashflows=cf,
++        cost_rates=fees,
++    )
++    assert core["discounted_pnl"] == pytest.approx(expected, abs=2e-12)
++
++
++def test_bptt_cash_gradient_matches_parameter_bump():
++    data = dataset()
++    with torch.random.fork_rng(devices=[]):
++        torch.random.default_generator.manual_seed(47)
++        model = _PolicyNet()
++    scaler = {"mean": np.zeros(9), "std": np.ones(9)}
++    objective = _torch_rollout(model, data, scaler, universe="U2")["discounted_pnl"].square().mean()
++    objective.backward()
++    analytic = model.last.bias.grad[0].item()
++    original = model.last.bias[0].item()
++    values = []
++    for shift in [-1e-5, 1e-5]:
++        with torch.no_grad():
++            model.last.bias[0] = original + shift
++        values.append(
++            _torch_rollout(model, data, scaler, universe="U2")["discounted_pnl"]
++            .square()
++            .mean()
++            .item()
++        )
++    with torch.no_grad():
++        model.last.bias[0] = original
++    assert analytic == pytest.approx((values[1] - values[0]) / 2e-5, rel=2e-7, abs=2e-7)
++
++
++def test_fit_retains_attempts_and_restores_rng_dtype_and_threads():
++    data = dataset()
++    np_before = np.random.get_state()
++    torch_before = torch.random.get_rng_state().clone()
++    dtype, threads = torch.get_default_dtype(), torch.get_num_threads()
++    got = fit_policy(
++        data,
++        universe="U1",
++        seed=11,
++        updates=3,
++        batch_size=4,
++        learning_rate=0.003,
++        cap_seconds=60.0,
++    )
++    assert got["status"] == "completed"
++    assert got["updates"] == 3 and got["attempt_count"] == 3
++    assert got["original_path_count"] == 4
++    assert got["batch_indices"].shape == (3, 4)
++    assert len(got["losses"]) == 3
++    assert got["train_holdings"][:, :, 1] == pytest.approx(np.zeros((4, 2)))
++    assert torch.equal(torch_before, torch.random.get_rng_state())
++    assert torch.get_default_dtype() == dtype and torch.get_num_threads() == threads
++    np_after = np.random.get_state()
++    assert np_before[0] == np_after[0] and np.array_equal(np_before[1], np_after[1])
++    assert got["scaler"]["mean"][:5] == pytest.approx(
++        observable_features(
++            data["prices"][:, :-1, 0],
++            data["times"][:-1],
++            data["memory_sum"],
++            data["memory_count"],
++            data["prices"][:, :-1, 1],
++            np.zeros((4, 2, 2)),
++            data["cost_rates"],
++        )
++        .reshape(-1, 9)
++        .mean(axis=0)[:5]
++    )
++
++
++def test_zero_time_cap_is_preserved_as_incomplete_attempt():
++    got = fit_policy(
++        dataset(),
++        universe="U2",
++        seed=29,
++        updates=2,
++        batch_size=4,
++        learning_rate=0.003,
++        cap_seconds=0.0,
++    )
++    assert got["status"] == "time_cap"
++    assert not got["complete"] and got["updates"] == 0
++    assert got["attempt_count"] == 0
++    assert got["batch_indices"].shape == (0, 4)
++    assert all(np.isfinite(a).all() for a in got["weights"].values())
++    assert got["overrun_seconds"] >= 0.0
++
++
++def test_exported_numpy_policy_replays_all_observable_dates_and_cash():
++    data = dataset()
++    result = fit_policy(
++        data, universe="U2", seed=47, updates=2, batch_size=4,
++        learning_rate=.003, cap_seconds=60.,
++    )
++    old = np.zeros((4, 2))
++    all_holdings = []
++    for j, time in enumerate(data["times"][:-1]):
++        features = observable_features(
++            data["prices"][:, j, 0], time, data["memory_sum"][:, j],
++            data["memory_count"][j], data["prices"][:, j, 1], old, data["cost_rates"],
++        )
++        old = numpy_policy(result["weights"], features, result["scaler"], universe="U2")
++        all_holdings.append(old.copy())
++    holdings = np.stack(all_holdings, axis=1)
++    assert holdings == pytest.approx(result["train_holdings"], abs=3e-13)
++    from hullkit._dynamic_hedging_core import cash_account
++    cash = cash_account(
++        data["times"], data["prices"], holdings, data["payoff"],
++        premium=data["premium"], rate=data["rate"],
++        cashflows=data["cashflows"], cost_rates=data["cost_rates"],
++    )
++    assert cash["discounted_pnl"] == pytest.approx(result["train_discounted_pnl"], abs=3e-12)
++
++
++def test_nonfinite_objective_retains_all_paths_and_incomplete_status():
++    data = dataset()
++    data["payoff"] = np.full(4, 1e200)
++    result = fit_policy(
++        data, universe="U2", seed=11, updates=2, batch_size=4,
++        learning_rate=.003, cap_seconds=60.,
++    )
++    assert not result["complete"] and result["status"] == "nonfinite_loss"
++    assert result["original_path_count"] == 4 and result["updates"] == 0
++    assert result["train_discounted_pnl"].shape == (4,)
++    assert result["attempt_count"] == 0
++    assert np.isinf(result["initial_loss"])
++
++
++def test_malformed_math_data_is_rejected_without_path_filtering():
++    data = dataset()
++    data["prices"][2, 1, 0] = np.nan
++    with pytest.raises(ValueError, match="finite two-asset"):
++        fit_policy(
++            data, universe="U1", seed=11, updates=1, batch_size=4,
++            learning_rate=.003, cap_seconds=60.,
++        )

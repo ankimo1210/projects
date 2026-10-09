@@ -1,0 +1,125 @@
+{
+  "review_date": "2026-10-09",
+  "review_scope": "Task1 and Task4 core/risk/policy source review only; not phase acceptance",
+  "base": "d71b25f3",
+  "source_digests": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py": "78ad0cc9e32628476da2023755cd688ea8363aee9be5f5655c204c6ab6fa5777",
+    "johnhull/hullkit/tests/test_dynamic_hedging_core.py": "3347d9def05ccff761527b0273d85c7d98b2712da9c45813bbe7a03999cfcb2b",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py": "f2a1c533d8536fce5df3698f5413e430a61abf9fc5e469e55351f9af05c36242",
+    "johnhull/hullkit/tests/test_dynamic_hedging_risk.py": "7255a2b52b9974ea015c78fd45eb4193346c54f740f6a7d13b0de077a4c34bbd",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py": "617910b429aefbe7c04b97e81dc75b15f419302eab5e3c838d33d8f26207651f",
+    "deep_hedge_price/tests/test_dynamic_hedging_policy.py": "41a165842e7d3f1386583d85f6f8c3927a2544404c3d53d710f2478ab3d0018f"
+  },
+  "source_manifest_sha256": "9b6b8c6c0f8c86fc33ef08a7bb2b4ee23e86426251ace0529c0b5c5e45803b22",
+  "review_package_sha256": "a22ead76073d740bc898ec8c406ff515d05deb66fb2738e261fba311cdd3b99b",
+  "all_current_source_digests_match": false,
+  "all_diff_additions_match_manifest": true,
+  "spec_compliance": {
+    "task1": "PASS within reviewed task scope",
+    "task4": "NEEDS_FIX: T14-R1 and T14-R2"
+  },
+  "code_quality": {
+    "task1": "No blocking finding identified",
+    "task4": "NEEDS_FIX: numerical stability and cap-status correctness"
+  },
+  "proceed_to_integration": {
+    "task1": true,
+    "task4": false,
+    "combined": false
+  },
+  "findings": [
+    {
+      "id": "T14-R1",
+      "severity": "Important",
+      "category": "spec_and_quality",
+      "file": "johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py",
+      "start_line": 149,
+      "end_line": 154,
+      "title": "local rank1 の null 差が丸めにより unknown になる",
+      "requirement": "DESIGN.md §8, line 251: null direction has sd0 and band holds; no ridge",
+      "evidence": {
+        "model": "local",
+        "spot": 100.0,
+        "state": 1.0,
+        "c_s": 0.6,
+        "c_theta": 10.0,
+        "dt": 0.08333333333333333,
+        "base_variance": 0.04,
+        "old": [
+          0.0,
+          0.0
+        ],
+        "target": [
+          -0.6,
+          1.0
+        ],
+        "width": 0.01,
+        "quadratic": -2.1316282072803005e-15,
+        "smallest_eigenvalue": -1.7763568394002505e-15,
+        "status": "unknown",
+        "holdings": [
+          "NaN",
+          "NaN"
+        ]
+      },
+      "impact": "Ordinary finite valid local inputs can turn a zero-risk portfolio difference into NaN holdings and invalidate the original-path aggregate study. Existing null fixture uses exactly representable .5 and misses this.",
+      "requested_fix": "Use stable diffusion-loading/PSD factor evaluation or an explicitly qualified roundoff treatment that preserves raw diagnostics; do not add ridge or repair a materially indefinite covariance. Add the ordinary CS=.6 monthly null fixture."
+    },
+    {
+      "id": "T14-R2",
+      "severity": "Important",
+      "category": "spec_and_quality",
+      "file": "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py",
+      "start_line": 313,
+      "end_line": 329,
+      "title": "cap 超過の fit を completed と認証する",
+      "requirement": "DESIGN.md §10, line 282: cap overrun cannot be a member of the completed family; fit docstring includes final diagnostics in cap",
+      "evidence": {
+        "probe": "in-memory perf_counter sequence [0,.1,.2,2], one requested/completed update, cap1",
+        "status": "completed",
+        "complete": true,
+        "updates": 1,
+        "requested_updates": 1,
+        "cap_seconds": 1.0,
+        "elapsed_seconds": 2.0,
+        "overrun_seconds": 1.0
+      },
+      "impact": "A last update or final replay that passes the budget is exported as successful completed training. Downstream use of the advertised complete/status fields can incorrectly accept a capped family. Logging overrun alone does not make these fields consistent.",
+      "requested_fix": "After final elapsed measurement, downgrade completed/complete on elapsed>cap, while retaining completed update count, last finite weights and overrun. Add deterministic clock coverage for final-update/final-evaluation overrun."
+    }
+  ],
+  "counts": {
+    "Critical": 0,
+    "Important": 2,
+    "Minor": 0
+  },
+  "verification": {
+    "green_suites_rerun": false,
+    "reported_scoped_results": {
+      "task1": 29,
+      "task4_risk": 21,
+      "task4_policy": 9
+    },
+    "reported_results_independently_recertified": false,
+    "numerical_probes": "/tmp/dynamic_core_risk_probe.py",
+    "probe_description": "ordinary local rank1 null vector; deterministic in-memory clock cap overrun; source digests"
+  },
+  "integration_items": [
+    "Runner must catch dataset rejection and persist failed training attempt with original roster/N; fit_policy deliberately rejects nonfinite input before returning an attempt object. This is a Task5 caller obligation, not an additional Task4 blocker.",
+    "Runner must qualify quote root/support/scaled denominator and teacher ratio error; quote_positions finite/denominator gate is not full fit qualification.",
+    "Runner owns fixed K100/T1 monthly12 roster, fixed traded-call K100/T1.25 and market actual prices, all-12-fit roster, selection and original IDs. Core is generic and does not certify supplied market contract.",
+    "Source/tests/model-index coordination, post-format scoped evidence, and final whole-suite gate remain integration obligations; index entries were present at review time."
+  ],
+  "declined_to_judge": [
+    "Task2/3 source correctness apart from cir_implicit_step consumer signature compatibility",
+    "Whole-suite pass, formal pilot, frozen protocol/source/main acceptance, performance and NN advantage: future Tasks5–7",
+    "Common fit/CF-PDE and discrete market-call drift accuracy, local field global boundedness, Greek moment/precision, empirical error envelopes",
+    "Bootstrap/Bonferroni/IUT support decision and persisted expenses/artifact replay"
+  ],
+  "all_source_digests_matched_at_review_probe": true,
+  "current_source_changes_at_report_write": {
+    "johnhull/hullkit/tests/test_dynamic_hedging_risk.py": "36307c9f3731fe0a87137545be27f724c2e902c4aae004abb053bc18c7e25b11",
+    "deep_hedge_price/tests/test_dynamic_hedging_policy.py": "fd159185a099eb991b55c092d56acb422548c23fd21bcb9dd2e42a62dccac619"
+  },
+  "review_binding": "Original frozen manifest and diff only; root began follow-up fixes before report write. Changed follow-up source is not reviewed by this report."
+}

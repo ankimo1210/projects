@@ -1,0 +1,254 @@
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-_dynamic_hedging_risk.py.txt b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py
+index 1a3f9387..26718a93 100644
+--- a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-_dynamic_hedging_risk.py.txt
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py
+@@ -142,39 +142,61 @@ def band_holdings(old, target, covariance, width: float) -> dict:
+     finite_matrices = cov[finite_cov]
+     tolerance = 16 * np.finfo(float).eps * np.max(np.abs(finite_matrices), axis=(-2, -1))
+     asymmetric = np.max(np.abs(finite_matrices - finite_matrices.swapaxes(-1, -2)), axis=(-2, -1))
+     eigenvalues = np.linalg.eigvalsh(finite_matrices)
+     if np.any(asymmetric > tolerance) or np.any(eigenvalues[..., 0] < -tolerance):
+         raise ValueError("covariance must be symmetric positive semidefinite")
+     valid = finite_cov & np.isfinite(old).all(axis=-1) & np.isfinite(target).all(axis=-1)
+     with np.errstate(over="ignore", invalid="ignore"):
+         delta = old - target
+         squared_sd = np.einsum("...i,...ij,...j->...", delta, cov, delta)
++    raw_squared_sd = squared_sd.copy()
++    # PSD quadratic forms can cancel to a tiny negative value in null directions.
++    # Retain the raw result and explicitly record this arithmetic correction;
++    # this bound does not qualify materially negative or nonfinite forms.
++    with np.errstate(over="ignore", invalid="ignore"):
++        roundoff_bound = (
++            16
++            * np.finfo(float).eps
++            * np.einsum("...i,...ij,...j->...", np.abs(delta), np.abs(cov), np.abs(delta))
++        )
++    roundoff_corrected = (
++        valid
++        & np.isfinite(squared_sd)
++        & np.isfinite(roundoff_bound)
++        & (squared_sd < 0)
++        & (squared_sd >= -roundoff_bound)
++    )
++    squared_sd = np.where(roundoff_corrected, 0.0, squared_sd)
+     valid &= np.isfinite(squared_sd) & (squared_sd >= 0)
+     sd = np.full(shape, np.nan)
+     np.sqrt(squared_sd, out=sd, where=valid)
+     raw = np.full(old.shape, np.nan)
+     hold = valid & (sd <= width)
+     trade = valid & (sd > width)
+     raw[hold] = old[hold]
+     with np.errstate(over="ignore", invalid="ignore"):
+         raw[trade] = target[trade] + (width / sd[trade])[..., None] * delta[trade]
+     valid &= np.isfinite(raw).all(axis=-1)
+     raw = np.where(valid[..., None], raw, np.nan)
+     holdings = np.clip(raw, -2.0, 2.0)
+     constrained = valid[..., None] & (holdings != raw)
+     counts = constrained.sum(axis=-1)
+     return {
+         "raw_target": target.copy(),
+         "raw_holdings": raw,
+         "holdings": holdings,
+         "sd": sd,
++        "raw_squared_sd": raw_squared_sd,
++        "squared_sd_roundoff_bound": roundoff_bound,
++        "roundoff_corrected": roundoff_corrected,
++        "roundoff_correction_count": int(roundoff_corrected.sum()),
+         "constrained": constrained,
+         "constraint_counts": counts,
+         "constraint_count": int(counts.sum()),
+         "valid": valid,
+         "status": np.where(valid, "ok", "unknown"),
+     }
+ 
+ 
+ def improvement_scores(base_squared, candidate_squared, relative_improvement: float = 0.05) -> dict:
+     """Retain paired absolute/relative scores on every original path.
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-test_dynamic_hedging_risk.py.txt b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_risk.py
+index 1a90a926..c28304bf 100644
+--- a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-test_dynamic_hedging_risk.py.txt
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_risk.py
+@@ -201,10 +201,24 @@ def test_improvement_unknown_keeps_original_n_and_nan_scores():
+     assert np.isnan(result["d_mean"])
+     assert np.isnan(result["r_se"])
+ 
+ 
+ def test_improvement_requires_original_pairs_and_nonnegative_squared_losses():
+     risk = risk_module()
+     with pytest.raises(ValueError):
+         risk.improvement_scores([1.0, 2.0], [1.0])
+     with pytest.raises(ValueError):
+         risk.improvement_scores([1.0, -1.0], [0.9, 1.0])
++
++
++def test_local_diffusion_null_band_survives_quadratic_roundoff():
++    from hullkit._dynamic_hedging_risk import band_holdings, price_covariance
++
++    cov = price_covariance("local", 100.0, 1.0, 0.6, 0.0, 1 / 12, base_variance=0.04)["covariance"]
++    old, target = np.array([0.0, 0.0]), np.array([-0.6, 1.0])
++    out = band_holdings(old, target, cov, 0.01)
++    assert out["valid"]
++    assert out["holdings"] == pytest.approx(old, abs=1e-13)
++    assert out["sd"] == pytest.approx(0.0, abs=1e-13)
++    assert out["roundoff_corrected"]
++    assert out["roundoff_correction_count"] == 1
++    assert out["raw_squared_sd"] >= -out["squared_sd_roundoff_bound"]
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-_dynamic_hedging_policy.py.txt b/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py
+index cacba9d3..ddd8b484 100644
+--- a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-_dynamic_hedging_policy.py.txt
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py
+@@ -315,28 +315,34 @@ def fit_policy(dataset, *, universe, seed, updates, batch_size, learning_rate, c
+             with torch.no_grad():
+                 result = _torch_rollout(model, data, scaler, universe=universe)
+                 final_loss = float(result["discounted_pnl"].square().mean())
+                 train_holdings = result["holdings"].numpy().copy()
+                 train_pnl = result["discounted_pnl"].numpy().copy()
+             if not np.isfinite(final_loss) and status == "completed":
+                 status, reason = "nonfinite_loss", "nonfinite final training objective"
+     finally:
+         torch.set_num_threads(old_threads)
+     elapsed = perf_counter() - start
++    if status == "completed" and elapsed > cap_seconds:
++        status, reason = (
++            "time_cap",
++            "completed updates but final diagnostics/restore exceeded time cap",
++        )
+     return {
+         "weights": last_finite,
+         "scaler": scaler,
+         "status": status,
+         "complete": status == "completed",
+         "reason": reason,
+         "updates": done,
+         "requested_updates": updates,
++        "updates_complete": done == updates,
+         "attempt_count": len(batches),
+         "attempt_events": attempt_events,
+         "batch_indices": np.stack(batches)
+         if batches
+         else np.empty((0, batch_size), dtype=np.int32),
+         "losses": np.asarray(losses),
+         "initial_loss": initial_loss,
+         "final_loss": final_loss,
+         "train_holdings": train_holdings,
+         "train_discounted_pnl": train_pnl,
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-test_dynamic_hedging_policy.py.txt b/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_policy.py
+index c9adeb3d..a8577ac4 100644
+--- a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-test_dynamic_hedging_policy.py.txt
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_policy.py
+@@ -188,55 +188,101 @@ def test_zero_time_cap_is_preserved_as_incomplete_attempt():
+     assert not got["complete"] and got["updates"] == 0
+     assert got["attempt_count"] == 0
+     assert got["batch_indices"].shape == (0, 4)
+     assert all(np.isfinite(a).all() for a in got["weights"].values())
+     assert got["overrun_seconds"] >= 0.0
+ 
+ 
+ def test_exported_numpy_policy_replays_all_observable_dates_and_cash():
+     data = dataset()
+     result = fit_policy(
+-        data, universe="U2", seed=47, updates=2, batch_size=4,
+-        learning_rate=.003, cap_seconds=60.,
++        data,
++        universe="U2",
++        seed=47,
++        updates=2,
++        batch_size=4,
++        learning_rate=0.003,
++        cap_seconds=60.0,
+     )
+     old = np.zeros((4, 2))
+     all_holdings = []
+     for j, time in enumerate(data["times"][:-1]):
+         features = observable_features(
+-            data["prices"][:, j, 0], time, data["memory_sum"][:, j],
+-            data["memory_count"][j], data["prices"][:, j, 1], old, data["cost_rates"],
++            data["prices"][:, j, 0],
++            time,
++            data["memory_sum"][:, j],
++            data["memory_count"][j],
++            data["prices"][:, j, 1],
++            old,
++            data["cost_rates"],
+         )
+         old = numpy_policy(result["weights"], features, result["scaler"], universe="U2")
+         all_holdings.append(old.copy())
+     holdings = np.stack(all_holdings, axis=1)
+     assert holdings == pytest.approx(result["train_holdings"], abs=3e-13)
+     from hullkit._dynamic_hedging_core import cash_account
++
+     cash = cash_account(
+-        data["times"], data["prices"], holdings, data["payoff"],
+-        premium=data["premium"], rate=data["rate"],
+-        cashflows=data["cashflows"], cost_rates=data["cost_rates"],
++        data["times"],
++        data["prices"],
++        holdings,
++        data["payoff"],
++        premium=data["premium"],
++        rate=data["rate"],
++        cashflows=data["cashflows"],
++        cost_rates=data["cost_rates"],
+     )
+     assert cash["discounted_pnl"] == pytest.approx(result["train_discounted_pnl"], abs=3e-12)
+ 
+ 
+ def test_nonfinite_objective_retains_all_paths_and_incomplete_status():
+     data = dataset()
+     data["payoff"] = np.full(4, 1e200)
+     result = fit_policy(
+-        data, universe="U2", seed=11, updates=2, batch_size=4,
+-        learning_rate=.003, cap_seconds=60.,
++        data,
++        universe="U2",
++        seed=11,
++        updates=2,
++        batch_size=4,
++        learning_rate=0.003,
++        cap_seconds=60.0,
+     )
+     assert not result["complete"] and result["status"] == "nonfinite_loss"
+     assert result["original_path_count"] == 4 and result["updates"] == 0
+     assert result["train_discounted_pnl"].shape == (4,)
+     assert result["attempt_count"] == 0
+     assert np.isinf(result["initial_loss"])
+ 
+ 
+ def test_malformed_math_data_is_rejected_without_path_filtering():
+     data = dataset()
+     data["prices"][2, 1, 0] = np.nan
+     with pytest.raises(ValueError, match="finite two-asset"):
+         fit_policy(
+-            data, universe="U1", seed=11, updates=1, batch_size=4,
+-            learning_rate=.003, cap_seconds=60.,
++            data,
++            universe="U1",
++            seed=11,
++            updates=1,
++            batch_size=4,
++            learning_rate=0.003,
++            cap_seconds=60.0,
+         )
++
++
++def test_final_diagnostic_cap_overrun_is_not_complete(monkeypatch):
++    from deep_hedge_price import _dynamic_hedging_policy as policy
++
++    clock = iter([0.0, 0.1, 0.2, 2.0])
++    monkeypatch.setattr(policy, "perf_counter", lambda: next(clock))
++    result = fit_policy(
++        dataset(),
++        universe="U2",
++        seed=11,
++        updates=1,
++        batch_size=4,
++        learning_rate=0.003,
++        cap_seconds=1.0,
++    )
++    assert not result["complete"]
++    assert result["status"] == "time_cap"
++    assert result["updates"] == 1 and result["updates_complete"]
++    assert result["overrun_seconds"] == pytest.approx(1.0)

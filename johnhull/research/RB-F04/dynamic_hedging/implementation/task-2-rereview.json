@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-09",
+  "scope": "Original Important I1 plus fix diff and directly relevant regression; source approval only",
+  "spec_compliance_verdict": "approved",
+  "code_quality_verdict": "approved",
+  "source_approved_for_task_3_integration": true,
+  "phase_acceptance": false,
+  "resolved_findings": [
+    {
+      "id": "I1",
+      "status": "resolved",
+      "source_lines": [
+        407,
+        408,
+        409,
+        410
+      ],
+      "evidence": "Original N32 one-invalid-path probe now preserves NaN in all three derivative channels and propagates unknown through means, SE, derivative and joint block covariance; valid rows finite and original denominator unchanged."
+    }
+  ],
+  "findings": [],
+  "severity_counts": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0
+  },
+  "verification": {
+    "suite_rerun": false,
+    "original_tiny_probe_rerun": true,
+    "current_manifest_hashes_match": true,
+    "before_fix_hashes_match_original_review": true,
+    "received_implementer_evidence": "RED24/1 to GREEN25; ruff check and format PASS"
+  },
+  "declined_to_judge": "Inherited all integration/pilot/freeze/main/acceptance boundaries from task-2-review.md",
+  "source_sha256": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py": "37ebedfe935526fbf25d93f41b4e572b60f895efd88606aa26d93e07a519fbe5",
+    "johnhull/hullkit/tests/test_dynamic_hedging_conditional.py": "a1b5844de2077eef344e49af7627d4f280a67fdac70b490d5d85de91ee1fa9fb",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-2-fix-review-package.diff": "2ce228e2162808f5b78d36a8edba43db925c330f179ef0fd28912caa443c24d4",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-2-fix-source.json": "85db7347d7f9a6e5df876a91b461fa4e88526eefdc5863a2fda7e1faba8be88f",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-2-report.md": "ec77f84890c2f94f9011038339544b0e46141ce52189e0cc92ce19b5289cf16a",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-_dynamic_hedging_conditional.py.txt": "636c6e060920c74be8f38ff0b95831effde1b72693280b2abc23c92966036b79",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-test_dynamic_hedging_conditional.py.txt": "ac88f7c901bfbf55bc52367fd139be7547f4a848b817277d59d94b2fcc8fb21d"
+  }
+}

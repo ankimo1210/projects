@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-09",
+  "reviewer": "independent conditional math/spec/quality subagent",
+  "scope": "Task 2 source approval for Task 3 integration; not phase acceptance",
+  "spec_compliance_verdict": "changes_required",
+  "code_quality_verdict": "changes_required",
+  "source_approved_for_task_3_integration": false,
+  "findings": [
+    {
+      "id": "I1",
+      "severity": "Important",
+      "file": "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py",
+      "line": 420,
+      "related_lines": [
+        427,
+        431,
+        434,
+        520,
+        527,
+        528
+      ],
+      "title": "Invalid raw path is silently zeroed in raw x derivative diagnostics",
+      "impact": "Primary f/f_x remain unknown, but raw derivative mean/SE/block covariance are finite and biased by replacement of an invalid sample with zero. Violates no-hidden-zero and all-metrics-unknown failure contract.",
+      "probe": {
+        "N": 32,
+        "invalid_path_indices": [
+          0
+        ],
+        "primary_status": "unknown_invalid_primitives",
+        "raw_derivative_mean": -0.5625,
+        "raw_derivative_se": 0.08909830562090465,
+        "raw_derivative_estimator_covariance": 0.012239583333333333
+      },
+      "recommended_change": "Preserve NaN for invalid raw derivative samples and propagate to derivative diagnostic summaries and covariances; keep original N and mask."
+    }
+  ],
+  "severity_counts": {
+    "Critical": 0,
+    "Important": 1,
+    "Minor": 0
+  },
+  "verification": {
+    "suite_rerun": false,
+    "tiny_probe_run": true,
+    "source_manifest_hashes_match": true,
+    "review_diff_payloads_match_source": true,
+    "supplied_24_pass_ruff_results": "accepted as parent-provided evidence, not independently rerun"
+  },
+  "declined_to_judge": [
+    "global IID CRN stream independence and cross-date/node block alignment",
+    "main monthly12 claim mapping and memory invariant",
+    "Task 3 smooth cache / local chain / cross-node covariance / scalar fit conditions",
+    "production local-field precision and moment gate suitability",
+    "pilot selection / source freeze / main outcomes / financial performance",
+    "fresh replay / saved-only notebook checker / phase acceptance",
+    "whole suite and release gates"
+  ],
+  "source_sha256": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py": "37ebedfe935526fbf25d93f41b4e572b60f895efd88606aa26d93e07a519fbe5",
+    "johnhull/hullkit/tests/test_dynamic_hedging_conditional.py": "a1b5844de2077eef344e49af7627d4f280a67fdac70b490d5d85de91ee1fa9fb",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py": "78ad0cc9e32628476da2023755cd688ea8363aee9be5f5655c204c6ab6fa5777",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-2-brief.md": "9065d01e98e77a260dd6e40aef57d0443610172c53f75b442dcc41314b4c42cd",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-2-report.md": "3fcfa3ddf92668d81abdd670ddb6c534be958f6cb3390b7493a05d8d20514c10",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-2-review-package.diff": "3d08d40464a747a26813907d42b3068779a22aba6c2e8dd275487a6daa557c53",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-2-review-source.json": "303ce09e833a57f155d6aa72f5d4c4595c8f1f6df0eb3edac157e61fe9ecce29"
+  }
+}

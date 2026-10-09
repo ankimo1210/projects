@@ -1,0 +1,18 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_local_diffusion_null_band_survives_quadratic_roundoff __________
+
+    def test_local_diffusion_null_band_survives_quadratic_roundoff():
+        from hullkit._dynamic_hedging_risk import price_covariance, band_holdings
+        cov = price_covariance(
+            "local", 100., 1., .6, 0., 1 / 12, base_variance=.04
+        )["covariance"]
+        old, target = np.array([0., 0.]), np.array([-.6, 1.])
+        out = band_holdings(old, target, cov, .01)
+>       assert out["valid"]
+E       assert np.False_
+
+johnhull/hullkit/tests/test_dynamic_hedging_risk.py:220: AssertionError
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_risk.py::test_local_diffusion_null_band_survives_quadratic_roundoff
+1 failed in 0.56s

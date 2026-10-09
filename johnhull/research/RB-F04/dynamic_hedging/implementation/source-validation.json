@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-09",
+  "kind": "private-source-checkpoint",
+  "base_commit": "d71b25f344165deb741e6bcefd8368da9a8057dd",
+  "branch": "codex/rbf04-dynamic-hedging",
+  "tasks_completed": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "tasks_pending": [
+    5,
+    6,
+    7
+  ],
+  "phase_acceptance": false,
+  "formal_pilot_run": false,
+  "full_related_suite_run": false,
+  "scoped_test_result": {
+    "passed": 1193,
+    "exit_code": 0,
+    "log": "source-checkpoint-tests.txt",
+    "run": "source-checkpoint-run.json"
+  },
+  "ruff_python_file_count": 11,
+  "source_sha256": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py": "78ad0cc9e32628476da2023755cd688ea8363aee9be5f5655c204c6ab6fa5777",
+    "johnhull/hullkit/tests/test_dynamic_hedging_core.py": "3347d9def05ccff761527b0273d85c7d98b2712da9c45813bbe7a03999cfcb2b",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py": "37ebedfe935526fbf25d93f41b4e572b60f895efd88606aa26d93e07a519fbe5",
+    "johnhull/hullkit/tests/test_dynamic_hedging_conditional.py": "a1b5844de2077eef344e49af7627d4f280a67fdac70b490d5d85de91ee1fa9fb",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py": "585ea869a96a6076fedd7749d88824dde5ebbbd99d0ca60a646ac829e39be50e",
+    "johnhull/hullkit/tests/test_dynamic_hedging_risk.py": "1a8ed43b97fdc9b229f5db4fa6ef8c794d6f78c01130f7be96bdb457e4cfbc22",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "6cf72bd149655a439bc5e68ad6f3d7e2ae6c77e5feb80d89cfdda68ff877ad0c",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py": "20d43d3d7e8fd225b860d2dae5ac8e87152bb481805fb93b4fee2df2685e8617",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py": "c233ba0cf6d736401c4f2a4d92dc803810c8066ebf7960534730299759142fca",
+    "deep_hedge_price/tests/test_dynamic_hedging_policy.py": "0b5929aeda2d044b3b70bc13c7d07c315a9a9166153479877a2daa3c3ff156cb",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "0bc79b971dd6f7f69847ef6029056cfbfbeb3a80b1a7a2cb19d73bcc9f9019f4"
+  },
+  "review_receipts": {
+    "task-2-rereview.json": {
+      "sha256": "3f9b7f5fbaf1485f54d96093f9678da802d97c13a8ef0543ecf0515b20a787f1",
+      "unresolved_findings": 0
+    },
+    "task-3-rereview.json": {
+      "sha256": "1330881496b5522fdd5650ac8161f7f00bb0a7488213c06e545943b021dc17b9",
+      "unresolved_findings": 0
+    },
+    "task-4-rereview.json": {
+      "sha256": "b1d53e7508dbdee1337a304831ebca961f1acedc1936c53a28c529be5b9d47d2",
+      "unresolved_findings": 0
+    }
+  },
+  "task1_review": "task-1-4-review.json (Task1 approved; Task4 original findings resolved by task-4-rereview.json)",
+  "numeric_comparison": "Tolerances and standard errors; digests bind provenance only",
+  "original_review_paths": "Original .superpowers paths are retained in historical receipts; same-named copies here preserve exact bytes. Original source is recoverable from review-package.diff files.",
+  "pending_qualification": [
+    "Call/Asian state-support intersection must be attached before quote fit",
+    "NaN/unmeasured price or Greek errors never qualify numeric accuracy",
+    "Independent CF integration receipts do not bound cutoff error; cutoff and bump refinement remain separate",
+    "All raw failures, costs, original denominators and policy cap overruns must be serialized",
+    "Formal pilot, source/protocol freeze, main experiment, replay/fresh/CAS, figures and phase acceptance"
+  ]
+}

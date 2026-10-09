@@ -71,7 +71,7 @@ cash_account(times: np.ndarray, prices: np.ndarray, holdings: np.ndarray, payoff
 
 timesはabsolute calendar time、normal形状(N,steps,2)、localは第1stock shockを使う。recorderは(N,record dates)のspot/variance、path mask/reasons、支持/wing/proxy/失敗件数を返す。cash prices=(N,m+1,d)、holdings=(N,m,d)、CF=(N,m+1,d)、fee=(d,)；terminal liquidationは関数が一度だけ行う。
 
-- [ ] failing tests：deterministic variance constant時のexact GBM、負normalでも正CIR、moment certificate、calendar/claim順序、unsupported local保持、2asset/CF/terminal fee fixtures。
+- [x] failing tests：deterministic variance constant時のexact GBM、負normalでも正CIR、moment certificate、calendar/claim順序、unsupported local保持、2asset/CF/terminal fee fixtures。
 
 ~~~python
 def test_two_asset_cash_matches_independent_discounted_gain():
@@ -90,10 +90,10 @@ def test_fourth_moment_sufficient_condition():
     assert c["gaussian_quadratic_coefficient"] == pytest.approx(.99421875)
 ~~~
 
-- [ ] scoped pytestを実行してmissing module/functionのFAILを確認。
-- [ ] CIRはa=(4κbarv−ξ²)/8、b=κ/2、c=ξ/2、D=1+b dt、u=√v+c√dt Zv、y'=(u+√(u²+4Da dt))/(2D)。u<0にはrationalized rootを使い、xi0はdeterministic transitionを返す。stockは旧vでlog-Euler。normal/RNGはcaller所有。
-- [ ] cash再帰と独立discounted gainを別に計算。CFはevent支払時に受領。失敗後のcash/P&LをNaN・理由付き保持、原path数を変えない。
-- [ ] 上のscoped tests/ruff/formatを実行し、source/tests/索引だけcommit。
+- [x] scoped pytestを実行してmissing module/functionのFAILを確認。
+- [x] CIRはa=(4κbarv−ξ²)/8、b=κ/2、c=ξ/2、D=1+b dt、u=√v+c√dt Zv、y'=(u+√(u²+4Da dt))/(2D)。u<0にはrationalized rootを使い、xi0はdeterministic transitionを返す。stockは旧vでlog-Euler。normal/RNGはcaller所有。
+- [x] cash再帰と独立discounted gainを別に計算。CFはevent支払時に受領。失敗後のcash/P&LをNaN・理由付き保持、原path数を変えない。
+- [x] 上のscoped tests/ruff/formatを実行し、source/tests/索引だけcommit。
 
 ### Task2: Conditional Asian / auxiliary GBM primitives
 
@@ -114,7 +114,7 @@ primitive_labels(primitives: dict, thresholds: np.ndarray, *, blocks: int = 16) 
 
 primitiveには(b,c,mu,sigma)、last-left spot/variance/coefficient、aux logG prefix/loading、状態/全Nを保存。model/auxを同じlast Zでconditionし、β=1の差+既知meanを作る。normalはdate/nodeで明示CRN共用、market/train/test/oracleから独立。
 
-- [ ] failing tests：last-tailと独立1D quadrature、aux m1のBlack、A≥12Kのexact linear、sigma0 atom unknown、local spot-dependent chain、state-dependent controlを全bumpで再計算。
+- [x] failing tests：last-tailと独立1D quadrature、aux m1のBlack、A≥12Kのexact linear、sigma0 atom unknown、local spot-dependent chain、state-dependent controlを全bumpで再計算。
 
 ~~~python
 def test_tail_against_independent_quadrature():
@@ -127,10 +127,10 @@ def test_tail_against_independent_quadrature():
     assert got["f"] == pytest.approx(ref, abs=2e-9)
 ~~~
 
-- [ ] red test確認後、tail positive strike / linear / deterministic atom branchを実装。underresolved全0/SE0をreadyへ昇格しない。
-- [ ] future calendar fixingを正しく使うGBM controlのmeanと同一priceのCRN bumpsを実装。Heston/local自身のgeometric価格を解析既知と扱わない。
-- [ ] 16IID blocksを同一CRN clusterのまま保存し、Nをnode数倍にしない。保存primitivesから価格/Greek covarianceまで再検算できるようにする。
-- [ ] scoped tests/ruff/format、索引登録、commit。
+- [x] red test確認後、tail positive strike / linear / deterministic atom branchを実装。underresolved全0/SE0をreadyへ昇格しない。
+- [x] future calendar fixingを正しく使うGBM controlのmeanと同一priceのCRN bumpsを実装。Heston/local自身のgeometric価格を解析既知と扱わない。
+- [x] 16IID blocksを同一CRN clusterのまま保存し、Nをnode数倍にしない。保存primitivesから価格/Greek covarianceまで再検算できるようにする。
+- [x] scoped tests/ruff/format、索引登録、commit。
 
 ### Task3: Calendar call snapshots / C1 Asian cache / quote fit
 
@@ -149,7 +149,7 @@ fit_quote_state(cache: dict, date_index: int, spot, quote, *, state_scale: float
 
 evaluate returns value/spot derivative/state derivative/status+error; modelstateはv又はell。fitはroot/residual/Ctheta/condition、bound/非一意/solver/支持外reasonを返す。call/Asianのtheta-support共通部分だけを使う。
 
-- [ ] failing tests：scalar analytic fixtureのnode微分/coordinate不変、複数root、unreachable quote、near-zero J、calendar-timeとremaining-timeの差、local chain、linearA branch。
+- [x] failing tests：scalar analytic fixtureのnode微分/coordinate不変、複数root、unreachable quote、near-zero J、calendar-timeとremaining-timeの差、local chain、linearA branch。
 
 ~~~python
 def test_local_normalized_spot_chain():
@@ -164,11 +164,11 @@ def test_local_normalized_spot_chain():
     assert got["spot_derivative"]-homogeneous == pytest.approx(disc*fz/12)
 ~~~
 
-- [ ] call HestonCFはcurrent v/spot/残存T1.25−t、localは元calendar coefficientのPDEをellごとに一回後退し全snapshotを保存。独立CF/PDEのorder/domain/time/spot refinementを実装。
-- [ ] fixed tensor cubicを採用しtheta各軸4nodes以上、priceと全derivativeを同じsurfaceから出す。solver/境界/overshootを検査し、bounds外はunknown。
-- [ ] Heston V=DSf/12、VS=D(f−xfx)/12、Vv=DSfv/12；local VS=D(f+fz−xfx)/12、Vell=DSfw/(12ell)。観測jumpをtime interpolateしない。
-- [ ] pieceのextremaと微分からroot一意性を確認し、vectorized bracket/Newton-bisectionでfit。endpoint bracketだけで一意扱いしない。t0 nearS0は専用sheet。
-- [ ] scoped tests/ruff/format・索引・commit。selected actual CF/PDE/conditional oracle gateはTask5 pilotで測る。
+- [x] call HestonCFはcurrent v/spot/残存T1.25−t、localは元calendar coefficientのPDEをellごとに一回後退し全snapshotを保存。独立CF/PDEのorder/domain/time/spot refinementを実装。
+- [x] fixed tensor cubicを採用しtheta各軸4nodes以上、priceと全derivativeを同じsurfaceから出す。solver/境界/overshootを検査し、bounds外はunknown。
+- [x] Heston V=DSf/12、VS=D(f−xfx)/12、Vv=DSfv/12；local VS=D(f+fz−xfx)/12、Vell=DSfw/(12ell)。観測jumpをtime interpolateしない。
+- [x] pieceのextremaと微分から全rootを列挙し一意性を確認、scaled Brentでfit（実装判断：候補Newton-bisectionから変更、速度はpilotで測定）。endpoint bracketだけで一意扱いしない。t0 nearS0は専用sheet。
+- [x] scoped tests/ruff/format・索引・commit。selected actual CF/PDE/conditional oracle gateはTask5 pilotで測る。
 
 ### Task4: Quote risk / band / observable Torch policy
 
@@ -188,7 +188,7 @@ fit_policy(dataset: dict, *, universe: str, seed: int, updates: int, batch_size:
            learning_rate: float, cap_seconds: float) -> dict
 ~~~
 
-- [ ] failing tests：IFTと独立Q/S re-fit bump、theta/logtheta不変、Σ PSD/ρ/multiplier、rank1 band null方向、feature latent禁止、Torch/NumPy inference・cash/gradient一致。
+- [x] failing tests：IFTと独立Q/S re-fit bump、theta/logtheta不変、Σ PSD/ρ/multiplier、rank1 band null方向、feature latent禁止、Torch/NumPy inference・cash/gradient一致。
 
 ~~~python
 def test_ift_two_asset_coordinates():
@@ -204,10 +204,10 @@ def test_band_rank_one_no_costly_null_trade():
     assert out["holdings"] == pytest.approx(old)
 ~~~
 
-- [ ] U2 hQ=Vtheta/Ctheta、hS=VS−hQ CS。U1 minvariance hS=VS|Q+VQ betaM、Heston betaM=CS+Cvρxi/S、local betaM=CS。
-- [ ] band sd=sqrt((old−target)'Σ(old−target))、sd≤widthはold、それ以外target+(width/sd)(old−target)。rank1/zero sdは仕様として保持。raw targetと±2制約後を両保存。
-- [ ] 9→32→32→2 tanh、float64 CPU、U1 call=0。train-only scaler、local RNG、oldholding BPTT、全attempt/最後finite weights/更新数/capと失敗を保存。
-- [ ] scoped tests/ruff/format、索引、commit。
+- [x] U2 hQ=Vtheta/Ctheta、hS=VS−hQ CS。U1 minvariance hS=VS|Q+VQ betaM、Heston betaM=CS+Cvρxi/S、local betaM=CS。
+- [x] band sd=sqrt((old−target)'Σ(old−target))、sd≤widthはold、それ以外target+(width/sd)(old−target)。rank1/zero sdは仕様として保持。raw targetと±2制約後を両保存。
+- [x] 9→32→32→2 tanh、float64 CPU、U1 call=0。train-only scaler、local RNG、oldholding BPTT、全attempt/最後finite weights/更新数/capと失敗を保存。
+- [x] scoped tests/ruff/format、索引、commit。
 
 ### Task5: Complete runner / statistical decision / candidate pilot
 
@@ -288,6 +288,12 @@ PYTHONPATH="$PWD/johnhull/hullkit/src:$PWD/deep_hedge_price/src" \
 
 ## Self-review / status
 
-全spec要件をTasks1–7へ割当。主claim/quote fit/limited local closure/原分母/CF/終端費用/有限四次/paired relative score/phase費用/3図を含む。候補の精度・所要時間は正式pilotで確定し、現時点で達成値を主張しない。金融source実装とmainは未着手。
+全spec要件をTasks1–7へ割当。主claim/quote fit/limited local closure/原分母/CF/終端費用/有限四次/paired relative score/phase費用/3図を含む。候補の精度・所要時間は正式pilotで確定し、現時点で達成値を主張しない。Tasks1–4のprivate source実装・独立レビューを完了し、開発branchの整合したソースcommitにまとめる。Task5 runner/pilot、Tasks6–7の主実験・最終受入・main統合は未実施。
 
 実装は既存の「研究ロードマップ完遂」指示の範囲で進める。新依存/API昇格/実データ利用権が必要になった場合だけ、その具体差分を別判断とする。
+
+## Source checkpoint（2026-10-09）
+
+Tasks1–4の詳細・レビュー対象・5件のImportant修正・最新指紋は[ソース記録](../../../research/RB-F04/dynamic_hedging/implementation/README.md)を参照。変更範囲＋索引/docstring1193 tests、11Python ruff/check/format PASS。関連全3suiteは最終gateで1回実行する。Tasks1–4は共有索引の参照を同時に解決するため一つのcommitにする（各taskのRED/GREENと独立レビューは別記録）。元d71b25f3の設計レビューは歴史的記録で、最新ソース承認と区別する。
+
+Task5で必須：call/Asian state-support交差、NaN/unmeasured誤差の不適格化、独立CFのquad収束・cutoff・bumpの別誤差、共通乱数cluster covarianceとCtheta誤差のIFT伝播、全original N／raw failure／cap超過／費用の保存。solver-okだけで精度承認しない。正式pilot・freeze・main/phase acceptanceは未完了。
