@@ -16,7 +16,7 @@ import json
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time
-from decimal import Decimal
+from decimal import Decimal, getcontext
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -109,6 +109,8 @@ class Row:
     unrealized_tax_jpy: Decimal | None
     unrealized_after_tax_jpy: Decimal | None
     note: str
+    taxable_unrealized_jpy: Decimal | None = None
+    taxable_day_pnl_jpy: Decimal | None = None
 
 
 def _cost_index(
@@ -201,6 +203,16 @@ def mark_positions(
     return rows
 
 
+def _same_cost(left: Decimal, right: Decimal | None) -> bool:
+    """Allow only a few Decimal rounding units, never a monetary tolerance."""
+    if right is None or not left.is_finite() or not right.is_finite():
+        return False
+    # A lower ambient precision must not turn rounding tolerance into cents.
+    precision = max(28, getcontext().prec)
+    unit = ONE.scaleb(max(left.adjusted(), right.adjusted()) - precision + 1)
+    return abs(left - right) <= 4 * unit
+
+
 def _attach_tax(row: Row, holding: dict[str, Any] | None, account_rate: Decimal | None) -> None:
     """Rate: the position's own, else 0 for a holding bought only through NISA, else the account's.
 
@@ -211,6 +223,29 @@ def _attach_tax(row: Row, holding: dict[str, Any] | None, account_rate: Decimal 
     )
     if row.tax_rate is None:
         row.tax_rate = ZERO if row.tax_category == "nisa" else account_rate
+    if row.tax_category != "mixed":
+        row.taxable_unrealized_jpy = row.unrealized_jpy
+        row.taxable_day_pnl_jpy = row.day_pnl_jpy
+    elif holding and row.unrealized_jpy is not None:
+        buckets = holding.get("tax_buckets") or {}
+        taxable = buckets.get("taxable")
+        ledger_qty = _dec(holding.get("quantity"))
+        components = [
+            (_dec(b.get("quantity")), _dec(b.get("cost_basis_jpy"))) for b in buckets.values()
+        ]
+        complete = (
+            set(buckets) == {"nisa", "taxable"}
+            and all(q is not None and c is not None for q, c in components)
+            and sum((q for q, _ in components), ZERO) == ledger_qty
+            and _same_cost(sum((c for _, c in components), ZERO), row.cost_basis_jpy)
+        )
+        if taxable and complete and ledger_qty and row.quantity == ledger_qty:
+            quantity = _dec(taxable.get("quantity"))
+            cost = _dec(taxable.get("cost_basis_jpy"))
+            if quantity is not None and cost is not None:
+                row.taxable_unrealized_jpy = quantity * row.price * row.fx - cost
+                if row.quantity and row.day_pnl_jpy is not None:
+                    row.taxable_day_pnl_jpy = row.day_pnl_jpy * quantity / ledger_qty
 
 
 @dataclass
@@ -221,8 +256,8 @@ class TaxPool:
     unrealized_jpy: Decimal
     realized_ytd_jpy: Decimal
     carryforward_loss_jpy: Decimal
-    tax_jpy: Decimal
-    prev_tax_jpy: Decimal
+    tax_jpy: Decimal | None
+    prev_tax_jpy: Decimal | None
 
 
 def _liquidation_tax(
@@ -261,29 +296,44 @@ def net_tax(
     """
     for r in rows:
         r.day_pnl_after_tax_jpy = r.unrealized_tax_jpy = r.unrealized_after_tax_jpy = None
+        if r.tax_category != "mixed":
+            r.taxable_unrealized_jpy = r.unrealized_jpy
+            r.taxable_day_pnl_jpy = r.day_pnl_jpy
         if r.tax_rate == ZERO:
             r.day_pnl_after_tax_jpy = r.day_pnl_jpy
             if r.unrealized_jpy is not None:
                 r.unrealized_tax_jpy, r.unrealized_after_tax_jpy = ZERO, r.unrealized_jpy
-    taxable = [r for r in rows if r.tax_rate is not None and r.tax_rate > ZERO]
+    relevant = [r for r in rows if r.symbol not in NON_MARKET_SYMBOLS]
+    taxable = [r for r in relevant if r.tax_rate is not None and r.tax_rate > ZERO]
     rates = sorted({r.tax_rate for r in taxable})
     if len(rates) > 1:
         raise ValueError(f"netting needs one tax rate across taxable positions, got {rates}")
     rate = rates[0] if rates else None
-    pooled = [r for r in taxable if r.unrealized_jpy is not None]
-    now = [r.unrealized_jpy for r in pooled]
-    prev = [r.unrealized_jpy - (r.day_pnl_jpy or ZERO) for r in pooled]
+    pooled = [r for r in taxable if r.taxable_unrealized_jpy is not None]
+    now = [r.taxable_unrealized_jpy for r in pooled]
+    prev = [r.taxable_unrealized_jpy - (r.taxable_day_pnl_jpy or ZERO) for r in pooled]
     total_now, total_prev = sum(now, ZERO), sum(prev, ZERO)
+    # Any unknown taxable cost can offset gains elsewhere. A partial pool cannot
+    # provide a liquidation tax for its known positions either.
+    if any(
+        r.tax_rate is None or r.taxable_unrealized_jpy is None
+        for r in relevant
+        if r.tax_rate != ZERO
+    ):
+        return TaxPool(rate, total_now, realized_ytd_jpy, carryforward_loss_jpy, None, None)
     tax = prev_tax = ZERO
     if rate is not None:
         tax = _liquidation_tax(total_now, realized_ytd_jpy, carryforward_loss_jpy, rate)
-        prev_tax = _liquidation_tax(total_prev, realized_ytd_jpy, carryforward_loss_jpy, rate)
-    for r, share, prev_share in zip(
-        pooled, _allocate(tax, now), _allocate(prev_tax, prev), strict=True
-    ):
+        prev_tax = (
+            _liquidation_tax(total_prev, realized_ytd_jpy, carryforward_loss_jpy, rate)
+            if all(r.taxable_day_pnl_jpy is not None for r in pooled)
+            else None
+        )
+    previous_shares = _allocate(prev_tax, prev) if prev_tax is not None else [None] * len(pooled)
+    for r, share, prev_share in zip(pooled, _allocate(tax, now), previous_shares, strict=True):
         r.unrealized_tax_jpy = share
         r.unrealized_after_tax_jpy = r.unrealized_jpy - share
-        if r.day_pnl_jpy is not None:
+        if r.day_pnl_jpy is not None and prev_share is not None:
             r.day_pnl_after_tax_jpy = r.day_pnl_jpy - (share - prev_share)
     return TaxPool(
         rate=rate,
@@ -302,10 +352,11 @@ def _attach_cost(row: Row, holding: dict[str, Any] | None) -> None:
     average_cost = _dec(holding.get("average_cost"))
     trade_fx = _dec(holding.get("average_trade_fx")) or ONE
     ledger_qty = _dec(holding.get("quantity"))
-    if average_cost is None or ledger_qty in (None, ZERO):
+    cost = _dec(holding.get("cost_basis_jpy"))
+    if average_cost is None or cost is None or ledger_qty in (None, ZERO):
         return
     scale = row.quantity / ledger_qty
-    cost_basis_jpy = (_dec(holding.get("cost_basis_jpy")) or ZERO) * scale
+    cost_basis_jpy = cost * scale
     commission_jpy = (_dec(holding.get("commission_jpy")) or ZERO) * scale
     cost_native = row.quantity * average_cost
     holding_state = Holding(
@@ -420,7 +471,12 @@ def summarize(snapshot: dict[str, Any], rows: list[Row]) -> Summary:
             ),
             total_after_tax_jpy=(
                 None
-                if tax is None and any(r.unrealized_jpy is not None for r in mine)
+                if any(
+                    r.symbol not in NON_MARKET_SYMBOLS
+                    and r.tax_rate != ZERO
+                    and r.unrealized_tax_jpy is None
+                    for r in mine
+                )
                 else sum((r.market_value_jpy for r in mine), ZERO) - (tax or ZERO)
             ),
             cost_known_value_jpy=sum(
@@ -428,6 +484,7 @@ def summarize(snapshot: dict[str, Any], rows: list[Row]) -> Summary:
             ),
             snapshot_unrealized_jpy=_dec(acc.get("unrealized_pnl_jpy")),
         )
+    liquidation_complete = all(a.total_after_tax_jpy is not None for a in accounts.values())
     return Summary(
         accounts=accounts,
         total_jpy=sum((a.total_jpy for a in accounts.values()), ZERO),
@@ -440,12 +497,18 @@ def summarize(snapshot: dict[str, Any], rows: list[Row]) -> Summary:
         unrealized_fx_jpy=_sum_optional([a.unrealized_fx_jpy for a in accounts.values()]),
         unrealized_tax_jpy=_sum_strict(
             [(a.unrealized_known_jpy, a.unrealized_tax_jpy) for a in accounts.values()]
-        ),
+        )
+        if liquidation_complete
+        else None,
         unrealized_after_tax_jpy=_sum_strict(
             [(a.unrealized_known_jpy, a.unrealized_after_tax_jpy) for a in accounts.values()]
-        ),
-        day_pnl_after_tax_jpy=_sum_strict(
-            [(a.day_pnl_jpy, a.day_pnl_after_tax_jpy) for a in accounts.values()]
+        )
+        if liquidation_complete
+        else None,
+        day_pnl_after_tax_jpy=(
+            _sum_strict([(a.day_pnl_jpy, a.day_pnl_after_tax_jpy) for a in accounts.values()])
+            if liquidation_complete
+            else None
         ),
         total_after_tax_jpy=_sum_strict(
             [(a.total_jpy, a.total_after_tax_jpy) for a in accounts.values()]
@@ -485,18 +548,25 @@ def tax_note(snapshot: dict[str, Any], rows: list[Row], pool: TaxPool) -> str:
     if not parts:
         return ""
     mixed = [r.symbol for r in rows if r.tax_category == "mixed"]
-    tail = f" NISA と課税口座の両方で買った {'・'.join(mixed)} は課税側の率。" if mixed else ""
+    tail = (
+        f" NISA と課税口座の両方で買った {'・'.join(mixed)} は課税分だけを損益通算。"
+        if mixed
+        else ""
+    )
 
     def yen(value: Decimal, sign: bool = False) -> str:
         return (f"{round(value):+,}" if sign else f"{round(value):,}").replace("-", "−")
 
-    netting = (
-        f"課税分は口座をまたいで損益通算（含み損益 {yen(pool.unrealized_jpy, True)}・"
-        f"今年の実現損益 {yen(pool.realized_ytd_jpy, True)}・繰越損失 {yen(pool.carryforward_loss_jpy)}）し、"
-        f"見込み税額 {yen(pool.tax_jpy)} 円を含み益の銘柄に按分。配当との通算・外国税額控除は含まない。"
-        if pool.rate is not None
-        else ""
-    )
+    netting = "課税保有の取得原価・税区分が不足するため、見込み税額と税引後総資産は不明。"
+    if pool.tax_jpy is not None:
+        allocation = "課税分の含み損" if pool.tax_jpy < ZERO else "課税分の含み益"
+        netting = (
+            f"課税分は口座をまたいで損益通算（含み損益 {yen(pool.unrealized_jpy, True)}・"
+            f"今年の実現損益 {yen(pool.realized_ytd_jpy, True)}・繰越損失 {yen(pool.carryforward_loss_jpy)}）し、"
+            f"見込み税額 {yen(pool.tax_jpy)} 円を{allocation}に按分。配当との通算・外国税額控除は含まない。"
+            if pool.rate is not None
+            else ""
+        )
     return "税引後は見込み: " + "、".join(parts) + "。" + netting + tail
 
 

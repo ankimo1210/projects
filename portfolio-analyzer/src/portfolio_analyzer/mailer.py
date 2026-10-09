@@ -152,14 +152,20 @@ def _nav_after_tax(h: dict[str, Any]) -> str:
 def _warning_box(data: dict[str, Any]) -> str:
     """Problems with this run itself (not the portfolio), at the top where they are seen.
     Colour by attribute and longhand CSS only: Gmail strips the ``background`` shorthand."""
-    warnings = [str(w) for w in data.get("warnings") or []]
+    warnings = [
+        str(w)
+        for w in [
+            *(data.get("warnings") or []),
+            *((data.get("quality") or {}).get("warnings") or []),
+        ]
+    ]
     if not warnings:
         return ""
     items = "<br>".join(html.escape(w) for w in warnings)
     return (
         f'<table role="presentation" width="100%" cellspacing="0" cellpadding="0" bgcolor="{CARD}" '
         f'style="border-left:3px solid {UP};margin:0 0 12px"><tr>'
-        f'<td style="padding:8px 12px;font:400 12px/1.7 {SANS};color:{INK}"><b>このメールの注意</b><br>{items}</td>'
+        f'<td style="padding:8px 12px;font:400 12px/1.7 {SANS};color:{INK}"><b>このメールの注意・分析の制約</b><br>{items}</td>'
         "</tr></table>"
     )
 
@@ -170,16 +176,17 @@ def text_body(data: dict[str, Any]) -> str:
     lines = [
         f"日次損益 {data['as_of']}{_edition(data)}  (USD/JPY {float(data['fx']['last']):.2f})",
         *[f"! {warning}" for warning in data.get("warnings") or []],
+        *[f"! {warning}" for warning in (data.get("quality") or {}).get("warnings") or []],
         "",
         f"総資産          {jpy(h['nav_total']):>14} 円  {usd(h['nav_total'], rate):>10}  (時価評価 {int(h['quoted_share'] * 100)}%)",
         f"                {_nav_after_tax(h)}",
-        f"日次損益        {jpy(h['day_pnl'], True):>14} 円  {usd(h['day_pnl'], rate, True):>10}  ({pct(h['day_pnl_pct'])})",
+        f"日次損益        {jpy(h['day_pnl'], True):>14} 円  {usd(h['day_pnl'], rate, True):>10}  ({pct(h['day_pnl_pct'])} 総資産比)",
         f"                {_joined(split(h.get('day_stock'), h.get('day_fx')), after_tax(h.get('day_after_tax')))}",
         f"期間損益 {w['days']}日  {jpy(h['pnl_window'], True):>14} 円  {usd(h['pnl_window'], rate, True):>10}  (全口座・入金控除後)",
         f"含み損益        {jpy(h['unrealized_known'], True):>14} 円  {usd(h['unrealized_known'], rate, True):>10}  (原価が台帳にある保有)",
         f"                {_joined(split(h.get('unreal_stock'), h.get('unreal_fx')), after_tax(h.get('unreal_after_tax')))}",
         f"開設来損益      {jpy(h.get('pnl_incept'), True):>14} 円  {usd(h.get('pnl_incept'), rate, True):>10}  (実現 {jpy(h.get('realized_cum'), True)} · 配当 {jpy(h.get('dividends_net'), True)})",
-        f"資金加重リターン {_xirr(h):>13}  ({h.get('xirr_scope') or '—'})  最大DD（期間内） {_max_dd(h)}",
+        f"{_xirr_label(h)} {_xirr(h):>13}  ({h.get('xirr_scope') or '—'})  {_dd_label(data)} {_max_dd(h)}",
         "",
         "口座別",
     ]
@@ -205,7 +212,14 @@ def text_body(data: dict[str, Any]) -> str:
             f"リスク: ボラ {_ratio(s['vol_annual'])}, VaR(1日95%) {jpy(s['var_1d_95_jpy'])}, "
             f"ES(97.5%) {jpy(s['es_1d_975_jpy'])}, 外貨 {_ratio(c['foreign_currency_ratio'])}, "
             f"最大ルックスルー銘柄 {c.get('largest_issuer') or '—'} {_ratio(c['largest_issuer_lookthrough_ratio'])}, "
-            f"超過 {r.get('policy_breaches') or 0}",
+            f"{_policy_status(r)}",
+            *([s["reason"]] if s.get("reason") else []),
+            *[
+                f"限度 {lim['label']}: {_policy_value(lim)} / {lim['operator']} "
+                f"{_limit_value(lim['metric'], lim['threshold'])} · {lim['reason']}"
+                for lim in r.get("policy") or []
+                if lim.get("reason")
+            ],
         ]
     lines += ["", "保有 (数量 / 1D / 1Y / 評価額 / 日次 / 含み  (USD: 評価額 / 日次 / 含み))"]
     for p in data["positions"]:
@@ -236,6 +250,25 @@ def text_body(data: dict[str, Any]) -> str:
 
 def _xirr(h: dict[str, Any]) -> str:
     return pct(None if h.get("xirr") is None else h["xirr"] * 100)
+
+
+def _xirr_label(h: dict[str, Any]) -> str:
+    return "資金加重リターン（推定）" if h.get("xirr_is_estimate") else "資金加重リターン"
+
+
+def _dd_label(data: dict[str, Any]) -> str:
+    return (
+        "最大DD（期間内・入金調整後）"
+        if (data.get("quality") or {}).get("dd_method") == "twr_end_of_day_flows"
+        else "最大DD（期間内）"
+    )
+
+
+def _policy_status(risk: dict[str, Any]) -> str:
+    breaches = risk.get("policy_breaches")
+    missing = sum(1 for limit in risk.get("policy") or [] if limit.get("value") is None)
+    text = "未取得" if breaches is None else f"超過 {int(breaches)} 件"
+    return f"{text} · 未計算 {missing} 件" if missing else text
 
 
 def _max_dd(h: dict[str, Any]) -> str:
@@ -645,6 +678,13 @@ def _limit_value(metric: str, value: float | None) -> str:
     return f"{float(value):.1f}" if words & {"effective", "count"} else _ratio(value)
 
 
+def _policy_value(limit: dict[str, Any]) -> str:
+    value = limit.get("value")
+    if value is None and limit.get("lower_bound_value") is not None:
+        return "少なくとも" + _limit_value(limit["metric"], limit["lower_bound_value"])
+    return _limit_value(limit["metric"], value)
+
+
 def _heading(text: str) -> str:
     return (
         f'<div style="font:500 10px {MONO};letter-spacing:.08em;color:{MUTED};margin:10px 0 3px">'
@@ -673,16 +713,22 @@ def _risk(data: dict[str, Any], table_style: str) -> str:
         chips += (
             f'<span style="display:inline-block;border:1px solid {DN if breach else RULE};color:{color};'
             f'border-radius:999px;padding:2px 9px;margin:0 4px 4px 0;font:{700 if breach else 400} 11px {SANS}">'
-            f"{'超過 ' if breach else ''}{html.escape(lim['label'])} · {_limit_value(lim['metric'], lim['value'])}"
+            f"{'超過 ' if breach else ''}{html.escape(lim['label'])} · {_policy_value(lim)}"
             f" / {html.escape(lim['operator'])} {_limit_value(lim['metric'], lim['threshold'])}</span>"
         )
+    policy_notes = "".join(
+        _caption(f"{html.escape(lim['label'])} · {html.escape(lim['reason'])}")
+        for lim in r.get("policy") or []
+        if lim.get("reason")
+    )
     breaches = r.get("policy_breaches") or 0
+    limits_status = _policy_status(r)
     out = '<div id="risk"></div>' + _section(
         "リスク", f"ルックスルー · 直近 {int(s.get('window_days') or 0)} 営業日 · 現在ウェイト"
     )
     out += _card(
         f'<div style="font:600 12px {SANS};color:{DN if breaches else INK};margin-bottom:6px">'
-        f"限度 · {'超過 ' + str(breaches) + ' 件' if breaches else '超過なし'}</div>{chips}"
+        f"限度 · {limits_status if limits_status != '超過 0 件' else '超過なし'}</div>{chips}{policy_notes}"
         f'<div style="font:400 10.5px {SANS};color:{MUTED}">参照ファイルのポリシー（draft）· 値 / 限度</div>'
     )
     # the asset-class split is the 資産配分 card above; the mail adds the other three
@@ -814,6 +860,10 @@ def _risk(data: dict[str, Any], table_style: str) -> str:
             + "</tr>"
         )
     out += _section("リスク量", "過去シミュレーション · 前日比は前回レポート比")
+    if s.get("reason"):
+        out += _caption(
+            f"{html.escape(s['reason'])} · 価格対象カバー率 {_ratio(s.get('coverage_ratio'), 0)}"
+        )
     out += (
         f'<table role="presentation" cellspacing="0" cellpadding="0" {table_style}>{rows}</table>'
     )
@@ -854,7 +904,10 @@ def _risk(data: dict[str, Any], table_style: str) -> str:
             (
                 f"{e['label']}（{kinds.get(e['kind'], e['kind'])}）",
                 (e["impact_pct"] or 0) * 100,
-                f"{pct((e['impact_pct'] or 0) * 100, 1)} · {jpy(e['impact_jpy'], True)}",
+                _joined(
+                    f"{pct(None if e['impact_pct'] is None else e['impact_pct'] * 100, 1)} · {jpy(e['impact_jpy'], True)}",
+                    str(e.get("reason") or ""),
+                ),
             )
             for e in shown
         ]
@@ -864,12 +917,19 @@ def _risk(data: dict[str, Any], table_style: str) -> str:
             (
                 f"{e['label']} {e['start']} → {e['end']}",
                 (e["impact_pct"] or 0) * 100,
-                f"{pct((e['impact_pct'] or 0) * 100, 1)} · {jpy(e['impact_jpy'], True)} · カバー率 {_ratio(e.get('coverage'), 0)}",
+                _joined(
+                    f"{pct(None if e['impact_pct'] is None else e['impact_pct'] * 100, 1)} · {jpy(e['impact_jpy'], True)} · 価格対象カバー率 {_ratio(e.get('coverage'), 0)}",
+                    "既知部分のみ（全体未計算）" if e.get("complete") is False else "",
+                    f"総資産カバー率 {_ratio(e['priced_nav_ratio'], 0)}"
+                    if e.get("priced_nav_ratio") is not None
+                    else "",
+                    str(e.get("reason") or ""),
+                ),
             )
             for e in st["episodes"]
         ]
     )
-    out += _section("ストレス", "ファクター換算のシナリオ · 実測リプレイの局面") + _card(
+    out += _section("ストレス", "仮定係数の線形シナリオ · 実測リプレイ · 影響は総資産比") + _card(
         _heading("シナリオ（参照ファイル）")
         + stress
         + _heading("過去局面のリプレイ · 開始前日の終値 → 終了日の終値 · 現在の保有で")
@@ -925,7 +985,9 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
         + _kpi_cell(
             "日次損益 ¥",
             jpy(h["day_pnl"], True),
-            _joined(pct(h["day_pnl_pct"]), split(h.get("day_stock"), h.get("day_fx"))),
+            _joined(
+                f"{pct(h['day_pnl_pct'])} 総資産比", split(h.get("day_stock"), h.get("day_fx"))
+            ),
             _tone(h["day_pnl"]),
             _joined(after_tax(h.get("day_after_tax")), usd(h.get("day_after_tax"), rate, True)),
             usd(h["day_pnl"], rate, True),
@@ -957,9 +1019,9 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
             dollars=usd(h.get("pnl_incept"), rate, True),
         )
         + _kpi_cell(
-            "資金加重リターン",
+            _xirr_label(h),
             _xirr(h),
-            f"{h.get('xirr_scope') or '—'} · 最大DD（期間内） {_max_dd(h)}",
+            f"{h.get('xirr_scope') or '—'} · {_dd_label(data)} {_max_dd(h)}",
             _tone(h.get("xirr")),
         )
         + "</tr></table>"
@@ -1081,7 +1143,7 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
 {_closed(data.get("closed"), table_style)}
 {charts}
 <div style="font:400 11px/1.7 {SANS};color:{MUTED};margin-top:16px">
-日次損益は全銘柄に共通の直近 2 営業日で比べた差（価格と為替の両方）で、まだ開いていない市場の銘柄は株の変化 0。株＝価格の変化（今日のレート換算）、FX＝残り（レートの変化分）で、円建ては FX 0。含み損益の FX は取得原価（外貨）×（現在レート − 取得時レート）。総資産の {100 - quoted}% は時価が取れない残高（現金など）で据え置き。累計損益は 3 口座の NAV − 累計入金（海外は取引履歴、国内は取引 CSV、DC は掛金履歴を日次で再生）。
+日次損益は全銘柄に共通の直近 2 営業日で比べた差（価格と為替の両方）で、まだ開いていない市場の銘柄は株の変化 0。株＝価格の変化（今日のレート換算）、FX＝残り（レートの変化分）で、円建ては FX 0。含み損益の FX は取得原価（外貨）×（現在レート − 取得時レート）。総資産の {100 - quoted}% は時価が取れない残高（現金など）で据え置き。累計損益は {len(data["accounts"])} 口座の NAV − 累計入金（海外は取引履歴、国内は取引 CSV、DC は掛金履歴を日次で再生）。復元不能な期間は空白。
 <ul style="margin:8px 0 0;padding-left:18px">{notes}</ul>
 ダッシュボード本体（ホバーで数値が出る図つき）: <span style="font-family:{MONO}">Documents\\pl-daily\\latest.html</span>
 </div></div></td></tr></table>"""

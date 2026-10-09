@@ -19,7 +19,10 @@ from __future__ import annotations
 import math
 from collections.abc import Sequence
 from dataclasses import dataclass
+from decimal import Decimal
 from typing import Any
+
+from .core import FactorRisk, _is_static_balance, _measured_model_status
 
 HOME_CURRENCY = "JPY"
 HOME_COUNTRY = "日本"
@@ -332,6 +335,8 @@ def risk_contributions(
     if not tickers:
         return {}
     n = min(len(returns[t]) for t in tickers)
+    if n < 2:
+        return {}
     series = {t: [x if x is not None else 0.0 for x in returns[t][-n:]] for t in tickers}
     means = {t: _mean(series[t]) for t in tickers}
 
@@ -350,16 +355,51 @@ def risk_contributions(
 
 
 def scenario_impacts(
-    holdings: Sequence[Holding], reference: dict[str, Any]
+    holdings: Sequence[Holding], reference: dict[str, Any], *, factor_risk: FactorRisk | None = None
 ) -> list[dict[str, Any]]:
     """Σ value × factor loading × shock for every scenario in the reference (worst first)."""
     instruments = _instruments(reference)
     total = sum(float(h.value_jpy) for h in holdings)
+    values: dict[str, Decimal] = {}
+    for h in holdings:
+        if not _is_static_balance(h.symbol, h.currency, h.asset_class):
+            values[h.symbol] = values.get(h.symbol, Decimal()) + Decimal(str(h.value_jpy))
+    coverage, measured_reason = _measured_model_status(values, factor_risk)
     out = []
     for sc in reference.get("scenarios", []):
+        historical = sc.get("kind") == "historical"
+        reason = measured_reason if historical else ""
+        if (
+            historical
+            and not reason
+            and values
+            and factor_risk is not None
+            and set(sc.get("shocks", {})) - set(factor_risk.factors)
+        ):
+            reason = "実測ファクター基準にないショックが含まれています"
+        if reason:
+            out.append(
+                {
+                    "id": str(sc["id"]),
+                    "label": str(sc.get("label", sc["id"])),
+                    "kind": "historical",
+                    "impact_jpy": None,
+                    "impact_pct": None,
+                    "reason": reason,
+                    "model_basis": "measured_joint",
+                    "coverage": coverage,
+                }
+            )
+            continue
         impact = 0.0
         for h in holdings:
-            loadings = instruments.get(h.symbol, {}).get("factor_loadings", {})
+            if historical and _is_static_balance(h.symbol, h.currency, h.asset_class):
+                continue
+            loadings = (
+                factor_risk.instrument_loadings.get(h.symbol, {})
+                if historical and factor_risk is not None
+                else instruments.get(h.symbol, {}).get("factor_loadings", {})
+            )
             impact += float(h.value_jpy) * sum(
                 float(loadings.get(f, 0.0)) * float(shock)
                 for f, shock in sc.get("shocks", {}).items()
@@ -371,9 +411,11 @@ def scenario_impacts(
                 "kind": str(sc.get("kind", "hypothetical")),
                 "impact_jpy": impact,
                 "impact_pct": (impact / total if total else None),
+                "reason": "",
+                "model_basis": "measured_joint" if historical else "manual_linear",
             }
         )
-    return sorted(out, key=lambda r: r["impact_jpy"])
+    return sorted(out, key=lambda r: (r["impact_jpy"] is None, r["impact_jpy"] or 0.0))
 
 
 def episode_impacts(
@@ -381,23 +423,52 @@ def episode_impacts(
     episodes: Sequence[dict[str, Any]],
     dates: Sequence[str],
     prices_jpy: dict[str, Sequence[float | None]],
+    *,
+    total_nav: float | None = None,
+    missing_holdings: Sequence[str] = (),
 ) -> list[dict[str, Any]]:
-    """Each episode replayed on today's holdings: last close before ``start`` → close at ``end``."""
-    total = sum(values_by_ticker.values())
+    """Keep priced partial P&L separate from a complete replay of today's market assets."""
+    invested = sum(values_by_ticker.values())
+    total = invested if total_nav is None else total_nav
     out = []
     for ep in episodes:
         before = [i for i, d in enumerate(dates) if d < str(ep["start"])]
         upto = [i for i, d in enumerate(dates) if d <= str(ep["end"])]
-        if not before or not upto or upto[-1] <= before[-1]:
-            continue
-        i0, i1 = before[-1], upto[-1]
-        impact = covered = 0.0
-        for t, v in values_by_ticker.items():
-            series = prices_jpy.get(t)
-            if not series or series[i0] in (None, 0) or series[i1] is None:
-                continue
-            impact += v * (float(series[i1]) / float(series[i0]) - 1.0)
-            covered += v
+        boundary_known = bool(
+            before and upto and upto[-1] > before[-1] and dates[-1] >= str(ep["end"])
+        )
+        static_only = not values_by_ticker and not missing_holdings
+        impact = 0.0 if boundary_known or static_only else None
+        covered = 0.0
+        missing = list(missing_holdings)
+        if boundary_known:
+            i0, i1 = before[-1], upto[-1]
+            for ticker, value in values_by_ticker.items():
+                series = prices_jpy.get(ticker)
+                if (
+                    not series
+                    or len(series) <= i1
+                    or series[i0] is None
+                    or series[i1] is None
+                    or not math.isfinite(series[i0])
+                    or not math.isfinite(series[i1])
+                    or series[i0] <= 0
+                ):
+                    missing.append(ticker)
+                    continue
+                impact += value * (float(series[i1]) / float(series[i0]) - 1.0)
+                covered += value
+        complete = (boundary_known or static_only) and not missing
+        reason = (
+            "局面の開始前・終了時の価格履歴がありません"
+            if not boundary_known and not static_only
+            else f"局面価格が未計算: {', '.join(sorted(set(missing)))}"
+            if missing
+            else ""
+        )
+        if not static_only and covered == 0:
+            impact = None
+        ratio = impact / total if impact is not None and total else None
         out.append(
             {
                 "id": str(ep["id"]),
@@ -405,25 +476,41 @@ def episode_impacts(
                 "start": str(ep["start"]),
                 "end": str(ep["end"]),
                 "impact_jpy": impact,
-                "impact_pct": (impact / total if total else None),
-                "coverage": (covered / total if total else None),
+                "impact_pct": ratio,
+                "total_impact_jpy": impact if complete else None,
+                "total_impact_pct": ratio if complete else None,
+                "complete": complete,
+                "reason": reason,
+                "coverage": covered / invested if invested else None,
+                "coverage_basis": "priced_positions",
+                "priced_nav_ratio": covered / total if total else None,
             }
         )
-    return sorted(out, key=lambda r: r["impact_jpy"])
+    return sorted(out, key=lambda row: (row["impact_jpy"] is None, row["impact_jpy"] or 0.0))
 
 
 # ---- limits ----
 
 
 def evaluate_limits(
-    limits: Sequence[dict[str, Any]], metrics: dict[str, Any]
+    limits: Sequence[dict[str, Any]],
+    metrics: dict[str, Any],
+    *,
+    lower_bounds: dict[str, float | None] | None = None,
+    reasons: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
     out = []
     for limit in limits:
-        value = metrics.get(str(limit["metric"]))
+        metric = str(limit["metric"])
+        value = metrics.get(metric)
+        lower_bound = (lower_bounds or {}).get(metric)
+        reason = (reasons or {}).get(metric, "")
         op, threshold = str(limit["operator"]), float(limit["threshold"])
         if value is None or op not in ("<=", ">="):
             status = "na"
+            if value is None and op == "<=" and lower_bound is not None and lower_bound > threshold:
+                status = "breach"
+                reason = f"{reason}。少なくとも {lower_bound:.1%} の損失を確認"
         elif op == "<=":
             status = "ok" if value <= threshold else "breach"
         else:
@@ -436,6 +523,8 @@ def evaluate_limits(
                 "operator": op,
                 "threshold": threshold,
                 "value": value,
+                "lower_bound_value": lower_bound,
+                "reason": reason,
                 "status": status,
                 "note": str(limit.get("note", "")),
             }
@@ -446,11 +535,14 @@ def evaluate_limits(
 # ---- the payload block ----
 
 
-def _worst(scenarios: Sequence[dict[str, Any]], kind: str) -> float | None:
-    """The largest loss ratio among scenarios of one kind, as a positive number."""
-    ratios = [
-        r["impact_pct"] for r in scenarios if r["kind"] == kind and r["impact_pct"] is not None
-    ]
+def _worst(
+    scenarios: Sequence[dict[str, Any]], kind: str, *, require_complete: bool = True
+) -> float | None:
+    """An exact worst loss needs every configured scenario; known losses give a lower bound."""
+    rows = [row for row in scenarios if row["kind"] == kind]
+    if require_complete and any(row["impact_pct"] is None for row in rows):
+        return None
+    ratios = [row["impact_pct"] for row in rows if row["impact_pct"] is not None]
     return max(-min(ratios), 0.0) if ratios else None
 
 
@@ -471,12 +563,14 @@ HISTORY_KEYS = (
 def assemble(
     holdings: Sequence[Holding],
     reference: dict[str, Any],
-    returns: dict[str, list[float]],
-    benchmarks: dict[str, list[float]],
+    returns: dict[str, list[float | None]],
+    benchmarks: dict[str, list[float | None]],
     dates: Sequence[str],
     prices_jpy: dict[str, Sequence[float | None]],
     as_of: str,
     previous: dict[str, Any] | None = None,
+    *,
+    factor_risk: FactorRisk | None = None,
 ) -> dict[str, Any]:
     """Everything the report shows, from today's holdings and the price history.
 
@@ -492,11 +586,30 @@ def assemble(
     values: dict[str, float] = {}
     symbol_of: dict[str, str] = {}
     for h in holdings:
-        if h.ticker and not h.is_cash and total:
+        if h.ticker and not h.is_cash and h.symbol != "RECONCILIATION" and total:
             weights[h.ticker] = weights.get(h.ticker, 0.0) + float(h.value_jpy) / total
             values[h.ticker] = values.get(h.ticker, 0.0) + float(h.value_jpy)
             symbol_of[h.ticker] = h.symbol
-    port = portfolio_returns(weights, returns)
+    window = max((len(returns[t]) for t in weights if t in returns), default=0)
+    modeled = [
+        h for h in holdings if not h.is_cash and h.symbol != "RECONCILIATION" and h.value_jpy
+    ]
+
+    def complete_history(h: Holding) -> bool:
+        observations = returns.get(h.ticker or "", [])
+        return (
+            window >= 2
+            and len(observations) == window
+            and all(x is not None and math.isfinite(x) for x in observations[-window:])
+        )
+
+    missing_history = [h.symbol for h in modeled if not complete_history(h)]
+    modeled_value = sum(float(h.value_jpy) for h in modeled)
+    covered_value = sum(float(h.value_jpy) for h in modeled if complete_history(h))
+    history_reason = (
+        f"価格履歴が不足: {', '.join(sorted(set(missing_history)))}" if missing_history else ""
+    )
+    port = [] if missing_history else portfolio_returns(weights, returns)
     var95, var99 = value_at_risk(port, 0.95), value_at_risk(port, 0.99)
     es = expected_shortfall(port, 0.975)
     worst_i = min(range(len(port)), key=lambda i: port[i]) if port else None
@@ -509,6 +622,23 @@ def assemble(
             "pnl_jpy": port[worst_i] * total,
             "pct": port[worst_i],
         }
+    beta_values: dict[str, float | None] = {}
+    beta_reasons: dict[str, str] = {}
+    for name, series in benchmarks.items():
+        reason = (
+            history_reason or "有効なポートフォリオリターンがありません"
+            if not port
+            else "ベンチマークの価格履歴が不足"
+            if len(series) != len(port)
+            or any(value is None or not math.isfinite(value) for value in series)
+            else "共通観測が3件ありません"
+            if len(port) < 3
+            else ""
+        )
+        beta_values[name] = None if reason else beta(port, series)
+        beta_reasons[name] = reason or (
+            "ベンチマークに変動がありません" if beta_values[name] is None else ""
+        )
     stats = {
         "window_days": len(port),
         "vol_annual": volatility(port),
@@ -521,15 +651,22 @@ def assemble(
         "es_1d_975_jpy": (None if es is None else es * total),
         "var_20d_95_jpy": (None if var95 is None else var95 * math.sqrt(20) * total),
         "worst_day": worst,
-        "beta": {name: beta(port, series) for name, series in benchmarks.items()},
+        "beta": beta_values,
+        "beta_reasons": beta_reasons,
         "prev": previous or {},
+        "coverage_ratio": covered_value / modeled_value if modeled_value else None,
+        "reason": history_reason,
     }
-    shares = risk_contributions(weights, returns)
-    standalone = {
-        t: volatility([x if x is not None else 0.0 for x in returns[t][-len(port) :]])
-        for t in weights
-        if t in returns and len(returns[t]) > 1
-    }
+    shares = {} if missing_history else risk_contributions(weights, returns)
+    standalone = (
+        {}
+        if missing_history
+        else {
+            t: volatility(returns[t][-len(port) :])
+            for t in weights
+            if t in returns and len(returns[t]) > 1
+        }
+    )
     positions = sorted(
         (
             {
@@ -540,6 +677,7 @@ def assemble(
                 "vol_annual": standalone.get(t),
             }
             for t in weights
+            if not missing_history
         ),
         key=lambda r: -r["risk_share"],
     )
@@ -568,7 +706,8 @@ def assemble(
             for key, b in buckets.items()
         },
     }
-    scenarios = scenario_impacts(holdings, reference)
+    scenarios = scenario_impacts(holdings, reference, factor_risk=factor_risk)
+    measured_reason = next((r["reason"] for r in scenarios if r.get("reason")), "")
     metrics = {
         **conc,
         # the names the main dashboard's policy uses (core.validate_analysis_reference)
@@ -580,7 +719,19 @@ def assemble(
     # cannot compute; limits only this monitor evaluates sit in policy.daily_limits
     policy_ref = reference.get("policy") or {}
     limits = [*policy_ref.get("limits", []), *policy_ref.get("daily_limits", [])]
-    policy = evaluate_limits(limits, metrics)
+    lower_bounds = {
+        f"worst_{kind}_drawdown": _worst(scenarios, kind, require_complete=False)
+        for kind in ("compound", "historical")
+    }
+    worst_reasons = {
+        f"worst_{kind}_drawdown": "未計算のシナリオ: "
+        + ", ".join(
+            row["label"] for row in scenarios if row["kind"] == kind and row["impact_pct"] is None
+        )
+        for kind in ("compound", "historical")
+        if any(row["kind"] == kind and row["impact_pct"] is None for row in scenarios)
+    }
+    policy = evaluate_limits(limits, metrics, lower_bounds=lower_bounds, reasons=worst_reasons)
     breaches = sum(1 for r in policy if r["status"] == "breach")
     history = {
         "vol_annual": stats["vol_annual"],
@@ -613,8 +764,16 @@ def assemble(
         "stats": stats,
         "contributions": contributions,
         "stress": {
+            "measured_factor_reason": measured_reason,
             "scenarios": scenarios,
-            "episodes": episode_impacts(values, reference.get("episodes", []), dates, prices_jpy),
+            "episodes": episode_impacts(
+                values,
+                reference.get("episodes", []),
+                dates,
+                prices_jpy,
+                total_nav=total,
+                missing_holdings=[h.symbol for h in modeled if not h.ticker],
+            ),
         },
         "policy": policy,
         "policy_breaches": breaches,

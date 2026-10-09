@@ -1,0 +1,89 @@
+{
+  "research_date": "2026-09-30",
+  "period_start": "2026-02-01",
+  "period_end": "2026-07-31",
+  "period_days": 181,
+  "annualization_days": 365,
+  "sources": [
+    {
+      "id": "adr",
+      "title": "アドバンス・レジデンス投資法人 第32期 物件データ",
+      "url": "https://www.adr-reit.com/files/optionallink/00003487_file.xlsx",
+      "filename": "adr_202607_property_data.xlsx",
+      "as_of": "2026-07-31",
+      "locations": ["物件概要", "収益状況", "帳簿価額", "鑑定評価"],
+      "measurement": "半期の実収支、開示取得価格、期末鑑定評価額",
+      "limitation": "単一J-REITの保有物件。都市全体・売出物件の代表標本ではない。取得価格は過去の取得・合併等の条件を含み、現在の買値ではない。"
+    },
+    {
+      "id": "adr_presentation",
+      "title": "アドバンス・レジデンス投資法人 第32期 決算説明資料",
+      "url": "https://www.adr-reit.com/files/optionallink/00003484_file.pdf",
+      "filename": "adr_202607_presentation.pdf",
+      "as_of": "2026-07-31"
+    },
+    {
+      "id": "jrei",
+      "title": "日本不動産研究所 第54回 不動産投資家調査",
+      "url": "https://www.reinet.or.jp/pdf/REIS/booklet_the-japanese-real-estate-investor-survey_202604.pdf",
+      "filename": "jrei_202604_booklet.pdf",
+      "as_of": "2026-04-01",
+      "page": 14,
+      "measurement": "NOIを基準とする投資家の期待還元利回り。成約の実測値ではない。",
+      "transcription": "公表PDFの14ページを確認して手入力。ワンルームは駅徒歩10分以内、築5年未満、25〜30㎡、50戸程度。",
+      "limitation": "ADRの築年・住戸仕様・契約と異なる。地方都市に掲載された2列はワンルームとファミリーの期待利回りで、期待・取引利回りの2列ではない。"
+    },
+    {
+      "id": "boj",
+      "title": "日本銀行 2026年9月18日 金融市場調節方針の変更",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260918a.pdf",
+      "filename": "boj_20260918.pdf",
+      "as_of": "2026-09-18",
+      "page": 1,
+      "policy_rate": 0.0125,
+      "limitation": "政策金利は個別物件の融資金利ではない。融資シナリオの入力には使わない。"
+    },
+    {
+      "id": "cbre_uk",
+      "title": "CBRE UK Multifamily Index — results to March 2026",
+      "url": "https://www.cbre.co.uk/insights/articles/business-insights-robust-occupier-demand-drives-multifamily-housing-investment",
+      "as_of": "2026-03-31",
+      "published": "2026-07-14",
+      "source_read": "web toolで本文・表を確認。requestsによる原本保存はHTTP 403で失敗。",
+      "period": "2025年9月〜2026年3月の6か月",
+      "net_income_return": 0.022,
+      "capital_value_change": -0.022,
+      "total_return": 0.0,
+      "market_rental_value_change": 0.017,
+      "yield_shift": 0.0017,
+      "limitation": "UK全体の保有資産指数。6か月のincome returnを年間の取得Cap Rateに置き換えない。ロンドン・マンチェスター別のNOI利回りではない。"
+    }
+  ],
+  "jrei_expected_yields": [
+    {"market": "東京・城南", "studio": 0.036, "family": 0.037},
+    {"market": "東京・城東", "studio": 0.038, "family": 0.039},
+    {"market": "札幌", "studio": 0.049, "family": 0.05},
+    {"market": "仙台", "studio": 0.05, "family": 0.05},
+    {"market": "さいたま", "studio": 0.045, "family": 0.045},
+    {"market": "千葉", "studio": 0.045, "family": 0.046},
+    {"market": "横浜", "studio": 0.042, "family": 0.043},
+    {"market": "名古屋", "studio": 0.045, "family": 0.045},
+    {"market": "京都", "studio": 0.046, "family": 0.046},
+    {"market": "大阪", "studio": 0.042, "family": 0.043},
+    {"market": "神戸", "studio": 0.047, "family": 0.047},
+    {"market": "広島", "studio": 0.05, "family": 0.051},
+    {"market": "福岡", "studio": 0.045, "family": 0.045}
+  ],
+  "scenario_defaults": {
+    "loan_rate": 0.03,
+    "ltv": 0.7,
+    "loan_years": 30,
+    "annual_capex_reserve_per_price": 0.005,
+    "acquisition_cost_per_price": 0.07,
+    "dscr_target": 1.25,
+    "hold_years": 5,
+    "annual_noi_growth": 0.0,
+    "exit_cap_increase": 0.005,
+    "status": "すべて分析用仮定。銀行提示条件・将来予測・実測修繕費ではない。"
+  }
+}

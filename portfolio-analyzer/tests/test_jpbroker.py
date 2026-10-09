@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 
+import pytest
 from portfolio_analyzer import jpbroker
 from portfolio_analyzer import timeseries as ts
 
@@ -184,3 +185,233 @@ def test_replay_carries_realised_pnl_per_symbol() -> None:
     rows = jpbroker.parse_transactions(SAMPLE)
     path = jpbroker.replay(rows, DATES)["9023"]
     assert path["realized_cum"][2] == D(0) and path["realized_cum"][3] == D(515902) - D(528424)
+
+
+def _mixed_sales() -> list[jpbroker.Txn]:
+    return [
+        jpbroker.Txn(
+            "株式",
+            "2026-01-01",
+            "2026-01-03",
+            "1234",
+            "test",
+            "買",
+            D(100),
+            D(1),
+            D(-100),
+            "NISA成長投資枠",
+        ),
+        jpbroker.Txn(
+            "株式",
+            "2026-01-02",
+            "2026-01-04",
+            "1234",
+            "test",
+            "買",
+            D(1100),
+            D(1),
+            D(-1100),
+            "特定",
+        ),
+        jpbroker.Txn(
+            "株式", "2026-01-05", "2026-01-07", "1234", "test", "売", D(1000), D(1), D(1000), "特定"
+        ),
+    ]
+
+
+def test_a_taxable_sale_does_not_use_the_nisa_acquisition_cost() -> None:
+    rows = _mixed_sales()
+    assert jpbroker.taxable_realized_since(rows, "2026-01-01") == D(-100)
+    h = jpbroker.derive_holdings(rows)["1234"]
+    assert h["quantity"] == D(1) and h["cost_basis_jpy"] == D(100)
+    assert h["tax_category"] == "nisa"
+
+
+def test_a_nisa_sale_does_not_remove_the_taxable_acquisition_cost() -> None:
+    rows = _mixed_sales()[:2]
+    rows.append(
+        jpbroker.Txn(
+            "株式",
+            "2026-01-05",
+            "2026-01-07",
+            "1234",
+            "test",
+            "売",
+            D(1000),
+            D(1),
+            D(1000),
+            "NISA成長投資枠",
+        )
+    )
+    assert jpbroker.taxable_realized_since(rows, "2026-01-01") == D(0)
+    h = jpbroker.derive_holdings(rows)["1234"]
+    assert h["cost_basis_jpy"] == D(1100) and h["tax_category"] == "taxable"
+
+
+def test_daily_replay_uses_the_sold_tax_bucket_cost() -> None:
+    dates = ["2026-01-02", "2026-01-05"]
+    paths = jpbroker.replay(_mixed_sales(), dates)["1234"]
+    assert paths["cost_basis_jpy"] == [D(1200), D(100)]
+    assert paths["realized_cum"] == [D(0), D(-100)]
+    account = jpbroker.account_paths(_mixed_sales(), dates, {"1234": [D(1000), D(1000)]})
+    assert account.unrealized == [D(800), D(900)]
+    assert account.realized_cum == [D(0), D(-100)]
+    assert account.pnl == [D(800), D(800)]
+
+
+def test_a_sale_cannot_borrow_quantity_from_the_other_tax_bucket() -> None:
+    rows = _mixed_sales()[:1]
+    rows.append(_mixed_sales()[2])  # NISA stock exists, but no taxable stock was bought
+    with pytest.raises(ValueError, match="taxable"):
+        jpbroker.derive_holdings(rows)
+    with pytest.raises(ValueError, match="taxable"):
+        jpbroker.replay(rows, ["2026-01-05"])
+
+
+def _same_day_export(*records: str) -> list[jpbroker.Txn]:
+    header = "商品分類,約定日,受渡日,銘柄,取引,約定単価,数量,受渡金額,備考\n"
+    return jpbroker.parse_transactions(header + "\n".join(records) + "\n")
+
+
+@pytest.mark.parametrize("daily", [False, True])
+def test_newest_first_export_restores_a_same_day_purchase_before_sale(daily: bool) -> None:
+    rows = _same_day_export(
+        "株式,2026/01/05,2026/01/07,1234 test,売,120,1,120,特定",
+        "株式,2026/01/05,2026/01/07,1234 test,買,100,1,-100,特定",
+    )
+    assert [t.action for t in rows] == [jpbroker.SELL, jpbroker.BUY]
+    if daily:
+        s = jpbroker.account_paths(rows, ["2026-01-05"], {"1234": [D(120)]})
+        assert s.realized_cum == [D(20)] and s.nav == [D(20)]
+    else:
+        assert jpbroker.ledger(rows, "jp")["closed"][0]["realized_pnl_jpy"] == D(20)
+
+
+@pytest.mark.parametrize("daily", [False, True])
+def test_newest_first_preserves_a_sale_before_a_same_day_repurchase(daily: bool) -> None:
+    rows = _same_day_export(
+        "株式,2026/01/05,2026/01/07,1234 test,買,200,1,-200,特定",
+        "株式,2026/01/05,2026/01/07,1234 test,売,120,1,120,特定",
+        "株式,2026/01/01,2026/01/03,1234 test,買,100,1,-100,特定",
+    )
+    if daily:
+        path = jpbroker.replay(rows, ["2026-01-05"])["1234"]
+        assert path["realized_cum"] == [D(20)]
+        assert path["cost_basis_jpy"] == [D(200)]
+    else:
+        h = jpbroker.derive_holdings(rows)["1234"]
+        assert h["realized_pnl_jpy"] == D(20) and h["cost_basis_jpy"] == D(200)
+
+
+def test_manually_created_transactions_keep_their_given_same_day_order() -> None:
+    rows = _mixed_sales()[1:2]
+    rows.extend(
+        [
+            jpbroker.Txn(
+                "株式",
+                "2026-01-05",
+                "2026-01-07",
+                "1234",
+                "test",
+                "売",
+                D(1200),
+                D(1),
+                D(1200),
+                "特定",
+            ),
+            jpbroker.Txn(
+                "株式",
+                "2026-01-05",
+                "2026-01-07",
+                "1234",
+                "test",
+                "買",
+                D(2000),
+                D(1),
+                D(-2000),
+                "特定",
+            ),
+        ]
+    )
+    h = jpbroker.derive_holdings(rows)["1234"]
+    assert h["realized_pnl_jpy"] == D(100) and h["cost_basis_jpy"] == D(2000)
+    assert jpbroker.replay(rows, ["2026-01-05"])["1234"]["cost_basis_jpy"] == [D(2000)]
+
+
+def test_source_order_does_not_change_transaction_equality_or_representation() -> None:
+    row = _same_day_export("株式,2026/01/05,2026/01/07,1234 test,買,100,1,-100,特定")[0]
+    expected = jpbroker.Txn(
+        "株式", "2026-01-05", "2026-01-07", "1234", "test", "買", D(100), D(1), D(-100), "特定"
+    )
+    assert row == expected and repr(row) == repr(expected)
+
+
+@pytest.mark.parametrize("note", ["NISA成長投資枠", "特定"])
+def test_a_split_without_a_tax_note_uses_the_only_open_bucket(note: str) -> None:
+    rows = [
+        jpbroker.Txn(
+            "株式", "2026-01-01", "2026-01-03", "1234", "test", "買", D(100), D(1), D(-100), note
+        ),
+        jpbroker.Txn(
+            "入庫(増減資)", "", "2026-01-10", "1234", "test", jpbroker.SPLIT, None, D(1), None, ""
+        ),
+    ]
+    h = jpbroker.derive_holdings(rows)["1234"]
+    category = "nisa" if "NISA" in note else "taxable"
+    assert h["tax_category"] == category
+    assert h["tax_buckets"][category]["quantity"] == D(2)
+    assert h["cost_basis_jpy"] == D(100)
+    rows.append(
+        jpbroker.Txn(
+            "株式", "2026-01-11", "2026-01-13", "1234", "test", "売", D(60), D(2), D(120), note
+        )
+    )
+    assert jpbroker.closed_positions(rows)["1234"]["realized_pnl_jpy"] == D(20)
+    assert jpbroker.replay(rows, ["2026-01-11"])["1234"]["realized_cum"] == [D(20)]
+
+
+@pytest.mark.parametrize("daily", [False, True])
+def test_a_split_without_a_tax_note_rejects_ambiguous_mixed_holdings(daily: bool) -> None:
+    rows = _mixed_sales()[:2]
+    rows.append(
+        jpbroker.Txn(
+            "入庫(増減資)", "", "2026-01-10", "1234", "test", jpbroker.SPLIT, None, D(2), None, ""
+        )
+    )
+    with pytest.raises(ValueError, match=r"ambiguous.*split"):
+        if daily:
+            jpbroker.replay(rows, ["2026-01-10"])
+        else:
+            jpbroker.derive_holdings(rows)
+
+
+def test_fractional_sales_keep_the_aggregate_cost_equal_to_bucket_costs() -> None:
+    trades = [
+        ("買", "0.3", "-1", "NISA"),
+        ("買", "0.2", "-1", "特定"),
+        ("売", "0.1", "1", "NISA"),
+        ("売", "0.1", "1", "特定"),
+        ("売", "0.1", "1", "NISA"),
+    ]
+    rows = [
+        jpbroker.Txn(
+            "株式",
+            f"2026-01-0{i}",
+            f"2026-01-0{i + 2}",
+            "1234",
+            "test",
+            action,
+            abs(D(amount)) / D(qty),
+            D(qty),
+            D(amount),
+            note,
+        )
+        for i, (action, qty, amount, note) in enumerate(trades, 1)
+    ]
+    h = jpbroker.derive_holdings(rows)["1234"]
+    assert h["quantity"] == D("0.2")
+    assert h["cost_basis_jpy"] == D("0.8333333333333333333333333333")
+    assert h["cost_basis_jpy"] == sum(
+        (b["cost_basis_jpy"] for b in h["tax_buckets"].values()), D(0)
+    )
+    assert jpbroker.replay(rows, ["2026-01-05"])["1234"]["cost_basis_jpy"] == [h["cost_basis_jpy"]]

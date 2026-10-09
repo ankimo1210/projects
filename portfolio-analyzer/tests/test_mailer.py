@@ -9,6 +9,78 @@ from portfolio_analyzer import mailer
 from risk_fixture import risk_block
 
 
+def test_analysis_limits_and_estimated_xirr_carry_into_both_email_formats() -> None:
+    data = payload()
+    data["headline"].update(pnl_window=None, max_dd_window=None, xirr_is_estimate=True)
+    data["quality"] = {
+        "historical_pnl_exact": False,
+        "warnings": ["外貨現金の期間合計は日次配分不能 <検証中>"],
+        "dd_method": "twr_end_of_day_flows",
+    }
+    text = mailer.text_body(data)
+    markup = mailer.html_body(data)
+    assert text.index("日次配分不能") < text.index("総資産")
+    assert markup.index("日次配分不能") < markup.index("総資産 ¥")
+    assert "&lt;検証中&gt;" in markup
+    for body in (text, markup):
+        assert "資金加重リターン（推定）" in body
+        assert "入金調整後" in body
+
+
+def test_email_unavailable_stress_keeps_reason_and_unknown_instead_of_zero() -> None:
+    data = payload()
+    data["risk"]["stress"]["scenarios"] = [
+        {
+            "label": "未校正の局面",
+            "kind": "historical",
+            "impact_pct": None,
+            "impact_jpy": None,
+            "reason": "共同回帰係数が未校正",
+        }
+    ]
+    data["risk"]["stress"]["episodes"] = []
+    markup = mailer.html_body(data)
+    stress = markup.split("未校正の局面", 1)[1]
+    assert "共同回帰係数が未校正" in stress
+    assert "+0.0%" not in stress and "±0.0%" not in stress
+
+
+def test_email_replay_coverage_distinguishes_priced_positions_from_total_nav() -> None:
+    data = payload()
+    data["risk"]["stress"]["episodes"][0].update(
+        coverage=1.0, coverage_basis="priced_positions", priced_nav_ratio=0.8
+    )
+    markup = mailer.html_body(data)
+    assert "価格対象カバー率 100%" in markup
+    assert "総資産カバー率 80%" in markup
+    assert "影響は総資産比" in markup
+
+
+def test_email_unknown_policy_does_not_claim_no_breaches_without_qualification() -> None:
+    data = payload()
+    data["risk"]["policy"] = [
+        {
+            "label": "実測ストレス限度",
+            "metric": "worst_historical_drawdown",
+            "operator": "<=",
+            "threshold": 0.12,
+            "value": None,
+            "status": "na",
+        }
+    ]
+    data["risk"]["policy_breaches"] = 0
+    markup = mailer.html_body(data)
+    assert "未計算 1 件" in markup
+    assert "超過なし" not in markup
+
+
+def test_missing_risk_history_reason_is_retained_in_both_email_formats() -> None:
+    data = payload()
+    data["risk"]["stats"].update(reason="価格履歴が不足: DC FUND", coverage_ratio=0.5)
+    assert "価格履歴が不足: DC FUND" in mailer.html_body(data)
+    assert "価格履歴が不足: DC FUND" in mailer.text_body(data)
+
+
 def payload() -> dict:
     return {
         "as_of": "2026-09-11",
@@ -562,3 +634,38 @@ def test_a_change_that_rounds_to_nothing_is_not_a_signed_zero() -> None:
     assert "±0.0pt" in mailer._delta(0.3189, 0.3190)
     assert "±0.00" in mailer._delta(0.512, 0.5124, unit="", digits=2)
     assert "−0.1pt" in mailer._delta(0.156, 0.1572)
+
+
+def test_policy_bounds_and_missing_scenarios_are_explained_in_both_formats() -> None:
+    data = payload()
+    data["risk"]["policy"] = [
+        {
+            "label": "過去局面限度",
+            "metric": "worst_historical_drawdown",
+            "operator": "<=",
+            "threshold": 0.12,
+            "value": None,
+            "lower_bound_value": 0.2,
+            "status": "breach",
+            "reason": "未計算の局面あり <不足>",
+        }
+    ]
+    data["risk"]["policy_breaches"] = 1
+    for body in (mailer.html_body(data), mailer.text_body(data)):
+        assert "少なくとも20.0%" in body
+        assert "未計算の局面あり" in body
+    assert "&lt;不足&gt;" in mailer.html_body(data)
+
+
+def test_email_labels_partial_episode_as_known_portion() -> None:
+    data = payload()
+    data["risk"]["stress"]["episodes"][0].update(
+        complete=False,
+        coverage=0.5,
+        total_impact_pct=None,
+        total_impact_jpy=None,
+        reason="未取得: FUND",
+    )
+    body = mailer.html_body(data)
+    assert "既知部分のみ" in body
+    assert "未取得: FUND" in body

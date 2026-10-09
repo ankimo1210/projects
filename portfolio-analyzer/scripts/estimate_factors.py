@@ -186,9 +186,7 @@ def download_prices(symbols: list[str], start: str, end: str):
     for symbol in symbols:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            raw = yf.download(
-                symbol, start=start, end=end, auto_adjust=False, progress=False
-            )
+            raw = yf.download(symbol, start=start, end=end, auto_adjust=False, progress=False)
         if raw is None or raw.empty:
             raise RuntimeError(f"empty price response for {symbol}")
         if isinstance(raw.columns, pd.MultiIndex):
@@ -233,7 +231,9 @@ def find_price_spikes(series, threshold: float = 0.4, window: int = 11) -> list:
     return list(deviation[deviation > threshold].index)
 
 
-def screen_prices(prices, threshold: float = 0.4, *, skip: tuple[str, ...] = ()) -> tuple[Any, dict[str, Any]]:
+def screen_prices(
+    prices, threshold: float = 0.4, *, skip: tuple[str, ...] = ()
+) -> tuple[Any, dict[str, Any]]:
     """Blank out spike prints and report every value that was removed.
 
     ``skip`` exempts series whose level can legitimately halve or double — a
@@ -309,7 +309,72 @@ def series_payload(weekly_factors) -> dict[str, Any]:
     return {
         "factors": factors,
         "dates": [stamp.date().isoformat() for stamp in clean.index],
-        "values": [[round(float(clean.iloc[row][factor]), 8) for factor in factors] for row in range(len(clean))],
+        "values": [
+            [round(float(clean.iloc[row][factor]), 8) for factor in factors]
+            for row in range(len(clean))
+        ],
+    }
+
+
+def estimate_joint_loadings(
+    prices, factors, targets: dict[str, str], *, usd_tickers: tuple[str, ...] = ()
+) -> dict[str, Any]:
+    """Fit JPY target returns jointly on the exact measured excess-return basis.
+
+    Marginal market betas remain useful for manual hypothetical shocks, but
+    cannot be added to measured sector excess returns. Fit all columns together
+    with an intercept; the intercept is reported, not treated as a stress factor.
+    Screen the JPY target's adjustment discontinuities with the same MAD rule
+    used by marginal betas and record excluded weeks. Rank-deficient or
+    undersampled fits are explicitly unavailable after screening.
+    """
+    import numpy as np
+    import pandas as pd
+
+    fitted: dict[str, Any] = {}
+    unavailable: dict[str, str] = {}
+    for symbol, ticker in targets.items():
+        if ticker not in prices or (ticker in usd_tickers and "JPY=X" not in prices):
+            unavailable[symbol] = "price history unavailable"
+            continue
+        levels = prices[ticker]
+        if ticker in usd_tickers:
+            levels = levels * prices["JPY=X"]
+        target = levels.pct_change(fill_method=None).rename("_target")
+        aligned = pd.concat([factors, target], axis=1).replace([np.inf, -np.inf], np.nan).dropna()
+        # The factor covariance's excluded weeks are removed by the caller.
+        # A target's own adjusted-price discontinuity need not occur in a proxy.
+        dropped = robust_outlier_mask(aligned["_target"])
+        dropped_dates = [stamp.date().isoformat() for stamp in aligned.index[dropped]]
+        aligned = aligned.loc[~dropped]
+        if len(aligned) <= len(factors.columns) + 1:
+            unavailable[symbol] = "too few observations for joint regression"
+            continue
+        design = np.column_stack([np.ones(len(aligned)), aligned[list(factors.columns)].to_numpy()])
+        response = aligned["_target"].to_numpy()
+        coefficients, _residuals, rank, _singular = np.linalg.lstsq(design, response, rcond=None)
+        if rank != design.shape[1]:
+            unavailable[symbol] = "factor basis is rank deficient"
+            continue
+        residual = response - design @ coefficients
+        spread = float(np.sum((response - response.mean()) ** 2))
+        fitted[symbol] = {
+            "loadings": {
+                str(factor): round(float(value), 10)
+                for factor, value in zip(factors.columns, coefficients[1:], strict=True)
+            },
+            "intercept": round(float(coefficients[0]), 10),
+            "observations": len(aligned),
+            "dropped_outliers": dropped_dates,
+            "r_squared": (
+                None if not spread else round(1 - float(residual @ residual) / spread, 6)
+            ),
+        }
+    return {
+        "basis": "joint-jpy-excess-v1",
+        "factors": list(factors.columns),
+        "instruments": fitted,
+        "unavailable": unavailable,
     }
 
 
@@ -403,7 +468,9 @@ def measure_episodes(daily_prices, daily_yields) -> list[dict[str, Any]]:
                     if value == value  # drop NaN when a proxy has no history yet
                 },
                 "raw_moves": {
-                    symbol: round(float(value), 6) for symbol, value in moves.items() if value == value
+                    symbol: round(float(value), 6)
+                    for symbol, value in moves.items()
+                    if value == value
                 },
             }
         )
@@ -415,7 +482,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--start", default="2018-01-01", help="history start for episode replay")
     parser.add_argument("--end", default=date.today().isoformat(), help="history end")
     parser.add_argument(
-        "--beta-window-years", type=int, default=3, help="trailing years used for beta and covariance"
+        "--beta-window-years",
+        type=int,
+        default=3,
+        help="trailing years used for beta and covariance",
     )
     parser.add_argument(
         "--output",
@@ -446,7 +516,9 @@ def main() -> int:
     levels, quality_report = screen_prices(levels, skip=tuple(YIELD_PROXIES))
     for symbol, rows in quality_report.items():
         for row in rows:
-            print(f"  data quality: dropped {symbol} {row['date']} ({row['price']})", file=sys.stderr)
+            print(
+                f"  data quality: dropped {symbol} {row['date']} ({row['price']})", file=sys.stderr
+            )
 
     factor_symbols = list(dict.fromkeys([*PRICE_PROXIES, *EQUIPMENT_BASKET, *PLATFORM_BASKET]))
     daily_prices = levels[factor_symbols]
@@ -458,6 +530,10 @@ def main() -> int:
     weekly_prices = weekly(levels.loc[window_start:])
     weekly_factors = weekly(daily_prices.loc[window_start:]).pipe(
         lambda frame: build_factor_frame(frame, weekly(daily_yields.loc[window_start:]))
+    )
+    covariance = estimate_covariance(weekly_factors)
+    measured_factors = weekly_factors.dropna().drop(
+        index=pd.to_datetime(covariance["dropped_outliers"]), errors="ignore"
     )
 
     payload = {
@@ -500,9 +576,15 @@ def main() -> int:
             ),
             "removed": quality_report,
         },
-        "factor_series": series_payload(weekly_factors),
+        "factor_series": series_payload(measured_factors),
         "betas": estimate_betas(weekly_prices, BETA_TARGETS),
-        "factor_risk": estimate_covariance(weekly_factors),
+        "factor_risk": covariance,
+        "measured_factor_model": estimate_joint_loadings(
+            weekly_prices,
+            measured_factors,
+            {ticker.removesuffix(".T"): ticker for ticker in BETA_TARGETS},
+            usd_tickers=tuple(ticker for ticker in BETA_TARGETS if not ticker.endswith(".T")),
+        ),
         "episodes": measure_episodes(daily_prices, daily_yields),
         "latest_levels": {
             "usdjpy": round(float(levels["JPY=X"].dropna().iloc[-1]), 4),

@@ -102,6 +102,34 @@ def test_horizontal_bar_sorts_labels_values_and_tooltips() -> None:
     assert "class='ref'" in out
 
 
+def test_horizontal_bar_keeps_an_unavailable_scenario_and_its_reason() -> None:
+    chart = {
+        "encodings": {
+            "x": {"field": "scenario"},
+            "y": {"field": "impact", "format": "currency"},
+            "tooltip": [{"field": "reason", "label": "未計算の理由"}],
+        },
+    }
+    rows = [
+        {"scenario": "仮定のショック", "impact": -100},
+        {"scenario": "未校正の局面", "impact": None, "reason": "共同回帰係数が未校正"},
+    ]
+    out = mh.horizontal_bar(chart, rows)
+    assert "未校正の局面" in out and "共同回帰係数が未校正" in out
+    assert out.count("<span class='bar") == 1
+    assert "—" in out
+
+
+def test_main_artifact_explains_unavailable_measured_factor_model() -> None:
+    artifact = example_artifact()
+    summaries = artifact["snapshot"]["datasets"]["summary"]
+    reasons = {r["measured_factor_reason"] for r in summaries if r["measured_factor_reason"]}
+    assert reasons
+    out = mh.render(artifact, tokens_css="")
+    for reason in reasons:
+        assert reason in out
+
+
 def test_stacked_bar_100_has_a_legend_and_shares() -> None:
     chart = {
         "id": "currencies",

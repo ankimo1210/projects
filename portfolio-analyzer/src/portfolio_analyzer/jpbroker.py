@@ -17,7 +17,7 @@ from __future__ import annotations
 import csv
 import io
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Any
 
@@ -41,6 +41,8 @@ class Txn:
     quantity: Decimal | None
     amount: Decimal | None
     note: str
+    # CSV rows are newest first; retain their execution order for date ties only.
+    _source_order: int | None = field(default=None, compare=False, repr=False, kw_only=True)
 
 
 def decode(raw: bytes) -> str:
@@ -76,7 +78,7 @@ def _split_symbol(field: str) -> tuple[str | None, str]:
 def parse_transactions(text: str) -> list[Txn]:
     """Every row of the export, oldest last (the broker writes newest first)."""
     rows: list[Txn] = []
-    for row in csv.DictReader(io.StringIO(text)):
+    for index, row in enumerate(csv.DictReader(io.StringIO(text))):
         symbol, name = _split_symbol(row.get("銘柄", ""))
         rows.append(
             Txn(
@@ -90,17 +92,51 @@ def parse_transactions(text: str) -> list[Txn]:
                 quantity=_number(row.get("数量", "")),
                 amount=_number(row.get("受渡金額", "")),
                 note=row.get("備考", "").strip(),
+                _source_order=-index,
             )
         )
     return rows
 
 
 def _ordered(rows: list[Txn]) -> list[Txn]:
-    return sorted(rows, key=lambda r: (r.settle_date or r.trade_date, r.trade_date))
+    return sorted(
+        rows,
+        key=lambda r: (r.settle_date or r.trade_date, r.trade_date, r._source_order or 0),
+    )
+
+
+def _tax_category(txn: Txn) -> str:
+    return "nisa" if "NISA" in txn.note else "taxable"
+
+
+def _new_tax_bucket() -> dict[str, Decimal]:
+    return {
+        "quantity": ZERO,
+        "cost_basis_jpy": ZERO,
+        "cost_native_jpy": ZERO,
+        "realized_pnl_jpy": ZERO,
+    }
+
+
+def _split_bucket(txn: Txn, buckets: dict[str, dict[str, Decimal]]) -> dict[str, Decimal]:
+    """Use an explicit split category, or infer it from a single open holding."""
+    category = (
+        "nisa"
+        if "NISA" in txn.note
+        else "taxable"
+        if any(label in txn.note for label in ("特定", "一般"))
+        else None
+    )
+    if category is None:
+        open_categories = [k for k, b in buckets.items() if b["quantity"] > ZERO]
+        if len(open_categories) != 1:
+            raise ValueError(f"ambiguous tax category for split of {txn.symbol}")
+        category = open_categories[0]
+    return buckets.setdefault(category, _new_tax_bucket())
 
 
 def _replay(rows: list[Txn]) -> dict[str, dict[str, Any]]:
-    """Average-cost replay over the whole export."""
+    """Average-cost replay within each symbol and tax bucket, over the whole export."""
     state: dict[str, dict[str, Any]] = {}
     for txn in _ordered(rows):
         if txn.symbol is None:
@@ -118,7 +154,7 @@ def _replay(rows: list[Txn]) -> dict[str, dict[str, Any]]:
                 "first_trade": "",
                 "last_trade": "",
                 "trades": 0,
-                "tax_categories": set(),
+                "tax_buckets": {},
                 "sales": [],
             },
         )
@@ -128,32 +164,41 @@ def _replay(rows: list[Txn]) -> dict[str, dict[str, Any]]:
             book["dividends_jpy"] += txn.amount
             continue
         if txn.action == SPLIT and txn.quantity is not None:
+            bucket = _split_bucket(txn, book["tax_buckets"])
             book["quantity"] += txn.quantity
+            bucket["quantity"] += txn.quantity
             continue
         if txn.kind not in TRADE_KINDS or txn.quantity is None or txn.amount is None:
             continue
+        category = _tax_category(txn)
+        bucket = book["tax_buckets"].setdefault(category, _new_tax_bucket())
         book["trades"] += 1
         book["first_trade"] = book["first_trade"] or txn.trade_date
         book["last_trade"] = txn.trade_date
         native = (txn.price or ZERO) * txn.quantity
         if txn.action == BUY:
             book["quantity"] += txn.quantity
-            book["cost_basis_jpy"] += -txn.amount
-            book["cost_native_jpy"] += native
-            book["tax_categories"].add("nisa" if "NISA" in txn.note else "taxable")
+            bucket["quantity"] += txn.quantity
+            bucket["cost_basis_jpy"] += -txn.amount
+            bucket["cost_native_jpy"] += native
         elif txn.action == SELL:
-            held = book["quantity"]
-            if held <= ZERO:
-                continue
-            share = min(txn.quantity / held, ONE)
-            removed = book["cost_basis_jpy"] * share
+            held = bucket["quantity"]
+            if held <= ZERO or txn.quantity > held:
+                raise ValueError(f"sale exceeds {category} holding for {txn.symbol}")
+            share = txn.quantity / held
+            removed = bucket["cost_basis_jpy"] * share
+            removed_native = bucket["cost_native_jpy"] * share
             book["realized_pnl_jpy"] += txn.amount - removed
             book["sales"].append((txn.trade_date, txn.amount - removed, txn.note))
-            book["cost_basis_jpy"] -= removed
-            book["cost_native_jpy"] -= book["cost_native_jpy"] * share
             book["quantity"] -= txn.quantity
-            if book["quantity"] <= ZERO:
-                book["tax_categories"] = set()  # a later rebuy starts a new holding
+            bucket["quantity"] -= txn.quantity
+            bucket["cost_basis_jpy"] -= removed
+            bucket["cost_native_jpy"] -= removed_native
+            bucket["realized_pnl_jpy"] += txn.amount - removed
+        # Buckets are authoritative: separately subtracting from the aggregate
+        # accumulates Decimal rounding differences after fractional sales.
+        for key in ("cost_basis_jpy", "cost_native_jpy"):
+            book[key] = sum((b[key] for b in book["tax_buckets"].values()), ZERO)
     return state
 
 
@@ -165,6 +210,7 @@ def derive_holdings(rows: list[Txn]) -> dict[str, dict[str, Any]]:
         if quantity <= ZERO:
             continue
         native = book["cost_native_jpy"]
+        buckets = {k: v for k, v in book["tax_buckets"].items() if v["quantity"] > ZERO}
         out[symbol] = {
             "symbol": symbol,
             "name": book["name"],
@@ -181,11 +227,8 @@ def derive_holdings(rows: list[Txn]) -> dict[str, dict[str, Any]]:
             "last_trade": book["last_trade"],
             "trades": book["trades"],
             # "nisa" / "taxable", or "mixed" when the lots still held came through both
-            "tax_category": (
-                "mixed"
-                if len(book["tax_categories"]) > 1
-                else next(iter(book["tax_categories"]), "taxable")
-            ),
+            "tax_category": ("mixed" if len(buckets) > 1 else next(iter(buckets), "taxable")),
+            "tax_buckets": {k: dict(v) for k, v in buckets.items()},
         }
     return out
 
@@ -252,6 +295,10 @@ def _event_date(txn: Txn) -> str:
     return txn.trade_date or txn.settle_date
 
 
+def _event_order(txn: Txn) -> tuple[str, str, int]:
+    return (_event_date(txn), txn.settle_date or "", txn._source_order or 0)
+
+
 def replay(rows: list[Txn], dates: Sequence[str]) -> dict[str, dict[str, Any]]:
     """Quantity and cost basis on each date, plus the trades, for every symbol seen.
 
@@ -264,24 +311,28 @@ def replay(rows: list[Txn], dates: Sequence[str]) -> dict[str, dict[str, Any]]:
     became — otherwise the pre-split part of the line shows a loss the size of
     the split. The trade markers move with it: the quantity up, the price down.
     """
-    ordered = sorted(
-        (t for t in rows if t.symbol), key=lambda t: (_event_date(t), t.settle_date or "")
-    )
+    ordered = sorted((t for t in rows if t.symbol), key=_event_order)
     symbols = {t.symbol for t in ordered if t.symbol}
     paths: dict[str, dict[str, Any]] = {
         s: {"quantity": [], "cost_basis_jpy": [], "realized_cum": [], "trades": []} for s in symbols
     }
-    book = {s: {"quantity": ZERO, "cost_basis_jpy": ZERO, "realized": ZERO} for s in symbols}
+    book = {
+        s: {"quantity": ZERO, "cost_basis_jpy": ZERO, "realized": ZERO, "tax_buckets": {}}
+        for s in symbols
+    }
     splits: dict[str, list[tuple[str, Decimal]]] = {s: [] for s in symbols}
 
     def apply(txn: Txn, *, record: bool) -> None:
         state = book[txn.symbol]
         if txn.action == SPLIT and txn.quantity is not None:
+            bucket = _split_bucket(txn, state["tax_buckets"])
             before = state["quantity"]
             state["quantity"] += txn.quantity
+            bucket["quantity"] += txn.quantity
             if before > ZERO:
                 splits[txn.symbol].append((_event_date(txn), state["quantity"] / before))
         elif txn.kind in TRADE_KINDS and txn.quantity is not None and txn.amount is not None:
+            bucket = state["tax_buckets"].setdefault(_tax_category(txn), _new_tax_bucket())
             if record:
                 paths[txn.symbol]["trades"].append(
                     (
@@ -292,13 +343,21 @@ def replay(rows: list[Txn], dates: Sequence[str]) -> dict[str, dict[str, Any]]:
                 )
             if txn.action == BUY:
                 state["quantity"] += txn.quantity
-                state["cost_basis_jpy"] += -txn.amount
-            elif txn.action == SELL and state["quantity"] > ZERO:
-                share = min(txn.quantity / state["quantity"], ONE)
-                removed = state["cost_basis_jpy"] * share
+                bucket["quantity"] += txn.quantity
+                bucket["cost_basis_jpy"] += -txn.amount
+            elif txn.action == SELL:
+                if bucket["quantity"] <= ZERO or txn.quantity > bucket["quantity"]:
+                    raise ValueError(f"sale exceeds {_tax_category(txn)} holding for {txn.symbol}")
+                share = txn.quantity / bucket["quantity"]
+                removed = bucket["cost_basis_jpy"] * share
                 state["realized"] += txn.amount - removed
-                state["cost_basis_jpy"] -= removed
                 state["quantity"] -= txn.quantity
+                bucket["quantity"] -= txn.quantity
+                bucket["cost_basis_jpy"] -= removed
+                bucket["realized_pnl_jpy"] += txn.amount - removed
+            state["cost_basis_jpy"] = sum(
+                (b["cost_basis_jpy"] for b in state["tax_buckets"].values()), ZERO
+            )
 
     cursor = 0
     for date in dates:
@@ -341,7 +400,7 @@ def account_paths(
     date; commissions are inside the cost basis, so ``fees_cum`` stays zero. A date on
     which a held symbol has no price is None.
     """
-    ordered = sorted(rows, key=lambda t: (_event_date(t), t.settle_date or ""))
+    ordered = sorted(rows, key=_event_order)
     paths = replay(rows, dates)
     n = len(dates)
     cash: list[Decimal] = []

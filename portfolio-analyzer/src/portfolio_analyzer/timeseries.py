@@ -5,7 +5,8 @@ once per calendar date gives the quantity, cost basis and realised P&L of every 
 on every date, and summing the cash rows gives the cash balance. Marking the quantities
 with daily closes and USD/JPY then yields NAV, and NAV minus cumulative deposits is the
 account's all-in P&L, which the buckets (unrealised, realised, dividends, fees, FX
-translation) add up to by construction.
+translation) add up to by construction. A statement-period cash FX adjustment
+does not establish daily balances before its ending date; those marks are None.
 """
 
 from __future__ import annotations
@@ -33,17 +34,19 @@ class PositionPath:
 @dataclass
 class Paths:
     dates: list[str]
-    cash: list[Decimal]
+    cash: list[Decimal | None]
     deposits_cum: list[Decimal]
     dividends_cum: list[Decimal]
     fees_cum: list[Decimal]
-    fx_translation_cum: list[Decimal]
+    fx_translation_cum: list[Decimal | None]
     forex_cum: list[Decimal]
     realized_cum: list[Decimal]
     positions: dict[str, PositionPath]
     first_trade: dict[str, str] = field(default_factory=dict)
     last_trade: dict[str, str] = field(default_factory=dict)
     trades: dict[str, list[tuple[str, Decimal, Decimal]]] = field(default_factory=dict)
+    # Statement-period cash FX totals have no daily allocation in this export.
+    aggregate_fx_adjustments: list[tuple[str, Decimal]] = field(default_factory=list)
 
 
 def _net(row: Transaction) -> Decimal:
@@ -53,6 +56,12 @@ def _net(row: Transaction) -> Decimal:
 def replay(transactions: list[Transaction], dates: list[str]) -> Paths:
     """State of the account at the close of every date in ``dates`` (ISO, ascending)."""
     rows = sorted(transactions, key=lambda r: r.date)
+    aggregate_fx = [
+        (r.date, _net(r))
+        for r in rows
+        if r.transaction_type == "Adjustment" and "FX Translation" in r.description
+    ]
+    fx_known_from = max((day for day, _ in aggregate_fx), default=None)
     symbols = sorted({r.symbol for r in rows if r.transaction_type in TRADE_TYPES and r.symbol})
     currency = {
         r.symbol: (r.price_currency or "JPY")
@@ -69,7 +78,9 @@ def replay(transactions: list[Transaction], dates: list[str]) -> Paths:
             positions[s].quantity.append(h.quantity if h else ZERO)
             positions[s].cost_basis_jpy.append(h.cost_basis_jpy if h else ZERO)
             positions[s].realized_cum.append(h.realized_pnl_jpy if h else ZERO)
-        cash.append(sum((_net(r) for r in upto), ZERO))
+        cash.append(
+            None if fx_known_from and day < fx_known_from else sum((_net(r) for r in upto), ZERO)
+        )
         deposits.append(sum((_net(r) for r in upto if r.transaction_type == "Deposit"), ZERO))
         dividends.append(
             sum(
@@ -82,7 +93,11 @@ def replay(transactions: list[Transaction], dates: list[str]) -> Paths:
             )
         )
         fees.append(sum((_net(r) for r in upto if r.transaction_type == "Other Fee"), ZERO))
-        fxadj.append(sum((_net(r) for r in upto if r.transaction_type == "Adjustment"), ZERO))
+        fxadj.append(
+            None
+            if fx_known_from and day < fx_known_from
+            else sum((_net(r) for r in upto if r.transaction_type == "Adjustment"), ZERO)
+        )
         forex.append(
             sum((_net(r) for r in upto if r.transaction_type == "Forex Trade Component"), ZERO)
         )
@@ -104,39 +119,54 @@ def replay(transactions: list[Transaction], dates: list[str]) -> Paths:
         first_trade={s: t[0][0] for s, t in trades.items() if t},
         last_trade={s: t[-1][0] for s, t in trades.items() if t},
         trades=trades,
+        aggregate_fx_adjustments=aggregate_fx,
     )
 
 
 @dataclass
 class ValuePaths:
-    nav: list[Decimal]
-    positions_value: list[Decimal]
-    pnl_total: list[Decimal]
-    unrealized: dict[str, list[Decimal]]
-    value: dict[str, list[Decimal]]
+    nav: list[Decimal | None]
+    positions_value: list[Decimal | None]
+    pnl_total: list[Decimal | None]
+    unrealized: dict[str, list[Decimal | None]]
+    value: dict[str, list[Decimal | None]]
 
 
-def value_paths(paths: Paths, prices: dict[str, list[Decimal]], fx: list[Decimal]) -> ValuePaths:
+def value_paths(
+    paths: Paths, prices: dict[str, list[Decimal | None]], fx: list[Decimal | None]
+) -> ValuePaths:
     """Mark the replayed quantities with closes (per symbol, aligned to ``paths.dates``)."""
     n = len(paths.dates)
-    unrealized: dict[str, list[Decimal]] = {}
-    value: dict[str, list[Decimal]] = {}
-    positions_value = [ZERO] * n
+    unrealized: dict[str, list[Decimal | None]] = {}
+    value: dict[str, list[Decimal | None]] = {}
+    positions_value: list[Decimal | None] = [ZERO] * n
     for s, pos in paths.positions.items():
-        series = prices.get(s)
-        if series is None:
-            continue
+        series = prices.get(s, [None] * n)
         vals, unr = [], []
         for i in range(n):
             rate = fx[i] if pos.currency == "USD" else Decimal(1)
-            v = pos.quantity[i] * series[i] * rate
+            q = pos.quantity[i]
+            v = (
+                ZERO
+                if q == ZERO
+                else None
+                if series[i] is None or rate is None
+                else q * series[i] * rate
+            )
             vals.append(v)
-            unr.append(v - pos.cost_basis_jpy[i])
-            positions_value[i] += v
+            unr.append(None if v is None else v - pos.cost_basis_jpy[i])
+            positions_value[i] = (
+                None if v is None or positions_value[i] is None else positions_value[i] + v
+            )
         value[s] = vals
         unrealized[s] = unr
-    nav = [paths.cash[i] + positions_value[i] for i in range(n)]
-    pnl_total = [nav[i] - paths.deposits_cum[i] for i in range(n)]
+    nav = [
+        None
+        if paths.cash[i] is None or positions_value[i] is None
+        else paths.cash[i] + positions_value[i]
+        for i in range(n)
+    ]
+    pnl_total = [None if nav[i] is None else nav[i] - paths.deposits_cum[i] for i in range(n)]
     return ValuePaths(nav, positions_value, pnl_total, unrealized, value)
 
 
@@ -169,6 +199,8 @@ class AccountSeries:
     forex_cum: list[Decimal | None]
     # dated deposits for a money-weighted return; None when the history does not have them
     xirr_flows: list[tuple[str, Decimal]] | None = None
+    # A marked terminal value may carry cash from a statement rather than a current FX mark.
+    estimated_nav: bool = False
 
     @property
     def pnl(self) -> list[Decimal | None]:
@@ -183,7 +215,7 @@ def from_ledger(
 ) -> AccountSeries:
     """The IBKR account's series from its replayed paths and their marks."""
     n = len(paths.dates)
-    unrealized = [sum((values.unrealized[s][i] for s in values.unrealized), ZERO) for i in range(n)]
+    unrealized = _add(list(values.unrealized.values())) if values.unrealized else [ZERO] * n
     return AccountSeries(
         account_id=account_id,
         nav=list(values.nav),
@@ -195,6 +227,7 @@ def from_ledger(
         fx_translation_cum=list(paths.fx_translation_cum),
         forex_cum=list(paths.forex_cum),
         xirr_flows=list(flows),
+        estimated_nav=bool(paths.aggregate_fx_adjustments),
     )
 
 
@@ -208,7 +241,12 @@ def _add(columns: Sequence[Sequence[Decimal | None]]) -> list[Decimal | None]:
 def combine(series: Sequence[AccountSeries], account_id: str = "total") -> AccountSeries:
     """The accounts added together; a date any of them cannot reconstruct is None."""
     summed = {f: _add([getattr(s, f) for s in series]) for f in ("nav", "deposits_cum", *BUCKETS)}
-    return AccountSeries(account_id=account_id, xirr_flows=None, **summed)
+    return AccountSeries(
+        account_id=account_id,
+        xirr_flows=None,
+        estimated_nav=any(s.estimated_nav for s in series),
+        **summed,
+    )
 
 
 def first_defined(values: Sequence[Decimal | None]) -> int | None:
@@ -240,9 +278,31 @@ def window_start_index(dates: list[str], as_of: str, days: int) -> int:
     return len(dates) - 1
 
 
-def max_drawdown(values: list[Decimal]) -> Decimal | None:
-    if not values:
+def max_drawdown(
+    values: Sequence[Decimal | None], deposits_cum: Sequence[Decimal | None] | None = None
+) -> Decimal | None:
+    """Maximum drawdown; optional dated-flow totals create a time-weighted index.
+
+    Contributions are assumed to arrive at the end of each observation interval:
+    gross return = (NAV_today - net_flow_today) / NAV_previous. Unknown observations
+    invalidate the requested window instead of shortening or bridging it.
+    """
+    if not values or any(v is None for v in values):
         return None
+    if deposits_cum is not None:
+        if len(values) != len(deposits_cum):
+            raise ValueError("NAV and deposits must use the same calendar")
+        if any(d is None for d in deposits_cum):
+            return None
+        index = Decimal(1)
+        indices = [index]
+        for i in range(1, len(values)):
+            if values[i - 1] <= ZERO:
+                return None
+            flow = deposits_cum[i] - deposits_cum[i - 1]
+            index *= (values[i] - flow) / values[i - 1]
+            indices.append(index)
+        return max_drawdown(indices)
     peak = values[0]
     worst = ZERO
     for v in values:

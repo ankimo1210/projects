@@ -7,6 +7,52 @@ import math
 import pytest
 from portfolio_analyzer import risk
 
+
+def test_missing_fitted_factor_is_unknown_instead_of_an_implicit_zero_loading() -> None:
+    from decimal import Decimal
+
+    from portfolio_analyzer.core import FactorRisk, validate_factor_risk
+
+    model = FactorRisk(
+        factors=("equity", "fx"),
+        covariance=((Decimal("0.01"), Decimal(0)), (Decimal(0), Decimal("0.01"))),
+        observations=10,
+        frequency="weekly",
+        estimated_at="2026-10-08",
+        window_start="2023-10-08",
+        measured_basis="joint-jpy-excess-v1",
+        instrument_loadings={"TEST": {"equity": Decimal(1)}},
+    )
+    holding = risk.Holding("TEST", "broker", 1000.0, "USD", "米国株", "TEST")
+    reference = {"scenarios": [{"id": "fx", "kind": "historical", "shocks": {"fx": 0.1}}]}
+    result = risk.scenario_impacts([holding], reference, factor_risk=model)[0]
+    assert result["impact_jpy"] is None
+    assert result["coverage"] == 0.0 and result["reason"]
+    assert validate_factor_risk(model)
+
+
+def test_missing_fund_history_does_not_become_zero_risk_for_the_whole_portfolio() -> None:
+    book = [
+        risk.Holding("A", "broker", 100.0, "JPY", "日本株", "A"),
+        risk.Holding("FUND", "dc", 100.0, "JPY", "バランス型", None),
+    ]
+    dates = ["2026-01-01", "2026-01-02", "2026-01-03", "2026-01-04"]
+    result = risk.assemble(
+        book,
+        {},
+        {"A": [0.1, -0.1, 0.1, -0.1]},
+        {},
+        dates,
+        {"A": [100.0, 90.0, 99.0, 89.1]},
+        dates[-1],
+    )
+    assert result["stats"]["var_1d_95"] is None
+    assert result["stats"]["vol_annual"] is None
+    assert result["stats"]["coverage_ratio"] == 0.5
+    assert "FUND" in result["stats"]["reason"]
+    assert result["contributions"]["positions"] == []
+
+
 REFERENCE = {
     "instruments": [
         {
@@ -237,7 +283,9 @@ def test_scenario_impacts_apply_the_factor_loadings() -> None:
     assert by_id["global_equity_down_10"]["impact_pct"] == pytest.approx(-154.0 / 2000.0)
     assert by_id["compound_x"]["kind"] == "compound"
     assert by_id["compound_x"]["impact_jpy"] == pytest.approx(-154.0 - 0.1 * (600 * 1 + 100 * 0.2))
-    assert out[0]["impact_jpy"] <= out[-1]["impact_jpy"]
+    calculated = [r for r in out if r["impact_jpy"] is not None]
+    assert calculated[0]["impact_jpy"] <= calculated[-1]["impact_jpy"]
+    assert out[-1]["impact_jpy"] is None
 
 
 def test_episode_impacts_replay_the_move_from_the_close_before_the_start() -> None:
@@ -252,9 +300,11 @@ def test_episode_impacts_replay_the_move_from_the_close_before_the_start() -> No
     (ep,) = out
     assert ep["impact_jpy"] == pytest.approx(600.0 * (80 / 100 - 1) + 200.0 * (9.5 / 10 - 1))
     assert ep["coverage"] == pytest.approx(800.0 / 900.0)
-    # an episode the history does not reach is left out
+    # A configured episode outside the history stays visibly uncalculated.
     old = [{"id": "old", "label": "x", "start": "2025-01-01", "end": "2025-01-05"}]
-    assert risk.episode_impacts({"SMH": 1.0}, old, dates, prices) == []
+    (unknown,) = risk.episode_impacts({"SMH": 1.0}, old, dates, prices)
+    assert unknown["impact_jpy"] is None and unknown["complete"] is False
+    assert unknown["reason"]
 
 
 def test_evaluate_limits_reports_ok_breach_and_na() -> None:
@@ -305,11 +355,12 @@ def test_assemble_builds_the_payload_block() -> None:
         "single_position_max": "breach",
         "cash_min": "ok",
         "sectors_min": "ok",  # 1 / (0.821² + 0.179²) = 1.42 effective equity sectors
-        "hist_dd_max": "ok",  # the historical scenario loses 308 of 2000 = 15.4%
+        "hist_dd_max": "na",  # measured replay requires compatible joint coefficients
         "na_metric": "na",
     }
     assert out["policy_breaches"] == 1
-    assert out["stress"]["scenarios"][0]["id"] == "hist_x"
+    assert out["stress"]["scenarios"][0]["id"] == "compound_x"
+    assert out["stress"]["measured_factor_reason"]
     assert out["history"]["vol_annual"] == out["stats"]["vol_annual"]
 
 
@@ -352,3 +403,275 @@ def test_the_single_country_limit_reads_countries_not_regions() -> None:
     # the effective count uses the regions, where the Netherlands has joined 欧州
     shares = [200.0 / 1100.0, 300.0 / 1100.0, 600.0 / 1100.0]
     assert math.isclose(c["effective_countries"], 1 / sum(s * s for s in shares))
+
+
+def test_episode_replay_reports_losses_as_a_fraction_of_total_nav() -> None:
+    hs = [
+        risk.Holding("A", "a", 100.0, "JPY", "日本株", "A"),
+        risk.Holding("CASH_JPY", "a", 100.0, "JPY", "現金"),
+    ]
+    reference = {"episodes": [{"id": "ep", "start": "2026-01-02", "end": "2026-01-03"}]}
+    result = risk.assemble(
+        hs,
+        reference,
+        {"A": [0.0, -0.05, -0.0526315789]},
+        {},
+        ["2026-01-01", "2026-01-02", "2026-01-03"],
+        {"A": [100.0, 95.0, 90.0]},
+        "2026-01-03",
+    )
+    episode = result["stress"]["episodes"][0]
+    assert episode["impact_jpy"] == pytest.approx(-10.0)
+    assert episode["impact_pct"] == pytest.approx(-0.05)
+
+
+@pytest.mark.parametrize("returns", [[], [0.01]])
+def test_risk_contribution_is_unavailable_without_two_observations(returns) -> None:
+    assert risk.risk_contributions({"A": 1.0}, {"A": returns}) == {}
+
+
+def test_historical_factor_replay_requires_compatible_joint_loadings() -> None:
+    result = risk.scenario_impacts(holdings(), REFERENCE)
+    historical = next(row for row in result if row["kind"] == "historical")
+    assert historical["impact_jpy"] is None
+    assert historical["impact_pct"] is None
+    assert historical["reason"]
+    assert next(row for row in result if row["id"] == "global_equity_down_10")["impact_jpy"] == -154
+
+
+def test_joint_loadings_do_not_reapply_the_marginal_market_beta() -> None:
+    from decimal import Decimal
+
+    from portfolio_analyzer.core import FactorRisk
+
+    factor_risk = FactorRisk(
+        factors=("株式全体", "情報技術"),
+        covariance=((Decimal(".01"), Decimal()), (Decimal(), Decimal(".01"))),
+        observations=10,
+        frequency="weekly",
+        estimated_at="",
+        window_start="",
+        measured_basis="joint-jpy-excess-v1",
+        instrument_loadings={"SMH": {"株式全体": Decimal(1), "情報技術": Decimal(1)}},
+    )
+    reference = {
+        "instruments": REFERENCE["instruments"],
+        "scenarios": [
+            {
+                "id": "measured",
+                "kind": "historical",
+                "shocks": {"株式全体": -0.1, "情報技術": -0.09},
+            }
+        ],
+    }
+    result = risk.scenario_impacts(
+        [risk.Holding("SMH", "a", 100, "USD", "米国株")], reference, factor_risk=factor_risk
+    )
+    assert result[0]["impact_jpy"] == pytest.approx(-19)
+    assert result[0]["impact_pct"] == pytest.approx(-0.19)
+
+
+def _measured_test_model(loadings=None):
+    from decimal import Decimal
+
+    from portfolio_analyzer.core import FactorRisk
+
+    return FactorRisk(
+        factors=("market",),
+        covariance=((Decimal(".01"),),),
+        observations=10,
+        frequency="weekly",
+        estimated_at="",
+        window_start="",
+        series=((Decimal("-.1"),), (Decimal(".05"),)),
+        measured_basis="joint-jpy-excess-v1",
+        instrument_loadings=loadings if loadings is not None else {"A": {"market": Decimal(1)}},
+    )
+
+
+def test_reconciliation_is_static_in_measured_shocks_and_price_statistics() -> None:
+    from decimal import Decimal
+
+    book = [
+        risk.Holding("A", "broker", 100, "JPY", "日本株", "A"),
+        risk.Holding("RECONCILIATION", "broker", 50, "JPY", "未分類", "ADJ"),
+        risk.Holding("CASH_JPY", "broker", 50, "JPY", "現金"),
+    ]
+    reference = {"scenarios": [{"id": "history", "kind": "historical", "shocks": {"market": -0.1}}]}
+    model = _measured_test_model(
+        {"A": {"market": Decimal(1)}, "RECONCILIATION": {"market": Decimal(9)}}
+    )
+    dates = ["2026-01-01", "2026-01-02", "2026-01-03"]
+    result = risk.assemble(
+        book,
+        reference,
+        {"A": [0.1, -0.1, 0.1], "ADJ": [None] * 3},
+        {},
+        dates,
+        {},
+        dates[-1],
+        factor_risk=model,
+    )
+    assert result["stress"]["scenarios"][0]["impact_jpy"] == pytest.approx(-10)
+    assert result["stress"]["scenarios"][0]["impact_pct"] == pytest.approx(-0.05)
+    assert result["stats"]["var_1d_95"] == pytest.approx(0.04)  # existing interpolated 95% quantile
+    assert [row["ticker"] for row in result["contributions"]["positions"]] == ["A"]
+
+
+@pytest.mark.parametrize("with_cash", [False, True])
+def test_only_static_balances_need_no_measured_calibration(with_cash) -> None:
+    book = [risk.Holding("RECONCILIATION", "broker", 50, "JPY", "未分類")]
+    if with_cash:
+        book.append(risk.Holding("CASH_JPY", "broker", 50, "JPY", "現金"))
+    result = risk.scenario_impacts(
+        book, {"scenarios": [{"id": "history", "kind": "historical", "shocks": {"market": -0.5}}]}
+    )[0]
+    assert result["impact_jpy"] == 0 and result["impact_pct"] == 0
+    assert result["reason"] == ""
+
+
+def test_foreign_cash_is_not_a_static_jpy_balance() -> None:
+    book = [risk.Holding("CASH_USD", "broker", 100, "USD", "現金")]
+    result = risk.scenario_impacts(
+        book,
+        {"scenarios": [{"id": "fx", "kind": "historical", "shocks": {"market": -0.1}}]},
+        factor_risk=_measured_test_model(),
+    )[0]
+    assert result["impact_jpy"] is None and "CASH_USD" in result["reason"]
+
+
+@pytest.mark.parametrize("known_loss, expected_status", [(0.1, "na"), (0.3, "breach")])
+def test_unknown_historical_scenario_prevents_safe_policy_but_preserves_proven_breach(
+    known_loss, expected_status
+) -> None:
+    reference = {
+        "scenarios": [
+            {"id": "known", "kind": "historical", "shocks": {"market": -known_loss}},
+            {"id": "unknown", "kind": "historical", "shocks": {"unavailable": -0.9}},
+        ],
+        "policy": {
+            "limits": [
+                {
+                    "id": "dd",
+                    "metric": "worst_historical_drawdown",
+                    "operator": "<=",
+                    "threshold": 0.2,
+                }
+            ]
+        },
+    }
+    book = [risk.Holding("A", "broker", 100, "JPY", "日本株", "A")]
+    dates = ["2026-01-01", "2026-01-02", "2026-01-03"]
+    result = risk.assemble(
+        book,
+        reference,
+        {"A": [0.1, -0.1, 0.1]},
+        {},
+        dates,
+        {},
+        dates[-1],
+        factor_risk=_measured_test_model(),
+    )
+    check = result["policy"][0]
+    assert check["value"] is None and check["status"] == expected_status
+    assert check["lower_bound_value"] == pytest.approx(known_loss)
+    assert check["reason"]
+
+
+@pytest.mark.parametrize("ratios", [[-0.1, None], [None, None]])
+def test_worst_requires_every_configured_scenario(ratios) -> None:
+    assert (
+        risk._worst([{"kind": "historical", "impact_pct": value} for value in ratios], "historical")
+        is None
+    )
+
+
+def test_partial_episode_profit_and_total_loss_are_distinct() -> None:
+    dates = ["2026-01-01", "2026-01-02", "2026-01-03"]
+    episode = {"id": "partial", "start": dates[1], "end": dates[-1]}
+    row = risk.episode_impacts(
+        {"A": 100, "B": 100}, [episode], dates, {"A": [100, 90, 90], "B": [None] * 3}, total_nav=250
+    )[0]
+    assert row["impact_jpy"] == pytest.approx(-10)  # existing partial-price contract
+    assert row["coverage"] == 0.5 and row["priced_nav_ratio"] == 0.4
+    assert row["total_impact_jpy"] is None and row["total_impact_pct"] is None
+    assert row["complete"] is False and row["reason"]
+
+
+@pytest.mark.parametrize("known_loss, expected_status", [(0.1, "na"), (0.3, "breach")])
+def test_unknown_episode_is_retained_with_unknown_total_loss(known_loss, expected_status) -> None:
+    dates = ["2026-01-01", "2026-01-02", "2026-01-03"]
+    reference = {
+        "episodes": [
+            {"id": "known", "start": dates[1], "end": dates[-1]},
+            {"id": "old", "start": "2025-01-01", "end": "2025-01-03"},
+        ],
+        "policy": {
+            "limits": [
+                {
+                    "id": "dd",
+                    "metric": "worst_historical_drawdown",
+                    "operator": "<=",
+                    "threshold": 0.2,
+                }
+            ]
+        },
+    }
+    book = [risk.Holding("A", "broker", 100, "JPY", "日本株", "A")]
+    result = risk.assemble(
+        book,
+        reference,
+        {"A": [0.1, -0.1, 0.1]},
+        {},
+        dates,
+        {"A": [100, 90, 100 * (1 - known_loss)]},
+        dates[-1],
+    )
+    episodes = {row["id"]: row for row in result["stress"]["episodes"]}
+    assert episodes["old"]["complete"] is False and episodes["old"]["reason"]
+    assert episodes["old"]["total_impact_pct"] is None
+    assert episodes["known"]["complete"] is True
+    assert episodes["known"]["total_impact_pct"] == pytest.approx(-known_loss)
+    assert result["policy"][0]["status"] == "na"  # policy uses configured factor scenarios only
+
+
+@pytest.mark.parametrize("bad_history", [[0.1, None, -0.1], [0.1, math.nan, -0.1], [0.1, -0.1]])
+def test_missing_or_short_returns_invalidate_the_requested_risk_window(bad_history) -> None:
+    book = [
+        risk.Holding("A", "broker", 100, "JPY", "日本株", "A"),
+        risk.Holding("B", "broker", 100, "JPY", "日本株", "B"),
+    ]
+    dates = ["2026-01-01", "2026-01-02", "2026-01-03"]
+    result = risk.assemble(
+        book, {}, {"A": [0.1, -0.1, 0.1], "B": bad_history}, {}, dates, {}, dates[-1]
+    )
+    assert result["stats"]["vol_annual"] is None and result["stats"]["es_1d_975"] is None
+    assert result["stats"]["coverage_ratio"] == 0.5 and "B" in result["stats"]["reason"]
+    assert result["contributions"]["positions"] == []
+
+
+def test_missing_benchmark_is_unknown_without_hiding_valid_price_risk() -> None:
+    book = [risk.Holding("A", "broker", 100, "JPY", "日本株", "A")]
+    dates = ["2026-01-01", "2026-01-02", "2026-01-03"]
+    result = risk.assemble(
+        book,
+        {},
+        {"A": [0.1, -0.1, 0.1]},
+        {"broken": [0.1, None, 0.1], "valid": [0.1, -0.1, 0.1]},
+        dates,
+        {},
+        dates[-1],
+    )
+    assert result["stats"]["var_1d_95"] == pytest.approx(0.08)
+    assert result["stats"]["beta"]["broken"] is None
+    assert result["stats"]["beta"]["valid"] == pytest.approx(1)
+    assert result["stats"]["beta_reasons"]["broken"]
+
+
+def test_episode_with_no_observed_price_is_unknown_instead_of_zero_pnl() -> None:
+    dates = ["2026-01-01", "2026-01-02", "2026-01-03"]
+    episode = {"id": "empty", "start": dates[1], "end": dates[-1]}
+    row = risk.episode_impacts({"A": 100}, [episode], dates, {"A": [None] * 3})[0]
+    assert row["impact_jpy"] is None and row["impact_pct"] is None
+    assert row["total_impact_jpy"] is None and row["complete"] is False
+    assert row["reason"]

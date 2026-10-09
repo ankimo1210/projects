@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import csv
 import io
+import math
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
@@ -250,6 +251,12 @@ def money_weighted_return(flows: list[tuple[str, Decimal]]) -> Decimal | None:
     stretches an irregular contribution schedule produces. Returns None when the flows
     have no sign change, which is when the rate is not defined.
     """
+    by_date: dict[str, Decimal] = {}
+    for day, amount in flows:
+        if not amount.is_finite():
+            return None
+        by_date[day] = by_date.get(day, Decimal(0)) + amount
+    flows = [(day, amount) for day, amount in by_date.items() if amount]
     if len(flows) < 2:
         return None
     amounts = [amount for _, amount in flows]
@@ -257,23 +264,49 @@ def money_weighted_return(flows: list[tuple[str, Decimal]]) -> Decimal | None:
         return None
 
     start = min(date.fromisoformat(day) for day, _ in flows)
+    scale = max(abs(amount) for amount in amounts)
     dated = [
-        ((date.fromisoformat(day) - start).days / DAYS_PER_YEAR, float(amount))
+        ((date.fromisoformat(day) - start).days / DAYS_PER_YEAR, float(amount / scale))
         for day, amount in flows
     ]
+    if not any(years > 0 for years, _ in dated):
+        return None
 
     def npv(rate: float) -> float:
-        return sum(amount / (1.0 + rate) ** years for years, amount in dated)
+        # Common positive scaling preserves the root and sign. Log discounts,
+        # shifted by their maximum, avoid both long-horizon powers overflowing
+        # and tiny denominators underflowing; every exponential is <= 1.
+        log_discounts = [-years * math.log1p(rate) for years, _ in dated]
+        offset = max(log_discounts)
+        return math.fsum(
+            amount * math.exp(discount - offset)
+            for (_, amount), discount in zip(dated, log_discounts, strict=True)
+        )
 
     low, high = _RATE_FLOOR, _RATE_CEILING
-    if npv(low) * npv(high) > 0:
+    low_npv, high_npv = npv(low), npv(high)
+    # Short holding periods can annualise above the initial 1000% bracket.
+    for _ in range(64):
+        if low_npv == 0 or high_npv == 0 or (low_npv < 0) != (high_npv < 0):
+            break
+        high = 2 * high + 1
+        high_npv = npv(high)
+    if low_npv == 0:
+        return Decimal(repr(low))
+    if high_npv == 0:
+        return Decimal(repr(high))
+    if (low_npv < 0) == (high_npv < 0):
         return None
     for _ in range(_BISECTION_STEPS):
         middle = (low + high) / 2
-        if npv(low) * npv(middle) <= 0:
+        middle_npv = npv(middle)
+        if middle_npv == 0:
+            return Decimal(repr(middle))
+        if (low_npv < 0) != (middle_npv < 0):
             high = middle
         else:
             low = middle
+            low_npv = middle_npv
     return Decimal(repr((low + high) / 2))
 
 

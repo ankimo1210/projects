@@ -6,7 +6,8 @@ import json
 from decimal import Decimal
 from pathlib import Path
 
-from portfolio_analyzer import mtm
+import pytest
+from portfolio_analyzer import jpbroker, mtm
 
 D = Decimal
 
@@ -381,6 +382,261 @@ def test_a_taxable_position_without_a_cost_leaves_after_tax_unknown() -> None:
     rows, _ = _marked(_taxed_snapshot(), [ledger()])  # 1329 in gb has no cost
     jp = {(r.account_id, r.symbol): r for r in rows}[("gb", "1329")]
     assert jp.day_pnl_after_tax_jpy is None
+
+
+def test_missing_taxable_cost_invalidates_the_whole_liquidation_pool() -> None:
+    snap = _taxed_snapshot()
+    rows, pool = _marked(snap, [ledger()])  # taxable 1329 lacks a cost
+    summary = mtm.summarize(snap, rows)
+    assert pool.tax_jpy is None and pool.prev_tax_jpy is None
+    assert summary.total_after_tax_jpy is None
+    assert summary.unrealized_after_tax_jpy is None
+    assert next(r for r in rows if r.symbol == "XLE").unrealized_tax_jpy is None
+    assert summary.accounts["dc"].total_after_tax_jpy == D("1000")
+    assert "不明" in mtm.tax_note(snap, rows, pool)
+
+
+def test_a_taxable_account_with_no_known_cost_has_no_after_tax_nav() -> None:
+    snap = _taxed_snapshot()
+    rows, _ = _marked(snap, [])
+    assert mtm.summarize(snap, rows).accounts["gb"].total_after_tax_jpy is None
+
+
+def test_an_absent_ledger_cost_is_not_a_zero_cost() -> None:
+    snap, ledgers = _netting_case()
+    del ledgers[1]["holdings"][0]["cost_basis_jpy"]
+    rows, pool = _marked(snap, ledgers)
+    jp = next(r for r in rows if r.account_id == "jp")
+    assert jp.cost_basis_jpy is None and jp.unrealized_jpy is None
+    assert pool.tax_jpy is None
+
+
+@pytest.mark.parametrize(
+    ("nisa_cost", "taxable_cost", "expected_tax"),
+    [("100", "1100", "0"), ("1100", "100", "182.835")],
+)
+def test_mixed_nisa_holdings_net_only_the_taxable_bucket(
+    nisa_cost: str, taxable_cost: str, expected_tax: str
+) -> None:
+    snap = {
+        "accounts": [{"id": "jp", "tax_rate": "0.20315"}],
+        "positions": [
+            {
+                "account_id": "jp",
+                "symbol": "1234",
+                "currency": "JPY",
+                "quantity": 2,
+                "market_value_jpy": 2000,
+            }
+        ],
+    }
+    trades = [
+        jpbroker.Txn(
+            "株式",
+            "2026-01-01",
+            "2026-01-03",
+            "1234",
+            "test",
+            "買",
+            D(nisa_cost),
+            D(1),
+            -D(nisa_cost),
+            "NISA成長投資枠",
+        ),
+        jpbroker.Txn(
+            "株式",
+            "2026-01-02",
+            "2026-01-04",
+            "1234",
+            "test",
+            "買",
+            D(taxable_cost),
+            D(1),
+            -D(taxable_cost),
+            "特定",
+        ),
+    ]
+    quotes_ = {"1234.T": mtm.Quote(D(1000), D(990), "2026-10-07", "2026-10-06")}
+    rows = mtm.mark_positions(snap, quotes_, FX, jpbroker.ledger(trades, "jp"))
+    pool = mtm.net_tax(rows)
+    assert len(rows) == 1  # the dashboard keeps one key per account and symbol
+    assert pool.tax_jpy == D(expected_tax)
+    assert rows[0].unrealized_jpy == D(800)
+    assert rows[0].unrealized_after_tax_jpy == D(800) - D(expected_tax)
+    assert rows[0].day_pnl_after_tax_jpy == (D(20) if taxable_cost == "1100" else D("17.9685"))
+    assert mtm.summarize(snap, rows).total_after_tax_jpy == D(2000) - D(expected_tax)
+
+
+def test_legacy_mixed_holdings_without_tax_bucket_costs_have_unknown_tax() -> None:
+    _, pool = _marked(*_netting_case("mixed"))
+    assert pool.tax_jpy is None
+
+
+def test_mixed_holdings_cannot_guess_which_bucket_a_quantity_mismatch_belongs_to() -> None:
+    snap, ledgers = _netting_case("mixed")
+    ledgers[1]["holdings"][0]["tax_buckets"] = {
+        "nisa": {"quantity": 125, "cost_basis_jpy": 1000000},
+        "taxable": {"quantity": 125, "cost_basis_jpy": 1000000},
+    }
+    snap["positions"][1]["quantity"] = 200
+    _, pool = _marked(snap, ledgers)
+    assert pool.tax_jpy is None
+
+
+def test_incomplete_tax_bucket_quantities_do_not_produce_a_tax_estimate() -> None:
+    snap, ledgers = _netting_case("mixed")
+    ledgers[1]["holdings"][0]["tax_buckets"] = {
+        "nisa": {"quantity": 125, "cost_basis_jpy": 1000000},
+        "taxable": {"quantity": 124, "cost_basis_jpy": 1000000},
+    }
+    _, pool = _marked(snap, ledgers)
+    assert pool.tax_jpy is None
+
+
+def _fractional_mixed_holding(cost: str) -> tuple[dict, dict]:
+    snap = {
+        "accounts": [{"id": "jp", "name": "test", "as_of": "2026-01-05", "tax_rate": "0.20315"}],
+        "positions": [
+            {
+                "account_id": "jp",
+                "symbol": "1234",
+                "name": "test",
+                "currency": "JPY",
+                "quantity": "0.2",
+                "market_value_jpy": 2,
+            }
+        ],
+    }
+    led = {
+        "account_id": "jp",
+        "holdings": [
+            {
+                "symbol": "1234",
+                "quantity": "0.2",
+                "average_cost": "4.166666666666666666666666666",
+                "cost_basis_jpy": cost,
+                "tax_category": "mixed",
+                "tax_buckets": {
+                    "nisa": {"quantity": "0.1", "cost_basis_jpy": "0.3333333333333333333333333333"},
+                    "taxable": {"quantity": "0.1", "cost_basis_jpy": "0.5"},
+                },
+            }
+        ],
+    }
+    return snap, led
+
+
+def test_decimal_roundoff_does_not_invalidate_a_complete_mixed_tax_pool() -> None:
+    snap, led = _fractional_mixed_holding("0.8333333333333333333333333336")
+    rows = mtm.mark_positions(
+        snap, {"1234.T": mtm.Quote(D(10), D(9), "2026-01-05", "2026-01-04")}, FX, led
+    )
+    pool = mtm.net_tax(rows)
+    # Taxable lot: 0.1 shares * 10 yen - 0.5 yen cost = 0.5 yen gain.
+    assert pool.tax_jpy == D("0.101575")
+    assert mtm.summarize(snap, rows).total_after_tax_jpy == D("1.898425")
+
+
+@pytest.mark.parametrize("defect", ["missing", "unknown", "wrong_cost", "wrong_quantity"])
+def test_mixed_cost_completeness_guard_invalidates_the_whole_pool(defect: str) -> None:
+    snap, ledgers = _netting_case("mixed")
+    h = ledgers[1]["holdings"][0]
+    h["tax_buckets"] = {
+        "nisa": {"quantity": 125, "cost_basis_jpy": 1000000},
+        "taxable": {"quantity": 125, "cost_basis_jpy": 1000000},
+    }
+    b = h["tax_buckets"]["taxable"]
+    if defect == "missing":
+        del b["cost_basis_jpy"]
+    elif defect == "unknown":
+        b["cost_basis_jpy"] = None
+    elif defect == "wrong_cost":
+        b["cost_basis_jpy"] = "1000000.001"
+    else:
+        b["quantity"] = "124.9999999999999999999999999"
+    rows, pool = _marked(snap, ledgers)
+    summary = mtm.summarize(snap, rows)
+    assert pool.tax_jpy is None and pool.prev_tax_jpy is None
+    assert summary.total_after_tax_jpy is None and summary.unrealized_after_tax_jpy is None
+    assert summary.accounts["gb"].total_after_tax_jpy is None
+    assert summary.accounts["jp"].total_after_tax_jpy is None
+    assert all(r.unrealized_tax_jpy is None for r in rows if r.tax_rate)
+
+
+@pytest.mark.parametrize("missing", [False, True])
+def test_unknown_nisa_bucket_cost_does_not_publish_a_mixed_liquidation_estimate(
+    missing: bool,
+) -> None:
+    snap, led = _fractional_mixed_holding("0.8333333333333333333333333333")
+    nisa = led["holdings"][0]["tax_buckets"]["nisa"]
+    if missing:
+        del nisa["cost_basis_jpy"]
+    else:
+        nisa["cost_basis_jpy"] = None
+    rows = mtm.mark_positions(
+        snap,
+        {"1234.T": mtm.Quote(D(10), D(9), "2026-01-05", "2026-01-04")},
+        FX,
+        led,
+    )
+    # Aggregate cost and taxable-lot cost remain known; only the cross-check
+    # prevents an unjustified 0.101575 yen liquidation tax from being published.
+    assert rows[0].unrealized_jpy is not None
+    pool = mtm.net_tax(rows)
+    assert pool.tax_jpy is None and pool.prev_tax_jpy is None
+    assert rows[0].unrealized_after_tax_jpy is None
+    assert mtm.summarize(snap, rows).total_after_tax_jpy is None
+
+
+def test_missing_previous_close_leaves_the_previous_tax_pool_unknown() -> None:
+    snap, ledgers = _netting_case()
+    q = quotes()
+    q["1329.T"] = mtm.Quote(D(7000), None, "2026-09-11", None)
+    rows = mtm.mark_positions(snap, q, FX, ledgers)
+    pool = mtm.net_tax(rows)
+    assert pool.tax_jpy == D("105090.258356440")
+    assert pool.prev_tax_jpy is None
+    assert next(r for r in rows if r.symbol == "XLE").day_pnl_after_tax_jpy is None
+    assert mtm.summarize(snap, rows).total_after_tax_jpy is not None
+
+
+def test_cash_and_known_zero_rate_holdings_do_not_require_acquisition_costs() -> None:
+    snap = _taxed_snapshot()
+    snap["positions"] = [snap["positions"][0], snap["positions"][3]]
+    rows, pool = _marked(snap, [])
+    summary = mtm.summarize(snap, rows)
+    assert pool.tax_jpy == D(0)
+    assert summary.total_after_tax_jpy == D(101000)
+
+
+def test_an_explicit_zero_cost_is_a_known_cost() -> None:
+    snap, ledgers = _netting_case()
+    ledgers[1]["holdings"][0].update(average_cost=0, cost_basis_jpy=0)
+    rows, pool = _marked(snap, ledgers)
+    assert next(r for r in rows if r.account_id == "jp").cost_basis_jpy == D(0)
+    assert pool.tax_jpy is not None
+
+
+def test_non_mixed_rows_do_not_require_the_new_internal_tax_fields() -> None:
+    snap, ledgers = _netting_case()
+    rows = mtm.mark_positions(snap, quotes(), FX, ledgers)
+    for row in rows:
+        row.taxable_unrealized_jpy = row.taxable_day_pnl_jpy = None
+    assert mtm.net_tax(rows).tax_jpy == D("105090.258356440")
+
+
+def test_unknown_tax_pool_does_not_publish_only_the_tax_free_daily_result() -> None:
+    snap = _taxed_snapshot()
+    snap["positions"][0].update(ticker="SOMPO_AM:0885", quantity=1)
+    q = quotes()
+    q["SOMPO_AM:0885"] = mtm.Quote(D(1000), D(990), "2026-09-11", "2026-09-10")
+    q["1329.T"] = mtm.Quote(D(7000), None, "2026-09-11", None)
+    q["XLE"] = mtm.Quote(D(64), None, "2026-09-11", None)
+    rows = mtm.mark_positions(snap, q, FX, None)
+    mtm.net_tax(rows)
+    summary = mtm.summarize(snap, rows)
+    assert summary.accounts["dc"].day_pnl_after_tax_jpy == D(10)
+    assert summary.day_pnl_after_tax_jpy is None
 
 
 def test_summary_totals() -> None:

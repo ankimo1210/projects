@@ -213,6 +213,53 @@ def test_money_weighted_return_is_undefined_when_no_sign_change_exists() -> None
     assert ibkr.money_weighted_return(flows) is None
 
 
+def test_money_weighted_return_is_undefined_without_a_time_interval() -> None:
+    assert (
+        ibkr.money_weighted_return([("2026-01-01", Decimal(-100)), ("2026-01-01", Decimal(100))])
+        is None
+    )
+
+
+def test_cancelled_same_day_flows_do_not_define_a_rate_via_a_later_zero_flow() -> None:
+    flows = [
+        ("2026-01-01", Decimal(-100)),
+        ("2026-01-01", Decimal(100)),
+        ("2026-02-01", Decimal(0)),
+    ]
+    assert ibkr.money_weighted_return(flows) is None
+
+
+def test_money_weighted_return_expands_the_positive_rate_bracket() -> None:
+    rate = ibkr.money_weighted_return(
+        [("2025-01-01", Decimal(-100)), ("2026-01-01", Decimal(2100))]
+    )
+    assert rate is not None and abs(rate - Decimal(20)) < Decimal("1e-9")
+
+
+def test_long_cash_flows_without_a_rate_return_none_without_overflow() -> None:
+    # With exactly 8-year intervals NPV is -(z*z - z + 1), always negative.
+    flows = [
+        ("2001-01-01", Decimal(-100)),
+        ("2009-01-01", Decimal(100)),
+        ("2017-01-01", Decimal(-100)),
+    ]
+    assert ibkr.money_weighted_return(flows) is None
+
+
+def test_xirr_is_invariant_to_large_cash_flow_units() -> None:
+    flows = [("2025-01-01", Decimal("-1e400")), ("2026-01-01", Decimal("1.1e400"))]
+    rate = ibkr.money_weighted_return(flows)
+    assert rate is not None and abs(rate - Decimal("0.1")) < Decimal("1e-9")
+
+
+def test_century_cash_flow_does_not_underflow_the_negative_rate_bracket() -> None:
+    flows = [("1900-01-01", Decimal(-100)), ("2000-01-01", Decimal(110))]
+    rate = ibkr.money_weighted_return(flows)
+    # 36,524 actual days: (1+r)^(36524/365) = 1.1.
+    expected = Decimal("1.1") ** (Decimal(365) / Decimal(36524)) - 1
+    assert rate is not None and abs(rate - expected) < Decimal("1e-12")
+
+
 def test_decompose_pnl_splits_a_foreign_holding_into_price_fx_and_cross_terms() -> None:
     holdings = ibkr.derive_holdings(ibkr.parse_transactions(statement(BUY_QQQ)))
 

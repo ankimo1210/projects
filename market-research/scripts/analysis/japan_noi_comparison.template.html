@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>住宅NOI比較：日本3社・取得案件・NY・London — 2026-10-01</title>
+<style>
+@@TOKENS@@
+.toolbar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:20px 0;border-bottom:1px solid var(--rule)}.toolbar a{font-size:13px}.toolbar button{margin-left:auto}
+button,select,input{font:inherit;color:var(--ink);accent-color:var(--accent)}button,select,input[type=search]{background:var(--surface);border:1px solid var(--rule-2);border-radius:8px;padding:8px 12px;max-width:100%}
+.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 25px;margin:24px 0}.controls label{display:flex;flex-direction:column;gap:6px;color:var(--ink-2);font-size:13px}.controls output{font-family:var(--mono);font-weight:600;color:var(--ink)}input[type=range]{width:100%}
+.minor{font-size:13px;color:var(--ink-2)}.tw th{white-space:normal;min-width:90px}.tw td:first-child{white-space:normal;min-width:110px}.tw td.name{min-width:220px;white-space:normal}
+.facts{font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}.note{max-width:none}details{border-top:1px solid var(--rule);padding:16px 0}summary{cursor:pointer;font-weight:600}.scroll svg{min-width:720px;width:100%}.source-list{max-height:600px;overflow:auto}.source-list li{overflow-wrap:anywhere}
+pre.facts{white-space:pre-wrap;word-break:break-word}
+@media(max-width:700px){.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar button{margin-left:0}.controls select{width:100%;min-width:0}}
+@media print{.toolbar,.controls,button{display:none}.tw{overflow:visible}.source-list{max-height:none}}
+</style></head><body><div class="wrap">
+<nav class="toolbar" aria-label="レポートの各項目"><a href="#actual">通年実績</a><a href="#finance">融資・出口</a><a href="#acquisitions">直近取得</a><a href="#global">NY・London</a><a href="#properties">全物件</a><a href="#quality">品質・出典</a><button id="theme" type="button">配色を切替</button></nav>
+<header class="mast"><div class="eyebrow"><span>2026-10-01</span><span>3住宅REIT・実績12か月</span><b>Market Research</b></div>
+<h1>福岡の収益の厚みは、2社でも確認できる。<span class="sub">東京は取得価格と融資条件を詰めたい</span></h1>
+<p class="lede" id="lead"></p><div class="strip" id="headline"></div>
+<p class="minor">REIT保有標本の実績NOI/鑑定額。全国・都市平均、現在の売出利回り、成約Cap Rateではありません。築年・権利・住戸構成は未調整です。</p></header>
+<section id="actual"><div class="head"><h2>2期を足した実績NOIで比較する</h2></div>
+<p class="col">半期の年率換算をやめ、2期とも全期間運用した同じ物件のNOIを合計しました。3社の参考合算には決算時点と契約確認範囲の違いがあるため、社別の値も併記します。</p>
+<div class="tw"><table><caption>公表済みの直近2期と標本の条件</caption><thead><tr><th>社</th><th>実績期間</th><th>採用数</th><th>対象・除外</th></tr></thead><tbody id="coverage"></tbody></table></div>
+<figure><p class="figtitle">同じ実績NOIを、取得額と鑑定額で割る</p><p class="figsub">3社参考合算。NOI合計÷価格合計。5件以上の市場、0%起点。</p>
+<div class="legend"><span><i style="background:var(--series-1)"></i>NOI/開示取得額</span><span><i style="background:var(--series-2)"></i>NOI/期末鑑定額</span></div>
+<div class="scroll"><svg id="chart" viewBox="0 0 920 475" role="img" aria-label="都市別の実績NOI利回り"></svg></div><figcaption>取得額には過去の取得・合併時の条件が含まれます。鑑定額も今買える価格とは限りません。</figcaption></figure>
+<div class="tw"><table><caption>3社参考合算と、契約確認済みの2社</caption><thead><tr><th>都市</th><th>件数</th><th>NOI/取得額</th><th>NOI/鑑定額</th><th>契約未確認</th><th>確認済み2社 NOI/鑑定額</th></tr></thead><tbody id="markets"></tbody></table></div>
+<details open><summary>社別の比較を見る</summary><div class="tw"><table><caption>社別・都市別。少数例は都市の代表値ではない。</caption><thead><tr><th>都市</th><th>社</th><th>件数</th><th>NOI/取得額</th><th>NOI/鑑定額</th><th>運営費/収入</th></tr></thead><tbody id="fund-markets"></tbody></table></div></details>
+<div class="note"><span class="lab">前回からの変化</span><p>ADR福岡の半期年率換算4.83%に対し、同じ10物件の通年実績は4.60%。NAFの4物件は4.47%、2社合算4.57%。半期の季節性や修繕の偏りがあり、取得時の安定化NOIはさらに別の概念です。</p></div>
+</section>
+<section id="finance"><div class="head"><h2>融資と出口を入れて、買値の余裕を見る</h2></div>
+<p class="col">期末鑑定額で買い、同じ通年実績NOIが続く試算です。分析用の仮定で、銀行の提示条件や価格予測ではありません。CoCは取得費とCAPEX積立後、税引前です。</p>
+<div class="controls">
+<label>対象都市<select id="market"></select></label>
+<label>金利 <output id="rate-v"></output><input id="rate" type="range" min="0" max="6" step="0.1" value="3"></label>
+<label>LTV <output id="ltv-v"></output><input id="ltv" type="range" min="30" max="85" step="5" value="70"></label>
+<label>元利均等・返済年数 <output id="term-v"></output><input id="term" type="range" min="10" max="35" step="1" value="30"></label>
+<label>CAPEX積立/価格 <output id="reserve-v"></output><input id="reserve" type="range" min="0" max="1.5" step="0.1" value="0.5"></label>
+<label>取得費/価格 <output id="costs-v"></output><input id="costs" type="range" min="0" max="12" step="0.5" value="7"></label>
+<label>年次NOI成長率 <output id="growth-v"></output><input id="growth" type="range" min="-2" max="5" step="0.1" value="0"></label>
+<label>出口利回り上昇幅 <output id="exit-v"></output><input id="exit" type="range" min="0" max="1.5" step="0.05" value="0.5"></label>
+<label>保有期間 <output id="hold-v"></output><input id="hold" type="range" min="3" max="10" step="1" value="5"></label></div>
+<div class="strip" id="finance-cards" aria-live="polite"></div><p id="finance-reading" class="minor"></p>
+<div class="tw"><table><caption>同じ条件で都市を比較</caption><thead><tr><th>都市</th><th>NOI/鑑定額</th><th>DSCR</th><th>CoC</th><th>DSCR1.25 価格/鑑定額</th><th>出口価格変化</th><th>価格維持に必要なNOI成長</th></tr></thead><tbody id="finance-table"></tbody></table></div>
+<p class="minor">DSCR=NOI÷年間元利返済。CoC=(NOI−返済−積立)/(頭金＋取得費)。出口価格比=(1＋NOI成長率)^保有年数×取得時NOI利回り÷出口利回り。出口の列は価格変化だけで、保有中の収入・税・売却費込みIRRではありません。買値の逆算はDSCR条件のみです。</p>
+</section>
+<section id="acquisitions"><div class="head"><h2>今の取得価格では、予想NOIはどれくらいか</h2></div>
+<p class="col">2025〜2026年の28取得案件。価格は開示取得額、NOIは取得時鑑定による予想値です。保有標本の通年実績と混ぜて集計しません。</p>
+<div class="tw"><table><caption>取得確認済み28件（一般住宅27・学生住宅1）。金額は百万円。</caption><thead><tr><th>社</th><th>物件</th><th>都市</th><th>実取得日</th><th>取得額</th><th>鑑定予想NOI/年</th><th>予想NOI/取得額</th><th>収支・日付の条件</th></tr></thead><tbody id="acq-table"></tbody></table></div>
+<p class="minor">ADR4件は利回り0.1ポイント丸めで、正確な予想NOI金額を逆算しません。小岩は改修後の安定賃料による査定。NAF八王子・大森山王は現在保有を確認していますが実引渡日は未確認で、予定日を実日付として使いません。取得費・CAPEX・税は価格とNOIの外です。</p>
+</section>
+<section id="global"><div class="head"><h2>NY・Londonの一次資料を参考にする</h2></div>
+<p class="col">日本は実績NOI/鑑定額、NYは安定稼働の市場推計、LondonはNIYです。時点・築年・規制・費用・価格分母が揃っていないため、同一定義の都市順位や日本全体の割高判定は保留します。</p>
+<div class="tw"><table><caption>海外参考値。現在の一棟売出利回りではない。</caption><thead><tr><th>市場・条件</th><th>利回り</th><th>観測・公表時点</th><th>定義・未確認事項</th><th>原典</th></tr></thead><tbody id="global-table"></tbody></table></div>
+<p class="minor">NY H1 2026の都市表は登録フォーム経由で未照合。UK全体の半年income return2.2%は年間取得Cap Rateに変換しません。Graingerの既存全社調達コスト3.2%もLondon新規物件の借入金利には使いません。</p>
+<details><summary>同じCap Rateでも控除項目が違う例</summary><p>EQRは予想NOIから管理費（収入の3〜4%）と住戸内更新CAPEX（100〜450米ドル/戸）も控除して取得Cap Rateを計算します。日本のこのNOIはCAPEX控除前です。この定義をCBREへ自動適用することもできません。</p><a href="../global_noi_references_2026-10-01.json">海外の全定義・未取得項目・原典JSON</a></details>
+</section>
+<section id="properties"><div class="head"><h2>通年531物件の明細を調べる</h2></div>
+<p class="col">福岡から表示します。都市・社・物件名で絞り込み、各物件の原典まで辿れます。CAPEX未開示は空欄にし、ゼロとして扱いません。</p>
+<div class="controls"><label>都市<select id="property-market"><option value="福岡">福岡</option><option value="all">全都市</option></select></label><label>社<select id="property-fund"><option value="all">全社</option><option>ADR</option><option>NAF</option><option>CFR</option></select></label><label>物件名<input id="property-search" type="search" placeholder="博多・赤坂など"></label></div>
+<p id="property-count" class="minor" aria-live="polite"></p><div class="tw"><table><caption>通年実績NOI。金額は百万円。</caption><thead><tr><th>社</th><th>物件・原典</th><th>都市</th><th>NOI/年</th><th>取得額</th><th>鑑定額</th><th>NOI/鑑定額</th><th>CAPEX/年</th><th>契約</th></tr></thead><tbody id="properties-table"></tbody></table></div>
+</section>
+<section id="quality"><div class="head"><h2>原典の差と、判断の限界を残す</h2></div><ul id="quality-list"></ul>
+<details><summary>収益・費用・価格の照合記録を見る</summary><pre id="quality-json" class="facts"></pre></details>
+<details><summary>国内原典・保存ハッシュを見る</summary><ul id="sources" class="source-list"></ul></details>
+<p class="col">次は築年・駅距離・住戸構成・権利を揃えて比較し、コンフォリアの契約種別と沖縄標本を補います。海外は同じ物件のNOI/NCF・取引価格と実融資条件を揃える段階です。</p>
+<p class="facts">原本・加工データ: _data/market-research/market/{raw,processed}/noi_expansion_20261001/</p><a href="japan_noi_comparison_2026-10-01.md">分析ノート（Markdown）</a> · <a href="japan_noi_valuation_2026-09-30.html">前回の半期分析</a></section>
+<footer>2026-10-01 · market-research<br>再計算: uv run --no-sync python market-research/scripts/analysis/japan_noi_comparison.py<br>3社の選別済み保有標本。全国平均や投資推奨ではありません。</footer></div>
+<script id="report-data" type="application/json">@@DATA@@</script>
+<script>
+'use strict';
+const D=JSON.parse(document.getElementById('report-data').textContent),$=id=>document.getElementById(id),pct=v=>(v*100).toFixed(2)+'%',million=v=>v==null?'未開示':(v/1e6).toLocaleString('ja-JP',{maximumFractionDigits:1}),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function table(id,rows){$(id).innerHTML=rows.map(r=>'<tr>'+r.map((v,i)=>'<td'+(i===1?' class="name"':'')+'>'+v+'</td>').join('')+'</tr>').join('')}
+function cards(id,items){$(id).innerHTML=items.map(([label,value])=>'<div><span class="k">'+esc(label)+'</span><span class="v">'+esc(value)+'</span></div>').join('')}
+const tokyo=D.markets.find(x=>x.market==='東京23区'),fukuoka=D.markets.find(x=>x.market==='福岡');
+$('lead').textContent=`福岡${fukuoka.n}物件は${pct(fukuoka.yield_on_appraisal)}、東京23区${tokyo.n}物件は${pct(tokyo.yield_on_appraisal)}。実際の2期収支に広げても差は残ります。ただし買値・修繕・借入条件と、標本の違いを確認する必要があります。`;
+cards('headline',[['通年実績の住宅',D.annual_properties.length+'件'],['福岡 NOI/鑑定額',pct(fukuoka.yield_on_appraisal)],['東京23区 NOI/鑑定額',pct(tokyo.yield_on_appraisal)],['直近取得・予想NOI',D.acquisitions.length+'件']]);
+table('coverage',D.coverage.map(r=>[esc(r.fund),esc(r.period_start+'〜'+r.period_end),r.annual_n,esc(r.selection)]));
+table('markets',D.markets.map(r=>{const v=D.verified_contract_markets.find(x=>x.market===r.market);return[esc(r.market)+(r.n<5?'（少数例）':''),r.n,pct(r.yield_on_acquisition),pct(r.yield_on_appraisal),r.unknown_contract_n,v?pct(v.yield_on_appraisal)+` / ${v.n}件`:'該当なし']}));
+table('fund-markets',D.fund_markets.map(r=>[esc(r.market),r.fund,r.n,pct(r.yield_on_acquisition),pct(r.yield_on_appraisal),pct(r.expense_ratio)]));
+const svg=$('chart'),ns='http://www.w3.org/2000/svg';
+function el(tag,attrs,text){const n=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs)){if(k==='fill'||k==='stroke')n.style[k]=v;else n.setAttribute(k,v)}if(text!=null)n.textContent=text;svg.appendChild(n);return n}
+const chart=D.markets.filter(r=>r.n>=5),left=200,width=570,max=8;
+for(let i=0;i<=8;i++){const x=left+i/max*width;el('line',{x1:x,x2:x,y1:25,y2:chart.length*47+25,stroke:'var(--rule)'});el('text',{x,y:15,fill:'var(--ink-2)','font-size':12},i+'%')}
+chart.forEach((r,i)=>{const y=40+i*47;el('text',{x:0,y:y+12,fill:'var(--ink)','font-size':14},r.market+' '+r.n+'件');for(const [j,key,color] of [[0,'yield_on_acquisition','var(--series-1)'],[1,'yield_on_appraisal','var(--series-2)']]){const value=r[key],x=left+value*100/max*width,n=el('rect',{x:left,y:y+j*17,width:x-left,height:12,fill:color});const t=document.createElementNS(ns,'title');t.textContent=r.market+' '+key+': '+pct(value);n.appendChild(t);el('text',{x:x+5,y:y+j*17+11,fill:'var(--ink)','font-size':12},pct(value))}});
+const options=D.markets.map(r=>'<option value="'+esc(r.market)+'">'+esc(r.market)+'</option>').join('');$('market').innerHTML=options;$('market').value='福岡';
+function finance(y){const rate=+$('rate').value/100,ltv=+$('ltv').value/100,term=+$('term').value,reserve=+$('reserve').value/100,cost=+$('costs').value/100,m=rate/12,service=rate===0?ltv/term:12*ltv*m/(-Math.expm1(-12*term*Math.log1p(m))),growth=+$('growth').value/100,cap=+$('exit').value/100,hold=+$('hold').value;return{dscr:y/service,coc:(y-service-reserve)/(1-ltv+cost),ratio:y/(1.25*service),exit:(1+growth)**hold*y/(y+cap)-1,needed:((y+cap)/y)**(1/hold)-1}}
+function update(){for(const k of ['rate','ltv','reserve','costs','growth'])$(k+'-v').textContent=$(k).value+'%';$('exit-v').textContent=$('exit').value+'ポイント';$('term-v').textContent=$('term').value+'年';$('hold-v').textContent=$('hold').value+'年';const r=D.markets.find(x=>x.market===$('market').value),f=finance(r.yield_on_appraisal);cards('finance-cards',[[r.market+' DSCR',f.dscr.toFixed(2)+'倍'],['積立後・税引前CoC',pct(f.coc)],['DSCR1.25 価格/鑑定額',(f.ratio*100).toFixed(1)+'%'],['想定出口価格変化',pct(f.exit)]]);$('finance-reading').textContent=`${r.market}は${r.n}件。${f.coc<0?'この条件では、返済と積立を引くと現金収支がマイナスです。':'この条件では、返済と積立後の現金収支がプラスです。'}価格を維持するNOI成長は年${pct(f.needed)}。実績CAPEXの不足分や追加工事は別に確認してください。`;table('finance-table',D.markets.map(r=>{const f=finance(r.yield_on_appraisal);return[esc(r.market),pct(r.yield_on_appraisal),f.dscr.toFixed(2),pct(f.coc),(f.ratio*100).toFixed(1)+'%',pct(f.exit),pct(f.needed)]}))}
+document.querySelectorAll('#finance input,#finance select').forEach(e=>e.addEventListener('input',update));update();
+const statusLabels={actual_in_period_end_data_book:'決算資料で実日確認',completion_release:'完了開示で実日確認',completion_disclosed_in_financial_statement:'取得後の短信で実日確認',current_owned_portfolio_date_not_individually_confirmed:'保有確認・実引渡日未確認'};
+table('acq-table',D.acquisitions.map(r=>[r.fund,'<a href="'+esc(r.source_url)+'">'+esc(r.property_name)+'</a>',esc(r.market),r.acquisition_date||'実日未確認',million(r.acquisition_price_yen),million(r.noi_forecast_annual_yen),pct(r.yield_on_acquisition),r.fund==='ADR'?'予想・0.1pt丸め':esc((r.asset_label==='学生住宅'?'学生住宅・':'')+(r.property_name.includes('小岩')?'改修後安定賃料・':'')+(statusLabels[r.acquisition_date_status]||r.acquisition_date_status||'予想NOI'))]));
+const globalRows=D.global.references.filter(r=>r.ranges?.length);
+table('global-table',globalRows.map(r=>{const v=r.ranges[0],isLondon=r.city==='London';return[esc(r.city+' / '+r.assetdefinition),(v.lower).toFixed(2)+'〜'+(v.upper).toFixed(2)+'%',esc(r.asof+' / 公表 '+r.publicationdate),isLondon?'Prime BTRのNIY。費用・取得費込み分母を未照合':'Class A Infill・安定稼働の専門家推計NOI/取得価格','<a href="'+esc(r.sourceURL)+'">一次資料 p'+esc(r.page)+'</a>']}));
+$('property-market').innerHTML='<option value="福岡">福岡</option><option value="all">全都市</option>'+D.markets.filter(r=>r.market!=='福岡').map(r=>'<option value="'+esc(r.market)+'">'+esc(r.market)+'</option>').join('');
+function properties(){const market=$('property-market').value,fund=$('property-fund').value,q=$('property-search').value.trim().toLowerCase(),rows=D.annual_properties.filter(r=>(market==='all'||r.market===market)&&(fund==='all'||r.fund===fund)&&(!q||r.property_name.toLowerCase().includes(q)));$('property-count').textContent=rows.length+'件 / 全531件。各社の実績期間は上の期間表を参照。';table('properties-table',rows.map(r=>[r.fund,'<a href="'+esc(r.source_url)+'">'+esc(r.property_name)+'</a>',esc(r.market),million(r.noi_annual_yen),million(r.acquisition_price_yen),million(r.appraisal_value_yen),pct(r.noi_annual_yen/r.appraisal_value_yen),million(r.capex_annual_yen),r.contract_verified?'パススルー確認済み':'種別未確認']))}
+for(const id of ['property-market','property-fund','property-search'])$(id).addEventListener('input',properties);properties();
+$('quality-list').innerHTML=D.quality_notes.map(n=>'<li>'+esc(n)+'</li>').join('');$('quality-json').textContent=JSON.stringify(D.quality,null,2);
+$('sources').innerHTML=Object.entries(D.sources).flatMap(([fund,rows])=>rows.map(r=>'<li>'+esc(fund)+' <a href="'+esc(r.url)+'">'+esc(r.filename)+'</a><p class="facts">'+esc(r.retrieved_at)+' · '+esc(r.size_bytes??r.bytes)+' bytes · SHA-256 '+esc(r.sha256)+'</p></li>')).join('');
+$('theme').addEventListener('click',()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'});
+</script></body></html>

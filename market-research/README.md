@@ -83,6 +83,8 @@ manifestには契約版、元snapshot ID、基準時刻、ParquetのSHA-256を�
 ## 研究ノート
 
 [不動産市場の国際比較・地価調査](docs/REAL_ESTATE_BENCHMARK.md)では、福岡・東京と海外都市の公的系列、原本の配置、再計算方法、比較の限界をまとめています。
+[国内住宅NOIのHTML](docs/data/validation/japan_noi_valuation_2026-09-30.html)は、住宅J-REITの実収支を使い、都市別のNOI利回りと融資・修繕積立・出口価格の感応度を確認できます。
+[3社・通年NOI比較のHTML](docs/data/validation/japan_noi_comparison_2026-10-01.html)は、531住宅の実績12か月、28取得案件の鑑定予想NOI、NY・Londonの参考値を区別して表示します。社別比較・全物件検索・融資と出口の操作を含みます。
 
 [合成デモの5本のノート](notebooks/README.md)は取得済みデータの来歴、
 PIT信号、同条件の戦略比較、retrospective仮想リスク、HTML出力を共通APIで再実行します。

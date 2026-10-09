@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>日本の住宅NOIと購入採算 — 2026年9月30日</title>
+<style>
+/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+
+.toolbar{display:flex;gap:16px;flex-wrap:wrap;padding:20px 0;border-bottom:1px solid var(--rule);align-items:center}
+.toolbar a{font-size:13px}.toolbar button{margin-left:auto}
+button,select,input{font:inherit;color:var(--ink);accent-color:var(--accent)}
+button,select{background:var(--surface);border:1px solid var(--rule-2);border-radius:8px;padding:7px 12px}
+.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 28px;margin:24px 0}
+.controls label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
+.controls output{font-family:var(--mono);font-weight:600;color:var(--ink)}
+input[type=range]{width:100%}.minor{font-size:13px;color:var(--ink-2)}
+.scenario-note{max-width:none}.focus-line{font-size:18px;max-width:760px}
+.grid-pair{display:grid;grid-template-columns:1fr 1fr;gap:24px}.grid-pair>div{min-width:0}
+details{border-top:1px solid var(--rule);padding:18px 0;margin-top:20px}summary{cursor:pointer;font-weight:700}
+.facts{font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}
+.tw th{white-space:normal;min-width:90px;line-height:1.6}.tw td:first-child{white-space:normal;min-width:120px}
+.quality{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--ink-2);font-size:13px}
+.formula{font-family:var(--mono);font-size:13px;background:var(--surface-2);padding:16px;overflow-wrap:anywhere}
+@media(max-width:700px){.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.controls select{min-width:0;width:100%}.grid-pair{grid-template-columns:1fr}.toolbar{gap:10px}.toolbar button{margin-left:0}}
+@media print{.toolbar,button,input{display:none}.controls{display:none}body{padding:0 10px}section{padding-top:30px}figure,.tw,.strip{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toolbar" aria-label="レポートの各項目">
+<a href="#observed">実収支</a><a href="#finance">融資条件</a><a href="#growth">家賃・出口</a><a href="#fukuoka">福岡12物件</a><a href="#sources">定義・出典</a>
+<button id="theme" type="button">配色を切替</button>
+</nav>
+<header class="mast">
+<div class="eyebrow"><span>調査 2026-09-30</span><span>実績 2026年2〜7月</span><b>Market Research</b></div>
+<h1>福岡の保有例は、東京よりNOI利回りが高い。<span class="sub">現在の買値では、融資と修繕を含めた選別が必要</span></h1>
+<p class="lede" id="lead"></p>
+<div class="strip" id="headline"></div>
+<p class="minor">住宅J-REIT 1社の保有標本。半年の実収支を年率換算しています。鑑定額は売出価格・成約価格ではありません。全国や各都市の平均としては扱えません。</p>
+</header>
+<section id="observed">
+<div class="head"><h2>過去の取得価格と、現在の鑑定額で利回りが変わる</h2></div>
+<p class="col">同じ実績NOIでも分母を変えると利回りが下がります。保有者の取得時条件で収益が良く見えても、新たに買う場合の採算を保証しません。</p>
+<figure>
+<p class="figtitle">同じNOIをどの価格で割るか</p>
+<p class="figsub">181日運用・パススルー型・当期新規取得を除く保有物件。NOI合計÷価格合計。0%起点。</p>
+<div class="legend"><span><i style="background:var(--series-1)"></i>開示取得価格を分母</span><span><i style="background:var(--series-2)"></i>2026年7月の鑑定額を分母</span></div>
+<div class="scroll"><svg id="yield-chart" viewBox="0 0 900 390" role="img" aria-label="都市ごとの取得価格・鑑定額に対する実績NOI利回り"></svg></div>
+<figcaption>都市別の建物の築年・土地の権利・住戸構成は揃えていません。グラフは5物件以上の都市。全標本の集計は下表で確認できます。</figcaption>
+</figure>
+<div class="tw"><table><caption>実績NOIの比較（年率換算、現在の募集利回りとは異なる）</caption><thead><tr><th>都市</th><th>物件数</th><th>NOI/開示取得価格</th><th>NOI/鑑定額</th><th>運営費/実収入</th></tr></thead><tbody id="market-table"></tbody></table></div>
+<p class="minor">運営費は減価償却を除き、経常修繕・公租公課等を含みます。資本的支出は含みません。5物件未満は「少数例」を表示。沖縄の物件はこの標本に含まれません。</p>
+</section>
+<section id="finance">
+<div class="head"><h2>金利と修繕積立を入れると、いくら残るか</h2></div>
+<p class="col">選んだ都市の鑑定額で買い、同じ年率換算NOIが続く場合の試算です。金利・借入比率・年数・費用は分析用の仮定で、金融機関の提示条件ではありません。</p>
+<div class="controls">
+<label>対象都市<select id="market" aria-label="試算する都市"></select></label>
+<label>借入金利 <output id="rate-value"></output><input id="rate" type="range" min="0" max="6" step="0.1" value="3"></label>
+<label>LTV <output id="ltv-value"></output><input id="ltv" type="range" min="30" max="85" step="5" value="70"></label>
+<label>元利均等の返済期間 <output id="term-value"></output><input id="term" type="range" min="10" max="35" step="1" value="30"></label>
+<label>年次CAPEX積立/価格 <output id="reserve-value"></output><input id="reserve" type="range" min="0" max="1.5" step="0.1" value="0.5"></label>
+<label>取得費/価格 <output id="costs-value"></output><input id="costs" type="range" min="0" max="12" step="0.5" value="7"></label>
+</div>
+<div class="strip" id="finance-cards" aria-live="polite"></div>
+<div class="note scenario-note"><span class="lab">この条件での読み方</span><p id="finance-reading"></p></div>
+<div class="tw"><table><caption>同じ融資条件で比較（CoCは取得費・積立後、税引前）</caption><thead><tr><th>都市</th><th>NOI/鑑定額</th><th>NOI DSCR</th><th>CoC</th><th>DSCR 1.25の価格/鑑定額</th></tr></thead><tbody id="finance-table"></tbody></table></div>
+<p class="minor">DSCR=NOI÷年間元利返済。積立を差し引くのはCoCです。CoCの自己資金には頭金と取得費を含めます。買値の逆算は同じNOIを前提としたDSCR条件だけの値で、成約予測ではありません。税、追加工事、空室増、融資手数料の個別明細は別途確認が必要です。</p>
+</section>
+<section id="growth">
+<div class="head"><h2>家賃が上がれば、今の価格に追いつくか</h2></div>
+<p class="col">ここで必要なのは、費用と空室を引いた後のNOI成長です。売却時の要求利回りが上がると、NOIが増えても売却価格は下がる場合があります。</p>
+<div class="controls">
+<label>想定するNOI成長率/年 <output id="growth-value"></output><input id="noi-growth" type="range" min="-2" max="5" step="0.1" value="0"></label>
+<label>出口NOI利回りの上昇幅 <output id="cap-value"></output><input id="cap" type="range" min="0" max="1.5" step="0.05" value="0.5"></label>
+<label>保有期間 <output id="hold-value"></output><input id="hold" type="range" min="3" max="10" step="1" value="5"></label>
+</div>
+<div class="strip" id="growth-cards" aria-live="polite"></div>
+<figure>
+<p class="figtitle" id="growth-title"></p><p class="figsub">価格の増減率のみ。保有中の収入・売却費・税を含む総収益やIRRではありません。ゼロは取得価格維持。</p>
+<div class="scroll"><svg id="growth-chart" viewBox="0 0 900 290" role="img" aria-label="NOI成長率と将来売却価格の感応度"></svg></div>
+<figcaption id="growth-caption"></figcaption>
+</figure>
+<p class="formula">売却価格/取得価格 = (1 + 年次NOI成長率)<sup>保有年数</sup> × 取得時NOI利回り / 出口NOI利回り</p>
+<p class="col">英国の住宅保有指数でも、2026年3月までの6か月にmarket rental valueは1.7%上がった一方、資産価値は2.2%下がりました。income return2.2%と合わせたtotal returnは0.0%。賃料改善だけでは価格上昇は決まりません。半年のincome returnを年間取得Cap Rateとは扱いません。<a href="https://www.cbre.co.uk/insights/articles/business-insights-robust-occupier-demand-drives-multifamily-housing-investment">CBREの原典</a></p>
+</section>
+<section id="fukuoka">
+<div class="head"><h2>福岡の12物件を確認する</h2></div>
+<p class="col">博多・天神・薬院・警固・高宮・西新などの保有例です。売りに出ている物件ではありません。賃料保証型2件は基準の都市集計から除外しています。</p>
+<div class="tw"><table><caption>福岡の保有例（NOIは年率換算、金額は百万円）</caption><thead><tr><th>物件</th><th>築年月</th><th>NOI/年</th><th>取得価格</th><th>鑑定額</th><th>NOI/鑑定額</th><th>当期CAPEX</th><th>契約</th></tr></thead><tbody id="fukuoka-table"></tbody></table></div>
+<p class="minor">当期CAPEXは181日間の実際の資本的支出です。将来の年次必要額として外挿していません。鑑定人が用いた直接還元利回りは、想定収支や修繕等の扱いが異なり、実績NOI÷鑑定額と一致するとは限りません。</p>
+</section>
+<section id="survey">
+<div class="head"><h2>築浅・駅近の投資家期待値はどこにあるか</h2></div>
+<p class="col">日本不動産研究所の2026年4月調査は、ワンルームで徒歩10分以内・築5年未満・25〜30㎡・50戸程度を想定しています。今回のJ-REIT保有標本とは築年・住戸構成が異なるため、差をそのまま割安度には変換しません。</p>
+<div class="tw"><table><caption>調査による期待NOI還元利回り。成約の実測値ではない。</caption><thead><tr><th>市場</th><th>ワンルーム</th><th>ファミリー</th></tr></thead><tbody id="survey-table"></tbody></table></div>
+<p class="minor">国際比較には、同条件の海外一棟住宅のNOI・取得費・修繕・融資を揃える必要があります。ロンドン・マンチェスター・香港の都市別取得NOI利回りと沖縄の比較標本は、今回取得できていません。</p>
+</section>
+<section id="sources">
+<div class="head"><h2>どこまで判断できるか</h2></div>
+<ul>
+<li><strong>東京のこの標本は融資後CFの余裕が小さい。</strong>現在の収入で成立する融資条件・買値を確認したい市場です。</li>
+<li><strong>福岡には相対的な収益の厚みがある。</strong>人気地区を一律に割安とせず、実収支と工事予定を物件ごとに確認します。</li>
+<li><strong>全国・国際的な割安度の順位はまだ作れない。</strong>単一保有標本の選択、鑑定額、半期年率換算、築年の差が残っています。</li>
+<li><strong>次は複数の住宅J-REITと直近取得案件を増やす。</strong>築年・駅距離・住戸仕様を揃えることで、現在の買値の比較に近づけます。</li>
+</ul>
+<div class="quality" id="quality"></div>
+<div class="note scenario-note"><span class="lab">原典の照合で残った差</span><p id="reconciliation-note"></p></div>
+<details><summary>名称・取得価格・総計の差を確認する</summary><div id="quality-details"></div></details>
+<details><summary>計算の定義と集計対象</summary>
+<p>NOI = 賃貸事業収入 − 賃貸事業費用 + 減価償却費。実収入には共益費・駐車場や店舗・事務所等も含まれます。NOIには経常修繕・公租公課を含み、資本的支出・借入利息・税効果・取得費を含みません。</p>
+<p>年率換算NOI = 当期NOI × 365 / 運用日数。基準集計には181日運用・パススルー型・当期新規取得を除く物件だけを使います。半年の季節性や修繕の偏りが残り、安定化NOIや直近12か月実績ではありません。</p>
+<p>取得価格は過去の取得・合併等の条件を含む開示値です。現在の市場価格と読み替えません。現在価格の代理に使った2026年7月末の鑑定額も、今買える価格・実際の成約価格ではありません。</p>
+<p>Excel内部の単位は、物件概要・簿価が円、収益状況が千円、鑑定評価が百万円。見出しの表示単位だけで換算せず、保存セルの値を確認しています。保有物件をIDで接続し、物件ごとのNOIの足し引きを確認しています。原典の集計表と物件明細には上記の未解明の差があり、都市利回りは明細から計算し、集計表に合わせる補正はしていません。</p>
+<p>日銀は2026年9月18日に政策金利1.25%を決定しました。これは個別融資金利ではありません。4月の投資家調査、7月の収支・鑑定、9月の政策金利はそれぞれの時点を表示しています。</p>
+</details>
+<details><summary>確認した原典・原本の記録</summary><div id="source-list"></div><p class="facts">保存先: _data/market-research/market/{raw,processed}/noi_valuation_20260930/</p><div id="manifest"></div></details>
+</section>
+<footer>作成 2026-09-30 · market-research<br>再計算: uv run --no-sync python market-research/scripts/analysis/japan_noi_valuation.py<br>原本・全物件CSV・計算結果はリポジトリ内に保存。分析用シナリオは将来予測ではありません。</footer>
+</div>
+<div id="tip" role="status"></div>
+<script id="report-data" type="application/json">{"references": {"research_date": "2026-09-30", "period_start": "2026-02-01", "period_end": "2026-07-31", "period_days": 181, "annualization_days": 365, "sources": [{"id": "adr", "title": "アドバンス・レジデンス投資法人 第32期 物件データ", "url": "https://www.adr-reit.com/files/optionallink/00003487_file.xlsx", "filename": "adr_202607_property_data.xlsx", "as_of": "2026-07-31", "locations": ["物件概要", "収益状況", "帳簿価額", "鑑定評価"], "measurement": "半期の実収支、開示取得価格、期末鑑定評価額", "limitation": "単一J-REITの保有物件。都市全体・売出物件の代表標本ではない。取得価格は過去の取得・合併等の条件を含み、現在の買値ではない。"}, {"id": "adr_presentation", "title": "アドバンス・レジデンス投資法人 第32期 決算説明資料", "url": "https://www.adr-reit.com/files/optionallink/00003484_file.pdf", "filename": "adr_202607_presentation.pdf", "as_of": "2026-07-31"}, {"id": "jrei", "title": "日本不動産研究所 第54回 不動産投資家調査", "url": "https://www.reinet.or.jp/pdf/REIS/booklet_the-japanese-real-estate-investor-survey_202604.pdf", "filename": "jrei_202604_booklet.pdf", "as_of": "2026-04-01", "page": 14, "measurement": "NOIを基準とする投資家の期待還元利回り。成約の実測値ではない。", "transcription": "公表PDFの14ページを確認して手入力。ワンルームは駅徒歩10分以内、築5年未満、25〜30㎡、50戸程度。", "limitation": "ADRの築年・住戸仕様・契約と異なる。地方都市に掲載された2列はワンルームとファミリーの期待利回りで、期待・取引利回りの2列ではない。"}, {"id": "boj", "title": "日本銀行 2026年9月18日 金融市場調節方針の変更", "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260918a.pdf", "filename": "boj_20260918.pdf", "as_of": "2026-09-18", "page": 1, "policy_rate": 0.0125, "limitation": "政策金利は個別物件の融資金利ではない。融資シナリオの入力には使わない。"}, {"id": "cbre_uk", "title": "CBRE UK Multifamily Index — results to March 2026", "url": "https://www.cbre.co.uk/insights/articles/business-insights-robust-occupier-demand-drives-multifamily-housing-investment", "as_of": "2026-03-31", "published": "2026-07-14", "source_read": "web toolで本文・表を確認。requestsによる原本保存はHTTP 403で失敗。", "period": "2025年9月〜2026年3月の6か月", "net_income_return": 0.022, "capital_value_change": -0.022, "total_return": 0.0, "market_rental_value_change": 0.017, "yield_shift": 0.0017, "limitation": "UK全体の保有資産指数。6か月のincome returnを年間の取得Cap Rateに置き換えない。ロンドン・マンチェスター別のNOI利回りではない。"}], "jrei_expected_yields": [{"market": "東京・城南", "studio": 0.036, "family": 0.037}, {"market": "東京・城東", "studio": 0.038, "family": 0.039}, {"market": "札幌", "studio": 0.049, "family": 0.05}, {"market": "仙台", "studio": 0.05, "family": 0.05}, {"market": "さいたま", "studio": 0.045, "family": 0.045}, {"market": "千葉", "studio": 0.045, "family": 0.046}, {"market": "横浜", "studio": 0.042, "family": 0.043}, {"market": "名古屋", "studio": 0.045, "family": 0.045}, {"market": "京都", "studio": 0.046, "family": 0.046}, {"market": "大阪", "studio": 0.042, "family": 0.043}, {"market": "神戸", "studio": 0.047, "family": 0.047}, {"market": "広島", "studio": 0.05, "family": 0.051}, {"market": "福岡", "studio": 0.045, "family": 0.045}], "scenario_defaults": {"loan_rate": 0.03, "ltv": 0.7, "loan_years": 30, "annual_capex_reserve_per_price": 0.005, "acquisition_cost_per_price": 0.07, "dscr_target": 1.25, "hold_years": 5, "annual_noi_growth": 0.0, "exit_cap_increase": 0.005, "status": "すべて分析用仮定。銀行提示条件・将来予測・実測修繕費ではない。"}}, "sources_manifest": [{"filename": "jrei_202604_booklet.pdf", "url": "https://www.reinet.or.jp/pdf/REIS/booklet_the-japanese-real-estate-investor-survey_202604.pdf", "retrieved_at": "2026-09-30T14:41:31.450003+00:00", "bytes": 1954919, "sha256": "3860c49ee2b611f8b40e875402176bac1e92c7a2db17015aaa28db1b51be2f27"}, {"filename": "adr_202607_property_data.xlsx", "url": "https://www.adr-reit.com/files/optionallink/00003487_file.xlsx", "retrieved_at": "2026-09-30T14:41:31.926837+00:00", "bytes": 1073462, "sha256": "a29c75704b1d6a2180c9ae6a0aab85ff61814e4e46f51c5024cb52bb31f6a0d8"}, {"filename": "adr_202607_presentation.pdf", "url": "https://www.adr-reit.com/files/optionallink/00003484_file.pdf", "retrieved_at": "2026-09-30T14:41:32.581321+00:00", "bytes": 6975432, "sha256": "93cb64b1ddef16a4150f29f4974c21434778909a6ef3b979736bce10ce589b51"}, {"filename": "boj_20260918.pdf", "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/k260918a.pdf", "retrieved_at": "2026-09-30T14:41:32.628931+00:00", "bytes": 224369, "sha256": "83f22629fc8ec792b6c32460f07933018b09aba3179f1145f74b8062ec2524b9"}], "quality": {"income_properties": 291, "owned": 289, "sold_excluded": ["R-032", "T-108"], "name_differences": [{"property_id": "T-019", "names": {"overview": "レジディア駒沢大学", "book": "レジディア駒澤大学", "appraisal": "レジディア駒沢大学", "income": "レジディア駒沢大学"}}, {"property_id": "T-057", "names": {"overview": "パークタワー芝浦ベイワード　アーバンウイング", "book": "パークタワー芝浦ベイワードアーバンウイング", "appraisal": "パークタワー芝浦ベイワード　アーバンウイング", "income": "パークタワー芝浦ベイワード　アーバンウイング"}}, {"property_id": "T-061", "names": {"overview": "レジディア芝浦KAIGAN", "book": "レジディア芝浦ＫＡＩＧＡＮ", "appraisal": "レジディア芝浦ＫＡＩＧＡＮ", "income": "レジディア芝浦ＫＡＩＧＡＮ"}}, {"property_id": "T-073", "names": {"overview": "アルティスコート南青山", "book": "アルティスコート南青山", "appraisal": "アルティスコート\n南青山", "income": "アルティスコート南青山"}}, {"property_id": "T-197", "names": {"overview": "ハーモニーグラシア武蔵小山", "book": "レジディア武蔵小山", "appraisal": "レジディア武蔵小山", "income": "レジディア武蔵小山"}}, {"property_id": "S-020", "names": {"overview": "パシフィックロイヤルコートみなとみらい　オーシャンタワー", "book": "パシフィックロイヤルコートみなとみらいオーシャンタワー", "appraisal": "パシフィックロイヤルコートみなとみらい　オーシャンタワー", "income": "パシフィックロイヤルコートみなとみらいオーシャンタワー"}}, {"property_id": "S-022", "names": {"overview": "ブランシエール港北２", "book": "ライフ＆シニアハウス港北２", "appraisal": "ライフ＆シニアハウス港北２", "income": "ブランシエール港北２"}}, {"property_id": "S-040", "names": {"overview": "ポルトパルティーレ横浜", "book": "レジディア横濱戸部", "appraisal": "レジディア横濱戸部", "income": "レジディア横濱戸部"}}], "price_differences": [{"property_id": "T-019", "overview_yen": 333000000.0, "book_yen": 335852460.0, "difference_yen": -2852460.0}, {"property_id": "T-196", "overview_yen": 1221066952.0, "book_yen": 1221066951.0, "difference_yen": 1.0}], "partial_period": 4, "guaranteed_lease": 24, "baseline": 261, "exclusion_counts_overlap": true, "markets_owned": {"東京23区": 190, "その他首都圏・都市": 27, "横浜": 8, "京都": 7, "名古屋": 8, "神戸": 4, "福岡": 12, "大阪": 12, "札幌": 12, "仙台": 8, "広島": 1}, "portfolio_reconciliation": {"revenue": {"reported_thousand_yen": 19504188.0, "all_detail_thousand_yen": 19547121.0, "owned_detail_thousand_yen": 19487167.0, "owned_minus_reported_thousand_yen": -17021.0, "owned_minus_reported_ratio": -0.0008726843691211344, "status": "unreconciled"}, "noi": {"reported_thousand_yen": 14825011.0, "all_detail_thousand_yen": 14855984.0, "owned_detail_thousand_yen": 14811739.0, "owned_minus_reported_thousand_yen": -13272.0, "owned_minus_reported_ratio": -0.000895243855131035, "status": "unreconciled"}}}, "markets": [{"market": "東京23区", "n": 177, "noi_annualized_yen": 20587627375.69061, "acquisition_price_yen": 342599974819.0, "appraisal_value_yen": 554320000000.0, "revenue_period_yen": 13289730000.0, "operating_expense_period_yen": 3080522000.0, "capex_period_yen": 2278265464.0, "yield_on_acquisition": 0.06009232016601087, "yield_on_appraisal": 0.03714032936875922, "opex_ratio": 0.23179718474340713, "small_sample": false}, {"market": "福岡", "n": 10, "noi_annualized_yen": 759357292.8176795, "acquisition_price_yen": 10632616758.0, "appraisal_value_yen": 15715000000.0, "revenue_period_yen": 496452000.0, "operating_expense_period_yen": 119894000.0, "capex_period_yen": 13018169.0, "yield_on_acquisition": 0.07141772435711442, "yield_on_appraisal": 0.048320540427469263, "opex_ratio": 0.24150169603506483, "small_sample": false}, {"market": "その他首都圏・都市", "n": 22, "noi_annualized_yen": 1743131104.9723756, "acquisition_price_yen": 31834725000.0, "appraisal_value_yen": 42258000000.0, "revenue_period_yen": 1155018000.0, "operating_expense_period_yen": 290616000.0, "capex_period_yen": 157165833.0, "yield_on_acquisition": 0.054755651414371435, "yield_on_appraisal": 0.04124973034626285, "opex_ratio": 0.2516116631948593, "small_sample": false}, {"market": "京都", "n": 6, "noi_annualized_yen": 440210165.74585634, "acquisition_price_yen": 7057840000.0, "appraisal_value_yen": 9563000000.0, "revenue_period_yen": 280304000.0, "operating_expense_period_yen": 62009000.0, "capex_period_yen": 15861364.0, "yield_on_acquisition": 0.06237179728441795, "yield_on_appraisal": 0.04603264307705284, "opex_ratio": 0.22122053199383526, "small_sample": false}, {"market": "仙台", "n": 6, "noi_annualized_yen": 467008425.41436464, "acquisition_price_yen": 7360000000.0, "appraisal_value_yen": 10502000000.0, "revenue_period_yen": 313326000.0, "operating_expense_period_yen": 81743000.0, "capex_period_yen": 16094783.0, "yield_on_acquisition": 0.06345223171390824, "yield_on_appraisal": 0.04446852270180581, "opex_ratio": 0.2608880207834651, "small_sample": false}, {"market": "名古屋", "n": 8, "noi_annualized_yen": 821243950.2762431, "acquisition_price_yen": 14065700000.0, "appraisal_value_yen": 18611000000.0, "revenue_period_yen": 567974000.0, "operating_expense_period_yen": 160731000.0, "capex_period_yen": 46545374.0, "yield_on_acquisition": 0.058386283674203426, "yield_on_appraisal": 0.04412680405546414, "opex_ratio": 0.28299006644670355, "small_sample": false}, {"market": "大阪", "n": 12, "noi_annualized_yen": 1176128812.1546962, "acquisition_price_yen": 19615058824.0, "appraisal_value_yen": 29383000000.0, "revenue_period_yen": 786989000.0, "operating_expense_period_yen": 203759000.0, "capex_period_yen": 57007440.0, "yield_on_acquisition": 0.05996050395299575, "yield_on_appraisal": 0.04002752653421013, "opex_ratio": 0.25890959085832205, "small_sample": false}, {"market": "広島", "n": 1, "noi_annualized_yen": 39393784.53038674, "acquisition_price_yen": 663000000.0, "appraisal_value_yen": 855000000.0, "revenue_period_yen": 26441000.0, "operating_expense_period_yen": 6906000.0, "capex_period_yen": 3403354.0, "yield_on_acquisition": 0.05941747289651092, "yield_on_appraisal": 0.04607460178992601, "opex_ratio": 0.261185280435687, "small_sample": true}, {"market": "札幌", "n": 12, "noi_annualized_yen": 768673867.403315, "acquisition_price_yen": 12611160000.0, "appraisal_value_yen": 18332000000.0, "revenue_period_yen": 599978000.0, "operating_expense_period_yen": 218800000.0, "capex_period_yen": 52393104.0, "yield_on_acquisition": 0.06095187654453, "yield_on_appraisal": 0.041930715001271816, "opex_ratio": 0.36468003826806983, "small_sample": false}, {"market": "横浜", "n": 4, "noi_annualized_yen": 324208729.28176796, "acquisition_price_yen": 4915450000.0, "appraisal_value_yen": 6908000000.0, "revenue_period_yen": 207387000.0, "operating_expense_period_yen": 46616000.0, "capex_period_yen": 30485436.0, "yield_on_acquisition": 0.06595708008051511, "yield_on_appraisal": 0.04693235803152403, "opex_ratio": 0.22477783081871092, "small_sample": true}, {"market": "神戸", "n": 3, "noi_annualized_yen": 366730220.9944751, "acquisition_price_yen": 6012000000.0, "appraisal_value_yen": 9110000000.0, "revenue_period_yen": 250954000.0, "operating_expense_period_yen": 69098000.0, "capex_period_yen": 20329251.0, "yield_on_acquisition": 0.060999704090897396, "yield_on_appraisal": 0.0402557871563639, "opex_ratio": 0.27534129760832665, "small_sample": true}], "financing_scenarios": [{"market": "東京23区", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.1962215491058668, "cash_after_reserve_per_price": 0.0010922936628982938, "cash_on_cash": 0.002952145034860253, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 0.9569772392846935}, {"market": "東京23区", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.048725208552551, "cash_after_reserve_per_price": -0.003274409464514609, "cash_on_cash": -0.008849755309498941, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 0.8389801668420407}, {"market": "東京23区", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 0.9261261262449506, "cash_after_reserve_per_price": -0.007962555450339377, "cash_on_cash": -0.021520420136052366, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.7409009009959605}, {"market": "東京23区", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 0.8236381681471806, "cash_after_reserve_per_price": -0.012952686964260458, "cash_on_cash": -0.0350072620655688, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.6589105345177444}, {"market": "福岡", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.5563155390969812, "cash_after_reserve_per_price": 0.012272504721608339, "cash_on_cash": 0.03316893168002254, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 1.245052431277585}, {"market": "福岡", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.364418940231456, "cash_after_reserve_per_price": 0.007905801594195436, "cash_on_cash": 0.02136703133566334, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 1.0915351521851646}, {"market": "福岡", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 1.2049143258755564, "cash_after_reserve_per_price": 0.0032176556083706705, "cash_on_cash": 0.00869636650910992, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.963931460700445}, {"market": "福岡", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 1.0715748104011, "cash_after_reserve_per_price": -0.0017724759055504106, "cash_on_cash": -0.004790475420406515, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.85725984832088}, {"market": "その他首都圏・都市", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.3285777798328207, "cash_after_reserve_per_price": 0.0052016946404019266, "cash_on_cash": 0.014058634163248448, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 1.0628622238662566}, {"market": "その他首都圏・都市", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.164761670005788, "cash_after_reserve_per_price": 0.0008349915129890239, "cash_on_cash": 0.002256733818889253, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 0.9318093360046302}, {"market": "その他首都圏・都市", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 1.0285975817534723, "cash_after_reserve_per_price": -0.003853154472835743, "cash_on_cash": -0.01041393100766417, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.8228780654027779}, {"market": "その他首都圏・都市", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 0.9147698180495735, "cash_after_reserve_per_price": -0.008843285986756825, "cash_on_cash": -0.023900772937180605, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.7318158544396587}, {"market": "京都", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.482626582665366, "cash_after_reserve_per_price": 0.009984607371191917, "cash_on_cash": 0.026985425327545717, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 1.1861012661322927}, {"market": "京都", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.299815969101627, "cash_after_reserve_per_price": 0.005617904243779015, "cash_on_cash": 0.015183524983186526, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 1.0398527752813016}, {"market": "京都", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 1.147863633369594, "cash_after_reserve_per_price": 0.0009297582579542484, "cash_on_cash": 0.002512860156633103, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.9182909066956751}, {"market": "京都", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 1.0208375225355044, "cash_after_reserve_per_price": -0.004060373255966833, "cash_on_cash": -0.010973981772883331, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.8166700180284036}, {"market": "仙台", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.4322491484835387, "cash_after_reserve_per_price": 0.008420486995944887, "cash_on_cash": 0.022758072962013206, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 1.145799318786831}, {"market": "仙台", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.255650166196497, "cash_after_reserve_per_price": 0.004053783868531985, "cash_on_cash": 0.010956172617654011, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 1.0045201329571973}, {"market": "仙台", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 1.1088609436054369, "cash_after_reserve_per_price": -0.0006343621172927817, "cash_on_cash": -0.0017144922088994097, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.8870887548843494}, {"market": "仙台", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 0.9861509900645841, "cash_after_reserve_per_price": -0.005624493631213863, "cash_on_cash": -0.015201334138415843, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.7889207920516672}, {"market": "名古屋", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.4212430207665068, "cash_after_reserve_per_price": 0.008078768349603214, "cash_on_cash": 0.02183450905298166, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 1.1369944166132055}, {"market": "名古屋", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.2460011144852752, "cash_after_reserve_per_price": 0.0037120652221903127, "cash_on_cash": 0.010032608708622465, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 0.99680089158822}, {"market": "名古屋", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 1.1003398946115017, "cash_after_reserve_per_price": -0.0009760807636344541, "cash_on_cash": -0.002638056117930957, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.8802719156892014}, {"market": "名古屋", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 0.9785729064913313, "cash_after_reserve_per_price": -0.005966212277555535, "cash_on_cash": -0.016124898047447392, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.7828583251930651}, {"market": "大阪", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.2892128479050335, "cash_after_reserve_per_price": 0.003979490828349205, "cash_on_cash": 0.01075538061716001, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 1.0313702783240268}, {"market": "大阪", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.1302505073566256, "cash_after_reserve_per_price": -0.0003872122990636979, "cash_on_cash": -0.0010465197271991833, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 0.9042004058853003}, {"market": "大阪", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 0.9981208762105669, "cash_after_reserve_per_price": -0.005075358284888465, "cash_on_cash": -0.013717184553752605, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.7984967009684535}, {"market": "大阪", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 0.8876657582318284, "cash_after_reserve_per_price": -0.010065489798809547, "cash_on_cash": -0.027204026483269042, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.7101326065854626}, {"market": "広島", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.4839779954655403, "cash_after_reserve_per_price": 0.010026566084065089, "cash_on_cash": 0.027098827254229966, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 1.1871823963724324}, {"market": "広島", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.3010007501915202, "cash_after_reserve_per_price": 0.005659862956652187, "cash_on_cash": 0.015296926909870773, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 1.0408006001532162}, {"market": "広島", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 1.1489099100417697, "cash_after_reserve_per_price": 0.0009717169708274203, "cash_on_cash": 0.0026262620833173516, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.9191279280334157}, {"market": "広島", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 1.021768015021598, "cash_after_reserve_per_price": -0.004018414543093661, "cash_on_cash": -0.010860579846199082, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.8174144120172784}, {"market": "札幌", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.3505110403282798, "cash_after_reserve_per_price": 0.005882679295410893, "cash_on_cash": 0.01589913323084025, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 1.080408832262624}, {"market": "札幌", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.1839905187123934, "cash_after_reserve_per_price": 0.0015159761679979901, "cash_on_cash": 0.004097232886481054, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 0.9471924149699146}, {"market": "札幌", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 1.0455785211068591, "cash_after_reserve_per_price": -0.0031721698178267766, "cash_on_cash": -0.008573431940072368, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.8364628168854872}, {"market": "札幌", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 0.9298715945636965, "cash_after_reserve_per_price": -0.008162301331747859, "cash_on_cash": -0.022060273869588806, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.7438972756509572}, {"market": "横浜", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.5116047429262853, "cash_after_reserve_per_price": 0.010884322325663102, "cash_on_cash": 0.02941708736665703, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 1.2092837943410284}, {"market": "横浜", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.3252210683374814, "cash_after_reserve_per_price": 0.006517619198250201, "cash_on_cash": 0.017615187022297838, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 1.060176854669985}, {"market": "横浜", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 1.1702988012765847, "cash_after_reserve_per_price": 0.0018294732124254339, "cash_on_cash": 0.004944522195744415, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.9362390410212676}, {"market": "横浜", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 1.0407899459401984, "cash_after_reserve_per_price": -0.0031606583014956472, "cash_on_cash": -0.008542319733772018, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.8326319567521586}, {"market": "神戸", "loan_rate": 0.02, "debt_service_per_price": 0.031048035705860923, "dscr": 1.2965647017973776, "cash_after_reserve_per_price": 0.004207751450502979, "cash_on_cash": 0.011372301217575617, "required_yield_for_dscr_125": 0.03881004463232615, "max_price_ratio_for_dscr_125": 1.0372517614379022}, {"market": "神戸", "loan_rate": 0.03, "debt_service_per_price": 0.035414738833273826, "dscr": 1.1366958639983442, "cash_after_reserve_per_price": -0.000158951676909924, "cash_on_cash": -0.00042959912678357834, "required_yield_for_dscr_125": 0.044268423541592286, "max_price_ratio_for_dscr_125": 0.9093566911986752}, {"market": "神戸", "loan_rate": 0.04, "debt_service_per_price": 0.04010288481909859, "dscr": 1.0038127515752306, "cash_after_reserve_per_price": -0.004847097662734691, "cash_on_cash": -0.013100263953337, "required_yield_for_dscr_125": 0.05012860602387324, "max_price_ratio_for_dscr_125": 0.8030502012601844}, {"market": "神戸", "loan_rate": 0.05, "debt_service_per_price": 0.045093016333019674, "dscr": 0.892727753208346, "cash_after_reserve_per_price": -0.009837229176655773, "cash_on_cash": -0.026587105882853436, "required_yield_for_dscr_125": 0.056366270416274594, "max_price_ratio_for_dscr_125": 0.7141822025666767}], "fukuoka_properties": [{"property_id": "R-010", "property_name": "レジディア博多", "address": "福岡県福岡市", "market": "福岡", "built_date": "2002-03-12", "master_lease": "パス・スルー型", "units": 155.0, "lettable_area_sqm": 3955.24, "operating_days": 181, "revenue_period_yen": 62918000.0, "operating_expense_period_yen": 15265000.0, "depreciation_period_yen": 9463000.0, "noi_period_yen": 47653000.0, "noi_annualized_yen": 96095828.72928177, "acquisition_price_yen": 1220000000.0, "appraisal_value_yen": 1640000000.0, "book_acquisition_price_yen": 1220000000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.042, "capex_period_yen": 0.0, "yield_on_acquisition": 0.07876707272891949, "yield_on_appraisal": 0.05859501751785474, "baseline_eligible": true, "exclusion_reasons": "", "source_overview_row": 228, "source_book_row": 230, "source_appraisal_row": 235, "source_income_column": "HR"}, {"property_id": "R-019", "property_name": "レジディア天神南", "address": "福岡県福岡市", "market": "福岡", "built_date": "2004-01-15", "master_lease": "パス・スルー型", "units": 56.0, "lettable_area_sqm": 3179.96, "operating_days": 181, "revenue_period_yen": 43885000.0, "operating_expense_period_yen": 10688000.0, "depreciation_period_yen": 11076000.0, "noi_period_yen": 33197000.0, "noi_annualized_yen": 66944226.51933701, "acquisition_price_yen": 936000000.0, "appraisal_value_yen": 1270000000.0, "book_acquisition_price_yen": 936000000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.041, "capex_period_yen": 370700.0, "yield_on_acquisition": 0.0715216095292062, "yield_on_appraisal": 0.05271198938530473, "baseline_eligible": true, "exclusion_reasons": "", "source_overview_row": 234, "source_book_row": 236, "source_appraisal_row": 241, "source_income_column": "HX"}, {"property_id": "R-020", "property_name": "レジディア博多駅南", "address": "福岡県福岡市", "market": "福岡", "built_date": "2003-01-14", "master_lease": "パス・スルー型", "units": 39.0, "lettable_area_sqm": 1606.29, "operating_days": 181, "revenue_period_yen": 18475000.0, "operating_expense_period_yen": 5048000.0, "depreciation_period_yen": 4097000.0, "noi_period_yen": 13427000.0, "noi_annualized_yen": 27076546.961325966, "acquisition_price_yen": 324000000.0, "appraisal_value_yen": 444000000.0, "book_acquisition_price_yen": 324000000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.044000000000000004, "capex_period_yen": 267364.0, "yield_on_acquisition": 0.08356958938680854, "yield_on_appraisal": 0.06098321387686028, "baseline_eligible": true, "exclusion_reasons": "", "source_overview_row": 235, "source_book_row": 237, "source_appraisal_row": 242, "source_income_column": "HY"}, {"property_id": "R-042", "property_name": "レジディア西新", "address": "福岡県福岡市", "market": "福岡", "built_date": "2008-01-22", "master_lease": "パス・スルー型", "units": 173.0, "lettable_area_sqm": 7282.78, "operating_days": 181, "revenue_period_yen": 119097000.0, "operating_expense_period_yen": 28598000.0, "depreciation_period_yen": 30363000.0, "noi_period_yen": 90499000.0, "noi_annualized_yen": 182497983.42541435, "acquisition_price_yen": 2380000000.0, "appraisal_value_yen": 3700000000.0, "book_acquisition_price_yen": 2380000000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.042, "capex_period_yen": 4339048.0, "yield_on_acquisition": 0.07667982496866149, "yield_on_appraisal": 0.049323779304166045, "baseline_eligible": true, "exclusion_reasons": "", "source_overview_row": 250, "source_book_row": 253, "source_appraisal_row": 258, "source_income_column": "IO"}, {"property_id": "R-064", "property_name": "レジディア高宮", "address": "福岡県福岡市", "market": "福岡", "built_date": "2007-02-11", "master_lease": "パス・スルー型", "units": 51.0, "lettable_area_sqm": 1556.02, "operating_days": 181, "revenue_period_yen": 22845000.0, "operating_expense_period_yen": 5542000.0, "depreciation_period_yen": 3738000.0, "noi_period_yen": 17303000.0, "noi_annualized_yen": 34892790.05524862, "acquisition_price_yen": 488570000.0, "appraisal_value_yen": 648000000.0, "book_acquisition_price_yen": 488570000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.04, "capex_period_yen": 0.0, "yield_on_acquisition": 0.07141820016629882, "yield_on_appraisal": 0.05384689823340836, "baseline_eligible": true, "exclusion_reasons": "", "source_overview_row": 271, "source_book_row": 274, "source_appraisal_row": 279, "source_income_column": "JJ"}, {"property_id": "R-066", "property_name": "レジディア天神", "address": "福岡県福岡市", "market": "福岡", "built_date": "2007-05-16", "master_lease": "パス・スルー型", "units": 88.0, "lettable_area_sqm": 3175.04, "operating_days": 181, "revenue_period_yen": 48597000.0, "operating_expense_period_yen": 13271000.0, "depreciation_period_yen": 9658000.0, "noi_period_yen": 35326000.0, "noi_annualized_yen": 71237513.8121547, "acquisition_price_yen": 1122790000.0, "appraisal_value_yen": 1710000000.0, "book_acquisition_price_yen": 1122790000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.038, "capex_period_yen": 4945848.0, "yield_on_acquisition": 0.06344687235560942, "yield_on_appraisal": 0.04165936480242965, "baseline_eligible": true, "exclusion_reasons": "", "source_overview_row": 273, "source_book_row": 276, "source_appraisal_row": 281, "source_income_column": "JL"}, {"property_id": "R-067", "property_name": "レジディア薬院大通", "address": "福岡県福岡市", "market": "福岡", "built_date": "2007-06-15", "master_lease": "パス・スルー型", "units": 91.0, "lettable_area_sqm": 3221.4, "operating_days": 181, "revenue_period_yen": 48941000.0, "operating_expense_period_yen": 13027000.0, "depreciation_period_yen": 8075000.0, "noi_period_yen": 35913000.0, "noi_annualized_yen": 72421243.09392264, "acquisition_price_yen": 1123230000.0, "appraisal_value_yen": 1770000000.0, "book_acquisition_price_yen": 1123230000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.038, "capex_period_yen": 286000.0, "yield_on_acquisition": 0.06447588035747144, "yield_on_appraisal": 0.04091595655023878, "baseline_eligible": true, "exclusion_reasons": "", "source_overview_row": 274, "source_book_row": 277, "source_appraisal_row": 282, "source_income_column": "JM"}, {"property_id": "R-068", "property_name": "レジディア博多Ⅱ", "address": "福岡県福岡市", "market": "福岡", "built_date": "2007-09-10", "master_lease": "パス・スルー型", "units": 124.0, "lettable_area_sqm": 3592.6, "operating_days": 181, "revenue_period_yen": 60543000.0, "operating_expense_period_yen": 13257000.0, "depreciation_period_yen": 10260000.0, "noi_period_yen": 47287000.0, "noi_annualized_yen": 95357762.43093923, "acquisition_price_yen": 1358580000.0, "appraisal_value_yen": 2300000000.0, "book_acquisition_price_yen": 1358580000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.037, "capex_period_yen": 106700.0, "yield_on_acquisition": 0.070189287661337, "yield_on_appraisal": 0.041459896709104015, "baseline_eligible": true, "exclusion_reasons": "", "source_overview_row": 275, "source_book_row": 278, "source_appraisal_row": 283, "source_income_column": "JN"}, {"property_id": "R-069", "property_name": "レジディア警固", "address": "福岡県福岡市", "market": "福岡", "built_date": "2008-01-10", "master_lease": "パス・スルー型", "units": 86.0, "lettable_area_sqm": 2293.82, "operating_days": 181, "revenue_period_yen": 42309000.0, "operating_expense_period_yen": 8661000.0, "depreciation_period_yen": 9487000.0, "noi_period_yen": 33648000.0, "noi_annualized_yen": 67853701.65745856, "acquisition_price_yen": 834390000.0, "appraisal_value_yen": 1290000000.0, "book_acquisition_price_yen": 834390000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.04, "capex_period_yen": 689185.0, "yield_on_acquisition": 0.08132132654688881, "yield_on_appraisal": 0.052599768726712064, "baseline_eligible": true, "exclusion_reasons": "", "source_overview_row": 276, "source_book_row": 279, "source_appraisal_row": 284, "source_income_column": "JO"}, {"property_id": "R-083", "property_name": "レジディア博多東", "address": "福岡県福岡市", "market": "福岡", "built_date": "2007-03-06", "master_lease": "パス・スルー型", "units": 63.0, "lettable_area_sqm": 2250.57, "operating_days": 181, "revenue_period_yen": 28842000.0, "operating_expense_period_yen": 6537000.0, "depreciation_period_yen": 5825000.0, "noi_period_yen": 22305000.0, "noi_annualized_yen": 44979696.13259669, "acquisition_price_yen": 845056758.0, "appraisal_value_yen": 943000000.0, "book_acquisition_price_yen": 845056758.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.042, "capex_period_yen": 2013324.0, "yield_on_acquisition": 0.05322683441885058, "yield_on_appraisal": 0.04769851127528811, "baseline_eligible": true, "exclusion_reasons": "", "source_overview_row": 288, "source_book_row": 291, "source_appraisal_row": 296, "source_income_column": "KA"}, {"property_id": "R-087", "property_name": "レジディア九大学研都市", "address": "福岡県福岡市", "market": "福岡", "built_date": "2020-03-13", "master_lease": "賃料保証型", "units": 94.0, "lettable_area_sqm": 2164.5, "operating_days": 181, "revenue_period_yen": 28734000.0, "operating_expense_period_yen": 3127000.0, "depreciation_period_yen": 7170000.0, "noi_period_yen": 25607000.0, "noi_annualized_yen": 51638425.41436464, "acquisition_price_yen": 1048000000.0, "appraisal_value_yen": 1150000000.0, "book_acquisition_price_yen": 1048000000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.043, "capex_period_yen": 0.0, "yield_on_acquisition": 0.049273306693096035, "yield_on_appraisal": 0.04490297862118665, "baseline_eligible": false, "exclusion_reasons": "賃料保証型", "source_overview_row": 292, "source_book_row": 295, "source_appraisal_row": 300, "source_income_column": "KE"}, {"property_id": "R-088", "property_name": "レジディア九産大前", "address": "福岡県福岡市", "market": "福岡", "built_date": "2022-01-20", "master_lease": "賃料保証型", "units": 80.0, "lettable_area_sqm": 2004.88, "operating_days": 181, "revenue_period_yen": 24135000.0, "operating_expense_period_yen": 3053000.0, "depreciation_period_yen": 6447000.0, "noi_period_yen": 21081000.0, "noi_annualized_yen": 42511408.839779004, "acquisition_price_yen": 806542000.0, "appraisal_value_yen": 918000000.0, "book_acquisition_price_yen": 806542000.0, "appraisal_date": "2026-07-31", "appraiser_direct_cap": 0.043, "capex_period_yen": 0.0, "yield_on_acquisition": 0.052708239421851565, "yield_on_appraisal": 0.046308724226338784, "baseline_eligible": false, "exclusion_reasons": "賃料保証型", "source_overview_row": 293, "source_book_row": 296, "source_appraisal_row": 301, "source_income_column": "KF"}]}</script>
+<script>
+const data=JSON.parse(document.getElementById('report-data').textContent);
+const $=id=>document.getElementById(id), pct=(n,d=2)=>(n*100).toFixed(d)+'%', signed=n=>(n>=0?'+':'')+pct(n), num=n=>n.toLocaleString('ja-JP',{maximumFractionDigits:1});
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tokyo=data.markets.find(m=>m.market==='東京23区'), fukuoka=data.markets.find(m=>m.market==='福岡');
+function card(label,value,note,kind='a'){return `<div><span class="k">${esc(label)}</span><span class="v ${kind}">${esc(value)}</span><span class="n">${esc(note)}</span></div>`;}
+const tip=$('tip');
+function bind(node,label){node.addEventListener('pointerenter',()=>{tip.textContent=label;tip.style.opacity=1});node.addEventListener('pointermove',e=>{tip.style.left=Math.min(innerWidth-tip.offsetWidth-8,e.clientX+12)+'px';tip.style.top=Math.max(8,e.clientY-tip.offsetHeight-14)+'px'});node.addEventListener('pointerleave',()=>tip.style.opacity=0);}
+function el(tag,attrs={},text){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v] of Object.entries(attrs)){if(['fill','stroke'].includes(k)&&String(v).includes('var('))e.style.setProperty(k,v);else e.setAttribute(k,v)}if(text!==undefined)e.textContent=text;return e;}
+function text(svg,x,y,label,attrs={}){svg.append(el('text',{x,y,'font-size':12,...attrs},label));}
+function yieldChart(){const svg=$('yield-chart'), rows=data.markets.filter(r=>r.n>=5), height=55+rows.length*43;svg.setAttribute('viewBox',`0 0 900 ${height}`);const scale=v=>230+v/.085*580;for(let p=0;p<=8;p+=2){let x=scale(p/100);svg.append(el('line',{x1:x,x2:x,y1:20,y2:height-30,stroke:'var(--grid)'}));text(svg,x,height-8,p+'%',{'text-anchor':'middle'})}rows.forEach((r,i)=>{let y=35+i*43;text(svg,5,y+7,`${r.market}  n=${r.n}`);[['yield_on_acquisition','--series-1',-9],['yield_on_appraisal','--series-2',9]].forEach(([k,c,dy])=>{let rect=el('rect',{x:230,y:y+dy-6,width:scale(r[k])-230,height:12,rx:2,fill:`var(${c})`});bind(rect,`${r.market}: ${k==='yield_on_acquisition'?'取得価格':'鑑定額'} ${pct(r[k])}`);svg.append(rect);text(svg,scale(r[k])+8,y+dy+4,pct(r[k]))})});}
+function finance(y,rate,ltv,years,reserve,costs){const monthly=rate/12,ds=rate===0?ltv/years:12*ltv*monthly/(-Math.expm1(-12*years*Math.log1p(monthly)));return {service:ds,dscr:y/ds,cash:(y-ds-reserve)/(1-ltv+costs),max:y/(1.25*ds)};}
+function update(){const m=data.markets.find(r=>r.market===$('market').value), rate=+$('rate').value/100,ltv=+$('ltv').value/100,years=+$('term').value,reserve=+$('reserve').value/100,costs=+$('costs').value/100;
+$('rate-value').textContent=pct(rate,1);$('ltv-value').textContent=pct(ltv,0);$('term-value').textContent=years+'年';$('reserve-value').textContent=pct(reserve,1);$('costs-value').textContent=pct(costs,1);
+const f=finance(m.yield_on_appraisal,rate,ltv,years,reserve,costs);
+$('finance-cards').innerHTML=card('年間元利返済/物件価格',pct(f.service),'利息と元本を含む')+card('NOI DSCR',f.dscr.toFixed(2)+'倍','CAPEX積立は別途')+card('税引前Cash on Cash',pct(f.cash),'頭金と取得費が自己資金','b');
+$('finance-reading').textContent=`${m.market}（${m.n}物件${m.small_sample?'・少数例':''}）。鑑定額を分母とした年率換算NOIは${pct(m.yield_on_appraisal)}。この条件では${f.dscr>=1.25?'DSCR1.25を満たします':'DSCR1.25に届きません'}。積立後CoCは${pct(f.cash)}。同じNOIでDSCR1.25を満たす価格の上限は鑑定額の${pct(f.max,1)}です。`;
+$('finance-table').innerHTML=data.markets.map(r=>{let v=finance(r.yield_on_appraisal,rate,ltv,years,reserve,costs);return `<tr class="${r.market===m.market?'hl':''}"><td>${esc(r.market)}${r.small_sample?'（少数例）':''}</td><td>${pct(r.yield_on_appraisal)}</td><td>${v.dscr.toFixed(2)}</td><td>${pct(v.cash)}</td><td>${pct(v.max,1)}</td></tr>`}).join('');
+const g=+$('noi-growth').value/100,cap=+$('cap').value/100,hold=+$('hold').value,y=m.yield_on_appraisal,end=y+cap,delta=(1+g)**hold*y/end-1,required=(end/y)**(1/hold)-1;
+$('growth-value').textContent=pct(g,1);$('cap-value').textContent=+$('cap').value+'ポイント';$('hold-value').textContent=hold+'年';
+$('growth-cards').innerHTML=card('価格の変化',signed(delta),'保有中の収入を含まない')+card('価格維持に必要なNOI成長/年',pct(required),'費用上昇を引いた後','b')+card('出口NOI利回り',pct(end),'取得時 '+pct(y));
+$('growth-title').textContent=`${m.market}: NOI成長率が違うと${hold}年後の価格はどう変わるか`;
+$('growth-caption').textContent=`取得時NOI利回り${pct(y)}、出口${pct(end)}。年${pct(required)}のNOI成長が価格維持の分岐点。スライダーで選んだケースは年${pct(g,1)}、価格変化${signed(delta)}。`;
+const svg=$('growth-chart');svg.replaceChildren();const values=[0,.01,.02,.03,.04].map(growth=>({growth,delta:(1+growth)**hold*y/end-1})),lo=Math.min(-.2,...values.map(v=>v.delta)),hi=Math.max(.3,...values.map(v=>v.delta)),xmin=Math.floor(lo*10)/10,xmax=Math.ceil(hi*10)/10,scale=x=>250+(x-xmin)/(xmax-xmin)*550;
+for(let tick=Math.ceil(xmin*10);tick<=Math.floor(xmax*10);tick++){let x=scale(tick/10);svg.append(el('line',{x1:x,x2:x,y1:15,y2:245,stroke:tick===0?'var(--ink-3)':'var(--grid)'}));text(svg,x,275,tick*10+'%',{'text-anchor':'middle'})}
+values.forEach((v,i)=>{let cy=38+i*43;const bar=el('rect',{x:Math.min(scale(0),scale(v.delta)),y:cy-10,width:Math.max(.5,Math.abs(scale(v.delta)-scale(0))),height:21,fill:v.delta<0?'var(--series-1)':'var(--series-2)',rx:2});bind(bar,`NOI成長 ${pct(v.growth,0)}/年 → 価格 ${signed(v.delta)}`);svg.append(bar);text(svg,4,cy+5,`NOI 年${pct(v.growth,0)}`);text(svg,scale(v.delta)+(v.delta<0?-8:8),cy+5,signed(v.delta),{'text-anchor':v.delta<0?'end':'start'})});
+}
+$('lead').innerHTML=`福岡${fukuoka.n}物件のNOI利回りは、開示取得価格で<strong>${pct(fukuoka.yield_on_acquisition)}</strong>、現在の鑑定額で<strong>${pct(fukuoka.yield_on_appraisal)}</strong>。東京23区は<strong>${pct(tokyo.yield_on_acquisition)} → ${pct(tokyo.yield_on_appraisal)}</strong>。過去の取得条件で見た収益を、そのまま現在の購入採算には使えません。`;
+$('headline').innerHTML=card('福岡 NOI/鑑定額',pct(fukuoka.yield_on_appraisal),fukuoka.n+'物件・実績NOIの年率換算')+card('東京23区 NOI/鑑定額',pct(tokyo.yield_on_appraisal),tokyo.n+'物件・同じ集計方法','b')+card('福岡 経常運営費/実収入',pct(fukuoka.opex_ratio,1),'CAPEX・減価償却を除く');
+$('market-table').innerHTML=data.markets.map(r=>`<tr class="${r.market==='福岡'?'hl':''}"><td>${esc(r.market)}${r.small_sample?'（少数例）':''}</td><td>${r.n}</td><td>${pct(r.yield_on_acquisition)}</td><td>${pct(r.yield_on_appraisal)}</td><td>${pct(r.opex_ratio,1)}</td></tr>`).join('');
+$('market').innerHTML=data.markets.map(r=>`<option value="${esc(r.market)}">${esc(r.market)}（n=${r.n}）</option>`).join('');$('market').value='福岡';
+$('fukuoka-table').innerHTML=data.fukuoka_properties.map(r=>`<tr><td>${esc(r.property_name)}<br><small>${esc(r.property_id)}</small></td><td>${r.built_date.slice(0,7)}</td><td>${num(r.noi_annualized_yen/1e6)}</td><td>${num(r.acquisition_price_yen/1e6)}</td><td>${num(r.appraisal_value_yen/1e6)}</td><td>${pct(r.yield_on_appraisal)}</td><td>${num(r.capex_period_yen/1e6)}</td><td>${r.baseline_eligible?'パススルー':'賃料保証・集計外'}</td></tr>`).join('');
+$('survey-table').innerHTML=data.references.jrei_expected_yields.map(r=>`<tr><td>${esc(r.market)}</td><td>${pct(r.studio,1)}</td><td>${pct(r.family,1)}</td></tr>`).join('');
+$('source-list').innerHTML=data.references.sources.map(s=>`<p><a href="${esc(s.url)}">${esc(s.title)}</a> · 時点 ${esc(s.as_of)}${s.page?' · p.'+s.page:''}<br>${esc(s.measurement||'')} ${esc(s.limitation||'')}${s.source_read?'<br>'+esc(s.source_read):''}</p>`).join('');
+$('manifest').innerHTML=data.sources_manifest.map(s=>`<p class="facts">${esc(s.filename)}<br>SHA-256: ${esc(s.sha256)}<br>取得 ${esc(s.retrieved_at)} · ${num(s.bytes)} bytes</p>`).join('');
+const q=data.quality;$('quality').innerHTML=`<span>期末保有 ${q.owned}件</span><span>基準集計 ${q.baseline}件</span><span>賃料保証 ${q.guaranteed_lease}件</span><span>端数期間 ${q.partial_period}件</span><span>売却済み除外 ${q.sold_excluded.length}件</span><span>除外理由は重複あり</span>`;
+const reconciliation=q.portfolio_reconciliation;
+$('reconciliation-note').textContent=`原典の集計表と期末保有明細のNOIには${num(Math.abs(reconciliation.noi.owned_minus_reported_thousand_yen)/1000)}百万円（${pct(Math.abs(reconciliation.noi.owned_minus_reported_ratio),3)}）の差があり、原因は未確認です。丸め誤差とは扱いません。都市利回りは物件明細から計算しています。名称差${q.name_differences.length}件、取得価格の差${q.price_differences.length}件も記録しました。`;
+$('quality-details').innerHTML=`<div class="tw"><table><caption>原典集計と期末保有明細（千円）。明細の列は売却済み2件を除く。</caption><thead><tr><th>項目</th><th>原典集計</th><th>期末保有明細</th><th>明細−集計</th></tr></thead><tbody>${Object.entries(reconciliation).map(([key,r])=>`<tr><td>${key==='noi'?'NOI':'実収入'}</td><td>${num(r.reported_thousand_yen)}</td><td>${num(r.owned_detail_thousand_yen)}</td><td>${num(r.owned_minus_reported_thousand_yen)}</td></tr>`).join('')}</tbody></table></div><p>取得価格は物件概要の値を採用。以下の2件は帳簿価額シートとの差の原因を確認できていません。鑑定額を分母とする利回りには影響しません。両方の値を全物件CSVに保存しています。</p><div class="tw"><table><caption>取得価格の差（円）</caption><thead><tr><th>ID</th><th>物件概要</th><th>帳簿価額シート</th><th>差</th></tr></thead><tbody>${q.price_differences.map(r=>`<tr><td>${esc(r.property_id)}</td><td>${num(r.overview_yen)}</td><td>${num(r.book_yen)}</td><td>${num(r.difference_yen)}</td></tr>`).join('')}</tbody></table></div><p>名称は表記揺れ・改称を含むため、IDで接続しています。</p>${q.name_differences.map(r=>`<p class="minor">${esc(r.property_id)}: ${Object.entries(r.names).map(([sheet,name])=>esc(sheet)+': '+esc(name)).join(' / ')}</p>`).join('')}`;
+for(const id of ['market','rate','ltv','term','reserve','costs','noi-growth','cap','hold'])$(id).addEventListener('input',update);
+$('theme').addEventListener('click',()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'});
+yieldChart();update();
+</script>
+</body>
+</html>

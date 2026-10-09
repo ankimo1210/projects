@@ -40,6 +40,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from portfolio_analyzer import (  # noqa: E402
     chartshot,
+    core,
     dashboard,
     dcplan,
     ibkr,
@@ -193,7 +194,7 @@ def _downsample(values: list[float], n: int = 80) -> list[float]:
 
 
 def attribution_of(series: ts.AccountSeries, wi: int) -> dict[str, dict[str, float | None]]:
-    """Each P&L bucket over the window (from its first defined date on or after ``wi``) and since inception."""
+    """Each P&L bucket over the requested complete window and since inception."""
     keys = {
         "unrealized": series.unrealized,
         "realized": series.realized_cum,
@@ -203,15 +204,13 @@ def attribution_of(series: ts.AccountSeries, wi: int) -> dict[str, dict[str, flo
         "forex": series.forex_cum,
         "total": series.pnl,
     }
-    start = ts.first_defined(series.pnl[wi:])
-    i0 = None if start is None else wi + start
 
     def bucket(values, at):
         a, b = values[at], values[-1]
-        return None if a is None or b is None else float(b - a)
+        return None if any(v is None for v in values[at:]) else float(b - a)
 
     return {
-        "window": {k: (None if i0 is None else bucket(v, i0)) for k, v in keys.items()},
+        "window": {k: bucket(v, wi) for k, v in keys.items()},
         "incept": {k: (None if v[-1] is None else float(v[-1])) for k, v in keys.items()},
     }
 
@@ -234,15 +233,30 @@ def jpy_price_paths(filled, tickers, fx_symbol, usd_tickers) -> dict[str, list[f
             continue
         raw = filled[t].tolist()
         rate = fx if t in usd_tickers else [1.0] * len(raw)
-        out[t] = [None if v != v else float(v) * r for v, r in zip(raw, rate, strict=True)]
+        out[t] = [
+            None if v != v or r != r else float(v) * r for v, r in zip(raw, rate, strict=True)
+        ]
     return out
 
 
-def daily_returns(path: list[float | None]) -> list[float]:
-    """Close-to-close returns; 0.0 on the first date and wherever a close is missing."""
-    out = [0.0]
+def daily_returns(path: list[float | None]) -> list[float | None]:
+    """Keep unknown intervals distinct from a known, forward-filled unchanged close."""
+    import math
+
+    if not path:
+        return []
+    out: list[float | None] = [None]
     for prev, cur in pairwise(path):
-        out.append(0.0 if prev in (None, 0.0) or cur is None else cur / prev - 1.0)
+        out.append(
+            None
+            if prev is None
+            or cur is None
+            or prev <= 0
+            or cur < 0
+            or not math.isfinite(prev)
+            or not math.isfinite(cur)
+            else cur / prev - 1.0
+        )
     return out
 
 
@@ -357,6 +371,16 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     reference = (
         json.loads(reference_path.read_text(encoding="utf-8")) if reference_path.exists() else {}
     )
+    source_warnings = []
+    factor_risk = None
+    factor_estimates_path = PROJECT_ROOT / "data" / "factor_estimates.json"
+    if reference and factor_estimates_path.exists():
+        try:
+            factor_risk = core.load_factor_risk(factor_estimates_path)
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            source_warnings.append(
+                f"実測ファクターモデルを読み込めず、実測ショックは未計算です: {exc}"
+            )
 
     open_tickers = {
         ticker: (str(row["symbol"]), str(row["account_id"]))
@@ -398,7 +422,14 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     missing = [t for t in open_tickers if t not in quotes]
     if missing:
         raise RuntimeError(f"no usable close for {missing}")
-    as_of = report_as_of(quotes)
+    price_as_of = report_as_of(quotes)
+    as_of = max(price_as_of, fx_quote.date)
+    if fx_quote.date > price_as_of:
+        source_warnings.append(
+            f"評価基準日は最新の為替観測日です。保有価格の最終日は {price_as_of} で、以後の日次損益は為替変動だけを含みます。"
+        )
+    # Benchmarks may have a later print while every portfolio quote and FX are stale.
+    closes = closes.loc[:as_of]
     generated_at = datetime.now(TZ).replace(microsecond=0).isoformat()
 
     # ---- today's marks (all accounts) ----
@@ -425,9 +456,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
 
     # ---- daily paths on the union calendar, forward-filled ----
     filled = closes.ffill()
-    # FX has no bar on some JP trading days at the very start of the window: back-fill it so the
-    # replay never multiplies by NaN (a NaN in the payload would break JSON.parse in the page).
-    filled[mtm.FX_SYMBOL] = filled[mtm.FX_SYMBOL].bfill()
+    # Preserve unknown initial FX rather than look ahead to a later day's rate.
     dates = [d.date().isoformat() for d in filled.index]
     jp_paths = jpbroker.replay(jp_rows, dates) if jp_ledger else {}
     # quantity and cost per day for the accounts replayed from their own history, by (account, symbol)
@@ -437,7 +466,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
             (dc_holding["account_id"], s): p
             for s, p in dcplan.replay(dc_holding, dc_trades, dates).items()
         }
-    fx_path = [Decimal(str(v)) for v in filled[mtm.FX_SYMBOL].tolist()]
+    fx_path = [None if v != v else Decimal(str(v)) for v in filled[mtm.FX_SYMBOL].tolist()]
     price_path = {
         t: [
             None if v != v else Decimal(str(v)) for v in filled[t].tolist()
@@ -446,11 +475,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         if t in filled.columns
     }
     paths = ts.replay(transactions, dates)
-    ledger_prices = {
-        s: [v if v is not None else ZERO for v in price_path[s]]
-        for s in paths.positions
-        if s in price_path
-    }
+    ledger_prices = {s: price_path[s] for s in paths.positions if s in price_path}
     values = ts.value_paths(paths, ledger_prices, fx_path)
     wi = ts.window_start_index(dates, as_of, args.window_days)
     n = len(dates)
@@ -460,9 +485,11 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
 
     # ---- account series and their total ----
     cash = ibkr.summarize_cash(transactions) if transactions else None
-    account_series = [
-        ts.from_ledger(ledger_account, paths, values, cash.deposit_flows if cash else [])
-    ]
+    account_series = (
+        [ts.from_ledger(ledger_account, paths, values, cash.deposit_flows if cash else [])]
+        if transactions
+        else []
+    )
     if jp_rows:
         jp_prices = {
             sym: price_path.get(mtm.market_symbol(sym, "JPY") or "", [None] * n)
@@ -473,6 +500,21 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         account_series.append(
             dcplan.account_paths(dc_holding, dc_trades, dates, price_path[dc_ticker])
         )
+    # Every expected account stays in the total, including an unavailable DC source.
+    # Its snapshot is still shown in today's NAV; its history cannot be invented.
+    expected_accounts = [str(a["id"]) for a in snapshot["accounts"]]
+    present_accounts = {s.account_id for s in account_series}
+    for account_id in expected_accounts:
+        if account_id not in present_accounts:
+            unknown = [None] * n
+            account_series.append(
+                ts.AccountSeries(
+                    account_id=account_id,
+                    nav=list(unknown),
+                    deposits_cum=list(unknown),
+                    **{b: list(unknown) for b in ts.BUCKETS},
+                )
+            )
     total_series = ts.combine(account_series)
     pnl = total_series.pnl
     record["total_pnl_incept_jpy"] = _f(pnl[-1])
@@ -512,13 +554,12 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
             price_jpy,
             as_of,
             previous=previous.get("risk"),
+            factor_risk=factor_risk,
         )
     record["risk"] = risk_block["history"] if risk_block else None
 
     # ---- headline ----
-    start_i = ts.first_defined(pnl[wi:])
-    i0 = None if start_i is None else wi + start_i
-    pnl_window = None if i0 is None or pnl[-1] is None else pnl[-1] - pnl[i0]
+    pnl_window = None if any(v is None for v in pnl[wi:]) else pnl[-1] - pnl[wi]
     xirr_series = [s for s in account_series if s.xirr_flows]
     xirr = None
     if xirr_series and all(s.nav[-1] is not None for s in xirr_series):
@@ -527,17 +568,9 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         ]
         xirr = ibkr.money_weighted_return(flows)
     xirr_scope = "・".join(account_names.get(s.account_id, s.account_id) for s in xirr_series)
-    peak, dd_jpy, dd_pct = None, ZERO, None
-    for i in range(wi, n):
-        v, nav_i = pnl[i], total_series.nav[i]
-        if v is None or nav_i is None:
-            continue
-        if peak is None or v > peak[0]:
-            peak = (v, nav_i)
-        if peak[1] and v - peak[0] < dd_jpy:
-            dd_jpy, dd_pct = v - peak[0], (v - peak[0]) / peak[1]
+    dd_pct = ts.max_drawdown(total_series.nav[wi:], total_series.deposits_cum[wi:])
     day_pnl = summary.day_pnl_jpy
-    day_base = summary.quoted_value_jpy - (day_pnl or ZERO)
+    day_base = summary.total_jpy - (day_pnl or ZERO)
     headline = {
         "nav_total": _f(summary.total_jpy),
         "nav_after_tax": _f(summary.total_after_tax_jpy),
@@ -559,9 +592,10 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         "realized_cum": _f(total_series.realized_cum[-1]),
         "dividends_net": _f(total_series.dividends_cum[-1]),
         "xirr": _f(xirr),
+        "xirr_is_estimate": any(s.estimated_nav for s in xirr_series),
         "xirr_scope": xirr_scope,
         "max_dd_window": _f(dd_pct),
-        "max_dd_window_jpy": _f(dd_jpy),
+        "max_dd_window_jpy": None,  # a unitised return drawdown has no single JPY scale
     }
 
     # ---- general data ----
@@ -648,15 +682,24 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
                 if d in dates and dates.index(d) >= wi
             ]
         else:
-            base = next((v for v in price_path[r.ticker][wi:] if v is not None), None)
-            rate = fx_path if r.currency == "USD" else None
-            pnl_series = [
-                (r.quantity * (v - base) * (rate[i] if rate else Decimal(1)))
-                if (v is not None and base is not None)
-                else None
-                for i, v in enumerate(price_path[r.ticker])
+            rates = fx_path if r.currency == "USD" else [Decimal(1)] * n
+            marks = [
+                None if v is None or rate is None else v * rate
+                for v, rate in zip(price_path[r.ticker], rates, strict=True)
             ]
-            label, mode = "評価額の変化（期間初日比・原価なし）", "value"
+            first = ts.first_defined(marks[wi:])
+            base_i = None if first is None else wi + first
+            base = None if base_i is None else marks[base_i]
+            pnl_series = [
+                r.quantity * (v - base)
+                if v is not None and base is not None and i >= base_i
+                else None
+                for i, v in enumerate(marks)
+            ]
+            label, mode = (
+                f"評価額の変化（{dates[base_i] if base_i is not None else '基準日不明'} 比・原価なし）",
+                "value",
+            )
             trades = []
         symbols[key] = {
             "mode": mode,
@@ -694,7 +737,37 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     ]
     daily = [_f(v) for v in ts.daily_changes(pnl)[wi:]]
 
-    notes = []
+    warnings_quality = list(source_warnings)
+    if risk_block and risk_block["stats"].get("reason"):
+        warnings_quality.append("リスク量は未計算です。" + risk_block["stats"]["reason"])
+    if paths.aggregate_fx_adjustments:
+        warnings_quality.append(
+            "海外口座のFX換算調整は取引履歴の期間集計で、日次に配分できません。調整日より前のNAV・損益と、それを含む期間損益・最大DDは未計算です。"
+        )
+        warnings_quality.append(
+            "海外口座の現金は履歴末日の円換算残高を据え置いています。履歴末日以降の外貨現金FXは未更新で、開設来損益・XIRRの終端残高は推定です。"
+        )
+    unavailable_accounts = [s.account_id for s in account_series if s.nav[-1] is None]
+    if unavailable_accounts:
+        warnings_quality.append(
+            "履歴または価格が不足する口座: "
+            + "、".join(account_names.get(a, a) for a in unavailable_accounts)
+            + "。全口座の履歴集計は未計算です。"
+        )
+    quality = {
+        "historical_pnl_exact": not paths.aggregate_fx_adjustments
+        and not any(v is None for v in pnl[wi:]),
+        "aggregate_fx_adjustments": [
+            {"account_id": ledger_account, "date": d, "amount_jpy": _f(a)}
+            for d, a in paths.aggregate_fx_adjustments
+        ],
+        "dd_method": "twr_end_of_day_flows",
+        "xirr_is_estimate": headline["xirr_is_estimate"],
+        "accounts_expected": expected_accounts,
+        "accounts_available": [s.account_id for s in account_series if s.nav[-1] is not None],
+        "warnings": warnings_quality,
+    }
+    notes = list(warnings_quality)
     if meta["stale"]:
         notes.append(
             "基準日より前の終値: "
@@ -767,6 +840,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         "notes": notes,
         "tax_note": tax_text,
         "edition": EDITIONS.get(args.edition, args.edition),
+        "quality": quality,
     }
     return payload, record, as_of
 
@@ -841,12 +915,18 @@ def main() -> int:
     h = payload["headline"]
     print(f"as of {as_of}  USD/JPY {payload['fx']['last']:.2f}  history rows {len(records)}")
     for p in payload["positions"]:
+        change = "未計算" if p["chg1d"] is None else f"{p['chg1d']:+6.2f}%"
         print(
-            f"  {p['sym']:6s} {p['acct'][:6]:6s} {p['last']:>12,.2f} {p['chg1d']:+6.2f}%  value {p['value']:>14,.0f}"
+            f"  {p['sym']:6s} {p['acct'][:6]:6s} {p['last']:>12,.2f} {change}  value {p['value']:>14,.0f}"
         )
+
+    def shown_pnl(value: float | None) -> str:
+        return "未計算" if value is None else f"{value:+,.0f}"
+
     print(
-        f"total {h['nav_total']:,.0f} JPY  day {h['day_pnl'] or 0:+,.0f}  window {h['pnl_window'] or 0:+,.0f}  "
-        f"inception {h['pnl_incept'] or 0:+,.0f}  unrealized(known) {h['unrealized_known'] or 0:+,.0f}"
+        f"total {h['nav_total']:,.0f} JPY  day {shown_pnl(h['day_pnl'])}  "
+        f"window {shown_pnl(h['pnl_window'])}  inception {shown_pnl(h['pnl_incept'])}  "
+        f"unrealized(known) {shown_pnl(h['unrealized_known'])}"
     )
     print(
         f"report: {dated}\nlatest: {latest}"
