@@ -331,3 +331,7 @@ assert np.allclose(learner.numpy_predict(export["weights"],export["normalization
 Task1教師/独立参照36+47 tests、Task2protocol10 tests、Task3learner25+補間/集計11 tests、pilot-only16条件32updates接続smokeを完了。Task2 full pilot/独立freeze、Task3 main runner/6fits、Task4教材、Task5全費用/最終受入は未完了。[基礎証拠](../../../research/RB-F05/short_maturity/FOUNDATION_VALIDATION.md)。
 
 Ruling:時刻端点はexp(log())後の近接floatを別nodeとせず、定義値60/23400秒をunion前に確定する。同じlog値の分母ゼロを避け、契約・比較gridの意味を維持する。費用は全祖先のcharged状態を確認し、known call price lower boundはrawを保持してsafe fallbackへ渡す。
+
+## 正式pilot前checkpoint
+
+実装確定の金融registryは新7件＋既存zero_dte.py/alternative_models.py/bsm.pyの10件。_multilevel_mc.pyは今回呼ばない。教師・独立参照・protocol・pilot・learner・analytics・runner・教材builderは実装済み。全short対象と両package guardは1270 PASS（19.85秒）。独立runner再レビューの残lifecycleを修正し46回帰と独立11witness/実failureを確認。最終対象gate1275PASS/20.73秒、16Pythonruff/formatPASS、残Critical/Important0。fullpilot/freeze/mainは次に実施する。toy教材3PNGの実行は正式main教材の受入と区別する。
