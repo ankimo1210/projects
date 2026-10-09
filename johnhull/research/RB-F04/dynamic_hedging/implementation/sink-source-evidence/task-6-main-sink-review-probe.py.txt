@@ -1,0 +1,42 @@
+"""Independent source-boundary probe; no formal financial job is launched."""
+import importlib.util
+import sys
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / "johnhull/research/RB-F04/dynamic_hedging"))
+spec = importlib.util.spec_from_file_location(
+    "sink_fixture", ROOT / "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+)
+fixture_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(fixture_module)
+runner = fixture_module.runner
+_, fixture, frozen, receipts, validation, closed = fixture_module.actual_execution_inputs()
+calls = []
+with pytest.MonkeyPatch.context() as patch:
+    # Source-unit synthetic registry only. Real A and raw-selection guards remain.
+    patch.setattr(runner, "execution_source_identity",
+                  lambda: {"protocol_source": fixture["source"]})
+    patch.setattr(runner.study, "test_roster", lambda *a, **k: {"original_n": 32768})
+    def loader():
+        calls.append("loader")
+        return {"test_cases": [
+            {"generator": g, "seed_slot": slot, "level": level,
+             "dataset": {"original_n": 32768}, "risk": {}}
+            for g in ["Heston", "local"] for slot in range(3)
+            for level in [192, 384, 768]
+        ]}
+    def sink(row):
+        calls.append("sink")
+        raise RuntimeError("independent immutable writer failure")
+    with pytest.raises(RuntimeError, match="independent immutable writer failure"):
+        runner.run_execution_main(
+            frozen=frozen, candidate=fixture["candidate"], source=fixture["source"],
+            selection_receipts=receipts, raw_validation=validation, closed_fits=closed,
+            main_test_loader=loader, evaluation_sink=sink,
+        )
+assert calls == ["loader", "sink"]
+print("PASS: sink exception propagates after first evaluation, no retry/fallback")
+print("BOUNDARY: synthetic source-unit registry; real A/raw guards; no formal data")

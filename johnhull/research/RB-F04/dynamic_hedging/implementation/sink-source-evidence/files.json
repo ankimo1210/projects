@@ -1,0 +1,41 @@
+{
+  "purpose": "original source-unit evidence; hashes bind provenance only, not numerical equality",
+  "files": [
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-sink-red.txt",
+      "archive": "task-6-main-sink-red.txt",
+      "bytes": 3402,
+      "sha256": "9f1750955c0daeaf46cf70c81cc313085f11aec4e3cdf29a82abadd2814baf4f"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-sink-green.txt",
+      "archive": "task-6-main-sink-green.txt",
+      "bytes": 100,
+      "sha256": "1b1d689471ce3c10cc269f9789d5f730ade0893f3a567816a72243f84a883d8f"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-sink-review.md",
+      "archive": "task-6-main-sink-review.md",
+      "bytes": 2031,
+      "sha256": "767964c37f9f909e03b4a21f96123bb0053a517331e0b58b4a7506a806b2f32f"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-sink-review-probe.py",
+      "archive": "task-6-main-sink-review-probe.py.txt",
+      "bytes": 1962,
+      "sha256": "55aae72a251131422a8e8378f9e533ee3e6450e9fab67d216ed65d2caf3ee519"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-sink-review-probe.log",
+      "archive": "task-6-main-sink-review-probe.log.txt",
+      "bytes": 150,
+      "sha256": "652e439c70c0e63646009ee680eb619675d9bbd8274acc76f7210b37761d470b"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-sink-review-test.log",
+      "archive": "task-6-main-sink-review-test.log.txt",
+      "bytes": 100,
+      "sha256": "345a56c622d74e854585eda878ccd1a43f12fb0dc9fb7f89302cd726dacb5842"
+    }
+  ]
+}
