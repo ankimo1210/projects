@@ -1,0 +1,21 @@
+{
+  "financial_source_registry": {
+    "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+    "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+    "research/RB-F06/analytics.py": "9d6076382a9dd1c308248c6dcf07e7218b3954bd80a62da8795c5e7aea97d135",
+    "research/RB-F06/build_reference.py": "ba6da93dd40225d87cf5bbf349086663f2c6a64dbbf793df527f626925b5e9aa",
+    "research/RB-F06/protocol.py": "8c4dd998aa1d2156ed33bf445089922a6a92934fb5e88f6b541277e7a8a889bb",
+    "research/RB-F06/reference_methods.py": "d8e76a9a4e73beba393a4290c3f9d0448138603fa79e96e0ef8ec28432bec497"
+  },
+  "frozen_protocol_digest": "54fccc16e344f2a1221c477f637f75b556c759c8e28bedcea77ddc0d4c891e7e",
+  "passed": true,
+  "pilot_validation": {
+    "dataset_slots": 30,
+    "fresh": false,
+    "original_attempts": 386,
+    "passed": true,
+    "scope": "saved Hagan-map/Black revaluation; not exact SABR validation"
+  },
+  "schema": "RB-F06-freeze-check-v1",
+  "scope": "saved-only full pilot and typed review binding before any main generation"
+}

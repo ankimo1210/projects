@@ -1,0 +1,747 @@
+{
+  "schema": "RB-F06-protocol-v1",
+  "state": "candidate",
+  "forward": 100.0,
+  "maturity": 1.0,
+  "beta": 0.5,
+  "discount": 1.0,
+  "noise_scale": 0.0005,
+  "parameter_scale": [
+    0.2,
+    0.5,
+    0.5
+  ],
+  "bounds": [
+    [
+      0.05,
+      -0.95,
+      0.0
+    ],
+    [
+      0.5,
+      0.95,
+      1.5
+    ]
+  ],
+  "truths": [
+    {
+      "name": "ordinary",
+      "theta": [
+        0.2,
+        -0.3,
+        0.4
+      ]
+    },
+    {
+      "name": "weak_nu",
+      "theta": [
+        0.2,
+        -0.3,
+        0.02
+      ]
+    }
+  ],
+  "log_moneyness": [
+    -0.2,
+    -0.1,
+    -0.01,
+    0.0,
+    0.01,
+    0.1,
+    0.2
+  ],
+  "groups": {
+    "full": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "atm": [
+      2,
+      3,
+      4
+    ],
+    "sparse": [
+      1,
+      5
+    ]
+  },
+  "holdout_log_moneyness": [
+    -0.15,
+    -0.05,
+    0.05,
+    0.15,
+    -0.25,
+    0.25
+  ],
+  "holdout_kind": [
+    "interpolation",
+    "interpolation",
+    "interpolation",
+    "interpolation",
+    "extrapolation",
+    "extrapolation"
+  ],
+  "pilot_reps": 4,
+  "main_reps": 16,
+  "starts": [
+    [
+      0.12,
+      -0.6,
+      0.08
+    ],
+    [
+      0.12,
+      -0.6,
+      0.8
+    ],
+    [
+      0.12,
+      0.3,
+      0.08
+    ],
+    [
+      0.12,
+      0.3,
+      0.8
+    ],
+    [
+      0.28,
+      -0.6,
+      0.08
+    ],
+    [
+      0.28,
+      -0.6,
+      0.8
+    ],
+    [
+      0.28,
+      0.3,
+      0.08
+    ],
+    [
+      0.28,
+      0.3,
+      0.8
+    ],
+    [
+      0.2,
+      0.0,
+      0.5
+    ]
+  ],
+  "profile_starts": [
+    [
+      0.12,
+      0.28
+    ],
+    [
+      -0.6,
+      0.3
+    ],
+    [
+      0.08,
+      0.8
+    ]
+  ],
+  "profile_grids": [
+    [
+      0.05,
+      0.08,
+      0.1,
+      0.12,
+      0.15,
+      0.18,
+      0.2,
+      0.22,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.5
+    ],
+    [
+      -0.95,
+      -0.8312499999999999,
+      -0.7124999999999999,
+      -0.59375,
+      -0.475,
+      -0.35624999999999996,
+      -0.3,
+      -0.23750000000000004,
+      -0.11875000000000002,
+      0.0,
+      0.11874999999999991,
+      0.23750000000000004,
+      0.35624999999999996,
+      0.47499999999999987,
+      0.59375,
+      0.7124999999999999,
+      0.83125,
+      0.95
+    ],
+    [
+      0.0,
+      0.002,
+      0.005,
+      0.01,
+      0.02,
+      0.04,
+      0.08,
+      0.12,
+      0.2,
+      0.3,
+      0.4,
+      0.6,
+      0.8,
+      1.0,
+      1.2,
+      1.5
+    ]
+  ],
+  "representative_noisy_rep": 0,
+  "profile_refinement_per_bracket": 6,
+  "profile_refinement_per_curve": 12,
+  "profile_threshold": 3.841458820694124,
+  "noiseless_delta_q": 1e-06,
+  "noiseless_max_iv_error": 1e-09,
+  "baseline_improvement_tolerance": 1e-06,
+  "profile_slice_tolerance": 1e-06,
+  "boundary_distance_u": 1e-06,
+  "rank_rtol": 1e-08,
+  "jacobian_steps_u": [
+    0.0001,
+    3e-05,
+    1e-05
+  ],
+  "jacobian_global_rtol": 1e-05,
+  "jacobian_smallest_sv_relative_limit": 0.01,
+  "fit_max_nfev": 400,
+  "profile_max_nfev": 250,
+  "solver_call_cap": 4830,
+  "solver_call_roster": {
+    "main": 918,
+    "representative_noisy_grid": 1200,
+    "noiseless_nu_grid": 408,
+    "all_noisy_truth_points": 1152,
+    "noisy_refinement": 864,
+    "noiseless_refinement": 288
+  },
+  "iv_reference_line": 0.001,
+  "price_over_forward_reference_line": 0.0002,
+  "fresh_cases": [
+    [
+      0,
+      "full",
+      0
+    ],
+    [
+      1,
+      "atm",
+      0
+    ],
+    [
+      0,
+      "sparse",
+      0
+    ]
+  ],
+  "fresh_starts": [
+    0,
+    4,
+    8
+  ],
+  "seed_ledger": [
+    {
+      "phase": "pilot",
+      "truth": 0,
+      "rep": 0,
+      "entropy": 2026100606,
+      "spawn_key": [
+        0,
+        0,
+        0
+      ],
+      "seed": 3480455231
+    },
+    {
+      "phase": "pilot",
+      "truth": 0,
+      "rep": 1,
+      "entropy": 2026100606,
+      "spawn_key": [
+        0,
+        0,
+        1
+      ],
+      "seed": 1913905670
+    },
+    {
+      "phase": "pilot",
+      "truth": 0,
+      "rep": 2,
+      "entropy": 2026100606,
+      "spawn_key": [
+        0,
+        0,
+        2
+      ],
+      "seed": 2337233565
+    },
+    {
+      "phase": "pilot",
+      "truth": 0,
+      "rep": 3,
+      "entropy": 2026100606,
+      "spawn_key": [
+        0,
+        0,
+        3
+      ],
+      "seed": 2928302010
+    },
+    {
+      "phase": "pilot",
+      "truth": 1,
+      "rep": 0,
+      "entropy": 2026100606,
+      "spawn_key": [
+        0,
+        1,
+        0
+      ],
+      "seed": 1757803740
+    },
+    {
+      "phase": "pilot",
+      "truth": 1,
+      "rep": 1,
+      "entropy": 2026100606,
+      "spawn_key": [
+        0,
+        1,
+        1
+      ],
+      "seed": 2421944168
+    },
+    {
+      "phase": "pilot",
+      "truth": 1,
+      "rep": 2,
+      "entropy": 2026100606,
+      "spawn_key": [
+        0,
+        1,
+        2
+      ],
+      "seed": 154624491
+    },
+    {
+      "phase": "pilot",
+      "truth": 1,
+      "rep": 3,
+      "entropy": 2026100606,
+      "spawn_key": [
+        0,
+        1,
+        3
+      ],
+      "seed": 2133236424
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 0,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        0
+      ],
+      "seed": 1587300898
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 1,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        1
+      ],
+      "seed": 1566704517
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 2,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        2
+      ],
+      "seed": 26537204
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 3,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        3
+      ],
+      "seed": 177331731
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 4,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        4
+      ],
+      "seed": 4062800368
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 5,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        5
+      ],
+      "seed": 1817829813
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 6,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        6
+      ],
+      "seed": 2218082908
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 7,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        7
+      ],
+      "seed": 3606414301
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 8,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        8
+      ],
+      "seed": 1737608118
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 9,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        9
+      ],
+      "seed": 3488950774
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 10,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        10
+      ],
+      "seed": 323206608
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 11,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        11
+      ],
+      "seed": 1514386254
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 12,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        12
+      ],
+      "seed": 383374257
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 13,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        13
+      ],
+      "seed": 2275432521
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 14,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        14
+      ],
+      "seed": 362783931
+    },
+    {
+      "phase": "main",
+      "truth": 0,
+      "rep": 15,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        0,
+        15
+      ],
+      "seed": 2206446058
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 0,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        0
+      ],
+      "seed": 782697199
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 1,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        1
+      ],
+      "seed": 990167396
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 2,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        2
+      ],
+      "seed": 2100502148
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 3,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        3
+      ],
+      "seed": 3822481651
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 4,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        4
+      ],
+      "seed": 2183886104
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 5,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        5
+      ],
+      "seed": 2670426492
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 6,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        6
+      ],
+      "seed": 2392052985
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 7,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        7
+      ],
+      "seed": 1700322213
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 8,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        8
+      ],
+      "seed": 2113939374
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 9,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        9
+      ],
+      "seed": 3249028522
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 10,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        10
+      ],
+      "seed": 1407407171
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 11,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        11
+      ],
+      "seed": 1015046192
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 12,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        12
+      ],
+      "seed": 1513472440
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 13,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        13
+      ],
+      "seed": 578043944
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 14,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        14
+      ],
+      "seed": 3748834851
+    },
+    {
+      "phase": "main",
+      "truth": 1,
+      "rep": 15,
+      "entropy": 2026100606,
+      "spawn_key": [
+        1,
+        1,
+        15
+      ],
+      "seed": 661420726
+    }
+  ],
+  "claims": {
+    "chi_square": "pointwise descriptive reference; boundary/nonidentification LR distribution unverified",
+    "profile_price_range": "finite visited point range, not a joint confidence envelope",
+    "hagan": "inverse of asymptotic IV map; exact SABR/dynamics not validated",
+    "support_grid": "unexplored interiors may contain undetected support components"
+  }
+}

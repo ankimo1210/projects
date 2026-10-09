@@ -131,8 +131,8 @@ assert np.allclose(atm_noise, full_noise[atm_indices])
 assert result["attempted_slots"] == len(result["fits"])
 ```
 - [x] GREEN: noiseless＋別pilot4 noisy反復、全9starts、代表profileの費用・差分安定性を保存。holdout/main noiseは見ない。
-- [ ] 独立pilotレビュー後にstarts/grid/seed/予算/許容差/全financial sourceを固定し、固定前の成果をmainへ昇格しない。
-- [ ] rootが条件固定・ROADMAP状態をcommitする。
+- [x] 独立pilotレビュー後にstarts/grid/seed/予算/許容差/全financial sourceを固定し、固定前の成果をmainへ昇格しない。
+- [x] rootが条件固定・ROADMAP状態をcommitする。
 
 ## Task 3: 918 main fits・profile・独立数値検算
 
@@ -167,3 +167,4 @@ Nu=0の解析Jacobian列をprivate診断に使う（publicの小z/log取消し�
 - 修正後のpilot/は30dataset/270 unrestricted＋116profile、saved/fresh checker PASS（元8noise vectorsと10selected fit再計算）。protocol22＋runner34＋core22＋analytics12＋reference22＋教材builder8の対象120 PASS、変更8Python ruff/format PASS。
 - 独立pilotレビューは進行中。主noise/holdoutはpilotの生成・評価には使用していない。
 - 無効slotのNaN/±Inf分類・有限値の数値照合と実master quoteからの無効判定を修正。正常quoteをinvalidとして隠す対照も拒否し、修正前の数値PASS成果はpilot-pre-invalid-fix/に保持した。新pilot saved/fresh PASS。\n
+- 最新pilotの独立レビューapproved・重要指摘0、386式比較/10SLSQP/270 multi-step確認後にcandidate全条件/financial source6件を固定。保存したfrozen protocolを実pilotへ再照合してPASS。主実験はこの固定から開始する。
