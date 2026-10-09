@@ -1,0 +1,268 @@
+{
+  "claim": {
+    "expiry": 1.0,
+    "fixing_times": [
+      0.08333333333333333,
+      0.16666666666666666,
+      0.25,
+      0.3333333333333333,
+      0.4166666666666667,
+      0.5,
+      0.5833333333333334,
+      0.6666666666666666,
+      0.75,
+      0.8333333333333334,
+      0.9166666666666666,
+      1.0
+    ],
+    "kind": "arithmetic_asian_call",
+    "quantity": 1.0,
+    "strike": 100.0
+  },
+  "gates": {
+    "asian_price_error": 0.05,
+    "call_accumulated_drift_error": 0.01,
+    "call_position_error": 0.01,
+    "call_position_se": 0.005,
+    "call_price_error": 0.001,
+    "call_scaled_state_derivative_error": 0.01,
+    "call_stock_derivative_error": 0.002,
+    "cf_order_cutoff_error": 1e-08,
+    "initial_quote_error": 0.001,
+    "mse_difference_absolute": 0.001,
+    "mse_difference_relative": 0.02,
+    "pnl_rms_difference": 0.05,
+    "quote_condition_number": 0.25,
+    "stock_position_error": 0.01,
+    "stock_position_se": 0.002,
+    "teacher_price_se": 0.03
+  },
+  "hedging": {
+    "band_width_candidates": [
+      0.0,
+      0.01,
+      0.02,
+      0.05,
+      0.1,
+      0.2
+    ],
+    "baseline_rule": "minimum_validation_discounted_pnl_mse",
+    "checkpoint_rule": "last_finite_completed",
+    "dates": [
+      0.0,
+      0.08333333333333333,
+      0.16666666666666666,
+      0.25,
+      0.3333333333333333,
+      0.4166666666666667,
+      0.5,
+      0.5833333333333334,
+      0.6666666666666666,
+      0.75,
+      0.8333333333333334,
+      0.9166666666666666
+    ],
+    "frequency_diagnostics": [
+      24,
+      48
+    ],
+    "half_spreads": [
+      0.0005,
+      0.005
+    ],
+    "position_bounds": [
+      -2.0,
+      2.0
+    ]
+  },
+  "limits": {
+    "chunk_uncompressed_bytes": 268435456,
+    "job_path_steps": 1000000000
+  },
+  "market": {
+    "dividend_yield": 0.0,
+    "generators": [
+      "Heston",
+      "local"
+    ],
+    "heston": {
+      "kappa": 2.0,
+      "mean_variance": 0.04,
+      "rho": -0.7,
+      "v0": 0.04,
+      "xi": 0.3
+    },
+    "rate": 0.03,
+    "spot": 100.0
+  },
+  "pilot": {
+    "initial_quotes": 37,
+    "selected_states": 18,
+    "tiny_cells": 44,
+    "tiny_fits": 4
+  },
+  "premium": {
+    "model": "Heston",
+    "original_n": 65536,
+    "seed": 74465188,
+    "steps_per_year": 1536
+  },
+  "sde": {
+    "independent_level": 1536,
+    "main_levels": [
+      192,
+      384,
+      768
+    ]
+  },
+  "seeds": {
+    "bootstrap": [
+      467711159
+    ],
+    "fresh": [
+      3204431721,
+      2015086102,
+      4200987281
+    ],
+    "optional_p": [
+      1318225101,
+      726223465,
+      4197217211
+    ],
+    "oracle": [
+      3631740690,
+      3584985287,
+      3528099577
+    ],
+    "pilot": [
+      571576394,
+      897800919,
+      57346572,
+      3530081562,
+      3298253178,
+      114746875
+    ],
+    "premium": [
+      74465188
+    ],
+    "refinement": [
+      3858740885,
+      1001519867,
+      310817098
+    ],
+    "teacher": [
+      138674072,
+      1345225788
+    ],
+    "test": [
+      3648259678,
+      4207029089,
+      2263049566
+    ],
+    "train": [
+      3050892616,
+      4085010191
+    ],
+    "validation": [
+      1680996203,
+      2946539793
+    ]
+  },
+  "statistics": {
+    "absolute_improvement": 0.001,
+    "all_initializations_required": true,
+    "alpha": 0.05,
+    "block_paths": 64,
+    "bootstrap_replicates": 2000,
+    "family_count": 8,
+    "relative_improvement": 0.05
+  },
+  "teacher": {
+    "driver_level": 768,
+    "grid_candidates": [
+      "coarse",
+      "high"
+    ],
+    "heston_bounds": [
+      1e-05,
+      0.5
+    ],
+    "heston_state_counts": [
+      9,
+      13
+    ],
+    "iid_blocks": 16,
+    "local_bounds": [
+      0.25,
+      4.0
+    ],
+    "local_spot_counts": [
+      9,
+      17
+    ],
+    "local_state_counts": [
+      5,
+      7
+    ],
+    "n_candidates": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "threshold_counts": [
+      33,
+      65
+    ]
+  },
+  "test": {
+    "mean_loss_se_max": 0.01,
+    "minimum_n": 8192,
+    "mse_se_absolute": 0.001,
+    "mse_se_relative": 0.02,
+    "n_candidates": [
+      8192,
+      16384,
+      32768
+    ],
+    "seed_slots": 3,
+    "selection_rule": "smallest_n_from_worst_pilot_greek_band_se"
+  },
+  "traded_call": {
+    "expiry": 1.25,
+    "rolling": false,
+    "strike": 100.0
+  },
+  "training": {
+    "activation": "tanh",
+    "architecture": [
+      9,
+      32,
+      32,
+      2
+    ],
+    "batch_size": 256,
+    "cap_seconds": 300.0,
+    "device": "cpu",
+    "dtype": "float64",
+    "initializations": [
+      11,
+      29,
+      47
+    ],
+    "learning_rate": 0.003,
+    "optimizer": "Adam",
+    "original_n": 8192,
+    "price_level": 768,
+    "updates": 512
+  },
+  "universes": [
+    "U1",
+    "U2"
+  ],
+  "validation": {
+    "original_n": 2048,
+    "selection_only": true
+  },
+  "version": "rb-f04-dynamic-v1"
+}

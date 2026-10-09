@@ -1,0 +1,530 @@
+{
+  "dimensions": {
+    "sde_levels": [
+      192,
+      384,
+      768
+    ],
+    "test_seed_slots": [
+      0,
+      1,
+      2
+    ]
+  },
+  "fits": [
+    {
+      "id": "fit:Heston:U1:init11",
+      "initialization": 11,
+      "training_generator": "Heston",
+      "universe": "U1"
+    },
+    {
+      "id": "fit:Heston:U1:init29",
+      "initialization": 29,
+      "training_generator": "Heston",
+      "universe": "U1"
+    },
+    {
+      "id": "fit:Heston:U1:init47",
+      "initialization": 47,
+      "training_generator": "Heston",
+      "universe": "U1"
+    },
+    {
+      "id": "fit:Heston:U2:init11",
+      "initialization": 11,
+      "training_generator": "Heston",
+      "universe": "U2"
+    },
+    {
+      "id": "fit:Heston:U2:init29",
+      "initialization": 29,
+      "training_generator": "Heston",
+      "universe": "U2"
+    },
+    {
+      "id": "fit:Heston:U2:init47",
+      "initialization": 47,
+      "training_generator": "Heston",
+      "universe": "U2"
+    },
+    {
+      "id": "fit:local:U1:init11",
+      "initialization": 11,
+      "training_generator": "local",
+      "universe": "U1"
+    },
+    {
+      "id": "fit:local:U1:init29",
+      "initialization": 29,
+      "training_generator": "local",
+      "universe": "U1"
+    },
+    {
+      "id": "fit:local:U1:init47",
+      "initialization": 47,
+      "training_generator": "local",
+      "universe": "U1"
+    },
+    {
+      "id": "fit:local:U2:init11",
+      "initialization": 11,
+      "training_generator": "local",
+      "universe": "U2"
+    },
+    {
+      "id": "fit:local:U2:init29",
+      "initialization": 29,
+      "training_generator": "local",
+      "universe": "U2"
+    },
+    {
+      "id": "fit:local:U2:init47",
+      "initialization": 47,
+      "training_generator": "local",
+      "universe": "U2"
+    }
+  ],
+  "primary_cells": [
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:no_hedge",
+      "initialization": null,
+      "policy": "no_hedge",
+      "policy_id": "no_hedge",
+      "training_generator": null,
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:greek:Heston",
+      "initialization": null,
+      "policy": "greek",
+      "policy_id": "greek:Heston",
+      "training_generator": null,
+      "universe": "U1",
+      "valuation": "Heston"
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:greek:local",
+      "initialization": null,
+      "policy": "greek",
+      "policy_id": "greek:local",
+      "training_generator": null,
+      "universe": "U1",
+      "valuation": "local"
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:band:Heston",
+      "initialization": null,
+      "policy": "band",
+      "policy_id": "band:Heston",
+      "training_generator": null,
+      "universe": "U1",
+      "valuation": "Heston"
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:band:local",
+      "initialization": null,
+      "policy": "band",
+      "policy_id": "band:local",
+      "training_generator": null,
+      "universe": "U1",
+      "valuation": "local"
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:nn:trainHeston:init11",
+      "initialization": 11,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init11",
+      "training_generator": "Heston",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:nn:trainHeston:init29",
+      "initialization": 29,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init29",
+      "training_generator": "Heston",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:nn:trainHeston:init47",
+      "initialization": 47,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init47",
+      "training_generator": "Heston",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:nn:trainlocal:init11",
+      "initialization": 11,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init11",
+      "training_generator": "local",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:nn:trainlocal:init29",
+      "initialization": 29,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init29",
+      "training_generator": "local",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U1:nn:trainlocal:init47",
+      "initialization": 47,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init47",
+      "training_generator": "local",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:no_hedge",
+      "initialization": null,
+      "policy": "no_hedge",
+      "policy_id": "no_hedge",
+      "training_generator": null,
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:greek:Heston",
+      "initialization": null,
+      "policy": "greek",
+      "policy_id": "greek:Heston",
+      "training_generator": null,
+      "universe": "U2",
+      "valuation": "Heston"
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:greek:local",
+      "initialization": null,
+      "policy": "greek",
+      "policy_id": "greek:local",
+      "training_generator": null,
+      "universe": "U2",
+      "valuation": "local"
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:band:Heston",
+      "initialization": null,
+      "policy": "band",
+      "policy_id": "band:Heston",
+      "training_generator": null,
+      "universe": "U2",
+      "valuation": "Heston"
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:band:local",
+      "initialization": null,
+      "policy": "band",
+      "policy_id": "band:local",
+      "training_generator": null,
+      "universe": "U2",
+      "valuation": "local"
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:nn:trainHeston:init11",
+      "initialization": 11,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init11",
+      "training_generator": "Heston",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:nn:trainHeston:init29",
+      "initialization": 29,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init29",
+      "training_generator": "Heston",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:nn:trainHeston:init47",
+      "initialization": 47,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init47",
+      "training_generator": "Heston",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:nn:trainlocal:init11",
+      "initialization": 11,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init11",
+      "training_generator": "local",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:nn:trainlocal:init29",
+      "initialization": 29,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init29",
+      "training_generator": "local",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "Heston",
+      "id": "cell:Heston:U2:nn:trainlocal:init47",
+      "initialization": 47,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init47",
+      "training_generator": "local",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:no_hedge",
+      "initialization": null,
+      "policy": "no_hedge",
+      "policy_id": "no_hedge",
+      "training_generator": null,
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:greek:Heston",
+      "initialization": null,
+      "policy": "greek",
+      "policy_id": "greek:Heston",
+      "training_generator": null,
+      "universe": "U1",
+      "valuation": "Heston"
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:greek:local",
+      "initialization": null,
+      "policy": "greek",
+      "policy_id": "greek:local",
+      "training_generator": null,
+      "universe": "U1",
+      "valuation": "local"
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:band:Heston",
+      "initialization": null,
+      "policy": "band",
+      "policy_id": "band:Heston",
+      "training_generator": null,
+      "universe": "U1",
+      "valuation": "Heston"
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:band:local",
+      "initialization": null,
+      "policy": "band",
+      "policy_id": "band:local",
+      "training_generator": null,
+      "universe": "U1",
+      "valuation": "local"
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:nn:trainHeston:init11",
+      "initialization": 11,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init11",
+      "training_generator": "Heston",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:nn:trainHeston:init29",
+      "initialization": 29,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init29",
+      "training_generator": "Heston",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:nn:trainHeston:init47",
+      "initialization": 47,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init47",
+      "training_generator": "Heston",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:nn:trainlocal:init11",
+      "initialization": 11,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init11",
+      "training_generator": "local",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:nn:trainlocal:init29",
+      "initialization": 29,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init29",
+      "training_generator": "local",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U1:nn:trainlocal:init47",
+      "initialization": 47,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init47",
+      "training_generator": "local",
+      "universe": "U1",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:no_hedge",
+      "initialization": null,
+      "policy": "no_hedge",
+      "policy_id": "no_hedge",
+      "training_generator": null,
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:greek:Heston",
+      "initialization": null,
+      "policy": "greek",
+      "policy_id": "greek:Heston",
+      "training_generator": null,
+      "universe": "U2",
+      "valuation": "Heston"
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:greek:local",
+      "initialization": null,
+      "policy": "greek",
+      "policy_id": "greek:local",
+      "training_generator": null,
+      "universe": "U2",
+      "valuation": "local"
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:band:Heston",
+      "initialization": null,
+      "policy": "band",
+      "policy_id": "band:Heston",
+      "training_generator": null,
+      "universe": "U2",
+      "valuation": "Heston"
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:band:local",
+      "initialization": null,
+      "policy": "band",
+      "policy_id": "band:local",
+      "training_generator": null,
+      "universe": "U2",
+      "valuation": "local"
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:nn:trainHeston:init11",
+      "initialization": 11,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init11",
+      "training_generator": "Heston",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:nn:trainHeston:init29",
+      "initialization": 29,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init29",
+      "training_generator": "Heston",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:nn:trainHeston:init47",
+      "initialization": 47,
+      "policy": "nn",
+      "policy_id": "nn:trainHeston:init47",
+      "training_generator": "Heston",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:nn:trainlocal:init11",
+      "initialization": 11,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init11",
+      "training_generator": "local",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:nn:trainlocal:init29",
+      "initialization": 29,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init29",
+      "training_generator": "local",
+      "universe": "U2",
+      "valuation": null
+    },
+    {
+      "generator": "local",
+      "id": "cell:local:U2:nn:trainlocal:init47",
+      "initialization": 47,
+      "policy": "nn",
+      "policy_id": "nn:trainlocal:init47",
+      "training_generator": "local",
+      "universe": "U2",
+      "valuation": null
+    }
+  ]
+}

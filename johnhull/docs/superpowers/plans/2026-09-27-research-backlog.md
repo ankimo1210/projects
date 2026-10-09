@@ -1,7 +1,7 @@
 # johnhull 研究・拡張バックログ：提案書のレビューと実装計画
 
 - 日付：2026-09-27
-- 状態：**準備文書完成。RB-F07 v1完了、RB-F05 digital v1は実装・対象検証済み（独立レビューImportant1修正済み（Critical/Minor0）、2026-10-07）。** 未評価292節・65出典・設計等9本を統合し、件数・参照の検査と独立レビューを終えた。原典・出典の確認とgit管理外の独立試算を行い、コード・notebook・依存・配布データは変更していない。
+- 初期準備時の状態（現在地は下記）：**準備文書完成。RB-F07 v1完了、RB-F05 digital v1は実装・対象検証済み（独立レビューImportant1修正済み（Critical/Minor0）、2026-10-07）。** 未評価292節・65出典・設計等9本を統合し、件数・参照の検査と独立レビューを終えた。原典・出典の確認とgit管理外の独立試算を行い、コード・notebook・依存・配布データは変更していない。
 - 入力：[研究・実装の引継ぎ提案書](../../RESEARCH_HANDOFF_2026-09-27.md)（以下「提案書」。SHA-256 `2cda1d58…c7ba`）。
   提案書の基準資料 [BASE] は [研究検討用資料](../../PROJECT_RESEARCH_BRIEF_2026-09-27.md)（SHA-256 `607f99b2…3fed`、提案書の記載と一致）。
 - 照合した HEAD：`1df81924`（johnhull 配下の最終変更は `a0e75edd`）。提案書の基準点は `163f7412`。
@@ -11,7 +11,7 @@
   [market-research 統合仕様](../../../../docs/superpowers/specs/2026-09-27-market-research-design.md)、
   [ADR 0004 保管先](../../../../docs/decisions/0004-artifact-storage-and-evidence.md)。
 
-**研究の現在地（2026-10-09）：** 本編306節のmain統合とRB-F07/F05 v1は完了。[quote DMLの設計](../specs/2026-10-09-calibrated-quote-dml-design.md)と[実施計画](2026-10-09-calibrated-quote-dml.md)の作成後、本人の「研究ロードマップを完遂せよ」に従い実装を開始した。quote DMLを先行し、離散バリア→F04→F08→F06と統合後続候補を保持。Tasks1–6を実装し、30NN＋4ridgeの本学習、fresh独立数値照合、core成果のC/F両復元がPASS。直近scoped 974 tests PASS。本計時・総費用・本成果3図・レビュー追加指摘の補完・main反映は未完了。[結果ドラフト](../../../research/RB-F07/quote_dml/README.md)に価格/ヘッジ悪化も記録し、[離散バリア設計§7](../../prep/design/RB-F05_DESIGN.md#7-離散バリア段階の具体化2026-10-09)で次の契約・参照・教師を具体化した。冒頭の292節・65出典は準備時点の記録である。
+**研究の現在地（2026-10-09）：** 本編306節と既存RB-F07/F05 v1、quote DML、離散バリア、F04価格モデル比較、F08 GBM、F06識別、F05短期/0DTEの研究v1はmain統合済み。成果・ゲート・採否の最新正本は[ROADMAPの研究実行表](../../../ROADMAP.md#研究ロードマップの実行2026-10-09)。動的モデル横断ヘッジはTasks1–4のprivate sourceを実装・独立レビューし、b7c98432を開発branchへpush（正式pilot/main未実施）。Task5の統計/protocol helperも実装・独立レビューを完了（M1修正、scoped1200 tests/5Python ruff）。[helperの記録](../../../research/RB-F04/dynamic_hedging/implementation/TASK5_HELPERS.md)。実験runner/金融checker/正式pilotは未実施。Task5を継続する。[多曲線リスク/P&L](../../../research/RB-F07/multicurve/README.md)と[増分XVA＋IM/資本](../../../research/RB-H09/incremental_xva/README.md)の既存code・一次資料・候補工程を調査し、重要2件修正後の調査案レビューを完了。後続2テーマの正式設計/実装は未着手。同時研究1本の順序を維持する。冒頭の292節・65出典と以下の初期準備表は当時の記録であり、現在の成果を未完了へ戻すものではない。
 
 ## 0. ID の書き方
 
@@ -29,7 +29,7 @@ market-research 仕様の機能 ID が F01–F19、§26.11 の要求 ID が L01�
    - **(b) 本編の後のコラム**：対象章の節が受け入れられた後に「Hull の先」として足す。
    - **(c) 研究トラック**：本編と並行するのは同時に1本まで。
    - **(d) johnhull の外・移行後に判断**：LLM・実務ツール・実データ系。
-3. **現在の作業は準備文書と独立試算まで**（§4 の RB-0）。
+3. **初期作業は準備文書と独立試算まで**（§4 の RB-0）。現在は上の現在地のとおり、研究完遂指示に従って実装・受入へ進んでいる。
    実装再開はjohnhullに必要な保管庫と作業分離が整った時点。M15と研究実装にはD1-preflightの検証が必要。
 4. **研究トラックの1本目は RB-F07（較正を通した市場クオート感応度）に決定。**
    RB-F05は2本目。digitalから始め、離散バリアへの拡張はM15（§27.6）受入後とする（§6.1）。

@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-09",
+  "scope": "Original two Important findings and v2 draft diffs only; planning-stage review",
+  "rates_verdict": "approved_for_planning",
+  "xva_verdict": "approved_for_planning",
+  "approved_for_planning": true,
+  "formal_design_implementation_study_accepted": false,
+  "resolved_findings": [
+    {
+      "id": "I1",
+      "status": "resolved",
+      "draft": "/tmp/johnhull-next-rates-research-v2.md",
+      "heading": "8. 商品横断のP&L契約",
+      "lines": [
+        144,
+        146,
+        148,
+        150,
+        152,
+        154
+      ],
+      "evidence": "Exact roll/fixing Vf, representable regrid/rebootstrap Vg and market V1 are separated in four-term telescoping bridge. Taylor starts at Vg/fixing-conditioned qg, and zero-move representation difference is explicitly stored. Absolute old knots/new anchor exact-logDF support is checked; missing horizon or rank are unknown. Primary versus representation variants are not conflated."
+    },
+    {
+      "id": "I2",
+      "status": "resolved",
+      "draft": "/tmp/johnhull-next-xva-research-v2.md",
+      "heading": "5. 独立参照と主要実験",
+      "lines": [
+        90
+      ],
+      "evidence": "Main(c) is same legal-set different-maturity hedge. Identical hedge in separate non-nettable set is validation-only with unchanged existing IM plus nonnegative new-set IM. Funding/capital aggregate effects are separated; main32 cells remain planned, not executed."
+    }
+  ],
+  "findings": [],
+  "severity_counts": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0
+  },
+  "inherited_planning_obligations": [
+    "Resolve dates/fixing availability before rank checks. Zero-start term-forward anchors must still have unfixed contractual resets or be explicitly abstract forward quotes; known reset rows cannot calibrate projection nodes.",
+    "Derive actual Gaussian integration state/dimension for lagged VM/MPOR/coupon/reset history; low-dimensional conditional anchors are not evidence every dated IRS case is1D/2D.",
+    "Closeout/IM-return/funding/K stop times, contractual versus OIS-excess cash costs, and hedge counterparty pooling remain explicit formal-design choices. Existing cash-anchor gates are appropriate."
+  ],
+  "declined_to_judge": [
+    "Formal implementation API/source acceptance",
+    "12quote actual rank/coverage/Hessian/numerical precision/runtime and dated roll fixture implementation",
+    "Actual conditional Gaussian dimensions/IM quantiles/funding/closeout/capital implementation",
+    "All formal pilot/main/freeze/SE/performance/regulatory compliance/licensing/capital adequacy claims",
+    "Artifacts/checker/tamper/replay/restoration/final study adoption"
+  ],
+  "verification": {
+    "original_drafts_unchanged": true,
+    "v2_review": "Read exact original-v2 diffs; algebra and legal-netting implications checked against prior independent counterexamples and original source/primary review. No new numerical claim from text correction.",
+    "new_source_git_fullsuite_mutation": false,
+    "new_numerical_probe_required": false,
+    "primary_sources": "Inherited original official BCBS/ISDA verification and explicit limitations."
+  },
+  "sha256": {
+    "/tmp/johnhull-next-rates-research.md": "e4735c1a18dcce8d63463f049270609259ac5ab9f1e06b7466e95f9ce44512e9",
+    "/tmp/johnhull-next-xva-research.md": "a651bc231539f4f4c4a09584ac399817ddc7ae0fd66ce037f3c1a10bab48a560",
+    "/tmp/johnhull-next-rates-research-v2.md": "c547b78cca4e21736acd177c0182cb250486004040be3da9817ff90567e5b482",
+    "/tmp/johnhull-next-xva-research-v2.md": "d6dec17ae4d23b8d03130d06aecbc9a577c873809d10bd1aaf83218a28b6d878",
+    "/tmp/johnhull-next-design-review.md": "eb6b5b5ac928e48e4185b82a51e73df861ea4d84a4df0b01e8ea507de511e3ac",
+    "/tmp/johnhull-next-design-review.json": "c26c24003099d426bb095a94a5f586fd16ec729d56662ec2e0429ef62fad63e6"
+  },
+  "written_files": [
+    "/tmp/johnhull-next-design-rereview.md",
+    "/tmp/johnhull-next-design-rereview.json"
+  ]
+}

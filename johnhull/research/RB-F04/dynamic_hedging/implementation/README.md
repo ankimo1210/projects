@@ -2,6 +2,8 @@
 
 2026-10-09。**private sourceの実装・独立レビュー完了。開発branchのみ。正式pilot・研究受入・main統合は未実施。**
 
+後続の[Task5 helperチェックポイント](TASK5_HELPERS.md)では統計/実験管理の2 private moduleを承認した。下表と1193件はTasks1–4時点の記録として保持する。runner・正式pilot・研究受入は未完了。
+
 ## 実装と確認
 
 | Task | 内容 | 関係テスト | 独立レビュー |
