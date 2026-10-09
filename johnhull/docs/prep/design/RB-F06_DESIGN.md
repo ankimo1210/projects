@@ -20,6 +20,7 @@ v1は正のforwardとstrike、固定満期・beta、合成smile。ノイズな�
 - `hullkit.sabr:sabr_implied_vol`：Hagan近似のteacher。teacher自身の近似誤差とoptimizerの誤差を分ける。
 - `hullkit.sabr:calibrate_sabr`：固定betaのleast-squares。現在は最終3パラメータのみ返し、成功フラグ・残差・Jacobianは返さない。
   公開APIを変えず、研究用の非公開runnerでSciPyの診断も保存する。
+  現行実装は3quote以上・非重み付きraw残差で、nuの下限は1e-9。2quoteの未識別診断は研究用runnerで扱い、この公開関数の条件を変えない。
 - `hullkit.stochastic_volatility:heston_price`：v2の再価格付け。M11の独立積分で計算誤差を把握する。
 - vol19のmulti-startと直接逆写像：教材・artifact形式の再利用候補。既存の保存集計だけを新しい実験の証拠にしない。
 
@@ -46,6 +47,15 @@ v1は正のforwardとstrike、固定満期・beta、合成smile。ノイズな�
 目的関数断面・特異値と弱い方向・quote削減/ノイズ対区間幅の3図を作る。
 独立参照は目的関数のgrid/profileと再価格付け、固定betaの既存較正、必要なら解析極限。
 Hagan近似とその同じ式を二重に呼ぶだけでは価格モデルの独立検証にならない。
+
+2026-10-09の実装前監査：scaled JacobianはW J D_parameterとして単位を明記し、noiselessのnoise SD=0で割らない尺度を固定する。
+profileは対象parameterを固定し、残りを各点multi-startで再最適化する。真値で他parameterを止めた断面とは別に表示する。
+status/active_mask/optimality、全初期値・失敗・境界解を保存する。
+quote/holdout、noiseで負IVが出た場合の扱い、starts/境界/予算、同程度fitの目的値幅、区間・外側反復を本比較前に固定する。
+
+小さな独立検算はbeta=1・nu=0の解析極限。全strikeでIV=alphaとなりrhoは識別されないことを、Blackの価格極限と併せて確認する。
+nu=0はboundaryであり、公開calibrate_sabrの正のnu下限とは区別する。
+このfixtureだけで研究を終えず、full/ATM/sparse＋noisy smileの本比較へ進む。
 
 教材採用には、どの条件で何が決まらないかを説明できることを求める。
 速い点推定でも不安定・過信・費用劣後なら標準器には昇格しない。

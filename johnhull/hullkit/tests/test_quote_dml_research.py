@@ -224,3 +224,56 @@ def test_experiment_returns_failed_inputs_instead_of_discarding_them(monkeypatch
     assert all("forced calibration failure" in value for value in arrays["train_failure_reason"])
     assert len(arrays["train_x_quote"]) == 32
     assert record["fits"] == []
+
+
+@pytest.mark.parametrize("change", ["budget", "kind", "mode", "seed", "negative_time"])
+def test_fit_metadata_cannot_evade_fixed_training_contract(smoke_result, change):
+    run, original, arrays = smoke_result
+    record = copy.deepcopy(original)
+    fit = record["fits"][0]
+    if change == "budget":
+        fit.update(budget_s=300.0, elapsed_s=200.0, budget_failure=False)
+    elif change == "kind":
+        fit["kind"] = "ridge"
+    elif change == "negative_time":
+        fit["elapsed_s"] = -1.0
+    else:
+        fit[change] = "q_dml" if change == "mode" else 99
+    with pytest.raises((AssertionError, ValueError), match=r"fit|budget|mode|seed|time|kind"):
+        run.check_record(record, arrays, fresh=False)
+
+
+def test_saved_discount_cannot_corrupt_the_cached_exact_comparator(smoke_result):
+    run, record, original = smoke_result
+    arrays = {key: value.copy() for key, value in original.items()}
+    arrays["test_discount"] *= 2
+    with pytest.raises((AssertionError, ValueError), match=r"discount|rate"):
+        run.check_record(record, arrays, fresh=False)
+
+
+def test_loading_statistics_require_the_saved_raw_observations():
+    run = runner()
+    arrays = {
+        "model_ids": np.array(["model"]),
+        "loading__full_npz": np.linspace(0.1, 0.2, 100),
+        "loading__decode__model": np.linspace(0.001, 0.002, 100),
+    }
+
+    def observation(key):
+        return {
+            "median_s": float(np.median(arrays[key])),
+            "p95_s": float(np.quantile(arrays[key], 0.95)),
+        }
+
+    record = {
+        "loading": {
+            "repeats": 100,
+            "warmup": 3,
+            "full_npz": observation("loading__full_npz"),
+            "model_decode": {"model": observation("loading__decode__model")},
+        }
+    }
+    run._check_loading(record, arrays)
+    record["loading"]["full_npz"]["median_s"] *= 2
+    with pytest.raises((AssertionError, ValueError), match="loading"):
+        run._check_loading(record, arrays)

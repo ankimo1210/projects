@@ -26,10 +26,16 @@ M12の既存例は解析混合面であり、Heston由来の面の高精度微�
 | §27.3の独立PDE・paired MC記録 | vanilla repricing、二時点確率差の比較方法。Heston面へそのまま数値を転用しない |
 | §26.13 | Asianの観測・既発平均・支払規約の整理 |
 
+現行コードとの照合（2026-10-09）：dupire_local_volは1点につき5価格の中央差分であり、面grid・wing・時間補間・local-vol経路/PDEの実装ではない。
+正のdensityも数値安定性を保証しない。maturity_step<Tが必要なので、t=0と最小正時刻の処置を別に固定する。
+heston_mc_priceは終端European・full-truncation/log-Eulerで、配当引数とAsian観測を持たない。公開APIを変えず研究用private経路で補う。
+GBM moment-matchのasian_average_priceをHeston Asianの独立参照には使わない。
+
 ## 3. 最小契約と誤差の分離
 
 対象は満期1年、月次12観測、満期支払の算術平均call、初期spotを平均に含めない。
 両モデルで同じ利率、配当、spot、strike、日付、cashflowを使う。監視格子を細かくするときも観測日は固定する。
+観測集合は{i/12,i=1,...,12}。既存arithmetic_asian_detailsへはS0＋12観測の13列を渡し、include_initial=Falseを明示する。全内部stepを平均へ入れない。
 
 1. Heston COSと独立積分で面の価格を確認する。
 2. strike/time微分幅・外側領域・補間を変え、Dupire分母の符号と安定領域を調べる。clipで不適切な面を隠さない。
@@ -48,3 +54,4 @@ M12の既存例は解析混合面であり、Heston由来の面の高精度微�
 - 採用：数値誤差を分離して差または差を検出できない条件を説明できれば教材候補。合成の結果を市場でのモデル順位にしない。
 - [S026](../sources/sources_S001-S031.md#s026)は複数満期SPX–VIXの別の問題設定。RB-F04の小実験を同論文の再現と呼ばない。
 - 残る事項：Hestonの安定パラメータ領域、面のwing処理、pilot予算。本編の要求に追加しない。
+- pilotで面内/未使用のvanilla検査点、density閾値、t=0・wing/面外訪問の処置、二時点event/条件付きbin、両モデルの格子biasを固定する。面外pathを捨てたりdensity/volをclipして成立を装わない。

@@ -1,0 +1,101 @@
+"""Measure warm-cache replay bundle loading separately from prepared inference.
+
+This artifact-only script materializes every array of the compressed research
+NPZ. It measures the existing per-model dictionary/scalar decoding from already
+loaded arrays. It does not calibrate, train or price. These are whole-bundle
+replay costs, not minimal exported-model deployment or cold filesystem latency.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import platform
+import sys
+from pathlib import Path
+from time import perf_counter
+
+import numpy as np
+
+
+def _load(path):
+    with np.load(path, allow_pickle=False) as stored:
+        return {key: stored[key] for key in stored.files}
+
+
+def _decode(arrays, identifier):
+    prefix = f"weights__{identifier}__"
+    exported = {
+        key[len(prefix) :]: value for key, value in arrays.items() if key.startswith(prefix)
+    }
+    for key in ("kind", "mode", "differential"):
+        if key in exported:
+            exported[key] = exported[key].item()
+    return exported
+
+
+def _times(function, repeats, warmup):
+    for _ in range(warmup):
+        function()
+    values = np.empty(repeats)
+    for index in range(repeats):
+        start = perf_counter()
+        function()
+        values[index] = perf_counter() - start
+    return values
+
+
+def _summary(values):
+    return {"median_s": float(np.median(values)), "p95_s": float(np.quantile(values, 0.95))}
+
+
+def measure(directory, *, repeats=100, warmup=3):
+    """Return timings and raw samples without changing the reference bundle."""
+    if repeats < 2 or warmup < 0:
+        raise ValueError("at least two repetitions and nonnegative warmup required")
+    path = Path(directory) / "reference.npz"
+    arrays = _load(path)
+    raw = {"loading__full_npz": _times(lambda: _load(path), repeats, warmup)}
+    result = {
+        "scope": "whole_compressed_research_bundle_warm_cache",
+        "repeats": repeats,
+        "warmup": warmup,
+        "includes": ["npz_open", "all_arrays_materialized", "npz_close"],
+        "excludes": [
+            "cold_filesystem_io",
+            "minimal_model_packaging",
+            "json_parse",
+            "module_import",
+            "calibration",
+            "prediction",
+        ],
+        "full_npz": _summary(raw["loading__full_npz"]),
+        "model_decode": {},
+        "environment": {
+            "python": sys.version,
+            "platform": platform.platform(),
+            "numpy": np.__version__,
+        },
+        "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "p95_is": "empirical_latency_quantile_not_confidence_interval",
+    }
+    for identifier in arrays["model_ids"].astype(str):
+        values = _times(lambda model_id=identifier: _decode(arrays, model_id), repeats, warmup)
+        raw[f"loading__decode__{identifier}"] = values
+        result["model_decode"][identifier] = _summary(values)
+    return result, raw
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--directory", type=Path, required=True)
+    options = parser.parse_args()
+    loading, samples = measure(options.directory)
+    (options.directory / "loading.json").write_text(json.dumps(loading, indent=2) + "\n")
+    np.savez_compressed(options.directory / "loading.npz", **samples)
+    print(
+        json.dumps(
+            {"full_npz": loading["full_npz"], "decoded_models": len(loading["model_decode"])}
+        )
+    )

@@ -13,6 +13,8 @@ import importlib.metadata
 import importlib.util
 import json
 import platform
+import subprocess
+import sys
 from functools import cache
 from pathlib import Path
 from time import perf_counter
@@ -503,6 +505,30 @@ def _close(got, expected, *, label, atol=1e-10, rtol=1e-9):
     np.testing.assert_allclose(got, expected, atol=atol, rtol=rtol, err_msg=label)
 
 
+def _check_loading(record, arrays):
+    loading = record["loading"]
+    assert loading["repeats"] == 100 and loading["warmup"] == 3, "loading protocol"
+    identifiers = list(map(str, arrays["model_ids"]))
+    assert set(loading["model_decode"]) == set(identifiers), "loading model roster"
+    observations = {"loading__full_npz": loading["full_npz"]}
+    observations.update(
+        {
+            f"loading__decode__{identifier}": loading["model_decode"][identifier]
+            for identifier in identifiers
+        }
+    )
+    assert {key for key in arrays if key.startswith("loading__")} == set(observations), (
+        "loading raw registry"
+    )
+    for key, saved in observations.items():
+        raw = arrays[key]
+        assert raw.shape == (100,) and np.isfinite(raw).all() and np.all(raw >= 0), (
+            "loading raw observations"
+        )
+        _close(saved["median_s"], np.median(raw), label="loading median")
+        _close(saved["p95_s"], np.quantile(raw, 0.95), label="loading p95")
+
+
 def check_record(record, arrays, *, fresh=True):
     """Recompute weights, risks, coupons, hedge cash flows and metrics without fit."""
     config, reference = record["protocol"], component("reference_methods")
@@ -526,12 +552,51 @@ def check_record(record, arrays, *, fresh=True):
     np.testing.assert_array_equal(arrays["model_ids"], roster, err_msg="fixed model roster")
     assert [fit["id"] for fit in record["fits"]] == roster, "fit roster"
     for fit in record["fits"]:
-        if fit["kind"] == "nn":
-            assert fit["requested_updates"] == config["training"]["updates"], "update protocol"
+        identifier = fit["id"]
+        method, size_seed = identifier.rsplit("_n", 1)
+        size = int(size_seed.split("_s")[0])
+        kind = "ridge" if method.startswith("ridge_") else "nn"
+        assert fit["kind"] == kind, "fit kind must match model ID"
+        exported = _restore(arrays, identifier)
+        assert exported["kind"] == kind, "fit/export kind must match model ID"
+        times = ["elapsed_s", "train_teacher_s", "offline_s"]
+        if kind == "nn":
+            seed = int(size_seed.split("_s")[1])
+            assert fit["mode"] == exported["mode"] == method, "fit mode must match model ID"
+            assert fit["seed"] == seed, "fit seed must match model ID"
+            assert fit["budget_s"] == config["training"]["budget_s"], "fixed fit budget"
+            assert fit["requested_updates"] == config["training"]["updates"], "fit update protocol"
+            assert 0 <= fit["updates"] <= fit["requested_updates"], "fit update count"
+            assert fit["batch_size"] == min(config["training"]["batch"], size), "fit batch size"
+            assert fit["batch_seed"] == seed + 104729, "fit batch seed"
+            assert fit["threads"] == config["training"]["threads"], "fit thread protocol"
+            times += ["setup_s", "training_s", "export_s", "overrun_s"]
             complete = (
                 fit["updates"] == fit["requested_updates"] and fit["elapsed_s"] <= fit["budget_s"]
             )
             assert fit["budget_failure"] == (not complete), "fit budget status"
+            _close(
+                fit["overrun_s"],
+                max(0.0, fit["elapsed_s"] - fit["budget_s"]),
+                label="fit budget overrun",
+            )
+            assert fit["elapsed_s"] + 1e-10 >= fit["setup_s"] + fit["training_s"], (
+                "fit elapsed time includes setup and training"
+            )
+        else:
+            assert bool(exported["differential"]) == (method == "ridge_dml"), "fit ridge mode"
+            assert fit["budget_failure"] is False, "fit ridge completion"
+        assert all(np.isfinite(fit[key]) and fit[key] >= 0 for key in times), "fit times"
+        _close(
+            fit["offline_s"],
+            fit["train_teacher_s"] + fit["elapsed_s"] + (fit["export_s"] if kind == "nn" else 0.0),
+            label="fit offline time",
+        )
+    _close(
+        record["total_fit_s"],
+        sum(fit["elapsed_s"] for fit in record["fits"]),
+        label="total fit time",
+    )
     assert record["complete_fits"] == (not any(fit["budget_failure"] for fit in record["fits"])), (
         "complete fits status"
     )
@@ -562,6 +627,10 @@ def check_record(record, arrays, *, fresh=True):
         )
         assert data["calibration_count"] == nmarket, "calibration count"
         assert not np.any(data["failure_reason"]), "recorded calibration failure"
+        assert np.isfinite(data["discount"]).all() and np.all(data["discount"] > 0), (
+            "positive finite discount"
+        )
+        _close(data["discount"], np.exp(-data["integrated_rate"]), label="discount/rate identity")
     test = _dataset(arrays, "test")
     _close(arrays["contract_quotes"], test["x_quote"][:, :5], label="frozen contract coupon")
     for model_id in arrays["model_ids"]:
@@ -659,6 +728,18 @@ def check_record(record, arrays, *, fresh=True):
                     np.testing.assert_array_equal(arrays[key], expected, err_msg="policy replay")
                 else:
                     _close(arrays[key], expected, label="policy replay")
+    if "benchmark" in record:
+        measured = record["benchmark"]
+        expected_batches = (
+            [1, 8, 16] if record["experiment"] == "smoke" else config["timing"]["batches"]
+        )
+        assert measured["settings"]["batches"] == expected_batches, "timing batch protocol"
+        assert measured["settings"]["repeats"] == (
+            3 if record["experiment"] == "smoke" else config["timing"]["repeats"]
+        ), "timing repeat protocol"
+        component("benchmark").check_measurement(
+            measured, arrays, model_ids=arrays["model_ids"], protocol=config
+        )
     for split in ("train", "validation", "test"):
         data = _dataset(arrays, split)
         if fresh:
@@ -672,6 +753,7 @@ def check_record(record, arrays, *, fresh=True):
                 "A",
                 "integrated_rate",
                 "a_quote",
+                "discount",
             ):
                 _close(data[key], regenerated[key], label=f"dataset replay {split} {key}")
         if fresh:
@@ -735,6 +817,10 @@ def check_record(record, arrays, *, fresh=True):
             assert actual == expected, "metric replay metadata"
 
     compare(record["metrics"], computed)
+    if "loading" in record:
+        _check_loading(record, arrays)
+    if "costs" in record:
+        compare(record["costs"], component("costs").cost_summary(record, arrays))
 
 
 def save_result(directory, record, arrays):
@@ -753,8 +839,30 @@ def save_result(directory, record, arrays):
     }
     (directory / "reference.json").write_text(json.dumps(record, indent=2, allow_nan=False) + "\n")
     if record["artifact"]["bytes"] > record["protocol"]["artifacts"]["max_git_bytes"]:
-        raise RuntimeError(
-            "saved artifact exceeds Git budget; move to existing artifact store before commit"
+        store = HERE.parents[2] / "scripts/evidence_store.py"
+        subprocess.run(
+            [
+                sys.executable,
+                str(store),
+                "put",
+                "--project-root",
+                str(directory),
+                "--manifest-out",
+                str(directory / "manifest.json"),
+                "reference.npz",
+            ],
+            check=True,
+        )
+        subprocess.run(
+            [
+                sys.executable,
+                str(store),
+                "verify",
+                str(directory / "manifest.json"),
+                "--work",
+                str(directory / "artifact-cache/restore-check" / record["artifact"]["sha256"][:16]),
+            ],
+            check=True,
         )
 
 
@@ -763,6 +871,19 @@ def load_result(directory):
     directory = Path(directory)
     record = json.loads((directory / "reference.json").read_text())
     array_path = directory / "reference.npz"
+    if not array_path.exists() and (directory / "manifest.json").exists():
+        store = HERE.parents[2] / "scripts/evidence_store.py"
+        subprocess.run(
+            [
+                sys.executable,
+                str(store),
+                "restore",
+                str(directory / "manifest.json"),
+                "--dest",
+                str(directory),
+            ],
+            check=True,
+        )
     assert hashlib.sha256(array_path.read_bytes()).hexdigest() == record["artifact"]["sha256"], (
         "artifact integrity"
     )
@@ -785,11 +906,46 @@ def main():
     actions.add_argument("--smoke", action="store_true")
     actions.add_argument("--refresh", action="store_true")
     actions.add_argument("--check", action="store_true")
+    actions.add_argument(
+        "--measure", action="store_true", help="append timing to saved fits; never train"
+    )
+    actions.add_argument(
+        "--measure-loading",
+        action="store_true",
+        help="measure warm-cache saved-bundle loading and summarize costs; never train",
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     if args.smoke and args.output is None:
         parser.error("--smoke requires a separate --output directory")
     output = args.output or HERE
+    if args.measure:
+        record, arrays = load_result(output)
+        source_digest = hashlib.sha256((HERE / "benchmark.py").read_bytes()).hexdigest()
+        benchmark, raw = component("benchmark").measure(
+            record["protocol"], arrays, smoke=record["experiment"] == "smoke"
+        )
+        record["benchmark"] = benchmark
+        record["timing_source"] = {"sha256": source_digest, "capture": "before_measure_call"}
+        # A new measurement invalidates costs and loading of the old bundle.
+        record.pop("costs", None)
+        record.pop("loading", None)
+        arrays = {key: value for key, value in arrays.items() if not key.startswith("loading__")}
+        arrays.update(raw)
+        save_result(output, record, arrays)
+        print("PASS: timing saved; no training")
+        return
+    if args.measure_loading:
+        record, arrays = load_result(output)
+        loading, raw = component("measure_loading").measure(output)
+        loading["input_npz"] = {key: record["artifact"][key] for key in ("sha256", "bytes")}
+        record["loading"] = loading
+        arrays.update(raw)
+        _check_loading(record, arrays)
+        record["costs"] = component("costs").cost_summary(record, arrays)
+        save_result(output, record, arrays)
+        print("PASS: loading and cost accounts saved; no training")
+        return
     if args.check:
         record, arrays = load_result(output)
         check_record(record, arrays, fresh=True)
