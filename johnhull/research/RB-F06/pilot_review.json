@@ -1,0 +1,2726 @@
+{
+  "schema": "RB-F06-pilot-review-v1",
+  "decision": "approved",
+  "approved": true,
+  "protocol_digest": "ef74f705deee2b8bc47dd7344dc20cb560bd0e890bd81ce2c7479cb655383b9b",
+  "pilot_record_digest": "675928f59d696667d7bc3e26fc13faa4ff077a4977907dbcda53c2c519bfac8a",
+  "pilot_arrays_digest": "594e54bfc735b8c0096033558190b0c3ffe86e1dcc7426f2a2dccab2e4360403",
+  "source_registry": {
+    "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+    "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+    "research/RB-F06/protocol.py": "8c4dd998aa1d2156ed33bf445089922a6a92934fb5e88f6b541277e7a8a889bb",
+    "research/RB-F06/reference_methods.py": "d8e76a9a4e73beba393a4290c3f9d0448138603fa79e96e0ef8ec28432bec497",
+    "research/RB-F06/build_reference.py": "ba6da93dd40225d87cf5bbf349086663f2c6a64dbbf793df527f626925b5e9aa",
+    "research/RB-F06/analytics.py": "9d6076382a9dd1c308248c6dcf07e7218b3954bd80a62da8795c5e7aea97d135"
+  },
+  "reviewed_at_utc": "2026-10-09T06:55:11.974661+00:00",
+  "reviewer": "/root/f08_foundation_review",
+  "scope": "Independent approval to freeze this exact candidate/source and run the fixed synthetic Hagan-map inverse experiment; basis/pilot quality only.",
+  "source_fingerprint": "028eb8496f68df3b83ba3d33b3bc2cce7f456099e2ebbb20873582dcc1291845",
+  "main_results_accepted": false,
+  "exact_sabr_pricing_validated": false,
+  "structural_or_global_identifiability_proved": false,
+  "confidence_coverage_certified": false,
+  "unresolved_findings": {
+    "Critical": 0,
+    "Important": 0
+  },
+  "approved_conditions": {
+    "forward": 100,
+    "maturity": 1,
+    "beta": 0.5,
+    "discount": 1,
+    "theta": "(a,rho,nu), alpha=a*F**(1-beta)",
+    "parameter_scale": [
+      0.2,
+      0.5,
+      0.5
+    ],
+    "noise_sd_iv": 0.0005,
+    "noiseless_scaling_reference": 0.0005,
+    "truths": [
+      [
+        0.2,
+        -0.3,
+        0.4
+      ],
+      [
+        0.2,
+        -0.3,
+        0.02
+      ]
+    ],
+    "groups": {
+      "full": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "atm": [
+        2,
+        3,
+        4
+      ],
+      "sparse": [
+        1,
+        5
+      ]
+    },
+    "main_noisy_reps": 16,
+    "original_main_dataset_slots": 102,
+    "main_unrestricted_fits": 918,
+    "starts": 9,
+    "profile_nuisance_starts_per_point": 4,
+    "max_nfev": {
+      "unrestricted": 400,
+      "profile": 250
+    },
+    "bounds": [
+      [
+        0.05,
+        -0.95,
+        0
+      ],
+      [
+        0.5,
+        0.95,
+        1.5
+      ]
+    ],
+    "solver_call_cap": 4830,
+    "solver_roster": {
+      "all_noisy_truth_points": 1152,
+      "main": 918,
+      "noiseless_nu_grid": 408,
+      "noiseless_refinement": 288,
+      "noisy_refinement": 864,
+      "representative_noisy_grid": 1200
+    },
+    "total_nfev_cap": 1345200,
+    "profile_refinement": {
+      "per_bracket": 6,
+      "per_curve": 12,
+      "all_initial_adjacent_crossings": "retained in increasing-grid order; unresolved intervals retained"
+    },
+    "noisy_pointwise_delta_q": 3.841458820694124,
+    "noiseless_delta_q": 0.000001,
+    "noiseless_max_iv_residual": 1e-9,
+    "baseline_improvement_tolerance": 0.000001,
+    "jacobian_steps_u": [
+      0.0001,
+      0.00003,
+      0.00001
+    ],
+    "numerical_rank_rtol": 1e-8,
+    "source_and_full_conditions": "Exact candidate bound by protocol_digest; no adaptive main changes or pilot pooling."
+  },
+  "findings": [
+    {
+      "id": "F06-PILOT-I1",
+      "severity": "Important",
+      "status": "resolved",
+      "file": "research/RB-F06/protocol.py",
+      "function": "freeze_protocol / verify_frozen_evidence",
+      "title": "Unbound approval could freeze changed conditions",
+      "before": "decision=approved alone accepted wrong record/arrays/source and changed noise scale; main pre-draw binding passed.",
+      "correction": "Typed explicitly true approval, exact candidate/record/typed arrays/source binding, complete nonfixture pilot numerical validation, review digest and actual saved pilot revalidation at frozen load/main entry.",
+      "verified": {
+        "approved_false": {
+          "rejected": true,
+          "type": "ValueError",
+          "message": "approved independent pilot review required"
+        },
+        "wrong_record_digest": {
+          "rejected": true,
+          "type": "ValueError",
+          "message": "approved review/pilot/conditions/source binding mismatch"
+        },
+        "changed_conditions": {
+          "rejected": true,
+          "type": "ValueError",
+          "message": "full candidate pilot evidence mismatch; fixture cannot freeze"
+        },
+        "missing_evidence": {
+          "rejected": true,
+          "type": "ValueError",
+          "message": "saved pilot record and arrays required"
+        },
+        "fixture_evidence": {
+          "rejected": true,
+          "type": "ValueError",
+          "message": "full candidate pilot evidence mismatch; fixture cannot freeze"
+        },
+        "self_consistent_digest_numeric_tamper": {
+          "rejected": true,
+          "type": "ValueError",
+          "message": "numerical mismatch: IV"
+        }
+      }
+    },
+    {
+      "id": "F06-PILOT-I2",
+      "severity": "Important",
+      "status": "resolved",
+      "file": "research/RB-F06/build_reference.py",
+      "function": "_invalid_equal / check_record",
+      "title": "Invalid nonfinite original slots could not be validated; valid slots could be hidden as invalid",
+      "before": "NaN original invalid slot rejected as master quote mismatch; finite positive observations could be labelled invalid and replaced by skipped fits.",
+      "correction": "Explicit NaN/+Inf/-Inf masks and finite provenance comparisons only for actually invalid master quotes; recorded invalid flag must match observation validity.",
+      "verified": {
+        "nan": {
+          "rejected": false
+        },
+        "positive_inf": {
+          "rejected": false
+        },
+        "negative_inf": {
+          "rejected": false
+        },
+        "finite_negative": {
+          "rejected": false
+        },
+        "hide_valid": {
+          "rejected": true,
+          "type": "ValueError",
+          "message": "saved invalid_data disagrees with actual master quotes"
+        }
+      }
+    },
+    {
+      "id": "F06-PILOT-I3",
+      "severity": "Important",
+      "status": "resolved",
+      "origin": "root first-pilot checker failure",
+      "file": "research/RB-F06/build_reference.py",
+      "function": "_roster",
+      "title": "Canonical JSON key ordering changed dataset roster",
+      "correction": "Deterministic sorted group order for generation and saved checker; rebuilt pilot with exact 30-dataset/386-attempt roster.",
+      "verified": "Latest native saved/fresh checker and independent exact fit-to-point assignment union pass."
+    }
+  ],
+  "verification": {
+    "saved": {
+      "passed": true,
+      "dataset_slots": 30,
+      "original_attempts": 386,
+      "fresh": false,
+      "scope": "saved Hagan-map/Black revaluation; not exact SABR validation"
+    },
+    "fresh": {
+      "passed": true,
+      "dataset_slots": 30,
+      "original_attempts": 386,
+      "fresh": true,
+      "scope": "saved Hagan-map/Black revaluation; not exact SABR validation",
+      "fresh_replay": {
+        "fit_ids": [
+          "t0_full_r0_u0",
+          "t0_full_r0_u4",
+          "t0_full_r0_u8",
+          "t0_full_r0_p2_0x1.999999999999ap-2_s0",
+          "t0_sparse_r0_u0",
+          "t0_sparse_r0_u4",
+          "t0_sparse_r0_u8",
+          "t1_atm_r0_u0",
+          "t1_atm_r0_u4",
+          "t1_atm_r0_u8"
+        ],
+        "noise_vectors": 8,
+        "scope": "selected original fits; fresh work is not pooled with original evidence"
+      }
+    },
+    "negative_guards": {
+      "approved_false": {
+        "rejected": true,
+        "type": "ValueError",
+        "message": "approved independent pilot review required"
+      },
+      "wrong_record_digest": {
+        "rejected": true,
+        "type": "ValueError",
+        "message": "approved review/pilot/conditions/source binding mismatch"
+      },
+      "changed_conditions": {
+        "rejected": true,
+        "type": "ValueError",
+        "message": "full candidate pilot evidence mismatch; fixture cannot freeze"
+      },
+      "missing_evidence": {
+        "rejected": true,
+        "type": "ValueError",
+        "message": "saved pilot record and arrays required"
+      },
+      "fixture_evidence": {
+        "rejected": true,
+        "type": "ValueError",
+        "message": "full candidate pilot evidence mismatch; fixture cannot freeze"
+      },
+      "self_consistent_digest_numeric_tamper": {
+        "rejected": true,
+        "type": "ValueError",
+        "message": "numerical mismatch: IV"
+      }
+    },
+    "invalid_slot_provenance": {
+      "nan": {
+        "rejected": false
+      },
+      "positive_inf": {
+        "rejected": false
+      },
+      "negative_inf": {
+        "rejected": false
+      },
+      "finite_negative": {
+        "rejected": false
+      },
+      "hide_valid": {
+        "rejected": true,
+        "type": "ValueError",
+        "message": "saved invalid_data disagrees with actual master quotes"
+      }
+    },
+    "no_rng_no_optimizer": {
+      "passed": true,
+      "dataset_slots": 30,
+      "original_attempts": 386,
+      "fresh": false,
+      "scope": "saved Hagan-map/Black revaluation; not exact SABR validation"
+    },
+    "in_memory_freeze": {
+      "passed": true,
+      "dataset_slots": 30,
+      "original_attempts": 386,
+      "fresh": false,
+      "scope": "saved Hagan-map/Black revaluation; not exact SABR validation"
+    },
+    "main_binding_before_draw": true,
+    "actual_freeze_persisted": false,
+    "main_noise_drawn": false,
+    "holdout_evaluated": false,
+    "source_registry_unchanged": true,
+    "full_roster": {
+      "dataset_slots": 30,
+      "unrestricted": 270,
+      "profile": 116,
+      "assigned_attempt_union_exact": true,
+      "main_dataset_slots": 102,
+      "main_unrestricted_slots": 918,
+      "main_solver_call_cap": 4830,
+      "main_roster": {
+        "all_noisy_truth_points": 1152,
+        "main": 918,
+        "noiseless_nu_grid": 408,
+        "noiseless_refinement": 288,
+        "noisy_refinement": 864,
+        "representative_noisy_grid": 1200
+      },
+      "main_max_nfev": 400,
+      "profile_max_nfev": 250,
+      "total_nfev_cap": 1345200
+    },
+    "profile_curve": {
+      "dataset_id": "t0_full_r0",
+      "axis": 2,
+      "initial_points": 17,
+      "total_points": 29,
+      "refinement_brackets": [
+        {
+          "final": [
+            0.36875,
+            0.37031250000000004
+          ],
+          "initial": [
+            0.3,
+            0.4
+          ],
+          "point_ids": [
+            "t0_full_r0_p2_0x1.6666666666666p-2",
+            "t0_full_r0_p2_0x1.8000000000000p-2",
+            "t0_full_r0_p2_0x1.7333333333333p-2",
+            "t0_full_r0_p2_0x1.799999999999ap-2",
+            "t0_full_r0_p2_0x1.7cccccccccccdp-2",
+            "t0_full_r0_p2_0x1.7b33333333334p-2"
+          ],
+          "unresolved_interior": true
+        },
+        {
+          "final": [
+            0.43551046253996956,
+            0.43855656508552565
+          ],
+          "initial": [
+            0.4050494370844084,
+            0.6
+          ],
+          "point_ids": [
+            "t0_full_r0_p2_0x1.014aeb7f2407cp-1",
+            "t0_full_r0_p2_0x1.d0ad8f4a38e42p-2",
+            "t0_full_r0_p2_0x1.b7b96b70314e6p-2",
+            "t0_full_r0_p2_0x1.c4337d5d35194p-2",
+            "t0_full_r0_p2_0x1.bdf67466b333dp-2",
+            "t0_full_r0_p2_0x1.c114f8e1f4268p-2"
+          ],
+          "unresolved_interior": true
+        }
+      ]
+    },
+    "transport": {
+      "json_file_sha256": "91f9e80934d772ed91051edc66ee099be70078707fa16efe4ed523f44906f910",
+      "npz_file_sha256": "6a8b3fad22b770e00da8acb68b47b3f396770288ef723b0556102341afa7f239",
+      "npz_bytes": 1653381,
+      "native_arrays": 5870
+    }
+  },
+  "financial_numerical_evidence": {
+    "record_digest_at_numeric_review": "675928f59d696667d7bc3e26fc13faa4ff077a4977907dbcda53c2c519bfac8a",
+    "arrays_digest": "594e54bfc735b8c0096033558190b0c3ffe86e1dcc7426f2a2dccab2e4360403",
+    "source_registry_at_generation": {
+      "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+      "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+      "research/RB-F06/analytics.py": "9d6076382a9dd1c308248c6dcf07e7218b3954bd80a62da8795c5e7aea97d135",
+      "research/RB-F06/build_reference.py": "ba6da93dd40225d87cf5bbf349086663f2c6a64dbbf793df527f626925b5e9aa",
+      "research/RB-F06/protocol.py": "8c4dd998aa1d2156ed33bf445089922a6a92934fb5e88f6b541277e7a8a889bb",
+      "research/RB-F06/reference_methods.py": "d8e76a9a4e73beba393a4290c3f9d0448138603fa79e96e0ef8ec28432bec497"
+    },
+    "independent_hagan_revaluation": {
+      "fits": 386,
+      "max_absolute_iv_error": 1.830313678397033e-12,
+      "max_absolute_q_error": 8.016058927751146e-9,
+      "max_absolute_residual_error": 1.830313678397033e-12
+    },
+    "all_unrestricted_multi_step_stability": {
+      "fits": 270,
+      "counts": {
+        "stable_estimate": 258,
+        "numerical_unresolved": 12
+      },
+      "by_condition": {
+        "(0, 'atm')": {
+          "stable_estimate": 45
+        },
+        "(0, 'full')": {
+          "stable_estimate": 45
+        },
+        "(0, 'sparse')": {
+          "stable_estimate": 45
+        },
+        "(1, 'atm')": {
+          "stable_estimate": 33,
+          "numerical_unresolved": 12
+        },
+        "(1, 'full')": {
+          "stable_estimate": 45
+        },
+        "(1, 'sparse')": {
+          "stable_estimate": 45
+        }
+      },
+      "small_nu_unresolved_examples": [
+        {
+          "fit_id": "t1_atm_r2_u2",
+          "nu": 0.00675563621484276,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              2,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                693.9589353777893,
+                6.626901060111422,
+                0.000004216713922131403
+              ],
+              [
+                693.9589734502208,
+                6.6269272784311495,
+                0.000007246948780233288
+              ],
+              [
+                693.958992102168,
+                6.626919268592466,
+                0.00002027718048827233
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00017594046446568713,
+            "relative_matrix_change": 2.535315071883104e-7,
+            "smallest_nonzero_to_estimated_error": 0.041189778611995354,
+            "direction_projector_changes": [
+              2.496640820063922e-7,
+              0,
+              0.000023244475085711558
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r2_u1",
+          "nu": 0.006766855932657227,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              2,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                693.9587232489371,
+                6.61489292426828,
+                0.000006309591096474717
+              ],
+              [
+                693.9587813619681,
+                6.614872451311722,
+                0.00002007231034868142
+              ],
+              [
+                693.9587217637404,
+                6.615019267469536,
+                0.00003277027704863569
+              ]
+            ],
+            "estimated_delta_j_norm": 0.0003430091048433263,
+            "relative_matrix_change": 4.942787872359427e-7,
+            "smallest_nonzero_to_estimated_error": 0.058518301891285644,
+            "direction_projector_changes": [
+              0.000011418342444447004,
+              0,
+              0.00004659127593813638
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r2_u6",
+          "nu": 0.006804653589127077,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                693.9584116620962,
+                6.5798085263743324,
+                0.000012372285205384454
+              ],
+              [
+                693.9583953117673,
+                6.579767774513401,
+                0.00000959818810334794
+              ],
+              [
+                693.9583645540838,
+                6.579764732269606,
+                0.00004140361516232972
+              ]
+            ],
+            "estimated_delta_j_norm": 0.0001501962082198239,
+            "relative_matrix_change": 2.1643402433707406e-7,
+            "smallest_nonzero_to_estimated_error": 0.06390433032304145,
+            "direction_projector_changes": [
+              0.000004822770437826221,
+              0,
+              0.00000778526099592077
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r2_u4",
+          "nu": 0.0070771523773116,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              2,
+              2,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                693.9554255739074,
+                6.325250264330524,
+                0.000005395335013702822
+              ],
+              [
+                693.9553968040611,
+                6.325237268033085,
+                0.000003324964915910052
+              ],
+              [
+                693.9554350193475,
+                6.325182415614561,
+                0.000023078716897609756
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00012013544285661304,
+            "relative_matrix_change": 1.7311695162237255e-7,
+            "smallest_nonzero_to_estimated_error": 52650.88401582317,
+            "direction_projector_changes": [
+              0.0000015185150354056186,
+              0,
+              0.000014289660183357178
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r2_u3",
+          "nu": 0.0073219459593411584,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              3,
+              2,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                693.9530720095884,
+                6.112819106850003,
+                0.00000882435490276184
+              ],
+              [
+                693.9530603563669,
+                6.112847132707766,
+                0.0000020846243372970646
+              ],
+              [
+                693.9530836375538,
+                6.112784662878026,
+                0.000014297670918527981
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00012442541690692655,
+            "relative_matrix_change": 1.7929947141241826e-7,
+            "smallest_nonzero_to_estimated_error": 49128.60478723841,
+            "direction_projector_changes": [
+              0.0000026100206987065846,
+              0,
+              0.000017324527871512403
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r2_u8",
+          "nu": 0.007447323967058597,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              3,
+              2,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                693.9519316969314,
+                6.008712607959875,
+                0.000007048710020025632
+              ],
+              [
+                693.951931494915,
+                6.00871761575399,
+                0.0000023973121726514132
+              ],
+              [
+                693.951923928128,
+                6.008712083753654,
+                0.000018963084812002125
+              ]
+            ],
+            "estimated_delta_j_norm": 0.000060719881523824496,
+            "relative_matrix_change": 8.749868509339173e-8,
+            "smallest_nonzero_to_estimated_error": 98957.99308166248,
+            "direction_projector_changes": [
+              6.000269132975354e-7,
+              0,
+              0.000006123298462669041
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r2_u7",
+          "nu": 0.007499057913198639,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              2,
+              3,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                693.9514943045177,
+                5.967027609857928,
+                0.000006176136525347944
+              ],
+              [
+                693.9514755416964,
+                5.967016925444023,
+                0.000024422272833800156
+              ],
+              [
+                693.9515403703992,
+                5.967070691143736,
+                2.923932844434591e-7
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00009199383252486903,
+            "relative_matrix_change": 1.3256522360307535e-7,
+            "smallest_nonzero_to_estimated_error": 0.2654772843298815,
+            "direction_projector_changes": [
+              0.0000016877169553367836,
+              0,
+              0.000005076584043130203
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r2_u5",
+          "nu": 0.00847883540075763,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                693.9448360059635,
+                5.274355700181177,
+                0.000013813630177206958
+              ],
+              [
+                693.944834021335,
+                5.274358205341248,
+                0.000012803750979315954
+              ],
+              [
+                693.9448074357435,
+                5.2743809779435145,
+                0.000012248232557239989
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00006295594861856328,
+            "relative_matrix_change": 9.072183483770661e-8,
+            "smallest_nonzero_to_estimated_error": 0.20337634902288837,
+            "direction_projector_changes": [
+              5.110256144278167e-7,
+              0,
+              0.0000011283913223897206
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r2_u0",
+          "nu": 0.008624652484657786,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              3,
+              3,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                693.9440854713671,
+                5.185097848225571,
+                0.000014272985544832213
+              ],
+              [
+                693.944085299501,
+                5.185109142969136,
+                0.000014470756690478656
+              ],
+              [
+                693.9440637795792,
+                5.185109185212178,
+                0.000005916687544401404
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00004451956812003112,
+            "relative_matrix_change": 6.415440244125261e-8,
+            "smallest_nonzero_to_estimated_error": 0.3250426116323372,
+            "direction_projector_changes": [
+              2.1012547305800286e-7,
+              0,
+              0.0000011578646841589559
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r1_u7",
+          "nu": 0.02476719383075864,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                692.9190025597529,
+                6.696914243785081,
+                0.00008848690445910049
+              ],
+              [
+                692.9190011179084,
+                6.6969147355115215,
+                0.00008907981808182032
+              ],
+              [
+                692.9190014772001,
+                6.6969136452907385,
+                0.00009271817871161333
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00001036906402373514,
+            "relative_matrix_change": 1.4964323401445767e-8,
+            "smallest_nonzero_to_estimated_error": 8.59092179177538,
+            "direction_projector_changes": [
+              1.0419889194036699e-7,
+              0,
+              0.0000012048416477914164
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r1_u1",
+          "nu": 0.024767197549626543,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                692.9190023601384,
+                6.696914460381558,
+                0.00008775674188691942
+              ],
+              [
+                692.9190028349049,
+                6.696914412199245,
+                0.0000883316241250353
+              ],
+              [
+                692.9190017602375,
+                6.696917036970697,
+                0.00008919202631173774
+              ]
+            ],
+            "estimated_delta_j_norm": 0.000014575518713910629,
+            "relative_matrix_change": 2.1034953081498037e-8,
+            "smallest_nonzero_to_estimated_error": 6.060273109919106,
+            "direction_projector_changes": [
+              1.2219961776064773e-9,
+              0,
+              0.000002103569617019304
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "fit_id": "t1_atm_r1_u2",
+          "nu": 0.02476720820575668,
+          "success": true,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                692.9190019306018,
+                6.696914166900803,
+                0.00008767246452004376
+              ],
+              [
+                692.9190020137145,
+                6.696913982363975,
+                0.00008760580538241314
+              ],
+              [
+                692.9190006389454,
+                6.69691531732938,
+                0.00009271533457643936
+              ]
+            ],
+            "estimated_delta_j_norm": 0.000009812622533933866,
+            "relative_matrix_change": 1.4161283649917354e-8,
+            "smallest_nonzero_to_estimated_error": 8.92786867929099,
+            "direction_projector_changes": [
+              3.6212495581058485e-7,
+              0,
+              5.615287691812646e-7
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        }
+      ],
+      "all_30_best": [
+        {
+          "dataset_id": "t0_atm_r-1",
+          "theta": [
+            0.20000000000028387,
+            -0.3000000000163246,
+            0.39999999997867525
+          ],
+          "q": 5.546678239835239e-26,
+          "status": 1,
+          "rank": 3,
+          "condition": 15623.684329100526,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                697.7553917689231,
+                3.5682667048919043,
+                0.044660092185612295
+              ],
+              [
+                697.7553917984264,
+                3.568266679472758,
+                0.04466010558718175
+              ],
+              [
+                697.7553918227007,
+                3.5682666695263854,
+                0.044660200433652826
+              ]
+            ],
+            "estimated_delta_j_norm": 2.650952811936999e-7,
+            "relative_matrix_change": 3.799258082555711e-10,
+            "smallest_nonzero_to_estimated_error": 168468.12733173283,
+            "direction_projector_changes": [
+              8.275333546720114e-9,
+              0,
+              2.916229765748015e-8
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 8.326672684688674e-17
+        },
+        {
+          "dataset_id": "t0_full_r-1",
+          "theta": [
+            0.19999999999999962,
+            -0.29999999999999627,
+            0.40000000000000946
+          ],
+          "q": 2.5792053815233863e-24,
+          "status": 3,
+          "rank": 3,
+          "condition": 44.46264413178911,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                1059.179201870438,
+                74.04958291825747,
+                23.82177719879004
+              ],
+              [
+                1059.1792019660438,
+                74.0495829074849,
+                23.821777194055148
+              ],
+              [
+                1059.179201860772,
+                74.04958291459407,
+                23.821777188651495
+              ]
+            ],
+            "estimated_delta_j_norm": 2.8657947518877423e-7,
+            "relative_matrix_change": 2.7056750609984295e-10,
+            "smallest_nonzero_to_estimated_error": 83124505.61354187,
+            "direction_projector_changes": [
+              2.6465124531527413e-10,
+              0,
+              1.5156401617843362e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 5.273559366969494e-16
+        },
+        {
+          "dataset_id": "t0_sparse_r-1",
+          "theta": [
+            0.1936326675794673,
+            -0.19019544776619884,
+            0.646797458700998
+          ],
+          "q": 1.429810390713084e-23,
+          "status": 3,
+          "rank": 2,
+          "condition": null,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                574.0318905099375,
+                46.66236638222548,
+                0
+              ],
+              [
+                574.0318905839125,
+                46.66236638190752,
+                0
+              ],
+              [
+                574.0318906004346,
+                46.66236638626904,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 7.963783984236809e-8,
+            "relative_matrix_change": 1.387341733947211e-10,
+            "smallest_nonzero_to_estimated_error": 585932095.5248047,
+            "direction_projector_changes": [
+              4.838000300898167e-11,
+              0,
+              1.7846459673739438e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 1.4432899320127035e-15
+        },
+        {
+          "dataset_id": "t0_atm_r0",
+          "theta": [
+            0.20283921076057268,
+            -0.9499999999999998,
+            0.23884935932618526
+          ],
+          "q": 5.077528030748639,
+          "status": 2,
+          "rank": 3,
+          "condition": 88171.19808702743,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                684.7462775736418,
+                6.791257906516158,
+                0.007766143777951671
+              ],
+              [
+                684.7462776188335,
+                6.791257899700024,
+                0.007766099275899255
+              ],
+              [
+                684.7462779174135,
+                6.791257842724212,
+                0.007766757189900979
+              ]
+            ],
+            "estimated_delta_j_norm": 0.0000018531462849954298,
+            "relative_matrix_change": 2.7063254603437086e-9,
+            "smallest_nonzero_to_estimated_error": 4190.764290320668,
+            "direction_projector_changes": [
+              3.8029054770036766e-8,
+              0,
+              2.0243533587477288e-7
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0009199250220364996
+        },
+        {
+          "dataset_id": "t0_full_r0",
+          "theta": [
+            0.19970703117173258,
+            -0.2948665473684297,
+            0.4050494370844084
+          ],
+          "q": 8.584292770063639,
+          "status": 2,
+          "rank": 3,
+          "condition": 43.470868688148876,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                1059.3842973739454,
+                74.13985015353796,
+                24.3699822197717
+              ],
+              [
+                1059.3842974265299,
+                74.13985015846312,
+                24.3699822293945
+              ],
+              [
+                1059.3842973999112,
+                74.13985016437098,
+                24.36998221064385
+              ]
+            ],
+            "estimated_delta_j_norm": 2.992271311592267e-7,
+            "relative_matrix_change": 2.824538100914966e-10,
+            "smallest_nonzero_to_estimated_error": 81443090.1869877,
+            "direction_projector_changes": [
+              3.6286283875428617e-10,
+              0,
+              6.181143171883371e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0011452954009048832
+        },
+        {
+          "dataset_id": "t0_sparse_r0",
+          "theta": [
+            0.19970176831842554,
+            -0.2807536388183332,
+            0.41980640540521574
+          ],
+          "q": 1.5359738122235304e-21,
+          "status": 3,
+          "rank": 2,
+          "condition": null,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                567.619319387208,
+                35.03085692696362,
+                0
+              ],
+              [
+                567.619319412201,
+                35.03085692090966,
+                0
+              ],
+              [
+                567.6193194186511,
+                35.03085692719434,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 2.9050192747425814e-8,
+            "relative_matrix_change": 5.117900634092015e-11,
+            "smallest_nonzero_to_estimated_error": 1205873476.485412,
+            "direction_projector_changes": [
+              7.664125091614199e-11,
+              0,
+              6.075238478486709e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 1.426636586643326e-14
+        },
+        {
+          "dataset_id": "t0_atm_r1",
+          "theta": [
+            0.20279591450066256,
+            -0.9499999999996442,
+            0.23532808456580293
+          ],
+          "q": 1.5217716069276075,
+          "status": 2,
+          "rank": 3,
+          "condition": 90742.44591087387,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                684.8958193606293,
+                6.787823551758062,
+                0.007547793678667668
+              ],
+              [
+                684.8958193493906,
+                6.787823535729934,
+                0.007547689644844785
+              ],
+              [
+                684.8958193429233,
+                6.7878232337673605,
+                0.007548303051307684
+              ]
+            ],
+            "estimated_delta_j_norm": 0.0000011913251489016413,
+            "relative_matrix_change": 1.739425347979679e-9,
+            "smallest_nonzero_to_estimated_error": 6335.541268312419,
+            "direction_projector_changes": [
+              2.053047337652697e-9,
+              0,
+              3.8351242412154316e-8
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0005036176881387244
+        },
+        {
+          "dataset_id": "t0_full_r1",
+          "theta": [
+            0.19946681605221872,
+            -0.3010294334575335,
+            0.4126327821911448
+          ],
+          "q": 4.266915802726703,
+          "status": 3,
+          "rank": 3,
+          "condition": 42.62207365546886,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                1059.2782563347232,
+                75.41459668955655,
+                24.85280903024719
+              ],
+              [
+                1059.2782564104332,
+                75.41459668926262,
+                24.85280901565231
+              ],
+              [
+                1059.2782563962012,
+                75.41459669443864,
+                24.852809023730885
+              ]
+            ],
+            "estimated_delta_j_norm": 2.514753570141322e-7,
+            "relative_matrix_change": 2.3740254790682144e-10,
+            "smallest_nonzero_to_estimated_error": 98828009.67355084,
+            "direction_projector_changes": [
+              1.8493665975655216e-10,
+              0,
+              5.392532769161783e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0007218662501483619
+        },
+        {
+          "dataset_id": "t0_sparse_r1",
+          "theta": [
+            0.19324445930175949,
+            -0.18770763287625455,
+            0.646150279620684
+          ],
+          "q": 1.1107223175270067e-21,
+          "status": 3,
+          "rank": 2,
+          "condition": null,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                574.04393025149,
+                46.57080270136858,
+                0
+              ],
+              [
+                574.0439303269617,
+                46.57080270071101,
+                0
+              ],
+              [
+                574.0439303462039,
+                46.57080270172302,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 7.881012692693049e-8,
+            "relative_matrix_change": 1.3728936543592078e-10,
+            "smallest_nonzero_to_estimated_error": 590924092.0762575,
+            "direction_projector_changes": [
+              5.731628750314735e-11,
+              0,
+              2.2534626887647708e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 1.2739809207573671e-14
+        },
+        {
+          "dataset_id": "t0_atm_r2",
+          "theta": [
+            0.1990606922231354,
+            -0.4952693266433841,
+            0.5898940492642132
+          ],
+          "q": 1.31271385009434e-24,
+          "status": 3,
+          "rank": 3,
+          "condition": 10795.106866030934,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                696.7620277907396,
+                5.47010084366328,
+                0.06454425061134565
+              ],
+              [
+                696.7620277941829,
+                5.470100849947214,
+                0.06454424550318169
+              ],
+              [
+                696.762027715416,
+                5.470100859445155,
+                0.06454421671487177
+              ]
+            ],
+            "estimated_delta_j_norm": 1.269525927391746e-7,
+            "relative_matrix_change": 1.8220366161612242e-10,
+            "smallest_nonzero_to_estimated_error": 508412.18844414235,
+            "direction_projector_changes": [
+              8.529343349970542e-9,
+              0,
+              1.5305437072109113e-9
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 5.551115123125783e-16
+        },
+        {
+          "dataset_id": "t0_full_r2",
+          "theta": [
+            0.19969425022835408,
+            -0.2942848581637751,
+            0.4074079295130988
+          ],
+          "q": 8.789971058616317,
+          "status": 2,
+          "rank": 3,
+          "condition": 43.118951989294544,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                1059.4337018792462,
+                74.33826229141428,
+                24.570024392129415
+              ],
+              [
+                1059.433701941858,
+                74.33826229244049,
+                24.570024387533618
+              ],
+              [
+                1059.4337020026735,
+                74.33826231668887,
+                24.57002435569612
+              ]
+            ],
+            "estimated_delta_j_norm": 3.299557471925126e-7,
+            "relative_matrix_change": 3.114453944477412e-10,
+            "smallest_nonzero_to_estimated_error": 74464605.01625463,
+            "direction_projector_changes": [
+              2.0384692217966e-10,
+              0,
+              2.8421764236545615e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0011015636087774727
+        },
+        {
+          "dataset_id": "t0_sparse_r2",
+          "theta": [
+            0.1939303866896365,
+            -0.18504908519580715,
+            0.6458041241119082
+          ],
+          "q": 1.3620176566706532e-23,
+          "status": 3,
+          "rank": 2,
+          "condition": null,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                574.1621491294975,
+                46.51703174242914,
+                0
+              ],
+              [
+                574.1621492068608,
+                46.51703174386812,
+                0
+              ],
+              [
+                574.1621492114145,
+                46.51703176662994,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 8.11052164333046e-8,
+            "relative_matrix_change": 1.412583824018044e-10,
+            "smallest_nonzero_to_estimated_error": 573539333.0972805,
+            "direction_projector_changes": [
+              6.997531161605384e-11,
+              0,
+              2.469189403925384e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 1.3322676295501878e-15
+        },
+        {
+          "dataset_id": "t0_atm_r3",
+          "theta": [
+            0.17052128657967647,
+            -0.11613769535410515,
+            1.4999999999999971
+          ],
+          "q": 0.001263414390398974,
+          "status": 3,
+          "rank": 3,
+          "condition": 2220.064875198235,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                818.5852739008819,
+                12.402258118077768,
+                0.3687212848147433
+              ],
+              [
+                818.585273924014,
+                12.402258132952088,
+                0.36872133020478537
+              ],
+              [
+                818.5852739527614,
+                12.402258133073461,
+                0.3687213886655137
+              ]
+            ],
+            "estimated_delta_j_norm": 1.3474010278605968e-7,
+            "relative_matrix_change": 1.6460118093764667e-10,
+            "smallest_nonzero_to_estimated_error": 2736537.3974090037,
+            "direction_projector_changes": [
+              7.144320716805813e-9,
+              0,
+              5.8099216458838064e-9
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.00001450452648824041
+        },
+        {
+          "dataset_id": "t0_full_r3",
+          "theta": [
+            0.19958882586651813,
+            -0.3098657964347654,
+            0.41421396408096167
+          ],
+          "q": 1.4533198430592944,
+          "status": 2,
+          "rank": 3,
+          "condition": 42.76615626988419,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                1059.0237535614294,
+                76.30220541871327,
+                24.76312686896265
+              ],
+              [
+                1059.0237536734332,
+                76.30220541615124,
+                24.763126875145307
+              ],
+              [
+                1059.0237537065975,
+                76.30220540768023,
+                24.763126881579193
+              ]
+            ],
+            "estimated_delta_j_norm": 2.457627635977799e-7,
+            "relative_matrix_change": 2.3206539300492858e-10,
+            "smallest_nonzero_to_estimated_error": 100760288.14386673,
+            "direction_projector_changes": [
+              9.978980502992987e-11,
+              0,
+              1.1614622024452602e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.00041506868164303823
+        },
+        {
+          "dataset_id": "t0_sparse_r3",
+          "theta": [
+            0.19532067474120848,
+            -0.21914972300438995,
+            0.5895650315360619
+          ],
+          "q": 2.4968637104578677e-20,
+          "status": 3,
+          "rank": 2,
+          "condition": null,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                571.8738101595272,
+                43.550547173654714,
+                0
+              ],
+              [
+                571.8738102223741,
+                43.55054717072262,
+                0
+              ],
+              [
+                571.8738102351163,
+                43.55054717608159,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 6.562712241901258e-8,
+            "relative_matrix_change": 1.1475804844690012e-10,
+            "smallest_nonzero_to_estimated_error": 663605923.366004,
+            "direction_projector_changes": [
+              1.8690259132697296e-11,
+              0,
+              1.5727303297935275e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 5.742628594873622e-14
+        },
+        {
+          "dataset_id": "t1_atm_r-1",
+          "theta": [
+            0.1999999999977176,
+            -0.2999999489269786,
+            0.020000003388891137
+          ],
+          "q": 7.194657974648509e-22,
+          "status": 3,
+          "rank": 3,
+          "condition": 3834902.865850622,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                693.5026907022196,
+                2.1211220245410503,
+                0.00018117565826406102
+              ],
+              [
+                693.5026906711522,
+                2.121123263034902,
+                0.0001808397017944615
+              ],
+              [
+                693.5026910354411,
+                2.1211234067460096,
+                0.00018083726325737547
+              ]
+            ],
+            "estimated_delta_j_norm": 0.0000020901662226436684,
+            "relative_matrix_change": 3.0139266231553694e-9,
+            "smallest_nonzero_to_estimated_error": 86.51929202345121,
+            "direction_projector_changes": [
+              1.3703441883668968e-7,
+              0,
+              9.830408887049485e-7
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 1.1046719095020308e-14
+        },
+        {
+          "dataset_id": "t1_full_r-1",
+          "theta": [
+            0.19999999999999934,
+            -0.29999999998365223,
+            0.02000000000105746
+          ],
+          "q": 6.307281900912202e-22,
+          "status": 3,
+          "rank": 3,
+          "condition": 10740.72536537937,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                1060.110712814494,
+                47.32895041499823,
+                0.0986997904367931
+              ],
+              [
+                1060.1107130728617,
+                47.328950364554075,
+                0.09870010423038293
+              ],
+              [
+                1060.1107124558814,
+                47.32895024371935,
+                0.09869944890505201
+              ]
+            ],
+            "estimated_delta_j_norm": 0.000007417524082640927,
+            "relative_matrix_change": 6.9969334251328514e-9,
+            "smallest_nonzero_to_estimated_error": 13306.340920600267,
+            "direction_projector_changes": [
+              4.1280883703732135e-9,
+              0,
+              8.509782107352762e-9
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 1.1546319456101628e-14
+        },
+        {
+          "dataset_id": "t1_sparse_r-1",
+          "theta": [
+            0.19933719405007302,
+            -0.037889497110912475,
+            0.16434520529090643
+          ],
+          "q": 1.1617209424543807e-24,
+          "status": 3,
+          "rank": 2,
+          "condition": null,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                567.2592430725853,
+                11.8445720687342,
+                0
+              ],
+              [
+                567.2592430779483,
+                11.844572066683765,
+                0
+              ],
+              [
+                567.2592431286569,
+                11.84457207735664,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 5.365743849164397e-8,
+            "relative_matrix_change": 9.459068167933016e-11,
+            "smallest_nonzero_to_estimated_error": 220744269.56717867,
+            "direction_projector_changes": [
+              1.309225983354417e-9,
+              0,
+              2.943646332125038e-9
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 4.440892098500626e-16
+        },
+        {
+          "dataset_id": "t1_atm_r0",
+          "theta": [
+            0.20058469489222694,
+            -0.9499999999999998,
+            0.05019569571285125
+          ],
+          "q": 0.8770007702054796,
+          "status": 2,
+          "rank": 3,
+          "condition": 1925022.1938044992,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                692.0485296556382,
+                6.694590182648676,
+                0.0003592552989967461
+              ],
+              [
+                692.0485291923078,
+                6.694589631249284,
+                0.00035950158466723143
+              ],
+              [
+                692.0485292271525,
+                6.69458755756408,
+                0.0003616734043256162
+              ]
+            ],
+            "estimated_delta_j_norm": 0.000005652434493939519,
+            "relative_matrix_change": 8.167685148520573e-9,
+            "smallest_nonzero_to_estimated_error": 63.60119432656589,
+            "direction_projector_changes": [
+              1.1762472807277154e-7,
+              0,
+              5.457450698083065e-7
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0003823181534284015
+        },
+        {
+          "dataset_id": "t1_full_r0",
+          "theta": [
+            0.20003651159642427,
+            -0.9499999991065383,
+            0.006136977678278959
+          ],
+          "q": 4.78290645530985,
+          "status": 3,
+          "rank": 3,
+          "condition": 360719.3731900379,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                1060.1452937035772,
+                149.89361892531218,
+                0.0029367509219913553
+              ],
+              [
+                1060.145293293738,
+                149.89361906744224,
+                0.0029389752036833943
+              ],
+              [
+                1060.1452951032902,
+                149.89361788221598,
+                0.002937137954191672
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00002278541704484724,
+            "relative_matrix_change": 2.1492730467213437e-8,
+            "smallest_nonzero_to_estimated_error": 128.98492039442493,
+            "direction_projector_changes": [
+              1.0500667722857028e-8,
+              0,
+              3.2307174182891184e-8
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0007078914942439396
+        },
+        {
+          "dataset_id": "t1_sparse_r0",
+          "theta": [
+            0.18814495242154813,
+            -0.02325396824323364,
+            0.6850941583183442
+          ],
+          "q": 1.5407439555097887e-25,
+          "status": 1,
+          "rank": 2,
+          "condition": null,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                578.6147847495662,
+                47.681317354799084,
+                0
+              ],
+              [
+                578.6147848413822,
+                47.68131735630697,
+                0
+              ],
+              [
+                578.6147848428078,
+                47.68131735089912,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 9.269813670680254e-8,
+            "relative_matrix_change": 1.6020699632176566e-10,
+            "smallest_nonzero_to_estimated_error": 514371907.03325033,
+            "direction_projector_changes": [
+              4.0450808716492345e-11,
+              0,
+              2.7993365508749043e-11
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 1.3877787807814457e-16
+        },
+        {
+          "dataset_id": "t1_atm_r1",
+          "theta": [
+            0.20050153084474145,
+            -0.9499999981884074,
+            0.02476719383075864
+          ],
+          "q": 1.4903309903282294,
+          "status": 3,
+          "rank": 3,
+          "condition": 7778630.626316033,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                692.9190025597529,
+                6.696914243785081,
+                0.00008848690445910049
+              ],
+              [
+                692.9190011179084,
+                6.6969147355115215,
+                0.00008907981808182032
+              ],
+              [
+                692.9190014772001,
+                6.6969136452907385,
+                0.00009271817871161333
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00001036906402373514,
+            "relative_matrix_change": 1.4964323401445767e-8,
+            "smallest_nonzero_to_estimated_error": 8.59092179177538,
+            "direction_projector_changes": [
+              1.0419889194036699e-7,
+              0,
+              0.0000012048416477914164
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0004983863812365041
+        },
+        {
+          "dataset_id": "t1_full_r1",
+          "theta": [
+            0.20004869802422218,
+            -0.9499999998842218,
+            0.004672414835325757
+          ],
+          "q": 8.963839999392475,
+          "status": 2,
+          "rank": 3,
+          "condition": 619959.1617732596,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                1060.2187814996023,
+                149.89948226309,
+                0.0017006438469477337
+              ],
+              [
+                1060.2187786839945,
+                149.89948203079967,
+                0.001710142932078731
+              ],
+              [
+                1060.2187801762486,
+                149.89948224604422,
+                0.0017113017815643785
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00003475760309046061,
+            "relative_matrix_change": 3.278342526021259e-8,
+            "smallest_nonzero_to_estimated_error": 49.20198115007787,
+            "direction_projector_changes": [
+              1.097094087694438e-8,
+              0,
+              5.370600377445814e-8
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0009055264674439623
+        },
+        {
+          "dataset_id": "t1_sparse_r1",
+          "theta": [
+            0.19814445706519843,
+            0.005780420459413515,
+            0.2894978750054314
+          ],
+          "q": 1.5561513950648866e-23,
+          "status": 3,
+          "rank": 2,
+          "condition": null,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                569.0582203112504,
+                20.397246686176317,
+                0
+              ],
+              [
+                569.0582203356774,
+                20.397246685190822,
+                0
+              ],
+              [
+                569.0582202964215,
+                20.397246702609454,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 5.024247446288025e-8,
+            "relative_matrix_change": 8.829056969468449e-11,
+            "smallest_nonzero_to_estimated_error": 405976156.69308954,
+            "direction_projector_changes": [
+              6.50494068720509e-10,
+              0,
+              1.202158233540947e-9
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 1.5265566588595902e-15
+        },
+        {
+          "dataset_id": "t1_atm_r2",
+          "theta": [
+            0.20049033655297094,
+            0.9388894438536349,
+            0.00675563621484276
+          ],
+          "q": 1.210146054269635,
+          "status": 3,
+          "rank": 3,
+          "condition": 95758779.93550293,
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              2,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                693.9589353777893,
+                6.626901060111422,
+                0.000004216713922131403
+              ],
+              [
+                693.9589734502208,
+                6.6269272784311495,
+                0.000007246948780233288
+              ],
+              [
+                693.958992102168,
+                6.626919268592466,
+                0.00002027718048827233
+              ]
+            ],
+            "estimated_delta_j_norm": 0.00017594046446568713,
+            "relative_matrix_change": 2.535315071883104e-7,
+            "smallest_nonzero_to_estimated_error": 0.041189778611995354,
+            "direction_projector_changes": [
+              2.496640820063922e-7,
+              0,
+              0.000023244475085711558
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.00044910046725904484
+        },
+        {
+          "dataset_id": "t1_full_r2",
+          "theta": [
+            0.20026416919524773,
+            -0.9499999999999998,
+            0.006748565949762708
+          ],
+          "q": 5.32972551817902,
+          "status": 2,
+          "rank": 3,
+          "condition": 299061.3433036435,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                1060.1175405503313,
+                149.89044386266704,
+                0.003546025321349696
+              ],
+              [
+                1060.117541436361,
+                149.89044423320962,
+                0.0035448163568234914
+              ],
+              [
+                1060.1175430210903,
+                149.89044367241812,
+                0.003557939419419023
+              ]
+            ],
+            "estimated_delta_j_norm": 0.000035056706614927965,
+            "relative_matrix_change": 3.306869780442401e-8,
+            "smallest_nonzero_to_estimated_error": 101.11663927135773,
+            "direction_projector_changes": [
+              7.196278209738667e-9,
+              0,
+              3.211431843032458e-8
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0007395848364330493
+        },
+        {
+          "dataset_id": "t1_sparse_r2",
+          "theta": [
+            0.19856492455597288,
+            -0.009597915485674648,
+            0.26880478698026244
+          ],
+          "q": 1.0180311611635378e-22,
+          "status": 3,
+          "rank": 2,
+          "condition": null,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                568.6223433548961,
+                18.932938875968322,
+                0
+              ],
+              [
+                568.6223433629465,
+                18.932938864402452,
+                0
+              ],
+              [
+                568.6223433772594,
+                18.93293890392945,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 5.764715752669094e-8,
+            "relative_matrix_change": 1.0138039456162432e-10,
+            "smallest_nonzero_to_estimated_error": 328427968.9876539,
+            "direction_projector_changes": [
+              2.878548143477674e-11,
+              0,
+              2.1683630273800628e-9
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 3.635980405647388e-15
+        },
+        {
+          "dataset_id": "t1_atm_r3",
+          "theta": [
+            0.16831729149969465,
+            0.012433505293857105,
+            1.4999999999999998
+          ],
+          "q": 0.4557326284483269,
+          "status": 2,
+          "rank": 3,
+          "condition": 2197.039655291477,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                826.4313885707936,
+                12.545322975408613,
+                0.37615678177388395
+              ],
+              [
+                826.4313885642321,
+                12.54532298263614,
+                0.3761567919695063
+              ],
+              [
+                826.4313885780915,
+                12.545322966235855,
+                0.3761570017794301
+              ]
+            ],
+            "estimated_delta_j_norm": 3.5616469580620905e-7,
+            "relative_matrix_change": 4.3096704788158854e-10,
+            "smallest_nonzero_to_estimated_error": 1056131.6054025048,
+            "direction_projector_changes": [
+              2.6235690390232748e-9,
+              0,
+              1.2863948836285532e-9
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.00027547964705029737
+        },
+        {
+          "dataset_id": "t1_full_r3",
+          "theta": [
+            0.19970342898815485,
+            -0.09561155143518792,
+            0.12294439745445947
+          ],
+          "q": 3.0857437346200007,
+          "status": 2,
+          "rank": 3,
+          "condition": 148.37845967928257,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              3,
+              3,
+              3
+            ],
+            "singular_values_by_step": [
+              [
+                1060.320599048959,
+                24.54846574461754,
+                7.146054651988479
+              ],
+              [
+                1060.3205990555293,
+                24.548465735423676,
+                7.146054766624439
+              ],
+              [
+                1060.320599235175,
+                24.54846571208208,
+                7.14605474669947
+              ]
+            ],
+            "estimated_delta_j_norm": 9.62228879214964e-7,
+            "relative_matrix_change": 9.074886219055447e-10,
+            "smallest_nonzero_to_estimated_error": 7426564.428677884,
+            "direction_projector_changes": [
+              2.0748757823808868e-9,
+              0,
+              1.2713484322826971e-9
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 0.0005797786550321149
+        },
+        {
+          "dataset_id": "t1_sparse_r3",
+          "theta": [
+            0.19640487221570346,
+            -0.04090654522025857,
+            0.36599441867797905
+          ],
+          "q": 4.88723982687705e-24,
+          "status": 3,
+          "rank": 2,
+          "condition": null,
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                569.9197472021801,
+                25.840672964468073,
+                0
+              ],
+              [
+                569.9197472235711,
+                25.840672966844767,
+                0
+              ],
+              [
+                569.9197472372438,
+                25.840672975931025,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 4.697764283501964e-8,
+            "relative_matrix_change": 8.242852272425473e-11,
+            "smallest_nonzero_to_estimated_error": 550063208.9522753,
+            "direction_projector_changes": [
+              4.040622687087021e-11,
+              0,
+              4.2337498473172246e-10
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          },
+          "max_iv_residual": 8.604228440844963e-16
+        }
+      ]
+    },
+    "budget_stops": [
+      {
+        "fit_id": "t1_atm_r-1_u1",
+        "q": 3.255277262659168e-10,
+        "nu": 0.02298684570356629,
+        "nfev": 400,
+        "message": "The maximum number of function evaluations is exceeded."
+      },
+      {
+        "fit_id": "t1_atm_r-1_u2",
+        "q": 1.7166320769885953e-15,
+        "nu": 0.020003112966370976,
+        "nfev": 400,
+        "message": "The maximum number of function evaluations is exceeded."
+      },
+      {
+        "fit_id": "t1_atm_r-1_u3",
+        "q": 1.6036074632865202e-9,
+        "nu": 0.026273644726883007,
+        "nfev": 400,
+        "message": "The maximum number of function evaluations is exceeded."
+      },
+      {
+        "fit_id": "t1_atm_r-1_u7",
+        "q": 2.456953318604998e-11,
+        "nu": 0.020877121492480447,
+        "nfev": 400,
+        "message": "The maximum number of function evaluations is exceeded."
+      },
+      {
+        "fit_id": "t1_atm_r-1_u8",
+        "q": 1.5150370481016723e-11,
+        "nu": 0.020686039124596784,
+        "nfev": 400,
+        "message": "The maximum number of function evaluations is exceeded."
+      }
+    ],
+    "independent_slsqp": [
+      {
+        "dataset_id": "t0_full_r0",
+        "kind": "unrestricted",
+        "start_index": 4,
+        "saved_best_q": 8.584292770063639,
+        "theta": [
+          0.19970703113513094,
+          -0.2948665464284029,
+          0.40504943947625704
+        ],
+        "q": 8.584292770068306,
+        "success": true,
+        "status": 0,
+        "message": "Optimization terminated successfully",
+        "nfev": 23,
+        "seconds": 0.00877243495779112,
+        "method": "SLSQP",
+        "objective_scale": 10000
+      },
+      {
+        "dataset_id": "t0_full_r0",
+        "kind": "unrestricted",
+        "start_index": 8,
+        "saved_best_q": 8.584292770063639,
+        "theta": [
+          0.1997070312146351,
+          -0.2948665499159931,
+          0.4050494343111063
+        ],
+        "q": 8.584292770069103,
+        "success": true,
+        "status": 0,
+        "message": "Optimization terminated successfully",
+        "nfev": 14,
+        "seconds": 0.0052736380021087825,
+        "method": "SLSQP",
+        "objective_scale": 10000
+      },
+      {
+        "dataset_id": "t1_atm_r0",
+        "kind": "unrestricted",
+        "start_index": 8,
+        "saved_best_q": 0.8770007702054796,
+        "theta": [
+          0.20058469490566264,
+          -0.95,
+          0.050195698317919125
+        ],
+        "q": 0.877000770225806,
+        "success": true,
+        "status": 0,
+        "message": "Optimization terminated successfully",
+        "nfev": 108,
+        "seconds": 0.03538212104467675,
+        "method": "SLSQP",
+        "objective_scale": 10000
+      },
+      {
+        "dataset_id": "t0_sparse_r0",
+        "kind": "unrestricted",
+        "start_index": 8,
+        "saved_best_q": 1.5359738122235304e-21,
+        "theta": [
+          0.19754154188546055,
+          -0.23155462511288386,
+          0.513242652872913
+        ],
+        "q": 1.6669153449863262e-15,
+        "success": true,
+        "status": 0,
+        "message": "Optimization terminated successfully",
+        "nfev": 10,
+        "seconds": 0.0035528310108929873,
+        "method": "SLSQP",
+        "objective_scale": 10000
+      },
+      {
+        "dataset_id": "t0_full_r0",
+        "kind": "profile",
+        "nu": 0,
+        "start_index": 0,
+        "saved_best_q": 1368.703171659897,
+        "saved_success": true,
+        "saved_slice_q": 1749.1078917558266,
+        "theta": [
+          0.20338550404836628,
+          -0.6,
+          0
+        ],
+        "q": 1368.7031716598926,
+        "success": true,
+        "status": 0,
+        "message": "Optimization terminated successfully",
+        "nfev": 5,
+        "seconds": 0.0006023540045134723,
+        "method": "SLSQP",
+        "objective_scale": 10000
+      },
+      {
+        "dataset_id": "t0_full_r0",
+        "kind": "profile",
+        "nu": 0,
+        "start_index": 3,
+        "saved_best_q": 1368.703171659897,
+        "saved_success": true,
+        "saved_slice_q": 1749.1078917558266,
+        "theta": [
+          0.2033855040517647,
+          0.3,
+          0
+        ],
+        "q": 1368.7031716598908,
+        "success": true,
+        "status": 0,
+        "message": "Optimization terminated successfully",
+        "nfev": 5,
+        "seconds": 0.0005311760469339788,
+        "method": "SLSQP",
+        "objective_scale": 10000
+      },
+      {
+        "dataset_id": "t0_full_r0",
+        "kind": "profile",
+        "nu": 0.4,
+        "start_index": 0,
+        "saved_best_q": 8.669604005174364,
+        "saved_success": true,
+        "saved_slice_q": 9.067121018389448,
+        "theta": [
+          0.19981806590256795,
+          -0.29793614049328887,
+          0.4
+        ],
+        "q": 8.669604005189548,
+        "success": true,
+        "status": 0,
+        "message": "Optimization terminated successfully",
+        "nfev": 9,
+        "seconds": 0.0031678139930590987,
+        "method": "SLSQP",
+        "objective_scale": 10000
+      },
+      {
+        "dataset_id": "t0_full_r0",
+        "kind": "profile",
+        "nu": 0.4,
+        "start_index": 3,
+        "saved_best_q": 8.669604005174364,
+        "saved_success": true,
+        "saved_slice_q": 9.067121018389448,
+        "theta": [
+          0.1998180657284988,
+          -0.297936134986035,
+          0.4
+        ],
+        "q": 8.669604005191829,
+        "success": true,
+        "status": 0,
+        "message": "Optimization terminated successfully",
+        "nfev": 8,
+        "seconds": 0.0029639260028488934,
+        "method": "SLSQP",
+        "objective_scale": 10000
+      },
+      {
+        "dataset_id": "t0_full_r0",
+        "kind": "profile",
+        "nu": 0.37031250000000004,
+        "start_index": 0,
+        "saved_best_q": 12.34006429673698,
+        "saved_success": true,
+        "saved_slice_q": 30.44329747331412,
+        "theta": [
+          0.20044460319365728,
+          -0.31783950236072755,
+          0.37031250000000004
+        ],
+        "q": 12.340064296745407,
+        "success": true,
+        "status": 0,
+        "message": "Optimization terminated successfully",
+        "nfev": 8,
+        "seconds": 0.002880468964576721,
+        "method": "SLSQP",
+        "objective_scale": 10000
+      },
+      {
+        "dataset_id": "t0_full_r0",
+        "kind": "profile",
+        "nu": 0.37031250000000004,
+        "start_index": 3,
+        "saved_best_q": 12.34006429673698,
+        "saved_success": true,
+        "saved_slice_q": 30.44329747331412,
+        "theta": [
+          0.20044460318652202,
+          -0.31783948408406465,
+          0.37031250000000004
+        ],
+        "q": 12.340064296750487,
+        "success": true,
+        "status": 0,
+        "message": "Optimization terminated successfully",
+        "nfev": 8,
+        "seconds": 0.0029075760394334793,
+        "method": "SLSQP",
+        "objective_scale": 10000
+      }
+    ],
+    "physical_seed_sequence_all_match": true,
+    "physical_seeds_all_unique": true,
+    "pilot_master_noise_checks": [
+      {
+        "truth": 0,
+        "rep": 0,
+        "groups": 3,
+        "identical_reserved_noise": true
+      },
+      {
+        "truth": 0,
+        "rep": 1,
+        "groups": 3,
+        "identical_reserved_noise": true
+      },
+      {
+        "truth": 0,
+        "rep": 2,
+        "groups": 3,
+        "identical_reserved_noise": true
+      },
+      {
+        "truth": 0,
+        "rep": 3,
+        "groups": 3,
+        "identical_reserved_noise": true
+      },
+      {
+        "truth": 1,
+        "rep": 0,
+        "groups": 3,
+        "identical_reserved_noise": true
+      },
+      {
+        "truth": 1,
+        "rep": 1,
+        "groups": 3,
+        "identical_reserved_noise": true
+      },
+      {
+        "truth": 1,
+        "rep": 2,
+        "groups": 3,
+        "identical_reserved_noise": true
+      },
+      {
+        "truth": 1,
+        "rep": 3,
+        "groups": 3,
+        "identical_reserved_noise": true
+      }
+    ],
+    "main_noise_drawn": false,
+    "holdout_evaluated": false,
+    "review_seconds": 0.2424405479687266,
+    "runtime_backend_at_review": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/kazumasa/projects/.venv/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-32a4b2a6.so",
+        "version": "0.3.31.188.0",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/kazumasa/projects/.venv/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+        "version": "0.3.30",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      }
+    ],
+    "runtime_backend_limit": "Captured at independent review, not original pilot invocation."
+  },
+  "cost_review": {
+    "approved_fixed_solver_budget": true,
+    "pilot_original": {
+      "attempt_seconds": 3.2037083745817654,
+      "checkpoint_seconds": 4.262560971721541,
+      "cpu_seconds": 3.2007836249999926,
+      "diagnostic_calls": 2795,
+      "diagnostic_seconds": 0.054262437974102795,
+      "evaluation_count_unknown": 0,
+      "exceptions": 0,
+      "holdout_black_evaluations": 0,
+      "holdout_iv_evaluations": 0,
+      "holdout_seconds": 0,
+      "holdout_truth_black_evaluations": 0,
+      "holdout_truth_iv_evaluations": 0,
+      "holdout_truth_seconds": 0,
+      "interpretation": "measured original work; exceptions retain unknown evaluation counts",
+      "master_generation_seconds": 0.0010754579561762512,
+      "master_truth_iv_evaluations": 70,
+      "noise_draws": 56,
+      "original_attempt_slots": 386,
+      "profile_calls": 116,
+      "residual_calls": 78776,
+      "scalar_iv_evaluations": 288387,
+      "slice_iv_evaluations": 203,
+      "slice_seconds": 0.0020378068438731134,
+      "solver_calls": 386,
+      "solver_seconds": 3.107422321452759,
+      "stability_scalar_iv_evaluations": 0,
+      "stability_seconds": 0,
+      "unrestricted_calls": 270
+    },
+    "pilot_runtime": {
+      "blas_threads": {
+        "MKL_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1"
+      },
+      "cost_scope": "fit work sums survive resume; invocation includes checkpoint/I/O and setup for this invocation",
+      "invocation_cpu_seconds": 7.465679606,
+      "invocation_seconds": 7.490950409031939,
+      "numpy": "2.4.6",
+      "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "python": "3.12.3",
+      "scipy": "1.17.1",
+      "serialization_pending": true,
+      "serialization_receipt": "serialization_cost.json"
+    },
+    "serialization_receipt": {
+      "pending": false,
+      "protocol_digest": "ef74f705deee2b8bc47dd7344dc20cb560bd0e890bd81ce2c7479cb655383b9b",
+      "reference_record_digest": "675928f59d696667d7bc3e26fc13faa4ff077a4977907dbcda53c2c519bfac8a",
+      "schema": "RB-F06-serialization-cost-v1",
+      "scope": "final JSON/NPZ compression, transport hashing, writes and first load validation; receipt write excluded",
+      "seconds": 0.33708531101001427
+    },
+    "external_process_time": "real 8.29\nuser 7.92\nsys 0.33\n",
+    "maximum_main_solver_calls": 4830,
+    "total_main_nfev_budget": 1345200,
+    "main_cost_measurement_required": "Preserve actual residual/scalar IV, diagnostic, multi-step, slice, holdout, serialization/checkpoint, external wall and CPU work. Validation/review costs stay separate; exceptions retain unknown counts.",
+    "prediction_limit": "Pilot measured one ordinary/full nu curve. It does not bound weak/ATM profile wall time or nonlinear checkpoint/compression cost; the fixed call and stopping caps govern the main workload.",
+    "scipy_nfev_excludes_numerical_jacobian_calls": true
+  },
+  "limitations": [
+    "Inverse validation of Hagan asymptotic IV map only; exact SABR general pricing, dynamics, model error and arbitrage freedom are not validated.",
+    "SLSQP and TRF convergence is local. Ten independent optimizer checks do not establish every global profile minimum or global uniqueness.",
+    "Step differences estimate numerical uncertainty; 12/270 unrestricted fits were unresolved, all weak/ATM. Best fits for weak/ATM reps 1 and 2 remain unresolved despite finite numerical condition values.",
+    "Five noiseless weak/ATM starts stopped at nfev=400 and are retained as failed finite attempts. No stopping budget was expanded.",
+    "Chi-square threshold is a descriptive pointwise reference. Boundary/nonidentified likelihood-ratio laws and nominal 95% coverage remain unverified.",
+    "Main original denominator is retained with included/excluded/unknown. Known-only Wilson summaries and finite visited holdout price ranges do not certify confidence coverage or joint envelopes.",
+    "Review-time backend captured NumPy/SciPy OpenBLAS with one actual thread each; original pilot directly recorded thread environment/version, not runtime threadpool metadata.",
+    "Original runtime serialization_pending flag precedes final save; separate bound serialization receipt supplies the measured completed save cost.",
+    "Earlier failed/old-source pilots were not pooled or promoted; only current pilot record and typed arrays are approved."
+  ],
+  "primary_sources": [
+    {
+      "title": "Hagan et al. (2002), original (2.15)/(2.17)/(2.18)",
+      "url": "https://lesniewski.us/papers/published/ManagingSmileRisk.pdf"
+    },
+    {
+      "title": "Raue et al. (2009), original profile likelihood paper",
+      "url": "https://www.jeti.uni-freiburg.de/papers/Raue_Bioinformatics_printed_1923.pdf"
+    },
+    {
+      "title": "Self & Liang (1987), original boundary likelihood paper",
+      "url": "https://pages.stat.wisc.edu/~larget/Stat998/Fall2015/Self-Liang-1987.pdf"
+    }
+  ],
+  "author_reported_checks": {
+    "targeted_tests": 120,
+    "status": "PASS as reported by root; independent review uses numerical/provenance guards instead of repeated suite.",
+    "root_source_commit": "34764265",
+    "commit_identity_source": "root report; Git not invoked by reviewer"
+  }
+}
