@@ -1,0 +1,48 @@
+# 短期・0DTE v1 — 基礎実装と検証
+
+2026-10-09。ブランチ codex/rbf05-short-maturity。main の研究成果とは区別する。
+
+## 現在地
+
+| 部分 | 状態 | 証拠 |
+|---|---|---|
+| 合成欧州call教師・時計・compact IID統計 | 基礎実装済み | 36 scoped tests、別UTC/時計/元N共分散/expiry |
+| 独立級数・density/境界Gamma・Merton・3幅FD | 実装済み | 47 tests、全84候補の参照精度 preflight |
+| CPU price-only / Delta-DML learner | 基礎実装済み | 25 tests、physical Gamma・plain weights replay |
+| 条件・seed台帳・review/source freeze | 候補規約実装済み | 10 tests。実pilot/全金融source不足ではmain生成を拒否 |
+| C² quintic Hermite・raw/safe・費用/誤差集計 | 基礎実装済み | 11 tests。独立log-spot polynomial/FD、endpoint・bound・費用祖先/overflow回帰 |
+| 教師→学習→保存重み | 接続smoke済み | FOUNDATION_SMOKE.json、pilot-only16条件/32updates |
+| pilot・固定条件・主6fits・全費用・3図・採否 | 未完了 | pilot/runnerを実装中。smokeはfreeze/受入不可 |
+
+## 判断に影響する発見
+
+- 独立second-moment積分で最大分散1.17279024246。SE(C)≤0.002には当初の最大N2^18が不足するため、正式pilot前に2^20を追加。精度基準と元の84×3条件は維持する。価格だけの予測で正式pilotのDelta/Gamma/rare-count判断は代替しない。
+- Gammaまで同じ価格関数を微分するため、discounted intrinsic＋smooth residualの構成は避ける。W>0のATM kinkを持たないunconstrained total-price networkを使用する。
+- CPU学習のaccelerator RNG seed変更、ambient meta deviceでのAdam状態生成、no_grad内予測の問題を回帰RED→GREENで修正。学習数式・公開API・依存は変更していない。
+- 密度Deltaの正負score積分の誤差を別々に積み上げると相対QUADPACK誤差が最終予算を超える場合があった。合計に対する絶対誤差再計算を追加し、最終精度基準は維持した。
+
+## 接続smokeの限界
+
+16件、N16384、1 paired seed、32updates。主実験のseed11/29/47を使っていない。
+event条件2件はrare_event_unresolvedを保持した。full precision selection、主実験、
+性能比較、採否、金融source freezeではない。Torch/NumPy C/Delta/Gamma再生差は
+最大約5e-16。paired batch順は同一。
+
+最初のprice-only fitにはAdamの初回準備費用が入る。このsmokeの2fit wall差を
+速度優位として扱わない。主実験では共通・初回・反復・cold費用を分離する。
+
+## 次
+
+全金融sourceを完成→84×3 full pilot→原始配列の数値照合と独立レビュー→
+固定source/条件/N→512/128教師・主6fits/336test→3図・全費用・最終レビュー→main。
+動的ヘッジ、多曲線risk/P&L、増分XVAは全体ロードマップの後続として保持する。
+
+## rootのレビュー対応
+
+Hermiteのexp(log(endpoint))が生んだ重複時刻で、390分の42条件にNaNが出ることを再現し、endpointをunion前に確定する回帰RED→GREENで修正。誤差RMSの二乗overflow、費用の祖先をまたぐ二重計上、既知call下限違反もRED→GREENで修正。raw出力と元の条件数は維持した。
+
+Minor記録：custom Hermite gridのnode自体Inf拒否は未追加（canonical生成と保存checkerの配列検査で別確認）。±2sqrtWのbucket境界には算術roundoff幅がなく、厳密境界の分類が片側へずれる場合がある。全体元分母は不変。OOD/invalid/expiryはmain固定48bucketとは別の元件数でrunnerが報告する。これらの限界を主実験前レビューと最終採否に渡す。
+
+## 合成gate
+
+最終基礎129件と両packageのMODEL_INDEX/docstring guardsを合わせて1183 passed（4.74秒）。[実行receipt](FOUNDATION_TESTS.json)・[stdout](FOUNDATION_TESTS.txt)。全3suite/release/研究受入の完了を示す数字ではない。
