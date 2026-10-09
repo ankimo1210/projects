@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "johnhull/hullkit/tests/test_short_maturity_notebook.py"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 9.45358288497664,
+  "stdout": "......................                                                   [100%]\n22 passed in 8.62s\n",
+  "stderr": "",
+  "scope": "targeted actual notebook wording clarification after final related three-suite; no second whole-suite"
+}

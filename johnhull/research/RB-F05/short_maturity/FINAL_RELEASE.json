@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "johnhull/scripts/verify_release.py",
+    "--require-tracked"
+  ],
+  "cwd": "/home/kazumasa/worktrees/johnhull-research-roadmap",
+  "exit_code": 0,
+  "wall_seconds": 20.867336483031977,
+  "stdout": "[PASS] johnhull A5--A8 release contract\n",
+  "stderr": "",
+  "commit": "8703fcaf9adb34106851adaf6b1838ddbb5277aa"
+}

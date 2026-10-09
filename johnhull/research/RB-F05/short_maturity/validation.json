@@ -1,0 +1,112 @@
+{
+  "schema": "RB-F05-short-validation-v1",
+  "date": "2026-10-09",
+  "phase": "v1 research accepted; main integration pending",
+  "financial_sources_unchanged": true,
+  "original_record_unchanged": true,
+  "original_record_accepted": false,
+  "original_record_teaching_acceptance": false,
+  "pilot": {
+    "passed": true,
+    "original_cases": 84,
+    "streams": 3,
+    "selected_N": 1048576,
+    "independent_review": "PILOT_REVIEW.json",
+    "freeze": "freeze_check.json",
+    "dual_cas": "pilot_cas_validation.json"
+  },
+  "main": {
+    "saved_numeric_passed": true,
+    "teachers": 640,
+    "original_test_rows": 336,
+    "original_fits": 6,
+    "per_fit_updates": 512,
+    "timing_slots": 448,
+    "independent_review": "MAIN_REVIEW.json",
+    "dual_cas": "main_cas_validation.json"
+  },
+  "fresh": {
+    "saved_numeric_passed": true,
+    "original_cases": 12,
+    "original_estimators": 180,
+    "unsupported_or_unknown": 0,
+    "negative_control": 12,
+    "analytic": 18,
+    "supported": 150,
+    "selection_or_labels_changed": false,
+    "dual_cas": "fresh_cas_validation.json"
+  },
+  "tests": {
+    "passed": 7998,
+    "skipped": 6,
+    "seconds": 446.10767178301467,
+    "receipt": "FULL_SUITE.json",
+    "scope": "related hullkit/report/deep_hedge_price once; not all projects, market validity or full Book reacceptance",
+    "post_suite_display_tests": "NOTEBOOK_WORDING_TESTS.json"
+  },
+  "ruff": {
+    "count": 19,
+    "check_passed": true,
+    "format_passed": true,
+    "receipt": "FINAL_RUFF.json"
+  },
+  "release": {
+    "passed": true,
+    "receipt": "FINAL_RELEASE.json",
+    "commit": "8703fcaf9adb34106851adaf6b1838ddbb5277aa"
+  },
+  "notebook": {
+    "artifact_only": true,
+    "original_main_protocol_fresh_unchanged": true,
+    "figures": 3,
+    "rendered_and_viewed": true,
+    "execution": "notebook_execution.json",
+    "visual": "NOTEBOOK_VISUAL_REVIEW.json"
+  },
+  "decisions": {
+    "teacher": {
+      "status": "supported_fixed_domain",
+      "original_teacher_count": 640,
+      "reason": "All fixed teachers precision-ready; saved independent references and additional raw validation retained."
+    },
+    "delta_improvement": {
+      "status": "improved_3_of_3_pairs",
+      "reason": "Descriptive lower raw Delta RMSE in all fixed paired seeds; not a full accuracy pass."
+    },
+    "gamma_utility": {
+      "status": "NN_accuracy_not_met",
+      "reason": "All original fits fail full-roster fixed C/Delta/KGamma pointwise accuracy; physical Gamma was not trained."
+    },
+    "standard_accelerator_adoption": {
+      "status": "NN_not_adopted",
+      "reason": "All 6 raw and safe fits fail equal-accuracy gate. Hermite passes all 336. Online timing cannot support equal-accuracy NN speed or payback."
+    }
+  },
+  "standard_nn_adopted": false,
+  "final_independent_review": {
+    "status": "approved_with_scope_limits",
+    "critical": 0,
+    "important": 0,
+    "checks": 208,
+    "receipt": "REVIEW.json"
+  },
+  "main_integration": {
+    "status": "pending",
+    "before": "706f109ded2d90182678d8257616be66e3d20794",
+    "unrelated_changes": 48
+  },
+  "limits": [
+    "Primitive replay is provenance only; independent financial values use tolerances.",
+    "Exported weights and objectives reconstructed; exact optimizer trajectory not rerun.",
+    "Pointwise accuracy uses frozen absolute plus relative KGamma limits, all original 336 rows and all paired seeds.",
+    "Cold/fresh and performance adoption require separate external bound receipts.",
+    "calendar is synthetic regular same-day NY session; not an official holiday/early-close calendar",
+    "QUADPACK estimates are not rigorous integration error bounds; positive Poisson tail envelopes are separate",
+    "literal <=2sqrt(W) ATM classification preserves known floating endpoint behavior and original weights",
+    "affine log-time blending guarantees C2 only in log spot; no Theta smoothness guarantee",
+    "All 6 raw and safe NN routes fail the original full-roster fixed pointwise accuracy gate; saved online speed cannot support equal-accuracy NN adoption.",
+    "Formal study acceptedFalse/teachingAcceptanceFalse remain unchanged; no main output is rewritten.",
+    "Expiry ATM and invalid original diagnostic unknowns retained; synthetic calendar does not certify market contracts."
+  ],
+  "teaching_comparison_accepted": true
+}

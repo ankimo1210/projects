@@ -375,11 +375,12 @@ lines = ["Original immutable record:",
          "cold / fresh / archive: " + " / ".join(number(external_costs.get(key)) for key in
               ["cold_pipeline_s", "fresh_s", "archive_load_s"]) + " s",
          "resolved external IDs: " + (", ".join(sorted(resolved_ids)) or "none"),
-         "remaining original pending: " + (", ".join(remaining) or "none"),
+         "unresolved five external IDs: " + (", ".join(remaining) or "none"),
          "serialization receipt: " + ("unknown" if receipt is None else
              "pending=" + str(receipt.get("pending")) + "; " + number(receipt.get("seconds")) + " s")]
 for key in ["teacher", "delta_improvement", "gamma_utility", "standard_accelerator_adoption"]:
     lines.append(key + ": " + _decision_label(external_decisions.get(key)))
+lines.append("Resolved IDs exclude full pilot/review research cost.")
 lines.append("Equal-accuracy cold payback (external):")
 for fit in fits:
     cell = external_payback.get(fit["id"], {})

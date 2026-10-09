@@ -3,7 +3,6 @@
   "study_record_digest": "c116e01cbcfa0ef3d42b1b623a85eb976c6d3c3545ffca1b38cc97e06b03aebe",
   "study_arrays_digest": "8d270b341fae01de439f4a99edf81b61704fb1a2b9e98e545dbf5289169b44b6",
   "protocol_digest": "12ccfefe21193800ec4ace021c44ffe926461fc68bd86f526bb02b617c19acc2",
-  "status": "numerical assessment; final artifact/render/gates review pending",
   "original_record_accepted": false,
   "original_record_teaching_acceptance": false,
   "costs": {
@@ -462,6 +461,7 @@
     "main_review": "MAIN_REVIEW.json",
     "fresh": "fresh_check.json",
     "cold": "cold_process_cost.json",
-    "pending_final": "CAS, rendered figures, final source/gates and independent final review"
-  }
+    "phase_acceptance": "REVIEW.json/validation.json (separate from financial conclusions)"
+  },
+  "scope": "Bound external cost/decision overlay; immutable main unchanged. Final phase acceptance is separate REVIEW.json/validation.json."
 }

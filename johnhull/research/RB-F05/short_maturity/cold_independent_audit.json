@@ -1,0 +1,308 @@
+{
+  "schema": "RB-F05-independent-cold-receipt-audit-v1",
+  "passed": true,
+  "critical_findings": [],
+  "important_findings": [],
+  "record_digest": "c116e01cbcfa0ef3d42b1b623a85eb976c6d3c3545ffca1b38cc97e06b03aebe",
+  "arrays_digest": "8d270b341fae01de439f4a99edf81b61704fb1a2b9e98e545dbf5289169b44b6",
+  "financial_source_count": 10,
+  "collector_hashes": {
+    "cold_artifact_process_source.txt": "c728254afe495cd265dce62220f1bbedcc627beba19819a4cf99d88da2b83e02",
+    "cold_artifact_stopwatch_source.txt": "d04201d0219ce2ca50afbb35b89bf75e6d9724349bacef0e7a7d535691aa418d"
+  },
+  "cold": {
+    "wall_seconds": 18.15101205703104,
+    "internal_interval_seconds": 17.815115089004394,
+    "unitemized_startup_hash_json_process_overhead_seconds": 0.3358969680266455,
+    "intervals": {
+      "cold_import_s": 1.0506436499999836,
+      "pilot_freeze_s": 6.590492043993436,
+      "archive_load_s": 0.899917743052356,
+      "saved_check_s": 9.192855457018595,
+      "prepare_s": 0.07718702894635499,
+      "serving_s": 0.004019165993668139
+    },
+    "method_count": 14,
+    "input_rows": 2,
+    "method_row_outputs": 28,
+    "whole_scope": "single new interpreter; artifact-backed validated serving; disk cache not flushed; no offline teacher/training repeat"
+  },
+  "initial_failure": {
+    "wall_seconds": 18.026820087980013,
+    "exit_code": 1,
+    "cause": "collector KeyError: grid; final source uses actual keys",
+    "accounting": "separate measured failed collector research expense; zero financial results adopted"
+  },
+  "main": {
+    "wall_seconds": 46.08508096204605,
+    "categorized_seconds": 39.2201654202654,
+    "serialization_seconds": 4.184679661993869,
+    "category_plus_serialization_seconds": 43.40484508225927,
+    "remaining_process_overhead_seconds": 2.6802358797867782
+  },
+  "expense_relations": {
+    "cold_success_and_failed_distinct_process_seconds": 36.17783214501105,
+    "main_and_both_cold_processes_distinct_research_seconds": 82.2629131070571,
+    "prohibited_double_count": "never add internal cold intervals to cold wall, serialization to main wall, or repeat main construction inside artifact-backed cold; failed collector is a separate research expense",
+    "excluded_from_subtotal": "pilot, independent fresh/replay and other research processes are owned by separate receipts; this subtotal is not complete research cost"
+  },
+  "serving_max_abs_against_saved": [
+    5.551115123125783e-16,
+    9.020562075079397e-17,
+    2.220446049250313e-16
+  ],
+  "serving_max_abs_against_reference_reconstruction": [
+    5.551115123125783e-16,
+    9.020562075079397e-17,
+    2.5567655631553166e-15
+  ],
+  "serving_comparison_scope": "Core/Hermite/safe fallback reconstructed with independent mathematical functions; NN raw compared with saved main predictions (parent owns independent NN export replay).",
+  "serving": [
+    {
+      "method": "core_mixture",
+      "routes": [
+        "mixture",
+        "mixture"
+      ],
+      "saved_max_abs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "independent_max_abs": [
+        1.3010426069826053e-17,
+        6.08237418764368e-17,
+        2.5567655631553166e-15
+      ]
+    },
+    {
+      "method": "hermite",
+      "routes": [
+        "hermite",
+        "hermite"
+      ],
+      "saved_max_abs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "independent_max_abs": [
+        2.168404344971009e-19,
+        9.75781955236954e-19,
+        2.168404344971009e-18
+      ]
+    },
+    {
+      "method": "fit0/raw",
+      "routes": [
+        "raw",
+        "raw"
+      ],
+      "saved_max_abs": [
+        1.1102230246251565e-16,
+        0.0,
+        0.0
+      ],
+      "independent_max_abs": [
+        1.1102230246251565e-16,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "method": "fit0/safe",
+      "routes": [
+        "fallback_bound",
+        "fallback_bound"
+      ],
+      "saved_max_abs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "independent_max_abs": [
+        1.3010426069826053e-17,
+        6.08237418764368e-17,
+        2.5567655631553166e-15
+      ]
+    },
+    {
+      "method": "fit1/raw",
+      "routes": [
+        "raw",
+        "raw"
+      ],
+      "saved_max_abs": [
+        5.551115123125783e-16,
+        2.7755575615628914e-17,
+        0.0
+      ],
+      "independent_max_abs": [
+        5.551115123125783e-16,
+        2.7755575615628914e-17,
+        0.0
+      ]
+    },
+    {
+      "method": "fit1/safe",
+      "routes": [
+        "fallback_bound",
+        "fallback_bound"
+      ],
+      "saved_max_abs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "independent_max_abs": [
+        1.3010426069826053e-17,
+        6.08237418764368e-17,
+        2.5567655631553166e-15
+      ]
+    },
+    {
+      "method": "fit2/raw",
+      "routes": [
+        "raw",
+        "raw"
+      ],
+      "saved_max_abs": [
+        2.220446049250313e-16,
+        0.0,
+        1.1102230246251565e-16
+      ],
+      "independent_max_abs": [
+        2.220446049250313e-16,
+        0.0,
+        1.1102230246251565e-16
+      ]
+    },
+    {
+      "method": "fit2/safe",
+      "routes": [
+        "fallback_bound",
+        "fallback_bound"
+      ],
+      "saved_max_abs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "independent_max_abs": [
+        1.3010426069826053e-17,
+        6.08237418764368e-17,
+        2.5567655631553166e-15
+      ]
+    },
+    {
+      "method": "fit3/raw",
+      "routes": [
+        "raw",
+        "raw"
+      ],
+      "saved_max_abs": [
+        0.0,
+        2.7755575615628914e-17,
+        0.0
+      ],
+      "independent_max_abs": [
+        0.0,
+        2.7755575615628914e-17,
+        0.0
+      ]
+    },
+    {
+      "method": "fit3/safe",
+      "routes": [
+        "fallback_bound",
+        "fallback_bound"
+      ],
+      "saved_max_abs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "independent_max_abs": [
+        1.3010426069826053e-17,
+        6.08237418764368e-17,
+        2.5567655631553166e-15
+      ]
+    },
+    {
+      "method": "fit4/raw",
+      "routes": [
+        "raw",
+        "raw"
+      ],
+      "saved_max_abs": [
+        2.220446049250313e-16,
+        5.551115123125783e-17,
+        0.0
+      ],
+      "independent_max_abs": [
+        2.220446049250313e-16,
+        5.551115123125783e-17,
+        0.0
+      ]
+    },
+    {
+      "method": "fit4/safe",
+      "routes": [
+        "fallback_bound",
+        "fallback_bound"
+      ],
+      "saved_max_abs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "independent_max_abs": [
+        1.3010426069826053e-17,
+        6.08237418764368e-17,
+        2.5567655631553166e-15
+      ]
+    },
+    {
+      "method": "fit5/raw",
+      "routes": [
+        "raw",
+        "raw"
+      ],
+      "saved_max_abs": [
+        4.440892098500626e-16,
+        9.020562075079397e-17,
+        2.220446049250313e-16
+      ],
+      "independent_max_abs": [
+        4.440892098500626e-16,
+        9.020562075079397e-17,
+        2.220446049250313e-16
+      ]
+    },
+    {
+      "method": "fit5/safe",
+      "routes": [
+        "fallback_bound",
+        "fallback_bound"
+      ],
+      "saved_max_abs": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "independent_max_abs": [
+        1.3010426069826053e-17,
+        6.08237418764368e-17,
+        2.5567655631553166e-15
+      ]
+    }
+  ],
+  "limitations": [
+    "one successful new-interpreter run; no confidence interval or uncached-storage benchmark",
+    "two fixed 1-minute -4sigma test rows cover both event regimes; not the full 336 precision roster or a standalone per-method cold comparison",
+    "collector failure occurs before result JSON and carries no completed financial measurement or record digest",
+    "internal interval names are sequential wall segments; full saved_check includes another frozen-pilot verification; they are contained in encompassing wall",
+    "original core pending metadata remains immutable; cold/serialization/fresh measurements are resolved only in sidecar overlays",
+    "no performance adoption, acceptance or assessment was inspected or asserted"
+  ]
+}
