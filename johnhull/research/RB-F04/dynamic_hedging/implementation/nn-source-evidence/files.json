@@ -1,0 +1,197 @@
+{
+  "scope": "exact textual source-unit evidence; full local unit raw arrays excluded",
+  "files": [
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-closure-review-final.json",
+      "saved": "task-6-closure-review-final.json",
+      "bytes": 6383,
+      "sha256": "8f86e8b76b00d53a742081288eadb82e92a4eb35d3fe19ad54bcbacc541073b0"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-closure-review-final.md",
+      "saved": "task-6-closure-review-final.md",
+      "bytes": 6004,
+      "sha256": "1f10c83ea76fce63669351270a688f6e389953c7515ecc99ba86b33b1c05d00d"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-closure-review-probes.json",
+      "saved": "task-6-closure-review-probes.json",
+      "bytes": 6151,
+      "sha256": "49757aebc127524dffb231e7f71adcc2b70daff716157a487efd534b6bb1af95"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-closure-review-probes.py",
+      "saved": "task-6-closure-review-probes.py.txt",
+      "bytes": 12255,
+      "sha256": "5ae203cb51565d20b1f511918613210528bf39a8d733d8d1d410028ce9587a5c"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-closure-review-probes.txt",
+      "saved": "task-6-closure-review-probes.txt",
+      "bytes": 3277,
+      "sha256": "a70a1e4e0aec96b4b2724bad826018571830180dac7bee67b63f2573587d7ce9"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-closure-review-requirements.json",
+      "saved": "task-6-closure-review-requirements.json",
+      "bytes": 2732,
+      "sha256": "05a24383843f260a0778cf5193dd3d667bd117dd9e0787fd8129e3c141b65162"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-closure-review-requirements.md",
+      "saved": "task-6-closure-review-requirements.md",
+      "bytes": 1660,
+      "sha256": "6a875b2efda3c1a5cd1ef6ec4b8d8046b94f01cba497036ed7c128c920fdce77"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-closure-review-ruff.json",
+      "saved": "task-6-closure-review-ruff.json",
+      "bytes": 157,
+      "sha256": "b2dc8972fa271e5e36ef4a4684a743b567d1b0f89598b81627b6c1aa3563005a"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-closure-review-run.json",
+      "saved": "task-6-closure-review-run.json",
+      "bytes": 32,
+      "sha256": "d87dd448026749895c67f36620a936400042f4d210116a72472d59a5dd48c510"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-closure-review-tests.txt",
+      "saved": "task-6-closure-review-tests.txt",
+      "bytes": 100,
+      "sha256": "a30861697bb9b3ca96fe381d8f3be7c6570914b69d710695d99c7228aa94e019"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-current-replay.json",
+      "saved": "task-6-full-count-unit-current-replay.json",
+      "bytes": 739834,
+      "sha256": "5b87bc913490ddf6ca4e37dc80d8d4a757a16795d144422049e403a60e4e539c"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-split-v2.log",
+      "saved": "task-6-full-count-unit-runtime-split-v2.log",
+      "bytes": 3246,
+      "sha256": "342120cc82b451ef32c27603a3b320e046a044d3e25c38dc6eb039b7a7d90d5d"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-split-v2.py",
+      "saved": "task-6-full-count-unit-runtime-split-v2.py.txt",
+      "bytes": 2592,
+      "sha256": "9be05a65208d23e4db1d448bd57b1475d33e3e6b462cc33c0dabef96af441bb9"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-split.json",
+      "saved": "task-6-full-count-unit-runtime-split.json",
+      "bytes": 5156,
+      "sha256": "cdaed22c539da404a2d73be07825f3f1deb36cc1fef3fd12511106b30c0c5390"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-split.log",
+      "saved": "task-6-full-count-unit-runtime-split.log",
+      "bytes": 812,
+      "sha256": "82d967c7a878d42eb05c9ed471fc4ed781b418b126c57bc0e210771bbace18df"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-split.py",
+      "saved": "task-6-full-count-unit-runtime-split.py.txt",
+      "bytes": 2520,
+      "sha256": "2f9b4cb2e5a728f4f213dc9243e35245dedd5f2dc74e818909a75e03a6d01a96"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-whole-bundle-failed.py",
+      "saved": "task-6-full-count-unit-runtime-whole-bundle-failed.py.txt",
+      "bytes": 2332,
+      "sha256": "c09d141d79191ed48c8763f6400a516194e607c8bd9fa7f123b151d9477d412d"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-whole-bundle-failed.txt",
+      "saved": "task-6-full-count-unit-runtime-whole-bundle-failed.txt",
+      "bytes": 502,
+      "sha256": "5fd1352b929dac54657ae9c8aadedbcc262e87e04e8eb236027872324e0b287a"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime.py",
+      "saved": "task-6-full-count-unit-runtime.py.txt",
+      "bytes": 2332,
+      "sha256": "c09d141d79191ed48c8763f6400a516194e607c8bd9fa7f123b151d9477d412d"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-config-red.txt",
+      "saved": "task-6-training-closure-config-red.txt",
+      "bytes": 6208,
+      "sha256": "69f2a77c269a8347d532831a4ce5b3ef0b6c74d6d6d84adacce146ee04337623"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-edge-green.txt",
+      "saved": "task-6-training-closure-edge-green.txt",
+      "bytes": 2412,
+      "sha256": "5191e8f4d685833b4bcc14796da43bea6b3a334157b107c14f8348dbd5ffec8b"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-edge-red.txt",
+      "saved": "task-6-training-closure-edge-red.txt",
+      "bytes": 15649,
+      "sha256": "65b594519def3f226709359fbb23163e6d5b9f112cf772874cdcbe1f82411323"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-final-green.txt",
+      "saved": "task-6-training-closure-final-green.txt",
+      "bytes": 100,
+      "sha256": "04a616501052d9fb47d44d61094e6806f0edc25b716c6a5947d43d14a9a949ef"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-first-green.txt",
+      "saved": "task-6-training-closure-first-green.txt",
+      "bytes": 98,
+      "sha256": "9a29046c90750af49b467ad92dc4beece6ee950647875b378019c92056bcd7b1"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-guards.json",
+      "saved": "task-6-training-closure-guards.json",
+      "bytes": 634,
+      "sha256": "2cdd1ca3a3c5aa42b943dd9e7cb253133d1c29f49399eb0f5d58cda3e75e5e68"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-guards.txt",
+      "saved": "task-6-training-closure-guards.txt",
+      "bytes": 1301,
+      "sha256": "a5b78fb3d58f7f8bb3d1b786b300e5a398aff09465c2b62b620f1cfe9edda661"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-no-rng-green.txt",
+      "saved": "task-6-training-closure-no-rng-green.txt",
+      "bytes": 113,
+      "sha256": "b260c7e917350aaf127225065023143c6072a5d7343ddc6d4a05096fde8b392b"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-red.txt",
+      "saved": "task-6-training-closure-red.txt",
+      "bytes": 3913,
+      "sha256": "3a24031303987db09110ce2020b358cf79cf33bbf01810983e91a5816b5f933b"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-review-red.txt",
+      "saved": "task-6-training-closure-review-red.txt",
+      "bytes": 12984,
+      "sha256": "3e1e19d797f07bfe9f55d51104dac6d61b8bc23d8cf3001ef3a3a7fb364a61fe"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-reviewed-green.txt",
+      "saved": "task-6-training-closure-reviewed-green.txt",
+      "bytes": 2817,
+      "sha256": "ee8c396b99179bf25a517bcc7c61b50403cd916b866d5aa143a48ac00d8cb254"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-timers-green.txt",
+      "saved": "task-6-training-closure-timers-green.txt",
+      "bytes": 100,
+      "sha256": "dac3c3a47ce35345a4a6f33efde4100fab6cc0c1c6d87f8bd3d87a79727d2285"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-training-closure-timers-red.txt",
+      "saved": "task-6-training-closure-timers-red.txt",
+      "bytes": 4711,
+      "sha256": "0885e1d2d06db962ebdcdc76bd738d7dbc05222fc0c68afd28c5a1778ac30788"
+    }
+  ]
+}

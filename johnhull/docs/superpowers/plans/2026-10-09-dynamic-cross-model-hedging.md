@@ -317,3 +317,7 @@ Task5 helperの[ソース確認](../../../research/RB-F04/dynamic_hedging/implem
 [最新source/TDD/独立レビュー](../../../research/RB-F04/dynamic_hedging/implementation/PREFREEZE_SOURCE.md)：固定Cartesian domain51tests、保存再計算101tests、別execution metadata50tests、入口/API/CLI39testsを確認。I1必須source closureとI2 CLI providerを修正して独立再レビュー未解決0、索引/docstring1125tests・8Pythonruff/format PASS。元strict v1・閾値・121cases/51obligations・原N・全失敗/unknownを保持。実run_freshはまだ未実装で、専用registryがtest loader前に拒否する。合成registryを使う単体正常接続は正式金融freeze/main readinessの証明ではない。
 
 次は既存設計の独立positions oracle/premium/freshと、正式pilot実行器・保存金融checkerの接続。正式pilot/Tasks6–7の未完条件は維持する。今回のsource検査は全suite/金融precision/本物pilot/研究受入を代替しない。
+
+## 元件数の学習・検証source checkpoint（2026-10-10）
+
+[12本のsource確認](../../../research/RB-F04/dynamic_hedging/implementation/NN_CLOSURE_SOURCE.md)：12fit×8,192経路×512更新、12 NN×2,048検証経路、4×14baselineを接続。38scoped tests・独立6群・索引/docstring1,129件・2Pythonruff/format PASS。実optimizerを使った合成source-unit12fitと分割保存、最終sourceの保存再検算を確認。実学習と最終cost guardのsource SHAを区別する。旧一括保存のcap失敗を保持。正式pilot/freeze/main/金融精度の未完条件を維持し、現在は正式pilot/fresh source確認と全396件の主実験実行器を並行して進める。

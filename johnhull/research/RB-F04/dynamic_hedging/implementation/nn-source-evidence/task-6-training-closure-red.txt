@@ -1,0 +1,70 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+___ test_all_twelve_fixed_checkpoints_validate_original_paths_and_hand_cash ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7eaa64314200>
+
+    def test_all_twelve_fixed_checkpoints_validate_original_paths_and_hand_cash(monkeypatch):
+>       api = module()
+              ^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def module():
+        name = "deep_hedge_price._dynamic_hedging_closure"
+>       assert importlib.util.find_spec(name) is not None, "raw training/validation closure missing"
+E       AssertionError: raw training/validation closure missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7eab8408bce0>('deep_hedge_price._dynamic_hedging_closure')
+E        +    where <function find_spec at 0x7eab8408bce0> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:17: AssertionError
+_____ test_finite_validation_with_unknown_market_never_selects_checkpoint ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7eaa66b9bda0>
+
+    def test_finite_validation_with_unknown_market_never_selects_checkpoint(monkeypatch):
+>       api = module()
+              ^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def module():
+        name = "deep_hedge_price._dynamic_hedging_closure"
+>       assert importlib.util.find_spec(name) is not None, "raw training/validation closure missing"
+E       AssertionError: raw training/validation closure missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7eab8408bce0>('deep_hedge_price._dynamic_hedging_closure')
+E        +    where <function find_spec at 0x7eab8408bce0> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:17: AssertionError
+_ test_optimizer_error_is_retained_unclosed_instead_of_permitted_financial_failure _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7eaa6433fb90>
+
+    def test_optimizer_error_is_retained_unclosed_instead_of_permitted_financial_failure(monkeypatch):
+>       api = module()
+              ^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def module():
+        name = "deep_hedge_price._dynamic_hedging_closure"
+>       assert importlib.util.find_spec(name) is not None, "raw training/validation closure missing"
+E       AssertionError: raw training/validation closure missing
+E       assert None is not None
+E        +  where None = <function find_spec at 0x7eab8408bce0>('deep_hedge_price._dynamic_hedging_closure')
+E        +    where <function find_spec at 0x7eab8408bce0> = <module 'importlib.util' (frozen)>.find_spec
+E        +      where <module 'importlib.util' (frozen)> = importlib.util
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:17: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_all_twelve_fixed_checkpoints_validate_original_paths_and_hand_cash
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_finite_validation_with_unknown_market_never_selects_checkpoint
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_optimizer_error_is_retained_unclosed_instead_of_permitted_financial_failure
+3 failed in 1.28s

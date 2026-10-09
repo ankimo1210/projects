@@ -1,0 +1,97 @@
+{
+  "review": "independent_bounded_source_approval",
+  "date_utc": "2026-10-09T23:10:12.710276+00:00",
+  "source_binding": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py": "c34a9aab22e216a512deafd1205c222fb17e9cc6b60ef46b7ff3267b64417902",
+    "deep_hedge_price/tests/test_dynamic_hedging_closure.py": "7ca8bd46194081eeaba2d5662ded14607a6b587ecf702dbec3363468fd0a9ad5",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py": "c233ba0cf6d736401c4f2a4d92dc803810c8066ebf7960534730299759142fca",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce",
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "bb7e7f6ecee12e56444ae24ced496328fcc5e1e1a142630f3fd985c94f3790d6"
+  },
+  "source_stable": true,
+  "actionable_findings": [],
+  "finding_counts": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0
+  },
+  "approval": "approved_only_for_original_roster_fixed_checkpoint_closure_and_saved_numeric_replay",
+  "validation": {
+    "scoped_tests": {
+      "result": "pass",
+      "count": 38,
+      "seconds": 46.13,
+      "raw": "task-6-closure-review-tests.txt"
+    },
+    "independent_probes": {
+      "result": "pass",
+      "groups": 6,
+      "seconds": 16.302108346999375,
+      "raw": "task-6-closure-review-probes.txt",
+      "json": "task-6-closure-review-probes.json"
+    },
+    "ruff": {
+      "check": {
+        "code": 0,
+        "output": "All checks passed!\n"
+      },
+      "format-check": {
+        "code": 0,
+        "output": "2 files already formatted\n"
+      }
+    },
+    "nonzero_hand_cash_max_abs_error": 5.284661597215745e-14
+  },
+  "original_review_concerns_and_resolutions": [
+    {
+      "concern": "NN completion must be separate from baseline validation and training completion",
+      "resolution": "All12 fixed raw checkpoints get original2048 validation; 4x14 baseline candidates retained separately; all-failed selected_baseline stays None."
+    },
+    {
+      "concern": "Finite numeric losses with unknown market/teacher qualification could rescue checkpoint",
+      "resolution": "Unknown training or validation creates failed selection and checkpoint None, retains finite diagnostic loss/last weights; checker overall qualification always unknown."
+    },
+    {
+      "concern": "Outer failed/raw completed over-cap connector could rescue completed raw optimizer",
+      "resolution": "Inclusive connector overrun classified time_cap; original raw completed weights retained but original2048 validation unknown. Actual elapsed/cap/overrun checked before producer closes."
+    },
+    {
+      "concern": "Optimizer/source defects could be relabeled as recognized finance failure",
+      "resolution": "Optimizer_error and missing raw on finite input stay source_or_optimizer_defect/unclosed. Direct nonfinite market numbers allow explicit unqualified_training_data."
+    },
+    {
+      "concern": "Inputs/weights/scaler could drift from original fixed candidate",
+      "resolution": "Monthly calendar/rate/halfspreads/Asian memory/payoff/shared premium/path IDs/declared reserved seeds and global driver IDs checked; six weights/shapes/config/512 attempts/checkpoint and train-only scales checked."
+    },
+    {
+      "concern": "No-RNG saved replay could construct SeedSequence or claim history authentication",
+      "resolution": "Cached original candidate; replay recomputes fixed train/validation cash and selections without fit/RNG, returns history and RNG authenticity False. Independent probe confirmed plausible earlier batch/loss history can remain structurally valid: this is explicitly unverified."
+    },
+    {
+      "concern": "Costs might drop validation or double-charge children",
+      "resolution": "All28 inclusive root cost IDs retained/cross-bound; 12 training+12 NN validation+4 baseline selection, measured wall/cpu finite; metadata is a raw study ledger, not A normalized timing receipts."
+    }
+  ],
+  "limitations": [
+    "Approval covers this private closure source contract and synthetic original-count saved arithmetic replay only.",
+    "No actual model teacher precision, calibration/Q correctness, random-stream provenance, earlier optimizer-step history, external source bytes registry, or fresh main financial qualification is certified.",
+    "Declared stream seeds/IDs are checked for isolation; actual raw driver bytes/history require external receipts and caller-owned source checks.",
+    "Recorded timings are cross-bound metadata; reviewer did not authenticate original wall-clock history or recreate actual optimization.",
+    "A normalized execution-expense metadata producer/runner integration is outside this module approval; raw study expenses are not already A receipt objects.",
+    "Disk fit-boundary checkpoint resumption, real formal pilot/freeze/main/NN main, test streams, and full suites were not opened.",
+    "Parent actual full-count source-unit optimization and split disk evidence retain their historical5ea85d source SHA; reviewer neither relabeled them nor reran training."
+  ],
+  "mutations": "ignored review evidence only; no source/tests/docs/Git modifications",
+  "earlier_requirements_evidence": "task-6-closure-review-requirements.md/json remains unchanged",
+  "evidence_sha": {
+    "task-6-closure-review-probes.py": "5ae203cb51565d20b1f511918613210528bf39a8d733d8d1d410028ce9587a5c",
+    "task-6-closure-review-probes.json": "49757aebc127524dffb231e7f71adcc2b70daff716157a487efd534b6bb1af95",
+    "task-6-closure-review-probes.txt": "a70a1e4e0aec96b4b2724bad826018571830180dac7bee67b63f2573587d7ce9",
+    "task-6-closure-review-tests.txt": "a30861697bb9b3ca96fe381d8f3be7c6570914b69d710695d99c7228aa94e019",
+    "task-6-closure-review-run.json": "d87dd448026749895c67f36620a936400042f4d210116a72472d59a5dd48c510",
+    "task-6-closure-review-ruff.json": "b2dc8972fa271e5e36ef4a4684a743b567d1b0f89598b81627b6c1aa3563005a"
+  }
+}

@@ -1,0 +1,209 @@
+"""Read-only bounded independent source probes; synthetic original-count inputs."""
+import copy
+import gc
+import hashlib
+import importlib.util
+import json
+import time
+from pathlib import Path
+from unittest.mock import patch
+
+import numpy as np
+
+ROOT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+OUT = ROOT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+from deep_hedge_price import _dynamic_hedging_closure as api
+from deep_hedge_price import _dynamic_hedging_study as study
+from deep_hedge_price import _dynamic_hedging_policy as policy
+
+spec = importlib.util.spec_from_file_location("closure_unit_helpers", ROOT / "deep_hedge_price/tests/test_dynamic_hedging_closure.py")
+helpers = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(helpers)
+
+records = []
+started = time.perf_counter()
+def record(name, fn):
+    tick = time.perf_counter()
+    try:
+        detail = fn()
+        row = {"name": name, "result": "pass", "detail": detail}
+    except Exception as exc:
+        row = {"name": name, "result": "FAIL", "error": type(exc).__name__ + ": " + str(exc)}
+    row["wall_seconds"] = time.perf_counter() - tick
+    records.append(row)
+    print(json.dumps(row, allow_nan=False), flush=True)
+    write()
+    gc.collect()
+
+def shas():
+    files = [
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_closure.py",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+        "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md",
+    ]
+    return {s: hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in files}
+before = shas()
+def write():
+    out = {"scope": "synthetic original-count fixed-weight source probes, no optimizer/financial RNG",
+           "source_sha_before": before, "records": records,
+           "elapsed_seconds": time.perf_counter() - started}
+    (OUT / "task-6-closure-review-probes.json").write_text(json.dumps(out, indent=2, allow_nan=False)+"\n")
+
+def args_and_training():
+    args = helpers.inputs()
+    return args, helpers.training_fixture(args["train_datasets"], args["candidate"])
+def produce(args, training):
+    with patch.object(study, "fit_roster", side_effect=lambda *a, **kw: copy.deepcopy(training)):
+        return api.training_validation_closure(**args)
+def reject(fn):
+    try:
+        fn()
+    except (ValueError, KeyError, TypeError, IndexError) as exc:
+        return str(exc)
+    raise AssertionError("invalid contract accepted")
+def forbidden(*a, **kw):
+    raise AssertionError("RNG/teacher/fit forbidden during saved replay")
+
+def nonzero_hand_cash():
+    args, training = args_and_training()
+    for row in training["fits"]:
+        raw = row["raw_fit"]
+        raw["weights"]["b3"] = np.arctanh(np.array([0.25, 0.125]))
+        h = np.array([0.5, 0.0 if row["universe"]=="U1" else 0.25])
+        data = args["train_datasets"][row["training_generator"]]
+        raw["train_holdings"][:] = h
+        p0, pT = data["prices"][:,0], data["prices"][:,-1]
+        D = np.exp(-data["rate"])
+        raw["train_discounted_pnl"] = (
+            data["premium"] - p0@h - np.sum(data["cost_rates"]*np.abs(h)*p0, axis=1)
+            + D*(pT@h - np.sum(data["cost_rates"]*np.abs(h)*pT, axis=1) - data["payoff"])
+        )
+    out = produce(args, training)
+    maxerr = 0.0
+    examples = {}
+    assert len(out["nn_validation"]) == 12 and len(out["expenses"]) == 28
+    for row in out["nn_validation"]:
+        data = args["validation_datasets"][row["training_generator"]]
+        h = np.array([0.5, 0.0 if row["universe"]=="U1" else 0.25])
+        p0,pT,D = data["prices"][:,0],data["prices"][:,-1],np.exp(-data["rate"])
+        expected = -(data["premium"]-p0@h-np.sum(data["cost_rates"]*np.abs(h)*p0,axis=1)
+                     +D*(pT@h-np.sum(data["cost_rates"]*np.abs(h)*pT,axis=1)-data["payoff"]))
+        err = float(np.max(np.abs(row["result"]["loss"]-expected)))
+        assert np.allclose(row["result"]["loss"], expected, rtol=2e-10, atol=2e-11)
+        assert np.isclose(row["mse"], np.mean(expected**2), rtol=2e-10, atol=2e-11)
+        assert row["result"]["loss"].shape==(2048,)
+        maxerr=max(maxerr,err); examples[row["universe"]]=float(expected[0])
+    # Strict saved replay prohibition: no optimizer and no random seed construction.
+    with patch.object(study,"fit_roster",side_effect=forbidden), patch.object(study,"fit_policy",side_effect=forbidden), patch.object(policy,"fit_policy",side_effect=forbidden), patch.object(np.random,"default_rng",side_effect=forbidden), patch.object(np.random,"SeedSequence",side_effect=forbidden):
+        checked = api.check_training_closure(out, **args)
+    assert checked["integrity"]=="pass" and checked["qualification"]=="unknown"
+    assert checked["optimizer_history_authenticated"] is False
+    assert checked["random_stream_provenance_authenticated"] is False
+    assert checked["nn_validation_qualification"]=="qualified"
+    # Expected limitation: actual optimizer history cannot be authenticated from plausible records.
+    altered=copy.deepcopy(out["training"])
+    altered["fits"][0]["raw_fit"]["batch_indices"][:]=7
+    altered["fits"][0]["raw_fit"]["losses"][:]=123.0
+    api._audit_training(altered,args["train_datasets"],args["candidate"])
+    return {"all12_original_validation_n":2048,"maximum_hand_cash_error":maxerr,
+            "first_loss_by_universe":examples,"saved_replay":checked,
+            "plausible_earlier_batches_loss_history_not_authenticated":True}
+
+def finite_unknown_training():
+    args,training=args_and_training()
+    args["train_datasets"]["Heston"]["qualification"]="unknown"
+    out=produce(args,training)
+    hs=[r for r in out["nn_validation"] if r["training_generator"]=="Heston"]
+    assert len(hs)==6 and all(r["mse"] is None and r["status"]=="failed" and np.isfinite(r["result"]["loss"]).all() for r in hs)
+    assert all(not r["result"]["qualified_path_mask"].any() and r["result"]["raw_validation_qualified_path_mask"].all() for r in hs)
+    hsclosed=[r for r in out["closed_fits"]["fits"] if r["training_generator"]=="Heston"]
+    assert all(r["failure_kind"]=="unqualified_training_data" and r["checkpoint_id"] is None and r["raw_fit"]["status"]=="completed" for r in hsclosed)
+    assert out["closure_status"]=="closed"
+    return {"failed_original_heston_slots":6,"finite_diagnostic_losses_retained":True,"raw_weights_retained":True,"unknown_not_requalified":True}
+
+def all_validation_unknown():
+    args,training=args_and_training()
+    for d in args["validation_datasets"].values():d["qualification"]="unknown"
+    out=produce(args,training)
+    assert all(r["status"]=="failed" and r["mse"] is None and r["result"]["loss"].shape==(2048,) for r in out["nn_validation"])
+    assert all(r["selected_baseline"] is None for r in out["baseline_validation"])
+    assert all(len(r["candidates"])==14 for r in out["baseline_validation"])
+    checked=api.check_training_closure(out,**args)
+    assert checked["qualification"]==checked["nn_validation_qualification"]==checked["baseline_validation_qualification"]=="unknown"
+    return {"original_nn_slots":12,"original_baseline_candidates":56,"all_failed_baseline":None,"checker":checked}
+
+def raw_defect_and_cap():
+    args,training=args_and_training()
+    raw=training["fits"][0]["raw_fit"]
+    raw.update(status="optimizer_error",complete=False,reason="synthetic source defect")
+    training["fits"][0].update(status="failed",reason="synthetic source defect",checkpoint_id=None)
+    out=produce(args,training)
+    bad=out["closed_fits"]["fits"][0]
+    assert out["closure_status"]=="unclosed" and bad["failure_kind"]=="source_or_optimizer_defect"
+    assert np.isnan(out["nn_validation"][0]["result"]["loss"]).all() and out["nn_validation"][0]["result"]["loss"].shape==(2048,)
+    del out
+    args,training=args_and_training()
+    row=training["fits"][0]
+    row.update(status="failed",elapsed_seconds=301.,overrun_seconds=1.,reason="connector overrun",checkpoint_id=None)
+    row["expense"].update(status="failed",wall_seconds=301.,overrun_seconds=1.,reason="connector overrun")
+    # Raw optimizer did finish; inclusive connector cap forbids checkpoint rescue.
+    out=produce(args,training)
+    fixed=out["closed_fits"]["fits"][0]
+    assert fixed["status"]=="failed" and fixed["failure_kind"]=="time_cap" and fixed["checkpoint_id"] is None
+    assert fixed["raw_fit"]["status"]=="completed" and np.isfinite(fixed["raw_fit"]["weights"]["b3"]).all()
+    assert np.isnan(out["nn_validation"][0]["result"]["loss"]).all()
+    return {"optimizer_defect_remains_unclosed":True,"outer_failed_raw_completed_cap":True,"last_finite_weights_retained":True,"original_failed_validation_n":2048}
+
+def input_isolation():
+    args,training=args_and_training()
+    cases={}
+    mutations={
+        "train_validation_seed_reuse":lambda a:a["stream_receipts"]["validation"]["Heston"].update(seed=a["stream_receipts"]["train"]["Heston"]["seed"]),
+        "train_validation_global_id_reuse":lambda a:a["stream_receipts"]["validation"]["Heston"].update(global_driver_id=a["stream_receipts"]["train"]["Heston"]["global_driver_id"]),
+        "path_id_omission":lambda a:a["validation_datasets"]["Heston"].update(path_ids=np.arange(2047)),
+        "market_fee_change":lambda a:a["validation_datasets"]["local"].update(cost_rates=np.array([.0005,.006])),
+        "shared_premium_change":lambda a:a["validation_datasets"]["local"].update(premium=5.0001),
+        "fixing_memory_change":lambda a:a["validation_datasets"]["Heston"]["memory_sum"].__setitem__((0,3),301.),
+    }
+    for name,mutate in mutations.items():
+        a=copy.deepcopy(args);mutate(a)
+        with patch.object(study,"fit_roster",side_effect=forbidden):
+            cases[name]=reject(lambda:api.training_validation_closure(**a))
+    return cases
+
+def original_fit_contract():
+    args,training=args_and_training()
+    cases={}
+    for name,mutate in {
+        "one_slot_omitted":lambda t:t["fits"].pop(),
+        "duplicate_original_id":lambda t:t["fits"][0].update(id=t["fits"][1]["id"]),
+        "validation_scale_leak":lambda t:t["fits"][0]["raw_fit"]["scaler"]["mean"].__setitem__(0,99.),
+        "original_batch_path_outside_n":lambda t:t["fits"][0]["raw_fit"]["batch_indices"].__setitem__((0,0),8192),
+        "checkpoint_changed":lambda t:t["fits"][0].update(checkpoint_id="best_validation"),
+        "extra_weight_tensor":lambda t:t["fits"][0]["raw_fit"]["weights"].update(extra=np.zeros(1)),
+        "wrong_float_dtype":lambda t:t["fits"][0]["raw_fit"].update(dtype="float32"),
+        "optimizer_device_change":lambda t:t["fits"][0]["raw_fit"].update(device="cuda"),
+    }.items():
+        t=copy.deepcopy(training);mutate(t)
+        cases[name]=reject(lambda:api._audit_training(t,args["train_datasets"],args["candidate"]))
+    return cases
+
+record("independent_nonzero_hand_cash_and_no_rng_saved_replay",nonzero_hand_cash)
+record("finite_unknown_training_cannot_select",finite_unknown_training)
+record("all_original_validation_unknown_no_fallback",all_validation_unknown)
+record("raw_optimizer_defect_and_inclusive_connector_cap",raw_defect_and_cap)
+record("input_seed_and_market_isolation_before_fit",input_isolation)
+record("all12_fixed_checkpoint_and_training_only_contract",original_fit_contract)
+after=shas()
+result={"scope":"synthetic original-count source probes only; no actual fit or financial RNG",
+        "source_sha_before":before,"source_sha_after":after,"stable_source":before==after,
+        "records":records,"passed":sum(r["result"]=="pass" for r in records),
+        "failed":sum(r["result"]!="pass" for r in records),
+        "elapsed_seconds":time.perf_counter()-started}
+(OUT/"task-6-closure-review-probes.json").write_text(json.dumps(result,indent=2,allow_nan=False)+"\n")
+print(json.dumps({"passed":result["passed"],"failed":result["failed"],"source_stable":before==after,"elapsed_seconds":result["elapsed_seconds"]}),flush=True)
+raise SystemExit(0 if result["failed"]==0 and before==after else 1)
