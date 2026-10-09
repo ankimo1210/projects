@@ -1,6 +1,6 @@
 {
   "schema": "RB-F08-validation-v1",
-  "validated_at_utc": "2026-10-09T05:38:06.896494+00:00",
+  "validated_at_utc": "2026-10-09T05:48:25.788522+00:00",
   "source_fingerprint": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004",
   "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
   "related_suites": {
@@ -62,7 +62,31 @@
     "exit_code": 0,
     "output": "[PASS] johnhull A5--A8 release contract"
   },
-  "main_integration": "pending",
+  "main_integration": {
+    "status": "PASS",
+    "branch": "codex/rbf08-mlmc-rqmc",
+    "base_main": "0bdeca5f37a4e16f82d1de7fed236de658e2fddb",
+    "integrated_commit": "255f4a616b8c59d5c6da649939cba093f8fbe885",
+    "method": "fast-forward",
+    "pushed_to": "origin/main",
+    "checked_at_utc": "2026-10-09T05:48:25.788512+00:00",
+    "main_release": {
+      "status": "PASS",
+      "command": "python johnhull/scripts/verify_release.py --require-tracked",
+      "exit_code": 0
+    },
+    "main_saved_artifact_check": {
+      "status": "PASS",
+      "command": "python johnhull/research/RB-F08/build_reference.py --check johnhull/research/RB-F08",
+      "main_runs": 3072,
+      "coverage_cells": 18,
+      "fresh": false,
+      "restored_from": "primary",
+      "npz_sha256": "fb5c05d57271b9e601f818cdafed63b39127165d82f3be0fe53ad57aec53f3a3"
+    },
+    "full_suites_rerun_after_merge": false,
+    "scope": "Full suites ran once before fast-forward; main release and saved numerical artifact checker ran after integration."
+  },
   "limitations": [
     "Core accepted sections were not fully reaccepted by this research gate.",
     "Existing core artifact dependency fingerprint failures (69 on F04 baseline) are recorded in F04 validation; F08 does not repair or claim a new full 306-section artifact PASS.",

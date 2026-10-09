@@ -1,6 +1,6 @@
 # RB-F08：MLMC・RQMCの誤差と費用
 
-更新日：2026-10-09。状態：GBM v1完了・独立受入approved、main統合待ち。
+更新日：2026-10-09。状態：GBM v1完了・独立受入approved、main統合・push済み。
 
 ## 目的・範囲
 
@@ -137,3 +137,10 @@ Heston固定月次12観測Asianは専用revisionの未完段階（本v1の完了
 次の研究順はRB-F06固定beta SABR識別可能性。Student区間の被覆率を厳密保証と扱う改変や公開API昇格はしない。
 
 独立最終検算は自前28,990数値比較・全原始block/scramble集計・代表fresh再生・金融/ bootstrap乱数を禁止したnonfresh checker・全4図を確認しapproved。未解決Critical/Important/Minorは0。受入と標準高速器への採用は別で、Heston拡張は未完として保持する。
+
+## main反映
+
+`255f4a61`をmainへfast-forward統合してpushした。統合後の`verify_release.py --require-tracked`はPASS。
+mainで保管庫から22,255,119 bytesの原始配列を復元し、3072 main runs・18 coverage cellsを保存値から再検算してPASS。
+関連3suiteは統合前に1回実行（7616 passed・6 skipped）；統合後はreleaseと保存成果の検査を実施した。
+研究のfinancial source・固定条件・元の費用計測を受入後に変更していない。
