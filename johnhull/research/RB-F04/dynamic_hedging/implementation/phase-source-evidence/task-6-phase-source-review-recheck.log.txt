@@ -1,0 +1,1 @@
+{"missing_transitive_closure_rejected": true, "original_counterexample_closed": true, "present_closure_registered": true, "source_unit_only": true}

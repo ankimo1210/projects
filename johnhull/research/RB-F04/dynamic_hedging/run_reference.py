@@ -75,8 +75,9 @@ def _same(actual, expected, name):
 def source_identity(root=ROOT, *, entrypoints=None, package_roots=None) -> dict:
     """Record transitive local imports, package initializers and actual versions.
 
-    Imports inside functions and from-import submodules are included. External
-    versions come from installed distribution metadata without module imports.
+    Imports inside functions, research-local bare imports and from-import
+    submodules are included. Loaded research bare aliases must use this checkout.
+    External versions come from distribution metadata without module imports.
     Dynamic imports are explicitly listed and not treated as resolved silently.
     """
     root = Path(root).resolve(strict=True)
@@ -150,6 +151,13 @@ def source_identity(root=ROOT, *, entrypoints=None, package_roots=None) -> dict:
                     "importlib.util.spec_from_file_location",
                 ):
                     dynamic.append({"source": paths[name], "line": node.lineno, "call": text})
+        if name.startswith("dynamic_research."):
+            dependencies = {
+                "dynamic_research." + dependency
+                if not resolve(dependency) and resolve("dynamic_research." + dependency)
+                else dependency
+                for dependency in dependencies
+            }
         graph[paths[name]] = sorted(dep for dep in dependencies if resolve(dep))
         for dependency in dependencies:
             if resolve(dependency):
@@ -158,10 +166,14 @@ def source_identity(root=ROOT, *, entrypoints=None, package_roots=None) -> dict:
                 external.add(dependency.split(".")[0])
     files = protocol.source_registry(root, sorted(set(paths.values())))
     for module_name, relative in paths.items():
-        loaded = sys.modules.get(module_name)
-        if loaded is not None and getattr(loaded, "__file__", None):
-            if Path(loaded.__file__).resolve() != root / relative:
-                raise ValueError(f"loaded source differs from registered checkout: {module_name}")
+        aliases = [module_name]
+        if module_name.startswith("dynamic_research."):
+            aliases.append(module_name.removeprefix("dynamic_research."))
+        for alias in aliases:
+            loaded = sys.modules.get(alias)
+            if loaded is not None and getattr(loaded, "__file__", None):
+                if Path(loaded.__file__).resolve() != root / relative:
+                    raise ValueError(f"loaded source differs from registered checkout: {alias}")
     distributions = importlib.metadata.packages_distributions()
     versions = {}
     for module in sorted(external - set(sys.stdlib_module_names)):
@@ -198,6 +210,11 @@ def execution_source_identity(root=ROOT) -> dict:
     required = [
         "reference_methods",
         "run_fresh",
+        "check_fresh",
+        "run_pilot",
+        "check_pilot",
+        "run_main",
+        "check_main",
         "run_reference",
         "check_initial_quotes",
         "check_selected_calls",
@@ -205,7 +222,16 @@ def execution_source_identity(root=ROOT) -> dict:
     for name in required:
         if not (base / f"{name}.py").is_file():
             raise ValueError(f"required execution source missing: {name}")
-    return source_identity(root, entrypoints=[f"dynamic_research.{name}" for name in required])
+    closure_path = root / "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py"
+    if not closure_path.is_file():
+        raise ValueError(
+            "required execution source missing: deep_hedge_price._dynamic_hedging_closure"
+        )
+    return source_identity(
+        root,
+        entrypoints=[f"dynamic_research.{name}" for name in required]
+        + ["deep_hedge_price._dynamic_hedging_closure"],
+    )
 
 
 def validation_candidate_ids(widths=None):
@@ -1092,12 +1118,15 @@ def check_bundle(bundle):
 
 def initial_quote_pilot(directory):
     """Check the saved initial-37-quote component; full pilot remains unknown."""
-    import importlib.util
-
-    path = Path(__file__).with_name("check_initial_quotes.py")
-    spec = importlib.util.spec_from_file_location("dynamic_initial_quotes_component", path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    path = Path(__file__).with_name("check_initial_quotes.py").resolve()
+    previous_path = sys.path[:]
+    try:
+        sys.path.insert(0, str(path.parent))
+        import check_initial_quotes as module
+    finally:
+        sys.path[:] = previous_path
+    if Path(module.__file__).resolve() != path:
+        raise ValueError("loaded source differs from registered checkout: check_initial_quotes")
     directory = Path(directory)
     metadata = json.loads((directory / "initial-quotes.json").read_text())
     with np.load(directory / "reference.npz", allow_pickle=False) as archive:

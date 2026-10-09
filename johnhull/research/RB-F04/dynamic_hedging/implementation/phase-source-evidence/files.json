@@ -1,0 +1,131 @@
+{
+  "purpose": "original source-boundary evidence only; numerical equality is not asserted by SHA",
+  "files": [
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-closure-green.txt",
+      "archive": "task-6-phase-source-closure-green.txt",
+      "bytes": 100,
+      "sha256": "cb117b4aa147a011a6ca3557d1192780e893466c9e32fb2e9598994160e82066"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-closure-red-initial.txt",
+      "archive": "task-6-phase-source-closure-red-initial.txt",
+      "bytes": 8749,
+      "sha256": "c09a24f06cc02560c0e81223d7c6936824bb3bf773dda45f96199f8b215a2ed9"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-closure-red.txt",
+      "archive": "task-6-phase-source-closure-red.txt",
+      "bytes": 1770,
+      "sha256": "47ecfbd15d1ae4bb0e7835fab71b59cd67b7f9329b51aa3862c107b4e36b3c7f"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-current-inventory.json",
+      "archive": "task-6-phase-source-current-inventory.json",
+      "bytes": 34581,
+      "sha256": "48427dfcba2031bff2be746fb2049490423e40200cdfb5883008dd503eaa2985"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-final-ruff.json",
+      "archive": "task-6-phase-source-final-ruff.json",
+      "bytes": 904,
+      "sha256": "5b51d40def51b2fc95530b8186af139928e4adf1895cb111014b3a5016fb0724"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-green.txt",
+      "archive": "task-6-phase-source-green.txt",
+      "bytes": 100,
+      "sha256": "7943b9d1b118208dc52de7197a9ffcf90c9fe9e99317d48a7af401e1cc4133db"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-inventory-unresolved.json",
+      "archive": "task-6-phase-source-inventory-unresolved.json",
+      "bytes": 34760,
+      "sha256": "2f7bd69953611af7ce7068dcc64e7d47d6486553954c89e0274752d884f167fe"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-red.txt",
+      "archive": "task-6-phase-source-red.txt",
+      "bytes": 6881,
+      "sha256": "8a5d2830dcbd81be25df4c14f9258e59cca59419edd4dbb4c4e355da8fc195c0"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-review-probe.log",
+      "archive": "task-6-phase-source-review-probe.log.txt",
+      "bytes": 141,
+      "sha256": "d334c6651401002f457ea295df603b198f8e4b9c4702d5212fd4c1ac7a3f94fe"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-review-probe.py",
+      "archive": "task-6-phase-source-review-probe.py.txt",
+      "bytes": 1842,
+      "sha256": "612f8077601fb714f65b4060a1a59f62c2642a45546d02e515e83fcad313ae0e"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-review-recheck-test.log",
+      "archive": "task-6-phase-source-review-recheck-test.log.txt",
+      "bytes": 114,
+      "sha256": "dead9673039f6edd9e4fe9214a96344665e11d4484ea07f5e924b28fdfc9a06d"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-review-recheck.log",
+      "archive": "task-6-phase-source-review-recheck.log.txt",
+      "bytes": 148,
+      "sha256": "30e4271025fab3ebc286a48ae82331b84901a8e76b97301cf61cc1350dcd8732"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-review-recheck.py",
+      "archive": "task-6-phase-source-review-recheck.py.txt",
+      "bytes": 1855,
+      "sha256": "7ecfb4951a63d9f34dcb57de3540d5dcdc42498011f5c587a4856e8531a6093b"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-review-static-probe.log",
+      "archive": "task-6-phase-source-review-static-probe.log.txt",
+      "bytes": 224,
+      "sha256": "5f3e106103c4dbdf8c03792a8e8b037e16386bd27131a584672b8b7b6e7fb490"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-review-static-probe.py",
+      "archive": "task-6-phase-source-review-static-probe.py.txt",
+      "bytes": 990,
+      "sha256": "6fa84847e74678857e76be661756a1077330fd032c0477278abe5d17a51eefb5"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-review-static-test.log",
+      "archive": "task-6-phase-source-review-static-test.log.txt",
+      "bytes": 114,
+      "sha256": "cae0632a03b4a78963df10e1b8d116b517cf730517c674dabefc2d895aa5ebd8"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-review-test.log",
+      "archive": "task-6-phase-source-review-test.log.txt",
+      "bytes": 100,
+      "sha256": "4cd737ab05cb1b052effa98909f2d3c09e8fcc0d059c006758ad20b54332a2cc"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-review.md",
+      "archive": "task-6-phase-source-review.md",
+      "bytes": 2950,
+      "sha256": "cc4c72da653ec736dd94bd19da8e54a22d0b82657a27924f9c97cc9b66dca45e"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-ruff.json",
+      "archive": "task-6-phase-source-ruff.json",
+      "bytes": 904,
+      "sha256": "5b51d40def51b2fc95530b8186af139928e4adf1895cb111014b3a5016fb0724"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-static-green.txt",
+      "archive": "task-6-phase-source-static-green.txt",
+      "bytes": 100,
+      "sha256": "82ce779f01099e9eb93d54519e6dd2c96417cccf794a4b09b7e99e2296b2f5f0"
+    },
+    {
+      "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-phase-source-static-red.txt",
+      "archive": "task-6-phase-source-static-red.txt",
+      "bytes": 3104,
+      "sha256": "3b7c14940828d78bc345061a758cb4bdcd54035cdd6bf1de2fe3ebeba16ff3c2"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+___ test_execution_source_includes_both_phase_roots_and_relative_dependency ____
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3753/test_execution_source_includes0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x787860511b80>
+
+    def test_execution_source_includes_both_phase_roots_and_relative_dependency(tmp_path, monkeypatch):
+        base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+        base.mkdir(parents=True)
+        for name in [
+            "run_reference", "check_initial_quotes", "check_selected_calls",
+            "run_pilot", "check_pilot", "check_fresh", "run_main", "check_main",
+        ]:
+            monkeypatch.delitem(sys.modules, name, raising=False)
+            (base / f"{name}.py").write_text("SCALE = 1\n")
+        for name in ["reference_methods", "run_fresh"]:
+            monkeypatch.delitem(sys.modules, name, raising=False)
+        (base / "reference_methods.py").write_text("from .shared import SCALE\n")
+        (base / "run_fresh.py").write_text("from .shared import SCALE\n")
+        (base / "shared.py").write_text("SCALE = 2\n")
+        identity = runner.execution_source_identity(tmp_path)
+>       assert {str(p.relative_to(tmp_path)) for p in base.glob("*.py")} <= set(identity["files"])
+E       AssertionError: assert {'johnhull/re...hods.py', ...} <= {'johnhull/re...ng/shared.py'}
+E         
+E         Extra items in the left set:
+E         'johnhull/research/RB-F04/dynamic_hedging/check_pilot.py'
+E         'johnhull/research/RB-F04/dynamic_hedging/check_fresh.py'
+E         'johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'
+E         'johnhull/research/RB-F04/dynamic_hedging/check_main.py'
+E         'johnhull/research/RB-F04/dynamic_hedging/run_main.py'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:661: AssertionError
+__ test_source_closure_research_bare_imports_bind_actual_nested_dependencies ___
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3753/test_source_closure_research_b0')
+
+    def test_source_closure_research_bare_imports_bind_actual_nested_dependencies(tmp_path):
+        base = tmp_path / "research"
+        base.mkdir()
+        (base / "entry.py").write_text("import peer\ndef later():\n    from saved import check\n")
+        (base / "peer.py").write_text("import numpy\nfrom leaf import VALUE\n")
+        (base / "leaf.py").write_text("VALUE = 3\n")
+        (base / "saved.py").write_text("def check():\n    return 3\n")
+        identity = runner.source_identity(
+            tmp_path, entrypoints=["dynamic_research.entry"],
+            package_roots={"dynamic_research": "research"},
+        )
+>       assert set(identity["files"]) == {
+            "research/entry.py", "research/peer.py", "research/leaf.py", "research/saved.py",
+        }
+E       AssertionError: assert {'research/entry.py'} == {'research/en...rch/saved.py'}
+E         
+E         Extra items in the right set:
+E         'research/saved.py'
+E         'research/peer.py'
+E         'research/leaf.py'
+E         Use -v to get more diff
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:881: AssertionError
+____ test_source_closure_research_bare_alias_rejects_loaded_other_checkout _____
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3753/test_source_closure_research_b1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7878605f3b60>
+
+    def test_source_closure_research_bare_alias_rejects_loaded_other_checkout(tmp_path, monkeypatch):
+        base = tmp_path / "research"
+        base.mkdir()
+        (base / "entry.py").write_text("import peer\n")
+        (base / "peer.py").write_text("VALUE = 3\n")
+        imported = types.ModuleType("peer")
+        imported.__file__ = str(tmp_path / "other_checkout" / "peer.py")
+        monkeypatch.setitem(sys.modules, "peer", imported)
+>       with pytest.raises(ValueError, match="loaded source"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:899: Failed
+_____ test_execution_source_requires_all_saved_phase_checkers[check_fresh] _____
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3753/test_execution_source_requires0')
+missing = 'check_fresh'
+
+    @pytest.mark.parametrize("missing", ["check_fresh", "check_main"])
+    def test_execution_source_requires_all_saved_phase_checkers(tmp_path, missing):
+        base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+        base.mkdir(parents=True)
+        for name in [
+            "reference_methods", "run_fresh", "check_fresh", "run_pilot", "check_pilot",
+            "run_main", "check_main", "run_reference", "check_initial_quotes", "check_selected_calls",
+        ]:
+            if name != missing:
+                (base / f"{name}.py").write_text("VALUE = 1\n")
+>       with pytest.raises(ValueError, match="required execution source.*" + missing):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:916: Failed
+_____ test_execution_source_requires_all_saved_phase_checkers[check_main] ______
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3753/test_execution_source_requires1')
+missing = 'check_main'
+
+    @pytest.mark.parametrize("missing", ["check_fresh", "check_main"])
+    def test_execution_source_requires_all_saved_phase_checkers(tmp_path, missing):
+        base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+        base.mkdir(parents=True)
+        for name in [
+            "reference_methods", "run_fresh", "check_fresh", "run_pilot", "check_pilot",
+            "run_main", "check_main", "run_reference", "check_initial_quotes", "check_selected_calls",
+        ]:
+            if name != missing:
+                (base / f"{name}.py").write_text("VALUE = 1\n")
+>       with pytest.raises(ValueError, match="required execution source.*" + missing):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:916: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_source_includes_both_phase_roots_and_relative_dependency
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_source_closure_research_bare_imports_bind_actual_nested_dependencies
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_source_closure_research_bare_alias_rejects_loaded_other_checkout
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_source_requires_all_saved_phase_checkers[check_fresh]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_source_requires_all_saved_phase_checkers[check_main]
+5 failed, 40 deselected in 2.27s

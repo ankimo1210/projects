@@ -1,0 +1,38 @@
+[
+  {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/ruff",
+      "check",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+    ],
+    "returncode": 0,
+    "stdout": "All checks passed!\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/ruff",
+      "format",
+      "--check",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+    ],
+    "returncode": 0,
+    "stdout": "2 files already formatted\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]
