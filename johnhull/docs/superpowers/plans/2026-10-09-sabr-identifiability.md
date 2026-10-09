@@ -155,7 +155,7 @@ assert bad_profile_dataset["support_status"] == "unsupported"
 - [x] 20MB超の成果は既存CAS契約で両保存/独立復元・数値検査。20MB以下はGit管理。
 - [x] 関連3suiteを1回実行：pytest -q johnhull/hullkit/tests johnhull/report/tests deep_hedge_price/tests。変更Python ruff/formatとtracked releaseを実行。
 - [x] 独立最終レビューで全データ/原価/採否を照合。Critical/Important未解決を受入済みと扱わない。
-- [ ] rootがmainへfast-forward/pushし、mainのrelease/保存数値checkerを確認。ROADMAPを更新し、次の研究を保持する。
+- [x] rootがmainへfast-forward/pushし、mainのrelease/保存数値checkerを確認。ROADMAPを更新し、次の研究を保持する。
 
 Nu=0の解析Jacobian列をprivate診断に使う（publicの小z/log取消しを修正しない）。rho=0/nu=0のrank1と弱方向を独立検算する。main918、代表profile最大1200、noiseless profile408、truth固定1152、細分化1152の最大4830 solver callsを本前固定し、重複省略も元rosterとの対応を保持する。
 
@@ -175,3 +175,5 @@ Nu=0の解析Jacobian列をprivate診断に使う（publicの小z/log取消し�
 102 dataset / 918 unrestricted＋3480 profile＝4398 calls、上限4830以内。全saved/fresh検査、両保管庫の独立復元/全数値検査、artifact-only3図実行/目視、独立最終レビューapproved（重要0）を完了。金融source6件はfreezeから不変。
 
 最終3suiteは7742 passed・2 failed・6 skipped（433.14秒）。2件はdefault protocolがcandidateからfrozenへ正式更新されたことに依存するテストfixtureを修正済み。関係56件PASS、索引を含むroot再確認777件PASS（5.73秒）。元PASSと修正2件を合わせると重複なし7744 passed・6 skippedで、全suiteを再実行した数字ではない。金融sourceは6/6不変。main反映はrelease後に行う。独立レビューは一般exact SABR、大域識別、保証被覆、joint価格包絡を承認していない。
+
+最終反映：3e919eedをmainへfast-forward統合/push。branch/mainのtracked release PASS。mainに23,154,318-byte NPZをprimaryから復元し、102dataset/4398fitの保存数値checker PASS。mainの別プロジェクト変更48件は状態とtracked diff digestが一致。最終記録以外の金融source/原始成果は不変。

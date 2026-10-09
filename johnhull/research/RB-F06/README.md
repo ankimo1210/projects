@@ -1,6 +1,6 @@
 # RB-F06：固定beta SABR較正の識別可能性
 
-更新日：2026-10-09。状態：主実験・保存値/fresh検算・両保管庫復元・3図・独立最終レビューを完了。最終テストfixture修正済み、release・main統合を進行中。
+更新日：2026-10-09。状態：主実験・保存値/fresh検算・両保管庫復元・3図・独立最終レビューを完了。最終テストfixture修正・branch/main tracked release・main統合/push・mainの保管庫復元/保存値再検査まで完了（3e919eed）。
 
 ## 問いと範囲
 
