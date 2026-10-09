@@ -108,3 +108,41 @@ def test_array_identity_is_provenance_and_rejects_object_payload():
     assert m.arrays_digest(a) == m.arrays_digest(copy.deepcopy(a))
     with pytest.raises(ValueError, match="object"):
         m.arrays_digest({"bad": np.asarray([{}], dtype=object)})
+
+
+@pytest.mark.parametrize(
+    "group,key,value",
+    [
+        ("clock", "annual_sessions", 365),
+        ("clock", "carry_days", 360),
+        ("clock", "edges", [0.0, 0.2, 0.8, 1.0]),
+        ("contract", "pulse_minutes", 15.0),
+        ("contract", "pulse_full_mean_count", 0.04),
+        ("contract", "pulse_variance", 0.0004),
+        ("contract", "timezone", "UTC"),
+        ("contract", "session_open", "08:00"),
+        ("contract", "session_close", "15:00"),
+        ("fit", "widths", [3, 16, 16, 1]),
+        ("fit", "gamma_loss", True),
+        ("fit", "output", "discounted_intrinsic_residual"),
+    ],
+)
+def test_ignored_hardcoded_conditions_are_rejected(group, key, value):
+    m = module()
+    p = m.candidate_protocol()
+    p[group][key] = value
+    with pytest.raises(ValueError, match=r"fixed.*condition"):
+        m.validate_protocol(p)
+
+
+def test_full_original_pilot_and_fit_seed_rosters_required():
+    m = module()
+    p = m.candidate_protocol()
+    p["pilot"]["cases"][0]["distance"] = -3.0
+    with pytest.raises(ValueError, match="roster"):
+        m.validate_protocol(p)
+    p = m.candidate_protocol()
+    p["fit"]["paired_seeds"] = [11, 29]
+    p["seed_ledger"] = m.build_seed_ledger(p)
+    with pytest.raises(ValueError, match="roster"):
+        m.validate_protocol(p)

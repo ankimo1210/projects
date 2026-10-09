@@ -9,7 +9,7 @@
 | 合成欧州call教師・時計・compact IID統計 | 基礎実装済み | 36 scoped tests、別UTC/時計/元N共分散/expiry |
 | 独立級数・density/境界Gamma・Merton・3幅FD | 実装済み | 47 tests、全84候補の参照精度 preflight |
 | CPU price-only / Delta-DML learner | 基礎実装済み | 25 tests、physical Gamma・plain weights replay |
-| 条件・seed台帳・review/source freeze | 候補規約実装済み | 10 tests。実pilot/全金融source不足ではmain生成を拒否 |
+| 条件・seed台帳・review/source freeze | 候補規約実装済み | 23 tests。実pilot/全金融source不足ではmain生成を拒否 |
 | C² quintic Hermite・raw/safe・費用/誤差集計 | 基礎実装済み | 11 tests。独立log-spot polynomial/FD、endpoint・bound・費用祖先/overflow回帰 |
 | 教師→学習→保存重み | 接続smoke済み | FOUNDATION_SMOKE.json、pilot-only16条件/32updates |
 | pilot・固定条件・主6fits・全費用・3図・採否 | 未完了 | pilot/runnerを実装中。smokeはfreeze/受入不可 |
@@ -46,3 +46,7 @@ Minor記録：custom Hermite gridのnode自体Inf拒否は未追加（canonical�
 ## 合成gate
 
 最終基礎129件と両packageのMODEL_INDEX/docstring guardsを合わせて1183 passed（4.74秒）。[実行receipt](FOUNDATION_TESTS.json)・[stdout](FOUNDATION_TESTS.txt)。全3suite/release/研究受入の完了を示す数字ではない。
+
+## pilot実装checkpoint
+
+pilot.pyの全84×3・4N候補・原始draw/compact保存とsaved-only checkerを実装。21 tests PASS。固定clock/pulse/CPU networkの実装が読み取らないmetadataの不一致と、84条件/3paired-seed rosterの変更を13回帰RED→GREENで拒否した。関連163件＋両package索引/docstringで1217 passed（6.10秒）。[receipt](PILOT_CODE_TESTS.json)。full sampling、source freeze、主6fitsはまだ行っていない。

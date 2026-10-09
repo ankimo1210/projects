@@ -227,8 +227,40 @@ def validate_protocol(p, *, require_frozen=False):
     """Check original rosters and frozen evidence/source/condition identities."""
     if p.get("schema") != "RB-F05-short-protocol-v1":
         raise ValueError("unknown short protocol")
-    if p.get("splits") != SPLITS or len(p["pilot"]["cases"]) != 84:
-        raise ValueError("original scenario roster changed")
+    if (
+        p.get("splits") != SPLITS
+        or p["pilot"]["cases"] != _pilot_cases()
+        or p["pilot"]["streams"] != 3
+        or p["fit"]["paired_seeds"] != [11, 29, 47]
+    ):
+        raise ValueError("original scenario/paired-fit roster changed")
+    # These declared conventions are constants in the underlying APIs, not
+    # configurable inputs. Reject contradictory metadata before any sampling.
+    fixed = {
+        "clock": {"annual_sessions": 252, "carry_days": 365, "edges": [0.0, 0.15, 0.85, 1.0]},
+        "contract": {
+            "pulse_minutes": 30.0,
+            "pulse_full_mean_count": 0.028,
+            "timezone": "America/New_York",
+            "session_open": "09:30",
+            "session_close": "16:00",
+        },
+        "fit": {
+            "widths": [3, 32, 32, 1],
+            "gamma_loss": False,
+            "output": "unconstrained_total_price_train_only_shift_scale",
+        },
+    }
+    if any(
+        p[group][key] != value
+        for group, settings in fixed.items()
+        for key, value in settings.items()
+    ):
+        raise ValueError("fixed implementation condition disagrees with metadata")
+    c = p["contract"]
+    actual_nominal = 0.028 * (c["jump_mean"] ** 2 + c["jump_std"] ** 2)
+    if not np.isclose(c["pulse_variance"], actual_nominal, rtol=1e-13, atol=1e-16):
+        raise ValueError("fixed pulse variance condition disagrees with jump law")
     rows = p["seed_ledger"]
     if (
         len({r["id"] for r in rows}) != len(rows)
