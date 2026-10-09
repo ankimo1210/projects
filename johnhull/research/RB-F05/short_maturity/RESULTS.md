@@ -1,6 +1,6 @@
 # 短期・同日満期 DML v1 — 結果と採否
 
-2026-10-09。合成同日欧州cash callの固定実験。数値・保存物・実3図の検証済み、関連3suite7998 PASS/6 skip、19Python ruff/format PASS。tracked release/最終独立208checks PASS・Critical/Important0。main未反映。main統合は未実施。
+2026-10-09。合成同日欧州cash callの固定実験。数値・保存物・実3図の検証済み、関連3suite7998 PASS/6 skip、19Python ruff/format PASS。tracked release/最終独立208checks PASS・Critical/Important0。main統合済み。main統合済み（da1d1f3e）。mainで全3配列を復元しpilot/主/fresh数値検査・tracked release PASS。
 
 ## 結論
 
@@ -89,6 +89,6 @@ SHAは原始保存物のidentity用。金融値の一致は許容誤差つきで
 
 ## 検証の範囲と次
 
-[主数値review](MAIN_REVIEW.json)、[pilot承認](PILOT_REVIEW.json)、[金融source固定](freeze_check.json)、[最終ruff](FINAL_RUFF.json)を保持する。最終関連3suite7998 PASS/6 skip（443.32秒）、19Python ruff/format PASS。[実測](FULL_SUITE.json)。tracked release/最終独立208checks PASS・重要0。[最終受入](validation.json)／[独立最終レビュー](REVIEW.json)。main反映は未実施。
+[主数値review](MAIN_REVIEW.json)、[pilot承認](PILOT_REVIEW.json)、[金融source固定](freeze_check.json)、[最終ruff](FINAL_RUFF.json)を保持する。最終関連3suite7998 PASS/6 skip（443.32秒）、19Python ruff/format PASS。[実測](FULL_SUITE.json)。tracked release/最終独立208checks PASS・重要0。[最終受入](validation.json)／[独立最終レビュー](REVIEW.json)。main統合済み、mainの復元配列・数値検査・tracked release PASS。[統合記録](MAIN_INTEGRATION_REPLAY.json)。
 
 本v1は実市場のSPX/SPXW、official holiday/early-close calendar、Bates/PIDE/rough、Gamma loss、vol/quote Greeks、動的ヘッジを承認していない。次は[同一較正条件の動的モデル横断ヘッジ](../../RB-F04/dynamic_hedging/README.md)、その後は多曲線risk/P&Lと増分XVA＋IM・資本。短期v1完了で全研究ロードマップの完了とはしない。

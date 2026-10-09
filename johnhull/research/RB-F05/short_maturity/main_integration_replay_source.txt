@@ -1,0 +1,35 @@
+from pathlib import Path
+import importlib.util,json,sys,time,hashlib
+s=Path('/home/kazumasa/projects/johnhull/research/RB-F05/short_maturity')
+def module(name,path):
+ spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);sys.modules[name]=m;spec.loader.exec_module(m);return m
+t=time.perf_counter()
+store=module('main_short_store',s.parents[2]/'scripts/evidence_store.py')
+primary=store.Store.open('/mnt/c/Users/Kazumasa/ProjectArtifacts/projects',role='primary')
+restores=[]
+for filename in ['pilot_manifest.json','reference_manifest.json','fresh_manifest.json']:
+ manifest=store.load_manifest(json.loads((s/filename).read_text()))
+ b=time.perf_counter();r=store.restore([primary],manifest,s)
+ assert r['status']=='PASS'
+ restores.append({'manifest':filename,'seconds':time.perf_counter()-b,'report':r})
+helper=module('main_short_fresh',s/'fresh_support.py')
+runner,p,analytics,ref,core=helper.modules(s)
+learner=runner._learner()
+import numpy as np,torch,hullkit,deep_hedge_price
+assert Path(hullkit.__file__).resolve().is_relative_to('/home/kazumasa/projects/johnhull/hullkit/src')
+assert Path(deep_hedge_price.__file__).resolve().is_relative_to('/home/kazumasa/projects/deep_hedge_price/src')
+def forbidden(*args,**kwargs):raise RuntimeError('main restored numeric replay attempted sampling or training')
+learner.train=forbidden
+for name in ['default_rng','normal','rand','randn','randint','choice','random','poisson','RandomState']:
+ setattr(np.random,name,forbidden)
+for name in ['Adam','AdamW','SGD','RMSprop']:setattr(torch.optim,name,forbidden)
+for name in ['rand','randn','randint','normal','multinomial']:setattr(torch,name,forbidden)
+before=time.perf_counter();protocol=json.loads((s/'protocol.json').read_text());frozen=p.verify_frozen_evidence(protocol);pilot_s=time.perf_counter()-before
+before=time.perf_counter();r,a=runner.load_result(s);main=runner.check_record(r,a);ser=runner.serialization_receipt(s,r);main_s=time.perf_counter()-before
+before=time.perf_counter();fresh=helper.check_saved(s,source=s);fresh_s=time.perf_counter()-before
+review=json.loads((s/'REVIEW.json').read_text())
+assert p.json_digest(r)==review['main_record_digest'] and p.arrays_digest(a)==review['main_arrays_digest']
+assert p.source_registry(require_complete=True)==r['source_registry']
+d={'schema':'RB-F05-short-main-integration-replay-v1','passed':True,'restores':restores,'frozen_pilot':frozen,'main_check':main,'fresh_check':fresh,'serialization':ser,'timings':{'pilot_saved_s':pilot_s,'main_saved_s':main_s,'fresh_saved_including_repeated_main_s':fresh_s,'whole_process_inner_s':time.perf_counter()-t},'actual_hullkit_file':hullkit.__file__,'actual_learner_file':learner.__file__,'record_digest':p.json_digest(r),'arrays_digest':p.arrays_digest(a),'source_registry':p.source_registry(require_complete=True),'scope':'actual main checkout, primary restore all three NPZ, RNG/optimizer/train trapped; no second whole suite, production speed or market approval'}
+Path('/tmp/rbf05-main-integrated-replay.json').write_text(json.dumps(d,indent=2)+'\n')
+print(json.dumps({'passed':True,'main_check':main,'fresh_check':fresh,'timings':d['timings']}))

@@ -8,7 +8,7 @@
 
 **Tech Stack:** 既存Python / NumPy / SciPy / PyTorch CPU float64 / pytest / ruff / nbclient / matplotlib。新production依存なし。
 
-**Spec:** ../specs/2026-10-09-short-maturity-dml-design.md。2026-10-09の調査・計画提案。正式pilotの独立承認後、source10・条件・N1048576を固定済み。主6fits/全336点・追加検証・両復元・実3図・全採否・最終独立レビューを完了。main統合は次。 本人の継続指示に従い、rootとsubagentsが実装し独立レビューする。
+**Spec:** ../specs/2026-10-09-short-maturity-dml-design.md。2026-10-09の調査・計画提案。正式pilotの独立承認後、source10・条件・N1048576を固定済み。主6fits/全336点・追加検証・両復元・実3図・全採否・最終独立レビューを完了。mainへfast-forward統合済み。mainの全3配列復元・保存数値/源/releaseを検証。 本人の継続指示に従い、rootとsubagentsが実装し独立レビューする。
 
 ## Global Constraints
 
@@ -259,7 +259,7 @@ Task3で費用registryを最初から実装し、ここでは保存費用の照�
       回収Q=(NNoffline−baselineoffline)/(baselineonline−NNonline)、分母<=0は回収不能。
       baselineも同じ要求Greeks/precisionを達成しているcaseだけで速度採否。
 - [x] 原始配列/重み/route/全費用の独立review→全関連3suite7998 PASS/6 skip、19Pythonruff/format→tracked release/CAS gate。
-- [ ] 受入後main統合/pushとmainの復元・saved数値/release。正式docs/ROADMAP/INDEX更新を同じcommitで記録。
+- [x] 受入後main統合とmainの復元・saved数値/release。pushは直後のremote HEAD照合で確認。正式docs/ROADMAP/INDEX更新を同じcommitで記録。
 
 ## 5. 一次資料・公式情報の再確認（2026-10-09）
 

@@ -12,7 +12,7 @@
 | 条件・seed台帳・review/source freeze | 候補規約実装済み | 23 tests。実pilot/全金融source不足ではmain生成を拒否 |
 | C² quintic Hermite・raw/safe・費用/誤差集計 | 基礎実装済み | 11 tests。独立log-spot polynomial/FD、endpoint・bound・費用祖先/overflow回帰 |
 | 教師→学習→保存重み | 接続smoke済み | FOUNDATION_SMOKE.json、pilot-only16条件/32updates |
-| pilot/主runner/教材builder | 実装・事前レビュー完了 | 基礎最終1275 PASS。正式pilot承認/実freeze、640教師/6fits/336点/追加12条件、両復元/3図は完了。Python19件ruff/format PASS。最終関連3suite7998 PASS/6 skip・最終独立208checks・tracked release PASS。v1受入済み、mainは未反映 |
+| pilot/主runner/教材builder | 実装・事前レビュー完了 | 基礎最終1275 PASS。正式pilot承認/実freeze、640教師/6fits/336点/追加12条件、両復元/3図は完了。Python19件ruff/format PASS。最終関連3suite7998 PASS/6 skip・最終独立208checks・tracked release PASS。v1受入済み、main統合済み |
 
 ## 判断に影響する発見
 
@@ -33,7 +33,7 @@ event条件2件はrare_event_unresolvedを保持した。full precision selectio
 
 ## 次
 
-全関連3suite7998 PASS/6 skip（443.32秒）・19Pythonruff/format PASS。独立総合208checks/重要0とtracked release PASS。mainへ反映する。
+全関連3suite7998 PASS/6 skip（443.32秒）・19Pythonruff/format PASS。独立総合208checks/重要0とtracked release PASS。mainへfast-forward反映済み。mainの保管庫復元・pilot/主/fresh数値・tracked release PASS。
 正式pilot承認・金融source固定・主6fits/336点・追加検証・両復元・実3図/全費用は完了。[結果](RESULTS.md)。
 動的ヘッジ、多曲線risk/P&L、増分XVAは全体ロードマップの後続として保持する。
 
