@@ -143,6 +143,7 @@ def candidate_protocol() -> dict:
             "truths": ["BSM", "independent_clipped_integral"],
             "coverage_uncertainty": "Wilson 95%",
         },
+        "clip_diagnostic": {"power": 10, "public_clip": [1e-10, 1 - 1e-10]},
         "fresh_review": {
             "strikes": [80.0, 100.0, 120.0],
             "runs_per_case": 1,
@@ -287,6 +288,7 @@ def _logical_rows(p: dict) -> list[dict]:
         for level in p["pilot"]["levels"]:
             append("pilot", 0, 0, run, "mlmc", 0, level)
         append("pilot", 0, 0, run, "exact_cv", 3)
+    append("pilot", 0, 0, 0, "clip_diagnostic", 4)
     for budget in range(len(p["epsilon"])):
         for run in range(p["main"]["outer_runs"]):
             for method_index, method in enumerate(METHODS):
@@ -754,6 +756,10 @@ def validate_protocol(p: dict, *, require_frozen: bool = False) -> None:
     expected_clip = candidate_protocol()["rqmc"]["clip"]
     if rqmc["clip"] != expected_clip:
         raise ValueError("fixed nextafter clip values and hex metadata required")
+    diagnostic = p["clip_diagnostic"]
+    _integer(diagnostic["power"], 0, "clip diagnostic power", 20)
+    if diagnostic["public_clip"] != [1e-10, 1 - 1e-10]:
+        raise ValueError("fixed public clip comparison contract required")
     for key in ("pairs_per_level", "warmup_repetitions", "measured_repetitions"):
         _integer(p["timing"][key], 1, "timing " + key)
     for key in ("runs_per_case", "paths_per_level", "rqmc_reserved_runs"):

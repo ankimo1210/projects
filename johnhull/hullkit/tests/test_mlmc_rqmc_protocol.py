@@ -454,3 +454,15 @@ def test_seed_collision_audit_tampering_is_rejected(protocol, field):
         rows[0][field][0] ^= 1
     with pytest.raises(ValueError, match=r"audit|seed|spawn|retry"):
         protocol.validate_seed_ledger(rows)
+
+
+def test_clip_comparison_has_reserved_pilot_stream_and_frozen_conditions(protocol):
+    p = protocol.candidate_protocol()
+    rows = protocol.build_seed_ledger(p)
+    selected = [
+        row for row in rows if row["phase"] == "pilot" and row["method"] == "clip_diagnostic"
+    ]
+    assert len(selected) == 1
+    assert p["clip_diagnostic"]["power"] == 10
+    assert p["clip_diagnostic"]["public_clip"] == pytest.approx([1e-10, 1 - 1e-10])
+    assert len(rows) == 181729

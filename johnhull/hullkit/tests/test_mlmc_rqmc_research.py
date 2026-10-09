@@ -156,6 +156,7 @@ def decision_fixture(ratio):
             )
         )
     r = dict(
+        offline_expenses=[dict(expense_id="fixture_setup", seconds=0.0, methods=["all"])],
         main_repetitions=4,
         bootstrap_resamples=2000,
         epsilons=[0.4, 0.2, 0.1],
@@ -226,3 +227,31 @@ def test_cold_pilot_disadvantage_is_not_hidden_by_main_speed():
     assert out["standard_accelerator_rejected"] is True
     assert any("cold" in reason for reason in out["rejection_reasons"])
     assert out["cells"][0]["cost_accounts"]["mlmc"]["cold_mean_s"] == pytest.approx(100.1)
+
+
+def test_duplicate_epsilon_and_repeated_cell_do_not_count_as_three_successes():
+    r, a = decision_fixture(0.5)
+    r["epsilons"] = [0.4, 0.4, 0.4]
+    r["budget_cells"] = [r["budget_cells"][0]] * 3
+    with pytest.raises(ValueError, match=r"epsilon|roster"):
+        analytics().decision(r, a)
+
+
+def test_method_with_missing_required_offline_expenses_is_rejected():
+    p = {"expenses": [dict(expense_id="beta", seconds=1.0, methods=["exact_cv"])]}
+    with pytest.raises(ValueError, match=r"offline|expense"):
+        analytics().cost_account(p, [dict(main_s=1.0, method="mlmc")], method="mlmc")
+    r, a = decision_fixture(0.5)
+    r.pop("offline_expenses", None)
+    with pytest.raises(ValueError, match=r"offline|expense"):
+        analytics().decision(r, a)
+
+
+def test_inaccurate_exact_comparator_not_declared_faster_at_same_error():
+    r, a = decision_fixture(0.5)
+    for cell in r["budget_cells"]:
+        for name in ["exact_plain", "exact_cv"]:
+            a[cell["methods"][name]["prices_key"]] = np.full(4, 1000.0)
+    out = analytics().decision(r, a)
+    assert not any("faster" in reason or "cold" in reason for reason in out["rejection_reasons"])
+    assert any("accuracy" in reason for reason in out["rejection_reasons"])

@@ -134,6 +134,7 @@ SE=s_Q/\sqrt R,\quad CI=\widehat P\pm t_{.975,R-1}SE.
 - CV betaは独立pilotからCov(P,C)/Var(C)。C=e^-rT S_T、E(C)=S0e^-qT。Var(C)=0ならbeta=0として記録し、main標本でbetaをfitしない。
 - Phase roots：pilot=83101、main=83201、coverage=83301、fresh_review=83401、timing=83501、method_order=83601、bootstrap=83701。root→固定case roster→budget→run→method→level→scrambleのSeedSequenceをlogical childとし、候補roster生成時に全phaseの物理seedを一意に確定する。RQMC主rosterだけで172,032子scrambleがあり、32bit出力の衝突を単に失敗とする規約は採用しない。
 - 衝突解決の順序は上のphase順→case/budget/run/method/level/scrambleの固定ordinal順。logical childにcandidate ordinal k=0,1,…を付けた次child（`spawn_key=logical_spawn_key+(k,)`）からuint32を生成する。すでに台帳にあるseedならそのlogical childのkを増やす。最初の候補`raw_seed`、採用した`seed`、全`candidate_seeds`、`retry_count`、`entropy`、`logical_spawn_key`、採用候補の実`spawn_key`を保存する。衝突解決は候補台帳生成時だけ行い、価格・CI・計時を参照しない。
+- clip対比pilotは専用slot1個（power10、public clip=[1e-10,1-1e-10]）を予約する。Euler/exactの30slotsに加え31pilot slots、全181729slotsとなる。主反復/coverageのrosterは変えない。
 - pilot開始前にpilot用台帳を確定する。全main/coverage/fresh/timing/method_order/bootstrap台帳は主観測を見る前にfreezeする。主実験はfrozen台帳だけを読み、衝突解決・seed再生成・失敗run補充による台帳書換えを禁止する。case/roster変更は主比較前のprotocol revisionと再レビューで扱い、既に走らせたpilotの台帳と観測の対応を保持する。全level0…8の候補main slotを予約し、pilotで選ばなかったslotも未使用と明示する。
 - 一意なuint32 seed台帳は同じ初期化の偶発的再使用を防ぐ契約であり、PRNGやscrambleの真の独立性の数学的証明ではない。独立randomizationの仮定、SeedSequence/SciPyの生成方式、再現性を記録する。
 - block_size=2048、single process、OMP/OPENBLAS/MKL threads=1。main methodの順序はmethod_order phaseの確定seedを使うbalanced置換表として保存する。wall timeはRNG+path+payoff+集計を含み、importは別setup欄。
@@ -582,3 +583,5 @@ ruffは今回追加/変更したPythonだけに`uv run --no-sync ruff check <fil
 一次資料確認日: 2026-10-09。Giles著者公開PDF、Jain et al. arXiv v2本文、SciPy Sobol/t公式ドキュメントを確認した。S020の出版社Version of Record全差分を新たに照合したとは主張しない。
 
 2026-10-09実装前レビュー修正：数値再現比較をallcloseへ統一し、32bit seedのcandidate時限定・決定的衝突解決と直接seed seam、pilot reviewでのcap選定と全主条件freezeを追加した。変更対象はこの計画1fileのみ。実装・主実験・commit/pushは実施していない。
+
+2026-10-09実装時の補完：固定seed clip診断の専用slotをfullpilot前に追加。freeze/fresh費用は承認済み観測を変更しない別receiptに記録。基礎独立レビューの3件（epsilon重複、offline原価欠落、精度未達比較器の速度理由）とCI confidence渡しは対象RED→GREENで修正。

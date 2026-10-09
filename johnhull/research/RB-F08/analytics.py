@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+from itertools import pairwise
 
 import numpy as np
 
@@ -150,6 +151,8 @@ def cost_account(
         ):
             continue
         selected.append(identity)
+    if method is not None and not selected:
+        raise ValueError("required method offline expenses are missing")
     selected_runs = [
         r
         for r in runs
@@ -229,6 +232,14 @@ def decision(record: dict, arrays: dict) -> dict:
     """
     coupling = _coupling_proof(record, arrays)
     expected_epsilons = record["epsilons"]
+    if (
+        not expected_epsilons
+        or any(not math.isfinite(x) or x <= 0 for x in expected_epsilons)
+        or any(a <= b for a, b in pairwise(expected_epsilons))
+    ):
+        raise ValueError("epsilon roster must be positive, distinct and descending")
+    if not isinstance(record.get("offline_expenses"), list) or not record["offline_expenses"]:
+        raise ValueError("explicit offline expenses required for cost decision")
     cells = record["budget_cells"]
     if len(cells) != len(expected_epsilons) or [c["epsilon"] for c in cells] != expected_epsilons:
         raise ValueError("budget roster differs from fixed epsilons")
@@ -274,11 +285,15 @@ def decision(record: dict, arrays: dict) -> dict:
             reasons.append(
                 f"epsilon={cell['epsilon']}: Euler comparator empirical RMSE exceeds target"
             )
-        exact_best = min(
-            float(np.median(times["exact_plain"])), float(np.median(times["exact_cv"]))
-        )
-        if exact_best <= float(np.median(times["mlmc"])):
-            reasons.append(f"epsilon={cell['epsilon']}: exact terminal comparator is faster")
+        accurate_exact = [
+            name for name in ("exact_plain", "exact_cv") if errors[name]["rmse"] <= cell["epsilon"]
+        ]
+        if accurate_exact:
+            exact_best = min(float(np.median(times[name])) for name in accurate_exact)
+            if exact_best <= float(np.median(times["mlmc"])):
+                reasons.append(f"epsilon={cell['epsilon']}: exact terminal comparator is faster")
+        else:
+            reasons.append(f"epsilon={cell['epsilon']}: exact comparator accuracy is unresolved")
         cost_accounts = {}
         if record.get("offline_expenses"):
             run_rows = [

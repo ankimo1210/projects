@@ -72,6 +72,7 @@ def rqmc_gbm_call_from_seeds(
     power: int,
     child_seeds: list[int],
     child_metadata: list[dict] | None = None,
+    confidence: float = 0.95,
 ) -> dict:
     """Replay a GBM call with already frozen, distinct uint32 scramble seeds.
 
@@ -125,7 +126,7 @@ def rqmc_gbm_call_from_seeds(
         )
         engine_s += perf_counter() - phase_start
     phase_start = perf_counter()
-    summary = student_summary(np.asarray(estimates))
+    summary = student_summary(np.asarray(estimates), confidence=confidence)
     result = {
         **summary,
         "child_seeds": seeds,

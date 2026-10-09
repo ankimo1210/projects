@@ -234,3 +234,17 @@ def test_scramble_timings_separate_generation_payoff_and_statistics():
     )
     total = sum(timing[k] for k in ["rng_s", "engine_s", "summary_s", "overhead_s"])
     assert total == pytest.approx(timing["wall_s"], rel=1e-12, abs=1e-12)
+
+
+def test_requested_scramble_confidence_is_used_in_summary():
+    from hullkit import _rqmc_ci as r
+    from hullkit._multilevel_mc import GBMCall
+
+    c = GBMCall(100, 100, 0.03, 0.2, 1)
+    wide = r.rqmc_gbm_call_from_seeds(c, power=3, child_seeds=[101, 103, 107, 109], confidence=0.95)
+    narrow = r.rqmc_gbm_call_from_seeds(
+        c, power=3, child_seeds=[101, 103, 107, 109], confidence=0.9
+    )
+    assert narrow["confidence_level"] == pytest.approx(0.9)
+    assert narrow["width"] < wide["width"]
+    np.testing.assert_allclose(narrow["estimates"], wide["estimates"], rtol=0, atol=1e-12)

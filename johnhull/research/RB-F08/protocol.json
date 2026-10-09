@@ -117,6 +117,13 @@
     ],
     "coverage_uncertainty": "Wilson 95%"
   },
+  "clip_diagnostic": {
+    "power": 10,
+    "public_clip": [
+      1e-10,
+      0.9999999999
+    ]
+  },
   "fresh_review": {
     "strikes": [
       80.0,
