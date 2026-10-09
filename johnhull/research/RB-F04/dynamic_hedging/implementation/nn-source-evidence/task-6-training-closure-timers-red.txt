@@ -1,0 +1,100 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+__ test_missing_or_contradictory_measured_cost_cannot_close_fit[missing_time] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ef8de91aa80>
+field = 'missing_time'
+
+    @pytest.mark.parametrize("field", ["missing_time", "raw_time", "cap", "overrun"])
+    def test_missing_or_contradictory_measured_cost_cannot_close_fit(monkeypatch, field):
+        args = inputs()
+        def corrupt(training):
+            row = training["fits"][0]
+            if field == "missing_time":
+                row["elapsed_seconds"] = np.nan
+            elif field == "raw_time":
+                row["raw_fit"]["elapsed_seconds"] = 2.0
+            elif field == "cap":
+                row["cap_seconds"] = 600.0
+            else:
+                row["overrun_seconds"] = 1.0
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:513: Failed
+____ test_missing_or_contradictory_measured_cost_cannot_close_fit[raw_time] ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ef7c03756d0>
+field = 'raw_time'
+
+    @pytest.mark.parametrize("field", ["missing_time", "raw_time", "cap", "overrun"])
+    def test_missing_or_contradictory_measured_cost_cannot_close_fit(monkeypatch, field):
+        args = inputs()
+        def corrupt(training):
+            row = training["fits"][0]
+            if field == "missing_time":
+                row["elapsed_seconds"] = np.nan
+            elif field == "raw_time":
+                row["raw_fit"]["elapsed_seconds"] = 2.0
+            elif field == "cap":
+                row["cap_seconds"] = 600.0
+            else:
+                row["overrun_seconds"] = 1.0
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:513: Failed
+______ test_missing_or_contradictory_measured_cost_cannot_close_fit[cap] _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ef8de94d670>
+field = 'cap'
+
+    @pytest.mark.parametrize("field", ["missing_time", "raw_time", "cap", "overrun"])
+    def test_missing_or_contradictory_measured_cost_cannot_close_fit(monkeypatch, field):
+        args = inputs()
+        def corrupt(training):
+            row = training["fits"][0]
+            if field == "missing_time":
+                row["elapsed_seconds"] = np.nan
+            elif field == "raw_time":
+                row["raw_fit"]["elapsed_seconds"] = 2.0
+            elif field == "cap":
+                row["cap_seconds"] = 600.0
+            else:
+                row["overrun_seconds"] = 1.0
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:513: Failed
+____ test_missing_or_contradictory_measured_cost_cannot_close_fit[overrun] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ef7c0377a70>
+field = 'overrun'
+
+    @pytest.mark.parametrize("field", ["missing_time", "raw_time", "cap", "overrun"])
+    def test_missing_or_contradictory_measured_cost_cannot_close_fit(monkeypatch, field):
+        args = inputs()
+        def corrupt(training):
+            row = training["fits"][0]
+            if field == "missing_time":
+                row["elapsed_seconds"] = np.nan
+            elif field == "raw_time":
+                row["raw_fit"]["elapsed_seconds"] = 2.0
+            elif field == "cap":
+                row["cap_seconds"] = 600.0
+            else:
+                row["overrun_seconds"] = 1.0
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:513: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_missing_or_contradictory_measured_cost_cannot_close_fit[missing_time]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_missing_or_contradictory_measured_cost_cannot_close_fit[raw_time]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_missing_or_contradictory_measured_cost_cannot_close_fit[cap]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_missing_or_contradictory_measured_cost_cannot_close_fit[overrun]
+4 failed, 34 deselected in 8.84s

@@ -1,0 +1,53 @@
+......F....................                                              [100%]
+=================================== FAILURES ===================================
+_______________ test_completed_fit_cannot_use_validation_scaler ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x70863dd4aed0>
+
+    def test_completed_fit_cannot_use_validation_scaler(monkeypatch):
+        args = inputs()
+        args["validation_datasets"]["Heston"]["prices"][:, :, 0] *= 1.2
+        def contaminate(training):
+            training["fits"][0]["raw_fit"]["scaler"] = policy._normalization(
+                policy._dataset(args["validation_datasets"]["Heston"]))
+        supply_training(monkeypatch, args, contaminate)
+        with pytest.raises(ValueError, match="training-only scaler"):
+>           module().training_validation_closure(**args)
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py:176: in training_validation_closure
+    _inputs(train, validation, risks, streams, candidate)
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py:55: in _inputs
+    _require(np.allclose(data["memory_sum"], memory, rtol=2e-10, atol=2e-11, equal_nan=True),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'original monthly fixing memory differs'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: original monthly fixing memory differs
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py:24: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x70863dd4aed0>
+
+    def test_completed_fit_cannot_use_validation_scaler(monkeypatch):
+        args = inputs()
+        args["validation_datasets"]["Heston"]["prices"][:, :, 0] *= 1.2
+        def contaminate(training):
+            training["fits"][0]["raw_fit"]["scaler"] = policy._normalization(
+                policy._dataset(args["validation_datasets"]["Heston"]))
+        supply_training(monkeypatch, args, contaminate)
+>       with pytest.raises(ValueError, match="training-only scaler"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'training-only scaler'
+E         Actual message: 'original monthly fixing memory differs'
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:202: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_completed_fit_cannot_use_validation_scaler
+1 failed, 26 passed in 39.35s

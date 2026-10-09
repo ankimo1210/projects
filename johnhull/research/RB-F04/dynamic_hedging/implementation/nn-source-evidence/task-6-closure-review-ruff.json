@@ -1,0 +1,10 @@
+{
+  "check": {
+    "code": 0,
+    "output": "All checks passed!\n"
+  },
+  "format-check": {
+    "code": 0,
+    "output": "2 files already formatted\n"
+  }
+}

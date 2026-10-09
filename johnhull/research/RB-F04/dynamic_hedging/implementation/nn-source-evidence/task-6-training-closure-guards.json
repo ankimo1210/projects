@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_docstrings.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_model_index.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_docstrings.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_model_index.py"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 3.519933775000027
+}

@@ -1,0 +1,33 @@
+{
+  "phase": "requirements_audit_not_final_source_review",
+  "source_was_changing": true,
+  "first_observed": {
+    "source": "6f48f8b72eb9671b7889dff073ace0fd6d1df9a852728c95374593bcad69b2ae",
+    "tests": "42c3348e7c5467509d08b18b3430001ca7f7b4cb86f6347471e6542a1275e9fb"
+  },
+  "bindings_at_capture": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py": "ccb03891a95f1af9219f0824dbf7d56e09ff374eb4e628a6dc8ff1bbbd2f8488",
+    "deep_hedge_price/tests/test_dynamic_hedging_closure.py": "7add224b10ae39b246669db9a175af1159069395eec478417ee0f539025c126b",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py": "c233ba0cf6d736401c4f2a4d92dc803810c8066ebf7960534730299759142fca",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "bb7e7f6ecee12e56444ae24ced496328fcc5e1e1a142630f3fd985c94f3790d6",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce"
+  },
+  "required_cases": [
+    "all twelve G2/U2/init11,29,47 fit slots, original8192 train/2048 validation, all original512 requested updates",
+    "separate fixed last-finite NN holdout validation for all12, not inferred from Greek/band-only select_validation",
+    "raw weight six-key shape, train-only scaler, raw identity, actual finite update/event/batch domains preserved",
+    "completed raw/outer fit with connector elapsed beyond cap must fail time_cap and retain diagnostic raw weights",
+    "finite loss plus unknown train/validation qualification cannot become completed or select a fallback",
+    "optimizer/source/shape/solver defects remain unclosed, not one of allowed financial failure kinds",
+    "raw study expenses mapped explicitly to A timing/complete/failed ledger; separate NN validation cost and no double-charge",
+    "original candidate cash/rate/fee/calendar/memory/payoff input conventions bound or explicit checker limitation",
+    "reserved declared train/validation seeds and driver identities disjoint; no authenticity of original RNG claim",
+    "saved replay no RNG/SeedSequence/fit/optimizer/teacher, recomputes fixed policy training+validation+cash and selections",
+    "history/batch structural validation is not earlier optimizer authentication; disk fit-boundary resume remains caller-owned"
+  ],
+  "scoped_tests_run": false,
+  "final_review": "pending stable SHA",
+  "mutations": "ignored evidence only; source/docs/Git unchanged"
+}

@@ -1,0 +1,32 @@
+from pathlib import Path
+import hashlib,importlib.util,json,os,runpy,sys,time
+import numpy as np
+root=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+d=root/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+from deep_hedge_price import _dynamic_hedging_closure as closure
+from deep_hedge_price import _dynamic_hedging_study as study
+test=runpy.run_path(str(root/'deep_hedge_price/tests/test_dynamic_hedging_closure.py'))
+args=test['inputs']()
+spec=importlib.util.spec_from_file_location('closure_probe_pilot',root/'johnhull/research/RB-F04/dynamic_hedging/run_pilot.py')
+runner=importlib.util.module_from_spec(spec);sys.modules[spec.name]=runner;spec.loader.exec_module(runner)
+actual=study.fit_policy
+def instrumented(*a,**kw):
+ print(json.dumps({'fit_started':{'universe':kw['universe'],'seed':kw['seed'],'original_n':len(a[0]['prices']),'updates':kw['updates']}}),flush=True)
+ out=actual(*a,**kw)
+ print(json.dumps({'fit_finished':{'universe':kw['universe'],'seed':kw['seed'],'status':out['status'],'elapsed':out['elapsed_seconds'],'updates':out['updates']}}),flush=True)
+ return out
+study.fit_policy=instrumented
+start=time.perf_counter()
+payload=closure.training_validation_closure(**args)
+artifact=d/'task-6-full-count-unit-runtime-split'
+runner.write_closure_artifact(artifact,{'scope':'deterministic source unit; not formal finance','inputs':args,'closure':payload})
+loaded,receipt=runner.read_closure_artifact(artifact)
+check=closure.check_training_closure(loaded['closure'],**loaded['inputs'])
+summary={'scope':'source unit only; deterministic supplied paths, not formal pilot or RNG authentication',
+ 'elapsed_seconds':time.perf_counter()-start,'source_sha256':hashlib.sha256(Path(closure.__file__).read_bytes()).hexdigest(),
+ 'check':check,'closure_status':payload['closure_status'],'artifact_provenance':receipt,
+ 'fits':[{'id':r['id'],'status':r['status'],'updates':r['updates'],'elapsed_seconds':r['elapsed_seconds'],'failure_kind':r.get('failure_kind')} for r in payload['closed_fits']['fits']],
+ 'nn_validation':[{'id':r['id'],'status':r['status'],'original_n':r['original_n'],'mse':r['mse']} for r in payload['nn_validation']],
+ 'expense_count':len(payload['expenses']),'artifact':str(artifact)}
+(d/'task-6-full-count-unit-runtime-split.json').write_text(json.dumps(summary,indent=2))
+print(json.dumps({'summary':str(d/'task-6-full-count-unit-runtime-split.json'),'elapsed_seconds':summary['elapsed_seconds'],'check':check,'fits':[r['status'] for r in summary['fits']]}),flush=True)

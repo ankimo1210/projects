@@ -1,0 +1,123 @@
+F.FFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_ test_checkpoint_architecture_and_declared_training_config_must_match[weights_extra] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7dfe659882f0>
+field = 'weights_extra'
+
+    @pytest.mark.parametrize("field", ["weights_extra", "weights_shape", "learning_rate", "device", "dtype"])
+    def test_checkpoint_architecture_and_declared_training_config_must_match(monkeypatch, field):
+        args = inputs()
+        def corrupt(training):
+            raw = training["fits"][0]["raw_fit"]
+            if field == "weights_extra":
+                raw["weights"]["unused"] = np.zeros(1)
+            elif field == "weights_shape":
+                raw["weights"]["w1"] = np.zeros((9, 31))
+            elif field == "learning_rate":
+                raw[field] = 0.01
+            else:
+                raw[field] = "wrong"
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:471: Failed
+_ test_checkpoint_architecture_and_declared_training_config_must_match[learning_rate] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7dff83dd30b0>
+field = 'learning_rate'
+
+    @pytest.mark.parametrize("field", ["weights_extra", "weights_shape", "learning_rate", "device", "dtype"])
+    def test_checkpoint_architecture_and_declared_training_config_must_match(monkeypatch, field):
+        args = inputs()
+        def corrupt(training):
+            raw = training["fits"][0]["raw_fit"]
+            if field == "weights_extra":
+                raw["weights"]["unused"] = np.zeros(1)
+            elif field == "weights_shape":
+                raw["weights"]["w1"] = np.zeros((9, 31))
+            elif field == "learning_rate":
+                raw[field] = 0.01
+            else:
+                raw[field] = "wrong"
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:471: Failed
+_ test_checkpoint_architecture_and_declared_training_config_must_match[device] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7dff83e05700>
+field = 'device'
+
+    @pytest.mark.parametrize("field", ["weights_extra", "weights_shape", "learning_rate", "device", "dtype"])
+    def test_checkpoint_architecture_and_declared_training_config_must_match(monkeypatch, field):
+        args = inputs()
+        def corrupt(training):
+            raw = training["fits"][0]["raw_fit"]
+            if field == "weights_extra":
+                raw["weights"]["unused"] = np.zeros(1)
+            elif field == "weights_shape":
+                raw["weights"]["w1"] = np.zeros((9, 31))
+            elif field == "learning_rate":
+                raw[field] = 0.01
+            else:
+                raw[field] = "wrong"
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:471: Failed
+_ test_checkpoint_architecture_and_declared_training_config_must_match[dtype] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7dfe65883500>
+field = 'dtype'
+
+    @pytest.mark.parametrize("field", ["weights_extra", "weights_shape", "learning_rate", "device", "dtype"])
+    def test_checkpoint_architecture_and_declared_training_config_must_match(monkeypatch, field):
+        args = inputs()
+        def corrupt(training):
+            raw = training["fits"][0]["raw_fit"]
+            if field == "weights_extra":
+                raw["weights"]["unused"] = np.zeros(1)
+            elif field == "weights_shape":
+                raw["weights"]["w1"] = np.zeros((9, 31))
+            elif field == "learning_rate":
+                raw[field] = 0.01
+            else:
+                raw[field] = "wrong"
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:471: Failed
+_ test_arithmetic_replay_cannot_certify_financial_precision_when_baselines_unknown _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7dfe65883320>
+
+    def test_arithmetic_replay_cannot_certify_financial_precision_when_baselines_unknown(monkeypatch):
+        args = inputs()
+        supply_training(monkeypatch, args)
+        for risk_data in args["validation_risks"].values():
+            for row in risk_data["models"].values():
+                row["qualification"][:] = "unknown"
+                row["band_qualification"][:] = "unknown"
+        saved = module().training_validation_closure(**args)
+        assert all(r["status"] == "completed" for r in saved["nn_validation"])
+        assert all(r["selected_baseline"] is None for r in saved["baseline_validation"])
+        result = module().check_training_closure(saved, **args)
+>       assert result["qualification"] == "unknown"
+E       AssertionError: assert 'qualified' == 'unknown'
+E         
+E         - unknown
+E         + qualified
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:486: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_checkpoint_architecture_and_declared_training_config_must_match[weights_extra]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_checkpoint_architecture_and_declared_training_config_must_match[learning_rate]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_checkpoint_architecture_and_declared_training_config_must_match[device]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_checkpoint_architecture_and_declared_training_config_must_match[dtype]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_arithmetic_replay_cannot_certify_financial_precision_when_baselines_unknown
+5 failed, 1 passed, 28 deselected in 13.89s

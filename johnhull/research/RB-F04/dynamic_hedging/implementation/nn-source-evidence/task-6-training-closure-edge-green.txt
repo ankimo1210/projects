@@ -1,0 +1,43 @@
+...........F.......                                                      [100%]
+=================================== FAILURES ===================================
+__________ test_saved_closure_replays_without_rng_training_or_teacher __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x70a231225490>
+
+    def test_saved_closure_replays_without_rng_training_or_teacher(monkeypatch):
+        args = inputs()
+        supply_training(monkeypatch, args)
+        saved = module().training_validation_closure(**args)
+        def forbidden(*a, **kw):
+            pytest.fail("saved replay opened RNG/training")
+        monkeypatch.setattr(study, "fit_roster", forbidden)
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        monkeypatch.setattr(np.random, "SeedSequence", forbidden)
+>       result = module().check_training_closure(saved, **args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:233: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py:313: in check_training_closure
+    _inputs(train, validation, risks, streams, candidate)
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py:26: in _inputs
+    _require(candidate == protocol.candidate_protocol(), "unchanged original financial candidate required")
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py:136: in candidate_protocol
+    "seed": main_seeds()["premium"][0],
+            ^^^^^^^^^^^^
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py:54: in main_seeds
+    int(np.random.SeedSequence([2026100904, tag, slot]).generate_state(1)[0])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = ([2026100904, 1, 0],), kw = {}
+
+    def forbidden(*a, **kw):
+>       pytest.fail("saved replay opened RNG/training")
+E       Failed: saved replay opened RNG/training
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:229: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_saved_closure_replays_without_rng_training_or_teacher
+1 failed, 18 passed in 34.93s

@@ -1,0 +1,285 @@
+......F.FFFFFFFFFF.                                                      [100%]
+=================================== FAILURES ===================================
+_______________ test_completed_fit_cannot_use_validation_scaler ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f556da0dd0>
+
+    def test_completed_fit_cannot_use_validation_scaler(monkeypatch):
+        args = inputs()
+        args["validation_datasets"]["Heston"]["prices"][:, :, 0] *= 1.2
+        def contaminate(training):
+            training["fits"][0]["raw_fit"]["scaler"] = policy._normalization(
+                policy._dataset(args["validation_datasets"]["Heston"]))
+        supply_training(monkeypatch, args, contaminate)
+>       with pytest.raises(ValueError, match="training-only scaler"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:202: Failed
+_ test_completed_fit_requires_original_identity_updates_and_batch_domain[batch_ids] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f55e652b10>
+corruption = 'batch_ids'
+
+    @pytest.mark.parametrize("corruption", ["lost_slot", "batch_ids", "updates", "identity"])
+    def test_completed_fit_requires_original_identity_updates_and_batch_domain(monkeypatch, corruption):
+        args = inputs()
+        def corrupt(training):
+            first = training["fits"][0]
+            if corruption == "lost_slot":
+                training["fits"].pop()
+            elif corruption == "batch_ids":
+                first["raw_fit"]["batch_indices"][0, 0] = 8192
+            elif corruption == "updates":
+                first["raw_fit"]["updates"] = 511
+            else:
+                first["raw_fit"]["seed"] = 29
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:220: Failed
+_ test_completed_fit_requires_original_identity_updates_and_batch_domain[updates] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f6753605f0>
+corruption = 'updates'
+
+    @pytest.mark.parametrize("corruption", ["lost_slot", "batch_ids", "updates", "identity"])
+    def test_completed_fit_requires_original_identity_updates_and_batch_domain(monkeypatch, corruption):
+        args = inputs()
+        def corrupt(training):
+            first = training["fits"][0]
+            if corruption == "lost_slot":
+                training["fits"].pop()
+            elif corruption == "batch_ids":
+                first["raw_fit"]["batch_indices"][0, 0] = 8192
+            elif corruption == "updates":
+                first["raw_fit"]["updates"] = 511
+            else:
+                first["raw_fit"]["seed"] = 29
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:220: Failed
+_ test_completed_fit_requires_original_identity_updates_and_batch_domain[identity] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f675360a70>
+corruption = 'identity'
+
+    @pytest.mark.parametrize("corruption", ["lost_slot", "batch_ids", "updates", "identity"])
+    def test_completed_fit_requires_original_identity_updates_and_batch_domain(monkeypatch, corruption):
+        args = inputs()
+        def corrupt(training):
+            first = training["fits"][0]
+            if corruption == "lost_slot":
+                training["fits"].pop()
+            elif corruption == "batch_ids":
+                first["raw_fit"]["batch_indices"][0, 0] = 8192
+            elif corruption == "updates":
+                first["raw_fit"]["updates"] = 511
+            else:
+                first["raw_fit"]["seed"] = 29
+        supply_training(monkeypatch, args, corrupt)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:220: Failed
+__________ test_saved_closure_replays_without_rng_training_or_teacher __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f675360ef0>
+
+    def test_saved_closure_replays_without_rng_training_or_teacher(monkeypatch):
+        args = inputs()
+        supply_training(monkeypatch, args)
+        saved = module().training_validation_closure(**args)
+        def forbidden(*a, **kw):
+            pytest.fail("saved replay opened RNG/training")
+        monkeypatch.setattr(study, "fit_roster", forbidden)
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        monkeypatch.setattr(np.random, "SeedSequence", forbidden)
+>       result = module().check_training_closure(saved, **args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'deep_hedge_price._dynamic_hedging_closure' has no attribute 'check_training_closure'
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:233: AttributeError
+_____ test_saved_closure_tampering_cannot_reseal_numerical_selection[loss] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f6753610d0>
+corruption = 'loss'
+
+    @pytest.mark.parametrize("corruption", ["loss", "mask", "checkpoint", "baseline", "train_pnl", "expense"])
+    def test_saved_closure_tampering_cannot_reseal_numerical_selection(monkeypatch, corruption):
+        args = inputs()
+        supply_training(monkeypatch, args)
+        saved = module().training_validation_closure(**args)
+        if corruption == "loss":
+            saved["nn_validation"][0]["result"]["loss"][0] += 0.5
+        elif corruption == "mask":
+            saved["nn_validation"][0]["result"]["qualified_path_mask"][0] = False
+        elif corruption == "checkpoint":
+            saved["closed_fits"]["fits"][0]["checkpoint_id"] = "best_validation"
+        elif corruption == "baseline":
+            saved["baseline_validation"][0]["selected_baseline"] = "band:local:width0.2"
+        elif corruption == "train_pnl":
+            saved["training"]["fits"][0]["raw_fit"]["train_discounted_pnl"][0] += 0.5
+        else:
+            saved["expenses"][0]["wall_seconds"] = 0.0
+        with pytest.raises(ValueError):
+>           module().check_training_closure(saved, **args)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'deep_hedge_price._dynamic_hedging_closure' has no attribute 'check_training_closure'
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:257: AttributeError
+_____ test_saved_closure_tampering_cannot_reseal_numerical_selection[mask] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f556da1220>
+corruption = 'mask'
+
+    @pytest.mark.parametrize("corruption", ["loss", "mask", "checkpoint", "baseline", "train_pnl", "expense"])
+    def test_saved_closure_tampering_cannot_reseal_numerical_selection(monkeypatch, corruption):
+        args = inputs()
+        supply_training(monkeypatch, args)
+        saved = module().training_validation_closure(**args)
+        if corruption == "loss":
+            saved["nn_validation"][0]["result"]["loss"][0] += 0.5
+        elif corruption == "mask":
+            saved["nn_validation"][0]["result"]["qualified_path_mask"][0] = False
+        elif corruption == "checkpoint":
+            saved["closed_fits"]["fits"][0]["checkpoint_id"] = "best_validation"
+        elif corruption == "baseline":
+            saved["baseline_validation"][0]["selected_baseline"] = "band:local:width0.2"
+        elif corruption == "train_pnl":
+            saved["training"]["fits"][0]["raw_fit"]["train_discounted_pnl"][0] += 0.5
+        else:
+            saved["expenses"][0]["wall_seconds"] = 0.0
+        with pytest.raises(ValueError):
+>           module().check_training_closure(saved, **args)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'deep_hedge_price._dynamic_hedging_closure' has no attribute 'check_training_closure'
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:257: AttributeError
+__ test_saved_closure_tampering_cannot_reseal_numerical_selection[checkpoint] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f556da1670>
+corruption = 'checkpoint'
+
+    @pytest.mark.parametrize("corruption", ["loss", "mask", "checkpoint", "baseline", "train_pnl", "expense"])
+    def test_saved_closure_tampering_cannot_reseal_numerical_selection(monkeypatch, corruption):
+        args = inputs()
+        supply_training(monkeypatch, args)
+        saved = module().training_validation_closure(**args)
+        if corruption == "loss":
+            saved["nn_validation"][0]["result"]["loss"][0] += 0.5
+        elif corruption == "mask":
+            saved["nn_validation"][0]["result"]["qualified_path_mask"][0] = False
+        elif corruption == "checkpoint":
+            saved["closed_fits"]["fits"][0]["checkpoint_id"] = "best_validation"
+        elif corruption == "baseline":
+            saved["baseline_validation"][0]["selected_baseline"] = "band:local:width0.2"
+        elif corruption == "train_pnl":
+            saved["training"]["fits"][0]["raw_fit"]["train_discounted_pnl"][0] += 0.5
+        else:
+            saved["expenses"][0]["wall_seconds"] = 0.0
+        with pytest.raises(ValueError):
+>           module().check_training_closure(saved, **args)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'deep_hedge_price._dynamic_hedging_closure' has no attribute 'check_training_closure'
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:257: AttributeError
+___ test_saved_closure_tampering_cannot_reseal_numerical_selection[baseline] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f556da3c50>
+corruption = 'baseline'
+
+    @pytest.mark.parametrize("corruption", ["loss", "mask", "checkpoint", "baseline", "train_pnl", "expense"])
+    def test_saved_closure_tampering_cannot_reseal_numerical_selection(monkeypatch, corruption):
+        args = inputs()
+        supply_training(monkeypatch, args)
+        saved = module().training_validation_closure(**args)
+        if corruption == "loss":
+            saved["nn_validation"][0]["result"]["loss"][0] += 0.5
+        elif corruption == "mask":
+            saved["nn_validation"][0]["result"]["qualified_path_mask"][0] = False
+        elif corruption == "checkpoint":
+            saved["closed_fits"]["fits"][0]["checkpoint_id"] = "best_validation"
+        elif corruption == "baseline":
+            saved["baseline_validation"][0]["selected_baseline"] = "band:local:width0.2"
+        elif corruption == "train_pnl":
+            saved["training"]["fits"][0]["raw_fit"]["train_discounted_pnl"][0] += 0.5
+        else:
+            saved["expenses"][0]["wall_seconds"] = 0.0
+        with pytest.raises(ValueError):
+>           module().check_training_closure(saved, **args)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'deep_hedge_price._dynamic_hedging_closure' has no attribute 'check_training_closure'
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:257: AttributeError
+__ test_saved_closure_tampering_cannot_reseal_numerical_selection[train_pnl] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f556da3ef0>
+corruption = 'train_pnl'
+
+    @pytest.mark.parametrize("corruption", ["loss", "mask", "checkpoint", "baseline", "train_pnl", "expense"])
+    def test_saved_closure_tampering_cannot_reseal_numerical_selection(monkeypatch, corruption):
+        args = inputs()
+        supply_training(monkeypatch, args)
+        saved = module().training_validation_closure(**args)
+        if corruption == "loss":
+            saved["nn_validation"][0]["result"]["loss"][0] += 0.5
+        elif corruption == "mask":
+            saved["nn_validation"][0]["result"]["qualified_path_mask"][0] = False
+        elif corruption == "checkpoint":
+            saved["closed_fits"]["fits"][0]["checkpoint_id"] = "best_validation"
+        elif corruption == "baseline":
+            saved["baseline_validation"][0]["selected_baseline"] = "band:local:width0.2"
+        elif corruption == "train_pnl":
+            saved["training"]["fits"][0]["raw_fit"]["train_discounted_pnl"][0] += 0.5
+        else:
+            saved["expenses"][0]["wall_seconds"] = 0.0
+        with pytest.raises(ValueError):
+>           module().check_training_closure(saved, **args)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'deep_hedge_price._dynamic_hedging_closure' has no attribute 'check_training_closure'
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:257: AttributeError
+___ test_saved_closure_tampering_cannot_reseal_numerical_selection[expense] ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72f556da0c50>
+corruption = 'expense'
+
+    @pytest.mark.parametrize("corruption", ["loss", "mask", "checkpoint", "baseline", "train_pnl", "expense"])
+    def test_saved_closure_tampering_cannot_reseal_numerical_selection(monkeypatch, corruption):
+        args = inputs()
+        supply_training(monkeypatch, args)
+        saved = module().training_validation_closure(**args)
+        if corruption == "loss":
+            saved["nn_validation"][0]["result"]["loss"][0] += 0.5
+        elif corruption == "mask":
+            saved["nn_validation"][0]["result"]["qualified_path_mask"][0] = False
+        elif corruption == "checkpoint":
+            saved["closed_fits"]["fits"][0]["checkpoint_id"] = "best_validation"
+        elif corruption == "baseline":
+            saved["baseline_validation"][0]["selected_baseline"] = "band:local:width0.2"
+        elif corruption == "train_pnl":
+            saved["training"]["fits"][0]["raw_fit"]["train_discounted_pnl"][0] += 0.5
+        else:
+            saved["expenses"][0]["wall_seconds"] = 0.0
+        with pytest.raises(ValueError):
+>           module().check_training_closure(saved, **args)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'deep_hedge_price._dynamic_hedging_closure' has no attribute 'check_training_closure'
+
+deep_hedge_price/tests/test_dynamic_hedging_closure.py:257: AttributeError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_completed_fit_cannot_use_validation_scaler
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_completed_fit_requires_original_identity_updates_and_batch_domain[batch_ids]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_completed_fit_requires_original_identity_updates_and_batch_domain[updates]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_completed_fit_requires_original_identity_updates_and_batch_domain[identity]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_saved_closure_replays_without_rng_training_or_teacher
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_saved_closure_tampering_cannot_reseal_numerical_selection[loss]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_saved_closure_tampering_cannot_reseal_numerical_selection[mask]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_saved_closure_tampering_cannot_reseal_numerical_selection[checkpoint]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_saved_closure_tampering_cannot_reseal_numerical_selection[baseline]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_saved_closure_tampering_cannot_reseal_numerical_selection[train_pnl]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_closure.py::test_saved_closure_tampering_cannot_reseal_numerical_selection[expense]
+11 failed, 8 passed in 15.62s

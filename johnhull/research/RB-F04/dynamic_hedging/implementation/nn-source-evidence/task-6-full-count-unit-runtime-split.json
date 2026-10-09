@@ -1,0 +1,188 @@
+{
+  "scope": "source unit only; deterministic supplied paths, not formal pilot or RNG authentication",
+  "elapsed_seconds": 34.51216298200052,
+  "source_sha256": "5ea85d5eec969482d04760a11827464dad4fcdd7a81deb0f472d938e2332c15e",
+  "check": {
+    "integrity": "pass",
+    "closure_status": "closed",
+    "original_fit_slots": 12,
+    "original_validation_n": 2048,
+    "test_opened": false,
+    "optimizer_history_authenticated": false,
+    "random_stream_provenance_authenticated": false,
+    "qualification": "unknown",
+    "nn_validation_qualification": "qualified",
+    "baseline_validation_qualification": "qualified",
+    "verification_scope": "fixed checkpoint/scaler/cash/selection arithmetic and retained expenses"
+  },
+  "closure_status": "closed",
+  "artifact_provenance": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "5305021b1aba2d37e3a57235d11b8d2b5f1c425276c488442e63d915e129b076",
+    "metadata_sha256": "60af5aca14bdae9599eab7d4802976a26c6f4a8e4a24aae81d94c1e7d622e2bb",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "fits": [
+    {
+      "id": "fit:Heston:U1:init11",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.7703049930005363,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:Heston:U1:init29",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.197656468999412,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:Heston:U1:init47",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.150509246999718,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:Heston:U2:init11",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.111976209000204,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:Heston:U2:init29",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.1477865589986322,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:Heston:U2:init47",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.094223301000966,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:local:U1:init11",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.2482827750009164,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:local:U1:init29",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.256728151000061,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:local:U1:init47",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.2103635650000797,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:local:U2:init11",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.1550554989989905,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:local:U2:init29",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.1133617469986348,
+      "failure_kind": null
+    },
+    {
+      "id": "fit:local:U2:init47",
+      "status": "completed",
+      "updates": 512,
+      "elapsed_seconds": 2.123749506999957,
+      "failure_kind": null
+    }
+  ],
+  "nn_validation": [
+    {
+      "id": "validation:fit:Heston:U1:init11",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 9.039133658345166
+    },
+    {
+      "id": "validation:fit:Heston:U1:init29",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 9.039136089573221
+    },
+    {
+      "id": "validation:fit:Heston:U1:init47",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 9.039173286367035
+    },
+    {
+      "id": "validation:fit:Heston:U2:init11",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 4.499815688547231
+    },
+    {
+      "id": "validation:fit:Heston:U2:init29",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 4.922882182420239
+    },
+    {
+      "id": "validation:fit:Heston:U2:init47",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 4.4998521063818355
+    },
+    {
+      "id": "validation:fit:local:U1:init11",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 9.039133658345166
+    },
+    {
+      "id": "validation:fit:local:U1:init29",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 9.039136089573221
+    },
+    {
+      "id": "validation:fit:local:U1:init47",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 9.039173286367035
+    },
+    {
+      "id": "validation:fit:local:U2:init11",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 4.499815688547231
+    },
+    {
+      "id": "validation:fit:local:U2:init29",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 4.922882182420239
+    },
+    {
+      "id": "validation:fit:local:U2:init47",
+      "status": "completed",
+      "original_n": 2048,
+      "mse": 4.4998521063818355
+    }
+  ],
+  "expense_count": 28,
+  "artifact": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-split"
+}
