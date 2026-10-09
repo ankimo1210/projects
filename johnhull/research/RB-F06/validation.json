@@ -75,11 +75,26 @@
     "python_files_checked": 12
   },
   "release": {
-    "worktree_tracked": "pending",
-    "precommit_tracked_check": "expected FAIL: changed release files differ from HEAD; run again after committing"
+    "worktree_tracked": "PASS after commit 3e919eed",
+    "precommit_tracked_check": "expected FAIL: changed release files differ from HEAD; run again after committing",
+    "main_tracked": "PASS at 3e919eed"
   },
   "main_integration": {
-    "status": "pending"
+    "status": "fast-forward merged and pushed",
+    "study_commit": "3e919eed",
+    "previous_main": "4fa38f98",
+    "primary_restore": "PASS; 23154318-byte reference.npz",
+    "main_saved_numerical_check": {
+      "passed": true,
+      "dataset_slots": 102,
+      "original_attempts": 4398,
+      "fresh": false
+    },
+    "unrelated_changes_preserved": {
+      "paths": 48,
+      "status_identical": true,
+      "tracked_diff_digest_identical": true
+    }
   },
   "adoption": {
     "teaching_diagnostics": "retain",
