@@ -92,7 +92,7 @@ Ch26–28 は既存巻の節別教材を利用する。全 Book 本文をこの�
 計算の正本は非公開の [quote risk](hullkit/src/hullkit/_quote_risk.py)、[digital 教師](hullkit/src/hullkit/_digital_teachers.py)、[digital DML](../deep_hedge_price/src/deep_hedge_price/_digital_dml.py)。
 研究 backlog 全体は [研究計画](docs/superpowers/plans/2026-09-27-research-backlog.md) を参照。
 
-**統合研究（実装中・研究成果未完了）：** [較正込み市場クオートGreeksのDML：調査・設計](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)と[8工程の実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)。F07＋F05を接続し、価格・市場risk・固定契約ヘッジ・総費用を同じ条件で比較する。完了済み研究の件数には含めない。
+**統合研究（本計時中・研究成果未完了）：** [較正込み市場クオートGreeksのDML：結果ドラフト](research/RB-F07/quote_dml/README.md)、[調査・設計](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)、[8工程の実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)。F07＋F05を接続した30NN＋4回帰の学習と独立数値照合が完了。価格・市場risk・固定契約ヘッジ・総費用を同じ条件で比較し、価格やヘッジの悪化も記録する。計時・総費用・本成果3図・最終レビュー・main反映は未完了で、完了済み研究の件数には含めない。
 
 ## 6. モデル名からの短い案内
 

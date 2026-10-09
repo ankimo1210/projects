@@ -1,0 +1,3 @@
+# Main arrays are kept in the two artifact stores; Git retains their manifest.
+reference.npz
+artifact-cache/
