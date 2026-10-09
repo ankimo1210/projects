@@ -1,0 +1,77 @@
+import json,copy,math,hashlib
+from pathlib import Path
+import numpy as np
+from deep_hedge_price import _dynamic_hedging_replay as replay
+from hullkit._dynamic_hedging_conditional import teacher_primitives
+from hullkit._heston_local_surface import HestonParameters
+source=Path("/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py")
+assert hashlib.sha256(source.read_bytes()).hexdigest()=="d52ac6ee48b9eb638701f35d08732fcfe9ada436c4d0f31a2d47cfb170589b61"
+def forbidden(*a,**k): raise AssertionError("RNG forbidden in replay")
+old_rng,old_seed=np.random.default_rng,np.random.seed
+np.random.default_rng=forbidden
+np.random.seed=forbidden
+out={}
+try:
+ times=np.array([0.,.5,1.]);prices=np.array([[[100.,6.],[104.,8.],[102.,5.]]])
+ holds=np.array([[[.4,.5],[.6,.2]]]);cf=np.array([[[0.,0.],[1.,.3],[.5,.2]]])
+ data={"times":times,"prices":prices,"cashflows":cf,"rate":.05,"premium":7.,"payoff":np.array([3.]),"cost_rates":np.array([.001,.005]),"original_n":1}
+ # Scalar event recurrence with hand-computed quantities and all event fees.
+ c0=7-(.4*100+.5*6)-(.4*100*.001+.5*6*.005)
+ c1=c0*math.exp(.05*.5)+.4*1+.5*.3-((.6-.4)*104+(.2-.5)*8)-(abs(.6-.4)*104*.001+abs(.2-.5)*8*.005)
+ c2=c1*math.exp(.05*.5)+.6*.5+.2*.2+.6*102+.2*5-(.6*102*.001+.2*5*.005)-3
+ expected=c2*math.exp(-.05)
+ cash=replay.check_cash(data,{"holdings":holds,"raw_holdings":holds,"original_n":1,"universe":"U2"})
+ actual=float(cash["recomputed"]["discounted_pnl"][0])
+ assert abs(actual-expected)<1e-12
+ out["independent_cash"]={"hand_discounted_pnl":expected,"replay_discounted_pnl":actual,"cash_integrity":cash["integrity"]}
+ count=[]
+ for where in ["dataset","cell"]:
+  for key in ["original_n","original_path_count"]:
+   d=copy.deepcopy(data);cell={"holdings":holds,"raw_holdings":holds,"original_n":1}
+   (d if where=="dataset" else cell)[key]=2
+   try: replay.check_cash(d,cell)
+   except ValueError as e: count.append({"scope":where,"alias":key,"rejected":True,"reason":str(e)})
+   else: raise AssertionError("Original denominator tamper accepted")
+ out["R1_all_count_aliases"]=count
+ # Exact zero call exposure needs no unknown call price or CF; active liquidation does.
+ stock_holds=np.array([[[.4,0.],[.6,0.]]])
+ good=copy.deepcopy(data)
+ bad=copy.deepcopy(data);bad["prices"][0,1,1]=np.nan;bad["cashflows"][0,1,1]=np.nan
+ untraded=replay.check_cash(bad,{"holdings":stock_holds,"raw_holdings":stock_holds,"original_n":1})
+ clean=replay.check_cash(good,{"holdings":stock_holds,"raw_holdings":stock_holds,"original_n":1})
+ assert abs(float(untraded["recomputed"]["discounted_pnl"][0])-float(clean["recomputed"]["discounted_pnl"][0]))<1e-12
+ assert untraded["recomputed"]["unused_call_price_mask"][0,1]
+ assert untraded["recomputed"]["unused_call_cashflow_mask"][0,1]
+ active=np.array([[[.4,.5],[.6,0.]]])
+ active_result=replay.check_cash(bad,{"holdings":active,"raw_holdings":active,"original_n":1})
+ assert np.isnan(active_result["recomputed"]["discounted_pnl"]).all()
+ out["inactive_call"]={"zero_exposure_integrity":untraded["integrity"],"zero_exposure_discounted_pnl":float(untraded["recomputed"]["discounted_pnl"][0]),"nonzero_liquidation_qualification":active_result["qualification"],"nonzero_liquidation_n":active_result["original_path_count"]}
+ invalid=stock_holds.copy();invalid[0,0]=np.nan
+ rejected=[]
+ for repaired in [np.zeros_like(stock_holds),np.where(np.isnan(invalid),0.,invalid)]:
+  try: replay.check_cash(data,{"holdings":repaired,"raw_holdings":invalid,"original_n":1})
+  except ValueError as e: rejected.append(str(e))
+  else: raise AssertionError("Invalid action repaired silently")
+ allowed=replay.check_cash(data,{"holdings":invalid,"raw_holdings":invalid,"original_n":1,"reasons":np.array(["source action invalid"])})
+ assert allowed["qualification"]=="unknown"
+ out["invalid_action"]={"repairs_rejected":rejected,"retained_original_n":allowed["original_path_count"],"whole_action_unknown":bool(np.isnan(allowed["recomputed"]["discounted_pnl"]).all())}
+ p=HestonParameters(100.,.03,0.,.04,2.,.04,0.,-.7)
+ states=np.array([.01,.04,.08,.16]);thresholds=np.array([0.,1.,2.,3.])
+ rows=[]
+ for state in states:
+  prim=teacher_primitives("heston",p,np.zeros((32,1,2)),calendar_times=np.array([11/12,1.]),fixing_indices=np.array([1]),spot=100.,state=float(state),memory_count=11,compact_status=True)
+  rows.append({"primitives":prim,"thresholds":thresholds,"date_index":0,"global_driver_id":"common-global","driver_mapping":{"original_n":32,"global_steps":768,"start_step":704,"stop_step":768,"aggregation_factor":64}})
+ axes={"dates":np.array([11/12]),"state":states,"threshold":thresholds}
+ valid=replay.rebuild_asian_cache(rows,p,axes,model="heston")
+ assert valid["integrity"]=="pass" and valid["qualification"]=="unknown"
+ changed=copy.deepcopy(rows)
+ changed[-1]["driver_mapping"].update(global_steps=1536,start_step=1408,stop_step=1536,aggregation_factor=128)
+ try: replay.rebuild_asian_cache(changed,p,axes,model="heston")
+ except ValueError as e: reason=str(e)
+ else: raise AssertionError("Conflicting shared global lengths accepted")
+ out["R2_shared_global_grid"]={"valid_original_n":valid["original_path_count"],"valid_groups":valid["saved_group_count"],"mixed_grid_rejected":True,"reason":reason,"earlier_sde_verified":valid["earlier_sde_verified"]}
+ out["rng"]="forbidden throughout numerical replay/probes"
+finally:
+ np.random.default_rng=old_rng
+ np.random.seed=old_seed
+print(json.dumps(out,ensure_ascii=False,indent=2))

@@ -1,0 +1,11 @@
+{
+  "probe_scope": "orchestration only; synthetic actual protocol freeze gate; no financial pilot/main qualification",
+  "real_protocol_gate_used": true,
+  "raw_validation_all14_per4_original_n": 2048,
+  "pretest_receipts_have_weights": false,
+  "test_opened": true,
+  "evaluations": 36,
+  "weight_taken_from_test_artifact": 123.0,
+  "qualification": "unknown",
+  "finding": "post-gate test artifact supplies all raw fit weights without closed training binding"
+}

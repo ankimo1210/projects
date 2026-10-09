@@ -1,0 +1,119 @@
+"""Read-only numerical spike for actual calendar Heston/local common fit to T*=1.25."""
+import importlib.util
+import json
+import os
+import sys
+import time
+from pathlib import Path
+import numpy as np
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+OUT=Path("/tmp/johnhull-dynamic-initial-pilot")
+def load(name,path):
+    spec=importlib.util.spec_from_file_location(name,path)
+    mod=importlib.util.module_from_spec(spec)
+    sys.modules[name]=mod
+    spec.loader.exec_module(mod)
+    return mod
+surface=load("dynamic_spike_surface",ROOT/"johnhull/hullkit/src/hullkit/_heston_local_surface.py")
+pilot=load("dynamic_spike_oldpilot",ROOT/"johnhull/research/RB-F04/pilot.py")
+ref=load("dynamic_spike_reference",ROOT/"johnhull/research/RB-F04/dynamic_hedging/reference_methods.py")
+p=surface.HestonParameters(spot=100,rate=.03,dividend_yield=0,v0=.04,kappa=2,theta=.04,xi=.3,rho=-.7)
+groups=[("fit",t,np.array([80,90,100,110,120.])) for t in [.25,.5,.75,1,1.25]]
+groups += [("holdout",t,np.array([85,95,105,115.])) for t in [1/3,2/3,1.125]]
+arrays={}
+record={"schema":"dynamic-initial-quotes-read-only-spike-v1","parameters":vars(p),"scope":"initial 37 quote common fit only; no formal pilot/freeze/Q/teacher/PnL acceptance","status":"running","stages":[],"quotes":[{"kind":kind,"time":t,"strike":float(k)} for kind,t,ks in groups for k in ks],"started_wall_time":time.time(),"all_costs_inclusive_wall_s":None}
+global_wall=time.perf_counter()
+global_cpu=time.process_time()
+def clean(x):
+    if isinstance(x,dict):return {str(k):clean(v) for k,v in x.items()}
+    if isinstance(x,(list,tuple)):return [clean(v) for v in x]
+    if isinstance(x,np.ndarray):return clean(x.tolist())
+    if isinstance(x,np.generic):return clean(x.item())
+    if isinstance(x,float) and not np.isfinite(x):return None
+    return x
+def save():
+    record["all_costs_inclusive_wall_s"]=time.perf_counter()-global_wall
+    record["all_costs_inclusive_cpu_s"]=time.process_time()-global_cpu
+    OUT.with_suffix(".json").write_text(json.dumps(clean(record),indent=2,sort_keys=True,allow_nan=False)+"\n")
+    np.savez_compressed(OUT.with_suffix(".npz"),**arrays)
+def stage(label,fn):
+    w,c=time.perf_counter(),time.process_time()
+    try:
+        value=fn()
+        row={"id":label,"status":"completed","wall_s":time.perf_counter()-w,"cpu_s":time.process_time()-c,**value}
+    except Exception as exc:
+        row={"id":label,"status":"failed","wall_s":time.perf_counter()-w,"cpu_s":time.process_time()-c,"error_type":type(exc).__name__,"error":str(exc)}
+    record["stages"].append(row)
+    save()
+    print(json.dumps(clean({k:v for k,v in row.items() if k in ["id","status","wall_s","max_error","max_refinement","gate_pass","failure","error"]})),flush=True)
+    return row
+def truths():
+    base,cut,errors,order_prices,order_refined,cutoff_refined=[],[],[],[],[],[]
+    receipts=[]
+    for i,(_,t,ks) in enumerate(groups):
+        a=ref.independent_heston_call(ks,t,p,upper=250,return_receipt=True)
+        b=ref.independent_heston_call(ks,t,p,upper=500,return_receipt=True)
+        receipts.append({"time":t,"strikes":ks,"upper250":a,"upper500":b})
+        base.extend(a["price"]);cut.extend(b["price"]);errors.extend(b["price_unit_error"])
+        for o,f,dest in [(1024,512,order_prices),(2048,512,order_refined),(2048,1024,cutoff_refined)]:
+            dest.extend(surface.fourier_surface(ks,t,p,order=o,max_frequency=f/np.sqrt(t))["price"])
+    for key,values in [("truth250",base),("truth500",cut),("truth500_error",errors),("cf1024_cutoff512",order_prices),("cf2048_cutoff512",order_refined),("cf2048_cutoff1024",cutoff_refined)]:
+        arrays[key]=np.asarray(values)
+    checks={name:float(np.max(np.abs(arrays[a]-arrays[b]))) for name,a,b in [
+        ("adaptive_cutoff","truth250","truth500"),
+        ("fourier_order","cf1024_cutoff512","cf2048_cutoff512"),
+        ("fourier_cutoff","cf2048_cutoff512","cf2048_cutoff1024"),
+        ("independent_transform","cf2048_cutoff1024","truth500")]}
+    record["cf_receipts"]=receipts
+    return {"checks":checks,"max_error":max(checks.values()),"max_adaptive_error":float(max(errors)),"gate_pass":all(v<=1e-8 for v in checks.values()) and np.isfinite(arrays["truth500"]).all()}
+stage("independent_CF_37_quotes",truths)
+fields={}
+def build(label,nt,nz,tmin=1/4096,width=5,order=1024,scale=512):
+    def run():
+        built=pilot.build_surface(p,times=np.geomspace(tmin,1.25,nt),z_nodes=np.linspace(-width,width,nz),order=order,frequency_scale=scale,density_floor=1e-10,allow_row_wings=True)
+        for key,value in built["arrays"].items():arrays[label+"."+key]=value
+        fields[label]=built["grid"]
+        return {"settings":{"time_nodes":nt,"z_nodes":nz,"tmin":tmin,"tmax":1.25,"z_width":width,**built["settings"]},"failure":built["failure"],"unsupported_original_cells":built["unsupported_cells"],"wing_policy":"constant extension of each contiguous supported row; unsupported cells retained","support_intervals":built["arrays"]["surface.wing_boundaries"],"grid_bounded_max_variance":None if built["grid"] is None else float(np.nanmax(built["grid"].values)),"gate_pass":built["grid"] is not None}
+    return stage(label,run)
+def pde(label,field_label,space,steps,width,subset=None,compare=None):
+    def run():
+        grid=fields[field_label]
+        if grid is None:return {"failure":"unbuilt_or_unsupported_field","gate_pass":False}
+        prices=[];receipts=[];selected=np.arange(37) if subset is None else np.asarray(subset)
+        first=0
+        all_ids=[]
+        for i,(kind,t,ks) in enumerate(groups):
+            ids=np.arange(first,first+len(ks));first+=len(ks)
+            mask=np.isin(ids,selected)
+            if not np.any(mask):continue
+            ans=ref.pde_call(100,ks[mask],t,grid.evaluate,.03,0,space_nodes=space,time_steps=steps,log_half_width=width)
+            all_ids.extend(ids[mask]);prices.extend(ans["price"])
+            for key in ["log_spots","spots","values"]:arrays[label+f".group{i}."+key]=ans["grid"][key]
+            receipts.append({"time":t,"strikes":ks[mask],"supported":ans["supported"],"failure":ans["failure"],"status_counts":ans["status_counts"],"grid":{k:v for k,v in ans["grid"].items() if k not in ["log_spots","spots","values"]}})
+        ids=np.asarray(all_ids)
+        values=np.asarray(prices)
+        arrays[label+".quote_ids"]=ids
+        arrays[label+".prices"]=values
+        errors=values-arrays["truth500"][ids]
+        arrays[label+".errors"]=errors
+        refinement=None
+        if compare is not None:
+            oldids=arrays[compare+".quote_ids"]
+            old=arrays[compare+".prices"]
+            oldmap={int(i):float(v) for i,v in zip(oldids,old,strict=True)}
+            refinement=np.array([values[j]-oldmap[int(i)] for j,i in enumerate(ids)])
+            arrays[label+".refinement"]=refinement
+        return {"field":field_label,"space_nodes":space,"time_steps":steps,"log_half_width":width,"original_quote_count":len(ids),"max_error":float(np.max(np.abs(errors))),"worst_quote_id":int(ids[np.argmax(np.abs(errors))]),"max_refinement":None if refinement is None else float(np.max(np.abs(refinement))),"gate_pass":len(ids)==37 and np.isfinite(values).all() and np.max(np.abs(errors))<=.001,"all_quote_errors":errors,"pde_receipts":receipts,"failure":next((r["failure"] for r in receipts if r["failure"]),None)}
+    return stage(label,run)
+build("field129x161",129,161)
+pde("pde1201x960", "field129x161",1201,960,1.8)
+pde("pde2401x1920", "field129x161",2401,1920,1.8,compare="pde1201x960")
+pde("pde_domain2p4", "field129x161",3201,1920,2.4,compare="pde2401x1920")
+build("field257x321",257,321)
+pde("pde_field_refined","field257x321",2401,1920,1.8,compare="pde2401x1920")
+pde("pde_space4801","field257x321",4801,1920,1.8,compare="pde_field_refined")
+pde("pde_time3840","field257x321",4801,3840,1.8,compare="pde_space4801")
+record["status"]="completed"
+record["qualification"]="unknown until source/code/math/pilot independent review and full formal gates"
+save()
+print(json.dumps({"final_status":record["status"],"wall_s":record["all_costs_inclusive_wall_s"],"cpu_s":record["all_costs_inclusive_cpu_s"],"files":[str(OUT.with_suffix(s)) for s in [".json",".npz"]]}),flush=True)

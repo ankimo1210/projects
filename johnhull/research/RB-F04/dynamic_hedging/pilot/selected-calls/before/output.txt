@@ -1,0 +1,22 @@
+cache heston 5.769054208999933
+cache local 2.2745835860000625
+state 0 0 ['ok', 'ok']
+state 0 1 ['ok', 'ok']
+state 0 2 ['ok', 'ok']
+state 1 0 ['ok', 'ok']
+state 1 1 ['ok', 'ok']
+state 1 2 ['ok', 'ok']
+state 2 0 ['ok', 'ok']
+state 2 1 ['ok', 'ok']
+state 2 2 ['ok', 'ok']
+state 3 0 ['ok', 'ok']
+state 3 1 ['ok', 'ok']
+state 3 2 ['ok', 'ok']
+state 4 0 ['ok', 'ok']
+state 4 1 ['ok', 'ok']
+state 4 2 ['ok', 'ok']
+state 5 0 ['unknown', 'ok']
+state 5 1 ['ok', 'ok']
+state 5 2 ['ok', 'ok']
+independent base 0.7368328730000258
+FINAL 8.82092813099996 7.920749047457543e-06 0.0014499732926109843

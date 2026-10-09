@@ -1,0 +1,796 @@
+FFFFFFFF                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_main_requires_closed_raw_checkpoint_before_test_opening[original_path_count] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4f46c7a0>
+key = 'original_path_count'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        with pytest.raises(ValueError, match="completed fit slot"):
+>           runner.run_main(
+                frozen={"fixture": True}, candidate=runner.candidate_protocol(),
+                source=runner.source_identity()["protocol_source"],
+                selection_receipts=receipts, raw_validation={}, closed_fits=closed,
+                main_test_loader=lambda: opened.append(True),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def run_main(
+        *,
+        frozen,
+        candidate,
+        source,
+        selection_receipts,
+        raw_validation,
+        main_test_loader,
+        closed_fits=None,
+    ):
+        """Enforce raw selection and actual protocol gate before test loader access.
+    
+        A loader can supply all eighteen original generator/seed/level cases.
+        This evaluates supplied data; generation, statistics, Q checks and full
+        expense/fresh management remain explicit unimplemented obligations.
+        """
+        if not frozen:
+            protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
+        _same(source_identity()["protocol_source"], source, "main.source_identity")
+        if closed_fits is None:
+            raise ValueError("closed training fits must be fixed before test access")
+        _check_original_fits(
+            closed_fits, candidate["training"]["original_n"], candidate["training"]["updates"]
+        )
+        if selection_receipts.get("closed_fits_sha256") != payload_digest(closed_fits):
+            raise ValueError("closed fits differ from the prior training selection receipt")
+        selected_fits = {row["id"]: row for row in selection_receipts.get("fits", [])}
+        if len(selected_fits) != 12:
+            raise ValueError("twelve prior training selection fit records required")
+        for row in closed_fits["fits"]:
+            selected = selected_fits[row["id"]]
+            for key in [
+                "status",
+                "attempted",
+                "original_n",
+                "requested_updates",
+                "updates",
+                "elapsed_seconds",
+            ]:
+                _same(row[key], selected[key], f"closed_fits.{row['id']}.{key}")
+        # Detach before loader access so alias mutation cannot select test weights.
+        fixed_fits = copy.deepcopy(closed_fits)
+        validations = selection_receipts.get("validation", [])
+        if len(validations) != 4:
+>           raise ValueError("all four raw validation selections required before test loading")
+E           ValueError: all four raw validation selections required before test loading
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:309: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4f46c7a0>
+key = 'original_path_count'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+>       with pytest.raises(ValueError, match="completed fit slot"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'completed fit slot'
+E         Actual message: 'all four raw validation selections required before test loading'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:274: AssertionError
+_ test_main_requires_closed_raw_checkpoint_before_test_opening[training_generator] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ef88cb0>
+key = 'training_generator'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        with pytest.raises(ValueError, match="completed fit slot"):
+>           runner.run_main(
+                frozen={"fixture": True}, candidate=runner.candidate_protocol(),
+                source=runner.source_identity()["protocol_source"],
+                selection_receipts=receipts, raw_validation={}, closed_fits=closed,
+                main_test_loader=lambda: opened.append(True),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def run_main(
+        *,
+        frozen,
+        candidate,
+        source,
+        selection_receipts,
+        raw_validation,
+        main_test_loader,
+        closed_fits=None,
+    ):
+        """Enforce raw selection and actual protocol gate before test loader access.
+    
+        A loader can supply all eighteen original generator/seed/level cases.
+        This evaluates supplied data; generation, statistics, Q checks and full
+        expense/fresh management remain explicit unimplemented obligations.
+        """
+        if not frozen:
+            protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
+        _same(source_identity()["protocol_source"], source, "main.source_identity")
+        if closed_fits is None:
+            raise ValueError("closed training fits must be fixed before test access")
+        _check_original_fits(
+            closed_fits, candidate["training"]["original_n"], candidate["training"]["updates"]
+        )
+        if selection_receipts.get("closed_fits_sha256") != payload_digest(closed_fits):
+            raise ValueError("closed fits differ from the prior training selection receipt")
+        selected_fits = {row["id"]: row for row in selection_receipts.get("fits", [])}
+        if len(selected_fits) != 12:
+            raise ValueError("twelve prior training selection fit records required")
+        for row in closed_fits["fits"]:
+            selected = selected_fits[row["id"]]
+            for key in [
+                "status",
+                "attempted",
+                "original_n",
+                "requested_updates",
+                "updates",
+                "elapsed_seconds",
+            ]:
+                _same(row[key], selected[key], f"closed_fits.{row['id']}.{key}")
+        # Detach before loader access so alias mutation cannot select test weights.
+        fixed_fits = copy.deepcopy(closed_fits)
+        validations = selection_receipts.get("validation", [])
+        if len(validations) != 4:
+>           raise ValueError("all four raw validation selections required before test loading")
+E           ValueError: all four raw validation selections required before test loading
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:309: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ef88cb0>
+key = 'training_generator'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+>       with pytest.raises(ValueError, match="completed fit slot"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'completed fit slot'
+E         Actual message: 'all four raw validation selections required before test loading'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:274: AssertionError
+_____ test_main_requires_closed_raw_checkpoint_before_test_opening[fit_id] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ed03b30>
+key = 'fit_id'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        with pytest.raises(ValueError, match="completed fit slot"):
+>           runner.run_main(
+                frozen={"fixture": True}, candidate=runner.candidate_protocol(),
+                source=runner.source_identity()["protocol_source"],
+                selection_receipts=receipts, raw_validation={}, closed_fits=closed,
+                main_test_loader=lambda: opened.append(True),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def run_main(
+        *,
+        frozen,
+        candidate,
+        source,
+        selection_receipts,
+        raw_validation,
+        main_test_loader,
+        closed_fits=None,
+    ):
+        """Enforce raw selection and actual protocol gate before test loader access.
+    
+        A loader can supply all eighteen original generator/seed/level cases.
+        This evaluates supplied data; generation, statistics, Q checks and full
+        expense/fresh management remain explicit unimplemented obligations.
+        """
+        if not frozen:
+            protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
+        _same(source_identity()["protocol_source"], source, "main.source_identity")
+        if closed_fits is None:
+            raise ValueError("closed training fits must be fixed before test access")
+        _check_original_fits(
+            closed_fits, candidate["training"]["original_n"], candidate["training"]["updates"]
+        )
+        if selection_receipts.get("closed_fits_sha256") != payload_digest(closed_fits):
+            raise ValueError("closed fits differ from the prior training selection receipt")
+        selected_fits = {row["id"]: row for row in selection_receipts.get("fits", [])}
+        if len(selected_fits) != 12:
+            raise ValueError("twelve prior training selection fit records required")
+        for row in closed_fits["fits"]:
+            selected = selected_fits[row["id"]]
+            for key in [
+                "status",
+                "attempted",
+                "original_n",
+                "requested_updates",
+                "updates",
+                "elapsed_seconds",
+            ]:
+                _same(row[key], selected[key], f"closed_fits.{row['id']}.{key}")
+        # Detach before loader access so alias mutation cannot select test weights.
+        fixed_fits = copy.deepcopy(closed_fits)
+        validations = selection_receipts.get("validation", [])
+        if len(validations) != 4:
+>           raise ValueError("all four raw validation selections required before test loading")
+E           ValueError: all four raw validation selections required before test loading
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:309: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ed03b30>
+key = 'fit_id'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+>       with pytest.raises(ValueError, match="completed fit slot"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'completed fit slot'
+E         Actual message: 'all four raw validation selections required before test loading'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:274: AssertionError
+_ test_main_requires_closed_raw_checkpoint_before_test_opening[checkpoint_id] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ef6fad0>
+key = 'checkpoint_id'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        with pytest.raises(ValueError, match="completed fit slot"):
+>           runner.run_main(
+                frozen={"fixture": True}, candidate=runner.candidate_protocol(),
+                source=runner.source_identity()["protocol_source"],
+                selection_receipts=receipts, raw_validation={}, closed_fits=closed,
+                main_test_loader=lambda: opened.append(True),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def run_main(
+        *,
+        frozen,
+        candidate,
+        source,
+        selection_receipts,
+        raw_validation,
+        main_test_loader,
+        closed_fits=None,
+    ):
+        """Enforce raw selection and actual protocol gate before test loader access.
+    
+        A loader can supply all eighteen original generator/seed/level cases.
+        This evaluates supplied data; generation, statistics, Q checks and full
+        expense/fresh management remain explicit unimplemented obligations.
+        """
+        if not frozen:
+            protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
+        _same(source_identity()["protocol_source"], source, "main.source_identity")
+        if closed_fits is None:
+            raise ValueError("closed training fits must be fixed before test access")
+        _check_original_fits(
+            closed_fits, candidate["training"]["original_n"], candidate["training"]["updates"]
+        )
+        if selection_receipts.get("closed_fits_sha256") != payload_digest(closed_fits):
+            raise ValueError("closed fits differ from the prior training selection receipt")
+        selected_fits = {row["id"]: row for row in selection_receipts.get("fits", [])}
+        if len(selected_fits) != 12:
+            raise ValueError("twelve prior training selection fit records required")
+        for row in closed_fits["fits"]:
+            selected = selected_fits[row["id"]]
+            for key in [
+                "status",
+                "attempted",
+                "original_n",
+                "requested_updates",
+                "updates",
+                "elapsed_seconds",
+            ]:
+                _same(row[key], selected[key], f"closed_fits.{row['id']}.{key}")
+        # Detach before loader access so alias mutation cannot select test weights.
+        fixed_fits = copy.deepcopy(closed_fits)
+        validations = selection_receipts.get("validation", [])
+        if len(validations) != 4:
+>           raise ValueError("all four raw validation selections required before test loading")
+E           ValueError: all four raw validation selections required before test loading
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:309: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ef6fad0>
+key = 'checkpoint_id'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+>       with pytest.raises(ValueError, match="completed fit slot"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'completed fit slot'
+E         Actual message: 'all four raw validation selections required before test loading'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:274: AssertionError
+_ test_main_requires_closed_raw_checkpoint_before_test_opening[requested_updates] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ee58290>
+key = 'requested_updates'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        with pytest.raises(ValueError, match="completed fit slot"):
+>           runner.run_main(
+                frozen={"fixture": True}, candidate=runner.candidate_protocol(),
+                source=runner.source_identity()["protocol_source"],
+                selection_receipts=receipts, raw_validation={}, closed_fits=closed,
+                main_test_loader=lambda: opened.append(True),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def run_main(
+        *,
+        frozen,
+        candidate,
+        source,
+        selection_receipts,
+        raw_validation,
+        main_test_loader,
+        closed_fits=None,
+    ):
+        """Enforce raw selection and actual protocol gate before test loader access.
+    
+        A loader can supply all eighteen original generator/seed/level cases.
+        This evaluates supplied data; generation, statistics, Q checks and full
+        expense/fresh management remain explicit unimplemented obligations.
+        """
+        if not frozen:
+            protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
+        _same(source_identity()["protocol_source"], source, "main.source_identity")
+        if closed_fits is None:
+            raise ValueError("closed training fits must be fixed before test access")
+        _check_original_fits(
+            closed_fits, candidate["training"]["original_n"], candidate["training"]["updates"]
+        )
+        if selection_receipts.get("closed_fits_sha256") != payload_digest(closed_fits):
+            raise ValueError("closed fits differ from the prior training selection receipt")
+        selected_fits = {row["id"]: row for row in selection_receipts.get("fits", [])}
+        if len(selected_fits) != 12:
+            raise ValueError("twelve prior training selection fit records required")
+        for row in closed_fits["fits"]:
+            selected = selected_fits[row["id"]]
+            for key in [
+                "status",
+                "attempted",
+                "original_n",
+                "requested_updates",
+                "updates",
+                "elapsed_seconds",
+            ]:
+                _same(row[key], selected[key], f"closed_fits.{row['id']}.{key}")
+        # Detach before loader access so alias mutation cannot select test weights.
+        fixed_fits = copy.deepcopy(closed_fits)
+        validations = selection_receipts.get("validation", [])
+        if len(validations) != 4:
+>           raise ValueError("all four raw validation selections required before test loading")
+E           ValueError: all four raw validation selections required before test loading
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:309: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ee58290>
+key = 'requested_updates'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+>       with pytest.raises(ValueError, match="completed fit slot"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'completed fit slot'
+E         Actual message: 'all four raw validation selections required before test loading'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:274: AssertionError
+____ test_main_requires_closed_raw_checkpoint_before_test_opening[updates] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4eec9070>
+key = 'updates'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        with pytest.raises(ValueError, match="completed fit slot"):
+>           runner.run_main(
+                frozen={"fixture": True}, candidate=runner.candidate_protocol(),
+                source=runner.source_identity()["protocol_source"],
+                selection_receipts=receipts, raw_validation={}, closed_fits=closed,
+                main_test_loader=lambda: opened.append(True),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def run_main(
+        *,
+        frozen,
+        candidate,
+        source,
+        selection_receipts,
+        raw_validation,
+        main_test_loader,
+        closed_fits=None,
+    ):
+        """Enforce raw selection and actual protocol gate before test loader access.
+    
+        A loader can supply all eighteen original generator/seed/level cases.
+        This evaluates supplied data; generation, statistics, Q checks and full
+        expense/fresh management remain explicit unimplemented obligations.
+        """
+        if not frozen:
+            protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
+        _same(source_identity()["protocol_source"], source, "main.source_identity")
+        if closed_fits is None:
+            raise ValueError("closed training fits must be fixed before test access")
+        _check_original_fits(
+            closed_fits, candidate["training"]["original_n"], candidate["training"]["updates"]
+        )
+        if selection_receipts.get("closed_fits_sha256") != payload_digest(closed_fits):
+            raise ValueError("closed fits differ from the prior training selection receipt")
+        selected_fits = {row["id"]: row for row in selection_receipts.get("fits", [])}
+        if len(selected_fits) != 12:
+            raise ValueError("twelve prior training selection fit records required")
+        for row in closed_fits["fits"]:
+            selected = selected_fits[row["id"]]
+            for key in [
+                "status",
+                "attempted",
+                "original_n",
+                "requested_updates",
+                "updates",
+                "elapsed_seconds",
+            ]:
+                _same(row[key], selected[key], f"closed_fits.{row['id']}.{key}")
+        # Detach before loader access so alias mutation cannot select test weights.
+        fixed_fits = copy.deepcopy(closed_fits)
+        validations = selection_receipts.get("validation", [])
+        if len(validations) != 4:
+>           raise ValueError("all four raw validation selections required before test loading")
+E           ValueError: all four raw validation selections required before test loading
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:309: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4eec9070>
+key = 'updates'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+>       with pytest.raises(ValueError, match="completed fit slot"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'completed fit slot'
+E         Actual message: 'all four raw validation selections required before test loading'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:274: AssertionError
+____ test_main_requires_closed_raw_checkpoint_before_test_opening[weights] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ef1dbe0>
+key = 'weights'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        with pytest.raises(ValueError, match="completed fit slot"):
+>           runner.run_main(
+                frozen={"fixture": True}, candidate=runner.candidate_protocol(),
+                source=runner.source_identity()["protocol_source"],
+                selection_receipts=receipts, raw_validation={}, closed_fits=closed,
+                main_test_loader=lambda: opened.append(True),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def run_main(
+        *,
+        frozen,
+        candidate,
+        source,
+        selection_receipts,
+        raw_validation,
+        main_test_loader,
+        closed_fits=None,
+    ):
+        """Enforce raw selection and actual protocol gate before test loader access.
+    
+        A loader can supply all eighteen original generator/seed/level cases.
+        This evaluates supplied data; generation, statistics, Q checks and full
+        expense/fresh management remain explicit unimplemented obligations.
+        """
+        if not frozen:
+            protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
+        _same(source_identity()["protocol_source"], source, "main.source_identity")
+        if closed_fits is None:
+            raise ValueError("closed training fits must be fixed before test access")
+        _check_original_fits(
+            closed_fits, candidate["training"]["original_n"], candidate["training"]["updates"]
+        )
+        if selection_receipts.get("closed_fits_sha256") != payload_digest(closed_fits):
+            raise ValueError("closed fits differ from the prior training selection receipt")
+        selected_fits = {row["id"]: row for row in selection_receipts.get("fits", [])}
+        if len(selected_fits) != 12:
+            raise ValueError("twelve prior training selection fit records required")
+        for row in closed_fits["fits"]:
+            selected = selected_fits[row["id"]]
+            for key in [
+                "status",
+                "attempted",
+                "original_n",
+                "requested_updates",
+                "updates",
+                "elapsed_seconds",
+            ]:
+                _same(row[key], selected[key], f"closed_fits.{row['id']}.{key}")
+        # Detach before loader access so alias mutation cannot select test weights.
+        fixed_fits = copy.deepcopy(closed_fits)
+        validations = selection_receipts.get("validation", [])
+        if len(validations) != 4:
+>           raise ValueError("all four raw validation selections required before test loading")
+E           ValueError: all four raw validation selections required before test loading
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:309: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ef1dbe0>
+key = 'weights'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+>       with pytest.raises(ValueError, match="completed fit slot"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'completed fit slot'
+E         Actual message: 'all four raw validation selections required before test loading'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:274: AssertionError
+_____ test_main_requires_closed_raw_checkpoint_before_test_opening[scaler] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ef8ab40>
+key = 'scaler'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        with pytest.raises(ValueError, match="completed fit slot"):
+>           runner.run_main(
+                frozen={"fixture": True}, candidate=runner.candidate_protocol(),
+                source=runner.source_identity()["protocol_source"],
+                selection_receipts=receipts, raw_validation={}, closed_fits=closed,
+                main_test_loader=lambda: opened.append(True),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def run_main(
+        *,
+        frozen,
+        candidate,
+        source,
+        selection_receipts,
+        raw_validation,
+        main_test_loader,
+        closed_fits=None,
+    ):
+        """Enforce raw selection and actual protocol gate before test loader access.
+    
+        A loader can supply all eighteen original generator/seed/level cases.
+        This evaluates supplied data; generation, statistics, Q checks and full
+        expense/fresh management remain explicit unimplemented obligations.
+        """
+        if not frozen:
+            protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
+        _same(source_identity()["protocol_source"], source, "main.source_identity")
+        if closed_fits is None:
+            raise ValueError("closed training fits must be fixed before test access")
+        _check_original_fits(
+            closed_fits, candidate["training"]["original_n"], candidate["training"]["updates"]
+        )
+        if selection_receipts.get("closed_fits_sha256") != payload_digest(closed_fits):
+            raise ValueError("closed fits differ from the prior training selection receipt")
+        selected_fits = {row["id"]: row for row in selection_receipts.get("fits", [])}
+        if len(selected_fits) != 12:
+            raise ValueError("twelve prior training selection fit records required")
+        for row in closed_fits["fits"]:
+            selected = selected_fits[row["id"]]
+            for key in [
+                "status",
+                "attempted",
+                "original_n",
+                "requested_updates",
+                "updates",
+                "elapsed_seconds",
+            ]:
+                _same(row[key], selected[key], f"closed_fits.{row['id']}.{key}")
+        # Detach before loader access so alias mutation cannot select test weights.
+        fixed_fits = copy.deepcopy(closed_fits)
+        validations = selection_receipts.get("validation", [])
+        if len(validations) != 4:
+>           raise ValueError("all four raw validation selections required before test loading")
+E           ValueError: all four raw validation selections required before test loading
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:309: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x76fc4ef8ab40>
+key = 'scaler'
+
+    @pytest.mark.parametrize("key", [
+        "original_path_count", "training_generator", "fit_id", "checkpoint_id",
+        "requested_updates", "updates", "weights", "scaler",
+    ])
+    def test_main_requires_closed_raw_checkpoint_before_test_opening(monkeypatch, key):
+        closed = closed_fits_fixture()
+        closed["fits"][0]["raw_fit"].pop(key)
+        receipts = {"fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        opened = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+>       with pytest.raises(ValueError, match="completed fit slot"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'completed fit slot'
+E         Actual message: 'all four raw validation selections required before test loading'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:274: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_requires_closed_raw_checkpoint_before_test_opening[original_path_count]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_requires_closed_raw_checkpoint_before_test_opening[training_generator]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_requires_closed_raw_checkpoint_before_test_opening[fit_id]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_requires_closed_raw_checkpoint_before_test_opening[checkpoint_id]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_requires_closed_raw_checkpoint_before_test_opening[requested_updates]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_requires_closed_raw_checkpoint_before_test_opening[updates]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_requires_closed_raw_checkpoint_before_test_opening[weights]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_requires_closed_raw_checkpoint_before_test_opening[scaler]
+8 failed, 17 deselected in 9.23s

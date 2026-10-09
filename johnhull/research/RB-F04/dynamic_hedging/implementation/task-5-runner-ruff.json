@@ -1,0 +1,25 @@
+[
+  {
+    "command": [
+      "ruff",
+      "check",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+    ],
+    "exit_code": 0,
+    "stdout": "All checks passed!\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "ruff",
+      "format",
+      "--check",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+    ],
+    "exit_code": 0,
+    "stdout": "2 files already formatted\n",
+    "stderr": ""
+  }
+]

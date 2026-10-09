@@ -1,0 +1,87 @@
+from pathlib import Path
+import runpy,copy,json,numpy as np,hashlib,sys
+R=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+W=R/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+path=R/"johnhull/research/RB-F04/dynamic_hedging/run_reference.py"
+source_bytes=path.read_bytes()
+ns={"__file__":str(path),"__name__":"independent_runner_final"}
+exec(compile(source_bytes,str(path),"exec"),ns)
+fixtures=runpy.run_path(str(R/"deep_hedge_price/tests/test_dynamic_hedging_protocol.py"))
+p=ns["protocol"]
+identity=ns["source_identity"]()
+def digest(x):return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest()
+def prepare():
+ candidate,source,pilot,review,selection=fixtures["freeze_inputs"]()
+ source=copy.deepcopy(identity["protocol_source"])
+ pilot["verification"]["inputs"]={"candidate":digest(candidate),"source":digest(source)}
+ review["verification"]["inputs"]={"candidate":digest(candidate),"source":digest(source),"pilot":digest(pilot)}
+ frozen=p.freeze_contract(candidate,source,pilot,review,selection)
+ receipts=fixtures["main_selection_receipts"](frozen)
+ closed={"fits":[]}
+ for slot in p.study_roster()["fits"]:
+  row=dict(slot,status="completed",attempted=True,original_n=8192,requested_updates=512,updates=512,elapsed_seconds=20.,reason=None,checkpoint_id="last_finite_completed")
+  row["raw_fit"]={"status":"completed","complete":True,"seed":slot["initialization"],"universe":slot["universe"],"original_path_count":8192,"training_generator":slot["training_generator"],"fit_id":slot["id"],"checkpoint_id":"last_finite_completed","requested_updates":512,"updates":512,"weights":{"w1":np.zeros((9,32)),"b1":np.zeros(32),"w2":np.zeros((32,32)),"b2":np.zeros(32),"w3":np.zeros((32,2)),"b3":np.zeros(2)},"scaler":{"mean":np.zeros(9),"std":np.ones(9)}}
+  closed["fits"].append(row)
+ receipts["closed_fits_sha256"]=ns["payload_digest"](closed)
+ raw={row["id"]:{v["id"]:np.full(2048,np.sqrt(v["mse"])) for v in row["candidates"]} for row in receipts["validation"]}
+ return dict(frozen=frozen,candidate=candidate,source=source,selection_receipts=receipts,raw_validation=raw,closed_fits=closed)
+def cases():
+ return [{"generator":g,"seed_slot":s,"level":l,"dataset":{"original_n":16384},"risk":{}} for g in ["Heston","local"] for s in range(3) for l in [192,384,768]]
+checks=[]
+def reject(name,kwargs,pattern,loader_payload=None,opened_expected=False):
+ opened=[]
+ def loader():
+  opened.append(True)
+  return {} if loader_payload is None else loader_payload
+ try:ns["run_main"](**kwargs,main_test_loader=loader)
+ except (ValueError,KeyError) as e:
+  message=str(e)
+  assert pattern in message,(name,message,pattern)
+  assert bool(opened)==opened_expected,(name,opened)
+  checks.append({"name":name,"rejected":True,"test_opened":bool(opened),"reason":message})
+ else:raise AssertionError("not rejected: "+name)
+kwargs=prepare();kwargs.pop("closed_fits");reject("missing closed training weights",kwargs,"closed training fits")
+kwargs=prepare();kwargs["selection_receipts"]["closed_fits_sha256"]="0"*64;reject("prior payload digest mismatch",kwargs,"prior training selection")
+kwargs=prepare();kwargs["closed_fits"]["fits"].pop();reject("erased original fit",kwargs,"twelve")
+kwargs=prepare();kwargs["source"]={"wrong.py":"0"*64};reject("different actual source",kwargs,"source")
+for key,bad in [
+ ("seed",29),("universe","U2"),("training_generator","local"),
+ ("original_path_count",8191),("fit_id","fit:local:U2:init47"),
+ ("checkpoint_id","best_loss"),("requested_updates",511),("updates",511),
+ ("weights",{"w1":np.zeros((9,32))}),("scaler",{"mean":np.zeros(9),"std":np.zeros(9)})
+]:
+ kwargs=prepare();kwargs["closed_fits"]["fits"][0]["raw_fit"][key]=bad
+ # Rebind the prior digest to isolate semantic identity validation.
+ kwargs["selection_receipts"]["closed_fits_sha256"]=ns["payload_digest"](kwargs["closed_fits"])
+ reject("invalid raw checkpoint "+key,kwargs,"completed fit slot")
+kwargs=prepare();kwargs["raw_validation"]["selection:Heston:U1"]["greek:Heston"][0]=np.nan
+reject("raw validation unknown original path",kwargs,"unknown validation path")
+kwargs=prepare();badfits=copy.deepcopy(kwargs["closed_fits"]);badfits["fits"][0]["raw_fit"]["weights"]["w1"][0,0]=123.
+reject("same ID test-supplied different weights",kwargs,"test_artifact.closed_fits",{"fits":badfits},True)
+kwargs=prepare();seen=[]
+original=ns["study"].test_roster
+def consumer(dataset,risk,fitted,validation,*,generator,universe):
+ row={"generator":generator,"universe":universe,"original_n":dataset["original_n"],"weight":float(fitted["fits"][0]["raw_fit"]["weights"]["w1"][0,0]),"band":validation["selected_bands"]["Heston"]}
+ seen.append(row);return row
+ns["study"].test_roster=consumer
+def alias_loader():
+ kwargs["closed_fits"]["fits"][0]["raw_fit"]["weights"]["w1"][0,0]=123.
+ kwargs["selection_receipts"]["validation"][0]["selected_bands"]["Heston"]="band:Heston:width0.2"
+ kwargs["frozen"]["selection"]["test_n"]=1
+ kwargs["candidate"]["sde"]["main_levels"]=[1]
+ kwargs["source"].clear()
+ kwargs["raw_validation"]["selection:Heston:U1"]["greek:Heston"][:]=np.nan
+ return {"test_cases":cases()}
+try:result=ns["run_main"](**kwargs,main_test_loader=alias_loader)
+finally:ns["study"].test_roster=original
+assert len(seen)==36
+assert all(x["original_n"]==16384 and x["weight"]==0. and x["band"]=="band:Heston:width0" for x in seen),seen
+checks.append({"name":"test loader mutation cannot replace weights/band/candidate/frozenN/source/rawloss","evaluations":len(seen),"fixed_weight":0.,"fixed_band":"band:Heston:width0","original_n":16384,"qualification":result["qualification"]})
+payload={"raw_fit":{"weights":{"w1":np.arange(6.).reshape(2,3),"b1":np.zeros(3)}}}
+arrays={};tree=ns["_encode_tree"](payload,arrays)
+roundtrip=ns["_decode_tree"](json.loads(json.dumps(tree,sort_keys=True)),arrays,set())
+before,after=ns["payload_digest"](payload),ns["payload_digest"](roundtrip)
+assert before==after,(before,after)
+checks.append({"name":"sorted JSON numeric payload roundtrip provenance","before":before,"after":after,"equal":True})
+out={"source_sha256":hashlib.sha256(source_bytes).hexdigest(),"tests_sha256":hashlib.sha256((R/"deep_hedge_price/tests/test_dynamic_hedging_runner.py").read_bytes()).hexdigest(),"scope":"independent source orchestration only; synthetic raw gate receipts, no formal financial pilot/main acceptance","real_freeze_and_main_gate":True,"actual_source_registry":True,"raw_validation_per_selection":{"original_n":2048,"candidate_count":14,"selection_count":4},"checks":checks}
+print(json.dumps(out,indent=2))

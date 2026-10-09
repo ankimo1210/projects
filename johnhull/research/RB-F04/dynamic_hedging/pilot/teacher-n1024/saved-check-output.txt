@@ -1,0 +1,37 @@
+{
+  "scope": "saved arithmetic/provenance only; no RNG/SDE and no independent finance oracle",
+  "qualification": "unknown",
+  "current_binding_changes": {},
+  "raw_arrays_count": 9557,
+  "raw_array_bytes": 240626504,
+  "status": "PASS",
+  "original_slots": 36,
+  "computed_slots": 35,
+  "teacher_calls_replayed": 175,
+  "path_steps": 82247680,
+  "valid_original_path_counts": [
+    1024
+  ],
+  "underresolved_slots": [
+    "state09.heston",
+    "state09.local",
+    "state12.heston",
+    "state12.local",
+    "state15.local"
+  ],
+  "simultaneous_SE_pass_slots": [
+    "state13.heston",
+    "state13.local",
+    "state16.heston",
+    "state16.local",
+    "state17.heston",
+    "state17.local"
+  ],
+  "qualification_unknown_slots": 36,
+  "source_input_binding_count": 65,
+  "limitations": "Saved CE/control arithmetic and fixed selected-call IFT only; no solver/oracle/denominator/bias/interpolation certification, no formal-pilot approval",
+  "elapsed_saved_replay_wall_seconds": 9.566610685999876,
+  "preflight_json_sha256_before_summary": "5528d7b742db8c4a5cff1d577e74d8aef927b83e378d9157737a1b44b40a8e67",
+  "preflight_npz_sha256": "6e1248871e594793bcf2297e4bf32c9fabe238dd4ecdfed2677b25cdbd544e65",
+  "preflight_script_sha256": "4b0a7a217d0af7cb5a73f505268f474e8f5a2aa4bef85ac5c3a6b7b65403a3c3"
+}

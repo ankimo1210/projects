@@ -1,0 +1,54 @@
+{
+  "reviewer": "root independent of study implementer",
+  "critical": 0,
+  "important": 0,
+  "minor": 0,
+  "unresolved": [],
+  "resolved_original_findings": [
+    "I1",
+    "I2",
+    "I3",
+    "I4"
+  ],
+  "source_proceed": true,
+  "formal_pilot_qualified": false,
+  "independent_probes": {
+    "expected_linear_stock": 0.7425528449356018,
+    "linear": {
+      "heston": {
+        "target": [
+          0.7425528449356018,
+          0.0
+        ],
+        "target_qualification": "qualified",
+        "band_qualification": "unknown"
+      },
+      "local": {
+        "target": [
+          0.7425528449356018,
+          0.0
+        ],
+        "target_qualification": "qualified",
+        "band_qualification": "unknown"
+      }
+    },
+    "local_covariance": {
+      "expected": 83.75104340495011,
+      "actual": 83.75104340495011,
+      "base_variance": 0.1
+    },
+    "wrong_generator": {
+      "original_slots": 12,
+      "reasoned_failed_local_slots": 6
+    },
+    "wrong_checkpoint": {
+      "status": "unknown",
+      "reason": "original NN checkpoint identity mismatch",
+      "original_cells": 11
+    }
+  },
+  "source_hashes": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+    "deep_hedge_price/tests/test_dynamic_hedging_study.py": "9b2dc720aedda15e1f5006cd2f542397fb70af7c411f3ed16e0b2c2f001c9487"
+  }
+}

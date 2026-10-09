@@ -1,0 +1,51 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_main_loader_cannot_accept_a_different_source_registry __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x717f60267290>
+
+    def test_main_loader_cannot_accept_a_different_source_registry(monkeypatch):
+        calls = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        with pytest.raises(ValueError, match="source"):
+>           runner.run_main(
+                frozen={"fixture": True}, candidate=runner.candidate_protocol(),
+                source={"different.py": "0"*64}, selection_receipts={}, raw_validation={},
+                main_test_loader=lambda: calls.append("opened"),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:187: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def run_main(*, frozen, candidate, source, selection_receipts, raw_validation, main_test_loader):
+        """Enforce raw selection and actual protocol gate before test loader access.
+    
+        A loader can supply all eighteen original generator/seed/level cases.
+        This evaluates supplied data; generation, statistics, Q checks and full
+        expense/fresh management remain explicit unimplemented obligations.
+        """
+        if not frozen:
+            protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
+        validations = selection_receipts.get("validation", [])
+        if len(validations) != 4:
+>           raise ValueError("all four raw validation selections required before test loading")
+E           ValueError: all four raw validation selections required before test loading
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:274: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x717f60267290>
+
+    def test_main_loader_cannot_accept_a_different_source_registry(monkeypatch):
+        calls = []
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+>       with pytest.raises(ValueError, match="source"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'source'
+E         Actual message: 'all four raw validation selections required before test loading'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:186: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_loader_cannot_accept_a_different_source_registry
+1 failed, 14 deselected in 1.62s

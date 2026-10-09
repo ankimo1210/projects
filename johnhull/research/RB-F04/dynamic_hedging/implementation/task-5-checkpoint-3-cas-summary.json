@@ -1,0 +1,44 @@
+[
+  {
+    "kind": "tiny-historical",
+    "blob": {
+      "sha256": "0759202d8b85b2a03b38ed7a983c638af2b8839dcd8f3bc1cc8eb842714a9587",
+      "bytes": 48897658
+    },
+    "roles": [
+      "primary",
+      "mirror"
+    ],
+    "semantic_roles": []
+  },
+  {
+    "kind": "tiny-current",
+    "blob": {
+      "sha256": "47cc2277ccc4b3f764c3e5862ea02efd7daa1ceabe676f4340594f2b7ab0487c",
+      "bytes": 48897658
+    },
+    "roles": [
+      "primary",
+      "mirror"
+    ],
+    "semantic_roles": [
+      "primary",
+      "mirror"
+    ]
+  },
+  {
+    "kind": "teacher-n1024",
+    "blob": {
+      "sha256": "6e1248871e594793bcf2297e4bf32c9fabe238dd4ecdfed2677b25cdbd544e65",
+      "bytes": 48764846
+    },
+    "roles": [
+      "primary",
+      "mirror"
+    ],
+    "semantic_roles": [
+      "primary",
+      "mirror"
+    ]
+  }
+]

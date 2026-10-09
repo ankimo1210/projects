@@ -1,0 +1,364 @@
+"""N1024 actual-field teacher precision preflight; no formal pilot approval."""
+import time
+script_start_wall = time.perf_counter()
+script_start_cpu = time.process_time()
+import ast
+import hashlib
+import json
+import os
+from pathlib import Path
+import platform
+import sys
+import traceback
+
+import numpy as np
+import scipy
+from hullkit._dynamic_hedging_conditional import primitive_labels, teacher_primitives
+from hullkit._heston_local_surface import HestonParameters, LocalVarianceGrid
+
+ROOT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+OUT = ROOT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+BASE = ROOT / "johnhull/research/RB-F04/dynamic_hedging"
+PREFIX = "task-5-teacher-preflight"
+N = 1024
+BLOCKS = 16
+DS = .02
+DV = {"heston": .0001, "local": .001}
+MAX_BYTES = 256 * 1024**2
+
+def digest(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+def clean(value):
+    if isinstance(value, dict):
+        return {str(key): clean(v) for key, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [clean(v) for v in value]
+    if isinstance(value, np.ndarray):
+        return clean(value.tolist())
+    if isinstance(value, (np.integer,)):
+        return int(value)
+    if isinstance(value, (np.bool_,)):
+        return bool(value)
+    if isinstance(value, (float, np.floating)):
+        return float(value) if np.isfinite(value) else None
+    return value
+
+def source_bindings():
+    paths = {
+        ROOT / "johnhull/hullkit/src/hullkit/__init__.py",
+        BASE / "candidate.json",
+        BASE / "DESIGN.md",
+        BASE / "pilot/selected-calls/refined/selected-calls.json",
+        BASE / "pilot/selected-calls/refined/reference.npz",
+        BASE / "pilot/initial-quotes/evidence-manifest.json",
+        BASE / "pilot/initial-quotes/initial-quotes.json",
+        BASE / "pilot/initial-quotes/reference.npz",
+        BASE / "check_selected_calls.py",
+        ROOT / "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+    }
+    for name, mod in list(sys.modules.items()):
+        filename = getattr(mod, "__file__", None)
+        if name.startswith("hullkit") and filename:
+            path = Path(filename).resolve()
+            if path.suffix == ".py" and path.is_relative_to(ROOT):
+                paths.add(path)
+    return {
+        str(path.relative_to(ROOT)): digest(path)
+        for path in sorted(paths)
+    }
+
+def save_dict(prefix, mapping):
+    saved_meta = {}
+    for key, value in mapping.items():
+        if isinstance(value, np.ndarray):
+            if value.dtype.kind == "O":
+                raise ValueError("object arrays are forbidden")
+            arrays[prefix + "." + key] = value.copy()
+        elif isinstance(value, (str, int, float, bool, np.generic)) or value is None:
+            saved_meta[key] = value
+        elif isinstance(value, tuple) and all(isinstance(x, str) for x in value):
+            saved_meta[key] = list(value)
+        else:
+            saved_meta[key] = clean(value)
+    return saved_meta
+
+def mean_se(samples):
+    if not np.isfinite(samples).all():
+        return np.full(samples.shape[1:], np.nan), np.full(samples.shape[1:], np.nan)
+    return samples.mean(axis=0), samples.std(axis=0, ddof=1)/np.sqrt(len(samples))
+
+def checkpoint(*, raw=False):
+    started_wall, started_cpu = time.perf_counter(), time.process_time()
+    report["arrays_uncompressed_bytes"] = int(sum(a.nbytes for a in arrays.values()))
+    if report["arrays_uncompressed_bytes"] > MAX_BYTES:
+        raise RuntimeError("declared raw chunk budget exceeded")
+    if raw:
+        temporary = OUT / (PREFIX + ".tmp.npz")
+        np.savez_compressed(temporary, **arrays)
+        temporary.replace(OUT / (PREFIX + ".npz"))
+        report["last_raw_checkpoint_slot_ids"] = [
+            row["slot_id"] for row in rows if row["execution_status"] != "pending"
+        ]
+        report["npz_bytes"] = (OUT / (PREFIX + ".npz")).stat().st_size
+        report["npz_sha256_provenance"] = digest(OUT / (PREFIX + ".npz"))
+    report["checkpoint_costs"].append({
+        "raw_npz": raw, "wall_seconds": time.perf_counter()-started_wall,
+        "cpu_seconds": time.process_time()-started_cpu,
+    })
+    report["elapsed_wall_seconds"] = time.perf_counter()-script_start_wall
+    report["elapsed_cpu_seconds"] = time.process_time()-script_start_cpu
+    (OUT/(PREFIX+".json")).write_text(
+        json.dumps(clean(report), ensure_ascii=False, indent=2, allow_nan=False)+"\n"
+    )
+
+settings = json.loads((BASE/"candidate.json").read_text())
+assert settings["teacher"]["n_candidates"][0] == N
+assert settings["teacher"]["driver_level"] == 768
+assert settings["teacher"]["iid_blocks"] == BLOCKS
+selected = json.loads((BASE/"pilot/selected-calls/refined/selected-calls.json").read_text())
+assert selected["original_states"] == len(selected["rows"]) == 18
+parameters = HestonParameters(**selected["parameters"])
+with np.load(BASE/"pilot/initial-quotes/reference.npz", allow_pickle=False) as raw:
+    field = "field257x321.surface."
+    surface = LocalVarianceGrid(raw[field+"times"], raw[field+"z_nodes"],
+                                raw[field+"local_variance"], parameters,
+                                raw[field+"wing_boundaries"])
+arrays = {}
+rows = []
+for point_id, point in enumerate(selected["rows"]):
+    for model in ["heston", "local"]:
+        fitted = point["models"][model]
+        count = int(round(point["date"]*12))
+        row = {
+            "slot_id": f"state{point_id:02d}.{model}", "original_state_id": point_id,
+            "model": model, "date": point["date"], "scenario": point["scenario"],
+            "spot": point["spot"], "diagnostic_heston_latent_variance": point["heston_state"],
+            "memory_count": count, "memory_sum": count*100.,
+            "original_path_count": N, "state_source": "saved common-Q fitted model state",
+            "fitted_state": fitted["state"], "fit_status": fitted["status"],
+            "fit_reason": fitted["reason"], "call_CS": fitted["call_spot_derivative"],
+            "call_Ctheta": fitted["call_state_derivative"], "execution_status": "pending",
+            "failure": None, "qualification": "unknown",
+            "unmeasured_errors": ["finite_bump_bias", "SDE_discretization",
+                                  "call_denominator_error", "call_spot_derivative_error",
+                                  "independent_Asian_price_oracle", "teacher_interpolation"],
+        }
+        if fitted["status"] != "ok" or fitted["state"] is None:
+            row["execution_status"] = "not_executed_fit_unknown"
+            row["failure"] = fitted["reason"] or "saved fitted state unavailable"
+        rows.append(row)
+planned_base_steps = sum(
+    N * (768-int(round(r["date"]*768)))
+    for r in rows if r["execution_status"] == "pending"
+)
+assert planned_base_steps == 16449536
+assert planned_base_steps < settings["limits"]["job_path_steps"]
+report = {
+    "kind": "actual-selected-teacher-N1024-precision-preflight",
+    "scope": "36 original selected model slots; CE/control teacher and optional CRN finite-bump diagnostics only",
+    "started_unix_time": time.time(), "original_slots": 36,
+    "valid_fit_slots": 35, "not_executed_fit_unknown_slots": 1,
+    "N": N, "IID_blocks": BLOCKS, "steps_per_year": 768,
+    "driver_factor_count": 2, "parameters": selected["parameters"], "rows": rows,
+    "original_precision_gates": settings["gates"],
+    "planned_base_path_steps": planned_base_steps,
+    "planned_optional_bump_path_steps": 4*planned_base_steps,
+    "actual_path_steps": 0, "status": "running_base", "qualification": "unknown",
+    "source_bindings": source_bindings(),
+    "probe_source_sha256": digest(__file__),
+    "environment": {"python": sys.version, "numpy": np.__version__,
+                    "scipy": scipy.__version__, "platform": platform.platform(),
+                    "thread_environment": {k: os.environ.get(k) for k in
+                                           ["OPENBLAS_NUM_THREADS","OMP_NUM_THREADS","MKL_NUM_THREADS"]}},
+    "global_drivers": {}, "checkpoint_costs": [],
+    "outside_measurement": "OS process startup before the first script timer; total outer process timing is supplied by parent runner",
+    "precision_claim": "Measured original-N MC/16-block standard errors only, no oracle agreement or bias/denominator certification",
+    "checkpoint_policy": "JSON after each slot; raw NPZ after each selected date and phase boundary",
+}
+checkpoint()
+
+drivers = {}
+for i, model in enumerate(["heston", "local"]):
+    started_wall, started_cpu = time.perf_counter(), time.process_time()
+    seed = int(settings["seeds"]["teacher"][i])
+    normal = np.random.default_rng(seed).standard_normal((N,768,2))
+    driver_id = hashlib.sha256(np.ascontiguousarray(normal).tobytes()).hexdigest()
+    arrays["global."+model+".normals"] = normal
+    drivers[model] = normal
+    report["global_drivers"][model] = {
+        "seed": seed, "candidate_teacher_seed_slot": i, "shape": normal.shape,
+        "global_driver_id": driver_id, "scope": "same original IID path/step/factor across selected dates/states and all bumps for this model",
+        "cross_model_pairing": "separate candidate teacher seeds; no shared model-to-model driver claim",
+        "wall_seconds": time.perf_counter()-started_wall,
+        "cpu_seconds": time.process_time()-started_cpu,
+    }
+checkpoint(raw=True)
+
+def teacher(row, name, *, spot=None, state=None):
+    started_wall, started_cpu = time.perf_counter(), time.process_time()
+    s = row["spot"] if spot is None else float(spot)
+    v = row["fitted_state"] if state is None else float(state)
+    begin = int(round(row["date"]*768))
+    calendar = np.arange(begin,769)/768
+    indices = np.arange(row["memory_count"]+1,13)*64-begin
+    normals = drivers[row["model"]][:, begin:, :]
+    planned_steps = N * normals.shape[1]
+    assert planned_steps < settings["limits"]["job_path_steps"]
+    raw = teacher_primitives(
+        row["model"], parameters, normals, calendar_times=calendar,
+        fixing_indices=indices, spot=s, state=v, memory_count=row["memory_count"],
+        surface=surface if row["model"]=="local" else None,
+        compact_status=True,
+    )
+    report["actual_path_steps"] += planned_steps
+    x = (1200.-row["memory_sum"])/s
+    labels = primitive_labels(raw, np.array([x]), blocks=BLOCKS)
+    discount = np.exp(-parameters.rate*(1.-row["date"]))
+    scale = discount*s/12.
+    samples = np.stack([labels[key][:,0] for key in
+                        ["raw_samples","conditioned_samples","cv_samples"]],axis=-1)*scale
+    blocks = labels["block_means"][:,0,:]*scale
+    mean, se = mean_se(samples)
+    prefix = row["slot_id"]+"."+name
+    arrays[prefix+".price_samples"] = samples
+    arrays[prefix+".price_blocks"] = blocks
+    primitive_metadata = save_dict(prefix+".primitives", raw)
+    label_metadata = save_dict(prefix+".labels", labels)
+    outcome = {
+        "original_path_count": N, "valid_path_count": int(raw["path_mask"].sum()),
+        "spot": s, "state": v, "threshold": x, "discount": discount,
+        "price_means_raw_CE_CV": mean, "price_SE_raw_CE_CV": se,
+        "price_block_SE_raw_CE_CV": blocks.std(axis=0,ddof=1)/np.sqrt(BLOCKS),
+        "label_status": str(labels["status"][0]),
+        "label_status_reason": str(labels["status_reasons"][0]),
+        "primitive_metadata": primitive_metadata, "label_metadata": label_metadata,
+        "global_driver_id": report["global_drivers"][row["model"]]["global_driver_id"],
+        "slice_driver_id": raw["shared_driver_id"],
+        "driver_mapping": {"original_n": N, "global_steps":768,"factor_count":2,
+                           "start_step":begin,"stop_step":768,"aggregation_factor":1},
+        "raw_prefix": prefix, "path_steps": planned_steps,
+        "wall_seconds": time.perf_counter()-started_wall,
+        "cpu_seconds": time.process_time()-started_cpu,
+        "qualification": "unknown",
+    }
+    return outcome
+
+try:
+    for index, row in enumerate(rows):
+        if row["execution_status"] != "pending":
+            print("BASE_SKIP", row["slot_id"], row["failure"], flush=True)
+            continue
+        try:
+            result = teacher(row, "base")
+            row["base"] = result
+            row["execution_status"] = "completed_base"
+            cv_se = result["price_SE_raw_CE_CV"][2]
+            label_ready = result["label_status"] in ("ready","not_required_linear_claim")
+            row["price_SE_gate"] = "pass" if label_ready and np.isfinite(cv_se) and cv_se<=.03 else "fail_or_unknown"
+            print("BASE", row["slot_id"], result["label_status"],
+                  "CV_SE", cv_se, "Nvalid", result["valid_path_count"], flush=True)
+        except Exception as exc:
+            row["execution_status"] = "failed_base"
+            row["failure"] = {"type":type(exc).__name__,"message":str(exc),"traceback":traceback.format_exc()}
+            print("BASE_FAILURE",row["slot_id"],repr(exc),flush=True)
+        checkpoint()
+        if index==len(rows)-1 or rows[index+1]["date"] != row["date"]:
+            checkpoint(raw=True)
+    report["status"] = "base_complete"
+    report["base_phase_wall_seconds"] = time.perf_counter()-script_start_wall
+    report["base_phase_cpu_seconds"] = time.process_time()-script_start_cpu
+    report["base_gate_counts"] = {
+        "price_SE_pass":sum(r.get("price_SE_gate")=="pass" for r in rows),
+        "price_SE_fail_or_unknown":sum(r.get("price_SE_gate")=="fail_or_unknown" for r in rows),
+        "not_executed_fit_unknown":sum(r["execution_status"]=="not_executed_fit_unknown" for r in rows),
+        "failed_base":sum(r["execution_status"]=="failed_base" for r in rows),
+    }
+    checkpoint(raw=True)
+    print("BASE_COMPLETE",json.dumps(report["base_gate_counts"]),report["base_phase_wall_seconds"],flush=True)
+    # The optional phase remains bounded at the same original prefix. Proceed
+    # only after completed base actual costs show it is a bounded extension.
+    predicted_bumps = 4*sum(r.get("base",{}).get("wall_seconds",0.) for r in rows)
+    report["optional_bump_decision"] = {
+        "planned_path_steps":4*planned_base_steps,
+        "base_measured_compute_wall_seconds":sum(r.get("base",{}).get("wall_seconds",0.) for r in rows),
+        "predicted_bump_compute_wall_seconds":predicted_bumps,
+        "unchanged_original_n":N,
+        "decision":"run" if predicted_bumps<300. else "defer_after_base_cost",
+        "not_a_runtime_guarantee":True,
+    }
+    checkpoint()
+    if predicted_bumps < 300.:
+        report["status"] = "running_CRN_bumps"
+        for index,row in enumerate(rows):
+            if row["execution_status"] != "completed_base":
+                continue
+            outcomes={}
+            try:
+                for name,s,v in [
+                    ("spot_plus",row["spot"]+DS,row["fitted_state"]),
+                    ("spot_minus",row["spot"]-DS,row["fitted_state"]),
+                    ("state_plus",row["spot"],row["fitted_state"]+DV[row["model"]]),
+                    ("state_minus",row["spot"],row["fitted_state"]-DV[row["model"]]),
+                ]:
+                    outcomes[name]=teacher(row,name,spot=s,state=v)
+                    row.setdefault("bumps",{})[name]=outcomes[name]
+                prefix=row["slot_id"]
+                vs=(arrays[prefix+".spot_plus.price_samples"][:,2]
+                    -arrays[prefix+".spot_minus.price_samples"][:,2])/(2*DS)
+                vt=(arrays[prefix+".state_plus.price_samples"][:,2]
+                    -arrays[prefix+".state_minus.price_samples"][:,2])/(2*DV[row["model"]])
+                cs,ct=row["call_CS"],row["call_Ctheta"]
+                if not np.isfinite([cs,ct]).all() or ct==0:
+                    raise ValueError("selected call derivative denominator unavailable")
+                hq=vt/ct
+                hs=vs-cs*hq
+                joint=np.column_stack([vs,vt,hs,hq])
+                blocks=joint.reshape(BLOCKS,N//BLOCKS,4).mean(axis=1)
+                arrays[prefix+".risk.samples"]=joint
+                arrays[prefix+".risk.block_means"]=blocks
+                covariance=np.cov(blocks,rowvar=False,ddof=1)/BLOCKS
+                arrays[prefix+".risk.block_covariance_of_mean"]=covariance
+                mean,se=mean_se(joint)
+                block_se=np.sqrt(np.diag(covariance))
+                ready=all(o["label_status"] in ("ready","not_required_linear_claim")
+                          and o["valid_path_count"]==N for o in outcomes.values())
+                row["risk"]={
+                    "component_order":["VS","Vtheta","hS","hQ"],"mean":mean,
+                    "per_path_IID_SE":se,"same_16block_SE":block_se,
+                    "call_CS":cs,"call_Ctheta":ct,
+                    "stock_position_SE_gate":"pass" if ready and np.isfinite(block_se[2]) and block_se[2]<=.002 else "fail_or_unknown",
+                    "call_position_SE_gate":"pass" if ready and np.isfinite(block_se[3]) and block_se[3]<=.005 else "fail_or_unknown",
+                    "spot_bump":DS,"state_bump":DV[row["model"]],
+                    "bump_bias":"unmeasured","denominator_error":"unmeasured",
+                    "qualification":"unknown",
+                    "scope":"same original path/16-block CRN finite-difference price derivatives followed by a fixed selected-call IFT transform",
+                }
+                row["execution_status"]="completed_bumps"
+                print("BUMP",row["slot_id"],"hS/hQ_SE",block_se[2:].tolist(),flush=True)
+            except Exception as exc:
+                row["execution_status"]="failed_bumps"
+                row["bump_failure"]={"type":type(exc).__name__,"message":str(exc),"traceback":traceback.format_exc()}
+                print("BUMP_FAILURE",row["slot_id"],repr(exc),flush=True)
+            checkpoint()
+            if index==len(rows)-1 or rows[index+1]["date"]!=row["date"]:
+                checkpoint(raw=True)
+    report["status"]="completed_preflight"
+    report["risk_gate_counts"]={
+        "stock_position_SE_pass":sum(r.get("risk",{}).get("stock_position_SE_gate")=="pass" for r in rows),
+        "call_position_SE_pass":sum(r.get("risk",{}).get("call_position_SE_gate")=="pass" for r in rows),
+        "computed_risk_slots":sum("risk" in r for r in rows),
+        "completed_bump_slots":sum(r["execution_status"]=="completed_bumps" for r in rows),
+        "failed_bump_slots":sum(r["execution_status"]=="failed_bumps" for r in rows),
+    }
+finally:
+    report["source_bindings_at_end"]=source_bindings()
+    report["source_binding_changes"]={
+        k:{"before":v,"after":report["source_bindings_at_end"].get(k)}
+        for k,v in report["source_bindings"].items()
+        if report["source_bindings_at_end"].get(k)!=v
+    }
+    checkpoint(raw=True)
+    print("FINAL",report["status"],report.get("risk_gate_counts"),
+          "wall",report["elapsed_wall_seconds"],"CPU",report["elapsed_cpu_seconds"],
+          "raw_bytes",report["arrays_uncompressed_bytes"],"path_steps",report["actual_path_steps"],flush=True)

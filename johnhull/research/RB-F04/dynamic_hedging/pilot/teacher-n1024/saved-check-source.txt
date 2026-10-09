@@ -1,0 +1,145 @@
+"""Saved-only arithmetic/provenance replay of bounded N1024 experiment; no SDE/RNG."""
+from pathlib import Path
+import hashlib,json,time
+import numpy as np
+from hullkit._dynamic_hedging_conditional import primitive_labels
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+W=ROOT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+PREFIX="task-5-teacher-preflight"
+report=json.loads((W/(PREFIX+".json")).read_text())
+result={"scope":"saved arithmetic/provenance only; no RNG/SDE and no independent finance oracle","qualification":"unknown"}
+started=time.perf_counter()
+def sha(path): return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+def compare(a,b,label):
+    av,bv=np.asarray(a),np.asarray(b)
+    if av.dtype.kind in "biufc" and bv.dtype.kind in "biufc":
+        if not np.allclose(av,bv,rtol=2e-10,atol=1e-10,equal_nan=True):
+            raise AssertionError(label)
+    elif not np.array_equal(av,bv): raise AssertionError(label)
+def decode(prefix,metadata):
+    data=dict(metadata)
+    tag=prefix+"."
+    data.update({key[len(tag):]:raw[key] for key in raw.files if key.startswith(tag)})
+    return data
+bindings=report["source_bindings"]
+assert bindings==report["source_bindings_at_end"]
+assert not report["source_binding_changes"]
+result["current_binding_changes"]={k:sha(ROOT/k) for k,v in bindings.items() if sha(ROOT/k)!=v}
+assert not result["current_binding_changes"]
+assert sha(W/(PREFIX+".py"))==report["probe_source_sha256"]
+assert sha(W/(PREFIX+".npz"))==report["npz_sha256_provenance"]
+assert len(report["rows"])==36 and {x["slot_id"] for x in report["rows"]}=={
+    f"state{i:02d}.{model}" for i in range(18) for model in ["heston","local"]}
+selected=json.loads((ROOT/"johnhull/research/RB-F04/dynamic_hedging/pilot/selected-calls/refined/selected-calls.json").read_text())
+candidate=json.loads((ROOT/"johnhull/research/RB-F04/dynamic_hedging/candidate.json").read_text())
+raw=np.load(W/(PREFIX+".npz"),allow_pickle=False)
+total_bytes=sum(raw[key].nbytes for key in raw.files)
+assert total_bytes==report["arrays_uncompressed_bytes"] and total_bytes<=256*1024**2
+result["raw_arrays_count"]=len(raw.files)
+result["raw_array_bytes"]=total_bytes
+calls=0
+steps=0
+path_counts=set()
+underresolved=[]
+joint_pass=[]
+row_summaries=[]
+for model,meta in report["global_drivers"].items():
+    driver=raw["global."+model+".normals"]
+    assert driver.shape==(1024,768,2)
+    assert meta["seed"]==candidate["seeds"]["teacher"][meta["candidate_teacher_seed_slot"]]
+    assert hashlib.sha256(np.ascontiguousarray(driver).tobytes()).hexdigest()==meta["global_driver_id"]
+for row in report["rows"]:
+    q=selected["rows"][row["original_state_id"]]
+    fitted=q["models"][row["model"]]
+    assert row["date"]==q["date"] and row["spot"]==q["spot"]
+    assert row["fitted_state"]==fitted["state"]
+    assert row["fit_status"]==fitted["status"] and row["fit_reason"]==fitted["reason"]
+    assert row["qualification"]=="unknown"
+    assert row["original_path_count"]==1024
+    assert row["memory_count"]==round(q["date"]*12) and row["memory_sum"]==row["memory_count"]*100
+    if row["execution_status"]=="not_executed_fit_unknown":
+        assert row["slot_id"]=="state15.heston" and fitted["state"] is None
+        assert row["failure"] and "base" not in row and "risk" not in row and "bumps" not in row
+        continue
+    assert row["execution_status"]=="completed_bumps"
+    assert len(row["bumps"])==4
+    outcomes={"base":row["base"],**row["bumps"]}
+    for name,outcome in outcomes.items():
+        prefix=outcome["raw_prefix"]
+        assert prefix==row["slot_id"]+"."+name
+        data=decode(prefix+".primitives",outcome["primitive_metadata"])
+        labels=primitive_labels(data,np.array([outcome["threshold"]]),blocks=16)
+        saved_labels=decode(prefix+".labels",outcome["label_metadata"])
+        for key,value in labels.items():
+            if isinstance(value,np.ndarray): compare(value,saved_labels[key],prefix+".labels."+key)
+        assert str(labels["status"][0])==outcome["label_status"]
+        assert str(labels["status_reasons"][0])==outcome["label_status_reason"]
+        assert data["original_path_count"]==1024 and data["N"]==1024
+        assert data["local_step_status"].dtype==np.uint8
+        assert data["path_mask"].shape==(1024,) and bool(data["path_mask"].all())
+        assert outcome["valid_path_count"]==1024
+        path_counts.add(outcome["valid_path_count"])
+        d=outcome["driver_mapping"]
+        begin=round(row["date"]*768)
+        assert d=={"original_n":1024,"global_steps":768,"factor_count":2,"start_step":begin,"stop_step":768,"aggregation_factor":1}
+        normals=raw["global."+row["model"]+".normals"][:,begin:,:]
+        assert hashlib.sha256(np.ascontiguousarray(normals).tobytes()).hexdigest()==data["shared_driver_id"]==outcome["slice_driver_id"]
+        assert outcome["global_driver_id"]==report["global_drivers"][row["model"]]["global_driver_id"]
+        compare(data["calendar_times"],np.arange(begin,769)/768,prefix+"calendar")
+        compare(data["fixing_indices"],np.arange(row["memory_count"]+1,13)*64-begin,prefix+"fixings")
+        compare(outcome["threshold"],(1200-row["memory_sum"])/outcome["spot"],prefix+"threshold")
+        discount=np.exp(-report["parameters"]["rate"]*(1-row["date"]))
+        compare(outcome["discount"],discount,prefix+"discount")
+        price=np.stack([labels[k][:,0] for k in ["raw_samples","conditioned_samples","cv_samples"]],axis=-1)*discount*outcome["spot"]/12
+        assert price.shape==(1024,3)
+        compare(price,raw[prefix+".price_samples"],prefix+"price")
+        blocks=price.reshape(16,64,3).mean(axis=1)
+        compare(blocks,raw[prefix+".price_blocks"],prefix+"priceblocks")
+        compare(price.mean(axis=0),outcome["price_means_raw_CE_CV"],prefix+"means")
+        compare(price.std(axis=0,ddof=1)/32,outcome["price_SE_raw_CE_CV"],prefix+"SE")
+        compare(blocks.std(axis=0,ddof=1)/4,outcome["price_block_SE_raw_CE_CV"],prefix+"blockSE")
+        assert outcome["qualification"]=="unknown"
+        calls+=1
+        assert outcome["path_steps"]==1024*(768-begin)<candidate["limits"]["job_path_steps"]
+        steps+=outcome["path_steps"]
+    sid=row["slot_id"];risk=row["risk"]
+    def cv(name):return raw[sid+"."+name+".price_samples"][:,2]
+    vs=(cv("spot_plus")-cv("spot_minus"))/(2*risk["spot_bump"])
+    vt=(cv("state_plus")-cv("state_minus"))/(2*risk["state_bump"])
+    assert risk["spot_bump"]==.02 and risk["state_bump"]=={"heston":.0001,"local":.001}[row["model"]]
+    cs,ct=fitted["call_spot_derivative"],fitted["call_state_derivative"]
+    compare([row["call_CS"],row["call_Ctheta"]],[cs,ct],sid+"callGreeks")
+    hq=vt/ct;hs=vs-cs*hq
+    samples=np.column_stack([vs,vt,hs,hq])
+    blocks=samples.reshape(16,64,4).mean(axis=1)
+    covariance=np.cov(blocks,rowvar=False,ddof=1)/16
+    compare(samples,raw[sid+".risk.samples"],sid+"IFT samples")
+    compare(blocks,raw[sid+".risk.block_means"],sid+"IFT blocks")
+    compare(covariance,raw[sid+".risk.block_covariance_of_mean"],sid+"IFT covariance")
+    compare(samples.mean(axis=0),risk["mean"],sid+"IFT mean")
+    compare(samples.std(axis=0,ddof=1)/32,risk["per_path_IID_SE"],sid+"IFT IIDSE")
+    se=np.sqrt(np.diag(covariance))
+    compare(se,risk["same_16block_SE"],sid+"IFT blockSE")
+    ready=lambda o:o["label_status"] in ("ready","not_required_linear_claim") and o["valid_path_count"]==1024
+    p=ready(row["base"]) and row["base"]["price_SE_raw_CE_CV"][2]<=.03
+    h=all(ready(o) for o in row["bumps"].values()) and se[2]<=.002
+    c=all(ready(o) for o in row["bumps"].values()) and se[3]<=.005
+    assert row["price_SE_gate"]==("pass" if p else "fail_or_unknown")
+    assert risk["stock_position_SE_gate"]==("pass" if h else "fail_or_unknown")
+    assert risk["call_position_SE_gate"]==("pass" if c else "fail_or_unknown")
+    assert risk["qualification"]=="unknown" and risk["bump_bias"]=="unmeasured" and risk["denominator_error"]=="unmeasured"
+    if p and h and c: joint_pass.append(sid)
+    if row["base"]["label_status"]=="unknown_underresolved":underresolved.append(sid)
+    row_summaries.append({"slot_id":sid,"date":row["date"],"spot":row["spot"],"fitted_state":row["fitted_state"],
+        "status":row["base"]["label_status"],"CV_price_SE":row["base"]["price_SE_raw_CE_CV"][2],"hS_16block_SE":float(se[2]),"hQ_16block_SE":float(se[3]),"price_SE_pass":bool(p),"hS_SE_pass":bool(h),"hQ_SE_pass":bool(c)})
+assert calls==175 and steps==report["actual_path_steps"]==82247680
+assert len(joint_pass)==6 and len(underresolved)==5 and path_counts=={1024}
+result.update({"status":"PASS","original_slots":36,"computed_slots":35,"teacher_calls_replayed":calls,"path_steps":steps,
+    "valid_original_path_counts":sorted(path_counts),"underresolved_slots":underresolved,"simultaneous_SE_pass_slots":joint_pass,
+    "qualification_unknown_slots":36,"source_input_binding_count":len(bindings),
+    "limitations":"Saved CE/control arithmetic and fixed selected-call IFT only; no solver/oracle/denominator/bias/interpolation certification, no formal-pilot approval",
+    "rows":row_summaries,"elapsed_saved_replay_wall_seconds":time.perf_counter()-started,
+    "preflight_json_sha256_before_summary":sha(W/(PREFIX+".json")),
+    "preflight_npz_sha256":sha(W/(PREFIX+".npz")),"preflight_script_sha256":sha(W/(PREFIX+".py"))})
+(W/(PREFIX+"-saved-check.json")).write_text(json.dumps(result,indent=2,ensure_ascii=False)+"\n")
+print(json.dumps({k:v for k,v in result.items() if k!="rows"},indent=2))

@@ -1,0 +1,14 @@
+from pathlib import Path
+import json,numpy as np
+R=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+W=R/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+ns={"__file__":str(R/"johnhull/research/RB-F04/dynamic_hedging/run_reference.py"),"__name__":"independent_digest_original"}
+exec(compile((W/"task-5-runner-review-second-source.py").read_text(),ns["__file__"],"exec"),ns)
+payload={"raw_fit":{"weights":{"w1":np.arange(6.).reshape(2,3),"b1":np.zeros(3)}}}
+arrays={}
+tree=ns["_encode_tree"](payload,arrays)
+roundtrip=ns["_decode_tree"](json.loads(json.dumps(tree,sort_keys=True)),arrays,set())
+before=ns["payload_digest"](payload)
+after=ns["payload_digest"](roundtrip)
+out={"source_binding":"c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937","scope":"source-original payload provenance, no finance qualification","before":before,"after_sorted_json_roundtrip":after,"numeric_arrays_equal":all(np.allclose(payload["raw_fit"]["weights"][k],roundtrip["raw_fit"]["weights"][k]) for k in ["w1","b1"]),"digest_equal":before==after,"finding":"dict insertion order changes ordinal array bindings in payload_digest"}
+print(json.dumps(out,indent=2))

@@ -1,0 +1,28 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_main_rejects_same_identity_different_test_weights ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77f221041cd0>
+
+    def test_main_rejects_same_identity_different_test_weights(monkeypatch):
+        row, losses = validation_row(n=2048)
+        closed = closed_fits_fixture()
+        receipts = {"validation": [], "fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        raw = {}
+        for g in ["Heston", "local"]:
+            for u in ["U1", "U2"]:
+                saved = copy.deepcopy(row)
+                saved.update(id=f"selection:{g}:{u}", generator=g, universe=u)
+                receipts["validation"].append(saved)
+                raw[saved["id"]] = copy.deepcopy(losses)
+        test_fits = copy.deepcopy(closed)
+        test_fits["fits"][0]["raw_fit"]["weights"]["w1"][0, 0] += .1
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+>       with pytest.raises(ValueError, match="test.*fits"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:222: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_rejects_same_identity_different_test_weights
+1 failed, 16 deselected in 1.99s

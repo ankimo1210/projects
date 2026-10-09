@@ -1,0 +1,64 @@
+"""Actual-field selected-call preflight; no formal pilot qualification."""
+from pathlib import Path
+import numpy as np, json, hashlib, time, sys, importlib.util
+from dataclasses import asdict
+from hullkit._heston_local_surface import HestonParameters, LocalVarianceGrid
+from hullkit._dynamic_hedging_surfaces import build_call_cache, evaluate_call, fit_quote_state
+root=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+w=root/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+refpath=root/"johnhull/research/RB-F04/dynamic_hedging/reference_methods.py"
+spec=importlib.util.spec_from_file_location("selected_call_refs",refpath)
+ref=importlib.util.module_from_spec(spec);spec.loader.exec_module(ref)
+start=time.perf_counter();cpu=time.process_time()
+p=HestonParameters(100.,.03,0.,.04,2.,.04,.3,-.7)
+raw=np.load(root/"johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/reference.npz",allow_pickle=False)
+label="field257x321.surface."
+surface=LocalVarianceGrid(raw[label+"times"],raw[label+"z_nodes"],raw[label+"local_variance"],p,raw[label+"wing_boundaries"])
+dates=np.array([0.,1/12,.25,.5,.75,11/12])
+spots=np.geomspace(50.,200.,65)
+hstates=np.r_[1e-5,np.linspace(0,.08,17)[1:],np.linspace(.08,.5,17)[1:]]
+lstates=np.array([.25,.5,.75,1.,1.5,2.,4.])
+arrays={};rows=[];caches={}
+for model,states in [("heston",hstates),("local",lstates)]:
+    wall=time.perf_counter();c=time.process_time()
+    cache=build_call_cache(p,surface,dates=dates,spot_nodes=spots,state_nodes=states,model=model)
+    caches[model]=cache
+    for key in ["dates","spot_nodes","state_nodes","values","support_mask","coefficient_min_times"]:
+        arrays[model+"."+key]=np.asarray(cache[key])
+    print("cache",model,time.perf_counter()-wall,flush=True)
+for j,t in enumerate(dates):
+    for scenario,(s,v) in enumerate(zip([99.95,100.,100.05] if t==0 else [80.,100.,120.],[.02,.04,.08])):
+        q=ref.independent_heston_call([100.],1.25-t,{**asdict(p),"spot":s,"v0":v},upper=500,return_receipt=True)
+        quote=float(q["price"][0])
+        point={"date":float(t),"scenario":scenario,"spot":s,"heston_state":v,"quote":quote,"cf_price_error":float(q["price_unit_error"][0]),"models":{}}
+        for model in ["heston","local"]:
+            fit=fit_quote_state(caches[model],j,s,quote,state_scale=.04 if model=="heston" else 1.)
+            state=float(fit["state"])
+            val=evaluate_call(caches[model],j,s,state)
+            point["models"][model]={"status":str(np.asarray(fit["status"])),"reason":str(np.asarray(fit["reason"])),"state":state,"condition":float(fit["condition"]),"residual":float(fit["residual"]),"call_price":float(val["value"]),"call_spot_derivative":float(val["spot_derivative"]),"call_state_derivative":float(val["state_derivative"]),"state_reference_error":None,"qualification":"unknown"}
+            if model=="heston":
+                orig=evaluate_call(caches[model],j,s,v)
+                point["models"][model]["price_error_at_true_v"]=float(orig["value"]-quote)
+        rows.append(point)
+        print("state",j,scenario,[x["status"] for x in point["models"].values()],flush=True)
+wall=time.perf_counter();c=time.process_time()
+fine=ref.calendar_call_snapshots(p.spot,100.,1.25,surface.evaluate,p.rate,p.dividend_yield,dates,space_nodes=2401,time_steps=1920,log_half_width=1.8)
+arrays["independent_local_base.log_spots"]=np.log(fine["spots"])
+arrays["independent_local_base.values"]=fine["values"]
+from scipy.interpolate import CubicSpline
+for point in rows:
+    j=int(np.flatnonzero(dates==point["date"])[0])
+    independent=float(CubicSpline(np.log(fine["spots"]),fine["values"][j])(np.log(point["spot"])))
+    coarse=evaluate_call(caches["local"],j,point["spot"],1.)
+    point["models"]["local"]["base_price_error"]=float(coarse["value"]-independent)
+    point["models"]["local"]["base_independent_price"]=independent
+print("independent base",time.perf_counter()-wall,flush=True)
+result={"scope":"actual 257x321 T1.25 field / full call state axes / six dates and18states; no teacher/position/P&L/Q gate","parameters":asdict(p),"rows":rows,"original_states":18,"qualification":"unknown","wall_seconds":time.perf_counter()-start,"cpu_seconds":time.process_time()-cpu,"timing_scope":"afterimports/input-read/build/references; final archive outside","source_sha256":{str(x.relative_to(root)):hashlib.sha256(x.read_bytes()).hexdigest() for x in [root/"johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",root/"johnhull/hullkit/src/hullkit/_heston_local_surface.py",refpath]},"cache_numerical_status":"unmeasured"}
+def clean(x):
+    if isinstance(x,dict):return {k:clean(v) for k,v in x.items()}
+    if isinstance(x,list):return [clean(v) for v in x]
+    if isinstance(x,float) and not np.isfinite(x):return None
+    return x
+(w/"task-5-selected-call-probe.json").write_text(json.dumps(clean(result),indent=2,allow_nan=False)+"\n")
+np.savez_compressed(w/"task-5-selected-call-probe.npz",**arrays)
+print("FINAL",result["wall_seconds"],max(abs(x["models"]["heston"]["price_error_at_true_v"]) for x in rows),max(abs(x["models"]["local"]["base_price_error"]) for x in rows),flush=True)

@@ -1,0 +1,637 @@
+{
+  "checks": {
+    "cells": {
+      "Heston:U1": {
+        "cells": 11,
+        "integrity": "pass",
+        "market": "pass",
+        "original_n": 32
+      },
+      "Heston:U2": {
+        "cells": 11,
+        "integrity": "pass",
+        "market": "pass",
+        "original_n": 32
+      },
+      "local:U1": {
+        "cells": 11,
+        "integrity": "pass",
+        "market": "pass",
+        "original_n": 32
+      },
+      "local:U2": {
+        "cells": 11,
+        "integrity": "pass",
+        "market": "pass",
+        "original_n": 32
+      }
+    },
+    "expense_check": {
+      "charged_ids": [
+        "source:registry",
+        "call:Heston",
+        "teacher:Heston",
+        "call:local",
+        "teacher:local",
+        "market:Heston",
+        "risk:Heston",
+        "market:local",
+        "risk:local",
+        "training:all_12",
+        "validation:Heston:U1",
+        "cells:Heston:U1",
+        "validation:Heston:U2",
+        "cells:Heston:U2",
+        "validation:local:U1",
+        "cells:local:U1",
+        "validation:local:U2",
+        "cells:local:U2",
+        "cold_import",
+        "serialization",
+        "load",
+        "saved_check",
+        "fresh",
+        "CAS_primary",
+        "CAS_mirror",
+        "plots"
+      ],
+      "charged_measured_subtotals": {
+        "cpu_seconds": 2.6205274719999996,
+        "wall_seconds": 2.693592463999721
+      },
+      "charged_totals": {
+        "cpu_seconds": null,
+        "wall_seconds": null
+      },
+      "excluded_ids": [
+        "fit:Heston:U1:init11",
+        "fit:Heston:U1:init29",
+        "fit:Heston:U1:init47",
+        "fit:Heston:U2:init11",
+        "fit:Heston:U2:init29",
+        "fit:Heston:U2:init47",
+        "fit:local:U1:init11",
+        "fit:local:U1:init29",
+        "fit:local:U1:init47",
+        "fit:local:U2:init11",
+        "fit:local:U2:init29",
+        "fit:local:U2:init47"
+      ],
+      "raw_measured_subtotals": {
+        "cpu_seconds": 3.3775860299999985,
+        "wall_seconds": 3.5229896339992592
+      },
+      "raw_records": [
+        {
+          "id": "source:registry",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "source:registry",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.564097759,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.5647595870000259
+          }
+        },
+        {
+          "id": "call:Heston",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "call:Heston",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.05051207800000013,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.05050972599974557
+          }
+        },
+        {
+          "id": "teacher:Heston",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "teacher:Heston",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.052657556999999855,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.05266138499973749
+          }
+        },
+        {
+          "id": "call:local",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "call:local",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.00012172700000023795,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.00012189900007797405
+          }
+        },
+        {
+          "id": "teacher:local",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "teacher:local",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.24682651100000008,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.24682358399968507
+          }
+        },
+        {
+          "id": "market:Heston",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "market:Heston",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.030646259000000065,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.030646653000076185
+          }
+        },
+        {
+          "id": "risk:Heston",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "risk:Heston",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.36543988900000013,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.3654398640001091
+          }
+        },
+        {
+          "id": "market:local",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "market:local",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.02622436799999983,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.026224259000173333
+          }
+        },
+        {
+          "id": "risk:local",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "risk:local",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.3586046920000001,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.35861126100007823
+          }
+        },
+        {
+          "id": "training:all_12",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "training:all_12",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.7571512350000003,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.829547922999609
+          }
+        },
+        {
+          "id": "fit:Heston:U1:init11",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.6546297160000001,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.7270191319998958
+          }
+        },
+        {
+          "id": "fit:Heston:U1:init29",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.008855296000000124,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.008850582999912149
+          }
+        },
+        {
+          "id": "fit:Heston:U1:init47",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.009921148000000102,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.009916034000070795
+          }
+        },
+        {
+          "id": "fit:Heston:U2:init11",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.008054228999999857,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.008048995999615727
+          }
+        },
+        {
+          "id": "fit:Heston:U2:init29",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.00963633400000008,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.00963147399988884
+          }
+        },
+        {
+          "id": "fit:Heston:U2:init47",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.007585283000000054,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.007580388999940624
+          }
+        },
+        {
+          "id": "fit:local:U1:init11",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.008798295000000067,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.008794416000000638
+          }
+        },
+        {
+          "id": "fit:local:U1:init29",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.010672044999999741,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.010667447000287211
+          }
+        },
+        {
+          "id": "fit:local:U1:init47",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.009502565999999213,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.009498283000084484
+          }
+        },
+        {
+          "id": "fit:local:U2:init11",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.009752663999999633,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.009747971999786387
+          }
+        },
+        {
+          "id": "fit:local:U2:init29",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.009480233999999754,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.009475420999933704
+          }
+        },
+        {
+          "id": "fit:local:U2:init47",
+          "includes_children": true,
+          "parent_id": "training:all_12",
+          "reason": null,
+          "scope": "tiny_training",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.010170748000000174,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.010167023000121844
+          }
+        },
+        {
+          "id": "validation:Heston:U1",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "validation:Heston:U1",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.026827166000000346,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.026827304000107688
+          }
+        },
+        {
+          "id": "cells:Heston:U1",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "cells:Heston:U1",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.012196953999999316,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.012197121000099287
+          }
+        },
+        {
+          "id": "validation:Heston:U2",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "validation:Heston:U2",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.030359848999999883,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.03035992500008433
+          }
+        },
+        {
+          "id": "cells:Heston:U2",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "cells:Heston:U2",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.01409685799999938,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.014097426000262203
+          }
+        },
+        {
+          "id": "validation:local:U1",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "validation:local:U1",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.02756519199999996,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.027565189999677386
+          }
+        },
+        {
+          "id": "cells:local:U1",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "cells:local:U1",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.013701446999999867,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.013701419999961217
+          }
+        },
+        {
+          "id": "validation:local:U2",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "validation:local:U2",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.029708124999999974,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.029708113000197045
+          }
+        },
+        {
+          "id": "cells:local:U2",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "cells:local:U2",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.013789806000000127,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.01378982400001405
+          }
+        },
+        {
+          "id": "cold_import",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "cold_import",
+          "status": "pending",
+          "timing": {
+            "cpu_seconds": null,
+            "overrun_seconds": null,
+            "wall_seconds": null
+          }
+        },
+        {
+          "id": "serialization",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "serialization",
+          "status": "pending",
+          "timing": {
+            "cpu_seconds": null,
+            "overrun_seconds": null,
+            "wall_seconds": null
+          }
+        },
+        {
+          "id": "load",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "load",
+          "status": "pending",
+          "timing": {
+            "cpu_seconds": null,
+            "overrun_seconds": null,
+            "wall_seconds": null
+          }
+        },
+        {
+          "id": "saved_check",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "saved_check",
+          "status": "pending",
+          "timing": {
+            "cpu_seconds": null,
+            "overrun_seconds": null,
+            "wall_seconds": null
+          }
+        },
+        {
+          "id": "fresh",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "fresh",
+          "status": "pending",
+          "timing": {
+            "cpu_seconds": null,
+            "overrun_seconds": null,
+            "wall_seconds": null
+          }
+        },
+        {
+          "id": "CAS_primary",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "CAS_primary",
+          "status": "pending",
+          "timing": {
+            "cpu_seconds": null,
+            "overrun_seconds": null,
+            "wall_seconds": null
+          }
+        },
+        {
+          "id": "CAS_mirror",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "CAS_mirror",
+          "status": "pending",
+          "timing": {
+            "cpu_seconds": null,
+            "overrun_seconds": null,
+            "wall_seconds": null
+          }
+        },
+        {
+          "id": "plots",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "plots",
+          "status": "pending",
+          "timing": {
+            "cpu_seconds": null,
+            "overrun_seconds": null,
+            "wall_seconds": null
+          }
+        }
+      ],
+      "raw_totals": {
+        "cpu_seconds": null,
+        "wall_seconds": null
+      },
+      "unknown_ids": [
+        "cold_import",
+        "serialization",
+        "load",
+        "saved_check",
+        "fresh",
+        "CAS_primary",
+        "CAS_mirror",
+        "plots"
+      ]
+    },
+    "formal_pilot_qualification": "unknown",
+    "integrity": "pass",
+    "kind": "tiny_saved_boundary",
+    "teacher_checks": {
+      "heston": {
+        "integrity": "pass",
+        "original_n": 32,
+        "rows": 48
+      },
+      "local": {
+        "integrity": "pass",
+        "original_n": 32,
+        "rows": 196
+      }
+    },
+    "unverified": [
+      "earlier_SDE_and_global_driver_generation",
+      "independent_call_and_Asian_precision",
+      "train_only_scaler_and_training_data_origin",
+      "exported_weights_binding_to_actual_training_events",
+      "original_training_loss_update_and_cap_history",
+      "original_expense_timing_measurement",
+      "conditional_and_binned_Q_accuracy",
+      "formal37quote_and18states",
+      "premium",
+      "full_pilot",
+      "freeze",
+      "main_statistics",
+      "independent_refinements",
+      "fresh",
+      "CAS",
+      "plots"
+    ]
+  },
+  "kind": "tiny",
+  "receipt": {
+    "arrays_sha256": "0759202d8b85b2a03b38ed7a983c638af2b8839dcd8f3bc1cc8eb842714a9587",
+    "artifact_sha256": "c485ebe8c4102139b452252dd95faa7f7d0ad6d2b8fbe6870cae5010535dc0a8",
+    "metadata_sha256": "9ed15bf7333a7b243a2c69d6d0d4782e5ea60b5ed95a67791025a755bedfb40c",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 45735944
+  }
+}

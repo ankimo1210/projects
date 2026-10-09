@@ -1,0 +1,207 @@
+{
+  "scope": "Task5 bounded research runner, source-connected tiny and saved-only boundaries; not full formal pilot/main",
+  "source_sha256": "c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937",
+  "tests_sha256": "cdd7583688cf65f4072e17f81369f1d5c2a65680b6d67203d2de6b8e8fca198b",
+  "source_frozen_at_utc": "2026-10-09T14:55:45Z",
+  "validation": {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+    ],
+    "exit_code": 0,
+    "parent_wall_seconds": 26.372771163999914,
+    "source_sha256": "c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937",
+    "tests_sha256": "cdd7583688cf65f4072e17f81369f1d5c2a65680b6d67203d2de6b8e8fca198b"
+  },
+  "ruff": [
+    {
+      "command": [
+        "ruff",
+        "check",
+        "--fix",
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "ruff",
+        "format",
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+      ],
+      "exit_code": 0,
+      "stdout": "2 files reformatted\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+      ],
+      "exit_code": 0,
+      "stdout": "2 files already formatted\n",
+      "stderr": ""
+    }
+  ],
+  "cli_receipts": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "--phase",
+        "tiny",
+        "--output",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/pilot/tiny/source-c7347038a574-n32-u1",
+        "--original-n",
+        "32",
+        "--updates",
+        "1"
+      ],
+      "exit_code": 0,
+      "parent_wall_seconds": 7.377675368999917,
+      "child_cpu_seconds": 7.2982640000000005,
+      "source_sha256": "c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "--phase",
+        "check",
+        "--input",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/pilot/tiny/source-c7347038a574-n32-u1"
+      ],
+      "exit_code": 0,
+      "parent_wall_seconds": 4.636221553000269,
+      "child_cpu_seconds": 4.629179999999999,
+      "source_sha256": "c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937"
+    }
+  ],
+  "canonical_tiny": "johnhull/research/RB-F04/dynamic_hedging/pilot/tiny/source-c7347038a574-n32-u1",
+  "artifact_receipt": {
+    "arrays_sha256": "0759202d8b85b2a03b38ed7a983c638af2b8839dcd8f3bc1cc8eb842714a9587",
+    "artifact_sha256": "c485ebe8c4102139b452252dd95faa7f7d0ad6d2b8fbe6870cae5010535dc0a8",
+    "metadata_sha256": "9ed15bf7333a7b243a2c69d6d0d4782e5ea60b5ed95a67791025a755bedfb40c",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 45735944
+  },
+  "tiny_counts": {
+    "original_n": 32,
+    "monthly_fixings": 12,
+    "teacher_groups": {
+      "heston": 48,
+      "local": 196
+    },
+    "fit_attempts": 12,
+    "fit_statuses": {
+      "completed": 12
+    },
+    "requested_updates_per_fit": 1,
+    "fit_update_counts": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "actual_weights_saved": 12,
+    "validation_candidates": 56,
+    "policy_cells": 44,
+    "cell_statuses": {
+      "unknown": 44
+    },
+    "market_original_and_valid": {
+      "Heston": {
+        "original_n": 32,
+        "valid": 32
+      },
+      "local": {
+        "original_n": 32,
+        "valid": 32
+      }
+    }
+  },
+  "expense_counts": {
+    "required_ids": 38,
+    "record_statuses": {
+      "complete": 30,
+      "pending": 8
+    }
+  },
+  "source_registry": {
+    "files": 71,
+    "environment_sha256": "f2ad2aa896b3131965a4281ea706098c9de5d6c4f717bb0f936d9fb36ee4c276",
+    "runtime_origins_checked": true,
+    "note": "AST closure includes localpackage initializers plus explicit two researchcheckers; environment hash bound to protocol_source"
+  },
+  "fixed_defects": [
+    "nested-package init closure and actual runtime checkout origin",
+    "global teacher driver and restart slice provenance",
+    "source/environment gate before main loader",
+    "test weights could replace a closed checkpoint: now priorpayloadSHA+detachedclosed fits and optionalnumeric equality",
+    "raw completed checkpoint metadata and finiteweights/scaler required before test opening",
+    "all twelve original attempts must survive saved checker",
+    "source-owned unverified list, not caller supplied flag list"
+  ],
+  "tdd_evidence": [
+    "task-5-runner-red.txt",
+    "task-5-runner-first-green.txt",
+    "task-5-runner-green-2.txt",
+    "task-5-runner-green-3.txt",
+    "task-5-runner-extra-red.txt",
+    "task-5-runner-extra-green.txt",
+    "task-5-runner-origin-red.txt",
+    "task-5-runner-origin-green.txt",
+    "task-5-runner-source-gate-red.txt",
+    "task-5-runner-closed-fit-behavior-red.txt",
+    "task-5-runner-raw-checkpoint-specific-red.txt",
+    "task-5-runner-final-green.txt"
+  ],
+  "historical_notes": [
+    "First missingmodule RED collection2.",
+    "Firstgreen8/11 date_index andmapping connector deficits fixed.",
+    "green2/green3 retained accountingboundary failures; independentreplay fixes consumed without repairing dataset.",
+    "task-5-runner-raw-checkpoint-red.txt has8passed because errorregex was overlybroad; specific-red narrows exact failure and has8fails.",
+    "FirstCLI c6a9source and17tests is historical; canonicalnewartifact binds finalc734source/25tests."
+  ],
+  "formal_pilot_qualification": "unknown",
+  "main_execution": "not_run",
+  "required_remaining": [
+    "ActualHeston/local selected18 conditionalteacher/call/position/SDE/grid precision pilot with allfailures",
+    "Premium and worstpilot SE-derivedN/grids selection, measuredQconditional/bin gains",
+    "Independentpilot review and source/candidate/pilot bound formalfreeze",
+    "Main fulltrain/validation lifecycle rawfinance/scaler/update/expense checks before test",
+    "All3testseeds/3levels/44slots and failure receipts",
+    "Main pairedstatistics/envelopes, independentfresh, doubleCAS semanticrestore andallcosts",
+    "Threeartifactonlyfigures/notebook, finalreview/3suitesonce/mainintegration"
+  ]
+}

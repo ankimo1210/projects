@@ -1,0 +1,122 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+___ test_compact_status_preserves_teacher_finance_and_all_categories[heston] ___
+
+model = 'heston'
+
+    @pytest.mark.parametrize("model", ["heston", "local"])
+    def test_compact_status_preserves_teacher_finance_and_all_categories(model):
+        api = _api()
+        normals = np.random.default_rng(7391).standard_normal((48, 24, 2))
+        kwargs = dict(
+            calendar_times=np.linspace(0, 1, 25),
+            fixing_indices=np.arange(2, 25, 2),
+            spot=100.0,
+            state=0.04 if model == "heston" else 1.0,
+            memory_count=0,
+            surface=_Local() if model == "local" else None,
+        )
+        legacy = api.teacher_primitives(model, _parameters(), normals, **kwargs)
+>       compact = api.teacher_primitives(model, _parameters(), normals, compact_status=True, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: teacher_primitives() got an unexpected keyword argument 'compact_status'
+
+johnhull/hullkit/tests/test_dynamic_hedging_conditional.py:496: TypeError
+___ test_compact_status_preserves_teacher_finance_and_all_categories[local] ____
+
+model = 'local'
+
+    @pytest.mark.parametrize("model", ["heston", "local"])
+    def test_compact_status_preserves_teacher_finance_and_all_categories(model):
+        api = _api()
+        normals = np.random.default_rng(7391).standard_normal((48, 24, 2))
+        kwargs = dict(
+            calendar_times=np.linspace(0, 1, 25),
+            fixing_indices=np.arange(2, 25, 2),
+            spot=100.0,
+            state=0.04 if model == "heston" else 1.0,
+            memory_count=0,
+            surface=_Local() if model == "local" else None,
+        )
+        legacy = api.teacher_primitives(model, _parameters(), normals, **kwargs)
+>       compact = api.teacher_primitives(model, _parameters(), normals, compact_status=True, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: teacher_primitives() got an unexpected keyword argument 'compact_status'
+
+johnhull/hullkit/tests/test_dynamic_hedging_conditional.py:496: TypeError
+__ test_compact_status_keeps_failure_and_unexecuted_step_coordinates[heston] ___
+
+model = 'heston'
+
+    @pytest.mark.parametrize("model", ["heston", "local"])
+    def test_compact_status_keeps_failure_and_unexecuted_step_coordinates(model):
+        api = _api()
+        normals = np.zeros((32, 12, 2))
+        normals[3, 4, 0] = np.nan
+        kwargs = dict(
+            calendar_times=np.linspace(0, 1, 13),
+            fixing_indices=np.arange(1, 13),
+            spot=100.0,
+            state=0.04 if model == "heston" else 1.0,
+            memory_count=0,
+            surface=_Local() if model == "local" else None,
+        )
+        legacy = api.teacher_primitives(model, _parameters(), normals, **kwargs)
+>       compact = api.teacher_primitives(model, _parameters(), normals, compact_status=True, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: teacher_primitives() got an unexpected keyword argument 'compact_status'
+
+johnhull/hullkit/tests/test_dynamic_hedging_conditional.py:526: TypeError
+___ test_compact_status_keeps_failure_and_unexecuted_step_coordinates[local] ___
+
+model = 'local'
+
+    @pytest.mark.parametrize("model", ["heston", "local"])
+    def test_compact_status_keeps_failure_and_unexecuted_step_coordinates(model):
+        api = _api()
+        normals = np.zeros((32, 12, 2))
+        normals[3, 4, 0] = np.nan
+        kwargs = dict(
+            calendar_times=np.linspace(0, 1, 13),
+            fixing_indices=np.arange(1, 13),
+            spot=100.0,
+            state=0.04 if model == "heston" else 1.0,
+            memory_count=0,
+            surface=_Local() if model == "local" else None,
+        )
+        legacy = api.teacher_primitives(model, _parameters(), normals, **kwargs)
+>       compact = api.teacher_primitives(model, _parameters(), normals, compact_status=True, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: teacher_primitives() got an unexpected keyword argument 'compact_status'
+
+johnhull/hullkit/tests/test_dynamic_hedging_conditional.py:526: TypeError
+__________ test_compact_status_never_allocates_unicode_path_step_cube __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79a9b91d0ce0>
+
+    def test_compact_status_never_allocates_unicode_path_step_cube(monkeypatch):
+        api = _api()
+        original_full = np.full
+        allocations = []
+    
+        def guarded_full(shape, fill, *args, **kwargs):
+            if isinstance(shape, tuple) and len(shape) == 2 and shape[0] == 32:
+                allocations.append(np.dtype(kwargs.get("dtype", type(fill))))
+            return original_full(shape, fill, *args, **kwargs)
+    
+        monkeypatch.setattr(np, "full", guarded_full)
+>       got = api.teacher_primitives(
+            "heston", _parameters(), np.zeros((32, 24, 2)),
+            calendar_times=np.linspace(0, 1, 25), fixing_indices=np.arange(2, 25, 2),
+            spot=100.0, state=0.04, memory_count=0, compact_status=True,
+        )
+E       TypeError: teacher_primitives() got an unexpected keyword argument 'compact_status'
+
+johnhull/hullkit/tests/test_dynamic_hedging_conditional.py:547: TypeError
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_conditional.py::test_compact_status_preserves_teacher_finance_and_all_categories[heston]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_conditional.py::test_compact_status_preserves_teacher_finance_and_all_categories[local]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_conditional.py::test_compact_status_keeps_failure_and_unexecuted_step_coordinates[heston]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_conditional.py::test_compact_status_keeps_failure_and_unexecuted_step_coordinates[local]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_conditional.py::test_compact_status_never_allocates_unicode_path_step_cube
+5 failed, 25 deselected in 0.63s

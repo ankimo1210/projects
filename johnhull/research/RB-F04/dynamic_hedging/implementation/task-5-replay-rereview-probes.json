@@ -1,0 +1,55 @@
+{
+  "independent_cash": {
+    "hand_discounted_pnl": 3.076956452050289,
+    "replay_discounted_pnl": 3.076956452050294,
+    "cash_integrity": "pass"
+  },
+  "R1_all_count_aliases": [
+    {
+      "scope": "dataset",
+      "alias": "original_n",
+      "rejected": true,
+      "reason": "dataset.original_n: declared original count differs from raw path axis"
+    },
+    {
+      "scope": "dataset",
+      "alias": "original_path_count",
+      "rejected": true,
+      "reason": "dataset.original_path_count: declared original count differs from raw path axis"
+    },
+    {
+      "scope": "cell",
+      "alias": "original_n",
+      "rejected": true,
+      "reason": "cell.original_n: declared original count differs from raw path axis"
+    },
+    {
+      "scope": "cell",
+      "alias": "original_path_count",
+      "rejected": true,
+      "reason": "cell.original_path_count: declared original count differs from raw path axis"
+    }
+  ],
+  "inactive_call": {
+    "zero_exposure_integrity": "pass",
+    "zero_exposure_discounted_pnl": 2.6320974409641438,
+    "nonzero_liquidation_qualification": "unknown",
+    "nonzero_liquidation_n": 1
+  },
+  "invalid_action": {
+    "repairs_rejected": [
+      "raw_holdings: invalid target was repaired to finite action",
+      "raw_holdings: invalid target was repaired to finite action"
+    ],
+    "retained_original_n": 1,
+    "whole_action_unknown": true
+  },
+  "R2_shared_global_grid": {
+    "valid_original_n": 32,
+    "valid_groups": 4,
+    "mixed_grid_rejected": true,
+    "reason": "driver_mapping.global_steps: one shared global grid length required",
+    "earlier_sde_verified": false
+  },
+  "rng": "forbidden throughout numerical replay/probes"
+}

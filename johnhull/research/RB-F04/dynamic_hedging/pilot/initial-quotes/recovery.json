@@ -1,0 +1,454 @@
+{
+  "kind": "initial-quote-preflight-recovery",
+  "scope": "original37 prices / saved arithmetic only; dynamic formal pilot unknown",
+  "manifest_sha256": "8b86c99d774d3a2132720dbb30016ed38ff280f90eddec3ff2474db3678aaab3",
+  "results": [
+    {
+      "role": "primary",
+      "blob": {
+        "sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+        "bytes": 30535323
+      },
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "reference.npz",
+            "sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "semantic": {
+        "best_measured_stage": "pde_space4801",
+        "boundary": "saved CF integrals / PDE nodes -> all37 query prices and errors; earlier solver work not replayed",
+        "cf_gate": "pass",
+        "cf_max_difference_or_quad_error": 3.959271899486031e-10,
+        "fields": {
+          "field129x161": {
+            "max_variance": 0.1528898210352357,
+            "min_variance": 0.017923084990491552,
+            "original_cells": 20769,
+            "original_supported_cells": 20769
+          },
+          "field257x321": {
+            "max_variance": 0.15291274733705976,
+            "min_variance": 0.017922981975112474,
+            "original_cells": 82497,
+            "original_supported_cells": 82497
+          },
+          "field_early_extended": {
+            "max_variance": 0.15291274733705976,
+            "min_variance": 0.017922981975112474,
+            "original_cells": 82818,
+            "original_supported_cells": 82818
+          },
+          "field_wing6": {
+            "max_variance": 0.17806292140550456,
+            "min_variance": 0.017922981975112474,
+            "original_cells": 98945,
+            "original_supported_cells": 96943
+          }
+        },
+        "formal_pilot_qualification": "unknown",
+        "initial_quote_gate": "pass",
+        "integrity": "pass",
+        "original_quote_count": 37,
+        "pde_stages": {
+          "pde1201x960": {
+            "gate": "pass",
+            "max_error": 0.0004987307888888459,
+            "original_quote_count": 37
+          },
+          "pde2401x1920": {
+            "gate": "pass",
+            "max_error": 0.0004235755590462631,
+            "original_quote_count": 37
+          },
+          "pde_domain2p4": {
+            "gate": "pass",
+            "max_error": 0.0004235755590586976,
+            "original_quote_count": 37
+          },
+          "pde_early_extended": {
+            "gate": "pass",
+            "max_error": 0.00013064409999463678,
+            "original_quote_count": 37
+          },
+          "pde_field_refined": {
+            "gate": "pass",
+            "max_error": 0.00013064409999463678,
+            "original_quote_count": 37
+          },
+          "pde_space4801": {
+            "gate": "pass",
+            "max_error": 0.00010408252889604341,
+            "original_quote_count": 37
+          },
+          "pde_time3840": {
+            "gate": "pass",
+            "max_error": 0.0001041288281009578,
+            "original_quote_count": 37
+          },
+          "pde_wing6": {
+            "gate": "pass",
+            "max_error": 0.0001310200385926663,
+            "original_quote_count": 37
+          }
+        }
+      },
+      "wall_seconds": 0.7453546269999833,
+      "parent_cpu_seconds": 0.11659965400000001,
+      "checker_child_cpu_seconds": null,
+      "saved_arithmetic_checks": {
+        "original": {
+          "result": {
+            "best_measured_stage": "pde_space4801",
+            "boundary": "saved CF integrals / PDE nodes -> all37 query prices and errors; earlier solver work not replayed",
+            "cf_gate": "pass",
+            "cf_max_difference_or_quad_error": 3.959271899486031e-10,
+            "fields": {
+              "field129x161": {
+                "max_variance": 0.1528898210352357,
+                "min_variance": 0.017923084990491552,
+                "original_cells": 20769,
+                "original_supported_cells": 20769
+              },
+              "field257x321": {
+                "max_variance": 0.15291274733705976,
+                "min_variance": 0.017922981975112474,
+                "original_cells": 82497,
+                "original_supported_cells": 82497
+              },
+              "field_early_extended": {
+                "max_variance": 0.15291274733705976,
+                "min_variance": 0.017922981975112474,
+                "original_cells": 82818,
+                "original_supported_cells": 82818
+              },
+              "field_wing6": {
+                "max_variance": 0.17806292140550456,
+                "min_variance": 0.017922981975112474,
+                "original_cells": 98945,
+                "original_supported_cells": 96943
+              }
+            },
+            "formal_pilot_qualification": "unknown",
+            "initial_quote_gate": "pass",
+            "integrity": "pass",
+            "original_quote_count": 37,
+            "pde_stages": {
+              "pde1201x960": {
+                "gate": "pass",
+                "max_error": 0.0004987307888888459,
+                "original_quote_count": 37
+              },
+              "pde2401x1920": {
+                "gate": "pass",
+                "max_error": 0.0004235755590462631,
+                "original_quote_count": 37
+              },
+              "pde_domain2p4": {
+                "gate": "pass",
+                "max_error": 0.0004235755590586976,
+                "original_quote_count": 37
+              },
+              "pde_early_extended": {
+                "gate": "pass",
+                "max_error": 0.00013064409999463678,
+                "original_quote_count": 37
+              },
+              "pde_field_refined": {
+                "gate": "pass",
+                "max_error": 0.00013064409999463678,
+                "original_quote_count": 37
+              },
+              "pde_space4801": {
+                "gate": "pass",
+                "max_error": 0.00010408252889604341,
+                "original_quote_count": 37
+              },
+              "pde_time3840": {
+                "gate": "pass",
+                "max_error": 0.0001041288281009578,
+                "original_quote_count": 37
+              },
+              "pde_wing6": {
+                "gate": "pass",
+                "max_error": 0.0001310200385926663,
+                "original_quote_count": 37
+              }
+            },
+            "refinements": {
+              "pde2401x1920": {
+                "max_difference": 0.0003280728220866891,
+                "original_quote_count": 37,
+                "reference": "pde1201x960"
+              },
+              "pde_domain2p4": {
+                "max_difference": 9.592326932761353e-14,
+                "original_quote_count": 37,
+                "reference": "pde2401x1920"
+              },
+              "pde_early_extended": {
+                "max_difference": 6.047555434207652e-08,
+                "original_quote_count": 37,
+                "reference": "pde_field_refined"
+              },
+              "pde_field_refined": {
+                "max_difference": 0.0002971153613420263,
+                "original_quote_count": 37,
+                "reference": "pde2401x1920"
+              },
+              "pde_space4801": {
+                "max_difference": 8.20472527101046e-05,
+                "original_quote_count": 37,
+                "reference": "pde_field_refined"
+              },
+              "pde_time3840": {
+                "max_difference": 7.024302917102432e-08,
+                "original_quote_count": 37,
+                "reference": "pde_space4801"
+              },
+              "pde_wing6": {
+                "max_difference": 1.6024683599624723e-05,
+                "original_quote_count": 37,
+                "reference": "pde_field_refined"
+              }
+            }
+          },
+          "wall_seconds": 0.28768050500002573,
+          "child_cpu_seconds": null,
+          "checker_sha256": "7fe16943f2ead6dbe17a17e969930afde863681ed9eb24b9ea8b7b18c4a004d4"
+        }
+      },
+      "semantic_check": "pass within the declared saved arithmetic boundary; formal pilot unknown"
+    },
+    {
+      "role": "mirror",
+      "blob": {
+        "sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+        "bytes": 30535323
+      },
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "reference.npz",
+            "sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "semantic": {
+        "best_measured_stage": "pde_space4801",
+        "boundary": "saved CF integrals / PDE nodes -> all37 query prices and errors; earlier solver work not replayed",
+        "cf_gate": "pass",
+        "cf_max_difference_or_quad_error": 3.959271899486031e-10,
+        "fields": {
+          "field129x161": {
+            "max_variance": 0.1528898210352357,
+            "min_variance": 0.017923084990491552,
+            "original_cells": 20769,
+            "original_supported_cells": 20769
+          },
+          "field257x321": {
+            "max_variance": 0.15291274733705976,
+            "min_variance": 0.017922981975112474,
+            "original_cells": 82497,
+            "original_supported_cells": 82497
+          },
+          "field_early_extended": {
+            "max_variance": 0.15291274733705976,
+            "min_variance": 0.017922981975112474,
+            "original_cells": 82818,
+            "original_supported_cells": 82818
+          },
+          "field_wing6": {
+            "max_variance": 0.17806292140550456,
+            "min_variance": 0.017922981975112474,
+            "original_cells": 98945,
+            "original_supported_cells": 96943
+          }
+        },
+        "formal_pilot_qualification": "unknown",
+        "initial_quote_gate": "pass",
+        "integrity": "pass",
+        "original_quote_count": 37,
+        "pde_stages": {
+          "pde1201x960": {
+            "gate": "pass",
+            "max_error": 0.0004987307888888459,
+            "original_quote_count": 37
+          },
+          "pde2401x1920": {
+            "gate": "pass",
+            "max_error": 0.0004235755590462631,
+            "original_quote_count": 37
+          },
+          "pde_domain2p4": {
+            "gate": "pass",
+            "max_error": 0.0004235755590586976,
+            "original_quote_count": 37
+          },
+          "pde_early_extended": {
+            "gate": "pass",
+            "max_error": 0.00013064409999463678,
+            "original_quote_count": 37
+          },
+          "pde_field_refined": {
+            "gate": "pass",
+            "max_error": 0.00013064409999463678,
+            "original_quote_count": 37
+          },
+          "pde_space4801": {
+            "gate": "pass",
+            "max_error": 0.00010408252889604341,
+            "original_quote_count": 37
+          },
+          "pde_time3840": {
+            "gate": "pass",
+            "max_error": 0.0001041288281009578,
+            "original_quote_count": 37
+          },
+          "pde_wing6": {
+            "gate": "pass",
+            "max_error": 0.0001310200385926663,
+            "original_quote_count": 37
+          }
+        }
+      },
+      "wall_seconds": 1.155034177999994,
+      "parent_cpu_seconds": 0.09867029600000002,
+      "checker_child_cpu_seconds": null,
+      "saved_arithmetic_checks": {
+        "original": {
+          "result": {
+            "best_measured_stage": "pde_space4801",
+            "boundary": "saved CF integrals / PDE nodes -> all37 query prices and errors; earlier solver work not replayed",
+            "cf_gate": "pass",
+            "cf_max_difference_or_quad_error": 3.959271899486031e-10,
+            "fields": {
+              "field129x161": {
+                "max_variance": 0.1528898210352357,
+                "min_variance": 0.017923084990491552,
+                "original_cells": 20769,
+                "original_supported_cells": 20769
+              },
+              "field257x321": {
+                "max_variance": 0.15291274733705976,
+                "min_variance": 0.017922981975112474,
+                "original_cells": 82497,
+                "original_supported_cells": 82497
+              },
+              "field_early_extended": {
+                "max_variance": 0.15291274733705976,
+                "min_variance": 0.017922981975112474,
+                "original_cells": 82818,
+                "original_supported_cells": 82818
+              },
+              "field_wing6": {
+                "max_variance": 0.17806292140550456,
+                "min_variance": 0.017922981975112474,
+                "original_cells": 98945,
+                "original_supported_cells": 96943
+              }
+            },
+            "formal_pilot_qualification": "unknown",
+            "initial_quote_gate": "pass",
+            "integrity": "pass",
+            "original_quote_count": 37,
+            "pde_stages": {
+              "pde1201x960": {
+                "gate": "pass",
+                "max_error": 0.0004987307888888459,
+                "original_quote_count": 37
+              },
+              "pde2401x1920": {
+                "gate": "pass",
+                "max_error": 0.0004235755590462631,
+                "original_quote_count": 37
+              },
+              "pde_domain2p4": {
+                "gate": "pass",
+                "max_error": 0.0004235755590586976,
+                "original_quote_count": 37
+              },
+              "pde_early_extended": {
+                "gate": "pass",
+                "max_error": 0.00013064409999463678,
+                "original_quote_count": 37
+              },
+              "pde_field_refined": {
+                "gate": "pass",
+                "max_error": 0.00013064409999463678,
+                "original_quote_count": 37
+              },
+              "pde_space4801": {
+                "gate": "pass",
+                "max_error": 0.00010408252889604341,
+                "original_quote_count": 37
+              },
+              "pde_time3840": {
+                "gate": "pass",
+                "max_error": 0.0001041288281009578,
+                "original_quote_count": 37
+              },
+              "pde_wing6": {
+                "gate": "pass",
+                "max_error": 0.0001310200385926663,
+                "original_quote_count": 37
+              }
+            },
+            "refinements": {
+              "pde2401x1920": {
+                "max_difference": 0.0003280728220866891,
+                "original_quote_count": 37,
+                "reference": "pde1201x960"
+              },
+              "pde_domain2p4": {
+                "max_difference": 9.592326932761353e-14,
+                "original_quote_count": 37,
+                "reference": "pde2401x1920"
+              },
+              "pde_early_extended": {
+                "max_difference": 6.047555434207652e-08,
+                "original_quote_count": 37,
+                "reference": "pde_field_refined"
+              },
+              "pde_field_refined": {
+                "max_difference": 0.0002971153613420263,
+                "original_quote_count": 37,
+                "reference": "pde2401x1920"
+              },
+              "pde_space4801": {
+                "max_difference": 8.20472527101046e-05,
+                "original_quote_count": 37,
+                "reference": "pde_field_refined"
+              },
+              "pde_time3840": {
+                "max_difference": 7.024302917102432e-08,
+                "original_quote_count": 37,
+                "reference": "pde_space4801"
+              },
+              "pde_wing6": {
+                "max_difference": 1.6024683599624723e-05,
+                "original_quote_count": 37,
+                "reference": "pde_field_refined"
+              }
+            }
+          },
+          "wall_seconds": 0.2789152450000074,
+          "child_cpu_seconds": null,
+          "checker_sha256": "7fe16943f2ead6dbe17a17e969930afde863681ed9eb24b9ea8b7b18c4a004d4"
+        }
+      },
+      "semantic_check": "pass within the declared saved arithmetic boundary; formal pilot unknown"
+    }
+  ],
+  "qualification": "unknown"
+}

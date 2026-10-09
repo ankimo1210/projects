@@ -1,0 +1,66 @@
+{
+  "review_kind": "independent_source_review",
+  "reviewed_at": "2026-10-09T14:24:45.399553+00:00",
+  "scope": [
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_replay.py"
+  ],
+  "source_sha256": "9966db6c4b98a211d186657b96acb37dd5f9101a98c055853ec7638d3e13a860",
+  "test_sha256": "771f3f0b0721cf0588b9d2320904ca9a9e6daef594a5b88cbb95cebd74c85fd7",
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "Important",
+      "file": "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+      "line": 319,
+      "title": "Original dataset denominator is not enforced at shared market/cash input boundary",
+      "detail": "check_cash accepts dataset.original_n=2 or original_path_count=2 with arrays retaining only one path, then returns original_path_count=1 and qualification verified. _market_arrays ignores both declarations; check_market additionally checks only original_path_count, not the canonical original_n produced by market_dataset. A truncated saved path set can therefore be treated as its own complete population.",
+      "recommendation": "At shared dataset-array boundary verify canonical original_n and any original_path_count alias agree with raw prices shape; also verify cell original_n/original_path_count when supplied. Preserve failure rows instead of allowing a sliced finite subset. Add tamper tests for both aliases in market/cash."
+    },
+    {
+      "id": "R2",
+      "severity": "Important",
+      "file": "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+      "line": 250,
+      "title": "One shared global driver may declare conflicting global grid lengths",
+      "detail": "Four rows with one global_driver_id are accepted when three use global_steps=768/start704/stop768/factor64 and the fourth uses global_steps=1536/start1408/stop1536/factor128. All sliced calendar dates match, but the same global driver identity cannot have two array lengths. Current original_n equality alone does not bind the shared calendar.",
+      "recommendation": "Bind common global_steps and original_n for the declared shared global driver; keep legitimate per-date start/stop and aggregation changes explicit, and reject conflicting global grid lengths. Add a proportional-calendar tamper regression."
+    }
+  ],
+  "counts": {
+    "Critical": 0,
+    "Important": 2,
+    "Minor": 0
+  },
+  "source_approved": false,
+  "unresolved": 2,
+  "validation": {
+    "scoped_tests": "62 passed in 0.72s",
+    "test_wall_seconds": 1.0392206380000175,
+    "test_exit_code": 0,
+    "independent_probe_exit_code": 0,
+    "probe_output": "task-5-replay-review-probes.txt"
+  },
+  "limits": [
+    "This review does not qualify the formal pilot, finance accuracy, earlier SDE generation, runtime expenses, source closure, NN fitting, validation choice or final adoption.",
+    "Teacher label replay always uses sixteen IID blocks and therefore rejects N=1 even when all requested thresholds are exact-linear. Formal production teacher prefixes are multiples of sixteen; this is a documented domain limit rather than a finding.",
+    "rebuild_asian_cache retains scalar/threshold/block summaries and explicit driver bindings, not N-by-threshold sample arrays across Cartesian nodes. replay_teacher does allocate node samples transiently.",
+    "Shared slice hashes/global mapping are provenance declarations; earlier random-driver values remain unverified, as the module says.",
+    "check_cash financial accounting is independently recomputed with event recurrence and discounted gains, including initial/interim/final costs and one claim settlement. Its boundary-level verification does not certify policy/market accuracy.",
+    "teacher/cache/market qualification stays unknown; statistics qualification is conditional on the externally measured envelope and uses saved indices without RNG."
+  ],
+  "artifacts": [
+    {
+      "path": "task-5-replay-review-tests.txt",
+      "sha256": "1adacc4f7ec6d448ab763475d76841e2565e324ba2a3144aaf541be9218ecaf1"
+    },
+    {
+      "path": "task-5-replay-review-probes.py",
+      "sha256": "a0a9c7801451b8097008e8b10bf690be84c651f5a91617aaa78bc01fbd1c4235"
+    },
+    {
+      "path": "task-5-replay-review-probes.txt",
+      "sha256": "9735be5ab58f8bc4c2e2de98b45b35e9dcd1e83aef704855e637c62aaa815f34"
+    }
+  ]
+}

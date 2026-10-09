@@ -1,0 +1,104 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___________ test_source_closure_contains_nested_package_initializer ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3704/test_source_closure_contains_n0')
+
+    def test_source_closure_contains_nested_package_initializer(tmp_path):
+        package = tmp_path / "pkg"
+        nested = package / "nested"
+        nested.mkdir(parents=True)
+        (package/"__init__.py").write_text("")
+        (nested/"__init__.py").write_text("from . import helper\n")
+        (nested/"helper.py").write_text("VALUE = 1\n")
+        (nested/"entry.py").write_text("VALUE = 2\n")
+        result = runner.source_identity(tmp_path, entrypoints=["pkg.nested.entry"],
+                                        package_roots={"pkg": "pkg"})
+>       assert set(result["files"]) == {
+            "pkg/__init__.py", "pkg/nested/__init__.py",
+            "pkg/nested/helper.py", "pkg/nested/entry.py",
+        }
+E       AssertionError: assert {'pkg/__init_...ted/entry.py'} == {'pkg/__init_...ed/helper.py'}
+E         
+E         Extra items in the right set:
+E         'pkg/nested/helper.py'
+E         'pkg/nested/__init__.py'
+E         Use -v to get more diff
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:97: AssertionError
+__________ test_tiny_saved_checker_rejects_saved_global_driver_tamper __________
+
+    def test_tiny_saved_checker_rejects_saved_global_driver_tamper():
+        bundle = runner.run_tiny(original_n=32, updates=0, train=False)
+        bundle["teacher_global_driver"][0, 0, 0] += .01
+        with pytest.raises(ValueError, match="driver"):
+>           runner.check_bundle(bundle)
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:566: in check_bundle
+    replay.check_cash(data, cash_record)
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py:465: in check_cash
+    _same(np.clip(np.asarray(cell["raw_holdings"], float), -2., 2.), holds, "raw_holdings")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+expected = array([[[       nan, 0.        ],
+        [       nan, 0.        ],
+        [       nan, 0.        ],
+        [       ...n, 0.        ],
+        [       nan, 0.        ],
+        [       nan, 0.        ],
+        [       nan, 0.        ]]])
+saved = array([[[nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan]...      [nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan]]])
+name = 'raw_holdings'
+
+    def _same(expected, saved, name):
+        """Compare numeric values by tolerance, preserving NaNs and shapes."""
+        if isinstance(expected, dict):
+            if not isinstance(saved, dict) or set(saved) != set(expected):
+                raise ValueError(f"{name}: saved key set differs from recomputation")
+            for key, value in expected.items():
+                _same(value, saved[key], f"{name}.{key}")
+            return
+        if expected is None or saved is None:
+            if expected is not None or saved is not None:
+                raise ValueError(f"{name}: unknown value changed")
+            return
+        left, right = np.asarray(expected), np.asarray(saved)
+        if left.shape != right.shape:
+            raise ValueError(f"{name}: saved shape differs from original")
+        if left.dtype.kind in "USb" or right.dtype.kind in "USb":
+            equal = np.array_equal(left, right)
+        else:
+            equal = np.allclose(left, right, rtol=_RTOL, atol=_ATOL, equal_nan=True)
+        if not equal:
+>           raise ValueError(f"{name}: saved value differs from recomputation")
+E           ValueError: raw_holdings: saved value differs from recomputation
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py:48: ValueError
+
+During handling of the above exception, another exception occurred:
+
+    def test_tiny_saved_checker_rejects_saved_global_driver_tamper():
+        bundle = runner.run_tiny(original_n=32, updates=0, train=False)
+        bundle["teacher_global_driver"][0, 0, 0] += .01
+>       with pytest.raises(ValueError, match="driver"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'driver'
+E         Actual message: 'raw_holdings: saved value differs from recomputation'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:198: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_source_closure_contains_nested_package_initializer
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_tiny_saved_checker_rejects_saved_global_driver_tamper
+2 failed, 11 deselected in 4.41s

@@ -1,0 +1,48 @@
+{
+  "schema": "independent-replay-source-rereview-v1",
+  "timestamp_utc": "2026-10-09T14:55:18.912052+00:00",
+  "reviewer": "/root/task5_study_review",
+  "bindings": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "d52ac6ee48b9eb638701f35d08732fcfe9ada436c4d0f31a2d47cfb170589b61",
+    "deep_hedge_price/tests/test_dynamic_hedging_replay.py": "5d257a9eb7ab191ac7a3153e588b90acf52624504d35ae5878694da59726801a"
+  },
+  "original_findings": {
+    "R1": "resolved: all provided dataset and cell population aliases are checked against unsliced raw path axis",
+    "R2": "resolved: every group sharing global ID has one original N and one global grid length"
+  },
+  "counts": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0,
+    "unresolved": 0
+  },
+  "source_approved": true,
+  "approval_scope": "saved-only replay module source boundary only",
+  "formal_pilot_qualification": "not_reviewed",
+  "validation": {
+    "tests": 82,
+    "pytest_seconds": 0.76,
+    "test_wall_seconds": 1.1514996189998783,
+    "test_exit": 0,
+    "independent_probe_exit": 0,
+    "probe_outputs": "task-5-replay-rereview-probes.json"
+  },
+  "independent_results": {
+    "cash_hand_reference": 3.076956452050289,
+    "cash_replay": 3.076956452050294,
+    "all4_population_alias_tampers_rejected": true,
+    "shared768_vs1536_grid_conflict_rejected": true,
+    "unknown_untraded_call_exact_zero_contribution": true,
+    "nonzero_call_liquidation_remains_unknown": true,
+    "invalid_action_repair_rejected": true,
+    "original_n_for_failed_action_retained": true,
+    "saved_rng_forbidden": true
+  },
+  "limits": [
+    "Replay derives primitive final-step flags/coefficient/auxiliary metadata and checks compact code/legend/status plus original N; earlier SDE/actual random values remain unverified.",
+    "Numeric label/cache/quote checking does not measure independent pricing, Greek, root/field/variance bias or financial suitability.",
+    "Cash boundary independently checks recurrence, discounted gain, all event fees, one terminal claim, original declarations and supplied zero-input masks; raw policy target origin, model calibration and market accuracy remain external.",
+    "Stats uses fixed saved indices and paired statistics; numerical envelope truth, all3init IUT, training/full-expense/source closure/formal pilot/main/fresh/CAS/acceptance are not certified.",
+    "Only exact existing scoped suite and independent small probes were run; no full suites/source/Git/docs/index edits. No self-rereview of my study fixes was performed."
+  ]
+}

@@ -1,0 +1,512 @@
+--- a/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py
++++ b/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py
+@@ -255,6 +255,10 @@
+     Position error is a conservative frozen-state ratio perturbation conditional
+     on supplied derivative errors. It does not bound root-state error or entire
+     model bias; the independent checker must assess these additional errors.
++    Exact linear claims retain known stock/zero-call targets without a quote
++    fit. Their band covariance qualification is recorded separately. Local
++    covariance uses the current calendar field; unsupported t0 restarts use
++    only the supplied original first internal midpoint, explicitly recorded.
+     """
+     start, cpu_start = perf_counter(), process_time()
+     times, prices, memory, counts = _dataset_shape(dataset)
+@@ -362,20 +366,57 @@
+         cs, ct = row["call_spot_derivative"], row["call_state_derivative"]
+         vs, vt = row["asian_spot_derivative"], row["asian_state_derivative"]
+         raw_positions = quote_positions(vs, vt, cs, ct)
++        linear = row["asian_status"] == "not_required_linear_claim"
++        # The exact linear claim has zero state exposure; do not manufacture
++        # an unavailable 0/Ctheta or use latent generator state to rescue it.
++        raw_positions["stock"][linear] = vs[linear]
++        raw_positions["call"][linear] = 0.0
++        raw_positions["valid"][linear] = np.isfinite(vs[linear])
++        row["linear_claim"] = linear
+         row["u2_target"] = np.stack([raw_positions["stock"], raw_positions["call"]], axis=-1)
+         row["u1_target"] = stock_only_target(
+             raw_positions, cs, ct, model=model, spot=spot, xi=parameters.xi, rho=parameters.rho
+         )
++        row["u1_target"][linear] = vs[linear]
+         if model == "local":
+             base_variance, local_status = np.full(shape, np.nan), np.full(shape, "", dtype="<U64")
++            local_original_status = np.full(shape, "", dtype="<U64")
++            local_source_time = np.broadcast_to(times[:m], shape).copy()
++            local_early_proxy = np.zeros(shape, dtype=bool)
++            calendar = np.asarray(
++                dataset.get("primitives", {}).get("calendar_times", []), dtype=float
++            )
++            first_midpoint = (
++                float((calendar[0] + calendar[1]) / 2)
++                if calendar.ndim == 1
++                and len(calendar) >= 2
++                and calendar[0] == 0
++                and np.isfinite(calendar[:2]).all()
++                and calendar[1] > 0
++                else np.nan
++            )
+             for j in range(m):
+-                local = surface.evaluate(float((times[j] + times[j + 1]) / 2), spot[:, j])
++                local = surface.evaluate(float(times[j]), spot[:, j])
+                 base_variance[:, j], local_status[:, j] = local["variance"], local["status"]
+-                unsupported = np.char.startswith(
+-                    np.asarray(local["status"]).astype(str), "unsupported"
+-                )
++                local_original_status[:, j] = local_status[:, j]
++                unsupported = np.char.startswith(local_status[:, j], "unsupported")
++                if times[j] == 0 and np.any(unsupported) and np.isfinite(first_midpoint):
++                    # The approved t0 closure uses the original first internal
++                    # SDE step, never the much larger hedge-interval midpoint.
++                    retry = surface.evaluate(first_midpoint, spot[unsupported, j])
++                    base_variance[unsupported, j] = retry["variance"]
++                    local_status[unsupported, j] = retry["status"]
++                    local_source_time[unsupported, j] = first_midpoint
++                    local_early_proxy[unsupported, j] = True
++                unsupported = np.char.startswith(local_status[:, j], "unsupported")
+                 base_variance[unsupported, j] = np.nan
+-            row["local_base_variance"], row["local_base_status"] = base_variance, local_status
++            row.update(
++                local_base_variance=base_variance,
++                local_base_status=local_status,
++                local_base_original_status=local_original_status,
++                local_base_source_time=local_source_time,
++                local_base_early_proxy=local_early_proxy,
++            )
+         else:
+             base_variance = None
+         cov = price_covariance(
+@@ -403,6 +444,17 @@
+             spot,
+             parameters,
+         )
++        u2_blocks[linear] = np.stack(
++            [
++                row["asian_block_values"][..., 1][linear],
++                np.zeros_like(row["asian_block_values"][..., 1][linear]),
++            ],
++            axis=-1,
++        )
++        u1_blocks[linear] = row["asian_block_values"][..., 1][linear]
++        u2_cov[linear] = 0.0
++        u2_se[linear] = 0.0
++        u1_se[linear] = 0.0
+         row.update(
+             u2_block_positions=u2_blocks,
+             u1_block_positions=u1_blocks,
+@@ -439,12 +491,12 @@
+             spot=spot,
+             parameters=parameters,
+         )
++        row["u2_deterministic_error"][linear] = 0.0
++        row["u1_deterministic_error"][linear] = 0.0
+         measured_call = np.isfinite([cp_error, cs_error, ct_error]).all()
+         measured_asian = np.isfinite(row["asian_deterministic_error"]).all(axis=-1)
+-        finite = raw_positions["valid"] & cov["valid"] & (row["fit_status"] == "ok")
+-        finite &= np.isin(row["asian_status"], ["ok", "not_required_linear_claim"]) & (
+-            row["call_status"] == "ok"
+-        )
++        fitted = (row["fit_status"] == "ok") & (row["call_status"] == "ok")
++        finite = raw_positions["valid"] & (linear | (fitted & (row["asian_status"] == "ok")))
+         qualified = finite.copy()
+         qualified &= measured_call and cp_error <= 0.001 and cs_error <= 0.002
+         qualified &= measured_asian & (point_vp_error <= 0.05)
+@@ -457,8 +509,18 @@
+         qualified &= np.all(row["u2_deterministic_error"] <= 0.01, axis=-1) & (
+             row["u1_deterministic_error"] <= 0.01
+         )
++        qualified[linear] = finite[linear]
++        covariance_qualified = cov["valid"] & fitted
++        covariance_qualified &= measured_call and cp_error <= 0.001 and cs_error <= 0.002
++        covariance_qualified &= (np.abs(ct) > 3 * ct_error) & (
++            ct_error * (0.04 if model == "heston" else 1.0) <= 0.01
++        )
+         row["arithmetic_valid"] = finite
++        row["band_arithmetic_valid"] = finite & cov["valid"]
+         row["qualification"] = np.where(qualified, "qualified", "unknown")
++        row["band_qualification"] = np.where(
++            qualified & covariance_qualified, "qualified", "unknown"
++        )
+         row["qualification_reason"] = np.where(
+             qualified, "", "unmeasured_or_failed_support/fit/precision/error"
+         )
+@@ -533,6 +595,8 @@
+     never an implicit holding/zero action. Terminal has one liquidation and
+     one claim payment. Net cash, independent discounted gains and zero-fee
+     same-holding cash are returned. U1 keeps Q observable but trades no call.
++    Zero call exposure/entitlement is evaluated as an exact zero contribution,
++    with masks retained; raw unknown quotes/CF remain in the input dataset.
+     """
+     start, cpu_start = perf_counter(), process_time()
+     _universe(universe)
+@@ -558,6 +622,8 @@
+         if not np.array_equal(risk["times"], times[:m]):
+             raise ValueError("risk exact dates must match dataset")
+         point_qualified = row["qualification"] == "qualified"
++        if policy == "band":
++            point_qualified &= row["band_qualification"] == "qualified"
+     if policy == "nn" and (
+         fit is None
+         or fit.get("status") != "completed"
+@@ -621,6 +687,8 @@
+         valid = np.isfinite(action).all(axis=1) & np.isfinite(old).all(axis=1)
+         if policy in ("greek", "band"):
+             valid &= row["arithmetic_valid"][:, j]
++        if policy == "band":
++            valid &= row["band_arithmetic_valid"][:, j]
+         action[~valid] = np.nan
+         point_valid[:, j], constrained[:, j] = valid, valid[:, None] & (action != raw)
+         holdings[:, j], raw_targets[:, j], raw_holdings[:, j], old = action, target, raw, action
+@@ -630,6 +698,21 @@
+     ah = holdings[..., :1] if stock_account else holdings
+     acf = None if cf is None else (cf[..., :1] if stock_account else cf)
+     fees = np.asarray(dataset["cost_rates"])[:1] if stock_account else dataset["cost_rates"]
++    previous = np.concatenate([np.zeros((n, 1, 2)), holdings], axis=1)
++    current = np.concatenate([holdings, np.zeros((n, 1, 2))], axis=1)
++    invalid_call_price = ~np.isfinite(prices[..., 1]) | (prices[..., 1] < 0)
++    original_cf = np.zeros_like(prices) if cf is None else np.asarray(cf)
++    invalid_call_cf = ~np.isfinite(original_cf[..., 1])
++    unused_call_price = invalid_call_price & (previous[..., 1] == 0) & (current[..., 1] == 0)
++    unused_call_cashflow = invalid_call_cf & (previous[..., 1] == 0)
++    if not stock_account:
++        # Zero entitlement/exposure contributes exactly zero. Preserve the raw
++        # unknown quote/CF in dataset; a nonzero trade/liquidation still needs it.
++        ap = ap.copy()
++        ap[..., 1][unused_call_price] = 0.0
++        if acf is not None:
++            acf = np.asarray(acf).copy()
++            acf[..., 1][unused_call_cashflow] = 0.0
+     net = cash_account(
+         times,
+         ap,
+@@ -688,6 +771,8 @@
+         "reasons": reasons,
+         "raw_account": net,
+         "gross_account": gross,
++        "unused_call_price_mask": unused_call_price,
++        "unused_call_cashflow_mask": unused_call_cashflow,
+         "diagnostics": {
+             "original_n": n,
+             "unknown_count": int(np.sum(~path_qualified)),
+@@ -789,8 +874,10 @@
+ def fit_roster(train_datasets, *, candidate) -> dict:
+     """Attempt all twelve slots, retaining original N, failures, batches and caps.
+ 
+-    Only training data/scales are consumed. No validation completion or financial
+-    approval is recorded. Last finite weights and update events stay in raw_fit.
++    Only training data/scales are consumed. Dataset generator identity must
++    match its slot. Actual seed/universe/original N and fixed checkpoint identity
++    are retained with raw_fit. No validation completion or financial approval is
++    recorded. Last finite weights and update events stay in raw_fit.
+     Tiny source-fixture candidates are allowed here; main must enforce its exact
+     frozen candidate at the caller-owned protocol boundary.
+     """
+@@ -805,6 +892,8 @@
+         try:
+             dataset = train_datasets[slot["training_generator"]]
+             _dataset_shape(dataset)
++            if _model(dataset["model"]) != _model(slot["training_generator"]):
++                raise ValueError("training dataset generator differs from original fit slot")
+             if len(dataset["prices"]) != n:
+                 raise ValueError("training original N differs from candidate")
+             raw = fit_policy(
+@@ -816,7 +905,18 @@
+                 learning_rate=training["learning_rate"],
+                 cap_seconds=training["cap_seconds"],
+             )
++            if (
++                raw.get("universe") != slot["universe"]
++                or raw.get("seed") != slot["initialization"]
++                or raw.get("original_path_count") != n
++            ):
++                raise ValueError("returned raw fit identity differs from original attempt")
+             complete = raw["status"] == "completed" and raw["complete"]
++            raw.update(
++                training_generator=_NAMES[_model(dataset["model"])],
++                fit_id=slot["id"],
++                checkpoint_id=candidate["hedging"]["checkpoint_rule"] if complete else None,
++            )
+             row.update(
+                 status="completed" if complete else "failed",
+                 reason=raw["reason"],
+@@ -867,7 +967,10 @@
+ 
+     This function is not test-opening authorization: the caller must pass the
+     protocol boundary before loading data. No failed NN, band width or original
+-    denominator is replaced. Four generator/universe calls cover all 44 cells.
++    denominator is replaced. Outer/raw training generator, universe, seed,
++    original N and checkpoint identities must agree before NN replay; mismatched
++    slots remain reason-bearing unknown cells. Four generator/universe calls
++    cover all 44 cells.
+     """
+     _universe(universe)
+     start, cpu_start = perf_counter(), process_time()
+@@ -882,6 +985,7 @@
+         if row["id"] in fit_by_id:
+             raise ValueError("duplicate original fit slot")
+         fit_by_id[row["id"]] = row
++    fit_slots = {row["id"]: row for row in study_roster()["fits"]}
+     cells = []
+     for slot in study_roster()["primary_cells"]:
+         if slot["generator"] != generator or slot["universe"] != universe:
+@@ -923,9 +1027,27 @@
+             if fitted is None or fitted.get("status") != "completed" or not fitted.get("raw_fit"):
+                 result = _unknown_rollout(dataset, "original NN fit missing or failed")
+             else:
+-                result = policy_rollout(
+-                    dataset, risk, universe=universe, policy="nn", fit=fitted["raw_fit"]
++                expected = fit_slots[fit_id]
++                raw_fit = fitted["raw_fit"]
++                identity_valid = all(fitted.get(key) == value for key, value in expected.items())
++                identity_valid &= (
++                    isinstance(fitted.get("original_n"), (int, np.integer))
++                    and fitted["original_n"] > 0
++                    and raw_fit.get("original_path_count") == fitted["original_n"]
++                    and raw_fit.get("universe") == expected["universe"]
++                    and raw_fit.get("seed") == expected["initialization"]
++                    and raw_fit.get("training_generator") == expected["training_generator"]
++                    and raw_fit.get("fit_id") == expected["id"]
++                    and fitted.get("checkpoint_id") == "last_finite_completed"
++                    and raw_fit.get("checkpoint_id") == fitted.get("checkpoint_id")
+                 )
++                if not identity_valid:
++                    result = _unknown_rollout(dataset, "original NN checkpoint identity mismatch")
++                    result["raw_fit_slot"] = fitted
++                else:
++                    result = policy_rollout(
++                        dataset, risk, universe=universe, policy="nn", fit=raw_fit
++                    )
+         cells.append(
+             {
+                 **slot,
+--- a/deep_hedge_price/tests/test_dynamic_hedging_study.py
++++ b/deep_hedge_price/tests/test_dynamic_hedging_study.py
+@@ -1,4 +1,6 @@
+ """Independent contracts for the observable dynamic study connector."""
++
++import copy
+ 
+ import numpy as np
+ import pytest
+@@ -369,7 +371,8 @@
+ 
+     old_np = np.random.get_state()
+     old_torch = torch.get_rng_state().clone()
+-    result = study.fit_roster({"Heston": data, "local": data}, candidate=candidate)
++    local_data, _, _ = setup(generator="local")
++    result = study.fit_roster({"Heston": data, "local": local_data}, candidate=candidate)
+     assert len(result["fits"]) == 12
+     assert all(row["status"] == "completed" for row in result["fits"])
+     assert all(
+@@ -537,3 +540,213 @@
+     expected_cash, expected_costs = hand_cash(data, replay["holdings"])
+     assert replay["cash"] == pytest.approx(expected_cash, abs=1e-12)
+     assert replay["costs"] == pytest.approx(expected_costs, abs=1e-12)
++
++
++def test_training_generator_mismatch_keeps_six_reasoned_failed_local_slots():
++    data, _, _ = setup()
++    candidate = candidate_protocol()
++    candidate["training"].update(original_n=4, updates=1, batch_size=4, cap_seconds=30)
++    fitted = study.fit_roster({"Heston": data, "local": data}, candidate=candidate)
++    local_rows = [row for row in fitted["fits"] if row["training_generator"] == "local"]
++    assert len(fitted["fits"]) == 12
++    assert len(local_rows) == 6
++    assert all(row["status"] == "failed" for row in local_rows)
++    assert all(row["original_n"] == 4 and "generator" in row["reason"] for row in local_rows)
++    assert all(row["raw_fit"] is None for row in local_rows)
++
++
++@pytest.fixture(scope="module")
++def tiny_identity_roster():
++    data, risk, _ = setup()
++    local_data, _, _ = setup(generator="local")
++    candidate = candidate_protocol()
++    candidate["training"].update(original_n=4, updates=1, batch_size=4, cap_seconds=30)
++    fitted = study.fit_roster({"Heston": data, "local": local_data}, candidate=candidate)
++    validation = study.select_validation(
++        data, risk, generator="Heston", universe="U2", widths=[0, 0.01, 0.02, 0.05, 0.1, 0.2]
++    )
++    return data, risk, fitted, validation
++
++
++@pytest.mark.parametrize(
++    "field,bad",
++    [
++        ("seed", 29),
++        ("universe", "U1"),
++        ("original_path_count", 3),
++        ("training_generator", "local"),
++        ("fit_id", "fit:Heston:U1:init29"),
++        ("checkpoint_id", "best_test_mse"),
++    ],
++)
++def test_test_roster_raw_checkpoint_mismatch_keeps_original_cell_unknown(
++    tiny_identity_roster, field, bad
++):
++    data, risk, fitted, validation = tiny_identity_roster
++    altered = copy.deepcopy(fitted)
++    row = next(row for row in altered["fits"] if row["id"] == "fit:Heston:U2:init11")
++    row["raw_fit"][field] = bad
++    result = study.test_roster(data, risk, altered, validation, generator="Heston", universe="U2")
++    cell = next(cell for cell in result["cells"] if cell["policy_id"] == "nn:trainHeston:init11")
++    assert len(result["cells"]) == 11
++    assert cell["status"] == "unknown"
++    assert cell["original_n"] == 4
++    assert np.isnan(cell["result"]["discounted_pnl"]).all()
++    assert "identity" in cell["reason"]
++    unaffected = next(
++        cell for cell in result["cells"] if cell["policy_id"] == "nn:trainHeston:init29"
++    )
++    assert unaffected["status"] == "completed"
++
++
++@pytest.mark.parametrize(
++    "field,bad",
++    [
++        ("universe", "U1"),
++        ("initialization", 29),
++        ("training_generator", "local"),
++        ("original_n", 3),
++        ("original_n", None),
++        ("checkpoint_id", "best_test_mse"),
++    ],
++)
++def test_test_roster_outer_checkpoint_mismatch_is_not_replayed(tiny_identity_roster, field, bad):
++    data, risk, fitted, validation = tiny_identity_roster
++    altered = copy.deepcopy(fitted)
++    row = next(row for row in altered["fits"] if row["id"] == "fit:Heston:U2:init11")
++    row[field] = bad
++    result = study.test_roster(data, risk, altered, validation, generator="Heston", universe="U2")
++    cell = next(cell for cell in result["cells"] if cell["policy_id"] == "nn:trainHeston:init11")
++    assert cell["status"] == "unknown"
++    assert np.isnan(cell["result"]["discounted_pnl"]).all()
++
++
++class CalendarField:
++    def evaluate(self, time, spots):
++        spots = np.asarray(spots, float)
++        unsupported = (time == 0) & (spots != 100)
++        return {
++            "variance": np.where(unsupported, np.nan, 0.04 + 0.24 * time),
++            "status": np.where(unsupported, "unsupported_initial", "ok"),
++        }
++
++
++def test_local_covariance_uses_current_calendar_state_not_monthly_midpoint():
++    data, _, caches = setup()
++    risk = study.quote_risk_dataset(parameters(), CalendarField(), data, caches)
++    row = risk["models"]["local"]
++    j = 3
++    time, spot = data["times"][j], data["prices"][0, j, 0]
++    expected_base = 0.04 + 0.24 * time
++    expected_covariance = expected_base * spot**2 * np.diff(data["times"])[j]
++    assert row["local_base_variance"][0, j] == pytest.approx(expected_base)
++    assert row["price_covariance"][0, j, 0, 0] == pytest.approx(expected_covariance)
++
++
++def test_t0_unsupported_covariance_uses_saved_first_internal_midpoint():
++    data, _, caches = setup()
++    data["prices"][:, 0, 0] = [99.95, 100, 100.05, 100]
++    data["prices"][:, 0, 1] = 0.2 * data["prices"][:, 0, 0] - 10 + 0.2
++    data["primitives"]["calendar_times"] = np.arange(193) / 192
++    data["primitives"]["record_indices"] = np.arange(13) * 16
++    risk = study.quote_risk_dataset(parameters(), CalendarField(), data, caches)
++    row = risk["models"]["local"]
++    expected = np.array([0.04 + 0.24 / 384, 0.04, 0.04 + 0.24 / 384, 0.04])
++    assert row["local_base_variance"][:, 0] == pytest.approx(expected)
++    assert row["local_base_source_time"][:, 0] == pytest.approx([1 / 384, 0, 1 / 384, 0])
++    assert row["local_base_early_proxy"][:, 0] == pytest.approx([True, False, True, False])
++
++
++def test_t0_unsupported_covariance_without_internal_grid_stays_unknown():
++    data, _, caches = setup()
++    data["prices"][:, 0, 0] = 99.95
++    data["prices"][:, 0, 1] = 0.2 * 99.95 - 10 + 0.2
++    data.pop("primitives")
++    risk = study.quote_risk_dataset(parameters(), CalendarField(), data, caches)
++    row = risk["models"]["local"]
++    assert np.isnan(row["local_base_variance"][:, 0]).all()
++    assert np.all(row["band_qualification"][:, 0] == "unknown")
++    assert np.all(row["qualification"][:, 0] == "qualified")
++
++
++@pytest.mark.parametrize("quote", [99.0, np.nan])
++def test_exact_linear_targets_do_not_depend_on_an_unnecessary_quote_fit(quote):
++    data, _, caches = setup()
++    data["memory_sum"][:, 3] = 1300
++    data["prices"][:, 3, 1] = quote
++    for pair in caches.values():
++        pair["call"]["derivative_error"] = np.nan
++        pair["asian"].pop("deterministic_error")
++    risk = study.quote_risk_dataset(parameters(), ConstantField(), data, caches)
++    t = data["times"][3]
++    expected = np.exp(-0.03 * (1 - t)) * np.exp(0.03 * (np.arange(4, 13) / 12 - t)).sum() / 12
++    for row in risk["models"].values():
++        assert np.all(row["fit_status"][:, 3] == "unknown")
++        assert row["u2_target"][:, 3] == pytest.approx(np.tile([expected, 0], (4, 1)))
++        assert row["u1_target"][:, 3] == pytest.approx(expected)
++        assert row["u2_position_se"][:, 3] == pytest.approx(0)
++        assert row["u2_deterministic_error"][:, 3] == pytest.approx(0)
++        assert np.all(row["qualification"][:, 3] == "qualified")
++        assert np.all(row["band_qualification"][:, 3] == "unknown")
++
++
++@pytest.mark.parametrize("universe", ["U1", "U2"])
++def test_greek_linear_action_survives_no_root_but_band_keeps_unknown_covariance(universe):
++    data, _, caches = setup()
++    data["memory_sum"][:, 3] = 1300
++    data["prices"][:, 3, 1] = 99
++    risk = study.quote_risk_dataset(parameters(), ConstantField(), data, caches)
++    greek = study.policy_rollout(data, risk, universe=universe, policy="greek", model="heston")
++    band = study.policy_rollout(
++        data, risk, universe=universe, policy="band", model="heston", width=0.02
++    )
++    assert np.isfinite(greek["holdings"][:, 3]).all()
++    assert greek["holdings"][:, 3, 1] == pytest.approx(0)
++    assert np.isfinite(greek["discounted_pnl"]).all()
++    assert np.isnan(band["holdings"][:, 3:]).all()
++    assert band["status"] == "unknown"
++
++
++def test_zero_call_exposure_does_not_require_unknown_unused_call_mid_or_cf():
++    data, risk, _ = setup()
++    row = risk["models"]["heston"]
++    row["u2_target"][..., 1] = 0
++    baseline = study.policy_rollout(data, risk, universe="U2", policy="greek", model="heston")
++    data["prices"][1, 4, 1] = np.nan
++    data["cashflows"][1, 4, 1] = np.nan
++    data["qualification"] = "unknown"
++    changed = study.policy_rollout(data, risk, universe="U2", policy="greek", model="heston")
++    assert changed["discounted_pnl"] == pytest.approx(baseline["discounted_pnl"])
++    assert changed["discounted_gain_pnl"] == pytest.approx(baseline["discounted_gain_pnl"])
++    assert changed["costs"] == pytest.approx(baseline["costs"])
++    assert changed["status"] == "unknown"
++    assert changed["unused_call_price_mask"][1, 4]
++    assert changed["unused_call_cashflow_mask"][1, 4]
++    assert changed["unused_call_price_mask"].sum() == 1
++    assert changed["unused_call_cashflow_mask"].sum() == 1
++
++
++def test_unknown_call_mid_cannot_be_ignored_when_liquidating_a_nonzero_call():
++    data, risk, _ = setup()
++    row = risk["models"]["heston"]
++    row["u2_target"][..., 1] = 0
++    row["u2_target"][:, 3, 1] = 0.5
++    data["prices"][:, 4, 1] = np.nan
++    result = study.policy_rollout(data, risk, universe="U2", policy="greek", model="heston")
++    assert np.isnan(result["discounted_pnl"]).all()
++    assert result["status"] == "unknown"
++    assert not np.any(result["unused_call_price_mask"][:, 4])
++
++
++@pytest.mark.parametrize("universe,policy", [("U1", "greek"), ("U2", "none")])
++def test_unused_invalid_call_masks_use_the_same_zero_exposure_definition(universe, policy):
++    data, risk, _ = setup()
++    data["prices"][1, 4, 1] = np.nan
++    data["cashflows"][1, 4, 1] = np.nan
++    data["qualification"] = "unknown"
++    result = study.policy_rollout(data, risk, universe=universe, policy=policy, model="heston")
++    assert np.isfinite(result["discounted_pnl"]).all()
++    assert result["unused_call_price_mask"][1, 4]
++    assert result["unused_call_cashflow_mask"][1, 4]
++    assert result["unused_call_price_mask"].sum() == 1
++    assert result["unused_call_cashflow_mask"].sum() == 1

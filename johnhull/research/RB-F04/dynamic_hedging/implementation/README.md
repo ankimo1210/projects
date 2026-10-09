@@ -2,7 +2,7 @@
 
 2026-10-09。**private sourceの実装・独立レビュー完了。開発branchのみ。正式pilot・研究受入・main統合は未実施。**
 
-後続の[Task5 helperチェックポイント](TASK5_HELPERS.md)では統計/実験管理の2 private moduleを承認した。下表と1193件はTasks1–4時点の記録として保持する。runner・正式pilot・研究受入は未完了。
+後続の[Task5 helperチェックポイント](TASK5_HELPERS.md)では統計/実験管理の2 private moduleを承認した。下表と1193件はTasks1–4時点の記録として保持する。最新の[Task5接続・予備測定](TASK5_CONNECTORS.md)でstudy/replay/runner/checkerのsourceを承認した。Task5全体・正式pilot・研究受入は未完了。
 
 ## 実装と確認
 
@@ -15,7 +15,7 @@
 
 [変更範囲と索引/docstringの検査](source-checkpoint-tests.txt)：1193 passed（実測4.86秒）。[実行環境・11ファイルのruff/check/formatとソース指紋](source-checkpoint-run.json)を保存した。WTのhullkit/deep_hedge_priceを明示preloadしimport元を確認。これは関連3suiteの全実行ではない。数値は許容誤差／SEで比較し、SHAはレビュー対象・実行ソースの同定にだけ使う。
 
-[照合記録](source-validation.json)は現在のソースと各再レビューを結ぶ。Task1の原レビューはTask4の原指摘も含むため、最新のTask4再レビューと組にして読む。元のレビュー対象・差分・RED/GREEN・費用ログを保持し、指摘を削除して履歴を成功扱いしない。
+[照合記録](source-validation.json)はTasks1–4時点のソースと各再レビューを結ぶ。条件付きstatusとcall空間格子は後続で変更したため、現在の指紋は[Task5照合](connectors-source-validation.json)を参照。Task1の原レビューはTask4の原指摘も含むため、最新のTask4再レビューと組にして読む。元のレビュー対象・差分・RED/GREEN・費用ログを保持し、指摘を削除して履歴を成功扱いしない。
 
 ## 修正した重要指摘（5件）
 

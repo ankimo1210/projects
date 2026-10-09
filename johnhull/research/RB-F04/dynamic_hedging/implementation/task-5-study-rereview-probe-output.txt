@@ -1,0 +1,35 @@
+{
+  "expected_linear_stock": 0.7425528449356018,
+  "linear": {
+    "heston": {
+      "target": [
+        0.7425528449356018,
+        0.0
+      ],
+      "target_qualification": "qualified",
+      "band_qualification": "unknown"
+    },
+    "local": {
+      "target": [
+        0.7425528449356018,
+        0.0
+      ],
+      "target_qualification": "qualified",
+      "band_qualification": "unknown"
+    }
+  },
+  "local_covariance": {
+    "expected": 83.75104340495011,
+    "actual": 83.75104340495011,
+    "base_variance": 0.1
+  },
+  "wrong_generator": {
+    "original_slots": 12,
+    "reasoned_failed_local_slots": 6
+  },
+  "wrong_checkpoint": {
+    "status": "unknown",
+    "reason": "original NN checkpoint identity mismatch",
+    "original_cells": 11
+  }
+}

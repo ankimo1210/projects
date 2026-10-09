@@ -1,0 +1,89 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-c",
+    "import sys, pathlib, hullkit, deep_hedge_price, pytest; root=pathlib.Path(sys.argv[1]); assert pathlib.Path(hullkit.__file__).is_relative_to(root); assert pathlib.Path(deep_hedge_price.__file__).is_relative_to(root); print(\"CHECKOUT\",hullkit.__file__,deep_hedge_price.__file__); raise SystemExit(pytest.main(sys.argv[2:]))",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap",
+    "-q",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_conditional.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_study.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_replay.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_model_index.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_docstrings.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_model_index.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_docstrings.py"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 39.221338124999875,
+  "child_cpu_seconds": 39.130363,
+  "source_hashes": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py": "9007e30a45375fbb7c8b4afe5fa4e4f694b5bc68e924b138bd993d8bdbf2b025",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "fff3bc88d497210a846956d464317d5ddb00941a1e3ef25193f9cbaa26a8c406",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "d52ac6ee48b9eb638701f35d08732fcfe9ada436c4d0f31a2d47cfb170589b61",
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937",
+    "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py": "7fe16943f2ead6dbe17a17e969930afde863681ed9eb24b9ea8b7b18c4a004d4",
+    "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py": "681548eb4753946fe6c896a588b2314cb47e85736f347ca92ee2d2513a46f9a1",
+    "johnhull/hullkit/tests/test_dynamic_hedging_conditional.py": "cfed5aaa3aa87abcb8ef90b45d8d0b733a3e83506f343e3eb67aec878240ef83",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py": "55071a03a936b89a26a85bed5531f31a515d04d041491a3c737d28c2613da825",
+    "deep_hedge_price/tests/test_dynamic_hedging_study.py": "9b2dc720aedda15e1f5006cd2f542397fb70af7c411f3ed16e0b2c2f001c9487",
+    "deep_hedge_price/tests/test_dynamic_hedging_replay.py": "5d257a9eb7ab191ac7a3153e588b90acf52624504d35ae5878694da59726801a",
+    "deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py": "1bc212184fe080f1074f37715f879b64adcd58a586ea52b77af0a2f8f30b3091",
+    "deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py": "f3b0363939ac00edd50c69c502c03db96b1b5099dffaf1d8280ffb88c25e4b0b",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "cdd7583688cf65f4072e17f81369f1d5c2a65680b6d67203d2de6b8e8fca198b"
+  },
+  "scope": "14 changed Python files/tests +both model-index/docstring guards; not full related3 suites",
+  "source_stable": true,
+  "ruff": [
+    {
+      "command": [
+        "check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_conditional.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_study.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_replay.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "format",
+        "--check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_conditional.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_study.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_replay.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+      ],
+      "exit_code": 0,
+      "stdout": "14 files already formatted\n",
+      "stderr": ""
+    }
+  ]
+}

@@ -216,9 +216,9 @@ def test_band_rank_one_no_costly_null_trade():
 **Produces:** CLI --phase tiny/pilot/main/check；saved-check入力JSON+NPZ、phase別typed original IDs/status/expense keyset。mainはfrozen.jsonがないと拒否。policy/action/market/rawscoreをG/M/U/seed/level別に保存。
 
 - [x] 統計helper：original perpath d/r、保存bootstrap/個別ES、数値envelope付きstrict閾値、全3init IUTを実装・独立レビュー承認。
-- [x] protocol helper：候補12fits/44cells/用途別seed、receipt同一性、全費用・immutable I/Oを実装・独立レビュー承認。M1の不正inclusive flagを修正。runnerの金融semantic checkerと正式pilotは未実装。
+- [x] protocol helper：候補12fits/44cells/用途別seed、receipt同一性、全費用・immutable I/Oを実装・独立レビュー承認。M1の不正inclusive flagを修正。helper時点ではrunnerの金融semantic checkerと正式pilotは未実装。後続source checkpointは下記参照。
 
-- [ ] failing tests：test開封前のfit選択、original denominator保持、candidate/frozen mismatch、expense消去/二重加算拒否、改善閾値のboundary反例、64path block bootstrap、saved-only RNG guard。
+- [x] failing tests：test開封前のfit選択、original denominator保持、candidate/frozen mismatch、expense消去/二重加算拒否、改善閾値のboundary反例、64path block bootstrap、saved-only RNG guard。
 
 ~~~python
 def test_relative_improvement_includes_baseline_uncertainty():
@@ -234,6 +234,8 @@ def test_relative_improvement_includes_baseline_uncertainty():
     assert relative_score[:2] == pytest.approx([-.05, .05], abs=1e-14)
 ~~~
 
+- [x] bounded study/replay/runner source実装・独立レビュー。test開封前snapshot、閉じた重み/validation/元N/sourceをloader変更から保護、saved-only RNG禁止検査。
+- [x] 37quotes/18states保存checker・全attempt、actual N1024教師175callsとtiny12fits/44cellsを事前測定。latest tiny/教師rawの各C/F復元・saved checker PASS。正式金融precisionは未承認。
 - [ ] 44cells（G2×U2×11policy）、trainG2×U2×init3=12fits、別train/validation/test/oracle streams、3test seeds/192-384-768を実装。重いdriverはchunk、state/Greekを全policy共用。
 - [ ] pilotはtoy→37quote→selected state→teacher/position/P&L refinement→tiny全44cell→4tinyNNの順。予算はCONDITIONAL_FEASIBILITYの構造的見積りを使い、actual時間/byte/SEを測る。各job≤10億path-step、NPZ≤256MiB uncompressedで分割し、全candidate直積を自動実行しない。旧CM2 scratch SEは選定に使わない。
 - [ ] candidate gates：priceSE .03、hSSE .002/hQSE .005、独立Asian価格 .05/positions .01、call .001。Nprefix1024/4096/16384/65536、coarse/fine nodes、内部SDE/teacher/gridを検証し、24/48取引頻度は別診断する。未達は教師/source revisionへ戻り、達成を偽装しない。
@@ -291,7 +293,7 @@ PYTHONPATH="$PWD/johnhull/hullkit/src:$PWD/deep_hedge_price/src" \
 
 ## Self-review / status
 
-全spec要件をTasks1–7へ割当。主claim/quote fit/limited local closure/原分母/CF/終端費用/有限四次/paired relative score/phase費用/3図を含む。候補の精度・所要時間は正式pilotで確定し、現時点で達成値を主張しない。Tasks1–4のprivate source実装・独立レビューを完了し、開発branchの整合したソースcommitにまとめる。Task5の統計/protocol helperも実装・独立レビューを完了した。Task5 runner/金融checker/pilot、Tasks6–7の主実験・最終受入・main統合は未実施。
+全spec要件をTasks1–7へ割当。主claim/quote fit/limited local closure/原分母/CF/終端費用/有限四次/paired relative score/phase費用/3図を含む。候補の精度・所要時間は正式pilotで確定し、現時点で達成値を主張しない。Tasks1–4のprivate source実装・独立レビューを完了し、開発branchの整合したソースcommitにまとめる。Task5の統計/protocol helperも実装・独立レビューを完了した。Task5 bounded study/replay/runner/金融checker sourceと事前測定は完了。正式pilot/freeze、Tasks6–7の主実験・最終受入・main統合は未実施。
 
 実装は既存の「研究ロードマップ完遂」指示の範囲で進める。新依存/API昇格/実データ利用権が必要になった場合だけ、その具体差分を別判断とする。
 
@@ -304,3 +306,7 @@ Task5で必須：call/Asian state-support交差、NaN/unmeasured誤差の不適�
 Task5実装分担：統計helperはoriginal shape(3,N)、保存済みint16 bootstrap indices、paired d/rと全3initのIUTを扱う。protocol helperは44cell/12fit roster、seed namespaces、source/候補/pilot/review binding、test開封前選択、全費用、immutable JSON+non-object NPZを扱う。freeze helperはreceipt同一性の境界であり、pilot raw arraysの数学/数値再算出は研究checkerの責務。両helperの実装だけでrunner/pilot完了とはしない。
 
 Task5 helperの[ソース確認](../../../research/RB-F04/dynamic_hedging/implementation/TASK5_HELPERS.md)：M1解消・独立再レビュー未解決0、変更範囲＋索引/docstring1200 tests、5Python ruff/check/format PASS。候補/rosterはsourceから保存、formal freezeは未実施。以前の1193件と重複するguard件数を足し合わせない。
+
+## Task5 connectors checkpoint（2026-10-10）
+
+[接続・予備測定](../../../research/RB-F04/dynamic_hedging/implementation/TASK5_CONNECTORS.md)で最新source/レビュー/runを結ぶ。1352 scoped testsは旧runner c734時点、最終runner f96は27tests・独立18probes/26操作禁止saved replayで確認。重複件数を加算しない。compact status/local PDE格子変更は旧Tasks1–4 source承認と別記録。37元quotes・18元states・全36教師slotsを保持、N1024のSE同時条件6/36、underresolved5/fitunknown1。正式pilot/freeze/mainは未完了。次は教師state感応度分散/underresolution・誤差伝播と正式pilot。

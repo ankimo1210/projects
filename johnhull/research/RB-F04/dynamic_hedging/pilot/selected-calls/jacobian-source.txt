@@ -1,0 +1,33 @@
+from pathlib import Path
+import json, importlib.util, time, math, numpy as np
+root=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+w=root/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+p=root/"johnhull/research/RB-F04/dynamic_hedging/reference_methods.py"
+spec=importlib.util.spec_from_file_location("jrefs",p);ref=importlib.util.module_from_spec(spec);spec.loader.exec_module(ref)
+m=json.loads((w/"task-5-selected-call-refined-probe.json").read_text())
+start=time.perf_counter();cpu=time.process_time()
+rows=[]
+for row in m["rows"]:
+    s,v,t=row["spot"],row["heston_state"],row["date"]
+    p={**m["parameters"],"spot":s,"v0":v}
+    receipts=[];derivatives=[]
+    for h in [.0001,.00005,.0002]:
+        pairs=[]
+        for dv in [h,-h]:
+            rec=ref.independent_heston_call([100.],1.25-t,{**p,"v0":v+dv},upper=500,return_receipt=True)
+            # raw converged integral receipts retained for arithmetic replay
+            pairs.append(rec)
+        derivative=float((pairs[0]["price"][0]-pairs[1]["price"][0])/(2*h))
+        derivatives.append(derivative);receipts.append({"h":h,"plus":pairs[0],"minus":pairs[1]})
+    j=derivatives[1];condition=.01/abs(.04*j)
+    rows.append({"date":t,"scenario":row["scenario"],"spot":s,"v":v,"derivatives":derivatives,"jacobian":j,"condition":condition,"reference_receipts":receipts,"conditioning_gate":"pass" if condition<=.25 else "unknown"})
+result={"scope":"independent Heston Jacobian of fixed traded call at all18 prespecified states; no criterion relaxation","rows":rows,"original_states":18,"gate_failures":sum(r["conditioning_gate"]!="pass" for r in rows),"formal_pilot_qualification":"unknown","wall_seconds":time.perf_counter()-start,"cpu_seconds":time.process_time()-cpu}
+def clean(x):
+    if isinstance(x,np.ndarray):return clean(x.tolist())
+    if isinstance(x,np.generic):return clean(x.item())
+    if isinstance(x,dict):return {k:clean(v) for k,v in x.items()}
+    if isinstance(x,list):return [clean(v) for v in x]
+    return x
+(w/"task-5-selected-call-jacobian.json").write_text(json.dumps(clean(result),indent=2,allow_nan=False)+"\n")
+print("Measured",result["wall_seconds"],result["gate_failures"])
+print([{"date":r["date"],"spot":r["spot"],"v":r["v"],"jacobian":r["jacobian"],"condition":r["condition"]} for r in rows if r["conditioning_gate"]!="pass"])

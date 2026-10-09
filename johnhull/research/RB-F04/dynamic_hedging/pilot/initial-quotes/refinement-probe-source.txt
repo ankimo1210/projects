@@ -1,0 +1,102 @@
+"""Additional independent finite-field diagnostics, retaining all first-pass evidence."""
+import hashlib
+import importlib.util
+import json
+import sys
+import time
+from pathlib import Path
+import numpy as np
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+OUT=Path("/tmp/johnhull-dynamic-initial-pilot")
+def load(name,path):
+    spec=importlib.util.spec_from_file_location(name,path)
+    mod=importlib.util.module_from_spec(spec);sys.modules[name]=mod;spec.loader.exec_module(mod);return mod
+surface=load("dynamic_spike_refine_surface",ROOT/"johnhull/hullkit/src/hullkit/_heston_local_surface.py")
+pilot=load("dynamic_spike_refine_oldpilot",ROOT/"johnhull/research/RB-F04/pilot.py")
+ref=load("dynamic_spike_refine_reference",ROOT/"johnhull/research/RB-F04/dynamic_hedging/reference_methods.py")
+record=json.loads(OUT.with_suffix(".json").read_text())
+with np.load(OUT.with_suffix(".npz")) as loaded:arrays={k:loaded[k].copy() for k in loaded.files}
+p=surface.HestonParameters(**record["parameters"])
+started_wall=time.perf_counter();started_cpu=time.process_time()
+prior_wall=record["all_costs_inclusive_wall_s"];prior_cpu=record["all_costs_inclusive_cpu_s"]
+record["status"]="refinements_running"
+def clean(x):
+    if isinstance(x,dict):return {str(k):clean(v) for k,v in x.items()}
+    if isinstance(x,(list,tuple)):return [clean(v) for v in x]
+    if isinstance(x,np.ndarray):return clean(x.tolist())
+    if isinstance(x,np.generic):return clean(x.item())
+    if isinstance(x,float) and not np.isfinite(x):return None
+    return x
+def save():
+    record["all_costs_inclusive_wall_s"]=prior_wall+time.perf_counter()-started_wall
+    record["all_costs_inclusive_cpu_s"]=prior_cpu+time.process_time()-started_cpu
+    OUT.with_suffix(".json").write_text(json.dumps(clean(record),indent=2,sort_keys=True,allow_nan=False)+"\n")
+    np.savez_compressed(OUT.with_suffix(".npz"),**arrays)
+def stage(label,fn):
+    w,c=time.perf_counter(),time.process_time()
+    try:
+        value=fn();row={"id":label,"status":"completed","wall_s":time.perf_counter()-w,"cpu_s":time.process_time()-c,**value}
+    except Exception as exc:row={"id":label,"status":"failed","wall_s":time.perf_counter()-w,"cpu_s":time.process_time()-c,"error_type":type(exc).__name__,"error":str(exc)}
+    record["stages"].append(row);save()
+    print(json.dumps(clean({k:v for k,v in row.items() if k in ["id","status","wall_s","max_error","max_refinement","failure","error"]})),flush=True)
+    return row
+def representative_fourier():
+    times=np.array([1/4096,.001,.01,.1,.25,.5,1,1.25]);z=np.linspace(-5,5,161)
+    arrays["representative_fourier.times"]=times;arrays["representative_fourier.z_nodes"]=z
+    measures=[]
+    for t in times:
+        ks=p.spot*np.exp((p.rate-p.dividend_yield)*t+z*np.sqrt(p.integrated_variance(float(t))))
+        settings=[(1024,512),(2048,512),(2048,1024)]
+        rows=[surface.fourier_surface(ks,float(t),p,order=o,max_frequency=f/np.sqrt(t),density_floor=1e-10) for o,f in settings]
+        for (o,f),row in zip(settings,rows,strict=True):
+            for key,value in row.items():arrays[f"representative_fourier.t{t:.17g}.o{o}.c{f}."+key]=value
+        common=np.logical_and.reduce([row["supported"] for row in rows])
+        measures.append({"time":float(t),"all161_supported":bool(common.all()),"original_nodes":161,"common_support_nodes":int(common.sum()),
+                         "max_variance_order_abs":float(np.max(np.abs(rows[0]["local_variance"][common]-rows[1]["local_variance"][common]))),
+                         "max_variance_cutoff_abs":float(np.max(np.abs(rows[1]["local_variance"][common]-rows[2]["local_variance"][common]))),
+                         "max_density_order_abs":float(np.max(np.abs(rows[0]["density"]-rows[1]["density"]))),
+                         "max_density_cutoff_abs":float(np.max(np.abs(rows[1]["density"]-rows[2]["density"])))})
+    return {"representative_only":True,"measures":measures,"max_error":max(v["max_variance_order_abs"] for v in measures),"full_field_refinement_certified":False}
+stage("representative_field_order_cutoff",representative_fourier)
+fields={}
+def build(label,times,z):
+    def run():
+        built=pilot.build_surface(p,times=times,z_nodes=z,order=1024,frequency_scale=512,density_floor=1e-10,allow_row_wings=True)
+        for key,value in built["arrays"].items():arrays[label+"."+key]=value
+        fields[label]=built["grid"]
+        return {"settings":{"time_nodes":len(times),"z_nodes":len(z),"tmin":float(times[0]),"tmax":float(times[-1]),"z_width":float(z[-1]),**built["settings"]},"failure":built["failure"],"unsupported_original_cells":built["unsupported_cells"],"support_intervals":built["arrays"]["surface.wing_boundaries"],"grid_bounded_max_variance":None if built["grid"] is None else float(np.nanmax(built["grid"].values))}
+    return stage(label,run)
+def quotes(label,field_label,ids):
+    def run():
+        values=[];receipts=[];q=record["quotes"]
+        for t in sorted({q[i]["time"] for i in ids}):
+            group=[i for i in ids if q[i]["time"]==t]
+            ks=np.array([q[i]["strike"] for i in group])
+            a=ref.pde_call(100,ks,t,fields[field_label].evaluate,.03,0,space_nodes=2401,time_steps=1920,log_half_width=1.8)
+            for key in ["log_spots","spots","values"]:arrays[label+f".t{t:.17g}."+key]=a["grid"][key]
+            values.extend(zip(group,a["price"],strict=True))
+            receipts.append({"time":t,"strikes":ks,"supported":a["supported"],"failure":a["failure"],"status_counts":a["status_counts"],"grid":{k:v for k,v in a["grid"].items() if k not in ["log_spots","spots","values"]}})
+        values.sort();idx=np.array([i for i,v in values]);pv=np.array([v for i,v in values])
+        arrays[label+".quote_ids"]=idx;arrays[label+".prices"]=pv
+        error=pv-arrays["truth500"][idx]
+        refinement=pv-arrays["pde_field_refined.prices"][idx]
+        arrays[label+".errors"]=error;arrays[label+".refinement"]=refinement
+        return {"field":field_label,"original_quote_count":len(idx),"max_error":float(np.max(np.abs(error))),"max_refinement":float(np.max(np.abs(refinement))),"all_quote_errors":error,"pde_receipts":receipts,"formal_gate":False}
+    return stage(label,run)
+late=arrays["field257x321.surface.times"]
+z=arrays["field257x321.surface.z_nodes"]
+build("field_early_extended",np.r_[1/16384,late],z)
+quotes("pde_early_extended","field_early_extended",list(range(37)))
+build("field_wing6",late,np.linspace(-6,6,385))
+quotes("pde_wing6","field_wing6",list(range(37)))
+paths=[
+"johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+"johnhull/research/RB-F04/pilot.py",
+"johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+"johnhull/research/RB-F04/dynamic_hedging/DESIGN.md",
+]
+record["source_provenance"]={"root":str(ROOT),"head_at_start":"ab2f37c7","relative_files_sha256":{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in paths},"spike_files_sha256":{str(OUT.with_suffix(".py")):hashlib.sha256(OUT.with_suffix(".py").read_bytes()).hexdigest(),str(Path(__file__)):hashlib.sha256(Path(__file__).read_bytes()).hexdigest()},"purpose":"provenance only; numerical comparisons use tolerance"}
+record["minimum_measured_quote_gate_candidate"]={"field":"field129x161","pde":"pde1201x960","max_abs_error":float(np.max(np.abs(arrays["pde1201x960.errors"]))),"absolute_gate":.001,"claims":"initial 37 synthetic quote comparison only; independent review and formal pilot pending"}
+record["status"]="completed"
+save()
+print(json.dumps({"final_status":"completed","total_wall_s":record["all_costs_inclusive_wall_s"],"total_cpu_s":record["all_costs_inclusive_cpu_s"],"npz_bytes":OUT.with_suffix(".npz").stat().st_size}),flush=True)

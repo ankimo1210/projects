@@ -1,0 +1,18 @@
+{
+  "kind": "final_formatted_fingerprint",
+  "owned_files": [
+    {
+      "path": "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+      "before_sha256": "85f2138a921e623a5748c9f8889b3c4a447b07a6eac7bb255136c0dd46ad87b5",
+      "after_sha256": "d52ac6ee48b9eb638701f35d08732fcfe9ada436c4d0f31a2d47cfb170589b61"
+    },
+    {
+      "path": "deep_hedge_price/tests/test_dynamic_hedging_replay.py",
+      "before_sha256": "10e19ce9e89de22ca5dc33f6158698fcb00015240dd9934a9f936024841fb70f",
+      "after_sha256": "5d257a9eb7ab191ac7a3153e588b90acf52624504d35ae5878694da59726801a"
+    }
+  ],
+  "evidence": "task-5-replay-inactive-fix-source.json",
+  "ruff_and_format_pass": true,
+  "scope": "replay R1/R2 plus inactive-input/raw-action fixes; independent review pending"
+}

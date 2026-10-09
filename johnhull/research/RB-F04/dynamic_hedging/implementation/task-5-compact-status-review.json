@@ -1,0 +1,196 @@
+{
+  "critical": 0,
+  "date": "2026-10-09",
+  "findings": [],
+  "formal_pilot_approved": false,
+  "full_related_suite_run": false,
+  "hash_role": "source provenance only; finance compared by numerical tolerances",
+  "important": 0,
+  "independent_probe": {
+    "allocations": [
+      {
+        "dtype": "uint8",
+        "function": "zeros",
+        "shape": [
+          32,
+          8
+        ]
+      }
+    ],
+    "before_after_probes": [
+      {
+        "all_before_keys_compared": 35,
+        "compact_preserved": true,
+        "default_preserved": true,
+        "model": "heston",
+        "original_N": 32,
+        "poisoned": false
+      },
+      {
+        "all_before_keys_compared": 35,
+        "compact_preserved": true,
+        "default_preserved": true,
+        "model": "heston",
+        "original_N": 32,
+        "poisoned": true
+      },
+      {
+        "all_before_keys_compared": 35,
+        "compact_preserved": true,
+        "default_preserved": true,
+        "model": "local",
+        "original_N": 32,
+        "poisoned": false
+      },
+      {
+        "all_before_keys_compared": 35,
+        "compact_preserved": true,
+        "default_preserved": true,
+        "model": "local",
+        "original_N": 32,
+        "poisoned": true
+      }
+    ],
+    "category_limit": "compact step status supports at most 256 categories",
+    "decoded_categories": [
+      "",
+      "early_time",
+      "interior",
+      "nonfinite_coefficient",
+      "novel_status",
+      "unsupported_time",
+      "wing_both",
+      "wing_left",
+      "wing_right"
+    ],
+    "empty_shape": [
+      32,
+      0
+    ],
+    "invalid_fixing_rejections": [
+      {
+        "compact": false,
+        "indices": [
+          0
+        ],
+        "rejected": true
+      },
+      {
+        "compact": true,
+        "indices": [
+          0
+        ],
+        "rejected": true
+      },
+      {
+        "compact": false,
+        "indices": [
+          9
+        ],
+        "rejected": true
+      },
+      {
+        "compact": true,
+        "indices": [
+          9
+        ],
+        "rejected": true
+      },
+      {
+        "compact": false,
+        "indices": [
+          2,
+          2
+        ],
+        "rejected": true
+      },
+      {
+        "compact": true,
+        "indices": [
+          2,
+          2
+        ],
+        "rejected": true
+      },
+      {
+        "compact": false,
+        "indices": [
+          4,
+          2
+        ],
+        "rejected": true
+      },
+      {
+        "compact": true,
+        "indices": [
+          4,
+          2
+        ],
+        "rejected": true
+      },
+      {
+        "compact": false,
+        "indices": [
+          1.5
+        ],
+        "rejected": true
+      },
+      {
+        "compact": true,
+        "indices": [
+          1.5
+        ],
+        "rejected": true
+      }
+    ],
+    "invalid_path_count": 27,
+    "memory_formula": {
+      "compact_bytes_max_candidate": 50331648,
+      "legacy_bytes_max_candidate": 12884901888
+    },
+    "original_path_count": 32,
+    "passed": true,
+    "reviewer": "dynamic_initial_pilot",
+    "scope": "independent small numeric/status/allocation probes, no full suite",
+    "source_hashes": {
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py": "9007e30a45375fbb7c8b4afe5fa4e4f694b5bc68e924b138bd993d8bdbf2b025",
+      "johnhull/hullkit/tests/test_dynamic_hedging_conditional.py": "cfed5aaa3aa87abcb8ef90b45d8d0b733a3e83506f343e3eb67aec878240ef83"
+    }
+  },
+  "limitations": [
+    "Actual maximum N x steps was not allocated during review; nbytes formula checked and allocations/source inspected.",
+    "Compact dictionary admits at most 256 categories including empty code; excess raises explicit ValueError. Current LocalVarianceGrid category inventory is within that bound.",
+    "Legacy Unicode category width is retained. The representation change does not certify model/SDE/Greek/PnL/pilot numerical precision."
+  ],
+  "main_study_approved": false,
+  "minor": 0,
+  "reviewed_receipts": {
+    "fix_diff_sha256": "587e8a1e9bb9e3d9f94eca568aa4e98027214aa74ff0da563ffa843d5faa62ee",
+    "run_receipt_sha256": "823de483ca7f9f2043bfb1e2fe2d7960e97c94586a92bd13f16a51c8cffb30b5"
+  },
+  "reviewer": "dynamic_initial_pilot",
+  "root_targeted_test_evidence": {
+    "passed": 30,
+    "reexecuted_by_reviewer": false,
+    "ruff": {
+      "check": {
+        "exit": 0,
+        "stderr": "",
+        "stdout": "All checks passed!\n"
+      },
+      "format": {
+        "exit": 0,
+        "stderr": "",
+        "stdout": "2 files already formatted\n"
+      }
+    }
+  },
+  "schema": "dynamic-task5-compact-status-independent-review-v1",
+  "scope": "private compact status representation only; source/spec/quality and independent bounded probes",
+  "source_hashes": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py": "9007e30a45375fbb7c8b4afe5fa4e4f694b5bc68e924b138bd993d8bdbf2b025",
+    "johnhull/hullkit/tests/test_dynamic_hedging_conditional.py": "cfed5aaa3aa87abcb8ef90b45d8d0b733a3e83506f343e3eb67aec878240ef83"
+  },
+  "source_proceed": true,
+  "unresolved_findings": []
+}

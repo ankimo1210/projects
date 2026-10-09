@@ -1,0 +1,117 @@
+{
+  "kind": "replay_cash_inactive_inputs_and_unknown_action_fix",
+  "updated_at": "2026-10-09T14:44:23.162188+00:00",
+  "owned_files": [
+    {
+      "path": "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+      "before_sha256": "85f2138a921e623a5748c9f8889b3c4a447b07a6eac7bb255136c0dd46ad87b5",
+      "after_sha256": "d52ac6ee48b9eb638701f35d08732fcfe9ada436c4d0f31a2d47cfb170589b61"
+    },
+    {
+      "path": "deep_hedge_price/tests/test_dynamic_hedging_replay.py",
+      "before_sha256": "10e19ce9e89de22ca5dc33f6158698fcb00015240dd9934a9f936024841fb70f",
+      "after_sha256": "5d257a9eb7ab191ac7a3153e588b90acf52624504d35ae5878694da59726801a"
+    }
+  ],
+  "validation_runs": [
+    {
+      "label": "format",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_replay.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.012897785999939515,
+      "output": "2 files reformatted\n"
+    },
+    {
+      "label": "ruff",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_replay.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.01127238899994154,
+      "output": "All checks passed!\n"
+    },
+    {
+      "label": "format-check",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_replay.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.009453824000047462,
+      "output": "2 files already formatted\n"
+    },
+    {
+      "label": "green-formatted",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_replay.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 1.294201011000041,
+      "output": "........................................................................ [ 87%]\n..........                                                               [100%]\n82 passed in 0.81s\n"
+    }
+  ],
+  "red": "9 failed, 1 passed, 72 deselected in 0.80s",
+  "green_before_format": "82 passed in 0.86s",
+  "independent_re_review_pending": true,
+  "source_approved": false,
+  "full_suite_run": false,
+  "changes": [
+    "Cash event price validity is required for current/previous nonzero exposures. CF validity is required for previous nonzero entitlement. Contributions at exact zero exposure are independently zero, preserving raw unknown input arrays.",
+    "Saved unused_call_price_mask is independently recomputed as invalid raw call price AND zero previous/current holding; unused_call_cashflow_mask as nonfinite raw call CF AND zero previous call holding. Forged masks are rejected.",
+    "Active nonzero call trades/liquidation/entitlement retain original-N unknown paths; no NaN quote is replaced in dataset and no finite path subset is used.",
+    "Finite legal actions are checked against clipped finite raw targets. Invalid whole actions remain NaN; repaired finite actions and erased failure reasons are rejected. Valid target points may remain unknown when prior action or independent policy/risk support failed.",
+    "Raw account reasons are compared within their accounting boundary. Top-level action/risk/precision reasons are not equated to account reasons; failure action reasons are preserved and checked for nonempty supplied declarations.",
+    "Ruff format/check ran on only the two owned files; source/test financial behavior and target tests remain green."
+  ],
+  "limits": [
+    "These are implemented fixes, not independent source approval. Original R1/R2 review/fix evidence remains unchanged.",
+    "Accounting integrity/qualification does not certify market quote precision, policy origin or formal pilot.",
+    "Formal source fingerprints need synchronization to the final formatted hashes before a new independent review."
+  ],
+  "artifacts": [
+    {
+      "path": "task-5-replay-inactive-red.txt",
+      "sha256": "ada81654509aec49935d25c85f410a780bebbf96341c36436640f027b431d2f7"
+    },
+    {
+      "path": "task-5-replay-inactive-green.txt",
+      "sha256": "987aa8d51bb47ee09c65c6d683755ee632ad60f502487f324999efe11a33c767"
+    },
+    {
+      "path": "task-5-replay-inactive-green-formatted.txt",
+      "sha256": "810dab6ee165bfc39b32217666483042a4839246e52b897539c49a9e1e11fc7c"
+    },
+    {
+      "path": "task-5-replay-inactive-format.txt",
+      "sha256": "96a977f329ec3c59092d40e041a019b49dcf03ca04055e177aa0ccb8c27234df"
+    },
+    {
+      "path": "task-5-replay-inactive-ruff.txt",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "task-5-replay-inactive-format-check.txt",
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    {
+      "path": "task-5-replay-inactive-fix.diff",
+      "sha256": "ea460bbacc220e86a8aaf6881b982a99f51b82e32d433c45121c3b691cf9bf0a"
+    }
+  ]
+}

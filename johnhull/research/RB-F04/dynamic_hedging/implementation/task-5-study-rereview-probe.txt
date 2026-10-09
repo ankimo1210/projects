@@ -1,0 +1,43 @@
+import json,copy,runpy,numpy as np,hashlib
+from pathlib import Path
+R=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+w=R/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+h=runpy.run_path(str(R/"deep_hedge_price/tests/test_dynamic_hedging_study.py"));study=h["study"]
+data,_,caches=h["setup"]()
+data["memory_sum"][:,3]=1300.;data["prices"][:,3,1]=99.
+out=study.quote_risk_dataset(h["parameters"](),h["ConstantField"](),data,caches)
+t=data["times"][3];stock=float(np.exp(-.03*(1-t))*np.exp(.03*(np.arange(4,13)/12-t)).sum()/12)
+checks={"expected_linear_stock":stock,"linear":{}}
+for model,row in out["models"].items():
+    assert row["fit_reason"][0,3]=="no_root"
+    np.testing.assert_allclose(row["u2_target"][:,3],np.tile([stock,0.],(4,1)),rtol=1e-12,atol=1e-13)
+    np.testing.assert_allclose(row["u1_target"][:,3],stock,rtol=1e-12,atol=1e-13)
+    assert np.all(row["qualification"][:,3]=="qualified")
+    assert np.all(row["band_qualification"][:,3]=="unknown")
+    checks["linear"][model]={"target":row["u2_target"][0,3].tolist(),"target_qualification":str(row["qualification"][0,3]),"band_qualification":str(row["band_qualification"][0,3])}
+class TimeField:
+ def evaluate(self,t,s):
+    s=np.asarray(s,float);return {"variance":np.full(s.shape,.04+.24*t),"status":np.full(s.shape,"ok",dtype="<U16")}
+data,risk,caches=h["setup"]()
+risks=study.quote_risk_dataset(h["parameters"](),TimeField(),data,caches)
+row=risks["models"]["local"];s=data["prices"][0,3,0];delta=data["times"][4]-data["times"][3]
+expected=float(row["state"][0,3]*(.04+.24*data["times"][3])*s*s*delta)
+np.testing.assert_allclose(row["price_covariance"][0,3,0,0],expected,rtol=1e-12,atol=1e-12)
+checks["local_covariance"]={"expected":expected,"actual":float(row["price_covariance"][0,3,0,0]),"base_variance":float(row["local_base_variance"][0,3])}
+candidate=h["candidate_protocol"]();candidate["training"].update(original_n=4,updates=1,batch_size=4,cap_seconds=30)
+fits=study.fit_roster({"Heston":data,"local":data},candidate=candidate)
+localfits=[r for r in fits["fits"] if r["training_generator"]=="local"]
+assert len(localfits)==6 and all(r["status"]=="failed" and "generator" in r["reason"] for r in localfits)
+checks["wrong_generator"]={"original_slots":12,"reasoned_failed_local_slots":6}
+selected=study.select_validation(data,risk,generator="Heston",universe="U2",widths=[0,.01,.02,.05,.1,.2])
+changed=copy.deepcopy(fits)
+slot=next(r for r in changed["fits"] if r["id"]=="fit:Heston:U2:init11")
+slot["raw_fit"]=next(r for r in changed["fits"] if r["id"]=="fit:Heston:U1:init29")["raw_fit"]
+cells=study.test_roster(data,risk,changed,selected,generator="Heston",universe="U2")["cells"]
+bad=next(r for r in cells if r.get("training_generator")=="Heston" and r.get("initialization")==11)
+assert bad["status"]=="unknown" and np.isnan(bad["result"]["holdings"]).all()
+assert "identity" in bad["reason"]
+checks["wrong_checkpoint"]={"status":bad["status"],"reason":bad["reason"],"original_cells":len(cells)}
+result={"reviewer":"root independent of study implementer","critical":0,"important":0,"minor":0,"unresolved":[],"resolved_original_findings":["I1","I2","I3","I4"],"source_proceed":True,"formal_pilot_qualified":False,"independent_probes":checks,"source_hashes":{name:hashlib.sha256((R/name).read_bytes()).hexdigest() for name in ["deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py","deep_hedge_price/tests/test_dynamic_hedging_study.py"]}}
+(w/"task-5-study-rereview.json").write_text(json.dumps(result,indent=2,allow_nan=False)+"\n")
+print(json.dumps(checks,indent=2))

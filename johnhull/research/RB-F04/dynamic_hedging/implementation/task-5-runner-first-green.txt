@@ -1,0 +1,214 @@
+........FFF                                                              [100%]
+=================================== FAILURES ===================================
+_____ test_tiny_real_pipeline_preserves_all_44_slots_and_unknown_precision _____
+
+    def test_tiny_real_pipeline_preserves_all_44_slots_and_unknown_precision():
+>       bundle = runner.run_tiny(original_n=32, updates=1)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:440: in run_tiny
+    asian = build_asian_cache(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+primitive_groups = {'N': 32, 'groups': [{'N': 32, 'aux_conditioned_samples': array([[1.20748359e+001, 1.10748359e+001, 1.00748359e+001,
+ ...meters': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.0, rho=-0.7)}
+
+    def build_asian_cache(primitive_groups: dict, *, model: str, axes: dict) -> dict:
+        """Construct exact-date normalized CV tables with shared IID block curves.
+    
+        Axes are ``dates``, ``state``, ``threshold`` (1D or per-date 2D), and
+        ``spot`` for local. The production input has ``groups`` containing Task2
+        label dictionaries plus ``date_index``. Every Cartesian node is required;
+        unavailable/failed nodes remain NaN. A dense ``f``/``block_means`` input
+        uses shape (date,[spot],state,threshold,[16,3]) for analytic fixtures.
+        Heston has no spot axis: its normalized claim is homogeneous. Local axes
+        use log S/log ell internally; price and derivatives share that operator.
+        """
+        _model(model)
+        dates = _axis(axes["dates"], "dates", cubic=False)
+        states = _axis(axes["state"], "state", positive=True)
+        threshold = np.asarray(axes["threshold"], float)
+        if threshold.ndim == 1:
+            threshold = np.broadcast_to(threshold, (len(dates), len(threshold))).copy()
+        if threshold.ndim != 2 or threshold.shape[0] != len(dates):
+            raise ValueError("threshold requires one axis per exact date")
+        for x in threshold:
+            _axis(x, "threshold")
+        shape = (len(dates),)
+        spots = None
+        if model == "local":
+            spots = _axis(axes["spot"], "spot", positive=True)
+            shape += (len(spots),)
+        shape += (len(states), threshold.shape[1])
+        t0_sheet = None
+        t0_spots = (
+            _axis(axes["t0_spot"], "t0_spot", positive=True)
+            if model == "local" and "t0_spot" in axes
+            else spots
+        )
+        original_n = primitive_groups.get("N")
+        driver_ids = set()
+        if "groups" in primitive_groups:
+            f = np.full(shape, np.nan)
+            blocks = np.full((*shape, 16, 3), np.nan)
+            seen = set()
+            if model == "local" and dates[0] == 0:
+                if "t0_spot" not in axes:
+                    raise ValueError("local production groups require a dedicated t0_spot axis")
+                t0_shape = (len(t0_spots), len(states), threshold.shape[1])
+                t0_sheet = {
+                    "spot_nodes": t0_spots,
+                    "f": np.full(t0_shape, np.nan),
+                    "block_means": np.full((*t0_shape, 16, 3), np.nan),
+                }
+            for group in primitive_groups["groups"]:
+>               j = group["date_index"]
+                    ^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'date_index'
+
+johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py:360: KeyError
+___________ test_tiny_saved_checker_rejects_missing_required_expense ___________
+
+    def test_tiny_saved_checker_rejects_missing_required_expense():
+>       bundle = runner.run_tiny(original_n=32, updates=0, train=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:440: in run_tiny
+    asian = build_asian_cache(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+primitive_groups = {'N': 32, 'groups': [{'N': 32, 'aux_conditioned_samples': array([[1.20748359e+001, 1.10748359e+001, 1.00748359e+001,
+ ...meters': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.0, rho=-0.7)}
+
+    def build_asian_cache(primitive_groups: dict, *, model: str, axes: dict) -> dict:
+        """Construct exact-date normalized CV tables with shared IID block curves.
+    
+        Axes are ``dates``, ``state``, ``threshold`` (1D or per-date 2D), and
+        ``spot`` for local. The production input has ``groups`` containing Task2
+        label dictionaries plus ``date_index``. Every Cartesian node is required;
+        unavailable/failed nodes remain NaN. A dense ``f``/``block_means`` input
+        uses shape (date,[spot],state,threshold,[16,3]) for analytic fixtures.
+        Heston has no spot axis: its normalized claim is homogeneous. Local axes
+        use log S/log ell internally; price and derivatives share that operator.
+        """
+        _model(model)
+        dates = _axis(axes["dates"], "dates", cubic=False)
+        states = _axis(axes["state"], "state", positive=True)
+        threshold = np.asarray(axes["threshold"], float)
+        if threshold.ndim == 1:
+            threshold = np.broadcast_to(threshold, (len(dates), len(threshold))).copy()
+        if threshold.ndim != 2 or threshold.shape[0] != len(dates):
+            raise ValueError("threshold requires one axis per exact date")
+        for x in threshold:
+            _axis(x, "threshold")
+        shape = (len(dates),)
+        spots = None
+        if model == "local":
+            spots = _axis(axes["spot"], "spot", positive=True)
+            shape += (len(spots),)
+        shape += (len(states), threshold.shape[1])
+        t0_sheet = None
+        t0_spots = (
+            _axis(axes["t0_spot"], "t0_spot", positive=True)
+            if model == "local" and "t0_spot" in axes
+            else spots
+        )
+        original_n = primitive_groups.get("N")
+        driver_ids = set()
+        if "groups" in primitive_groups:
+            f = np.full(shape, np.nan)
+            blocks = np.full((*shape, 16, 3), np.nan)
+            seen = set()
+            if model == "local" and dates[0] == 0:
+                if "t0_spot" not in axes:
+                    raise ValueError("local production groups require a dedicated t0_spot axis")
+                t0_shape = (len(t0_spots), len(states), threshold.shape[1])
+                t0_sheet = {
+                    "spot_nodes": t0_spots,
+                    "f": np.full(t0_shape, np.nan),
+                    "block_means": np.full((*t0_shape, 16, 3), np.nan),
+                }
+            for group in primitive_groups["groups"]:
+>               j = group["date_index"]
+                    ^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'date_index'
+
+johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py:360: KeyError
+_________________ test_tiny_saved_checker_rejects_cash_tamper __________________
+
+    def test_tiny_saved_checker_rejects_cash_tamper():
+>       bundle = runner.run_tiny(original_n=32, updates=0, train=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:172: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:440: in run_tiny
+    asian = build_asian_cache(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+primitive_groups = {'N': 32, 'groups': [{'N': 32, 'aux_conditioned_samples': array([[1.20748359e+001, 1.10748359e+001, 1.00748359e+001,
+ ...meters': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.0, rho=-0.7)}
+
+    def build_asian_cache(primitive_groups: dict, *, model: str, axes: dict) -> dict:
+        """Construct exact-date normalized CV tables with shared IID block curves.
+    
+        Axes are ``dates``, ``state``, ``threshold`` (1D or per-date 2D), and
+        ``spot`` for local. The production input has ``groups`` containing Task2
+        label dictionaries plus ``date_index``. Every Cartesian node is required;
+        unavailable/failed nodes remain NaN. A dense ``f``/``block_means`` input
+        uses shape (date,[spot],state,threshold,[16,3]) for analytic fixtures.
+        Heston has no spot axis: its normalized claim is homogeneous. Local axes
+        use log S/log ell internally; price and derivatives share that operator.
+        """
+        _model(model)
+        dates = _axis(axes["dates"], "dates", cubic=False)
+        states = _axis(axes["state"], "state", positive=True)
+        threshold = np.asarray(axes["threshold"], float)
+        if threshold.ndim == 1:
+            threshold = np.broadcast_to(threshold, (len(dates), len(threshold))).copy()
+        if threshold.ndim != 2 or threshold.shape[0] != len(dates):
+            raise ValueError("threshold requires one axis per exact date")
+        for x in threshold:
+            _axis(x, "threshold")
+        shape = (len(dates),)
+        spots = None
+        if model == "local":
+            spots = _axis(axes["spot"], "spot", positive=True)
+            shape += (len(spots),)
+        shape += (len(states), threshold.shape[1])
+        t0_sheet = None
+        t0_spots = (
+            _axis(axes["t0_spot"], "t0_spot", positive=True)
+            if model == "local" and "t0_spot" in axes
+            else spots
+        )
+        original_n = primitive_groups.get("N")
+        driver_ids = set()
+        if "groups" in primitive_groups:
+            f = np.full(shape, np.nan)
+            blocks = np.full((*shape, 16, 3), np.nan)
+            seen = set()
+            if model == "local" and dates[0] == 0:
+                if "t0_spot" not in axes:
+                    raise ValueError("local production groups require a dedicated t0_spot axis")
+                t0_shape = (len(t0_spots), len(states), threshold.shape[1])
+                t0_sheet = {
+                    "spot_nodes": t0_spots,
+                    "f": np.full(t0_shape, np.nan),
+                    "block_means": np.full((*t0_shape, 16, 3), np.nan),
+                }
+            for group in primitive_groups["groups"]:
+>               j = group["date_index"]
+                    ^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'date_index'
+
+johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py:360: KeyError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_tiny_real_pipeline_preserves_all_44_slots_and_unknown_precision
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_tiny_saved_checker_rejects_missing_required_expense
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_tiny_saved_checker_rejects_cash_tamper
+3 failed, 8 passed in 3.80s

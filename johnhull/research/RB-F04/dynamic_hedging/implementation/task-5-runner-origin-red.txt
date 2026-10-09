@@ -1,0 +1,22 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_source_closure_rejects_a_loaded_package_from_another_checkout ______
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3707/test_source_closure_rejects_a_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb06ed8f8c0>
+
+    def test_source_closure_rejects_a_loaded_package_from_another_checkout(tmp_path, monkeypatch):
+        package = tmp_path / "pkg"
+        package.mkdir()
+        (package/"__init__.py").write_text("")
+        (package/"entry.py").write_text("VALUE = 1\n")
+        imported = types.ModuleType("pkg.entry")
+        imported.__file__ = str(tmp_path/"other_checkout.py")
+        monkeypatch.setitem(sys.modules, "pkg.entry", imported)
+>       with pytest.raises(ValueError, match="loaded source"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:125: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_source_closure_rejects_a_loaded_package_from_another_checkout
+1 failed, 13 deselected in 1.82s

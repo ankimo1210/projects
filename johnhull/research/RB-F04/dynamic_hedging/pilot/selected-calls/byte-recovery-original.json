@@ -1,0 +1,56 @@
+{
+  "scope": "18-state call preflight raw caches only",
+  "results": [
+    {
+      "role": "primary",
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "before/reference.npz",
+            "sha256": "f3cdacfa19fb3f57d2d8e7d2ed9b9b59e04c090ce583268df305db01b484f68c",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "refined/reference.npz",
+            "sha256": "ed4f31d6de71562a75fd246be5ec4033e8180a12430c0237ad8f99b20aaddac2",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "wall_seconds": 0.09369704300002013,
+      "parent_cpu_seconds": 0.009145480999999997,
+      "semantic_check": "pending; byte restore alone is provenance"
+    },
+    {
+      "role": "mirror",
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "before/reference.npz",
+            "sha256": "f3cdacfa19fb3f57d2d8e7d2ed9b9b59e04c090ce583268df305db01b484f68c",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "refined/reference.npz",
+            "sha256": "ed4f31d6de71562a75fd246be5ec4033e8180a12430c0237ad8f99b20aaddac2",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "wall_seconds": 0.6747359220000817,
+      "parent_cpu_seconds": 0.011294711999999998,
+      "semantic_check": "pending; byte restore alone is provenance"
+    }
+  ],
+  "formal_pilot_qualification": "unknown"
+}
