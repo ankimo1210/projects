@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "saved_statistics_comparisons": 280,
+  "original_slots": 36,
+  "computed_slots": 35,
+  "original_status_qualification_preserved": true,
+  "source_input_bindings_unchanged": 65,
+  "preflight_artifacts_unchanged": 4,
+  "prefreeze_artifact_hashes_verified": 13
+}

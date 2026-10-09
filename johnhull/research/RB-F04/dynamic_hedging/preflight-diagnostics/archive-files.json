@@ -1,0 +1,276 @@
+{
+  "kind": "exact_prefreeze_scratch_archive",
+  "qualification": "unknown",
+  "files": [
+    {
+      "original": "task-5-cache-cartesian-boundary-details.json",
+      "archive": "task-5-cache-cartesian-boundary-details.json",
+      "sha256": "87f655c34fe9f11e18012fe7d404b76d65cb44fca8206eaefc06f4b740609e98",
+      "bytes": 6317
+    },
+    {
+      "original": "task-5-cache-cartesian-boundary-details.py",
+      "archive": "task-5-cache-cartesian-boundary-details.py.txt",
+      "sha256": "01e4bfc00fa4ed3b0a9aa7f611b4cddbf00063a91e92670407fd3887a77bedb1",
+      "bytes": 2820
+    },
+    {
+      "original": "task-5-cache-cartesian-boundary-details.txt",
+      "archive": "task-5-cache-cartesian-boundary-details.txt",
+      "sha256": "2621d2a3bfc326bb61b250707c64a77d9ae452488478741818e4d4e08dd4eeb3",
+      "bytes": 6318
+    },
+    {
+      "original": "task-5-cache-cartesian-probe-first-failure.npz",
+      "archive": "raw/task-5-cache-cartesian-probe-first-failure.npz",
+      "sha256": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+      "bytes": 11621695
+    },
+    {
+      "original": "task-5-cache-cartesian-probe-first-failure.py",
+      "archive": "task-5-cache-cartesian-probe-first-failure.py.txt",
+      "sha256": "92b7ebada59c86e4e81fa2665d1670552caafc40972c5efe0428485f77989251",
+      "bytes": 7073
+    },
+    {
+      "original": "task-5-cache-cartesian-probe-first-failure.txt",
+      "archive": "task-5-cache-cartesian-probe-first-failure.txt",
+      "sha256": "5a8c31d18bffc709f5a878406118e059c672d93248cd00660646fdc94560c2ce",
+      "bytes": 4454
+    },
+    {
+      "original": "task-5-cache-cartesian-probe-run.json",
+      "archive": "task-5-cache-cartesian-probe-run.json",
+      "sha256": "15aa8d0971adcea55d5f5a9e4eeab05077170da1ea2ebddf2a19f711e48399c1",
+      "bytes": 251
+    },
+    {
+      "original": "task-5-cache-cartesian-probe.json",
+      "archive": "task-5-cache-cartesian-probe.json",
+      "sha256": "c506a33bf8e918f73e880b050de1b4d1db03bbd18d1a8831c51ed5976c6a32f0",
+      "bytes": 195142
+    },
+    {
+      "original": "task-5-cache-cartesian-probe.npz",
+      "archive": "raw/task-5-cache-cartesian-probe.npz",
+      "sha256": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+      "bytes": 11621695
+    },
+    {
+      "original": "task-5-cache-cartesian-probe.py",
+      "archive": "task-5-cache-cartesian-probe.py.txt",
+      "sha256": "114b93ec9e87c5e11cb4ce67f583e2430450fd966094cc295c057dc897f33ffa",
+      "bytes": 7405
+    },
+    {
+      "original": "task-5-cache-cartesian-probe.txt",
+      "archive": "task-5-cache-cartesian-probe.txt",
+      "sha256": "d42ae498924d354e7632630584acfa9ce76389ee27c20f6c94faddff201527d3",
+      "bytes": 3156
+    },
+    {
+      "original": "task-5-cache-domain-manifest.json",
+      "archive": "task-5-cache-domain-manifest.json",
+      "sha256": "f585ab0fce05caae85fd2ad2f73b52221f184bbe66b32fd1f804b8be60becc26",
+      "bytes": 3103
+    },
+    {
+      "original": "task-5-cache-domain-probe-endpoints-v1-original.json",
+      "archive": "task-5-cache-domain-probe-endpoints-v1-original.json",
+      "sha256": "da0362d7e050bfa923519acc9b8d35e9c369b2d6e1cdc58b896f61ac1e59ec24",
+      "bytes": 39957
+    },
+    {
+      "original": "task-5-cache-domain-probe-endpoints-v1-original.py",
+      "archive": "task-5-cache-domain-probe-endpoints-v1-original.py.txt",
+      "sha256": "d191ba7fd3c4b677e8a592f499edb3703fb4ed9e6cc11cd7b819c6e5aa9aaa65",
+      "bytes": 11039
+    },
+    {
+      "original": "task-5-cache-domain-probe-first-extended-failure.txt",
+      "archive": "task-5-cache-domain-probe-first-extended-failure.txt",
+      "sha256": "3671fe2dc43a6ff1034d029cb9c4e235893bd36a9f2081745c24631d9cafe5fb",
+      "bytes": 553
+    },
+    {
+      "original": "task-5-cache-domain-probe.json",
+      "archive": "task-5-cache-domain-probe.json",
+      "sha256": "ab770377888f7170b1e9290e1e96da17d01458cb1c10e9b29234e336e3035f86",
+      "bytes": 42088
+    },
+    {
+      "original": "task-5-cache-domain-probe.npz",
+      "archive": "raw/task-5-cache-domain-probe.npz",
+      "sha256": "890a615e307f7bdc1865c97802ecad08709f8b34b5d7e6e21328dc5fb9a13d9d",
+      "bytes": 501632
+    },
+    {
+      "original": "task-5-cache-domain-probe.py",
+      "archive": "task-5-cache-domain-probe.py.txt",
+      "sha256": "48571c0a218327d1962edc9bd75c897e63ada98d7c8e12236c2565ff3d6f2a1e",
+      "bytes": 13608
+    },
+    {
+      "original": "task-5-cache-domain-probe.txt",
+      "archive": "task-5-cache-domain-probe.txt",
+      "sha256": "8bd7e01ac27e8e4aefa12b59a601e3b998e96f7d44ff2602053cce4afc1a0f02",
+      "bytes": 2329
+    },
+    {
+      "original": "task-5-cache-domain-report.md",
+      "archive": "task-5-cache-domain-report.md",
+      "sha256": "c61e0c20635a5dc846e9fa39708ae7549ca14da087717b76c81b270cb217e4a1",
+      "bytes": 13302
+    },
+    {
+      "original": "task-5-freeze-feasibility-audit.json",
+      "archive": "task-5-freeze-feasibility-audit.json",
+      "sha256": "3eb7d08220fdc8a698a6808a1d1dd1774690da787f825c737447963c03852f09",
+      "bytes": 3802
+    },
+    {
+      "original": "task-5-freeze-feasibility-audit.md",
+      "archive": "task-5-freeze-feasibility-audit.md",
+      "sha256": "034a29ccffe5abfae2326ab2e7795e69d67f5e6ee409dfec465fe0ec9d9b5c75",
+      "bytes": 19684
+    },
+    {
+      "original": "task-5-teacher-prefreeze-artifacts.json",
+      "archive": "task-5-teacher-prefreeze-artifacts.json",
+      "sha256": "64f0dba58b489ef3aebb3d76cfa5e5186fe93869f82b60694e25f4270e41708f",
+      "bytes": 1063
+    },
+    {
+      "original": "task-5-teacher-prefreeze-control-probe.json",
+      "archive": "task-5-teacher-prefreeze-control-probe.json",
+      "sha256": "16da4e9ad8fef4b30180035375140400632c3ef80533ee2875a345a31e89c95c",
+      "bytes": 75886
+    },
+    {
+      "original": "task-5-teacher-prefreeze-control-probe.npz",
+      "archive": "raw/task-5-teacher-prefreeze-control-probe.npz",
+      "sha256": "5d05e5176afc553f58decfe60f111d268cae92125d78f40e876382b8aab504ca",
+      "bytes": 1279303
+    },
+    {
+      "original": "task-5-teacher-prefreeze-control-probe.py",
+      "archive": "task-5-teacher-prefreeze-control-probe.py.txt",
+      "sha256": "112017356f22d11c4aa750b2e8d4852b8880df7083d4b82efada66dd3443c7c0",
+      "bytes": 8677
+    },
+    {
+      "original": "task-5-teacher-prefreeze-control-probe.txt",
+      "archive": "task-5-teacher-prefreeze-control-probe.txt",
+      "sha256": "325b938a887136323530526d6bc20d6f6520544906e95b37091807c74649053a",
+      "bytes": 3504
+    },
+    {
+      "original": "task-5-teacher-prefreeze-diagnostic.json",
+      "archive": "task-5-teacher-prefreeze-diagnostic.json",
+      "sha256": "f8e494f9cec3ca20ba571e3f09e547b987ab27b11c4550f0058b54e42fbaa7ab",
+      "bytes": 256981
+    },
+    {
+      "original": "task-5-teacher-prefreeze-diagnostic.npz",
+      "archive": "raw/task-5-teacher-prefreeze-diagnostic.npz",
+      "sha256": "038d59b77c09af092ad0ffff7831757011a656c662d95a19bfc5d47d53140970",
+      "bytes": 1534641
+    },
+    {
+      "original": "task-5-teacher-prefreeze-diagnostic.py",
+      "archive": "task-5-teacher-prefreeze-diagnostic.py.txt",
+      "sha256": "74275f73b7cb7040ae235ee73687cede0d89e4f3c1430956df1ecfe7cd4702ed",
+      "bytes": 15416
+    },
+    {
+      "original": "task-5-teacher-prefreeze-diagnostic.txt",
+      "archive": "task-5-teacher-prefreeze-diagnostic.txt",
+      "sha256": "90cbef2ef87834d149b3e4072033e3df252d4304e57591234b7dbf4d2468f184",
+      "bytes": 29869
+    },
+    {
+      "original": "task-5-teacher-prefreeze-homogeneity-independent.md",
+      "archive": "task-5-teacher-prefreeze-homogeneity-independent.md",
+      "sha256": "9ace06c4a7a9dae464b7b5217bb0a9bd4d1b1930e15c7c6bf901e26be1fcf73b",
+      "bytes": 1834
+    },
+    {
+      "original": "task-5-teacher-prefreeze-parity-artifacts.json",
+      "archive": "task-5-teacher-prefreeze-parity-artifacts.json",
+      "sha256": "057567f3260f2ffb78fe2935f0a45e49eb9e628f0326936ee0534e5bdf580679",
+      "bytes": 693
+    },
+    {
+      "original": "task-5-teacher-prefreeze-parity-report.md",
+      "archive": "task-5-teacher-prefreeze-parity-report.md",
+      "sha256": "d11cda0a86ff49ff46c6961ec35140545a56fe833274d2c18583f409d8be5028",
+      "bytes": 11730
+    },
+    {
+      "original": "task-5-teacher-prefreeze-parity-saved-check.py",
+      "archive": "task-5-teacher-prefreeze-parity-saved-check.py.txt",
+      "sha256": "fdd6c5b0b307df5757dd5a2caa0b5f1f7fbd9e46fb1715e11b572ecb9af7c76d",
+      "bytes": 1833
+    },
+    {
+      "original": "task-5-teacher-prefreeze-parity-saved-check.txt",
+      "archive": "task-5-teacher-prefreeze-parity-saved-check.txt",
+      "sha256": "ef8bd12ec6cbb5d7de7a62b43dba2a706c5239ea2b15d36aab0684051336330d",
+      "bytes": 284
+    },
+    {
+      "original": "task-5-teacher-prefreeze-parity.json",
+      "archive": "task-5-teacher-prefreeze-parity.json",
+      "sha256": "3521209027678b1cf9940f6485e8bfc9edcb0b7fdab1fabd097ac32579a86ff1",
+      "bytes": 279780
+    },
+    {
+      "original": "task-5-teacher-prefreeze-parity.npz",
+      "archive": "raw/task-5-teacher-prefreeze-parity.npz",
+      "sha256": "45a86149473e3b3dfe63b18d61628b1fbdeab9aaa7fa3da5744391516381cdda",
+      "bytes": 5062174
+    },
+    {
+      "original": "task-5-teacher-prefreeze-parity.py",
+      "archive": "task-5-teacher-prefreeze-parity.py.txt",
+      "sha256": "74e5d2fa45e2f8106447f954c47b11660ea9fee611d7713a11c41bbd56663715",
+      "bytes": 9404
+    },
+    {
+      "original": "task-5-teacher-prefreeze-parity.txt",
+      "archive": "task-5-teacher-prefreeze-parity.txt",
+      "sha256": "28b70ac33f45d3a5f4964e83190d8f773ad4d8bf56a929b600d215b62385a759",
+      "bytes": 9751
+    },
+    {
+      "original": "task-5-teacher-prefreeze-quick.py",
+      "archive": "task-5-teacher-prefreeze-quick.py.txt",
+      "sha256": "120e3b65bddead015f2d20860f453a8299b46bd8f784bec051a20acd161a9427",
+      "bytes": 1591
+    },
+    {
+      "original": "task-5-teacher-prefreeze-quick.txt",
+      "archive": "task-5-teacher-prefreeze-quick.txt",
+      "sha256": "cb616fbbc896453013a4d115a3e96349d32537d62192eda6e75b8fd52a7b2dba",
+      "bytes": 6569
+    },
+    {
+      "original": "task-5-teacher-prefreeze-report.md",
+      "archive": "task-5-teacher-prefreeze-report.md",
+      "sha256": "62c60922c9a9b022da6a519740246edf6d1af822e644d4777e08b38aff518fce",
+      "bytes": 11769
+    },
+    {
+      "original": "task-5-teacher-prefreeze-tail-probe.py",
+      "archive": "task-5-teacher-prefreeze-tail-probe.py.txt",
+      "sha256": "6feb6455ff1cbe78a3424c28573d0973aa33ba76319f53f74a66f7c4c46b3b41",
+      "bytes": 623
+    },
+    {
+      "original": "task-5-teacher-prefreeze-tail-probe.txt",
+      "archive": "task-5-teacher-prefreeze-tail-probe.txt",
+      "sha256": "02dfb91409e801ef53e61991f5f0bad80339065b1a2ce4edf50113b3fd1e7c3e",
+      "bytes": 854
+    }
+  ]
+}

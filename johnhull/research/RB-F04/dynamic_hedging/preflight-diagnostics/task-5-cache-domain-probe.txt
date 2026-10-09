@@ -1,0 +1,86 @@
+actual ready windows 30 /36
+{
+  "actual_summary": {
+    "original_slots": 36,
+    "executed": 35,
+    "all_33_nodes_ready": 0,
+    "query_in_4_plus_ready_run": 30
+  },
+  "global_poison_reproduction": {
+    "current_status": "unknown",
+    "current_reason": "nonfinite_nodes",
+    "far_nan_x": 24.0,
+    "query_x": 1.0
+  },
+  "fixed_rectangle_bounds": [
+    0.0,
+    2.0930956249377375
+  ],
+  "hermite_face_C1": {
+    "None": {
+      "left": 0.013139735777907557,
+      "right": 0.013139735777907557,
+      "difference": 0.0
+    },
+    "0": {
+      "left": 0.2732544090813263,
+      "right": 0.2732544090813263,
+      "difference": 0.0
+    },
+    "1": {
+      "left": -0.326245451370056,
+      "right": -0.326245451370056,
+      "difference": 0.0
+    }
+  },
+  "sliding_four_node_cubic": {
+    "boundary": 1.0,
+    "price_jump": 0.0,
+    "first_derivative_jump": -0.0017721087932168755
+  },
+  "missing_stencil_unknown": true,
+  "local_fz_fixture": [
+    {
+      "spot_nodes": 9,
+      "truth": [
+        0.36582313302687236,
+        0.05896254427123493,
+        0.07967377357032124
+      ],
+      "shared_jet_hermite": [
+        0.3658202963893707,
+        0.05897143944529731,
+        0.07968277201605015
+      ],
+      "omitted_fz_delta": 0.05948198113228582,
+      "proper_minus_omitted": -0.000510541686988504,
+      "scope": "frozen local power-variance one-step analytic fixture, not actual local monthly teacher"
+    },
+    {
+      "spot_nodes": 17,
+      "truth": [
+        0.36582313302687236,
+        0.05896254427123493,
+        0.07967377357032124
+      ],
+      "shared_jet_hermite": [
+        0.365820307249397,
+        0.05897143947595871,
+        0.07968277953916003
+      ],
+      "omitted_fz_delta": 0.059481979327560414,
+      "proper_minus_omitted": -0.0005105398516017032,
+      "scope": "frozen local power-variance one-step analytic fixture, not actual local monthly teacher"
+    }
+  ],
+  "tail_bounds": {
+    "p": 4.0,
+    "x": 24.0,
+    "one_fixing_GBM_price_bound": 0.0006196238516994917,
+    "twelve_fixing_GBM_Minkowski_price_bound": 14.762189941683877,
+    "one_fixing_GBM_tail_probability_bound": 3.1058742463394486e-06,
+    "claim": "price/threshold derivative bounds only; no bound for local f_z or state derivative follows"
+  },
+  "wall_seconds": 0.5667311520001022,
+  "cpu_seconds": 0.566704211
+}

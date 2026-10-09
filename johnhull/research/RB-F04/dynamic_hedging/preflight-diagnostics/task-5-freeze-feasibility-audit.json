@@ -1,0 +1,94 @@
+{
+  "kind": "read_only_prefreeze_feasibility_audit",
+  "date": "2026-10-10",
+  "v1_formal_freeze_feasible_with_only_N_or_grid_refinement": false,
+  "reason": "original required state15.Heston independent 3-width C_v implies kappa_Q > unchanged .25 gate; finite-N sampling does not change this market quote sensitivity",
+  "original_state_count": 18,
+  "original_model_slots": 36,
+  "bad_original_state": {
+    "date": 0.9166666666666666,
+    "scenario": 0,
+    "spot": 80.0,
+    "v": 0.02,
+    "derivatives": [
+      0.3093831877287734,
+      0.30937758056154285,
+      0.30940561735470773
+    ],
+    "jacobian": 0.30937758056154285,
+    "condition": 0.8080740677660992,
+    "conditioning_gate": "unknown"
+  },
+  "derived_condition_numbers_three_widths": [
+    0.8080594224763346,
+    0.8080740677660992,
+    0.8080008441262263
+  ],
+  "required_abs_Cv_for_original_gate": 1.0,
+  "teacher_direct_bump_sqrtN_diagnostics": {
+    "heston": {
+      "price": {
+        "original_slot": "state05.heston",
+        "N_observed": 1024,
+        "SE_observed": 0.09582015163438978,
+        "target": 0.03,
+        "diagnostic_N_sqrt_scaling": 10446.508326954612,
+        "projected_SE_N65536": 0.011977518954298723
+      },
+      "hS": {
+        "original_slot": "state08.heston",
+        "N_observed": 1024,
+        "SE_observed": 0.03280398253957538,
+        "target": 0.002,
+        "diagnostic_N_sqrt_scaling": 275481.9252369322,
+        "projected_SE_N65536": 0.0041004978174469225
+      },
+      "hQ": {
+        "original_slot": "state06.heston",
+        "N_observed": 1024,
+        "SE_observed": 0.04114785222748843,
+        "target": 0.005,
+        "diagnostic_N_sqrt_scaling": 69351.24963062679,
+        "projected_SE_N65536": 0.005143481528436054
+      }
+    },
+    "local": {
+      "price": {
+        "original_slot": "state02.local",
+        "N_observed": 1024,
+        "SE_observed": 0.06236452873710368,
+        "target": 0.03,
+        "diagnostic_N_sqrt_scaling": 4425.198301412728,
+        "projected_SE_N65536": 0.00779556609213796
+      },
+      "hS": {
+        "original_slot": "state02.local",
+        "N_observed": 1024,
+        "SE_observed": 0.012338466483813234,
+        "target": 0.002,
+        "diagnostic_N_sqrt_scaling": 38972.86532407872,
+        "projected_SE_N65536": 0.0015423083104766542
+      },
+      "hQ": {
+        "original_slot": "state03.local",
+        "N_observed": 1024,
+        "SE_observed": 0.023546132663181583,
+        "target": 0.005,
+        "diagnostic_N_sqrt_scaling": 22709.058084542325,
+        "projected_SE_N65536": 0.002943266582897698
+      }
+    }
+  },
+  "projection_scope": "Illustrative iid N^-1/2 projection from 16block selected-state finite bump SE. Not a precision guarantee, not a production cubic-cache derivative forecast, not selecting any N. Structural kappa obstruction independent of projection.",
+  "source_bindings": {
+    "DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce",
+    "candidate.json": "23304b8b25285dfb2f82cff6a3f4cb9f2b0b339b02b27d11ffc924fd97d52148",
+    "pilot/selected-calls/jacobian.json": "f75a10c923649c5142e2aef0c24aab83260f94030e6d3f18bf1753e8334ed71a",
+    "pilot/selected-calls/refined/selected-calls.json": "9f9fa7fbfd61c5114881479d8707f482c1a007e0ea47ad8e050eb537cdb2012e",
+    "pilot/teacher-n1024/preflight.json": "50313a08abe3a4ce5abce65b909d44f7b33e7337a2725951b4294a788abc058d",
+    "protocol_source": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f"
+  },
+  "canonical_files_changed": false,
+  "formal_pilot_qualification": "unknown",
+  "proposed_revision": "Separately versioned execution readiness with full original roster and unchanged financial qualification, requiring independent review before main. Keep original v1 freeze function/results unchanged."
+}

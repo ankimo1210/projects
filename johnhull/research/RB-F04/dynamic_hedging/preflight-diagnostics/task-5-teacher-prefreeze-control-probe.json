@@ -1,0 +1,2209 @@
+{
+  "scope": "saved-only constant-vol auxiliary/control diagnosis; fixed original N1024; no new drivers or finance source changes",
+  "original_slots": 36,
+  "computed_slots": 35,
+  "qualification_unknown_slots": 36,
+  "rows": [
+    {
+      "slot_id": "state00.heston",
+      "model": "heston",
+      "date": 0.0,
+      "spot": 99.95,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            4.590859327917981,
+            0.595343666761319,
+            44.59823839139102,
+            -0.12049110771747994,
+            1.0681488293840933
+          ],
+          "IID_SE": [
+            0.17457489958262987,
+            0.016337342510961986,
+            2.546867640655956,
+            0.03514577091048585,
+            0.06099868037586028
+          ],
+          "same_16block_SE": [
+            0.16233359039486817,
+            0.01561691779297622,
+            2.5020851735074148,
+            0.043785685882822785,
+            0.059926119180912334
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0218218624478287,
+          0.005473210735352849,
+          0.007490764897614044
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.0313533525671465,
+        "new_variance": 0.027259486989811958,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            4.837190192782705,
+            0.608473019750289,
+            47.48629128507725,
+            -0.15371714378427281,
+            1.1373190573764564
+          ],
+          "IID_SE": [
+            0.07707507835128541,
+            0.008330866431749923,
+            1.393663747938308,
+            0.02525800441073172,
+            0.03337890362061287
+          ],
+          "same_16block_SE": [
+            0.10530753625812574,
+            0.009972203944465716,
+            1.262519960854497,
+            0.026504131581725758,
+            0.030237948109652208
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.009634384793910688,
+          0.0033130164477157193,
+          0.0037797435137065264
+        ],
+        "ready_original_and_three_forecast_conditions": false,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -2.9181519582969508e-05,
+          "IID_SE": 1.7882449891656843e-05,
+          "same_16block_SE": 1.7863754842597003e-05
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state00.local",
+      "model": "local",
+      "date": 0.0,
+      "spot": 99.95,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            5.14692070446804,
+            0.5338768034092681,
+            2.6028528548104064,
+            0.22897843852176453,
+            0.5635966326729183
+          ],
+          "IID_SE": [
+            0.19739184907447158,
+            0.013956425957122884,
+            0.10640006526094059,
+            0.012514860234494652,
+            0.023038843085739016
+          ],
+          "same_16block_SE": [
+            0.2355316673410326,
+            0.016973259289895407,
+            0.12750906967130807,
+            0.01047035237836021,
+            0.027609583142278855
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.02467398113430895,
+          0.0013087940472950267,
+          0.003451197892784857
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state01.heston",
+      "model": "heston",
+      "date": 0.0,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            5.420359463916018,
+            0.5883240117401134,
+            36.418744120709405,
+            -0.04790503829076866,
+            0.9555335351092628
+          ],
+          "IID_SE": [
+            0.21268838085232164,
+            0.016645872917484383,
+            2.022901804165775,
+            0.029180414862726836,
+            0.05307570479933905
+          ],
+          "same_16block_SE": [
+            0.19210940612933644,
+            0.013816729086254418,
+            2.0700571425990093,
+            0.03525372532309737,
+            0.05431293876553583
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.026586047606540108,
+          0.004406715665387171,
+          0.00678911734569198
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.04,
+        "new_variance": 0.04,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            5.72102983109239,
+            0.6009553607242595,
+            38.9046332222562,
+            -0.07870173439013754,
+            1.0207568276318586
+          ],
+          "IID_SE": [
+            0.08237024823320115,
+            0.007135656518332598,
+            0.9338450702839788,
+            0.01852732256934067,
+            0.024501676342688388
+          ],
+          "same_16block_SE": [
+            0.09880259394639986,
+            0.006399136886915617,
+            0.7298598935462194,
+            0.015446295292348016,
+            0.01914963354867893
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.01029628102915017,
+          0.0019307869115435018,
+          0.0023937041935848625
+        ],
+        "ready_original_and_three_forecast_conditions": true,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -1.0279689048938324e-06,
+          "IID_SE": 1.3729684899683791e-05,
+          "same_16block_SE": 1.3089012919567283e-05
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state01.local",
+      "model": "local",
+      "date": 0.0,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            5.625290547820706,
+            0.5272207800942986,
+            2.3519161413859404,
+            0.2285478417231846,
+            0.5611466477090361
+          ],
+          "IID_SE": [
+            0.2162092592710674,
+            0.0138677686922993,
+            0.0960473797408398,
+            0.012334394992222258,
+            0.022916065847079427
+          ],
+          "same_16block_SE": [
+            0.25840872411541954,
+            0.01690817950506432,
+            0.11615578613398048,
+            0.01011379473463386,
+            0.027713755968646604
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.027026157408883384,
+          0.0012642243418292329,
+          0.003464219496080826
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state02.heston",
+      "model": "heston",
+      "date": 0.0,
+      "spot": 100.05,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            6.719777027383803,
+            0.5802947795921417,
+            28.014788598088927,
+            0.01862255596635018,
+            0.8515529593901393
+          ],
+          "IID_SE": [
+            0.2773746161542226,
+            0.01721134321153728,
+            1.5980037208855742,
+            0.025623845849568335,
+            0.04857380211426595
+          ],
+          "same_16block_SE": [
+            0.2522745379823104,
+            0.014574864788948528,
+            1.7036037350788797,
+            0.03181062461464463,
+            0.051783678365271535
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.03467182701927767,
+          0.003976328076830579,
+          0.006472959795658944
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.05729329454064851,
+        "new_variance": 0.06548102554141451,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            7.111892543115496,
+            0.5892449123501329,
+            30.136101217564395,
+            -0.014957790198045653,
+            0.916033547297524
+          ],
+          "IID_SE": [
+            0.09490461191099313,
+            0.0068932839707034526,
+            0.6152253553286561,
+            0.014660444770363313,
+            0.018700729087697147
+          ],
+          "same_16block_SE": [
+            0.09303064276670547,
+            0.0055025001866092355,
+            0.4346029332945939,
+            0.011533040302803617,
+            0.013210430366477685
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.011863076488874117,
+          0.0014416300378504523,
+          0.0016513037958097096
+        ],
+        "ready_original_and_three_forecast_conditions": true,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -1.1149049295955513e-05,
+          "IID_SE": 1.075936614412636e-05,
+          "same_16block_SE": 9.517707352309478e-06
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state02.local",
+      "model": "local",
+      "date": 0.0,
+      "spot": 100.05,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            6.448155160253825,
+            0.517198604048981,
+            2.009241216740996,
+            0.2255268836649619,
+            0.561466768542655
+          ],
+          "IID_SE": [
+            0.24910764615168998,
+            0.013712208729836618,
+            0.0826340286831989,
+            0.012136465781635866,
+            0.02309143405472825
+          ],
+          "same_16block_SE": [
+            0.2988193354770448,
+            0.016727907569701102,
+            0.10177910901326913,
+            0.009906963282437549,
+            0.028441377255599715
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.031138455768961317,
+          0.0012383704103046938,
+          0.003555172156949965
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state03.heston",
+      "model": "heston",
+      "date": 0.08333333333333333,
+      "spot": 80.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.004539987297400993,
+            0.0022340003108020775,
+            0.4849236109653205,
+            -0.001670605974858752,
+            0.0245060519477875
+          ],
+          "IID_SE": [
+            0.0033598940151476,
+            0.001578953643878785,
+            0.35938069296125946,
+            0.0014744906352301248,
+            0.01816162738128734
+          ],
+          "same_16block_SE": [
+            0.003267582037775354,
+            0.0015261669271860938,
+            0.3495689731900924,
+            0.0014607001822704018,
+            0.017665783275180185
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0004199867518934437,
+          0.00018258752278380022,
+          0.0022082229093975227
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.030834983994621902,
+        "new_variance": 0.02685893191076878,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.0034345319900045486,
+            0.003283951492772382,
+            0.6752087896007057,
+            -0.002152831588917679,
+            0.034122285034994065
+          ],
+          "IID_SE": [
+            0.01666213689570424,
+            0.003940331003966102,
+            0.9135488132192338,
+            0.003574379777006854,
+            0.04616701304567135
+          ],
+          "same_16block_SE": [
+            0.015891342618198346,
+            0.003390372883279778,
+            0.8172274155768505,
+            0.0033090093682924923,
+            0.041299324360419006
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.002082767111963003,
+          0.00041362617103656116,
+          0.005162415545052381
+        ],
+        "ready_original_and_three_forecast_conditions": false,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -8.732893145992417e-07,
+          "IID_SE": 7.880813996713567e-07,
+          "same_16block_SE": 7.880814005698627e-07
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state03.local",
+      "model": "local",
+      "date": 0.08333333333333333,
+      "spot": 80.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.03227080693272114,
+            0.010677624598396447,
+            0.3078925039650105,
+            0.000530617343514015,
+            0.0916731974092749
+          ],
+          "IID_SE": [
+            0.010943593031944053,
+            0.0028362156357491066,
+            0.08207932128097106,
+            0.0003060134664724545,
+            0.024438639220215854
+          ],
+          "same_16block_SE": [
+            0.011801986219037866,
+            0.002914078133220593,
+            0.08664113707928614,
+            0.00018238346586303518,
+            0.0257968932693992
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.001367949128993017,
+          2.2797933232879397e-05,
+          0.0032246116586749
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state04.heston",
+      "model": "heston",
+      "date": 0.08333333333333333,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            4.754371571277017,
+            0.5457420260069871,
+            33.723639700518504,
+            -0.02741799342148499,
+            0.8649358604927376
+          ],
+          "IID_SE": [
+            0.1907077649709726,
+            0.015181550003215786,
+            1.8994944143540078,
+            0.026850845480271307,
+            0.04871777928985413
+          ],
+          "same_16block_SE": [
+            0.1897812333720997,
+            0.015789824895496653,
+            1.5377657863183818,
+            0.01880264659242469,
+            0.03944024979027195
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.023838470621371597,
+          0.0023503308240530856,
+          0.004930031223783994
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.04,
+        "new_variance": 0.040000000000000015,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            4.984719523616138,
+            0.5530807545400847,
+            35.70093205943346,
+            -0.05368491768612638,
+            0.9156489828926889
+          ],
+          "IID_SE": [
+            0.06776518423017173,
+            0.007125417149189417,
+            0.7943878993334255,
+            0.01633141612829242,
+            0.02037427120490812
+          ],
+          "same_16block_SE": [
+            0.06676501088181644,
+            0.006146912114820611,
+            0.7886509633562983,
+            0.016221275388535017,
+            0.020227131640494854
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.00847064802877145,
+          0.0020276594235668776,
+          0.002528391455061858
+        ],
+        "ready_original_and_three_forecast_conditions": false,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -1.371621389675609e-05,
+          "IID_SE": 1.8803047560019944e-05,
+          "same_16block_SE": 1.6228680543962957e-05
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state04.local",
+      "model": "local",
+      "date": 0.08333333333333333,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            4.934063226797337,
+            0.4671520341236269,
+            2.082410346456643,
+            0.19279274078358327,
+            0.5138188169034245
+          ],
+          "IID_SE": [
+            0.1940979849461014,
+            0.012872434498427985,
+            0.08644880869788654,
+            0.011059814495657135,
+            0.02133058197844652
+          ],
+          "same_16block_SE": [
+            0.24475400443058826,
+            0.016946928507942334,
+            0.10883722660236655,
+            0.009010699739523554,
+            0.026854752764282938
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.024262248118262626,
+          0.0011263374674404442,
+          0.0033568440955353677
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state05.heston",
+      "model": "heston",
+      "date": 0.08333333333333333,
+      "spot": 120.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            19.815907867827644,
+            0.8120675719133672,
+            11.89178920639047,
+            0.40824165742994434,
+            0.4709974161697085
+          ],
+          "IID_SE": [
+            0.4572459455783314,
+            0.01030675826726524,
+            2.3088697971762797,
+            0.07529708379965425,
+            0.09144727423842308
+          ],
+          "same_16block_SE": [
+            0.4737665568832683,
+            0.008571663804500007,
+            2.065856946713978,
+            0.06561491401299677,
+            0.08182227814428839
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.05715574319729151,
+          0.008201864251624594,
+          0.01022778476803605
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.05832992213832109,
+        "new_variance": 0.0662819786401505,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            20.545215613361588,
+            0.8327424500083637,
+            13.641514251080324,
+            0.369498704952673,
+            0.5402986761191761
+          ],
+          "IID_SE": [
+            0.10392220503234219,
+            0.004136937791043823,
+            0.8522020423028411,
+            0.031074808997696886,
+            0.03375311763544286
+          ],
+          "same_16block_SE": [
+            0.09826877204466593,
+            0.004741982571558783,
+            0.6864074321091556,
+            0.02542326974098229,
+            0.027186499975072095
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.012990275629042763,
+          0.003177908717622787,
+          0.003398312496884013
+        ],
+        "ready_original_and_three_forecast_conditions": false,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": 2.060010663087401e-06,
+          "IID_SE": 3.1921383534426497e-06,
+          "same_16block_SE": 2.848415434226797e-06
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state05.local",
+      "model": "local",
+      "date": 0.08333333333333333,
+      "spot": 120.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            20.141994575606677,
+            0.8377735895060898,
+            0.49713331655719184,
+            0.6415326211981257,
+            0.2500552280179748
+          ],
+          "IID_SE": [
+            0.40889023180311007,
+            0.008127864625616663,
+            0.09362188939223376,
+            0.03457029909911699,
+            0.047091277369166996
+          ],
+          "same_16block_SE": [
+            0.5455874309339921,
+            0.006717857556244206,
+            0.12999667548550412,
+            0.0485316209415077,
+            0.0653875876902062
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.05111127897538878,
+          0.006066452617688465,
+          0.008173448461275774
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state06.heston",
+      "model": "heston",
+      "date": 0.25,
+      "spot": 80.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.0005637568603320904,
+            0.0009022049537887225,
+            0.26415060887955516,
+            -0.0009739000095743823,
+            0.01602245570516842
+          ],
+          "IID_SE": [
+            0.0005637568603320795,
+            0.000902204953788692,
+            0.2641506088795226,
+            0.0009739000095742169,
+            0.016022455705167176
+          ],
+          "same_16block_SE": [
+            0.0005637568603320905,
+            0.0009022049537887011,
+            0.2641506088795265,
+            0.0009739000095742009,
+            0.01602245570516669
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          7.04696075415113e-05,
+          0.0001217375011967751,
+          0.0020028069631458363
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.029641687495854604,
+        "new_variance": 0.025990723971520076,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            -0.005192982154383243,
+            -0.00022425661268925007,
+            -0.06316130045776167,
+            0.00022434060911495721,
+            -0.00383114444883503
+          ],
+          "IID_SE": [
+            0.0076356442291143885,
+            0.0024434282093982666,
+            0.633279525491132,
+            0.0020736761661367753,
+            0.03841252984125508
+          ],
+          "same_16block_SE": [
+            0.0071885863711773626,
+            0.0023296283757527026,
+            0.612583097304561,
+            0.00203818112325676,
+            0.03715715660823098
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0009544555286392937,
+          0.000254772640407095,
+          0.004644644576028873
+        ],
+        "ready_original_and_three_forecast_conditions": true,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -5.376476607094293e-08,
+          "IID_SE": 1.9908608986834732e-15,
+          "same_16block_SE": 1.9390836655042826e-15
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state06.local",
+      "model": "local",
+      "date": 0.25,
+      "spot": 80.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.00406870306489633,
+            0.0013055121764631453,
+            0.038939032830211724,
+            2.495864915269617e-05,
+            0.015526949408233251
+          ],
+          "IID_SE": [
+            0.003559593513352739,
+            0.0009212768118073396,
+            0.027566397456495306,
+            8.781517275656776e-05,
+            0.010992108112715159
+          ],
+          "same_16block_SE": [
+            0.003523612094697263,
+            0.0008902816896464768,
+            0.02665091601403868,
+            9.042506289012474e-05,
+            0.010627059650849624
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.00044494918916908885,
+          1.1303132861265592e-05,
+          0.0013283824563562032
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state07.heston",
+      "model": "heston",
+      "date": 0.25,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            3.483782173934256,
+            0.44194880686995697,
+            26.747080387183207,
+            0.011333573474447549,
+            0.6567756497242854
+          ],
+          "IID_SE": [
+            0.14588105798280207,
+            0.012383257630771523,
+            1.5595135530116067,
+            0.021009829250803625,
+            0.03829391889530632
+          ],
+          "same_16block_SE": [
+            0.14501049779736852,
+            0.012955360981747743,
+            1.5563953530329424,
+            0.02243830014759432,
+            0.038217351367661564
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.01823513224785028,
+          0.00280478751844929,
+          0.0047771689209576956
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.04,
+        "new_variance": 0.04000000000000001,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            3.725017310228707,
+            0.4677372458398508,
+            28.528939225838773,
+            0.008434935253915782,
+            0.700529266176409
+          ],
+          "IID_SE": [
+            0.04728118926217754,
+            0.0062048186208394215,
+            0.5303591456156516,
+            0.01167345732950274,
+            0.013022990450047473
+          ],
+          "same_16block_SE": [
+            0.04536711857685442,
+            0.006299723865207293,
+            0.69633108053184,
+            0.014235407456363997,
+            0.017098438080690878
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0059101486577721905,
+          0.0017794259320454997,
+          0.0021373047600863593
+        ],
+        "ready_original_and_three_forecast_conditions": true,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": 9.280219940724236e-06,
+          "IID_SE": 7.921341448832745e-06,
+          "same_16block_SE": 7.4894669024759085e-06
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state07.local",
+      "model": "local",
+      "date": 0.25,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            3.4916876952979425,
+            0.3954371814917036,
+            1.4862539457395634,
+            0.18376673273948904,
+            0.3941703339358572
+          ],
+          "IID_SE": [
+            0.1420940603334682,
+            0.010817544853685952,
+            0.06384333314352993,
+            0.009291295881918304,
+            0.016931930116586547
+          ],
+          "same_16block_SE": [
+            0.19539767071641775,
+            0.011831803171268281,
+            0.08795714654034474,
+            0.008914723725737641,
+            0.02332716957504924
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.017761757541683514,
+          0.0011143404657172052,
+          0.002915896196881155
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state08.heston",
+      "model": "heston",
+      "date": 0.25,
+      "spot": 120.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            16.10759672400113,
+            0.6804438880900964,
+            8.035349589525978,
+            0.405649213009611,
+            0.31908211043697643
+          ],
+          "IID_SE": [
+            0.3514461610163187,
+            0.007744479241036218,
+            1.8762452706680617,
+            0.061772049391851616,
+            0.07450532101833288
+          ],
+          "same_16block_SE": [
+            0.3561411055884847,
+            0.00766466715706269,
+            2.0046701018203894,
+            0.06909560940844568,
+            0.07960504514359197
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.043930770127039775,
+          0.008636951176055712,
+          0.009950630642948996
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.06071656195822624,
+        "new_variance": 0.068018466783827,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            16.59446209147597,
+            0.6799991310455681,
+            11.198035058647239,
+            0.2970462338260237,
+            0.44467171209550377
+          ],
+          "IID_SE": [
+            0.07251955439474668,
+            0.003288452084086853,
+            0.5995613590445888,
+            0.022574933678331882,
+            0.023808460559050164
+          ],
+          "same_16block_SE": [
+            0.07370685193494751,
+            0.0038147115730241357,
+            0.7481321178586342,
+            0.028229671425460335,
+            0.029708175405732437
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.00906494429934333,
+          0.003528708928182542,
+          0.003713521925716556
+        ],
+        "ready_original_and_three_forecast_conditions": false,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -2.0299927773686317e-06,
+          "IID_SE": 1.280224252837113e-06,
+          "same_16block_SE": 1.2899940175635187e-06
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state08.local",
+      "model": "local",
+      "date": 0.25,
+      "spot": 120.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            16.25246783486895,
+            0.6877258999622076,
+            0.33097324382466253,
+            0.5396789762391236,
+            0.1876040305507499
+          ],
+          "IID_SE": [
+            0.29651950791670734,
+            0.005672168475535362,
+            0.06204154396078696,
+            0.027035517625388833,
+            0.03516672095343512
+          ],
+          "same_16block_SE": [
+            0.4248768726019047,
+            0.007103040670484509,
+            0.08294604725860091,
+            0.03310709957105824,
+            0.04701592371681306
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.03706493848958842,
+          0.004138387446382278,
+          0.005876990464601633
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state09.heston",
+      "model": "heston",
+      "date": 0.5,
+      "spot": 80.0,
+      "original_status": "unknown_underresolved",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "IID_SE": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "same_16block_SE": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.02735791085281674,
+        "new_variance": 0.02449870921132725,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.001221025693891514,
+            0.000757803826577232,
+            0.2218697391327361,
+            -0.0005113426049452438,
+            0.02328072656330697
+          ],
+          "IID_SE": [
+            2.0338724177517464e-19,
+            4.338927824537059e-19,
+            1.6227590063768599e-16,
+            3.7965618464699267e-19,
+            1.0413426778888942e-17
+          ],
+          "same_16block_SE": [
+            5.598795943944346e-20,
+            0.0,
+            0.0,
+            2.799397971972173e-20,
+            8.958073510310954e-19
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "ready_original_and_three_forecast_conditions": false,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -1.4361085246775845e-08,
+          "IID_SE": 0.0,
+          "same_16block_SE": 0.0
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state09.local",
+      "model": "local",
+      "date": 0.5,
+      "spot": 80.0,
+      "original_status": "unknown_underresolved",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "IID_SE": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "same_16block_SE": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state10.heston",
+      "model": "heston",
+      "date": 0.5,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            1.8451511817901083,
+            0.28791398778732635,
+            15.432129279942647,
+            0.05699768711700754,
+            0.35928264069380883
+          ],
+          "IID_SE": [
+            0.07720456213155664,
+            0.008150834028594662,
+            0.8596532206403247,
+            0.010585866422759419,
+            0.02001398987721167
+          ],
+          "same_16block_SE": [
+            0.09158963674106683,
+            0.010677192069287267,
+            0.9597663416142793,
+            0.008373017355866418,
+            0.022344770407826474
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.009650570266444555,
+          0.0010466271694833025,
+          0.0027930963009783092
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.04,
+        "new_variance": 0.039999999999999994,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            2.0833420888880814,
+            0.30059181570977833,
+            17.781139168624787,
+            0.03452646568322478,
+            0.4139710417894745
+          ],
+          "IID_SE": [
+            0.021193689421538545,
+            0.00350996481601092,
+            0.23685659914320206,
+            0.005654835601665313,
+            0.005514369589718831
+          ],
+          "same_16block_SE": [
+            0.01864741293259537,
+            0.0026877425686335117,
+            0.22351989059265923,
+            0.0034976658269055237,
+            0.0052038714219494134
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0026492111776923186,
+          0.00043720822836319025,
+          0.0006504839277436755
+        ],
+        "ready_original_and_three_forecast_conditions": true,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -1.0942122850767541e-05,
+          "IID_SE": 5.3540602829433125e-06,
+          "same_16block_SE": 6.247580748626439e-06
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state10.local",
+      "model": "local",
+      "date": 0.5,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            2.0227835685987077,
+            0.2618615183492407,
+            0.8910747568256375,
+            0.11632167693262643,
+            0.2700322288117177
+          ],
+          "IID_SE": [
+            0.08369697738453877,
+            0.007406305722521851,
+            0.03850286948183368,
+            0.006020978708186681,
+            0.011667949947167688
+          ],
+          "same_16block_SE": [
+            0.10778411541552456,
+            0.006444730297382432,
+            0.05032265202206999,
+            0.006214609718511676,
+            0.015249829244007019
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.010462122173067369,
+          0.0007768262148139598,
+          0.0019062286555008774
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state11.heston",
+      "model": "heston",
+      "date": 0.5,
+      "spot": 120.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            10.230149592449092,
+            0.46441907084034795,
+            2.062267865038871,
+            0.39004153692560944,
+            0.08550001372787083
+          ],
+          "IID_SE": [
+            0.2031145884986753,
+            0.0044249910607582306,
+            1.0871429925660956,
+            0.03787822019603147,
+            0.045072098714396484
+          ],
+          "same_16block_SE": [
+            0.25054904112023385,
+            0.0046411847104198,
+            1.251686333348409,
+            0.04185105715840322,
+            0.05189393700912852
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.025389323562334407,
+          0.005231382144800404,
+          0.006486742126141065
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.06528487505851373,
+        "new_variance": 0.07100343592535167,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            10.726674295008566,
+            0.4664262156171363,
+            5.223536682529189,
+            0.278034696093375,
+            0.2165637479182966
+          ],
+          "IID_SE": [
+            0.03332497508966271,
+            0.0015487320146134842,
+            0.26648510079648424,
+            0.010631468686292554,
+            0.011048263982886126
+          ],
+          "same_16block_SE": [
+            0.027053735165513564,
+            0.0014313180463586938,
+            0.26570774943006226,
+            0.010635576297006458,
+            0.011016035602845295
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0041656218862078384,
+          0.0013294470371258069,
+          0.0013770044503556623
+        ],
+        "ready_original_and_three_forecast_conditions": true,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -7.009632989892585e-07,
+          "IID_SE": 5.255123053871245e-07,
+          "same_16block_SE": 4.0773069960306777e-07
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state11.local",
+      "model": "local",
+      "date": 0.5,
+      "spot": 120.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            10.618826622978828,
+            0.4725786373833633,
+            0.1531001185154427,
+            0.38625364554279557,
+            0.10713845036290734
+          ],
+          "IID_SE": [
+            0.18574094168862915,
+            0.0031918696923046476,
+            0.03656599266879098,
+            0.020749360926710415,
+            0.025588639829305763
+          ],
+          "same_16block_SE": [
+            0.2189235806283966,
+            0.0030712641032888516,
+            0.0406739330845937,
+            0.021647578853979926,
+            0.028463349363171152
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.023217617711078647,
+          0.0027059473567474907,
+          0.0035579186703963935
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state12.heston",
+      "model": "heston",
+      "date": 0.75,
+      "spot": 80.0,
+      "original_status": "unknown_underresolved",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "IID_SE": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "same_16block_SE": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.02426371149249562,
+        "new_variance": 0.022761578459811457,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            7.767483336293398e-06,
+            8.010356145498734e-06,
+            0.0027732842361457995,
+            -4.373039071158485e-06,
+            0.0011055561823800643
+          ],
+          "IID_SE": [
+            1.1122739784579862e-21,
+            2.7542022323721563e-21,
+            1.2610008990060828e-18,
+            8.209641269570851e-22,
+            2.372851154043704e-19
+          ],
+          "same_16block_SE": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "ready_original_and_three_forecast_conditions": false,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -4.707322698142575e-10,
+          "IID_SE": 0.0,
+          "same_16block_SE": 0.0
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state12.local",
+      "model": "local",
+      "date": 0.75,
+      "spot": 80.0,
+      "original_status": "unknown_underresolved",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "IID_SE": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "same_16block_SE": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state13.heston",
+      "model": "heston",
+      "date": 0.75,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.727174824583848,
+            0.136973353604722,
+            7.175041033346551,
+            0.03408417449300466,
+            0.16473021257555387
+          ],
+          "IID_SE": [
+            0.030769361321915215,
+            0.00405219436890703,
+            0.3792085981059445,
+            0.004339204607963297,
+            0.00870616804644732
+          ],
+          "same_16block_SE": [
+            0.034080145615996635,
+            0.004485273044014735,
+            0.44839519512076875,
+            0.003777813345976203,
+            0.010294608137683332
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0038461701652394193,
+          0.00047222666824702544,
+          0.0012868260172104167
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.04,
+        "new_variance": 0.04,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.7762002802472939,
+            0.14325901376985553,
+            7.67597492981443,
+            0.03318650606708605,
+            0.17623104537468898
+          ],
+          "IID_SE": [
+            0.008101973601291477,
+            0.0012911921964806144,
+            0.05383845796703139,
+            0.0016944936155699679,
+            0.0012360654920899495
+          ],
+          "same_16block_SE": [
+            0.008084198618258986,
+            0.0009076432027989626,
+            0.056770136300307444,
+            0.0011712423619041898,
+            0.0013033732597806508
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0010127467001614355,
+          0.00014640529523802392,
+          0.000162921657472581
+        ],
+        "ready_original_and_three_forecast_conditions": true,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -8.936660636354456e-07,
+          "IID_SE": 6.164324982735223e-07,
+          "same_16block_SE": 5.302549958284946e-07
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state13.local",
+      "model": "local",
+      "date": 0.75,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.7995582654730922,
+            0.13394618827861887,
+            0.3650653765032686,
+            0.06199786271500263,
+            0.1340947781998752
+          ],
+          "IID_SE": [
+            0.03327539065210949,
+            0.0037656555385467945,
+            0.015736146802999316,
+            0.0029336665278932375,
+            0.005780156791313735
+          ],
+          "same_16block_SE": [
+            0.04092457243914676,
+            0.0034996690129566964,
+            0.019374258631703608,
+            0.002116070566018518,
+            0.007116497704848908
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.004159423831513676,
+          0.0002645088207523148,
+          0.0008895622131061135
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state14.heston",
+      "model": "heston",
+      "date": 0.75,
+      "spot": 120.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            5.0010921842728315,
+            0.23860962986828538,
+            0.3838076515926983,
+            0.22227403224738423,
+            0.018428382034241336
+          ],
+          "IID_SE": [
+            0.08741990468504765,
+            0.001779507489601128,
+            0.4988718482413865,
+            0.02061751630110251,
+            0.023953146758200847
+          ],
+          "same_16block_SE": [
+            0.09051357171854717,
+            0.001674393737228358,
+            0.5516600856697567,
+            0.022626089893116187,
+            0.026487754398792134
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.010927488085630958,
+          0.0028282612366395247,
+          0.0033109692998490163
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.07147765481982574,
+        "new_variance": 0.07448240559531775,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            5.164079007878395,
+            0.24036531182947604,
+            1.2640634350833075,
+            0.18656432178374174,
+            0.060693536985425206
+          ],
+          "IID_SE": [
+            0.011938744501422882,
+            0.0007235017005291901,
+            0.10021555539247864,
+            0.004904891194402595,
+            0.00481181272150908
+          ],
+          "same_16block_SE": [
+            0.011602272795554968,
+            0.0006046584777584636,
+            0.06950382712341517,
+            0.003475056982206794,
+            0.003337200479867991
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0014923430626778607,
+          0.0004343821227758495,
+          0.00041715005998349883
+        ],
+        "ready_original_and_three_forecast_conditions": true,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": 1.0324341494656044e-08,
+          "IID_SE": 6.014635274917995e-08,
+          "same_16block_SE": 4.179099165781314e-08
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state14.local",
+      "model": "local",
+      "date": 0.75,
+      "spot": 120.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            5.187734257318793,
+            0.24234641403035326,
+            0.04285720191937771,
+            0.20782015603684967,
+            0.041226030977381325
+          ],
+          "IID_SE": [
+            0.0814137665441516,
+            0.0012397435992378004,
+            0.015217892194861457,
+            0.01237303801212883,
+            0.01463869004364805
+          ],
+          "same_16block_SE": [
+            0.10185474125587593,
+            0.0011889016288915654,
+            0.018667158997483276,
+            0.014959715866163223,
+            0.017956675672332906
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.010176720818018946,
+          0.0018699644832704024,
+          0.002244584459041613
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state15.heston",
+      "status": "not_executed_fit_unknown",
+      "qualification": "unknown",
+      "proposal_measurement": null
+    },
+    {
+      "slot_id": "state15.local",
+      "model": "local",
+      "date": 0.9166666666666666,
+      "spot": 80.0,
+      "original_status": "unknown_underresolved",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            5.592948943916352e-83,
+            2.656081694327983e-81,
+            9.725949593297608e-80,
+            -4.5567303146726877e-82,
+            2.0595567550451013e-78
+          ],
+          "IID_SE": [
+            5.592948943916237e-83,
+            2.6560816943279183e-81,
+            9.725949593297676e-80,
+            4.556730314672739e-82,
+            2.0595567550450565e-78
+          ],
+          "same_16block_SE": [
+            5.592948943916355e-83,
+            2.6560816943279815e-81,
+            9.725949593297608e-80,
+            4.556730314672686e-82,
+            2.0595567550451006e-78
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          6.99118617989544e-84,
+          5.6959128933408596e-83,
+          2.5744459438063767e-79
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state16.heston",
+      "model": "heston",
+      "date": 0.9166666666666666,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.19521747142518264,
+            0.045087860287153114,
+            2.113606960838782,
+            0.01417911286007093,
+            0.050931086415026534
+          ],
+          "IID_SE": [
+            0.008375095783090432,
+            0.0012840961159717836,
+            0.10481370219434029,
+            0.0011476997585522567,
+            0.0025256709609909255
+          ],
+          "same_16block_SE": [
+            0.009451262590524768,
+            0.0014558989533063383,
+            0.11481131539918646,
+            0.0014209574683975103,
+            0.002766581078867315
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0010468869728863042,
+          0.0001776196835496888,
+          0.00034582263485841434
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.04,
+        "new_variance": 0.04,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.2034464385353883,
+            0.04611513897845102,
+            2.2086970818965077,
+            0.013815822448862808,
+            0.053222450543995964
+          ],
+          "IID_SE": [
+            0.001472020268902949,
+            0.00021124474728635104,
+            0.005860602676017659,
+            0.00025014975307310894,
+            0.0001412215548428815
+          ],
+          "same_16block_SE": [
+            0.00140483079093057,
+            0.0002540237206109538,
+            0.006079829265104267,
+            0.0002884669221111737,
+            0.00014650420604535912
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.00018400253361286885,
+          3.605836526389671e-05,
+          1.8313025755669955e-05
+        ],
+        "ready_original_and_three_forecast_conditions": true,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": 2.0786840102293193e-09,
+          "IID_SE": 2.532631653555029e-08,
+          "same_16block_SE": 2.580881079815333e-08
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state16.local",
+      "model": "local",
+      "date": 0.9166666666666666,
+      "spot": 100.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            0.19707568654287683,
+            0.04178262271343261,
+            0.09270804414073272,
+            0.01971486818913249,
+            0.041485564596114896
+          ],
+          "IID_SE": [
+            0.00894899890458366,
+            0.0012161070609157038,
+            0.004309797444167021,
+            0.0009024841113621342,
+            0.0019285746120881147
+          ],
+          "same_16block_SE": [
+            0.0071909954573684855,
+            0.0010061996351919962,
+            0.0034707008856434502,
+            0.0008633662646845068,
+            0.0015530905340488438
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0011186248630729557,
+          0.00010792078308556338,
+          0.00019413631675610537
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    },
+    {
+      "slot_id": "state17.heston",
+      "model": "heston",
+      "date": 0.9166666666666666,
+      "spot": 120.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            1.6771147812063876,
+            0.08180836842351825,
+            0.09647051911993433,
+            0.07639702911525542,
+            0.005959369775878709
+          ],
+          "IID_SE": [
+            0.024085035708353974,
+            0.00039546010045606684,
+            0.13969012858273028,
+            0.0076360944820008944,
+            0.00862921789847109
+          ],
+          "same_16block_SE": [
+            0.02503328294405996,
+            0.00043203760014983377,
+            0.14356285747015246,
+            0.007845061361891706,
+            0.008868451849862844
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0030106294635442463,
+          0.0009806326702364637,
+          0.0011085564812328556
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      },
+      "Heston_geometric_weighted_aux_variance_fixed_beta1": {
+        "variance_formula": "integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+        "old_variance": 0.07684462485219158,
+        "new_variance": 0.07684462485219158,
+        "reconstruction": "aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            1.6930821941519048,
+            0.08186641494683447,
+            0.2084448298013311,
+            0.07017407918044585,
+            0.01287647076006613
+          ],
+          "IID_SE": [
+            0.002323399121613997,
+            0.00016789544150731627,
+            0.02162079368801091,
+            0.0013742636394666425,
+            0.0013356028930937636
+          ],
+          "same_16block_SE": [
+            0.0024145211241032535,
+            0.00021561703615979584,
+            0.027564793514493455,
+            0.001756736105994367,
+            0.0017027875339240925
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0002904248902017495,
+          0.00021959201324929598,
+          0.00021284844174051162
+        ],
+        "ready_original_and_three_forecast_conditions": true,
+        "homogeneous_VS_vs_new_aux_CRN_spot_difference": {
+          "mean": -5.728751743023662e-09,
+          "IID_SE": 3.884592323672067e-09,
+          "same_16block_SE": 3.239962609404813e-09
+        },
+        "control_chain": "new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+        "source_change": "proposal only; current DESIGN expected-average control remains unchanged",
+        "certification": "no independent Asian oracle/bias/source freeze qualification"
+      }
+    },
+    {
+      "slot_id": "state17.local",
+      "model": "local",
+      "date": 0.9166666666666666,
+      "spot": 120.0,
+      "original_status": "ready",
+      "qualification": "unknown",
+      "original_precision_gates_unchanged": true,
+      "CE_only_fixed_beta0_diagnostic": {
+        "scope": "different estimator proposal; not accepted current beta1 teacher",
+        "statistics_price_VS_Vtheta_hS_hQ": {
+          "mean": [
+            1.6779122678489442,
+            0.0821120776289055,
+            0.0028130088245382056,
+            0.0786716211568921,
+            0.003940483806598152
+          ],
+          "IID_SE": [
+            0.023192942660293623,
+            0.0002810444687422223,
+            0.004157337232565249,
+            0.005101213350358189,
+            0.005823629097992691
+          ],
+          "same_16block_SE": [
+            0.015045809019164054,
+            0.0002688049348275907,
+            0.002788419533828944,
+            0.0034781242705916792,
+            0.0039060389442108117
+          ]
+        },
+        "sqrt_scaling_N65536_SE_price_hS_hQ": [
+          0.0028991178325367016,
+          0.0004347655338239599,
+          0.0004882548680263514
+        ],
+        "rare_tail_validity": "unknown even if SE becomes small"
+      }
+    }
+  ],
+  "Heston_weighted_aux_summary": {
+    "original_ready_slots": 15,
+    "three_N65536_reference_conditions": 10,
+    "ready_forecast_hS_fail_slots": [
+      "state00.heston",
+      "state04.heston",
+      "state05.heston",
+      "state08.heston"
+    ],
+    "ready_forecast_hQ_fail_slots": [
+      "state03.heston"
+    ]
+  },
+  "sqrt_scaling_guarantee": false,
+  "local_homogeneity_applied": false,
+  "beta_optimization_applied": false,
+  "original_artifact_bindings": {
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-preflight.json": "50313a08abe3a4ce5abce65b909d44f7b33e7337a2725951b4294a788abc058d",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-preflight.npz": "6e1248871e594793bcf2297e4bf32c9fabe238dd4ecdfed2677b25cdbd544e65",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-preflight.py": "4b0a7a217d0af7cb5a73f505268f474e8f5a2aa4bef85ac5c3a6b7b65403a3c3",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-preflight.txt": "7433f73b497bcaff898abb8e47b65418f942ea9427f54e463b929bb3383939f1"
+  },
+  "source_input_binding_changes": {},
+  "original_artifact_changes": {},
+  "elapsed_wall_seconds": 0.23313161899977786,
+  "derived_arrays_bytes": 2129920,
+  "limitations": "Controls choices are proposals; finite-N mean differences do not prove price accuracy. Current original underresolution/status/qualification not revised.",
+  "source_sha256": "112017356f22d11c4aa750b2e8d4852b8880df7083d4b82efada66dd3443c7c0",
+  "npz_sha256": "5d05e5176afc553f58decfe60f111d268cae92125d78f40e876382b8aab504ca"
+}

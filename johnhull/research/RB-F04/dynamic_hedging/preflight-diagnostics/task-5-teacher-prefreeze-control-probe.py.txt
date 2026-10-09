@@ -1,0 +1,124 @@
+"""Scratch controls comparison from frozen N1024 primitives; no RNG/SDE/source changes."""
+from pathlib import Path
+import hashlib,json,time
+import numpy as np
+from scipy.special import ndtr,log_ndtr
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+W=ROOT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+P="task-5-teacher-prefreeze-control-probe"
+r=json.loads((W/"task-5-teacher-preflight.json").read_text())
+z=np.load(W/"task-5-teacher-preflight.npz",allow_pickle=False)
+started=time.perf_counter()
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+original={str(W/"task-5-teacher-preflight."+e):sha(W/"task-5-teacher-preflight."+e) for e in []}
+bindings={str(W/f"task-5-teacher-preflight.{e}"):sha(W/f"task-5-teacher-preflight.{e}") for e in ["json","npz","py","txt"]}
+def clean(v):
+    if isinstance(v,dict):return {k:clean(x) for k,x in v.items()}
+    if isinstance(v,(list,tuple)):return [clean(x) for x in v]
+    if isinstance(v,np.ndarray):return clean(v.tolist())
+    if isinstance(v,(np.integer,)):return int(v)
+    if isinstance(v,(bool,np.bool_)):return bool(v)
+    if isinstance(v,(float,np.floating)):return float(v) if np.isfinite(v) else None
+    return v
+def moments(a):
+    a=np.asarray(a);b=a.reshape(16,64,*a.shape[1:]).mean(1)
+    return {"mean":a.mean(0),"IID_SE":a.std(0,ddof=1)/32,"same_16block_SE":b.std(0,ddof=1)/4}
+def lognormal_tail(c,mu,sigma,x):
+    c,mu,sigma,x=np.broadcast_arrays(*map(np.asarray,[c,mu,sigma,x]))
+    d2=(np.log(c)+mu-np.log(x))/sigma;d1=d2+sigma
+    loga=np.log(c)+mu+.5*sigma*sigma+log_ndtr(d1)
+    logb=np.log(x)+log_ndtr(d2)
+    price=np.exp(loga)*-np.expm1(logb-loga)
+    moment=c*np.exp(mu+.5*sigma*sigma)*ndtr(d1)
+    return price,moment
+def geometric_weighted_variance(state,delays):
+    left=np.r_[0,delays[:-1]];right=delays
+    weight=(np.arange(len(delays),0,-1)/len(delays))**2
+    theta,kappa=r["parameters"]["theta"],r["parameters"]["kappa"]
+    expected_integrals=theta*(right-left)+(state-theta)*(np.exp(-kappa*left)-np.exp(-kappa*right))/kappa
+    return float((weight*expected_integrals).sum()/(weight*(right-left)).sum())
+def ce_components(row,outcome):
+    prefix=outcome["raw_prefix"];D=outcome["discount"];S=outcome["spot"];x=outcome["threshold"]
+    ce=z[prefix+".price_samples"][:,1]
+    hom=D*(z[prefix+".labels.conditioned_samples"][:,0]-x*z[prefix+".labels.conditioned_x_samples"][:,0])/12
+    return ce,hom
+def new_aux(row,outcome):
+    prefix=outcome["raw_prefix"];meta=outcome["primitive_metadata"]
+    old=meta["control_variance"];delays=z[prefix+".primitives.fixing_delays"];m=len(delays)
+    new=geometric_weighted_variance(outcome["state"],delays)
+    ratio=np.sqrt(new/old)
+    drift=r["parameters"]["rate"]-r["parameters"]["dividend_yield"]
+    mean_delay=delays.mean()
+    old_mu=(drift-old/2)*mean_delay
+    new_mu=(drift-new/2)*mean_delay
+    aux_prefix=z[prefix+".primitives.aux_logG_prefix"]
+    new_prefix=new_mu+ratio*(aux_prefix-old_mu)
+    loading=meta["aux_last_loading"]*ratio
+    c=m*np.exp(new_prefix);x=outcome["threshold"];D=outcome["discount"];S=outcome["spot"]
+    aux,auxmoment=lognormal_tail(c,0,loading,x)
+    knownsigma=np.sqrt(new*np.minimum.outer(delays,delays).mean())
+    known,knownmoment=lognormal_tail(m,new_mu,knownsigma,x)
+    ce,hce=ce_components(row,outcome)
+    samples=ce-aux*D*S/12+known*D*S/12
+    homogeneous=hce-auxmoment*D/12+knownmoment*D/12
+    return samples,homogeneous,new
+rows=[];derived={}
+for row in r["rows"]:
+    sid=row["slot_id"]
+    if "base" not in row:
+        rows.append({"slot_id":sid,"status":"not_executed_fit_unknown","qualification":"unknown","proposal_measurement":None});continue
+    b=row["base"];risk=row["risk"];ct=row["call_Ctheta"];cs=row["call_CS"];dv=risk["state_bump"];ds=risk["spot_bump"]
+    names={"base":b,**row["bumps"]}
+    ce={name:ce_components(row,value)[0] for name,value in names.items()}
+    cet=(ce["state_plus"]-ce["state_minus"])/(2*dv)
+    ces=(ce["spot_plus"]-ce["spot_minus"])/(2*ds)
+    hq=cet/ct;hs=ces-cs*hq
+    cejoint=np.column_stack([ce["base"],ces,cet,hs,hq])
+    out={"slot_id":sid,"model":row["model"],"date":row["date"],"spot":row["spot"],"original_status":b["label_status"],
+        "qualification":"unknown","original_precision_gates_unchanged":True,
+        "CE_only_fixed_beta0_diagnostic":{"scope":"different estimator proposal; not accepted current beta1 teacher",
+            "statistics_price_VS_Vtheta_hS_hQ":moments(cejoint),
+            "sqrt_scaling_N65536_SE_price_hS_hQ":np.array([moments(ce["base"])["IID_SE"],moments(hs)["same_16block_SE"],moments(hq)["same_16block_SE"]])/8,
+            "rare_tail_validity":"unknown even if SE becomes small"}}
+    derived[sid+".CE_only_price_VS_Vtheta_hS_hQ"]=cejoint
+    if row["model"]=="heston":
+        new={name:new_aux(row,value) for name,value in names.items()}
+        vt=(new["state_plus"][0]-new["state_minus"][0])/(2*dv)
+        vs=new["base"][1];hq=vt/ct;hs=vs-cs*hq
+        joint=np.column_stack([new["base"][0],vs,vt,hs,hq])
+        pred=np.array([moments(new["base"][0])["IID_SE"],moments(hs)["same_16block_SE"],moments(hq)["same_16block_SE"]])/8
+        rawvs=(new["spot_plus"][0]-new["spot_minus"][0])/(2*ds)
+        out["Heston_geometric_weighted_aux_variance_fixed_beta1"]={
+            "variance_formula":"integral E[v(u)]*(remaining_fixing_count/m)^2 du divided by integral (remaining_fixing_count/m)^2 du",
+            "old_variance":b["primitive_metadata"]["control_variance"],"new_variance":new["base"][2],
+            "reconstruction":"aux_prefix_new=mu_new+sqrt(vnew/vold)*(aux_prefix_old-mu_old); loading_new=sqrt(vnew/vold)*loading_old",
+            "statistics_price_VS_Vtheta_hS_hQ":moments(joint),
+            "sqrt_scaling_N65536_SE_price_hS_hQ":pred,
+            "ready_original_and_three_forecast_conditions":bool(b["label_status"]=="ready" and np.all(pred<=[.03,.002,.005])),
+            "homogeneous_VS_vs_new_aux_CRN_spot_difference":moments(vs-rawvs),
+            "control_chain":"new variance recomputed at both state bumps, known geometric expectation recomputed; no theta chain omitted",
+            "source_change":"proposal only; current DESIGN expected-average control remains unchanged",
+            "certification":"no independent Asian oracle/bias/source freeze qualification"}
+        derived[sid+".Heston_weighted_aux_price_VS_Vtheta_hS_hQ"]=joint
+    rows.append(out)
+readyH=[x for x in rows if x.get("model")=="heston" and x.get("original_status")=="ready"]
+result={"scope":"saved-only constant-vol auxiliary/control diagnosis; fixed original N1024; no new drivers or finance source changes",
+    "original_slots":36,"computed_slots":35,"qualification_unknown_slots":36,"rows":rows,
+    "Heston_weighted_aux_summary":{"original_ready_slots":len(readyH),
+        "three_N65536_reference_conditions":sum(x["Heston_geometric_weighted_aux_variance_fixed_beta1"]["ready_original_and_three_forecast_conditions"] for x in readyH),
+        "ready_forecast_hS_fail_slots":[x["slot_id"] for x in readyH if x["Heston_geometric_weighted_aux_variance_fixed_beta1"]["sqrt_scaling_N65536_SE_price_hS_hQ"][1]>.002],
+        "ready_forecast_hQ_fail_slots":[x["slot_id"] for x in readyH if x["Heston_geometric_weighted_aux_variance_fixed_beta1"]["sqrt_scaling_N65536_SE_price_hS_hQ"][2]>.005]},
+    "sqrt_scaling_guarantee":False,"local_homogeneity_applied":False,"beta_optimization_applied":False,
+    "original_artifact_bindings":bindings,
+    "source_input_binding_changes":{k:sha(ROOT/k) for k,v in r["source_bindings"].items() if sha(ROOT/k)!=v},
+    "original_artifact_changes":{k:sha(k) for k,v in bindings.items() if sha(k)!=v},
+    "elapsed_wall_seconds":time.perf_counter()-started,"derived_arrays_bytes":sum(a.nbytes for a in derived.values()),
+    "limitations":"Controls choices are proposals; finite-N mean differences do not prove price accuracy. Current original underresolution/status/qualification not revised."}
+assert not result["original_artifact_changes"] and not result["source_input_binding_changes"]
+np.savez_compressed(W/(P+".npz"),**derived)
+result["source_sha256"]=sha(__file__);result["npz_sha256"]=sha(W/(P+".npz"))
+(W/(P+".json")).write_text(json.dumps(clean(result),ensure_ascii=False,indent=2,allow_nan=False)+"\n")
+print(json.dumps(clean({k:v for k,v in result.items() if k not in ["rows","original_artifact_bindings"]}),indent=2))
+for x in readyH:
+    v=x["Heston_geometric_weighted_aux_variance_fixed_beta1"]
+    print(x["slot_id"],"oldctl",v["old_variance"],"newctl",v["new_variance"],"newSEforecast",v["sqrt_scaling_N65536_SE_price_hS_hQ"],"CEforecast",x["CE_only_fixed_beta0_diagnostic"]["sqrt_scaling_N65536_SE_price_hS_hQ"])

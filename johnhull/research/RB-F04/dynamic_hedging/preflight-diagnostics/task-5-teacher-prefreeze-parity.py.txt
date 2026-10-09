@@ -1,0 +1,129 @@
+"""Scratch call/put parity beta1 estimators, all frozen original N1024 slots."""
+from pathlib import Path
+import hashlib,json,time
+import numpy as np
+from scipy.special import ndtr,log_ndtr
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+W=ROOT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging";P="task-5-teacher-prefreeze-parity"
+r=json.loads((W/"task-5-teacher-preflight.json").read_text())
+z=np.load(W/"task-5-teacher-preflight.npz",allow_pickle=False)
+started=time.perf_counter()
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+bindings={str(W/f"task-5-teacher-preflight.{e}"):sha(W/f"task-5-teacher-preflight.{e}") for e in ["json","npz","py","txt"]}
+def clean(v):
+    if isinstance(v,dict):return {k:clean(x) for k,x in v.items()}
+    if isinstance(v,(list,tuple)):return [clean(x) for x in v]
+    if isinstance(v,np.ndarray):return clean(v.tolist())
+    if isinstance(v,(np.integer,)):return int(v)
+    if isinstance(v,(bool,np.bool_)):return bool(v)
+    if isinstance(v,(float,np.floating)):return float(v) if np.isfinite(v) else None
+    return v
+def compare(a,b,label):
+    assert np.allclose(a,b,rtol=2e-10,atol=1e-10,equal_nan=True),label
+def stats(a):
+    a=np.asarray(a);blocks=a.reshape(16,64,*a.shape[1:]).mean(axis=1)
+    return {"mean":a.mean(axis=0),"IID_SE":a.std(axis=0,ddof=1)/32,
+        "same_16block_SE":blocks.std(axis=0,ddof=1)/4,
+        "same_16block_covariance_of_mean":np.cov(blocks,rowvar=False,ddof=1)/16 if a.ndim>1 else np.var(blocks,ddof=1)/16}
+def put_tail(b,c,mu,sigma,x):
+    b,c,mu,sigma,x=np.broadcast_arrays(*[np.asarray(v,dtype=float) for v in [b,c,mu,sigma,x]])
+    p=np.zeros(b.shape);px=np.zeros(b.shape)
+    stoch=(sigma>0)&(c>0);pos=stoch&(x>b)
+    k=x[pos]-b[pos];d2=(np.log(c[pos])+mu[pos]-np.log(k))/sigma[pos];d1=d2+sigma[pos]
+    logfirst=np.log(k)+log_ndtr(-d2);logsecond=np.log(c[pos])+mu[pos]+.5*sigma[pos]**2+log_ndtr(-d1)
+    p[pos]=np.exp(logfirst)*-np.expm1(logsecond-logfirst);px[pos]=ndtr(-d2)
+    deterministic=~stoch;terminal=b+c*np.exp(mu)
+    p[deterministic]=np.maximum(x[deterministic]-terminal[deterministic],0)
+    px[deterministic]=(x[deterministic]>terminal[deterministic]).astype(float)
+    px[deterministic&(x==terminal)]=np.nan
+    return p,px
+derived={}
+def measure(row,outcome):
+    pref=outcome["raw_prefix"];meta=outcome["primitive_metadata"]
+    get=lambda k:z[pref+".primitives."+k]
+    x=outcome["threshold"];D=outcome["discount"];S=outcome["spot"]
+    b,c,mu,sigma=[get(k) for k in ["b","c","mu","sigma"]]
+    model_put,model_px=put_tail(b,c,mu,sigma,x)
+    condEY=b+c*np.exp(mu+.5*sigma*sigma)
+    m=len(get("fixing_delays"));loading=meta["aux_last_loading"];ac=m*np.exp(get("aux_logG_prefix"))
+    aux_put,aux_px=put_tail(0,ac,0,loading,x);condAuxEY=ac*np.exp(.5*loading**2)
+    delays=get("fixing_delays");v=meta["control_variance"];drift=r["parameters"]["rate"]-r["parameters"]["dividend_yield"]
+    knownmu=(drift-v/2)*delays.mean();knownsig=np.sqrt(v*np.minimum.outer(delays,delays).mean())
+    knownput,knownpx=put_tail(0,m,knownmu,knownsig,x)
+    knownEY=np.exp(drift*delays).sum();knownAuxEY=m*np.exp(knownmu+.5*knownsig**2)
+    fput=model_put-aux_put+knownput+knownEY-x
+    fxput=model_px-aux_px+knownpx-1
+    fcall=z[pref+".labels.cv_samples"][:,0]
+    fxcall=z[pref+".labels.f_x_samples"][:,0]
+    forward_residual=condEY-condAuxEY-(knownEY-knownAuxEY)
+    compare(model_put,z[pref+".labels.conditioned_samples"][:,0]-condEY+x,pref+"independent model call-put parity")
+    compare(aux_put,z[pref+".labels.aux_conditioned_samples"][:,0]-condAuxEY+x,pref+"independent aux call-put parity")
+    compare(fput,fcall-forward_residual,pref+"independent CV parity")
+    compare(fxput,fxcall,pref+"parity x derivative invariant")
+    putprice=D*S*fput/12
+    callprice=z[pref+".price_samples"][:,2]
+    homput=D*(fput-x*fxput)/12;homcall=D*(fcall-x*fxcall)/12
+    derived[pref+".call_put_price_forward_residual"]=np.column_stack([callprice,putprice,D*S*forward_residual/12])
+    return {"price_put":putprice,"price_call":callprice,"f_put":fput,"f_x_put":fxput,
+        "homVS_put":homput,"homVS_call":homcall,"forward_residual":D*S*forward_residual/12,
+        "original_status":outcome["label_status"],"known_model_EY":knownEY,"known_aux_EY":knownAuxEY}
+rows=[]
+for row in r["rows"]:
+    sid=row["slot_id"]
+    if "base" not in row:
+        rows.append({"slot_id":sid,"model":row["model"],"status":"not_executed_fit_unknown","reason":row["failure"],"qualification":"unknown"});continue
+    outcomes={"base":row["base"],**row["bumps"]};values={name:measure(row,val) for name,val in outcomes.items()}
+    ds=row["risk"]["spot_bump"];dv=row["risk"]["state_bump"];cs=row["call_CS"];ct=row["call_Ctheta"]
+    out={"slot_id":sid,"model":row["model"],"date":row["date"],"spot":row["spot"],"state":row["fitted_state"],
+        "original_path_count":1024,"original_status":row["base"]["label_status"],"qualification":"unknown",
+        "call_CS":cs,"call_Ctheta":ct,"denominator_error":"unmeasured","bump_bias":"unmeasured",
+        "models_EY_known_by_Q_martingale":values["base"]["known_model_EY"],
+        "aux_EY_known_by_separate_GBM":values["base"]["known_aux_EY"],"selected_estimator":None}
+    for variant in ["call","put"]:
+        vs=(values["spot_plus"]["price_"+variant]-values["spot_minus"]["price_"+variant])/(2*ds)
+        vt=(values["state_plus"]["price_"+variant]-values["state_minus"]["price_"+variant])/(2*dv)
+        hq=vt/ct;hs=vs-cs*hq
+        joint=np.column_stack([values["base"]["price_"+variant],vs,vt,hs,hq])
+        derived[sid+"."+variant+".price_VS_Vtheta_hS_hQ"]=joint
+        summary=stats(joint);pred=np.array([summary["IID_SE"][0],summary["same_16block_SE"][3],summary["same_16block_SE"][4]])/8
+        out[variant+"_beta1"]={"statistics":summary,"component_order":["price","VS","Vtheta","hS","hQ"],
+            "forecast_N65536_SE_price_hS_hQ":pred,"forecast_guarantee":False,
+            "three_N65536_reference_conditions":bool(row["base"]["label_status"]=="ready" and all(v["original_status"]=="ready" for v in values.values()) and np.all(pred<=[.03,.002,.005])),
+            "original_unknown_status_preserved":row["base"]["label_status"]!="ready"}
+        if variant=="call":
+            compare(joint[:,1:],z[sid+".risk.samples"],sid+"original call CRN risk unchanged")
+        if row["model"]=="heston":
+            hvs=values["base"]["homVS_"+variant];hhs=hvs-cs*hq
+            homjoint=np.column_stack([hvs,hhs,hq])
+            derived[sid+"."+variant+".homVS_hS_hQ"]=homjoint
+            out[variant+"_beta1"]["Heston_homogeneous_VS_hS_hQ"]=stats(homjoint)
+    putjoint=derived[sid+".put.price_VS_Vtheta_hS_hQ"];calljoint=derived[sid+".call.price_VS_Vtheta_hS_hQ"]
+    difference=putjoint-calljoint
+    out["paired_put_minus_call"]=stats(difference)
+    out["paired_formula_check"]="PASS: f_put=f_call-centered conditional model-minus-aux forward residual; f_x invariant"
+    out["forward_residual_statistics"]=stats(values["base"]["forward_residual"])
+    rows.append(out)
+ready=[x for x in rows if x.get("original_status")=="ready"]
+result={"scope":"two unconditional beta1 parity-equivalent estimators, original saved N1024 only; no data-driven winner selection",
+    "formula":"putCV=Pmodel-Paux+E[Paux]+EYmodel-x = callCV-(conditionalEYmodel-conditionalEYaux)+(EYmodel-EYaux)",
+    "original_slots":36,"computed_slots":35,"not_executed_fit_unknown_slots":1,"qualification_unknown_slots":36,"rows":rows,
+    "unmeasured_errors_remain_unknown":["numerical_SDE_bias","finite_bump_bias","oracle_error","denominator_error","production_interpolation_error","SE_sampling_error","Greek_population_moment"],
+    "source_input_binding_changes":{k:sha(ROOT/k) for k,v in r["source_bindings"].items() if sha(ROOT/k)!=v},
+    "original_artifact_bindings":bindings,"original_artifact_changes":{k:sha(k) for k,v in bindings.items() if sha(k)!=v},
+    "forecasts":{"N":65536,"rule":"N1024 SE/8","guarantee":False,"execution":False,"ready_slots":len(ready),
+        "call_ready_three_SE_reference_conditions":sum(x["call_beta1"]["three_N65536_reference_conditions"] for x in ready),
+        "put_ready_three_SE_reference_conditions":sum(x["put_beta1"]["three_N65536_reference_conditions"] for x in ready)},
+    "local_homogeneity_applied":False,"beta_optimized":False,"estimator_selected":False,
+    "raw_derived_arrays_bytes":sum(a.nbytes for a in derived.values()),"elapsed_wall_seconds":time.perf_counter()-started}
+assert len(rows)==36 and len(ready)==30
+assert not result["source_input_binding_changes"] and not result["original_artifact_changes"]
+np.savez_compressed(W/(P+".npz"),**derived)
+result["source_sha256"]=sha(__file__);result["npz_sha256"]=sha(W/(P+".npz"))
+(W/(P+".json")).write_text(json.dumps(clean(result),ensure_ascii=False,indent=2,allow_nan=False)+"\n")
+print(json.dumps(clean({k:v for k,v in result.items() if k not in ["rows","original_artifact_bindings"]}),indent=2))
+for row in rows:
+ if row.get("original_status") is None:print(row["slot_id"],row["status"]);continue
+ print(row["slot_id"],row["original_status"],"callSEfore",row["call_beta1"]["forecast_N65536_SE_price_hS_hQ"],
+       "putSEfore",row["put_beta1"]["forecast_N65536_SE_price_hS_hQ"],
+       "priceMeans",[row[v+"_beta1"]["statistics"]["mean"][0] for v in ["call","put"]],
+       "pairedPriceDifferenceSE",row["paired_put_minus_call"]["same_16block_SE"][0])

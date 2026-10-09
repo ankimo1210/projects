@@ -1,0 +1,23 @@
+from pathlib import Path
+import json,numpy as np
+r=json.loads(Path("/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-preflight.json").read_text())
+z=np.load("/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-preflight.npz")
+for row in r["rows"]:
+    if "base" not in row:continue
+    sid=row["slot_id"];b=row["base"];risk=row["risk"];old=z[sid+".risk.samples"];x=b["threshold"];d=b["discount"]
+    if row["model"]=="heston":
+        vs=d*(z[sid+".base.labels.f_samples"][:,0]-x*z[sid+".base.labels.f_x_samples"][:,0])/12
+        hs=vs-row["call_CS"]*old[:,3]
+        samples=np.column_stack([vs,hs]);blocks=samples.reshape(16,64,2).mean(1)
+        se=blocks.std(axis=0,ddof=1)/4
+        diff=vs-old[:,0]
+        print(sid,"VSmean",vs.mean(),"old",old[:,0].mean(),"homVS/HSSE",se,"oldVS/HSSE",risk["same_16block_SE"][0:3:2],"hSforecast65536",se[1]/8,"maxsamplediff",abs(diff).max())
+    cov=z[sid+".risk.block_covariance_of_mean"]
+    v1=cov[0,0];v2=row["call_CS"]**2*cov[3,3];cross=-2*row["call_CS"]*cov[0,3]
+    if sid in ["state08.heston","state06.heston","state02.local","state03.local"]:
+        print("DECOMP",sid,"hS",v1,v2,cross,"ratios",np.array([v1,v2,cross])/cov[2,2])
+print("FORECAST original gates unchanged, SE/8 only")
+for row in r["rows"]:
+    if "base" not in row:continue
+    sid=row["slot_id"];b=row["base"];risk=row["risk"]
+    print(sid,b["label_status"],np.array([b["price_SE_raw_CE_CV"][2],*risk["same_16block_SE"][2:]])/8)
