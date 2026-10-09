@@ -1,0 +1,21 @@
+[
+  {
+    "args": [
+      "check",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+      "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py"
+    ],
+    "exit_code": 0,
+    "output": "All checks passed!\n"
+  },
+  {
+    "args": [
+      "format",
+      "--check",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+      "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py"
+    ],
+    "exit_code": 1,
+    "output": "Would reformat: johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py\n1 file would be reformatted, 1 file already formatted\n"
+  }
+]

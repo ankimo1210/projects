@@ -1,0 +1,16 @@
+{
+  "kind": "independent bounded fixed-domain source review probes",
+  "assertions": "pass",
+  "price_greeks_max_abs_error": 3.642086632282826e-13,
+  "block_greeks_max_abs_error": 8.167910792167277e-13,
+  "original_N": 32,
+  "original_shape": [
+    1,
+    7,
+    8
+  ],
+  "raw_unknown_nodes_preserved": true,
+  "no_evaluation_domain_unknown": true,
+  "linear_branch_independent_of_fit_and_patch": true,
+  "financial_domain_precision": "unverified"
+}

@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price",
+    "-q",
+    "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+  ],
+  "returncode": 1,
+  "wall_seconds": 0.5993389369996294,
+  "expected_missing_module": true
+}

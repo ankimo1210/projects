@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-domain-replay-source-review-probes.py", line 94, in <module>
+    run("exact saved metadata", expect="accept")
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-domain-replay-source-review-probes.py", line 90, in run
+    replay._same(before_saved, after_saved, "immutable_saved")
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py", line 41, in _same
+    _same(value, saved[key], f"{name}.{key}")
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py", line 41, in _same
+    _same(value, saved[key], f"{name}.{key}")
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py", line 53, in _same
+    equal = np.allclose(left, right, rtol=_RTOL, atol=_ATOL, equal_nan=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/projects/.venv/lib/python3.12/site-packages/numpy/_core/numeric.py", line 2376, in allclose
+    res = all(isclose(a, b, rtol=rtol, atol=atol, equal_nan=equal_nan))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/projects/.venv/lib/python3.12/site-packages/numpy/_core/numeric.py", line 2507, in isclose
+    result = (less_equal(abs(x - y), atol + rtol * abs(y))
+                             ~~^~~
+TypeError: unsupported operand type(s) for -: 'dict' and 'dict'

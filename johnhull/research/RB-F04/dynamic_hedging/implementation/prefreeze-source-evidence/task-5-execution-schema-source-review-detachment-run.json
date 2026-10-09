@@ -1,0 +1,8 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-execution-schema-source-review-detachment.py"
+  ],
+  "returncode": 0,
+  "wall_seconds": 0.1623736910005391
+}

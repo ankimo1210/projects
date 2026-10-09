@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap",
+    "johnhull/hullkit/tests/test_model_index.py",
+    "johnhull/hullkit/tests/test_docstrings.py",
+    "deep_hedge_price/tests/test_model_index.py",
+    "deep_hedge_price/tests/test_docstrings.py"
+  ],
+  "exit_code": 0
+}

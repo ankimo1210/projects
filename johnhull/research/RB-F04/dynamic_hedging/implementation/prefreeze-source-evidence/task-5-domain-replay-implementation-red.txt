@@ -1,0 +1,533 @@
+........................................................................ [ 72%]
+..........FFFFFFFFFFFFFFFFFF                                             [100%]
+=================================== FAILURES ===================================
+_ test_rebuild_fixed_domain_retains_full_original_nodes_and_unknown_tail_without_rng _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x768b38d23590>
+
+    def test_rebuild_fixed_domain_retains_full_original_nodes_and_unknown_tail_without_rng(monkeypatch):
+        from hullkit._dynamic_hedging_surfaces import evaluate_asian
+    
+        rows, p, axes = _domain_replay_fixture()
+        domain = [{"state": [1, 5], "threshold": [0, 4]}]
+>       original_tail = replay_teacher(rows[0]["primitives"], axes["threshold"], p)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: replay_teacher() missing 1 required positional argument: 'surface'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1045: TypeError
+_ test_rebuild_domain_descriptor_is_detached_and_explicit_none_never_uses_default _
+
+    def test_rebuild_domain_descriptor_is_detached_and_explicit_none_never_uses_default():
+        from hullkit._dynamic_hedging_surfaces import evaluate_asian
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+>       got = rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1087: TypeError
+_ test_rebuild_saved_domain_compares_full_arrays_with_tolerance_without_qualification _
+
+    def test_rebuild_saved_domain_compares_full_arrays_with_tolerance_without_qualification():
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+>       saved = rebuild_asian_cache(
+            rows, p, axes, model="heston", evaluation_domains=domains
+        )["cache"]
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1104: TypeError
+_____ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[domain] ______
+
+tamper = 'domain'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+_ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[noninteger_domain] _
+
+tamper = 'noninteger_domain'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+_____ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[schema] ______
+
+tamper = 'schema'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+______ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[sheet] ______
+
+tamper = 'sheet'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+_____ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[bounds] ______
+
+tamper = 'bounds'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+___ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[original_N] ____
+
+tamper = 'original_N'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+___ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[state_nodes] ___
+
+tamper = 'state_nodes'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+______ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[dates] ______
+
+tamper = 'dates'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+__ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[outside_mean] ___
+
+tamper = 'outside_mean'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+__ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[inside_block] ___
+
+tamper = 'inside_block'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+__ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[outside_block] __
+
+tamper = 'outside_block'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+__ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[group_status] ___
+
+tamper = 'group_status'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+___ test_rebuild_rejects_misbound_saved_domain_or_full_evidence[group_count] ___
+
+tamper = 'group_count'
+
+    @pytest.mark.parametrize(
+        "tamper",
+        [
+            "domain",
+            "noninteger_domain",
+            "schema",
+            "sheet",
+            "bounds",
+            "original_N",
+            "state_nodes",
+            "dates",
+            "outside_mean",
+            "inside_block",
+            "outside_block",
+            "group_status",
+            "group_count",
+        ],
+    )
+    def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        saved = copy.deepcopy(
+>           rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1148: TypeError
+___ test_rebuild_saved_legacy_missing_or_null_domain_metadata_is_compatible ____
+
+    def test_rebuild_saved_legacy_missing_or_null_domain_metadata_is_compatible():
+        import copy
+    
+        rows, p, axes = _domain_replay_fixture()
+        legacy = rebuild_asian_cache(rows, p, axes, model="heston")["cache"]
+>       assert rebuild_asian_cache(rows, p, axes, model="heston", saved_cache=legacy)["integrity"] == (
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            "pass"
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'saved_cache'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1187: TypeError
+____ test_rebuild_saved_local_domain_uses_t0_sheet_and_all_original_groups _____
+
+    def test_rebuild_saved_local_domain_uses_t0_sheet_and_all_original_groups():
+        from hullkit._dynamic_hedging_surfaces import evaluate_asian
+    
+        rows, p, axes = _domain_replay_fixture(model="local")
+        domains = [
+            {"spot": [1, 5], "state": [0, 4], "threshold": [1, 5]},
+            {"spot": [0, 4], "state": [0, 4], "threshold": [0, 4]},
+        ]
+>       first = rebuild_asian_cache(rows, p, axes, model="local", evaluation_domains=domains)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1229: TypeError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_fixed_domain_retains_full_original_nodes_and_unknown_tail_without_rng
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_domain_descriptor_is_detached_and_explicit_none_never_uses_default
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_saved_domain_compares_full_arrays_with_tolerance_without_qualification
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[domain]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[noninteger_domain]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[schema]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[sheet]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[bounds]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[original_N]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[state_nodes]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[dates]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[outside_mean]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[inside_block]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[outside_block]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[group_status]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_rejects_misbound_saved_domain_or_full_evidence[group_count]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_saved_legacy_missing_or_null_domain_metadata_is_compatible
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_saved_local_domain_uses_t0_sheet_and_all_original_groups
+18 failed, 82 passed in 0.91s

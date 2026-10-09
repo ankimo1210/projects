@@ -1,0 +1,50 @@
+{
+  "task": "bounded saved Asian fixed-domain replay adapter",
+  "implementation_files": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b",
+    "deep_hedge_price/tests/test_dynamic_hedging_replay.py": "d811e320f449c9cd92b2894b8da38b0de2c292d4423c06a74491288f12c04781"
+  },
+  "baseline_sha256": {
+    "source": "d52ac6ee48b9eb638701f35d08732fcfe9ada436c4d0f31a2d47cfb170589b61",
+    "tests": "5d257a9eb7ab191ac7a3153e588b90acf52624504d35ae5878694da59726801a"
+  },
+  "dependency_source_sha256": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe"
+  },
+  "canonical_design_review_sha256": "562bdf8fdfd6694ea6936c099df4bb9139e82754d15b390a46ae2802160f199f",
+  "TDD": {
+    "red_corrected": "19 failed, 82 passed",
+    "red_method": "isolated child process executes recorded baseline replay module, no source/Git rollback",
+    "green": "101 passed in 1.01s",
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS"
+  },
+  "old_function_ast_changes": [
+    "rebuild_asian_cache"
+  ],
+  "old_test_or_fixture_ast_changes": [],
+  "api": "rebuild_asian_cache(rows, parameters, axes, *, model, evaluation_domains=None, saved_cache=None)",
+  "domain_bindings": [
+    "evaluation_domains",
+    "evaluation_domain_schema",
+    "evaluation_domain_bounds",
+    "evaluation_domain_sheets"
+  ],
+  "configuration": "generation build validates/canonicalizes/detaches domains; replay consumes identical descriptor without selection",
+  "financial_comparisons": "full f/16blocks/axes/NaN support/t0 sheet and all retained group summaries use rtol2e-10/atol2e-11/equal_nan; semantic integer geometry and original counts are exact",
+  "legacy": "None argument retains old cache return; missing/null domain metadata in saved legacy compatible; explicit mismatches rejected",
+  "population": "full axes, originalN/status/16blocks/missing nodes/global and slice bindings retained",
+  "qualification": "unknown; no independent numerical precision or earlier SDE/global RNG verification",
+  "tests": "old82 preserved, 19 new cases including13tamper cases, legacy compatibility, no RNG/simulation, local t0 and original generated full-label cache",
+  "out_of_scope": [
+    "runner/study integration",
+    "hullkit edits",
+    "canonical docs",
+    "Git",
+    "formal pilot",
+    "financial RNG",
+    "independent source approval",
+    "main readiness"
+  ],
+  "independent_source_review": "pending root-assigned reviewer"
+}

@@ -1,0 +1,18 @@
+{
+  "original_test_ast_prefix_unchanged": true,
+  "original_source_definitions_unchanged": [
+    "_same",
+    "_original",
+    "_step_status",
+    "replay_teacher",
+    "_check_original_counts",
+    "_market_arrays",
+    "_mean_se",
+    "check_market",
+    "check_cash",
+    "check_statistics"
+  ],
+  "existing_source_definitions_changed": [
+    "rebuild_asian_cache"
+  ]
+}

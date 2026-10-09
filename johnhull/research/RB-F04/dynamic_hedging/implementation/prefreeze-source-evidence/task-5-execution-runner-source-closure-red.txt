@@ -1,0 +1,72 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+____ test_execution_source_requires_missing_real_fresh_entry_before_opening ____
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3720/test_execution_source_requires0')
+
+    def test_execution_source_requires_missing_real_fresh_entry_before_opening(tmp_path):
+        base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+        base.mkdir(parents=True)
+        (base / "reference_methods.py").write_text("REFERENCE = 1\n")
+        with pytest.raises(ValueError, match="required execution source.*run_fresh"):
+>           runner.execution_source_identity(tmp_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'dynamic_research_runner' has no attribute 'execution_source_identity'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:638: AttributeError
+___ test_execution_source_includes_both_phase_roots_and_relative_dependency ____
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3720/test_execution_source_includes0')
+
+    def test_execution_source_includes_both_phase_roots_and_relative_dependency(tmp_path):
+        base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+        base.mkdir(parents=True)
+        for name in ["run_reference", "check_initial_quotes", "check_selected_calls"]:
+            (base / f"{name}.py").write_text("SCALE = 1\n")
+        (base / "reference_methods.py").write_text("from .shared import SCALE\n")
+        (base / "run_fresh.py").write_text("from .shared import SCALE\n")
+        (base / "shared.py").write_text("SCALE = 2\n")
+>       identity = runner.execution_source_identity(tmp_path)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'dynamic_research_runner' has no attribute 'execution_source_identity'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:649: AttributeError
+______ test_execution_actual_metadata_guard_and_raw_closure_reach_loader _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71789489bcb0>
+
+    def test_execution_actual_metadata_guard_and_raw_closure_reach_loader(monkeypatch):
+        path = ROOT / "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+        helper_spec = importlib.util.spec_from_file_location("execution_unit_helpers", path)
+        helper = importlib.util.module_from_spec(helper_spec)
+        helper_spec.loader.exec_module(helper)
+        fixture = helper.execution_fixture()
+        frozen = runner.execution.freeze_execution(**fixture)
+        receipts = helper.closure(fixture, frozen)
+        closed = closed_fits_fixture()
+        raw_by_id = {r["id"]: r for r in closed["fits"]}
+        for row in receipts["fits"]:
+            raw = raw_by_id[row["id"]]
+            for key in ["status", "attempted", "original_n", "requested_updates", "updates",
+                        "elapsed_seconds", "checkpoint_id", "reason"]:
+                row[key] = raw[key]
+            row["selection_status"] = raw["status"]
+        receipts["closed_fits_sha256"] = runner.payload_digest(closed)
+        helper.seal_closure(fixture, frozen, receipts)
+        validation = {}
+        for row in receipts["validation"]:
+            ids = [c["id"] for c in row["candidates"]]
+            validation[row["id"]] = {
+                "losses": {identifier: np.full(2048, np.nan) for identifier in ids},
+                "qualifications": {identifier: np.zeros(2048, bool) for identifier in ids}}
+        # Only the physical source registry is a fixture; A guard and raw replay are actual.
+>       monkeypatch.setattr(runner, "execution_source_identity",
+                            lambda: {"protocol_source": fixture["source"]})
+E       AttributeError: <module 'dynamic_research_runner' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py'> has no attribute 'execution_source_identity'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:683: AttributeError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_source_requires_missing_real_fresh_entry_before_opening
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_source_includes_both_phase_roots_and_relative_dependency
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_actual_metadata_guard_and_raw_closure_reach_loader
+3 failed, 35 deselected in 1.68s

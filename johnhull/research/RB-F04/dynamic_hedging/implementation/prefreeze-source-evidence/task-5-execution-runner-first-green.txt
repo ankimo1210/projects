@@ -1,0 +1,81 @@
+...........................F.....F.                                      [100%]
+=================================== FAILURES ===================================
+_____ test_execution_runner_refuses_before_loader_for_empty_actual_freeze ______
+
+    def test_execution_runner_refuses_before_loader_for_empty_actual_freeze():
+        calls = []
+        with pytest.raises(ValueError, match="frozen"):
+>           runner.run_execution_main(
+                frozen={},
+                candidate={},
+                source={},
+                selection_receipts={},
+                raw_validation={},
+                main_test_loader=lambda: calls.append("opened"),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:493: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:312: in run_execution_main
+    result = _run_closed_main(
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:357: in _run_closed_main
+    readiness_guard(frozen, gate_candidate, source, selection_receipts)
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:569: in assert_execution_ready
+    _require(frozen.get("schema") == _SCHEMA, "execution schema required")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'execution schema required'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: execution schema required
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:33: ValueError
+
+During handling of the above exception, another exception occurred:
+
+    def test_execution_runner_refuses_before_loader_for_empty_actual_freeze():
+        calls = []
+>       with pytest.raises(ValueError, match="frozen"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'frozen'
+E         Actual message: 'execution schema required'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:492: AssertionError
+__ test_execution_runner_domain_generation_keeps_explicit_config_and_replays ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x74ffb63f3230>
+
+    def test_execution_runner_domain_generation_keeps_explicit_config_and_replays(monkeypatch):
+        domains = {"heston": [None] * 12, "local": [None] * 12}
+        bundle = runner.run_tiny(
+            original_n=16, updates=0, train=False, evaluation_domains_by_model=domains
+        )
+        domains["heston"][0] = {"state": [0, 4], "threshold": [0, 4]}
+        for model in ["heston", "local"]:
+            assert bundle["teachers"][model]["evaluation_domains"] == [None] * 12
+            cache = bundle["caches"][model]["asian"]
+            assert cache["evaluation_domains"] == [None] * 12
+            assert cache["original_N"] == 16
+        calls = []
+        real = runner.replay.rebuild_asian_cache
+    
+        def traced(*args, **kwargs):
+            assert kwargs["evaluation_domains"] == [None] * 12
+            assert kwargs["saved_cache"]["original_N"] == 16
+            calls.append(kwargs["model"])
+            return real(*args, **kwargs)
+    
+        monkeypatch.setattr(runner.replay, "rebuild_asian_cache", traced)
+        result = runner.check_bundle(bundle)
+        assert calls == ["heston", "local"]
+>       assert result["qualification"] == "unknown"
+               ^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'qualification'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:617: KeyError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_runner_refuses_before_loader_for_empty_actual_freeze
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_runner_domain_generation_keeps_explicit_config_and_replays
+2 failed, 33 passed in 29.01s

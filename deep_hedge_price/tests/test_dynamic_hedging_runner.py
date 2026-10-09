@@ -2,6 +2,7 @@
 
 import copy
 import importlib.util
+import json
 import sys
 import types
 from pathlib import Path
@@ -457,3 +458,334 @@ def test_tiny_saved_checker_rejects_erased_twelve_fit_roster():
     bundle["fits"]["fits"] = []
     with pytest.raises(ValueError, match="twelve"):
         runner.check_bundle(bundle)
+
+
+def execution_runner_fixture():
+    row, losses = validation_row(n=2048)
+    closed = closed_fits_fixture()
+    receipts = {
+        "validation": [],
+        "fits": copy.deepcopy(closed["fits"]),
+        "closed_fits_sha256": runner.payload_digest(closed),
+    }
+    raw = {}
+    for g in ["Heston", "local"]:
+        for u in ["U1", "U2"]:
+            record = copy.deepcopy(row)
+            record.update(id=f"selection:{g}:{u}", generator=g, universe=u)
+            receipts["validation"].append(record)
+            raw[record["id"]] = {"losses": copy.deepcopy(losses)}
+    return {
+        "frozen": {
+            "schema": "execution_boundary_fixture",
+            "selection": {"test_n": 32768, "precision_selection": "unavailable"},
+        },
+        "candidate": {"original_candidate": runner.candidate_protocol()},
+        "source": runner.source_identity()["protocol_source"],
+        "selection_receipts": receipts,
+        "raw_validation": raw,
+        "closed_fits": closed,
+    }
+
+
+def test_execution_runner_refuses_before_loader_for_empty_actual_freeze():
+    calls = []
+    with pytest.raises(ValueError, match="execution schema"):
+        runner.run_execution_main(
+            frozen={},
+            candidate={},
+            source={},
+            selection_receipts={},
+            raw_validation={},
+            main_test_loader=lambda: calls.append("opened"),
+        )
+    assert calls == []
+
+
+def test_execution_runner_uses_own_guard_and_preserves_unavailable_precision(monkeypatch):
+    args = execution_runner_fixture()
+    monkeypatch.setattr(runner, "execution_source_identity", runner.source_identity)
+    calls = []
+
+    def guard(frozen, candidate, source, selection):
+        assert candidate["original_candidate"] == runner.candidate_protocol()
+        assert frozen["selection"]["precision_selection"] == "unavailable"
+        assert "qualification" not in frozen
+        calls.append("execution_guard")
+
+    monkeypatch.setattr(runner.execution, "assert_execution_ready", guard)
+    monkeypatch.setattr(
+        runner.protocol,
+        "assert_main_ready",
+        lambda *args: pytest.fail("legacy gate must not be projected"),
+    )
+    out = runner.run_execution_main(
+        **args, main_test_loader=lambda: calls.append("test_opened") or {}
+    )
+    assert calls == ["execution_guard", "test_opened"]
+    assert out["qualification"] == "unknown"
+    assert out["precision_selection"] == "unavailable"
+    assert out["main_execution"] == "not_implemented"
+
+
+def test_execution_runner_rechecks_raw_validation_before_loader(monkeypatch):
+    args = execution_runner_fixture()
+    monkeypatch.setattr(runner, "execution_source_identity", runner.source_identity)
+    args["selection_receipts"]["validation"][0]["candidates"][0]["mse"] += 1
+    calls = []
+    monkeypatch.setattr(runner.execution, "assert_execution_ready", lambda *args: None)
+    with pytest.raises(ValueError, match="MSE"):
+        runner.run_execution_main(**args, main_test_loader=lambda: calls.append("opened"))
+    assert calls == []
+
+
+def test_execution_runner_keeps_all_failed_baselines_and_original_paths(monkeypatch):
+    args = execution_runner_fixture()
+    monkeypatch.setattr(runner, "execution_source_identity", runner.source_identity)
+    for record in args["selection_receipts"]["validation"]:
+        for item in record["candidates"]:
+            item.update(status="failed", mse=None, reason="original risk unqualified")
+        record.update(
+            status="failed",
+            selected_baseline=None,
+            selected_bands={"Heston": None, "local": None},
+            band_failures={"Heston": "all failed", "local": "all failed"},
+            reason="all original candidates failed",
+        )
+        raw = args["raw_validation"][record["id"]]
+        raw["qualifications"] = {name: np.zeros(2048, bool) for name in raw["losses"]}
+    calls = []
+
+    def loader():
+        calls.append("opened")
+        for raw in args["raw_validation"].values():
+            assert all(loss.shape == (2048,) for loss in raw["losses"].values())
+        return {}
+
+    monkeypatch.setattr(runner.execution, "assert_execution_ready", lambda *args: None)
+    out = runner.run_execution_main(**args, main_test_loader=loader)
+    assert calls == ["opened"]
+    assert out["qualification"] == "unknown"
+    assert all(r["selected_baseline"] is None for r in args["selection_receipts"]["validation"])
+
+
+def test_execution_runner_detaches_earlier_inputs_before_untrusted_loader(monkeypatch):
+    args = execution_runner_fixture()
+    monkeypatch.setattr(runner, "execution_source_identity", runner.source_identity)
+    checked = []
+
+    def guard(frozen, candidate, source, receipts):
+        checked.append(candidate["original_candidate"]["training"]["original_n"])
+
+    def loader():
+        args["candidate"]["original_candidate"]["training"]["original_n"] = 1
+        args["frozen"]["selection"]["precision_selection"] = "fabricated_success"
+        return {}
+
+    monkeypatch.setattr(runner.execution, "assert_execution_ready", guard)
+    out = runner.run_execution_main(**args, main_test_loader=loader)
+    assert checked == [8192]
+    assert out["precision_selection"] == "unavailable"
+    assert out["qualification"] == "unknown"
+
+
+def test_execution_runner_cli_demands_closed_inputs(capsys):
+    with pytest.raises(SystemExit) as exc:
+        runner.main(["--phase", "execution-main"])
+    assert exc.value.code == 2
+    assert "execution-main requires" in capsys.readouterr().err
+
+
+def test_execution_runner_domain_generation_keeps_explicit_config_and_replays(monkeypatch):
+    domains = {"heston": [None] * 12, "local": [None] * 12}
+    bundle = runner.run_tiny(
+        original_n=16, updates=0, train=False, evaluation_domains_by_model=domains
+    )
+    domains["heston"][0] = {"state": [0, 4], "threshold": [0, 4]}
+    for model in ["heston", "local"]:
+        assert bundle["teachers"][model]["evaluation_domains"] == [None] * 12
+        cache = bundle["caches"][model]["asian"]
+        assert cache["evaluation_domains"] == [None] * 12
+        assert cache["original_N"] == 16
+    calls = []
+    real = runner.replay.rebuild_asian_cache
+
+    def traced(*args, **kwargs):
+        assert kwargs["evaluation_domains"] == [None] * 12
+        assert kwargs["saved_cache"]["original_N"] == 16
+        calls.append(kwargs["model"])
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(runner.replay, "rebuild_asian_cache", traced)
+    result = runner.check_bundle(bundle)
+    assert calls == ["heston", "local"]
+    assert result["formal_pilot_qualification"] == "unknown"
+
+
+def test_execution_runner_saved_domain_tamper_cannot_change_generation_config():
+    domains = {"heston": [None] * 12, "local": [None] * 12}
+    bundle = runner.run_tiny(
+        original_n=16, updates=0, train=False, evaluation_domains_by_model=domains
+    )
+    bundle["caches"]["heston"]["asian"]["evaluation_domains"][0] = {
+        "state": [0, 4],
+        "threshold": [0, 4],
+    }
+    with pytest.raises(ValueError, match="domain"):
+        runner.check_bundle(bundle)
+
+
+def test_execution_source_requires_missing_real_fresh_entry_before_opening(tmp_path):
+    base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+    base.mkdir(parents=True)
+    (base / "reference_methods.py").write_text("REFERENCE = 1\n")
+    with pytest.raises(ValueError, match=r"required execution source.*run_fresh"):
+        runner.execution_source_identity(tmp_path)
+
+
+def test_execution_source_includes_both_phase_roots_and_relative_dependency(tmp_path):
+    base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+    base.mkdir(parents=True)
+    for name in ["run_reference", "check_initial_quotes", "check_selected_calls"]:
+        (base / f"{name}.py").write_text("SCALE = 1\n")
+    (base / "reference_methods.py").write_text("from .shared import SCALE\n")
+    (base / "run_fresh.py").write_text("from .shared import SCALE\n")
+    (base / "shared.py").write_text("SCALE = 2\n")
+    identity = runner.execution_source_identity(tmp_path)
+    assert {str(p.relative_to(tmp_path)) for p in base.glob("*.py")} <= set(identity["files"])
+    first = identity["files"][str((base / "shared.py").relative_to(tmp_path))]
+    (base / "shared.py").write_text("SCALE = 3\n")
+    second = runner.execution_source_identity(tmp_path)["files"][
+        str((base / "shared.py").relative_to(tmp_path))
+    ]
+    assert first != second
+
+
+def actual_execution_inputs():
+    path = ROOT / "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+    helper_spec = importlib.util.spec_from_file_location("execution_unit_helpers", path)
+    helper = importlib.util.module_from_spec(helper_spec)
+    helper_spec.loader.exec_module(helper)
+    fixture = helper.execution_fixture()
+    frozen = runner.execution.freeze_execution(**fixture)
+    receipts = helper.closure(fixture, frozen)
+    closed = closed_fits_fixture()
+    raw_by_id = {r["id"]: r for r in closed["fits"]}
+    for row in receipts["fits"]:
+        raw = raw_by_id[row["id"]]
+        for key in [
+            "status",
+            "attempted",
+            "original_n",
+            "requested_updates",
+            "updates",
+            "elapsed_seconds",
+            "checkpoint_id",
+            "reason",
+        ]:
+            row[key] = raw[key]
+        row["selection_status"] = raw["status"]
+        row["weights_sha256"] = (
+            runner.payload_digest(raw["raw_fit"]["weights"])
+            if raw["status"] == "completed"
+            else None
+        )
+        if raw["status"] == "failed":
+            row["failure_kind"] = "unqualified_training_data"
+    receipts["closed_fits_sha256"] = runner.payload_digest(closed)
+    helper.seal_closure(fixture, frozen, receipts)
+    validation = {}
+    for row in receipts["validation"]:
+        ids = [c["id"] for c in row["candidates"]]
+        validation[row["id"]] = {
+            "losses": {identifier: np.full(2048, np.nan) for identifier in ids},
+            "qualifications": {identifier: np.zeros(2048, bool) for identifier in ids},
+        }
+    return helper, fixture, frozen, receipts, validation, closed
+
+
+def test_execution_actual_metadata_guard_and_raw_closure_reach_loader(monkeypatch):
+    helper, fixture, frozen, receipts, validation, closed = actual_execution_inputs()
+    # Only the physical source registry is a fixture; A guard and raw replay are actual.
+    monkeypatch.setattr(
+        runner, "execution_source_identity", lambda: {"protocol_source": fixture["source"]}
+    )
+    calls = []
+    result = runner.run_execution_main(
+        frozen=frozen,
+        candidate=fixture["candidate"],
+        source=fixture["source"],
+        selection_receipts=receipts,
+        raw_validation=validation,
+        closed_fits=closed,
+        main_test_loader=lambda: calls.append("opened") or {},
+    )
+    assert calls == ["opened"]
+    assert result["qualification"] == "unknown" and result["precision_selection"] == "unavailable"
+    receipts["validation"][0]["selected_baseline"] = "greek:Heston"
+    helper.seal_closure(fixture, frozen, receipts)
+    calls.clear()
+    with pytest.raises(ValueError, match="baseline"):
+        runner.run_execution_main(
+            frozen=frozen,
+            candidate=fixture["candidate"],
+            source=fixture["source"],
+            selection_receipts=receipts,
+            raw_validation=validation,
+            closed_fits=closed,
+            main_test_loader=lambda: calls.append("opened") or {},
+        )
+    assert calls == []
+
+
+def test_execution_cli_uses_execution_source_with_actual_guard(monkeypatch, tmp_path, capsys):
+    _, fixture, frozen, receipts, validation, closed = actual_execution_inputs()
+    frozen_path = tmp_path / "frozen.json"
+    frozen_path.write_text(json.dumps(frozen))
+    opened, saved = [], []
+    train, test, output = [tmp_path / name for name in ("train", "test", "out")]
+
+    def loader(path):
+        if path == train:
+            return {
+                "selection_receipts": receipts,
+                "raw_validation": validation,
+                "closed_fits": closed,
+            }, {}
+        assert path == test
+        opened.append("test")
+        return {}, {}
+
+    def writer(path, result):
+        assert path == output
+        saved.append(result)
+        return {"unit": "artifact writer not certified"}
+
+    # Physical source/artifact I/O is supplied; the A and raw financial guards are actual.
+    monkeypatch.setattr(
+        runner, "execution_source_identity", lambda: {"protocol_source": fixture["source"]}
+    )
+    monkeypatch.setattr(runner, "load_bundle", loader)
+    monkeypatch.setattr(runner, "save_bundle", writer)
+    assert (
+        runner.main(
+            [
+                "--phase",
+                "execution-main",
+                "--frozen",
+                str(frozen_path),
+                "--input",
+                str(train),
+                "--test-artifact",
+                str(test),
+                "--output",
+                str(output),
+            ]
+        )
+        == 0
+    )
+    assert opened == ["test"] and len(saved) == 1
+    assert saved[0]["precision_selection"] == "unavailable"
+    assert saved[0]["qualification"] == "unknown"
+    shown = json.loads(capsys.readouterr().out)
+    assert shown["qualification"] == "unknown"

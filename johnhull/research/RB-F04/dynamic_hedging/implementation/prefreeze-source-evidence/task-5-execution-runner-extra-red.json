@@ -1,0 +1,6 @@
+{
+  "scope": "isolated child executes exact archived original runner without Git/source rollback; three new runner features absent",
+  "exit_code": 1,
+  "failures": 3,
+  "source_or_git_mutation": false
+}

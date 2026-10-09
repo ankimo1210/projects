@@ -1,0 +1,247 @@
+from pathlib import Path
+import copy,hashlib,importlib.util,json,time
+import numpy as np
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+OUT=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+spec=importlib.util.spec_from_file_location("review_execution_fixtures",WT/"deep_hedge_price/tests/test_dynamic_hedging_execution.py")
+fmod=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(fmod)
+import deep_hedge_price._dynamic_hedging_execution as e
+import deep_hedge_price._dynamic_hedging_protocol as v1
+records=[]
+start=time.monotonic()
+calls=[]
+restored=[]
+def forbidden(*args,**kwargs):
+    calls.append("opened_rng")
+    raise AssertionError("execution metadata guard opened financial RNG")
+for name in ("default_rng","RandomState","normal","standard_normal","random","rand","randn","uniform"):
+    if hasattr(np.random,name):
+        restored.append((name,getattr(np.random,name)))
+        setattr(np.random,name,forbidden)
+
+def row_by_id(rows,identifier):
+    return next(r for r in rows if r["id"]==identifier)
+def case(f,identifier):
+    return row_by_id(f["pilot"]["cases"],identifier)
+def qualified_fixture():
+    f=fmod.execution_fixture()
+    fmod.all_cases_qualified(f)
+    fmod.reseal(f)
+    return f
+def raw_underresolved(f):
+    row=case(f,"state00.Heston")
+    row.update(outcome="measured_precision_failure",financial_qualification="unknown",
+               first_failure_date=0.0,reason="zero rare events underresolved on original N")
+    uncertain=("teacher_price_se","stock_position_se","call_position_se")
+    for name in uncertain:
+        row["measurements"][name]=None
+    row["unmeasured_reasons"]={name:"raw zero sample statistic is unknown_underresolved; no valid uncertainty certification" for name in uncertain}
+    row["raw_measurements"]={"original_n":4096,"teacher_price_se":0.0,
+        "stock_position_se":0.0,"call_position_se":0.0,
+        "primitive_status":"unknown_underresolved","rare_event_count":0}
+    row["evidence_sha256"]=fmod.digest(row["raw_measurements"])
+
+def freeze_probe(name,mutate=None,*,factory=fmod.execution_fixture,expect="reject",reseal=True,check=None):
+    f=factory()
+    if mutate: mutate(f)
+    if reseal:fmod.reseal(f)
+    begin=time.monotonic()
+    try:
+        frozen=fmod.freeze(f)
+        observed="accept"
+        detail={"financial_qualification":frozen["financial_qualification"],
+                "v1_financial_qualification":frozen["original_v1_financial_qualification"]}
+        if check:check(f,frozen)
+    except ValueError as exc:
+        observed="reject";detail={"error":str(exc)}
+    assert observed==expect,(name,observed,detail)
+    records.append({"case":name,"stage":"freeze","expected":expect,"observed":observed,
+                    "receipts_resealed":reseal,"wall_seconds":time.monotonic()-begin,**detail})
+
+def closure_probe(name,mutate=None,*,expect="reject",reseal=True,check=None):
+    f=fmod.execution_fixture()
+    frozen=fmod.freeze(f)
+    rc=fmod.closure(f,frozen)
+    if mutate:mutate(f,frozen,rc)
+    if reseal:fmod.seal_closure(f,frozen,rc)
+    begin=time.monotonic()
+    try:
+        e.assert_execution_ready(frozen,f["candidate"],f["source"],rc)
+        observed="accept";detail={}
+        if check:check(f,frozen,rc)
+    except ValueError as exc:
+        observed="reject";detail={"error":str(exc)}
+    assert observed==expect,(name,observed,detail)
+    records.append({"case":name,"stage":"ready","expected":expect,"observed":observed,
+                    "closure_receipt_resealed":reseal,"wall_seconds":time.monotonic()-begin,**detail})
+
+def assert_raw_kept(f,frozen):
+    original=case(f,"state00.Heston")
+    saved=case({"pilot":frozen["pilot"]},"state00.Heston")
+    assert saved["raw_measurements"]==original["raw_measurements"]
+    assert saved["raw_measurements"]["teacher_price_se"]==0.0
+    assert saved["measurements"]["teacher_price_se"] is None
+    assert saved["financial_qualification"]=="unknown"
+    assert saved["original_n"]==4096
+    assert frozen["financial_qualification"]=="unknown"
+    original["raw_measurements"]["teacher_price_se"]=99.0
+    assert saved["raw_measurements"]["teacher_price_se"]==0.0
+
+def bad_precision(f):
+    r=f["pilot"]["cases"][0]
+    r.update(outcome="measured_precision_failure",financial_qualification="unknown",reason="all declared gates pass yet claim failure")
+def actual_precision_failure(f):
+    bad_precision(f)
+    f["pilot"]["cases"][0]["measurements"]["initial_quote_error"]=0.01
+def qualify_unknown(f):
+    case(f,"state15.Heston")["financial_qualification"]="qualified"
+def missing_case_reasoned(f):
+    f["pilot"]["cases"].pop()
+def changed_state_n(f):
+    plan=row_by_id(f["pilot"]["case_plan"],"state00.Heston")
+    plan["original_n"]=case(f,"state00.Heston")["original_n"]=1024
+def changed_teacher_attempt_n(f):
+    row_by_id(f["pilot"]["attempt_plan"],"teacher:Heston:date0")["original_n"]=1024
+    row_by_id(f["pilot"]["attempts"],"teacher:Heston:date0")["original_n"]=1024
+def change_q_to_solver(f):
+    r=row_by_id(f["pilot"]["attempts"],"Q:one_step:Heston")
+    r.update(status="validated_rejection",financial_qualification="unknown",
+             rejection_kind="solver_failure",reason="numerical solver failed")
+def q_unknown(f):
+    r=row_by_id(f["pilot"]["attempts"],"Q:one_step:Heston")
+    r.update(financial_qualification="unknown",reason="independent drift unavailable",
+             measurements={"call_accumulated_drift_error":None},
+             unmeasured_reasons={"call_accumulated_drift_error":"no valid independent oracle"})
+    f["pilot"]["financial_qualification"]="unknown"
+def q_unknown_overridden(f):
+    q_unknown(f)
+    f["pilot"]["financial_qualification"]="qualified"
+def smaller_qualified(f):
+    for i,r in enumerate(f["pilot"]["test_precision"]):
+        r.update(qualification="qualified" if i else "unknown",
+                 worst_mean_loss_se=0.005,worst_mse_se=0.001,reason=None if i else "original smallest N unqualified")
+    f["selection"].update(test_n=16384,precision_selection="smallest_qualified")
+def bad_smallest(f):
+    smaller_qualified(f)
+    f["selection"]["test_n"]=32768
+def unavailable_domain(f):
+    f["domains"][0].update(status="unavailable",indices=None,reason="no finite eligible box")
+def missing_review(f):
+    f["review"]["case_decisions"]=[]
+def duplicate_case(f):
+    f["pilot"]["cases"][-1]=copy.deepcopy(f["pilot"]["cases"][0])
+def wrong_case_identity(f):
+    f["pilot"]["case_plan"][0]["identity"]["strike"]=101
+def rawzero_falsequalified(f):
+    raw_underresolved(f)
+    r=case(f,"state00.Heston")
+    r.update(outcome="within_envelope",financial_qualification="qualified",reason=None)
+def cap_not_reached(f):
+    r=next(r for r in f["pilot"]["attempts"] if r["status"]=="failed_at_declared_cap")
+    r["cap_evidence"]["consumed"]=0.009
+def cap_wrong_measurement(f):
+    r=next(r for r in f["pilot"]["attempts"] if r["status"]=="failed_at_declared_cap")
+    r["cap_evidence"]["consumed"]=1.
+def cap_posthoc(f):
+    p=next(p for p in f["pilot"]["attempt_plan"] if p["cap"])
+    p["cap"]["planned_before_attempt"]=False
+def cap_source_defect(f):
+    f["pilot"]["integrity"]["unresolved_issues"]=["source defect"]
+def cap_as_qualified(f):
+    r=next(r for r in f["pilot"]["attempts"] if r["status"]=="failed_at_declared_cap")
+    r["financial_qualification"]="qualified"
+
+try:
+    candidate=e.execution_candidate()
+    assert candidate["original_candidate"]==v1.candidate_protocol()
+    assert candidate["original_roster"]==v1.study_roster()
+    assert len(candidate["pilot_cases"])==121 and len(candidate["required_pilot_attempt_ids"])==51
+    assert len(candidate["original_roster"]["fits"])==12
+    assert len(candidate["original_roster"]["primary_cells"])==44
+    assert candidate["main_obligations"]["evaluation_slots"]==396
+    assert len(candidate["original_pilot_fit_ids"])==4
+    freeze_probe("full synthetic unknown boundary",expect="accept")
+    freeze_probe("raw-zero underresolved preserved with unavailable uncertainty",raw_underresolved,expect="accept",check=assert_raw_kept)
+    freeze_probe("raw-zero unknown cannot become qualified",rawzero_falsequalified)
+    freeze_probe("all gate PASS cannot classify precision failure",bad_precision)
+    freeze_probe("actual measured original precision failure stays unknown",actual_precision_failure,expect="accept")
+    freeze_probe("unknown original structural case cannot become qualified",qualify_unknown)
+    freeze_probe("original gate threshold cannot change",lambda f:f["candidate"]["original_candidate"]["gates"].__setitem__("quote_condition_number",1.))
+    freeze_probe("original test seed cannot change",lambda f:f["candidate"]["original_candidate"]["seeds"]["test"].__setitem__(0,1))
+    freeze_probe("original tiny case identity cannot change",wrong_case_identity)
+    freeze_probe("121 original case removal",missing_case_reasoned)
+    freeze_probe("121 original duplicate case",duplicate_case)
+    freeze_probe("51 required attempt removal",lambda f:f["pilot"]["attempts"].pop())
+    freeze_probe("selected state N cannot be silently reduced",changed_state_n)
+    freeze_probe("teacher attempt N cannot be silently reduced",changed_teacher_attempt_n)
+    freeze_probe("solver failure cannot be structural case",lambda f:case(f,"state15.Heston").__setitem__("rejection_kind","solver_failure"))
+    freeze_probe("solver failure cannot close required Q attempt",change_q_to_solver)
+    freeze_probe("required Q unmeasured keeps global unknown",q_unknown,factory=qualified_fixture,expect="accept")
+    freeze_probe("required Q unknown cannot globally qualify",q_unknown_overridden,factory=qualified_fixture)
+    freeze_probe("unavailable precision uses explicit N32768",expect="accept",check=lambda f,o: o["selection"]["test_n"]==32768)
+    freeze_probe("unavailable precision cannot choose lower N",lambda f:f["selection"].__setitem__("test_n",8192))
+    freeze_probe("smallest actually qualified original N selected",smaller_qualified,factory=qualified_fixture,expect="accept")
+    freeze_probe("larger qualified N cannot replace smallest",bad_smallest,factory=qualified_fixture)
+    freeze_probe("ordered original precision case missing",lambda f:f["pilot"]["test_precision"].pop())
+    freeze_probe("budgeted cap measured closure keeps unknown",factory=fmod.capped_fixture,expect="accept")
+    freeze_probe("cap not reached",cap_not_reached,factory=fmod.capped_fixture)
+    freeze_probe("cap consumption exceeds measured expense",cap_wrong_measurement,factory=fmod.capped_fixture)
+    freeze_probe("cap declared after attempt",cap_posthoc,factory=fmod.capped_fixture)
+    freeze_probe("cap budget independent approval absent",lambda f:f["review"].__setitem__("budget_decisions",[]),factory=fmod.capped_fixture)
+    freeze_probe("cap does not close source defect",cap_source_defect,factory=fmod.capped_fixture)
+    freeze_probe("cap failure cannot be qualified",cap_as_qualified,factory=fmod.capped_fixture)
+    freeze_probe("current measured expense cannot be unavailable",lambda f:f["pilot"]["expenses"][0]["timing"].__setitem__("wall_seconds",None))
+    freeze_probe("history cannot be removed",lambda f:f["pilot"].__setitem__("history",[]))
+    freeze_probe("unavailable domain retained explicitly unknown",unavailable_domain,expect="accept")
+    freeze_probe("domain cannot have noncontiguous step triple",lambda f:f["domains"][0]["indices"].__setitem__("state",[0,9,2]))
+    freeze_probe("domain original four-node support required",lambda f:f["domains"][0]["indices"].__setitem__("state",[0,3]))
+    freeze_probe("domain must precede test",lambda f:f["domains"][0].__setitem__("selected_before_test",False))
+    freeze_probe("source closure required file cannot vanish",lambda f:f["source"].pop(f["candidate"]["required_source_files"][0]))
+    freeze_probe("pretest plan cannot be unlocked",lambda f:f["pilot"].__setitem__("plans_locked_before_execution",False))
+    freeze_probe("global flag cannot replace per-case verification",lambda f:f["review"].__setitem__("case_decisions",[]),reseal=False)
+    freeze_probe("stale source receipt rejects changed digest",lambda f:f["source"].__setitem__(next(iter(f["source"])),fmod.digest("stale")),reseal=False)
+    # Closure probes rebind receipts after tampering to hit semantic gates.
+    closure_probe("all 12 fits and four all-failed selections close without fallback",expect="accept")
+    closure_probe("fit original slot erased",lambda f,o,r:r["fits"].pop())
+    closure_probe("fit fewer than512 updates cannot complete",lambda f,o,r:r["fits"][0].__setitem__("updates",511))
+    closure_probe("fit more than300 seconds cannot complete",lambda f,o,r:r["fits"][0].__setitem__("elapsed_seconds",300.001))
+    closure_probe("fit wrong original validation denominator",lambda f,o,r:r["fits"][0].__setitem__("validation_original_n",1024))
+    closure_probe("fit wrong original training denominator",lambda f,o,r:r["fits"][0].__setitem__("original_n",4096))
+    closure_probe("all four validations required",lambda f,o,r:r["validation"].pop())
+    closure_probe("all14 original baseline candidates required",lambda f,o,r:r["validation"][0]["candidates"].pop())
+    closure_probe("failed candidates cannot acquire finite score",lambda f,o,r:r["validation"][0]["candidates"][0].__setitem__("mse",0.))
+    closure_probe("all-failed band cannot use width0 fallback",lambda f,o,r:r["validation"][0]["selected_bands"].__setitem__("Heston","band:Heston:width0"))
+    closure_probe("all-failed baseline cannot use no-hedge fallback",lambda f,o,r:r["validation"][0].__setitem__("selected_baseline","no_hedge"))
+    closure_probe("all-failed baseline reason required",lambda f,o,r:r["validation"][0].__setitem__("reason",None))
+    closure_probe("new safe baseline cannot replace14 originals",lambda f,o,r:r["validation"][0]["candidates"][-1].__setitem__("id","safe"))
+    closure_probe("current closure expense must be measured",lambda f,o,r:r["expenses"][0]["timing"].__setitem__("cpu_seconds",None))
+    closure_probe("test cannot open before closure",lambda f,o,r:r.__setitem__("test_opened",True))
+    closure_probe("stale selection receipt refuses",lambda f,o,r:r["verification"]["inputs"].__setitem__("source",fmod.digest("stale")),reseal=False)
+
+    f=fmod.execution_fixture();frozen=fmod.freeze(f);rc=fmod.closure(f,frozen)
+    # Recompute the envelope digest: compare to reconstructed current contract
+    # must still reject an attempted original-v1-qualified projection.
+    frozen["original_v1_financial_qualification"]="qualified"
+    frozen["frozen_sha256"]=fmod.digest({k:v for k,v in frozen.items() if k!="frozen_sha256"})
+    fmod.seal_closure(f,frozen,rc)
+    try:
+        e.assert_execution_ready(frozen,f["candidate"],f["source"],rc)
+        raise AssertionError("v1 projection tamper accepted")
+    except ValueError as exc:
+        records.append({"case":"resealed frozen cannot project v1 qualified","stage":"ready","observed":"reject","error":str(exc)})
+    assert not calls
+finally:
+    for name,value in restored:setattr(np.random,name,value)
+
+source=WT/"deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py"
+tests=WT/"deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+protocol=WT/"deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py"
+report={"case_count":len(records),"records":records,"rng_draw_calls":len(calls),
+        "source_sha256":hashlib.sha256(source.read_bytes()).hexdigest(),
+        "tests_sha256":hashlib.sha256(tests.read_bytes()).hexdigest(),
+        "strict_v1_protocol_sha256":hashlib.sha256(protocol.read_bytes()).hexdigest(),
+        "wall_seconds":time.monotonic()-start,
+        "approval_scope":"metadata binding only; raw financial checkers and actual pilot excluded"}
+(OUT/"task-5-execution-schema-source-review-probes.json").write_text(json.dumps(report,indent=2)+"\n")
+print(json.dumps(report,indent=2))

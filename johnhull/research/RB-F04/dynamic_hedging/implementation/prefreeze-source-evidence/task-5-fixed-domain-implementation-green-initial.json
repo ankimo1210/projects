@@ -1,0 +1,15 @@
+{
+  "exit_code": 0,
+  "wall_seconds": 5.852544178000244,
+  "child_cpu_seconds": 5.6645069999999995,
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py"
+  ],
+  "source_sha256": "9dff741ae8424f8814267425b769dfb534bb59a260f698f671da90265c28a556",
+  "tests_sha256": "5e2a602f69ea9844ca40e8a9561b783556105ce880198e6c774d9513b1a0fd70"
+}

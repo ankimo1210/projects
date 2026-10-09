@@ -1,0 +1,17 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_precision_failure_requires_failed_or_reasoned_unmeasured_original_gate __
+
+    def test_precision_failure_requires_failed_or_reasoned_unmeasured_original_gate():
+        f = execution_fixture()
+        row = f["pilot"]["cases"][0]
+        row.update(outcome="measured_precision_failure", financial_qualification="unknown",
+                   reason="precision failed")
+        reseal(f)
+>       with pytest.raises(ValueError, match="precision"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:506: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_precision_failure_requires_failed_or_reasoned_unmeasured_original_gate
+1 failed, 49 deselected in 0.14s

@@ -1,0 +1,212 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_default_unknown_mean_or_bounds_preserves_original_early_rejection[nan-nonfinite_nodes] _
+
+damage = 'nan', reason = 'nonfinite_nodes'
+
+    @pytest.mark.parametrize("damage,reason", [
+        ("nan", "nonfinite_nodes"),
+        ("increasing", "price_bounds"),
+    ])
+    def test_default_unknown_mean_or_bounds_preserves_original_early_rejection(damage, reason):
+        cache = fixed_domain_fixture()
+        if damage == "nan":
+            cache["f"][1, 0, 0] = np.nan
+        else:
+            cache["f"][1] = np.broadcast_to(
+                1.0 + 0.04 * cache["threshold_nodes"][1], cache["f"][1].shape
+            )
+        del cache["block_means"]
+>       got = evaluate_asian(cache, 1, 100.0, 0.04, 600.0, 6)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:830: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cache = {'dates': array([0. , 0.5]), 'dividend_yield': 0.0, 'f': array([[[3.02008 , 2.948926, 2.845456, 2.715888, 2.625232],
+ ...41832],
+        [3.1696  , 3.100546, 3.000576, 2.876608, 2.791552]]]), 'interpolation': 'not_a_knot_tensor_cubic', ...}
+date_index = 1, spot = array(100.), state = array(0.04), memory_sum = 600.0
+memory_count = 6
+
+    def evaluate_asian(cache: dict, date_index: int, spot, state, memory_sum, memory_count) -> dict:
+        """Value the monthly Asian from one fixed same-price interpolation domain.
+    
+        Exact linear/settled branches require no patch or fitted state. Explicit
+        boxes use common subaxes for mean and all sixteen CV block curves; unknown
+        nodes outside the box are retained, while necessary unavailable nodes
+        make this date unknown. Box boundaries use only the inward derivative,
+        without extrapolation or a continuity claim across unsupported gaps.
+        """
+        if not _date(cache, date_index):
+            return _unknown("date_index")
+        spot, state, a, n = np.broadcast_arrays(
+            np.asarray(spot, float),
+            np.asarray(state, float),
+            np.asarray(memory_sum, float),
+            np.asarray(memory_count, float),
+        )
+        if spot.ndim:
+            rows = [
+                evaluate_asian(cache, date_index, s, v, aa, nn)
+                for s, v, aa, nn in zip(spot.flat, state.flat, a.flat, n.flat, strict=True)
+            ]
+            return _batch_results(rows, spot.shape)
+        if not np.isfinite(spot + a + n) or spot <= 0 or n != int(n) or n < 0 or n > 12 or a < 0:
+            return _unknown("invalid_memory")
+        if n == 12:
+            return {
+                "value": max(float(a) / 12 - cache["strike"], 0.0),
+                "spot_derivative": 0.0,
+                "state_derivative": 0.0,
+                "status": "not_required_settled_claim",
+                "reason": "",
+                "error": 0.0,
+            }
+        if n != cache["memory_counts"][date_index]:
+            return _unknown("memory_date_mismatch")
+        t = cache["dates"][date_index]
+        d = math.exp(-cache["rate"] * (1 - t))
+        x = (12 * cache["strike"] - float(a)) / float(spot)
+        if x <= 0:
+            delays = np.arange(int(n) + 1, 13) / 12 - t
+            expected_sum = np.exp((cache["rate"] - cache["dividend_yield"]) * delays).sum()
+            return {
+                "value": d * (float(a) + float(spot) * expected_sum - 12 * cache["strike"]) / 12,
+                "spot_derivative": d * expected_sum / 12,
+                "state_derivative": 0.0,
+                "status": "not_required_linear_claim",
+                "reason": "",
+                "error": 0.0,
+            }
+        local = cache["model"] == "local"
+        sheet = cache.get("t0_sheet") if local and t == 0 else None
+        interpolation_spots = sheet["spot_nodes"] if sheet is not None else cache["spot_nodes"]
+        if sheet is not None and (spot < interpolation_spots[0] or spot > interpolation_spots[-1]):
+            return _unknown("outside_t0_support")
+        axes = [np.log(interpolation_spots)] if local else []
+        axes += [
+            np.log(cache["state_nodes"]) if local else cache["state_nodes"],
+            cache["threshold_nodes"][date_index],
+        ]
+        if not np.isfinite(state) or state <= 0:
+            return _unknown("outside_support")
+        point = [math.log(float(spot))] if local else []
+        point += [math.log(float(state)) if local else float(state), x]
+        if any(v < axis[0] or v > axis[-1] for axis, v in zip(axes, point, strict=True)):
+            return _unknown("outside_support")
+        values = sheet["f"] if sheet is not None else cache["f"][date_index]
+>       blocks = (sheet["block_means"] if sheet is not None else cache["block_means"][date_index])[
+                                                                 ^^^^^^^^^^^^^^^^^^^^
+            ..., 2
+        ]
+E       KeyError: 'block_means'
+
+johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py:586: KeyError
+_ test_default_unknown_mean_or_bounds_preserves_original_early_rejection[increasing-price_bounds] _
+
+damage = 'increasing', reason = 'price_bounds'
+
+    @pytest.mark.parametrize("damage,reason", [
+        ("nan", "nonfinite_nodes"),
+        ("increasing", "price_bounds"),
+    ])
+    def test_default_unknown_mean_or_bounds_preserves_original_early_rejection(damage, reason):
+        cache = fixed_domain_fixture()
+        if damage == "nan":
+            cache["f"][1, 0, 0] = np.nan
+        else:
+            cache["f"][1] = np.broadcast_to(
+                1.0 + 0.04 * cache["threshold_nodes"][1], cache["f"][1].shape
+            )
+        del cache["block_means"]
+>       got = evaluate_asian(cache, 1, 100.0, 0.04, 600.0, 6)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:830: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cache = {'dates': array([0. , 0.5]), 'dividend_yield': 0.0, 'f': array([[[3.02008 , 2.948926, 2.845456, 2.715888, 2.625232],
+ ...6    ],
+        [1.      , 1.12    , 1.32    , 1.64    , 1.96    ]]]), 'interpolation': 'not_a_knot_tensor_cubic', ...}
+date_index = 1, spot = array(100.), state = array(0.04), memory_sum = 600.0
+memory_count = 6
+
+    def evaluate_asian(cache: dict, date_index: int, spot, state, memory_sum, memory_count) -> dict:
+        """Value the monthly Asian from one fixed same-price interpolation domain.
+    
+        Exact linear/settled branches require no patch or fitted state. Explicit
+        boxes use common subaxes for mean and all sixteen CV block curves; unknown
+        nodes outside the box are retained, while necessary unavailable nodes
+        make this date unknown. Box boundaries use only the inward derivative,
+        without extrapolation or a continuity claim across unsupported gaps.
+        """
+        if not _date(cache, date_index):
+            return _unknown("date_index")
+        spot, state, a, n = np.broadcast_arrays(
+            np.asarray(spot, float),
+            np.asarray(state, float),
+            np.asarray(memory_sum, float),
+            np.asarray(memory_count, float),
+        )
+        if spot.ndim:
+            rows = [
+                evaluate_asian(cache, date_index, s, v, aa, nn)
+                for s, v, aa, nn in zip(spot.flat, state.flat, a.flat, n.flat, strict=True)
+            ]
+            return _batch_results(rows, spot.shape)
+        if not np.isfinite(spot + a + n) or spot <= 0 or n != int(n) or n < 0 or n > 12 or a < 0:
+            return _unknown("invalid_memory")
+        if n == 12:
+            return {
+                "value": max(float(a) / 12 - cache["strike"], 0.0),
+                "spot_derivative": 0.0,
+                "state_derivative": 0.0,
+                "status": "not_required_settled_claim",
+                "reason": "",
+                "error": 0.0,
+            }
+        if n != cache["memory_counts"][date_index]:
+            return _unknown("memory_date_mismatch")
+        t = cache["dates"][date_index]
+        d = math.exp(-cache["rate"] * (1 - t))
+        x = (12 * cache["strike"] - float(a)) / float(spot)
+        if x <= 0:
+            delays = np.arange(int(n) + 1, 13) / 12 - t
+            expected_sum = np.exp((cache["rate"] - cache["dividend_yield"]) * delays).sum()
+            return {
+                "value": d * (float(a) + float(spot) * expected_sum - 12 * cache["strike"]) / 12,
+                "spot_derivative": d * expected_sum / 12,
+                "state_derivative": 0.0,
+                "status": "not_required_linear_claim",
+                "reason": "",
+                "error": 0.0,
+            }
+        local = cache["model"] == "local"
+        sheet = cache.get("t0_sheet") if local and t == 0 else None
+        interpolation_spots = sheet["spot_nodes"] if sheet is not None else cache["spot_nodes"]
+        if sheet is not None and (spot < interpolation_spots[0] or spot > interpolation_spots[-1]):
+            return _unknown("outside_t0_support")
+        axes = [np.log(interpolation_spots)] if local else []
+        axes += [
+            np.log(cache["state_nodes"]) if local else cache["state_nodes"],
+            cache["threshold_nodes"][date_index],
+        ]
+        if not np.isfinite(state) or state <= 0:
+            return _unknown("outside_support")
+        point = [math.log(float(spot))] if local else []
+        point += [math.log(float(state)) if local else float(state), x]
+        if any(v < axis[0] or v > axis[-1] for axis, v in zip(axes, point, strict=True)):
+            return _unknown("outside_support")
+        values = sheet["f"] if sheet is not None else cache["f"][date_index]
+>       blocks = (sheet["block_means"] if sheet is not None else cache["block_means"][date_index])[
+                                                                 ^^^^^^^^^^^^^^^^^^^^
+            ..., 2
+        ]
+E       KeyError: 'block_means'
+
+johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py:586: KeyError
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_default_unknown_mean_or_bounds_preserves_original_early_rejection[nan-nonfinite_nodes]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_default_unknown_mean_or_bounds_preserves_original_early_rejection[increasing-price_bounds]
+2 failed, 49 deselected in 0.60s

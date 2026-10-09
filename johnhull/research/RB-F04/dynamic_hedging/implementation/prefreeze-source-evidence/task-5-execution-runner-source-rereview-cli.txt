@@ -1,0 +1,27 @@
+{
+  "bindings": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "ee85c0f22b0fd709bd0f3573be38a0fbc0c08602584e5ce3fb4fe1fc28b95f7b",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "fab67dae8c860bff362f99dd0843c160fb6a58dce1cb08343f6826f0e9cd262f",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+    "deep_hedge_price/tests/test_dynamic_hedging_execution.py": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe"
+  },
+  "probe": "execution CLI supplies legacy source registry",
+  "actual_A_gate_patched": false,
+  "source_provider_only_synthetic": true,
+  "error": "main.source_identity: saved keyset mismatch",
+  "main_test_loader_calls": 0,
+  "direct_API_accepted_same_synthetic_source_provider": "not_implemented",
+  "finding": {
+    "id": "I2",
+    "severity": "Important",
+    "line": 1162,
+    "file": "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+    "title": "execution-main CLI supplies legacy source_identity rather than execution_source_identity",
+    "action": "Choose matching source provider for phase before constructing source argument; preserve legacy main provider."
+  },
+  "boundary": "Unit source registry fixture only; no real financial freeze or main opened."
+}
+
+EXIT 0

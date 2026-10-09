@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "wall_seconds": 28.55641545799972,
+  "scope": "old27+new8 runner tests, A source financial pipeline not certified",
+  "first_33pass_2fail_preserved": true,
+  "test_assumption_repairs": [
+    "actual execution schema refusal message",
+    "formal_pilot_qualification field"
+  ]
+}

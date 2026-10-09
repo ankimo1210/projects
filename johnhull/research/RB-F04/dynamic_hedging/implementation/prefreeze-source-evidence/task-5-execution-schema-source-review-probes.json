@@ -1,0 +1,528 @@
+{
+  "case_count": 57,
+  "records": [
+    {
+      "case": "full synthetic unknown boundary",
+      "stage": "freeze",
+      "expected": "accept",
+      "observed": "accept",
+      "receipts_resealed": true,
+      "wall_seconds": 0.010738708000644692,
+      "financial_qualification": "unknown",
+      "v1_financial_qualification": "not_claimed"
+    },
+    {
+      "case": "raw-zero underresolved preserved with unavailable uncertainty",
+      "stage": "freeze",
+      "expected": "accept",
+      "observed": "accept",
+      "receipts_resealed": true,
+      "wall_seconds": 0.009882843000013963,
+      "financial_qualification": "unknown",
+      "v1_financial_qualification": "not_claimed"
+    },
+    {
+      "case": "raw-zero unknown cannot become qualified",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0029462080001394497,
+      "error": "false within-envelope qualification"
+    },
+    {
+      "case": "all gate PASS cannot classify precision failure",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0023185860009107273,
+      "error": "precision failure requires failed or unmeasured original gate"
+    },
+    {
+      "case": "actual measured original precision failure stays unknown",
+      "stage": "freeze",
+      "expected": "accept",
+      "observed": "accept",
+      "receipts_resealed": true,
+      "wall_seconds": 0.010440939000545768,
+      "financial_qualification": "unknown",
+      "v1_financial_qualification": "not_claimed"
+    },
+    {
+      "case": "unknown original structural case cannot become qualified",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.003113585999017232,
+      "error": "failed/unknown case cannot be qualified"
+    },
+    {
+      "case": "original gate threshold cannot change",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0011422539992054226,
+      "error": "changed original candidate"
+    },
+    {
+      "case": "original test seed cannot change",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0011312629994790768,
+      "error": "changed original candidate"
+    },
+    {
+      "case": "original tiny case identity cannot change",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0011952629993174924,
+      "error": "changed original candidate"
+    },
+    {
+      "case": "121 original case removal",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0014042800012248335,
+      "error": "incomplete original case measurements"
+    },
+    {
+      "case": "121 original duplicate case",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0014032309991307557,
+      "error": "incomplete original case measurements"
+    },
+    {
+      "case": "51 required attempt removal",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0013579589995060815,
+      "error": "incomplete required attempt measurements"
+    },
+    {
+      "case": "selected state N cannot be silently reduced",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0028393100001267157,
+      "error": "state count differs from selected original teacher N"
+    },
+    {
+      "case": "teacher attempt N cannot be silently reduced",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.003835150999293546,
+      "error": "teacher attempt differs from selected original N"
+    },
+    {
+      "case": "solver failure cannot be structural case",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0030607950011471985,
+      "error": "solver/source failure is not a structural rejection"
+    },
+    {
+      "case": "solver failure cannot close required Q attempt",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.003710275001139962,
+      "error": "source/solver failure cannot close required attempt"
+    },
+    {
+      "case": "required Q unmeasured keeps global unknown",
+      "stage": "freeze",
+      "expected": "accept",
+      "observed": "accept",
+      "receipts_resealed": true,
+      "wall_seconds": 0.010010280999267707,
+      "financial_qualification": "unknown",
+      "v1_financial_qualification": "not_claimed"
+    },
+    {
+      "case": "required Q unknown cannot globally qualify",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.003998652000518632,
+      "error": "pilot financial qualification cannot override original failures/unknown"
+    },
+    {
+      "case": "unavailable precision uses explicit N32768",
+      "stage": "freeze",
+      "expected": "accept",
+      "observed": "accept",
+      "receipts_resealed": true,
+      "wall_seconds": 0.00960926500010828,
+      "financial_qualification": "unknown",
+      "v1_financial_qualification": "not_claimed"
+    },
+    {
+      "case": "unavailable precision cannot choose lower N",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0012556820001918823,
+      "error": "unavailable precision requires research N32768"
+    },
+    {
+      "case": "smallest actually qualified original N selected",
+      "stage": "freeze",
+      "expected": "accept",
+      "observed": "accept",
+      "receipts_resealed": true,
+      "wall_seconds": 0.010006147998865345,
+      "financial_qualification": "qualified",
+      "v1_financial_qualification": "not_claimed"
+    },
+    {
+      "case": "larger qualified N cannot replace smallest",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0012210960012453143,
+      "error": "use smallest qualified original N"
+    },
+    {
+      "case": "ordered original precision case missing",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0011302490001980914,
+      "error": "missing original ordered precision projections"
+    },
+    {
+      "case": "budgeted cap measured closure keeps unknown",
+      "stage": "freeze",
+      "expected": "accept",
+      "observed": "accept",
+      "receipts_resealed": true,
+      "wall_seconds": 0.010182255999097833,
+      "financial_qualification": "unknown",
+      "v1_financial_qualification": "not_claimed"
+    },
+    {
+      "case": "cap not reached",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0039708380008960376,
+      "error": "cap has not been reached"
+    },
+    {
+      "case": "cap consumption exceeds measured expense",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.003963659999499214,
+      "error": "cap consumption exceeds recorded wall time"
+    },
+    {
+      "case": "cap declared after attempt",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.004630450999684399,
+      "error": "cap was not declared before attempt"
+    },
+    {
+      "case": "cap budget independent approval absent",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.00546753199887462,
+      "error": "incomplete prior budget decisions"
+    },
+    {
+      "case": "cap does not close source defect",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.001481379000324523,
+      "error": "source/integrity remains incomplete"
+    },
+    {
+      "case": "cap failure cannot be qualified",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.004048628001328325,
+      "error": "failed/unmeasured attempt is falsely qualified"
+    },
+    {
+      "case": "current measured expense cannot be unavailable",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0019345989985595224,
+      "error": "current expense measurement unavailable"
+    },
+    {
+      "case": "history cannot be removed",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0019943509996664943,
+      "error": "original unknown expense history missing"
+    },
+    {
+      "case": "unavailable domain retained explicitly unknown",
+      "stage": "freeze",
+      "expected": "accept",
+      "observed": "accept",
+      "receipts_resealed": true,
+      "wall_seconds": 0.009964251999917906,
+      "financial_qualification": "unknown",
+      "v1_financial_qualification": "not_claimed"
+    },
+    {
+      "case": "domain cannot have noncontiguous step triple",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0012437769983080216,
+      "error": "domain needs contiguous four-node axes"
+    },
+    {
+      "case": "domain original four-node support required",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0012033869988954393,
+      "error": "domain needs contiguous four-node axes"
+    },
+    {
+      "case": "domain must precede test",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0012200210003356915,
+      "error": "domain selection must be fixed before test"
+    },
+    {
+      "case": "source closure required file cannot vanish",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.00117750800018257,
+      "error": "missing source dependency"
+    },
+    {
+      "case": "pretest plan cannot be unlocked",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": true,
+      "wall_seconds": 0.0012615140003617853,
+      "error": "pilot is not pretest closed"
+    },
+    {
+      "case": "global flag cannot replace per-case verification",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": false,
+      "wall_seconds": 0.003935662000003504,
+      "error": "incomplete case_decisions"
+    },
+    {
+      "case": "stale source receipt rejects changed digest",
+      "stage": "freeze",
+      "expected": "reject",
+      "observed": "reject",
+      "receipts_resealed": false,
+      "wall_seconds": 0.0022553899998456473,
+      "error": "stale or misbound verification receipt"
+    },
+    {
+      "case": "all 12 fits and four all-failed selections close without fallback",
+      "stage": "ready",
+      "expected": "accept",
+      "observed": "accept",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.018834878001143807
+    },
+    {
+      "case": "fit original slot erased",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.011209269001483335,
+      "error": "incomplete all twelve fit attempts"
+    },
+    {
+      "case": "fit fewer than512 updates cannot complete",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.011215918999369023,
+      "error": "fit is not a completed original attempt"
+    },
+    {
+      "case": "fit more than300 seconds cannot complete",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.010956439000437967,
+      "error": "fit is not a completed original attempt"
+    },
+    {
+      "case": "fit wrong original validation denominator",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.011597509001148865,
+      "error": "fit original training/validation counts differ"
+    },
+    {
+      "case": "fit wrong original training denominator",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.010998387000654475,
+      "error": "fit original training/validation counts differ"
+    },
+    {
+      "case": "all four validations required",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.01176970300002722,
+      "error": "incomplete all four validation selections"
+    },
+    {
+      "case": "all14 original baseline candidates required",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.011547123000127613,
+      "error": "incomplete all original baseline candidates"
+    },
+    {
+      "case": "failed candidates cannot acquire finite score",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.012298446999920998,
+      "error": "failed baseline cannot rescue a score"
+    },
+    {
+      "case": "all-failed band cannot use width0 fallback",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.011813846000222838,
+      "error": "failed band cannot use fallback"
+    },
+    {
+      "case": "all-failed baseline cannot use no-hedge fallback",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.011658419000013964,
+      "error": "all failed baselines cannot use fallback"
+    },
+    {
+      "case": "all-failed baseline reason required",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.011615022998739732,
+      "error": "missing reason/checker"
+    },
+    {
+      "case": "new safe baseline cannot replace14 originals",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.011738874000002397,
+      "error": "incomplete all original baseline candidates"
+    },
+    {
+      "case": "current closure expense must be measured",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.011591876998863881,
+      "error": "current expense measurement unavailable"
+    },
+    {
+      "case": "test cannot open before closure",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": true,
+      "wall_seconds": 0.0115099820013711,
+      "error": "test RNG already opened"
+    },
+    {
+      "case": "stale selection receipt refuses",
+      "stage": "ready",
+      "expected": "reject",
+      "observed": "reject",
+      "closure_receipt_resealed": false,
+      "wall_seconds": 0.011762932999772602,
+      "error": "stale or misbound verification receipt"
+    },
+    {
+      "case": "resealed frozen cannot project v1 qualified",
+      "stage": "ready",
+      "observed": "reject",
+      "error": "execution freeze stale or source changed"
+    }
+  ],
+  "rng_draw_calls": 0,
+  "source_sha256": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+  "tests_sha256": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508",
+  "strict_v1_protocol_sha256": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f",
+  "wall_seconds": 0.9717006660011975,
+  "approval_scope": "metadata binding only; raw financial checkers and actual pilot excluded"
+}

@@ -1,0 +1,30 @@
+{
+  "bindings": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "d0c056223db903589fe06eda6ce2996628cc6615874acb4cf1792a7f47ce4214",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "ff35642d4e1b87a24eb4bf2517d096d15d60ed333f70e4f1d87353933c8b12a4",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+    "deep_hedge_price/tests/test_dynamic_hedging_execution.py": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508"
+  },
+  "probe": {
+    "missing_required_sources": [
+      "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+      "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py"
+    ],
+    "actual_guard_rejection": "missing source dependency",
+    "includes_execution_module": true,
+    "source_count": 73,
+    "unit_only": true,
+    "main_test_opened": false
+  },
+  "findings": [
+    {
+      "id": "I1",
+      "severity": "Important",
+      "line": 88,
+      "file": "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "title": "Default runner source closure omits two execution-required entrypoints",
+      "repro": "source_identity()[\"protocol_source\"] lacks reference_methods.py and run_fresh.py; execution.freeze_execution with current actual registry raises missing source dependency.",
+      "action": "Include all execution-required entrypoints in the source registry used by run_execution_main and its CLI, retaining raw source equality checks. Add real unpatched execution metadata fixture coverage."
+    }
+  ]
+}

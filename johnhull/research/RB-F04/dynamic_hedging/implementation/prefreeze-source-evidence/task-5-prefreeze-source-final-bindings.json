@@ -1,0 +1,10 @@
+{
+  "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+  "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py": "98e2b6f569e07a55f66c9a3cc44443c125c793d9209e10cc6d2af3dc74a18396",
+  "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b",
+  "deep_hedge_price/tests/test_dynamic_hedging_replay.py": "d811e320f449c9cd92b2894b8da38b0de2c292d4423c06a74491288f12c04781",
+  "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+  "deep_hedge_price/tests/test_dynamic_hedging_execution.py": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508",
+  "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "bb7e7f6ecee12e56444ae24ced496328fcc5e1e1a142630f3fd985c94f3790d6",
+  "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "65dd78525041e2fd75af25309265548413d2a9cabd9048e757fd2b43b0ea3b23"
+}

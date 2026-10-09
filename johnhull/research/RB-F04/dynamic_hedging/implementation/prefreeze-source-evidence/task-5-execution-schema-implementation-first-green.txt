@@ -1,0 +1,2012 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                                    [100%]
+=================================== FAILURES ===================================
+____________ test_candidate_preserves_exact_v1_and_full_obligations ____________
+
+    def test_candidate_preserves_exact_v1_and_full_obligations():
+        e = execution()
+        old = importlib.import_module("deep_hedge_price._dynamic_hedging_protocol")
+>       c = e.execution_candidate()
+            ^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:205: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_____ test_execution_freeze_keeps_financial_rejection_unknown_and_detached _____
+
+    def test_execution_freeze_keeps_financial_rejection_unknown_and_detached():
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:220: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+___ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[threshold] ____
+
+mutation = 'threshold'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+______ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[seed] ______
+
+mutation = 'seed'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+__ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[case_missing] __
+
+mutation = 'case_missing'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[case_duplicate] _
+
+mutation = 'case_duplicate'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+___ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[n_erasure] ____
+
+mutation = 'n_erasure'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+__ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[measurement] ___
+
+mutation = 'measurement'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[falsequalified] _
+
+mutation = 'falsequalified'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[solver_as_structural] _
+
+mutation = 'solver_as_structural'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[missing_case_review] _
+
+mutation = 'missing_case_review'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[attempt_missing] _
+
+mutation = 'attempt_missing'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[source_missing] _
+
+mutation = 'source_missing'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+___ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[integrity] ____
+
+mutation = 'integrity'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+__ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[review_scope] __
+
+mutation = 'review_scope'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[global_flag_only] _
+
+mutation = 'global_flag_only'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[current_cost_unknown] _
+
+mutation = 'current_cost_unknown'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[history_erased] _
+
+mutation = 'history_erased'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[domain_missing] _
+
+mutation = 'domain_missing'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[domain_short_axis] _
+
+mutation = 'domain_short_axis'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[precision_falsequalified] _
+
+mutation = 'precision_falsequalified'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+___ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[research_n] ___
+
+mutation = 'research_n'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[cap_without_plan] _
+
+mutation = 'cap_without_plan'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_____ test_smallest_qualified_test_n_uses_all_original_ordered_projections _____
+
+    def test_smallest_qualified_test_n_uses_all_original_ordered_projections():
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:292: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_____________ test_legacy_v1_still_rejects_unknown_execution_pilot _____________
+
+    def test_legacy_v1_still_rejects_unknown_execution_pilot():
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:306: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_______ test_assert_execution_ready_accepts_full_closed_failed_baselines _______
+
+    def test_assert_execution_ready_accepts_full_closed_failed_baselines():
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:314: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[frozen_tamper] _
+
+mutation = 'frozen_tamper'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[source_stale] _
+
+mutation = 'source_stale'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[test_opened] _
+
+mutation = 'test_opened'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[fit_erased] _
+
+mutation = 'fit_erased'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[incomplete_fit] _
+
+mutation = 'incomplete_fit'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[failed_fit_without_reason] _
+
+mutation = 'failed_fit_without_reason'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[validation_erased] _
+
+mutation = 'validation_erased'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[candidate_erased] _
+
+mutation = 'candidate_erased'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[failed_band_fallback] _
+
+mutation = 'failed_band_fallback'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[closed_cost_unknown] _
+
+mutation = 'closed_cost_unknown'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[receipt_stale] _
+
+mutation = 'receipt_stale'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:64: in execution_fixture
+    c = e.execution_candidate()
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution_candidate() -> dict:
+        """Return the fixed full-roster candidate; no measured success is implied."""
+        original, roster = _v1.candidate_protocol(), _v1.study_roster()
+        cases = []
+        quotes = [(t, k, "fit") for t in (.25, .5, .75, 1., 1.25)
+                  for k in (80, 90, 100, 110, 120)]
+        quotes += [(t, k, "holdout") for t in (1/3, 2/3, 1.125)
+                   for k in (85, 95, 105, 115)]
+        for i, (t, k, role) in enumerate(quotes):
+            cases.append({"id": f"quote{i:02d}", "kind": "quote",
+                          "identity": {"expiry": t, "strike": k, "role": role},
+                          "gates": ["initial_quote_error", "cf_order_cutoff_error"]})
+        dates = [0., 1/12, .25, .5, .75, 11/12]
+        state_gates = ["call_price_error", "call_stock_derivative_error",
+                       "call_scaled_state_derivative_error", "quote_condition_number",
+                       "teacher_price_se", "asian_price_error", "stock_position_se",
+                       "call_position_se", "stock_position_error", "call_position_error"]
+        for i in range(18):
+            t, scenario = dates[i // 3], i % 3
+            for model in original["market"]["generators"]:
+                cases.append({"id": f"state{i:02d}.{model}", "kind": "state",
+                              "identity": {"state_index": i, "model": model, "date": t,
+                                           "scenario": scenario,
+                                           "spot": ([99.95, 100., 100.05] if t == 0 else
+                                                    [80., 100., 120.])[scenario],
+                                           "diagnostic_heston_variance": [.02, .04, .08][scenario]},
+                              "gates": state_gates})
+        cases += [{"id": "pilot:" + r["id"], "kind": "cell", "identity": r,
+                   "gates": ["pnl_rms_difference", "mse_difference", "baseline_mse"]}
+>                 for r in roster["cells"]]
+                           ^^^^^^^^^^^^^^^
+E       KeyError: 'cells'
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:98: KeyError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_candidate_preserves_exact_v1_and_full_obligations
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_execution_freeze_keeps_financial_rejection_unknown_and_detached
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[threshold]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[seed]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[case_missing]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[case_duplicate]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[n_erasure]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[measurement]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[falsequalified]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[solver_as_structural]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[missing_case_review]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[attempt_missing]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[source_missing]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[integrity]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[review_scope]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[global_flag_only]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[current_cost_unknown]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[history_erased]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[domain_missing]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[domain_short_axis]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[precision_falsequalified]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[research_n]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[cap_without_plan]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_smallest_qualified_test_n_uses_all_original_ordered_projections
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_legacy_v1_still_rejects_unknown_execution_pilot
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_execution_ready_accepts_full_closed_failed_baselines
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[frozen_tamper]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[source_stale]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[test_opened]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[fit_erased]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[incomplete_fit]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[failed_fit_without_reason]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[validation_erased]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[candidate_erased]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[failed_band_fallback]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[closed_cost_unknown]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[receipt_stale]
+37 failed in 0.54s

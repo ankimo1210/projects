@@ -1,0 +1,163 @@
+from pathlib import Path
+import copy
+import hashlib
+import importlib.util
+import json
+import sys
+import time
+import numpy as np
+
+WT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+OUT = WT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+spec = importlib.util.spec_from_file_location("review_replay_fixtures", WT / "deep_hedge_price/tests/test_dynamic_hedging_replay.py")
+fixtures = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(fixtures)
+import deep_hedge_price._dynamic_hedging_replay as replay
+import hullkit._dynamic_hedging_conditional as conditional
+import hullkit._heston_local_surface as local
+from hullkit._dynamic_hedging_surfaces import evaluate_asian
+
+start = time.monotonic()
+records = []
+rows, parameters, axes = fixtures._domain_replay_fixture()
+domains = [{"state": [1, 5], "threshold": [0, 4]}]
+base = replay.rebuild_asian_cache(rows, parameters, axes, model="heston", evaluation_domains=domains)
+local_rows, local_parameters, local_axes = fixtures._domain_replay_fixture(model="local")
+local_domains = [
+    {"spot": [1, 5], "state": [0, 4], "threshold": [1, 5]},
+    {"spot": [0, 4], "state": [0, 4], "threshold": [0, 4]},
+]
+local_base = replay.rebuild_asian_cache(local_rows, local_parameters, local_axes, model="local", evaluation_domains=local_domains)
+legacy_base = replay.rebuild_asian_cache(rows, parameters, axes, model="heston")
+none_base = replay.rebuild_asian_cache(rows, parameters, axes, model="heston", evaluation_domains=[None])
+
+# Setup uses only hand-specified finite drivers. All below probes forbid new
+# teachers, random draws and CF/quadrature solves during cache reconstruction.
+calls = []
+def forbidden(*args, **kwargs):
+    calls.append("forbidden")
+    raise AssertionError("saved-only replay regenerated drivers or a pricing solve")
+
+restored = []
+def patch(owner, name):
+    if hasattr(owner, name):
+        restored.append((owner, name, getattr(owner, name)))
+        setattr(owner, name, forbidden)
+for name in ("default_rng", "RandomState", "seed", "normal", "standard_normal", "rand", "randn", "random", "uniform"):
+    patch(np.random, name)
+patch(conditional, "teacher_primitives")
+patch(fixtures, "teacher_primitives")
+for name in ("fourier_surface", "_quadrature", "_characteristic_terms", "_characteristic_and_time_derivative"):
+    patch(local, name)
+
+def immutable_same(expected, saved, name):
+    if isinstance(expected, local.HestonParameters):
+        replay._same(vars(expected), vars(saved), name)
+    elif isinstance(expected, dict):
+        assert isinstance(saved, dict) and set(expected) == set(saved), name
+        for key, value in expected.items():
+            immutable_same(value, saved[key], name + "." + str(key))
+    elif isinstance(expected, (list, tuple)):
+        assert isinstance(saved, (list, tuple)) and len(expected) == len(saved), name
+        for index, (value, other) in enumerate(zip(expected, saved, strict=True)):
+            immutable_same(value, other, name + "[" + str(index) + "]")
+    else:
+        replay._same(expected, saved, name)
+
+class Once:
+    def __init__(self, values):
+        self.values = values
+        self.iterations = 0
+        self.yields = 0
+    def __iter__(self):
+        self.iterations += 1
+        if self.iterations != 1:
+            raise AssertionError("stream re-consumed")
+        for value in self.values:
+            self.yields += 1
+            yield value
+
+def run(case, mutate=None, *, local_model=False, expect="reject", requested=None, saved_override=None):
+    original = local_base if local_model else base
+    rs, p, ax = (local_rows, local_parameters, local_axes) if local_model else (rows, parameters, axes)
+    requested = (local_domains if local_model else domains) if requested is None else requested
+    saved = copy.deepcopy(original["cache"]) if saved_override is None else copy.deepcopy(saved_override)
+    if mutate:
+        mutate(saved)
+    stream = Once(rs)
+    before_saved = copy.deepcopy(saved)
+    begin = time.monotonic()
+    try:
+        out = replay.rebuild_asian_cache(stream, p, ax, model="local" if local_model else "heston", evaluation_domains=requested, saved_cache=saved)
+        result = "accept"
+        detail = {"qualification": out["qualification"], "integrity": out["integrity"], "original_N": out["cache"]["original_N"], "groups": out["saved_group_count"]}
+        assert out["qualification"] == "unknown"
+    except ValueError as exc:
+        result = "reject"
+        detail = {"error": str(exc)}
+    assert result == expect, (case, result, detail)
+    assert stream.iterations == 1 and stream.yields == len(rs), (case, stream.iterations, stream.yields)
+    # Numeric and raw status evidence remains unchanged; no compare-time repair.
+    immutable_same(before_saved, saved, "immutable_saved")
+    records.append({"case": case, "expected": expect, "observed": result, "stream_iterations": stream.iterations, "stream_yields": stream.yields, "wall_seconds": time.monotonic()-begin, **detail})
+
+try:
+    run("exact saved metadata", expect="accept")
+    run("numeric bounds tolerance accepted", lambda c: c["evaluation_domain_bounds"][0]["state"].__setitem__(0, c["evaluation_domain_bounds"][0]["state"][0]+1e-12), expect="accept")
+    run("numeric raw arrays tolerance accepted", lambda c: (c["f"].__iadd__(1e-12), c["block_means"].__iadd__(1e-12)), expect="accept")
+    run("exact index differs", lambda c: c["evaluation_domains"][0].__setitem__("state", [0,4]))
+    run("near integer index differs", lambda c: c["evaluation_domains"][0]["state"].__setitem__(0, 1.000000000001))
+    run("boolean index differs", lambda c: c["evaluation_domains"][0]["state"].__setitem__(0, True))
+    run("schema differs", lambda c: c.__setitem__("evaluation_domain_schema", "rb-f04-asian-fixed-domain-v2"))
+    run("sheet differs", lambda c: c["evaluation_domain_sheets"].__setitem__(0, "t0_sheet"))
+    run("physical bounds beyond tolerance", lambda c: c["evaluation_domain_bounds"][0]["state"].__setitem__(0, 0.011))
+    for key in ("evaluation_domains", "evaluation_domain_schema", "evaluation_domain_bounds", "evaluation_domain_sheets"):
+        run("required explicit metadata missing: "+key, lambda c,key=key: c.pop(key))
+    run("outside original mean NaN repaired", lambda c: c["f"].__setitem__((0,0,-1), 0.0))
+    run("outside original block NaN repaired", lambda c: c["block_means"].__setitem__((0,0,-1,15,2), 0.0))
+    run("inside block15 changed", lambda c: c["block_means"].__setitem__((0,2,2,15,2), c["block_means"][0,2,2,15,2]+0.01))
+    run("CV block15 removed", lambda c: c.__setitem__("block_means", c["block_means"][...,:15,:]))
+    run("threshold original full axis shortened", lambda c: c.__setitem__("threshold_nodes", c["threshold_nodes"][...,:-1]))
+    run("support NaN status repaired", lambda c: c["support_mask"].__setitem__((0,0,-1),True))
+    run("original cache N reduced", lambda c: c.__setitem__("original_N",16))
+    run("original group N reduced", lambda c: c["primitive_groups"]["groups"][0].__setitem__("N",16))
+    run("unknown original group status rescued", lambda c: c["primitive_groups"]["groups"][0]["status"].__setitem__(-1,"ready"))
+    run("original group status reason removed", lambda c: c["primitive_groups"]["groups"][0].pop("status_reasons"))
+    run("original group removed", lambda c: c["primitive_groups"]["groups"].pop())
+    run("local exact t0 and full arrays", local_model=True, expect="accept")
+    run("local t0 outside box block NaN repaired", lambda c: c["t0_sheet"]["block_means"].__setitem__((0,0,-1,15,2),0.0), local_model=True)
+    run("local t0 axis changed", lambda c: c["t0_sheet"]["spot_nodes"].__setitem__(0,99.7), local_model=True)
+    run("local t0 sheet mapping changed", lambda c: c["evaluation_domain_sheets"].__setitem__(0,"main"), local_model=True)
+    run("explicit unavailable exact date", requested=[None], saved_override=none_base["cache"], expect="accept")
+    # None argument uses the original cache with missing domain keys or null.
+    for mode in ("missing", "null"):
+        saved = copy.deepcopy(legacy_base["cache"])
+        if mode == "null":
+            for key in ("evaluation_domains", "evaluation_domain_schema", "evaluation_domain_bounds", "evaluation_domain_sheets"):
+                saved[key]=None
+        stream=Once(rows)
+        out=replay.rebuild_asian_cache(stream,parameters,axes,model="heston",saved_cache=saved)
+        assert out["qualification"]=="unknown" and "evaluation_domains" not in out["cache"]
+        assert stream.iterations==1 and stream.yields==6
+        records.append({"case":"legacy default "+mode,"expected":"accept","observed":"accept","stream_iterations":stream.iterations,"stream_yields":stream.yields})
+    legacy_stream=Once(rows)
+    try:
+        replay.rebuild_asian_cache(legacy_stream,parameters,axes,model="heston",saved_cache=base["cache"])
+        raise AssertionError("default request incorrectly accepted explicit saved domain")
+    except ValueError as exc:
+        records.append({"case":"default request rejects explicit saved domain","observed":"reject","error":str(exc)})
+    run("explicit request rejects legacy cache", saved_override=legacy_base["cache"])
+    assert not calls
+    # Review cannot qualify Greek SE or pilot readiness from structural agreement.
+    for model, saved in (("heston",base["cache"]),("local",local_base["cache"])):
+        assert saved["original_N"]==32
+    assert evaluate_asian(none_base["cache"],0,100.,0.04,1100.,11)["reason"]=="no_evaluation_domain"
+finally:
+    for owner,name,value in reversed(restored):
+        setattr(owner,name,value)
+
+source=WT/"deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py"
+tests=WT/"deep_hedge_price/tests/test_dynamic_hedging_replay.py"
+report={"case_count":len(records),"records":records,"solver_rng_regeneration_calls":len(calls),"source_sha256":hashlib.sha256(source.read_bytes()).hexdigest(),"tests_sha256":hashlib.sha256(tests.read_bytes()).hexdigest(),"B_dependency_sha256":hashlib.sha256((WT/"johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py").read_bytes()).hexdigest(),"wall_seconds":time.monotonic()-start,"financial_qualification":"NOT_GRANTED","formal_pilot":"NOT_RUN"}
+(OUT/"task-5-domain-replay-source-review-probes.json").write_text(json.dumps(report,indent=2)+"\n")
+print(json.dumps(report,indent=2))

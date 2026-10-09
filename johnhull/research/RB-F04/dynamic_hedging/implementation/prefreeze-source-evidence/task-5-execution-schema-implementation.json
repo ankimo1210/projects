@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-10",
+  "status": "implemented_scoped_verified_awaiting_independent_source_review",
+  "proposal_sha256": "3728b09ab65b0960a13bc54309dee13f476c606c36c6ce9b6cbcc10281ea271b",
+  "formal_pilot_approved": false,
+  "actual_execution_freeze_approved": false,
+  "financial_qualification_approved": false,
+  "tests": {
+    "passed": 50,
+    "seconds": 0.99
+  },
+  "ruff_check": "PASS",
+  "ruff_format_check": "PASS",
+  "owned_paths": [
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+  ],
+  "parent_owns": [
+    "runner",
+    "canonical_docs",
+    "Git",
+    "independent_source_review",
+    "actual_pilot",
+    "main/fresh/full_acceptance"
+  ]
+}

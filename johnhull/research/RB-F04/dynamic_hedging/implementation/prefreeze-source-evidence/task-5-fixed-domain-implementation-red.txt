@@ -1,0 +1,1763 @@
+....................FFFFFFFFFFFFFFFFFFFFFFFFF                            [100%]
+=================================== FAILURES ===================================
+________ test_fixed_domain_full_axes_matches_unchanged_default[heston] _________
+
+model = 'heston'
+
+    @pytest.mark.parametrize("model", ["heston", "local"])
+    def test_fixed_domain_full_axes_matches_unchanged_default(model):
+>       original = fixed_domain_fixture(model)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:475: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_________ test_fixed_domain_full_axes_matches_unchanged_default[local] _________
+
+model = 'local'
+
+    @pytest.mark.parametrize("model", ["heston", "local"])
+    def test_fixed_domain_full_axes_matches_unchanged_default(model):
+>       original = fixed_domain_fixture(model)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:475: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'local'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_______ test_fixed_domain_far_nan_does_not_erase_original_nodes[heston] ________
+
+model = 'heston'
+
+    @pytest.mark.parametrize("model", ["heston", "local"])
+    def test_fixed_domain_far_nan_does_not_erase_original_nodes(model):
+>       cache = fixed_domain_fixture(model, domains=fixed_domain(model))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:501: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+________ test_fixed_domain_far_nan_does_not_erase_original_nodes[local] ________
+
+model = 'local'
+
+    @pytest.mark.parametrize("model", ["heston", "local"])
+    def test_fixed_domain_far_nan_does_not_erase_original_nodes(model):
+>       cache = fixed_domain_fixture(model, domains=fixed_domain(model))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:501: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'local'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_ test_fixed_domain_same_price_operator_greeks_and_shared_block_covariance[heston] _
+
+model = 'heston'
+
+    @pytest.mark.parametrize("model", ["heston", "local"])
+    def test_fixed_domain_same_price_operator_greeks_and_shared_block_covariance(model):
+>       cache = fixed_domain_fixture(model, domains=fixed_domain(model))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_ test_fixed_domain_same_price_operator_greeks_and_shared_block_covariance[local] _
+
+model = 'local'
+
+    @pytest.mark.parametrize("model", ["heston", "local"])
+    def test_fixed_domain_same_price_operator_greeks_and_shared_block_covariance(model):
+>       cache = fixed_domain_fixture(model, domains=fixed_domain(model))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'local'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_ test_fixed_domain_required_bad_node_is_unknown_without_repair[mean-nonfinite_domain_nodes] _
+
+damage = 'mean', reason = 'nonfinite_domain_nodes'
+
+    @pytest.mark.parametrize("damage,reason", [
+        ("mean", "nonfinite_domain_nodes"),
+        ("block", "nonfinite_domain_blocks"),
+        ("negative", "domain_price_bounds"),
+    ])
+    def test_fixed_domain_required_bad_node_is_unknown_without_repair(damage, reason):
+>       cache = fixed_domain_fixture(domains=fixed_domain())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:617: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_ test_fixed_domain_required_bad_node_is_unknown_without_repair[block-nonfinite_domain_blocks] _
+
+damage = 'block', reason = 'nonfinite_domain_blocks'
+
+    @pytest.mark.parametrize("damage,reason", [
+        ("mean", "nonfinite_domain_nodes"),
+        ("block", "nonfinite_domain_blocks"),
+        ("negative", "domain_price_bounds"),
+    ])
+    def test_fixed_domain_required_bad_node_is_unknown_without_repair(damage, reason):
+>       cache = fixed_domain_fixture(domains=fixed_domain())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:617: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_ test_fixed_domain_required_bad_node_is_unknown_without_repair[negative-domain_price_bounds] _
+
+damage = 'negative', reason = 'domain_price_bounds'
+
+    @pytest.mark.parametrize("damage,reason", [
+        ("mean", "nonfinite_domain_nodes"),
+        ("block", "nonfinite_domain_blocks"),
+        ("negative", "domain_price_bounds"),
+    ])
+    def test_fixed_domain_required_bad_node_is_unknown_without_repair(damage, reason):
+>       cache = fixed_domain_fixture(domains=fixed_domain())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:617: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+__ test_fixed_domain_unavailable_date_outside_rows_and_snapshot_are_explicit ___
+
+    def test_fixed_domain_unavailable_date_outside_rows_and_snapshot_are_explicit():
+        domains = [None, {"state": [0, 4], "threshold": [0, 4]}]
+>       cache = fixed_domain_fixture(domains=domains)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:636: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_____ test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad0] _____
+
+bad = []
+
+    @pytest.mark.parametrize("bad", [
+        [],
+        [{"state": [0, 4], "threshold": [0, 4]}],
+        [{"state": [0, 3], "threshold": [0, 4]}] * 2,
+        [{"state": [-1, 4], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 9], "threshold": [0, 4]}] * 2,
+        [{"state": [2, 2], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4, 1], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4], "threshold": [0, 4], "spot": [0, 4]}] * 2,
+    ])
+    def test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry(bad):
+        with pytest.raises(ValueError, match="domain"):
+>           fixed_domain_fixture(domains=bad)
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:661: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_____ test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad1] _____
+
+bad = [{'state': [0, 4], 'threshold': [0, 4]}]
+
+    @pytest.mark.parametrize("bad", [
+        [],
+        [{"state": [0, 4], "threshold": [0, 4]}],
+        [{"state": [0, 3], "threshold": [0, 4]}] * 2,
+        [{"state": [-1, 4], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 9], "threshold": [0, 4]}] * 2,
+        [{"state": [2, 2], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4, 1], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4], "threshold": [0, 4], "spot": [0, 4]}] * 2,
+    ])
+    def test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry(bad):
+        with pytest.raises(ValueError, match="domain"):
+>           fixed_domain_fixture(domains=bad)
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:661: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_____ test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad2] _____
+
+bad = [{'state': [0, 3], 'threshold': [0, 4]}, {'state': [0, 3], 'threshold': [0, 4]}]
+
+    @pytest.mark.parametrize("bad", [
+        [],
+        [{"state": [0, 4], "threshold": [0, 4]}],
+        [{"state": [0, 3], "threshold": [0, 4]}] * 2,
+        [{"state": [-1, 4], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 9], "threshold": [0, 4]}] * 2,
+        [{"state": [2, 2], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4, 1], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4], "threshold": [0, 4], "spot": [0, 4]}] * 2,
+    ])
+    def test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry(bad):
+        with pytest.raises(ValueError, match="domain"):
+>           fixed_domain_fixture(domains=bad)
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:661: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_____ test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad3] _____
+
+bad = [{'state': [-1, 4], 'threshold': [0, 4]}, {'state': [-1, 4], 'threshold': [0, 4]}]
+
+    @pytest.mark.parametrize("bad", [
+        [],
+        [{"state": [0, 4], "threshold": [0, 4]}],
+        [{"state": [0, 3], "threshold": [0, 4]}] * 2,
+        [{"state": [-1, 4], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 9], "threshold": [0, 4]}] * 2,
+        [{"state": [2, 2], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4, 1], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4], "threshold": [0, 4], "spot": [0, 4]}] * 2,
+    ])
+    def test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry(bad):
+        with pytest.raises(ValueError, match="domain"):
+>           fixed_domain_fixture(domains=bad)
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:661: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_____ test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad4] _____
+
+bad = [{'state': [0, 9], 'threshold': [0, 4]}, {'state': [0, 9], 'threshold': [0, 4]}]
+
+    @pytest.mark.parametrize("bad", [
+        [],
+        [{"state": [0, 4], "threshold": [0, 4]}],
+        [{"state": [0, 3], "threshold": [0, 4]}] * 2,
+        [{"state": [-1, 4], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 9], "threshold": [0, 4]}] * 2,
+        [{"state": [2, 2], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4, 1], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4], "threshold": [0, 4], "spot": [0, 4]}] * 2,
+    ])
+    def test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry(bad):
+        with pytest.raises(ValueError, match="domain"):
+>           fixed_domain_fixture(domains=bad)
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:661: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_____ test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad5] _____
+
+bad = [{'state': [2, 2], 'threshold': [0, 4]}, {'state': [2, 2], 'threshold': [0, 4]}]
+
+    @pytest.mark.parametrize("bad", [
+        [],
+        [{"state": [0, 4], "threshold": [0, 4]}],
+        [{"state": [0, 3], "threshold": [0, 4]}] * 2,
+        [{"state": [-1, 4], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 9], "threshold": [0, 4]}] * 2,
+        [{"state": [2, 2], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4, 1], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4], "threshold": [0, 4], "spot": [0, 4]}] * 2,
+    ])
+    def test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry(bad):
+        with pytest.raises(ValueError, match="domain"):
+>           fixed_domain_fixture(domains=bad)
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:661: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_____ test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad6] _____
+
+bad = [{'state': [0, 4, 1], 'threshold': [0, 4]}, {'state': [0, 4, 1], 'threshold': [0, 4]}]
+
+    @pytest.mark.parametrize("bad", [
+        [],
+        [{"state": [0, 4], "threshold": [0, 4]}],
+        [{"state": [0, 3], "threshold": [0, 4]}] * 2,
+        [{"state": [-1, 4], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 9], "threshold": [0, 4]}] * 2,
+        [{"state": [2, 2], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4, 1], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4], "threshold": [0, 4], "spot": [0, 4]}] * 2,
+    ])
+    def test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry(bad):
+        with pytest.raises(ValueError, match="domain"):
+>           fixed_domain_fixture(domains=bad)
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:661: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_____ test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad7] _____
+
+bad = [{'spot': [0, 4], 'state': [0, 4], 'threshold': [0, 4]}, {'spot': [0, 4], 'state': [0, 4], 'threshold': [0, 4]}]
+
+    @pytest.mark.parametrize("bad", [
+        [],
+        [{"state": [0, 4], "threshold": [0, 4]}],
+        [{"state": [0, 3], "threshold": [0, 4]}] * 2,
+        [{"state": [-1, 4], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 9], "threshold": [0, 4]}] * 2,
+        [{"state": [2, 2], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4, 1], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4], "threshold": [0, 4], "spot": [0, 4]}] * 2,
+    ])
+    def test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry(bad):
+        with pytest.raises(ValueError, match="domain"):
+>           fixed_domain_fixture(domains=bad)
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:661: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+____ test_fixed_domain_local_t0_uses_its_dedicated_spot_axis_and_all_blocks ____
+
+    def test_fixed_domain_local_t0_uses_its_dedicated_spot_axis_and_all_blocks():
+>       cache = fixed_domain_fixture("local", domains=fixed_domain("local"))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:665: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'local'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+______ test_fixed_domain_linear_and_settled_do_not_require_patch_or_state ______
+
+    def test_fixed_domain_linear_and_settled_do_not_require_patch_or_state():
+>       cache = fixed_domain_fixture(domains=[None, None])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:688: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_ test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary[0.02] _
+
+coordinate = 0.02
+
+    @pytest.mark.parametrize("coordinate", [0.02, 0.04, 0.01, 0.06])
+    def test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary(coordinate):
+>       cache = fixed_domain_fixture(domains=fixed_domain())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:701: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_ test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary[0.04] _
+
+coordinate = 0.04
+
+    @pytest.mark.parametrize("coordinate", [0.02, 0.04, 0.01, 0.06])
+    def test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary(coordinate):
+>       cache = fixed_domain_fixture(domains=fixed_domain())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:701: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_ test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary[0.01] _
+
+coordinate = 0.01
+
+    @pytest.mark.parametrize("coordinate", [0.02, 0.04, 0.01, 0.06])
+    def test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary(coordinate):
+>       cache = fixed_domain_fixture(domains=fixed_domain())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:701: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_ test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary[0.06] _
+
+coordinate = 0.06
+
+    @pytest.mark.parametrize("coordinate", [0.02, 0.04, 0.01, 0.06])
+    def test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary(coordinate):
+>       cache = fixed_domain_fixture(domains=fixed_domain())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:701: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+model = 'heston'
+
+    def fixed_domain_fixture(model="heston", *, domains=None):
+        """Nonuniform polynomial curves with correlated original sixteen blocks."""
+        dates = np.array([0.0, 0.5])
+        thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        states = (
+            np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+            if model == "heston"
+            else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+        )
+        axes = {"dates": dates, "state": states, "threshold": thresholds}
+        offset = (np.arange(16) - 7.5) * 0.001
+    
+        def curves(spots=None):
+            if model == "local":
+                z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+                f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+                noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+            else:
+                state, x = np.meshgrid(states, thresholds, indexing="ij")
+                f = (
+                    3.0
+                    + 2.0 * state
+                    + 0.7 * state**2
+                    + 10.0 * state**3
+                    - 0.025 * x
+                    + 0.0004 * x**2
+                    - 2e-6 * x**3
+                    + 0.01 * state * x
+                )
+                noise = 1.0 + 2.0 * state + 0.01 * x
+            block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+            block[..., 2] += noise[..., None] * offset
+            return f, block
+    
+        if model == "local":
+            axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+            axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+            f, blocks = curves(axes["spot"])
+            t0_f, t0_blocks = curves(axes["t0_spot"])
+        else:
+            f, blocks = curves()
+        raw = {
+            "parameters": P,
+            "N": 32,
+            "f": np.stack([f, f]),
+            "block_means": np.stack([blocks, blocks]),
+        }
+        if model == "local":
+            raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+>       return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:457: TypeError
+_ test_fixed_domain_keeps_original_nonunique_call_roots_instead_of_rescuing_patch_root _
+
+    def test_fixed_domain_keeps_original_nonunique_call_roots_instead_of_rescuing_patch_root():
+        states = np.array([0.25, 0.5, 0.625, 0.75, 1.0, 2.0, 4.0])
+        spots = np.array([80.0, 95.0, 105.0, 120.0])
+        curve = 10.0 + (states - 0.6) * (states - 1.2) * (states - 3.0)
+        call = {
+            "model": "local", "dates": np.array([0.5]),
+            "spot_nodes": spots, "state_nodes": states,
+            "values": (0.3 * (spots[:, None] - 100.0) + curve[None, :])[None],
+            "rate": 0.03, "dividend_yield": 0.0, "strike": 100.0, "maturity": 1.25,
+            "derivative_error": 0.0,
+        }
+        threshold = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+        f = np.broadcast_to(np.full((4, 7, 5), 2.0), (4, 7, 5)).copy()
+>       asian = build_asian_cache(
+            {
+                "parameters": P, "N": 32, "f": f[None],
+                "block_means": np.broadcast_to(f[None, ..., None, None], (1, 4, 7, 5, 16, 3)).copy(),
+            },
+            model="local", axes={"dates": [0.5], "spot": spots, "state": states, "threshold": threshold},
+            evaluation_domains=[{"spot": [0, 4], "state": [1, 5], "threshold": [0, 4]}],
+        )
+E       TypeError: build_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py:735: TypeError
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_full_axes_matches_unchanged_default[heston]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_full_axes_matches_unchanged_default[local]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_far_nan_does_not_erase_original_nodes[heston]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_far_nan_does_not_erase_original_nodes[local]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_same_price_operator_greeks_and_shared_block_covariance[heston]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_same_price_operator_greeks_and_shared_block_covariance[local]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_required_bad_node_is_unknown_without_repair[mean-nonfinite_domain_nodes]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_required_bad_node_is_unknown_without_repair[block-nonfinite_domain_blocks]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_required_bad_node_is_unknown_without_repair[negative-domain_price_bounds]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_unavailable_date_outside_rows_and_snapshot_are_explicit
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad0]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad1]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad2]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad3]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad4]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad5]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad6]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry[bad7]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_local_t0_uses_its_dedicated_spot_axis_and_all_blocks
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_linear_and_settled_do_not_require_patch_or_state
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary[0.02]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary[0.04]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary[0.01]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary[0.06]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py::test_fixed_domain_keeps_original_nonunique_call_roots_instead_of_rescuing_patch_root
+25 failed, 20 passed in 6.31s

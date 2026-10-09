@@ -1,0 +1,102 @@
+{
+  "decision": "APPROVE_BOUNDED_ADAPTER_CODE",
+  "blocking_findings": [],
+  "source_sha256": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b",
+  "tests_sha256": "d811e320f449c9cd92b2894b8da38b0de2c292d4423c06a74491288f12c04781",
+  "B_dependency_sha256": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+  "approved_design_sha256": "3728b09ab65b0960a13bc54309dee13f476c606c36c6ce9b6cbcc10281ea271b",
+  "scope": [
+    "replay adapter source",
+    "dedicated tests",
+    "saved-cache domain/evidence comparison"
+  ],
+  "excluded": [
+    "financial SE/Greeks/oracle",
+    "candidate-specific bounds qualification",
+    "formal pilot",
+    "source freeze",
+    "main readiness/integration",
+    "A schema",
+    "full suite"
+  ],
+  "tests": "101 passed in 0.97s",
+  "adversarial_probe_cases": 33,
+  "solver_rng_regeneration_calls": 0,
+  "artifacts": [
+    {
+      "file": "task-5-domain-replay-source-review-compatibility.json",
+      "bytes": 374,
+      "sha256": "99c62329344244e9d9fd1ff588e534987305d1d97e61d24a94b37f84a754fa26"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-diff-check.json",
+      "bytes": 238,
+      "sha256": "5e16c70095cf638c337627e6028f1be83f41b2f7600743da3d745f1f983293fa"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-final-source.txt",
+      "bytes": 39168,
+      "sha256": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-final-tests.txt",
+      "bytes": 48104,
+      "sha256": "d811e320f449c9cd92b2894b8da38b0de2c292d4423c06a74491288f12c04781"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-probes-first-harness-failure-run.json",
+      "bytes": 286,
+      "sha256": "dfceb03e916ef1bdf83f3a64922ea7084a21306197518f8ebc211d2a6687b54a"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-probes-first-harness-failure.py",
+      "bytes": 9869,
+      "sha256": "5365f787777b507549c18d77f1173338f4d5c0a9042e09f0a3c552c432b342f8"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-probes-first-harness-failure.txt",
+      "bytes": 1716,
+      "sha256": "8f5a4acf86b7e16d1c3cde4b65c29dbbe89a4cc1dd0190b9bbfa5508ed7c6884"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-probes-run.json",
+      "bytes": 285,
+      "sha256": "f783f418d3ba588da411b167124773d7d30c03cf0a8ea4b83412f84e8583f6bd"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-probes.json",
+      "bytes": 10231,
+      "sha256": "864e4227689f0fcb0adc2b103c083833f6286ad99f782f11a3b1cf2893e0debf"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-probes.py",
+      "bytes": 10337,
+      "sha256": "a0285b46a0d66d2c4441ac6c4deb371e65d48791d2385e98e04cf44ae880d58a"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-probes.txt",
+      "bytes": 10231,
+      "sha256": "864e4227689f0fcb0adc2b103c083833f6286ad99f782f11a3b1cf2893e0debf"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-ruff.json",
+      "bytes": 812,
+      "sha256": "5b6e400736426cc805cb8fc05882e777acd5c760447e32f6d7ce5d35acd291d7"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-scoped.json",
+      "bytes": 534,
+      "sha256": "4c120f7e9602a8bcaece6620a0093eee084deeb175f49827fe68dc7cb920c6a3"
+    },
+    {
+      "file": "task-5-domain-replay-source-review-scoped.txt",
+      "bytes": 180,
+      "sha256": "81e9be478890dc9418bd9de5ca5e37b8edf2e8e66069f9e6893324b188e8e7fa"
+    },
+    {
+      "file": "task-5-domain-replay-source-review.md",
+      "bytes": 5731,
+      "sha256": "68f469ef6929d76a7ff68d760f349d03b2b12818dea232564eb68ead7039c6c3"
+    }
+  ]
+}

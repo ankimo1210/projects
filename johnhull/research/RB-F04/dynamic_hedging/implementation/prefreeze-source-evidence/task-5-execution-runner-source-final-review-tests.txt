@@ -1,0 +1,6 @@
+COMMAND /home/kazumasa/projects/.venv/bin/python -m pytest -q deep_hedge_price/tests/test_dynamic_hedging_runner.py
+.......................................                                  [100%]
+39 passed in 28.10s
+
+EXIT 0
+WALL 28.991034069000307

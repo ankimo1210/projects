@@ -1,0 +1,57 @@
+[
+  {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/ruff",
+      "check",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+      "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_replay.py",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_execution.py",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+    ],
+    "returncode": 0,
+    "stdout": "All checks passed!\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/ruff",
+      "format",
+      "--check",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+      "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_replay.py",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_execution.py",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+    ],
+    "returncode": 0,
+    "stdout": "8 files already formatted\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+      "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_replay.py",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_execution.py",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+      "johnhull/MODEL_INDEX.md"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

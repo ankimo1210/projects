@@ -1,0 +1,29 @@
+{
+  "decision": "approved_bounded_source",
+  "reviewer": "root, independent from B source author",
+  "bindings": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py": "98e2b6f569e07a55f66c9a3cc44443c125c793d9209e10cc6d2af3dc74a18396"
+  },
+  "critical": 0,
+  "important": 0,
+  "results": [
+    {
+      "kind": "probes",
+      "exit_code": 0,
+      "wall_seconds": 0.5480397789997369
+    },
+    {
+      "kind": "tests",
+      "exit_code": 0,
+      "wall_seconds": 6.016166286000043
+    }
+  ],
+  "not_approved": [
+    "domain selection precision",
+    "formal pilot",
+    "freeze",
+    "main",
+    "financial performance"
+  ]
+}
