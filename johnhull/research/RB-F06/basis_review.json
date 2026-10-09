@@ -1,0 +1,766 @@
+{
+  "schema": "RB-F06-basis-independent-review-v1",
+  "reviewed_at_utc": "2026-10-09T06:19:28.119312+00:00",
+  "source_registry_snapshot": {
+    "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+    "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+    "research/RB-F06/protocol.py": "5b6e47c39f6c7ac0b009027883e29186b8f385961e99e2f622ae6b035d8d632d",
+    "research/RB-F06/reference_methods.py": "d8e76a9a4e73beba393a4290c3f9d0448138603fa79e96e0ef8ec28432bec497",
+    "research/RB-F06/build_reference.py": "8d9bb7ea634a7c6117396fae64f53125abf2e1b2c7c92ce7481ffc3260569c0b",
+    "research/RB-F06/analytics.py": "9d6076382a9dd1c308248c6dcf07e7218b3954bd80a62da8795c5e7aea97d135"
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  },
+  "reviewed_fingerprints": {
+    "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+    "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+    "research/RB-F06/analytics.py": "9d6076382a9dd1c308248c6dcf07e7218b3954bd80a62da8795c5e7aea97d135",
+    "research/RB-F06/protocol.py": "5b6e47c39f6c7ac0b009027883e29186b8f385961e99e2f622ae6b035d8d632d",
+    "research/RB-F06/protocol.json": "1d4e7e72e2bed160b3314b907293b75777926ecd065427c7da4baee651f81752",
+    "hullkit/tests/test_sabr_identifiability.py": "aee5b4870efa037fba799b0b1af506c497f638cc6d3918ff88fb80029727f629",
+    "hullkit/tests/test_sabr_identifiability_analytics.py": "d59605051b97d78033b8575fcd2bc1a9cef177277bd3931f16a72f7ca8ce4385",
+    "hullkit/tests/test_sabr_identifiability_protocol.py": "7dc1e3a8e6f54aefb021c01937395ea13a302dc9d991f4f5b7b816a4c5d591d0"
+  },
+  "reviewer": "/root/f08_foundation_review",
+  "scope": "Current private Hagan inverse-map basis guards and protocol/analytics helpers only; no repository mutation or Git.",
+  "decision": "basis_guards_pass",
+  "basis_quality_verdict": "pass",
+  "spec_guard_verdict": "pass",
+  "unresolved_findings": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0
+  },
+  "findings": [
+    {
+      "id": "F06-BASIS-I1",
+      "severity": "Important",
+      "status": "resolved",
+      "file": "research/RB-F06/analytics.py",
+      "line": 25,
+      "title": "truth-fixed records bypassed dataset baseline and slice audit",
+      "reproduction": "dataset_support(10.0, [], [{\"q\":1.0,\"success\":True},{\"q\":10.0,\"success\":True}])",
+      "before": "supported; both included",
+      "correction": "Audit profiles, truth dictionaries/scalars and finite slice witnesses; any improvement invalidates every truth axis in the dataset.",
+      "after": "unsupported; every truth outcome unknown; failed finite lower-q and failed lower-slice witnesses also invalidate."
+    },
+    {
+      "id": "F06-BASIS-I2",
+      "severity": "Important",
+      "status": "resolved",
+      "file": "research/RB-F06/protocol.py",
+      "line": 68,
+      "title": "require_frozen load accepted self-consistent partial source registry",
+      "reproduction": "Replace source_registry in memory with SOURCES minus sabr.py; construct matching frozen digest/source_registry; validate_protocol(..., require_frozen=True).",
+      "before": "state frozen accepted",
+      "correction": "Require both live and saved source key sets to equal SOURCES before digest equality acceptance.",
+      "after": "ValueError complete frozen financial source registry required; partial freeze also rejects."
+    },
+    {
+      "id": "F06-BASIS-I3",
+      "severity": "Important",
+      "status": "resolved",
+      "origin": "root identified schema integration gap; independently verified",
+      "file": "research/RB-F06/analytics.py",
+      "line": 208,
+      "title": "Converged profile point could hide lower failed finite profile attempt",
+      "reproduction": "Unrestricted converged Q=10; converged truth points Q=11,12,13; saved failed profile fit Q=1.",
+      "before": "Previous witness line reproduced in memory: supported / all included.",
+      "correction": "Audit every saved fit with kind=profile, alongside aggregate points, best finite unrestricted and slice witnesses.",
+      "after": "Whole dataset unsupported / all truth axes unknown; original denominators preserved."
+    }
+  ],
+  "financial_main_acceptance": false,
+  "exact_sabr_pricing_validation": false,
+  "pilot_freeze_authorization": false,
+  "verification": {
+    "independent_probe_exit_code": 0,
+    "probe_before_and_after_fingerprints_unchanged": true,
+    "main_noise_drawn": false,
+    "solver_probe_calls": 1,
+    "author_reported_targeted_tests": 18,
+    "author_reported_targeted_tests_status": "PASS; not independently rerun",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "PYTHONPATH": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src"
+    },
+    "evidence": {
+      "actual_zero_and_tiny_positive": [
+        {
+          "nu": 0,
+          "jacobians": [
+            [
+              [
+                410.6222158026185,
+                0,
+                0
+              ],
+              [
+                390.54715328944667,
+                0,
+                0
+              ]
+            ],
+            [
+              [
+                410.62221580242897,
+                0,
+                0
+              ],
+              [
+                390.5471532893519,
+                0,
+                0
+              ]
+            ],
+            [
+              [
+                410.62221580148156,
+                0,
+                0
+              ],
+              [
+                390.5471532874571,
+                0,
+                0
+              ]
+            ]
+          ],
+          "stability": {
+            "status": "stable_estimate",
+            "ranks": [
+              1,
+              1,
+              1
+            ],
+            "singular_values_by_step": [
+              [
+                566.6901120128556,
+                0,
+                0
+              ],
+              [
+                566.6901120126529,
+                0,
+                0
+              ],
+              [
+                566.6901120106605,
+                0,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 2.118471512687222e-09,
+            "relative_matrix_change": 3.738324470076374e-12,
+            "smallest_nonzero_to_estimated_error": 267499519638.96005,
+            "direction_projector_changes": [
+              0,
+              0,
+              0
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "nu": 1e-10,
+          "jacobians": [
+            [
+              [
+                410.6222158026185,
+                -4.263256414560601e-09,
+                -3.883712906826986e-05
+              ],
+              [
+                390.54715328944667,
+                5.115907697472721e-09,
+                -1.6109140688058687e-05
+              ]
+            ],
+            [
+              [
+                410.62221580242897,
+                -4.736951571734001e-09,
+                -2.2023982637620065e-05
+              ],
+              [
+                390.5471532893519,
+                5.6843418860808015e-09,
+                -0.0005526781402901785
+              ]
+            ],
+            [
+              [
+                410.62221580148156,
+                -8.526512829121202e-09,
+                0.000249460185841599
+              ],
+              [
+                390.5471532874571,
+                1.1368683772161601e-08,
+                -0.000681902179167082
+              ]
+            ]
+          ],
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                566.6901120128568,
+                1.5092834343176556e-05,
+                0
+              ],
+              [
+                566.6901120127919,
+                0.0003852908569956912,
+                0
+              ],
+              [
+                566.6901120107344,
+                0.0006660256483988902,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 0.0005368323511369878,
+            "relative_matrix_change": 9.473120136687153e-07,
+            "smallest_nonzero_to_estimated_error": 0.7177116956153291,
+            "direction_projector_changes": [
+              0.0004594445372713756,
+              0,
+              2.028032593888976e-06
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        },
+        {
+          "nu": 1e-08,
+          "jacobians": [
+            [
+              [
+                410.6222158026185,
+                -4.476419235288631e-07,
+                1.5932357655401574e-05
+              ],
+              [
+                390.54715328944667,
+                5.468336894409731e-07,
+                -4.5575632157124346e-05
+              ]
+            ],
+            [
+              [
+                410.62221580242897,
+                -4.490630090003833e-07,
+                -0.00030932672719548765
+              ],
+              [
+                390.5471532893519,
+                5.466442113781037e-07,
+                -0.00043805149137673044
+              ]
+            ],
+            [
+              [
+                410.62221580148156,
+                -4.4622083805734286e-07,
+                -0.0024939964760051225
+              ],
+              [
+                390.5471532874571,
+                5.456968210637569e-07,
+                -0.004655191787605872
+              ]
+            ]
+          ],
+          "stability": {
+            "status": "numerical_unresolved",
+            "ranks": [
+              2,
+              2,
+              2
+            ],
+            "singular_values_by_step": [
+              [
+                566.6901120128557,
+                4.4009770488280014e-05,
+                0
+              ],
+              [
+                566.690112012897,
+                0.00010423396024750479,
+                0
+              ],
+              [
+                566.6901120328542,
+                0.0016543468952731272,
+                0
+              ]
+            ],
+            "estimated_delta_j_norm": 0.004749426722189561,
+            "relative_matrix_change": 8.380994518008232e-06,
+            "smallest_nonzero_to_estimated_error": 0.021946640372514536,
+            "direction_projector_changes": [
+              0.009244505640075243,
+              0,
+              0.006344291756712453
+            ],
+            "limitation": "step differences estimate numerical uncertainty; not a proof of structural/global identification"
+          }
+        }
+      ],
+      "independent_decimal_60_digit_nu_derivatives": [
+        {
+          "beta": 0.5,
+          "rho": -0.8,
+          "max_scaled_nu_column_abs_error": 7.105427357601002e-15
+        },
+        {
+          "beta": 0.5,
+          "rho": 0,
+          "max_scaled_nu_column_abs_error": 1.3244999249999998e-41
+        },
+        {
+          "beta": 0.5,
+          "rho": 0.8,
+          "max_scaled_nu_column_abs_error": 7.105427357601002e-15
+        },
+        {
+          "beta": 1,
+          "rho": -0.8,
+          "max_scaled_nu_column_abs_error": 7.105427357601002e-15
+        },
+        {
+          "beta": 1,
+          "rho": 0,
+          "max_scaled_nu_column_abs_error": 1.5489674699999998e-41
+        },
+        {
+          "beta": 1,
+          "rho": 0.8,
+          "max_scaled_nu_column_abs_error": 7.105427357601002e-15
+        }
+      ],
+      "nullspace": {
+        "rank": 2,
+        "null_residual": 0,
+        "vectors_shape": [
+          3,
+          3
+        ]
+      },
+      "budget_retention_and_scaling": {
+        "success": false,
+        "status": 0,
+        "nfev": 1,
+        "njev": 1,
+        "residual_calls": 7,
+        "diagnostic_calls": 7,
+        "scalar_iv_evaluations": 98,
+        "q": 271828.5356772013,
+        "observed_scalar_calls": 98
+      },
+      "dataset_support_extra": {
+        "failed_truth_slice_lower": {
+          "status": "unsupported",
+          "reasons": [
+            "slice_improves_unrestricted_baseline"
+          ],
+          "truth_outcomes": [
+            "unknown"
+          ]
+        },
+        "scalar_truth_lower": {
+          "status": "unsupported",
+          "reasons": [
+            "profile_improves_unrestricted_baseline"
+          ],
+          "truth_outcomes": [
+            "unknown",
+            "unknown"
+          ]
+        }
+      },
+      "dataset_support": {
+        "failed_profile_lower": {
+          "status": "unsupported",
+          "reasons": [
+            "profile_improves_unrestricted_baseline"
+          ],
+          "truth_outcomes": [
+            "unknown",
+            "unknown",
+            "unknown"
+          ]
+        },
+        "profile_slice_violation": {
+          "status": "unsupported",
+          "reasons": [
+            "profile_worse_than_feasible_slice"
+          ],
+          "truth_outcomes": [
+            "unknown",
+            "unknown",
+            "unknown"
+          ]
+        },
+        "truth_only_lower": {
+          "status": "unsupported",
+          "reasons": [
+            "profile_improves_unrestricted_baseline"
+          ],
+          "truth_outcomes": [
+            "unknown",
+            "unknown",
+            "unknown"
+          ]
+        },
+        "failed_truth_lower": {
+          "status": "unsupported",
+          "reasons": [
+            "profile_improves_unrestricted_baseline"
+          ],
+          "truth_outcomes": [
+            "unknown",
+            "unknown"
+          ]
+        },
+        "truth_only_slice_violation": {
+          "status": "unsupported",
+          "reasons": [
+            "profile_worse_than_feasible_slice"
+          ],
+          "truth_outcomes": [
+            "unknown"
+          ]
+        }
+      },
+      "unknown_separation": {
+        "included": 8,
+        "excluded": 0,
+        "unknown": 8,
+        "denominator": 16,
+        "known_denominator": 8,
+        "known_rate": 1,
+        "known_wilson95": [
+          0.6755924351161198,
+          1
+        ],
+        "original_rate_bounds": [
+          0.5,
+          1
+        ],
+        "interpretation": "descriptive pointwise inclusion, not certified confidence coverage"
+      },
+      "disconnected_profile_segments": {
+        "observed_components": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            4
+          ]
+        ],
+        "crossing_brackets": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "unknown_brackets": [],
+        "lower_censored": true,
+        "upper_censored": true,
+        "guaranteed_full_support": false,
+        "interior_limit": "unexplored gaps can contain additional crossings/support components"
+      },
+      "protocol": {
+        "ledger_rows": 40,
+        "physical_seed_unique": true,
+        "seed_sequence_all_match": true,
+        "noise_draws": false,
+        "solver_call_cap": 4830,
+        "present_sources": [
+          "hullkit/src/hullkit/_sabr_identifiability.py",
+          "hullkit/src/hullkit/sabr.py",
+          "research/RB-F06/analytics.py",
+          "research/RB-F06/build_reference.py",
+          "research/RB-F06/protocol.py",
+          "research/RB-F06/reference_methods.py"
+        ],
+        "source_registry_snapshot": {
+          "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+          "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+          "research/RB-F06/protocol.py": "5b6e47c39f6c7ac0b009027883e29186b8f385961e99e2f622ae6b035d8d632d",
+          "research/RB-F06/reference_methods.py": "d8e76a9a4e73beba393a4290c3f9d0448138603fa79e96e0ef8ec28432bec497",
+          "research/RB-F06/build_reference.py": "eb3ab99e93f998e96b2bde326d426356a5611c12b8df372ec9538c85add9fe53",
+          "research/RB-F06/analytics.py": "253d88d48788e8d43e3ecc6da65bcbea3a89a9cb6e41bd303628baf5de702fa3"
+        },
+        "required_sources": [
+          "hullkit/src/hullkit/sabr.py",
+          "hullkit/src/hullkit/_sabr_identifiability.py",
+          "research/RB-F06/protocol.py",
+          "research/RB-F06/reference_methods.py",
+          "research/RB-F06/build_reference.py",
+          "research/RB-F06/analytics.py"
+        ],
+        "real_freeze": {
+          "raised": false,
+          "returned": {
+            "state": "frozen"
+          }
+        },
+        "partial_freeze": {
+          "raised": true,
+          "exception": "ValueError",
+          "message": "complete financial source registry required"
+        },
+        "partial_require_frozen_validation": {
+          "raised": true,
+          "exception": "ValueError",
+          "message": "complete frozen financial source registry required"
+        },
+        "claim_labels": {
+          "chi_square": "pointwise descriptive reference; boundary/nonidentification LR distribution unverified",
+          "profile_price_range": "finite visited point range, not a joint confidence envelope",
+          "hagan": "inverse of asymptotic IV map; exact SABR/dynamics not validated",
+          "support_grid": "unexplored interiors may contain undetected support components"
+        }
+      }
+    },
+    "independent_probe_recipe": "At F=100,T=1,beta=.5,strikes=100*exp([-0.1,0.1]), call scaled_jacobian with theta=[.2,0,nu], h=[1e-4,3e-5,1e-5], nu=[0,1e-10,1e-8]; pass the actual three matrices to analytics.jacobian_stability. Independent 60-digit Decimal Hagan IV formula uses signed nu central derivative at +/-1e-8 on beta=.5/1,rho=-.8/0/.8 and K=100*exp([-.1,0,.1]). One unrestricted max_nfev=1 fit verifies public scalar-call instrumentation and raw/scaled transformation. Apply the explicit truth/slice/source-registry reproductions in findings.",
+    "numerical_probe_source_fingerprints": {
+      "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+      "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+      "research/RB-F06/analytics.py": "253d88d48788e8d43e3ecc6da65bcbea3a89a9cb6e41bd303628baf5de702fa3",
+      "research/RB-F06/protocol.py": "5b6e47c39f6c7ac0b009027883e29186b8f385961e99e2f622ae6b035d8d632d",
+      "research/RB-F06/protocol.json": "1d4e7e72e2bed160b3314b907293b75777926ecd065427c7da4baee651f81752",
+      "hullkit/tests/test_sabr_identifiability.py": "aee5b4870efa037fba799b0b1af506c497f638cc6d3918ff88fb80029727f629",
+      "hullkit/tests/test_sabr_identifiability_analytics.py": "7335c811a60722566d2d19bdc0510c668990f3fe78929b6974ff2a73a557291e",
+      "hullkit/tests/test_sabr_identifiability_protocol.py": "7dc1e3a8e6f54aefb021c01937395ea13a302dc9d991f4f5b7b816a4c5d591d0"
+    },
+    "numerical_probe_reviewed_at_utc": "2026-10-09T06:16:34.245445+00:00",
+    "schema_addendum": {
+      "reviewed_at_utc": "2026-10-09T06:19:28.119312+00:00",
+      "source_registry_snapshot": {
+        "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+        "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+        "research/RB-F06/protocol.py": "5b6e47c39f6c7ac0b009027883e29186b8f385961e99e2f622ae6b035d8d632d",
+        "research/RB-F06/reference_methods.py": "d8e76a9a4e73beba393a4290c3f9d0448138603fa79e96e0ef8ec28432bec497",
+        "research/RB-F06/build_reference.py": "8d9bb7ea634a7c6117396fae64f53125abf2e1b2c7c92ce7481ffc3260569c0b",
+        "research/RB-F06/analytics.py": "9d6076382a9dd1c308248c6dcf07e7218b3954bd80a62da8795c5e7aea97d135"
+      },
+      "reviewed_fingerprints": {
+        "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+        "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+        "research/RB-F06/analytics.py": "9d6076382a9dd1c308248c6dcf07e7218b3954bd80a62da8795c5e7aea97d135",
+        "research/RB-F06/protocol.py": "5b6e47c39f6c7ac0b009027883e29186b8f385961e99e2f622ae6b035d8d632d",
+        "research/RB-F06/protocol.json": "1d4e7e72e2bed160b3314b907293b75777926ecd065427c7da4baee651f81752",
+        "hullkit/tests/test_sabr_identifiability.py": "aee5b4870efa037fba799b0b1af506c497f638cc6d3918ff88fb80029727f629",
+        "hullkit/tests/test_sabr_identifiability_analytics.py": "d59605051b97d78033b8575fcd2bc1a9cef177277bd3931f16a72f7ca8ce4385",
+        "hullkit/tests/test_sabr_identifiability_protocol.py": "7dc1e3a8e6f54aefb021c01937395ea13a302dc9d991f4f5b7b816a4c5d591d0"
+      },
+      "changed_files": [
+        "research/RB-F06/analytics.py",
+        "hullkit/tests/test_sabr_identifiability_analytics.py"
+      ],
+      "previous_in_memory_witness": {
+        "status": "supported",
+        "reasons": [],
+        "truth_outcomes": [
+          "included",
+          "included",
+          "included"
+        ]
+      },
+      "current_all_attempt_witness": {
+        "status": "unsupported",
+        "reasons": [
+          "profile_improves_unrestricted_baseline"
+        ],
+        "truth_outcomes": [
+          "unknown",
+          "unknown",
+          "unknown"
+        ]
+      },
+      "current_original_slot_inclusion": [
+        {
+          "included": 0,
+          "excluded": 0,
+          "unknown": 1,
+          "denominator": 1,
+          "known_denominator": 0,
+          "known_rate": null,
+          "known_wilson95": null,
+          "original_rate_bounds": [
+            0,
+            1
+          ],
+          "interpretation": "descriptive pointwise inclusion, not certified confidence coverage"
+        },
+        {
+          "included": 0,
+          "excluded": 0,
+          "unknown": 1,
+          "denominator": 1,
+          "known_denominator": 0,
+          "known_rate": null,
+          "known_wilson95": null,
+          "original_rate_bounds": [
+            0,
+            1
+          ],
+          "interpretation": "descriptive pointwise inclusion, not certified confidence coverage"
+        },
+        {
+          "included": 0,
+          "excluded": 0,
+          "unknown": 1,
+          "denominator": 1,
+          "known_denominator": 0,
+          "known_rate": null,
+          "known_wilson95": null,
+          "original_rate_bounds": [
+            0,
+            1
+          ],
+          "interpretation": "descriptive pointwise inclusion, not certified confidence coverage"
+        }
+      ],
+      "nonfinite_failed_profile_not_improvement": {
+        "status": "supported",
+        "reasons": [],
+        "truth_outcomes": [
+          "included",
+          "included",
+          "included"
+        ]
+      },
+      "repository_mutations": false,
+      "independent_probe_exit_code": 0
+    }
+  },
+  "initial_regression_evidence": {
+    "fingerprints": {
+      "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+      "hullkit/src/hullkit/_sabr_identifiability.py": "81d91d6fe8e3dbf5a0de1a7a18439a3f10898a897f72744fb3c32eb0c6667fa5",
+      "research/RB-F06/analytics.py": "5291765e9d861176787fc85a770cdcff6364a0e473bbbc55f57b55a64ad5373a",
+      "research/RB-F06/protocol.py": "4ff1bc6221843330cb3733d3b4522ec30c68db5dfd348cc4034a558706d50fb5",
+      "research/RB-F06/protocol.json": "1d4e7e72e2bed160b3314b907293b75777926ecd065427c7da4baee651f81752",
+      "hullkit/tests/test_sabr_identifiability.py": "aee5b4870efa037fba799b0b1af506c497f638cc6d3918ff88fb80029727f629",
+      "hullkit/tests/test_sabr_identifiability_analytics.py": "bf2cab223d5aec49afee1e767b25979e93163dd8adf8ba0e1d6669c7d6fc7f2f",
+      "hullkit/tests/test_sabr_identifiability_protocol.py": "7dc1e3a8e6f54aefb021c01937395ea13a302dc9d991f4f5b7b816a4c5d591d0"
+    },
+    "dataset_support": {
+      "failed_profile_lower": {
+        "status": "unsupported",
+        "reasons": [
+          "profile_improves_unrestricted_baseline"
+        ],
+        "truth_outcomes": [
+          "unknown",
+          "unknown",
+          "unknown"
+        ]
+      },
+      "profile_slice_violation": {
+        "status": "unsupported",
+        "reasons": [
+          "profile_worse_than_feasible_slice"
+        ],
+        "truth_outcomes": [
+          "unknown",
+          "unknown",
+          "unknown"
+        ]
+      },
+      "truth_only_lower": {
+        "status": "supported",
+        "reasons": [],
+        "truth_outcomes": [
+          "included",
+          "included",
+          "included"
+        ]
+      },
+      "failed_truth_lower": {
+        "status": "supported_with_unknown",
+        "reasons": [],
+        "truth_outcomes": [
+          "unknown",
+          "included"
+        ]
+      },
+      "truth_only_slice_violation": {
+        "status": "supported",
+        "reasons": [],
+        "truth_outcomes": [
+          "excluded"
+        ]
+      }
+    },
+    "partial_frozen_validation": {
+      "raised": false,
+      "returned": {
+        "state": "frozen"
+      }
+    }
+  },
+  "limitations": [
+    "Step differences and projector agreement estimate numerical stability; they are not rigorous error bounds or structural/global identifiability proofs.",
+    "Decimal reference differentiates the original Hagan asymptotic IV map; it does not solve exact SABR.",
+    "Chi-square threshold is a descriptive pointwise reference; boundary/nonidentified likelihood-ratio distribution and 95% coverage remain unverified.",
+    "Finite visited holdout price ranges do not form a joint confidence envelope; unvisited profile interiors may contain additional components.",
+    "In-memory freeze used an approved transport stub to test source completeness only; no pilot/main approval follows from its return value.",
+    "reference_methods.py/build_reference.py were fingerprinted for registry completeness but their financial implementation and pending main runner were excluded.",
+    "No main noise vectors, broad parameter sweep, full suite, real persisted freeze, main results or Git operations were used."
+  ],
+  "prior_foundation_important_guards": {
+    "zero_nu_and_small_direction": "verified",
+    "dataset_wide_baseline_invalidation": "verified after truth/slice repair",
+    "unknown_original_denominator": "verified",
+    "finite_profile_and_slice_support": "verified"
+  },
+  "primary_sources": [
+    {
+      "title": "Hagan et al. (2002), Managing Smile Risk, original (2.15)/(2.17)/(2.18)",
+      "url": "https://lesniewski.us/papers/published/ManagingSmileRisk.pdf",
+      "local_extraction": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/references/processed/2002-hagan-et-al-managing-smile-risk/paper.md"
+    },
+    {
+      "title": "Raue et al. (2009), original profile likelihood paper",
+      "url": "https://www.jeti.uni-freiburg.de/papers/Raue_Bioinformatics_printed_1923.pdf"
+    },
+    {
+      "title": "Self & Liang (1987), original boundary likelihood paper",
+      "url": "https://pages.stat.wisc.edu/~larget/Stat998/Fall2015/Self-Liang-1987.pdf"
+    }
+  ]
+}

@@ -5,7 +5,7 @@
 **Goal:** 固定betaのHagan IV写像について、fitの良さ・parameter識別・holdout価格安定性を分離し、教材としての採否を独立検算から記録する。
 **Architecture:** privateの較正/感応度診断と、研究用の固定条件・保存結果・artifact-only教材を分離する。pilotの費用/収束/差分を確認して条件を固定し、主918 fitとprofileを全slot保存する。
 **Tech Stack:** existing NumPy/SciPy/Matplotlib/nbformat/nbclient、CPU単一thread、Python3.12.3/NumPy2.4.6/SciPy1.17.1。
-**Spec:** ../prep/design/RB-F06_DESIGN.md （正しい相対参照は ../../prep/design/RB-F06_DESIGN.md）。
+**Spec:** ../../prep/design/RB-F06_DESIGN.md。
 
 ## Global Constraints
 
@@ -101,7 +101,7 @@ ATM1quoteならJ rank≤1、sparse2quoteならrank≤2を線形代数の対照�
 - profileまたはtruth固定点がbaseline Qより1e-6超低いdatasetは全parameter支持判定をunsupported。良い点を黙って基準へ差替えない。
 - 真値含有率はincluded/excluded/unknownを元16分母で保存し、確定率とunknown込みの上限を併記。Wilsonはknown outcomesの記述的区間であり、unknownを非被覆に混ぜない。
 - profileは1parameterのpointwise参考域。対応するholdout価格範囲はprofile訪問点/全startの有限集合として表示し、3D joint confidence envelopeを主張しない。
-- 格子全隣接区間の閾値crossingを保持し、最大6回二分/区間。非連結の支持域は連結区間へ潰さない。bound到達を真の識別性と扱わない。
+- 格子全隣接区間の閾値crossingを保持し、最大6回二分/区間・全curveで追加12点まで。全crossingを昇順で処理し、未細分のbracketは幅つきで保持。非連結の支持域は連結区間へ潰さない。bound到達を真の識別性と扱わない。
 - 差分はscaled J全体に加え、full rankの最小特異値比、sparse null projection residualをstep間で比較。弱い方向が不安定ならその診断をunsupported。
 - referenceは独立Hagan転記＋Black/正規密度積分極限を分けて記録し、前者をexact SABR参照と呼ばない。
 - profile候補集合は草案grid＋best値、nuisance4固定starts。representative noisy rep0全3軸・noiseless nu軸・全noisy反復のtruth点。pilotは代表1条件の費用も測り、main roster/sourceを固定してから全実施。
@@ -111,15 +111,15 @@ ATM1quoteならJ rank≤1、sparse2quoteならrank≤2を線形代数の対照�
 **Files:** hullkit/src/hullkit/_sabr_identifiability.py、hullkit/tests/test_sabr_identifiability.py、research/RB-F06/reference_methods.py、hullkit/tests/test_sabr_identifiability_reference.py、MODEL_INDEX.md。
 **Interfaces:** sabr_vols(F,T,beta,theta,strikes)、scaled_jacobian(F,T,beta,theta,strikes,h=3e-5,noise_scale=.0005)、fit_smile(F,T,beta,strikes,quotes,start,fixed=None,max_nfev=400,noise_scale=.0005)。
 theta=(a,rho,nu)、a=alpha/F**(1-beta)。fit返却は初期/最終theta,IV/residual,Q,success/status/message,active_mask,optimality,nfev/njev/residual_calls,seconds,raw/scaled J,SVD。
-- [ ] RED: importはgetattrで未実装をassertし、beta1/nu0 flat、2x3 null方向、noisy/notfinite、max_nfev=1失敗保持、profile固定軸を検査する。
+- [x] RED: importはgetattrで未実装をassertし、beta1/nu0 flat、2x3 null方向、noisy/notfinite、max_nfev=1失敗保持、profile固定軸を検査する。
 ```python
 assert np.linalg.norm(J @ diagnostic["right_vectors"][-1]) < 1e-8
 assert diagnostic["singular_values"].shape == (3,)
 assert fitted["q"] == pytest.approx(np.dot(fitted["scaled_residual"], fitted["scaled_residual"]))
 ```
-- [ ] GREEN: 3point TRF、bounded scaled座標、正方/不足quoteどちらもfit、SVD full_matrices=Trueで欠損零特異値を補う。境界は片側差分。
-- [ ] 独立Black/quadのflat極限、原著Hagan転記と元public参照の役割を分け、対象tests/ruffと索引guardを実行。
-- [ ] rootがTask1をcommitする。全suiteはTask4だけ。
+- [x] GREEN: 3point TRF、bounded scaled座標、正方/不足quoteどちらもfit、SVD full_matrices=Trueで欠損零特異値を補う。境界は片側差分。
+- [x] 独立Black/quadのflat極限、原著Hagan転記と元public参照の役割を分け、対象tests/ruffと索引guardを実行。
+- [x] rootがTask1をcommitする。全suiteはTask4だけ。
 
 ## Task 2: protocol・pilot・主実験前固定
 
@@ -156,3 +156,5 @@ assert bad_profile_dataset["support_status"] == "unsupported"
 - [ ] 関連3suiteを1回実行：pytest -q johnhull/hullkit/tests johnhull/report/tests deep_hedge_price/tests。変更Python ruff/formatとtracked releaseを実行。
 - [ ] 独立最終レビューで全データ/原価/採否を照合。Critical/Important未解決を受入済みと扱わない。
 - [ ] rootがmainへfast-forward/pushし、mainのrelease/保存数値checkerを確認。ROADMAPを更新し、次の研究を保持する。
+
+Nu=0の解析Jacobian列をprivate診断に使う（publicの小z/log取消しを修正しない）。rho=0/nu=0のrank1と弱方向を独立検算する。main918、代表profile最大1200、noiseless profile408、truth固定1152、細分化1152の最大4830 solver callsを本前固定し、重複省略も元rosterとの対応を保持する。
