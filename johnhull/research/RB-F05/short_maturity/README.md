@@ -1,6 +1,6 @@
 # RB-F05 短期・0DTE
 
-2026-10-09。状態：正式設計と実施計画を作成し、private教師・独立参照・CPU学習・C²補間/集計の基礎実装と接続smokeを完了。full pilot/runnerを実装中。pilot/main/freeze/受入は未完了。
+2026-10-09。状態：正式設計と実施計画を作成し、private教師・独立参照・CPU学習・C²補間/集計の基礎実装と接続smokeを完了。pilot生成/saved checkerを実装し21 tests PASS。main runnerを実装中。pilot/main/freeze/受入は未完了。
 
 [設計](../../../docs/superpowers/specs/2026-10-09-short-maturity-dml-design.md)／[実施計画](../../../docs/superpowers/plans/2026-10-09-short-maturity-dml.md)。
 
