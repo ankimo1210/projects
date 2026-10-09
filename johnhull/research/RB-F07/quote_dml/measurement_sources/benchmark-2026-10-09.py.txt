@@ -1,0 +1,521 @@
+"""Torch-free timing of saved quote-DML models and comparable exact baselines.
+
+Raw scores are retained separately from their summaries. Main measurements
+require OPENBLAS_NUM_THREADS=1 to be set before starting the Python process;
+this module does not change global thread settings or perform any training.
+"""
+
+from __future__ import annotations
+
+import importlib.util
+import os
+import platform
+from pathlib import Path
+from time import perf_counter
+
+import numpy as np
+import scipy
+from hullkit import _quote_dml_hedging as hedging
+from hullkit import _quote_dml_teachers as teacher
+from scipy.special import ndtr
+
+HERE = Path(__file__).resolve().parent
+_MODULES = {}
+_ROUTING = ("ok", "fallback", "failure", "unsupported_context")
+
+
+def _component(name):
+    if name not in _MODULES:
+        spec = importlib.util.spec_from_file_location(
+            f"quote_dml_benchmark_{name}", HERE / f"{name}.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        _MODULES[name] = module
+    return _MODULES[name]
+
+
+def exact_cached(dataset, *, strike=100.0, sigma=0.2, greeks=True):
+    """Vectorized digital price and six risks from cached R(T), a_quote and D.
+
+    The expensive curve adapter is excluded here and measured separately.
+    No Python row loop or teacher call is used for this cheap analytic kernel.
+    """
+    x = np.asarray(dataset["x_quote"], dtype=float)
+    discount = np.asarray(dataset["discount"], dtype=float)
+    rate = np.asarray(dataset["integrated_rate"], dtype=float)
+    if (
+        x.ndim != 2
+        or x.shape[1] != 7
+        or not len(x)
+        or discount.shape != (len(x),)
+        or rate.shape != (len(x),)
+        or not np.isfinite(x).all()
+        or not np.isfinite(discount).all()
+        or not np.isfinite(rate).all()
+        or np.any(x[:, 5:] <= 0)
+        or np.any(discount <= 0)
+        or not np.isfinite([strike, sigma]).all()
+        or strike <= 0
+        or sigma <= 0
+    ):
+        raise ValueError("finite positive analytic inputs and matched cached arrays required")
+    v = sigma * np.sqrt(x[:, 6])
+    d2 = (np.log(x[:, 5] / strike) + rate - 0.5 * v * v) / v
+    probability = ndtr(d2)
+    result = {"price": discount * probability}
+    if greeks:
+        a_quote = np.asarray(dataset["a_quote"], dtype=float)
+        if a_quote.shape != (len(x), 5) or not np.isfinite(a_quote).all():
+            raise ValueError("finite matched integrated-rate quote derivatives required")
+        density = np.exp(-0.5 * d2 * d2) / np.sqrt(2 * np.pi)
+        result["g_quote"] = np.column_stack(
+            [
+                discount * density / (x[:, 5] * v),
+                (discount * (-probability + density / v))[:, None] * a_quote,
+            ]
+        )
+    return result
+
+
+def break_even(offsur, offref, onref, onsur):
+    """Return cost recovery only when the surrogate has positive online savings."""
+    values = np.asarray([offsur, offref, onref, onsur], dtype=float)
+    if not np.isfinite(values).all() or np.any(values < 0):
+        raise ValueError("finite nonnegative offline/online costs required")
+    numerator, denominator = float(offsur - offref), float(onref - onsur)
+    common = {
+        "offline_difference_s": numerator,
+        "online_saving_s": denominator,
+        "initial_advantage": numerator <= 0,
+    }
+    if denominator <= 0:
+        return {"status": "no_online_advantage", "evaluations": None, **common}
+    if numerator <= 0:
+        return {"status": "advantage_from_start", "evaluations": 0.0, **common}
+    return {"status": "break_even", "evaluations": numerator / denominator, **common}
+
+
+def _restore(arrays, identifier):
+    prefix = f"weights__{identifier}__"
+    exported = {
+        key[len(prefix) :]: value for key, value in arrays.items() if key.startswith(prefix)
+    }
+    for key in ("kind", "mode", "differential"):
+        if key in exported:
+            exported[key] = np.asarray(exported[key]).item()
+    return exported
+
+
+def _data(arrays, size):
+    keys = (
+        "x_quote",
+        "x_theta",
+        "A",
+        "discount",
+        "integrated_rate",
+        "a_quote",
+        "market_id",
+        "B",
+        "g_quote",
+    )
+    return {key: np.asarray(arrays["test_" + key])[:size] for key in keys}
+
+
+def _price(exported, data):
+    if exported["kind"] == "ridge":
+        x = data["x_quote"]
+        u = np.column_stack([np.log(x[:, 5] / 100.0), data["integrated_rate"], np.log(x[:, 6])])
+        u = (u - exported["feature_mean"]) / exported["feature_std"]
+        values = np.prod(u[:, None, :] ** exported["powers"][None], axis=2)
+        return exported["price_mean"] + exported["price_scale"] * (
+            values @ exported["coefficients"]
+        )
+    x = data["x_theta" if exported["mode"].startswith("theta") else "x_quote"]
+    features = np.column_stack([x[:, :5], np.log(x[:, 5] / 100.0), np.log(x[:, 6])])
+    h = (features - exported["feature_mean"]) / exported["feature_std"]
+    for layer in range(3):
+        h = h @ exported[f"layer{layer}_weight"].T + exported[f"layer{layer}_bias"]
+        if layer < 2:
+            h = np.tanh(h)
+    return exported["price_mean"] + exported["price_scale"] * h[:, 0]
+
+
+def _predict(exported, data):
+    replay = _component("replay")
+    if exported["kind"] == "ridge":
+        return replay.ridge_predict(exported, data)
+    return replay.nn_predict(
+        exported, data["x_theta" if exported["mode"].startswith("theta") else "x_quote"], data["A"]
+    )
+
+
+def _markets(data, cache):
+    n = len(data["x_quote"])
+    markets, count = [None] * n, 0
+    groups = (
+        [np.array([row]) for row in range(n)]
+        if cache == "row"
+        else [
+            np.flatnonzero(data["market_id"] == identifier)
+            for identifier in np.unique(data["market_id"])
+        ]
+    )
+    for rows in groups:
+        q = data["x_quote"][rows[0], :5]
+        if not np.allclose(data["x_quote"][rows, :5], q, atol=1e-14, rtol=1e-12):
+            raise ValueError("market-cache group contains different quote curves")
+        market = teacher.prepare_market(q)
+        count += 1
+        for row in rows:
+            markets[row] = market
+    return markets, count
+
+
+def _prepared(data, markets):
+    result = {key: value.copy() for key, value in data.items()}
+    groups = {}
+    for row, market in enumerate(markets):
+        groups.setdefault(id(market), []).append(row)
+    for group in groups.values():
+        rows = np.asarray(group, dtype=int)
+        market = markets[rows[0]]
+        maturity = data["x_quote"][rows, 6]
+        discount, derivatives = teacher.risk.discount_factors(
+            maturity,
+            market.calibration.times,
+            market.calibration.zeros,
+            interpolation=market.calibration.interpolation,
+        )
+        result["x_theta"][rows, :5] = market.calibration.zeros
+        result["A"][rows] = market.dz_dq
+        result["discount"][rows] = discount
+        result["integrated_rate"][rows] = -np.log(discount)
+        result["a_quote"][rows] = (-derivatives / discount[:, None]) @ market.dz_dq
+    return result
+
+
+def _representatives(identifiers):
+    parsed = [_component("replay")._model_coordinates(identifier) for identifier in identifiers]
+    largest = max(size for _, size, _ in parsed)
+    expected = [
+        f"{mode}_n{largest}_s11"
+        for mode in ("q_price", "theta_price", "theta_dml", "theta_quote_metric", "q_dml")
+    ]
+    expected += [f"ridge_{mode}_n{largest}" for mode in ("price", "dml")]
+    if any(identifier not in identifiers for identifier in expected):
+        raise ValueError("predeclared largest-size/seed11 representatives are incomplete")
+    return expected
+
+
+def _measure_call(record, raw, name, fn, *, source, operation, cache, batch_size, model_id=None):
+    settings = record["settings"]
+    for _ in range(settings["warmup"]):
+        fn()
+    elapsed, counts, routing = [], [], []
+    for _ in range(settings["repeats"]):
+        started = perf_counter()
+        _, count, routed = fn()
+        elapsed.append(perf_counter() - started)
+        counts.append(count)
+        if routed is not None:
+            routing.append(routed)
+    elapsed = np.asarray(elapsed)
+    counts = np.asarray(counts, dtype=int)
+    if not np.all(counts == counts[0]):
+        raise ValueError("calibration counts changed within one fixed measurement")
+    raw_key, count_key = f"timing__{name}", f"calibration_count__{name}"
+    raw[raw_key], raw[count_key] = elapsed, counts
+    item = {
+        "id": name,
+        "source": source,
+        "operation": operation,
+        "cache": cache,
+        "batch_size": batch_size,
+        "model_id": model_id,
+        "calibrations_per_call": int(counts[0]),
+        "median_s": float(np.median(elapsed)),
+        "p95_s": float(np.quantile(elapsed, 0.95)),
+        "raw_key": raw_key,
+        "count_key": count_key,
+    }
+    if routing:
+        route_key = f"routing_count__{name}"
+        raw[route_key] = np.asarray(routing, dtype=int)
+        item.update(routing_key=route_key, routing_counts_per_call=raw[route_key][0].tolist())
+    record["measurements"].append(item)
+
+
+def _rebootstrap_bump(q, spot, maturity, strike, sigma):
+    center = teacher.prepare_market(q)
+    count = 1
+    df, _, aq = teacher._curve(center, maturity)
+    cached = {
+        "x_quote": np.r_[q, spot, maturity][None],
+        "discount": np.array([df]),
+        "integrated_rate": np.array([-np.log(df)]),
+        "a_quote": aq[None],
+    }
+    prediction = exact_cached(cached, strike=strike, sigma=sigma)
+    risk = prediction["g_quote"][0].copy()
+    for bucket in range(5):
+        prices = []
+        for sign in (-1, 1):
+            changed = q.copy()
+            changed[bucket] += sign * 1e-5
+            market = teacher.prepare_market(changed)
+            count += 1
+            discount, _, _ = teacher._curve(market, maturity)
+            changed_data = {
+                **cached,
+                "discount": np.array([discount]),
+                "integrated_rate": np.array([-np.log(discount)]),
+            }
+            prices.append(
+                exact_cached(changed_data, strike=strike, sigma=sigma, greeks=False)["price"][0]
+            )
+        risk[bucket + 1] = (prices[1] - prices[0]) / 2e-5
+    return {"price": prediction["price"], "g_quote": risk[None]}, count
+
+
+def measure(protocol, arrays, *, smoke=False):
+    """Measure all saved raw models; predeclared representatives include adapters.
+
+    Market/row calibration is repeated inside each timed end-to-end call.
+    Safe timing additionally includes every policy diagnostic and fallback.
+    Input/export loading is excluded and belongs in the runner's load/offline
+    account. Calibration, price-only, price+six risks and hedge solve are
+    reported separately. Time units are seconds per declared batch.
+    """
+    if not smoke and os.environ.get("OPENBLAS_NUM_THREADS") != "1":
+        raise ValueError("set OPENBLAS_NUM_THREADS=1 before the main benchmark process starts")
+    batches, repeats, warmup = ([1, 8, 16], 3, 3) if smoke else ([1, 32, 1024], 100, 3)
+    if len(arrays["test_x_quote"]) < max(batches):
+        raise ValueError("test input shorter than a declared benchmark batch")
+    identifiers = [str(identifier) for identifier in arrays["model_ids"]]
+    exported = {identifier: _restore(arrays, identifier) for identifier in identifiers}
+    representatives = _representatives(identifiers)
+    record = {
+        "schema_version": 1,
+        "experiment": "smoke" if smoke else "main",
+        "settings": {
+            "batches": batches,
+            "repeats": repeats,
+            "warmup": warmup,
+            "statistics": ["median", "p95"],
+            "unit": "seconds_per_batch",
+        },
+        "representative_ids": representatives,
+        "selection_rule": "Before main: five NN modes at largest N and seed11; price/differential ridge at largest N. All seed/N raw models remain separate.",
+        "measurements": [],
+        "environment": {
+            "python": platform.python_version(),
+            "numpy": np.__version__,
+            "scipy": scipy.__version__,
+            "platform": platform.platform(),
+            "processor": platform.processor(),
+            "machine": platform.machine(),
+            "logical_cpu_count": os.cpu_count(),
+            "openblas_num_threads": os.environ.get("OPENBLAS_NUM_THREADS", "unset"),
+            "omp_num_threads": os.environ.get("OMP_NUM_THREADS", "unset"),
+            "mkl_num_threads": os.environ.get("MKL_NUM_THREADS", "unset"),
+            "thread_setting_required_at_process_start": True,
+        },
+        "bump_reason": "Rebootstrap 5 quote up/down plus center (11 calibrations) is measured for one predeclared S100/T1.5 contract only. Repeating identical scalar calibrations 1024 times is not a useful batch baseline; analytic/vectorized exact is the strong comparator.",
+    }
+    raw = {}
+    strike, sigma = protocol["contract"]["strike"], protocol["contract"]["sigma"]
+    policy = _component("policy")
+    for batch in batches:
+        data = _data(arrays, batch)
+        for greeks in (False, True):
+            operation = "price_risk" if greeks else "price"
+            _measure_call(
+                record,
+                raw,
+                f"exact_cached__{operation}__batch{batch}",
+                lambda data=data, greeks=greeks: (
+                    exact_cached(data, strike=strike, sigma=sigma, greeks=greeks),
+                    0,
+                    None,
+                ),
+                source="exact_cached",
+                operation=operation,
+                cache="prepared",
+                batch_size=batch,
+            )
+        for identifier in identifiers:
+            model = exported[identifier]
+            for operation in ("price", "price_risk"):
+                evaluate = _price if operation == "price" else _predict
+                _measure_call(
+                    record,
+                    raw,
+                    f"raw__{identifier}__{operation}__batch{batch}",
+                    lambda evaluate=evaluate, model=model, data=data: (
+                        evaluate(model, data),
+                        0,
+                        None,
+                    ),
+                    source="raw",
+                    operation=operation,
+                    cache="prepared",
+                    batch_size=batch,
+                    model_id=identifier,
+                )
+        for cache in ("market", "row"):
+
+            def calibrate(cache=cache, data=data):
+                markets, count = _markets(data, cache)
+                return markets, count, None
+
+            _measure_call(
+                record,
+                raw,
+                f"calibration__{cache}__batch{batch}",
+                calibrate,
+                source="calibration",
+                operation="calibration",
+                cache=cache,
+                batch_size=batch,
+            )
+
+            def exact_e2e(cache=cache, data=data):
+                markets, count = _markets(data, cache)
+                prepared = _prepared(data, markets)
+                return exact_cached(prepared, strike=strike, sigma=sigma), count, None
+
+            _measure_call(
+                record,
+                raw,
+                f"exact_e2e__{cache}__price_risk__batch{batch}",
+                exact_e2e,
+                source="e2e",
+                operation="price_risk",
+                cache=cache,
+                batch_size=batch,
+                model_id="exact",
+            )
+            for identifier in representatives:
+                model = exported[identifier]
+
+                def e2e(model=model, cache=cache, data=data):
+                    markets, count = _markets(data, cache)
+                    return _predict(model, _prepared(data, markets)), count, None
+
+                _measure_call(
+                    record,
+                    raw,
+                    f"e2e__{identifier}__{cache}__price_risk__batch{batch}",
+                    e2e,
+                    source="e2e",
+                    operation="price_risk",
+                    cache=cache,
+                    batch_size=batch,
+                    model_id=identifier,
+                )
+
+                def safe(model=model, cache=cache, data=data):
+                    markets, count = _markets(data, cache)
+                    outputs = [
+                        policy.safe_prediction(model, x[:5], x[5], x[6], protocol, market=market)
+                        for x, market in zip(data["x_quote"], markets, strict=True)
+                    ]
+                    routing = [
+                        sum(out["status"] == status for out in outputs) for status in _ROUTING
+                    ]
+                    if routing[2] or routing[3] or any(out["safe"] is None for out in outputs):
+                        raise ValueError("safe benchmark contains failed/unsupported predictions")
+                    return outputs, count, routing
+
+                _measure_call(
+                    record,
+                    raw,
+                    f"safe__{identifier}__{cache}__price_risk__batch{batch}",
+                    safe,
+                    source="safe",
+                    operation="price_risk",
+                    cache=cache,
+                    batch_size=batch,
+                    model_id=identifier,
+                )
+
+        def solve(data=data):
+            quantities = np.stack(
+                [hedging.solve_hedge(b, g) for b, g in zip(data["B"], data["g_quote"], strict=True)]
+            )
+            return quantities, 0, None
+
+        _measure_call(
+            record,
+            raw,
+            f"hedge_solve__batch{batch}",
+            solve,
+            source="hedge",
+            operation="hedge_solve",
+            cache="prepared",
+            batch_size=batch,
+        )
+    candidates = np.flatnonzero(
+        np.isclose(arrays["test_x_quote"][:, 5], 100.0)
+        & np.isclose(arrays["test_x_quote"][:, 6], 1.5)
+    )
+    if not len(candidates):
+        raise ValueError("predeclared bump contract S100/T1.5 absent")
+    row = int(candidates[0])
+    q, spot, maturity = arrays["test_x_quote"][row, :5], 100.0, 1.5
+    record["bump_contract_row"] = row
+    record["bump_width_rate_decimal"] = 1e-5
+
+    def bumped():
+        prediction, count = _rebootstrap_bump(q, spot, maturity, strike, sigma)
+        return prediction, count, None
+
+    _measure_call(
+        record,
+        raw,
+        "rebootstrap_bump__price_risk__batch1",
+        bumped,
+        source="bump",
+        operation="price_risk",
+        cache="none",
+        batch_size=1,
+        model_id="rebootstrap_bump",
+    )
+    check_measurement(record, raw)
+    return record, raw
+
+
+def check_measurement(record, raw):
+    """Recompute timing quantiles/counts from saved samples without rerunning fit."""
+    repeats = int(record["settings"]["repeats"])
+    if repeats < 1:
+        raise ValueError("positive timing repetition count required")
+    identifiers = [item["id"] for item in record["measurements"]]
+    if not identifiers or len(set(identifiers)) != len(identifiers):
+        raise ValueError("nonempty unique timing measurement IDs required")
+    for item in record["measurements"]:
+        scores = np.asarray(raw[item["raw_key"]], dtype=float)
+        counts = np.asarray(raw[item["count_key"]])
+        if (
+            scores.shape != (repeats,)
+            or not np.isfinite(scores).all()
+            or np.any(scores < 0)
+            or counts.shape != (repeats,)
+            or not np.isfinite(counts).all()
+            or np.any(counts != item["calibrations_per_call"])
+            or np.any(counts < 0)
+        ):
+            raise ValueError("finite timing samples and consistent calibration counts required")
+        np.testing.assert_allclose(item["median_s"], np.median(scores), atol=1e-12, rtol=1e-10)
+        np.testing.assert_allclose(item["p95_s"], np.quantile(scores, 0.95), atol=1e-12, rtol=1e-10)
+        if "routing_key" in item:
+            routed = np.asarray(raw[item["routing_key"]])
+            if (
+                routed.shape != (repeats, 4)
+                or np.any(routed < 0)
+                or not np.isfinite(routed).all()
+                or np.any(routed.sum(axis=1) != item["batch_size"])
+                or np.any(routed != item["routing_counts_per_call"])
+            ):
+                raise ValueError("saved safe-routing counts are inconsistent")

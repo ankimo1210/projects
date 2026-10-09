@@ -9,11 +9,14 @@
 GBM Euler＋欧州callを最初の教材にする。GBM終端厳密生成＋BSMを最強の比較器として併記する。
 この商品でEuler MLMCが厳密終端法に勝つ必要はない。目的はbias・差分分散・計算配分を見えるようにすること。
 次段階はHeston算術Asian。観測日は全階層で同じにし、観測の間の時間格子だけを細分する。
+F04と同じ月次12観測ではS0を平均へ含めない。既存arithmetic_asian_detailsへはS0＋月次12点の計13列を渡し、include_initial=Falseを明示する。月次12列だけを渡してさらに初列を落とさない。
 
 | 既存 | 再利用／不足 |
 |---|---|
 | `hullkit.mc_advanced:plain_price`, `hullkit.mc_advanced:control_variate_price` | GBM終端厳密生成の比較。CV係数の推定費用も数える |
 | `hullkit.mc_advanced:qmc_price` | scrambled Sobol一組の点推定。独立反復・CIは追加が必要 |
+| `hullkit._numerical_mc:randomized_qmc_price` | 現行private実装はSeedSequenceで独立scrambleを作り、組別推定のSEを計算する。既存CIは1.96正規近似。研究では全scramble推定値・子seedを保持し、Student型CIと被覆率を追加する |
+| `hullkit._numerical_mc:gbm_paths_from_normals` / `hullkit._stochastic_foundations:stock_paths` | 外から渡したBrownian乱数を再生できる。前者のdefaultはexactなので、MLMCにはscheme='euler'を明示。粗い正規乱数は隣接する細乱数の和/sqrt(2)で作る |
 | `hullkit.mc_advanced:error_vs_n` | 図の形式の参考。単一seedの誤差曲線をRMSEと呼ばない |
 | `hullkit.heston:heston_mc_price` | モデル規約の参考。粗細結合やAsianの専用評価器ではない |
 

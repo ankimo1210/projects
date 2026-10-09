@@ -10,7 +10,7 @@
 
 **Spec:** [調査・研究設計](../specs/2026-10-09-calibrated-quote-dml-design.md)。本文のQ01–Q12を根拠とし、版・確認範囲・未再現の性能主張を引き継ぐ。
 
-- 更新日：2026-10-09。**Tasks1–6実装済み。30NN＋4ridgeの本学習、保存重み・独立数値の再検査、core成果の両保管庫からの復元が完了。直近scoped 974 tests PASS。Task7の100反復本計時と追加レビュー修正、Task8の本成果3図・採否・最終レビュー・main反映は未完了。**
+- 更新日：2026-10-09。**Tasks1–6実装済み。30NN＋4ridgeの本学習、保存重み・独立数値の再検査、core成果の両保管庫からの復元が完了。直近scoped 974 tests PASS。Task7の100反復計時/原価、追加レビュー修正、Task8の3図実行/目視と独立最終レビューを完了。関連3suiteの初回4 FAILをAgg表示修正で解消、11件再検査PASS。commit後release/main統合gateを確認する。**
 - 本編P0–P8、306節acceptedの状態を変更しない。
 - 本人の「研究ロードマップを完遂せよ」に従い、quote DMLを先行し、既存離散バリア→F04→F08→F06と統合研究の後続候補も保持する。
 
@@ -377,46 +377,46 @@ assert reset == pytest.approx(0., abs=1e-6)
 - CLI：`build_reference.py --smoke --output /tmp/quote-dml-smoke`、`--refresh`、`--check`。
   checkは学習を起動せず、raw arrays/保存重みから指標と独立価格/リスク/hedgeを再計算する。
 
-- [ ] **RED：** smoke recordのprice predictionを1点変えたら価格検査が、Greekを変えたらrisk/数量検査が、couponを変えたらheld/shock再評価がFAILするtestを作る。
+- [x] **RED：** smoke recordのprice predictionを1点変えたら価格検査が、Greekを変えたらrisk/数量検査が、couponを変えたらheld/shock再評価がFAILするtestを作る。
   保存PASSフラグだけを変更しても数値検証の成否は変わらないことをtest。
-- [ ] research testを実行してFAILを確認。
-- [ ] **GREEN：** JSONへprotocol version、source基準、環境、全fit状態/updates/計時/失敗理由、尺度、指標を保存。
+- [x] research testを実行してFAILを確認。
+- [x] **GREEN：** JSONへprotocol version、source基準、環境、全fit状態/updates/計時/失敗理由、尺度、指標を保存。
   NPZへ全分割入力・教師・A・IDs、exported重み、全予測、B/h、shock後価格・残余、費用、raw/safe/OOD判定根拠を保存。
   q/zero/spot/T/unitsとshapeをmetadataへ固定し、配列不足・不整合はcheck失敗。
-- [ ] `--smoke` は市場数とupdatesを縮小し明確にsmokeと記録。主protocolの30fits/4ridgeと混ぜない。
+- [x] `--smoke` は市場数とupdatesを縮小し明確にsmokeと記録。主protocolの30fits/4ridgeと混ぜない。
   smokeでAPI・export・replayが通った後だけ、固定protocolの `--refresh` を1回実行する。
   120秒に達したfitは理由を記録し、学習条件を変えて無言で再実行しない。
-- [ ] 価格/risk/数量/残余/入口費用を設計§8の単位で再計算。2000回のpaired bootstrapは市場ID群、seed20261010。
+- [x] 価格/risk/数量/残余/入口費用を設計§8の単位で再計算。2000回のpaired bootstrapは市場ID群、seed20261010。
   test各8行を同じ群で引き、H1/H2はseed別にpaired差の95%CIを保存する。
-- [ ] timingはraw NNとsafe wrapper、解析・ridge・再bootstrap bumpを分ける。
+- [x] timingはraw NNとsafe wrapper、解析・ridge・再bootstrap bumpを分ける。
   single/batch32/batch1024、warmup後100反復、median/p95、較正共有あり/なし、calibration countを保存。
   offlineには教師・尺度・fit・exportを含め、loadを別記。全fit総費用と、1方式/1seedを利用する場合の費用を両方残す。
   損益分岐は `(offline_surrogate-offline_reference)/(online_reference-online_surrogate)`、分母>0のみ。分子≤0は開始時点から費用優位として別表示。
-- [ ] raw weights→NumPy replayと保存予測、全教師のfresh独立参照、全固定契約shockをcheckする。
+- [x] raw weights→NumPy replayと保存予測、全教師のfresh独立参照、全固定契約shockをcheckする。
   notebookへ読ませる指標に保存済みPASSだけを根拠とする項目を残さない。
   30fitsに失敗があればprotocol完遂は未完了と明記し、失敗そのものは成果物に保持する。
-- [ ] 生成JSON/NPZが20MBを超えたら学習を繰り返さず、既存ADR 0004保管庫＋small manifestへ移す。合成データ以外は入れない。
+- [x] 生成JSON/NPZが20MBを超えたら学習を繰り返さず、既存ADR 0004保管庫＋small manifestへ移す。合成データ以外は入れない。
 - [ ] 新tests＋ruff/format、`--check` 後にscoped commit：`research(johnhull): record controlled quote-DML comparison`。
 
 ## Task 8：artifact-only教材と結果・次工程の判断
 
 **Files:** build_notebook、notebook、README、research tests、MODEL_INDEX、CONTENTS_INDEX、ROADMAP、既存研究backlog。
 
-- [ ] **RED：** notebookの構文/出力、artifactだけの実行、3図の根拠配列、学習関数への非依存をresearch testで固定。
+- [x] **RED：** notebookの構文/出力、artifactだけの実行、3図の根拠配列、学習関数への非依存をresearch testで固定。
   build/nbclient実行中のtrainer呼出を例外へ置換し、学習を起動するとFAILする。
-- [ ] **GREEN：** notebookはJSON/NPZの読込だけにする。図は次の3枚。
+- [x] **GREEN：** notebookはJSON/NPZの読込だけにする。図は次の3枚。
   1. 方式別の価格／正規化6Greek誤差、3seedと市場群CI。
   2. fixed hedgeの小/大shock残余と入口費用を別パネルで表示。
   3. exact／ridge／raw NN／safe wrapperの費用・精度、評価回数別総費用。
   日本語図は既存nbplot設定を使い、renderして見切れ・凡例・単位を確認する。
-- [ ] READMEへH1–H4の結果、全fit失敗/負の結果、teacher/較正/NN誤差の分離、raw/safeの差を記載。
+- [x] READMEへH1–H4の結果、全fit失敗/負の結果、teacher/較正/NN誤差の分離、raw/safeの差を記載。
   「瞬間shock」「決定論的単一曲線」「固定sigma」「合成データ」を明示。
   動的hedging、multi-curve、最小二乗、rough、実市場性能へ結果を外挿しない。
-- [ ] 研究完了は全比較器・全fitの結果と再計算を確認した時点。DMLの勝利は必須にしない。
+- [x] 研究完了は全比較器・全fitの結果と再計算を確認した時点。DMLの勝利は必須にしない。
   速度採用へ自動昇格しない。H1/H2の改善主張には設計§8の全seed条件を使い、他指標の悪化も併記。
-- [ ] 下記の対象検証と索引guardを1回まとめて行う。旧F07/F05成果物が変わっていないことを確認。
+- [x] 下記の対象検証と索引guardを1回まとめて行う。旧F07/F05成果物が変わっていないことを確認。
   共有実装を変更していないため、Book全build・306節台帳再受入・D1全復元はこの研究のgateにしない。
-- [ ] 数式・risk座標・固定契約・公平loss・失敗時の記録を独立レビューへ渡す。
+- [x] 数式・risk座標・固定契約・公平loss・失敗時の記録を独立レビューへ渡す。
   独立レビューを未実施なら研究状態を「実装/対象検証済み、レビュー未完了」とする。
 - [ ] 結果と採否、次に離散バリア／高コスト金利／最小二乗のどれを選ぶかをROADMAP/backlogに記録。
   教材/計算の索引と同じcommitで更新し、commit：`docs(johnhull): publish quote-DML research findings`。
@@ -468,6 +468,15 @@ ruff format --checkは同じ対象Pythonへ実行する。notebook builderの既
 - Task5–6は並行で実装後、独立レビューと一括scoped gateで閉じる。安全wrapperをpolicy.py、MC診断をdiagnostics.py、計時をbenchmark.pyへ分離し、runnerから呼ぶ。各専用testも最終scoped gateへ追加する。
 - 群ID・shock/cost軸・train尺度・fit registryを保存フラグとは独立に再検査する。較正/fit例外では入力と部分成果を返して保存する。
 - 1方式導入のoffline費用はサイズ別train教師＋setup/fit/export、全比較費用は全分割教師＋全fitとし、評価oracle費用を混同しない。
-- 本学習は30本各512updates＋4ridgeを完遂、budget failureなし。fresh独立数値照合はPASS。本計時は保存重みを使う別工程として実行中。
-- 追加レビューでfit metadataの固定条件、計時measurement registry、保存discountとintegrated rateの不変条件の検査不足を検出。負のtestを準備し、本計時終了後にRED→GREENを確認する。
-- notebook builderの小fixtureはartifact-only実行と3図を確認済み。本成果の実行・表示・費用採否・最終レビューはこれから。smokeの性能は主実験の結論へ使わない。
+- 本学習は30本各512updates＋4ridgeを完遂、budget failureなし。fresh独立数値照合はPASS。本計時は保存重みを使う別工程で完了。310測定/288費用対照・loader rawを保存。
+- 追加レビューでfit metadataの固定条件、計時measurement registry、保存discountとintegrated rateの不変条件の検査不足を検出。本計時終了後にRED→GREENを確認し、main成果への独立fresh checkもPASS。
+- notebook builderの小fixtureはartifact-only実行と3図を確認済み。本成果3図の実行/目視・費用採否・独立最終レビューまで完了。関連suite/release/main統合は残る。smokeの性能は主実験の結論へ使わない。
+
+
+### 最終検証・採否
+
+34fit/310計時/288原価・fresh独立再計算・最終両保管庫復元・3図実行/目視・独立最終レビューを完了。
+関連3suiteは初回6,915 PASS / 4 FAIL / 6 skip、headless Aggの表示不具合を再現・修正し11件再検査PASS。
+重複除去6,919 PASS / 6 skipで、全suiteの再実行はしていない。通常make hull-reportもPASS。
+研究は教材として受け入れ、Q-DMLの標準価格/Greek/速度器への昇格は不採用。
+次はF05離散バリア、F04、F08、F06。commit後release/main反映は別gateで記録する。

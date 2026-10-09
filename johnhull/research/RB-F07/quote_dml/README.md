@@ -1,7 +1,8 @@
-# 較正込み市場クオートGreeksのDML — v1結果ドラフト
+# 較正込み市場クオートGreeksのDML — v1結果
 
-更新2026-10-09。**主学習30 NN fits＋4低次元回帰を一度実行し、保存済みmainコア結果を報告する。
-計時・総費用評価・研究3図の実行/目視・成果の最終レビューは未完了。研究全体の完了・性能採用を宣言しない。**
+更新2026-10-09。**30 NN fits＋4回帰、独立fresh再計算、310速度計測、
+288費用対照、両保管庫復元、artifact-only研究3図を作成・実行した。
+独立最終成果レビューを承認済み。commit後のrelease/main反映を行う。NNの標準価格/Greek器への昇格は不採用。**
 
 [研究設計](../../../docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)／
 [実施計画](../../../docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)／
@@ -12,7 +13,7 @@
 
 - **H1：Q-DMLはQ-priceより正規化6Greek RMSEが低い。**
   両学習サイズ・全3seedでpaired差の95% CI上端が0未満。
-  ただし価格・spot Delta・固定ショックのヘッジ残余は全6組で悪化した。
+  ただし価格・spot Delta・35ショック混合のヘッジ残余は全6組で悪化した。
   集約Greek指標の改善を「価格・全Greek・ヘッジの改善」と呼ばない。
 - **H2：quote入力の優位は支持されない。**
   同じ市場risk metricを使うTheta-quote-metricのほうが、全6組でQ-DMLより正規化6Greek RMSEが低い。
@@ -22,12 +23,14 @@
   正規化6Greek RMSEはn512で0.340881、n2048で0.326669と、全NN方式より低い。
   価格とspot Deltaの誤差は別に残るため、全指標で最良とは呼ばない。
   digitalの曲線依存を既知の1スカラーに要約できることを利用している。
-- **H3：Q-DMLのGreek集約誤差低下から、固定ヘッジ残余の低下は得られなかった。**
+- **H3：Q-DMLのGreek集約誤差は低下したが、35ショック混合の固定ヘッジ残余は低下しなかった。**
+  金利だけの1bp/10bp残余は全6組で改善したが、spot/組合せは悪化した。
   35種類の固定ショックを等しく混ぜた残余RMSEは、対応するQ-priceより全6組で大きい。
   入口費用が低いことと、ヘッジが良いことも分けて評価する。
-- **H4：計時と総費用の評価は未完了。**
-  raw/safe、解析/回帰、較正共有あり/なしを比較する本計時の結論はまだ書かない。
-  速度優位・費用回収・標準器への昇格は未判定。
+- **H4：価格＋6Greekの全面的な速度優位は支持されない。**
+  prepared解析に対するraw102対照、同じ較正条件のsafe42対照で、median/p95とも近似器の優位なし。
+  e2e42対照の5件だけmedianで約0.2–1.0%速いが、解析と精度同等ではなく計時CIもない。
+  小幅な観測差と条件付き償却を示し、速度/Greek標準器への採用根拠にはしない。
 
 上記は固定した合成protocol・512 optimizer updatesの結果。
 結果を見てseed・領域・loss重み・checkpointを選び直していない。
@@ -187,6 +190,39 @@ moneyness別(OTM S/K<.95 / ATM .95≤S/K≤1.05 / ITM S/K>1.05)、
 この集合での漏れRMSEは約1e-17。NNの漏れはゼロにならない。
 ゼロ判定や成功フラグだけで、価格・Greekの正しさを宣言しない。
 
+## H3のショック別分解
+
+35ショックの混合指標だけでは、rate hedgeとspot hedgeを区別できない。
+保存済みby_shock RMSEを使い、群内の二乗平均から残余RMSEを再集計した事後の記述的分解を示す。
+主protocol、35本の重み、loss、seed、H1/H2を変更する追加検定ではない。
+
+次表はQ-DML/Q-priceの残余RMSE比。1未満はQ-DMLのほうが小さい。
+金利1bp/10bpは各14本、spotは2本、組合せは4本。ゼロshockはこの分解へ混ぜない。
+
+| 学習組 | 金利1bp | 金利10bp | spot ±1% | spot＋金利 |
+|---|---:|---:|---:|---:|
+| n512 / s11 | 0.094 | 0.094 | 4.527 | 2.094 |
+| n512 / s29 | 0.098 | 0.098 | 5.174 | 3.179 |
+| n512 / s47 | 0.089 | 0.089 | 4.303 | 2.401 |
+| n2048 / s11 | 0.132 | 0.132 | 6.213 | 2.980 |
+| n2048 / s29 | 0.160 | 0.160 | 5.613 | 3.525 |
+| n2048 / s47 | 0.172 | 0.172 | 5.186 | 3.667 |
+
+金利だけの残余は全6組で約83–91%小さい一方、spot/組合せは悪化し、35本を等しく混ぜたRMSEは悪化する。
+市場quote riskの改善をspot Deltaや全商品hedgeの改善へ外挿できないことが、この実験の結果である。
+
+n2048/seed11の絶対値（payout1の通貨単位）は次のとおり。
+
+| ショック群 | Q-price RMSE | Q-DML RMSE |
+|---|---:|---:|
+| 金利1bp | 0.000305018 | 4.03078e-05 |
+| 金利10bp | 0.00305019 | 0.000403111 |
+| spot ±1% | 0.00296166 | 0.0184008 |
+| spot＋金利 | 0.00617593 | 0.0184062 |
+
+群別の低下率もこのstress集合の記述であり、発生確率付きの市場P&Lや新しい有意性主張ではない。
+NNの再チューニングやGreek損失の変更はこの結果に含めない。
+
 ## 固定契約・35ショック・入口費用
 
 ヘッジ列順は株式1単位、預金、FRA、2/3/5年swap。
@@ -269,44 +305,125 @@ safeの価格/Greek誤差にはsaved safe出力を使い、raw誤差を流用し
 wrapper通過はNN Greekの精度保証ではない。
 
 上の34モデル表とH1/H2はraw出力の比較。
-safe精度・routingと計時を組み合わせた最終比較は、このドラフトでは未完了。
+safeの保存出力は全34方式・全seedで集計でき、計時は事前の代表7方式だけである。
+price-only NNとridgeは各128/1024（12.5%）fallback、DML NNの3方式は両n・全seedで0%。
+全34合計2048/34816（5.88235%）は全てS80/T.05の負価格によるprice_bounds。
+上限D違反は0である。通過したDML NNのGreekが正確になったことは意味しない。
+OOD22件は正常control1を含み、各方式ok1/fallback17/unsupported3/failure1。
+負金利は数学的無効ではなくquote OODとしてfallbackした。
 
-## 計時・総費用・採否の残り
+## H4：計時・総費用・採否
 
-本計時はwarmup3後100反復、single/batch32/batch1024、median/p95と生標本を保存する。
-rawの準備済み入力、fresh較正を含むe2e、診断/fallback込みsafe、
-解析価格器、回帰、再bootstrap bump、ヘッジsolveを分ける。
-market共有較正とrowごとの較正を分け、実際のcalibration countも残す。
-safe/e2eの代表は事前固定の最大n・seed11の5 NN＋最大nの2 ridge。
-rawは全34モデルを計時する。数値・費用回収の判断は未完了。
+warmup3後100反復、batch1/32/1024、median/p95と生標本を保存した。
+単位はseconds per full batch。BLAS/OMP/MKL各1 thread、CPU環境を記録。
+market共有較正はbatch1/32/1024で1/4/128回、row較正は1/32/1024回。
+全310測定の内訳はcached解析6、raw204、較正6、e2e48、safe42、hedge3、bump1。
+e2e/safeは事前固定の最大n・seed11の5 NN＋最大nの2 ridge、rawは全34方式。
 
-1方式導入のoffline費用は、そのnのtrain教師＋setup/fit/export。
-全比較実験の教師・全34fits・評価/検証の費用とは区別する。
-loadとruntime import/process起動の範囲も記録する。
-C(N)=C_offline+N C_onlineは同じbatch/cacheの比較で作り、
-損益分岐はonline参照−online近似が正の場合のみ求める。
-分子≤0は開始時点から費用優位として別表示する。
+次表の速度比はexact/surrogate。1超で近似器が速い。
+**価格＋6Greekだけの対照**で、prepared、market共有、row較正を混ぜない。
+p95は標本の遅延分位点であり、速度差のCIでも期待総費用でもない。
 
-| 工程 | このドラフト時点 |
+| source / cache | batch | 方式数 | median比の範囲 | p95比の範囲 | 1超の件数 median/p95 |
+|---|---:|---:|---:|---:|---:|
+| raw / prepared | 1 | 34 | 0.105–0.459 | 0.098–0.454 | 0/0 |
+| raw / prepared | 32 | 34 | 0.087–0.215 | 0.079–0.193 | 0/0 |
+| raw / prepared | 1024 | 34 | 0.029–0.031 | 0.028–0.035 | 0/0 |
+| e2e / market | 1 | 7 | 0.834–0.983 | 0.792–1.072 | 0/1 |
+| e2e / market | 32 | 7 | 0.945–0.990 | 0.939–1.000 | 0/0 |
+| e2e / market | 1024 | 7 | 0.981–1.010 | 0.976–1.033 | 3/5 |
+| e2e / row | 1 | 7 | 0.846–0.952 | 0.772–0.930 | 0/0 |
+| e2e / row | 32 | 7 | 0.944–0.997 | 0.876–0.995 | 0/0 |
+| e2e / row | 1024 | 7 | 0.993–1.002 | 0.985–0.999 | 2/0 |
+| safe / market | 1 | 7 | 0.653–0.737 | 0.630–0.756 | 0/0 |
+| safe / market | 32 | 7 | 0.196–0.245 | 0.203–0.255 | 0/0 |
+| safe / market | 1024 | 7 | 0.196–0.241 | 0.200–0.247 | 0/0 |
+| safe / row | 1 | 7 | 0.638–0.721 | 0.623–0.689 | 0/0 |
+| safe / row | 32 | 7 | 0.645–0.716 | 0.603–0.710 | 0/0 |
+| safe / row | 1024 | 7 | 0.665–0.724 | 0.659–0.718 | 0/0 |
+
+
+準備済み解析よりrawは遅く、safeも同じ較正条件の解析より遅い。
+e2eでは較正が大半を占め、大batchの一部で小さな観測差が出た。
+全seedへの速度一般化、精度を合わせた費用優位、統計的な速度差は確認していない。
+価格だけではraw102対照中34件にmedian優位があるが、価格＋Greekの結果へ読み替えない。
+
+### バッチ単位の総費用
+
+\[
+C(N_{\rm calls})=C_{\rm offline}+N_{\rm calls}t_{\rm batch},\qquad
+N_{\rm calls}=\left\lceil N_{\rm queries}/B\right\rceil .
+\]
+
+端数queryでも実測full batchを1回実行するとして、分数callの割引をしない。
+288費用対照はraw204＋e2e42＋safe42で、同じoperation/batch/cacheの解析器を参照とする。
+各対照に1/10/100/1000/10000 callとquery budgetのC(N)、連続償却点、
+最初の整数call・処理行数を保存する。参照の追加fit原価は0で、共通準備は各onlineカテゴリで揃える。
+
+1方式のtrain-only費用は、そのnの教師＋setup/fit/export。
+NNではsetup、training、復元thread等のoverhead、exportを分ける。
+ridgeはfitがexport辞書を返すので、setup/fit/exportはまとめたelapsedであり未測定の内訳を0とはしない。
+deploymentシナリオにはwarm-cacheの**研究bundle全体**読み込み＋1方式decodeを追加する。
+最小モデルだけの配布、cold IO、JSON parse、module import、process起動はこの計時に含まない。
+NPZ読み込みはmedian 0.144787秒、p95 0.150425秒、各方式decodeも100標本を保存した。
+
+次表は価格＋6Greekでmedianに正の観測savingがあった5対照だけ。
+保存教師原価を含め、表の件数は**整数callの処理行数**（batch1024）である。
+p95シナリオは別に保存し、median/p95成分の和を実測総費用のp95と呼ばない。
+
+| e2eの方式 / cache | median速度比 | train-only最初のcall / 処理行数 | bundle loading込みcall / 処理行数 |
+|---|---:|---:|---:|
+| q_price_n2048_s11 / market | 1.00981 | 703 / 719,872 | 842 / 862,208 |
+| theta_dml_n2048_s11 / market | 1.00836 | 1116 / 1,142,784 | 1278 / 1,308,672 |
+| ridge_dml_n2048 / market | 1.00373 | 884 / 905,216 | 1248 / 1,277,952 |
+| q_dml_n2048_s11 / row | 1.00205 | 586 / 600,064 | 670 / 686,080 |
+| ridge_dml_n2048 / row | 1.00216 | 194 / 198,656 | 274 / 280,576 |
+
+
+全288対照ではmedian deploymentの償却可能39件、online優位なし249件。
+39件には価格だけの34件が含まれ、上のGreek付き5件と区別する。
+比較全体の測定小計は17.466秒
+（全分割教師0.602775＋34fit 16.8619＋別計測NN export 0.00137327）。
+独立oracle、長いbenchmark実行、serialization、図生成の費用は未計測で、
+この小計を研究の全所要時間と呼ばない。
+
+### 採否
+
+- **教材・接続研究として保持する。** 正しい教師、市場単位、入力座標/metric、固定契約hedge、
+  強い解析/回帰対照、fallback、群CI、原価を一つの保存配列で調べられる。
+- **Q-DMLを価格/Greek/速度標準器へ昇格しない。**
+  H1の集約risk改善だけでは価格・spot・混合hedge・強い参照との精度/費用の改善にならない。
+  小幅e2e savingも精度を合わせた採用根拠ではない。公開API・本番依存は追加しない。
+- **次はRB-F05離散バリア。** 解析digitalでの速度優位を前提にせず、
+  不連続性の正しい教師、MC/時間格子/学習誤差の分離を先に検証する。
+
+| 工程 | 現在の状態 |
 |---|---|
 | 主学習・全方式の保存結果 | 30 NN＋4 ridge完了、fit budget failure0 |
-| mainコアの独立fresh check | 実行担当によるPASS確認済み。保存重み・独立数値・配列を照合 |
-| コアNPZ保管・両コピー復元 | 担当によるPASS確認済み。最終payloadは計時追加後に再保存 |
-| 本計時・safe精度との対照・総費用/H4 | 未完了 |
-| artifact-only研究3図の実行・目視 | 未完了 |
-| 結果・採否の独立最終レビュー | 未完了 |
-| 教材採用・Greek/速度の標準器への昇格 | 未判定 |
+| mainの独立fresh check | 完了。保存重み・数値・固定CF・safe・費用を再計算 |
+| 最終NPZ保管・両コピー復元 | 23,498,066 bytes、primary/mirror各PASS |
+| 本計時・raw/safe・総費用/H4 | 310測定・288対照を保存、計時/loader summaryをrawから検査 |
+| artifact-only研究3図 | 実行済み・目視済み。H1/H2の別尺度、rate/spot分解、公平cache別の費用表示 |
+| 独立最終レビュー | 承認済み、修正要求なし。固定合成研究の採否まで |
+| 関連3suite | 初回6915 PASS / 4 FAIL / 6 skip。Agg表示修正後11件PASS、重複除去6919 PASS / 6 skip。全suiteの2回目は未実施 |
+| 配布生成 | 通常make hull-report PASS、旧教材の追跡ファイルは不変 |
+| commit後release / main反映 | 統合gateで確認 |
 
 ## 成果物と再実行
 
-このREADMEの数値は保存済みmainコアから抽出したドラフト。
-最終のreference.json/manifest.jsonへの配置・計時追加は担当の完了作業に含む。
-コアNPZは23,147,347 bytesで20MiB上限を超えたため、
-学習を繰り返さず既存C:/F:保管庫とsmall manifestを使う。
-最終NPZのサイズ・SHAは最終manifest/reference.jsonで確認する。
-SHAは保存物の完全性検査、数値の正しさは許容差付き独立再計算で判断する。
-計時前のコア保管はcore-manifest.json、最終payloadはmanifest.jsonで参照する。
+reference.json/manifest.jsonと実行済みnotebookを正本directoryへ配置した。
+最終NPZは23,498,066 bytesで20MiB上限を超えるため、既存C:/F:保管庫とsmall manifestを使う。
+NPZはgit管理外。両コピーの独立復元を確認し、SHAは完全性だけに使う。
+価格/Greekは許容差付き独立計算、計時/費用は保存raw標本と構成原価から再検査する。
 
+fit時の6source digestはpre-fit commit `b5fc6e85`に一致し、金融4moduleも同commitと不変。
+本計時sourceは実行中に保持した修正前snapshotを事後照合し、
+自動捕捉されていなかったdigestを当時から保存していたとは主張しない。
+loaderは自己digestを保存し、format前のsourceを保持した。
+`provenance`でfit/timing/loading/validationを分ける。
+計ったbundleはloading配列追加前の23,476,290 bytesで、SHA/bytesはloading.input_npzに保存。
+現行checker/表示コードへの修正は再学習・再計時の成果と混同しない。
+[計時source履歴](measurement_sources/README.md)を保持する。
 | ファイル | 役割 |
 |---|---|
 | protocol.json | 固定契約/分割/学習/ショック/費用/統計規約 |
@@ -314,14 +431,15 @@ SHAは保存物の完全性検査、数値の正しさは許容差付き独立�
 | reference_methods.py | 自作brentq・complex-step・密度積分・固定CFの独立参照 |
 | replay.py | torch/learnerをimportしない保存重み推論・指標/CI再計算 |
 | policy.py / diagnostics.py / benchmark.py | 安全wrapper、教師MC、raw標本付き計時 |
-| reference.json / manifest.json（最終配置予定） | 全結果metadata・指標と保管庫の論理参照 |
+| measure_loading.py / costs.py | artifact-only読み込み計時、full-batch原価と償却 |
+| reference.json / manifest.json | 全結果metadata・指標と保管庫の論理参照 |
 | reference.npz（git管理外） | 全入力/教師/A/IDs/重み/予測/B/h/ショック/費用/診断・計時根拠 |
-| build_notebook.py / quote_dml.ipynb（生成後） | 学習を起動しないartifact-only研究3図 |
+| build_notebook.py / quote_dml.ipynb | 学習を起動しないartifact-only研究3図 |
 | REVIEW.md | 実装指摘/対応。最終成果レビューと区別 |
 | hullkit/_quote_dml_teachers.py / _quote_dml_hedging.py | torch-freeの非公開金融計算 |
 | deep_hedge_price/_quote_dml.py | 非公開CPU学習 |
 
-WSLの対象checkout rootで共有venvを使う。以下は最終配置後のコマンド。
+WSLの対象checkout rootで共有venvを使う。以下は保存済み成果を使うコマンド。
 既存のPROJECTS_ARTIFACT_STORE / PROJECTS_ARTIFACT_MIRRORを設定しておく。
 root checkoutとworktreeの混同を避けるためPYTHONPATHを現在のcheckoutへ向ける。
 
@@ -350,6 +468,11 @@ quote_artifact_dir="$PWD/johnhull/research/RB-F07/quote_dml"
 /home/kazumasa/projects/.venv/bin/python \
   johnhull/research/RB-F07/quote_dml/build_reference.py \
   --measure --output "$quote_artifact_dir"
+
+# 再計時後はloadと原価も更新。再学習はしない。
+/home/kazumasa/projects/.venv/bin/python \
+  johnhull/research/RB-F07/quote_dml/build_reference.py \
+  --measure-loading --output "$quote_artifact_dir"
 
 # 保存済みartifactから研究3図を再生成・実行する。fitは起動しない。
 /home/kazumasa/projects/.venv/bin/python \

@@ -34,7 +34,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 101 priv
 | Beyond Hull（vol13–28） | 完了 | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 研究track #1 | RB-F07 v1完了 | [研究資料](research/RB-F07/README.md)。private単一曲線・解析Jacobian・随伴リスク、独立レビュー済み。v2/v3は別承認 |
 | 研究track #2 | RB-F05 digital v1完了 | [研究資料](research/RB-F05/README.md)。DMLは全seed改善、解析・補間には精度/費用で劣り、速度昇格は不採用。次は離散バリアの契約/独立参照を固定 |
-| 統合研究 | quote DMLの本学習・数値照合完了、本計時中 | [設計](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)／[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)。Tasks1–6のprivate教師・5NN/ridge・replay・固定契約hedge/OODを実装。30NN fits＋4ridge完遂、fresh独立再計算PASS、scoped 974 tests PASS。約23MBのcore成果をC/F両保管庫へ保存し、各コピーの独立復元PASS。本計時・総費用・教材3図・最終レビュー追加指摘の補完とmain反映は未完了 |
+| 統合研究 | quote DML研究受入済み・commit後統合gate | [結果](research/RB-F07/quote_dml/README.md)／[独立レビュー](research/RB-F07/quote_dml/REVIEW.md)。30NN＋4ridge、fresh独立再計算、310計時、288費用対照、最終23,498,066 bytesの両保管庫復元、artifact-only3図実行/目視を完了。関連3suite初回6915 PASS/4 FAIL/6 skip、Agg表示修正後11 PASS、重複除去6919 PASS/6 skip（全suite2回目なし）。教材保持・標準器昇格不採用。commit後release/main反映を確認する |
 | 実装前の準備 | 完了 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で製品受入と区別 |
 
 `done`・`accepted`・PASSは宣言した計算・再現性・integrationの範囲を示し、市場性能の承認ではない。
@@ -116,11 +116,11 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 | 順 | 研究 | 完了を示す主な証拠 | 現在の状態 |
 |---|---|---|---|
 | 既存 | RB-F07 v1 / RB-F05 digital v1 | 保存済み研究成果・再計算・レビュー・採否 | 完了。F05全体の完了とは区別 |
-| 1 | F07＋F05 quote DML | 8工程、30NN fits＋4ridge、全入力/重み/予測/hedge/費用、再計算・改変検査・3図・レビュー | Tasks1–6実装。本学習34方式とfresh数値照合PASS、scoped 974件PASS、core成果C/F両復元PASS。100反復の本計時中。総費用・3図・レビュー追加指摘の補完・main反映は未完了 |
+| 1 | F07＋F05 quote DML | 34 fits、310計時/288原価、fresh数値/改変検査、最終両復元・3図・独立最終レビュー | 研究受入済み。H1改善・H2優位不支持、rate-only残余改善/spot・混合悪化、全面速度優位なし。教材保持、標準器へ昇格しない。commit後release/main統合を確認する |
 | 2 | RB-F05離散バリア | 監視契約、独立離散参照、教師bias/SE、学習比較・総費用・3図・レビュー・採否 | 実装未着手。[追加調査](docs/prep/design/RB-F05_DISCRETE_RESEARCH.md)：BGK/連続監視を離散オラクルにしない。最終増分conditioningだけのPWには途中barrierのbiasが残る |
-| 3 | RB-F04モデル比較 | Heston→Dupire、vanilla再価格/収束、月次12観測Asian・二時点差、paired SE・3図・レビュー | 未着手。[設計](docs/prep/design/RB-F04_DESIGN.md) |
-| 4 | RB-F08 MLMC / RQMC CI | GBM Euler粗細結合、bias/sampling、費用、独立scramble被覆率・4図・レビュー | 未着手。[設計](docs/prep/design/RB-F08_DESIGN.md) |
-| 5 | RB-F06識別可能性 | 固定β SABR、削減/疎/noisy quote、多点初期化、scaled J/profile・3図・レビュー | 未着手。[設計](docs/prep/design/RB-F06_DESIGN.md) |
+| 3 | RB-F04モデル比較 | Heston→Dupire、vanilla再価格/収束、月次12観測Asian・二時点差、paired SE・3図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F04_DESIGN.md)に現行コード監査を反映。scalar Dupireと終端Heston MCだけでは面・局所ボラ経路/PDE・Asianを満たさない |
+| 4 | RB-F08 MLMC / RQMC CI | GBM Euler粗細結合、bias/sampling、費用、独立scramble被覆率・4図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F08_DESIGN.md)に既存private独立scramble推定の再利用と、Euler/観測点の指定を追記。Student CI・被覆率・MLMCは追加が必要 |
+| 5 | RB-F06識別可能性 | 固定β SABR、削減/疎/noisy quote、多点初期化、scaled J/profile・3図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F06_DESIGN.md)にraw較正の制限、scaled J・再最適化profile・解析的な未識別fixtureを追記 |
 | 後続 | RB-F05短期/0DTE | 短期契約・calendar・教師分散/共通乱数・独立参照・比較・採否 | 未設計。digital結果を短期へ外挿しない |
 | 後続 | 同一較正条件の動的モデル横断ヘッジ | 市場生成/評価/方策を分離、自己資金・CF・費用を持つ共通P&L実験・レビュー | 未設計。瞬間shockで代用しない |
 | 後続 | 多曲線統合risk / P&L | date/fixing/曲線間依存・quote units・商品横断risk/P&L・独立比較 | 未設計 |
