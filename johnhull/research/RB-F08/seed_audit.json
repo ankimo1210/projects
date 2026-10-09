@@ -1,0 +1,55 @@
+{
+  "rows": 181729,
+  "phase_counts": {
+    "pilot": 31,
+    "main": 9216,
+    "coverage": 172032,
+    "fresh_review": 372,
+    "timing": 72,
+    "method_order": 3,
+    "bootstrap": 3
+  },
+  "physical_unique": 181729,
+  "collisions": 2,
+  "collision_rows": [
+    {
+      "logical_id": "coverage.0.1.368.rqmc_r16.-1.14",
+      "raw_seed": 3937525580,
+      "seed": 2131282462,
+      "retry_count": 1,
+      "candidate_seeds": [
+        3937525580,
+        2131282462
+      ],
+      "spawn_key": [
+        0,
+        1,
+        368,
+        1,
+        0,
+        15,
+        1
+      ]
+    },
+    {
+      "logical_id": "coverage.2.0.146.rqmc_r8.-1.0",
+      "raw_seed": 2296480862,
+      "seed": 2122498564,
+      "retry_count": 1,
+      "candidate_seeds": [
+        2296480862,
+        2122498564
+      ],
+      "spawn_key": [
+        2,
+        0,
+        146,
+        0,
+        0,
+        1,
+        1
+      ]
+    }
+  ],
+  "scope": "candidate seed roster before any full pilot or main prices"
+}
