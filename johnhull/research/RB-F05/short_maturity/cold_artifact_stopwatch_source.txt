@@ -1,0 +1,12 @@
+from pathlib import Path
+import subprocess,time,json,os
+root=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+d=root/'johnhull/research/RB-F05/short_maturity'
+command=['/home/kazumasa/projects/.venv/bin/python','/tmp/rbf05-cold-artifact-child.py']
+started=time.perf_counter();r=subprocess.run(command,cwd=root,text=True,capture_output=True)
+receipt=dict(schema='RB-F05-short-cold-process-cost-v1',command=command,wall_seconds=time.perf_counter()-started,exit_code=r.returncode,stderr=r.stderr,scope='new-process artifact-backed validated pipeline; not uncached disk, and not repeated offline teacher/training construction')
+if r.returncode==0: receipt['measurement']=json.loads(r.stdout)
+else: receipt['stdout']=r.stdout
+(d/'cold_process_cost.json').write_text(json.dumps(receipt,indent=2)+'\n')
+print(json.dumps({k:receipt[k] for k in ['wall_seconds','exit_code']})); print(r.stderr[-1600:])
+raise SystemExit(r.returncode)

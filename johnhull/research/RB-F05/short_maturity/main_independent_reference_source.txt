@@ -1,0 +1,359 @@
+"""Independent saved RB-F05 main reference / C2 Hermite audit, /tmp only.
+
+No project pricing, interpolation, sampling, training, or checking function is
+called. Ordinary Poisson and density helpers belong to the previous independent
+/tmp pilot audit. Hermite uses explicit scalar quintic coefficients and analytic
+polynomial derivatives, with no SciPy BPoly. This audit never adopts a model.
+"""
+from __future__ import annotations
+import importlib.util
+import json
+import math
+import sys
+from datetime import UTC, datetime, time, timedelta
+from pathlib import Path
+from zoneinfo import ZoneInfo
+import numpy as np
+from scipy.special import ndtr
+
+_HELPER_PATH=Path('/tmp/rbf05_pilot_reference_audit.py')
+_spec=importlib.util.spec_from_file_location('rbf05_independent_reference_helper',_HELPER_PATH)
+_helpers=importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_helpers)
+independent_mixture=_helpers.independent_mixture
+independent_tails=_helpers.independent_tails
+independent_density=_helpers.independent_density
+
+CANONICAL=Path('/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity')
+EPS=np.finfo(float).eps
+
+
+def independent_row_state(protocol, seconds, event):
+    """Calendar-aware exact datetime-resolution carry / remaining U-clock / pulse."""
+    c,clock=protocol['contract'],protocol['clock']
+    zone=ZoneInfo(c['timezone'])
+    expiry=datetime.fromisoformat(c['expiry']).astimezone(zone)
+    opening=datetime.combine(expiry.date(),time.fromisoformat(c['session_open']),zone)
+    closing=datetime.combine(expiry.date(),time.fromisoformat(c['session_close']),zone)
+    timestamp=expiry-timedelta(seconds=float(seconds))
+    if expiry!=closing or expiry.weekday()>=5 or not opening<=timestamp<=closing or event not in (0,1):
+        raise ValueError('invalid synthetic same-day contract')
+    rem=(expiry.astimezone(UTC)-timestamp.astimezone(UTC)).total_seconds()
+    if rem==0:
+        return dict(carry_years=0.,variance=0.,jump_mean_count=0.,remaining_seconds=0.,status='expiry')
+    duration=(closing.astimezone(UTC)-opening.astimezone(UTC)).total_seconds()
+    elapsed=duration-rem
+    edges=np.asarray(clock['edges'])*duration
+    weights=np.asarray(clock['weights'])
+    weighted_full=math.fsum(float(w*(right-left)) for left,right,w in zip(edges[:-1],edges[1:],weights))
+    weighted_remaining=math.fsum(float(w*max(0.,right-max(left,elapsed))) for left,right,w in zip(edges[:-1],edges[1:],weights))
+    overlap=min(rem,c['pulse_minutes']*60)
+    return dict(carry_years=rem/(clock['carry_days']*86400),variance=clock['volatility']**2*weighted_remaining/(clock['annual_sessions']*weighted_full),jump_mean_count=c['pulse_full_mean_count']*overlap/(c['pulse_minutes']*60) if event else 0.,remaining_seconds=rem,status='active')
+
+
+def independent_oracle(inputs,protocol,*,invalid_nan=False):
+    """C/physical Delta/Gamma, retaining expiry ATM undefined and invalid rows."""
+    x=np.asarray(inputs,dtype=float)
+    if x.ndim!=2 or x.shape[1]!=3:
+        raise ValueError('Nx3 inputs required')
+    out=np.full((len(x),3),np.nan)
+    for i,(spot,seconds,event) in enumerate(x):
+        if not np.isfinite(x[i]).all() or spot<=0 or seconds<0 or seconds>390*60 or event not in (0,1):
+            if invalid_nan:
+                continue
+            raise ValueError('invalid contract input')
+        state=independent_row_state(protocol,seconds,event)
+        out[i]=independent_mixture(spot,protocol['contract']['strike'],state,protocol)
+    return out
+
+
+def independent_merton_price(S,K,state,protocol):
+    """Independent Esscher-tilted Poisson / integrated-clock Black price series."""
+    if state['status']=='expiry':
+        return max(S-K,0.)
+    c=protocol['contract']; r,q,mu,sd=(c[k] for k in ('rate','dividend','jump_mean','jump_std'))
+    tau,W,L=(state[k] for k in ('carry_years','variance','jump_mean_count'))
+    eta=mu+sd*sd/2
+    tilted=L*math.exp(eta)
+    terms=[]
+    for n in range(33):
+        probability=(1. if n==0 else 0.) if tilted==0 else math.exp(-tilted+n*math.log(tilted)-math.lgamma(n+1))
+        integrated_adjusted_rate=r*tau-math.expm1(eta)*L+n*eta
+        root=math.sqrt(W+n*sd*sd)
+        d1=(math.log(S/K)+integrated_adjusted_rate-q*tau+root*root/2)/root
+        d2=d1-root
+        black=math.fsum((S*math.exp(-q*tau)*float(ndtr(d1)),-K*math.exp(-integrated_adjusted_rate)*float(ndtr(d2))))
+        terms.append(probability*black)
+    return math.fsum(terms)
+
+
+def fixed_test_inputs(protocol):
+    """Original 336 deterministic slots, preserving duplicate geometry weights."""
+    rows=[]; K=protocol['contract']['strike']
+    for minutes in protocol['remaining_minutes']:
+        root=math.sqrt(independent_row_state(protocol,minutes*60,0)['variance'])
+        for event in (0,1):
+            for distance in [*(float(v)*root for v in protocol['test_scaled_distance']),*protocol['test_fixed_distance']]:
+                rows.append([K*math.exp(distance),minutes*60,event])
+    return np.asarray(rows)
+
+
+def independent_spot_domain(protocol):
+    full=independent_row_state(protocol,390*60,0)
+    extent=max(.05,4*math.sqrt(full['variance']))
+    return -extent,extent
+
+
+def expected_hermite_axes(protocol):
+    g=protocol['hermite']
+    xs=np.linspace(*independent_spot_domain(protocol),g['spot_nodes'])
+    seconds=np.exp(np.linspace(np.log(60),np.log(390*60),g['time_nodes']))
+    seconds[0],seconds[-1]=60.,390*60.
+    seconds=np.unique(np.r_[seconds,np.asarray(g['include_minutes'])*60])
+    return xs,seconds
+
+
+def independent_hermite_coefficients(grid):
+    """Normalized u=(x-left)/h scalar quintic from value/first/second derivatives."""
+    xs=np.asarray(grid['log_spot_nodes']); ts=np.asarray(grid['seconds_nodes']); ds=np.asarray(grid['derivatives'])
+    if xs.ndim!=1 or ts.ndim!=1 or len(xs)<2 or len(ts)<2 or not np.all(np.diff(xs)>0) or not np.all(np.diff(ts)>0) or not np.all(np.diff(np.log(ts))>0) or ds.shape!=(2,len(ts),len(xs),3) or not np.isfinite(ds).all():
+        raise ValueError('ordered finite primitive grid required')
+    h=np.diff(xs)
+    left,right=ds[:,:,:-1,:],ds[:,:,1:,:]
+    a0=left[...,0]; a1=h*left[...,1]; a2=.5*h*h*left[...,2]
+    b0=right[...,0]-a0-a1-a2
+    b1=h*right[...,1]-a1-2*a2
+    b2=h*h*right[...,2]-2*a2
+    # Solve the 3x3 endpoint residual system algebraically.
+    a3=10*b0-4*b1+.5*b2
+    a4=-15*b0+7*b1-b2
+    a5=6*b0-3*b1+.5*b2
+    return np.stack((a0,a1,a2,a3,a4,a5),axis=-1)
+
+
+def _poly_derivatives(coefficients,u,h):
+    c=np.asarray(coefficients); u=np.asarray(u); h=np.asarray(h)
+    powers=np.arange(6)
+    C=np.sum(c*u[...,None]**powers,axis=-1)
+    Cx=np.sum(c[...,1:]*powers[1:]*u[...,None]**(powers[1:]-1),axis=-1)/h
+    Cxx=np.sum(c[...,2:]*powers[2:]*(powers[2:]-1)*u[...,None]**(powers[2:]-2),axis=-1)/(h*h)
+    return np.stack((C,Cx,Cxx),axis=-1)
+
+
+def independent_hermite(grid,inputs,protocol,*,return_log_derivatives=False):
+    """Evaluate scalar quintics, log-time blend, then the physical Greek chain."""
+    x=np.asarray(inputs,dtype=float)
+    if x.ndim!=2 or x.shape[1]!=3 or not np.isfinite(x).all() or np.any(x[:,:2]<=0) or not np.isin(x[:,2],[0,1]).all():
+        raise ValueError('finite active Nx3/binary-event queries required')
+    xs=np.asarray(grid['log_spot_nodes']); ts=np.asarray(grid['seconds_nodes'])
+    coeff=independent_hermite_coefficients(grid)
+    logspot=np.log(x[:,0]/protocol['contract']['strike']); seconds=x[:,1].copy()
+    if np.any(logspot<xs[0]-1e-12) or np.any(logspot>xs[-1]+1e-12) or np.any(seconds<ts[0]-1e-12) or np.any(seconds>ts[-1]+1e-12):
+        raise ValueError('Hermite OOD query cannot extrapolate')
+    logspot=np.clip(logspot,xs[0],xs[-1]); seconds=np.clip(seconds,ts[0],ts[-1])
+    spotindex=np.clip(np.searchsorted(xs,logspot,side='right')-1,0,len(xs)-2)
+    timeindex=np.clip(np.searchsorted(ts,seconds,side='right')-1,0,len(ts)-2)
+    h=xs[spotindex+1]-xs[spotindex]; u=(logspot-xs[spotindex])/h
+    event=x[:,2].astype(int)
+    fraction=(np.log(seconds)-np.log(ts[timeindex]))/(np.log(ts[timeindex+1])-np.log(ts[timeindex]))
+    lower=_poly_derivatives(coeff[event,timeindex,spotindex],u,h)
+    upper=_poly_derivatives(coeff[event,timeindex+1,spotindex],u,h)
+    logderiv=(1-fraction[:,None])*lower+fraction[:,None]*upper
+    if return_log_derivatives:
+        return logderiv
+    return np.column_stack((logderiv[:,0],logderiv[:,1]/x[:,0],(logderiv[:,2]-logderiv[:,1])/(x[:,0]**2)))
+
+
+def independent_safe_route(raw,inputs,protocol):
+    """Independently reconstruct declared routes; undefined/invalid stays NaN."""
+    x=np.asarray(inputs,dtype=float); raw=np.asarray(raw,dtype=float)
+    result=raw.copy(); routes=[]; K=protocol['contract']['strike']; bounds=independent_spot_domain(protocol)
+    for i,(spot,seconds,event) in enumerate(x):
+        if not np.isfinite(x[i]).all() or spot<=0 or seconds<0 or seconds>390*60 or event not in (0,1):
+            result[i]=np.nan; routes.append('invalid_contract'); continue
+        if seconds==0:
+            result[i]=independent_oracle(x[i:i+1],protocol)[0]
+            routes.append('expiry_undefined_atm' if spot==K else 'expiry_exact'); continue
+        if seconds<60:
+            route='fallback_time'
+        elif not bounds[0]-1e-12<=math.log(spot/K)<=bounds[1]+1e-12:
+            route='fallback_spot'
+        elif not np.isfinite(raw[i]).all():
+            route='fallback_nonfinite'
+        else:
+            tau=seconds/(365*86400); c=protocol['contract']; bound=math.exp(-c['dividend']*tau)
+            lower=max(spot*bound-K*math.exp(-c['rate']*tau),0.)
+            money_slack=64*EPS*max(1.,spot,K); delta_slack=64*EPS*max(1.,bound)
+            bad=raw[i,0]<lower-money_slack or raw[i,0]>spot*bound+money_slack or raw[i,1]<-delta_slack or raw[i,1]>bound+delta_slack or raw[i,2]<0
+            route='fallback_bound' if bad else 'raw'
+        if route!='raw':
+            result[i]=independent_oracle(x[i:i+1],protocol)[0]
+        routes.append(route)
+    return dict(values=result,routes=np.asarray(routes,dtype='U32'))
+
+
+def independent_error_summary(predicted,reference,*,strike):
+    a,b=np.asarray(predicted),np.asarray(reference)
+    err=(a-b)*np.array([1.,1.,strike]); finite=np.isfinite(a).all(1)&np.isfinite(b).all(1)&np.isfinite(err).all(1)
+    result=dict(original_count=len(a),failed_rows=int((~finite).sum()),units=['currency','currency/spot','K*currency/spot^2'])
+    if len(a)==0 or not finite.all():
+        return dict(**result,status='empty' if len(a)==0 else 'nonfinite',rmse=None,p99=None,max=None)
+    return dict(**result,status='complete',rmse=np.sqrt(np.mean(err*err,axis=0)).tolist(),p99=np.quantile(abs(err),.99,axis=0).tolist(),max=np.max(abs(err),axis=0).tolist())
+
+
+def _classification_variance(protocol,seconds):
+    """Declared cumulative-clock arithmetic for literal saved ATM boundaries.
+
+    Financial references use direct remaining integrals. This independent
+    cumulative evaluation intentionally preserves the frozen numeric <=2sigma
+    classification (known endpoint rounding), rather than redefine its roster.
+    """
+    state=independent_row_state(protocol,seconds,0)
+    elapsed=(390*60-state['remaining_seconds'])/(390*60)
+    edges=np.asarray(protocol['clock']['edges']); weights=np.asarray(protocol['clock']['weights'])
+    normalized=weights/np.sum(np.diff(edges)*weights)
+    cumulative=0.
+    for lo,hi,weight in zip(edges[:-1],edges[1:],normalized):
+        cumulative+=max(0.,min(elapsed,float(hi))-float(lo))*float(weight)
+    return protocol['clock']['volatility']**2*(1.-np.clip(cumulative,0.,1.))/protocol['clock']['annual_sessions']
+
+
+def independent_bucket_rows(predicted,reference,inputs,protocol):
+    x=np.asarray(inputs); result=[]; K=protocol['contract']['strike']
+    for event in (0,1):
+        for minutes in protocol['remaining_minutes']:
+            base=(x[:,1]==minutes*60)&(x[:,2]==event)
+            near=abs(np.log(x[:,0]/K))<=2*math.sqrt(_classification_variance(protocol,minutes*60))
+            for geometry in ('all','atm','tail'):
+                mask=base if geometry=='all' else base&(near if geometry=='atm' else ~near)
+                result.append(dict(event=event,minutes=minutes,geometry=geometry,**independent_error_summary(np.asarray(predicted)[mask],np.asarray(reference)[mask],strike=K)))
+    return result
+
+
+def _summary_close(actual,expected):
+    if isinstance(expected,dict):
+        return isinstance(actual,dict) and set(actual)==set(expected) and all(_summary_close(actual[k],v) for k,v in expected.items())
+    if isinstance(expected,list):
+        return isinstance(actual,list) and len(actual)==len(expected) and all(_summary_close(a,b) for a,b in zip(actual,expected))
+    if isinstance(expected,(int,float)) and not isinstance(expected,bool):
+        return bool(np.isclose(actual,expected,rtol=1e-9,atol=1e-10))
+    return actual==expected
+
+
+def audit(record,arrays):
+    p=record['protocol']; K=p['contract']['strike']; findings=[]; details={}
+    def check(condition,item,detail=None):
+        if not bool(condition):
+            findings.append(dict(severity='Important',item=item,detail=detail))
+    def compare(actual,expected,item,tol=None):
+        actual,expected=np.asarray(actual),np.asarray(expected)
+        finite=np.isfinite(expected); same_nan=np.array_equal(np.isnan(actual),np.isnan(expected))
+        difference=np.where(finite,abs(actual-expected),0.)
+        if tol is None:
+            tol=np.asarray(p['pilot']['absolute_reference_tolerance'])+np.asarray(p['pilot']['relative_reference_tolerance'])*abs(expected)
+        okay=actual.shape==expected.shape and same_nan and np.all(difference[finite]<=np.broadcast_to(tol,expected.shape)[finite])
+        check(okay,item,dict(max_abs=np.max(difference,axis=0).tolist()) if difference.size else None)
+        return np.max(difference.reshape(-1,difference.shape[-1]),axis=0) if difference.ndim>1 else float(np.max(difference))
+    datasets=record['datasets']; test=datasets['test']; tx=np.asarray(arrays[test['inputs_key']]); expected_x=fixed_test_inputs(p)
+    check(record['mode']=='main' and record['phase']=='main' and record['complete'] is True,'saved main lifecycle')
+    check(len(tx)==336 and test['original_count']==336 and np.array_equal(arrays[test['original_indices_key']],np.arange(336)),'original fixed 336 test weights')
+    check(np.allclose(tx,expected_x,rtol=1e-13,atol=1e-12),'independent fixed 336 geometry')
+    oracle=independent_oracle(tx,p)
+    reference_max=dict(core=compare(arrays[test['oracle_key']],oracle,'independent 336 core reference').tolist(),ordinary=compare(arrays[test['independent_key']],oracle,'independent 336 ordinary-count reference').tolist())
+    states=[independent_row_state(p,row[1],row[2]) for row in tx]
+    tails=np.asarray([independent_tails(row[0],s,p)[0] for row,s in zip(tx,states)])
+    check(np.allclose(arrays[test['independent_tails_key']],tails,rtol=5e-14,atol=1e-300),'336 independent tilted-tail bounds')
+    merton=np.asarray([independent_merton_price(row[0],K,s,p) for row,s in zip(tx,states)])
+    price_tol=p['pilot']['absolute_reference_tolerance'][0]+p['pilot']['relative_reference_tolerance'][0]*abs(oracle[:,0])
+    merton_difference=abs(np.asarray(arrays[test['merton_prices_key']])-merton)
+    check(np.all(merton_difference<=price_tol) and np.all(abs(merton-oracle[:,0])<=price_tol),'independent 336 tilted Merton prices',dict(max_abs=float(merton_difference.max())))
+    refs=record['references']
+    check(refs['merton']['original_count']==336 and refs['independent_mixture']['original_count']==336 and refs['independent_mixture']['nmax']==p['reference_nmax'],'reference original metadata')
+    representative=[]
+    for event in (0,1):
+        ids=np.flatnonzero(tx[:,2]==event)
+        representative.append(int(ids[np.argmin(abs(np.log(tx[ids,0]/K)))]))
+    check([d['test_index'] for d in refs['density']]==representative,'original two density witnesses')
+    density_details=[]
+    for witness in refs['density']:
+        i=witness['test_index']; den=independent_density(tx[i,0],K,states[i],p)
+        maximum=compare(arrays[witness['values_key']],den['values'],f'density witness {i}')
+        tol=np.asarray(p['pilot']['absolute_reference_tolerance'])+np.asarray(p['pilot']['relative_reference_tolerance'])*abs(oracle[i])
+        error=np.asarray(arrays[witness['errors_key']]); budget=p['pilot']['quadrature_budget_fraction']*tol
+        check(np.isfinite(error).all() and np.all(error>=0) and np.all(error<=budget),f'density error budget {i}')
+        check(np.allclose(arrays[witness['tails_key']],tails[i],rtol=5e-14,atol=1e-300),f'density tail {i}')
+        check(abs(witness['lr_gamma']-oracle[i,2])<=8*witness['lr_gamma_error_estimate']+tol[2],f'density LR2 Gamma {i}')
+        check(witness['status']=='ok' and not witness['messages'] and not den['messages'],f'density status {i}')
+        density_details.append(dict(test_index=i,values=den['values'].tolist(),independent_errors=den['errors'].tolist(),saved_errors=error.tolist(),max_abs=float(maximum)))
+    grid={name:np.asarray(arrays[key]) for name,key in record['hermite']['keys'].items()}
+    xs,seconds=expected_hermite_axes(p)
+    check(np.allclose(grid['log_spot_nodes'],xs,rtol=0,atol=1e-15) and np.allclose(grid['seconds_nodes'],seconds,rtol=1e-14,atol=1e-10),'frozen Hermite axes')
+    check(grid['derivatives'].shape==(2,36,65,3) and record['hermite']['node_count']==4680,'all 4680 Hermite node primitives')
+    coeff=independent_hermite_coefficients(grid); h=np.diff(grid['log_spot_nodes'])
+    left=_poly_derivatives(coeff,np.zeros(coeff.shape[:-1]),h)
+    right=_poly_derivatives(coeff,np.ones(coeff.shape[:-1]),h)
+    left_diff=np.max(abs(left-grid['derivatives'][:,:,:-1,:]),axis=(0,1,2)); right_diff=np.max(abs(right-grid['derivatives'][:,:,1:,:]),axis=(0,1,2))
+    check(np.all(left_diff<=np.array([1e-11,1e-9,1e-6])) and np.all(right_diff<=np.array([1e-11,1e-9,1e-6])),'scalar quintic endpoint C/Cx/Cxx conditions',dict(left=left_diff.tolist(),right=right_diff.tolist()))
+    adjacent=np.max(abs(right[:,:,:-1,:]-left[:,:,1:,:]),axis=(0,1,2))
+    check(np.all(adjacent<=np.array([1e-11,1e-9,1e-6])),'C2 continuity in log spot',adjacent.tolist())
+    node_inputs=[]
+    for event in (0,1):
+        for t in grid['seconds_nodes']:
+            for x in grid['log_spot_nodes']:
+                node_inputs.append([K*float(np.exp(x)),t,event])
+    node_inputs=np.asarray(node_inputs); node_oracle=independent_oracle(node_inputs,p)
+    primitive=grid['derivatives'].reshape(-1,3); spots=node_inputs[:,0]
+    node_physical=np.column_stack((primitive[:,0],primitive[:,1]/spots,(primitive[:,2]-primitive[:,1])/(spots*spots)))
+    node_max=compare(node_physical,node_oracle,'all 4680 independent node price/Delta/Gamma').tolist()
+    hermite_predictions={}; prediction_max={}
+    for split,data in datasets.items():
+        x=np.asarray(arrays[data['inputs_key']]); predicted=independent_hermite(grid,x,p)
+        hermite_predictions[split]=predicted
+        prediction_max[split]=compare(arrays[record['hermite']['predictions'][split]],predicted,f'all Hermite {split} same-scalar derivatives').tolist()
+    summary=independent_error_summary(hermite_predictions['test'],np.asarray(arrays[test['oracle_key']]),strike=K)
+    buckets=independent_bucket_rows(hermite_predictions['test'],np.asarray(arrays[test['oracle_key']]),tx,p)
+    check(_summary_close(record['hermite']['test_errors'],summary),'independent Hermite full-roster errors')
+    check(len(buckets)==48 and _summary_close(record['hermite']['test_buckets'],buckets),'independent original 48 Hermite buckets')
+    partitions=[]
+    for index in range(0,48,3):
+        allrow,atm,tail=buckets[index:index+3]
+        check(allrow['original_count']==21 and atm['original_count']+tail['original_count']==21,f'bucket original denominator {index//3}')
+        partitions.append(dict(event=allrow['event'],minutes=allrow['minutes'],all=21,atm=atm['original_count'],tail=tail['original_count']))
+    diag=record['diagnostics']; dx=np.asarray(arrays[diag['inputs_key']]); expected_diag=np.array([[K,0,0],[K-1,0,0],[K+1,0,1],[K,1,1],[K,30,0],[K*math.exp(.15),60,1],[0,60,0],[K,-1,0],[K,60,.5],[K,24000,0]])
+    check(np.allclose(dx,expected_diag,rtol=1e-14,atol=1e-12),'diagnostic original 10 rows')
+    dy=independent_oracle(dx,p,invalid_nan=True)
+    compare(arrays[diag['reference_key']],dy,'diagnostics independent reference/unknown')
+    expected_denominators=dict(original_count=10,invalid_contract_count=4,price_defined_count=6,ordinary_greeks_defined_count=5,expiry_atm_unknown_count=1)
+    check(all(diag[k]==v for k,v in expected_denominators.items()),'diagnostic original denominators')
+    check(dy[0,0]==0 and np.isnan(dy[0,1:]).all() and np.isnan(dy[6:]).all(),'expiry ATM and invalid unknown preservation')
+    diagnostic_routes={}
+    for fit in record['fits']:
+        fdiag=fit['diagnostics']; reconstructed=independent_safe_route(arrays[fdiag['raw_key']],dx,p)
+        compare(arrays[fdiag['safe_key']],reconstructed['values'],f'{fit["id"]} independent diagnostic fallback')
+        check(np.array_equal(arrays[fdiag['routes_key']],reconstructed['routes']),f'{fit["id"]} diagnostic route roster')
+        diagnostic_routes[fit['id']]={str(route):int(np.sum(reconstructed['routes']==route)) for route in np.unique(reconstructed['routes'])}
+        for query in (dx[0:1],dx[3:4],dx[5:6]):
+            try:
+                independent_hermite(grid,query,p)
+                rejected=False
+            except ValueError:
+                rejected=True
+            check(rejected,'Hermite cannot extrapolate expiry/time/spot OOD')
+    err=abs((hermite_predictions['test']-oracle)*np.array([1,1,K]))
+    accuracy=p['accuracy']; limits=np.column_stack((np.full(336,accuracy['price_abs']),np.full(336,accuracy['delta_abs']),accuracy['scaled_gamma_abs']+accuracy['scaled_gamma_relative']*abs(K*oracle[:,2])))
+    accuracy_failed=np.sum(err>limits,axis=0)
+    return dict(schema='RB-F05-independent-main-reference-audit-v1',passed=not findings,critical_findings=[],important_findings=findings,scope='saved main reference / mathematical scalar Hermite / diagnostics; no NN adoption or study acceptance decision',original_test_count=336,hermite_node_count=4680,hermite_prediction_counts={split:len(value) for split,value in hermite_predictions.items()},bucket_count=48,reference_max_abs=reference_max,merton_max_abs=float(merton_difference.max()),tail_max=np.max(tails,axis=0).tolist(),density=density_details,hermite_node_physical_max_abs=node_max,hermite_endpoint_max_abs=dict(left=left_diff.tolist(),right=right_diff.tolist(),adjacent=adjacent.tolist()),hermite_prediction_max_abs=prediction_max,hermite_error_summary=summary,hermite_buckets=buckets,bucket_partition_counts=partitions,diagnostic_counts=expected_denominators,diagnostic_routes=diagnostic_routes,hermite_frozen_pointwise_accuracy=dict(failed_rows_per_output=accuracy_failed.tolist(),all_outputs_pass=bool((accuracy_failed==0).all()),max_error_per_output=np.max(err,axis=0).tolist(),status='experimental precision result; not a source flaw and not adoption',units=['currency','physical Delta','K*physical Gamma']),limits=['calendar is synthetic regular same-day NY session; not an official holiday/early-close calendar','QUADPACK estimates are not rigorous integration error bounds; positive Poisson tail envelopes are separate','literal <=2sqrt(W) ATM classification preserves known floating endpoint behavior and original weights','affine log-time blending guarantees C2 only in log spot; no Theta smoothness guarantee'])
+
+
+def main():
+    directory=Path(sys.argv[1]) if len(sys.argv)>1 else CANONICAL
+    record=json.loads((directory/'reference.json').read_text())
+    with np.load(directory/'reference.npz',allow_pickle=False) as arrays:
+        result=audit(record,arrays)
+    path=Path('/tmp/rbf05_main_reference_audit.json');path.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
+    concise={k:v for k,v in result.items() if k not in ('hermite_buckets','bucket_partition_counts')}
+    print(json.dumps(concise,indent=2,allow_nan=False));print('report:',path)
+    return 0 if result['passed'] else 1
+
+if __name__=='__main__':
+    raise SystemExit(main())

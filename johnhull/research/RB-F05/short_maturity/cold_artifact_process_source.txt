@@ -1,0 +1,26 @@
+from pathlib import Path
+import sys,time,json,os
+root=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+d=root/'johnhull/research/RB-F05/short_maturity'
+os.environ.update(OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MKL_NUM_THREADS='1')
+sys.path[:0]=[str(root/'johnhull/hullkit/src'),str(root/'deep_hedge_price/src'),str(d)]
+began=time.perf_counter()
+import build_reference,protocol
+build_reference._learner()
+import_s=time.perf_counter()-began
+began=time.perf_counter();p=protocol.load_protocol(d/'protocol.json',require_frozen=True);pilot_s=time.perf_counter()-began
+began=time.perf_counter();r,a=build_reference.load_result(d);load_s=time.perf_counter()-began
+began=time.perf_counter();checked=build_reference.check_record(r,a);check_s=time.perf_counter()-began
+analytics=build_reference.module('analytics')
+began=time.perf_counter();grid={name:a[key] for name,key in r['hermite']['keys'].items()};prepared=analytics.prepare_hermite(grid);prepare_s=time.perf_counter()-began
+x=a[r['datasets']['test']['inputs_key']][[0,21]]
+fits={f['id']:f for f in r['fits']}
+methods=['core_mixture','hermite']+[f"{f['id']}/{route}" for f in r['fits'] for route in ['raw','safe']]
+outputs=[]
+began=time.perf_counter()
+for method in methods:
+ values,routes=build_reference._call(method,x,p,prepared,fits,a)
+ outputs.append(dict(method=method,values=values.tolist(),routes=routes.tolist()))
+serve_s=time.perf_counter()-began
+result=dict(schema='RB-F05-short-cold-artifact-pipeline-v1',record_digest=protocol.json_digest(r),arrays_digest=protocol.arrays_digest(a),timings=dict(cold_import_s=import_s,pilot_freeze_s=pilot_s,archive_load_s=load_s,saved_check_s=check_s,prepare_s=prepare_s,serving_s=serve_s),check=checked,outputs=outputs,scope='one new interpreter: imports, actual frozen pilot validation, complete saved archive numeric check and fixed 2-row whole-Greek serving; construction/training measured separately; OS disk cache is not flushed')
+print(json.dumps(result,allow_nan=False))

@@ -1,0 +1,49 @@
+"""Bind independent all-row seed/math audits to the completed canonical pilot."""
+import importlib.util,sys,json,time
+from pathlib import Path
+import numpy as np
+ROOT=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+D=ROOT/'johnhull/research/RB-F05/short_maturity'
+def module(path,name):
+    spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);sys.modules[name]=m;spec.loader.exec_module(m);return m
+start=time.perf_counter()
+record=json.loads((D/'pilot/pilot.json').read_text())
+with np.load(D/'pilot/pilot.npz',allow_pickle=False) as archive:arrays={key:archive[key] for key in archive.files}
+seed=module(Path('/tmp/rbf05_formal_pilot_audit.py'),'formal_seed_moment_audit')
+references=module(Path('/tmp/rbf05_pilot_reference_audit.py'),'formal_independent_reference_audit')
+a=seed.audit(record,arrays);b=references.audit(record,arrays)
+assert a['passed'] and b['passed'] and not b['critical_findings'] and not b['important_findings']
+assert a['selected_sample_count']==1048576 and b['finite_target_count']==252
+protocol=module(D/'protocol.py','formal_protocol_binding')
+bindings=protocol.pilot_bindings(record['protocol'],record,arrays)
+assert bindings['source_registry']==record['source_registry']
+review={
+'schema':'RB-F05-short-pilot-review-v1',
+'approved':True,'decision':'approved','critical_findings':[],'important_findings':[],
+**bindings,
+'review_date':'2026-10-09',
+'scope':'Completed synthetic short-call teacher pilot only; main paired six NN fits, Gamma utility, performance adoption, market calibration and coverage need separate review.',
+'method':'Independent mathematical/source review; all reserved used primitive streams regenerated for provenance; all conditional/raw/CRN values and joint moments independently recomputed with numeric tolerances; all84 reference/clock/tail/quad and252 finite-h targets independently checked.',
+'selected_sample_count':a['selected_sample_count'],
+'case_count':84,'stream_count':3,'prefix_count':1008,'raw_replay_count':252,'finite_h_reference_count':252,
+'minor_findings':[
+ {'id':'atm_bucket_endpoint_roundoff','scope':'main runner fixed +/-2sigma classification','blocking':False,'detail':'Known endpoint roundoff can transfer the endpoint between ATM/tail; full original denominator remains. No financial source changed.'},
+ {'id':'finite_h_gamma_price_roundoff','scope':'pilot finite-h diagnostics','blocking':False,'detail':'Deep ITM/small-h second-price differences include price rounding amplified by h^-2. Independent60-digit targets agree within explicit rounding allowance; finite_h_bias storage includes numerical roundoff and cannot be read wholly as model bias.'}
+],
+'limits':[
+ 'Numeric financial values are compared with explicit tolerances; primitive seed byte identity and SHA bindings establish provenance only.',
+ 'All raw unsupported/inconclusive and naive-Gamma negative-control slots are retained; they are not hidden by conditioning readiness.',
+ '6SE evidence does not prove unbiasedness, universal accuracy or coverage; three streams do not establish statistical universality.',
+ 'Full artifact has84 active cases in one synthetic weekday; expiry/holiday/DST source fixtures are earlier foundation tests and are not saved full-pilot observations.',
+ 'Independent diagnostics permit a documented floating-price subtraction allowance; frozen teacher/reference precision/rare gates were not relaxed.',
+ 'Pilot/API/serialization/CLI costs are nested scopes. API time is not added to CLI wall, and main/cold/fresh costs are not approved here.'
+],
+'audit_evidence':{'seed_moments_path':'/tmp/rbf05-formal-pilot-seed-moment-audit.json','references_path':'/tmp/rbf05_pilot_reference_audit.json','combined_review_script':'/tmp/rbf05_formal_pilot_review.py','independent_review_api_s':time.perf_counter()-start}
+}
+# Validate that this typed approval carries exactly the four actual evidence bindings.
+protocol._validate_review(record['protocol'],review,bindings)
+Path('/tmp/rbf05-formal-pilot-seed-moment-audit.json').write_text(json.dumps(a,indent=2,allow_nan=False),encoding='utf-8')
+Path('/tmp/rbf05_pilot_reference_audit.json').write_text(json.dumps(b,indent=2,allow_nan=False),encoding='utf-8')
+Path('/tmp/rbf05-formal-pilot-review.json').write_text(json.dumps(review,indent=2,allow_nan=False),encoding='utf-8')
+Path('/tmp/rbf05-formal-pilot-combined-evidence.json').write_text(json.dumps({'seed_moments':a,'reference_summary':{k:v for k,v in b.items() if k!='cases'},'binding':bindings,'review_api_s':review['audit_evidence']['independent_review_api_s']},indent=2,allow_nan=False),encoding='utf-8')
+print(json.dumps({'approved':review['approved'],'decision':review['decision'],'critical_findings':0,'important_findings':0,'minor_findings':2,'selected_sample_count':review['selected_sample_count'],'case_count':84,'prefix_count':1008,'raw_replay_count':252,'finite_h_reference_count':252,'review_path':'/tmp/rbf05-formal-pilot-review.json','review_api_s':review['audit_evidence']['independent_review_api_s']},indent=2))

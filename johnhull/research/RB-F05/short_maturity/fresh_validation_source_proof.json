@@ -1,0 +1,22 @@
+{
+  "schema": "RB-F05-short-fresh-validation-source-proof-v1",
+  "main_record_digest": "c116e01cbcfa0ef3d42b1b623a85eb976c6d3c3545ffca1b38cc97e06b03aebe",
+  "fresh_record_digest": "f6d34e936f970cfbf09e9e121ce0cea95428d79b5a5f9e4dfbc60fc1a61442c8",
+  "files": {
+    "fresh_support.py": "21838ffe256244973838030521658995c1e4e2f58dcc8bd446c3301c70df70b6",
+    "fresh_generate_stopwatch.py": "5821c11f5d75a759ad6f632746e153441824bec983a0ddd8538fa8a3083c0506",
+    "fresh_replay_stopwatch.py": "8295efb8e792df6cd85cf44dc63a9e277d5ceb611cfcfa0fe83f2814ecb53222"
+  },
+  "scope": "supplementary validation/generation and independent timing wrappers outside frozen financial10",
+  "measured_stopwatch_sources": {
+    "fresh_generate_stopwatch.py": {
+      "file": "fresh_generate_stopwatch_measured_source.txt",
+      "sha256": "d075d3bd9d5b2add5aae7dbccf420ae1b41fd644965642e502776b0e65065663"
+    },
+    "fresh_replay_stopwatch.py": {
+      "file": "fresh_replay_stopwatch_measured_source.txt",
+      "sha256": "6437d6290f80d458e933a26594a6eaabea26748359badf627479c3d20aada0dd"
+    }
+  },
+  "style_note": "Measured stopwatch exact bytes preserved separately. Callable wrapper files subsequently received import ordering and formatting only; they were not rerun to replace the original measurement."
+}

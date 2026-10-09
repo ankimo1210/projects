@@ -1,0 +1,215 @@
+"""Independent actual main teacher, weights, derivatives, metrics, timings and costs."""
+import importlib.util,importlib.metadata,sys,json,hashlib,math,time
+from pathlib import Path
+from collections import Counter
+import numpy as np
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=ROOT/"johnhull/research/RB-F05/short_maturity"
+def module(name,path):
+    s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);sys.modules[name]=m;s.loader.exec_module(m);return m
+b=module("pilot_audit","/tmp/rbf05_formal_pilot_audit.py")
+h=module("main_ref_audit","/tmp/rbf05_main_reference_audit.py")
+req=b.require;DIFFS={};COMPARISONS=0
+def near(a,c,label,atol=1e-10,rtol=2e-9,primitive=False):
+    global COMPARISONS
+    a,c=np.asarray(a),np.asarray(c);req(a.shape==c.shape,label+" shape")
+    if primitive:req(a.dtype==c.dtype and a.tobytes()==c.tobytes(),label+" primitive byte/dtype provenance")
+    elif a.dtype.kind in "USbiu" and c.dtype.kind in "USbiu":req(np.array_equal(a,c),label+" exact roster")
+    else:
+        req(np.array_equal(np.isnan(a),np.isnan(c)) and np.array_equal(np.isposinf(a),np.isposinf(c)) and np.array_equal(np.isneginf(a),np.isneginf(c)),label+" unknown state")
+        good=np.isfinite(c);delta=np.abs(a[good]-c[good]);mx=float(delta.max()) if delta.size else 0.
+        family=label.split("/")[-1];DIFFS[family]=max(DIFFS.get(family,0),mx)
+        req(np.all(delta<=atol+rtol*np.abs(c[good])),label+" maxabs="+str(mx))
+    COMPARISONS+=1
+def nested(a,c,label):
+    if isinstance(c,dict):
+        req(isinstance(a,dict) and set(a)==set(c),label+" keys")
+        for key in c:nested(a[key],c[key],label+"/"+key)
+    elif isinstance(c,list):
+        req(isinstance(a,list) and len(a)==len(c),label+" roster")
+        for i,(x,y) in enumerate(zip(a,c)):nested(x,y,label+"/"+str(i))
+    elif isinstance(c,(int,float)) and not isinstance(c,bool):near(a,c,label)
+    else:req(a==c,label+" value")
+def norm(x,y,K):
+    f=np.column_stack([np.log(x[:,0]/K),np.log(x[:,1]),x[:,2]]);sd=f.std(0)
+    return dict(mean=f.mean(0).tolist(),std=np.where(sd>1e-12,sd,1.).tolist(),price_mean=float(np.mean(y[:,0]/K)),price_scale=max(float(np.std(y[:,0]/K)),1e-12),delta_scale=max(float(np.sqrt(np.mean(y[:,1]**2))),1e-12),strike=K)
+def predict(w,n,x,K):
+    # Independent physical S jets; no learner imports or log-Greek replay call.
+    if not all(np.isfinite(v).all() for v in w.values()):return np.full((len(x),3),np.nan)
+    S=x[:,0];sd=np.asarray(n["std"]);v=(np.column_stack([np.log(S/K),np.log(x[:,1]),x[:,2]])-n["mean"])/sd
+    d=np.zeros_like(v);dd=np.zeros_like(v);d[:,0]=1/(S*sd[0]);dd[:,0]=-1/(S*S*sd[0])
+    for layer in ["first","second"]:
+        W=w[layer+".weight"];pre=v@W.T+w[layer+".bias"];dp=d@W.T;ddp=dd@W.T
+        v=np.tanh(pre);slope=1-v*v;d=slope*dp;dd=slope*(ddp-2*v*dp*dp)
+    W=w["last.weight"];scale=K*n["price_scale"]
+    return np.column_stack([K*n["price_mean"]+scale*(v@W.T+w["last.bias"])[:,0],scale*(d@W.T)[:,0],scale*(dd@W.T)[:,0]])
+def init(seed):
+    import torch
+    out={}
+    with torch.random.fork_rng(devices=[]):
+        torch.random.default_generator.manual_seed(seed)
+        for layer,fin,fout in [("first",3,32),("second",32,32),("last",32,1)]:
+            weight=torch.empty((fout,fin),dtype=torch.float64,device="cpu");bias=torch.empty(fout,dtype=torch.float64,device="cpu")
+            torch.nn.init.kaiming_uniform_(weight,a=math.sqrt(5))
+            torch.nn.init.uniform_(bias,-1/math.sqrt(fin),1/math.sqrt(fin))
+            out[layer+".weight"]=weight.numpy().copy();out[layer+".bias"]=bias.numpy().copy()
+    return out
+def accuracy(y,truth,p):
+    K=p["contract"]["strike"];e=np.abs((y-truth)*[1,1,K]);s=p["accuracy"]
+    lim=np.column_stack([np.full(len(y),s["price_abs"]),np.full(len(y),s["delta_abs"]),s["scaled_gamma_abs"]+s["scaled_gamma_relative"]*np.abs(K*truth[:,2])])
+    good=np.isfinite(e)&(e<=lim)
+    return dict(original_count=len(y),passed_by_component=good.sum(0).tolist(),passed_all_components=int(good.all(1).sum()),all_rows_passed=bool(good.all()),maximum_error=e.max(0).tolist(),max_error_to_limit=(e/lim).max(0).tolist())
+def audit(r,a):
+    start=time.perf_counter();p=r["protocol"];K=p["contract"]["strike"];N=1048576
+    req(r["schema"]=="RB-F05-short-study-v1" and r["mode"]==r["phase"]=="main" and r["complete"] is True and r["accepted"] is False and r["teaching_acceptance"] is False,"completed original immutable main")
+    req(p["state"]=="frozen" and p["teacher_sample_count"]==N and json.loads((D/"protocol.json").read_text())==p and r["protocol_digest"]==b.json_digest(p),"actual frozen protocol")
+    registry={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in b.SOURCES}
+    req(len(registry)==10 and r["source_registry"]==registry and r["source_registry_complete"] is True,"10 sources current")
+    req(registry==json.loads(Path("/tmp/rbf05-formal-pilot-review.json").read_text())["source_registry"],"sources unchanged since formal pilot approval")
+    req(r["runtime"]["versions"]==p["runtime_versions"]=={name:importlib.metadata.version(name) for name in ["numpy","scipy","torch"]},"original runtime versions")
+    req(r["runtime"]["requested_torch_threads"]==1 and r["runtime"]["blas_environment"]=={name:"1" for name in ["OPENBLAS_NUM_THREADS","OMP_NUM_THREADS","MKL_NUM_THREADS"]},"recorded single thread conditions")
+    req(p["seed_ledger"]==b.ledger(p) and len({q["seed"] for q in p["seed_ledger"]})==3870,"3870 unique original seeds")
+    seeds={q["id"]:q["seed"] for q in p["seed_ledger"]}
+    ex=dict(splits=dict(train=512,validation=128,test=336),teacher_sample_count=N,fit=p["fit"],hermite=p["hermite"],timing=p["timing"],test_original_indices=list(range(336)),phase="main",paired_seed_ids=[dict(init=f"main/init/{s}",batch=f"main/batch/{s}") for s in [11,29,47]])
+    nested(r["execution"],ex,"execution")
+    refkeys=set()
+    def collect(o):
+        if isinstance(o,dict):
+            for key,v in o.items():
+                if key in ["keys","weights_keys"]:refkeys.update(v.values())
+                elif key.endswith("_key"):refkeys.add(v)
+                elif key=="predictions" and all(isinstance(q,str) for q in v.values()):refkeys.update(v.values())
+                elif isinstance(v,(dict,list)):collect(v)
+        elif isinstance(o,list):
+            for q in o:collect(q)
+    collect(r);req(refkeys==set(a) and len(a)==7715 and all(not q.dtype.hasobject for q in a.values()),"7715 complete plain arrays")
+    xs={};truths={};ready=Counter();reasons=Counter();counts=draws=teacher_count=0;max_se=np.zeros(3)
+    for split,nrows in [("train",512),("validation",128),("test",336)]:
+        ds=r["datasets"][split];x=a[ds["inputs_key"]];xs[split]=x
+        req(ds["original_count"]==nrows and x.shape==(nrows,3),"dataset original count");near(a[ds["original_indices_key"]],np.arange(nrows),split+"/indices")
+        if split=="test":
+            near(x,h.fixed_test_inputs(p),split+"/geometry",atol=1e-10,rtol=2e-12);req(ds["teacher_sample_count"] is None and not ds["teachers"],"test no labels")
+        else:
+            req(ds["scenario_seed_id"]==f"main/scenario/{split}" and ds["teacher_sample_count"]==N,"original scenario seed")
+            rng=np.random.default_rng(seeds[ds["scenario_seed_id"]]);secs=np.exp(rng.uniform(np.log(60),np.log(23400),nrows));atm=rng.random(nrows)<.7;scaled=rng.uniform(-4,4,nrows);fixed=rng.uniform(-.05,.05,nrows)
+            W=np.array([h.independent_row_state(p,t,0)["variance"] for t in secs])
+            expected=np.column_stack([K*np.exp(np.where(atm,scaled*np.sqrt(W),fixed)),secs,np.tile([0,1],nrows//2)])
+            near(x,expected,split+"/scenario-provenance",atol=1e-10,rtol=2e-12)
+        truth=h.independent_oracle(x,p);truths[split]=truth;near(a[ds["oracle_key"]],truth,split+"/oracle")
+        if split=="test":continue
+        req(len(ds["teachers"])==nrows,"full original teacher slots");labels=[]
+        for i,t in enumerate(ds["teachers"]):
+            teacher_count+=1;st=h.independent_row_state(p,x[i,1],x[i,2]);analytic=st["jump_mean_count"]==0
+            expected_seed=dict(count_id=f"main/teacher/{split}/{i}/count",jump_id=f"main/teacher/{split}/{i}/jump",count=seeds[f"main/teacher/{split}/{i}/count"],jump=seeds[f"main/teacher/{split}/{i}/jump"]);req(t["seeds"]==expected_seed,"teacher seed mapping")
+            c={key:a[val] for key,val in t["keys"].items()};ids,cnt,z=c["active_indices"],c["active_counts"],c["z_jump"];A=len(ids)
+            req(ids.ndim==1 and cnt.shape==z.shape==ids.shape and ids.dtype.kind in "iu" and cnt.dtype.kind in "iu" and np.all(np.diff(ids)>0) and np.all((ids>=0)&(ids<N)) and np.all(cnt>=1),"compact original active roster")
+            if analytic:oi=np.empty(0,dtype=np.int64);oc=np.empty(0,dtype=np.int64);oz=np.empty(0)
+            else:
+                rawcnt=np.random.default_rng(expected_seed["count"]).poisson(st["jump_mean_count"],N);oi=np.flatnonzero(rawcnt);oc=rawcnt[oi];oz=np.random.default_rng(expected_seed["jump"]).standard_normal(len(oi))
+            for val,witness,name in [(ids,oi,"indices"),(cnt,oc,"counts"),(z,oz,"marks")]:near(val,witness,"teacher/"+name,primitive=True)
+            zero=b.conditional(x[i,0],K,st,p,np.array(0),np.array(0.));active=b.conditional(x[i,0],K,st,p,cnt,z).reshape(-1,3)
+            near(c["zero_values"],zero,"teacher/zero");near(c["active_values"],active,"teacher/active")
+            m=b.compact_moments(zero,active,N,analytic)
+            for key in m:near(c[key],m[key],"teacher/"+key,atol=5e-7 if key=="m2_matrix" else 1e-10)
+            status="analytic_deterministic" if analytic else "rare_event_unobserved" if A==0 else "rare_event_unresolved" if A<100 else "ready"
+            meta=dict(sample_count=N,reserved_sample_count=N,observed_mc_count=0 if analytic else N,zero_count=0 if analytic else N-A,count_draws=0 if analytic else N,normal_draws=A,actual_random_draws=0 if analytic else N+A,normal_draw_policy="active_only",count=0 if analytic else N,active_count=A,prefix_equivalent_draws=0 if analytic else N+A,status=status)
+            if analytic:meta.update(delta_status="defined",gamma_status="defined")
+            for key,value in meta.items():req(t[key]==value,"teacher "+key)
+            lim=[.002,.0005,.01*max(1,abs(K*truth[i,2]))/K];rare=A>=100;prec=bool(np.all(m["se"]<=lim));witness=bool(np.all(np.abs(m["mean"]-truth[i])<=6*m["se"]+np.array(p["pilot"]["absolute_reference_tolerance"])+np.array(p["pilot"]["relative_reference_tolerance"])*abs(truth[i])))
+            good=analytic or (rare and prec and witness);reason=None if good else "rare_event_unobserved" if A==0 else "rare_event_unresolved" if not rare else "teacher_precision_unresolved" if not prec else "teacher_reference_disagreement"
+            req(t["precision_ready"]==good and t["reason"]==reason,"original precision classification")
+            ready[split]+=good;reasons[reason or "ready"]+=1;counts+=meta["observed_mc_count"];draws+=meta["actual_random_draws"];max_se=np.maximum(max_se,m["se"]*[1,1,K]);labels.append(m["mean"])
+        near(a[ds["labels_key"]],labels,split+"/labels");req(ds["precision_ready_count"]==ready[split],"original ready count")
+        print("MAIN_AUDIT "+split+" teachers complete",flush=True)
+    train=xs["train"];labels=a[r["datasets"]["train"]["labels_key"]];scale=norm(train,labels,K);tx=xs["test"];yt=truths["test"]
+    req(len(r["initializations"])==3 and len(r["fits"])==6,"3 original pairs 6 fits");pairs={}
+    for j,pair in enumerate(r["initializations"]):
+        req(pair["id"]==f"pair{j}" and pair["seed_id"]==f"main/init/{[11,29,47][j]}" and pair["batch_seed_id"]==f"main/batch/{[11,29,47][j]}","pair order")
+        req(pair["seed"]==seeds[pair["seed_id"]] and pair["batch_seed"]==seeds[pair["batch_seed_id"]],"pair original seeds")
+        iw=init(pair["seed"]);master=np.random.default_rng(pair["batch_seed"]).integers(0,512,(512,128),dtype=np.int32);near(a[pair["batch_roster_key"]],master,"paired/master",primitive=True)
+        req(set(pair["weights_keys"])==set(iw),"paired weight schema")
+        for key in iw:near(a[pair["weights_keys"][key]],iw[key],"paired/initial",primitive=True)
+        pairs[pair["id"]]=(iw,master,pair)
+    diag=a[r["diagnostics"]["inputs_key"]];dy=h.independent_oracle(diag,p,invalid_nan=True);near(a[r["diagnostics"]["reference_key"]],dy,"diagnostic/oracle")
+    fit_results=[];predictions={};ss=lambda y,t:h.independent_error_summary(y,t,strike=K)
+    for i,f in enumerate(r["fits"]):
+        req(f["id"]==f"fit{i}" and f["pair_id"]==i//2 and f["dml"]==bool(i%2) and f["initial_weights_id"]==f"pair{i//2}","six paired original order")
+        iw,master,pair=pairs[f["initial_weights_id"]];w={key:a[val] for key,val in f["weights_keys"].items()};s=f["stats"];nested(f["normalization"],scale,"normalization")
+        req(s["seed"]==pair["seed"] and s["batch_seed"]==pair["batch_seed"] and s["dml"]==f["dml"] and s["gamma_loss"] is False,"original objective")
+        req(s["requested_updates"]==512 and s["batch_size"]==128 and s["learning_rate"]==.003 and s["budget_s"]==120 and s["threads"]==1 and s["strike"]==K,"frozen optimization")
+        near(a[f["batch_indices_key"]],master[:s["batch_attempts"]],"fit/attempted",primitive=True)
+        req(s["status"]=="completed" and s["complete"] is True and s["updates"]==s["batch_attempts"]==512 and s["reason"] is None and f["weights_state"]=="final" and all(np.isfinite(q).all() for q in w.values()),"observed complete lifecycle")
+        near(s["teacher_s"],r["costs"]["shared_train_teacher_s"],"fit/shared");near(s["teacher_and_training_s"],s["teacher_s"]+s["training_s"],"fit/total");near(s["overrun_s"],max(0,s["teacher_and_training_s"]-s["budget_s"]),"fit/overrun")
+        for key,ww in [("initial_loss",iw),("final_loss",w)]:
+            pred=predict(ww,scale,train,K);loss=np.mean(((pred[:,0]-labels[:,0])/(K*scale["price_scale"]))**2)
+            if f["dml"]:loss+=np.mean(((pred[:,1]-labels[:,1])/scale["delta_scale"])**2)
+            near(s[key],loss,"fit/"+key)
+        routecounts={}
+        for split in ["train","validation","test"]:
+            x=xs[split];pd=f["predictions"][split];raw=predict(w,scale,x,K);safe=h.independent_safe_route(raw,x,p);sv,sr=safe["values"],safe["routes"]
+            for key,val in [("raw",raw),("safe",sv),("routes",sr)]:near(a[pd[key+"_key"]],val,"nn/"+key)
+            req(pd["original_count"]==len(x) and pd["raw_count"]==int(np.sum(sr=="raw")),"raw/safe original denominator")
+            nested(pd["raw_errors"],ss(raw,truths[split]),"nn/raw-errors");nested(pd["safe_errors"],ss(sv,truths[split]),"nn/safe-errors");routecounts[split]={str(q):int(np.sum(sr==q)) for q in np.unique(sr)}
+            if split=="test":
+                predictions[f["id"]]=(raw,sv,sr)
+                nested(f["test_buckets"],h.independent_bucket_rows(raw,yt,tx,p),"nn/raw48");nested(f["safe_test_buckets"],h.independent_bucket_rows(sv,yt,tx,p),"nn/safe48")
+        dr=np.full((10,3),np.nan);valid=(diag[:,0]>0)&(diag[:,1]>0)&np.isin(diag[:,2],[0,1]);dr[valid]=predict(w,scale,diag[valid],K)
+        safe=h.independent_safe_route(dr,diag,p);fd=f["diagnostics"]
+        for key,val in [("raw",dr),("safe",safe["values"]),("routes",safe["routes"])]:near(a[fd[key+"_key"]],val,"diagnostic/"+key)
+        dcounts={str(q):int(np.sum(safe["routes"]==q)) for q in np.unique(safe["routes"])};req(fd["original_count"]==10,"diagnostic all ten")
+        nested(fd["route_counts"],dcounts,"diagnostic/routecount");nested(fd["raw_errors"],ss(dr,dy),"diagnostic/raw-errors");nested(fd["safe_errors"],ss(safe["values"],dy),"diagnostic/safe-errors")
+        raw,sv,sr=predictions[f["id"]];fit_results.append(dict(id=f["id"],seed=s["seed"],dml=f["dml"],updates=s["updates"],raw_accuracy=accuracy(raw,yt,p),safe_accuracy=accuracy(sv,yt,p),raw_metrics=ss(raw,yt),safe_metrics=ss(sv,yt),route_counts=routecounts,diagnostic_routes=dcounts,training_s=s["training_s"]))
+    grid={key:a[val] for key,val in r["hermite"]["keys"].items()};hermite=h.independent_hermite(grid,tx,p)
+    methods=["core_mixture","hermite",*(f"fit{i}/{q}" for i in range(6) for q in ["raw","safe"])];expected=[]
+    for minutes in p["remaining_minutes"]:
+        for event in [0,1]:
+            ids=np.flatnonzero((tx[:,1]==minutes*60)&(tx[:,2]==event))
+            for batch in [1,32]:
+                for method in methods:expected.append((minutes,event,batch,method,np.resize(ids,batch)))
+    req(len(r["timing"])==len(expected)==448,"448 original timing slots");time_sum=0.;online=[]
+    for i,(t,e) in enumerate(zip(r["timing"],expected)):
+        minutes,event,batch,method,ids=e
+        req((t["minutes"],t["event"],t["batch_size"],t["method"],t["order"])==(minutes,event,batch,method,i) and t["warmup"]==1 and t["repetitions"]==7 and t["scope"]=="whole returned price, physical Delta, Gamma and route","timing fixed roster")
+        near(a[t["input_indices_key"]],ids,"timing/indices")
+        if method=="core_mixture":value=yt[ids];routes=np.full(batch,"mixture",dtype="U32")
+        elif method=="hermite":value=hermite[ids];routes=np.full(batch,"hermite",dtype="U32")
+        else:
+            fid,route=method.split("/");raw,sv,sr=predictions[fid];value=raw[ids] if route=="raw" else sv[ids];routes=np.full(batch,"raw",dtype="U32") if route=="raw" else sr[ids]
+        near(a[t["values_key"]],np.repeat(value[None],8,axis=0),"timing/values");near(a[t["routes_key"]],np.repeat(routes[None],8,axis=0),"timing/routes")
+        seconds=a[t["seconds_key"]];req(seconds.shape==(7,) and np.isfinite(seconds).all() and np.all(seconds>=0),"timing original measured 7");time_sum+=float(seconds.sum())
+        online.append(dict(minutes=minutes,event=event,batch_size=batch,method=method,median_s=float(np.median(seconds)),mean_s=float(seconds.mean()),min_s=float(seconds.min()),max_s=float(seconds.max())))
+    expected_costs=dict(protocol_gate="validation",geometry="geometry",reference="reference",hermite_grid="grid",hermite_prepare="prepare",hermite_evaluation="evaluation",timing="timing",serialization="serialization",cold_import="cold_import",archive_load="archive_load",pilot_freeze="pilot_freeze",fresh="fresh",saved_check="validation")
+    expected_costs.update({f"teacher/{split}/{i}":"teacher_"+split for split,n in [("train",512),("validation",128)] for i in range(n)})
+    expected_costs.update({f"initial/{i}":"initialization" for i in range(3)})
+    expected_costs.update({f"{kind}/fit{i}":kind for i in range(6) for kind in ["fit","export","evaluation"]})
+    expenses=r["expenses"];req(len(expenses)==len(expected_costs)==674 and len({q["id"] for q in expenses})==674 and {q["id"]:q["category"] for q in expenses}==expected_costs,"674 exact cost roster")
+    pending=["serialization","cold_import","archive_load","pilot_freeze","fresh"];categories={};byid={q["id"]:q for q in expenses}
+    for q in expenses:
+        req(set(q)<={"id","category","seconds","charged","scope","parent"} and {"id","category","seconds","charged","scope"}<=set(q) and q["charged"] is True and q.get("parent") is None and q["scope"],"charge schema")
+        if q["id"] in pending:req(q["seconds"] is None,"pending cost not zero")
+        else:
+            req(q["seconds"] is not None and np.isfinite(q["seconds"]) and q["seconds"]>=0,"required measured cost")
+            categories[q["category"]]=categories.get(q["category"],0)+q["seconds"]
+    nested(r["costs"]["categorized"],dict(measured_seconds=float(sum(categories.values())),categories=categories,pending_ids=pending),"cost categorized");near(r["costs"]["main_only_s"],sum(categories.values()),"cost/main-only")
+    req(all(r["costs"][k] is None for k in ["cold_pipeline_s","archive_load_s","fresh_s"]) and r["costs"]["serialization_pending"] is True,"immutable pending original")
+    teacher_s=0.
+    for split in ["train","validation"]:
+        for i,t in enumerate(r["datasets"][split]["teachers"]):
+            eid=f"teacher/{split}/{i}";req(t["expense_id"]==eid,"teacher expense original link");near(t["generation_s"],byid[eid]["seconds"],"cost/teacher")
+            if split=="train":teacher_s+=t["generation_s"]
+    near(teacher_s,r["costs"]["shared_train_teacher_s"],"cost/sharedonce")
+    for f in r["fits"]:near(f["stats"]["training_s"],byid["fit/"+f["id"]]["seconds"],"cost/fit")
+    req(byid["timing"]["seconds"]+1e-10>=time_sum,"timing expense covers repetitions")
+    serial=json.loads((D/"serialization_cost.json").read_text());process=json.loads((D/"process_cost.json").read_text())
+    req(serial["schema"]=="RB-F05-short-serialization-v1" and serial["record_digest"]==b.json_digest(r) and serial["expense_id"]=="serialization" and serial["npz_bytes"]==(D/"reference.npz").stat().st_size and np.isfinite(serial["seconds"]) and serial["seconds"]>=0,"record-bound serialization")
+    command=[sys.executable,str(D/"build_reference.py"),"--protocol",str(D/"protocol.json"),"--mode","main","--directory",str(D)]
+    req(process["schema"]=="RB-F05-short-process-cost-v1" and process["phase"]=="main" and process["command"]==command and process["exit_code"]==0 and process["wall_seconds"]>=sum(categories.values())+serial["seconds"],"formal CLI covers nested receipts")
+    req(registry=={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in b.SOURCES},"source unchanged during review")
+    return dict(schema="RB-F05-independent-main-numeric-audit-v1",passed=True,critical_findings=[],important_findings=[],original_acceptance=False,teacher_slots=teacher_count,teacher_precision_ready=dict(ready),teacher_precision_reasons=dict(reasons),teacher_max_scaled_se=max_se.tolist(),original_teacher_observed_count=counts,actual_teacher_random_draws=draws,fit_slots=6,fit_results=fit_results,hermite_accuracy=accuracy(hermite,yt,p),timing_slots=448,whole_call_repetitions=3584,expense_receipts=674,array_count=len(a),numeric_comparisons=COMPARISONS,max_differences=DIFFS,online=online,costs=dict(categories=categories,original_pending=pending,main_categorized_s=sum(categories.values()),serialization_s=serial["seconds"],cli_wall_s=process["wall_seconds"],nested_not_added=True,shared_teacher_s=teacher_s,timed_repetitions_s=time_sum),source_registry=registry,protocol_digest=r["protocol_digest"],record_digest=b.json_digest(r),audit_wall_s=time.perf_counter()-start,limits=["Primitive replay is provenance only; independent financial values use tolerances.","Exported weights and objectives reconstructed; exact optimizer trajectory not rerun.","Pointwise accuracy uses frozen absolute plus relative KGamma limits, all original 336 rows and all paired seeds.","Cold/fresh and performance adoption require separate external bound receipts."])
+if __name__=="__main__":
+    record=json.loads((D/"reference.json").read_text())
+    with np.load(D/"reference.npz",allow_pickle=False) as z:arrays={key:z[key] for key in z.files}
+    report=audit(record,arrays)
+    Path("/tmp/rbf05-main-independent-numeric-audit.json").write_text(json.dumps(report,indent=2,allow_nan=False))
+    print(json.dumps({key:report[key] for key in ["passed","teacher_slots","teacher_precision_ready","teacher_precision_reasons","fit_slots","timing_slots","expense_receipts","array_count","audit_wall_s"]},indent=2))
+    for f in report["fit_results"]:print(json.dumps({key:f[key] for key in ["id","seed","dml","raw_accuracy","safe_accuracy"]}))

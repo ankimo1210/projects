@@ -1,0 +1,467 @@
+{
+  "schema": "RB-F05-short-assessment-v1",
+  "study_record_digest": "c116e01cbcfa0ef3d42b1b623a85eb976c6d3c3545ffca1b38cc97e06b03aebe",
+  "study_arrays_digest": "8d270b341fae01de439f4a99edf81b61704fb1a2b9e98e545dbf5289169b44b6",
+  "protocol_digest": "12ccfefe21193800ec4ace021c44ffe926461fc68bd86f526bb02b617c19acc2",
+  "status": "numerical assessment; final artifact/render/gates review pending",
+  "original_record_accepted": false,
+  "original_record_teaching_acceptance": false,
+  "costs": {
+    "main_construction_cli_s": 46.08508096204605,
+    "main_categorized_s": 39.2201654202654,
+    "main_serialization_s": 4.184679661993869,
+    "cold_pipeline_s": 18.15101205703104,
+    "cold_import_s": 1.0506436499999836,
+    "archive_load_s": 0.899917743052356,
+    "pilot_freeze_s": 6.590492043993436,
+    "cold_saved_check_s": 9.192855457018595,
+    "cold_prepare_s": 0.07718702894635499,
+    "cold_serving_s": 0.004019165993668139,
+    "fresh_s": 26.15482251503272,
+    "fresh_cli_s": 26.444452277035452,
+    "fresh_saved_replay_s": 14.599337520019617,
+    "failed_cold_receipt_attempt_s": 18.026820087980013
+  },
+  "cost_scope": {
+    "main": "One complete offline construction CLI. Inner categories and serialization are nested, not added to CLI wall.",
+    "cold": "One fresh-interpreter artifact-backed validated pipeline: imports, actual frozen pilot check, load, saved numeric check, prepare and 2-row whole-Greek serving. OS disk cache not flushed; no retraining. Complete repeated-from-scratch construction cost is not inferred.",
+    "fresh": "Additional fixed-seed raw validation, distinct from main labels/training/pilot selection and cold serving. Function includes serialization; CLI includes function.",
+    "replay": "Separate saved fresh replay is disjoint from generation; recorded as research validation cost.",
+    "failed_collector": "Original root timing collector schema KeyError preserved; separate process cost, not a financial fit failure. No source10/main values changed."
+  },
+  "resolved_expenses": [
+    {
+      "id": "serialization",
+      "seconds": 4.184679661993869,
+      "scope": "NPZ compression/write and study JSON serialization/write; receipt write excluded; nested in original main CLI",
+      "receipt": "serialization_cost.json"
+    },
+    {
+      "id": "cold_import",
+      "seconds": 1.0506436499999836,
+      "scope": "measured component of external fresh-interpreter cold process; nested in cold_pipeline_s, disjoint from original main run",
+      "receipt": {
+        "path": "cold_process_cost.json",
+        "component": "cold_import_s"
+      }
+    },
+    {
+      "id": "archive_load",
+      "seconds": 0.899917743052356,
+      "scope": "measured component of external fresh-interpreter cold process; nested in cold_pipeline_s, disjoint from original main run",
+      "receipt": {
+        "path": "cold_process_cost.json",
+        "component": "archive_load_s"
+      }
+    },
+    {
+      "id": "pilot_freeze",
+      "seconds": 6.590492043993436,
+      "scope": "measured component of external fresh-interpreter cold process; nested in cold_pipeline_s, disjoint from original main run",
+      "receipt": {
+        "path": "cold_process_cost.json",
+        "component": "pilot_freeze_s"
+      }
+    },
+    {
+      "id": "fresh",
+      "seconds": 26.15482251503272,
+      "scope": "whole supplemental fresh function through evidence save; fresh-cost receipt write excluded; nested in separate fresh CLI, not cold or main",
+      "receipt": "fresh_cost.json"
+    }
+  ],
+  "decisions": {
+    "teacher": {
+      "status": "supported_fixed_domain",
+      "original_teacher_count": 640,
+      "reason": "All fixed teachers precision-ready; saved independent references and additional raw validation retained."
+    },
+    "delta_improvement": {
+      "status": "improved_3_of_3_pairs",
+      "reason": "Descriptive lower raw Delta RMSE in all fixed paired seeds; not a full accuracy pass."
+    },
+    "gamma_utility": {
+      "status": "NN_accuracy_not_met",
+      "reason": "All original fits fail full-roster fixed C/Delta/KGamma pointwise accuracy; physical Gamma was not trained."
+    },
+    "standard_accelerator_adoption": {
+      "status": "NN_not_adopted",
+      "reason": "All 6 raw and safe fits fail equal-accuracy gate. Hermite passes all 336. Online timing cannot support equal-accuracy NN speed or payback."
+    }
+  },
+  "accuracy": {
+    "targets": {
+      "delta_abs": 0.005,
+      "price_abs": 0.01,
+      "scaled_gamma_abs": 0.05,
+      "scaled_gamma_relative": 0.05
+    },
+    "fit_pointwise_accuracy": [
+      {
+        "id": "fit0",
+        "seed": 11,
+        "dml": false,
+        "raw": {
+          "original_count": 336,
+          "passed_by_component": [
+            43,
+            17,
+            15
+          ],
+          "passed_all_components": 0,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.4717537965228962,
+            0.5427447499883219,
+            388.6782732135234
+          ],
+          "max_error_to_limit": [
+            47.175379652289614,
+            108.54894999766438,
+            874.4395824267128
+          ]
+        },
+        "safe": {
+          "original_count": 336,
+          "passed_by_component": [
+            220,
+            200,
+            205
+          ],
+          "passed_all_components": 193,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.12305951533840431,
+            0.4375722531740529,
+            388.6782732135234
+          ],
+          "max_error_to_limit": [
+            12.305951533840432,
+            87.51445063481057,
+            496.35597795237965
+          ]
+        }
+      },
+      {
+        "id": "fit1",
+        "seed": 11,
+        "dml": true,
+        "raw": {
+          "original_count": 336,
+          "passed_by_component": [
+            80,
+            35,
+            13
+          ],
+          "passed_all_components": 0,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.17225761586468646,
+            0.27587468459266273,
+            267.98951671516835
+          ],
+          "max_error_to_limit": [
+            17.225761586468646,
+            55.174936918532545,
+            1950.7197181703584
+          ]
+        },
+        "safe": {
+          "original_count": 336,
+          "passed_by_component": [
+            201,
+            178,
+            168
+          ],
+          "passed_all_components": 156,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.1290580951915578,
+            0.22669451841550936,
+            258.67152629729975
+          ],
+          "max_error_to_limit": [
+            12.905809519155781,
+            45.33890368310187,
+            134.02344554273162
+          ]
+        }
+      },
+      {
+        "id": "fit2",
+        "seed": 29,
+        "dml": false,
+        "raw": {
+          "original_count": 336,
+          "passed_by_component": [
+            26,
+            9,
+            11
+          ],
+          "passed_all_components": 0,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.5957790654320148,
+            0.6539834502770597,
+            391.7622257393999
+          ],
+          "max_error_to_limit": [
+            59.57790654320147,
+            130.79669005541194,
+            913.9187673585725
+          ]
+        },
+        "safe": {
+          "original_count": 336,
+          "passed_by_component": [
+            207,
+            193,
+            201
+          ],
+          "passed_all_components": 191,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.14745517442262113,
+            0.4388655899406595,
+            391.7622257393999
+          ],
+          "max_error_to_limit": [
+            14.745517442262113,
+            87.7731179881319,
+            160.45048275876954
+          ]
+        }
+      },
+      {
+        "id": "fit3",
+        "seed": 29,
+        "dml": true,
+        "raw": {
+          "original_count": 336,
+          "passed_by_component": [
+            71,
+            36,
+            7
+          ],
+          "passed_all_components": 0,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.27046974690400205,
+            0.30757443825728836,
+            289.3087538429995
+          ],
+          "max_error_to_limit": [
+            27.046974690400205,
+            61.51488765145767,
+            2191.5183618380697
+          ]
+        },
+        "safe": {
+          "original_count": 336,
+          "passed_by_component": [
+            234,
+            205,
+            197
+          ],
+          "passed_all_components": 190,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.12352732333731808,
+            0.10806978329031358,
+            289.3087538429995
+          ],
+          "max_error_to_limit": [
+            12.352732333731808,
+            21.613956658062715,
+            350.26706155722474
+          ]
+        }
+      },
+      {
+        "id": "fit4",
+        "seed": 47,
+        "dml": false,
+        "raw": {
+          "original_count": 336,
+          "passed_by_component": [
+            46,
+            12,
+            6
+          ],
+          "passed_all_components": 0,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.4951052146015753,
+            0.5694450885484277,
+            389.65171763812856
+          ],
+          "max_error_to_limit": [
+            49.51052146015753,
+            113.88901770968553,
+            899.9428570838122
+          ]
+        },
+        "safe": {
+          "original_count": 336,
+          "passed_by_component": [
+            207,
+            192,
+            187
+          ],
+          "passed_all_components": 182,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.12975263629210354,
+            0.42569131043758734,
+            389.65171763812856
+          ],
+          "max_error_to_limit": [
+            12.975263629210353,
+            85.13826208751746,
+            134.86996976737015
+          ]
+        }
+      },
+      {
+        "id": "fit5",
+        "seed": 47,
+        "dml": true,
+        "raw": {
+          "original_count": 336,
+          "passed_by_component": [
+            112,
+            46,
+            27
+          ],
+          "passed_all_components": 4,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.1273186833016986,
+            0.1607921312010695,
+            222.10743426711454
+          ],
+          "max_error_to_limit": [
+            12.73186833016986,
+            32.1584262402139,
+            980.7244871226619
+          ]
+        },
+        "safe": {
+          "original_count": 336,
+          "passed_by_component": [
+            233,
+            191,
+            189
+          ],
+          "passed_all_components": 169,
+          "all_rows_passed": false,
+          "maximum_error": [
+            0.08553284060309391,
+            0.15691551749519617,
+            222.10743426711454
+          ],
+          "max_error_to_limit": [
+            8.553284060309391,
+            31.383103499039233,
+            154.35627795173534
+          ]
+        }
+      }
+    ],
+    "hermite_pointwise_accuracy": {
+      "original_count": 336,
+      "passed_by_component": [
+        336,
+        336,
+        336
+      ],
+      "passed_all_components": 336,
+      "all_rows_passed": true,
+      "maximum_error": [
+        0.00046117026625136504,
+        0.000553317337158854,
+        1.2460830586557226
+      ],
+      "max_error_to_limit": [
+        0.046117026625136504,
+        0.1106634674317708,
+        0.9028412531554348
+      ]
+    }
+  },
+  "equal_accuracy_payback": {
+    "fit0": {
+      "eligible": false,
+      "queries": null,
+      "baseline": "Hermite / independent mixture",
+      "reason": "Full original 336-row C/Delta/KGamma accuracy gate failed for raw and safe. Q is undefined for an ineligible comparison.",
+      "raw_passed_all_components": 0,
+      "safe_passed_all_components": 193,
+      "original_count": 336
+    },
+    "fit1": {
+      "eligible": false,
+      "queries": null,
+      "baseline": "Hermite / independent mixture",
+      "reason": "Full original 336-row C/Delta/KGamma accuracy gate failed for raw and safe. Q is undefined for an ineligible comparison.",
+      "raw_passed_all_components": 0,
+      "safe_passed_all_components": 156,
+      "original_count": 336
+    },
+    "fit2": {
+      "eligible": false,
+      "queries": null,
+      "baseline": "Hermite / independent mixture",
+      "reason": "Full original 336-row C/Delta/KGamma accuracy gate failed for raw and safe. Q is undefined for an ineligible comparison.",
+      "raw_passed_all_components": 0,
+      "safe_passed_all_components": 191,
+      "original_count": 336
+    },
+    "fit3": {
+      "eligible": false,
+      "queries": null,
+      "baseline": "Hermite / independent mixture",
+      "reason": "Full original 336-row C/Delta/KGamma accuracy gate failed for raw and safe. Q is undefined for an ineligible comparison.",
+      "raw_passed_all_components": 0,
+      "safe_passed_all_components": 190,
+      "original_count": 336
+    },
+    "fit4": {
+      "eligible": false,
+      "queries": null,
+      "baseline": "Hermite / independent mixture",
+      "reason": "Full original 336-row C/Delta/KGamma accuracy gate failed for raw and safe. Q is undefined for an ineligible comparison.",
+      "raw_passed_all_components": 0,
+      "safe_passed_all_components": 182,
+      "original_count": 336
+    },
+    "fit5": {
+      "eligible": false,
+      "queries": null,
+      "baseline": "Hermite / independent mixture",
+      "reason": "Full original 336-row C/Delta/KGamma accuracy gate failed for raw and safe. Q is undefined for an ineligible comparison.",
+      "raw_passed_all_components": 4,
+      "safe_passed_all_components": 169,
+      "original_count": 336
+    }
+  },
+  "limits": [
+    "Primitive replay is provenance only; independent financial values use tolerances.",
+    "Exported weights and objectives reconstructed; exact optimizer trajectory not rerun.",
+    "Pointwise accuracy uses frozen absolute plus relative KGamma limits, all original 336 rows and all paired seeds.",
+    "Cold/fresh and performance adoption require separate external bound receipts.",
+    "calendar is synthetic regular same-day NY session; not an official holiday/early-close calendar",
+    "QUADPACK estimates are not rigorous integration error bounds; positive Poisson tail envelopes are separate",
+    "literal <=2sqrt(W) ATM classification preserves known floating endpoint behavior and original weights",
+    "affine log-time blending guarantees C2 only in log spot; no Theta smoothness guarantee",
+    "All 6 raw and safe NN routes fail the original full-roster fixed pointwise accuracy gate; saved online speed cannot support equal-accuracy NN adoption.",
+    "Formal study acceptedFalse/teachingAcceptanceFalse remain unchanged; no main output is rewritten.",
+    "Expiry ATM and invalid original diagnostic unknowns retained; synthetic calendar does not certify market contracts."
+  ],
+  "evidence": {
+    "main_review": "MAIN_REVIEW.json",
+    "fresh": "fresh_check.json",
+    "cold": "cold_process_cost.json",
+    "pending_final": "CAS, rendered figures, final source/gates and independent final review"
+  }
+}

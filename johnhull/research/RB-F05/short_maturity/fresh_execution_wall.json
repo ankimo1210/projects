@@ -1,0 +1,14 @@
+{
+  "schema": "RB-F05-short-fresh-execution-wall-v1",
+  "main_record_digest": "c116e01cbcfa0ef3d42b1b623a85eb976c6d3c3545ffca1b38cc97e06b03aebe",
+  "fresh_record_digest": "f6d34e936f970cfbf09e9e121ce0cea95428d79b5a5f9e4dfbc60fc1a61442c8",
+  "support_script_sha256": "21838ffe256244973838030521658995c1e4e2f58dcc8bd446c3301c70df70b6",
+  "started_utc": "2026-10-09T09:47:38.134569+00:00",
+  "completed_utc": "2026-10-09T09:48:04.579038+00:00",
+  "exit_code": 0,
+  "wall_s": 26.444452277035452,
+  "fresh_function_s": 26.15482251503272,
+  "unaccounted_overhead_s": 0.2896297620027326,
+  "scope": "independent subprocess wall, including startup/imports/gates/draws/estimators/replay/IO/receipt/stdout/exit; descriptive overhead difference",
+  "charged_separately": false
+}

@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity/build_notebook.py",
+    "--artifacts",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity",
+    "--source",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity",
+    "--execute"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 15.68181529600406,
+  "stdout": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity/short_maturity_dml.ipynb\n",
+  "stderr": "",
+  "original_json_unchanged": true,
+  "original_json_before": {
+    "reference.json": "8f1119a6c9d0c82ca938ecd22a6e08f645041541aa80512081f5ce38f91dc27d",
+    "protocol.json": "667c56235a0458d1e88add00b4d23b4d3723947f4c76eb8c88c4cd91780b33df",
+    "fresh_check.json": "b60df78bd792d460b4228dbe7f6558896f4924153986ac67092c91a00c192b7b"
+  },
+  "original_json_after": {
+    "reference.json": "8f1119a6c9d0c82ca938ecd22a6e08f645041541aa80512081f5ce38f91dc27d",
+    "protocol.json": "667c56235a0458d1e88add00b4d23b4d3723947f4c76eb8c88c4cd91780b33df",
+    "fresh_check.json": "b60df78bd792d460b4228dbe7f6558896f4924153986ac67092c91a00c192b7b"
+  },
+  "scope": "real saved main artifact-only kernel; RNG/training/optimizer/network trapped. PNG visual review is separate."
+}

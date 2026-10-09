@@ -1,0 +1,24 @@
+"""Merge completed independent main audits and bind to immutable actual saved data."""
+import json,hashlib,importlib.util,sys,time
+from pathlib import Path
+import numpy as np
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=ROOT/"johnhull/research/RB-F05/short_maturity"
+def module(name,path):
+    s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);sys.modules[name]=m;s.loader.exec_module(m);return m
+n=module("independent_main_numeric","/tmp/rbf05_main_independent_audit.py")
+m=module("independent_main_reference","/tmp/rbf05_main_reference_audit.py")
+r=json.loads((D/"reference.json").read_text())
+with np.load(D/"reference.npz",allow_pickle=False) as z:a={k:z[k] for k in z.files}
+start=time.perf_counter();numeric=n.audit(r,a);reference=m.audit(r,a)
+assert numeric["passed"] and reference["passed"] and not numeric["critical_findings"] and not numeric["important_findings"] and not reference["critical_findings"] and not reference["important_findings"]
+digest=hashlib.sha256()
+for name in sorted(a):
+    arr=np.asarray(a[name]);digest.update(json.dumps([name,arr.dtype.str,list(arr.shape)]).encode());digest.update(np.ascontiguousarray(arr).tobytes())
+review=dict(schema="RB-F05-short-main-independent-review-v1",review_date="2026-10-09",numeric_review_approved=True,critical_findings=[],important_findings=[],protocol_digest=r["protocol_digest"],main_record_digest=n.b.json_digest(r),main_arrays_digest=digest.hexdigest(),source_registry=r["source_registry"],original_accepted=r["accepted"],original_teaching_acceptance=r["teaching_acceptance"],standard_nn_adoption="not_adopted_accuracy_failed",education_comparison="All three paired seeds show lower raw C/Delta/KGamma RMSE with Delta-DML; a descriptive fixed synthetic result, not universal accuracy or adoption.",cold_fresh_cost_review="pending separate bound receipts",accuracy_gate=r["protocol"]["accuracy"],fit_pointwise_accuracy=[dict(id=f["id"],seed=f["seed"],dml=f["dml"],raw=f["raw_accuracy"],safe=f["safe_accuracy"]) for f in numeric["fit_results"]],hermite_pointwise_accuracy=numeric["hermite_accuracy"],minor_findings=[dict(id="atm_bucket_endpoint_roundoff",detail="Literal floating <=2sqrt(W) classifier can transfer endpoints. Original 48 bucket rows/weights retained."),dict(id="finite_h_gamma_price_roundoff",detail="Inherited pilot diagnostic limitation: small-h second price differences amplify floating price error by h^-2, and finite_h_bias includes numeric roundoff.")],scope="Actual completed immutable synthetic main: 640 teachers, 336 references, 6 original fixed fits and predictions, 4680 scalar Hermite nodes, 448 timings and exact expenses. No new observations/training/checkpoint selection.",limits=numeric["limits"]+reference["limits"]+["All 6 raw and safe NN routes fail the original full-roster fixed pointwise accuracy gate; saved online speed cannot support equal-accuracy NN adoption.","Formal study acceptedFalse/teachingAcceptanceFalse remain unchanged; no main output is rewritten.","Expiry ATM and invalid original diagnostic unknowns retained; synthetic calendar does not certify market contracts."],evidence=dict(numeric="/tmp/rbf05-main-independent-numeric-audit.json",reference="/tmp/rbf05_main_reference_audit.json",script="/tmp/rbf05_main_combined_review.py",review_wall_s=time.perf_counter()-start))
+assert all(not f["raw"]["all_rows_passed"] and not f["safe"]["all_rows_passed"] for f in review["fit_pointwise_accuracy"])
+assert review["hermite_pointwise_accuracy"]["all_rows_passed"]
+Path("/tmp/rbf05-main-independent-numeric-audit.json").write_text(json.dumps(numeric,indent=2,allow_nan=False))
+Path("/tmp/rbf05_main_reference_audit.json").write_text(json.dumps(reference,indent=2,allow_nan=False))
+Path("/tmp/rbf05-main-independent-review.json").write_text(json.dumps(review,indent=2,allow_nan=False))
+print(json.dumps(dict(numeric_review_approved=True,critical_findings=0,important_findings=0,teacher_count=640,reference_count=336,fit_count=6,timing_count=448,main_record_digest=review["main_record_digest"],main_arrays_digest=review["main_arrays_digest"],standard_nn_adoption=review["standard_nn_adoption"],review_wall_s=review["evidence"]["review_wall_s"]),indent=2))

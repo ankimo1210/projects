@@ -1,0 +1,1673 @@
+{
+  "schema": "RB-F05-independent-main-reference-audit-v1",
+  "passed": true,
+  "critical_findings": [],
+  "important_findings": [],
+  "scope": "saved main reference / mathematical scalar Hermite / diagnostics; no NN adoption or study acceptance decision",
+  "original_test_count": 336,
+  "hermite_node_count": 4680,
+  "hermite_prediction_counts": {
+    "train": 512,
+    "validation": 128,
+    "test": 336
+  },
+  "bucket_count": 48,
+  "reference_max_abs": {
+    "core": [
+      1.0080825063596421e-13,
+      2.6134649999676185e-13,
+      1.4863665853681596e-12
+    ],
+    "ordinary": [
+      3.1530333899354446e-14,
+      1.2212453270876722e-15,
+      2.1316282072803006e-14
+    ]
+  },
+  "merton_max_abs": 2.8199664825478976e-14,
+  "tail_max": [
+    1.9961583766893248e-18,
+    1.898054204853634e-20,
+    2.6530787101264865e-22
+  ],
+  "density": [
+    {
+      "test_index": 8,
+      "values": [
+        0.03693126785609071,
+        0.5002092415189527,
+        4.309822549851479
+      ],
+      "independent_errors": [
+        1.0487057560234512e-15,
+        9.207051740395824e-15,
+        0.0
+      ],
+      "saved_errors": [
+        2.0201725804163323e-12,
+        1.6136772444671944e-13,
+        0.0
+      ],
+      "max_abs": 2.042810365310288e-14
+    },
+    {
+      "test_index": 29,
+      "values": [
+        0.04093472967959217,
+        0.5177487839398333,
+        4.301675510245619
+      ],
+      "independent_errors": [
+        2.2322303039465456e-15,
+        9.11303539178813e-15,
+        0.0
+      ],
+      "saved_errors": [
+        1.986981636260509e-12,
+        1.7828478420606341e-13,
+        0.0
+      ],
+      "max_abs": 1.9539925233402755e-14
+    }
+  ],
+  "hermite_node_physical_max_abs": [
+    1.1146639167236572e-13,
+    6.195044477408373e-14,
+    6.623590564913684e-13
+  ],
+  "hermite_endpoint_max_abs": {
+    "left": [
+      0.0,
+      1.4210854715202004e-14,
+      1.8189894035458565e-12
+    ],
+    "right": [
+      1.7763568394002505e-15,
+      1.1368683772161603e-13,
+      2.0372681319713593e-10
+    ],
+    "adjacent": [
+      1.7763568394002505e-15,
+      1.1368683772161603e-13,
+      2.0372681319713593e-10
+    ]
+  },
+  "hermite_prediction_max_abs": {
+    "train": [
+      1.7763568394002505e-15,
+      1.1435297153639112e-14,
+      3.831359473134955e-13
+    ],
+    "validation": [
+      1.7763568394002505e-15,
+      1.1546319456101628e-14,
+      2.2049311161620455e-13
+    ],
+    "test": [
+      8.881784197001252e-16,
+      8.104628079763643e-15,
+      5.94456667050991e-13
+    ]
+  },
+  "hermite_error_summary": {
+    "original_count": 336,
+    "failed_rows": 0,
+    "units": [
+      "currency",
+      "currency/spot",
+      "K*currency/spot^2"
+    ],
+    "status": "complete",
+    "rmse": [
+      0.00011369003644015099,
+      9.862145391626394e-05,
+      0.16746832360614278
+    ],
+    "p99": [
+      0.00041994807412268066,
+      0.00039558380680743805,
+      0.9428552928844942
+    ],
+    "max": [
+      0.00046117026630232427,
+      0.0005533173371760208,
+      1.2460830585178329
+    ]
+  },
+  "hermite_buckets": [
+    {
+      "event": 0,
+      "minutes": 1,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        2.520554359995763e-06,
+        6.060486677913673e-05,
+        0.44750839026797506
+      ],
+      "p99": [
+        7.547562368512284e-06,
+        0.0001280836029696475,
+        1.01009056023325
+      ],
+      "max": [
+        7.566411040379334e-06,
+        0.00012814491632651137,
+        1.0124213107046032
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 1,
+      "geometry": "atm",
+      "original_count": 7,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        4.107757157530398e-06,
+        9.610102616480735e-05,
+        0.7587340721864348
+      ],
+      "p99": [
+        7.560756438819219e-06,
+        0.0001281265223194522,
+        1.0117220855631972
+      ],
+      "max": [
+        7.566411040379334e-06,
+        0.00012814491632651137,
+        1.0124213107046032
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 1,
+      "geometry": "tail",
+      "original_count": 14,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.0454458330871905e-06,
+        2.9861701241069197e-05,
+        0.11205776587120742
+      ],
+      "p99": [
+        2.3894346688445667e-06,
+        6.513948924138247e-05,
+        0.22802811989298258
+      ],
+      "max": [
+        2.3926550014257515e-06,
+        6.524875896925437e-05,
+        0.22860804794194722
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 5,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        5.6181459410682886e-05,
+        0.00015161541625623872,
+        0.11731418786422229
+      ],
+      "p99": [
+        0.00010013053377927045,
+        0.0003207026385680711,
+        0.2286862309588633
+      ],
+      "max": [
+        0.00010017700394004958,
+        0.0003211293460382292,
+        0.2289626727810079
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 5,
+      "geometry": "atm",
+      "original_count": 8,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        8.791248128431447e-05,
+        0.00017861191929765115,
+        0.1689853941227876
+      ],
+      "p99": [
+        0.00010016073938377688,
+        0.00031417924936760473,
+        0.2288659181432573
+      ],
+      "max": [
+        0.00010017700394004958,
+        0.00031899580868743893,
+        0.2289626727810079
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 5,
+      "geometry": "tail",
+      "original_count": 13,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.8511221310493443e-05,
+        0.00013229168869064071,
+        0.06825657744829268
+      ],
+      "p99": [
+        5.111783548479539e-05,
+        0.00030962777440909933,
+        0.13074572266220286
+      ],
+      "max": [
+        5.4585247845858643e-05,
+        0.0003211293460382292,
+        0.13099765883482772
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 15,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.00010548971730572533,
+        0.00016591735959621318,
+        0.07072432956910264
+      ],
+      "p99": [
+        0.00018809658989231355,
+        0.0003512914544201051,
+        0.14727044308343595
+      ],
+      "max": [
+        0.00018824595049310444,
+        0.0003520971227479533,
+        0.14760020625558257
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 15,
+      "geometry": "atm",
+      "original_count": 7,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.00017167697037488678,
+        0.0001606904596982556,
+        0.10856787446986559
+      ],
+      "p99": [
+        0.00018820114231286718,
+        0.00026584850766762176,
+        0.14750127730393858
+      ],
+      "max": [
+        0.00018824595049310444,
+        0.0002660560878697399,
+        0.14760020625558257
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 15,
+      "geometry": "tail",
+      "original_count": 14,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        4.422250114266377e-05,
+        0.00016847000743173935,
+        0.04011738408777826
+      ],
+      "p99": [
+        0.00010492490410883112,
+        0.00035157343833485197,
+        0.08039632682933524
+      ],
+      "max": [
+        0.0001050499802833782,
+        0.0003520971227479533,
+        0.08068633426765101
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 30,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.928522711693256e-09,
+        5.971152052985908e-08,
+        0.0002160771337789079
+      ],
+      "p99": [
+        5.245652948127067e-09,
+        1.1718349793854443e-07,
+        0.000467487357503904
+      ],
+      "max": [
+        5.269694181020412e-09,
+        1.1728989504633525e-07,
+        0.00047045764073327945
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 30,
+      "geometry": "atm",
+      "original_count": 7,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        3.0337400840079794e-09,
+        1.0163001520404636e-07,
+        0.0003509374882386556
+      ],
+      "p99": [
+        5.262481811152409e-09,
+        1.17257975913998e-07,
+        0.0004695665557644668
+      ],
+      "max": [
+        5.269694181020412e-09,
+        1.1728989504633525e-07,
+        0.00047045764073327945
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 30,
+      "geometry": "tail",
+      "original_count": 14,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        9.884383266631728e-10,
+        1.3559813081098417e-08,
+        9.195341911823528e-05
+      ],
+      "p99": [
+        2.4272775653137733e-09,
+        2.6557909347561196e-08,
+        0.00022863548558989255
+      ],
+      "max": [
+        2.433813595104084e-09,
+        2.667782524556038e-08,
+        0.00022922294089511297
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 60,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.306409241796868e-06,
+        1.1253319908779023e-06,
+        0.00016047933431530305
+      ],
+      "p99": [
+        2.8972810496741276e-06,
+        2.1568460433663008e-06,
+        0.0003936737222320908
+      ],
+      "max": [
+        2.9455589906635105e-06,
+        2.168138793445795e-06,
+        0.000412684132933272
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 60,
+      "geometry": "atm",
+      "original_count": 7,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        2.231485933587666e-06,
+        1.7406841415882446e-06,
+        0.00023437474223703963
+      ],
+      "p99": [
+        2.9310756083666956e-06,
+        2.164750968421947e-06,
+        0.00040698100972291757
+      ],
+      "max": [
+        2.9455589906635105e-06,
+        2.168138793445795e-06,
+        0.000412684132933272
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 60,
+      "geometry": "tail",
+      "original_count": 14,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        2.6512812879548e-07,
+        6.201350612176622e-07,
+        0.00010566297939242882
+      ],
+      "p99": [
+        6.547366385244776e-07,
+        1.4534207097837911e-06,
+        0.00020806213184330902
+      ],
+      "max": [
+        6.594856998276555e-07,
+        1.4581863306585563e-06,
+        0.00020944241531650754
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 120,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        9.05672824582259e-05,
+        6.534440404668174e-05,
+        0.008171320056761121
+      ],
+      "p99": [
+        0.0001910742925547382,
+        0.0001264523660726935,
+        0.015185792536861475
+      ],
+      "max": [
+        0.00019335794109398563,
+        0.00012719953401957307,
+        0.01525827089609022
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 120,
+      "geometry": "atm",
+      "original_count": 9,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.00013783774460530098,
+        9.560810411975967e-05,
+        0.010894682971965709
+      ],
+      "p99": [
+        0.00019244448167828664,
+        0.00012690066684082124,
+        0.015229279552398722
+      ],
+      "max": [
+        0.00019335794109398563,
+        0.00012719953401957307,
+        0.01525827089609022
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 120,
+      "geometry": "tail",
+      "original_count": 12,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.0238372056239923e-05,
+        2.4831981703981825e-05,
+        0.005275200212107292
+      ],
+      "p99": [
+        2.3594205024229712e-05,
+        5.486644805483179e-05,
+        0.010566751637216081
+      ],
+      "max": [
+        2.3899396278892482e-05,
+        5.5061280649207345e-05,
+        0.010644364503769113
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 240,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.00016750276760486344,
+        9.704573949323781e-05,
+        0.010578360374156067
+      ],
+      "p99": [
+        0.00032499543858071077,
+        0.00018516852960470676,
+        0.018104510090790615
+      ],
+      "max": [
+        0.00032650139275702816,
+        0.00018660709986637047,
+        0.0182208228439118
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 240,
+      "geometry": "atm",
+      "original_count": 8,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.0002657965863029249,
+        0.0001263689908992414,
+        0.012259966031418983
+      ],
+      "p99": [
+        0.0003259743087953171,
+        0.00018610360027478817,
+        0.018180113380319385
+      ],
+      "max": [
+        0.00032650139275702816,
+        0.00018660709986637047,
+        0.0182208228439118
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 240,
+      "geometry": "tail",
+      "original_count": 13,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        4.298310753948412e-05,
+        7.339168457531686e-05,
+        0.009395095838473973
+      ],
+      "p99": [
+        0.00010944469082052788,
+        0.00016425644097876036,
+        0.015206342290754583
+      ],
+      "max": [
+        0.00011649727200476259,
+        0.00017214981419439931,
+        0.015327061053988303
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 390,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        9.462832198837572e-13,
+        1.1672468330421196e-10,
+        8.111334619590796e-07
+      ],
+      "p99": [
+        2.880312308106703e-12,
+        3.754748650885986e-10,
+        2.6776113296045345e-06
+      ],
+      "max": [
+        2.8959057374322583e-12,
+        3.7659282983715237e-10,
+        2.7116839607099763e-06
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 390,
+      "geometry": "atm",
+      "original_count": 11,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.218312112576936e-12,
+        1.5939242312174182e-10,
+        1.1205332065837976e-06
+      ],
+      "p99": [
+        2.8881090227694806e-12,
+        3.760338474628755e-10,
+        2.6946476451572554e-06
+      ],
+      "max": [
+        2.8959057374322583e-12,
+        3.7659282983715237e-10,
+        2.7116839607099763e-06
+      ]
+    },
+    {
+      "event": 0,
+      "minutes": 390,
+      "geometry": "tail",
+      "original_count": 10,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        4.977310656103907e-13,
+        2.5792044329630033e-11,
+        2.2684835634210474e-08
+      ],
+      "p99": [
+        1.1209319703419805e-12,
+        5.950257648641635e-11,
+        5.393448715740909e-08
+      ],
+      "max": [
+        1.1226938314152753e-12,
+        5.991419846010501e-11,
+        5.467580636289368e-08
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 1,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        2.746238886908486e-06,
+        6.695610333462004e-05,
+        0.45709263081273466
+      ],
+      "p99": [
+        9.25574417757966e-06,
+        0.00019211962332670311,
+        1.2097063985284253
+      ],
+      "max": [
+        1.0476494907735168e-05,
+        0.00020110135818884878,
+        1.2460830585178329
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 1,
+      "geometry": "atm",
+      "original_count": 7,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        4.5102754872556e-06,
+        0.00010775357924964822,
+        0.7748663960264246
+      ],
+      "p99": [
+        1.011026968868851e-05,
+        0.00019840683773020504,
+        1.2351700605210105
+      ],
+      "max": [
+        1.0476494907735168e-05,
+        0.00020110135818884878,
+        1.2460830585178329
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 1,
+      "geometry": "tail",
+      "original_count": 14,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.0683864237639725e-06,
+        3.0319345970508083e-05,
+        0.11485444645058579
+      ],
+      "p99": [
+        2.8744275220544295e-06,
+        7.357642269385038e-05,
+        0.283343489687183
+      ],
+      "max": [
+        3.0660224502598865e-06,
+        7.703654814639194e-05,
+        0.29319930494045854
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 5,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.00012344545337888085,
+        0.00016577433443570397,
+        0.12056174463462288
+      ],
+      "p99": [
+        0.00018472731232587193,
+        0.0004037173580746873,
+        0.2550162332176775
+      ],
+      "max": [
+        0.00018628862316072414,
+        0.0004212538283265982,
+        0.25996447030440795
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 5,
+      "geometry": "atm",
+      "original_count": 8,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.00016868961723790464,
+        0.00017387316733682398,
+        0.17228404001286352
+      ],
+      "p99": [
+        0.00018574216436852587,
+        0.00032750055917758216,
+        0.2582325873240523
+      ],
+      "max": [
+        0.00018628862316072414,
+        0.0003335714770670434,
+        0.25996447030440795
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 5,
+      "geometry": "tail",
+      "original_count": 13,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        8.429110886924971e-05,
+        0.0001605875516182563,
+        0.0722088296918111
+      ],
+      "p99": [
+        0.00012989147350885854,
+        0.0004075046982234348,
+        0.16088567718386254
+      ],
+      "max": [
+        0.00013147990549700062,
+        0.0004212538283265982,
+        0.16435606130859037
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 15,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.0003262022789644564,
+        0.00020675225917793786,
+        0.07671042995702923
+      ],
+      "p99": [
+        0.00045917258587890863,
+        0.0005270540709410188,
+        0.17448181898106155
+      ],
+      "max": [
+        0.00046117026630232427,
+        0.0005533173371760208,
+        0.17960636373086647
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 15,
+      "geometry": "atm",
+      "original_count": 7,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.000425428646704822,
+        0.00019292815791788207,
+        0.11577564770593667
+      ],
+      "p99": [
+        0.0004605709621752996,
+        0.0004079840303544151,
+        0.17806900030592498
+      ],
+      "max": [
+        0.00046117026630232427,
+        0.0004220010060010104,
+        0.17960636373086647
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 15,
+      "geometry": "tail",
+      "original_count": 14,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.00026290135694564113,
+        0.00021332863838214076,
+        0.04609484564920304
+      ],
+      "p99": [
+        0.00040807319317420537,
+        0.0005358560461122692,
+        0.11318982531301083
+      ],
+      "max": [
+        0.0004129929244897079,
+        0.0005533173371760208,
+        0.11520967376547342
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 30,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        2.2281068715277864e-09,
+        5.684245825495085e-08,
+        0.0002248880411530414
+      ],
+      "p99": [
+        7.77025706416579e-09,
+        1.513990061985382e-07,
+        0.0006377130813434164
+      ],
+      "max": [
+        8.58344753607021e-09,
+        1.5417641296977536e-07,
+        0.0006896019136282128
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 30,
+      "geometry": "atm",
+      "original_count": 7,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        3.4216380843613415e-09,
+        9.611091258387552e-08,
+        0.00035105385458326574
+      ],
+      "p99": [
+        8.203785485938472e-09,
+        1.533431909384042e-07,
+        0.000672896683277524
+      ],
+      "max": [
+        8.58344753607021e-09,
+        1.5417641296977536e-07,
+        0.0006896019136282128
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 30,
+      "geometry": "tail",
+      "original_count": 14,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.2620961755143844e-09,
+        1.509780884254608e-08,
+        0.00011934212236923617
+      ],
+      "p99": [
+        4.049268285122306e-09,
+        3.865200350202171e-08,
+        0.0003834443842871506
+      ],
+      "max": [
+        4.517495176548092e-09,
+        4.0741503941343904e-08,
+        0.0004301577522042299
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 60,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.2741487666951878e-06,
+        1.0967638000013343e-06,
+        0.00015930337114573967
+      ],
+      "p99": [
+        2.8262553492919287e-06,
+        2.1319506384065436e-06,
+        0.0003822563495647913
+      ],
+      "max": [
+        2.8431394702432833e-06,
+        2.1334542216477903e-06,
+        0.0003909077798902594
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 60,
+      "geometry": "atm",
+      "original_count": 7,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        2.1720619142498942e-06,
+        1.6820993597420918e-06,
+        0.00023507225916345856
+      ],
+      "p99": [
+        2.838074233957877e-06,
+        2.1330031466754164e-06,
+        0.00038831235079261894
+      ],
+      "max": [
+        2.8431394702432833e-06,
+        2.1334542216477903e-06,
+        0.0003909077798902594
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 60,
+      "geometry": "tail",
+      "original_count": 14,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        2.7614514270369655e-07,
+        6.241851660105939e-07,
+        0.00010216096403954791
+      ],
+      "p99": [
+        7.590548768832137e-07,
+        1.6022430196635514e-06,
+        0.00019652762197672896
+      ],
+      "max": [
+        7.991514016092438e-07,
+        1.6726101374209268e-06,
+        0.0001965278646813562
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 120,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        8.838202271094652e-05,
+        6.366811505974667e-05,
+        0.00798319458590058
+      ],
+      "p99": [
+        0.00018655260814691156,
+        0.00012254577955002067,
+        0.014897867972794021
+      ],
+      "max": [
+        0.00018757175025307937,
+        0.00012427119430372113,
+        0.014912582988096945
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 120,
+      "geometry": "atm",
+      "original_count": 9,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.00013442612152429818,
+        9.264480118483415e-05,
+        0.010585425572595297
+      ],
+      "p99": [
+        0.00018716409341061225,
+        0.00012358102840224095,
+        0.014906696981975776
+      ],
+      "max": [
+        0.00018757175025307937,
+        0.00012427119430372113,
+        0.014912582988096945
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 120,
+      "geometry": "tail",
+      "original_count": 12,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.0822743704252342e-05,
+        2.5623351493782243e-05,
+        0.005243235330299485
+      ],
+      "p99": [
+        2.70943174621844e-05,
+        6.38033262461818e-05,
+        0.010879400849375139
+      ],
+      "max": [
+        2.8220123247858775e-05,
+        6.669677904785898e-05,
+        0.011170717461422147
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 240,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.00016366865807208178,
+        9.474009809151374e-05,
+        0.010299141077146556
+      ],
+      "p99": [
+        0.0003173975160834064,
+        0.00017854105685951444,
+        0.017545113117225508
+      ],
+      "max": [
+        0.0003183986784623394,
+        0.00017856479717792695,
+        0.01803898166276019
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 240,
+      "geometry": "atm",
+      "original_count": 8,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        0.00025815481460712695,
+        0.00012026482517516077,
+        0.012262819615076439
+      ],
+      "p99": [
+        0.00031804827162971284,
+        0.0001781187434719858,
+        0.01786612767182305
+      ],
+      "max": [
+        0.0003183986784623394,
+        0.00017856479717792695,
+        0.01803898166276019
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 240,
+      "geometry": "tail",
+      "original_count": 13,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        4.75433048742169e-05,
+        7.482306540658058e-05,
+        0.008877389109292
+      ],
+      "p99": [
+        0.00012671688082197007,
+        0.00017164381130055427,
+        0.015050660327125778
+      ],
+      "max": [
+        0.0001352049315730547,
+        0.00017844609558586438,
+        0.015076782094007243
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 390,
+      "geometry": "all",
+      "original_count": 21,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        9.632456968175168e-13,
+        1.2007595793830013e-10,
+        8.444138523401542e-07
+      ],
+      "p99": [
+        3.2685298911872007e-12,
+        4.3450595899052773e-10,
+        3.1068378492093997e-06
+      ],
+      "max": [
+        3.5859509806002166e-12,
+        4.788005200651035e-10,
+        3.441850249252809e-06
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 390,
+      "geometry": "atm",
+      "original_count": 11,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        1.23783244479156e-12,
+        1.638922846884202e-10,
+        1.1664972374675063e-06
+      ],
+      "p99": [
+        3.4272404358937086e-12,
+        4.5665323952781566e-10,
+        3.274344049231104e-06
+      ],
+      "max": [
+        3.5859509806002166e-12,
+        4.788005200651035e-10,
+        3.441850249252809e-06
+      ]
+    },
+    {
+      "event": 1,
+      "minutes": 390,
+      "geometry": "tail",
+      "original_count": 10,
+      "failed_rows": 0,
+      "units": [
+        "currency",
+        "currency/spot",
+        "K*currency/spot^2"
+      ],
+      "status": "complete",
+      "rmse": [
+        5.12851532709183e-13,
+        2.7047104071447152e-11,
+        2.4199130749203423e-08
+      ],
+      "p99": [
+        1.3498907547315753e-12,
+        7.183171607007266e-11,
+        6.507490520068788e-08
+      ],
+      "max": [
+        1.402933325067579e-12,
+        7.484107344274404e-11,
+        6.804888155785907e-08
+      ]
+    }
+  ],
+  "bucket_partition_counts": [
+    {
+      "event": 0,
+      "minutes": 1,
+      "all": 21,
+      "atm": 7,
+      "tail": 14
+    },
+    {
+      "event": 0,
+      "minutes": 5,
+      "all": 21,
+      "atm": 8,
+      "tail": 13
+    },
+    {
+      "event": 0,
+      "minutes": 15,
+      "all": 21,
+      "atm": 7,
+      "tail": 14
+    },
+    {
+      "event": 0,
+      "minutes": 30,
+      "all": 21,
+      "atm": 7,
+      "tail": 14
+    },
+    {
+      "event": 0,
+      "minutes": 60,
+      "all": 21,
+      "atm": 7,
+      "tail": 14
+    },
+    {
+      "event": 0,
+      "minutes": 120,
+      "all": 21,
+      "atm": 9,
+      "tail": 12
+    },
+    {
+      "event": 0,
+      "minutes": 240,
+      "all": 21,
+      "atm": 8,
+      "tail": 13
+    },
+    {
+      "event": 0,
+      "minutes": 390,
+      "all": 21,
+      "atm": 11,
+      "tail": 10
+    },
+    {
+      "event": 1,
+      "minutes": 1,
+      "all": 21,
+      "atm": 7,
+      "tail": 14
+    },
+    {
+      "event": 1,
+      "minutes": 5,
+      "all": 21,
+      "atm": 8,
+      "tail": 13
+    },
+    {
+      "event": 1,
+      "minutes": 15,
+      "all": 21,
+      "atm": 7,
+      "tail": 14
+    },
+    {
+      "event": 1,
+      "minutes": 30,
+      "all": 21,
+      "atm": 7,
+      "tail": 14
+    },
+    {
+      "event": 1,
+      "minutes": 60,
+      "all": 21,
+      "atm": 7,
+      "tail": 14
+    },
+    {
+      "event": 1,
+      "minutes": 120,
+      "all": 21,
+      "atm": 9,
+      "tail": 12
+    },
+    {
+      "event": 1,
+      "minutes": 240,
+      "all": 21,
+      "atm": 8,
+      "tail": 13
+    },
+    {
+      "event": 1,
+      "minutes": 390,
+      "all": 21,
+      "atm": 11,
+      "tail": 10
+    }
+  ],
+  "diagnostic_counts": {
+    "original_count": 10,
+    "invalid_contract_count": 4,
+    "price_defined_count": 6,
+    "ordinary_greeks_defined_count": 5,
+    "expiry_atm_unknown_count": 1
+  },
+  "diagnostic_routes": {
+    "fit0": {
+      "expiry_exact": 2,
+      "expiry_undefined_atm": 1,
+      "fallback_spot": 1,
+      "fallback_time": 2,
+      "invalid_contract": 4
+    },
+    "fit1": {
+      "expiry_exact": 2,
+      "expiry_undefined_atm": 1,
+      "fallback_spot": 1,
+      "fallback_time": 2,
+      "invalid_contract": 4
+    },
+    "fit2": {
+      "expiry_exact": 2,
+      "expiry_undefined_atm": 1,
+      "fallback_spot": 1,
+      "fallback_time": 2,
+      "invalid_contract": 4
+    },
+    "fit3": {
+      "expiry_exact": 2,
+      "expiry_undefined_atm": 1,
+      "fallback_spot": 1,
+      "fallback_time": 2,
+      "invalid_contract": 4
+    },
+    "fit4": {
+      "expiry_exact": 2,
+      "expiry_undefined_atm": 1,
+      "fallback_spot": 1,
+      "fallback_time": 2,
+      "invalid_contract": 4
+    },
+    "fit5": {
+      "expiry_exact": 2,
+      "expiry_undefined_atm": 1,
+      "fallback_spot": 1,
+      "fallback_time": 2,
+      "invalid_contract": 4
+    }
+  },
+  "hermite_frozen_pointwise_accuracy": {
+    "failed_rows_per_output": [
+      0,
+      0,
+      0
+    ],
+    "all_outputs_pass": true,
+    "max_error_per_output": [
+      0.00046117026625136504,
+      0.000553317337158854,
+      1.2460830586557226
+    ],
+    "status": "experimental precision result; not a source flaw and not adoption",
+    "units": [
+      "currency",
+      "physical Delta",
+      "K*physical Gamma"
+    ]
+  },
+  "limits": [
+    "calendar is synthetic regular same-day NY session; not an official holiday/early-close calendar",
+    "QUADPACK estimates are not rigorous integration error bounds; positive Poisson tail envelopes are separate",
+    "literal <=2sqrt(W) ATM classification preserves known floating endpoint behavior and original weights",
+    "affine log-time blending guarantees C2 only in log spot; no Theta smoothness guarantee"
+  ]
+}

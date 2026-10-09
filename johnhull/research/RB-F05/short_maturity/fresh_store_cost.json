@@ -1,0 +1,34 @@
+{
+  "schema": "RB-F05-short-fresh-store-cost-v1",
+  "record_digest": "c116e01cbcfa0ef3d42b1b623a85eb976c6d3c3545ffca1b38cc97e06b03aebe",
+  "fresh_record_digest": "f6d34e936f970cfbf09e9e121ce0cea95428d79b5a5f9e4dfbc60fc1a61442c8",
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/scripts/evidence_store.py",
+    "put",
+    "--project-root",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity",
+    "--manifest-out",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity/fresh_manifest.json",
+    "fresh_arrays.npz"
+  ],
+  "wall_seconds": 5.278692360967398,
+  "exit_code": 0,
+  "stdout": "{\"status\": \"PASS\", \"entries\": 1}\n",
+  "stderr": "",
+  "manifest": {
+    "schema_version": 1,
+    "kind": "johnhull-evidence-manifest",
+    "entries": [
+      {
+        "path": "fresh_arrays.npz",
+        "ref": "artifact:sha256:23f6ee7e0868e4f4ef34a8a937786f0110032281417a86bd876f2603fbcf2123",
+        "bytes": 193825173,
+        "mime": "application/octet-stream"
+      }
+    ]
+  },
+  "unique_expense_id": "fresh/store_put",
+  "charged_once": true,
+  "scope": "write-once full fresh NPZ to primary and mirror plus manifest; excludes later restoration/replay"
+}

@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import inspect
+import json
+import math
 import os
 from contextlib import contextmanager
 from pathlib import Path
@@ -14,7 +17,84 @@ HERE = Path(__file__).resolve().parent
 ARTIFACT_ENV = "JOHNHULL_SHORT_MATURITY_ARTIFACTS_DIR"
 SOURCE_ENV = "JOHNHULL_SHORT_MATURITY_SOURCE_DIR"
 
+
+def _finite_assessment_cost(value, name, *, unknown=True):
+    if value is None and unknown:
+        return
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, (int, float))
+        or not math.isfinite(value)
+        or value < 0
+    ):
+        raise ValueError("assessment nonnegative finite value required: " + name)
+
+
+def _read_assessment(path, record, arrays, provenance):
+    """Validate an optional external assessment without changing study evidence."""
+    path = Path(path)
+    if not path.is_file():
+        return None
+    assessed = json.loads(path.read_text())
+    expected = {
+        "schema": "RB-F05-short-assessment-v1",
+        "study_record_digest": provenance.json_digest(record),
+        "study_arrays_digest": provenance.arrays_digest(arrays),
+        "protocol_digest": record["protocol_digest"],
+    }
+    if not isinstance(assessed, dict) or any(
+        assessed.get(key) != value for key, value in expected.items()
+    ):
+        raise ValueError("assessment schema or study/protocol binding mismatch")
+    costs = assessed.get("costs", {})
+    decisions = assessed.get("decisions", {})
+    payback = assessed.get("equal_accuracy_payback", {})
+    if not all(isinstance(value, dict) for value in (costs, decisions, payback)):
+        raise ValueError("assessment costs, decisions and payback must be mappings")
+    for name, value in costs.items():
+        _finite_assessment_cost(value, "costs." + name)
+    expenses = assessed.get("resolved_expenses", [])
+    if not isinstance(expenses, list):
+        raise ValueError("assessment resolved expenses must be a list")
+    ids = set()
+    for item in expenses:
+        if not isinstance(item, dict):
+            raise ValueError("assessment resolved expense must be a mapping")
+        identifier = item.get("id")
+        if not isinstance(identifier, str) or not identifier.strip() or identifier in ids:
+            raise ValueError("assessment resolved expense IDs must be nonempty and unique")
+        ids.add(identifier)
+        _finite_assessment_cost(item.get("seconds"), identifier, unknown=False)
+        scope, receipt = item.get("scope"), item.get("receipt")
+        if not isinstance(scope, str) or not scope.strip():
+            raise ValueError("assessment resolved expense scope required")
+        if not (
+            (isinstance(receipt, str) and receipt.strip())
+            or (isinstance(receipt, dict) and receipt)
+        ):
+            raise ValueError("assessment resolved expense receipt required")
+    fit_ids = {fit["id"] for fit in record["fits"]}
+    for fid, cell in payback.items():
+        if fid not in fit_ids or not isinstance(cell, dict):
+            raise ValueError("assessment payback must refer to an original fit")
+        eligible = cell.get("eligible")
+        if eligible is not None and not isinstance(eligible, bool):
+            raise ValueError("assessment payback eligibility must be bool or unknown")
+        _finite_assessment_cost(cell.get("queries"), "payback." + fid + ".queries")
+    return assessed
+
+
+def _decision_label(value):
+    if value is None:
+        return "unknown"
+    if isinstance(value, dict):
+        return str(value.get("status", value.get("accepted", "unknown")))
+    return str(value)
+
+
 LOAD = r"""import importlib.util
+import json
+import math
 import os
 import sys
 from pathlib import Path
@@ -23,6 +103,8 @@ from collections import Counter
 import numpy as np
 from IPython.display import Markdown, display
 from hullkit import nbplot
+
+# ASSESSMENT_HELPERS
 
 get_ipython().run_line_magic("matplotlib", "inline")
 plt = nbplot.setup()
@@ -94,6 +176,11 @@ record, arrays = loader.load_result(artifact_dir)
 checked = loader.check_record(record, arrays)
 if checked.get("passed") is not True:
     raise ValueError("Saved short-maturity numerical checker did not pass")
+assessment = _read_assessment(artifact_dir / "assessment.json", record, arrays, loader.module("protocol"))
+external_costs = {} if assessment is None else assessment.get("costs", {})
+external_decisions = {} if assessment is None else assessment.get("decisions", {})
+external_payback = {} if assessment is None else assessment.get("equal_accuracy_payback", {})
+resolved_expenses = [] if assessment is None else assessment.get("resolved_expenses", [])
 analytics = loader.module("analytics")
 protocol = record["protocol"]
 strike = protocol["contract"]["strike"]
@@ -141,6 +228,8 @@ print("smoke/fixture output checks display wiring only; it is not performance or
 print("Synthetic same-day session, conditioned jump teacher, unconstrained raw NN; no official SPX fit.")
 print("Price/Delta target one price function. Physical Gamma is a diagnostic; no Gamma training claim.")
 print("All original rows/paired seeds remain, including failures and undefined expiry Greeks.")
+print("External assessment:", "unknown (missing assessment.json)" if assessment is None else
+      "bound to this immutable record, arrays and protocol; separate from original acceptance.")
 """
 
 FIGURE_1 = r"""teacher_rows = []
@@ -250,7 +339,7 @@ else:
 FIGURE_3 = r"""methods = [("core_mixture", truth), ("hermite", arrays[record["hermite"]["predictions"]["test"]])]
 methods += [(fit["id"] + "/raw", arrays[fit["predictions"]["test"]["raw_key"]]) for fit in fits]
 comparison = [(name, analytics.error_summary(prediction, independent, strike=strike)) for name, prediction in methods]
-fig, axes = plt.subplots(2, 2, figsize=(14, 9))
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 positions = np.arange(len(comparison))
 for j, label in enumerate(units):
     axes[0, 0].scatter(positions, [np.nan if row["max"] is None else row["max"][j] for _, row in comparison],
@@ -276,17 +365,27 @@ axes[1, 1].set_axis_off()
 costs = record["costs"]
 pending = totals["pending_ids"]
 receipt = loader.serialization_receipt(artifact_dir, record) if hasattr(loader, "serialization_receipt") else None
-pending_text = "\n".join(pending) or "none"
-lines = ["main-only measured: " + number(costs.get("main_only_s")) + " s",
-         "cold pipeline: " + number(costs.get("cold_pipeline_s")) + " s",
-         "fresh replay: " + number(costs.get("fresh_s")) + " s",
-         "pending receipt IDs:\n" + pending_text,
+resolved_ids = {row["id"] for row in resolved_expenses}
+remaining = [identifier for identifier in pending if identifier not in resolved_ids]
+lines = ["Original immutable record:",
+         "main-only measured: " + number(costs.get("main_only_s")) + " s",
+         "original cold / fresh: " + number(costs.get("cold_pipeline_s")) + " / " + number(costs.get("fresh_s")) + " s",
+         "original pending: " + (", ".join(pending) or "none"),
+         "External assessment: " + ("unknown" if assessment is None else "study binding verified"),
+         "cold / fresh / archive: " + " / ".join(number(external_costs.get(key)) for key in
+              ["cold_pipeline_s", "fresh_s", "archive_load_s"]) + " s",
+         "resolved external IDs: " + (", ".join(sorted(resolved_ids)) or "none"),
+         "remaining original pending: " + (", ".join(remaining) or "none"),
          "serialization receipt: " + ("unknown" if receipt is None else
-             "pending=" + str(receipt.get("pending")) + "; " + number(receipt.get("seconds")) + " s"),
-         "equal-accuracy cold payback: unknown",
-         "standard accelerator adoption: " + str(record.get("standard_accelerator_adoption", "unknown")),
-         "Numerical replay, teaching and independent acceptance are separate."]
-axes[1, 1].text(0, 1, "\n\n".join(lines), transform=axes[1, 1].transAxes, va="top", fontsize=9,
+             "pending=" + str(receipt.get("pending")) + "; " + number(receipt.get("seconds")) + " s")]
+for key in ["teacher", "delta_improvement", "gamma_utility", "standard_accelerator_adoption"]:
+    lines.append(key + ": " + _decision_label(external_decisions.get(key)))
+lines.append("Equal-accuracy cold payback (external):")
+for fit in fits:
+    cell = external_payback.get(fit["id"], {})
+    lines.append(fit["id"] + ": eligible=" + _decision_label(cell.get("eligible")) +
+                 "; queries=" + number(cell.get("queries")))
+axes[1, 1].text(0, 1, "\n".join(lines), transform=axes[1, 1].transAxes, va="top", fontsize=8,
                 wrap=True)
 for ax in axes.flat[:3]:
     ax.grid(axis="x" if ax is not axes[0, 0] else "y", alpha=.2)
@@ -299,8 +398,23 @@ print("Frozen accuracy targets (descriptive, no new adoption decision):", protoc
 table(["expense ID", "category", "charged", "measured seconds", "scope"],
       [[row["id"], row["category"], row["charged"], number(row["seconds"]), row.get("scope", "unknown")]
        for row in record["expenses"]])
-print("Pending cold/import/archive/pilot/fresh costs:", pending)
-print("cold payback and standard adoption: unknown until complete equal-accuracy measurements and independent review.")
+print("original pending cold/import/archive/pilot/fresh costs:", pending)
+print("resolved external IDs:", sorted(resolved_ids), "| remaining original pending:", remaining)
+table(["external cost", "seconds (unknown remains unknown)"],
+      [[key, number(value)] for key, value in sorted(external_costs.items())] or [["assessment", "unknown"]])
+table(["resolved external expense ID", "seconds", "scope", "receipt"],
+      [[row["id"], number(row["seconds"]), row["scope"], row["receipt"]] for row in resolved_expenses]
+      or [["assessment", "unknown", "unknown", "unknown"]])
+table(["external decision", "saved assessment value"],
+      [[key, "unknown" if external_decisions.get(key) is None else json.dumps(external_decisions[key], sort_keys=True)]
+       for key in ["teacher", "delta_improvement", "gamma_utility", "standard_accelerator_adoption"]])
+table(["original fit", "eligible", "payback queries", "baseline", "reason", "external details"],
+      [[fit["id"], _decision_label(external_payback.get(fit["id"], {}).get("eligible")),
+        number(external_payback.get(fit["id"], {}).get("queries")),
+        external_payback.get(fit["id"], {}).get("baseline", "unknown"),
+        external_payback.get(fit["id"], {}).get("reason", "unknown"),
+        json.dumps(external_payback.get(fit["id"], {}), sort_keys=True)] for fit in fits])
+print("External assessment reports saved review/receipt conclusions; this notebook makes no new adoption decision.")
 """
 
 END = """## 読み方と限界
@@ -314,6 +428,8 @@ END = """## 読み方と限界
 - Gamma は物理 Gamma の診断であり、Gamma 学習や実市場の 0DTE 較正を主張しません。
 - 失敗した学習・非有限値は元の分母に残り、全分母の誤差を unknown と表示します。
 - smoke/fixture は配線の検証だけです。速度比較には精度同等性、cold 費用、未測定費用の解消が必要です。
+- 任意の `assessment.json` は record/arrays/protocol のidentity一致後に別表で表示します。元recordの受入・pending値を変更しません。
+- 外部費用・採否・paybackは保存された結論であり、このnotebookが採否や未測定費用を推定したものではありません。
 
 出典はこの保存物の `protocol` と `source_registry`、正式仕様
 `2026-10-09-short-maturity-dml-design.md`、計画 `2026-10-09-short-maturity-dml.md` です。
@@ -353,7 +469,17 @@ def build(artifacts=HERE, output=None, *, source=HERE, execute=False):
             "markdown",
             "# RB-F05: 短期・同日満期 DML\n\n保存済み証跡から教師・raw NN・強い基準器を比較します。",
         ),
-        ("load", "code", LOAD),
+        (
+            "load",
+            "code",
+            LOAD.replace(
+                "# ASSESSMENT_HELPERS",
+                "\n\n".join(
+                    inspect.getsource(function)
+                    for function in [_finite_assessment_cost, _read_assessment, _decision_label]
+                ),
+            ),
+        ),
         ("teacher", "code", FIGURE_1),
         ("raw", "code", FIGURE_2),
         ("cost", "code", FIGURE_3),
