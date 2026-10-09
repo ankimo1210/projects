@@ -1,0 +1,44 @@
+{
+  "scope": "saved-only constant-vol auxiliary/control diagnosis; fixed original N1024; no new drivers or finance source changes",
+  "original_slots": 36,
+  "computed_slots": 35,
+  "qualification_unknown_slots": 36,
+  "Heston_weighted_aux_summary": {
+    "original_ready_slots": 15,
+    "three_N65536_reference_conditions": 10,
+    "ready_forecast_hS_fail_slots": [
+      "state00.heston",
+      "state04.heston",
+      "state05.heston",
+      "state08.heston"
+    ],
+    "ready_forecast_hQ_fail_slots": [
+      "state03.heston"
+    ]
+  },
+  "sqrt_scaling_guarantee": false,
+  "local_homogeneity_applied": false,
+  "beta_optimization_applied": false,
+  "source_input_binding_changes": {},
+  "original_artifact_changes": {},
+  "elapsed_wall_seconds": 0.23313161899977786,
+  "derived_arrays_bytes": 2129920,
+  "limitations": "Controls choices are proposals; finite-N mean differences do not prove price accuracy. Current original underresolution/status/qualification not revised.",
+  "source_sha256": "112017356f22d11c4aa750b2e8d4852b8880df7083d4b82efada66dd3443c7c0",
+  "npz_sha256": "5d05e5176afc553f58decfe60f111d268cae92125d78f40e876382b8aab504ca"
+}
+state00.heston oldctl 0.0313533525671465 newctl 0.027259486989811958 newSEforecast [0.00963438 0.00331302 0.00377974] CEforecast [0.02182186 0.00547321 0.00749076]
+state01.heston oldctl 0.04 newctl 0.04 newSEforecast [0.01029628 0.00193079 0.0023937 ] CEforecast [0.02658605 0.00440672 0.00678912]
+state02.heston oldctl 0.05729329454064851 newctl 0.06548102554141451 newSEforecast [0.01186308 0.00144163 0.0016513 ] CEforecast [0.03467183 0.00397633 0.00647296]
+state03.heston oldctl 0.030834983994621902 newctl 0.02685893191076878 newSEforecast [0.00208277 0.00041363 0.00516242] CEforecast [0.00041999 0.00018259 0.00220822]
+state04.heston oldctl 0.04 newctl 0.040000000000000015 newSEforecast [0.00847065 0.00202766 0.00252839] CEforecast [0.02383847 0.00235033 0.00493003]
+state05.heston oldctl 0.05832992213832109 newctl 0.0662819786401505 newSEforecast [0.01299028 0.00317791 0.00339831] CEforecast [0.05715574 0.00820186 0.01022778]
+state06.heston oldctl 0.029641687495854604 newctl 0.025990723971520076 newSEforecast [0.00095446 0.00025477 0.00464464] CEforecast [7.04696075e-05 1.21737501e-04 2.00280696e-03]
+state07.heston oldctl 0.04 newctl 0.04000000000000001 newSEforecast [0.00591015 0.00177943 0.0021373 ] CEforecast [0.01823513 0.00280479 0.00477717]
+state08.heston oldctl 0.06071656195822624 newctl 0.068018466783827 newSEforecast [0.00906494 0.00352871 0.00371352] CEforecast [0.04393077 0.00863695 0.00995063]
+state10.heston oldctl 0.04 newctl 0.039999999999999994 newSEforecast [0.00264921 0.00043721 0.00065048] CEforecast [0.00965057 0.00104663 0.0027931 ]
+state11.heston oldctl 0.06528487505851373 newctl 0.07100343592535167 newSEforecast [0.00416562 0.00132945 0.001377  ] CEforecast [0.02538932 0.00523138 0.00648674]
+state13.heston oldctl 0.04 newctl 0.04 newSEforecast [0.00101275 0.00014641 0.00016292] CEforecast [0.00384617 0.00047223 0.00128683]
+state14.heston oldctl 0.07147765481982574 newctl 0.07448240559531775 newSEforecast [0.00149234 0.00043438 0.00041715] CEforecast [0.01092749 0.00282826 0.00331097]
+state16.heston oldctl 0.04 newctl 0.04 newSEforecast [1.84002534e-04 3.60583653e-05 1.83130258e-05] CEforecast [0.00104689 0.00017762 0.00034582]
+state17.heston oldctl 0.07684462485219158 newctl 0.07684462485219158 newSEforecast [0.00029042 0.00021959 0.00021285] CEforecast [0.00301063 0.00098063 0.00110856]

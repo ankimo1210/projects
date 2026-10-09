@@ -1,0 +1,71 @@
+{
+  "scope": "two unconditional beta1 parity-equivalent estimators, original saved N1024 only; no data-driven winner selection",
+  "formula": "putCV=Pmodel-Paux+E[Paux]+EYmodel-x = callCV-(conditionalEYmodel-conditionalEYaux)+(EYmodel-EYaux)",
+  "original_slots": 36,
+  "computed_slots": 35,
+  "not_executed_fit_unknown_slots": 1,
+  "qualification_unknown_slots": 36,
+  "unmeasured_errors_remain_unknown": [
+    "numerical_SDE_bias",
+    "finite_bump_bias",
+    "oracle_error",
+    "denominator_error",
+    "production_interpolation_error",
+    "SE_sampling_error",
+    "Greek_population_moment"
+  ],
+  "source_input_binding_changes": {},
+  "original_artifact_changes": {},
+  "forecasts": {
+    "N": 65536,
+    "rule": "N1024 SE/8",
+    "guarantee": false,
+    "execution": false,
+    "ready_slots": 30,
+    "call_ready_three_SE_reference_conditions": 24,
+    "put_ready_three_SE_reference_conditions": 23
+  },
+  "local_homogeneity_applied": false,
+  "beta_optimized": false,
+  "estimator_selected": false,
+  "raw_derived_arrays_bytes": 8003584,
+  "elapsed_wall_seconds": 0.4064964550007062,
+  "source_sha256": "74e5d2fa45e2f8106447f954c47b11660ea9fee611d7713a11c41bbd56663715",
+  "npz_sha256": "45a86149473e3b3dfe63b18d61628b1fbdeab9aaa7fa3da5744391516381cdda"
+}
+state00.heston ready callSEfore [0.01066016 0.00389615 0.00434041] putSEfore [0.00647362 0.00284627 0.00349477] priceMeans [np.float64(4.855379547759005), np.float64(4.7334849298173065)] pairedPriceDifferenceSE 0.13323335037874434
+state00.local ready callSEfore [0.00515168 0.0010534  0.00116284] putSEfore [0.00397925 0.00104545 0.00085313] priceMeans [np.float64(5.120068269670581), np.float64(5.100664052925555)] pairedPriceDifferenceSE 0.04824933396457106
+state01.heston ready callSEfore [0.01029628 0.00261123 0.00319099] putSEfore [0.00683217 0.00208863 0.00253335] priceMeans [np.float64(5.721029831092388), np.float64(5.5943678804672725)] pairedPriceDifferenceSE 0.11377332637895732
+state01.local ready callSEfore [0.00607757 0.0012075  0.00119044] putSEfore [0.00480792 0.00124103 0.00093687] priceMeans [np.float64(5.59884664455253), np.float64(5.5751119129635)] pairedPriceDifferenceSE 0.05736221907687453
+state02.heston ready callSEfore [0.01085329 0.00218268 0.00263134] putSEfore [0.00814829 0.0016487  0.00183085] priceMeans [np.float64(7.083821158379237), np.float64(6.949961857505977)] pairedPriceDifferenceSE 0.09737390123413855
+state02.local ready callSEfore [0.00779557 0.00154231 0.00128885] putSEfore [0.00639547 0.00160033 0.001134  ] priceMeans [np.float64(6.422407737803108), np.float64(6.390307405202377)] pairedPriceDifferenceSE 0.07481099019088555
+state03.heston ready callSEfore [0.00268728 0.00020931 0.00360562] putSEfore [0.00776371 0.00150095 0.00882678] priceMeans [np.float64(0.005688725269875174), np.float64(-0.056605269833126685)] pairedPriceDifferenceSE 0.06994852385711488
+state03.local ready callSEfore [0.00237034 0.00021931 0.00294327] putSEfore [0.00289907 0.00019669 0.00253486] priceMeans [np.float64(0.01729240386882938), np.float64(0.02942302608553222)] pairedPriceDifferenceSE 0.03534561749558961
+state04.heston ready callSEfore [0.00847065 0.0019234  0.00254881] putSEfore [0.00572953 0.00235758 0.00269461] priceMeans [np.float64(4.98471952361614), np.float64(4.9176392625322665)] pairedPriceDifferenceSE 0.08912791445357063
+state04.local ready callSEfore [0.00502734 0.00130857 0.00088944] putSEfore [0.00374724 0.00115286 0.00070939] priceMeans [np.float64(4.8531683067027185), np.float64(4.84779430339625)] pairedPriceDifferenceSE 0.041144962878629295
+state05.heston ready callSEfore [0.01197752 0.00297731 0.00338152] putSEfore [0.00569294 0.00321917 0.00315149] priceMeans [np.float64(20.51659843902411), np.float64(20.43748999020872)] pairedPriceDifferenceSE 0.12131903902971392
+state05.local ready callSEfore [0.00356989 0.0015276  0.00151029] putSEfore [0.00450752 0.00156013 0.00134574] priceMeans [np.float64(20.045037953136408), np.float64(19.984373257793184)] pairedPriceDifferenceSE 0.04435700147970379
+state06.heston ready callSEfore [0.00136596 0.00013616 0.00514348] putSEfore [0.00603768 0.00098306 0.00775286] priceMeans [np.float64(-0.0065532725499747296), np.float64(-0.07895859347632879)] pairedPriceDifferenceSE 0.04915868679991427
+state06.local ready callSEfore [8.28999543e-04 6.44255769e-05 1.86657050e-03] putSEfore [0.00183609 0.00014297 0.00130214] priceMeans [np.float64(0.014209598893618744), np.float64(-0.0016617681489992382)] pairedPriceDifferenceSE 0.017891031123070188
+state07.heston ready callSEfore [0.00591015 0.00197438 0.00247964] putSEfore [0.00467805 0.00178892 0.00183654] priceMeans [np.float64(3.725017310228706), np.float64(3.619705822535189)] pairedPriceDifferenceSE 0.06498961911212585
+state07.local ready callSEfore [0.00287233 0.00089848 0.00078564] putSEfore [0.00248094 0.00081171 0.00066205] priceMeans [np.float64(3.6295072285207404), np.float64(3.5695781096401284)] pairedPriceDifferenceSE 0.02448112373644125
+state08.heston ready callSEfore [0.00845876 0.0041005  0.00441405] putSEfore [0.00426797 0.00256474 0.00253424] priceMeans [np.float64(16.5625984546164), np.float64(16.413043401369528)] pairedPriceDifferenceSE 0.0907660865504978
+state08.local ready callSEfore [0.00246585 0.00114123 0.00090106] putSEfore [0.00352677 0.00172757 0.00154464] priceMeans [np.float64(16.188274919916015), np.float64(16.114917510498987)] pairedPriceDifferenceSE 0.039606952162122164
+state09.heston unknown_underresolved callSEfore [1.28811920e-19 1.74962373e-21 0.00000000e+00] putSEfore [0.00287412 0.00040871 0.00723224] priceMeans [np.float64(0.0022404273650748654), np.float64(-0.060454670074738204)] pairedPriceDifferenceSE 0.017776733896470064
+state09.local unknown_underresolved callSEfore [4.57621294e-20 4.37405933e-22 1.11975919e-19] putSEfore [7.07674687e-04 7.16566084e-05 1.63207788e-03] priceMeans [np.float64(0.0013411369985361836), np.float64(0.0018461564844320794)] pairedPriceDifferenceSE 0.0069558684249762665
+state10.heston ready callSEfore [0.00264921 0.00060247 0.00090069] putSEfore [0.0022552  0.00051924 0.00060428] priceMeans [np.float64(2.083342088888082), np.float64(2.0053363514990226)] pairedPriceDifferenceSE 0.019002733745043496
+state10.local ready callSEfore [0.00121158 0.00032275 0.00037949] putSEfore [0.00097953 0.00043667 0.00027788] priceMeans [np.float64(1.9927938272141075), np.float64(1.9884734874603922)] pairedPriceDifferenceSE 0.01285440718732661
+state11.heston ready callSEfore [0.00402781 0.00164118 0.00172791] putSEfore [0.00184173 0.0013998  0.00134544] priceMeans [np.float64(10.703070033116411), np.float64(10.613503971787779)] pairedPriceDifferenceSE 0.025491064203368698
+state11.local ready callSEfore [0.00145804 0.00081012 0.0006833 ] putSEfore [0.00154926 0.00090608 0.0008288 ] priceMeans [np.float64(10.527317847419868), np.float64(10.50890953649608)] pairedPriceDifferenceSE 0.016172008589013513
+state12.heston unknown_underresolved callSEfore [7.15033272e-22 0.00000000e+00 0.00000000e+00] putSEfore [1.04425751e-03 9.49905638e-05 7.86366958e-03] priceMeans [np.float64(1.3957559022078803e-05), np.float64(-0.008315245565772887)] pairedPriceDifferenceSE 0.00971086695544682
+state12.local unknown_underresolved callSEfore [1.72137640e-22 0.00000000e+00 3.49924746e-21] putSEfore [1.58814077e-04 1.60416924e-05 1.63238826e-03] priceMeans [np.float64(2.884076922269237e-06), np.float64(0.0011598421994212277)] pairedPriceDifferenceSE 0.0014051266784736874
+state13.heston ready callSEfore [0.00101275 0.00018795 0.00024331] putSEfore [0.00077278 0.00016352 0.00012686] priceMeans [np.float64(0.7762002802472939), np.float64(0.7711462203480343)] pairedPriceDifferenceSE 0.011097675714274589
+state13.local ready callSEfore [3.49747198e-04 6.16602837e-05 1.10374806e-04] putSEfore [2.80695800e-04 9.06596063e-05 8.68764144e-05] priceMeans [np.float64(0.7631091741519384), np.float64(0.7655887992485715)] pairedPriceDifferenceSE 0.003661257902227511
+state14.heston ready callSEfore [0.00143417 0.00058202 0.00057985] putSEfore [0.00052264 0.00053721 0.00051896] priceMeans [np.float64(5.160954826689366), np.float64(5.162299279732329)] pairedPriceDifferenceSE 0.012362820875508067
+state14.local ready callSEfore [0.00057216 0.00029446 0.00025985] putSEfore [0.00047142 0.00033714 0.00031516] priceMeans [np.float64(5.141141074921164), np.float64(5.142549724887965)] pairedPriceDifferenceSE 0.005798591288298061
+state15.heston not_executed_fit_unknown
+state15.local unknown_underresolved callSEfore [4.36421675e-26 1.66857122e-27 2.05034031e-23] putSEfore [3.05318687e-05 2.57323605e-06 1.76721162e-03] priceMeans [np.float64(1.6524855280687505e-09), np.float64(0.00011000818923640627)] pairedPriceDifferenceSE 0.00022046696174532774
+state16.heston ready callSEfore [1.84002534e-04 3.60571736e-05 1.83130258e-05] putSEfore [1.73509382e-04 3.84092220e-05 1.93209824e-05] priceMeans [np.float64(0.20344643853538827), np.float64(0.2035177545786115)] pairedPriceDifferenceSE 0.002272637653022339
+state16.local ready callSEfore [6.94860009e-05 1.28300392e-05 2.64503900e-05] putSEfore [5.88765081e-05 1.68199232e-05 2.25783301e-05] priceMeans [np.float64(0.19846345787658637), np.float64(0.1991462189380351)] pairedPriceDifferenceSE 0.0006618174075024691
+state17.heston ready callSEfore [0.00029042 0.00021959 0.00021285] putSEfore [9.51594013e-05 2.06758332e-04 1.99907470e-04] priceMeans [np.float64(1.6930821941519048), np.float64(1.6932378811684727)] pairedPriceDifferenceSE 0.0027606267179570133
+state17.local ready callSEfore [0.00015163 0.00012517 0.00011799] putSEfore [8.21039156e-05 1.39683472e-04 1.33310221e-04] priceMeans [np.float64(1.6893684157804498), np.float64(1.6910656459966962)] pairedPriceDifferenceSE 0.0012111754421192673

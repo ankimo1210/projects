@@ -1,0 +1,11 @@
+{
+  "sha256": {
+    "task-5-teacher-prefreeze-parity.py": "74e5d2fa45e2f8106447f954c47b11660ea9fee611d7713a11c41bbd56663715",
+    "task-5-teacher-prefreeze-parity.json": "3521209027678b1cf9940f6485e8bfc9edcb0b7fdab1fabd097ac32579a86ff1",
+    "task-5-teacher-prefreeze-parity.npz": "45a86149473e3b3dfe63b18d61628b1fbdeab9aaa7fa3da5744391516381cdda",
+    "task-5-teacher-prefreeze-parity.txt": "28b70ac33f45d3a5f4964e83190d8f773ad4d8bf56a929b600d215b62385a759",
+    "task-5-teacher-prefreeze-parity-report.md": "d11cda0a86ff49ff46c6961ec35140545a56fe833274d2c18583f409d8be5028"
+  },
+  "independent_review": "not acquired: agent thread limit",
+  "original_status_qualification_preserved": true
+}

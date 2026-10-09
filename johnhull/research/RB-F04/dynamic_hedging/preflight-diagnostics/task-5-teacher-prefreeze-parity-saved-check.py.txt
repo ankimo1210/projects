@@ -1,0 +1,22 @@
+from pathlib import Path
+import json,hashlib,numpy as np
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap");w=ROOT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+p=json.loads((w/"task-5-teacher-prefreeze-parity.json").read_text());r=json.loads((w/"task-5-teacher-preflight.json").read_text())
+z=np.load(w/"task-5-teacher-prefreeze-parity.npz",allow_pickle=False)
+comparisons=0
+for row in p["rows"]:
+ if row.get("original_status") is None:
+  assert row["slot_id"]=="state15.heston" and row["qualification"]=="unknown";continue
+ assert row["original_path_count"]==1024 and row["qualification"]=="unknown"
+ for v in ["call","put"]:
+  a=z[row["slot_id"]+"."+v+".price_VS_Vtheta_hS_hQ"];assert a.shape==(1024,5)
+  b=a.reshape(16,64,5).mean(1);stats=row[v+"_beta1"]["statistics"]
+  values=[a.mean(0),a.std(0,ddof=1)/32,b.std(0,ddof=1)/4,np.cov(b,rowvar=False,ddof=1)/16]
+  saved=[stats[k] for k in ["mean","IID_SE","same_16block_SE","same_16block_covariance_of_mean"]]
+  for value,ref in zip(values,saved):assert np.allclose(value,ref,rtol=2e-10,atol=1e-10);comparisons+=1
+for k,v in r["source_bindings"].items():assert hashlib.sha256((ROOT/k).read_bytes()).hexdigest()==v
+for k,v in p["original_artifact_bindings"].items():assert hashlib.sha256(Path(k).read_bytes()).hexdigest()==v
+for filename in ["task-5-teacher-prefreeze-artifacts.json","task-5-teacher-prefreeze-parity-artifacts.json"]:
+ meta=json.loads((w/filename).read_text())
+ for k,v in meta["sha256"].items():assert hashlib.sha256((w/k).read_bytes()).hexdigest()==v
+print(json.dumps({"status":"PASS","saved_statistics_comparisons":comparisons,"original_slots":36,"computed_slots":35,"original_status_qualification_preserved":True,"source_input_bindings_unchanged":65,"preflight_artifacts_unchanged":4,"prefreeze_artifact_hashes_verified":13},indent=2))

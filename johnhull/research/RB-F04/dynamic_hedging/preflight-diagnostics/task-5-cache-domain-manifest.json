@@ -1,0 +1,78 @@
+{
+  "task-5-cache-cartesian-boundary-details.json": {
+    "bytes": 6317,
+    "sha256_provenance": "87f655c34fe9f11e18012fe7d404b76d65cb44fca8206eaefc06f4b740609e98"
+  },
+  "task-5-cache-cartesian-boundary-details.py": {
+    "bytes": 2820,
+    "sha256_provenance": "01e4bfc00fa4ed3b0a9aa7f611b4cddbf00063a91e92670407fd3887a77bedb1"
+  },
+  "task-5-cache-cartesian-boundary-details.txt": {
+    "bytes": 6318,
+    "sha256_provenance": "2621d2a3bfc326bb61b250707c64a77d9ae452488478741818e4d4e08dd4eeb3"
+  },
+  "task-5-cache-cartesian-probe-first-failure.npz": {
+    "bytes": 11621695,
+    "sha256_provenance": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9"
+  },
+  "task-5-cache-cartesian-probe-first-failure.py": {
+    "bytes": 7073,
+    "sha256_provenance": "92b7ebada59c86e4e81fa2665d1670552caafc40972c5efe0428485f77989251"
+  },
+  "task-5-cache-cartesian-probe-first-failure.txt": {
+    "bytes": 4454,
+    "sha256_provenance": "5a8c31d18bffc709f5a878406118e059c672d93248cd00660646fdc94560c2ce"
+  },
+  "task-5-cache-cartesian-probe-run.json": {
+    "bytes": 251,
+    "sha256_provenance": "15aa8d0971adcea55d5f5a9e4eeab05077170da1ea2ebddf2a19f711e48399c1"
+  },
+  "task-5-cache-cartesian-probe.json": {
+    "bytes": 195142,
+    "sha256_provenance": "c506a33bf8e918f73e880b050de1b4d1db03bbd18d1a8831c51ed5976c6a32f0"
+  },
+  "task-5-cache-cartesian-probe.npz": {
+    "bytes": 11621695,
+    "sha256_provenance": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9"
+  },
+  "task-5-cache-cartesian-probe.py": {
+    "bytes": 7405,
+    "sha256_provenance": "114b93ec9e87c5e11cb4ce67f583e2430450fd966094cc295c057dc897f33ffa"
+  },
+  "task-5-cache-cartesian-probe.txt": {
+    "bytes": 3156,
+    "sha256_provenance": "d42ae498924d354e7632630584acfa9ce76389ee27c20f6c94faddff201527d3"
+  },
+  "task-5-cache-domain-probe-endpoints-v1-original.json": {
+    "bytes": 39957,
+    "sha256_provenance": "da0362d7e050bfa923519acc9b8d35e9c369b2d6e1cdc58b896f61ac1e59ec24"
+  },
+  "task-5-cache-domain-probe-endpoints-v1-original.py": {
+    "bytes": 11039,
+    "sha256_provenance": "d191ba7fd3c4b677e8a592f499edb3703fb4ed9e6cc11cd7b819c6e5aa9aaa65"
+  },
+  "task-5-cache-domain-probe-first-extended-failure.txt": {
+    "bytes": 553,
+    "sha256_provenance": "3671fe2dc43a6ff1034d029cb9c4e235893bd36a9f2081745c24631d9cafe5fb"
+  },
+  "task-5-cache-domain-probe.json": {
+    "bytes": 42088,
+    "sha256_provenance": "ab770377888f7170b1e9290e1e96da17d01458cb1c10e9b29234e336e3035f86"
+  },
+  "task-5-cache-domain-probe.npz": {
+    "bytes": 501632,
+    "sha256_provenance": "890a615e307f7bdc1865c97802ecad08709f8b34b5d7e6e21328dc5fb9a13d9d"
+  },
+  "task-5-cache-domain-probe.py": {
+    "bytes": 13608,
+    "sha256_provenance": "48571c0a218327d1962edc9bd75c897e63ada98d7c8e12236c2565ff3d6f2a1e"
+  },
+  "task-5-cache-domain-probe.txt": {
+    "bytes": 2329,
+    "sha256_provenance": "8bd7e01ac27e8e4aefa12b59a601e3b998e96f7d44ff2602053cce4afc1a0f02"
+  },
+  "task-5-cache-domain-report.md": {
+    "bytes": 13302,
+    "sha256_provenance": "c61e0c20635a5dc846e9fa39708ae7549ca14da087717b76c81b270cb217e4a1"
+  }
+}

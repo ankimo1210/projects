@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": "raw/task-5-cache-cartesian-probe-first-failure.npz",
+      "ref": "artifact:sha256:8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+      "bytes": 11621695,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-cache-cartesian-probe.npz",
+      "ref": "artifact:sha256:8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+      "bytes": 11621695,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-cache-domain-probe.npz",
+      "ref": "artifact:sha256:890a615e307f7bdc1865c97802ecad08709f8b34b5d7e6e21328dc5fb9a13d9d",
+      "bytes": 501632,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-teacher-prefreeze-control-probe.npz",
+      "ref": "artifact:sha256:5d05e5176afc553f58decfe60f111d268cae92125d78f40e876382b8aab504ca",
+      "bytes": 1279303,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-teacher-prefreeze-diagnostic.npz",
+      "ref": "artifact:sha256:038d59b77c09af092ad0ffff7831757011a656c662d95a19bfc5d47d53140970",
+      "bytes": 1534641,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-teacher-prefreeze-parity.npz",
+      "ref": "artifact:sha256:45a86149473e3b3dfe63b18d61628b1fbdeab9aaa7fa3da5744391516381cdda",
+      "bytes": 5062174,
+      "mime": "application/octet-stream"
+    }
+  ]
+}

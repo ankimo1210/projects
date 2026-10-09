@@ -1,0 +1,15 @@
+{
+  "sha256": {
+    "task-5-teacher-prefreeze-report.md": "62c60922c9a9b022da6a519740246edf6d1af822e644d4777e08b38aff518fce",
+    "task-5-teacher-prefreeze-diagnostic.py": "74275f73b7cb7040ae235ee73687cede0d89e4f3c1430956df1ecfe7cd4702ed",
+    "task-5-teacher-prefreeze-diagnostic.json": "f8e494f9cec3ca20ba571e3f09e547b987ab27b11c4550f0058b54e42fbaa7ab",
+    "task-5-teacher-prefreeze-diagnostic.npz": "038d59b77c09af092ad0ffff7831757011a656c662d95a19bfc5d47d53140970",
+    "task-5-teacher-prefreeze-control-probe.py": "112017356f22d11c4aa750b2e8d4852b8880df7083d4b82efada66dd3443c7c0",
+    "task-5-teacher-prefreeze-control-probe.json": "16da4e9ad8fef4b30180035375140400632c3ef80533ee2875a345a31e89c95c",
+    "task-5-teacher-prefreeze-control-probe.npz": "5d05e5176afc553f58decfe60f111d268cae92125d78f40e876382b8aab504ca",
+    "task-5-teacher-prefreeze-homogeneity-independent.md": "9ace06c4a7a9dae464b7b5217bb0a9bd4d1b1930e15c7c6bf901e26be1fcf73b"
+  },
+  "original_qualification_preserved": true,
+  "formal_pilot_executed": false,
+  "N65536_executed": false
+}

@@ -5,3 +5,6 @@ __pycache__/
 
 # Dynamic source smoke arrays use protocol immutable artifact naming; CAS only.
 /dynamic_hedging/pilot/tiny/**/arrays.npz
+
+# Prefreeze alternatives and original failed-attempt raw arrays live in CAS.
+/dynamic_hedging/preflight-diagnostics/raw/*.npz

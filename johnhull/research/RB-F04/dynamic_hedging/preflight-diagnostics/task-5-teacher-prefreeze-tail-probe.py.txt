@@ -1,0 +1,9 @@
+from pathlib import Path
+import json,numpy as np
+w=Path("/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging")
+r=json.loads((w/"task-5-teacher-preflight.json").read_text())
+z=np.load(w/"task-5-teacher-preflight.npz")
+for x in r["rows"]:
+ if x.get("base",{}).get("label_status")=="unknown_underresolved":
+  p=x["slot_id"]+".base.labels."
+  print(x["slot_id"],"CEmax",z[p+"conditioned_samples"].max(),"auxCEmax",z[p+"aux_conditioned_samples"].max(),"CVminmax",z[p+"cv_samples"].min(),z[p+"cv_samples"].max(),"fxminmax",z[p+"f_x_samples"].min(),z[p+"f_x_samples"].max())

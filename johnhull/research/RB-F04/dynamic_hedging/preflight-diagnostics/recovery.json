@@ -1,0 +1,162 @@
+{
+  "scope": "exact scratch bytes only; independent semantic rereview pending",
+  "results": [
+    {
+      "role": "primary",
+      "blobs": [
+        {
+          "sha256": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+          "bytes": 11621695
+        },
+        {
+          "sha256": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+          "bytes": 11621695
+        },
+        {
+          "sha256": "890a615e307f7bdc1865c97802ecad08709f8b34b5d7e6e21328dc5fb9a13d9d",
+          "bytes": 501632
+        },
+        {
+          "sha256": "5d05e5176afc553f58decfe60f111d268cae92125d78f40e876382b8aab504ca",
+          "bytes": 1279303
+        },
+        {
+          "sha256": "038d59b77c09af092ad0ffff7831757011a656c662d95a19bfc5d47d53140970",
+          "bytes": 1534641
+        },
+        {
+          "sha256": "45a86149473e3b3dfe63b18d61628b1fbdeab9aaa7fa3da5744391516381cdda",
+          "bytes": 5062174
+        }
+      ],
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "raw/task-5-cache-cartesian-probe-first-failure.npz",
+            "sha256": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "raw/task-5-cache-cartesian-probe.npz",
+            "sha256": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "raw/task-5-cache-domain-probe.npz",
+            "sha256": "890a615e307f7bdc1865c97802ecad08709f8b34b5d7e6e21328dc5fb9a13d9d",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "raw/task-5-teacher-prefreeze-control-probe.npz",
+            "sha256": "5d05e5176afc553f58decfe60f111d268cae92125d78f40e876382b8aab504ca",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "raw/task-5-teacher-prefreeze-diagnostic.npz",
+            "sha256": "038d59b77c09af092ad0ffff7831757011a656c662d95a19bfc5d47d53140970",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "raw/task-5-teacher-prefreeze-parity.npz",
+            "sha256": "45a86149473e3b3dfe63b18d61628b1fbdeab9aaa7fa3da5744391516381cdda",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "store_parent_wall_seconds": 0.39448231599999417,
+      "restore_parent_wall_seconds": 0.14536707999923237
+    },
+    {
+      "role": "mirror",
+      "blobs": [
+        {
+          "sha256": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+          "bytes": 11621695
+        },
+        {
+          "sha256": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+          "bytes": 11621695
+        },
+        {
+          "sha256": "890a615e307f7bdc1865c97802ecad08709f8b34b5d7e6e21328dc5fb9a13d9d",
+          "bytes": 501632
+        },
+        {
+          "sha256": "5d05e5176afc553f58decfe60f111d268cae92125d78f40e876382b8aab504ca",
+          "bytes": 1279303
+        },
+        {
+          "sha256": "038d59b77c09af092ad0ffff7831757011a656c662d95a19bfc5d47d53140970",
+          "bytes": 1534641
+        },
+        {
+          "sha256": "45a86149473e3b3dfe63b18d61628b1fbdeab9aaa7fa3da5744391516381cdda",
+          "bytes": 5062174
+        }
+      ],
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "raw/task-5-cache-cartesian-probe-first-failure.npz",
+            "sha256": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "raw/task-5-cache-cartesian-probe.npz",
+            "sha256": "8cb1bc019a38b9465b216c23be19a0b680634cc79405ba0aefe3ab84fe4d40f9",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "raw/task-5-cache-domain-probe.npz",
+            "sha256": "890a615e307f7bdc1865c97802ecad08709f8b34b5d7e6e21328dc5fb9a13d9d",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "raw/task-5-teacher-prefreeze-control-probe.npz",
+            "sha256": "5d05e5176afc553f58decfe60f111d268cae92125d78f40e876382b8aab504ca",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "raw/task-5-teacher-prefreeze-diagnostic.npz",
+            "sha256": "038d59b77c09af092ad0ffff7831757011a656c662d95a19bfc5d47d53140970",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "raw/task-5-teacher-prefreeze-parity.npz",
+            "sha256": "45a86149473e3b3dfe63b18d61628b1fbdeab9aaa7fa3da5744391516381cdda",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "store_parent_wall_seconds": 1.5754629739994925,
+      "restore_parent_wall_seconds": 0.12269743700016988
+    }
+  ],
+  "formal_pilot_qualification": "unknown"
+}

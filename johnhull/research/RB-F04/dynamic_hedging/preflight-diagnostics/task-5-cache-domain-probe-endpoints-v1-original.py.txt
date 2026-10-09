@@ -1,0 +1,174 @@
+
+from pathlib import Path
+import json, math, itertools, time, hashlib
+import numpy as np
+from scipy.interpolate import CubicSpline
+from scipy.special import ndtr
+from hullkit._heston_local_surface import HestonParameters
+from hullkit._dynamic_hedging_conditional import primitive_labels
+from hullkit._dynamic_hedging_surfaces import build_asian_cache,evaluate_asian,normalized_price_greeks
+
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+OUT=ROOT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+twall,tcpu=time.perf_counter(),time.process_time()
+def thresholds(m,n=33):
+ scale=.15*np.sqrt(m);half=(n-1)//2
+ return np.r_[m-scale*np.sinh(np.linspace(np.arcsinh(m/scale),0,half+1)),
+              m+scale*np.sinh(np.linspace(0,np.arcsinh((24-m)/scale),half+1))[1:]]
+def contiguous_windows(mask):
+ edges=np.flatnonzero(np.diff(np.r_[False,mask,False].astype(int)))
+ return [(int(a),int(b)) for a,b in edges.reshape(-1,2)]
+def finite_supported_window(axis,mask,query):
+ windows=[(a,b) for a,b in contiguous_windows(mask)
+          if b-a>=4 and axis[a]<=query<=axis[b-1]]
+ return windows
+meta=json.loads((OUT/"task-5-teacher-preflight.json").read_text())
+rows=[];rawcurves={}
+with np.load(OUT/"task-5-teacher-preflight.npz",allow_pickle=False) as z:
+ for row in meta["rows"]:
+  if "base" not in row:
+   rows.append({"slot":row["slot_id"],"executed":False,"fit_reason":row["fit_reason"],"original_N":1024});continue
+  prefix=row["base"]["raw_prefix"]+".primitives."
+  p=dict(row["base"]["primitive_metadata"])
+  for name in z.files:
+   if name.startswith(prefix):p[name[len(prefix):]]=z[name].copy()
+  x=thresholds(12-row["memory_count"])
+  lab=primitive_labels(p,x,blocks=16)
+  ready=~np.char.startswith(lab["status"].astype(str),"unknown")
+  q=row["base"]["threshold"]
+  win=finite_supported_window(x,ready,q)
+  rows.append({"slot":row["slot_id"],"executed":True,"original_N":int(lab["N"]),
+               "all_33_nodes_ready":bool(ready.all()),"ready_node_count":int(ready.sum()),
+               "original_node_count":33,"unknown_node_count":int((~ready).sum()),
+               "original_query":q,"original_query_status":row["base"]["label_status"],
+               "supported_query_window":bool(win),"contiguous_ready_windows":[
+                  {"index_begin":a,"index_end_exclusive":b,"nodes":b-a,
+                   "x_bounds":[float(x[a]),float(x[b-1])]} for a,b in contiguous_windows(ready)],
+               "unknown_node_indices":np.flatnonzero(~ready).tolist()})
+  rawcurves[row["slot_id"]+".thresholds"]=x
+  rawcurves[row["slot_id"]+".status"]=lab["status"]
+  rawcurves[row["slot_id"]+".f"]=lab["f"]
+  rawcurves[row["slot_id"]+".f_x"]=lab["f_x"]
+  rawcurves[row["slot_id"]+".block_means"]=lab["block_means"]
+  rawcurves[row["slot_id"]+".f_x_block_means"]=lab["f_x_block_means"]
+  rawcurves[row["slot_id"]+".f_se"]=lab["f_se"]
+  rawcurves[row["slot_id"]+".f_x_se"]=lab["f_x_se"]
+print("actual ready windows",sum(r.get("supported_query_window",False) for r in rows),"/36",flush=True)
+
+# A scalar tensor Hermite operator with geometry-only shared four-node jets.
+# Each node derivative is a fixed linear functional of its four source values.
+def D4(axis):
+ axis=np.asarray(axis);n=len(axis);D=np.zeros((n,n));stencils=[]
+ for i,x0 in enumerate(axis):
+  a=max(0,min(i-1,n-4));idx=np.arange(a,a+4)
+  nodes=axis[idx]-x0
+  M=np.array([nodes**k for k in range(4)])
+  D[i,idx]=np.linalg.solve(M,np.array([0.,1.,0.,0.]))
+  stencils.append(idx)
+ return D,stencils
+def hermite_weights(axis,z,deriv=0,cell=None):
+ D,stencils=D4(axis)
+ j=int(np.clip(np.searchsorted(axis,z,side="right")-1,0,len(axis)-2)) if cell is None else cell
+ h=axis[j+1]-axis[j];u=(z-axis[j])/h
+ if deriv==0:
+  v0,v1,d0,d1=2*u**3-3*u**2+1,-2*u**3+3*u**2,u**3-2*u**2+u,u**3-u**2
+ else:
+  v0,v1,d0,d1=(6*u*u-6*u)/h,(-6*u*u+6*u)/h,3*u*u-4*u+1,3*u*u-2*u
+ weights=(h*d0 if deriv==0 else d0)*D[j]+(h*d1 if deriv==0 else d1)*D[j+1]
+ weights[j]+=v0;weights[j+1]+=v1
+ required=np.unique(np.r_[j,j+1,stencils[j],stencils[j+1]])
+ return weights,required,j
+def tensor_hermite(values,axes,point,deriv=None,cells=None):
+ pairs=[hermite_weights(a,z,int(deriv==i),None if cells is None else cells[i]) for i,(a,z) in enumerate(zip(axes,point))]
+ index=[p[1] for p in pairs]
+ local=values[np.ix_(*index)]
+ if not np.isfinite(local).all():return np.nan
+ for weights,required,cell in pairs:local=np.tensordot(weights[required],local,axes=(0,0))
+ return float(local)
+def tensor_cubic(values,axes,point,deriv=None):
+ v=values
+ for i,(a,z) in enumerate(zip(axes,point)):
+  wt=CubicSpline(a,np.eye(len(a)),axis=0,extrapolate=False)(z,int(deriv==i))
+  v=np.tensordot(wt,v,axes=(0,0))
+ return float(v)
+def lognormal_tail(x,variance,tau):
+ x,variance=np.broadcast_arrays(np.asarray(x,float),np.asarray(variance,float))
+ sd=np.sqrt(variance*tau);mu=(.03-.5*variance)*tau
+ k=np.where(x>0,x,1.);d2=(mu-np.log(k))/sd;d1=d2+sd
+ return np.where(x<=0,np.exp(.03*tau)-x,np.exp(.03*tau)*ndtr(d1)-x*ndtr(d2))
+P=HestonParameters(spot=100,rate=.03,dividend_yield=0,v0=.04,kappa=2,theta=.04,xi=.3,rho=-.7)
+states=np.array([1e-5,.005,.01,.02,.04,.08,.16,.32,.5]);x=thresholds(1,65)
+vf=lognormal_tail(x[None,:],states[:,None],1/12)
+poison=vf.copy();poison[:,-1]=np.nan
+cache=build_asian_cache({"parameters":P,"f":poison[None],"N":1024},model="heston",axes={"dates":[11/12],"state":states,"threshold":x})
+current=evaluate_asian(cache,0,100,.04,1100,11)
+# Fixed preselected bounded Cartesian core, all source nodes/NaNs retained above.
+right=48
+rect_values=poison[:,:right];rect_axes=[states,x[:right]]
+points=[[.04,.98],[.04,1.],[.04,1.02],[.04,1.05]]
+synth=[]
+for point in points:
+ truth=float(lognormal_tail(point[1],point[0],1/12))
+ full=[tensor_cubic(vf,[states,x],point,d) for d in [None,0,1]]
+ rect=[tensor_cubic(rect_values,rect_axes,point,d) for d in [None,0,1]]
+ herm=[tensor_hermite(poison,[states,x],point,d) for d in [None,0,1]]
+ h=1e-6
+ analytic_ds=(float(lognormal_tail(point[1],point[0]+h,1/12))-float(lognormal_tail(point[1],point[0]-h,1/12)))/(2*h)
+ analytic_dx=(float(lognormal_tail(point[1]+h,point[0],1/12))-float(lognormal_tail(point[1]-h,point[0],1/12)))/(2*h)
+ synth.append({"state":point[0],"x":point[1],"truth":[truth,analytic_ds,analytic_dx],"full_cubic":full,"fixed_rectangle":rect,"shared_jet_hermite":herm,
+ "rectangle_minus_full":(np.array(rect)-full).tolist(),"hermite_minus_truth":(np.array(herm)-[truth,analytic_ds,analytic_dx]).tolist()})
+# C1 at a shared face: left/right expression at identical coordinate.
+point=[.04,x[33]];iv=4;ix=33
+c1={}
+for d in [None,0,1]:
+ lhs=tensor_hermite(poison,[states,x],point,d,[iv,ix-1]);rhs=tensor_hermite(poison,[states,x],point,d,[iv,ix])
+ c1[str(d)]={"left":lhs,"right":rhs,"difference":rhs-lhs}
+# Dynamic sliding four-node polynomial is C0 but has discontinuous derivatives.
+xx=np.array([0.,.4,1.,1.7,2.5,3.4]);yy=np.exp(.4*xx)
+node=xx[2];left=CubicSpline(xx[:4],yy[:4]);rightsp=CubicSpline(xx[1:5],yy[1:5])
+sliding={"boundary":node,"price_jump":float(rightsp(node)-left(node)),"first_derivative_jump":float(rightsp(node,1)-left(node,1))}
+# Hermite cell next to a missing stencil is unknown, not zero/nearest.
+point_bad=[.04,x[-2]]
+unavailable=not np.isfinite(tensor_hermite(poison,[states,x],point_bad))
+
+# Local frozen-coefficient one-fixing fixture, purpose: local f_z chain term.
+local=[]
+for ns in [9,17]:
+ spots=np.geomspace(50,200,ns);ells=np.array([.25,.5,.75,1,1.5,2,4]);xloc=thresholds(1,65)
+ var=.04*(spots[:,None]/100)**(-.6)*ells[None,:]
+ values=lognormal_tail(xloc[None,None,:],var[:,:,None],1/12);values[:,:,-1]=np.nan
+ axes=[np.log(spots),np.log(ells),xloc]
+ s,ell,A=103.,1.1,1100.;q=(1200-A)/s;point=[np.log(s),np.log(ell),q]
+ fs=[tensor_hermite(values,axes,point,d) for d in [None,0,1,2]]
+ got=normalized_price_greeks(s,np.exp(-.03/12),q,fs[0],fs[3],fs[2],model="local",state=ell,f_log_spot=fs[1])
+ def exact_price(s,e):
+  return np.exp(-.03/12)*s*float(lognormal_tail((1200-A)/s,.04*(s/100)**(-.6)*e,1/12))/12
+ ds=(exact_price(s+.0001,ell)-exact_price(s-.0001,ell))/.0002
+ de=(exact_price(s,ell+.00001)-exact_price(s,ell-.00001))/.00002
+ naive=np.exp(-.03/12)*(fs[0]-q*fs[3])/12
+ local.append({"spot_nodes":ns,"truth":[exact_price(s,ell),ds,de],"shared_jet_hermite":[float(got[k]) for k in ["value","spot_derivative","state_derivative"]],
+ "omitted_fz_delta":float(naive),"proper_minus_omitted":float(got["spot_derivative"]-naive),"scope":"frozen local power-variance one-step analytic fixture, not actual local monthly teacher"})
+
+# Simple p4 bound: useful for late far-tail price, weak for twelve fixings.
+p=4.
+late_moment=np.exp(p*.03/12+.5*p*(p-1)*.04/12)
+early_times=np.arange(1,13)/12
+sum_moment_bound=np.sum(np.exp((p*.03*early_times+.5*p*(p-1)*.04*early_times)/p))**p
+bounds={"p":p,"x":24.,"one_fixing_GBM_price_bound":float(np.exp(-.03/12)*100/12*late_moment/24**3),
+ "twelve_fixing_GBM_Minkowski_price_bound":float(np.exp(-.03)*100/12*sum_moment_bound/24**3),
+ "one_fixing_GBM_tail_probability_bound":float(late_moment/24**4),
+ "claim":"price/threshold derivative bounds only; no bound for local f_z or state derivative follows"}
+
+report={"kind":"read-only conditional cache domain feasibility","scope":"saved actual N1024 primitive threshold replay plus analytic fixtures; no production changes or formal precision acceptance",
+ "actual_36_slots":rows,"actual_summary":{"original_slots":36,"executed":sum(r["executed"] for r in rows),
+ "all_33_nodes_ready":sum(r.get("all_33_nodes_ready",False) for r in rows),"query_in_4_plus_ready_run":sum(r.get("supported_query_window",False) for r in rows)},
+ "global_poison_reproduction":{"current_status":current["status"],"current_reason":current["reason"],"far_nan_x":float(x[-1]),"query_x":1.},
+ "synthetic_Heston_deterministic_variance_one_fixing":synth,"fixed_rectangle_bounds":[float(x[0]),float(x[right-1])],"hermite_face_C1":c1,
+ "sliding_four_node_cubic":sliding,"missing_stencil_unknown":bool(unavailable),"local_fz_fixture":local,"tail_bounds":bounds,
+ "sources":{"scipy_CubicSpline":"https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.CubicSpline.html",
+ "scipy_CubicHermiteSpline":"https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.CubicHermiteSpline.html"},
+ "source_bindings":{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [ROOT/"johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",ROOT/"johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py"]},
+ "raw_source_sha256":hashlib.sha256((OUT/"task-5-teacher-preflight.npz").read_bytes()).hexdigest(),"wall_seconds":time.perf_counter()-twall,"cpu_seconds":time.process_time()-tcpu}
+(OUT/"task-5-cache-domain-probe.json").write_text(json.dumps(report,indent=2,allow_nan=False))
+np.savez_compressed(OUT/"task-5-cache-domain-probe.npz",**rawcurves)
+print(json.dumps({k:report[k] for k in ["actual_summary","global_poison_reproduction","fixed_rectangle_bounds","hermite_face_C1","sliding_four_node_cubic","missing_stencil_unknown","local_fz_fixture","tail_bounds","wall_seconds","cpu_seconds"]},indent=2))

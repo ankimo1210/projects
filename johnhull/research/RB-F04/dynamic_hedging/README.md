@@ -1,6 +1,9 @@
 # 動的モデル横断ヘッジ — 研究v1
 
-2026-10-10。**Tasks1–4、Task5統計/protocolとstudy/replay/runner/checkerのprivate source実装・独立レビュー完了（開発branch）。37quotes/18states、tiny全44cells、actual N1024教師を事前測定。Task5全体・正式pilot/freeze/主実験/研究受入・main統合は未完了。** 次は教師精度の見直しと正式pilot。
+2026-10-10。**Tasks1–4、Task5統計/protocolとstudy/replay/runner/checkerのprivate source実装・独立レビュー完了（開発branch）。37quotes/18states、tiny全44cells、actual N1024教師を事前測定。Task5全体・正式pilot/freeze/主実験/研究受入・main統合は未完了。** 次はprefreeze revisionの独立設計レビュー、private sourceの変更、本物pilot。
+
+- [prefreeze revision候補](PREFREEZE_REVISION.md)：旧v1の精度契約は保持。state15.Hの元quote条件拒否とfull Cartesian cacheの未知tailを受け、別execution-readinessと日付固定domainを検討。独立設計レビュー待ち、source/正式pilot/mainは未変更。
+- [追加の測定・証跡](preflight-diagnostics/README.md)：元全36教師slots、実2日付108groups、保存call/put比較と独立feasibility監査。45ファイルの原byte保持、rawは両保管庫からbyte復元済み。追加保管庫の金融semantic認証は未実施。
 
 - [Task5接続・予備測定](implementation/TASK5_CONNECTORS.md)：最終runner27tests・独立レビュー未解決0。latest tiny/教師rawの両CAS復元・saved checker PASS。N1024のSE同時条件6/36、fitunknown1/underresolved5を保持。
 - [Task5 helperチェックポイント](implementation/TASK5_HELPERS.md)：未解決0、変更範囲＋索引/docstring1200 tests・5Python ruff/format。候補12fits/44cellsを保存。helper時点の証跡を保持。正式pilotは未完了。

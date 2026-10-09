@@ -1,0 +1,342 @@
+[
+  {
+    "date": 0.5,
+    "model": "heston",
+    "original_groups": 9,
+    "original_N": 1024,
+    "total_nodes": 297,
+    "ready_and_price_bounded_nodes": 187,
+    "raw_price_bound_failed_nodes": [],
+    "hermite_missing_dependencies_after_price_bounds": [],
+    "geometry_cubic_anchor_rect_count": 15,
+    "max_node_volume_anchor_rectangle_after_price_bounds": [
+      {
+        "spot_index": [
+          0,
+          1
+        ],
+        "state_index": [
+          0,
+          9
+        ],
+        "threshold_index": [
+          7,
+          22
+        ],
+        "volume_nodes": 135,
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "spot_bounds": [
+          100.0,
+          100.0
+        ],
+        "x_bounds": [
+          4.719672082115108,
+          6.725963058274476
+        ]
+      }
+    ],
+    "scope": "mean raw price bounds plus primitive availability only; no clipping, no block price bounds, no Greek/oracle/SE precision certification"
+  },
+  {
+    "date": 0.5,
+    "model": "local",
+    "original_groups": 45,
+    "original_N": 1024,
+    "total_nodes": 1485,
+    "ready_and_price_bounded_nodes": 875,
+    "raw_price_bound_failed_nodes": [],
+    "hermite_missing_dependencies_after_price_bounds": [],
+    "geometry_cubic_anchor_rect_count": 45,
+    "max_node_volume_anchor_rectangle_after_price_bounds": [
+      {
+        "spot_index": [
+          0,
+          9
+        ],
+        "state_index": [
+          0,
+          5
+        ],
+        "threshold_index": [
+          11,
+          21
+        ],
+        "volume_nodes": 450,
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "spot_bounds": [
+          50.0,
+          200.0
+        ],
+        "x_bounds": [
+          5.515532120958888,
+          6.519615242270663
+        ]
+      }
+    ],
+    "scope": "mean raw price bounds plus primitive availability only; no clipping, no block price bounds, no Greek/oracle/SE precision certification"
+  },
+  {
+    "date": 0.9166666666666666,
+    "model": "heston",
+    "original_groups": 9,
+    "original_N": 1024,
+    "total_nodes": 297,
+    "ready_and_price_bounded_nodes": 118,
+    "raw_price_bound_failed_nodes": [],
+    "hermite_missing_dependencies_after_price_bounds": [],
+    "geometry_cubic_anchor_rect_count": 15,
+    "max_node_volume_anchor_rectangle_after_price_bounds": [
+      {
+        "spot_index": [
+          0,
+          1
+        ],
+        "state_index": [
+          3,
+          9
+        ],
+        "threshold_index": [
+          10,
+          20
+        ],
+        "volume_nodes": 60,
+        "state_bounds": [
+          0.02,
+          0.5
+        ],
+        "spot_bounds": [
+          100.0,
+          100.0
+        ],
+        "x_bounds": [
+          0.8298055464194387,
+          1.1938044911409413
+        ]
+      }
+    ],
+    "scope": "mean raw price bounds plus primitive availability only; no clipping, no block price bounds, no Greek/oracle/SE precision certification"
+  },
+  {
+    "date": 0.9166666666666666,
+    "model": "local",
+    "original_groups": 45,
+    "original_N": 1024,
+    "total_nodes": 1485,
+    "ready_and_price_bounded_nodes": 568,
+    "raw_price_bound_failed_nodes": [
+      [
+        0,
+        0,
+        19,
+        -4.333038255339383e-06
+      ],
+      [
+        0,
+        1,
+        20,
+        -1.5273919124289674e-06
+      ],
+      [
+        0,
+        2,
+        21,
+        -3.4974358173136186e-06
+      ],
+      [
+        0,
+        3,
+        22,
+        -2.1328205187546766e-05
+      ],
+      [
+        0,
+        4,
+        22,
+        -3.00026983887374e-05
+      ],
+      [
+        0,
+        4,
+        23,
+        -8.489013852830022e-05
+      ],
+      [
+        1,
+        3,
+        21,
+        -7.521033803898938e-06
+      ],
+      [
+        1,
+        4,
+        22,
+        -4.5980006857128e-05
+      ],
+      [
+        1,
+        4,
+        23,
+        -6.841688054117594e-06
+      ],
+      [
+        2,
+        1,
+        19,
+        -2.735544179250248e-06
+      ],
+      [
+        2,
+        2,
+        20,
+        -2.141794227964525e-05
+      ],
+      [
+        2,
+        3,
+        21,
+        -4.281932010510035e-05
+      ],
+      [
+        2,
+        4,
+        21,
+        -5.7336738670737385e-05
+      ],
+      [
+        2,
+        4,
+        22,
+        -8.061287136140433e-05
+      ],
+      [
+        3,
+        0,
+        18,
+        -1.6934175276925175e-07
+      ],
+      [
+        3,
+        1,
+        19,
+        -2.403858522117675e-06
+      ],
+      [
+        3,
+        4,
+        21,
+        -3.146558257044475e-05
+      ],
+      [
+        3,
+        4,
+        22,
+        -9.170776906991157e-06
+      ],
+      [
+        4,
+        2,
+        19,
+        -8.451061588636034e-06
+      ],
+      [
+        4,
+        3,
+        20,
+        -2.635723874713598e-05
+      ],
+      [
+        4,
+        4,
+        20,
+        -1.2897477813973927e-05
+      ],
+      [
+        4,
+        4,
+        21,
+        -4.432581072475793e-05
+      ],
+      [
+        5,
+        1,
+        18,
+        -2.787026022425688e-06
+      ]
+    ],
+    "hermite_missing_dependencies_after_price_bounds": [
+      [
+        3,
+        1,
+        19,
+        "ready"
+      ],
+      [
+        4,
+        2,
+        19,
+        "ready"
+      ],
+      [
+        5,
+        1,
+        18,
+        "ready"
+      ],
+      [
+        5,
+        1,
+        19,
+        "unknown_underresolved"
+      ],
+      [
+        6,
+        1,
+        19,
+        "unknown_underresolved"
+      ],
+      [
+        7,
+        1,
+        19,
+        "unknown_underresolved"
+      ]
+    ],
+    "geometry_cubic_anchor_rect_count": 45,
+    "max_node_volume_anchor_rectangle_after_price_bounds": [
+      {
+        "spot_index": [
+          0,
+          9
+        ],
+        "state_index": [
+          0,
+          5
+        ],
+        "threshold_index": [
+          13,
+          18
+        ],
+        "volume_nodes": 225,
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "spot_bounds": [
+          50.0,
+          200.0
+        ],
+        "x_bounds": [
+          0.9240749418284467,
+          1.054832201217002
+        ]
+      }
+    ],
+    "scope": "mean raw price bounds plus primitive availability only; no clipping, no block price bounds, no Greek/oracle/SE precision certification"
+  }
+]

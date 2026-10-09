@@ -1,0 +1,207 @@
+"""Scratch saved-only estimator/teacher precision diagnostic. No SDE/RNG/source change."""
+from pathlib import Path
+import hashlib,json,time
+import numpy as np
+from scipy.special import ndtr,log_ndtr
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+W=ROOT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+P="task-5-teacher-prefreeze-diagnostic"
+BASE=W/"task-5-teacher-preflight"
+started=time.perf_counter()
+def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+def clean(value):
+    if isinstance(value,dict):return {str(k):clean(v) for k,v in value.items()}
+    if isinstance(value,(list,tuple)):return [clean(v) for v in value]
+    if isinstance(value,np.ndarray):return clean(value.tolist())
+    if isinstance(value,(float,np.floating)):return float(value) if np.isfinite(value) else None
+    if isinstance(value,(bool,np.bool_)):return bool(value)
+    if isinstance(value,np.integer):return int(value)
+    return value
+r=json.loads(BASE.with_suffix(".json").read_text())
+old_hashes={str(BASE.with_suffix(ext).relative_to(ROOT)):sha(BASE.with_suffix(ext)) for ext in [".json",".npz",".py",".txt"]}
+z=np.load(BASE.with_suffix(".npz"),allow_pickle=False)
+selected=json.loads((ROOT/"johnhull/research/RB-F04/dynamic_hedging/pilot/selected-calls/refined/selected-calls.json").read_text())
+derived={}
+def compare(a,b,label):
+    assert np.allclose(a,b,rtol=2e-10,atol=1e-10,equal_nan=True),label
+def statistics(a):
+    a=np.asarray(a)
+    blocks=a.reshape(16,64,*a.shape[1:]).mean(axis=1)
+    return {"mean":a.mean(axis=0),"IID_SE":a.std(axis=0,ddof=1)/32,
+            "same_16block_SE":blocks.std(axis=0,ddof=1)/4}
+def decomposed_variance(a,b):
+    blocks=np.column_stack([a,b]).reshape(16,64,2).mean(axis=1)
+    covariance=np.cov(blocks,rowvar=False,ddof=1)/16
+    components=np.array([covariance[0,0],covariance[1,1],-2*covariance[0,1]])
+    total=components.sum()
+    return {"order":["first_variance","subtracted_second_variance","negative_twice_covariance"],
+        "components":components,"sum":total,"shares":components/total if total>0 else [None,None,None],
+        "component_correlation":covariance[0,1]/np.sqrt(covariance[0,0]*covariance[1,1]) if covariance[0,0]*covariance[1,1]>0 else None}
+def tail_and_truncated_moment(b,c,mu,sigma,x):
+    """Independent lognormal formula: E[Y 1(Y>x)], Y=b+c exp(mu+sigma Z).
+    The homogeneous stock derivative uses the moment, not a finite spot bump.
+    """
+    b,c,mu,sigma,x=np.broadcast_arrays(*[np.asarray(t,dtype=float) for t in [b,c,mu,sigma,x]])
+    price=np.empty(b.shape);derivative=np.empty(b.shape);moment=np.empty(b.shape)
+    stochastic=(c>0)&(sigma>0)
+    linear=stochastic&(x<=b)
+    expected=c*np.exp(mu+.5*sigma*sigma)
+    price[linear]=b[linear]+expected[linear]-x[linear]
+    derivative[linear]=-1;moment[linear]=b[linear]+expected[linear]
+    positive=stochastic&(x>b)
+    k=x[positive]-b[positive]
+    d2=(np.log(c[positive])+mu[positive]-np.log(k))/sigma[positive]
+    d1=d2+sigma[positive]
+    probability=ndtr(d2)
+    firstlog=np.log(c[positive])+mu[positive]+.5*sigma[positive]**2+log_ndtr(d1)
+    secondlog=np.log(k)+log_ndtr(d2)
+    price[positive]=np.exp(firstlog)*-np.expm1(secondlog-firstlog)
+    derivative[positive]=-probability
+    moment[positive]=expected[positive]*ndtr(d1)+b[positive]*probability
+    deterministic=~stochastic
+    terminal=b+c*np.exp(mu)
+    price[deterministic]=np.maximum(terminal[deterministic]-x[deterministic],0)
+    derivative[deterministic]=-(terminal[deterministic]>x[deterministic]).astype(float)
+    moment[deterministic]=terminal[deterministic]*(terminal[deterministic]>x[deterministic])
+    derivative[deterministic&(terminal==x)]=np.nan
+    moment[deterministic&(terminal==x)]=np.nan
+    return price,derivative,moment
+def components(row,outcome):
+    prefix=outcome["raw_prefix"];meta=outcome["primitive_metadata"]
+    get=lambda k:z[prefix+".primitives."+k]
+    x=outcome["threshold"];m=len(get("fixing_delays"));D=outcome["discount"];S=outcome["spot"]
+    cf,cf_x,cm=tail_and_truncated_moment(get("b"),get("c"),get("mu"),get("sigma"),x)
+    ac=m*np.exp(get("aux_logG_prefix"))
+    af,af_x,am=tail_and_truncated_moment(0,ac,0,meta["aux_last_loading"],x)
+    delays=get("fixing_delays");drift=r["parameters"]["rate"]-r["parameters"]["dividend_yield"]
+    variance=meta["control_variance"]
+    known_mu=(drift-variance/2)*delays.mean()
+    known_sigma=np.sqrt(variance*np.minimum.outer(delays,delays).mean())
+    kf,kf_x,km=tail_and_truncated_moment(0,m,known_mu,known_sigma,x)
+    ce=cf*D*S/12;aux=af*D*S/12;known=np.broadcast_to(kf*D*S/12,(1024,))
+    compare(ce,z[prefix+".price_samples"][:,1],prefix+"CE independent price")
+    compare(ce-aux+known,z[prefix+".price_samples"][:,2],prefix+"CV independent price")
+    compare(cf_x,z[prefix+".labels.conditioned_x_samples"][:,0],prefix+"CE fx")
+    compare(cf_x-af_x+kf_x,z[prefix+".labels.f_x_samples"][:,0],prefix+"CV fx")
+    return {"CE":ce,"aux":aux,"known":known,
+            "homogeneous_CE_VS":cm*D/12,"homogeneous_aux_VS":am*D/12,
+            "homogeneous_known_VS":np.broadcast_to(km*D/12,(1024,)),
+            "CE_positive_count":int((cf>0).sum()),"aux_positive_count":int((af>0).sum()),
+            "CE_fx_nonzero_count":int((cf_x!=0).sum()),"aux_fx_nonzero_count":int((af_x!=0).sum()),
+            "known_price":float(kf*D*S/12)}
+rows=[];unknown=[]
+for row in r["rows"]:
+    sid=row["slot_id"];model=row["model"];fitted=selected["rows"][row["original_state_id"]]["models"][model]
+    out={"slot_id":sid,"model":model,"date":row["date"],"spot":row["spot"],"fitted_state":row["fitted_state"],
+        "fit_status":row["fit_status"],"fit_reason":row["fit_reason"],"call_CS":row["call_CS"],"call_Ctheta":row["call_Ctheta"],
+        "fit_condition":fitted["condition"],"original_path_count":1024,"qualification":"unknown",
+        "forecast_N":65536,"forecast_SE_factor":1/8,"forecast_claim":"reference scaling only; no N65536 execution and no assurance"}
+    if "base" not in row:
+        out.update({"status":"not_executed_fit_unknown","hQ_denominator":"unavailable",
+                    "forecast":None,"all_SE":None,"reason":row["failure"]})
+        rows.append(out);continue
+    b=row["base"];risk=row["risk"];x=b["threshold"];d=b["discount"];ct=row["call_Ctheta"];cs=row["call_CS"]
+    vals={name:components(row,value) for name,value in {"base":b,**row["bumps"]}.items()}
+    cvprice=vals["base"]["CE"]-vals["base"]["aux"]+vals["base"]["known"]
+    baseprefix=sid+".base"
+    rawpositive=int((z[baseprefix+".labels.raw_samples"][:,0]>0).sum())
+    sample=z[sid+".risk.samples"]
+    cev=(vals["spot_plus"]["CE"]-vals["spot_minus"]["CE"])/(2*risk["spot_bump"])
+    auxv=(vals["spot_plus"]["aux"]-vals["spot_minus"]["aux"])/(2*risk["spot_bump"])
+    knownv=(vals["spot_plus"]["known"]-vals["spot_minus"]["known"])/(2*risk["spot_bump"])
+    cet=(vals["state_plus"]["CE"]-vals["state_minus"]["CE"])/(2*risk["state_bump"])
+    auxt=(vals["state_plus"]["aux"]-vals["state_minus"]["aux"])/(2*risk["state_bump"])
+    knownt=(vals["state_plus"]["known"]-vals["state_minus"]["known"])/(2*risk["state_bump"])
+    compare(cev-auxv+knownv,sample[:,0],sid+"spot-bump components")
+    compare(cet-auxt+knownt,sample[:,1],sid+"state-bump components")
+    original_se=np.array([b["price_SE_raw_CE_CV"][2],risk["same_16block_SE"][2],risk["same_16block_SE"][3]])
+    pred=original_se/8
+    ready=b["label_status"]=="ready" and all(v["label_status"]=="ready" for v in row["bumps"].values())
+    out.update({"status":b["label_status"],"price_mean_raw_CE_CV":b["price_means_raw_CE_CV"],
+        "all_SE":{"price_raw_CE_CV_IID":b["price_SE_raw_CE_CV"],"price_raw_CE_CV_16block":b["price_block_SE_raw_CE_CV"],
+        "VS_Vtheta_hS_hQ_IID":risk["per_path_IID_SE"],"VS_Vtheta_hS_hQ_16block":risk["same_16block_SE"]},
+        "forecast":{"price_SE":pred[0],"hS_SE":pred[1],"hQ_SE":pred[2],"three_SE_reference_conditions":bool(ready and np.all(pred<=[.03,.002,.005]))},
+        "raw_positive_payoff_count":rawpositive,"conditional_positive_count":vals["base"]["CE_positive_count"],
+        "conditional_fx_nonzero_count":vals["base"]["CE_fx_nonzero_count"],
+        "aux_conditional_positive_count":vals["base"]["aux_positive_count"],
+        "known_aux_price_currency":vals["base"]["known_price"],
+        "CV_sample_peak_to_peak":float(np.ptp(cvprice)),
+        "hQ_denominator":{"Ctheta":ct,"absolute_reciprocal":1/abs(ct),"state_derivative_to_quote_SE_scaling":"SE(Vtheta)/abs(Ctheta)",
+            "Ctheta_error":"unmeasured","units":"currency per annual variance" if model=="heston" else "currency per multiplier"},
+        "variance_decomposition":{
+            "price_CE_minus_aux":decomposed_variance(vals["base"]["CE"],vals["base"]["aux"]),
+            "Vtheta_CE_minus_aux":decomposed_variance(cet,auxt),
+            "hQ_CE_minus_aux_scaled":decomposed_variance(cet/ct,auxt/ct),
+            "hS_VS_minus_CS_hQ":decomposed_variance(sample[:,0],cs*sample[:,3]),
+            "hS_CE_minus_aux_with_fixed_IFT":decomposed_variance(cev-cs*cet/ct,auxv-cs*auxt/ct)
+        },
+        "Vtheta_components_statistics":{
+            "CE":statistics(cet),"aux":statistics(auxt),"known_analytic_mean_chain":statistics(knownt),
+            "CV":statistics(cet-auxt+knownt)},
+        "price_components_statistics":{"CE":statistics(vals["base"]["CE"]),"aux":statistics(vals["base"]["aux"]),"CV":statistics(cvprice)}})
+    derived[sid+".price_CE_aux_known"]=np.column_stack([vals["base"][k] for k in ["CE","aux","known"]])
+    derived[sid+".Vtheta_CE_aux_known"]=np.column_stack([cet,auxt,knownt])
+    derived[sid+".VS_CRN_CE_aux_known"]=np.column_stack([cev,auxv,knownv])
+    if model=="heston":
+        for name in ["spot_plus","spot_minus"]:
+            for key in ["b","c","mu","sigma","last_z","aux_logG_prefix","last_left_variance","last_left_coefficient"]:
+                compare(z[baseprefix+".primitives."+key],z[row["bumps"][name]["raw_prefix"]+".primitives."+key],sid+"Heston homogeneous primitive "+key)
+            compare(b["primitive_metadata"]["control_variance"],row["bumps"][name]["primitive_metadata"]["control_variance"],sid+"aux state held")
+        homce=vals["base"]["homogeneous_CE_VS"];homaux=vals["base"]["homogeneous_aux_VS"];homknown=vals["base"]["homogeneous_known_VS"]
+        hom=homce-homaux+homknown
+        direct=d*(z[baseprefix+".labels.f_samples"][:,0]-x*z[baseprefix+".labels.f_x_samples"][:,0])/12
+        compare(hom,direct,sid+"independent truncated moment vs f-xfx")
+        hq=sample[:,3];homhs=hom-cs*hq
+        homjoint=np.column_stack([hom,homhs,hq])
+        diff=hom-sample[:,0]
+        out["Heston_analytic_homogeneity"]={
+            "formula":"VS=D*(f-x*f_x)/12; x=(1200-A)/S; fixed v, A, calendar, drivers and GBM control",
+            "independent_formula":"D/12*(E[Y 1(Y>x)|past]-E[Y_aux 1(Y_aux>x)|past]+E[Y_aux 1(Y_aux>x)])",
+            "truncated_moment_vs_f_minus_xfx":"PASS","normalized_spot_bump_primitives_invariant":"PASS",
+            "analytic_VS_hS_hQ_statistics":statistics(homjoint),
+            "analytic_VS_minus_CRN_VS":statistics(diff),
+            "maximum_individual_analytic_minus_CRN_VS":float(np.abs(diff).max()),
+            "mean_difference_relative_to_IID_SE_of_difference":float(abs(diff.mean())/statistics(diff)["IID_SE"]) if statistics(diff)["IID_SE"]>0 else None,
+            "analytic_hS_SE_over_original_CRN_hS_SE":statistics(homhs)["same_16block_SE"]/risk["same_16block_SE"][2] if risk["same_16block_SE"][2]>0 else None,
+            "qualification":"unknown","bias_of_CRN_and_analytic":"unmeasured; finite-bump difference is diagnostic only",
+            "price_and_price_SE":"unchanged original CV estimator; this is a VS estimator only",
+            "local_homogeneity":"not applied"}
+        out["variance_decomposition"]["homogeneous_hS_VS_minus_CS_hQ"]=decomposed_variance(hom,cs*hq)
+        derived[sid+".VS_homogeneous_CE_aux_known"]=np.column_stack([homce,homaux,homknown])
+        derived[sid+".homogeneous_VS_hS_hQ"]=homjoint
+    if not ready:unknown.append(sid)
+    rows.append(out)
+valid=[x for x in rows if x["status"]=="ready"]
+result={"kind":"prefreeze-saved-only-teacher-precision-diagnostic","scope":"original36 slots/actual N1024 frozen sample; no RNG/SDE/new prefix/formal pilot",
+    "original_slots":36,"computed_slots":35,"qualification_unknown_slots":36,"rows":rows,
+    "forecast_N65536_reference":{"rule":"divide measured SE by8; assumes same finite variance/estimator law and eventual sqrt(N) behavior",
+        "guarantee":False,"executed_N65536":False,"underresolved_preserved":True,
+        "ready_slots":len(valid),"ready_slots_three_SE_reference_conditions":sum(x["forecast"]["three_SE_reference_conditions"] for x in valid),
+        "hS_reference_fail_slots":[x["slot_id"] for x in valid if x["forecast"]["hS_SE"]>.002],
+        "hQ_reference_fail_slots":[x["slot_id"] for x in valid if x["forecast"]["hQ_SE"]>.005],
+        "price_reference_fail_slots":[x["slot_id"] for x in valid if x["forecast"]["price_SE"]>.03]},
+    "source_input_bindings":r["source_bindings"],
+    "preflight_artifact_bindings":old_hashes,
+    "source_input_changes":{k:sha(ROOT/k) for k,v in r["source_bindings"].items() if sha(ROOT/k)!=v},
+    "original_preflight_artifact_changes":{k:sha(ROOT/k) for k,v in old_hashes.items() if sha(ROOT/k)!=v},
+    "unmeasured_errors_remain_unknown":["SDE_discretization","finite_state_bump_bias","call_denominator_error","call_spot_derivative_error","independent_Asian_oracle","teacher_interpolation","SE_estimation_sampling_uncertainty"],
+    "method_boundaries":{"independent_Heston_Delta":"own lognormal truncated first moment formula checked against saved f-xfx",
+        "local":"saved CRN finite bumps only; stock-dependent field forbids homogeneous derivative substitution",
+        "variance":"fixed selected call derivatives; denominator uncertainty separate and unmeasured",
+        "beta":"fixed1; no beta optimization; DESIGN7.3 excludes optimization in v1",
+        "production_operator":"production tensor cubic has its own state/threshold interpolation errors; direct sample derivative does not certify it"},
+    "raw_derived_arrays_bytes":sum(a.nbytes for a in derived.values()),"elapsed_wall_seconds":time.perf_counter()-started}
+assert not result["source_input_changes"] and not result["original_preflight_artifact_changes"]
+assert len(valid)==30 and len(rows)==36
+assert result["raw_derived_arrays_bytes"]<=256*1024**2
+np.savez_compressed(W/(P+".npz"),**derived)
+result["derived_npz_sha256"]=sha(W/(P+".npz"))
+result["probe_source_sha256"]=sha(__file__)
+(W/(P+".json")).write_text(json.dumps(clean(result),ensure_ascii=False,indent=2,allow_nan=False)+"\n")
+print(json.dumps(clean({k:v for k,v in result.items() if k not in ["rows","source_input_bindings","preflight_artifact_bindings"]}),ensure_ascii=False,indent=2))
+for sid in ["state08.heston","state06.heston","state02.local","state03.local","state05.heston"]:
+    x=next(t for t in rows if t["slot_id"]==sid)
+    print("WORST",json.dumps(clean(x),ensure_ascii=False))
+for x in rows:
+    if x["status"]=="unknown_underresolved":
+        print("UNDERRESOLVED",json.dumps(clean({k:x[k] for k in ["slot_id","conditional_positive_count","conditional_fx_nonzero_count","raw_positive_payoff_count","aux_conditional_positive_count","known_aux_price_currency","CV_sample_peak_to_peak","hQ_denominator"]}),ensure_ascii=False))

@@ -1,0 +1,45 @@
+
+from pathlib import Path
+import json,numpy as np
+w=Path("/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging")
+meta=json.loads((w/"task-5-cache-cartesian-probe.json").read_text())
+out=[]
+def runs(mask):
+ edges=np.flatnonzero(np.diff(np.r_[False,mask,False].astype(int)))
+ return [(int(a),int(b)) for a,b in edges.reshape(-1,2)]
+with np.load(w/"task-5-cache-cartesian-probe.npz",allow_pickle=False) as z:
+ for r in meta["results"]:
+  n=int(round(r["date"]*12));model=r["model"];prefix=f"t{n}.{model}."
+  mask=z[prefix+"support_mask"].copy();s=z[prefix+"spot_nodes"];v=z[prefix+"state_nodes"];x=z[prefix+"thresholds"]
+  future_mean=np.exp(.03*(np.arange(n+1,13)/12-r["date"])).sum()
+  pricebounds=[]
+  for si in range(len(s)):
+   for vi in range(len(v)):
+    lp=prefix+f"S{si}.state{vi}.labels."
+    f=z[lp+"f"]
+    bad=(f < -1e-12)|(f>future_mean+1e-12)
+    for j in np.flatnonzero(bad):pricebounds.append([si,vi,int(j),float(f[j])])
+    mask[si,vi]&=~bad
+  req=r["jet_required_node_indices"] if model=="local" else [[0],*r["jet_required_node_indices"]]
+  import itertools
+  indices=np.array(list(itertools.product(*req)))
+  bad=[ij.tolist()+[str(z[prefix+f"S{ij[0]}.state{ij[1]}.labels.status"][ij[2]])] for ij in indices if not mask[tuple(ij)]]
+  candidates=[]
+  spot_intervals=[(0,1)] if model=="heston" else [(a,b) for a in range(len(s)) for b in range(a+4,len(s)+1) if s[a]<100<s[b-1]]
+  for sa,sb in spot_intervals:
+   for va in range(len(v)):
+    for vb in range(va+4,len(v)+1):
+     anchor=.04 if model=="heston" else 1.
+     if not v[va]<anchor<v[vb-1]:continue
+     common=mask[sa:sb,va:vb].all(axis=(0,1))
+     for xa,xb in runs(common):
+      if xb-xa<4 or not x[xa]<12-n<x[xb-1]:continue
+      candidates.append({"spot_index":[sa,sb],"state_index":[va,vb],"threshold_index":[xa,xb],"volume_nodes":int((sb-sa)*(vb-va)*(xb-xa)),
+       "state_bounds":[float(v[va]),float(v[vb-1])],"spot_bounds":[float(s[sa]),float(s[sb-1])],"x_bounds":[float(x[xa]),float(x[xb-1])]})
+  best=sorted(candidates,key=lambda a:(-a["volume_nodes"],a["spot_index"],a["state_index"],a["threshold_index"]))[:1]
+  out.append({"date":r["date"],"model":model,"original_groups":r["original_groups"],"original_N":1024,"total_nodes":int(mask.size),
+    "ready_and_price_bounded_nodes":int(mask.sum()),"raw_price_bound_failed_nodes":pricebounds,
+    "hermite_missing_dependencies_after_price_bounds":bad,"geometry_cubic_anchor_rect_count":len(candidates),"max_node_volume_anchor_rectangle_after_price_bounds":best,
+    "scope":"mean raw price bounds plus primitive availability only; no clipping, no block price bounds, no Greek/oracle/SE precision certification"})
+(w/"task-5-cache-cartesian-boundary-details.json").write_text(json.dumps(out,indent=2))
+print(json.dumps(out,indent=2))

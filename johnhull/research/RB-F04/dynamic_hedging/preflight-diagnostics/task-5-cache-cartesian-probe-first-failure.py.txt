@@ -1,0 +1,94 @@
+
+from pathlib import Path
+import json,time,hashlib,itertools
+import numpy as np
+from hullkit._heston_local_surface import HestonParameters,LocalVarianceGrid
+from hullkit._dynamic_hedging_conditional import teacher_primitives,primitive_labels
+OUT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging")
+ROOT=OUT.parents[3]
+BASE=Path("/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging")
+P=HestonParameters(spot=100,rate=.03,dividend_yield=0,v0=.04,kappa=2,theta=.04,xi=.3,rho=-.7)
+N=1024;blocks=16;steps=0;data={};rawmeta=[];results=[]
+started,started_cpu=time.perf_counter(),time.process_time()
+with np.load(BASE/"pilot/initial-quotes/reference.npz",allow_pickle=False) as z:
+ prefix="field257x321.surface."
+ surf=LocalVarianceGrid(z[prefix+"times"],z[prefix+"z_nodes"],z[prefix+"local_variance"],P,z[prefix+"wing_boundaries"])
+with np.load(OUT/"task-5-teacher-preflight.npz",allow_pickle=False) as z:
+ drivers={m:z["global."+m+".normals"].copy() for m in ["heston","local"]}
+def thresholds(m):
+ scale=.15*np.sqrt(m)
+ x=np.r_[m-scale*np.sinh(np.linspace(np.arcsinh(m/scale),0,17)),
+         m+scale*np.sinh(np.linspace(0,np.arcsinh((24-m)/scale),17))[1:]]
+ x[0],x[16],x[-1]=0.,float(m),24.
+ return x
+def runs(mask):
+ edges=np.flatnonzero(np.diff(np.r_[False,mask,False].astype(int)))
+ return [(int(a),int(b)) for a,b in edges.reshape(-1,2)]
+def metadata(prefix,mapping):
+ row={}
+ for k,v in mapping.items():
+  if isinstance(v,np.ndarray):data[prefix+k]=v.copy()
+  elif isinstance(v,np.generic):row[k]=v.item()
+  else:row[k]=v
+ return row
+def point_dependencies(axis,point):
+ j=int(np.clip(np.searchsorted(axis,point,side="right")-1,0,len(axis)-2))
+ ids=[j,j+1]
+ for k in [j,j+1]:
+  a=max(0,min(k-1,len(axis)-4));ids.extend(range(a,a+4))
+ return np.unique(ids)
+for date in [.5,11/12]:
+ n=int(round(date*12));x=thresholds(12-n);begin=int(round(date*768));times=np.arange(begin,769)/768;fi=np.arange(n+1,13)*64-begin
+ for model in ["heston","local"]:
+  states=np.array([1e-5,.005,.01,.02,.04,.08,.16,.32,.5]) if model=="heston" else np.array([.25,.5,1,2,4])
+  spots=np.array([100.]) if model=="heston" else np.geomspace(50,200,9)
+  masks=np.zeros((len(spots),len(states),len(x)),bool)
+  vals=np.zeros(masks.shape)
+  bounds_unknown=np.zeros(masks.shape,bool)
+  for si,spot in enumerate(spots):
+   for vi,state in enumerate(states):
+    prefix=f"t{n}.{model}.S{si}.state{vi}."
+    prim=teacher_primitives(model,P,drivers[model][:,begin:],calendar_times=times,fixing_indices=fi,spot=float(spot),state=float(state),memory_count=n,surface=surf if model=="local" else None,compact_status=True)
+    lab=primitive_labels(prim,x,blocks=16)
+    steps+=N*(768-begin)
+    masks[si,vi]=(~np.char.startswith(lab["status"].astype(str),"unknown")) & np.isfinite(lab["f"]) & np.isfinite(lab["block_means"]).all(axis=(0,2))
+    vals[si,vi]=lab["f"]
+    future_mean=np.exp(.03*(np.arange(n+1,13)/12-date)).sum()
+    bounds_unknown[si,vi]=(lab["f"] < -1e-12)|(lab["f"]>future_mean+1e-12)|(lab["f_x"]>1e-10)|(lab["f_x"]<-1-1e-10)
+    row={"prefix":prefix,"primitive_metadata":metadata(prefix+"primitive.",prim),"label_metadata":metadata(prefix+"labels.",{k:v for k,v in lab.items() if k not in ["raw_samples","conditioned_samples","cv_samples","f_samples","f_x_samples","raw_x_samples","conditioned_x_samples","unreplaced_cv_samples","unreplaced_cv_x_samples","aux_raw_samples","aux_conditioned_samples","joint_block_covariance","block_covariance","derivative_block_covariance"]})}
+    rawmeta.append(row)
+  axes=[states,x] if model=="heston" else [np.log(spots),np.log(states),x]
+  point=[.04,12-n] if model=="heston" else [np.log(100.),0.,12-n]
+  dependencies=[point_dependencies(a,q) for a,q in zip(axes,point)]
+  fullmask=masks[0] if model=="heston" else masks
+  local_ok=bool(fullmask[np.ix_(*dependencies)].all())
+  candidates=[]
+  spot_intervals=[(0,1)] if model=="heston" else [(a,b) for a in range(len(spots)) for b in range(a+4,len(spots)+1) if spots[a]<100<spots[b-1]]
+  for sa,sb in spot_intervals:
+   for va in range(len(states)):
+    for vb in range(va+4,len(states)+1):
+     anchor=.04 if model=="heston" else 1.
+     if not states[va]<anchor<states[vb-1]:continue
+     common=masks[sa:sb,va:vb].all(axis=(0,1))
+     for xa,xb in runs(common):
+      if xb-xa<4 or not x[xa]<12-n<x[xb-1]:continue
+      candidates.append({"spot_index":[sa,sb],"state_index":[va,vb],"threshold_index":[xa,xb],"volume_nodes":int((sb-sa)*(vb-va)*(xb-xa)),"state_bounds":[float(states[va]),float(states[vb-1])],"spot_bounds":[float(spots[sa]),float(spots[sb-1])],"x_bounds":[float(x[xa]),float(x[xb-1])]})
+  best=sorted(candidates,key=lambda a:(-a["volume_nodes"],a["spot_index"],a["state_index"],a["threshold_index"]))[:1]
+  record={"date":date,"model":model,"original_groups":len(spots)*len(states),"original_N":N,"threshold_nodes":33,
+          "ready_nodes":int(masks.sum()),"original_nodes":int(masks.size),"groups_all_33_ready":int(masks.all(axis=-1).sum()),"full_cubic_supported":bool(masks.all()),
+          "nodes_with_raw_label_price_or_fx_bounds_failure":int(bounds_unknown.sum()),"C1_shared_jet_at_anchor_supported_by_status":local_ok,"jet_required_node_indices":[d.tolist() for d in dependencies],
+          "anchor_rectangular_candidate_count":len(candidates),"max_node_volume_anchor_rectangle":best,
+          "qualification":"unknown; domain/status diagnostic only, no interpolation/SE/oracle/drift gate"}
+  results.append(record);print(json.dumps(record),flush=True)
+  data[f"t{n}.{model}.support_mask"]=masks;data[f"t{n}.{model}.thresholds"]=x;data[f"t{n}.{model}.state_nodes"]=states;data[f"t{n}.{model}.spot_nodes"]=spots
+report={"kind":"actual coarse Cartesian domain scratch","source_inputs":["task-5-teacher-preflight.npz","pilot/initial-quotes/reference.npz"],
+        "source_input_sha256":{"teacher":hashlib.sha256((OUT/"task-5-teacher-preflight.npz").read_bytes()).hexdigest(),"field":hashlib.sha256((BASE/"pilot/initial-quotes/reference.npz").read_bytes()).hexdigest()},
+        "original_N":N,"original_groups":len(rawmeta),"actual_path_steps":steps,"results":results,"raw_group_metadata":rawmeta,
+        "source_bindings":{name:hashlib.sha256((Path("/home/kazumasa/worktrees/johnhull-research-roadmap")/name).read_bytes()).hexdigest() for name in ["johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py","johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py","johnhull/hullkit/src/hullkit/_heston_local_surface.py"]},
+        "arrays_uncompressed_bytes":sum(a.nbytes for a in data.values()),"wall_seconds":time.perf_counter()-started,"cpu_seconds":time.process_time()-started_cpu,
+        "qualification":"unknown"}
+assert steps==24772608
+assert report["arrays_uncompressed_bytes"]<256*1024**2
+np.savez_compressed(OUT/"task-5-cache-cartesian-probe.npz",**data)
+(OUT/"task-5-cache-cartesian-probe.json").write_text(json.dumps(report,indent=2,allow_nan=False))
+print("DONE",report["wall_seconds"],report["cpu_seconds"],report["arrays_uncompressed_bytes"],flush=True)
