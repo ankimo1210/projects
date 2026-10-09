@@ -1,0 +1,20 @@
+{
+  "schema": "RB-F08-fresh-check-v1",
+  "reference_record_digest": "97cf13a08cfea740c089b5d3c984cc9ae070667b562f267454b46b789cde3c3f",
+  "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+  "seconds": 26.187586626969278,
+  "checks": {
+    "passed": true,
+    "fixture": false,
+    "main_runs": 3072,
+    "coverage_cells": 18,
+    "fresh": {
+      "passed": true,
+      "replayed_groups": 105,
+      "independent_paths_per_level": 256,
+      "main_pooled": false,
+      "timing_reproduction_required": false
+    }
+  },
+  "scope": "saved evidence load/check and selected fresh replay; separate research reproducibility cost"
+}
