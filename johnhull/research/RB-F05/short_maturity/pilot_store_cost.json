@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/scripts/evidence_store.py",
+    "put",
+    "--project-root",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity",
+    "--manifest-out",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity/pilot_manifest.json",
+    "pilot/pilot.npz"
+  ],
+  "wall_seconds": 8.434450790984556,
+  "exit_code": 0,
+  "stdout": "{\"status\": \"PASS\", \"entries\": 1}\n",
+  "stderr": "",
+  "scope": "pilot NPZ write-once store replication to existing primary/mirror"
+}

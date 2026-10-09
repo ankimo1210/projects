@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "johnhull/scripts/verify_release.py",
+    "--require-tracked"
+  ],
+  "wall_seconds": 21.758135633019265,
+  "exit_code": 0,
+  "stdout": "[PASS] johnhull A5--A8 release contract\n",
+  "stderr": "",
+  "scope": "tracked release pre-pilot; earlier untracked study test failure now rechecked"
+}
