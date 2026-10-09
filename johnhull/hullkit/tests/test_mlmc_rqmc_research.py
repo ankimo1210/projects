@@ -255,3 +255,32 @@ def test_inaccurate_exact_comparator_not_declared_faster_at_same_error():
     out = analytics().decision(r, a)
     assert not any("faster" in reason or "cold" in reason for reason in out["rejection_reasons"])
     assert any("accuracy" in reason for reason in out["rejection_reasons"])
+
+
+def test_saved_bootstrap_indices_recompute_without_new_randomness(monkeypatch):
+    def forbidden(*args, **kwargs):
+        raise AssertionError("artifact statistics must use saved bootstrap indices")
+
+    monkeypatch.setattr(np.random, "default_rng", forbidden)
+    indices = np.tile(np.arange(4), (8, 1))
+    out = analytics().paired_ratio_bootstrap(
+        np.array([0.2, 0.4, 0.6, 0.8]), np.ones(4), seed=83701, resamples=8, indices=indices
+    )
+    assert out["median_ratio"] == pytest.approx(0.5)
+    assert out["interval95"] == pytest.approx([0.5, 0.5])
+
+
+@pytest.mark.parametrize(
+    "indices",
+    [
+        np.zeros((2, 3), dtype=int),
+        np.full((2, 4), -1),
+        np.full((2, 4), 4),
+        np.zeros((2, 4), dtype=float),
+    ],
+)
+def test_invalid_saved_bootstrap_indices_rejected(indices):
+    with pytest.raises(ValueError, match="indices"):
+        analytics().paired_ratio_bootstrap(
+            np.ones(4), np.ones(4), seed=83701, resamples=2, indices=indices
+        )

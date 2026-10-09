@@ -72,7 +72,7 @@ def coverage_summary(intervals: np.ndarray, truth: float) -> dict:
     )
 
 
-def paired_ratio_bootstrap(mlmc_times, plain_times, *, seed, resamples=2000) -> dict:
+def paired_ratio_bootstrap(mlmc_times, plain_times, *, seed, resamples=2000, indices=None) -> dict:
     """Bootstrap the median paired run-cost ratio, retaining every run in each pair."""
     a, b = _values(mlmc_times), _values(plain_times)
     if a.shape != b.shape or np.any(a <= 0) or np.any(b <= 0):
@@ -82,8 +82,19 @@ def paired_ratio_bootstrap(mlmc_times, plain_times, *, seed, resamples=2000) -> 
     if isinstance(seed, bool) or not isinstance(seed, (int, np.integer)) or not 0 <= seed < 2**32:
         raise ValueError("uint32 bootstrap seed required")
     ratio = a / b
-    rng = np.random.default_rng(seed)
-    sampled = np.median(ratio[rng.integers(0, len(ratio), size=(resamples, len(ratio)))], axis=1)
+    if indices is None:
+        rng = np.random.default_rng(seed)
+        indices = rng.integers(0, len(ratio), size=(resamples, len(ratio)))
+    else:
+        indices = np.asarray(indices)
+        if (
+            indices.shape != (resamples, len(ratio))
+            or indices.dtype.kind not in "iu"
+            or np.any(indices < 0)
+            or np.any(indices >= len(ratio))
+        ):
+            raise ValueError("saved bootstrap indices must be integer in-range complete resamples")
+    sampled = np.median(ratio[indices], axis=1)
     return dict(
         trials=len(ratio),
         median_ratio=float(np.median(ratio)),
@@ -276,6 +287,9 @@ def decision(record: dict, arrays: dict) -> dict:
             times["plain_euler"],
             seed=cell["bootstrap_seed"],
             resamples=record["bootstrap_resamples"],
+            indices=arrays[cell["bootstrap_indices_key"]]
+            if "bootstrap_indices_key" in cell
+            else None,
         )
         accurate = all(errors[name]["rmse"] <= cell["epsilon"] for name in ("mlmc", "plain_euler"))
         faster = ratio["median_ratio"] < 1 and ratio["interval95"][1] < 1

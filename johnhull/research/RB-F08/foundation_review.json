@@ -1,0 +1,293 @@
+{
+  "schema": "RB-F08-foundation-review-v1",
+  "review_date": "2026-10-09",
+  "reviewer": "independent /root/f08_foundation_review",
+  "scope": "Tasks 1,2,3,5 foundation",
+  "state": "completed",
+  "reviewed_range": "e55e8569..4942ef35",
+  "reviewed_commit": "4942ef35e6041e49facc632147d9c24873f6000d",
+  "source_fingerprint": "4f0358b42744fcc5aa5859411bd1238d1e6b8fc4c1cdb9e78ce6822f9c81a5bf",
+  "source_file_sha256": {
+    "johnhull/MODEL_INDEX.md": "92cc33990085d67daec6d8e19be9be556820bbab1a9ee53409768cd99da4a03d",
+    "johnhull/ROADMAP.md": "1ad7ae63d752c81f821184001c7591d4d03a22376f488a79a9c3dab94812cef4",
+    "johnhull/docs/superpowers/plans/2026-10-09-mlmc-rqmc-ci.md": "a88fedc8aa92bf1abc9a01a8e240c0e9ea2a6033e1720f88c74cfb9e5192f1d2",
+    "johnhull/hullkit/src/hullkit/_multilevel_mc.py": "7104b480a0e4ea872bbf44acc18c6bdb939da3678b9db26f8908337c2fefbfc3",
+    "johnhull/hullkit/src/hullkit/_rqmc_ci.py": "a36c08e1b55e92189d84319099fb634ef6bf3eff0799ea770c66d41e0d36c43d",
+    "johnhull/hullkit/tests/test_mlmc_rqmc_protocol.py": "ce39fc58090322301f248dcd41b0643c0860d37ff312e746347c018028ec7110",
+    "johnhull/hullkit/tests/test_mlmc_rqmc_reference.py": "1e9043ee0e8c1edf230c30895b4e51f13b096627fa0d9e06a72e903dac9c5686",
+    "johnhull/hullkit/tests/test_mlmc_rqmc_research.py": "e06340f68ba76f123fab96f2412268caa42b70a4f2c19f4dcffb0c825e7d66c8",
+    "johnhull/hullkit/tests/test_multilevel_mc.py": "09301bf56563ec0ba8417046b9bf1e642af708cef51034599b6416882ac2cd8f",
+    "johnhull/hullkit/tests/test_rqmc_ci.py": "916d1743f604bd8f183c4811c2756528dc4d7a7d25f12b9125682c764dadf0a8",
+    "johnhull/research/RB-F08/README.md": "5de07279f9891218274e640cee79e5f65b99fd9a577ced5a7046f974a91a6941",
+    "johnhull/research/RB-F08/analytics.py": "9da4deb0c52917f6ae4338debc12f01ef7bbaeacc2b68016a12fd4637a706c82",
+    "johnhull/research/RB-F08/protocol.json": "d5860203209b579c75826471f9c538211f36071430d5e4c0539379a8a1866307",
+    "johnhull/research/RB-F08/protocol.py": "3b26af1239232c7f99873a326a74117ac41a81b43bc8a7bc31eb25b4d24958ed",
+    "johnhull/research/RB-F08/reference_methods.py": "6a3b112b0686068fe5452f24ecba590c7457ca7859dd7c6195ab8bfeb36a50ca",
+    "johnhull/research/RB-F08/seed_audit.json": "f0f744c3dc59ce1914dd4c98c7eee6557edf3279d426822a76bf0aa533119241"
+  },
+  "basis_quality_verdict": "approved_foundation_only",
+  "spec_compliance_verdict": "approved_foundation_only",
+  "financial_pilot_approved": false,
+  "research_main_accepted": false,
+  "issues": [
+    {
+      "id": "F08-FR-01",
+      "severity": "Important",
+      "status": "resolved",
+      "file": "johnhull/research/RB-F08/analytics.py",
+      "line": 231,
+      "title": "重複epsilonで2条件以上の速度採用を偽装できる",
+      "example": "epsilons=[0.4,0.4,0.4]、budget_cellsを同一cell/同じ4run配列から3件複製するとsupported_epsilon_count=3、speedup_supported_vs_euler=true。",
+      "direction": "epsilon rosterをfinite positive・strict descending・uniqueとして検証し、distinct epsilonで採用条件を数える。",
+      "resolution_commit": "4942ef35e6041e49facc632147d9c24873f6000d",
+      "resolution_file": "johnhull/research/RB-F08/analytics.py",
+      "resolution_line": 235,
+      "resolution_evidence": "重複・非finite・非正・非降順epsilonを拒否。旧複製fixtureを再実行しValueErrorを確認。"
+    },
+    {
+      "id": "F08-FR-02",
+      "severity": "Important",
+      "status": "resolved",
+      "file": "johnhull/research/RB-F08/analytics.py",
+      "line": 135,
+      "title": "method別offline原価の欠落をゼロ費用として受け入れる",
+      "example": "expensesがexact_cv専用99秒の1件だけでもmlmcのexpense_ids=[]、offline_s=0、cold_mean_s=main_sとなる。decisionはoffline_expenses欠落時にもcost_accounts={}で判定成立。",
+      "direction": "method/epsilonに必要なoffline expenseの存在・完全性を確認し、欠落時は拒否または費用採否をnot_assessableとする。",
+      "resolution_commit": "4942ef35e6041e49facc632147d9c24873f6000d",
+      "resolution_file": "johnhull/research/RB-F08/analytics.py",
+      "resolution_line": 154,
+      "resolution_evidence": "method用expense選択空とdecision offline台帳の欠落/空を拒否。3境界を独立再実行してValueErrorを確認。"
+    },
+    {
+      "id": "F08-FR-03",
+      "severity": "Important",
+      "status": "resolved",
+      "file": "johnhull/research/RB-F08/analytics.py",
+      "line": 277,
+      "title": "精度未達exact法を速さだけで却下理由にする",
+      "example": "MLMC/plain Eulerはtruth=10でRMSE=0、exact plain/CVをprice=1000、各4run、seconds=.1/.08にするとexact RMSE=990でもstandard_accelerator_rejected=true。",
+      "direction": "exact速度比較の候補を同epsilonでRMSE<=epsilonの手法へ限定する。全exact法が精度未達ならその理由を明示し、比較不能な速さで劣位を認定しない。",
+      "resolution_commit": "4942ef35e6041e49facc632147d9c24873f6000d",
+      "resolution_file": "johnhull/research/RB-F08/analytics.py",
+      "resolution_line": 288,
+      "resolution_evidence": "RMSE<=epsilonのexact手法だけを速度比較へ含め、全exact精度未達はaccuracy unresolved。全精度未達/片側精度合格の2fixtureを再検査。"
+    },
+    {
+      "id": "F08-FR-M01",
+      "severity": "Minor",
+      "status": "resolved",
+      "file": "johnhull/hullkit/src/hullkit/_rqmc_ci.py",
+      "line": 137,
+      "title": "RQMC confidenceの可変protocolと固定wrapperが一致しない",
+      "example": "validate_protocolはrqmc.confidence=.9を許容するがfrom_seedsはstudent_summary既定.95を使う。今回の既定.95には影響しない。",
+      "direction": "将来revisionを許容するならconfidenceをseamへ渡すかvalidatorで.95へ固定する。",
+      "resolution_commit": "4942ef35e6041e49facc632147d9c24873f6000d",
+      "resolution_file": "johnhull/hullkit/src/hullkit/_rqmc_ci.py",
+      "resolution_line": 75,
+      "resolution_evidence": "confidence keywordをStudent summaryへ渡す。.9のCIを自前t(df3)半幅で再計算、.95とscramble estimatesが一致。"
+    }
+  ],
+  "evidence": {
+    "independent_black_conditions": 18,
+    "own_black_max_abs_error": 2.1316282072803006e-14,
+    "bsm_atm_q0": 9.413403383853016,
+    "one_step_euler_q002": {
+      "K80": 21.848225116166475,
+      "K100": 8.237934627901378,
+      "K120": 1.7769971106801166
+    },
+    "clip_integrals_sigma07_K120": [
+      {
+        "clip": [
+          0.001,
+          0.999
+        ],
+        "price": 20.818473224523277,
+        "abs_error": 1.7763568394002505e-14
+      },
+      {
+        "clip": [
+          0.1,
+          0.9
+        ],
+        "price": 12.3035005499317,
+        "abs_error": 1.7763568394002505e-15
+      },
+      {
+        "clip": [
+          5e-324,
+          0.9999999999999999
+        ],
+        "price": 20.976326589529318,
+        "abs_error": 7.105427357601002e-15
+      }
+    ],
+    "allocation_hand_fixture": [
+      16,
+      4
+    ],
+    "mlmc_hand": {
+      "counts": [
+        4,
+        7,
+        10
+      ],
+      "price": 2.37,
+      "variance": 0.453952380952381,
+      "df": 3.548861478674173,
+      "interval": [
+        0.40172056693440106,
+        4.338279433065599
+      ]
+    },
+    "negative_path_fixture": {
+      "paths": 3,
+      "negative_paths": 2,
+      "first_fine_payoff": 234.31457505076202,
+      "stock_updates": 9,
+      "normal_draws": 6,
+      "payoff_evaluations": 6,
+      "coarse_aggregations": 3
+    },
+    "nonfinite_whole_run_rejections": 2,
+    "rqmc_student": {
+      "R": 4,
+      "df": 3,
+      "se": 1.2909944487358056,
+      "interval": [
+        6.891479486478959,
+        15.108520513521041
+      ]
+    },
+    "rqmc_direct_seeds": [
+      41,
+      43,
+      47,
+      53
+    ],
+    "rqmc_direct_estimates": [
+      8.175458614104516,
+      7.976655353062209,
+      9.503083661987647,
+      8.473223074591179
+    ],
+    "discounted_control_q002": 98.01986733067554,
+    "rmse_hand": 1.224744871391589,
+    "wilson_2_of_4": [
+      0.15003898915214947,
+      0.8499610108478506
+    ],
+    "seed_ledger": {
+      "rows": 181729,
+      "physical_unique": 181729,
+      "phase_counts": {
+        "pilot": 31,
+        "main": 9216,
+        "coverage": 172032,
+        "fresh_review": 372,
+        "timing": 72,
+        "method_order": 3,
+        "bootstrap": 3
+      },
+      "collisions": 2,
+      "typed_digest": "e3c264ebc4fb93b7c82e6ba3464243a04d4881981cab23ce698acbbadcebdb16",
+      "typed_roundtrip": "pass",
+      "collision_replay": "matches committed research/RB-F08/seed_audit.json",
+      "existing_rows_unchanged": 181728,
+      "added_clip_slot": {
+        "logical_id": "pilot.0.0.0.clip_diagnostic.-1.-1",
+        "seed": 3739489220,
+        "retry_count": 0,
+        "spawn_key": [
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0
+        ]
+      },
+      "clip_conditions": {
+        "power": 10,
+        "public_clip": [
+          1e-10,
+          0.9999999999
+        ]
+      }
+    },
+    "freeze_binding": {
+      "stub_scope": "binding only; not financial validation",
+      "rejected": [
+        "approved condition",
+        "approved allocation",
+        "approved CV beta",
+        "pilot record SHA",
+        "pilot array SHA",
+        "source SHA",
+        "numerical validator false"
+      ],
+      "candidate_preserved": true
+    },
+    "validation_scope": "独立stdin probesと差分読解。作者1108PASS/対象69PASS/ruffPASSはreported evidence。全suite再実行なし。Task4/6の未コミット実装、実pilot、main、4図、F08受入は対象外。",
+    "remediation_probes": {
+      "rejected": [
+        "duplicate epsilon",
+        "offline missing",
+        "offline empty",
+        "method offline selection empty"
+      ],
+      "baseline_speedup_ratios": {
+        ".5": true,
+        "1.2": false
+      },
+      "inaccurate_exact": "no faster/cold reason; accuracy unresolved",
+      "mixed_exact": "fast inaccurate ignored; slower accurate selected",
+      "confidence90": {
+        "df": 3,
+        "interval": [
+          7.733466292038372,
+          9.330744059834402
+        ]
+      },
+      "clip_binding_rejected": [
+        "changed frozen power",
+        "unapproved condition",
+        "changed public clip"
+      ]
+    },
+    "expense_completeness_limit": "費用primitiveの算術・適用先・台帳欠落拒否を検査。実験に必要な全expense_id/金額/計測receiptの完全性はTask4/6の保存checkerとpilot/finalレビューで確認する。"
+  },
+  "initial_review": {
+    "reviewed_range": "e55e8569..2334c54e",
+    "reviewed_commit": "2334c54e64f52c9d1714d50fcf169fafe587f8c3",
+    "patch_sha256": "ee4c5574d1b439bde3d0bf7ce0ab5c958d16b5684c379d5772db33e5e787bb4e",
+    "source_fingerprint": "a312ac14181b6d779c226df1459e2c7e9858ae0e7fe994a593e32e8c1b73950f",
+    "basis_quality_verdict": "changes_required",
+    "spec_compliance_verdict": "changes_required",
+    "seed_ledger": {
+      "rows": 181728,
+      "physical_unique": 181728,
+      "phase_counts": {
+        "pilot": 30,
+        "main": 9216,
+        "coverage": 172032,
+        "fresh_review": 372,
+        "timing": 72,
+        "method_order": 3,
+        "bootstrap": 3
+      },
+      "collisions": 2,
+      "typed_digest": "9e037a9cd610e7948ac2b152489847466afff5bdafe59d9be757dfdcf799d4d1",
+      "typed_roundtrip": "pass",
+      "collision_replay": "matches /tmp/rbf08-seed-ledger-audit.json"
+    }
+  },
+  "remediation_range": "2334c54e..4942ef35",
+  "fix_patch_sha256": "5b4a6fa01a9f87608628f1cd4088df49d3e8849c11e18928029884292f4622af",
+  "unresolved_counts": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0
+  }
+}

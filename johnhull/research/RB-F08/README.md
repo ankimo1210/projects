@@ -23,7 +23,9 @@ Heston月次Asianは専用revisionで進める後続段階として保持する�
 
 基礎実装はテスト先行で検証した。粗細pair・負状態・安定moments・固定配分60件、
 Student区間・確定seed・費用内訳43件、独立Black/Euler/clip参照35件、
-RMSE/Wilson/固有費用/採否26件に加えprotocol48件・索引・docstringを含む1108件がPASS。全suite・pilot・主実験・教材実行・独立受入は未実施。
+RMSE/Wilson/固有費用/採否31件に加えprotocol48件・索引・docstringを含む1108件がPASS。basis独立レビューは修正後approved（主実験受入とは区別）。
+pilot実行/保存/CLI29件・主実験fixture/改変検査35件・analytics31件の対象95件とruffがPASS。
+全suite・full pilot・主実験・教材実行・独立受入は未実施。
 
 全phase予約は181729 slots（うちcoverage172032）。[固定条件](protocol.json)から生成した
 全seedは一意で、候補生成時の32bit衝突2件を解消した。
