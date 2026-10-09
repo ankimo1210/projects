@@ -10,7 +10,7 @@
 
 **Spec:** [調査・研究設計](../specs/2026-10-09-calibrated-quote-dml-design.md)。本文のQ01–Q12を根拠とし、版・確認範囲・未再現の性能主張を引き継ぐ。
 
-- 更新日：2026-10-09。**Tasks1–6実装済み。30NN＋4ridgeの本学習、保存重み・独立数値の再検査、core成果の両保管庫からの復元が完了。直近scoped 974 tests PASS。Task7の100反復計時/原価、追加レビュー修正、Task8の3図実行/目視と独立最終レビューを完了。関連3suiteの初回4 FAILをAgg表示修正で解消、11件再検査PASS。commit後release/main統合gateを確認する。**
+- 更新日：2026-10-09。**Tasks1–6実装済み。30NN＋4ridgeの本学習、保存重み・独立数値の再検査、core成果の両保管庫からの復元が完了。直近scoped 974 tests PASS。Task7の100反復計時/原価、追加レビュー修正、Task8の3図実行/目視と独立最終レビューを完了。関連3suiteの初回4 FAILをAgg表示修正で解消、11件再検査PASS。`a25345e1`をmainへ統合後、全関連3suite再実行で6919 PASS/6 skip（334.02秒）、release gate PASS。Tasks1–8完了。**
 - 本編P0–P8、306節acceptedの状態を変更しない。
 - 本人の「研究ロードマップを完遂せよ」に従い、quote DMLを先行し、既存離散バリア→F04→F08→F06と統合研究の後続候補も保持する。
 
@@ -396,7 +396,7 @@ assert reset == pytest.approx(0., abs=1e-6)
   notebookへ読ませる指標に保存済みPASSだけを根拠とする項目を残さない。
   30fitsに失敗があればprotocol完遂は未完了と明記し、失敗そのものは成果物に保持する。
 - [x] 生成JSON/NPZが20MBを超えたら学習を繰り返さず、既存ADR 0004保管庫＋small manifestへ移す。合成データ以外は入れない。
-- [ ] 新tests＋ruff/format、`--check` 後にscoped commit：`research(johnhull): record controlled quote-DML comparison`。
+- [x] 新tests＋ruff/format、`--check` 後にscoped commit。Task8と合わせて`a25345e1`（`research(johnhull): close calibrated quote-DML v1 evaluation`）に記録。
 
 ## Task 8：artifact-only教材と結果・次工程の判断
 
@@ -418,8 +418,8 @@ assert reset == pytest.approx(0., abs=1e-6)
   共有実装を変更していないため、Book全build・306節台帳再受入・D1全復元はこの研究のgateにしない。
 - [x] 数式・risk座標・固定契約・公平loss・失敗時の記録を独立レビューへ渡す。
   独立レビューを未実施なら研究状態を「実装/対象検証済み、レビュー未完了」とする。
-- [ ] 結果と採否、次に離散バリア／高コスト金利／最小二乗のどれを選ぶかをROADMAP/backlogに記録。
-  教材/計算の索引と同じcommitで更新し、commit：`docs(johnhull): publish quote-DML research findings`。
+- [x] 結果と採否、次に離散バリア／高コスト金利／最小二乗のどれを選ぶかをROADMAP/backlogに記録。
+  教材/計算の索引と同じ`a25345e1`で更新。統合後検証の記録を後続docs commitへ保持する。
 
 ### 最終対象検証コマンド
 
@@ -470,13 +470,13 @@ ruff format --checkは同じ対象Pythonへ実行する。notebook builderの既
 - 1方式導入のoffline費用はサイズ別train教師＋setup/fit/export、全比較費用は全分割教師＋全fitとし、評価oracle費用を混同しない。
 - 本学習は30本各512updates＋4ridgeを完遂、budget failureなし。fresh独立数値照合はPASS。本計時は保存重みを使う別工程で完了。310測定/288費用対照・loader rawを保存。
 - 追加レビューでfit metadataの固定条件、計時measurement registry、保存discountとintegrated rateの不変条件の検査不足を検出。本計時終了後にRED→GREENを確認し、main成果への独立fresh checkもPASS。
-- notebook builderの小fixtureはartifact-only実行と3図を確認済み。本成果3図の実行/目視・費用採否・独立最終レビューまで完了。関連suite/release/main統合は残る。smokeの性能は主実験の結論へ使わない。
+- notebook builderの小fixtureはartifact-only実行と3図を確認済み。本成果3図の実行/目視・費用採否・独立最終レビューまで完了。その後のmain統合・全関連suite再実行・release gateまでPASS。smokeの性能は主実験の結論へ使わない。
 
 
 ### 最終検証・採否
 
 34fit/310計時/288原価・fresh独立再計算・最終両保管庫復元・3図実行/目視・独立最終レビューを完了。
 関連3suiteは初回6,915 PASS / 4 FAIL / 6 skip、headless Aggの表示不具合を再現・修正し11件再検査PASS。
-重複除去6,919 PASS / 6 skipで、全suiteの再実行はしていない。通常make hull-reportもPASS。
+`a25345e1`をmainへfast-forward統合後、全関連3suiteを再実行し6,919 passed / 6 skipped（334.02秒）、終了コード0。通常make hull-reportもPASS。candidateと統合後mainの`verify_release.py --require-tracked`もPASS。
 研究は教材として受け入れ、Q-DMLの標準価格/Greek/速度器への昇格は不採用。
-次はF05離散バリア、F04、F08、F06。commit後release/main反映は別gateで記録する。
+次はF05離散バリア、F04、F08、F06。F05のprivate教師・独立PDE参照は作業branchで着手済み、学習/成果物/研究受入は未完了。

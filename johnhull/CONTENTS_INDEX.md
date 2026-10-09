@@ -87,12 +87,12 @@ Ch26–28 は既存巻の節別教材を利用する。全 Book 本文をこの�
 | 研究 | 収録したモデル・分析 | 状態・結果 |
 |---|---|---|
 | [RB-F07：較正を通した市場クオート感応度](research/RB-F07/README.md) | 単一曲線の預金／FRA／par swap 較正、解析 Jacobian、減衰 Newton、随伴 quote sensitivity、再 bootstrap bump、座標／残差不変性、補間変更・情報不足の増幅診断 | **v1 完了**。6か月の柱リスクが0でも、同じ満期の預金クオートリスクは +106.30/bp。補間変更は別モデルで、不変性を主張しない。v2／v3 は今後の範囲 |
-| [RB-F05：不連続 payoff の微分教師と DML](research/RB-F05/README.md) | GBM cash-or-nothing digital、LRM、厳密条件付き期待値、CRN bump、ramp 対照、price-only／DML、train-only 正規化、解析・Hermite 補間との精度／費用比較 | **digital v1 完了**。3 seed で DML の価格・delta が改善。解析・補間より速くならず、標準価格器への速度採用はしない。離散バリア・0DTE・rough は未着手の後続範囲 |
+| [RB-F05：不連続 payoff の微分教師と DML](research/RB-F05/README.md) | GBM cash-or-nothing digital、LRM、厳密条件付き期待値、CRN bump、ramp 対照、price-only／DML、train-only 正規化、解析・Hermite 補間との精度／費用比較 | **digital v1 完了**。3 seed で DML の価格・delta が改善。解析・補間より速くならず、標準価格器への速度採用はしない。離散バリアはprivate教師・独立参照に着手（研究受入は未完了）。0DTE・rough は未着手の後続範囲 |
 
 計算の正本は非公開の [quote risk](hullkit/src/hullkit/_quote_risk.py)、[digital 教師](hullkit/src/hullkit/_digital_teachers.py)、[digital DML](../deep_hedge_price/src/deep_hedge_price/_digital_dml.py)。
 研究 backlog 全体は [研究計画](docs/superpowers/plans/2026-09-27-research-backlog.md) を参照。
 
-**統合研究：** [較正込み市場クオートGreeksのDML](research/RB-F07/quote_dml/README.md)は研究受入済み、commit後release/main統合gateを確認する。30NN＋4回帰、310計時、288費用対照、独立再計算・両復元・3図・独立最終レビューを完了。金利shock残余改善、価格/spot/35shock混合残余悪化を記録し、標準価格/Greek器への昇格は不採用。[設計](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)／[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)。
+**統合研究：** [較正込み市場クオートGreeksのDML](research/RB-F07/quote_dml/README.md)はv1完了・main統合済み。30NN＋4回帰、310計時、288費用対照、独立再計算・両復元・3図・独立最終レビューを完了。統合後の関連3suiteは6,919 passed／6 skipped、release gate PASS。金利shock残余改善、価格/spot/35shock混合残余悪化を記録し、標準価格/Greek器への昇格は不採用。[設計](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)／[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)。
 
 ## 6. モデル名からの短い案内
 

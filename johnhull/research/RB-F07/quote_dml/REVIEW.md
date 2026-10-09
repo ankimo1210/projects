@@ -1,6 +1,6 @@
 # quote DML — 実装レビュー（2026-10-09）
 
-独立最終成果レビューを承認済み。関連suiteの表示不具合を是正済み。commit後のrelease/main統合gateは残る。以下は実装時の指摘と、最終レビュー範囲。
+独立最終成果レビューを承認済み。関連suiteの表示不具合を是正済み。`a25345e1`のmain統合後、全関連suiteとrelease gateを確認済み。以下は実装時の指摘と、最終レビュー範囲。
 
 | 対象 | 指摘・対応 | 検証 |
 |---|---|---|
@@ -39,5 +39,8 @@ H4の15範囲表と5償却case、safe/OODを照合してPASS。
 4件はheadless親のMPLBACKEND=Aggがkernelへ継承されてPNGを出さない表示不具合。
 Agg環境で単独REDを再現し、notebook内のinline backend明示で是正。
 kernel終了時のimport guardはdefault引数にoriginal importを保持する。
-Agg環境のnbplot＋notebook 11件がPASS、重複除去で6,919 passed / 6 skipped。
-金融・教師・学習・保存配列は変えず、全suiteの2回目は実行していない。
+Agg環境のnbplot＋notebook 11件がPASS。金融・教師・学習・保存配列は変更していない。
+その後、`a25345e1`をmainへfast-forward統合し、hullkit・report・deep_hedge_priceの
+全関連3suiteを再実行した。6,919 passed / 6 skipped、334.02秒、終了コード0。
+2件の既存deprecation warningが残る。candidateおよび統合後mainの
+`verify_release.py --require-tracked`はともにPASS。

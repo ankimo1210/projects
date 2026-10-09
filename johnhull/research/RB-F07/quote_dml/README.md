@@ -2,7 +2,7 @@
 
 更新2026-10-09。**30 NN fits＋4回帰、独立fresh再計算、310速度計測、
 288費用対照、両保管庫復元、artifact-only研究3図を作成・実行した。
-独立最終成果レビューを承認済み。commit後のrelease/main反映を行う。NNの標準価格/Greek器への昇格は不採用。**
+独立最終成果レビューを承認済み。`a25345e1`をmainへ統合し、統合後の全関連suiteとrelease gateもPASS。NNの標準価格/Greek器への昇格は不採用。**
 
 [研究設計](../../../docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)／
 [実施計画](../../../docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)／
@@ -405,9 +405,9 @@ p95シナリオは別に保存し、median/p95成分の和を実測総費用のp
 | 本計時・raw/safe・総費用/H4 | 310測定・288対照を保存、計時/loader summaryをrawから検査 |
 | artifact-only研究3図 | 実行済み・目視済み。H1/H2の別尺度、rate/spot分解、公平cache別の費用表示 |
 | 独立最終レビュー | 承認済み、修正要求なし。固定合成研究の採否まで |
-| 関連3suite | 初回6915 PASS / 4 FAIL / 6 skip。Agg表示修正後11件PASS、重複除去6919 PASS / 6 skip。全suiteの2回目は未実施 |
+| 関連3suite | main統合後に全再実行し6919 passed / 6 skipped、334.02秒、終了コード0。初回4 FAILはAgg表示修正で解消 |
 | 配布生成 | 通常make hull-report PASS、旧教材の追跡ファイルは不変 |
-| commit後release / main反映 | 統合gateで確認 |
+| commit後release / main反映 | `a25345e1`をmainへfast-forward統合。candidateと統合後mainの`verify_release.py --require-tracked`ともPASS |
 
 ## 成果物と再実行
 
