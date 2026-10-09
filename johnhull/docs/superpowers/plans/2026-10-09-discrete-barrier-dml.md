@@ -23,7 +23,7 @@
 | 3 | 数値pilot、主条件freeze | 完了・独立再検査後freeze |
 | 4 | 6fits、強い補間対照、保存重みreplay、改変検査 | 完了・6fits/fresh保存replayと独立200点PDE PASS |
 | 5 | price+Deltaの20反復、offline/load・safe費用、3図 | 完了・32測定/100load/3図実行・目視 |
-| 6 | 対象/全関連suite、独立レビュー、採否・main反映 | 独立最終レビュー・関連3suite7104 PASS/6 skip。main反映準備済み |
+| 6 | 対象/全関連suite、独立レビュー、採否・main反映 | 独立最終レビュー・関連3suite7104 PASS/6 skip。main統合済み |
 
 ## 候補protocolとfreeze
 
@@ -68,3 +68,7 @@ m1解析定数をMCから分離し、通常checkerでも4streamのdrawを再生�
 phase0は価格最大0.0258／Delta0.00249のaliasingを示すため、midpoint phase=.5だけをoracle候補にする。
 候補許容差・学習budgetは変更せずprotocolをfreeze。全test領域の独立確認は主成果fresh gateに残す。
 158,401,006 bytesのpilot NPZはC/F別physical diskの保管庫へ置き、各コピーから復元PASS。
+
+## 統合の確認
+
+2026-10-09、関連3suite7104 PASS/6 skip（366.24秒）、fresh MC/PDE200点と32計時/会計check、3図実行/目視、独立最終レビューを完了。09b8c1afをmainへfast-forward統合し、mainでrelease --require-tracked、pilotのprimary復元、保存成果/計時checkを確認した。公開API・依存・本編台帳は不変。研究教材を保持し標準高速器採用を見送る。次はRB-F04。

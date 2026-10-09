@@ -1,6 +1,6 @@
 # RB-F05 離散バリア — 微分教師とDML
 
-更新2026-10-09。**離散バリアv1の数値pilot・主6fits・精度/費用比較・教材・独立レビューを完了。mainへの統合検証中。**
+更新2026-10-09。**離散バリアv1の数値pilot・主6fits・精度/費用比較・教材・独立レビューを完了。main統合済み。**
 既存digital v1と区別し、0DTE・rough・動的ヘッジは後続とする。
 
 [独立レビュー](REVIEW.md)／[主結果](reference.json)／[3図のnotebook](discrete_barrier_dml.ipynb)／[protocol](protocol.json)／[実施計画](../../../docs/superpowers/plans/2026-10-09-discrete-barrier-dml.md)／[追加調査](../../../docs/prep/design/RB-F05_DISCRETE_RESEARCH.md)。
@@ -117,4 +117,4 @@ refreshは主fit用build_referenceと計時用finalizeに分離。上の通常�
 
 ## 統合状態
 
-関連3suiteは2026-10-09に7,104 passed／6 skipped（366.24秒）、既存deprecation warnings2件。独立最終レビュー・fresh再計算・計時/会計checkを完了。main反映準備済み。研究の次はRB-F04。
+関連3suiteは2026-10-09に7,104 passed／6 skipped（366.24秒）、既存deprecation warnings2件。独立最終レビュー・fresh再計算・計時/会計checkを完了。09b8c1afをmainへfast-forward統合。mainでrelease gate、pilotのprimary保管庫復元、主保存重み/32計時・会計checkを確認した。研究の次はRB-F04。
