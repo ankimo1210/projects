@@ -1,0 +1,148 @@
+"""Read-only independent cold artifact process / receipt audit; no collector run.
+
+Reads only explicit RB-F05 paths and /tmp independent mathematical helper.
+Never reads assessment, creates random draws, imports project modules, trains,
+starts a child collector, or modifies source/artifacts. Output goes to /tmp.
+"""
+from __future__ import annotations
+import ast
+import hashlib
+import importlib.util
+import json
+import math
+from pathlib import Path
+import numpy as np
+
+ROOT=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+DIRECTORY=ROOT/'johnhull/research/RB-F05/short_maturity'
+_SPEC=importlib.util.spec_from_file_location('rbf05_cold_independent_mathematics','/tmp/rbf05_main_reference_audit.py')
+MATH=importlib.util.module_from_spec(_SPEC);_SPEC.loader.exec_module(MATH)
+
+
+def json_digest(value):
+    return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+
+
+def arrays_digest(arrays):
+    digest=hashlib.sha256()
+    for name in sorted(arrays):
+        a=np.asarray(arrays[name])
+        if a.dtype.hasobject:
+            raise ValueError('object array cannot bind evidence')
+        digest.update(json.dumps([name,a.dtype.str,list(a.shape)]).encode())
+        digest.update(np.ascontiguousarray(a).tobytes())
+    return digest.hexdigest()
+
+
+def _call_name(node):
+    if isinstance(node,ast.Name):
+        return node.id
+    if isinstance(node,ast.Attribute):
+        return _call_name(node.value)+'.'+node.attr
+    return type(node).__name__
+
+
+def audit(directory=DIRECTORY):
+    d=Path(directory); findings=[]
+    def check(condition,item,detail=None):
+        if not bool(condition):
+            findings.append(dict(severity='Important',item=item,detail=detail))
+    def read(name):
+        return json.loads((d/name).read_text())
+    cold,failed,process,serialization,record,protocol=(read(name) for name in ('cold_process_cost.json','cold_process_cost_initial_failed.json','process_cost.json','serialization_cost.json','reference.json','protocol.json'))
+    child=(d/'cold_artifact_process_source.txt').read_text()
+    stopwatch=(d/'cold_artifact_stopwatch_source.txt').read_text()
+    child_ast=ast.parse(child); stopwatch_ast=ast.parse(stopwatch)
+    child_calls=sorted(set(_call_name(n.func) for n in ast.walk(child_ast) if isinstance(n,ast.Call)))
+    stopwatch_calls=sorted(set(_call_name(n.func) for n in ast.walk(stopwatch_ast) if isinstance(n,ast.Call)))
+    check('subprocess.run' in stopwatch_calls,'fresh interpreter stopwatch source')
+    check("command=['/home/kazumasa/projects/.venv/bin/python','/tmp/rbf05-cold-artifact-child.py']" in stopwatch,'collector command lineage')
+    check("r.returncode==0" in stopwatch and "receipt['measurement']=json.loads(r.stdout)" in stopwatch,'only successful process adopts measurement')
+    check("r.returncode" in stopwatch and "receipt['stdout']=r.stdout" in stopwatch,'failed stdout/stderr/cost preservation')
+    check("r['hermite']['keys']" in child and "r['hermite']['grid']" not in child,'collector fixed saved primitive key')
+    check('build_reference.run_study' not in child_calls and not any(call.endswith(('.train','.fit','.random','.default_rng','.poisson','.standard_normal')) for call in child_calls),'collector no direct RNG/training/new-main execution',child_calls)
+    check(not any(call.endswith(('.write_text','.write_bytes','.savez','.savez_compressed','.save')) for call in child_calls),'collector has no financial artifact writes',child_calls)
+    check("load_protocol(d/'protocol.json',require_frozen=True)" in child and 'build_reference.check_record(r,a)' in child,'frozen pilot and full numeric check source')
+    check("os.environ.update(OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MKL_NUM_THREADS='1')" in child,'single-thread requested before imports')
+    check("x=a[r['datasets']['test']['inputs_key']][[0,21]]" in child,'fixed two original serving inputs')
+    check('cache is not flushed' in child and 'not uncached disk' in cold['scope'],'disk-cache measurement scope explicit')
+    check('construction/training measured separately' in child and 'not repeated offline teacher/training construction' in cold['scope'],'cold is artifact-backed serving, not repeated offline construction')
+    expected_command=['/home/kazumasa/projects/.venv/bin/python','/tmp/rbf05-cold-artifact-child.py']
+    check(cold['command']==expected_command and failed['command']==expected_command,'cold process exact command')
+    check(cold['schema']=='RB-F05-short-cold-process-cost-v1' and failed['schema']==cold['schema'],'cold schema')
+    check(cold['exit_code']==0 and cold['stderr']=='' and 'measurement' in cold,'successful cold receipt')
+    check(failed['exit_code']==1 and "KeyError: 'grid'" in failed['stderr'] and "r['hermite']['grid']" in failed['stderr'] and failed['stdout']=='' and 'measurement' not in failed,'initial failure retained as collector expense')
+    for label,receipt in (('cold',cold),('failed',failed),('main',process)):
+        check(isinstance(receipt['wall_seconds'],(int,float)) and math.isfinite(receipt['wall_seconds']) and receipt['wall_seconds']>0,label+' measured whole-process wall')
+    current_child=Path(cold['command'][1])
+    current_child_matches=current_child.exists() and current_child.read_bytes()==(d/'cold_artifact_process_source.txt').read_bytes()
+    check(current_child_matches,'saved collector source matches actual command file')
+    m=cold['measurement'];check(m['schema']=='RB-F05-short-cold-artifact-pipeline-v1','cold inner schema')
+    calculated_record_digest=json_digest(record)
+    check(m['record_digest']==calculated_record_digest,'cold actual saved record binding')
+    check(serialization['record_digest']==calculated_record_digest,'serialization actual saved record binding')
+    check(record['protocol']==protocol and record['protocol_digest']==json_digest(protocol),'actual frozen protocol binding')
+    registry=record['source_registry']; calculated_sources={}
+    check(len(registry)==10 and registry==protocol['frozen']['source_registry'],'ten frozen financial sources')
+    for name in registry:
+        path=ROOT/name
+        if path.is_file():
+            calculated_sources[name]=hashlib.sha256(path.read_bytes()).hexdigest()
+    check(registry==calculated_sources,'all frozen financial source bytes unchanged')
+    timers=m['timings']; timer_names={'cold_import_s','pilot_freeze_s','archive_load_s','saved_check_s','prepare_s','serving_s'}
+    check(set(timers)==timer_names and all(math.isfinite(v) and v>0 for v in timers.values()),'complete positive cold interval measurements')
+    interval_sum=math.fsum(timers.values()); unitemized=cold['wall_seconds']-interval_sum
+    check(unitemized>=0,'intervals fit within encompassing process wall',dict(interval_sum=interval_sum,wall=cold['wall_seconds']))
+    check(m['check']==record['saved_check'] and m['check']['passed'] is True and m['check']['accepted'] is False,'cold complete saved reconstruction status')
+    check(m['check']['teacher_slots']==640 and m['check']['fit_slots']==6 and m['check']['original_test_count']==336 and m['check']['timing_slots']==448,'cold original saved-check denominators')
+    expected_process_command=['/home/kazumasa/projects/.venv/bin/python',str(d/'build_reference.py'),'--protocol',str(d/'protocol.json'),'--mode','main','--directory',str(d)]
+    check(process['command']==expected_process_command and process['phase']=='main' and process['exit_code']==0,'main process receipt scope/command')
+    check('nested expenses not added' in process['scope'],'main wall explicitly encompassing nested costs')
+    check(serialization['schema']=='RB-F05-short-serialization-v1' and serialization['expense_id']=='serialization' and math.isfinite(serialization['seconds']) and serialization['seconds']>0,'serialization receipt identity/seconds')
+    check(serialization['npz_bytes']==(d/'reference.npz').stat().st_size,'serialized actual NPZ bytes')
+    main_categorized=record['costs']['main_only_s']; main_resolved=main_categorized+serialization['seconds']
+    check(main_resolved<=process['wall_seconds'],'main category+serialization contained in main CLI wall')
+    check(record['costs']['cold_pipeline_s'] is None and record['costs']['archive_load_s'] is None and record['costs']['serialization_pending'] is True,'core record preserves original pending fields; receipts overlay separately')
+    original_expenses={e['id']:e for e in record['expenses']}
+    check(original_expenses['serialization']['seconds'] is None and original_expenses['archive_load']['seconds'] is None,'core expense metadata was not rewritten by collector')
+    methods=['core_mixture','hermite']+[f"{f['id']}/{route}" for f in record['fits'] for route in ('raw','safe')]
+    check([row['method'] for row in m['outputs']]==methods and len(m['outputs'])==14,'whole-serving method roster')
+    output_evidence=[]
+    with np.load(d/'reference.npz',allow_pickle=False) as arrays:
+        calculated_array_digest=arrays_digest(arrays)
+        check(m['arrays_digest']==calculated_array_digest,'cold actual saved arrays binding')
+        x=np.asarray(arrays[record['datasets']['test']['inputs_key']])[[0,21]]
+        grid={name:np.asarray(arrays[key]) for name,key in record['hermite']['keys'].items()}
+        fits={f['id']:f for f in record['fits']}
+        max_saved_diff=np.zeros(3);max_math_diff=np.zeros(3)
+        for row in m['outputs']:
+            method=row['method']; values=np.asarray(row['values']); routes=np.asarray(row['routes'])
+            if method=='core_mixture':
+                saved=np.asarray(arrays[record['datasets']['test']['oracle_key']])[[0,21]];savedroutes=np.array(['mixture']*2)
+                independent=MATH.independent_oracle(x,protocol)
+            elif method=='hermite':
+                saved=np.asarray(arrays[record['hermite']['predictions']['test']])[[0,21]];savedroutes=np.array(['hermite']*2)
+                independent=MATH.independent_hermite(grid,x,protocol)
+            else:
+                fid,route=method.split('/'); fit=fits[fid]
+                saved=np.asarray(arrays[fit['predictions']['test'][route+'_key']])[[0,21]]
+                savedroutes=np.array(['raw']*2) if route=='raw' else np.asarray(arrays[fit['predictions']['test']['routes_key']])[[0,21]]
+                independent=saved if route=='raw' else MATH.independent_safe_route(np.asarray(arrays[fit['predictions']['test']['raw_key']])[[0,21]],x,protocol)['values']
+            difference=abs(values-saved);mathdifference=abs(values-independent)
+            tol=np.asarray(protocol['pilot']['absolute_reference_tolerance'])+np.asarray(protocol['pilot']['relative_reference_tolerance'])*abs(independent)
+            check(values.shape==(2,3) and np.isfinite(values).all() and np.all(difference<=tol) and np.all(mathdifference<=tol) and np.array_equal(routes,savedroutes),method+' serving value/physical Greeks/routes binding')
+            max_saved_diff=np.maximum(max_saved_diff,np.max(difference,axis=0));max_math_diff=np.maximum(max_math_diff,np.max(mathdifference,axis=0))
+            output_evidence.append(dict(method=method,routes=routes.tolist(),saved_max_abs=np.max(difference,axis=0).tolist(),independent_max_abs=np.max(mathdifference,axis=0).tolist()))
+    collector_hashes={name:hashlib.sha256((d/name).read_bytes()).hexdigest() for name in ('cold_artifact_process_source.txt','cold_artifact_stopwatch_source.txt')}
+    return dict(schema='RB-F05-independent-cold-receipt-audit-v1',passed=not findings,critical_findings=[],important_findings=findings,record_digest=calculated_record_digest,arrays_digest=calculated_array_digest,financial_source_count=len(registry),collector_hashes=collector_hashes,cold=dict(wall_seconds=cold['wall_seconds'],internal_interval_seconds=interval_sum,unitemized_startup_hash_json_process_overhead_seconds=unitemized,intervals=timers,method_count=14,input_rows=2,method_row_outputs=28,whole_scope='single new interpreter; artifact-backed validated serving; disk cache not flushed; no offline teacher/training repeat'),initial_failure=dict(wall_seconds=failed['wall_seconds'],exit_code=failed['exit_code'],cause="collector KeyError: grid; final source uses actual keys",accounting='separate measured failed collector research expense; zero financial results adopted'),main=dict(wall_seconds=process['wall_seconds'],categorized_seconds=main_categorized,serialization_seconds=serialization['seconds'],category_plus_serialization_seconds=main_resolved,remaining_process_overhead_seconds=process['wall_seconds']-main_resolved),expense_relations=dict(cold_success_and_failed_distinct_process_seconds=cold['wall_seconds']+failed['wall_seconds'],main_and_both_cold_processes_distinct_research_seconds=process['wall_seconds']+cold['wall_seconds']+failed['wall_seconds'],prohibited_double_count='never add internal cold intervals to cold wall, serialization to main wall, or repeat main construction inside artifact-backed cold; failed collector is a separate research expense',excluded_from_subtotal='pilot, independent fresh/replay and other research processes are owned by separate receipts; this subtotal is not complete research cost'),serving_max_abs_against_saved=max_saved_diff.tolist(),serving_max_abs_against_reference_reconstruction=max_math_diff.tolist(),serving_comparison_scope='Core/Hermite/safe fallback reconstructed with independent mathematical functions; NN raw compared with saved main predictions (parent owns independent NN export replay).',serving=output_evidence,limitations=['one successful new-interpreter run; no confidence interval or uncached-storage benchmark','two fixed 1-minute -4sigma test rows cover both event regimes; not the full 336 precision roster or a standalone per-method cold comparison','collector failure occurs before result JSON and carries no completed financial measurement or record digest','internal interval names are sequential wall segments; full saved_check includes another frozen-pilot verification; they are contained in encompassing wall','original core pending metadata remains immutable; cold/serialization/fresh measurements are resolved only in sidecar overlays','no performance adoption, acceptance or assessment was inspected or asserted'])
+
+
+def main():
+    result=audit()
+    path=Path('/tmp/rbf05_cold_receipt_audit.json');path.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
+    concise={k:v for k,v in result.items() if k!='serving'}
+    print(json.dumps(concise,indent=2,allow_nan=False));print('report:',path)
+    return 0 if result['passed'] else 1
+
+if __name__=='__main__':
+    raise SystemExit(main())

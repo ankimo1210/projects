@@ -2,18 +2,18 @@
   "pngs": [
     {
       "path": "/tmp/rbf05-main-figure-1.png",
-      "bytes": 271047,
-      "sha256": "4773174391e5975b93f12c9c9ee011e3060917e68681394a864794c7ac77e436"
+      "sha256": "4773174391e5975b93f12c9c9ee011e3060917e68681394a864794c7ac77e436",
+      "bytes": 271047
     },
     {
       "path": "/tmp/rbf05-main-figure-2.png",
-      "bytes": 278519,
-      "sha256": "e2b1d8e9c7b7023f9a3a5bc368de7466e54c4e3c7376ea4de25bb8f6bb103472"
+      "sha256": "e2b1d8e9c7b7023f9a3a5bc368de7466e54c4e3c7376ea4de25bb8f6bb103472",
+      "bytes": 278519
     },
     {
       "path": "/tmp/rbf05-main-figure-3.png",
-      "bytes": 200230,
-      "sha256": "7efa49dc2e30d5e71fedfa7e65a430f790124692fc4fdd55b0792fe2370a299c"
+      "sha256": "d0e2e968f6a8d3b033dc0d9bc4070a816bf90cbf89bdbba7a569e9868671c1c1",
+      "bytes": 204061
     }
   ],
   "errors": [],
@@ -32,7 +32,10 @@
     "Labels, legends, panel titles and captions readable; no panel overlap",
     "Actual six fits, 336 original rows, saved timings and expense categories shown",
     "External decisions and all six ineligible payback entries fit within figure 3",
-    "RNG/optimizer/training/network forbidden in actual notebook; original main/protocol/fresh JSON unchanged"
+    "RNG/optimizer/training/network forbidden in actual notebook; original main/protocol/fresh JSON unchanged",
+    "Updated cost-ID wording separates five overlay IDs from full pilot/review research cost"
   ],
-  "scope": "three artifact-only research figures; not all Book/browser widths or market validity"
+  "scope": "three artifact-only research figures; not all Book/browser widths or market validity",
+  "notebook_sha256": "4f92d7c70ce13669f61d9ab71051bc72c2e41ccce972808748bc1cbc5865b328",
+  "assessment_sha256": "886d495a668a67e1849c159919187a40e353fc25c727bec116dfd1d73ae954a5"
 }

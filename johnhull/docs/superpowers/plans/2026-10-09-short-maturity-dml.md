@@ -8,7 +8,7 @@
 
 **Tech Stack:** 既存Python / NumPy / SciPy / PyTorch CPU float64 / pytest / ruff / nbclient / matplotlib。新production依存なし。
 
-**Spec:** ../specs/2026-10-09-short-maturity-dml-design.md。2026-10-09の調査・計画提案。**正式設計から実装着手。N・許容差・採否閾値はpilot前の候補、未freeze。** 本人の継続指示に従い、rootとsubagentsが実装し独立レビューする。
+**Spec:** ../specs/2026-10-09-short-maturity-dml-design.md。2026-10-09の調査・計画提案。正式pilotの独立承認後、source10・条件・N1048576を固定済み。主6fits/全336点・追加検証・両復元・実3図・全採否・最終独立レビューを完了。main統合は次。 本人の継続指示に従い、rootとsubagentsが実装し独立レビューする。
 
 ## Global Constraints
 
@@ -147,14 +147,14 @@ johnhull/hullkit/tests/test_short_maturity_teachers.py。
 
 Interfaces: 正式spec §12のClockState/CallParameters、clock_state、conditional_values、path_values、mixture_values、compact_teacher/compact_moments。dictのextra配列と費用metadataは保存境界へ渡し、expiry通常GreekはNaN+reasonを保持する。
 
-- [ ] failing testsを先に作る:別UTC時刻でも同instant同state、時計積分、martingale/jump variance、
+- [x] failing testsを先に作る:別UTC時刻でも同instant同state、時計積分、martingale/jump variance、
       Lambda0のBlack/density、nonzeroΛのmixture/density/Merton、
       PW/LR/Gamma/conditioningのSE検算、expiry ATM unknown、active count0。
-- [ ] witnessed RED→最小private実装→GREEN/ruff。例えばordinary expiryは
+- [x] witnessed RED→最小private実装→GREEN/ruff。例えばordinary expiryは
       assert expiry_result["price"] == pytest.approx(0)
       assert expiry_result["delta_status"] == "undefined_atm"
-- [ ] 同値退化M2=0、chunk統合と一括統計を許容差比較。normal/countはcaller drawsにする。
-- [ ] rootへ式・commands・RED/GREEN・未検証領域を報告。独立review後Task2へ。
+- [x] 同値退化M2=0、chunk統合と一括統計を許容差比較。normal/countはcaller drawsにする。
+- [x] rootへ式・commands・RED/GREEN・未検証領域を報告。独立review後Task2へ。
 
 ### Task2: protocol / pilot / freeze
 
@@ -167,11 +167,11 @@ validate_pilot(record,arrays,p)->deterministic checks、
 freeze_protocol(p,pilot,arrays,review)->frozen。
 schemaはsource/seed/condition/allocation digestsをbind。smokeはfreeze拒否。
 
-- [ ] RED:source欠落/seed重複/count0 SE0/rare件数不足/precision不足/smoke/改変reviewのfreeze拒否。
-- [ ] GREEN/ruff後、全financial source完成までfull samplingを待つ。
-- [ ] isolated full pilot、保存mean/M2/covariance/counts、cutoff/quad/CRNの元分母を独立検査。
-- [ ] selected_N=min(ready_candidates)の全slot規則で固定。空ならunsupportedを記録してfreezeしない。
-- [ ] 独立reviewが条件・原始配列・N・費用を承認してfreeze。mainデータはまだ使わない。
+- [x] RED:source欠落/seed重複/count0 SE0/rare件数不足/precision不足/smoke/改変reviewのfreeze拒否。
+- [x] GREEN/ruff後、全financial source完成までfull samplingを待つ。
+- [x] isolated full pilot、保存mean/M2/covariance/counts、cutoff/quad/CRNの元分母を独立検査。
+- [x] selected_N=min(ready_candidates)の全slot規則で固定。空ならunsupportedを記録してfreezeしない。
+- [x] 独立reviewが条件・原始配列・N・費用を承認してfreeze。mainデータはまだ使わない。
 
 ### 主教師のcompact IID保存境界
 
@@ -205,28 +205,28 @@ predict(weights,inputs)->price/delta/gamma、
 run_study(frozen,output)->record/arrays、
 load_result(output)->record/arrays、check_record(record,arrays,fresh=False)->checks。
 
-- [ ] RED:plain-array boundary、train-only scales、paired init/batches、weights replay、
+- [x] RED:plain-array boundary、train-only scales、paired init/batches、weights replay、
       log-spot physical chain rule、Gamma、raw/safe route/expiry/unknown保持。
-- [ ] 3features=(x=log(S/K),log(remaining seconds),event flag)、3→32→32→1 tanh、
+- [x] 3features=(x=log(S/K),log(remaining seconds),event flag)、3→32→32→1 tanh、
       normalized C/Kのunconstrained linear outputを初期候補にする。softplus/gatingはrootの数式検討後に別途判断し、真のGreek評価をclipしない。price/deltaはsame scalar priceから微分:
       Delta=C_x/S、Gamma=(C_xx−C_x)/S²。event flagは0/1契約のみ。
-- [ ] raw出力をclipしない。safeはexpiry exact、minT未満/契約OOD/nonfinite/bound違反をmixtureへfallback。
+- [x] raw出力をclipしない。safeはexpiry exact、minT未満/契約OOD/nonfinite/bound違反をmixtureへfallback。
       safe routeは未知のpricing error検知を保証しない。raw誤差と検出不能な悪化を残す。
-- [ ] 512train/128validation、70% ATM/30% log-moneyness[-.05,.05]、balanced regimes、
+- [x] 512train/128validation、70% ATM/30% log-moneyness[-.05,.05]、balanced regimes、
       train-only normalization、512updates/batch128/Adam.003、fit cap120秒を候補にする。
       同updatesがprimary比較。capで未完は失敗として保持し、unequal-updatesをpaired成功扱いしない。
-- [ ] main test候補は8時刻[1,5,15,30,60,120,240,390]×
+- [x] main test候補は8時刻[1,5,15,30,60,120,240,390]×
       (17 ATM distances[-4,4]sqrtW＋fixed x=[-.05,-.025,.025,.05])×2＝336slots。
       重複endpointもID/weightを固定。seed/test/checkpoint選択に使わない。
-- [ ] baselineは独立count-mixture、density（精度参照）、既存Merton価格、
+- [x] baselineは独立count-mixture、density（精度参照）、既存Merton価格、
       **C² quintic Hermite**（C/C_x/C_xxをnodeで一致、Gammaも同じ価格の微分）。
       C_x=SDelta、C_xx=S²Gamma+SDelta。SciPy BPoly.from_derivativesを使える。
       cubic HermiteのC¹ nodeで通常Gammaが一意でない問題を避ける。
       spot65/time33相当とclock/pulse breakを候補とし、採用gridはpilotで固定。
       baselineのGamma oracle/offline費用・同一精度達成も報告。
-- [ ] 全financial codeのfixture GREEN/ruff→Task2full pilot/freeze→固定main教師・6 fits。
+- [x] 全financial codeのfixture GREEN/ruff→Task2full pilot/freeze→固定main教師・6 fits。
       training teacherが固定precision/rare gateを満たさない場合も元のslotとreasonを残し、黙って置換しない。
-- [ ] price/Delta/GammaのRMSE/p99/max、time/ATM/event buckets、教師SE、
+- [x] price/Delta/GammaのRMSE/p99/max、time/ATM/event buckets、教師SE、
       raw/safe/OOD/失敗元分母、paired全3seedsを保存checkerで再計算。
 
 ### Task4: saved artifact-only notebook
@@ -235,11 +235,11 @@ Files: short_maturity/build_notebook.py、
 johnhull/hullkit/tests/test_short_maturity_notebook.py。
 後でshort_maturity_dml.ipynbを生成。
 
-- [ ] RED:toy JSON/NPZのschema読取、optimizer/RNG禁止、expiry unknown/failed slots保持、3PNG。
-- [ ] 数値計算を保存checker/analyticsに限定。deterministic cell IDs、nbplot.setup。
-- [ ] 図1=teacher誤差/SE/rare counts、図2=price/Delta/Gamma＋expiry/失敗、
+- [x] RED:toy JSON/NPZのschema読取、optimizer/RNG禁止、expiry unknown/failed slots保持、3PNG。
+- [x] 数値計算を保存checker/analyticsに限定。deterministic cell IDs、nbplot.setup。
+- [x] 図1=teacher誤差/SE/rare counts、図2=price/Delta/Gamma＋expiry/失敗、
       図3=強いbaseline対main/cold費用・回収・採否。単位と元分母を表に残す。
-- [ ] 実mainをguarded kernelで実行、3PNG目視。glyph/legend/zero/unknownを確認。
+- [x] 実mainをguarded kernelで実行、3PNG目視。glyph/legend/zero/unknownを確認。
       教材表示成功、数値研究受入、標準器採用は別status。
 
 ### Task5: 費用 / 独立review / 受入後main
@@ -247,19 +247,19 @@ johnhull/hullkit/tests/test_short_maturity_notebook.py。
 Files: short_maturityのREADME/REVIEW/費用receipts/manifest、root所有docs/ROADMAP/INDEX。
 Task3で費用registryを最初から実装し、ここでは保存費用の照合と最終表示を行う。
 
-- [ ] teacher/pilot/oracle/grid/common init/train/export/load/evaluation/fallback/check/freshをunique expense_idで保存。
+- [x] teacher/pilot/oracle/grid/common init/train/export/load/evaluation/fallback/check/freshをunique expense_idで保存。
       nestingを二重計上しない。独立導入caseごとには共通費用を1回課金。
-- [ ] BLAS/Torch1thread、hardware/version、warmup1＋7reps、固定順/別seed、
+- [x] BLAS/Torch1thread、hardware/version、warmup1＋7reps、固定順/別seed、
       batch1/32、返却price/全Greeks/routes、whole-call時間を保存。cap/overrunも残す。
-- [ ] main-only、凍結研究pipelineのvalidation込みcold、カテゴリ研究費用合計、
+- [x] main-only、凍結研究pipelineのvalidation込みcold、カテゴリ研究費用合計、
       measured CLI wall、serialization、freshを分離。未計測はpending、測定0にしない。
-- [ ] teacher成立、Delta改善、Gamma利用、標準高速器採用を別decision。
+- [x] teacher成立、Delta改善、Gamma利用、標準高速器採用を別decision。
       NN候補accuracyはprice abs.01、Delta abs.005、
       K Gamma abs.05＋relative.05（未承認）。全seeds/bucketsの劣化も表示する。
       回収Q=(NNoffline−baselineoffline)/(baselineonline−NNonline)、分母<=0は回収不能。
       baselineも同じ要求Greeks/precisionを達成しているcaseだけで速度採否。
-- [ ] 原始配列/重み/route/全費用の独立review→対象suite/ruff→required release/CAS gateをrootが1回。
-      rootが正式docs/ROADMAP/INDEXを更新し、受入後commit/main/push。
+- [x] 原始配列/重み/route/全費用の独立review→全関連3suite7998 PASS/6 skip、19Pythonruff/format→tracked release/CAS gate。
+- [ ] 受入後main統合/pushとmainの復元・saved数値/release。正式docs/ROADMAP/INDEX更新を同じcommitで記録。
 
 ## 5. 一次資料・公式情報の再確認（2026-10-09）
 
@@ -335,3 +335,7 @@ Ruling:時刻端点はexp(log())後の近接floatを別nodeとせず、定義値
 ## 正式pilot前checkpoint
 
 実装確定の金融registryは新7件＋既存zero_dte.py/alternative_models.py/bsm.pyの10件。_multilevel_mc.pyは今回呼ばない。教師・独立参照・protocol・pilot・learner・analytics・runner・教材builderは実装済み。全short対象と両package guardは1270 PASS（19.85秒）。独立runner再レビューの残lifecycleを修正し46回帰と独立11witness/実failureを確認。最終対象gate1275PASS/20.73秒、16Pythonruff/formatPASS、残Critical/Important0。fullpilot/freeze/mainは次に実施する。toy教材3PNGの実行は正式main教材の受入と区別する。
+
+## v1最終受入（2026-10-09）
+
+主640教師/6fit×512updates/336点、追加12条件180推定枠、全費用の定義、両保管庫、artifact-only3図を検証。最終独立208checks PASS、Critical/Important0。関連3suite7998PASS/6skip、表示文言後の対象22PASS、19Pythonruff/formatとtracked releasePASS。NNはraw/safe全fitで固定精度未達、Hermite336/336PASS。教師/教育比較保持、標準NN不採用。元acceptedFalse/pendingとQNoneを保存。未測定をゼロにせず、外部5費用IDの解消と全研究費総額を区別する。[最終受入](../../../research/RB-F05/short_maturity/validation.json)／[結果](../../../research/RB-F05/short_maturity/RESULTS.md)。

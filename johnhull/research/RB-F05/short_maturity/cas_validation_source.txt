@@ -1,0 +1,479 @@
+#!/usr/bin/env python3
+"""Independent per-store restoration/semantic replay for existing RB-F05 evidence.
+
+Owned repository outputs: main_cas_validation.json, fresh_manifest.json,
+fresh_store_cost.json, fresh_cas_validation.json. No financial/JSON originals,
+new data, training, source edits or Git operations.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from datetime import UTC, datetime
+from pathlib import Path
+from time import perf_counter
+
+import numpy as np
+
+HERE = Path(
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity"
+)
+STORE_CODE = HERE.parents[2] / "scripts" / "evidence_store.py"
+SOURCE_SCRIPT = Path(__file__).resolve()
+OWNED = (
+    "main_cas_validation.json",
+    "fresh_manifest.json",
+    "fresh_store_cost.json",
+    "fresh_cas_validation.json",
+)
+
+
+def import_file(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def snapshot():
+    return {
+        name: hashlib.sha256((HERE / name).read_bytes()).hexdigest()
+        for name in (
+            "reference.json",
+            "serialization_cost.json",
+            "reference_manifest.json",
+            "fresh_check.json",
+            "fresh_cost.json",
+            "fresh_execution_wall.json",
+            "fresh_saved_replay_cost.json",
+            "fresh_plan.json",
+            "fresh_support.py",
+            "fresh_generate_stopwatch.py",
+            "fresh_replay_stopwatch.py",
+            "fresh_validation_source_proof.json",
+            "protocol.json",
+        )
+    }
+
+
+def json_read(path):
+    return json.loads(Path(path).read_text())
+
+
+def write_new(path, record):
+    with Path(path).open("x") as handle:
+        json.dump(record, handle, indent=2, allow_nan=False)
+
+
+def copy_metadata(destination, names):
+    before = perf_counter()
+    for name in names:
+        source, target = HERE / name, destination / name
+        if target.exists():
+            raise FileExistsError(target)
+        shutil.copyfile(source, target)
+        if (
+            hashlib.sha256(target.read_bytes()).digest()
+            != hashlib.sha256(source.read_bytes()).digest()
+        ):
+            raise ValueError(f"canonical metadata copy changed {name}")
+    return perf_counter() - before
+
+
+def forbidden(*args, **kwargs):
+    raise RuntimeError("CAS semantic replay attempted RNG/training/optimizer")
+
+
+def check_saved_main(destination, runner, protocol):
+    before = perf_counter()
+    record, arrays = runner.load_result(destination)
+    archive_load_s = perf_counter() - before
+    before = perf_counter()
+    checked = runner.check_record(record, arrays)
+    semantic_check_s = perf_counter() - before
+    before = perf_counter()
+    receipt = runner.serialization_receipt(destination, record)
+    if receipt.get("pending") is not False:
+        raise ValueError("main serialization receipt remains unverified")
+    registry = protocol.source_registry(require_complete=True)
+    if (
+        registry != record["source_registry"]
+        or registry != record["protocol"]["frozen"]["source_registry"]
+        or protocol.json_digest(record) != protocol.json_digest(json_read(HERE / "reference.json"))
+        or record["protocol_digest"] != protocol.json_digest(record["protocol"])
+        or receipt["npz_bytes"] != (destination / "reference.npz").stat().st_size
+    ):
+        raise ValueError("main semantic source/record/serialization binding changed")
+    bindings = {
+        "main_record_digest": protocol.json_digest(record),
+        "main_arrays_digest": protocol.arrays_digest(arrays),
+        "protocol_digest": record["protocol_digest"],
+        "source_registry": registry,
+        "serialization_receipt_record_digest": receipt["record_digest"],
+        "serialization_seconds": receipt["seconds"],
+        "serialization_bytes": receipt["npz_bytes"],
+    }
+    binding_check_s = perf_counter() - before
+    del arrays
+    return {
+        "passed": bool(checked["passed"]),
+        "check": checked,
+        "bindings": bindings,
+        "archive_load_s": archive_load_s,
+        "semantic_check_s": semantic_check_s,
+        "binding_check_s": binding_check_s,
+        "rng_sampling_trapped": True,
+        "training_optimizer_trapped": True,
+        "scope": "restored NPZ plus byte-preserved canonical JSON/serialization receipt; saved-only semantic reconstruction",
+    }
+
+
+def validate_restore(store, manifest, destination, evidence_store):
+    before = perf_counter()
+    report = evidence_store.restore([store], manifest, destination)
+    seconds = perf_counter() - before
+    if report["status"] != "PASS":
+        raise ValueError("single-store restore not PASS")
+    if any(entry["served_by"] != store.role or entry["failures"] for entry in report["entries"]):
+        raise ValueError("restore used fallback or another store")
+    return report, seconds
+
+
+def fresh_bindings(destination, protocol):
+    proof = json_read(destination / "fresh_validation_source_proof.json")
+    record, cost = (
+        json_read(destination / "fresh_check.json"),
+        json_read(destination / "fresh_cost.json"),
+    )
+    wall = json_read(destination / "fresh_execution_wall.json")
+    replay_cost = json_read(destination / "fresh_saved_replay_cost.json")
+    main = json_read(destination / "reference.json")
+    md, fd = protocol.json_digest(main), protocol.json_digest(record)
+    if (
+        proof["main_record_digest"] != md
+        or proof["fresh_record_digest"] != fd
+        or cost["record_digest"] != md
+        or cost["fresh_record_digest"] != fd
+        or wall["main_record_digest"] != md
+        or wall["fresh_record_digest"] != fd
+        or replay_cost["record_digest"] != md
+        or replay_cost["fresh_record_digest"] != fd
+        or cost["npz_bytes"] != (destination / "fresh_arrays.npz").stat().st_size
+        or record["source_registry"] != protocol.source_registry()
+    ):
+        raise ValueError("fresh external cost/source/record identities changed")
+    for name, digest in proof["files"].items():
+        if hashlib.sha256((destination / name).read_bytes()).hexdigest() != digest:
+            raise ValueError("fresh validation source proof changed")
+    for seconds in (
+        cost["seconds"],
+        wall["wall_s"],
+        wall["fresh_function_s"],
+        replay_cost["seconds"],
+        cost["serialization_s"],
+    ):
+        if not isinstance(seconds, (int, float)) or not np.isfinite(seconds) or seconds < 0:
+            raise ValueError("fresh bound cost seconds invalid")
+    if (
+        wall["exit_code"] != 0
+        or replay_cost["exit_code"] != 0
+        or replay_cost["check"]["passed"] is not True
+        or replay_cost["disjoint_from_fresh_generation"] is not True
+        or wall["charged_separately"] is not False
+        or not np.isclose(wall["fresh_function_s"], cost["seconds"], rtol=1e-10, atol=1e-10)
+        or not np.isclose(
+            wall["wall_s"] - cost["seconds"],
+            wall["unaccounted_overhead_s"],
+            rtol=1e-10,
+            atol=1e-10,
+        )
+    ):
+        raise ValueError("fresh cost nesting/exit/result contract changed")
+    return {
+        "main_record_digest": md,
+        "fresh_record_digest": fd,
+        "fresh_numeric_arrays_digest": record["numeric_arrays_digest"],
+        "source_registry": record["source_registry"],
+        "source_proof": proof,
+        "function_seconds": cost["seconds"],
+        "generation_process_wall_s": wall["wall_s"],
+        "separate_saved_replay_wall_s": replay_cost["seconds"],
+        "fresh_npz_bytes": cost["npz_bytes"],
+    }
+
+
+def run(primary_root, mirror_root):
+    started = perf_counter()
+    started_utc = datetime.now(UTC).isoformat()
+    if any((HERE / name).exists() for name in OWNED):
+        raise FileExistsError("one of four owned CAS receipts already exists")
+    for name in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"):
+        if os.environ.get(name) != "1":
+            raise ValueError("single-thread environment required")
+    original_snapshot = snapshot()
+    evidence = import_file("rbf05_cas_evidence_store", STORE_CODE)
+    helper = import_file("rbf05_cas_fresh_support", HERE / "fresh_support.py")
+    runner, protocol, _analytics, _reference, _core = helper.modules(HERE)
+    primary = evidence.Store.open(primary_root, role="primary")
+    mirror = evidence.Store.open(mirror_root, role="mirror")
+    stores = (primary, mirror)
+    registry = protocol.source_registry(require_complete=True)
+    main = json_read(HERE / "reference.json")
+    if registry != main["source_registry"]:
+        raise ValueError("canonical frozen source registry changed")
+    setup_s = perf_counter() - started
+
+    # Import learner solely for NumPy weight replay, then forbid actual fitting.
+    before = perf_counter()
+    learner = runner._learner()
+    learner.train = forbidden
+    import torch
+
+    for name in ("Adam", "SGD", "AdamW", "RMSprop"):
+        setattr(torch.optim, name, forbidden)
+    for name in ("rand", "randn", "randint", "normal", "multinomial"):
+        setattr(torch, name, forbidden)
+    np.random.default_rng = forbidden
+    for name in ("normal", "rand", "randn", "randint", "choice", "random", "poisson"):
+        setattr(np.random, name, forbidden)
+    trap_setup_s = perf_counter() - before
+
+    main_manifest = evidence.load_manifest(json_read(HERE / "reference_manifest.json"))
+    if (
+        len(main_manifest["entries"]) != 1
+        or main_manifest["entries"][0]["path"] != "reference.npz"
+        or main_manifest["entries"][0]["bytes"] != (HERE / "reference.npz").stat().st_size
+    ):
+        raise ValueError("main manifest original NPZ binding changed")
+    main_copies, main_destinations = [], {}
+    main_run_start = perf_counter()
+    for store in stores:
+        before = perf_counter()
+        destination = Path(tempfile.mkdtemp(prefix=f"rbf05-main-cas-{store.role}-"))
+        restored, restore_s = validate_restore(store, main_manifest, destination, evidence)
+        metadata_copy_s = copy_metadata(destination, ["reference.json", "serialization_cost.json"])
+        check = check_saved_main(destination, runner, protocol)
+        row = {
+            "role": store.role,
+            "store_root": str(store.root),
+            "destination": str(destination),
+            "restore": restored,
+            "restore_s": restore_s,
+            "metadata_copy_s": metadata_copy_s,
+            **check,
+            "per_copy_wall_s": perf_counter() - before,
+        }
+        row["disjoint_inner_seconds"] = (
+            restore_s
+            + metadata_copy_s
+            + row["archive_load_s"]
+            + row["semantic_check_s"]
+            + row["binding_check_s"]
+        )
+        row["cost_scope"] = (
+            "per-copy wall encloses restore/copy/load/check/binding; do not add wall and enclosed components"
+        )
+        main_copies.append(row)
+        main_destinations[store.role] = destination
+    main_wall_s = perf_counter() - main_run_start
+    main_receipt = {
+        "schema": "RB-F05-short-main-cas-v1",
+        "passed": all(c["passed"] for c in main_copies),
+        "started_utc": started_utc,
+        "copies": main_copies,
+        "manifest": main_manifest,
+        "main_record_digest": protocol.json_digest(main),
+        "operation_wall_s": main_wall_s,
+        "unique_expense_id": "main/cas_restore_validate",
+        "copy_wall_seconds_sum": sum(c["per_copy_wall_s"] for c in main_copies),
+        "inner_component_seconds_sum": sum(c["disjoint_inner_seconds"] for c in main_copies),
+        "setup_s": setup_s,
+        "rng_trap_setup_s": trap_setup_s,
+        "setup_charge_owner": "main/cas_restore_validate (shared once with fresh validation)",
+        "charged_seconds": setup_s + trap_setup_s + main_wall_s,
+        "support_script": str(SOURCE_SCRIPT),
+        "support_script_sha256": hashlib.sha256(SOURCE_SCRIPT.read_bytes()).hexdigest(),
+        "scope": "both stores restored separately, no fallback; restore bytes proven by CAS, financial values rechecked with tolerances",
+        "original_data_unchanged": snapshot() == original_snapshot,
+    }
+    if not main_receipt["original_data_unchanged"]:
+        raise ValueError("canonical original metadata changed during main restoration")
+    write_new(HERE / "main_cas_validation.json", main_receipt)
+    print(
+        json.dumps(
+            {
+                "main_copies": 2,
+                "passed": main_receipt["passed"],
+                "seconds": main_receipt["charged_seconds"],
+            }
+        ),
+        flush=True,
+    )
+
+    # Canonical financial source cannot mutate: CLI put only writes two stores and owned manifest.
+    put_env = dict(os.environ)
+    put_env.update(
+        PROJECTS_ARTIFACT_STORE=str(primary_root),
+        PROJECTS_ARTIFACT_MIRROR=str(mirror_root),
+    )
+    command = [
+        sys.executable,
+        str(STORE_CODE),
+        "put",
+        "--project-root",
+        str(HERE),
+        "--manifest-out",
+        str(HERE / "fresh_manifest.json"),
+        "fresh_arrays.npz",
+    ]
+    before = perf_counter()
+    put_result = subprocess.run(command, env=put_env, capture_output=True, text=True)
+    put_wall_s = perf_counter() - before
+    if put_result.returncode != 0:
+        raise RuntimeError("fresh put failed: " + put_result.stderr)
+    fresh_manifest = evidence.load_manifest(json_read(HERE / "fresh_manifest.json"))
+    if (
+        len(fresh_manifest["entries"]) != 1
+        or fresh_manifest["entries"][0]["path"] != "fresh_arrays.npz"
+        or fresh_manifest["entries"][0]["bytes"] != (HERE / "fresh_arrays.npz").stat().st_size
+    ):
+        raise ValueError("fresh manifest original NPZ binding changed")
+    fresh_cost = {
+        "schema": "RB-F05-short-fresh-store-cost-v1",
+        "record_digest": protocol.json_digest(main),
+        "fresh_record_digest": protocol.json_digest(json_read(HERE / "fresh_check.json")),
+        "command": command,
+        "wall_seconds": put_wall_s,
+        "exit_code": put_result.returncode,
+        "stdout": put_result.stdout,
+        "stderr": put_result.stderr,
+        "manifest": fresh_manifest,
+        "unique_expense_id": "fresh/store_put",
+        "charged_once": True,
+        "scope": "write-once full fresh NPZ to primary and mirror plus manifest; excludes later restoration/replay",
+    }
+    write_new(HERE / "fresh_store_cost.json", fresh_cost)
+
+    metadata = [
+        "reference.json",
+        "serialization_cost.json",
+        "fresh_check.json",
+        "fresh_cost.json",
+        "fresh_execution_wall.json",
+        "fresh_saved_replay_cost.json",
+        "fresh_plan.json",
+        "fresh_support.py",
+        "fresh_generate_stopwatch.py",
+        "fresh_replay_stopwatch.py",
+        "fresh_validation_source_proof.json",
+    ]
+    fresh_copies = []
+    fresh_run_start = perf_counter()
+    for store in stores:
+        before = perf_counter()
+        destination = Path(tempfile.mkdtemp(prefix=f"rbf05-fresh-cas-{store.role}-"))
+        restored, restore_s = validate_restore(store, fresh_manifest, destination, evidence)
+        metadata_copy_s = copy_metadata(destination, metadata)
+        # The fresh saved checker repeats main validation using the same role's
+        # independent, already restored main archive. No canonical NPZ fallback.
+        main_archive = main_destinations[store.role] / "reference.npz"
+        (destination / "reference.npz").symlink_to(main_archive)
+        check_started = perf_counter()
+        checked = helper.check_saved(destination, source=HERE)
+        semantic_s = perf_counter() - check_started
+        binding_started = perf_counter()
+        bindings = fresh_bindings(destination, protocol)
+        binding_s = perf_counter() - binding_started
+        row = {
+            "role": store.role,
+            "store_root": str(store.root),
+            "destination": str(destination),
+            "restored_main_archive": str(main_archive),
+            "restore": restored,
+            "restore_s": restore_s,
+            "metadata_copy_s": metadata_copy_s,
+            "semantic_check_s": semantic_s,
+            "binding_check_s": binding_s,
+            "per_copy_wall_s": perf_counter() - before,
+            "check": checked,
+            "bindings": bindings,
+            "rng_sampling_trapped": True,
+            "training_optimizer_trapped": True,
+            "nested_main_revalidation": True,
+            "nested_main_revalidation_is_actual_repeated_work": True,
+            "semantic_scope": "helper.check_saved includes loading/rechecking same-role restored main, fresh primitives/references/cost/sourceproof",
+            "scope": "per-copy wall encloses restoration/copy/full nested saved check/binding; no separate addition of enclosed checks",
+        }
+        row["disjoint_inner_seconds"] = restore_s + metadata_copy_s + semantic_s + binding_s
+        fresh_copies.append(row)
+        print(
+            json.dumps(
+                {
+                    "fresh_role": store.role,
+                    "passed": checked["passed"],
+                    "seconds": row["per_copy_wall_s"],
+                }
+            ),
+            flush=True,
+        )
+    fresh_wall_s = perf_counter() - fresh_run_start
+    if snapshot() != original_snapshot or protocol.source_registry() != registry:
+        raise ValueError("canonical original metadata or financial10 changed during CAS validation")
+    fresh_receipt = {
+        "schema": "RB-F05-short-fresh-cas-v1",
+        "passed": all(c["check"]["passed"] for c in fresh_copies),
+        "copies": fresh_copies,
+        "manifest": fresh_manifest,
+        "main_record_digest": protocol.json_digest(main),
+        "fresh_record_digest": protocol.json_digest(json_read(HERE / "fresh_check.json")),
+        "unique_expense_id": "fresh/cas_restore_validate",
+        "charged_once": True,
+        "operation_wall_s": fresh_wall_s,
+        "copy_wall_seconds_sum": sum(c["per_copy_wall_s"] for c in fresh_copies),
+        "inner_component_seconds_sum": sum(c["disjoint_inner_seconds"] for c in fresh_copies),
+        "shared_setup_seconds": setup_s + trap_setup_s,
+        "shared_setup_charge_owner": "main/cas_restore_validate only; do not charge here again",
+        "charged_seconds": fresh_wall_s,
+        "put_cost_separate": True,
+        "support_script": str(SOURCE_SCRIPT),
+        "support_script_sha256": hashlib.sha256(SOURCE_SCRIPT.read_bytes()).hexdigest(),
+        "source_registry": registry,
+        "original_data_unchanged": True,
+        "scope": "both fresh NPZ copies restored alone; each fresh saved replay includes real repeated main replay; no new observations or model selection",
+    }
+    write_new(HERE / "fresh_cas_validation.json", fresh_receipt)
+    return {
+        "passed": main_receipt["passed"] and fresh_receipt["passed"],
+        "main_cas_seconds": main_receipt["charged_seconds"],
+        "fresh_put_seconds": put_wall_s,
+        "fresh_cas_seconds": fresh_wall_s,
+        "unique_total_seconds": main_receipt["charged_seconds"] + put_wall_s + fresh_wall_s,
+        "main_destinations": {k: str(v) for k, v in main_destinations.items()},
+        "fresh_destinations": {c["role"]: c["destination"] for c in fresh_copies},
+        "source_registry_unchanged": True,
+        "original_records_unchanged": True,
+        "scope": "unique outer expense sum; enclosed restoration/check components are descriptive only",
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--primary", type=Path, required=True)
+    parser.add_argument("--mirror", type=Path, required=True)
+    args = parser.parse_args()
+    result = run(args.primary, args.mirror)
+    write_new("/tmp/rbf05-cas-validation-summary.json", result)
+    print(json.dumps(result, indent=2))
+
+
+if __name__ == "__main__":
+    main()

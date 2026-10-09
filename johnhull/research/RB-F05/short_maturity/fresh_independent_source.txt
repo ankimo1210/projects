@@ -1,0 +1,149 @@
+"""Saved fresh overlay independent audit; every RNG path forbidden."""
+import importlib.util,sys,json,hashlib,math,time
+from pathlib import Path
+from collections import Counter
+from datetime import datetime
+import numpy as np
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=ROOT/"johnhull/research/RB-F05/short_maturity"
+def module(name,path):
+    s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);sys.modules[name]=m;s.loader.exec_module(m);return m
+b=module("fresh_pilot_math","/tmp/rbf05_formal_pilot_audit.py")
+h=module("fresh_clock_math","/tmp/rbf05_main_reference_audit.py")
+f=module("fresh_reference_math","/tmp/rbf05_pilot_reference_audit.py")
+req=b.require;DIFFS={}
+def near(a,c,label,atol=1e-10,rtol=2e-9):
+    a,c=np.asarray(a),np.asarray(c);req(a.shape==c.shape,label+" shape")
+    if a.dtype.kind in "USbiu" and c.dtype.kind in "USbiu":req(np.array_equal(a,c),label+" discrete")
+    else:
+        req(np.isfinite(a).all() and np.isfinite(c).all(),label+" finite")
+        delta=np.abs(a-c);mx=float(delta.max()) if delta.size else 0;DIFFS[label.split("/")[-1]]=max(DIFFS.get(label.split("/")[-1],0),mx)
+        
+        if not np.all(delta<=atol+rtol*np.abs(c)):
+            print(label, "actual",a, "independent",c, "difference",delta,flush=True)
+        req(np.all(delta<=atol+rtol*np.abs(c)),label+" maxabs="+str(mx))
+def arrays_digest(a):
+    digest=hashlib.sha256()
+    for name in sorted(a):
+        arr=np.asarray(a[name]);digest.update(json.dumps([name,arr.dtype.str,list(arr.shape)]).encode());digest.update(np.ascontiguousarray(arr).tobytes())
+    return digest.hexdigest()
+def forbid(*args,**kwargs):raise RuntimeError("Independent fresh review forbidden RNG/train")
+def audit(main,r,a):
+    start=time.perf_counter();p=main["protocol"];N=1048576;K=100.;methods=["conditioned_price","conditioned_delta","conditioned_gamma","price","pw_delta","lr_delta","lrpw_gamma","lr2_gamma","naive_gamma","crn_delta_0.02","crn_gamma_0.02","crn_delta_0.05","crn_gamma_0.05","crn_delta_0.10","crn_gamma_0.10"]
+    main_id=b.json_digest(main);r_id=b.json_digest(r)
+    registry={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in b.SOURCES}
+    req(registry==main["source_registry"]==r["source_registry"]==p["frozen"]["source_registry"],"frozen10 immutable")
+    req(r["schema"]=="RB-F05-short-fresh-v1" and r["phase"]=="additional_verification" and r["main_record_digest"]==main_id and r["protocol_digest"]==main["protocol_digest"],"actual fresh binding")
+    req(r["accepted"] is False and r["main_selection_changed"] is False and r["main_labels_pooled"] is False,"original no acceptance or pooling")
+    plan=json.loads((D/"fresh_plan.json").read_text());req(plan==r["declared_plan"] and b.json_digest(plan)==r["declared_plan_digest"],"predeclared plan exact")
+    req(r["support_source_filename"]=="fresh_support.py" and r["support_script_sha256"]==hashlib.sha256((D/"fresh_support.py").read_bytes()).hexdigest(),"support measured source proof")
+    expected=[]
+    for minute in [1,5,30,60,240,390]:
+        for event in [False,True]:
+            i=len(expected);expected.append(dict(id=i,remaining_minutes=minute,event=event,spot=K,strike=K,seed_ids={kind:f"fresh/raw/{i}/{kind}" for kind in ["count","jump","brown"]}))
+    req(plan["schema"]=="RB-F05-short-fresh-plan-v1" and plan["sample_count"]==N and plan["normal_draw_policy"]=="full_N_diagnostic" and plan["cases"]==[dict(index=d["id"],spot=K,minutes=d["remaining_minutes"],event=d["event"],seeds=d["seed_ids"]) for d in expected],"12 fixed pre-main slots")
+    fixed=dict(sample_count=N,block_size=16384,normal_draw_policy="full_N_diagnostic",roster=expected,method_order=methods,crn_scaled_bumps=[.02,.05,.1],se_multiple=6.,absolute_tolerance=[1e-7,1e-9,1e-9],relative_tolerance=[1e-10,1e-10,1e-9],nmax=8,epsabs=1e-10,epsrel=1e-10,tighten_factor=4)
+    req(r["fixed_design"]==fixed and r["original_case_count"]==len(r["cases"])==12,"fixed complete design")
+    seeds={q["id"]:q["seed"] for q in p["seed_ledger"]};req(len(seeds)==3870 and len(set(seeds.values()))==3870,"all reserved seed ledger identities")
+    used=[];status=Counter();rows=[];keys=set();draw_sums=Counter()
+    for row,definition in zip(r["cases"],expected):
+        i=row["id"]
+        req(all(row[k]==v for k,v in definition.items()),"original fresh case "+str(i))
+        st=h.independent_row_state(p,row["remaining_minutes"]*60,int(row["event"]))
+        for k in st:
+            if k=="status":req(row["state"][k]==st[k],"clock state")
+            else:near(row["state"][k],st[k],"clock/"+k,atol=2e-18,rtol=2e-12)
+        req(row["parameters"]=={k:p["contract"][k] for k in ["rate","dividend","jump_mean","jump_std"]},"parameters")
+        req(row["seeds"]=={kind:seeds[value] for kind,value in definition["seed_ids"].items()},"reserved concrete seed roles");used.extend(row["seeds"].values())
+        ek={name:f"fresh_{i}_{name}" for name in ["counts","z_jump","z_brown","mean","m2","covariance","se"]};req(row["keys"]==ek,"closed key roster");keys.update(ek.values())
+        counts,zj,zb=[a[ek[k]] for k in ["counts","z_jump","z_brown"]]
+        req(counts.shape==zj.shape==zb.shape==(N,) and counts.dtype.kind in "iu" and np.all(counts>=0) and np.isfinite(zj).all() and np.isfinite(zb).all(),"full saved primitive denominator")
+        L=st["jump_mean_count"];analytic=L==0
+        if analytic:req(np.all(counts==0),"analytic Poisson zero outputs")
+        dm=dict(original_n=N,normal_draw_policy="full_N_diagnostic",count_outputs=N,count_random_variates=0 if analytic else N,jump_normal_outputs=N,brownian_normal_outputs=N,requested_stochastic_variates=2*N if analytic else 3*N,count_status="deterministic_zero" if analytic else "IID_poisson",conditioned_effective_observed_mc_n=0 if analytic else N,conditioned_aggregation_n=N,scope="fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",engine_scope="requested variates, not a count of primitive generator words or rejection retries")
+        req(row["draws"]==dm,"draw semantic counts")
+        for k in ["count_outputs","count_random_variates","jump_normal_outputs","brownian_normal_outputs","requested_stochastic_variates","conditioned_effective_observed_mc_n","conditioned_aggregation_n"]:draw_sums[k]+=dm[k]
+        reference=row["reference"];truth=f.independent_mixture(K,K,st,p);tol=np.array([1e-7,1e-9,1e-9])+np.array([1e-10,1e-10,1e-9])*abs(truth)
+        near(reference["values"],truth,"reference/mixture",atol=8e-11,rtol=2e-10);near(reference["tolerance"],tol,"reference/tolerance")
+        tail,_core,_sf=f.independent_tails(K,st,p);near(reference["tail_bounds"],tail,"reference/tails",atol=1e-27,rtol=2e-10)
+        density=f.independent_density(K,K,st,p)
+        req(not density["messages"],"independent density no warnings")
+        for name in ["quad_values","tight_values"]:
+            near(reference[name],density["values"],"reference/"+name,atol=8e-11,rtol=2e-10)
+        qe=np.array(reference["quad_errors"]);te=np.array(reference["tight_errors"])
+        req(qe.shape==te.shape==(3,) and np.all(qe>=0) and np.all(te>=0) and np.all(np.maximum(qe,te)<=tol/4) and np.all(tail<=tol/4),"fixed reference quarter budget")
+        req(np.all(abs(np.array(reference["quad_values"])-truth)<=tol) and np.all(abs(np.array(reference["tight_values"])-reference["quad_values"])<=tol/4) and reference["primary_passed"] is True and reference["quad_status"]==reference["tight_status"]=="ok" and not reference["quad_messages"] and not reference["tight_messages"],"original primary reference PASS")
+        for name,err in [("quad_lr_gamma","quad_lr_gamma_error"),("tight_lr_gamma","tight_lr_gamma_error")]:
+            req(np.isfinite(reference[name]) and np.isfinite(reference[err]) and reference[err]>=0 and abs(reference[name]-truth[2])<=8*reference[err]+8e-10,"density LR Gamma original score")
+        widths=K*np.sqrt(st["variance"])*np.array([.02,.05,.1]);near(row["finite_steps"],widths,"crn/width");near(reference["finite_steps"],widths,"crn/referencewidth")
+        targets=f.independent_finite_targets(K,K,st,p,reference["finite_steps"]);allow=f.finite_roundoff_budgets(K,K,st,p,reference["finite_steps"],targets)
+        req(np.all(abs(np.array(reference["finite_values"])-targets)<=allow),"independent high precision finite targets plus explicit price rounding")
+        near(reference["finite_h_bias"],np.array(reference["finite_values"])-np.array(reference["values"])[1:],"crn/stored-bias")
+        # Direct original-N first/second sums in 80-bit, distinct from saved block/Chan algorithm.
+        center=np.r_[truth,truth[[0,1,1,2,2,2]],np.asarray(reference["finite_values"]).reshape(-1)].astype(np.longdouble)
+        moment_targets=center.astype(float).copy()
+        center[8]=0
+        if analytic: center[:3]=b.conditional(K,K,st,p,np.array(0),np.array(0.))
+        first=np.zeros(15,dtype=np.longdouble);second=np.zeros((15,15),dtype=np.longdouble);nonzero=np.zeros(6,dtype=np.int64);crossings=np.zeros(3,dtype=np.int64)
+        discount=math.exp(-p["contract"]["rate"]*st["carry_years"])
+        for j in range(0,N,65536):
+            ns,js,bs=counts[j:j+65536],zj[j:j+65536],zb[j:j+65536]
+            cond=b.conditional(K,K,st,p,ns,js);terminal,raw=b.raw_values(K,K,st,p,ns,bs,js);ratio=terminal/K
+            columns=[cond,raw];nonzero+=np.count_nonzero(raw,axis=0)
+            for q,width in enumerate(widths):
+                lower_spot=(K-width)*ratio;upper_spot=(K+width)*ratio
+                lower=discount*np.maximum(lower_spot-K,0);upper=discount*np.maximum(upper_spot-K,0)
+                columns.append(np.column_stack([(upper-lower)/(2*width),(upper+lower-2*raw[:,0])/(width*width)]))
+                crossings[q]+=np.count_nonzero((lower_spot<K)&(upper_spot>K))
+            values=np.column_stack(columns).astype(np.longdouble)-center;first+=values.sum(0);second+=values.T@values
+        mean=np.asarray(center+first/N,dtype=float);m2=np.asarray(second-np.outer(first,first)/N,dtype=float);cov=m2/(N-1);se=np.sqrt(np.maximum(np.diag(m2),0)/(N*(N-1)))
+        for name,val in [("mean",mean),("m2",m2),("covariance",cov),("se",se)]:near(a[ek[name]],val,"moments/"+name,atol=5e-7 if name=="m2" else 1e-10)
+        req(row["status"]=="observed" and row["n"]==N and row["active_count"]==int(np.count_nonzero(counts)) and row["zero_count"]==int(np.count_nonzero(counts==0)),"original case observations")
+        near(row["nonzero_raw"],nonzero,"diagnostic/nonzero");near(row["crossings"],crossings,"diagnostic/crossings")
+        comps=[0,1,2,0,1,1,2,2,2,1,2,1,2,1,2];mtol=np.asarray(reference["tolerance"])[comps];mtarget=moment_targets;support=abs(mean-mtarget)<=6*se+mtol
+        req([q["method"] for q in row["methods"]]==methods,"15 method original order")
+        for q,(item,name) in enumerate(zip(row["methods"],methods)):
+            if name=="naive_gamma":label="negative_control";ok=False
+            elif q<3 and analytic:label="analytic_deterministic" if support[q] else "unsupported";ok=bool(support[q])
+            elif (q<3 and row["active_count"]==0) or (q in [10,12,14] and crossings[(q-10)//2]==0) or (se[q]==0 and abs(mean[q]-mtarget[q])>mtol[q]):label="diagnostic_inconclusive";ok=False
+            else:label="supported" if support[q] else "unsupported";ok=bool(support[q])
+            req(item["original_n"]==N and item["status"]==label and item["supported"]==ok and item["criterion"]=="abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)","method original denominator/status")
+            for field,val in [("mean",mean[q]),("se",se[q]),("target",mtarget[q]),("difference",mean[q]-mtarget[q]),("tolerance",mtol[q])]:near(item[field],val,"method/"+field)
+            status[label]+=1
+        rows.append(dict(id=i,active_count=row["active_count"],crossings=crossings.tolist(),maximum_reference_difference=float(abs(np.array(reference["values"])-truth).max()),finite_target_error_ratio=float(np.max(abs(np.array(reference["finite_values"])-targets)/allow))))
+        print("FRESH_INDEPENDENT "+str(i+1)+"/12 complete",flush=True)
+    req(len(used)==len(set(used))==36 and keys==set(a) and len(a)==84 and all(not x.dtype.hasobject for x in a.values()),"36 separate used seeds /84 plain array closure")
+    req(r["numeric_arrays_digest"]==arrays_digest(a),"actual fresh primitive provenance hash")
+    expected_summary=dict(original_cases=12,original_method_slots=180,observed_cases=12,unknown_cases=0,method_status_counts=dict(status),primary_reference_supported_cases=12,scope="negative_control/unsupported/inconclusive remain in original 180 slots");req(r["summary"]==expected_summary,"all original180 summary")
+    exp=r["expenses"];ec={"main_gate":"validation","saved_replay":"validation"};ec.update({f"fresh/{i}/{kind}":kind for i in range(12) for kind in ["draw","reference","estimator"]})
+    req(len(exp)==len(ec)==38 and len({x["id"] for x in exp})==38 and {x["id"]:x["category"] for x in exp}==ec,"38 closed fresh expenses")
+    cats={}
+    for x in exp:
+        req(set(x)=={"id","category","charged","parent","seconds","scope"} and x["charged"] is True and x["parent"] is None and isinstance(x["seconds"],(int,float)) and not isinstance(x["seconds"],bool) and np.isfinite(x["seconds"]) and x["seconds"]>=0 and x["scope"],"measured charge contract")
+        cats[x["category"]]=cats.get(x["category"],0)+x["seconds"]
+    req(r["categorized_cost"]["pending_ids"]==[] and set(r["categorized_cost"]["categories"])==set(cats),"fresh category roster")
+    for name,val in cats.items():near(r["categorized_cost"]["categories"][name],val,"cost/"+name)
+    total=sum(cats.values());near(r["categorized_cost"]["measured_seconds"],total,"cost/total")
+    cost=json.loads((D/"fresh_cost.json").read_text());wall=json.loads((D/"fresh_execution_wall.json").read_text());replay=json.loads((D/"fresh_saved_replay_cost.json").read_text())
+    req(cost["schema"]=="RB-F05-short-fresh-cost-v1" and cost["record_digest"]==main_id and cost["fresh_record_digest"]==r_id and cost["expense_id"]=="fresh" and cost["charged_once"] is True and cost["main_only_cost"] is False and cost["cold_pricing_cost"] is False and cost["npz_bytes"]==(D/"fresh_arrays.npz").stat().st_size,"generation external binding/role")
+    near(cost["categorized_before_serialization_s"],total,"cost/inner-sum")
+    req(np.isfinite(cost["seconds"]) and cost["seconds"]>=total+cost["serialization_s"]-1e-9 and cost["serialization_s"]>=0,"function includes serialization")
+    req(wall["schema"]=="RB-F05-short-fresh-execution-wall-v1" and wall["main_record_digest"]==main_id and wall["fresh_record_digest"]==r_id and wall["exit_code"]==0 and wall["charged_separately"] is False and wall["support_script_sha256"]==r["support_script_sha256"] and wall["wall_s"]>=cost["seconds"],"CLI nested not separately charged")
+    near(wall["fresh_function_s"],cost["seconds"],"cost/nested-function");near(wall["unaccounted_overhead_s"],wall["wall_s"]-cost["seconds"],"cost/CLI-overhead")
+    req(replay["schema"]=="RB-F05-short-fresh-saved-replay-cost-v1" and replay["record_digest"]==main_id and replay["fresh_record_digest"]==r_id and replay["exit_code"]==0 and replay["charged_once"] is True and replay["parent"] is None and replay["disjoint_from_fresh_generation"] is True and replay["seconds"]>=0,"separate replay binding")
+    req(replay["check"]["passed"] is True and replay["check"]["replay_rng"] is False and replay["check"]["optimizer_or_training"] is False and replay["check"]["original_cases"]==12 and replay["check"]["original_method_slots"]==180,"saved replay no RNG evidence")
+    for obj,k in [(wall,"wall_s"),(replay,"seconds")]:
+        dt=(datetime.fromisoformat(obj["completed_utc"])-datetime.fromisoformat(obj["started_utc"])).total_seconds();near(obj[k],dt,"cost/UTC-duration",atol=1e-4,rtol=0)
+    proof=json.loads((D/"fresh_validation_source_proof.json").read_text());req(proof["main_record_digest"]==main_id and proof["fresh_record_digest"]==r_id,"support source proof binding")
+    for name,digest in proof["files"].items():req(hashlib.sha256((D/name).read_bytes()).hexdigest()==digest,"current supplement source "+name)
+    measured={}
+    for name,digest in proof.get("measured_stopwatch_sources",{}).items():
+        measured[name]=digest
+    req(registry=={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in b.SOURCES},"frozen10 after")
+    return dict(schema="RB-F05-short-fresh-independent-audit-v1",passed=True,critical_findings=[],important_findings=[],main_record_digest=main_id,fresh_record_digest=r_id,fresh_arrays_digest=arrays_digest(a),source_registry=registry,source_support_sha=r["support_script_sha256"],original_cases=12,original_method_slots=180,method_status_counts=dict(status),draw_metadata_sums=dict(draw_sums),numeric_max_differences=DIFFS,rows=rows,costs=dict(categories=cats,categorized_s=total,serialization_s=cost["serialization_s"],function_s=cost["seconds"],CLI_s=wall["wall_s"],CLI_overhead_s=wall["unaccounted_overhead_s"],separate_saved_replay_s=replay["seconds"],research_distinct_process_sum_s=wall["wall_s"]+replay["seconds"],nested_never_added=True),measured_stopwatch_source_proof=measured,no_rng=True,no_training=True,audit_s=time.perf_counter()-start,limits=["Saved primitives independently evaluated; no RNG regenerated, so seed values/roles are checked against reserved ledger without byte replay.","6SE support is diagnostic and does not prove simultaneous coverage or exactness.","Negative-control12 slots retained among180; no main labels/selection change.","Finite-h target rounding allowance is diagnostic, not rigorous library error proof.","CLI includes fresh function/categories/serialization; independent saved replay is a separate research expense."])
+if __name__=="__main__":
+    main=json.loads((D/"reference.json").read_text());r=json.loads((D/"fresh_check.json").read_text())
+    with np.load(D/"fresh_arrays.npz",allow_pickle=False) as z:a={k:z[k] for k in z.files}
+    np.random.default_rng=forbid
+    report=audit(main,r,a);Path("/tmp/rbf05-fresh-independent-audit.json").write_text(json.dumps(report,indent=2,allow_nan=False))
+    print(json.dumps({k:report[k] for k in ["passed","original_cases","original_method_slots","method_status_counts","costs","numeric_max_differences","audit_s"]},indent=2))

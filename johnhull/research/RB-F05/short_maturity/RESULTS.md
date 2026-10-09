@@ -1,6 +1,6 @@
 # 短期・同日満期 DML v1 — 結果と採否
 
-2026-10-09。合成同日欧州cash callの固定実験。数値・保存物・実3図の検証済み、関連3suite7998 PASS/6 skip、19Python ruff/format PASS。tracked release/独立総合レビュー待ち。main統合は未実施。
+2026-10-09。合成同日欧州cash callの固定実験。数値・保存物・実3図の検証済み、関連3suite7998 PASS/6 skip、19Python ruff/format PASS。tracked release/最終独立208checks PASS・Critical/Important0。main未反映。main統合は未実施。
 
 ## 結論
 
@@ -12,7 +12,7 @@
 | Delta-DMLの改善 | 支持 | 固定3 paired seedのraw RMSEの記述的比較 |
 | NN Gammaの利用 | 不支持 | 全元点の固定精度未達。Gamma lossは使っていない |
 | NN標準高速器 | 不採用 | raw/safeとも精度未達。安全経路も未知のGreek誤差を検知できない |
-| 研究教材の保持 | 最終gate待ち | 原始配列・失敗・unknown・費用・3図を保存 |
+| 研究教材の保持 | 受入 | 原始配列・失敗・unknown・費用・3図を保存 |
 
 ## 固定した問題
 
@@ -66,7 +66,7 @@ Hermiteは同じ価格をspotで2回微分するC² quintic、spot65/time36相�
 
 新規プロセスの観測は**保存物からの検査付き利用**であり、OS disk cacheをflushした測定ではない。offline教師/学習を毎回作り直すcoldと同一視しない。主construction CLIは別に実測済み。主費用の約29秒はvalidationとgeometry内の繰り返しpilot検査で、教師・学習時間だけをCLI全体と呼ばない。
 
-元recordのpending5とacceptedFalse/teachingAcceptanceFalseは不変。[外部assessment](assessment.json)に実receipt・採否をbindして解消を表示する。元JSONを書き換えて成功扱いしない。scalar価格だけを返す処理とprice/全Greeks/routesを返す処理の速度を比べない。
+元recordのpending5とacceptedFalse/teachingAcceptanceFalseは不変。[外部assessment](assessment.json)に実receipt・採否をbindして解消を表示する。元JSONを書き換えて成功扱いしない。外部5IDの解消はpilot初回生成・独立review・archive復元等の全研究費が確定した意味ではない。coldのpilot_freezeは当該プロセス内の再検証費用だけであり、全研究費総額を捏造しない。scalar価格だけを返す処理とprice/全Greeks/routesを返す処理の速度を比べない。
 
 保存されたwarmup1/7 repetitions、batch1/32の全448 timing slotを検査した。精度同等性が成立しない全NN fitのpaybackはeligible=False、Q=unknown/未定義。費用からQを推定していない。
 
@@ -89,6 +89,6 @@ SHAは原始保存物のidentity用。金融値の一致は許容誤差つきで
 
 ## 検証の範囲と次
 
-[主数値review](MAIN_REVIEW.json)、[pilot承認](PILOT_REVIEW.json)、[金融source固定](freeze_check.json)、[最終ruff](FINAL_RUFF.json)を保持する。最終関連3suite7998 PASS/6 skip（443.32秒）、19Python ruff/format PASS。[実測](FULL_SUITE.json)。tracked release・独立総合レビュー・main反映は未完了。
+[主数値review](MAIN_REVIEW.json)、[pilot承認](PILOT_REVIEW.json)、[金融source固定](freeze_check.json)、[最終ruff](FINAL_RUFF.json)を保持する。最終関連3suite7998 PASS/6 skip（443.32秒）、19Python ruff/format PASS。[実測](FULL_SUITE.json)。tracked release/最終独立208checks PASS・重要0。[最終受入](validation.json)／[独立最終レビュー](REVIEW.json)。main反映は未実施。
 
 本v1は実市場のSPX/SPXW、official holiday/early-close calendar、Bates/PIDE/rough、Gamma loss、vol/quote Greeks、動的ヘッジを承認していない。次は[同一較正条件の動的モデル横断ヘッジ](../../RB-F04/dynamic_hedging/README.md)、その後は多曲線risk/P&Lと増分XVA＋IM・資本。短期v1完了で全研究ロードマップの完了とはしない。

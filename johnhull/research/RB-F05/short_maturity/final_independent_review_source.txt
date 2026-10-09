@@ -1,0 +1,196 @@
+"""Final read-only overlay, receipt, restored-byte and notebook binding audit."""
+import ast,base64,copy,hashlib,json,math,sys,time
+from pathlib import Path
+from types import SimpleNamespace
+import numpy as np
+D=Path("/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity")
+ROOT=D.parents[3]
+def read(path):return json.loads(Path(path).read_text())
+def sha(path):
+    h=hashlib.sha256()
+    with Path(path).open("rb") as f:
+        for chunk in iter(lambda:f.read(1048576),b""):h.update(chunk)
+    return h.hexdigest()
+def jd(obj):return hashlib.sha256(json.dumps(obj,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest()
+def ad(arrays):
+    h=hashlib.sha256()
+    for name in sorted(arrays):
+        a=np.asarray(arrays[name]);h.update(json.dumps([name,a.dtype.str,list(a.shape)]).encode());h.update(np.ascontiguousarray(a).tobytes())
+    return h.hexdigest()
+CHECKS=[]
+def require(ok,label):
+    if not ok:raise AssertionError(label)
+    CHECKS.append(label)
+def eqnum(a,b,label,atol=1e-9):require(np.allclose(a,b,atol=atol,rtol=1e-12,equal_nan=False),label)
+def finite(v):return isinstance(v,(int,float)) and not isinstance(v,bool) and math.isfinite(v) and v>=0
+def forbidden(*a,**k):raise RuntimeError("No RNG/training permitted in final independent review")
+np.random.default_rng=forbidden
+start=time.perf_counter()
+main=read(D/"reference.json");fresh=read(D/"fresh_check.json");a=read(D/"assessment.json")
+ownmain=read("/tmp/rbf05-main-independent-review.json")
+ownfresh=read("/tmp/rbf05-fresh-independent-audit.json")
+owncold=read("/tmp/rbf05_cold_receipt_audit.json")
+mainid=jd(main);freshid=jd(fresh)
+require(mainid==ownmain["main_record_digest"]==ownfresh["main_record_digest"],"current immutable main matches independently reviewed main")
+require(freshid==ownfresh["fresh_record_digest"],"current fresh equals independently evaluated original12/180")
+require(owncold["passed"] and ownfresh["passed"] and ownmain["numeric_review_approved"],"prior independent financial and cold audits passed")
+registry={name:sha(ROOT/name) for name in ownmain["source_registry"]}
+require(len(registry)==10 and registry==ownmain["source_registry"]==main["source_registry"]==main["protocol"]["frozen"]["source_registry"]==fresh["source_registry"],"all frozen financial10 current exact identity")
+with np.load(D/"reference.npz",allow_pickle=False) as z:arrays={key:z[key] for key in z.files}
+arraysid=ad(arrays)
+require(arraysid==ownmain["main_arrays_digest"]==a["study_arrays_digest"],"current actual main7715 arrays binding")
+require(len(arrays)==7715 and all(not x.dtype.hasobject for x in arrays.values()),"plain closed original main arrays")
+require(a["schema"]=="RB-F05-short-assessment-v1" and a["study_record_digest"]==mainid and a["protocol_digest"]==main["protocol_digest"],"assessment actual three bindings")
+require(main["accepted"] is False and main["teaching_acceptance"] is False and a["original_record_accepted"] is False and a["original_record_teaching_acceptance"] is False,"original acceptance preserved False")
+require(a["accuracy"]["targets"]==ownmain["accuracy_gate"]==main["protocol"]["accuracy"],"frozen accuracy gate unchanged")
+require(a["accuracy"]["fit_pointwise_accuracy"]==ownmain["fit_pointwise_accuracy"] and a["accuracy"]["hermite_pointwise_accuracy"]==ownmain["hermite_pointwise_accuracy"],"assessment accuracy exactly independent review full original336 and six fits")
+# Current saved predictions independently re-evaluate fixed pointwise gate.
+truth=arrays[main["datasets"]["test"]["independent_key"]];K=main["protocol"]["contract"]["strike"];scale=np.array([1,1,K]);p=main["protocol"]["accuracy"]
+limits=np.column_stack([np.full(336,p["price_abs"]),np.full(336,p["delta_abs"]),p["scaled_gamma_abs"]+p["scaled_gamma_relative"]*np.abs(truth[:,2]*K)])
+require(truth.shape==(336,3),"current pointwise original336")
+rmses=[]
+for fit,checked in zip(main["fits"],a["accuracy"]["fit_pointwise_accuracy"]):
+    require(fit["id"]==checked["id"] and fit["stats"]["seed"]==checked["seed"] and fit["dml"]==checked["dml"],"fixed fit identity "+fit["id"])
+    require(fit["stats"]["updates"]==512 and fit["stats"]["batch_attempts"]==512,"original actual update roster "+fit["id"])
+    for route in ["raw","safe"]:
+        pred=arrays[fit["predictions"]["test"][route+"_key"]];err=np.abs((pred-truth)*scale);passc=np.isfinite(err)&(err<=limits);cell=checked[route]
+        require(cell["original_count"]==336 and cell["passed_by_component"]==passc.sum(0).tolist() and cell["passed_all_components"]==int(passc.all(1).sum()) and cell["all_rows_passed"]==bool(passc.all()),"recomputed pointwise denominator and pass "+fit["id"]+"/"+route)
+        eqnum(cell["maximum_error"],err.max(0),"recomputed maxima "+fit["id"]+"/"+route,atol=2e-8)
+        pay=a["equal_accuracy_payback"][fit["id"]]
+        require(pay["eligible"] is False and pay["queries"] is None and pay["original_count"]==336 and pay[route+"_passed_all_components"]==int(passc.all(1).sum()),"ineligible Q unknown "+fit["id"]+"/"+route)
+    pred=arrays[fit["predictions"]["test"]["raw_key"]];rmses.append(np.sqrt(np.mean(((pred-truth)*scale)**2,axis=0)))
+require(len(a["equal_accuracy_payback"])==len(main["fits"])==6,"all original six payback slots closed")
+require(all(np.all(rmses[i+1]<rmses[i]) for i in [0,2,4]),"all three descriptive paired raw RMSE improvements")
+hp=arrays[main["hermite"]["predictions"]["test"]];he=np.abs((hp-truth)*scale)
+require(np.all(he<=limits) and a["accuracy"]["hermite_pointwise_accuracy"]["passed_all_components"]==336,"current Hermite all original336 pointwise pass")
+require(a["decisions"]["teacher"]["status"]=="supported_fixed_domain" and a["decisions"]["teacher"]["original_teacher_count"]==640 and a["decisions"]["delta_improvement"]["status"]=="improved_3_of_3_pairs" and a["decisions"]["gamma_utility"]["status"]=="NN_accuracy_not_met" and a["decisions"]["standard_accelerator_adoption"]["status"]=="NN_not_adopted","supported educational comparison and nonadoption")
+c=read(D/"cold_process_cost.json");cf=read(D/"cold_process_cost_initial_failed.json");fc=read(D/"fresh_cost.json");fw=read(D/"fresh_execution_wall.json");fr=read(D/"fresh_saved_replay_cost.json");mc=read(D/"process_cost.json");sc=read(D/"serialization_cost.json")
+expected_costs=dict(main_construction_cli_s=mc["wall_seconds"],main_categorized_s=main["costs"]["categorized"]["measured_seconds"],main_serialization_s=sc["seconds"],cold_pipeline_s=c["wall_seconds"],cold_import_s=c["measurement"]["timings"]["cold_import_s"],archive_load_s=c["measurement"]["timings"]["archive_load_s"],pilot_freeze_s=c["measurement"]["timings"]["pilot_freeze_s"],cold_saved_check_s=c["measurement"]["timings"]["saved_check_s"],cold_prepare_s=c["measurement"]["timings"]["prepare_s"],cold_serving_s=c["measurement"]["timings"]["serving_s"],fresh_s=fc["seconds"],fresh_cli_s=fw["wall_s"],fresh_saved_replay_s=fr["seconds"],failed_cold_receipt_attempt_s=cf["wall_seconds"])
+require(a["costs"]==expected_costs and all(finite(v) for v in a["costs"].values()),"all14 assessment costs exact bound actual receipts")
+require(c["exit_code"]==0 and cf["exit_code"]!=0 and "KeyError" in cf["stderr"] and "measurement" not in cf,"failed initial collector retained as process expense")
+require(c["wall_seconds"]>=sum(c["measurement"]["timings"].values()) and mc["wall_seconds"]>=sc["seconds"]+main["costs"]["categorized"]["measured_seconds"] and fw["wall_s"]>=fc["seconds"]>=fc["categorized_before_serialization_s"]+fc["serialization_s"] and fw["charged_separately"] is False and fr["disjoint_from_fresh_generation"] is True,"cost enclosure cold/main/fresh/replay")
+resolved={x["id"]:x for x in a["resolved_expenses"]}
+require(len(resolved)==len(a["resolved_expenses"])==5 and set(resolved)==set(main["costs"]["categorized"]["pending_ids"]),"five overlay IDs exact original pending roster")
+for name in resolved:
+    eqnum(resolved[name]["seconds"],expected_costs[{"serialization":"main_serialization_s","fresh":"fresh_s"}.get(name,name+"_s")],"resolved actual cost "+name,atol=0)
+    require(bool(resolved[name]["scope"]) and bool(resolved[name]["receipt"]),"resolved scope and receipt "+name)
+require(main["costs"]["cold_pipeline_s"] is None and main["costs"]["fresh_s"] is None and main["costs"]["archive_load_s"] is None and main["costs"]["serialization_pending"] is True,"immutable original unknown and pending preserved")
+proof=read(D/"fresh_validation_source_proof.json");measured={}
+require(proof["main_record_digest"]==mainid and proof["fresh_record_digest"]==freshid,"supplemental source current binding")
+for name,h in proof["files"].items():require(sha(D/name)==h,"current support source hash "+name)
+def normalized(text):
+    tree=ast.parse(text)
+    imports=sorted((type(q).__name__,getattr(q,"module",None),getattr(q,"level",0),x.name,x.asname) for q in tree.body if isinstance(q,(ast.Import,ast.ImportFrom)) for x in q.names)
+    body=ast.dump(ast.Module(body=[q for q in tree.body if not isinstance(q,(ast.Import,ast.ImportFrom))],type_ignores=[]),include_attributes=False)
+    return imports,body
+require(len(proof["measured_stopwatch_sources"])==2,"two exact measured stopwatch source versions")
+for name,row in proof["measured_stopwatch_sources"].items():
+    require(sha(D/row["file"])==row["sha256"],"actual measured source bytes "+name)
+    require(normalized((D/name).read_text())==normalized((D/row["file"]).read_text()),"style-only complete AST equality "+name)
+    measured[name]=row["sha256"]
+require(sha(D/"fresh_support.py")==fresh["support_script_sha256"]==ownfresh["source_support_sha"],"fresh financially relevant supplemental helper unchanged")
+maincas=read(D/"main_cas_validation.json");freshcas=read(D/"fresh_cas_validation.json");put=read(D/"fresh_store_cost.json")
+cas_rows=[];main_destinations={}
+for receipt,filename,canonical,npzdigest,recordid in [(maincas,"reference.npz",D/"reference.npz",arraysid,mainid),(freshcas,"fresh_arrays.npz",D/"fresh_arrays.npz",fresh["numeric_arrays_digest"],freshid)]:
+    mh=sha(canonical);size=canonical.stat().st_size
+    require(receipt["passed"] is True and receipt["original_data_unchanged"] is True,"CAS successful immutable original "+filename)
+    require(len(receipt["copies"])==2 and {x["role"] for x in receipt["copies"]}=={"primary","mirror"},"two independent CAS roles "+filename)
+    require(receipt["manifest"]["entries"]==[dict(path=filename,ref="artifact:sha256:"+mh,bytes=size,mime="application/octet-stream")],"CAS closed actual manifest "+filename)
+    for row in receipt["copies"]:
+        role=row["role"];dest=Path(row["destination"]);rp=dest/filename
+        require(rp.is_file() and not rp.is_symlink() and rp.stat().st_size==size and sha(rp)==mh,"actual independent restored whole bytes "+filename+"/"+role)
+        rr=row["restore"];require(rr["status"]=="PASS" and len(rr["entries"])==1 and rr["entries"][0]["served_by"]==role and rr["entries"][0]["sha256"]==mh and rr["entries"][0]["failures"]==[],"CAS exact role no fallback "+filename+"/"+role)
+        require(row["rng_sampling_trapped"] and row["training_optimizer_trapped"] and row["check"]["passed"],"CAS saved-only traps and semantic result "+filename+"/"+role)
+        require(row["bindings"]["source_registry"]==registry and row["bindings"]["main_record_digest"]==mainid,"CAS source10 and main identity "+filename+"/"+role)
+        require((dest/"reference.json").read_bytes()==(D/"reference.json").read_bytes() and (dest/"serialization_cost.json").read_bytes()==(D/"serialization_cost.json").read_bytes(),"CAS original metadata exact "+filename+"/"+role)
+        components=["restore_s","metadata_copy_s","semantic_check_s","binding_check_s"]+(["archive_load_s"] if filename=="reference.npz" else [])
+        require(all(finite(row[x]) for x in components+["per_copy_wall_s"]),"CAS nonnegative measured components "+filename+"/"+role)
+        eqnum(row["disjoint_inner_seconds"],sum(row[x] for x in components),"CAS inner sum "+filename+"/"+role)
+        require(row["per_copy_wall_s"]>=row["disjoint_inner_seconds"],"CAS nested components not double charged "+filename+"/"+role)
+        if filename=="reference.npz":
+            main_destinations[role]=dest
+            require(row["check"]["teacher_slots"]==640 and row["check"]["fit_slots"]==6 and row["check"]["original_test_count"]==336 and row["check"]["timing_slots"]==448 and row["check"]["accepted"] is False,"CAS original main semantic scope "+role)
+            require(row["bindings"]["main_arrays_digest"]==arraysid and row["bindings"]["protocol_digest"]==main["protocol_digest"],"CAS actual main numeric bindings "+role)
+        else:
+            require(row["check"]["original_cases"]==12 and row["check"]["original_method_slots"]==180 and row["check"]["replay_rng"] is False and row["check"]["optimizer_or_training"] is False,"CAS fresh original denominator "+role)
+            require(row["bindings"]["fresh_record_digest"]==freshid and row["bindings"]["fresh_numeric_arrays_digest"]==npzdigest,"CAS actual fresh bindings "+role)
+            require(Path(row["restored_main_archive"])==main_destinations[role]/"reference.npz" and (dest/"reference.npz").is_symlink() and (dest/"reference.npz").resolve()==(main_destinations[role]/"reference.npz").resolve(),"CAS fresh same-role restored main, canonical excluded "+role)
+            require(row["nested_main_revalidation"] is True and row["nested_main_revalidation_is_actual_repeated_work"] is True,"CAS actual repeated main included "+role)
+            for name in ["fresh_check.json","fresh_cost.json","fresh_execution_wall.json","fresh_saved_replay_cost.json","fresh_plan.json","fresh_support.py"]:
+                require((dest/name).read_bytes()==(D/name).read_bytes(),"CAS fresh exact metadata "+role+"/"+name)
+            oldproof=read(dest/"fresh_validation_source_proof.json")
+            for name,h in oldproof["files"].items():
+                require(sha(dest/name)==h,"restored measured support proof "+role+"/"+name)
+                require(h==proof["files"][name] if name=="fresh_support.py" else h==measured[name],"restored old measured version maps to retained current proof "+role+"/"+name)
+        cas_rows.append(dict(kind=filename,role=role,bytes=size,sha256=mh,nested_wall_s=row["per_copy_wall_s"],semantic_claim_passed=True,independent_restored_byte_check=True))
+    eqnum(receipt["copy_wall_seconds_sum"],sum(x["per_copy_wall_s"] for x in receipt["copies"]),"CAS outercopy sum "+filename)
+    eqnum(receipt["inner_component_seconds_sum"],sum(x["disjoint_inner_seconds"] for x in receipt["copies"]),"CAS allinner sum "+filename)
+    require(receipt["operation_wall_s"]>=receipt["copy_wall_seconds_sum"],"CAS outer wall encloses copies "+filename)
+    require(receipt["support_script_sha256"]==sha(D/"cas_validation_source.txt")==sha(receipt["support_script"]),"CAS exact measured support script "+filename)
+eqnum(maincas["charged_seconds"],maincas["operation_wall_s"]+maincas["setup_s"]+maincas["rng_trap_setup_s"],"shared CAS setup charged only main")
+eqnum(freshcas["shared_setup_seconds"],maincas["setup_s"]+maincas["rng_trap_setup_s"],"fresh shared setup reference")
+eqnum(freshcas["charged_seconds"],freshcas["operation_wall_s"],"fresh CAS shared setup not charged again")
+require("only" in freshcas["shared_setup_charge_owner"] and freshcas["put_cost_separate"] is True and put["exit_code"]==0 and put["charged_once"] is True and put["record_digest"]==mainid and put["fresh_record_digest"]==freshid and put["manifest"]==freshcas["manifest"],"separate fresh put exact binding and disjoint cost")
+require(len({maincas["unique_expense_id"],freshcas["unique_expense_id"],put["unique_expense_id"]})==3,"closed three unique extra CAS expense IDs")
+notebook=read(D/"short_maturity_dml.ipynb");visual=read(D/"NOTEBOOK_VISUAL_REVIEW.json");code=[x for x in notebook["cells"] if x["cell_type"]=="code"]
+require(len(code)==4 and [x["execution_count"] for x in code]==[1,2,3,4],"actual notebook all four cells executed")
+outputs=[o for x in code for o in x.get("outputs",[])];require(all(o["output_type"]!="error" for o in outputs),"actual notebook no errors")
+pngs=[base64.b64decode("".join(o["data"]["image/png"])) for o in outputs if "image/png" in o.get("data",{})]
+require(len(pngs)==len(visual["pngs"])==3 and visual["passed"] is True and visual["errors"]==[],"exact three actual rendered figures")
+for n,(pixels,row) in enumerate(zip(pngs,visual["pngs"]),1):
+    require(hashlib.sha256(pixels).hexdigest()==row["sha256"]==sha(row["path"]) and len(pixels)==row["bytes"],"notebook embedded/extracted/visual PNG exact "+str(n))
+require(visual["notebook_sha256"]==sha(D/"short_maturity_dml.ipynb") and visual["assessment_sha256"]==sha(D/"assessment.json"),"current actual notebook and assessment visual bindings")
+src="".join(code[0]["source"])
+require(src.index("setattr(np.random")<src.index("checked = loader.check_record") and src.index("_learner.train = artifact_forbidden")<src.index("checked = loader.check_record") and src.index("_torch.optim.Adam.step = artifact_forbidden")<src.index("checked = loader.check_record") and src.index("_url.urlopen = artifact_forbidden")<src.index("checked = loader.check_record"),"artifact RNG training optimizer network guard before checker")
+later="\n".join("".join(c["source"]) for c in code[1:])
+require("Resolved IDs exclude full pilot/review research cost." in later and "unresolved five external IDs:" in later,"current figure3 explicit cost-ID scope clarification")
+# Extract only assessment guard functions, avoiding whole notebook numerical run.
+tree=ast.parse("\n".join(line for line in src.splitlines() if not line.startswith("%")))
+functions=[x for x in tree.body if isinstance(x,ast.FunctionDef) and x.name in {"_finite_assessment_cost","_read_assessment","_decision_label"}]
+require(len(functions)==3,"actual notebook assessment guard functions extracted")
+ns=dict(Path=Path,json=json,math=math);exec(compile(ast.Module(body=functions,type_ignores=[]),"actual_notebook_guard","exec"),ns)
+prov=SimpleNamespace(json_digest=jd,arrays_digest=ad)
+require(ns["_read_assessment"](D/"assessment.json",main,arrays,prov)==a,"actual notebook current assessment guard positive")
+require(ns["_read_assessment"]("/tmp/rbf05_absent_assessment_does_not_exist.json",main,arrays,prov) is None and ns["_decision_label"](None)=="unknown","missing external assessment remains unknown")
+bad=[]
+for name,mutate in [
+    ("wrong_protocol",lambda q:q.update(protocol_digest="foreign")),
+    ("wrong_arrays",lambda q:q.update(study_arrays_digest="foreign")),
+    ("negative_cost",lambda q:q["costs"].update(cold_pipeline_s=-1)),
+    ("boolean_cost",lambda q:q["costs"].update(cold_pipeline_s=True)),
+    ("duplicate_expense",lambda q:q["resolved_expenses"].append(copy.deepcopy(q["resolved_expenses"][0]))),
+    ("foreign_fit",lambda q:q["equal_accuracy_payback"].update(foreign=dict(eligible=False,queries=None))),
+    ("negative_queries",lambda q:q["equal_accuracy_payback"]["fit0"].update(queries=-1)),
+    ("numeric_eligible",lambda q:q["equal_accuracy_payback"]["fit0"].update(eligible=1))]:
+    q=copy.deepcopy(a);mutate(q);path=Path("/tmp/rbf05_overlay_bad_"+name+".json");path.write_text(json.dumps(q))
+    try:ns["_read_assessment"](path,main,arrays,prov)
+    except ValueError as e:bad.append(dict(case=name,rejected=True,error=str(e)))
+    else:raise AssertionError("Notebook guard accepted "+name)
+markdown=[]
+for o in outputs:
+    if "text/markdown" in o.get("data",{}):markdown.append("".join(o["data"]["text/markdown"]))
+tables={}
+for text in markdown:
+    lines=text.splitlines()
+    if lines and lines[0].startswith("| "):
+        header=lines[0];rows=[[q.strip() for q in line.strip("|").split("|")] for line in lines[2:] if line.startswith("|")]
+        tables[header]=rows
+def table_start(prefix):
+    found=[rows for head,rows in tables.items() if head.startswith(prefix)]
+    require(len(found)==1,"one output table "+prefix);return found[0]
+teacher=table_start("| split |");require([row[0] for row in teacher]==["train","validation"] and [int(row[1]) for row in teacher]==[512,128] and [int(row[6]) for row in teacher]==[512,128],"display640 original teachers/ready")
+ft=table_start("| fit | seed |");require(len(ft)==6,"display all original six fixed fits")
+for row,fit in zip(ft,main["fits"]):
+    require(row[:4]==[fit["id"],str(fit["stats"]["seed"]),"Delta-DML" if fit["dml"] else "price-only",fit["stats"]["status"]] and int(row[5])==512 and int(row[7])==336,"display original fit/updates/denominator "+fit["id"])
+ood=table_start("| fit | original contract diagnostic N |");require(len(ood)==6 and all(int(row[1])==10 and "expiry_undefined_atm" in row[2] and "invalid_contract" in row[2] and row[3:5]==["6","5"] for row in ood),"display all10 OOD/expiry with undefined retained perfit")
+buckets=table_start("| fit | raw/safe |");require(len(buckets)==576 and {row[1] for row in buckets}=={"raw","safe"},"display all48 raw/safe buckets per six fits")
+costtable=table_start("| external cost |");require(len(costtable)==14 and all(row[0] in expected_costs and row[1]==f"{expected_costs[row[0]]:.5g}" for row in costtable),"display all actual14 bound costs correct precision")
+paytable=table_start("| original fit | eligible |");require(len(paytable)==6 and all(row[1:3]==["False","unknown"] and '"original_count": 336' in row[-1] for row in paytable),"display six ineligible QNone original336")
+expense=table_start("| expense ID |") if any(head.startswith("| expense ID |") for head in tables) else None
+if expense is not None:require(len(expense)==674,"display closed674 original expense roster")
+require(registry=={name:sha(ROOT/name) for name in registry},"frozen financial10 unchanged after independent review")
+hashes={name:sha(D/name) for name in ["reference.json","reference.npz","fresh_check.json","fresh_arrays.npz","assessment.json","cold_process_cost.json","cold_process_cost_initial_failed.json","main_cas_validation.json","fresh_cas_validation.json","fresh_store_cost.json","fresh_validation_source_proof.json","short_maturity_dml.ipynb","NOTEBOOK_VISUAL_REVIEW.json"]}
+report=dict(schema="RB-F05-short-final-overlay-review-v1",review_date="2026-10-09",approved=True,decision="approved_with_scope_limits",critical_findings=[],important_findings=[],main_record_digest=mainid,main_arrays_digest=arraysid,fresh_record_digest=freshid,fresh_arrays_digest=fresh["numeric_arrays_digest"],assessment_digest=jd(a),actual_file_sha256=hashes,source_registry=registry,measured_stopwatch_sha256=measured,current_support_source_proof=proof,checks_passed=len(CHECKS),checks=CHECKS,notebook_guard_probes=bad,notebook_visual_independent_inspection=True,notebook_png_sha256=[q["sha256"] for q in visual["pngs"]],cas_restore_bindings=cas_rows,cas_semantic_execution_owner="separate CAS reviewer; current reviewer checked actual restored byte identity, scope, script, metadata, costs and bindings",costs=dict(expected_costs,main_cas_unique_s=maincas["charged_seconds"],fresh_put_unique_s=put["wall_seconds"],fresh_cas_unique_s=freshcas["charged_seconds"],cas_disjoint_research_sum_s=maincas["charged_seconds"]+put["wall_seconds"]+freshcas["charged_seconds"]),numeric_evidence=dict(main="/tmp/rbf05-main-independent-review.json",fresh="/tmp/rbf05-fresh-independent-audit.json",cold="/tmp/rbf05_cold_receipt_audit.json"),standard_nn_adoption="NN_not_adopted",education_comparison="supported_fixed_synthetic_comparison; all3 paired seeds lower raw Delta RMSE",no_new_rng=True,no_training=True,canonical_files_edited=False,audit_wall_s=time.perf_counter()-start,scope_limits=["Phase/Git integration is owned by root; this review approves bound overlay consistency, not original immutable main acceptance flags.","Cold18.151s is artifact-backed validated2-row serving in one fresh interpreter; disk cache unflushed and no repeated training.","MainCLI, coldCLI, freshCLI and separate replay are separate scopes; nested components are not added to enclosing wall.","Five resolved external IDs exclude formal pilot generation and independent review/replay research expense; no comprehensive research total is claimed.","Fresh15-method diagnostics retain all180 slots including12 negative controls. No change to labels/N/seed/checkpoint selection.","Hashes establish provenance and transfer identity; financial values independently compared using explicit tolerances.","CAS semantic numerical execution performed by separate reviewer; current review does not claim new execution of those restored numerical checkers.","Known original ATM endpoint/finite-hGamma roundoff minors remain; no threshold relaxation.","Current final review uses saved fresh primitives without seed regeneration, optimizer or new sampling."])
+Path("/tmp/rbf05-final-overlay-review.json").write_text(json.dumps(report,indent=2,allow_nan=False))
+Path("/tmp/rbf05-final-overlay-source-proof.json").write_text(json.dumps(dict(source_registry=registry,current_support=proof,actual_file_sha256=hashes,measured_stopwatch_sha256=measured),indent=2))
+print(json.dumps({k:report[k] for k in ["approved","critical_findings","important_findings","checks_passed","audit_wall_s","standard_nn_adoption"]},indent=2))

@@ -1,6 +1,6 @@
 # RB-F05 短期・0DTE
 
-2026-10-09。状態：正式84×3 pilot承認・source10/N1048576固定後、640教師/主6fits/336点・追加raw12条件・両保管庫の独立数値復元・実3図・実測費用を完了。主数値review残Critical/Important0。最終関連3suite7998 PASS/6 skip・19Python ruff/format PASS、tracked release/独立総合レビュー中、mainは未反映。DML全3seedでDelta誤差改善、NN raw/safe全fit精度未達、Hermite336/336 PASS。詳細は[結果と採否](RESULTS.md)。
+2026-10-09。状態：正式84×3 pilot承認・source10/N1048576固定後、640教師/主6fits/336点・追加raw12条件・両保管庫の独立数値復元・実3図・実測費用を完了。主数値review残Critical/Important0。v1受入済み。最終関連3suite7998 PASS/6 skip・19Python ruff/format・tracked release・最終独立208checks PASS。mainは未反映。DML全3seedでDelta誤差改善、NN raw/safe全fit精度未達、Hermite336/336 PASS。詳細は[結果と採否](RESULTS.md)。
 
 [設計](../../../docs/superpowers/specs/2026-10-09-short-maturity-dml-design.md)／[実施計画](../../../docs/superpowers/plans/2026-10-09-short-maturity-dml.md)。
 

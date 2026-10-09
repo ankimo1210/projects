@@ -9,7 +9,7 @@
     "--execute"
   ],
   "exit_code": 0,
-  "wall_seconds": 15.00316758302506,
+  "wall_seconds": 15.68181529600406,
   "stdout": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity/short_maturity_dml.ipynb\n",
   "stderr": "",
   "original_json_unchanged": true,
@@ -23,7 +23,5 @@
     "protocol.json": "667c56235a0458d1e88add00b4d23b4d3723947f4c76eb8c88c4cd91780b33df",
     "fresh_check.json": "b60df78bd792d460b4228dbe7f6558896f4924153986ac67092c91a00c192b7b"
   },
-  "assessment_sha256": "886d495a668a67e1849c159919187a40e353fc25c727bec116dfd1d73ae954a5",
-  "builder_sha256": "3801a6cc05945c8b6f28540cb7aed8ae684317b3e667dd688514e12e4a37ec69",
-  "scope": "actual artifact-only replay after cost ID wording clarification; financial10/main data unchanged; no RNG/optimizer/training/network"
+  "scope": "real saved main artifact-only kernel; RNG/training/optimizer/network trapped. PNG visual review is separate."
 }
