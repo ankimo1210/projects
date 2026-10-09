@@ -1,0 +1,163 @@
+{
+  "bindings": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "bb7e7f6ecee12e56444ae24ced496328fcc5e1e1a142630f3fd985c94f3790d6",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "65dd78525041e2fd75af25309265548413d2a9cabd9048e757fd2b43b0ea3b23",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+    "deep_hedge_price/tests/test_dynamic_hedging_execution.py": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe"
+  },
+  "source_unchanged": true,
+  "probes": [
+    {
+      "probe": "actual_execution_source_refusal",
+      "error": "required execution source missing: run_fresh",
+      "loader_calls": 0,
+      "source_provider_patched": false
+    },
+    {
+      "probe": "unpatched_actual_A_gate_with_synthetic_source_provider",
+      "qualification": "unknown",
+      "precision_selection": "unavailable",
+      "main_execution": "not_implemented",
+      "all_baselines": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "original_validation_n": 2048,
+      "fits": 12
+    },
+    {
+      "probe": "candidate_original_n_changed",
+      "error": "original fit attempts and requested denominator required",
+      "loader_calls": 0
+    },
+    {
+      "probe": "frozen_precision_changed",
+      "error": "execution freeze mutated",
+      "loader_calls": 0
+    },
+    {
+      "probe": "source_binding_changed",
+      "error": "main.source_identity.johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py: saved value mismatch",
+      "loader_calls": 0
+    },
+    {
+      "probe": "raw_fit_original_n_missing",
+      "error": "completed fit slot needs its own raw identity/checkpoint",
+      "loader_calls": 0
+    },
+    {
+      "probe": "raw_fit_weights_changed",
+      "error": "closed fits differ from the prior training selection receipt",
+      "loader_calls": 0
+    },
+    {
+      "probe": "closed_fit_digest_missing",
+      "error": "closed fits differ from the prior training selection receipt",
+      "loader_calls": 0
+    },
+    {
+      "probe": "raw_validation_truncation",
+      "error": "validation original denominator cannot be changed",
+      "loader_calls": 0
+    },
+    {
+      "probe": "all_failed_baseline_rescue",
+      "error": "saved baseline differs from original raw validation minimum",
+      "loader_calls": 0
+    },
+    {
+      "probe": "execution_expense_missing",
+      "error": "required expense IDs erased or duplicated",
+      "loader_calls": 0
+    },
+    {
+      "probe": "closure_verification_changed",
+      "error": "stale or misbound verification receipt",
+      "loader_calls": 0
+    },
+    {
+      "probe": "strict_legacy_gate_still_refuses_execution_freeze",
+      "error": "formally qualified pilot required",
+      "loader_calls": 0
+    },
+    {
+      "probe": "untrusted_loader_mutations_cannot_change_preloader_snapshots",
+      "evaluations": 36,
+      "seen_unique": [
+        [
+          8192,
+          0.0,
+          null,
+          32768
+        ]
+      ],
+      "qualification": "unknown",
+      "precision_selection": "unavailable",
+      "study_evaluation_patched": true,
+      "A_readiness_gate_patched": false
+    },
+    {
+      "probe": "execution_CLI_chooses_matching_source_provider",
+      "loader_order": [
+        "train",
+        "test"
+      ],
+      "unit_writes": 1,
+      "qualification": "unknown",
+      "precision_selection": "unavailable",
+      "actual_A_gate_patched": false,
+      "source_provider_only_synthetic": true,
+      "artifact_load_write_only_synthetic": true
+    },
+    {
+      "probe": "legacy_CLI_retains_old_source_and_strict_guard",
+      "error": "formally qualified pilot required",
+      "loader_order": [
+        "train"
+      ],
+      "unit_writes": 0
+    }
+  ],
+  "findings": [],
+  "boundary": "Synthetic metadata plus source-provider-only patch proves bounded wiring, not financial/source/freeze readiness. No RNG, teacher solver, training, formal pilot or actual main executed.",
+  "original_review_preserved": true,
+  "I1": "resolved at source architecture boundary",
+  "I2": "resolved at CLI wiring boundary",
+  "verification": {
+    "scoped_tests": {
+      "passed": 39,
+      "pytest_seconds": 28.1,
+      "process_wall_seconds": 28.991034069
+    },
+    "independent_probes": {
+      "expected_results": 16,
+      "unexpected_results": 0
+    },
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS",
+    "final_source_sha_unchanged": true
+  },
+  "evidence_sha256": {
+    "task-5-execution-runner-source-final-review.py": "4dc7e42810292da16355df426d399e5915c12ecd045e944f70e6566e8c446bc4",
+    "task-5-execution-runner-source-final-review.txt": "a3869c60142628c930ca434ee5f5a500fd6207725d1cf884179f1693a080d981",
+    "task-5-execution-runner-source-final-review-tests.txt": "dc4bd221b1565ad9abb2b8b9ff4dd9104fb35f423d6037771c6af96f5f953a68",
+    "task-5-execution-runner-source-final-review-ruff.txt": "dd3e0602e3514855cdff2fea9c56035ed0737a5dff810bf6bfb039d94388fb9f",
+    "task-5-execution-runner-source-review.json": "c5824285caa457073a8e74bfefe086cb501597875b982a28925a229c9207a109",
+    "task-5-execution-runner-source-rereview.json": "1c40d00f9aeaed09715b56ab64a33752396d95542dbcdf191e00b164173a6291",
+    "task-5-execution-runner-source-rereview-cli.json": "144e8b2b8424865d90f82bd67509390d02771c8fce7c601e12b5eb9f7cd81a1f"
+  },
+  "decision": "Approved for scoped private runner source/provider/CLI wiring only. Actual pilot, financial freeze, main and fresh remain unavailable/unverified.",
+  "finding_counts": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0
+  },
+  "original_findings": {
+    "I1": "Resolved by separate execution registry and explicit required phase file presence",
+    "I2": "Resolved by phase-dependent CLI source provider matching the selected entrypoint"
+  }
+}

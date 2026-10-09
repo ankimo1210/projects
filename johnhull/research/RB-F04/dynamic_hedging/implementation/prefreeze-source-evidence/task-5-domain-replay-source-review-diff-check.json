@@ -1,0 +1,12 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check",
+    "--",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_replay.py"
+  ],
+  "returncode": 0,
+  "output": ""
+}

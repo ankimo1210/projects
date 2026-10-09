@@ -1,0 +1,35 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___ test_rebuild_compares_original_generated_cache_with_full_label_evidence ____
+
+    def test_rebuild_compares_original_generated_cache_with_full_label_evidence():
+        from hullkit._dynamic_hedging_surfaces import build_asian_cache
+    
+        rows, p, axes = _domain_replay_fixture()
+        groups = []
+        for row in rows:
+            labels = primitive_labels(row["primitives"], row["thresholds"], blocks=16)
+            labels["date_index"] = row["date_index"]
+            labels["shared_driver_id"] = row["global_driver_id"]
+            groups.append(labels)
+        domains = [{"state": [1, 5], "threshold": [0, 4]}]
+        generated = build_asian_cache(
+            {"groups": groups, "parameters": p, "N": 32},
+            model="heston",
+            axes=axes,
+            evaluation_domains=domains,
+        )
+>       got = rebuild_asian_cache(
+            rows,
+            p,
+            axes,
+            model="heston",
+            evaluation_domains=domains,
+            saved_cache=generated,
+        )
+E       TypeError: rebuild_asian_cache() got an unexpected keyword argument 'evaluation_domains'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1271: TypeError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_compares_original_generated_cache_with_full_label_evidence
+1 failed, 100 deselected in 0.53s

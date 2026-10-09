@@ -1,0 +1,22 @@
+from pathlib import Path
+import importlib.util,json,hashlib,copy
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+OUT=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+spec=importlib.util.spec_from_file_location("review_detachment_fixture",WT/"deep_hedge_price/tests/test_dynamic_hedging_execution.py")
+fmod=importlib.util.module_from_spec(spec);spec.loader.exec_module(fmod)
+f=fmod.execution_fixture()
+frozen=fmod.freeze(f)
+prior=copy.deepcopy(frozen)
+f["source"][next(iter(f["source"]))]=fmod.digest("changed")
+f["domains"][0]["indices"]["state"][0]=1
+f["selection"]["premium"]["value"]=99.0
+f["pilot"]["expenses"][0]["timing"]["wall_seconds"]=999.0
+f["pilot"]["history"][0]["expenses"][0]["timing"]["wall_seconds"]=0.0
+f["candidate"]["original_candidate"]["gates"]["quote_condition_number"]=1.0
+assert frozen==prior
+assert frozen["pilot"]["history"][0]["expenses"][0]["timing"]["wall_seconds"] is None
+assert frozen["pilot"]["expenses"][0]["timing"]["wall_seconds"]==0.01
+assert frozen["candidate"]["original_candidate"]["gates"]["quote_condition_number"]==0.25
+report={"detached_components":["source","domains","selection","pilot current expenses","pilot unknown history","candidate gates"],"observed":"UNCHANGED","historic_unknown_cost":None,"source_sha256":hashlib.sha256((WT/"deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py").read_bytes()).hexdigest()}
+(OUT/"task-5-execution-schema-source-review-detachment.json").write_text(json.dumps(report,indent=2)+"\n")
+print(json.dumps(report,indent=2))

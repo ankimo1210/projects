@@ -997,3 +997,285 @@ def test_cash_invalid_raw_target_failure_reason_cannot_be_erased():
     cell["reasons"] = np.array([""])
     with pytest.raises(ValueError, match="reason"):
         check_cash(data, cell)
+
+
+def _domain_replay_fixture(*, model="heston"):
+    states = np.array([0.001, 0.01, 0.02, 0.04, 0.08, 0.16])
+    thresholds = np.array([0.0, 0.4, 0.8, 1.2, 1.6, 24.0])
+    dates = np.array([11 / 12])
+    spots = np.array([80.0, 95.0, 105.0, 120.0])
+    if model == "local":
+        states = np.array([0.25, 0.5, 1.0, 2.0])
+        dates = np.array([0.0, 11 / 12])
+        thresholds = np.array([[0.0, 9.5, 11.0, 12.0, 13.5, 24.0], thresholds])
+    t0_spots = np.array([99.8, 99.9, 99.95, 100.05, 100.1, 100.2])
+    axes = dict(dates=dates, state=states, threshold=thresholds)
+    if model == "local":
+        axes.update(spot=spots, t0_spot=t0_spots)
+    rows = []
+    for j, date in enumerate(dates):
+        date_spots = t0_spots if date == 0 else spots
+        for spot in date_spots if model == "local" else [100.0]:
+            for state in states:
+                raw, p, surface = primitives(model=model, state=state, spot=spot, date=date)
+                rows.append(
+                    dict(
+                        primitives=raw,
+                        thresholds=thresholds[j] if thresholds.ndim == 2 else thresholds,
+                        date_index=j,
+                        global_driver_id="fixed-domain-global",
+                        driver_mapping=dict(
+                            original_n=32,
+                            global_steps=768,
+                            start_step=round(date * 768),
+                            stop_step=768,
+                            aggregation_factor=64,
+                        ),
+                        surface=surface,
+                    )
+                )
+    return rows, p, axes
+
+
+def test_rebuild_fixed_domain_retains_full_original_nodes_and_unknown_tail_without_rng(monkeypatch):
+    from hullkit._dynamic_hedging_surfaces import evaluate_asian
+
+    rows, p, axes = _domain_replay_fixture()
+    domain = [{"state": [1, 5], "threshold": [0, 4]}]
+    original_tail = replay_teacher(rows[0]["primitives"], axes["threshold"], p, None)
+    assert original_tail["labels"]["status"][-1] == "unknown_underresolved"
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("domain replay must not regenerate drivers or teachers")
+
+    import hullkit._dynamic_hedging_conditional as conditional
+
+    monkeypatch.setattr(np.random, "default_rng", forbidden)
+    monkeypatch.setattr(conditional, "teacher_primitives", forbidden)
+    got = rebuild_asian_cache(iter(rows), p, axes, model="heston", evaluation_domains=domain)
+    cache = got["cache"]
+    assert got["original_path_count"] == 32
+    assert got["original_group_count"] == got["saved_group_count"] == 6
+    assert got["qualification"] == "unknown"
+    assert cache["f"].shape == (1, 6, 6)
+    assert cache["block_means"].shape == (1, 6, 6, 16, 3)
+    assert np.isnan(cache["f"][0, 0, -1])
+    assert cache["state_nodes"] == pytest.approx(axes["state"])
+    assert cache["threshold_nodes"][0] == pytest.approx(axes["threshold"])
+    assert cache["evaluation_domain_schema"] == "rb-f04-asian-fixed-domain-v1"
+    assert cache["evaluation_domains"] == [{"state": [1, 5], "threshold": [0, 4]}]
+    assert cache["evaluation_domain_sheets"] == ["main"]
+    value = evaluate_asian(cache, 0, 100.0, 0.04, 1100.0, 11)
+    assert value["status"] == "ok"
+    # At x=0 the claim is exactly linear, independently of the domain geometry.
+    linear = evaluate_asian(cache, 0, 100.0, np.nan, 1200.0, 11)
+    assert linear["value"] == pytest.approx(100.0 / 12, abs=2e-12)
+    group = cache["primitive_groups"]["groups"][0]
+    assert group["status"][-1] == "unknown_underresolved"
+    assert group["original_path_count"] == 32
+    assert group["blocks"] == 16
+    assert all(
+        np.asarray(v).shape[:1] != (32,) for v in group.values() if isinstance(v, np.ndarray)
+    )
+
+
+def test_rebuild_domain_descriptor_is_detached_and_explicit_none_never_uses_default():
+    from hullkit._dynamic_hedging_surfaces import evaluate_asian
+
+    rows, p, axes = _domain_replay_fixture()
+    domains = [{"state": [1, 5], "threshold": [0, 4]}]
+    got = rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)
+    domains[0]["state"][0] = 0
+    assert got["cache"]["evaluation_domains"] == [{"state": [1, 5], "threshold": [0, 4]}]
+    absent = rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=[None])
+    assert absent["cache"]["evaluation_domains"] == [None]
+    assert evaluate_asian(absent["cache"], 0, 100.0, 0.04, 1100.0, 11)["reason"] == (
+        "no_evaluation_domain"
+    )
+    legacy = rebuild_asian_cache(rows, p, axes, model="heston")
+    assert "evaluation_domains" not in legacy["cache"]
+
+
+def test_rebuild_saved_domain_compares_full_arrays_with_tolerance_without_qualification():
+    import copy
+
+    rows, p, axes = _domain_replay_fixture()
+    domains = [{"state": [1, 5], "threshold": [0, 4]}]
+    saved = rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+    perturbed = copy.deepcopy(saved)
+    perturbed["f"] += 1e-12
+    perturbed["block_means"] += 1e-12
+    out = rebuild_asian_cache(
+        iter(rows),
+        p,
+        axes,
+        model="heston",
+        evaluation_domains=domains,
+        saved_cache=perturbed,
+    )
+    assert out["integrity"] == "pass"
+    assert out["qualification"] == "unknown"
+    assert out["cache"]["f"] == pytest.approx(saved["f"], nan_ok=True)
+    assert out["cache"]["block_means"] == pytest.approx(saved["block_means"], nan_ok=True)
+
+
+@pytest.mark.parametrize(
+    "tamper",
+    [
+        "domain",
+        "noninteger_domain",
+        "schema",
+        "sheet",
+        "bounds",
+        "original_N",
+        "state_nodes",
+        "dates",
+        "outside_mean",
+        "inside_block",
+        "outside_block",
+        "group_status",
+        "group_count",
+    ],
+)
+def test_rebuild_rejects_misbound_saved_domain_or_full_evidence(tamper):
+    import copy
+
+    rows, p, axes = _domain_replay_fixture()
+    domains = [{"state": [1, 5], "threshold": [0, 4]}]
+    saved = copy.deepcopy(
+        rebuild_asian_cache(rows, p, axes, model="heston", evaluation_domains=domains)["cache"]
+    )
+    if tamper == "domain":
+        saved["evaluation_domains"][0]["state"] = [0, 4]
+    elif tamper == "noninteger_domain":
+        saved["evaluation_domains"][0]["state"][0] = 1.00000000001
+    elif tamper == "schema":
+        saved["evaluation_domain_schema"] = "other-domain-schema"
+    elif tamper == "sheet":
+        saved["evaluation_domain_sheets"][0] = "t0_sheet"
+    elif tamper == "bounds":
+        saved["evaluation_domain_bounds"][0]["state"][0] += 0.001
+    elif tamper == "original_N":
+        saved["original_N"] = 16
+    elif tamper == "state_nodes":
+        saved["state_nodes"][0] += 0.0001
+    elif tamper == "dates":
+        saved["dates"][0] -= 1 / 12
+    elif tamper == "outside_mean":
+        saved["f"][0, 0, -1] = 0.0
+    elif tamper == "inside_block":
+        saved["block_means"][0, 2, 2, 0, 2] += 0.01
+    elif tamper == "outside_block":
+        saved["block_means"][0, 0, -1, 0, 2] = 0.0
+    elif tamper == "group_status":
+        saved["primitive_groups"]["groups"][0]["status"][-1] = "ready"
+    elif tamper == "group_count":
+        saved["primitive_groups"]["groups"].pop()
+    with pytest.raises(ValueError, match="saved_cache"):
+        rebuild_asian_cache(
+            rows, p, axes, model="heston", evaluation_domains=domains, saved_cache=saved
+        )
+
+
+def test_rebuild_saved_legacy_missing_or_null_domain_metadata_is_compatible():
+    import copy
+
+    rows, p, axes = _domain_replay_fixture()
+    legacy = rebuild_asian_cache(rows, p, axes, model="heston")["cache"]
+    assert rebuild_asian_cache(rows, p, axes, model="heston", saved_cache=legacy)["integrity"] == (
+        "pass"
+    )
+    nulls = copy.deepcopy(legacy)
+    for key in (
+        "evaluation_domains",
+        "evaluation_domain_schema",
+        "evaluation_domain_bounds",
+        "evaluation_domain_sheets",
+    ):
+        nulls[key] = None
+    assert rebuild_asian_cache(rows, p, axes, model="heston", saved_cache=nulls)["integrity"] == (
+        "pass"
+    )
+    fixed = rebuild_asian_cache(
+        rows,
+        p,
+        axes,
+        model="heston",
+        evaluation_domains=[{"state": [1, 5], "threshold": [0, 4]}],
+    )["cache"]
+    with pytest.raises(ValueError, match="saved_cache"):
+        rebuild_asian_cache(rows, p, axes, model="heston", saved_cache=fixed)
+    with pytest.raises(ValueError, match="saved_cache"):
+        rebuild_asian_cache(
+            rows,
+            p,
+            axes,
+            model="heston",
+            evaluation_domains=[{"state": [1, 5], "threshold": [0, 4]}],
+            saved_cache=legacy,
+        )
+
+
+def test_rebuild_saved_local_domain_uses_t0_sheet_and_all_original_groups():
+    from hullkit._dynamic_hedging_surfaces import evaluate_asian
+
+    rows, p, axes = _domain_replay_fixture(model="local")
+    domains = [
+        {"spot": [1, 5], "state": [0, 4], "threshold": [1, 5]},
+        {"spot": [0, 4], "state": [0, 4], "threshold": [0, 4]},
+    ]
+    first = rebuild_asian_cache(rows, p, axes, model="local", evaluation_domains=domains)
+    again = rebuild_asian_cache(
+        iter(rows),
+        p,
+        axes,
+        model="local",
+        evaluation_domains=domains,
+        saved_cache=first["cache"],
+    )
+    assert again["qualification"] == "unknown"
+    assert again["original_group_count"] == again["saved_group_count"] == 40
+    assert again["cache"]["original_N"] == 32
+    assert again["cache"]["evaluation_domain_sheets"] == ["t0_sheet", "main"]
+    assert again["cache"]["t0_sheet"]["spot_nodes"] == pytest.approx(axes["t0_spot"])
+    assert again["cache"]["t0_sheet"]["block_means"].shape == (6, 4, 6, 16, 3)
+    assert again["cache"]["f"].shape == (2, 4, 4, 6)
+    assert evaluate_asian(again["cache"], 0, 99.8, 1.0, 0.0, 0)["reason"] == (
+        "outside_evaluation_domain"
+    )
+
+    inside = evaluate_asian(again["cache"], 0, 99.95, 1.0, 0.0, 0)
+    assert inside["status"] == "ok"
+    assert np.isfinite(inside["covariance"]).all()
+
+
+def test_rebuild_compares_original_generated_cache_with_full_label_evidence():
+    from hullkit._dynamic_hedging_surfaces import build_asian_cache
+
+    rows, p, axes = _domain_replay_fixture()
+    groups = []
+    for row in rows:
+        labels = primitive_labels(row["primitives"], row["thresholds"], blocks=16)
+        labels["date_index"] = row["date_index"]
+        labels["shared_driver_id"] = row["global_driver_id"]
+        groups.append(labels)
+    domains = [{"state": [1, 5], "threshold": [0, 4]}]
+    generated = build_asian_cache(
+        {"groups": groups, "parameters": p, "N": 32},
+        model="heston",
+        axes=axes,
+        evaluation_domains=domains,
+    )
+    got = rebuild_asian_cache(
+        rows,
+        p,
+        axes,
+        model="heston",
+        evaluation_domains=domains,
+        saved_cache=generated,
+    )
+    assert got["integrity"] == "pass"
+    assert got["qualification"] == "unknown"
+    assert got["cache"]["original_N"] == 32
+    assert got["cache"]["evaluation_domains"] == [{"state": [1, 5], "threshold": [0, 4]}]
+    assert len(got["cache"]["primitive_groups"]["groups"]) == 6

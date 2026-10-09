@@ -1,0 +1,137 @@
+{
+  "scope": "B private Asian fixed evaluation domain; source accuracy and pilot excluded",
+  "approved_design_sha256": "3728b09ab65b0960a13bc54309dee13f476c606c36c6ce9b6cbcc10281ea271b",
+  "head_read": "94895c5c2d5da71036395eab1f9e7dcc99f8dde3",
+  "changed_paths": [
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py"
+  ],
+  "final_source_sha256": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+  "final_tests_sha256": "98e2b6f569e07a55f66c9a3cc44443c125c793d9209e10cc6d2af3dc74a18396",
+  "validation": {
+    "scoped_pytest": "51 passed in 5.77s",
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS",
+    "owned_diff_check": "PASS",
+    "financial_qualification": "NOT_GRANTED",
+    "formal_pilot": "NOT_RUN",
+    "full_suite": "NOT_RUN"
+  },
+  "artifacts": [
+    {
+      "file": "task-5-fixed-domain-implementation-baseline-probe.py",
+      "bytes": 740,
+      "sha256": "d4e7aa340d5ad9587aef228101afcc1372196f4d87bbeee36782fdc0cf3eeed2"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-default-order-red.json",
+      "bytes": 376,
+      "sha256": "6923fab8c4ea2fc3d822450af98f6fb1d1114c35a9bb348e871465014b42eb69"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-default-order-red.txt",
+      "bytes": 10601,
+      "sha256": "67983e16ffbc4c652f2e5ff250bc9b8a08a672cafa9198f102c5e8fe75cee6e2"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-diff-check.json",
+      "bytes": 233,
+      "sha256": "aedd430aa199e2499129318e213c1a8ba269b40876a37ad6a51dc01bd0173378"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-final-source.txt",
+      "bytes": 32903,
+      "sha256": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-final-tests.txt",
+      "bytes": 36099,
+      "sha256": "98e2b6f569e07a55f66c9a3cc44443c125c793d9209e10cc6d2af3dc74a18396"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-green-before-format.json",
+      "bytes": 536,
+      "sha256": "59d64cf1292ccdd46605c7dd46dddb91d525bda604e55dafc1d8887993b8178c"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-green-before-format.txt",
+      "bytes": 99,
+      "sha256": "65e1472caba7c60ba4a2bb3e2677665f67fb79e3948495474da747936ce970ba"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-green-final.json",
+      "bytes": 535,
+      "sha256": "c39b2b3883111870c6b94891604fbdf206575cb2515c316a726ed95536701373"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-green-final.txt",
+      "bytes": 99,
+      "sha256": "80ba4fd2c3b5593d4bde053b35d8d97a372764b2ffe661fcabc30fb202ee0916"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-green-initial.json",
+      "bytes": 576,
+      "sha256": "1624cba7eec2a5e2abf6de55e4ed0f180fa11b3d5fb1704935142b82852959a0"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-green-initial.txt",
+      "bytes": 99,
+      "sha256": "0d1f7b3f0a54e8f2a4ccf944fbe5a8b61aa976c83376625da0678f6298e5c8cd"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-original-source.txt",
+      "bytes": 28309,
+      "sha256": "fff3bc88d497210a846956d464317d5ddb00941a1e3ef25193f9cbaa26a8c406"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-original-tests.txt",
+      "bytes": 16145,
+      "sha256": "55071a03a936b89a26a85bed5531f31a515d04d041491a3c737d28c2613da825"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-original.json",
+      "bytes": 299,
+      "sha256": "e7a8166bb9821ce11cd0f72e2ec9a34456dad31cb0fd0ae99bbc754c36687118"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-owned.diff",
+      "bytes": 29841,
+      "sha256": "dcc23f6edcf994a8d03b0721e2e5291bf9a71e0e09c9824c4f82290c95551847"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-red-final-regressions.json",
+      "bytes": 406,
+      "sha256": "0730d99184c292ebba3740fc3c79d54e002e3941c5c4bf1936ebae3cf379ff31"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-red-final-regressions.txt",
+      "bytes": 89963,
+      "sha256": "18ba99d67ada75922db2e933f0b27c87f73b5cfefa637a4729c0e1f511d1cde7"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-red.json",
+      "bytes": 565,
+      "sha256": "363fd570b194abe297d9a0900a5102954831ab37f556452552555d55ad79f7e4"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-red.txt",
+      "bytes": 79117,
+      "sha256": "441177a9ae51e9a83ece031cd0e65cf68bb2d6a69c40de306aff8a1f8646c7e2"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-ruff-final.json",
+      "bytes": 1317,
+      "sha256": "67f7828da06d734ac8df8e6e5be6bf8025cb73ba2b95a2774e8ac0c6af9debe7"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation-ruff-initial.json",
+      "bytes": 594,
+      "sha256": "a3c66427c48f0c13ebc6a1ad129253cef8aa857899d5aca54647b7cf35487b8b"
+    },
+    {
+      "file": "task-5-fixed-domain-implementation.md",
+      "bytes": 6424,
+      "sha256": "8ef623e917e7939e38a2bcada0e35d700c9670b7d2d532daa4323b965105b4c7"
+    }
+  ]
+}

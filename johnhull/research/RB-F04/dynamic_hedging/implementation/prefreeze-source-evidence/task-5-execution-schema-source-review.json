@@ -1,0 +1,133 @@
+{
+  "decision": "APPROVE_BOUNDED_METADATA_BINDING_SOURCE",
+  "unresolved_blocking_findings": [],
+  "resolved_findings": [
+    {
+      "id": "F1",
+      "description": "measured_precision_failure with all measured gates passing",
+      "author_red_sha256": "7422cea23438b7bde5bb1f2d604a7e85b3db6c58f7ed07d275403e7085b03ede",
+      "final_independent_result": "REJECT"
+    }
+  ],
+  "source_sha256": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+  "tests_sha256": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508",
+  "strict_v1_protocol_sha256": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f",
+  "approved_design_sha256": "3728b09ab65b0960a13bc54309dee13f476c606c36c6ce9b6cbcc10281ea271b",
+  "scoped_test_result": "50 passed in 0.99s",
+  "adversarial_probe_count": 57,
+  "detachment_component_count": 6,
+  "rng_data_draw_calls": 0,
+  "scope": "metadata evidence binding source only",
+  "excluded": [
+    "actual source bytes/transitive closure",
+    "actual raw financial checker/SE/Greeks/Q/refinement",
+    "reviewer authentication",
+    "actual preexecution chronology and measured costs",
+    "real financial pilot",
+    "actual freeze/main readiness",
+    "main/fresh/CAS/integration",
+    "full suites"
+  ],
+  "artifacts": [
+    {
+      "file": "task-5-execution-schema-source-review-detachment-run.json",
+      "bytes": 293,
+      "sha256": "819168a2f7c01173083acaf23088356bab12bedb4803579ae40d5b8a9f28e7f6"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-detachment.json",
+      "bytes": 309,
+      "sha256": "655b6a8b5af93104b05b42e021446af1483bd5f19b838af235a86a04e7332cf3"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-detachment.py",
+      "bytes": 1546,
+      "sha256": "09a990be4fb65293d4966423b966d5130be72d3a113de2aa7e8700c35e21d50f"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-detachment.txt",
+      "bytes": 309,
+      "sha256": "655b6a8b5af93104b05b42e021446af1483bd5f19b838af235a86a04e7332cf3"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-final-bindings.json",
+      "bytes": 429,
+      "sha256": "c2ed9ae0b59777a2c8a8ab9fe9175a71133cbb9cefe32df2c2e74ddc3a85f017"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-final-source.txt",
+      "bytes": 36721,
+      "sha256": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-final-tests.txt",
+      "bytes": 26107,
+      "sha256": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-preliminary-run.json",
+      "bytes": 295,
+      "sha256": "90881a41d46a297f9d22a50599bf5dcbf2f2c63be2a0c09e3f99cdb170a93ef6"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-preliminary-source.txt",
+      "bytes": 36721,
+      "sha256": "cb7fbc7e09e04b0db0169140e9c233e97fe4e8583ddcbc7dbfe01856d1f6c234"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-preliminary.json",
+      "bytes": 386,
+      "sha256": "ba24aef68081bc13e717f84d0da53f40df7267e7821b6dcb88d16c86d0150258"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-preliminary.py",
+      "bytes": 1454,
+      "sha256": "f2ab679857f7c64de20eeab00f8a4ca6ad27ee15e775d803886e86d53083d7f1"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-preliminary.txt",
+      "bytes": 386,
+      "sha256": "ba24aef68081bc13e717f84d0da53f40df7267e7821b6dcb88d16c86d0150258"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-probes-run.json",
+      "bytes": 289,
+      "sha256": "dac27cd517098a7acad9f5976402273bd9623fb3844356ec6f31947b155c4fa1"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-probes.json",
+      "bytes": 16968,
+      "sha256": "6dc7bb94d93fe35d79832796bd4579b3519e6aa7d955246f1b691811dabf500c"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-probes.py",
+      "bytes": 15875,
+      "sha256": "26eba10fbda1f0a2e95528bc81fc34c233cdaaa6d95f05a727a898eddb51c6af"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-probes.txt",
+      "bytes": 16968,
+      "sha256": "6dc7bb94d93fe35d79832796bd4579b3519e6aa7d955246f1b691811dabf500c"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-ruff.json",
+      "bytes": 824,
+      "sha256": "47a2b38637eabc79bdfcca127af68619bceb519c36c9aa518903f4ec9a6cc886"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-scoped.json",
+      "bytes": 537,
+      "sha256": "452d2b16671a4b35dd367504d876a27a8654dfead7d20fdd2c028589f2b96557"
+    },
+    {
+      "file": "task-5-execution-schema-source-review-scoped.txt",
+      "bytes": 99,
+      "sha256": "6917c9de8c5ed3da170c8cf3fd2af31c3441999f0e590db63a8d424b6a824814"
+    },
+    {
+      "file": "task-5-execution-schema-source-review.md",
+      "bytes": 7863,
+      "sha256": "d7a6b65204e27fc978eb915cb4186bf951c95aec6691ea844b83928f0a7d6d1e"
+    }
+  ]
+}

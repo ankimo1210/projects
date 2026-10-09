@@ -1,0 +1,12 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check",
+    "--",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py"
+  ],
+  "returncode": 0,
+  "output": ""
+}

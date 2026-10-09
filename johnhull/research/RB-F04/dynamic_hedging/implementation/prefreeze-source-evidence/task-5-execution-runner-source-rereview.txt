@@ -1,0 +1,109 @@
+{
+  "bindings": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "ee85c0f22b0fd709bd0f3573be38a0fbc0c08602584e5ce3fb4fe1fc28b95f7b",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "fab67dae8c860bff362f99dd0843c160fb6a58dce1cb08343f6826f0e9cd262f",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+    "deep_hedge_price/tests/test_dynamic_hedging_execution.py": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe"
+  },
+  "source_unchanged": true,
+  "probes": [
+    {
+      "probe": "actual_execution_source_refusal",
+      "error": "required execution source missing: run_fresh",
+      "loader_calls": 0,
+      "source_provider_patched": false
+    },
+    {
+      "probe": "unpatched_actual_A_gate_with_synthetic_source_provider",
+      "qualification": "unknown",
+      "precision_selection": "unavailable",
+      "main_execution": "not_implemented",
+      "all_baselines": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "original_validation_n": 2048,
+      "fits": 12
+    },
+    {
+      "probe": "candidate_original_n_changed",
+      "error": "original fit attempts and requested denominator required",
+      "loader_calls": 0
+    },
+    {
+      "probe": "frozen_precision_changed",
+      "error": "execution freeze mutated",
+      "loader_calls": 0
+    },
+    {
+      "probe": "source_binding_changed",
+      "error": "main.source_identity.johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py: saved value mismatch",
+      "loader_calls": 0
+    },
+    {
+      "probe": "raw_fit_original_n_missing",
+      "error": "completed fit slot needs its own raw identity/checkpoint",
+      "loader_calls": 0
+    },
+    {
+      "probe": "raw_fit_weights_changed",
+      "error": "closed fits differ from the prior training selection receipt",
+      "loader_calls": 0
+    },
+    {
+      "probe": "closed_fit_digest_missing",
+      "error": "closed fits differ from the prior training selection receipt",
+      "loader_calls": 0
+    },
+    {
+      "probe": "raw_validation_truncation",
+      "error": "validation original denominator cannot be changed",
+      "loader_calls": 0
+    },
+    {
+      "probe": "all_failed_baseline_rescue",
+      "error": "saved baseline differs from original raw validation minimum",
+      "loader_calls": 0
+    },
+    {
+      "probe": "execution_expense_missing",
+      "error": "required expense IDs erased or duplicated",
+      "loader_calls": 0
+    },
+    {
+      "probe": "closure_verification_changed",
+      "error": "stale or misbound verification receipt",
+      "loader_calls": 0
+    },
+    {
+      "probe": "strict_legacy_gate_still_refuses_execution_freeze",
+      "error": "formally qualified pilot required",
+      "loader_calls": 0
+    },
+    {
+      "probe": "untrusted_loader_mutations_cannot_change_preloader_snapshots",
+      "evaluations": 36,
+      "seen_unique": [
+        [
+          8192,
+          0.0,
+          null,
+          32768
+        ]
+      ],
+      "qualification": "unknown",
+      "precision_selection": "unavailable",
+      "study_evaluation_patched": true,
+      "A_readiness_gate_patched": false
+    }
+  ],
+  "findings": [],
+  "boundary": "Synthetic metadata plus source-provider-only patch proves bounded wiring, not financial/source/freeze readiness. No RNG, teacher solver, training, formal pilot or actual main executed.",
+  "original_review_preserved": true
+}
+
+EXIT 0

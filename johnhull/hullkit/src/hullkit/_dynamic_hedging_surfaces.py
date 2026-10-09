@@ -4,7 +4,9 @@ Times are years, prices currency, spot derivatives stock units, and state
 derivatives currency per annual variance (Heston) or multiplier (local).
 Every interpolated axis uses the same linear not-a-knot cubic operator.
 No extrapolation, price clipping, nearest-root substitution, or fixing-time
-interpolation is performed. Numerical accuracy remains a measured pilot gate.
+interpolation is performed. Explicit Asian evaluation boxes use the same C2
+operator on fixed subaxes; no continuity across unknown gaps is asserted.
+Numerical accuracy remains a measured pilot gate.
 """
 
 from __future__ import annotations
@@ -308,7 +310,53 @@ def normalized_price_greeks(
     }
 
 
-def build_asian_cache(primitive_groups: dict, *, model: str, axes: dict) -> dict:
+def _asian_evaluation_domains(domains, model, dates, states, threshold, spots, t0_spots):
+    """Snapshot per-date contiguous node boxes, independent of query or labels."""
+    if not isinstance(domains, (list, tuple)) or len(domains) != len(dates):
+        raise ValueError("evaluation domain requires one explicit entry per exact date")
+    names = (["spot"] if model == "local" else []) + ["state", "threshold"]
+    snapshots, bounds, sheets = [], [], []
+    for j, domain in enumerate(domains):
+        sheet = "t0_sheet" if model == "local" and dates[j] == 0 else "main"
+        sheets.append(sheet)
+        if domain is None:
+            snapshots.append(None)
+            bounds.append(None)
+            continue
+        if not isinstance(domain, dict) or set(domain) != set(names):
+            raise ValueError("evaluation domain must declare exactly the model's cubic axes")
+        axes = {"state": states, "threshold": threshold[j]}
+        if model == "local":
+            axes["spot"] = t0_spots if sheet == "t0_sheet" else spots
+        copied, endpoints = {}, {}
+        for name in names:
+            interval = domain[name]
+            if (
+                not isinstance(interval, (list, tuple))
+                or len(interval) != 2
+                or any(
+                    not isinstance(k, (int, np.integer)) or isinstance(k, bool) for k in interval
+                )
+            ):
+                raise ValueError("evaluation domain requires integer half-open node ranges")
+            a, b = (int(k) for k in interval)
+            if a < 0 or b > len(axes[name]) or b - a < 4:
+                raise ValueError("evaluation domain needs four or more contiguous original nodes")
+            copied[name] = [a, b]
+            endpoints[name] = [float(axes[name][a]), float(axes[name][b - 1])]
+        snapshots.append(copied)
+        bounds.append(endpoints)
+    return {
+        "evaluation_domains": snapshots,
+        "evaluation_domain_schema": "rb-f04-asian-fixed-domain-v1",
+        "evaluation_domain_bounds": bounds,
+        "evaluation_domain_sheets": sheets,
+    }
+
+
+def build_asian_cache(
+    primitive_groups: dict, *, model: str, axes: dict, evaluation_domains=None
+) -> dict:
     """Construct exact-date normalized CV tables with shared IID block curves.
 
     Axes are ``dates``, ``state``, ``threshold`` (1D or per-date 2D), and
@@ -318,6 +366,14 @@ def build_asian_cache(primitive_groups: dict, *, model: str, axes: dict) -> dict
     uses shape (date,[spot],state,threshold,[16,3]) for analytic fixtures.
     Heston has no spot axis: its normalized claim is homogeneous. Local axes
     use log S/log ell internally; price and derivatives share that operator.
+
+    evaluation_domains=None preserves the original global operator. An
+    explicit per-date list declares one fixed box or None (unavailable).
+    Each box maps its cubic axes to half-open contiguous original node index
+    ranges, with four or more nodes per axis. Local date-zero spot indices
+    refer to the dedicated t0 sheet. Only evaluation is restricted: full
+    arrays, primitive statuses, IID blocks and original N remain unchanged.
+    Availability is not a financial precision qualification.
     """
     _model(model)
     dates = _axis(axes["dates"], "dates", cubic=False)
@@ -431,7 +487,7 @@ def build_asian_cache(primitive_groups: dict, *, model: str, axes: dict) -> dict
     counts = np.floor(dates * 12 + 1e-9).astype(int)
     if dates[0] < 0 or dates[-1] >= 1 or np.any(counts > 11):
         raise ValueError("Asian cache dates must be in [0,1)")
-    return {
+    cache = {
         "model": model,
         "dates": dates,
         "state_nodes": states,
@@ -451,10 +507,24 @@ def build_asian_cache(primitive_groups: dict, *, model: str, axes: dict) -> dict
         "shared_driver_ids": tuple(driver_ids),
         "t0_sheet": t0_sheet,
     }
+    if evaluation_domains is not None:
+        cache.update(
+            _asian_evaluation_domains(
+                evaluation_domains, model, dates, states, threshold, spots, t0_spots
+            )
+        )
+    return cache
 
 
 def evaluate_asian(cache: dict, date_index: int, spot, state, memory_sum, memory_count) -> dict:
-    """Value the monthly Asian after recording all fixings at this exact date."""
+    """Value the monthly Asian from one fixed same-price interpolation domain.
+
+    Exact linear/settled branches require no patch or fitted state. Explicit
+    boxes use common subaxes for mean and all sixteen CV block curves; unknown
+    nodes outside the box are retained, while necessary unavailable nodes
+    make this date unknown. Box boundaries use only the inward derivative,
+    without extrapolation or a continuity claim across unsupported gaps.
+    """
     if not _date(cache, date_index):
         return _unknown("date_index")
     spot, state, a, n = np.broadcast_arrays(
@@ -513,7 +583,35 @@ def evaluate_asian(cache: dict, date_index: int, spot, state, memory_sum, memory
     if any(v < axis[0] or v > axis[-1] for axis, v in zip(axes, point, strict=True)):
         return _unknown("outside_support")
     values = sheet["f"] if sheet is not None else cache["f"][date_index]
-    if np.any(~np.isfinite(values)):
+    blocks = None
+    future_mean = np.exp(
+        (cache["rate"] - cache["dividend_yield"]) * (np.arange(int(n) + 1, 13) / 12 - t)
+    ).sum()
+    domains = cache.get("evaluation_domains")
+    if domains is not None:
+        domain = domains[date_index]
+        if domain is None:
+            return _unknown("no_evaluation_domain")
+        names = (["spot"] if local else []) + ["state", "threshold"]
+        slices = tuple(slice(*domain[name]) for name in names)
+        axes = [axis[section] for axis, section in zip(axes, slices, strict=True)]
+        if any(v < axis[0] or v > axis[-1] for axis, v in zip(axes, point, strict=True)):
+            return _unknown("outside_evaluation_domain")
+        values = values[slices]
+        if np.any(~np.isfinite(values)):
+            return _unknown("nonfinite_domain_nodes")
+        blocks = (sheet["block_means"] if sheet is not None else cache["block_means"][date_index])[
+            ..., 2
+        ][slices]
+        if np.any(~np.isfinite(blocks)):
+            return _unknown("nonfinite_domain_blocks")
+        if np.any(values < -1e-12) or np.any(values > future_mean + 1e-12):
+            return _unknown(
+                "domain_price_bounds",
+                raw_min_f=float(np.min(values)),
+                raw_max_f=float(np.max(values)),
+            )
+    elif np.any(~np.isfinite(values)):
         return _unknown("nonfinite_nodes")
     f = float(_tensor(values, axes, point))
     fx = float(_tensor(values, axes, point, len(axes) - 1))
@@ -522,14 +620,12 @@ def evaluate_asian(cache: dict, date_index: int, spot, state, memory_sum, memory
     got = normalized_price_greeks(
         float(spot), d, x, f, fx, fs, model=cache["model"], state=float(state), f_log_spot=fz
     )
-    future_mean = np.exp(
-        (cache["rate"] - cache["dividend_yield"]) * (np.arange(int(n) + 1, 13) / 12 - t)
-    ).sum()
     if f < -1e-12 or f > future_mean + 1e-12 or fx > 1e-10 or fx < -1 - 1e-10:
         return _unknown("price_bounds", raw_value=float(got["value"]), raw_f=f, raw_f_x=fx)
-    blocks = (sheet["block_means"] if sheet is not None else cache["block_means"][date_index])[
-        ..., 2
-    ]
+    if blocks is None:
+        blocks = (sheet["block_means"] if sheet is not None else cache["block_means"][date_index])[
+            ..., 2
+        ]
     fb = _tensor(blocks, axes, point)
     fxb = _tensor(blocks, axes, point, len(axes) - 1)
     fsb = _tensor(blocks, axes, point, int(local))

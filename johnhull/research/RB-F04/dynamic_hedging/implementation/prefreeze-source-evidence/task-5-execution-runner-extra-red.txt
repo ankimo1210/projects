@@ -1,0 +1,42 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_______________ test_execution_runner_cli_demands_closed_inputs ________________
+
+capsys = <_pytest.capture.CaptureFixture object at 0x743fb24bf8f0>
+
+    def test_execution_runner_cli_demands_closed_inputs(capsys):
+        with pytest.raises(SystemExit) as exc:
+            runner.main(["--phase", "execution-main"])
+        assert exc.value.code == 2
+>       assert "execution-main requires" in capsys.readouterr().err
+E       assert 'execution-main requires' in "usage: __main__.py [-h] --phase {tiny,pilot,main,check} [--input INPUT]\n                   [--output OUTPUT] [--froz..._main__.py: error: argument --phase: invalid choice: 'execution-main' (choose from 'tiny', 'pilot', 'main', 'check')\n"
+E        +  where "usage: __main__.py [-h] --phase {tiny,pilot,main,check} [--input INPUT]\n                   [--output OUTPUT] [--froz..._main__.py: error: argument --phase: invalid choice: 'execution-main' (choose from 'tiny', 'pilot', 'main', 'check')\n" = CaptureResult(out='', err="usage: __main__.py [-h] --phase {tiny,pilot,main,check} [--input INPUT]\n                  ...main__.py: error: argument --phase: invalid choice: 'execution-main' (choose from 'tiny', 'pilot', 'main', 'check')\n").err
+E        +    where CaptureResult(out='', err="usage: __main__.py [-h] --phase {tiny,pilot,main,check} [--input INPUT]\n                  ...main__.py: error: argument --phase: invalid choice: 'execution-main' (choose from 'tiny', 'pilot', 'main', 'check')\n") = readouterr()
+E        +      where readouterr = <_pytest.capture.CaptureFixture object at 0x743fb24bf8f0>.readouterr
+
+.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/test_execution_runner_extra_red.py:14: AssertionError
+__ test_execution_runner_domain_generation_keeps_explicit_config_and_replays ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x743fb24bf680>
+
+    def test_execution_runner_domain_generation_keeps_explicit_config_and_replays(monkeypatch):
+        domains = {"heston": [None] * 12, "local": [None] * 12}
+>       bundle = runner.run_tiny(original_n=16, updates=0, train=False,
+                                 evaluation_domains_by_model=domains)
+E       TypeError: run_tiny() got an unexpected keyword argument 'evaluation_domains_by_model'
+
+.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/test_execution_runner_extra_red.py:18: TypeError
+__ test_execution_runner_saved_domain_tamper_cannot_change_generation_config ___
+
+    def test_execution_runner_saved_domain_tamper_cannot_change_generation_config():
+        domains = {"heston": [None] * 12, "local": [None] * 12}
+>       bundle = runner.run_tiny(original_n=16, updates=0, train=False,
+                                 evaluation_domains_by_model=domains)
+E       TypeError: run_tiny() got an unexpected keyword argument 'evaluation_domains_by_model'
+
+.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/test_execution_runner_extra_red.py:40: TypeError
+=========================== short test summary info ============================
+FAILED .superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/test_execution_runner_extra_red.py::test_execution_runner_cli_demands_closed_inputs
+FAILED .superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/test_execution_runner_extra_red.py::test_execution_runner_domain_generation_keeps_explicit_config_and_replays
+FAILED .superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/test_execution_runner_extra_red.py::test_execution_runner_saved_domain_tamper_cannot_change_generation_config
+3 failed in 1.94s

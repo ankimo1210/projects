@@ -1,0 +1,62 @@
+..F                                                                      [100%]
+=================================== FAILURES ===================================
+______ test_execution_actual_metadata_guard_and_raw_closure_reach_loader _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72c7b22e5ee0>
+
+    def test_execution_actual_metadata_guard_and_raw_closure_reach_loader(monkeypatch):
+        path = ROOT / "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+        helper_spec = importlib.util.spec_from_file_location("execution_unit_helpers", path)
+        helper = importlib.util.module_from_spec(helper_spec)
+        helper_spec.loader.exec_module(helper)
+        fixture = helper.execution_fixture()
+        frozen = runner.execution.freeze_execution(**fixture)
+        receipts = helper.closure(fixture, frozen)
+        closed = closed_fits_fixture()
+        raw_by_id = {r["id"]: r for r in closed["fits"]}
+        for row in receipts["fits"]:
+            raw = raw_by_id[row["id"]]
+            for key in ["status", "attempted", "original_n", "requested_updates", "updates",
+                        "elapsed_seconds", "checkpoint_id", "reason"]:
+                row[key] = raw[key]
+            row["selection_status"] = raw["status"]
+        receipts["closed_fits_sha256"] = runner.payload_digest(closed)
+        helper.seal_closure(fixture, frozen, receipts)
+        validation = {}
+        for row in receipts["validation"]:
+            ids = [c["id"] for c in row["candidates"]]
+            validation[row["id"]] = {
+                "losses": {identifier: np.full(2048, np.nan) for identifier in ids},
+                "qualifications": {identifier: np.zeros(2048, bool) for identifier in ids}}
+        # Only the physical source registry is a fixture; A guard and raw replay are actual.
+        monkeypatch.setattr(runner, "execution_source_identity",
+                            lambda: {"protocol_source": fixture["source"]})
+        calls = []
+>       result = runner.run_execution_main(
+            frozen=frozen, candidate=fixture["candidate"], source=fixture["source"],
+            selection_receipts=receipts, raw_validation=validation, closed_fits=closed,
+            main_test_loader=lambda: calls.append("opened") or {})
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:690: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:337: in run_execution_main
+    result = _run_closed_main(
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:424: in _run_closed_main
+    readiness_guard(frozen, gate_candidate, source, selection_receipts)
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:899: in assert_execution_ready
+    _closed_fits(candidate, selection_receipts.get("fits"))
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:790: in _closed_fits
+    _require(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'source/solver defect cannot close fit'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: source/solver defect cannot close fit
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:34: ValueError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_actual_metadata_guard_and_raw_closure_reach_loader
+1 failed, 2 passed, 35 deselected in 2.89s

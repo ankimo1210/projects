@@ -283,7 +283,117 @@ def replay_teacher(primitives, thresholds, parameters, surface, *, saved_labels=
     }
 
 
-def rebuild_asian_cache(rows, parameters, axes, *, model) -> dict:
+def _same_cache_domains(expected, saved):
+    """Bind exact integer domain geometry; physical coordinates use tolerances."""
+    keys = (
+        "evaluation_domains",
+        "evaluation_domain_schema",
+        "evaluation_domain_bounds",
+        "evaluation_domain_sheets",
+    )
+    domains = expected.get("evaluation_domains")
+    if domains is None:
+        if any(saved.get(key) is not None for key in keys):
+            raise ValueError("saved_cache.evaluation_domains: explicit domain differs from default")
+        return
+    stored = saved.get("evaluation_domains")
+    if not isinstance(stored, (list, tuple)) or len(stored) != len(domains):
+        raise ValueError("saved_cache.evaluation_domains: original date entries required")
+    for index, (box, other) in enumerate(zip(domains, stored, strict=True)):
+        name = f"saved_cache.evaluation_domains[{index}]"
+        if box is None:
+            _same(None, other, name)
+            continue
+        if not isinstance(other, dict) or set(box) != set(other):
+            raise ValueError(f"{name}: original axis geometry required")
+        for axis, pair in box.items():
+            values = other[axis]
+            if (
+                not isinstance(values, (list, tuple))
+                or len(values) != 2
+                or any(
+                    isinstance(v, (bool, np.bool_)) or not isinstance(v, (int, np.integer))
+                    for v in values
+                )
+                or list(values) != pair
+            ):
+                raise ValueError(f"{name}.{axis}: original integer node ranges required")
+    for key in keys[1:]:
+        if key not in saved:
+            raise ValueError(f"saved_cache.{key}: missing domain binding")
+        if key == "evaluation_domain_bounds":
+            bounds = saved[key]
+            if not isinstance(bounds, (list, tuple)) or len(bounds) != len(expected[key]):
+                raise ValueError(f"saved_cache.{key}: original date bounds required")
+            for index, (value, other) in enumerate(zip(expected[key], bounds, strict=True)):
+                _same(value, other, f"saved_cache.{key}[{index}]")
+        else:
+            _same(expected[key], saved[key], "saved_cache." + key)
+
+
+def _same_asian_cache(expected, saved):
+    """Compare raw full cache evidence, including nodes outside the fixed box."""
+    if not isinstance(saved, dict):
+        raise ValueError("saved_cache: original cache mapping required")
+    _same_cache_domains(expected, saved)
+    keys = (
+        "model",
+        "dates",
+        "state_nodes",
+        "spot_nodes",
+        "threshold_nodes",
+        "f",
+        "block_means",
+        "memory_counts",
+        "rate",
+        "dividend_yield",
+        "strike",
+        "maturity",
+        "original_N",
+        "support_mask",
+        "interpolation",
+        "shared_driver_ids",
+        "t0_sheet",
+    )
+    for key in keys:
+        if key not in saved:
+            raise ValueError(f"saved_cache.{key}: missing original cache evidence")
+        if key == "original_N":
+            _original(saved[key], "saved_cache.original_N")
+        _same(expected[key], saved[key], "saved_cache." + key)
+    original = expected["primitive_groups"]
+    stored = saved.get("primitive_groups")
+    if not isinstance(stored, dict) or not isinstance(stored.get("groups"), (list, tuple)):
+        raise ValueError("saved_cache.primitive_groups: original group evidence required")
+    if len(original["groups"]) != len(stored["groups"]):
+        raise ValueError("saved_cache.primitive_groups: original group count differs")
+    if "N" not in stored:
+        raise ValueError("saved_cache.primitive_groups.N: missing original count")
+    _original(stored["N"], "saved_cache.primitive_groups.N")
+    _same(original["N"], stored["N"], "saved_cache.primitive_groups.N")
+    parameters = stored.get("parameters")
+    if isinstance(parameters, HestonParameters):
+        parameters = vars(parameters)
+    _same(vars(original["parameters"]), parameters, "saved_cache.primitive_groups.parameters")
+    for index, (group, other) in enumerate(zip(original["groups"], stored["groups"], strict=True)):
+        name = f"saved_cache.primitive_groups.groups[{index}]"
+        if not isinstance(other, dict):
+            raise ValueError(f"{name}: original labels required")
+        for key, value in group.items():
+            # Generation keeps full labels, while replay retains bounded
+            # summaries and adds a slice ID from the raw primitive record.
+            if key in ("shared_driver_scope", "slice_driver_id"):
+                continue
+            if key not in other:
+                raise ValueError(f"{name}.{key}: missing original label evidence")
+            if key in ("original_path_count", "N", "blocks", "block_path_count"):
+                _original(other[key], f"{name}.{key}")
+            _same(value, other[key], f"{name}.{key}")
+
+
+def rebuild_asian_cache(
+    rows, parameters, axes, *, model, evaluation_domains=None, saved_cache=None
+) -> dict:
     """Rebuild Cartesian curves from primitives and explicit global driver maps.
 
     Each row requires primitives, thresholds, date_index, global_driver_id,
@@ -294,7 +404,11 @@ def rebuild_asian_cache(rows, parameters, axes, *, model) -> dict:
     Original N and global step count are common to every node; per-date slice
     boundaries and time aggregation may differ. Mapping checks do not
     authenticate earlier random values. Missing/failed nodes remain unknown;
-    no RNG or simulation is invoked.
+    no RNG or simulation is invoked. Explicit evaluation_domains use the same
+    detached per-date descriptor as generation; None preserves the legacy full
+    cache. If saved_cache is supplied, full arrays, group summaries and domain
+    bindings are compared, including unknown nodes outside the evaluation box.
+    Numeric comparisons use tolerances and do not establish financial accuracy.
     """
     groups, bindings = [], []
     original_n, global_steps, global_id = None, None, None
@@ -384,8 +498,13 @@ def rebuild_asian_cache(rows, parameters, axes, *, model) -> dict:
     if not groups:
         raise ValueError("rows: original primitive groups required")
     cache = build_asian_cache(
-        {"groups": groups, "parameters": parameters, "N": original_n}, model=model, axes=axes
+        {"groups": groups, "parameters": parameters, "N": original_n},
+        model=model,
+        axes=axes,
+        evaluation_domains=evaluation_domains,
     )
+    if saved_cache is not None:
+        _same_asian_cache(cache, saved_cache)
     dates, states = np.asarray(axes["dates"]), np.asarray(axes["state"])
     expected = len(dates) * len(states)
     if model == "local":

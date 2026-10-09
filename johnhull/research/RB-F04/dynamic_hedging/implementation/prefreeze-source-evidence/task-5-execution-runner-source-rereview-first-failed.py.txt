@@ -1,0 +1,140 @@
+"""Independent bounded rereview. Source provider only is synthetic for success probes."""
+import copy,hashlib,importlib.util,json,sys,time
+from pathlib import Path
+import numpy as np
+P=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+D=P/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+sys.path[:0]=[str(P/'deep_hedge_price/src'),str(P/'johnhull/hullkit/src')]
+def load(name,path):
+    spec=importlib.util.spec_from_file_location(name,P/path)
+    mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);return mod
+r=load('rereview_runner','johnhull/research/RB-F04/dynamic_hedging/run_reference.py')
+h=load('rereview_execution_helpers','deep_hedge_price/tests/test_dynamic_hedging_execution.py')
+rh=load('rereview_runner_helpers','deep_hedge_price/tests/test_dynamic_hedging_runner.py')
+FILES=[
+ 'johnhull/research/RB-F04/dynamic_hedging/run_reference.py',
+ 'deep_hedge_price/tests/test_dynamic_hedging_runner.py',
+ 'deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py',
+ 'deep_hedge_price/tests/test_dynamic_hedging_execution.py',
+ 'deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py',
+ 'johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py',
+]
+binding={s:hashlib.sha256((P/s).read_bytes()).hexdigest() for s in FILES}
+results=[]
+def forbidden(*a,**kw):
+    raise AssertionError('forbidden financial generation/RNG/solver/train')
+np.random.default_rng=forbidden
+for name in ['teacher_primitives','primitive_labels','build_asian_cache','build_call_cache']:
+    setattr(r,name,forbidden)
+r.study.fit_roster=forbidden
+f=h.execution_fixture()
+frozen=h.freeze(f)
+receipt=h.closure(f,frozen)
+closed=rh.closed_fits_fixture()
+raw_keys=['status','attempted','original_n','requested_updates','updates','elapsed_seconds',
+          'reason','checkpoint_id']
+for row,original in zip(receipt['fits'],closed['fits'],strict=True):
+    for k in raw_keys:row[k]=copy.deepcopy(original[k])
+    row['selection_status']=row['status']
+    row['weights_sha256']=(r.payload_digest(original['raw_fit']['weights'])
+                           if row['status']=='completed' else None)
+    if row['status']=='failed':row['failure_kind']='unqualified_training_data'
+receipt['closed_fits_sha256']=r.payload_digest(closed)
+h.seal_closure(f,frozen,receipt)
+raw={row['id']:{'losses':{q['id']:np.zeros(2048) for q in row['candidates']},
+               'qualifications':{q['id']:np.zeros(2048,bool) for q in row['candidates']}}
+      for row in receipt['validation']}
+base=dict(frozen=frozen,candidate=f['candidate'],source=f['source'],
+          selection_receipts=receipt,raw_validation=raw,closed_fits=closed)
+opened=[]
+try:
+    r.run_execution_main(**copy.deepcopy(base),main_test_loader=lambda:opened.append(True) or {})
+except ValueError as exc:
+    results.append({'probe':'actual_execution_source_refusal','error':str(exc),
+                    'loader_calls':len(opened),'source_provider_patched':False})
+else:
+    raise AssertionError('actual missing source must refuse')
+assert opened==[]
+real_provider=r.execution_source_identity
+r.execution_source_identity=lambda: {'protocol_source':copy.deepcopy(f['source'])}
+normal=r.run_execution_main(**copy.deepcopy(base),main_test_loader=lambda: {})
+assert normal['qualification']=='unknown' and normal['precision_selection']=='unavailable'
+assert normal['main_execution']=='not_implemented'
+results.append({'probe':'unpatched_actual_A_gate_with_synthetic_source_provider',
+                'qualification':normal['qualification'],'precision_selection':normal['precision_selection'],
+                'main_execution':normal['main_execution'],
+                'all_baselines':[x['selected_baseline'] for x in receipt['validation']],
+                'original_validation_n':2048,'fits':len(closed['fits'])})
+def reject(name, mutate):
+    args=copy.deepcopy(base);mutate(args);calls=[]
+    try:r.run_execution_main(**args,main_test_loader=lambda:calls.append(True) or {})
+    except (ValueError,KeyError) as exc:
+        assert calls==[],name
+        results.append({'probe':name,'error':str(exc),'loader_calls':0})
+    else:raise AssertionError('unexpected accepted '+name)
+reject('candidate_original_n_changed',
+       lambda a:a['candidate']['original_candidate']['training'].__setitem__('original_n',8191))
+reject('frozen_precision_changed',
+       lambda a:a['frozen']['selection'].__setitem__('precision_selection','fabricated_success'))
+reject('source_binding_changed',lambda a:a['source'].__setitem__(
+       next(iter(a['source'])),'0'*64))
+reject('raw_fit_original_n_missing',
+       lambda a:a['closed_fits']['fits'][0]['raw_fit'].pop('original_path_count'))
+reject('raw_fit_weights_changed',
+       lambda a:a['closed_fits']['fits'][0]['raw_fit']['weights']['w1'].__setitem__((0,0),.01))
+reject('closed_fit_digest_missing',lambda a:a['selection_receipts'].pop('closed_fits_sha256'))
+first=next(iter(raw));name=next(iter(raw[first]['losses']))
+reject('raw_validation_truncation',
+       lambda a:a['raw_validation'][first]['losses'].__setitem__(name,np.zeros(2047)))
+reject('all_failed_baseline_rescue',
+       lambda a:a['selection_receipts']['validation'][0].__setitem__('selected_baseline','greek:Heston'))
+reject('execution_expense_missing',
+       lambda a:a['selection_receipts'].__setitem__('expenses',[
+           x for x in a['selection_receipts']['expenses'] if x['id']!='execution_freeze']))
+reject('closure_verification_changed',
+       lambda a:a['selection_receipts']['verification'].__setitem__('evidence_sha256','0'*64))
+old_args=copy.deepcopy(base)
+old_args['candidate']=copy.deepcopy(base['candidate']['original_candidate'])
+old_args['source']=r.source_identity()['protocol_source']
+calls=[]
+try:r.run_main(**old_args,main_test_loader=lambda:calls.append(True) or {})
+except ValueError as exc:
+    assert calls==[]
+    results.append({'probe':'strict_legacy_gate_still_refuses_execution_freeze',
+                    'error':str(exc),'loader_calls':0})
+else:raise AssertionError('legacy v1 accepts execution-only freeze')
+args=copy.deepcopy(base)
+cases=[dict(generator=g,seed_slot=s,level=l,dataset={'original_n':32768},risk={})
+       for g in ('Heston','local') for s in range(3) for l in (192,384,768)]
+seen=[]
+real_test_roster=r.study.test_roster
+def roster(data,risk,fits,validation,**kwargs):
+    row=fits['fits'][0]
+    seen.append((row['original_n'],float(row['raw_fit']['weights']['w1'][0,0]),
+                 validation['selected_baseline'],data['original_n']))
+    return {'qualification':'unknown','selected_baseline':validation['selected_baseline']}
+r.study.test_roster=roster
+def mutating_loader():
+    args['candidate']['original_candidate']['training']['original_n']=1
+    args['source'][next(iter(args['source']))]='0'*64
+    args['raw_validation'][first]['losses'][name][:]=np.nan
+    args['selection_receipts']['validation'][0]['selected_baseline']='greek:Heston'
+    args['frozen']['selection']['precision_selection']='fabricated_success'
+    args['closed_fits']['fits'][0]['raw_fit']['weights']['w1'][0,0]=1
+    return {'test_cases':cases}
+out=r.run_execution_main(**args,main_test_loader=mutating_loader)
+r.study.test_roster=real_test_roster
+assert len(seen)==36 and all(x==(8192,0.,None,32768) for x in seen)
+assert out['qualification']=='unknown' and out['precision_selection']=='unavailable'
+results.append({'probe':'untrusted_loader_mutations_cannot_change_preloader_snapshots',
+                'evaluations':len(out['evaluations']),'seen_unique':sorted(set(seen),key=str),
+                'qualification':out['qualification'],'precision_selection':out['precision_selection'],
+                'study_evaluation_patched':True,'A_readiness_gate_patched':False})
+r.execution_source_identity=real_provider
+end={s:hashlib.sha256((P/s).read_bytes()).hexdigest() for s in FILES}
+assert end==binding
+report={'bindings':binding,'source_unchanged':True,'probes':results,'findings':[],
+        'boundary':'Synthetic metadata plus source-provider-only patch proves bounded wiring, not financial/source/freeze readiness. No RNG, teacher solver, training, formal pilot or actual main executed.',
+        'original_review_preserved':True}
+(D/'task-5-execution-runner-source-rereview.json').write_text(json.dumps(report,indent=2)+'\n')
+print(json.dumps(report,indent=2))

@@ -403,3 +403,475 @@ def test_default_local_call_late_atm_meets_absolute_price_budget():
     # A finite solve alone does not measure actual-field derivative error.
     assert cache["reference_status"] == "unmeasured"
     assert np.isnan(cache["derivative_error"])
+
+
+def fixed_domain_fixture(model="heston", *, domains=None):
+    """Nonuniform polynomial curves with correlated original sixteen blocks."""
+    dates = np.array([0.0, 0.5])
+    thresholds = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+    states = (
+        np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+        if model == "heston"
+        else np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+    )
+    axes = {"dates": dates, "state": states, "threshold": thresholds}
+    offset = (np.arange(16) - 7.5) * 0.001
+
+    def curves(spots=None):
+        if model == "local":
+            z, state, x = np.meshgrid(np.log(spots), np.log(states), thresholds, indexing="ij")
+            f = 3.0 + 0.1 * z + 0.2 * state - 0.03 * x
+            noise = 1.0 + 0.02 * z + 0.05 * state + 0.01 * x
+        else:
+            state, x = np.meshgrid(states, thresholds, indexing="ij")
+            f = (
+                3.0
+                + 2.0 * state
+                + 0.7 * state**2
+                + 10.0 * state**3
+                - 0.025 * x
+                + 0.0004 * x**2
+                - 2e-6 * x**3
+                + 0.01 * state * x
+            )
+            noise = 1.0 + 2.0 * state + 0.01 * x
+        block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+        block[..., 2] += noise[..., None] * offset
+        return f, block
+
+    if model == "local":
+        axes["spot"] = np.array([80.0, 90.0, 100.0, 110.0, 120.0, 140.0])
+        axes["t0_spot"] = np.array([99.5, 99.75, 100.0, 100.25, 100.5])
+        f, blocks = curves(axes["spot"])
+        t0_f, t0_blocks = curves(axes["t0_spot"])
+    else:
+        f, blocks = curves()
+    raw = {
+        "parameters": P,
+        "N": 32,
+        "f": np.stack([f, f]),
+        "block_means": np.stack([blocks, blocks]),
+    }
+    if model == "local":
+        raw.update(t0_f=t0_f, t0_block_means=t0_blocks)
+    return build_asian_cache(raw, model=model, axes=axes, evaluation_domains=domains)
+
+
+def fixed_domain(model="heston"):
+    """One declared four-or-more-node box per date, never selected per query."""
+    if model == "heston":
+        return [
+            {"state": [0, 4], "threshold": [0, 4]},
+            {"state": [0, 4], "threshold": [0, 4]},
+        ]
+    return [
+        {"spot": [0, 4], "state": [1, 5], "threshold": [0, 4]},
+        {"spot": [1, 5], "state": [1, 5], "threshold": [0, 4]},
+    ]
+
+
+@pytest.mark.parametrize("model", ["heston", "local"])
+def test_fixed_domain_full_axes_matches_unchanged_default(model):
+    original = fixed_domain_fixture(model)
+    domains = [
+        {"state": [0, 5], "threshold": [0, 5]},
+        {"state": [0, 5], "threshold": [0, 5]},
+    ]
+    if model == "local":
+        domains[0]["spot"] = [0, 5]
+        domains[1]["spot"] = [0, 6]
+    selected = fixed_domain_fixture(model, domains=domains)
+    state = 0.04 if model == "heston" else 1.1
+    for date, memory, count in [(0, 0.0, 0), (1, 600.0, 6)]:
+        old = evaluate_asian(original, date, 100.0, state, memory, count)
+        new = evaluate_asian(selected, date, 100.0, state, memory, count)
+        assert old["status"] == new["status"] == "ok"
+        for key in [
+            "value",
+            "spot_derivative",
+            "state_derivative",
+            "block_values",
+            "covariance",
+            "standard_errors",
+        ]:
+            np.testing.assert_allclose(new[key], old[key], rtol=1e-12, atol=1e-12)
+    assert "evaluation_domains" not in original
+    assert selected["evaluation_domain_schema"] == "rb-f04-asian-fixed-domain-v1"
+    assert selected["interpolation"] == original["interpolation"]
+
+
+@pytest.mark.parametrize("model", ["heston", "local"])
+def test_fixed_domain_far_nan_does_not_erase_original_nodes(model):
+    cache = fixed_domain_fixture(model, domains=fixed_domain(model))
+    original_f = cache["f"].copy()
+    original_blocks = cache["block_means"].copy()
+    cache["f"][1, ..., -1] = np.nan
+    cache["block_means"][1, ..., -1, :, :] = np.nan
+    state = 0.04 if model == "heston" else 1.1
+    got = evaluate_asian(cache, 1, 101.0, state, 600.0, 6)
+    assert got["status"] == "ok"
+    assert cache["original_N"] == cache["primitive_groups"]["N"] == 32
+    assert cache["threshold_nodes"].shape == (2, 5)
+    assert cache["f"].shape == original_f.shape
+    assert cache["block_means"].shape == original_blocks.shape
+    assert np.isnan(cache["f"][1, ..., -1]).all()
+    assert cache["primitive_groups"]["f"].shape == original_f.shape
+    default = fixed_domain_fixture(model)
+    default["f"][1, ..., -1] = np.nan
+    assert evaluate_asian(default, 1, 101.0, state, 600.0, 6)["reason"] == "nonfinite_nodes"
+
+
+def independent_domain_value(cache, date, spot, state, memory, *, derivative=None, blocks=False):
+    """Direct reverse-axis SciPy interpolation independent of production basis."""
+    from scipy.interpolate import CubicSpline
+
+    domain = cache["evaluation_domains"][date]
+    local = cache["model"] == "local"
+    sheet = cache["t0_sheet"] if local and cache["dates"][date] == 0 else None
+    raw = (
+        sheet["block_means"][..., 2]
+        if blocks and sheet is not None
+        else cache["block_means"][date, ..., 2]
+        if blocks
+        else sheet["f"]
+        if sheet is not None
+        else cache["f"][date]
+    )
+    names = (["spot"] if local else []) + ["state", "threshold"]
+    selected = raw[tuple(slice(*domain[name]) for name in names)]
+    threshold = cache["threshold_nodes"][date][slice(*domain["threshold"])]
+    state_axis = cache["state_nodes"][slice(*domain["state"])]
+    point_x = (1200.0 - memory) / spot
+    value = CubicSpline(threshold, selected, axis=len(names) - 1, extrapolate=False)(
+        point_x, int(derivative == "threshold")
+    )
+    if local:
+        value = CubicSpline(np.log(state_axis), value, axis=1, extrapolate=False)(
+            np.log(state), int(derivative == "state")
+        )
+        spot_axis = (sheet["spot_nodes"] if sheet is not None else cache["spot_nodes"])[
+            slice(*domain["spot"])
+        ]
+        return CubicSpline(np.log(spot_axis), value, axis=0, extrapolate=False)(
+            np.log(spot), int(derivative == "spot")
+        )
+    return CubicSpline(state_axis, value, axis=0, extrapolate=False)(
+        state, int(derivative == "state")
+    )
+
+
+@pytest.mark.parametrize("model", ["heston", "local"])
+def test_fixed_domain_same_price_operator_greeks_and_shared_block_covariance(model):
+    cache = fixed_domain_fixture(model, domains=fixed_domain(model))
+    cache["f"][1, ..., -1] = np.nan
+    cache["block_means"][1, ..., -1, :, :] = np.nan
+    spot, state, memory = 101.0, 0.04 if model == "heston" else 1.1, 600.0
+    discount = np.exp(-0.03 * 0.5)
+    x = (1200.0 - memory) / spot
+    f = independent_domain_value(cache, 1, spot, state, memory)
+    fx = independent_domain_value(cache, 1, spot, state, memory, derivative="threshold")
+    fs = independent_domain_value(cache, 1, spot, state, memory, derivative="state")
+    fz = (
+        independent_domain_value(cache, 1, spot, state, memory, derivative="spot")
+        if model == "local"
+        else 0.0
+    )
+    expected = np.array(
+        [
+            discount * spot * f / 12,
+            discount * (f + fz - x * fx) / 12,
+            discount * spot * fs / (12 * state if model == "local" else 12),
+        ]
+    )
+    got = evaluate_asian(cache, 1, spot, state, memory, 6)
+    np.testing.assert_allclose(
+        [got[k] for k in ["value", "spot_derivative", "state_derivative"]],
+        expected,
+        rtol=1e-11,
+        atol=1e-11,
+    )
+    fb = independent_domain_value(cache, 1, spot, state, memory, blocks=True)
+    fxb = independent_domain_value(
+        cache, 1, spot, state, memory, derivative="threshold", blocks=True
+    )
+    fsb = independent_domain_value(cache, 1, spot, state, memory, derivative="state", blocks=True)
+    fzb = (
+        independent_domain_value(cache, 1, spot, state, memory, derivative="spot", blocks=True)
+        if model == "local"
+        else 0.0
+    )
+    expected_blocks = np.stack(
+        [
+            discount * spot * fb / 12,
+            discount * (fb + fzb - x * fxb) / 12,
+            discount * spot * fsb / (12 * state if model == "local" else 12),
+        ],
+        axis=-1,
+    )
+    expected_covariance = np.cov(expected_blocks, rowvar=False, ddof=1) / 16
+    np.testing.assert_allclose(got["block_values"], expected_blocks, atol=1e-11, rtol=1e-11)
+    np.testing.assert_allclose(got["covariance"], expected_covariance, atol=1e-14, rtol=1e-10)
+    assert abs(got["covariance"][0, 1]) > 1e-8
+    for h in [0.02, 0.01, 0.005]:
+        up = evaluate_asian(cache, 1, spot + h, state, memory, 6)
+        down = evaluate_asian(cache, 1, spot - h, state, memory, 6)
+        assert got["spot_derivative"] == pytest.approx(
+            (up["value"] - down["value"]) / (2 * h), rel=1e-7, abs=1e-9
+        )
+    if model == "local":
+        naive = discount * (f - x * fx) / 12
+        assert abs(got["spot_derivative"] - naive) > 0.008
+    assert np.isnan(got["error"])
+
+
+@pytest.mark.parametrize(
+    "damage,reason",
+    [
+        ("mean", "nonfinite_domain_nodes"),
+        ("block", "nonfinite_domain_blocks"),
+        ("negative", "domain_price_bounds"),
+        ("upper", "domain_price_bounds"),
+    ],
+)
+def test_fixed_domain_required_bad_node_is_unknown_without_repair(damage, reason):
+    cache = fixed_domain_fixture(domains=fixed_domain())
+    if damage == "mean":
+        cache["f"][1, 1, 2] = np.nan
+    elif damage == "block":
+        cache["block_means"][1, 1, 2, 7, 2] = np.nan
+    elif damage == "negative":
+        cache["f"][1, 1, 2] = -0.001
+    else:
+        cache["f"][1, 1, 2] = 100.0
+    before_f, before_blocks = cache["f"].copy(), cache["block_means"].copy()
+    got = evaluate_asian(cache, 1, 100.0, 0.04, 600.0, 6)
+    assert got["status"] == "unknown"
+    assert got["reason"] == reason
+    assert np.isnan(got["value"])
+    assert cache["original_N"] == 32
+    np.testing.assert_allclose(cache["f"], before_f, equal_nan=True)
+    np.testing.assert_allclose(cache["block_means"], before_blocks, equal_nan=True)
+
+
+def test_fixed_domain_unavailable_date_outside_rows_and_snapshot_are_explicit():
+    domains = [None, {"state": [0, 4], "threshold": [0, 4]}]
+    cache = fixed_domain_fixture(domains=domains)
+    domains[1]["state"][:] = [1, 5]
+    assert cache["evaluation_domains"][1]["state"] == [0, 4]
+    assert evaluate_asian(cache, 0, 100.0, 0.04, 0.0, 0)["reason"] == "no_evaluation_domain"
+    got = evaluate_asian(cache, 1, [100.0, 100.0], [0.04, 0.08], [600.0, 600.0], [6, 6])
+    assert got["status"].tolist() == ["ok", "unknown"]
+    assert got["reason"][1] == "outside_evaluation_domain"
+    assert np.isnan(got["value"][1])
+    assert got["block_values"].shape == (2, 16, 3)
+    assert cache["original_N"] == 32
+    assert cache["evaluation_domain_bounds"][1]["state"] == [0.01, 0.06]
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        [],
+        [{"state": [0, 4], "threshold": [0, 4]}],
+        [{"state": [0, 3], "threshold": [0, 4]}] * 2,
+        [{"state": [-1, 4], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 9], "threshold": [0, 4]}] * 2,
+        [{"state": [2, 2], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4, 1], "threshold": [0, 4]}] * 2,
+        [{"state": [0, 4], "threshold": [0, 4], "spot": [0, 4]}] * 2,
+    ],
+)
+def test_fixed_domain_rejects_incomplete_or_noncontiguous_geometry(bad):
+    with pytest.raises(ValueError, match="domain"):
+        fixed_domain_fixture(domains=bad)
+
+
+def test_fixed_domain_local_t0_uses_its_dedicated_spot_axis_and_all_blocks():
+    cache = fixed_domain_fixture("local", domains=fixed_domain("local"))
+    assert cache["evaluation_domain_sheets"] == ["t0_sheet", "main"]
+    assert cache["evaluation_domain_bounds"][0]["spot"] == [99.5, 100.25]
+    cache["f"][0] = np.nan
+    cache["block_means"][0] = np.nan
+    got = evaluate_asian(cache, 0, 100.0, 1.1, 0.0, 0)
+    assert got["status"] == "ok"
+    assert got["block_values"].shape == (16, 3)
+    assert evaluate_asian(cache, 0, 100.5, 1.1, 0.0, 0)["reason"] == "outside_evaluation_domain"
+    assert evaluate_asian(cache, 0, 120.0, 1.1, 0.0, 0)["reason"] == "outside_t0_support"
+    expected = independent_domain_value(cache, 0, 100.0, 1.1, 0.0)
+    assert got["value"] == pytest.approx(np.exp(-0.03) * 100.0 * expected / 12, rel=1e-12)
+    for h in [0.02, 0.01, 0.005]:
+        up = evaluate_asian(cache, 0, 100.0 + h, 1.1, 0.0, 0)
+        down = evaluate_asian(cache, 0, 100.0 - h, 1.1, 0.0, 0)
+        assert got["spot_derivative"] == pytest.approx(
+            (up["value"] - down["value"]) / (2 * h), rel=1e-7
+        )
+    cache["t0_sheet"]["block_means"][1, 1, 2, 4, 2] = np.nan
+    assert evaluate_asian(cache, 0, 100.0, 1.1, 0.0, 0)["reason"] == "nonfinite_domain_blocks"
+
+
+def test_fixed_domain_linear_and_settled_do_not_require_patch_or_state():
+    cache = fixed_domain_fixture(domains=[None, None])
+    cache["f"][:] = np.nan
+    cache["block_means"][:] = np.nan
+    linear = evaluate_asian(cache, 1, 100.0, np.nan, 1300.0, 6)
+    settled = evaluate_asian(cache, 1, 100.0, np.nan, 1300.0, 12)
+    assert linear["status"] == "not_required_linear_claim"
+    assert linear["state_derivative"] == 0.0
+    assert settled["status"] == "not_required_settled_claim"
+    assert settled["value"] == pytest.approx(1300.0 / 12 - 100.0)
+
+
+@pytest.mark.parametrize("coordinate", [0.02, 0.04, 0.01, 0.06])
+def test_fixed_domain_price_derivative_is_continuous_inside_and_one_sided_at_boundary(coordinate):
+    cache = fixed_domain_fixture(domains=fixed_domain())
+    got = evaluate_asian(cache, 1, 100.0, coordinate, 600.0, 6)
+    assert got["status"] == "ok"
+    for h in [1e-5, 5e-6, 2.5e-6]:
+        if coordinate == 0.01:
+            neighbour = evaluate_asian(cache, 1, 100.0, coordinate + h, 600.0, 6)
+            derivative = (neighbour["value"] - got["value"]) / h
+        elif coordinate == 0.06:
+            neighbour = evaluate_asian(cache, 1, 100.0, coordinate - h, 600.0, 6)
+            derivative = (got["value"] - neighbour["value"]) / h
+        else:
+            up = evaluate_asian(cache, 1, 100.0, coordinate + h, 600.0, 6)
+            down = evaluate_asian(cache, 1, 100.0, coordinate - h, 600.0, 6)
+            derivative = (up["value"] - down["value"]) / (2 * h)
+            assert up["state_derivative"] == pytest.approx(
+                down["state_derivative"], rel=1e-4, abs=5e-4
+            )
+        assert got["state_derivative"] == pytest.approx(derivative, rel=3e-5)
+    assert (
+        evaluate_asian(cache, 1, 100.0, 0.0601, 600.0, 6)["reason"] == "outside_evaluation_domain"
+    )
+
+
+def test_fixed_domain_keeps_original_nonunique_call_roots_instead_of_rescuing_patch_root():
+    states = np.array([0.25, 0.5, 0.625, 0.75, 1.0, 2.0, 4.0])
+    spots = np.array([80.0, 95.0, 105.0, 120.0])
+    curve = 10.0 + (states - 0.6) * (states - 1.2) * (states - 3.0)
+    call = {
+        "model": "local",
+        "dates": np.array([0.5]),
+        "spot_nodes": spots,
+        "state_nodes": states,
+        "values": (0.3 * (spots[:, None] - 100.0) + curve[None, :])[None],
+        "rate": 0.03,
+        "dividend_yield": 0.0,
+        "strike": 100.0,
+        "maturity": 1.25,
+        "derivative_error": 0.0,
+    }
+    threshold = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+    f = np.broadcast_to(np.full((4, 7, 5), 2.0), (4, 7, 5)).copy()
+    asian = build_asian_cache(
+        {
+            "parameters": P,
+            "N": 32,
+            "f": f[None],
+            "block_means": np.broadcast_to(f[None, ..., None, None], (1, 4, 7, 5, 16, 3)).copy(),
+        },
+        model="local",
+        axes={"dates": [0.5], "spot": spots, "state": states, "threshold": threshold},
+        evaluation_domains=[{"spot": [0, 4], "state": [1, 5], "threshold": [0, 4]}],
+    )
+    fit = fit_quote_state(call, 0, 100.0, 10.0, state_scale=1.0)
+    assert fit["status"] == "unknown"
+    assert fit["reason"] == "nonunique"
+    np.testing.assert_allclose(fit["roots"], [0.6, 1.2, 3.0], atol=1e-12)
+    assert asian["evaluation_domain_bounds"][0]["state"] == [0.5, 1.0]
+    assert "asian_state_bounds" not in call
+    assert evaluate_asian(asian, 0, 100.0, fit["state"], 600.0, 6)["status"] == "unknown"
+
+
+def test_fixed_domain_keeps_original_group_statuses_driver_and_denominator():
+    states = np.array([0.01, 0.02, 0.04, 0.06, 0.08])
+    threshold = np.array([0.0, 3.0, 8.0, 16.0, 24.0])
+    groups = []
+    for state in states:
+        f = 3.0 + 2.0 * state - 0.03 * threshold
+        status = np.full(5, "ready", dtype="<U40")
+        status[-1] = "unknown_underresolved"
+        groups.append(
+            {
+                "date_index": 0,
+                "spot": 100.0,
+                "state": state,
+                "thresholds": threshold.copy(),
+                "f": f.copy(),
+                "N": 32,
+                "block_means": np.broadcast_to(f[None, :, None], (16, 5, 3)).copy(),
+                "status": status,
+                "shared_driver_id": "original-global-iid",
+                "calendar_times": np.array([0.5, 1.0]),
+                "memory_count": 6,
+            }
+        )
+    raw = {"groups": groups, "parameters": P, "N": 32}
+    cache = build_asian_cache(
+        raw,
+        model="heston",
+        axes={"dates": [0.5], "state": states, "threshold": threshold},
+        evaluation_domains=[{"state": [0, 4], "threshold": [0, 4]}],
+    )
+    assert cache["primitive_groups"] is raw
+    assert len(cache["primitive_groups"]["groups"]) == 5
+    assert cache["original_N"] == 32
+    assert cache["shared_driver_ids"] == ("original-global-iid",)
+    assert cache["support_mask"].shape == (1, 5, 5)
+    assert np.isnan(cache["f"][0, :, -1]).all()
+    assert np.isnan(cache["block_means"][0, :, -1]).all()
+    assert all(row["status"][-1] == "unknown_underresolved" for row in groups)
+    assert all(np.isfinite(row["f"][-1]) for row in groups)
+    assert all(row["block_means"].shape == (16, 5, 3) and row["N"] == 32 for row in groups)
+    assert evaluate_asian(cache, 0, 100.0, 0.04, 600.0, 6)["status"] == "ok"
+
+
+def test_fixed_domain_retains_signed_cv_blocks_instead_of_clipping_uncertainty():
+    cache = fixed_domain_fixture(domains=fixed_domain())
+    block_curves = cache["block_means"][1, ..., 2]
+    block_curves[..., 0] -= 10.0
+    block_curves[..., 1:] += 10.0 / 15.0
+    original = block_curves.copy()
+    np.testing.assert_allclose(block_curves.mean(axis=-1), cache["f"][1], atol=1e-12)
+    got = evaluate_asian(cache, 1, 100.0, 0.04, 600.0, 6)
+    assert got["status"] == "ok"
+    assert got["block_values"].shape == (16, 3)
+    assert got["block_values"][0, 0] < 0.0
+    assert got["standard_errors"][0] > 1.0
+    np.testing.assert_allclose(cache["block_means"][1, ..., 2], original)
+    assert cache["original_N"] == 32
+
+
+def test_fixed_domain_preserves_post_interpolation_price_derivative_bounds():
+    cache = fixed_domain_fixture(domains=fixed_domain())
+    values = 1.0 + 0.04 * cache["threshold_nodes"][1]
+    cache["f"][1] = np.broadcast_to(values, cache["f"][1].shape)
+    cache["block_means"][1] = np.broadcast_to(
+        cache["f"][1, ..., None, None], cache["block_means"][1].shape
+    )
+    got = evaluate_asian(cache, 1, 100.0, 0.04, 600.0, 6)
+    assert got["status"] == "unknown"
+    assert got["reason"] == "price_bounds"
+    assert got["raw_f_x"] == pytest.approx(0.04)
+
+
+@pytest.mark.parametrize(
+    "damage,reason",
+    [
+        ("nan", "nonfinite_nodes"),
+        ("increasing", "price_bounds"),
+    ],
+)
+def test_default_unknown_mean_or_bounds_preserves_original_early_rejection(damage, reason):
+    cache = fixed_domain_fixture()
+    if damage == "nan":
+        cache["f"][1, 0, 0] = np.nan
+    else:
+        cache["f"][1] = np.broadcast_to(
+            1.0 + 0.04 * cache["threshold_nodes"][1], cache["f"][1].shape
+        )
+    del cache["block_means"]
+    got = evaluate_asian(cache, 1, 100.0, 0.04, 600.0, 6)
+    assert got["status"] == "unknown"
+    assert got["reason"] == reason

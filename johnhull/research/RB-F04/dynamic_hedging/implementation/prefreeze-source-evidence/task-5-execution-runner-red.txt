@@ -1,0 +1,96 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+_____ test_execution_runner_refuses_before_loader_for_empty_actual_freeze ______
+
+    def test_execution_runner_refuses_before_loader_for_empty_actual_freeze():
+        calls = []
+        with pytest.raises(ValueError, match="frozen"):
+>           runner.run_execution_main(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+                frozen={}, candidate={}, source={}, selection_receipts={},
+                raw_validation={}, main_test_loader=lambda: calls.append("opened"),
+            )
+E           AttributeError: module 'dynamic_research_runner' has no attribute 'run_execution_main'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:491: AttributeError
+___ test_execution_runner_uses_own_guard_and_preserves_unavailable_precision ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x756ebaca4bc0>
+
+    def test_execution_runner_uses_own_guard_and_preserves_unavailable_precision(monkeypatch):
+        args = execution_runner_fixture()
+        calls = []
+        def guard(frozen, candidate, source, selection):
+            assert candidate["original_candidate"] == runner.candidate_protocol()
+            assert frozen["selection"]["precision_selection"] == "unavailable"
+            assert "qualification" not in frozen
+            calls.append("execution_guard")
+>       monkeypatch.setattr(runner.execution, "assert_execution_ready", guard)
+                            ^^^^^^^^^^^^^^^^
+E       AttributeError: module 'dynamic_research_runner' has no attribute 'execution'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:506: AttributeError
+_________ test_execution_runner_rechecks_raw_validation_before_loader __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x756fd979b830>
+
+    def test_execution_runner_rechecks_raw_validation_before_loader(monkeypatch):
+        args = execution_runner_fixture()
+        args["selection_receipts"]["validation"][0]["candidates"][0]["mse"] += 1
+        calls = []
+>       monkeypatch.setattr(runner.execution, "assert_execution_ready", lambda *args: None)
+                            ^^^^^^^^^^^^^^^^
+E       AttributeError: module 'dynamic_research_runner' has no attribute 'execution'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:521: AttributeError
+_____ test_execution_runner_keeps_all_failed_baselines_and_original_paths ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x756fd979ad20>
+
+    def test_execution_runner_keeps_all_failed_baselines_and_original_paths(monkeypatch):
+        args = execution_runner_fixture()
+        for record in args["selection_receipts"]["validation"]:
+            for item in record["candidates"]:
+                item.update(status="failed", mse=None, reason="original risk unqualified")
+            record.update(status="failed", selected_baseline=None,
+                          selected_bands={"Heston": None, "local": None},
+                          band_failures={"Heston": "all failed", "local": "all failed"},
+                          reason="all original candidates failed")
+            raw = args["raw_validation"][record["id"]]
+            raw["qualifications"] = {name: np.zeros(2048, bool) for name in raw["losses"]}
+        calls = []
+        def loader():
+            calls.append("opened")
+            for raw in args["raw_validation"].values():
+                assert all(loss.shape == (2048,) for loss in raw["losses"].values())
+            return {}
+>       monkeypatch.setattr(runner.execution, "assert_execution_ready", lambda *args: None)
+                            ^^^^^^^^^^^^^^^^
+E       AttributeError: module 'dynamic_research_runner' has no attribute 'execution'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:544: AttributeError
+____ test_execution_runner_detaches_earlier_inputs_before_untrusted_loader _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x756eba523bc0>
+
+    def test_execution_runner_detaches_earlier_inputs_before_untrusted_loader(monkeypatch):
+        args = execution_runner_fixture()
+        checked = []
+        def guard(frozen, candidate, source, receipts):
+            checked.append(candidate["original_candidate"]["training"]["original_n"])
+        def loader():
+            args["candidate"]["original_candidate"]["training"]["original_n"] = 1
+            args["frozen"]["selection"]["precision_selection"] = "fabricated_success"
+            return {}
+>       monkeypatch.setattr(runner.execution, "assert_execution_ready", guard)
+                            ^^^^^^^^^^^^^^^^
+E       AttributeError: module 'dynamic_research_runner' has no attribute 'execution'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:560: AttributeError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_runner_refuses_before_loader_for_empty_actual_freeze
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_runner_uses_own_guard_and_preserves_unavailable_precision
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_runner_rechecks_raw_validation_before_loader
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_runner_keeps_all_failed_baselines_and_original_paths
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_runner_detaches_earlier_inputs_before_untrusted_loader
+5 failed, 27 deselected in 4.19s

@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-10",
+  "source_sha256": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+    "deep_hedge_price/tests/test_dynamic_hedging_execution.py": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f"
+  },
+  "runs": [
+    {
+      "command": [
+        "format",
+        "--check",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+      ],
+      "exit": 0,
+      "stdout": "2 files already formatted\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "check",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+      ],
+      "exit": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "pytest",
+        "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+      ],
+      "exit": 0,
+      "stdout": "..................................................                       [100%]\n50 passed in 0.99s\n",
+      "stderr": ""
+    }
+  ],
+  "formal_pilot_approved": false,
+  "financial_qualification_approved": false
+}

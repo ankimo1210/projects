@@ -1,0 +1,12 @@
+{
+  "source_sha256": "cb7fbc7e09e04b0db0169140e9c233e97fe4e8583ddcbc7dbfe01856d1f6c234",
+  "case_id": "quote00",
+  "measurements": {
+    "initial_quote_error": 0.0,
+    "cf_order_cutoff_error": 0.0
+  },
+  "classification": "measured_precision_failure",
+  "recomputed_receipts": true,
+  "observed": "REJECT",
+  "reason": "precision failure requires failed or unmeasured original gate"
+}

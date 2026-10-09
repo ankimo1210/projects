@@ -33,6 +33,7 @@ from hullkit._dynamic_hedging_surfaces import build_asian_cache, build_call_cach
 from hullkit._heston_local_surface import HestonParameters
 from scipy.special import ndtr
 
+from deep_hedge_price import _dynamic_hedging_execution as execution
 from deep_hedge_price import _dynamic_hedging_protocol as protocol
 from deep_hedge_price import _dynamic_hedging_replay as replay
 from deep_hedge_price import _dynamic_hedging_study as study
@@ -185,6 +186,28 @@ def source_identity(root=ROOT, *, entrypoints=None, package_roots=None) -> dict:
     }
 
 
+def execution_source_identity(root=ROOT) -> dict:
+    """Include all required phase entry points and reject missing local source.
+
+    The older bounded runner keeps its original source roots. Research execution
+    additionally binds independent references and fresh verification; missing
+    phase implementations cannot be treated as external libraries.
+    """
+    root = Path(root).resolve(strict=True)
+    base = root / "johnhull/research/RB-F04/dynamic_hedging"
+    required = [
+        "reference_methods",
+        "run_fresh",
+        "run_reference",
+        "check_initial_quotes",
+        "check_selected_calls",
+    ]
+    for name in required:
+        if not (base / f"{name}.py").is_file():
+            raise ValueError(f"required execution source missing: {name}")
+    return source_identity(root, entrypoints=[f"dynamic_research.{name}" for name in required])
+
+
 def validation_candidate_ids(widths=None):
     """Return the fixed model, Greek-then-width tie order."""
     widths = candidate_protocol()["hedging"]["band_width_candidates"] if widths is None else widths
@@ -272,18 +295,94 @@ def run_main(
     main_test_loader,
     closed_fits=None,
 ):
-    """Enforce raw selection and actual protocol gate before test loader access.
+    """Use the unchanged strict v1 gate before evaluating supplied main data.
 
-    A loader can supply all eighteen original generator/seed/level cases.
-    This evaluates supplied data; generation, statistics, Q checks and full
-    expense/fresh management remain explicit unimplemented obligations.
+    Generation, statistics, Q checks, all expenses and fresh lifecycle remain
+    caller-owned obligations; this boundary does not certify financial accuracy.
     """
-    frozen, candidate, source, selection_receipts, raw_validation, closed_fits = copy.deepcopy(
-        (frozen, candidate, source, selection_receipts, raw_validation, closed_fits)
+    return _run_closed_main(
+        frozen=frozen,
+        candidate=candidate,
+        gate_candidate=candidate,
+        source=source,
+        selection_receipts=selection_receipts,
+        raw_validation=raw_validation,
+        main_test_loader=main_test_loader,
+        closed_fits=closed_fits,
+        readiness_guard=protocol.assert_main_ready,
+        source_provider=source_identity,
+    )
+
+
+def run_execution_main(
+    *,
+    frozen,
+    candidate,
+    source,
+    selection_receipts,
+    raw_validation,
+    main_test_loader,
+    closed_fits=None,
+):
+    """Use the separate research execution gate, retaining unknown precision.
+
+    The full execution candidate is checked without a synthetic qualified v1
+    freeze. The financial calculation uses its exact original v1 candidate.
+    This supplied-data boundary is not a complete experiment or an acceptance.
+    """
+    fixed_candidate, fixed_frozen = copy.deepcopy((candidate, frozen))
+    precision = fixed_frozen.get("selection", {}).get("precision_selection")
+    result = _run_closed_main(
+        frozen=fixed_frozen,
+        candidate=fixed_candidate.get("original_candidate", {}),
+        gate_candidate=fixed_candidate,
+        source=source,
+        selection_receipts=selection_receipts,
+        raw_validation=raw_validation,
+        main_test_loader=main_test_loader,
+        closed_fits=closed_fits,
+        readiness_guard=execution.assert_execution_ready,
+        source_provider=execution_source_identity,
+    )
+    return result | {
+        "precision_selection": precision,
+        "execution_contract": fixed_frozen.get("schema"),
+        "kind": "rb-f04-execution-main-v1.1",
+    }
+
+
+def _run_closed_main(
+    *,
+    frozen,
+    candidate,
+    gate_candidate,
+    source,
+    selection_receipts,
+    raw_validation,
+    main_test_loader,
+    closed_fits,
+    readiness_guard,
+    source_provider,
+):
+    """Recalculate raw closed selections before either gated test loader."""
+    frozen, candidate, gate_candidate, source, selection_receipts, raw_validation, closed_fits = (
+        copy.deepcopy(
+            (
+                frozen,
+                candidate,
+                gate_candidate,
+                source,
+                selection_receipts,
+                raw_validation,
+                closed_fits,
+            )
+        )
     )
     if not frozen:
-        protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
-    _same(source_identity()["protocol_source"], source, "main.source_identity")
+        readiness_guard(frozen, gate_candidate, source, selection_receipts)
+    if "training" not in candidate or "validation" not in candidate:
+        raise ValueError("complete original financial candidate required")
+    _same(source_provider()["protocol_source"], source, "main.source_identity")
     if closed_fits is None:
         raise ValueError("closed training fits must be fixed before test access")
     _check_original_fits(
@@ -320,7 +419,7 @@ def run_main(
             original_n=candidate["validation"]["original_n"],
             qualifications=qualifications,
         )
-    protocol.assert_main_ready(frozen, candidate, source, selection_receipts)
+    readiness_guard(frozen, gate_candidate, source, selection_receipts)
     loaded = main_test_loader()
     if "fits" in loaded:
         _same(fixed_fits, loaded["fits"], "test_artifact.closed_fits")
@@ -640,7 +739,7 @@ def required_tiny_expenses():
     return ids
 
 
-def run_tiny(*, original_n=32, updates=1, train=True):
+def run_tiny(*, original_n=32, updates=1, train=True, evaluation_domains_by_model=None):
     """Run a bounded smoke through teacher/cache/12 fit attempts/44 policy slots.
 
     Twelve monthly fixings are retained. N is a multiple of sixteen. xi0 and
@@ -649,6 +748,12 @@ def run_tiny(*, original_n=32, updates=1, train=True):
     """
     if original_n < 16 or original_n > 64 or original_n % 16 or updates not in [0, 1, 2]:
         raise ValueError("tiny scope: N16/32/48/64 and zero to two updates")
+    evaluation_domains_by_model = copy.deepcopy(evaluation_domains_by_model)
+    if evaluation_domains_by_model is not None and set(evaluation_domains_by_model) != {
+        "heston",
+        "local",
+    }:
+        raise ValueError("explicit evaluation domains require both model descriptors")
     start, cpu = perf_counter(), process_time()
     identity = source_identity()
     expenses = [_expense("source:registry", start, cpu)]
@@ -689,14 +794,16 @@ def run_tiny(*, original_n=32, updates=1, train=True):
         axes = {"dates": times[:-1], "state": state_axes[model], "threshold": thresholds}
         if model == "local":
             axes.update(spot=spots, t0_spot=t0_spots)
+        domain = None if evaluation_domains_by_model is None else evaluation_domains_by_model[model]
         asian = build_asian_cache(
             {"groups": [row["labels"] for row in rows], "parameters": p, "N": original_n},
             model=model,
             axes=axes,
+            evaluation_domains=domain,
         )
         caches[model], teachers[model] = (
             {"call": call, "asian": asian},
-            {"rows": rows, "axes": axes},
+            {"rows": rows, "axes": axes, "evaluation_domains": copy.deepcopy(domain)},
         )
         expenses.append(_expense(f"teacher:{name}", start, cpu))
     datasets, risks = {}, {}
@@ -838,8 +945,15 @@ def check_bundle(bundle):
             ):
                 raise ValueError("saved driver/slice provenance does not match original arrays")
         rows = [{**row, "surface": surface} for row in records["rows"]]
-        cache = replay.rebuild_asian_cache(rows, p, records["axes"], model=model)["cache"]
         saved = bundle["caches"][model]["asian"]
+        cache = replay.rebuild_asian_cache(
+            rows,
+            p,
+            records["axes"],
+            model=model,
+            evaluation_domains=records.get("evaluation_domains"),
+            saved_cache=saved,
+        )["cache"]
         for key in ["f", "block_means", "support_mask", "threshold_nodes", "state_nodes"]:
             _same(cache[key], saved[key], f"{model}.asian.{key}")
         if model == "local":
@@ -998,7 +1112,9 @@ def initial_quote_pilot(directory):
 def main(argv=None):
     """Expose bounded tiny, saved pilot component, sealed main and saved check."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--phase", required=True, choices=["tiny", "pilot", "main", "check"])
+    parser.add_argument(
+        "--phase", required=True, choices=["tiny", "pilot", "main", "execution-main", "check"]
+    )
     parser.add_argument("--input", type=Path)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--frozen", type=Path)
@@ -1029,14 +1145,24 @@ def main(argv=None):
             or args.output is None
         ):
             parser.error(
-                "main requires --frozen, closed train/validation --input, --test-artifact and --output"
+                f"{args.phase} requires --frozen, closed train/validation --input, "
+                "--test-artifact and --output"
             )
         frozen = json.loads(args.frozen.read_text())
         training, _ = load_bundle(args.input)
-        result = run_main(
+        entry = run_execution_main if args.phase == "execution-main" else run_main
+        source_provider = (
+            execution_source_identity if args.phase == "execution-main" else source_identity
+        )
+        current_candidate = (
+            execution.execution_candidate()
+            if args.phase == "execution-main"
+            else candidate_protocol()
+        )
+        result = entry(
             frozen=frozen,
-            candidate=candidate_protocol(),
-            source=source_identity()["protocol_source"],
+            candidate=current_candidate,
+            source=source_provider()["protocol_source"],
             selection_receipts=training["selection_receipts"],
             raw_validation=training["raw_validation"],
             closed_fits=training["closed_fits"],

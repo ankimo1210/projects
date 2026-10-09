@@ -1,0 +1,316 @@
+{
+  "case_count": 33,
+  "records": [
+    {
+      "case": "exact saved metadata",
+      "expected": "accept",
+      "observed": "accept",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.008518569999978354,
+      "qualification": "unknown",
+      "integrity": "pass",
+      "original_N": 32,
+      "groups": 6
+    },
+    {
+      "case": "numeric bounds tolerance accepted",
+      "expected": "accept",
+      "observed": "accept",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.007534004999797617,
+      "qualification": "unknown",
+      "integrity": "pass",
+      "original_N": 32,
+      "groups": 6
+    },
+    {
+      "case": "numeric raw arrays tolerance accepted",
+      "expected": "accept",
+      "observed": "accept",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.007573183000204153,
+      "qualification": "unknown",
+      "integrity": "pass",
+      "original_N": 32,
+      "groups": 6
+    },
+    {
+      "case": "exact index differs",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006358482999530679,
+      "error": "saved_cache.evaluation_domains[0].state: original integer node ranges required"
+    },
+    {
+      "case": "near integer index differs",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006096854000134044,
+      "error": "saved_cache.evaluation_domains[0].state: original integer node ranges required"
+    },
+    {
+      "case": "boolean index differs",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006132132999482565,
+      "error": "saved_cache.evaluation_domains[0].state: original integer node ranges required"
+    },
+    {
+      "case": "schema differs",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006125021999650926,
+      "error": "saved_cache.evaluation_domain_schema: saved value differs from recomputation"
+    },
+    {
+      "case": "sheet differs",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006197748999511532,
+      "error": "saved_cache.evaluation_domain_sheets: saved value differs from recomputation"
+    },
+    {
+      "case": "physical bounds beyond tolerance",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006115568000495841,
+      "error": "saved_cache.evaluation_domain_bounds[0].state: saved value differs from recomputation"
+    },
+    {
+      "case": "required explicit metadata missing: evaluation_domains",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.00596833700001298,
+      "error": "saved_cache.evaluation_domains: original date entries required"
+    },
+    {
+      "case": "required explicit metadata missing: evaluation_domain_schema",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006187687999954505,
+      "error": "saved_cache.evaluation_domain_schema: missing domain binding"
+    },
+    {
+      "case": "required explicit metadata missing: evaluation_domain_bounds",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006056619999981194,
+      "error": "saved_cache.evaluation_domain_bounds: missing domain binding"
+    },
+    {
+      "case": "required explicit metadata missing: evaluation_domain_sheets",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006648584999311424,
+      "error": "saved_cache.evaluation_domain_sheets: missing domain binding"
+    },
+    {
+      "case": "outside original mean NaN repaired",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006279502999859687,
+      "error": "saved_cache.f: saved value differs from recomputation"
+    },
+    {
+      "case": "outside original block NaN repaired",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006147959999907471,
+      "error": "saved_cache.block_means: saved value differs from recomputation"
+    },
+    {
+      "case": "inside block15 changed",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.0061860120003984775,
+      "error": "saved_cache.block_means: saved value differs from recomputation"
+    },
+    {
+      "case": "CV block15 removed",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.005974555999273434,
+      "error": "saved_cache.block_means: saved shape differs from original"
+    },
+    {
+      "case": "threshold original full axis shortened",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006182617999911599,
+      "error": "saved_cache.threshold_nodes: saved shape differs from original"
+    },
+    {
+      "case": "support NaN status repaired",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006329902000288712,
+      "error": "saved_cache.support_mask: saved value differs from recomputation"
+    },
+    {
+      "case": "original cache N reduced",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006116949999523058,
+      "error": "saved_cache.original_N: saved value differs from recomputation"
+    },
+    {
+      "case": "original group N reduced",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006488816000455699,
+      "error": "saved_cache.primitive_groups.groups[0].N: saved value differs from recomputation"
+    },
+    {
+      "case": "unknown original group status rescued",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006703117999677488,
+      "error": "saved_cache.primitive_groups.groups[0].status: saved value differs from recomputation"
+    },
+    {
+      "case": "original group status reason removed",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.0066574580005180906,
+      "error": "saved_cache.primitive_groups.groups[0].status_reasons: missing original label evidence"
+    },
+    {
+      "case": "original group removed",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006287332000283641,
+      "error": "saved_cache.primitive_groups: original group count differs"
+    },
+    {
+      "case": "local exact t0 and full arrays",
+      "expected": "accept",
+      "observed": "accept",
+      "stream_iterations": 1,
+      "stream_yields": 40,
+      "wall_seconds": 0.05624026599980425,
+      "qualification": "unknown",
+      "integrity": "pass",
+      "original_N": 32,
+      "groups": 40
+    },
+    {
+      "case": "local t0 outside box block NaN repaired",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 40,
+      "wall_seconds": 0.04489848899993376,
+      "error": "saved_cache.t0_sheet.block_means: saved value differs from recomputation"
+    },
+    {
+      "case": "local t0 axis changed",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 40,
+      "wall_seconds": 0.04532308699981513,
+      "error": "saved_cache.t0_sheet.spot_nodes: saved value differs from recomputation"
+    },
+    {
+      "case": "local t0 sheet mapping changed",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 40,
+      "wall_seconds": 0.04362761199990928,
+      "error": "saved_cache.evaluation_domain_sheets: saved value differs from recomputation"
+    },
+    {
+      "case": "explicit unavailable exact date",
+      "expected": "accept",
+      "observed": "accept",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.008077800000137358,
+      "qualification": "unknown",
+      "integrity": "pass",
+      "original_N": 32,
+      "groups": 6
+    },
+    {
+      "case": "legacy default missing",
+      "expected": "accept",
+      "observed": "accept",
+      "stream_iterations": 1,
+      "stream_yields": 6
+    },
+    {
+      "case": "legacy default null",
+      "expected": "accept",
+      "observed": "accept",
+      "stream_iterations": 1,
+      "stream_yields": 6
+    },
+    {
+      "case": "default request rejects explicit saved domain",
+      "observed": "reject",
+      "error": "saved_cache.evaluation_domains: explicit domain differs from default"
+    },
+    {
+      "case": "explicit request rejects legacy cache",
+      "expected": "reject",
+      "observed": "reject",
+      "stream_iterations": 1,
+      "stream_yields": 6,
+      "wall_seconds": 0.006215192999661667,
+      "error": "saved_cache.evaluation_domains: original date entries required"
+    }
+  ],
+  "solver_rng_regeneration_calls": 0,
+  "source_sha256": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b",
+  "tests_sha256": "d811e320f449c9cd92b2894b8da38b0de2c292d4423c06a74491288f12c04781",
+  "B_dependency_sha256": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+  "wall_seconds": 0.4598744290005925,
+  "financial_qualification": "NOT_GRANTED",
+  "formal_pilot": "NOT_RUN"
+}

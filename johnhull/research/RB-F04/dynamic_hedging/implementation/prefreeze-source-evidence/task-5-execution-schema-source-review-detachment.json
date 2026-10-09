@@ -1,0 +1,13 @@
+{
+  "detached_components": [
+    "source",
+    "domains",
+    "selection",
+    "pilot current expenses",
+    "pilot unknown history",
+    "candidate gates"
+  ],
+  "observed": "UNCHANGED",
+  "historic_unknown_cost": null,
+  "source_sha256": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494"
+}

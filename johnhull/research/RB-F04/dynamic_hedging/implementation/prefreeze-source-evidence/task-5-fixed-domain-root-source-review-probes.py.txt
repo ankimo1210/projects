@@ -1,0 +1,40 @@
+from pathlib import Path
+import json,hashlib,math
+import numpy as np
+from hullkit._heston_local_surface import HestonParameters
+from hullkit._dynamic_hedging_surfaces import build_asian_cache,evaluate_asian
+p=HestonParameters(100,.03,0,.04,2,.04,.3,-.7)
+states=np.array([.005,.01,.02,.04,.08,.16,.5])
+x=np.array([0.,1,2,3,4,6,9,12])
+f=5-.3*x[None,:]+.05*states[:,None]
+f[0]=np.nan;f[:,-1]=np.nan
+blocks=np.broadcast_to(f[...,None,None],(*f.shape,16,3)).copy()
+eps=(np.arange(16)-7.5)*.001
+blocks[...,2]+=states[:,None,None]*eps[None,None,:]
+source={'parameters':p,'N':32,'f':f[None],'block_means':blocks[None]}
+axes={'dates':[.5],'state':states,'threshold':x}
+domains=[{'state':[1,6],'threshold':[1,7]}]
+cache=build_asian_cache(source,model='heston',axes=axes,evaluation_domains=domains)
+assert cache['original_N']==32 and cache['f'].shape==(1,7,8)
+assert np.isnan(cache['f'][0,0]).all() and np.isnan(cache['f'][0,:,-1]).all()
+assert cache['evaluation_domain_bounds']==[{'state':[.01,.16],'threshold':[1.,9.]}]
+D=math.exp(-.03*.5);v=.04;s=100
+got=evaluate_asian(cache,0,s,v,900,6)
+expected=np.array([D*s*(5-.3*3+.05*v)/12,D*(5+.05*v)/12,D*s*.05/12])
+actual=np.array([got['value'],got['spot_derivative'],got['state_derivative']])
+np.testing.assert_allclose(actual,expected,rtol=1e-12,atol=1e-12)
+fperblock=5-.3*3+(.05+eps)*v
+expectedblocks=np.stack([D*s*fperblock/12,D*(5+(.05+eps)*v)/12,D*s*(.05+eps)/12],axis=-1)
+np.testing.assert_allclose(got['block_values'],expectedblocks,rtol=1e-12,atol=1e-12)
+np.testing.assert_allclose(got['covariance'],np.cov(expectedblocks,rowvar=False,ddof=1)/16,rtol=1e-10,atol=1e-13)
+out=evaluate_asian(cache,0,100,v,200,6)
+assert out['reason']=='outside_evaluation_domain' and math.isnan(out['value'])
+bad=build_asian_cache(source,model='heston',axes=axes,evaluation_domains=[None])
+assert evaluate_asian(bad,0,100,v,900,6)['reason']=='no_evaluation_domain'
+linear=evaluate_asian(bad,0,100,np.nan,1300,6)
+assert linear['status']=='not_required_linear_claim' and math.isfinite(linear['value'])
+# The descriptor is detached from caller geometry; discarded nodes remain raw.
+domains[0]['threshold'][0]=0
+assert cache['evaluation_domains'][0]['threshold']==[1,7]
+report={'kind':'independent bounded fixed-domain source review probes','assertions':'pass','price_greeks_max_abs_error':float(np.max(abs(actual-expected))),'block_greeks_max_abs_error':float(np.max(abs(got['block_values']-expectedblocks))),'original_N':32,'original_shape':list(cache['f'].shape),'raw_unknown_nodes_preserved':True,'no_evaluation_domain_unknown':True,'linear_branch_independent_of_fit_and_patch':True,'financial_domain_precision':'unverified'}
+print(json.dumps(report,indent=2))

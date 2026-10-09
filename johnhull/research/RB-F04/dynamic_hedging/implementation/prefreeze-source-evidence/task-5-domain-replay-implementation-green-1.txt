@@ -1,0 +1,59 @@
+........................................................................ [ 71%]
+..........F................F.                                            [100%]
+=================================== FAILURES ===================================
+_ test_rebuild_fixed_domain_retains_full_original_nodes_and_unknown_tail_without_rng _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7e87617dbd40>
+
+    def test_rebuild_fixed_domain_retains_full_original_nodes_and_unknown_tail_without_rng(monkeypatch):
+        from hullkit._dynamic_hedging_surfaces import evaluate_asian
+    
+        rows, p, axes = _domain_replay_fixture()
+        domain = [{"state": [1, 5], "threshold": [0, 4]}]
+>       original_tail = replay_teacher(rows[0]["primitives"], axes["threshold"], p)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: replay_teacher() missing 1 required positional argument: 'surface'
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1045: TypeError
+____ test_rebuild_saved_local_domain_uses_t0_sheet_and_all_original_groups _____
+
+    def test_rebuild_saved_local_domain_uses_t0_sheet_and_all_original_groups():
+        from hullkit._dynamic_hedging_surfaces import evaluate_asian
+    
+        rows, p, axes = _domain_replay_fixture(model="local")
+        domains = [
+            {"spot": [1, 5], "state": [0, 4], "threshold": [1, 5]},
+            {"spot": [0, 4], "state": [0, 4], "threshold": [0, 4]},
+        ]
+        first = rebuild_asian_cache(rows, p, axes, model="local", evaluation_domains=domains)
+        again = rebuild_asian_cache(
+            iter(rows),
+            p,
+            axes,
+            model="local",
+            evaluation_domains=domains,
+            saved_cache=first["cache"],
+        )
+        assert again["qualification"] == "unknown"
+        assert again["original_group_count"] == again["saved_group_count"] == 40
+        assert again["cache"]["original_N"] == 32
+        assert again["cache"]["evaluation_domain_sheets"] == ["t0_sheet", "main"]
+        assert again["cache"]["t0_sheet"]["spot_nodes"] == pytest.approx(axes["t0_spot"])
+        assert again["cache"]["t0_sheet"]["block_means"].shape == (6, 4, 6, 16, 3)
+        assert again["cache"]["f"].shape == (2, 4, 4, 6)
+        assert evaluate_asian(again["cache"], 0, 99.8, 1.0, 0.0, 0)["reason"] == (
+            "outside_evaluation_domain"
+        )
+    
+        inside = evaluate_asian(again["cache"], 0, 99.95, 1.0, 0.0, 0)
+>       assert inside["status"] == "ok"
+E       AssertionError: assert 'unknown' == 'ok'
+E         
+E         - ok
+E         + unknown
+
+deep_hedge_price/tests/test_dynamic_hedging_replay.py:1250: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_fixed_domain_retains_full_original_nodes_and_unknown_tail_without_rng
+FAILED deep_hedge_price/tests/test_dynamic_hedging_replay.py::test_rebuild_saved_local_domain_uses_t0_sheet_and_all_original_groups
+2 failed, 99 passed in 1.02s

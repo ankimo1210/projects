@@ -310,3 +310,10 @@ Task5 helperの[ソース確認](../../../research/RB-F04/dynamic_hedging/implem
 ## Task5 connectors checkpoint（2026-10-10）
 
 [接続・予備測定](../../../research/RB-F04/dynamic_hedging/implementation/TASK5_CONNECTORS.md)で最新source/レビュー/runを結ぶ。1352 scoped testsは旧runner c734時点、最終runner f96は27tests・独立18probes/26操作禁止saved replayで確認。重複件数を加算しない。compact status/local PDE格子変更は旧Tasks1–4 source承認と別記録。37元quotes・18元states・全36教師slotsを保持、N1024のSE同時条件6/36、underresolved5/fitunknown1。正式pilot/freeze/mainは未完了。次は教師state感応度分散/underresolution・誤差伝播と正式pilot。
+
+
+## Task5 prefreeze private source checkpoint（2026-10-10）
+
+[最新source/TDD/独立レビュー](../../../research/RB-F04/dynamic_hedging/implementation/PREFREEZE_SOURCE.md)：固定Cartesian domain51tests、保存再計算101tests、別execution metadata50tests、入口/API/CLI39testsを確認。I1必須source closureとI2 CLI providerを修正して独立再レビュー未解決0、索引/docstring1125tests・8Pythonruff/format PASS。元strict v1・閾値・121cases/51obligations・原N・全失敗/unknownを保持。実run_freshはまだ未実装で、専用registryがtest loader前に拒否する。合成registryを使う単体正常接続は正式金融freeze/main readinessの証明ではない。
+
+次は既存設計の独立positions oracle/premium/freshと、正式pilot実行器・保存金融checkerの接続。正式pilot/Tasks6–7の未完条件は維持する。今回のsource検査は全suite/金融precision/本物pilot/研究受入を代替しない。

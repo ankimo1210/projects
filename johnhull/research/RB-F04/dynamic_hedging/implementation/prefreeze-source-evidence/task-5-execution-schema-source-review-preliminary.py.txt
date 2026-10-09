@@ -1,0 +1,24 @@
+from pathlib import Path
+import importlib.util, types,hashlib,json
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+OUT=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+snap=OUT/"task-5-execution-schema-source-review-preliminary-source.txt"
+review=types.ModuleType("deep_hedge_price._review_execution_snapshot")
+review.__package__="deep_hedge_price"
+exec(compile(snap.read_text(),str(snap),"exec"),review.__dict__)
+spec=importlib.util.spec_from_file_location("review_execution_fixture",WT/"deep_hedge_price/tests/test_dynamic_hedging_execution.py")
+fixtures=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(fixtures)
+fixtures.execution=lambda:review
+f=fixtures.execution_fixture()
+row=f["pilot"]["cases"][0]
+row.update(outcome="measured_precision_failure",financial_qualification="unknown",reason="declared precision failure despite all listed gates passing")
+fixtures.reseal(f)
+result={"source_sha256":hashlib.sha256(snap.read_bytes()).hexdigest(),"case_id":row["id"],"measurements":row["measurements"],"classification":row["outcome"],"recomputed_receipts":True}
+try:
+    frozen=fixtures.freeze(f)
+    result.update(observed="ACCEPT",financial_qualification=frozen["financial_qualification"])
+except ValueError as exc:
+    result.update(observed="REJECT",reason=str(exc))
+(OUT/"task-5-execution-schema-source-review-preliminary.json").write_text(json.dumps(result,indent=2)+"\n")
+print(json.dumps(result,indent=2))

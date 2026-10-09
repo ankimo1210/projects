@@ -1,0 +1,9 @@
+from pathlib import Path
+import types,sys,pytest,hullkit
+original=Path("/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fixed-domain-implementation-original-source.txt")
+module=types.ModuleType("hullkit._dynamic_hedging_surfaces")
+module.__package__="hullkit"
+module.__file__=str(original)
+exec(compile(original.read_text(),str(original),"exec"),module.__dict__)
+sys.modules["hullkit._dynamic_hedging_surfaces"]=module
+raise SystemExit(pytest.main(["-q","--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit","/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py","-k","test_fixed_domain"]))

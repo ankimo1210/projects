@@ -1,0 +1,13 @@
+{
+  "exit_code": 1,
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py",
+    "-k",
+    "test_default_unknown_mean_or_bounds"
+  ]
+}

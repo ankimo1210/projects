@@ -1,0 +1,3 @@
+Synthetic fixture warmup: actual A guard/raw checkpoint/all 56 candidate losses PASS, all baseline None; no runner integration or finance qualification
+
+EXIT 0

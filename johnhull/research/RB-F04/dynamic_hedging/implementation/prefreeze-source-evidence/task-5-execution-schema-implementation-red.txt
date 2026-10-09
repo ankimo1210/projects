@@ -1,0 +1,2010 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                                    [100%]
+=================================== FAILURES ===================================
+____________ test_candidate_preserves_exact_v1_and_full_obligations ____________
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_candidate_preserves_exact_v1_and_full_obligations():
+>       e = execution()
+            ^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_____ test_execution_freeze_keeps_financial_rejection_unknown_and_detached _____
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_execution_freeze_keeps_financial_rejection_unknown_and_detached():
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:216: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+___ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[threshold] ____
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'threshold'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+______ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[seed] ______
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'seed'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+__ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[case_missing] __
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'case_missing'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[case_duplicate] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'case_duplicate'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+___ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[n_erasure] ____
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'n_erasure'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+__ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[measurement] ___
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'measurement'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[falsequalified] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'falsequalified'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[solver_as_structural] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'solver_as_structural'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[missing_case_review] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'missing_case_review'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[attempt_missing] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'attempt_missing'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[source_missing] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'source_missing'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+___ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[integrity] ____
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'integrity'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+__ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[review_scope] __
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'review_scope'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[global_flag_only] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'global_flag_only'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[current_cost_unknown] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'current_cost_unknown'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[history_erased] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'history_erased'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[domain_missing] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'domain_missing'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[domain_short_axis] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'domain_short_axis'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[precision_falsequalified] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'precision_falsequalified'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+___ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[research_n] ___
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'research_n'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_freeze_refuses_incomplete_or_falsified_rebound_metadata[cap_without_plan] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'cap_without_plan'
+
+    @pytest.mark.parametrize("mutation", [
+        "threshold", "seed", "case_missing", "case_duplicate", "n_erasure", "measurement",
+        "falsequalified", "solver_as_structural", "missing_case_review",
+        "attempt_missing", "source_missing", "integrity", "review_scope", "global_flag_only",
+        "current_cost_unknown", "history_erased", "domain_missing", "domain_short_axis",
+        "precision_falsequalified", "research_n", "cap_without_plan"])
+    def test_freeze_refuses_incomplete_or_falsified_rebound_metadata(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_____ test_smallest_qualified_test_n_uses_all_original_ordered_projections _____
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_smallest_qualified_test_n_uses_all_original_ordered_projections():
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:288: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_____________ test_legacy_v1_still_rejects_unknown_execution_pilot _____________
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_legacy_v1_still_rejects_unknown_execution_pilot():
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:302: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_______ test_assert_execution_ready_accepts_full_closed_failed_baselines _______
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+    def test_assert_execution_ready_accepts_full_closed_failed_baselines():
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:310: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[frozen_tamper] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'frozen_tamper'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[source_stale] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'source_stale'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[test_opened] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'test_opened'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[fit_erased] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'fit_erased'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[incomplete_fit] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'incomplete_fit'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[failed_fit_without_reason] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'failed_fit_without_reason'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[validation_erased] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'validation_erased'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[candidate_erased] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'candidate_erased'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[failed_band_fallback] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'failed_band_fallback'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[closed_cost_unknown] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'closed_cost_unknown'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+_ test_assert_ready_refuses_unclosed_or_replaced_original_attempts[receipt_stale] _
+
+    def execution():
+        try:
+>           return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'deep_hedge_price._dynamic_hedging_execution'
+import_ = <function _gcd_import at 0x70c8f35a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_execution'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+mutation = 'receipt_stale'
+
+    @pytest.mark.parametrize("mutation", [
+        "frozen_tamper", "source_stale", "test_opened", "fit_erased", "incomplete_fit",
+        "failed_fit_without_reason", "validation_erased", "candidate_erased",
+        "failed_band_fallback", "closed_cost_unknown", "receipt_stale"])
+    def test_assert_ready_refuses_unclosed_or_replaced_original_attempts(mutation):
+>       f = execution_fixture()
+            ^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:63: in execution_fixture
+    e = execution()
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def execution():
+        try:
+            return importlib.import_module("deep_hedge_price._dynamic_hedging_execution")
+        except ModuleNotFoundError:
+>           pytest.fail("Separate execution-readiness schema is not implemented")
+E           Failed: Separate execution-readiness schema is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:15: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_candidate_preserves_exact_v1_and_full_obligations
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_execution_freeze_keeps_financial_rejection_unknown_and_detached
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[threshold]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[seed]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[case_missing]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[case_duplicate]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[n_erasure]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[measurement]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[falsequalified]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[solver_as_structural]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[missing_case_review]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[attempt_missing]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[source_missing]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[integrity]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[review_scope]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[global_flag_only]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[current_cost_unknown]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[history_erased]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[domain_missing]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[domain_short_axis]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[precision_falsequalified]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[research_n]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_freeze_refuses_incomplete_or_falsified_rebound_metadata[cap_without_plan]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_smallest_qualified_test_n_uses_all_original_ordered_projections
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_legacy_v1_still_rejects_unknown_execution_pilot
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_execution_ready_accepts_full_closed_failed_baselines
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[frozen_tamper]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[source_stale]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[test_opened]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[fit_erased]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[incomplete_fit]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[failed_fit_without_reason]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[validation_erased]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[candidate_erased]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[failed_band_fallback]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[closed_cost_unknown]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_assert_ready_refuses_unclosed_or_replaced_original_attempts[receipt_stale]
+37 failed in 0.40s

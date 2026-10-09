@@ -1,0 +1,66 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_execution_cli_uses_execution_source_with_actual_guard __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7e0ee65fbda0>
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3724/test_execution_cli_uses_execut0')
+capsys = <_pytest.capture.CaptureFixture object at 0x7e0ee65fb6e0>
+
+    def test_execution_cli_uses_execution_source_with_actual_guard(monkeypatch, tmp_path, capsys):
+        _, fixture, frozen, receipts, validation, closed = actual_execution_inputs()
+        frozen_path = tmp_path / "frozen.json"
+        frozen_path.write_text(json.dumps(frozen))
+        opened, saved = [], []
+        train, test, output = [tmp_path / name for name in ("train", "test", "out")]
+    
+        def loader(path):
+            if path == train:
+                return {
+                    "selection_receipts": receipts,
+                    "raw_validation": validation,
+                    "closed_fits": closed,
+                }, {}
+            assert path == test
+            opened.append("test")
+            return {}, {}
+    
+        def writer(path, result):
+            assert path == output
+            saved.append(result)
+            return {"unit": "artifact writer not certified"}
+    
+        # Physical source/artifact I/O is supplied; the A and raw financial guards are actual.
+        monkeypatch.setattr(
+            runner, "execution_source_identity", lambda: {"protocol_source": fixture["source"]}
+        )
+        monkeypatch.setattr(runner, "load_bundle", loader)
+        monkeypatch.setattr(runner, "save_bundle", writer)
+>       assert runner.main([
+            "--phase", "execution-main", "--frozen", str(frozen_path),
+            "--input", str(train), "--test-artifact", str(test), "--output", str(output),
+        ]) == 0
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:770: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:1159: in main
+    result = entry(
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:335: in run_execution_main
+    result = _run_closed_main(
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:385: in _run_closed_main
+    _same(source_provider()["protocol_source"], source, "main.source_identity")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual = {'deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py': '3734530fb976597d315b412e33d969862ef97b58f705a.../deep_hedge_price/_dynamic_hedging_replay.py': 'b46983a13aed8821b9d989eefa8daa4cff197af3fd809a72c80d53fd66795424', ...}
+expected = {'deep_hedge_price/src/deep_hedge_price/__init__.py': 'a8b359e6997c219dec5bc328a2819181a8f24445fd0eb1c66fed78cc3fcf65c...eep_hedge_price/_dynamic_hedging_protocol.py': '5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f', ...}
+name = 'main.source_identity'
+
+    def _same(actual, expected, name):
+        if isinstance(actual, dict) and isinstance(expected, dict):
+            if actual.keys() != expected.keys():
+>               raise ValueError(f"{name}: saved keyset mismatch")
+E               ValueError: main.source_identity: saved keyset mismatch
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:54: ValueError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_cli_uses_execution_source_with_actual_guard
+1 failed, 38 deselected in 1.66s

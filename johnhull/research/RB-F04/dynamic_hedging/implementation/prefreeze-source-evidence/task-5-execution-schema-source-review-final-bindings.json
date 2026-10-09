@@ -1,0 +1,7 @@
+{
+  "source_sha256": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+  "tests_sha256": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508",
+  "strict_v1_protocol_sha256": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f",
+  "strict_v1_protocol_HEAD_sha256": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f",
+  "strict_v1_protocol_unchanged_from_HEAD": true
+}

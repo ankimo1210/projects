@@ -1,0 +1,8 @@
+{
+  "exit_code": 1,
+  "wall_seconds": 1.206043337000665,
+  "child_cpu_seconds": 1.185039,
+  "scope": "all new regressions against exact original source loaded in isolated subprocess; canonical source never reverted",
+  "loaded_source_snapshot_sha256": "fff3bc88d497210a846956d464317d5ddb00941a1e3ef25193f9cbaa26a8c406",
+  "tests_sha256": "b34c8f019be773cb0811b34194dbe29b88eb539fc7183a0eddf5b438595327c8"
+}

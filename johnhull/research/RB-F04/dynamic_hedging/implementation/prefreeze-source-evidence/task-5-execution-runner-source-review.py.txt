@@ -1,0 +1,40 @@
+"""Independent bounded runner probes. Synthetic metadata is unit evidence only."""
+import hashlib,importlib.util,json,sys
+from pathlib import Path
+P=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+D=P/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+sys.path[:0]=[str(P/'deep_hedge_price/src'),str(P/'johnhull/hullkit/src')]
+def load(name,path):
+    spec=importlib.util.spec_from_file_location(name,P/path)
+    mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);return mod
+r=load('review_runner','johnhull/research/RB-F04/dynamic_hedging/run_reference.py')
+h=load('review_execution_helpers','deep_hedge_price/tests/test_dynamic_hedging_execution.py')
+identity=r.source_identity()
+source=identity['protocol_source']
+candidate=r.execution.execution_candidate()
+missing=sorted(set(candidate['required_source_files'])-set(source))
+f=h.execution_fixture();f['source']=source;h.reseal(f)
+try:
+    h.freeze(f)
+except ValueError as exc:
+    rejection=str(exc)
+else:
+    rejection=None
+rows={'missing_required_sources':missing,'actual_guard_rejection':rejection,
+      'includes_execution_module':'deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py' in source,
+      'source_count':len(source),'unit_only':True,'main_test_opened':False}
+files=[
+ 'johnhull/research/RB-F04/dynamic_hedging/run_reference.py',
+ 'deep_hedge_price/tests/test_dynamic_hedging_runner.py',
+ 'deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py',
+ 'deep_hedge_price/tests/test_dynamic_hedging_execution.py']
+result={'bindings':{path:hashlib.sha256((P/path).read_bytes()).hexdigest() for path in files},
+ 'probe':rows,'findings':[{'id':'I1','severity':'Important','line':88,
+ 'file':files[0],'title':'Default runner source closure omits two execution-required entrypoints',
+ 'repro':'source_identity()["protocol_source"] lacks reference_methods.py and run_fresh.py; execution.freeze_execution with current actual registry raises missing source dependency.',
+ 'action':'Include all execution-required entrypoints in the source registry used by run_execution_main and its CLI, retaining raw source equality checks. Add real unpatched execution metadata fixture coverage.'}]}
+assert missing==['johnhull/research/RB-F04/dynamic_hedging/reference_methods.py',
+                 'johnhull/research/RB-F04/dynamic_hedging/run_fresh.py']
+assert rejection=='missing source dependency'
+(D/'task-5-execution-runner-source-review.json').write_text(json.dumps(result,indent=2)+'\n')
+print(json.dumps(result,indent=2))

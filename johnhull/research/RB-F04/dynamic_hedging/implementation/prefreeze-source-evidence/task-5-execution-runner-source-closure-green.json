@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+    "-k",
+    "execution_source or execution_actual_metadata"
+  ],
+  "exit_code": 0
+}
