@@ -14,6 +14,15 @@ REL = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
 PKG = "{http://schemas.openxmlformats.org/package/2006/relationships}"
 
 
+def _cell_text(node: ET.Element) -> str:
+    """Read visible rich text, excluding Excel's Japanese phonetic runs."""
+    if node.tag == MAIN + "rPh":
+        return ""
+    if node.tag == MAIN + "t":
+        return node.text or ""
+    return "".join(_cell_text(child) for child in node)
+
+
 def excel_date(value: str) -> str:
     """Return ISO date for Excel's standard 1900 date system."""
     try:
@@ -48,9 +57,7 @@ def xlsx_rows(payload: bytes, sheet_name: str) -> Iterator[tuple[int, dict[str, 
                 raise ValueError(f"Unexpected XLSX sheet path: {sheet_path}")
             try:
                 shared_xml = ET.fromstring(archive.read("xl/sharedStrings.xml"))
-                strings = [
-                    "".join(t.text or "" for t in item.iter(MAIN + "t")) for item in shared_xml
-                ]
+                strings = [_cell_text(item) for item in shared_xml]
             except KeyError:
                 strings = []
             with archive.open(sheet_path) as stream:
@@ -70,7 +77,7 @@ def xlsx_rows(payload: bytes, sheet_name: str) -> Iterator[tuple[int, dict[str, 
                             if cell.get("t") == "s":
                                 text = strings[int(text)]
                         else:
-                            text = "".join(t.text or "" for t in cell.iter(MAIN + "t"))
+                            text = _cell_text(cell)
                         fields[column] = text
                     yield int(element.get("r", "0")), fields
                     root.clear()

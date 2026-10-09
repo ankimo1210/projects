@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>日本の住宅NOIと購入採算 — 2026年9月30日</title>
+<style>
+@@TOKENS@@
+.toolbar{display:flex;gap:16px;flex-wrap:wrap;padding:20px 0;border-bottom:1px solid var(--rule);align-items:center}
+.toolbar a{font-size:13px}.toolbar button{margin-left:auto}
+button,select,input{font:inherit;color:var(--ink);accent-color:var(--accent)}
+button,select{background:var(--surface);border:1px solid var(--rule-2);border-radius:8px;padding:7px 12px}
+.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 28px;margin:24px 0}
+.controls label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
+.controls output{font-family:var(--mono);font-weight:600;color:var(--ink)}
+input[type=range]{width:100%}.minor{font-size:13px;color:var(--ink-2)}
+.scenario-note{max-width:none}.focus-line{font-size:18px;max-width:760px}
+.grid-pair{display:grid;grid-template-columns:1fr 1fr;gap:24px}.grid-pair>div{min-width:0}
+details{border-top:1px solid var(--rule);padding:18px 0;margin-top:20px}summary{cursor:pointer;font-weight:700}
+.facts{font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}
+.tw th{white-space:normal;min-width:90px;line-height:1.6}.tw td:first-child{white-space:normal;min-width:120px}
+.quality{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--ink-2);font-size:13px}
+.formula{font-family:var(--mono);font-size:13px;background:var(--surface-2);padding:16px;overflow-wrap:anywhere}
+@media(max-width:700px){.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.controls select{min-width:0;width:100%}.grid-pair{grid-template-columns:1fr}.toolbar{gap:10px}.toolbar button{margin-left:0}}
+@media print{.toolbar,button,input{display:none}.controls{display:none}body{padding:0 10px}section{padding-top:30px}figure,.tw,.strip{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toolbar" aria-label="レポートの各項目">
+<a href="#observed">実収支</a><a href="#finance">融資条件</a><a href="#growth">家賃・出口</a><a href="#fukuoka">福岡12物件</a><a href="#sources">定義・出典</a>
+<button id="theme" type="button">配色を切替</button>
+</nav>
+<header class="mast">
+<div class="eyebrow"><span>調査 2026-09-30</span><span>実績 2026年2〜7月</span><b>Market Research</b></div>
+<h1>福岡の保有例は、東京よりNOI利回りが高い。<span class="sub">現在の買値では、融資と修繕を含めた選別が必要</span></h1>
+<p class="lede" id="lead"></p>
+<div class="strip" id="headline"></div>
+<p class="minor">住宅J-REIT 1社の保有標本。半年の実収支を年率換算しています。鑑定額は売出価格・成約価格ではありません。全国や各都市の平均としては扱えません。</p>
+</header>
+<section id="observed">
+<div class="head"><h2>過去の取得価格と、現在の鑑定額で利回りが変わる</h2></div>
+<p class="col">同じ実績NOIでも分母を変えると利回りが下がります。保有者の取得時条件で収益が良く見えても、新たに買う場合の採算を保証しません。</p>
+<figure>
+<p class="figtitle">同じNOIをどの価格で割るか</p>
+<p class="figsub">181日運用・パススルー型・当期新規取得を除く保有物件。NOI合計÷価格合計。0%起点。</p>
+<div class="legend"><span><i style="background:var(--series-1)"></i>開示取得価格を分母</span><span><i style="background:var(--series-2)"></i>2026年7月の鑑定額を分母</span></div>
+<div class="scroll"><svg id="yield-chart" viewBox="0 0 900 390" role="img" aria-label="都市ごとの取得価格・鑑定額に対する実績NOI利回り"></svg></div>
+<figcaption>都市別の建物の築年・土地の権利・住戸構成は揃えていません。グラフは5物件以上の都市。全標本の集計は下表で確認できます。</figcaption>
+</figure>
+<div class="tw"><table><caption>実績NOIの比較（年率換算、現在の募集利回りとは異なる）</caption><thead><tr><th>都市</th><th>物件数</th><th>NOI/開示取得価格</th><th>NOI/鑑定額</th><th>運営費/実収入</th></tr></thead><tbody id="market-table"></tbody></table></div>
+<p class="minor">運営費は減価償却を除き、経常修繕・公租公課等を含みます。資本的支出は含みません。5物件未満は「少数例」を表示。沖縄の物件はこの標本に含まれません。</p>
+</section>
+<section id="finance">
+<div class="head"><h2>金利と修繕積立を入れると、いくら残るか</h2></div>
+<p class="col">選んだ都市の鑑定額で買い、同じ年率換算NOIが続く場合の試算です。金利・借入比率・年数・費用は分析用の仮定で、金融機関の提示条件ではありません。</p>
+<div class="controls">
+<label>対象都市<select id="market" aria-label="試算する都市"></select></label>
+<label>借入金利 <output id="rate-value"></output><input id="rate" type="range" min="0" max="6" step="0.1" value="3"></label>
+<label>LTV <output id="ltv-value"></output><input id="ltv" type="range" min="30" max="85" step="5" value="70"></label>
+<label>元利均等の返済期間 <output id="term-value"></output><input id="term" type="range" min="10" max="35" step="1" value="30"></label>
+<label>年次CAPEX積立/価格 <output id="reserve-value"></output><input id="reserve" type="range" min="0" max="1.5" step="0.1" value="0.5"></label>
+<label>取得費/価格 <output id="costs-value"></output><input id="costs" type="range" min="0" max="12" step="0.5" value="7"></label>
+</div>
+<div class="strip" id="finance-cards" aria-live="polite"></div>
+<div class="note scenario-note"><span class="lab">この条件での読み方</span><p id="finance-reading"></p></div>
+<div class="tw"><table><caption>同じ融資条件で比較（CoCは取得費・積立後、税引前）</caption><thead><tr><th>都市</th><th>NOI/鑑定額</th><th>NOI DSCR</th><th>CoC</th><th>DSCR 1.25の価格/鑑定額</th></tr></thead><tbody id="finance-table"></tbody></table></div>
+<p class="minor">DSCR=NOI÷年間元利返済。積立を差し引くのはCoCです。CoCの自己資金には頭金と取得費を含めます。買値の逆算は同じNOIを前提としたDSCR条件だけの値で、成約予測ではありません。税、追加工事、空室増、融資手数料の個別明細は別途確認が必要です。</p>
+</section>
+<section id="growth">
+<div class="head"><h2>家賃が上がれば、今の価格に追いつくか</h2></div>
+<p class="col">ここで必要なのは、費用と空室を引いた後のNOI成長です。売却時の要求利回りが上がると、NOIが増えても売却価格は下がる場合があります。</p>
+<div class="controls">
+<label>想定するNOI成長率/年 <output id="growth-value"></output><input id="noi-growth" type="range" min="-2" max="5" step="0.1" value="0"></label>
+<label>出口NOI利回りの上昇幅 <output id="cap-value"></output><input id="cap" type="range" min="0" max="1.5" step="0.05" value="0.5"></label>
+<label>保有期間 <output id="hold-value"></output><input id="hold" type="range" min="3" max="10" step="1" value="5"></label>
+</div>
+<div class="strip" id="growth-cards" aria-live="polite"></div>
+<figure>
+<p class="figtitle" id="growth-title"></p><p class="figsub">価格の増減率のみ。保有中の収入・売却費・税を含む総収益やIRRではありません。ゼロは取得価格維持。</p>
+<div class="scroll"><svg id="growth-chart" viewBox="0 0 900 290" role="img" aria-label="NOI成長率と将来売却価格の感応度"></svg></div>
+<figcaption id="growth-caption"></figcaption>
+</figure>
+<p class="formula">売却価格/取得価格 = (1 + 年次NOI成長率)<sup>保有年数</sup> × 取得時NOI利回り / 出口NOI利回り</p>
+<p class="col">英国の住宅保有指数でも、2026年3月までの6か月にmarket rental valueは1.7%上がった一方、資産価値は2.2%下がりました。income return2.2%と合わせたtotal returnは0.0%。賃料改善だけでは価格上昇は決まりません。半年のincome returnを年間取得Cap Rateとは扱いません。<a href="https://www.cbre.co.uk/insights/articles/business-insights-robust-occupier-demand-drives-multifamily-housing-investment">CBREの原典</a></p>
+</section>
+<section id="fukuoka">
+<div class="head"><h2>福岡の12物件を確認する</h2></div>
+<p class="col">博多・天神・薬院・警固・高宮・西新などの保有例です。売りに出ている物件ではありません。賃料保証型2件は基準の都市集計から除外しています。</p>
+<div class="tw"><table><caption>福岡の保有例（NOIは年率換算、金額は百万円）</caption><thead><tr><th>物件</th><th>築年月</th><th>NOI/年</th><th>取得価格</th><th>鑑定額</th><th>NOI/鑑定額</th><th>当期CAPEX</th><th>契約</th></tr></thead><tbody id="fukuoka-table"></tbody></table></div>
+<p class="minor">当期CAPEXは181日間の実際の資本的支出です。将来の年次必要額として外挿していません。鑑定人が用いた直接還元利回りは、想定収支や修繕等の扱いが異なり、実績NOI÷鑑定額と一致するとは限りません。</p>
+</section>
+<section id="survey">
+<div class="head"><h2>築浅・駅近の投資家期待値はどこにあるか</h2></div>
+<p class="col">日本不動産研究所の2026年4月調査は、ワンルームで徒歩10分以内・築5年未満・25〜30㎡・50戸程度を想定しています。今回のJ-REIT保有標本とは築年・住戸構成が異なるため、差をそのまま割安度には変換しません。</p>
+<div class="tw"><table><caption>調査による期待NOI還元利回り。成約の実測値ではない。</caption><thead><tr><th>市場</th><th>ワンルーム</th><th>ファミリー</th></tr></thead><tbody id="survey-table"></tbody></table></div>
+<p class="minor">国際比較には、同条件の海外一棟住宅のNOI・取得費・修繕・融資を揃える必要があります。ロンドン・マンチェスター・香港の都市別取得NOI利回りと沖縄の比較標本は、今回取得できていません。</p>
+</section>
+<section id="sources">
+<div class="head"><h2>どこまで判断できるか</h2></div>
+<ul>
+<li><strong>東京のこの標本は融資後CFの余裕が小さい。</strong>現在の収入で成立する融資条件・買値を確認したい市場です。</li>
+<li><strong>福岡には相対的な収益の厚みがある。</strong>人気地区を一律に割安とせず、実収支と工事予定を物件ごとに確認します。</li>
+<li><strong>全国・国際的な割安度の順位はまだ作れない。</strong>単一保有標本の選択、鑑定額、半期年率換算、築年の差が残っています。</li>
+<li><strong>次は複数の住宅J-REITと直近取得案件を増やす。</strong>築年・駅距離・住戸仕様を揃えることで、現在の買値の比較に近づけます。</li>
+</ul>
+<div class="quality" id="quality"></div>
+<div class="note scenario-note"><span class="lab">原典の照合で残った差</span><p id="reconciliation-note"></p></div>
+<details><summary>名称・取得価格・総計の差を確認する</summary><div id="quality-details"></div></details>
+<details><summary>計算の定義と集計対象</summary>
+<p>NOI = 賃貸事業収入 − 賃貸事業費用 + 減価償却費。実収入には共益費・駐車場や店舗・事務所等も含まれます。NOIには経常修繕・公租公課を含み、資本的支出・借入利息・税効果・取得費を含みません。</p>
+<p>年率換算NOI = 当期NOI × 365 / 運用日数。基準集計には181日運用・パススルー型・当期新規取得を除く物件だけを使います。半年の季節性や修繕の偏りが残り、安定化NOIや直近12か月実績ではありません。</p>
+<p>取得価格は過去の取得・合併等の条件を含む開示値です。現在の市場価格と読み替えません。現在価格の代理に使った2026年7月末の鑑定額も、今買える価格・実際の成約価格ではありません。</p>
+<p>Excel内部の単位は、物件概要・簿価が円、収益状況が千円、鑑定評価が百万円。見出しの表示単位だけで換算せず、保存セルの値を確認しています。保有物件をIDで接続し、物件ごとのNOIの足し引きを確認しています。原典の集計表と物件明細には上記の未解明の差があり、都市利回りは明細から計算し、集計表に合わせる補正はしていません。</p>
+<p>日銀は2026年9月18日に政策金利1.25%を決定しました。これは個別融資金利ではありません。4月の投資家調査、7月の収支・鑑定、9月の政策金利はそれぞれの時点を表示しています。</p>
+</details>
+<details><summary>確認した原典・原本の記録</summary><div id="source-list"></div><p class="facts">保存先: _data/market-research/market/{raw,processed}/noi_valuation_20260930/</p><div id="manifest"></div></details>
+</section>
+<footer>作成 2026-09-30 · market-research<br>再計算: uv run --no-sync python market-research/scripts/analysis/japan_noi_valuation.py<br>原本・全物件CSV・計算結果はリポジトリ内に保存。分析用シナリオは将来予測ではありません。</footer>
+</div>
+<div id="tip" role="status"></div>
+<script id="report-data" type="application/json">@@DATA@@</script>
+<script>
+const data=JSON.parse(document.getElementById('report-data').textContent);
+const $=id=>document.getElementById(id), pct=(n,d=2)=>(n*100).toFixed(d)+'%', signed=n=>(n>=0?'+':'')+pct(n), num=n=>n.toLocaleString('ja-JP',{maximumFractionDigits:1});
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tokyo=data.markets.find(m=>m.market==='東京23区'), fukuoka=data.markets.find(m=>m.market==='福岡');
+function card(label,value,note,kind='a'){return `<div><span class="k">${esc(label)}</span><span class="v ${kind}">${esc(value)}</span><span class="n">${esc(note)}</span></div>`;}
+const tip=$('tip');
+function bind(node,label){node.addEventListener('pointerenter',()=>{tip.textContent=label;tip.style.opacity=1});node.addEventListener('pointermove',e=>{tip.style.left=Math.min(innerWidth-tip.offsetWidth-8,e.clientX+12)+'px';tip.style.top=Math.max(8,e.clientY-tip.offsetHeight-14)+'px'});node.addEventListener('pointerleave',()=>tip.style.opacity=0);}
+function el(tag,attrs={},text){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v] of Object.entries(attrs)){if(['fill','stroke'].includes(k)&&String(v).includes('var('))e.style.setProperty(k,v);else e.setAttribute(k,v)}if(text!==undefined)e.textContent=text;return e;}
+function text(svg,x,y,label,attrs={}){svg.append(el('text',{x,y,'font-size':12,...attrs},label));}
+function yieldChart(){const svg=$('yield-chart'), rows=data.markets.filter(r=>r.n>=5), height=55+rows.length*43;svg.setAttribute('viewBox',`0 0 900 ${height}`);const scale=v=>230+v/.085*580;for(let p=0;p<=8;p+=2){let x=scale(p/100);svg.append(el('line',{x1:x,x2:x,y1:20,y2:height-30,stroke:'var(--grid)'}));text(svg,x,height-8,p+'%',{'text-anchor':'middle'})}rows.forEach((r,i)=>{let y=35+i*43;text(svg,5,y+7,`${r.market}  n=${r.n}`);[['yield_on_acquisition','--series-1',-9],['yield_on_appraisal','--series-2',9]].forEach(([k,c,dy])=>{let rect=el('rect',{x:230,y:y+dy-6,width:scale(r[k])-230,height:12,rx:2,fill:`var(${c})`});bind(rect,`${r.market}: ${k==='yield_on_acquisition'?'取得価格':'鑑定額'} ${pct(r[k])}`);svg.append(rect);text(svg,scale(r[k])+8,y+dy+4,pct(r[k]))})});}
+function finance(y,rate,ltv,years,reserve,costs){const monthly=rate/12,ds=rate===0?ltv/years:12*ltv*monthly/(-Math.expm1(-12*years*Math.log1p(monthly)));return {service:ds,dscr:y/ds,cash:(y-ds-reserve)/(1-ltv+costs),max:y/(1.25*ds)};}
+function update(){const m=data.markets.find(r=>r.market===$('market').value), rate=+$('rate').value/100,ltv=+$('ltv').value/100,years=+$('term').value,reserve=+$('reserve').value/100,costs=+$('costs').value/100;
+$('rate-value').textContent=pct(rate,1);$('ltv-value').textContent=pct(ltv,0);$('term-value').textContent=years+'年';$('reserve-value').textContent=pct(reserve,1);$('costs-value').textContent=pct(costs,1);
+const f=finance(m.yield_on_appraisal,rate,ltv,years,reserve,costs);
+$('finance-cards').innerHTML=card('年間元利返済/物件価格',pct(f.service),'利息と元本を含む')+card('NOI DSCR',f.dscr.toFixed(2)+'倍','CAPEX積立は別途')+card('税引前Cash on Cash',pct(f.cash),'頭金と取得費が自己資金','b');
+$('finance-reading').textContent=`${m.market}（${m.n}物件${m.small_sample?'・少数例':''}）。鑑定額を分母とした年率換算NOIは${pct(m.yield_on_appraisal)}。この条件では${f.dscr>=1.25?'DSCR1.25を満たします':'DSCR1.25に届きません'}。積立後CoCは${pct(f.cash)}。同じNOIでDSCR1.25を満たす価格の上限は鑑定額の${pct(f.max,1)}です。`;
+$('finance-table').innerHTML=data.markets.map(r=>{let v=finance(r.yield_on_appraisal,rate,ltv,years,reserve,costs);return `<tr class="${r.market===m.market?'hl':''}"><td>${esc(r.market)}${r.small_sample?'（少数例）':''}</td><td>${pct(r.yield_on_appraisal)}</td><td>${v.dscr.toFixed(2)}</td><td>${pct(v.cash)}</td><td>${pct(v.max,1)}</td></tr>`}).join('');
+const g=+$('noi-growth').value/100,cap=+$('cap').value/100,hold=+$('hold').value,y=m.yield_on_appraisal,end=y+cap,delta=(1+g)**hold*y/end-1,required=(end/y)**(1/hold)-1;
+$('growth-value').textContent=pct(g,1);$('cap-value').textContent=+$('cap').value+'ポイント';$('hold-value').textContent=hold+'年';
+$('growth-cards').innerHTML=card('価格の変化',signed(delta),'保有中の収入を含まない')+card('価格維持に必要なNOI成長/年',pct(required),'費用上昇を引いた後','b')+card('出口NOI利回り',pct(end),'取得時 '+pct(y));
+$('growth-title').textContent=`${m.market}: NOI成長率が違うと${hold}年後の価格はどう変わるか`;
+$('growth-caption').textContent=`取得時NOI利回り${pct(y)}、出口${pct(end)}。年${pct(required)}のNOI成長が価格維持の分岐点。スライダーで選んだケースは年${pct(g,1)}、価格変化${signed(delta)}。`;
+const svg=$('growth-chart');svg.replaceChildren();const values=[0,.01,.02,.03,.04].map(growth=>({growth,delta:(1+growth)**hold*y/end-1})),lo=Math.min(-.2,...values.map(v=>v.delta)),hi=Math.max(.3,...values.map(v=>v.delta)),xmin=Math.floor(lo*10)/10,xmax=Math.ceil(hi*10)/10,scale=x=>250+(x-xmin)/(xmax-xmin)*550;
+for(let tick=Math.ceil(xmin*10);tick<=Math.floor(xmax*10);tick++){let x=scale(tick/10);svg.append(el('line',{x1:x,x2:x,y1:15,y2:245,stroke:tick===0?'var(--ink-3)':'var(--grid)'}));text(svg,x,275,tick*10+'%',{'text-anchor':'middle'})}
+values.forEach((v,i)=>{let cy=38+i*43;const bar=el('rect',{x:Math.min(scale(0),scale(v.delta)),y:cy-10,width:Math.max(.5,Math.abs(scale(v.delta)-scale(0))),height:21,fill:v.delta<0?'var(--series-1)':'var(--series-2)',rx:2});bind(bar,`NOI成長 ${pct(v.growth,0)}/年 → 価格 ${signed(v.delta)}`);svg.append(bar);text(svg,4,cy+5,`NOI 年${pct(v.growth,0)}`);text(svg,scale(v.delta)+(v.delta<0?-8:8),cy+5,signed(v.delta),{'text-anchor':v.delta<0?'end':'start'})});
+}
+$('lead').innerHTML=`福岡${fukuoka.n}物件のNOI利回りは、開示取得価格で<strong>${pct(fukuoka.yield_on_acquisition)}</strong>、現在の鑑定額で<strong>${pct(fukuoka.yield_on_appraisal)}</strong>。東京23区は<strong>${pct(tokyo.yield_on_acquisition)} → ${pct(tokyo.yield_on_appraisal)}</strong>。過去の取得条件で見た収益を、そのまま現在の購入採算には使えません。`;
+$('headline').innerHTML=card('福岡 NOI/鑑定額',pct(fukuoka.yield_on_appraisal),fukuoka.n+'物件・実績NOIの年率換算')+card('東京23区 NOI/鑑定額',pct(tokyo.yield_on_appraisal),tokyo.n+'物件・同じ集計方法','b')+card('福岡 経常運営費/実収入',pct(fukuoka.opex_ratio,1),'CAPEX・減価償却を除く');
+$('market-table').innerHTML=data.markets.map(r=>`<tr class="${r.market==='福岡'?'hl':''}"><td>${esc(r.market)}${r.small_sample?'（少数例）':''}</td><td>${r.n}</td><td>${pct(r.yield_on_acquisition)}</td><td>${pct(r.yield_on_appraisal)}</td><td>${pct(r.opex_ratio,1)}</td></tr>`).join('');
+$('market').innerHTML=data.markets.map(r=>`<option value="${esc(r.market)}">${esc(r.market)}（n=${r.n}）</option>`).join('');$('market').value='福岡';
+$('fukuoka-table').innerHTML=data.fukuoka_properties.map(r=>`<tr><td>${esc(r.property_name)}<br><small>${esc(r.property_id)}</small></td><td>${r.built_date.slice(0,7)}</td><td>${num(r.noi_annualized_yen/1e6)}</td><td>${num(r.acquisition_price_yen/1e6)}</td><td>${num(r.appraisal_value_yen/1e6)}</td><td>${pct(r.yield_on_appraisal)}</td><td>${num(r.capex_period_yen/1e6)}</td><td>${r.baseline_eligible?'パススルー':'賃料保証・集計外'}</td></tr>`).join('');
+$('survey-table').innerHTML=data.references.jrei_expected_yields.map(r=>`<tr><td>${esc(r.market)}</td><td>${pct(r.studio,1)}</td><td>${pct(r.family,1)}</td></tr>`).join('');
+$('source-list').innerHTML=data.references.sources.map(s=>`<p><a href="${esc(s.url)}">${esc(s.title)}</a> · 時点 ${esc(s.as_of)}${s.page?' · p.'+s.page:''}<br>${esc(s.measurement||'')} ${esc(s.limitation||'')}${s.source_read?'<br>'+esc(s.source_read):''}</p>`).join('');
+$('manifest').innerHTML=data.sources_manifest.map(s=>`<p class="facts">${esc(s.filename)}<br>SHA-256: ${esc(s.sha256)}<br>取得 ${esc(s.retrieved_at)} · ${num(s.bytes)} bytes</p>`).join('');
+const q=data.quality;$('quality').innerHTML=`<span>期末保有 ${q.owned}件</span><span>基準集計 ${q.baseline}件</span><span>賃料保証 ${q.guaranteed_lease}件</span><span>端数期間 ${q.partial_period}件</span><span>売却済み除外 ${q.sold_excluded.length}件</span><span>除外理由は重複あり</span>`;
+const reconciliation=q.portfolio_reconciliation;
+$('reconciliation-note').textContent=`原典の集計表と期末保有明細のNOIには${num(Math.abs(reconciliation.noi.owned_minus_reported_thousand_yen)/1000)}百万円（${pct(Math.abs(reconciliation.noi.owned_minus_reported_ratio),3)}）の差があり、原因は未確認です。丸め誤差とは扱いません。都市利回りは物件明細から計算しています。名称差${q.name_differences.length}件、取得価格の差${q.price_differences.length}件も記録しました。`;
+$('quality-details').innerHTML=`<div class="tw"><table><caption>原典集計と期末保有明細（千円）。明細の列は売却済み2件を除く。</caption><thead><tr><th>項目</th><th>原典集計</th><th>期末保有明細</th><th>明細−集計</th></tr></thead><tbody>${Object.entries(reconciliation).map(([key,r])=>`<tr><td>${key==='noi'?'NOI':'実収入'}</td><td>${num(r.reported_thousand_yen)}</td><td>${num(r.owned_detail_thousand_yen)}</td><td>${num(r.owned_minus_reported_thousand_yen)}</td></tr>`).join('')}</tbody></table></div><p>取得価格は物件概要の値を採用。以下の2件は帳簿価額シートとの差の原因を確認できていません。鑑定額を分母とする利回りには影響しません。両方の値を全物件CSVに保存しています。</p><div class="tw"><table><caption>取得価格の差（円）</caption><thead><tr><th>ID</th><th>物件概要</th><th>帳簿価額シート</th><th>差</th></tr></thead><tbody>${q.price_differences.map(r=>`<tr><td>${esc(r.property_id)}</td><td>${num(r.overview_yen)}</td><td>${num(r.book_yen)}</td><td>${num(r.difference_yen)}</td></tr>`).join('')}</tbody></table></div><p>名称は表記揺れ・改称を含むため、IDで接続しています。</p>${q.name_differences.map(r=>`<p class="minor">${esc(r.property_id)}: ${Object.entries(r.names).map(([sheet,name])=>esc(sheet)+': '+esc(name)).join(' / ')}</p>`).join('')}`;
+for(const id of ['market','rate','ltv','term','reserve','costs','noi-growth','cap','hold'])$(id).addEventListener('input',update);
+$('theme').addEventListener('click',()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'});
+yieldChart();update();
+</script>
+</body>
+</html>

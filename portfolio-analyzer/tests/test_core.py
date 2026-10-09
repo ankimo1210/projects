@@ -37,6 +37,156 @@ PRIVATE_ANALYSIS_ONLY = pytest.mark.skipif(
 )
 
 
+def test_position_limits_and_top_five_merge_symbols_across_accounts() -> None:
+    from portfolio_analyzer.core import _scope_rows
+
+    original = load_portfolio(EXAMPLE_DATA)
+    template = original.positions[0]
+    positions = tuple(
+        replace(
+            template,
+            symbol=symbol,
+            account_id=original.accounts[index % len(original.accounts)].id,
+            market_value_jpy=Decimal(value),
+            asset_class="日本株",
+        )
+        for index, (symbol, value) in enumerate(
+            [
+                ("A", "60"),
+                ("A", "60"),
+                ("B", "100"),
+                ("C", "90"),
+                ("D", "80"),
+                ("E", "70"),
+                ("F", "40"),
+            ]
+        )
+    )
+    row = _scope_rows(replace(original, positions=positions))["summary"][0]
+    # Total 500, A is 120, and the five largest symbols sum to 460.
+    assert row["largest_position_ratio"] == pytest.approx(0.24)
+    assert row["top_five_ratio"] == pytest.approx(0.92)
+
+
+def test_reference_rejects_between_without_two_thresholds() -> None:
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    invalid = replace(
+        reference, policy_limits=(replace(reference.policy_limits[0], operator="between"),)
+    )
+    assert any(
+        issue.startswith("invalid policy operator")
+        for issue in validate_analysis_reference(invalid)
+    )
+
+
+def test_legacy_marginal_betas_do_not_claim_measured_portfolio_risk() -> None:
+    portfolio = load_portfolio(EXAMPLE_DATA)
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    artifact = build_artifact(
+        portfolio, analysis_reference=reference, factor_risk=load_factor_risk(FACTOR_ESTIMATES)
+    )
+    summary = artifact["snapshot"]["datasets"]["summary"][0]
+    assert summary["factor_period_volatility"] is None
+    assert summary["replayed_expected_shortfall"] is None
+    assert summary["measured_factor_reason"]
+    assert artifact["snapshot"]["datasets"]["reverse_stress"] == []
+
+
+def test_measured_loading_schema_is_optional_but_preserved(tmp_path) -> None:
+    import json
+
+    payload = json.loads(FACTOR_ESTIMATES.read_text())
+    payload["measured_factor_model"] = {
+        "basis": "joint-jpy-excess-v1",
+        "factors": payload["factor_risk"]["factors"],
+        "instruments": {
+            "SMH": {
+                "loadings": {
+                    factor: int(factor in ("株式全体", "情報技術"))
+                    for factor in payload["factor_risk"]["factors"]
+                },
+                "observations": 156,
+            }
+        },
+    }
+    path = tmp_path / "measured.json"
+    path.write_text(json.dumps(payload))
+    calibrated = load_factor_risk(path)
+    assert calibrated.measured_basis == "joint-jpy-excess-v1"
+    assert calibrated.instrument_loadings["SMH"]["株式全体"] == 1
+
+
+def test_joint_basis_drives_historical_es_and_reverse_stress_consistently() -> None:
+    from portfolio_analyzer.core import _portfolio_datasets
+
+    original = load_portfolio(EXAMPLE_DATA)
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    position = replace(
+        original.positions[0], symbol="SMH", asset_class="米国株", market_value_jpy=Decimal(100)
+    )
+    portfolio = replace(original, positions=(position,))
+    instrument = replace(
+        next(iter(reference.instruments.values())),
+        symbol="SMH",
+        factor_loadings={"株式全体": Decimal("1.9"), "情報技術": Decimal(1)},
+    )
+    historical = replace(
+        reference.scenarios[0],
+        id="history",
+        kind="historical",
+        shocks={"株式全体": Decimal("-.1"), "情報技術": Decimal("-.09")},
+    )
+    limit = replace(
+        reference.policy_limits[0],
+        metric="worst_historical_drawdown",
+        operator="<=",
+        threshold=Decimal(".12"),
+    )
+    reference = replace(
+        reference, instruments={"SMH": instrument}, scenarios=(historical,), policy_limits=(limit,)
+    )
+    factor_risk = FactorRisk(
+        factors=("株式全体", "情報技術"),
+        covariance=((Decimal(".01"), Decimal()), (Decimal(), Decimal(".01"))),
+        observations=10,
+        frequency="weekly",
+        estimated_at="",
+        window_start="",
+        series=((Decimal("-.1"), Decimal("-.09")), (Decimal(".05"), Decimal(".02"))),
+        measured_basis="joint-jpy-excess-v1",
+        instrument_loadings={"SMH": {"株式全体": Decimal(1), "情報技術": Decimal(1)}},
+    )
+    datasets = _portfolio_datasets(portfolio, reference, factor_risk)
+    summary = datasets["summary"][0]
+    assert summary["worst_historical_drawdown"] == pytest.approx(0.19)
+    assert summary["replayed_expected_shortfall"] == pytest.approx(0.19)
+    assert summary["factor_period_volatility"] == pytest.approx(2**0.5 * 0.1)
+    rows = [row for row in datasets["reverse_stress"] if row["scope"] == "すべて"]
+    assert sum(row["loss_contribution_jpy"] for row in rows) == pytest.approx(-12)
+    assert sum(row["loss_share"] for row in rows) == pytest.approx(1)
+
+
+def test_partial_joint_calibration_does_not_treat_missing_holdings_as_zero_risk() -> None:
+    from portfolio_analyzer.core import _portfolio_datasets
+
+    portfolio = load_portfolio(EXAMPLE_DATA)
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    factor_risk = replace(
+        load_factor_risk(FACTOR_ESTIMATES),
+        measured_basis="joint-jpy-excess-v1",
+        instrument_loadings={
+            portfolio.positions[0].symbol: {
+                factor: Decimal(int(factor == "株式全体"))
+                for factor in load_factor_risk(FACTOR_ESTIMATES).factors
+            }
+        },
+    )
+    summary = _portfolio_datasets(portfolio, reference, factor_risk)["summary"][0]
+    assert summary["factor_period_volatility"] is None
+    assert 0 < summary["measured_factor_coverage_ratio"] < 1
+    assert summary["measured_factor_reason"]
+
+
 @pytest.mark.parametrize("path", [EXAMPLE_DATA])
 def test_snapshots_reconcile(path: Path) -> None:
     portfolio = load_portfolio(path)
@@ -331,9 +481,9 @@ def test_private_risk_model_exposes_compound_and_lookthrough_risk() -> None:
     assert impacts["株式全体 -10%"] == pytest.approx(-0.07934, rel=1e-4)
     assert impacts["円10%上昇（外貨バスケット）"] == pytest.approx(-0.05323, rel=1e-4)
     assert summary["worst_compound_drawdown"] == pytest.approx(0.17648, rel=1e-4)
-    # Replayed history is worse than every hand-set compound scenario.
-    assert summary["worst_historical_drawdown"] == pytest.approx(0.24099, rel=1e-4)
-    assert summary["worst_historical_drawdown"] > summary["worst_compound_drawdown"]
+    # Legacy marginal betas do not calibrate measured excess-return factors.
+    assert summary["worst_historical_drawdown"] is None
+    assert summary["measured_factor_reason"]
     assert issuers["Advantest"] == pytest.approx(0.16522, rel=1e-4)
     smh_market_loading = next(
         row["loading"]
@@ -379,7 +529,10 @@ def test_phase_a_scenarios_are_registered_and_linear_in_their_components() -> No
     )
     assert impacts["A1 複合: スタグフレーション型（株安＋金利上昇）"] == pytest.approx(expected_a1)
     # A5 lifts energy, so the oil sleeve must offset part of the equity and rate damage.
-    assert impacts["A5 複合: 原油供給ショック"] > impacts["A1 複合: スタグフレーション型（株安＋金利上昇）"]
+    assert (
+        impacts["A5 複合: 原油供給ショック"]
+        > impacts["A1 複合: スタグフレーション型（株安＋金利上昇）"]
+    )
 
 
 @PRIVATE_ANALYSIS_ONLY
@@ -397,17 +550,15 @@ def test_replayed_history_is_tracked_separately_from_hand_set_scenarios() -> Non
         if row["scope"] == "すべて"
     ]
     kinds = {row["scenario"]: row["scenario_kind"] for row in rows}
-    measured = {row["scenario"]: row["impact_ratio"] for row in rows if row["scenario_kind"] == "実測"}
+    measured = {
+        row["scenario"]: row["impact_ratio"] for row in rows if row["scenario_kind"] == "実測"
+    }
 
     assert kinds["株式全体 -10%"] == "単一"
     assert kinds["A1 複合: スタグフレーション型（株安＋金利上昇）"] == "複合"
     assert len(measured) == 5
-    # 2022 was an inflation regime: the energy sleeve carried the portfolio up.
-    assert measured["実測 2022 インフレ・金利ショック"] > 0
-    assert measured["実測 2020-03 コロナ・ショック"] < -0.2
-    # 2024 is the case the value-chain split exists for: the market barely moved
-    # (株式全体 -2.60%) yet the equipment tilt still cost double digits.
-    assert measured["実測 2024 AI capex 消化局面"] < -0.1
+    assert all(value is None for value in measured.values())
+    assert all(row["reason"] for row in rows if row["scenario_kind"] == "実測")
 
 
 def test_historical_scenarios_do_not_feed_the_compound_drawdown_metric() -> None:
@@ -435,12 +586,17 @@ def test_historical_scenarios_do_not_feed_the_compound_drawdown_metric() -> None
         ),
         generated_at="2026-08-15T00:00:00+00:00",
     )
-    before = next(r for r in compound_only["snapshot"]["datasets"]["summary"] if r["scope"] == "すべて")
-    after = next(r for r in with_history["snapshot"]["datasets"]["summary"] if r["scope"] == "すべて")
+    before = next(
+        r for r in compound_only["snapshot"]["datasets"]["summary"] if r["scope"] == "すべて"
+    )
+    after = next(
+        r for r in with_history["snapshot"]["datasets"]["summary"] if r["scope"] == "すべて"
+    )
 
     assert before["worst_historical_drawdown"] is None
     assert after["worst_compound_drawdown"] == pytest.approx(before["worst_compound_drawdown"])
-    assert after["worst_historical_drawdown"] > after["worst_compound_drawdown"]
+    assert after["worst_historical_drawdown"] is None
+    assert after["measured_factor_reason"]
 
 
 def _diagonal_risk(variances: dict[str, str]) -> FactorRisk:
@@ -509,7 +665,9 @@ def test_validate_factor_risk_rejects_an_asymmetric_covariance() -> None:
         window_start="",
     )
 
-    assert any(issue.startswith("covariance is not symmetric") for issue in validate_factor_risk(risk))
+    assert any(
+        issue.startswith("covariance is not symmetric") for issue in validate_factor_risk(risk)
+    )
 
 
 def test_tracked_factor_estimates_load_and_validate() -> None:
@@ -553,20 +711,16 @@ def test_reverse_stress_reproduces_each_policy_drawdown_limit() -> None:
     summary = next(
         row for row in artifact["snapshot"]["datasets"]["summary"] if row["scope"] == "すべて"
     )
-    rows = [row for row in artifact["snapshot"]["datasets"]["reverse_stress"] if row["scope"] == "すべて"]
+    rows = [
+        row
+        for row in artifact["snapshot"]["datasets"]["reverse_stress"]
+        if row["scope"] == "すべて"
+    ]
 
-    assert rows
-    for limit in {row["limit"] for row in rows}:
-        group = [row for row in rows if row["limit"] == limit]
-        # Every solved shock set must add back up to exactly the target loss.
-        assert sum(row["loss_share"] for row in group) == pytest.approx(1.0)
-        assert len({row["distance_sigma"] for row in group}) == 1
-    assert summary["nearest_limit_distance_sigma"] == pytest.approx(
-        min(row["distance_sigma"] for row in rows)
-    )
-    assert summary["factor_annual_volatility"] == pytest.approx(
-        summary["factor_period_volatility"] * 52**0.5
-    )
+    assert rows == []
+    assert summary["nearest_limit_distance_sigma"] is None
+    assert summary["factor_annual_volatility"] is None
+    assert summary["measured_factor_reason"]
 
 
 def test_expected_shortfall_averages_the_ceiling_of_the_tail() -> None:
@@ -645,10 +799,9 @@ def test_tail_and_hedge_monitors_are_reported_together() -> None:
     summary = next(row for row in datasets["summary"] if row["scope"] == "すべて")
     monitor = datasets["correlation_monitor"]
 
-    # A tail average must be at least as deep as the ordinary weekly move.
-    assert summary["replayed_expected_shortfall"] > summary["factor_period_volatility"]
-    assert summary["replayed_worst_period"] >= summary["replayed_expected_shortfall"]
-    assert 0 < summary["replayed_max_drawdown"] < 1
+    assert summary["replayed_expected_shortfall"] is None
+    assert summary["factor_period_volatility"] is None
+    assert summary["replayed_max_drawdown"] is None
     assert len(monitor) == len(risk.series) - 25
     assert all(-1 <= row["stock_bond_correlation"] <= 1 for row in monitor)
     assert summary["stock_bond_correlation"] == pytest.approx(monitor[-1]["stock_bond_correlation"])
@@ -690,7 +843,9 @@ def test_chain_role_is_a_second_axis_that_does_not_borrow_from_theme() -> None:
     datasets = artifact["snapshot"]["datasets"]
     summary = next(row for row in datasets["summary"] if row["scope"] == "すべて")
     roles = {
-        row["chain_role"]: row for row in datasets["chain_role_exposure"] if row["scope"] == "すべて"
+        row["chain_role"]: row
+        for row in datasets["chain_role_exposure"]
+        if row["scope"] == "すべて"
     }
     theme = next(row for row in datasets["theme_exposure"] if row["scope"] == "すべて")
 
@@ -699,7 +854,9 @@ def test_chain_role_is_a_second_axis_that_does_not_borrow_from_theme() -> None:
     assert theme["issuers"] == "Sample Technology"
     assert roles["需要側"]["issuers"] == "Sample Industrials"
     assert roles["製造装置"]["market_value_jpy"] > roles["需要側"]["market_value_jpy"]
-    assert summary["largest_chain_role_ratio"] == pytest.approx(roles["製造装置"]["portfolio_weight"])
+    assert summary["largest_chain_role_ratio"] == pytest.approx(
+        roles["製造装置"]["portfolio_weight"]
+    )
     # Roles are shares of the disclosed issuer base, which the whole portfolio exceeds.
     assert sum(row["known_issuer_weight"] for row in roles.values()) == pytest.approx(1.0)
 
@@ -744,15 +901,16 @@ def test_business_mix_must_account_for_the_whole_issuer() -> None:
     reference = load_analysis_reference(EXAMPLE_REFERENCE)
     instrument = reference.instruments["JP_EQ"]
     issuer = next(
-        exposure
-        for exposure in instrument.exposures
-        if exposure.category == "Sample Technology"
+        exposure for exposure in instrument.exposures if exposure.category == "Sample Technology"
     )
     others = tuple(exposure for exposure in instrument.exposures if exposure is not issuer)
     short = replace(issuer, business_mix={"検査装置": Decimal("0.4")})
     invalid = replace(
         reference,
-        instruments={**reference.instruments, "JP_EQ": replace(instrument, exposures=(short, *others))},
+        instruments={
+            **reference.instruments,
+            "JP_EQ": replace(instrument, exposures=(short, *others)),
+        },
     )
 
     issues = validate_analysis_reference(invalid)
@@ -821,7 +979,9 @@ def test_private_chain_roles_split_the_ai_theme_by_value_chain() -> None:
     )
     datasets = artifact["snapshot"]["datasets"]
     roles = {
-        row["chain_role"]: row for row in datasets["chain_role_exposure"] if row["scope"] == "すべて"
+        row["chain_role"]: row
+        for row in datasets["chain_role_exposure"]
+        if row["scope"] == "すべて"
     }
     equipment = roles["半導体製造・検査装置"]
 
@@ -899,3 +1059,136 @@ def test_private_proposal_is_reproducible_and_tax_caveated() -> None:
     assert comparison["暫定ルール超過"]["after"] == 2
     assert smh_trade["native_realized_gain_estimate"] == pytest.approx(-174)
     assert "円換算取得原価は未確認" in smh_trade["tax_status"]
+
+
+def _measured_static_case(*, only_static=False, with_cash=True):
+    original = load_portfolio(EXAMPLE_DATA)
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    template = original.positions[0]
+    positions = (
+        []
+        if only_static
+        else [
+            replace(
+                template,
+                symbol="A",
+                currency="JPY",
+                asset_class="日本株",
+                market_value_jpy=Decimal(100),
+            )
+        ]
+    )
+    positions.append(
+        replace(
+            template,
+            symbol="RECONCILIATION",
+            currency="JPY",
+            asset_class="未分類",
+            value_status="reconciliation",
+            market_value_jpy=Decimal(50),
+        )
+    )
+    if with_cash:
+        positions.append(
+            replace(
+                template,
+                symbol="CASH_JPY",
+                currency="JPY",
+                asset_class="現金",
+                market_value_jpy=Decimal(50),
+            )
+        )
+    historical = replace(
+        reference.scenarios[0], id="known", kind="historical", shocks={"market": Decimal("-.1")}
+    )
+    limit = replace(
+        reference.policy_limits[0],
+        metric="worst_historical_drawdown",
+        operator="<=",
+        threshold=Decimal(".2"),
+    )
+    reference = replace(reference, scenarios=(historical,), policy_limits=(limit,))
+    model = FactorRisk(
+        factors=("market",),
+        covariance=((Decimal(".01"),),),
+        observations=10,
+        frequency="weekly",
+        estimated_at="",
+        window_start="",
+        series=((Decimal("-.1"),), (Decimal(".05"),)),
+        measured_basis="joint-jpy-excess-v1",
+        instrument_loadings={"A": {"market": Decimal(1)}, "RECONCILIATION": {"market": Decimal(9)}},
+    )
+    return replace(original, positions=tuple(positions)), reference, model
+
+
+def test_measured_model_excludes_reconciliation_but_keeps_total_nav_denominator() -> None:
+    from portfolio_analyzer.core import _portfolio_datasets
+
+    portfolio, reference, model = _measured_static_case()
+    datasets = _portfolio_datasets(portfolio, reference, model)
+    summary = datasets["summary"][0]
+    assert summary["measured_factor_coverage_ratio"] == 1
+    assert summary["measured_factor_reason"] == ""
+    assert summary["factor_period_volatility"] == pytest.approx(0.05)
+    assert summary["replayed_expected_shortfall"] == pytest.approx(0.05)
+    assert summary["worst_historical_drawdown"] == pytest.approx(0.05)
+    reverse = [row for row in datasets["reverse_stress"] if row["scope"] == "すべて"]
+    assert sum(row["loss_contribution_jpy"] for row in reverse) == pytest.approx(-40)
+
+
+@pytest.mark.parametrize("with_cash", [False, True])
+def test_pure_reconciliation_and_jpy_cash_have_zero_measured_risk(with_cash) -> None:
+    from portfolio_analyzer.core import _portfolio_datasets
+
+    portfolio, reference, model = _measured_static_case(only_static=True, with_cash=with_cash)
+    datasets = _portfolio_datasets(portfolio, reference, model)
+    summary = datasets["summary"][0]
+    assert summary["measured_factor_reason"] == ""
+    assert summary["factor_period_volatility"] == 0
+    assert summary["worst_historical_drawdown"] == 0
+    assert summary["replayed_expected_shortfall"] == 0
+    assert datasets["reverse_stress"] == []
+
+
+def test_reconciliation_does_not_hide_an_uncalibrated_real_asset() -> None:
+    from portfolio_analyzer.core import _portfolio_datasets
+
+    portfolio, reference, model = _measured_static_case()
+    model = replace(model, instrument_loadings={"RECONCILIATION": {"market": Decimal(9)}})
+    summary = _portfolio_datasets(portfolio, reference, model)["summary"][0]
+    assert summary["factor_period_volatility"] is None
+    assert summary["measured_factor_coverage_ratio"] == 0
+    assert "A" in summary["measured_factor_reason"]
+
+
+@pytest.mark.parametrize("known_loss, expected_status", [(".1", "未計算"), (".3", "超過")])
+def test_core_worst_historical_requires_all_scenarios_but_preserves_proven_breach(
+    known_loss, expected_status
+) -> None:
+    from portfolio_analyzer.core import _portfolio_datasets
+
+    portfolio, reference, model = _measured_static_case(with_cash=False)
+    portfolio = replace(portfolio, positions=(portfolio.positions[0],))
+    known = replace(reference.scenarios[0], shocks={"market": Decimal(known_loss) * -1})
+    unknown = replace(known, id="unknown", label="unknown", shocks={"unavailable": Decimal("-.9")})
+    reference = replace(reference, scenarios=(known, unknown))
+    datasets = _portfolio_datasets(portfolio, reference, model)
+    summary = datasets["summary"][0]
+    assert summary["worst_historical_drawdown"] is None
+    assert summary["worst_historical_drawdown_lower_bound"] == pytest.approx(float(known_loss))
+    check = next(row for row in datasets["policy_checks"] if row["scope"] == "すべて")
+    assert check["value"] is None and check["status"] == expected_status
+    assert check["reason"]
+
+
+def test_core_all_unknown_historical_scenarios_have_no_lower_bound() -> None:
+    from portfolio_analyzer.core import _portfolio_datasets
+
+    portfolio, reference, model = _measured_static_case()
+    unknown = replace(reference.scenarios[0], shocks={"unavailable": Decimal("-.9")})
+    reference = replace(reference, scenarios=(unknown,))
+    datasets = _portfolio_datasets(portfolio, reference, model)
+    assert datasets["summary"][0]["worst_historical_drawdown"] is None
+    assert datasets["summary"][0]["worst_historical_drawdown_lower_bound"] is None
+    assert datasets["policy_checks"][0]["status"] == "未計算"

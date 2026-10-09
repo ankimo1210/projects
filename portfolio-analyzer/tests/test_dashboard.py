@@ -328,3 +328,102 @@ def test_dashboard_fx_row_also_carries_the_direct_sensitivity() -> None:
 
     page = dashboard.render(payload(), tokens_css="")
     assert "ベータ USD/JPY" in page and "円安 1% で +0.32%" in page
+
+
+def test_history_limitations_are_visible_before_the_headline_and_escaped() -> None:
+    data = sample()
+    data["headline"].update(pnl_window=None, max_dd_window=None, xirr_is_estimate=True)
+    data["quality"] = {
+        "historical_pnl_exact": False,
+        "warnings": ["外貨現金の期間合計は日次配分不能 <検証中>"],
+        "dd_method": "twr_end_of_day_flows",
+    }
+    page = dashboard.render(data, "")
+    visible = page.split('<script id="data"')[0]
+    assert "分析の制約" in visible
+    assert visible.index("日次配分不能") < visible.index("総資産 NAV")
+    assert "&lt;検証中&gt;" in visible and "<検証中>" not in visible
+    assert "資金加重リターン（推定）" in visible
+    assert "入金調整後" in visible
+
+
+def test_unavailable_stress_is_not_displayed_as_zero_loss() -> None:
+    row = {
+        "label": "未校正の局面",
+        "impact_pct": None,
+        "impact_jpy": None,
+        "reason": "共同回帰係数が未校正",
+    }
+    markup = dashboard._stress_rows([row], lambda r: "実測")
+    assert "—" in markup and "共同回帰係数が未校正" in markup
+    assert "+0.0%" not in markup and "±0.0%" not in markup
+
+
+def test_replay_coverage_identifies_its_denominator() -> None:
+    data = sample()
+    data["risk"]["stress"]["episodes"][0].update(
+        coverage=1.0, coverage_basis="priced_positions", priced_nav_ratio=0.8
+    )
+    visible = dashboard.render(data, "").split('<script id="data"')[0]
+    assert "価格対象カバー率 100%" in visible
+    assert "総資産カバー率 80%" in visible
+    assert "影響は総資産比" in visible
+
+
+def test_unknown_policy_is_not_reported_as_all_within_limits() -> None:
+    data = sample()
+    data["risk"]["policy"] = [
+        {
+            "label": "実測ストレス限度",
+            "metric": "worst_historical_drawdown",
+            "operator": "<=",
+            "threshold": 0.12,
+            "value": None,
+            "status": "na",
+        }
+    ]
+    data["risk"]["policy_breaches"] = 0
+    visible = dashboard.render(data, "").split('<script id="data"')[0]
+    assert "未計算 1 件" in visible
+    assert "超過なし" not in visible
+
+
+def test_missing_risk_history_is_explained_next_to_the_statistics() -> None:
+    data = sample()
+    data["risk"]["stats"].update(reason="価格履歴が不足: DC FUND", coverage_ratio=0.5)
+    assert "価格履歴が不足: DC FUND" in dashboard.render(data, "").split('<script id="data"')[0]
+
+
+def test_policy_shows_proven_loss_bound_and_missing_scenario_reason() -> None:
+    data = sample()
+    data["risk"]["policy"] = [
+        {
+            "label": "過去局面限度",
+            "metric": "worst_historical_drawdown",
+            "operator": "<=",
+            "threshold": 0.12,
+            "value": None,
+            "lower_bound_value": 0.2,
+            "status": "breach",
+            "reason": "未計算の局面あり <不足>",
+        }
+    ]
+    data["risk"]["policy_breaches"] = 1
+    visible = dashboard.render(data, "").split('<script id="data"')[0]
+    assert "少なくとも20.0%" in visible
+    assert "未計算の局面あり &lt;不足&gt;" in visible
+    assert "超過 1 件" in visible
+
+
+def test_partial_episode_is_explicitly_labeled_as_known_portion() -> None:
+    data = sample()
+    data["risk"]["stress"]["episodes"][0].update(
+        complete=False,
+        coverage=0.5,
+        total_impact_pct=None,
+        total_impact_jpy=None,
+        reason="未取得: FUND",
+    )
+    visible = dashboard.render(data, "").split('<script id="data"')[0]
+    assert "既知部分のみ" in visible
+    assert "未取得: FUND" in visible

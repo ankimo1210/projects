@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 
+import pytest
 from portfolio_analyzer import timeseries as ts
 from portfolio_analyzer.ibkr import Transaction
 
@@ -137,3 +138,53 @@ def test_first_defined_and_daily_changes() -> None:
     assert ts.first_defined(values) == 2
     assert ts.first_defined([None, None]) is None
     assert ts.daily_changes(values) == [None, None, None, D(2), D(-1)]
+
+
+def test_missing_price_makes_nav_unknown_only_while_the_symbol_is_held() -> None:
+    paths = ts.replay(transactions(), DATES)
+    values = ts.value_paths(paths, {}, [D(150)] * 4)
+    assert values.nav == [D(1000000), None, None, None]
+    assert values.pnl_total == [D(0), None, None, None]
+    assert values.unrealized["XLE"] == [D(0), None, None, None]
+
+
+def test_a_missing_first_price_is_not_a_zero_valuation() -> None:
+    paths = ts.replay(transactions(), DATES)
+    values = ts.value_paths(paths, {"XLE": [None, None, D(60), D(62)]}, [D(150)] * 4)
+    assert values.nav[:2] == [D(1000000), None]
+    assert values.nav[-1] == D(1017650)
+
+
+def test_statement_fx_total_preserves_the_endpoint_without_inventing_daily_cash() -> None:
+    adjustment = tx("2026-02-20", "Adjustment", net=50)
+    adjustment = Transaction(**{**adjustment.__dict__, "description": "FX Translations P&L"})
+    paths = ts.replay([adjustment, tx("2026-01-05", "Deposit", net=1000)], DATES)
+    assert paths.cash == [None, None, None, D(1050)]
+    assert paths.fx_translation_cum == [None, None, None, D(50)]
+    values = ts.value_paths(paths, {}, [D(1)] * 4)
+    assert values.pnl_total == [None, None, None, D(50)]
+
+
+def test_flow_adjusted_drawdown_ignores_deposits_at_the_end_of_the_day() -> None:
+    assert ts.max_drawdown([D(100), D(200), D(180)], [D(100), D(200), D(200)]) == D("-0.1")
+
+
+def test_flow_adjusted_drawdown_does_not_bridge_unknown_history() -> None:
+    assert ts.max_drawdown([D(100), None, D(90)], [D(100)] * 3) is None
+
+
+@pytest.mark.parametrize(
+    ("nav", "deposits", "expected"),
+    [
+        # Day 1: (190-100)/100=.9; day 2:171/190=.9; index 1,.9,.81.
+        ([D(100), D(190), D(171)], [D(100), D(200), D(200)], D("-0.19")),
+        # An end-of-day withdrawal of 20 restores pre-flow NAV: (70+20)/100=.9.
+        ([D(100), D(70), D(63)], [D(100), D(80), D(80)], D("-0.19")),
+        ([D(100), D(90), D(81)], [D(100)] * 3, D("-0.19")),
+        ([D(100), D(90), D(81)], None, D("-0.19")),
+        ([D(100), D(190), D(171)], None, D("-0.1")),
+        ([D(100), D(110), D(120)], [D(100), None, D(100)], None),
+    ],
+)
+def test_drawdown_matches_hand_calculated_end_of_day_cash_flows(nav, deposits, expected) -> None:
+    assert ts.max_drawdown(nav, deposits) == expected

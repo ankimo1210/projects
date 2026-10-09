@@ -217,3 +217,93 @@ def test_estimate_covariance_records_which_factors_were_screened() -> None:
     assert "日本金利" not in result["outlier_screened_factors"]
     assert "海外金利" not in result["outlier_screened_factors"]
     assert "株式全体" in result["outlier_screened_factors"]
+
+
+def test_joint_estimation_recovers_market_and_sector_without_double_counting() -> None:
+    index = pd.bdate_range("2026-01-01", periods=9)
+    market = [0.01, -0.02, 0.03, -0.01, 0.02, -0.03, 0.015, -0.015]
+    sector = [0.004, 0.008, -0.005, 0.006, -0.003, -0.01, 0.012, -0.008]
+    factors = pd.DataFrame(
+        {"株式全体": [float("nan"), *market], "情報技術": [float("nan"), *sector]}, index=index
+    )
+    price = [100.0]
+    for m, s in zip(market, sector, strict=True):
+        price.append(price[-1] * (1 + m + s))
+    measured = estimate_factors.estimate_joint_loadings(
+        pd.DataFrame({"SMH": price}, index=index), factors, {"SMH": "SMH"}
+    )
+    loadings = measured["instruments"]["SMH"]["loadings"]
+    assert loadings["株式全体"] == pytest.approx(1)
+    assert loadings["情報技術"] == pytest.approx(1)
+    assert measured["instruments"]["SMH"]["observations"] == 8
+
+
+def test_joint_estimation_rejects_an_unidentifiable_factor_basis() -> None:
+    index = pd.bdate_range("2026-01-01", periods=10)
+    factors = pd.DataFrame({"a": list(range(10)), "b": list(range(10))}, index=index)
+    prices = pd.DataFrame({"A": [100 + i for i in range(10)]}, index=index)
+    measured = estimate_factors.estimate_joint_loadings(prices, factors, {"A": "A"})
+    assert measured["instruments"] == {}
+    assert measured["unavailable"]["A"]
+
+
+def test_joint_estimation_fits_usd_holdings_in_jpy_before_regression() -> None:
+    index = pd.bdate_range("2026-01-01", periods=9)
+    fx_returns = [0.01, -0.02, 0.03, -0.01, 0.02, -0.03, 0.015, -0.015]
+    fx = [150.0]
+    for move in fx_returns:
+        fx.append(fx[-1] * (1 + move))
+    prices = pd.DataFrame({"USD_CASH": 100.0, "JPY=X": fx}, index=index)
+    factors = pd.DataFrame({"外貨対円": [float("nan"), *fx_returns]}, index=index)
+    measured = estimate_factors.estimate_joint_loadings(
+        prices, factors, {"USD_CASH": "USD_CASH"}, usd_tickers=("USD_CASH",)
+    )
+    assert measured["instruments"]["USD_CASH"]["loadings"]["外貨対円"] == pytest.approx(1)
+
+
+@pytest.mark.parametrize("usd_target", [False, True])
+def test_joint_estimation_removes_target_adjustment_discontinuity(usd_target: bool) -> None:
+    import numpy as np
+
+    index = pd.date_range("2024-01-05", periods=81, freq="W-FRI")
+    rng = np.random.default_rng(17)
+    market = rng.normal(0, 0.01, 80)
+    sector = rng.normal(0, 0.007, 80)
+    moves = 0.001 + 1.4 * market - 0.7 * sector
+    moves[37] = 2.5  # permanent adjusted-level discontinuity, absent in the factor series
+    target_jpy = np.r_[100.0, 100.0 * np.cumprod(1 + moves)]
+    fx = np.linspace(140, 150, len(index))
+    prices = pd.DataFrame(
+        {"TARGET": target_jpy / fx if usd_target else target_jpy, "JPY=X": fx}, index=index
+    )
+    factors = pd.DataFrame(
+        {"market": np.r_[np.nan, market], "sector": np.r_[np.nan, sector]}, index=index
+    )
+    measured = estimate_factors.estimate_joint_loadings(
+        prices, factors, {"T": "TARGET"}, usd_tickers=("TARGET",) if usd_target else ()
+    )
+    fitted = measured["instruments"]["T"]
+    assert fitted["loadings"]["market"] == pytest.approx(1.4, abs=1e-8)
+    assert fitted["loadings"]["sector"] == pytest.approx(-0.7, abs=1e-8)
+    assert fitted["intercept"] == pytest.approx(0.001, abs=1e-8)
+    assert fitted["observations"] == 79
+    assert fitted["dropped_outliers"] == [index[38].date().isoformat()]
+
+
+def test_joint_estimation_rechecks_observation_count_after_target_screening() -> None:
+    index = pd.date_range("2026-01-02", periods=5, freq="W-FRI")
+    factors = pd.DataFrame(
+        {
+            "market": [float("nan"), 0.01, 0.02, -0.01, 0.03],
+            "sector": [float("nan"), 0.002, -0.004, 0.003, 0.01],
+        },
+        index=index,
+    )
+    levels = [100.0]
+    for move in [0.009, 0.025, -0.012, 2.5]:
+        levels.append(levels[-1] * (1 + move))
+    measured = estimate_factors.estimate_joint_loadings(
+        pd.DataFrame({"TARGET": levels}, index=index), factors, {"T": "TARGET"}
+    )
+    assert "T" not in measured["instruments"]
+    assert "too few observations" in measured["unavailable"]["T"]

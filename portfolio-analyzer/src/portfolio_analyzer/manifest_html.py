@@ -233,9 +233,14 @@ def horizontal_bar(chart: dict[str, Any], rows: list[dict[str, Any]]) -> str:
     label_field, value_field = enc["x"]["field"], enc["y"]["field"]
     value_format = enc["y"].get("format") or chart.get("valueFormat")
     points = [(r, _num(r.get(value_field))) for r in rows]
+    unavailable = "".join(
+        f"<p class='empty'>{_esc(r.get(label_field, ''))}: — · {_esc(r.get('reason') or '未計算')}</p>"
+        for r, value in points
+        if value is None
+    )
     points = [(r, v) for r, v in points if v is not None]
     if not points:
-        return "<p class='empty'>この範囲にはデータがありません</p>"
+        return unavailable or "<p class='empty'>この範囲にはデータがありません</p>"
     order = (chart.get("settings") or {}).get("sort")
     if order in ("descending", "ascending"):
         points.sort(key=lambda p: p[1], reverse=order == "descending")
@@ -275,7 +280,7 @@ def horizontal_bar(chart: dict[str, Any], rows: list[dict[str, Any]]) -> str:
         for r in refs
         if float(r["value"]) != 0 or r.get("label")
     )
-    return f"<div class='hbars'><div class='rules'>{lines}</div>{''.join(out)}</div>"
+    return f"<div class='hbars'><div class='rules'>{lines}</div>{''.join(out)}</div>{unavailable}"
 
 
 def stacked_bar_100(chart: dict[str, Any], rows: list[dict[str, Any]]) -> str:

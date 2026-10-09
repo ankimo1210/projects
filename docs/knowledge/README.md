@@ -12,3 +12,4 @@
 - [Windows PC の基準構成（2026-10-03）](2026-10-03-windows-pc-baseline.md) — 本体・モニター・周辺機器・主要ソフトウェア・WSL・メモリ帯域
 - [Windows PC の性能測定（2026-10-03）](2026-10-03-windows-pc-performance.md) — CPU・メモリ・GPU・SSD・小ファイル・通信・Windows / WSL 呼び出しの実測、生データ、再測定手順
 - [GPU の負荷と温度（2026-10-03）](2026-10-03-gpu-thermal.md) — 低・中・高負荷と冷却の6分間の推移、電力・ファン・制限フラグ、CPU温度の未取得事項
+- [Codex 利用上限の API 料金相当額（2026-10-09）](2026-10-09-codex-usage-api-equivalent.md) — サブスクの実測ログによる30日換算、区間検証、推定の条件と再測定

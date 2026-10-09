@@ -170,6 +170,13 @@ def _limit_value(metric: str, value: float | None) -> str:
     return f"{float(value):.1f}" if words & {"effective", "count"} else _ratio(value)
 
 
+def _policy_value(limit: dict[str, Any]) -> str:
+    value = limit.get("value")
+    if value is None and limit.get("lower_bound_value") is not None:
+        return "少なくとも" + _limit_value(limit["metric"], limit["lower_bound_value"])
+    return _limit_value(limit["metric"], value)
+
+
 def _share_rows(rows: list[dict[str, Any]], key: str = "pct", limit: int = 8) -> str:
     """Label, a bar in proportion to the share, and the share itself."""
     out = ""
@@ -188,14 +195,31 @@ def _stress_rows(rows: list[dict[str, Any]], note) -> str:
     peak = max((abs(float(r["impact_pct"] or 0)) for r in rows), default=0.0)
     out = ""
     for r in rows:
-        p = float(r["impact_pct"] or 0)
-        width = 0.0 if not peak else abs(p) / peak * 100
+        p = None if r["impact_pct"] is None else float(r["impact_pct"])
+        width = 0.0 if p is None or not peak else abs(p) / peak * 100
+        detail = _joined(note(r), str(r.get("reason") or ""))
         out += (
-            f"<tr><td>{_esc(r['label'])}<small> {_esc(note(r))}</small></td>"
-            f"<td class='b'><div class='bar {'neg' if p < 0 else ''}' style='width:{width:.0f}%'></div></td>"
-            f"<td class='n {cls(p)}'>{pct(p * 100, 1)}<span class='sp'>{jpy(r['impact_jpy'], True)}</span></td></tr>"
+            f"<tr><td>{_esc(r['label'])}<small> {_esc(detail)}</small></td>"
+            f"<td class='b'><div class='bar {'neg' if p is not None and p < 0 else ''}' style='width:{width:.0f}%'></div></td>"
+            f"<td class='n {cls(p)}'>{pct(None if p is None else p * 100, 1)}<span class='sp'>{jpy(r['impact_jpy'], True)}</span></td></tr>"
         )
     return out
+
+
+def _replay_coverage(row: dict[str, Any]) -> str:
+    text = f"価格対象カバー率 {_ratio(row.get('coverage'), 0)}"
+    if row.get("priced_nav_ratio") is not None:
+        text += f" · 総資産カバー率 {_ratio(row['priced_nav_ratio'], 0)}"
+    if row.get("complete") is False:
+        text += " · 既知部分のみ（全体未計算）"
+    return text
+
+
+def _policy_status(risk: dict[str, Any]) -> str:
+    breaches = risk.get("policy_breaches")
+    missing = sum(1 for limit in risk.get("policy") or [] if limit.get("value") is None)
+    text = "未取得" if breaches is None else f"超過 {int(breaches)} 件"
+    return f"{text} · 未計算 {missing} 件" if missing else text
 
 
 def _risk(risk: dict[str, Any] | None) -> str:
@@ -216,10 +240,15 @@ def _risk(risk: dict[str, Any] | None) -> str:
         breach = lim["status"] == "breach"
         chips += (
             f"<span class='lim {lim['status']}' title='{_esc(lim.get('note') or '')}'>"
-            f"{'超過 ' if breach else ''}{_esc(lim['label'])} · {_limit_value(lim['metric'], lim['value'])}"
+            f"{'超過 ' if breach else ''}{_esc(lim['label'])} · {_policy_value(lim)}"
             f" / {_esc(lim['operator'])} {_limit_value(lim['metric'], lim['threshold'])}</span>"
         )
-    breaches = risk.get("policy_breaches") or 0
+    limits_status = _policy_status(risk)
+    policy_notes = "".join(
+        f"<p class='sub'>{_esc(lim['label'])} · {_esc(lim['reason'])}</p>"
+        for lim in risk.get("policy") or []
+        if lim.get("reason")
+    )
     exposures = "".join(
         f"<div><h3>{title}</h3><table class='mini'><tbody>{_share_rows(x[key])}</tbody></table></div>"
         for key, title in (
@@ -343,9 +372,9 @@ def _risk(risk: dict[str, Any] | None) -> str:
 <div class="rgrid">
   <div class="panel wide">
     <h2>限度 <small>{
-        "超過 " + str(breaches) + " 件" if breaches else "超過なし"
+        limits_status if limits_status != "超過 0 件" else "超過なし"
     } · 参照ファイルのポリシー（draft）</small></h2>
-    <div>{chips}</div>
+    <div>{chips}</div>{policy_notes}
   </div>
   <div class="panel wide">
     <h2>エクスポージャー <small>ルックスルー後 · 総資産比 · DC は月次レポートの構成比で按分（推定）</small></h2>
@@ -361,6 +390,11 @@ def _risk(risk: dict[str, Any] | None) -> str:
   </div>
   <div class="panel">
     <h2>リスク量 <small>過去シミュレーション · 前日比は前回レポート比</small></h2>
+    {
+        f"<p class='err'>{_esc(s['reason'])} · 価格対象カバー率 {_ratio(s.get('coverage_ratio'), 0)}</p>"
+        if s.get("reason")
+        else ""
+    }
     <div class="sx"><table class="mini rs"><tbody>{stats}</tbody></table></div>
   </div>
   <div class="panel wide">
@@ -370,7 +404,7 @@ def _risk(risk: dict[str, Any] | None) -> str:
     }</tbody></table></div>{buckets}</div>
   </div>
   <div class="panel wide">
-    <h2>ストレス <small>ファクター換算のシナリオ · 実測リプレイの局面</small></h2>
+    <h2>ストレス <small>仮定係数の線形シナリオ · 実測リプレイ · 影響は総資産比</small></h2>
     <div class="xg2"><div><h3>シナリオ <small>参照ファイル · 損失の大きい順 · 過去局面の換算は全件</small></h3>
     <table class="mini"><thead><tr><th>シナリオ</th><th></th><th>影響</th></tr></thead><tbody>{
         _stress_rows(shown, lambda r: kinds.get(r["kind"], r["kind"]))
@@ -379,7 +413,7 @@ def _risk(risk: dict[str, Any] | None) -> str:
     <table class="mini"><thead><tr><th>局面</th><th></th><th>影響</th></tr></thead><tbody>{
         _stress_rows(
             st["episodes"],
-            lambda r: f"{r['start']} → {r['end']} · カバー率 {_ratio(r.get('coverage'), 0)}",
+            lambda r: f"{r['start']} → {r['end']} · {_replay_coverage(r)}",
         )
     }</tbody></table></div></div>
   </div>
@@ -440,6 +474,17 @@ def _freshness(data: dict[str, Any]) -> str:
     )
 
 
+def _analysis_limits(data: dict[str, Any]) -> str:
+    warnings = (data.get("quality") or {}).get("warnings") or []
+    if not warnings:
+        return ""
+    return (
+        '<div class="err freshness" role="note"><b>分析の制約</b><br>'
+        + "<br>".join(_esc(w) for w in warnings)
+        + "</div>"
+    )
+
+
 def _overview(data: dict[str, Any]) -> str:
     """Compact overview of the same series and risk payload used in the details."""
     risk = data.get("risk")
@@ -447,7 +492,6 @@ def _overview(data: dict[str, Any]) -> str:
     if risk:
         stats = risk.get("stats") or {}
         concentration = risk.get("concentration") or {}
-        breaches = risk.get("policy_breaches")
         tiles = [
             (
                 "年率ボラティリティ",
@@ -466,7 +510,7 @@ def _overview(data: dict[str, Any]) -> str:
             ),
             (
                 "限度",
-                "未取得" if breaches is None else f"超過 {int(breaches)} 件",
+                _policy_status(risk),
                 "設定済みポリシー（draft）",
             ),
         ]
@@ -511,6 +555,12 @@ def render(data: dict[str, Any], tokens_css: str, capture: bool = False) -> str:
     """The dashboard page. ``capture`` lays it out for cutting the charts out into the mail."""
     h = data["headline"]
     fx = data["fx"]
+    xirr_label = "資金加重リターン（推定）" if h.get("xirr_is_estimate") else "資金加重リターン"
+    dd_label = (
+        "最大DD（期間内・入金調整後）"
+        if (data.get("quality") or {}).get("dd_method") == "twr_end_of_day_flows"
+        else "最大DD（期間内）"
+    )
     tape = "".join(
         f"<span class='tk'><b>{_esc(t['sym'])}</b> {price(t['last'], t.get('cur', 'USD'))} <i class='{cls(t['chg_pct'])}'>{pct(t['chg_pct'])}</i></span>"
         for t in data["tape"]
@@ -533,7 +583,10 @@ def render(data: dict[str, Any], tokens_css: str, capture: bool = False) -> str:
                 jpy(h["day_pnl"], True),
                 " · ".join(
                     t
-                    for t in (pct(h["day_pnl_pct"]), split(h.get("day_stock"), h.get("day_fx")))
+                    for t in (
+                        f"{pct(h['day_pnl_pct'])} 総資産比",
+                        split(h.get("day_stock"), h.get("day_fx")),
+                    )
                     if t
                 ),
                 cls(h["day_pnl"]),
@@ -567,9 +620,9 @@ def render(data: dict[str, Any], tokens_css: str, capture: bool = False) -> str:
                 dollars=usd(h["pnl_incept"], rate, True),
             ),
             _kpi(
-                "資金加重リターン",
+                xirr_label,
                 pct(None if h.get("xirr") is None else h["xirr"] * 100),
-                f"{h.get('xirr_scope') or '—'} · 最大DD（期間内） {pct(None if h.get('max_dd_window') is None else h['max_dd_window'] * 100, 1)}",
+                f"{h.get('xirr_scope') or '—'} · {dd_label} {pct(None if h.get('max_dd_window') is None else h['max_dd_window'] * 100, 1)}",
                 cls(h.get("xirr")),
             ),
         ]
@@ -750,6 +803,7 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
 <div class="tape">{tape}</div>
 
 {_freshness(data)}
+{_analysis_limits(data)}
 <h2 class="sec">ヘッドライン <small>headline</small></h2>
 <div class="kpis">{kpis}</div>
 
@@ -770,7 +824,7 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
 <h2 class="sec" id="charts-top">時系列 <small>time series · {_esc(data["window"]["start"])} → {_esc(data["as_of"])}</small></h2>
 <div class="grid">
   <div class="panel">
-    <h2>全口座 NAV と損益 <small>3 口座の合計 · 入金は段差、損益 ＝ NAV − 累計入金</small></h2>
+    <h2>全口座 NAV と損益 <small>{len(data["accounts"])} 口座の合計 · 入金は段差、損益 ＝ NAV − 累計入金 · 復元不能な期間は空白</small></h2>
     <div class="legend"><span><i style="background:var(--series-1)"></i>NAV ¥</span><span><i style="background:var(--series-2)"></i>累計入金 ¥</span></div>
     <svg id="c-nav" {_viewbox("nav", capture)} data-piece="nav" role="img" aria-label="全口座の NAV と累計入金"></svg>
     <div class="legend" style="margin-top:8px"><span><i style="background:var(--series-1)"></i>損益 ¥（NAV − 累計入金）</span></div>

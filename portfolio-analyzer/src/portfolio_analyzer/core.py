@@ -19,6 +19,7 @@ ALLOWED_SCENARIO_KINDS = {"single", "compound", "historical"}
 EXPOSURE_AXES = ("theme", "chain_role")
 EXPOSURE_AXIS_LABELS = {"theme": "テーマ", "chain_role": "バリューチェーン上の位置"}
 PERIODS_PER_YEAR = {"daily": Decimal("252"), "weekly": Decimal("52"), "monthly": Decimal("12")}
+MEASURED_FACTOR_BASIS = "joint-jpy-excess-v1"
 SCENARIO_KIND_LABELS = {"single": "単一", "compound": "複合", "historical": "実測"}
 STATUS_LABELS = {
     "exact": "確定",
@@ -174,6 +175,8 @@ class FactorRisk:
     window_start: str
     dates: tuple[str, ...] = ()
     series: tuple[tuple[Decimal, ...], ...] = ()
+    measured_basis: str = ""
+    instrument_loadings: dict[str, dict[str, Decimal]] = field(default_factory=dict)
 
     @property
     def periods_per_year(self) -> Decimal:
@@ -431,6 +434,9 @@ def load_factor_risk(path: Path) -> FactorRisk:
         for row in block["covariance"]
     )
     history = raw.get("factor_series", {})
+    model = raw.get("measured_factor_model") or {}
+    if model and tuple(model.get("factors", ())) != factors:
+        raise ValueError("measured_factor_model columns do not match factor_risk factors")
     dates: tuple[str, ...] = ()
     series: tuple[tuple[Decimal, ...], ...] = ()
     if history:
@@ -452,6 +458,14 @@ def load_factor_risk(path: Path) -> FactorRisk:
         window_start=str(raw.get("manifest", {}).get("estimation_window_start", "")),
         dates=dates,
         series=series,
+        measured_basis=str(model.get("basis", "")),
+        instrument_loadings={
+            str(symbol): {
+                str(factor): _decimal(value, "measured_factor_model.loading")
+                for factor, value in row["loadings"].items()
+            }
+            for symbol, row in model.get("instruments", {}).items()
+        },
     )
     issues = validate_factor_risk(risk)
     if issues:
@@ -482,7 +496,46 @@ def validate_factor_risk(risk: FactorRisk) -> list[str]:
                 )
     if risk.observations <= size:
         issues.append("covariance needs more observations than factors")
+    for symbol, loadings in risk.instrument_loadings.items():
+        if set(loadings) - set(risk.factors):
+            issues.append(f"unknown measured loading factor: {symbol}")
+        if set(risk.factors) - set(loadings):
+            issues.append(f"incomplete measured loading factors: {symbol}")
+        if any(not value.is_finite() for value in loadings.values()):
+            issues.append(f"non-finite measured loading: {symbol}")
     return issues
+
+
+def _is_static_balance(symbol: str, currency: str, asset_class: str) -> bool:
+    """Reconciliation and JPY cash are fixed JPY balances, not fitted market assets."""
+    return symbol == "RECONCILIATION" or (asset_class == "現金" and currency == "JPY")
+
+
+def _measured_model_status(
+    values: dict[str, Decimal], risk: FactorRisk | None
+) -> tuple[float | None, str]:
+    """Require fitted JPY coefficients on the covariance's own excess-return basis."""
+    total = sum(values.values(), Decimal())
+    if not any(values.values()):
+        return None, ""
+    if risk is None or risk.measured_basis != MEASURED_FACTOR_BASIS:
+        return (0.0 if total else None), "同じ実測ファクター基準の共同回帰係数がありません"
+    missing = [
+        symbol
+        for symbol, value in values.items()
+        if value
+        and (
+            symbol not in risk.instrument_loadings
+            or set(risk.instrument_loadings[symbol]) != set(risk.factors)
+            or any(
+                not coefficient.is_finite()
+                for coefficient in risk.instrument_loadings[symbol].values()
+            )
+        )
+    ]
+    covered = sum((value for symbol, value in values.items() if symbol not in missing), Decimal())
+    coverage = float(covered / total) if total else None
+    return coverage, (f"共同回帰係数が未計算: {', '.join(sorted(missing))}" if missing else "")
 
 
 def most_plausible_shock(
@@ -855,7 +908,7 @@ def validate_analysis_reference(reference: AnalysisReference) -> list[str]:
         "worst_historical_drawdown",
     }
     for limit in reference.policy_limits:
-        if limit.operator not in {"<=", ">=", "between"}:
+        if limit.operator not in {"<=", ">="}:
             issues.append(f"invalid policy operator: {limit.id}")
         if limit.metric not in supported_policy_metrics:
             issues.append(f"unsupported policy metric: {limit.id}/{limit.metric}")
@@ -1119,8 +1172,8 @@ def _equity_loading(position: Position, reference: InstrumentReference | None) -
 
 
 def _analysis_rows(
-    portfolio: Portfolio, reference: AnalysisReference
-) -> tuple[dict[str, list[dict[str, Any]]], dict[str, dict[str, float | None]]]:
+    portfolio: Portfolio, reference: AnalysisReference, factor_risk: FactorRisk | None = None
+) -> tuple[dict[str, list[dict[str, Any]]], dict[str, dict[str, Any]]]:
     lookthrough: list[dict[str, Any]] = []
     sectors: list[dict[str, Any]] = []
     sensitivity: list[dict[str, Any]] = []
@@ -1131,12 +1184,17 @@ def _analysis_rows(
     event_calendar: list[dict[str, Any]] = []
     axis_rows: dict[str, list[dict[str, Any]]] = {axis: [] for axis in EXPOSURE_AXES}
     business_lines: list[dict[str, Any]] = []
-    summary_metrics: dict[str, dict[str, float | None]] = {}
+    summary_metrics: dict[str, dict[str, Any]] = {}
 
     for scope, positions in _scopes(portfolio):
         total = sum((position.market_value_jpy for position in positions), Decimal())
         if total <= 0:
             continue
+        measured_values: defaultdict[str, Decimal] = defaultdict(Decimal)
+        for position in positions:
+            if not _is_static_balance(position.symbol, position.currency, position.asset_class):
+                measured_values[position.symbol] += position.market_value_jpy
+        measured_coverage, measured_reason = _measured_model_status(measured_values, factor_risk)
 
         exposure_values: defaultdict[tuple[str, str, bool], Decimal] = defaultdict(Decimal)
         issuer_values: defaultdict[str, Decimal] = defaultdict(Decimal)
@@ -1346,7 +1404,8 @@ def _analysis_rows(
             )
 
         compound_impact_ratios: list[Decimal] = []
-        historical_impact_ratios: list[Decimal] = []
+        historical_impact_ratios: list[Decimal | None] = []
+        missing_historical_scenarios: list[str] = []
         for symbol, market_value in by_symbol.items():
             instrument = reference.instruments.get(symbol)
             if instrument is None:
@@ -1365,16 +1424,49 @@ def _analysis_rows(
             )
         scenario_impacts: dict[str, tuple[Decimal, Decimal, str]] = {}
         for scenario in reference.scenarios:
+            if scenario.kind == "historical":
+                reason = measured_reason
+                if (
+                    not reason
+                    and measured_values
+                    and factor_risk is not None
+                    and set(scenario.shocks) - set(factor_risk.factors)
+                ):
+                    reason = "実測ファクター基準にないショックが含まれています"
+                if reason:
+                    historical_impact_ratios.append(None)
+                    missing_historical_scenarios.append(scenario.label)
+                    sensitivity.append(
+                        {
+                            "scope": scope,
+                            "scenario": scenario.label,
+                            "scenario_kind": SCENARIO_KIND_LABELS[scenario.kind],
+                            "impact_jpy": None,
+                            "impact_ratio": None,
+                            "ending_value_jpy": None,
+                            "affected_value_jpy": None,
+                            "assumption": scenario.assumption,
+                            "reason": reason,
+                            "model_basis": "measured_joint",
+                        }
+                    )
+                    continue
             scenario_impact = Decimal()
             affected_value = Decimal()
             contributions: list[tuple[Decimal, str, Decimal]] = []
             for symbol, market_value in by_symbol.items():
                 instrument = reference.instruments.get(symbol)
-                if instrument is None:
+                if scenario.kind == "historical" and symbol not in measured_values:
+                    continue
+                if scenario.kind == "historical" and factor_risk is not None:
+                    loadings = factor_risk.instrument_loadings.get(symbol, {})
+                elif instrument is not None:
+                    loadings = instrument.factor_loadings
+                else:
                     continue
                 coefficient = sum(
                     (
-                        instrument.factor_loadings.get(factor, Decimal()) * shock
+                        loadings.get(factor, Decimal()) * shock
                         for factor, shock in scenario.shocks.items()
                     ),
                     Decimal(),
@@ -1395,6 +1487,10 @@ def _analysis_rows(
                     "ending_value_jpy": _float(total + scenario_impact),
                     "affected_value_jpy": _float(affected_value),
                     "assumption": scenario.assumption,
+                    "reason": "",
+                    "model_basis": "measured_joint"
+                    if scenario.kind == "historical"
+                    else "manual_linear",
                 }
             )
             scenario_impacts[scenario.id] = (
@@ -1435,6 +1531,8 @@ def _analysis_rows(
             )
 
         summary_metrics[scope] = {
+            "measured_factor_coverage_ratio": measured_coverage,
+            "measured_factor_reason": measured_reason,
             "sector_coverage_ratio": (
                 _float(mapped_sector_total / sector_total) if sector_total else None
             ),
@@ -1502,8 +1600,23 @@ def _analysis_rows(
             ),
             "worst_historical_drawdown": (
                 _float(max(-min(historical_impact_ratios), Decimal()))
-                if historical_impact_ratios
+                if historical_impact_ratios and not missing_historical_scenarios
                 else None
+            ),
+            "worst_historical_drawdown_lower_bound": (
+                _float(
+                    max(
+                        -min(value for value in historical_impact_ratios if value is not None),
+                        Decimal(),
+                    )
+                )
+                if any(value is not None for value in historical_impact_ratios)
+                else None
+            ),
+            "worst_historical_drawdown_reason": (
+                f"未計算の過去シナリオ: {', '.join(missing_historical_scenarios)}"
+                if missing_historical_scenarios
+                else ""
             ),
         }
 
@@ -1564,8 +1677,9 @@ def _scope_rows(portfolio: Portfolio) -> dict[str, list[dict[str, Any]]]:
             ),
             Decimal(),
         )
-        top_five = sum((position.market_value_jpy for position in ranked[:5]), Decimal())
-        largest = ranked[0].market_value_jpy if ranked else Decimal()
+        ranked_values = sorted(investable_by_symbol.values(), reverse=True)
+        top_five = sum(ranked_values[:5], Decimal())
+        largest = ranked_values[0] if ranked_values else Decimal()
         summary.append(
             {
                 "scope": scope,
@@ -1746,9 +1860,19 @@ def _evaluate_policy(
         breach_count = 0
         for limit in limits:
             raw_value = summary.get(limit.metric)
+            lower_bound = summary.get(f"{limit.metric}_lower_bound")
+            reason = summary.get(f"{limit.metric}_reason", "")
             if raw_value is None:
-                passed = None
+                passed = (
+                    False
+                    if limit.operator == "<="
+                    and lower_bound is not None
+                    and Decimal(str(lower_bound)) > limit.threshold
+                    else None
+                )
                 distance = None
+                if passed is False:
+                    reason = f"{reason}。少なくとも {lower_bound:.1%} の損失を確認"
             else:
                 value = Decimal(str(raw_value))
                 if limit.operator == "<=":
@@ -1768,12 +1892,14 @@ def _evaluate_policy(
                     "metric": limit.metric,
                     "operator": limit.operator,
                     "value": raw_value,
+                    "lower_bound_value": lower_bound,
+                    "reason": reason,
                     "threshold": _float(limit.threshold),
                     "distance_to_limit": _float(distance),
                     "status": (
                         "範囲内" if passed is True else "超過" if passed is False else "未計算"
                     ),
-                    "note": limit.note,
+                    "note": " · ".join(part for part in (limit.note, reason) if part),
                 }
             )
         summary["policy_breach_count"] = breach_count
@@ -1784,16 +1910,28 @@ DRAWDOWN_POLICY_METRICS = ("worst_compound_drawdown", "worst_historical_drawdown
 
 
 def _factor_exposures(
-    positions: tuple[Position, ...], reference: AnalysisReference, factors: tuple[str, ...]
+    positions: tuple[Position, ...],
+    reference: AnalysisReference,
+    factors: tuple[str, ...],
+    *,
+    factor_risk: FactorRisk | None = None,
 ) -> dict[str, Decimal]:
     """Return b: the JPY value that moves per unit of each factor."""
     exposures = dict.fromkeys(factors, Decimal())
     for position in positions:
+        if factor_risk is not None and _is_static_balance(
+            position.symbol, position.currency, position.asset_class
+        ):
+            continue
         instrument = reference.instruments.get(position.symbol)
-        if instrument is None:
+        if factor_risk is not None:
+            loadings = factor_risk.instrument_loadings.get(position.symbol, {})
+        elif instrument is not None:
+            loadings = instrument.factor_loadings
+        else:
             continue
         for factor in factors:
-            loading = instrument.factor_loadings.get(factor)
+            loading = loadings.get(factor)
             if loading:
                 exposures[factor] += position.market_value_jpy * loading
     return exposures
@@ -1801,7 +1939,7 @@ def _factor_exposures(
 
 def _reverse_stress_rows(
     portfolio: Portfolio, reference: AnalysisReference, risk: FactorRisk
-) -> tuple[list[dict[str, Any]], dict[str, dict[str, float | None]]]:
+) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
     """Solve, for each policy drawdown limit, the least surprising way to breach it."""
     targets = [
         (limit.label, limit.threshold)
@@ -1809,14 +1947,34 @@ def _reverse_stress_rows(
         if limit.metric in DRAWDOWN_POLICY_METRICS and limit.operator == "<="
     ]
     rows: list[dict[str, Any]] = []
-    metrics: dict[str, dict[str, float | None]] = {}
+    metrics: dict[str, dict[str, Any]] = {}
     for scope, positions in _scopes(portfolio):
         total = sum((position.market_value_jpy for position in positions), Decimal())
         if total <= 0:
             continue
-        exposures = _factor_exposures(positions, reference, risk.factors)
+        values: defaultdict[str, Decimal] = defaultdict(Decimal)
+        for position in positions:
+            if not _is_static_balance(position.symbol, position.currency, position.asset_class):
+                values[position.symbol] += position.market_value_jpy
+        coverage, reason = _measured_model_status(values, risk)
+        if reason:
+            metrics[scope] = dict.fromkeys(
+                (
+                    "factor_period_volatility",
+                    "factor_annual_volatility",
+                    "nearest_limit_distance_sigma",
+                    "replayed_expected_shortfall",
+                    "replayed_worst_period",
+                    "replayed_max_drawdown",
+                )
+            )
+            metrics[scope].update(
+                measured_factor_coverage_ratio=coverage, measured_factor_reason=reason
+            )
+            continue
+        exposures = _factor_exposures(positions, reference, risk.factors, factor_risk=risk)
         variance = risk.quadratic_form(exposures)
-        period_volatility = variance.sqrt() / total if variance > 0 else None
+        period_volatility = variance.sqrt() / total if variance >= 0 else None
         metrics[scope] = {
             "factor_period_volatility": _float(period_volatility),
             "factor_annual_volatility": (
@@ -1907,7 +2065,7 @@ def _portfolio_datasets(
     datasets = _scope_rows(portfolio)
     if analysis_reference is None:
         return datasets
-    analysis_datasets, analysis_summary = _analysis_rows(portfolio, analysis_reference)
+    analysis_datasets, analysis_summary = _analysis_rows(portfolio, analysis_reference, factor_risk)
     datasets.update(analysis_datasets)
     for row in datasets["summary"]:
         row.update(analysis_summary[row["scope"]])
@@ -1985,7 +2143,13 @@ def _proposal_comparison_rows(
                     "scenario_kind": row["scenario_kind"],
                     "before_impact_ratio": before_row["impact_ratio"],
                     "after_impact_ratio": row["impact_ratio"],
-                    "improvement": row["impact_ratio"] - before_row["impact_ratio"],
+                    "improvement": (
+                        row["impact_ratio"] - before_row["impact_ratio"]
+                        if row["impact_ratio"] is not None
+                        and before_row["impact_ratio"] is not None
+                        else None
+                    ),
+                    "reason": row.get("reason") or before_row.get("reason", ""),
                 }
             )
 
@@ -2564,6 +2728,27 @@ def _extend_analysis_manifest(
     """Add look-through, factor sensitivity, and valuation views in place."""
     manifest = artifact["manifest"]
     analysis_source_id = "analysis_reference"
+    measured_limits = [
+        f"- **{row['scope']}**: {row['measured_factor_reason']}"
+        for row in artifact["snapshot"]["datasets"]["summary"]
+        if row.get("measured_factor_reason")
+    ]
+    if measured_limits:
+        manifest["blocks"].insert(
+            1,
+            {
+                "id": "measured_factor_limits",
+                "type": "markdown",
+                "body": (
+                    "## 実測モデルの制約\n\n"
+                    + "\n".join(measured_limits)
+                    + "\n\n未校正の商品をゼロリスクとして補完せず、実測ショック・"
+                    "共分散によるリスク・逆ストレスは未計算にします。"
+                    "仮定係数の単一・複合ショックは別の線形近似です。"
+                ),
+                "sourceId": analysis_source_id,
+            },
+        )
     manifest["cards"].extend(
         [
             {
@@ -2819,6 +3004,7 @@ def _extend_analysis_manifest(
                             "format": "currency",
                         },
                         {"field": "assumption", "type": "text", "label": "前提"},
+                        {"field": "reason", "type": "text", "label": "未計算の理由"},
                     ],
                 },
                 "valueFormat": "currency",
