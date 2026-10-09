@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-09",
+  "reviewer": "independent source/math reviewer",
+  "scope": {
+    "worktree": "/home/kazumasa/worktrees/johnhull-research-roadmap",
+    "branch_as_assigned": "codex/rbf04-dynamic-hedging",
+    "base_as_assigned": "b7c98432",
+    "files": [
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py",
+      "johnhull/hullkit/tests/test_dynamic_hedging_statistics.py",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_protocol.py"
+    ],
+    "binding": "canonical DESIGN §§8–13 / Task5 split / root index / frozen helper diff+manifest+reports"
+  },
+  "source_hashes": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py": "d07d4d1524a005d5b9ebe765922748aadab2175ace98ff12c941c1a38e8497ce",
+    "johnhull/hullkit/tests/test_dynamic_hedging_statistics.py": "f5b433cbf55d24b687927fd72e982832500cfebc166cd8015f63f1ba43614f1d",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "bbe326e8b1c31daf37a56e86a0464eb35cd8fed3e9dbf8e9f71291bf39f63700",
+    "deep_hedge_price/tests/test_dynamic_hedging_protocol.py": "1286179495e115ca435afe54be67af48caf034311556af7ab90f972da3f0aa36"
+  },
+  "components": {
+    "statistics": {
+      "spec": "approved",
+      "quality": "approved",
+      "source_proceed": true
+    },
+    "protocol": {
+      "spec": "approved",
+      "quality": "approved_with_minor",
+      "source_proceed": true
+    }
+  },
+  "critical_findings": [],
+  "important_findings": [],
+  "minor_findings": [
+    {
+      "id": "M1",
+      "severity": "Minor",
+      "component": "protocol",
+      "file": "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "lines": [
+        579,
+        611
+      ],
+      "title": "includes_children の bool 型を検査する",
+      "detail": "includes_children=-1 の不正 ledger を受理する。親 wall/cpu=10、子 wall/cpu=4 で子を excluded とし charged_totals=10 を返す。正常な bool ledger は正しく集計するが、不正 flag が費用除外を決められる。",
+      "recommendation": "record を採用する前に includes_children の型を bool に限定し、不正な整数/null/string を ValueError にする。小さな拒否反例を追加する。",
+      "blocks_source_proceed": false
+    }
+  ],
+  "formal_freeze_approved": false,
+  "study_approved": false,
+  "probe_evidence": {
+    "shape": [
+      3,
+      128
+    ],
+    "replicates": 2,
+    "paired_d_bootstrap_max_error": 1.1102230246251565e-16,
+    "paired_d_iid_se_error": 0.0,
+    "individual_es95_error": 0.0,
+    "original_count": 384,
+    "invalid_inclusive_flag": -1,
+    "invalid_flag_excluded_ids": [
+      "child"
+    ],
+    "invalid_flag_charged_wall_cpu": 10
+  },
+  "verification": {
+    "implementer_reported_only": "41 statistics + 1 doc guard / 52 protocol, ruff and format GREEN",
+    "suites_rerun": false,
+    "independent": "source/diff/test/report inspection and the concrete small numerical/expense probe only",
+    "performance_claim": false
+  },
+  "caller_integration_obligations": [
+    "実依存の transitive source closure、全 phase/attempt の required expense IDs、全 failure/weights/timing/raw primitives は caller が保存して検査する。",
+    "18 selected states/37 quotes・teacher の最小 qualified N/grid・accuracy/moment/Q gates は独立 saved numeric checker が全元分母から再計算する。receipt の checker 名/hash は真正性や金融精度の認証ではない。",
+    "call/Asian support の交差を fit caller に渡し、未測定の reference/denominator/interpolation error を ok として資格化しない。shared teacher cluster covariance と deterministic error を同じ operator/F07 へ伝播する。",
+    "正式 pilot、費用審査、全 source/code/math/pilot review の後に研究 freeze、その後 main 12 fits と全 selection 終了前の test 非開封を caller が実際の実行境界で強制する。",
+    "保存 int16(2000,3,B) indices を全 method/G/init に共用し、全 original path・init と独立 reserved refinement envelope/Q/訓練完了を family 判定へ結合する。",
+    "256 MiB 以下 chunk の全 roster/CAS copies/load と金融 semantic 再計算、inclusive expense の実測範囲を caller が確認する。"
+  ],
+  "declined_to_judge": [
+    "未完成 study orchestrator",
+    "実 pilot 数値達成/全12 fit/44 cell main",
+    "正式研究 freeze、最終 study acceptance、CAS 全復元",
+    "本 helper の caller numeric checker と source closure の未実装部分"
+  ]
+}

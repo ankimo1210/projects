@@ -211,9 +211,12 @@ def test_band_rank_one_no_costly_null_trade():
 
 ### Task5: Complete runner / statistical decision / candidate pilot
 
-**Files:** Create _dynamic_hedging_study.py、deep tests/test_dynamic_hedging_study.py、research/run_reference.py、candidate.json、pilot receipts。Modify MODEL_INDEX.md/README.md/ROADMAP.md。
+**Files:** Create _dynamic_hedging_study.py、deep tests/test_dynamic_hedging_study.py、research/run_reference.py、candidate.json、pilot receipts。Task5内部をTorch-free _dynamic_hedging_statistics.py＋hullkit testsと、_dynamic_hedging_protocol.py＋deep testsへ分割し、study orchestratorがconsumeする。Modify MODEL_INDEX.md/README.md/ROADMAP.md。
 
 **Produces:** CLI --phase tiny/pilot/main/check；saved-check入力JSON+NPZ、phase別typed original IDs/status/expense keyset。mainはfrozen.jsonがないと拒否。policy/action/market/rawscoreをG/M/U/seed/level別に保存。
+
+- [x] 統計helper：original perpath d/r、保存bootstrap/個別ES、数値envelope付きstrict閾値、全3init IUTを実装・独立レビュー承認。
+- [x] protocol helper：候補12fits/44cells/用途別seed、receipt同一性、全費用・immutable I/Oを実装・独立レビュー承認。M1の不正inclusive flagを修正。runnerの金融semantic checkerと正式pilotは未実装。
 
 - [ ] failing tests：test開封前のfit選択、original denominator保持、candidate/frozen mismatch、expense消去/二重加算拒否、改善閾値のboundary反例、64path block bootstrap、saved-only RNG guard。
 
@@ -288,7 +291,7 @@ PYTHONPATH="$PWD/johnhull/hullkit/src:$PWD/deep_hedge_price/src" \
 
 ## Self-review / status
 
-全spec要件をTasks1–7へ割当。主claim/quote fit/limited local closure/原分母/CF/終端費用/有限四次/paired relative score/phase費用/3図を含む。候補の精度・所要時間は正式pilotで確定し、現時点で達成値を主張しない。Tasks1–4のprivate source実装・独立レビューを完了し、開発branchの整合したソースcommitにまとめる。Task5 runner/pilot、Tasks6–7の主実験・最終受入・main統合は未実施。
+全spec要件をTasks1–7へ割当。主claim/quote fit/limited local closure/原分母/CF/終端費用/有限四次/paired relative score/phase費用/3図を含む。候補の精度・所要時間は正式pilotで確定し、現時点で達成値を主張しない。Tasks1–4のprivate source実装・独立レビューを完了し、開発branchの整合したソースcommitにまとめる。Task5の統計/protocol helperも実装・独立レビューを完了した。Task5 runner/金融checker/pilot、Tasks6–7の主実験・最終受入・main統合は未実施。
 
 実装は既存の「研究ロードマップ完遂」指示の範囲で進める。新依存/API昇格/実データ利用権が必要になった場合だけ、その具体差分を別判断とする。
 
@@ -297,3 +300,7 @@ PYTHONPATH="$PWD/johnhull/hullkit/src:$PWD/deep_hedge_price/src" \
 Tasks1–4の詳細・レビュー対象・5件のImportant修正・最新指紋は[ソース記録](../../../research/RB-F04/dynamic_hedging/implementation/README.md)を参照。変更範囲＋索引/docstring1193 tests、11Python ruff/check/format PASS。関連全3suiteは最終gateで1回実行する。Tasks1–4は共有索引の参照を同時に解決するため一つのcommitにする（各taskのRED/GREENと独立レビューは別記録）。元d71b25f3の設計レビューは歴史的記録で、最新ソース承認と区別する。
 
 Task5で必須：call/Asian state-support交差、NaN/unmeasured誤差の不適格化、独立CFのquad収束・cutoff・bumpの別誤差、共通乱数cluster covarianceとCtheta誤差のIFT伝播、全original N／raw failure／cap超過／費用の保存。solver-okだけで精度承認しない。正式pilot・freeze・main/phase acceptanceは未完了。
+
+Task5実装分担：統計helperはoriginal shape(3,N)、保存済みint16 bootstrap indices、paired d/rと全3initのIUTを扱う。protocol helperは44cell/12fit roster、seed namespaces、source/候補/pilot/review binding、test開封前選択、全費用、immutable JSON+non-object NPZを扱う。freeze helperはreceipt同一性の境界であり、pilot raw arraysの数学/数値再算出は研究checkerの責務。両helperの実装だけでrunner/pilot完了とはしない。
+
+Task5 helperの[ソース確認](../../../research/RB-F04/dynamic_hedging/implementation/TASK5_HELPERS.md)：M1解消・独立再レビュー未解決0、変更範囲＋索引/docstring1200 tests、5Python ruff/check/format PASS。候補/rosterはsourceから保存、formal freezeは未実施。以前の1193件と重複するguard件数を足し合わせない。

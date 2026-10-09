@@ -1,0 +1,41 @@
+{
+  "test_files": [
+    "johnhull/hullkit/tests/test_dynamic_hedging_statistics.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_protocol.py",
+    "johnhull/hullkit/tests/test_model_index.py",
+    "johnhull/hullkit/tests/test_docstrings.py",
+    "deep_hedge_price/tests/test_model_index.py",
+    "deep_hedge_price/tests/test_docstrings.py"
+  ],
+  "test_command": "import sys,pathlib,hullkit,deep_hedge_price,pytest\nroot=pathlib.Path('/home/kazumasa/worktrees/johnhull-research-roadmap')\nassert str(root) in hullkit.__file__ and str(root) in deep_hedge_price.__file__\nprint('PACKAGE_ORIGIN',hullkit.__file__,deep_hedge_price.__file__)\nsys.exit(pytest.main(['--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap', '-q', 'johnhull/hullkit/tests/test_dynamic_hedging_statistics.py', 'deep_hedge_price/tests/test_dynamic_hedging_protocol.py', 'johnhull/hullkit/tests/test_model_index.py', 'johnhull/hullkit/tests/test_docstrings.py', 'deep_hedge_price/tests/test_model_index.py', 'deep_hedge_price/tests/test_docstrings.py']))\n",
+  "exit_code": 0,
+  "passed": 1200,
+  "elapsed_seconds": 4.777313047030475,
+  "ruff_files": [
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py",
+    "johnhull/hullkit/tests/test_dynamic_hedging_statistics.py",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_protocol.py",
+    "johnhull/research/RB-F07/multicurve/design/closed_form_probe.py"
+  ],
+  "ruff": {
+    "check": {
+      "returncode": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    "format": {
+      "returncode": 0,
+      "stdout": "5 files already formatted\n",
+      "stderr": ""
+    }
+  },
+  "full_related_suite_run": false,
+  "source_sha256": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py": "d07d4d1524a005d5b9ebe765922748aadab2175ace98ff12c941c1a38e8497ce",
+    "johnhull/hullkit/tests/test_dynamic_hedging_statistics.py": "f5b433cbf55d24b687927fd72e982832500cfebc166cd8015f63f1ba43614f1d",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f",
+    "deep_hedge_price/tests/test_dynamic_hedging_protocol.py": "54f55ded625e8fcd107fdf0ea6d1948a7d76d1548e208047c7d6d201c560a67c",
+    "johnhull/research/RB-F07/multicurve/design/closed_form_probe.py": "d6a5f9fe75c9c985077ba03fd8ac68dfac8f6fe54c9e9ba9265de4551efe88b3"
+  }
+}

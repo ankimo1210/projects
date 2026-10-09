@@ -1,0 +1,41 @@
+--- a/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py
++++ b/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py
+@@ -560,7 +560,8 @@
+     """Retain raw records and charge each inclusive expense tree once.
+ 
+     Each record requires id, scope, status, parent_id, includes_children, and
+-    timing keys wall_seconds/cpu_seconds/overrun_seconds. Status complete or
++    timing keys wall_seconds/cpu_seconds/overrun_seconds. includes_children must
++    be a bool; truthy numeric/string values are invalid. Status complete or
+     failed permits nonnegative measured values or None (unknown); failed also
+     requires a reason. Pending requires all three timings None. Overrun is a
+     diagnostic subset of wall time, never an extra additive charge.
+@@ -579,6 +580,8 @@
+     for record in records:
+         if not fields <= record.keys() or not record["id"] or not record["scope"]:
+             raise ValueError("expense ID, scope, parent, status and timing keys required")
++        if not isinstance(record["includes_children"], bool):
++            raise ValueError("includes_children must be a bool")
+         identifier = record["id"]
+         if identifier in by_id or record["status"] not in ("complete", "failed", "pending"):
+             raise ValueError("unique expense IDs and known status required")
+--- a/deep_hedge_price/tests/test_dynamic_hedging_protocol.py
++++ b/deep_hedge_price/tests/test_dynamic_hedging_protocol.py
+@@ -142,6 +142,17 @@
+     assert got["unknown_ids"] == ["main"]
+     records[0]["timing"]["wall_seconds"] = -8
+     assert got["raw_records"][0]["timing"]["wall_seconds"] == 10.0
++
++
++@pytest.mark.parametrize("invalid_inclusive", [-1, "false"])
++def test_expenses_reject_nonboolean_inclusive_flag(invalid_inclusive):
++    p = protocol()
++    records = [
++        expense("parent", 2.0, inclusive=invalid_inclusive),
++        expense("child", 1.0, parent="parent"),
++    ]
++    with pytest.raises(ValueError, match="includes_children"):
++        p.validate_expenses(records, required_ids=["parent", "child"])
+ 
+ 
+ @pytest.mark.parametrize(

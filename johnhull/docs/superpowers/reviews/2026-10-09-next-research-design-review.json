@@ -1,0 +1,117 @@
+{
+  "date": "2026-10-09",
+  "scope": "Independent original next-study drafts math/financial/source-scope review; no source/Git/full-suite changes and no implementation/new research ID",
+  "rates_verdict": "approved_for_planning_with_mandatory_design_correction",
+  "xva_verdict": "approved_for_planning_with_mandatory_design_correction",
+  "approved_for_planning": true,
+  "formal_design_implementation_study_accepted": false,
+  "findings": [
+    {
+      "id": "I1",
+      "severity": "Important",
+      "draft": "/tmp/johnhull-next-rates-research.md",
+      "heading": "8. 商品横断のP&L契約",
+      "start_line": 144,
+      "end_line": 150,
+      "title": "Separate exact calendar roll from new curve representation",
+      "risk": "Exact old-curve ratio roll generally cannot be represented on newly resolved fixed-tenor knots. Vf can differ from recalibrated price at q_roll even with zero quote move. Assigning the entire V1-Vf to market Taylor then confounds representation change with quote/fixing risk.",
+      "evidence": {
+        "independent_piecewise_logDF_example": "Old knots[0,.5,1,2,3], logDF[0,-.005,-.04,-.07,-.10], roll.25, new knots[0,.5,1,2], payment old.5",
+        "exact_roll_DF": 0.9975031223974601,
+        "resampled_new_DF": 0.9900498337491681,
+        "unit_CF_difference_at_zero_quote_move": -0.007453288648291978
+      },
+      "minimal_fix": "Preserve shifted absolute old knots with exact roll support or explicitly add regrid/rebootstrap value term. Market Taylor must center on the resulting representable calibrated state and its fixing-conditioned quotes; include a zero-move counterexample."
+    },
+    {
+      "id": "I2",
+      "severity": "Important",
+      "draft": "/tmp/johnhull-next-xva-research.md",
+      "heading": "5. 独立参照と主要実験",
+      "start_line": 90,
+      "end_line": 90,
+      "title": "IM reduction fixture must preserve legal netting boundary",
+      "risk": "Bundle(c) puts hedge in a separate non-nettable set yet proposes IM reduction. With existing terms/threshold fixed, existing set IM is unchanged and new hedge set posted IM is nonnegative; common funding/capital pooling does not permit cross-set IM risk offsets.",
+      "evidence": {
+        "independent_Gaussian_anchor": "Opposite exposures sd100 and80, z99=2.3263478740408408",
+        "before_posted_IM": 232.63478740408408,
+        "separate_set_after": 418.74261732735135,
+        "same_set_after": 46.52695748081682
+      },
+      "primary_source": "MGN20.14; same legal boundary already stated by draft sections1/3/4",
+      "minimal_fix": "Use a same-set different-maturity hedge for IM-benefit/capital-residual bundle and keep separate-set no-IM-offset as a validation comparator. Recompute each set and bank capital/funding aggregates independently."
+    }
+  ],
+  "severity_counts": {
+    "Critical": 0,
+    "Important": 2,
+    "Minor": 0
+  },
+  "coherent_contracts": [
+    "Rates exact block IFT and directional second IFT including calibration curvature/direct quote terms",
+    "LS nonzero residual Hessian, fixed W regularization, KKT active-set boundaries",
+    "D versus projection pseudoDF, basis leg signs, fixing publication/as-of and frozen held coupons",
+    "Date cash bridge telescope, cumulative CF to t1 and explicit ex-payment without double count",
+    "XVA book increment versus standalone/marginal/Euler, paired full revaluation and own hedge charges",
+    "First-to-default densities, delayed closeout numeraire/MPOR cash/settled VM and separate posted/received IM",
+    "Funding from signed cash ledger, separate segregated IM/capital accounts, COLVA sign, net capital charge and account-specific stop dates",
+    "IM Q outer versus stressed physical inner; VaR/ES labels; selected SA-CCR/reduced BA-CVA distinguished from commercial SIMM and whole-bank capital"
+  ],
+  "planning_obligations": [
+    "Resolve dates/fixing availability before rank checks. Zero-start term-forward anchors must still have unfixed contractual resets or be explicitly abstract forward quotes; known reset rows cannot calibrate projection nodes.",
+    "The two Important mathematical corrections must be reflected in formal DESIGN before implementation approval.",
+    "Derive actual Gaussian integration state/dimension for lagged VM/MPOR/coupon/reset history; low-dimensional conditional anchors are not evidence every dated IRS case is1D/2D.",
+    "Closeout/IM-return/funding/K stop times, contractual versus OIS-excess cash costs, and hedge counterparty pooling remain explicit formal-design choices. Existing cash-anchor gates are appropriate."
+  ],
+  "evidence_boundary": {
+    "existing_sources": "Referenced major modules exist and limitations match source; MODEL_INDEX/ROADMAP preserve missing multicurve/full XVA capabilities. Symbol-level lookup also confirmed CDS/HW/risk-allocation/risk helper names. No source numerical certification from this review.",
+    "scratch": "Read draft4quote probe; original research numeric claims were not independently rerun. Two independent tiny mathematical counterexamples run for specific design risks. XVA has no completed study evidence.",
+    "proposed_only": "12quote rank/runtime/full Hessian precision, regulatory equations implementation, formal pilot/main/refinements/tamper/replay/restoration/performance all remain future gates.",
+    "web": "Primary official sources only; no SIMM coefficients copied or legal/jurisdiction assessment."
+  },
+  "primary_sources": [
+    {
+      "title": "BCBS MGN20",
+      "url": "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true",
+      "verified": "One-tail99%/10-day/stress calibration baseline and single legally enforceable netting agreement requirement at MGN20.14. Synthetic IM remains a proxy."
+    },
+    {
+      "title": "BCBS CRE52",
+      "url": "https://www.bis.org/committees/bcbs/basel-framework/standard/cre/52/inforce/2023-01-01/published/2020-06-05",
+      "verified": "Current chapter metadata; NICA excludes bankruptcy-remote segregated bank-posted collateral. Scope outline verified; equation images/entire subset implementation not validated."
+    },
+    {
+      "title": "BCBS MAR50",
+      "url": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/50/inforce/2023-01-01/published/2020-07-08",
+      "verified": "Reduced BA-CVA all-counterparty capital aggregation and discount scalar0.65. No jurisdiction/implementation approval."
+    },
+    {
+      "title": "ISDA SIMM2.8+2512 announcement",
+      "url": "https://www.isda.org/?p=1243627",
+      "verified": "Official search body confirms June12,2026 publication and July11,2026 effective date. Direct open failed; no coefficient methodology/license-use audit."
+    },
+    {
+      "title": "ISDA Licensing FAQ",
+      "url": "https://www.isda.org/2021/04/08/isda-simm-licensing-faq/",
+      "verified": "Users/vendors require relevant ISDA license. Publicly described methodology does not authorize commercial implementation."
+    }
+  ],
+  "source_sha256": {
+    "/tmp/johnhull-next-rates-research.md": "e4735c1a18dcce8d63463f049270609259ac5ab9f1e06b7466e95f9ce44512e9",
+    "/tmp/johnhull-next-xva-research.md": "a651bc231539f4f4c4a09584ac399817ddc7ae0fd66ce037f3c1a10bab48a560",
+    "johnhull/MODEL_INDEX.md": "21e0815e38ef36d8ccbb808403dc7ca0658136fd2caa7fe3018be483f4648787",
+    "johnhull/ROADMAP.md": "04dff3cbfd7228c24f41e39a66257b91b909ed44bd717b02e32c5595fdff2ee3",
+    "johnhull/hullkit/src/hullkit/_quote_risk.py": "e12623ab6058f82a41949cf745dd21818918ad15f8bb5eff832f2318602a7edb",
+    "johnhull/hullkit/src/hullkit/rfr.py": "36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+    "johnhull/hullkit/src/hullkit/_nonstandard_legs.py": "4a962505a118493b8d814dff9d96d1c18482f884459870dbb52d9d1174dd534f",
+    "johnhull/hullkit/src/hullkit/_quote_dml_hedging.py": "77f31b7d0c941503038698d2a011d0f3cd944df238aa24d005f5fb842695ac19",
+    "johnhull/hullkit/src/hullkit/pnl_explain.py": "802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+    "johnhull/hullkit/src/hullkit/_xva_foundations.py": "bbeaf6e1159000a5dc6c1e8402efb7e1c00c572deb3f5ce29a20368af8c05cc1",
+    "johnhull/hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+    "johnhull/hullkit/src/hullkit/_numeraire_choices.py": "1dcee8c8dd2457a3a371818acb90b16da13ba762091f26079e0e10c42fb1219a"
+  },
+  "written_files": [
+    "/tmp/johnhull-next-design-review.md",
+    "/tmp/johnhull-next-design-review.json"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-09",
+  "kind": "task5-private-helper-source-checkpoint",
+  "base_commit": "b7c984322e933cf0e26cfeba5eda048777bbc09c",
+  "branch": "codex/rbf04-dynamic-hedging",
+  "completed_scope": [
+    "Torch-free paired statistics / saved bootstrap / individual ES",
+    "fixed roster / seed namespace / receipt identity / selection boundary",
+    "expense accounting / immutable artifact I/O"
+  ],
+  "task5_complete": false,
+  "formal_pilot_run": false,
+  "formal_freeze": false,
+  "main_study_run": false,
+  "phase_acceptance": false,
+  "full_related_suite_run": false,
+  "source_sha256": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py": "d07d4d1524a005d5b9ebe765922748aadab2175ace98ff12c941c1a38e8497ce",
+    "johnhull/hullkit/tests/test_dynamic_hedging_statistics.py": "f5b433cbf55d24b687927fd72e982832500cfebc166cd8015f63f1ba43614f1d",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f",
+    "deep_hedge_price/tests/test_dynamic_hedging_protocol.py": "54f55ded625e8fcd107fdf0ea6d1948a7d76d1548e208047c7d6d201c560a67c"
+  },
+  "review_receipts": {
+    "task-5-helpers-review.json": {
+      "sha256": "708cb01c07d39a61f737d9fcdf5106e8c70e09cb61a2740ee2750cdd6f4c2f99"
+    },
+    "task-5-helpers-rereview.json": {
+      "sha256": "1fc07e60c09d50789894b43f232fd3f0d7b4f3f1c3f7c464afa1f035cd803862"
+    }
+  },
+  "resolved_findings": [
+    "M1: nonboolean includes_children flag refused before expense aggregation"
+  ],
+  "unresolved_findings": [],
+  "scoped_test_result": {
+    "passed": 1200,
+    "exit_code": 0,
+    "log": "task-5-checkpoint-tests.txt",
+    "run": "task-5-checkpoint-run.json",
+    "count_note": "Six test files; overlaps earlier 1193 guards, counts are not additive."
+  },
+  "ruff_python_file_count": 5,
+  "ruff_scope_note": "Four helper source/test files and one nonproduction rates math probe.",
+  "candidate_roster": {
+    "candidate.json": "23304b8b25285dfb2f82cff6a3f4cb9f2b0b339b02b27d11ffc924fd97d52148",
+    "roster.json": "795a443261f3cd726fc95c7a4b4340aa86ae7dfb438d5f89e7031ca5e7723d2d"
+  },
+  "candidate_note": "Deterministic source-derived candidate and 12-fit / 44-cell roster, not frozen study receipts or executed financial data.",
+  "numeric_comparison": "Tolerances and standard errors; digests bind provenance only.",
+  "pending": [
+    "study orchestrator and saved financial numeric checker",
+    "transitive source closure and actual required expense scopes",
+    "formal accuracy/moment/Q/teacher/position/P&L pilot and independent review",
+    "formal freeze, main fits/cells, replay/fresh/CAS, figures, final suite/phase acceptance/main integration"
+  ],
+  "historical_receipts": "Original SDD absolute paths are historical. Exact-byte copies here retain initial source diff, validation, finding and subsequent repair/rereview."
+}

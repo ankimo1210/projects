@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-09",
+  "kind": "non-production-mathematical-spike",
+  "formal_study_acceptance": false,
+  "source": "closed_form_probe.py",
+  "source_sha256": "d6a5f9fe75c9c985077ba03fd8ac68dfac8f6fe54c9e9ba9265de4551efe88b3",
+  "exit_code": 0,
+  "scope": [
+    "2-curve 4-quote explicit closed-form PV",
+    "complex-step gradient, mixed finite-difference Hessian",
+    "shock-halving first/second residuals",
+    "nonzero-residual LS versus wrong Gauss-Newton sensitivity"
+  ],
+  "not_executed": [
+    "dated 3-curve 12-quote rank/runtime",
+    "formal pilot/main/fresh/CAS/index/release gates"
+  ]
+}
