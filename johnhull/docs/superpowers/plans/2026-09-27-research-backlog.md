@@ -11,7 +11,7 @@
   [market-research 統合仕様](../../../../docs/superpowers/specs/2026-09-27-market-research-design.md)、
   [ADR 0004 保管先](../../../../docs/decisions/0004-artifact-storage-and-evidence.md)。
 
-**研究の現在地（2026-10-09）：** 本編306節のmain統合とRB-F07/F05 v1は完了。[quote DMLの設計](../specs/2026-10-09-calibrated-quote-dml-design.md)と[実施計画](2026-10-09-calibrated-quote-dml.md)の作成後、本人の「研究ロードマップを完遂せよ」に従い実装を開始した。quote DMLを先行し、離散バリア→F04→F08→F06と統合後続候補を保持。Tasks1–2の解析/LRM/conditioning教師・独立参照を実装、教師41件・既存教師/曲線を含む85件PASS。Task1の索引込み728件も確認。学習本実験・研究成果・独立最終レビューは未完了。冒頭の292節・65出典は準備時点の記録である。
+**研究の現在地（2026-10-09）：** 本編306節のmain統合とRB-F07/F05 v1は完了。[quote DMLの設計](../specs/2026-10-09-calibrated-quote-dml-design.md)と[実施計画](2026-10-09-calibrated-quote-dml.md)の作成後、本人の「研究ロードマップを完遂せよ」に従い実装を開始した。quote DMLを先行し、離散バリア→F04→F08→F06と統合後続候補を保持。Tasks1–6を実装し、30NN＋4ridgeの本学習、fresh独立数値照合、core成果のC/F両復元がPASS。直近scoped 974 tests PASS。本計時・総費用・本成果3図・レビュー追加指摘の補完・main反映は未完了。[結果ドラフト](../../../research/RB-F07/quote_dml/README.md)に価格/ヘッジ悪化も記録し、[離散バリア設計§7](../../prep/design/RB-F05_DESIGN.md#7-離散バリア段階の具体化2026-10-09)で次の契約・参照・教師を具体化した。冒頭の292節・65出典は準備時点の記録である。
 
 ## 0. ID の書き方
 

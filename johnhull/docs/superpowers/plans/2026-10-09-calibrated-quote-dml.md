@@ -10,7 +10,7 @@
 
 **Spec:** [調査・研究設計](../specs/2026-10-09-calibrated-quote-dml-design.md)。本文のQ01–Q12を根拠とし、版・確認範囲・未再現の性能主張を引き継ぐ。
 
-- 更新日：2026-10-09。**実装中。Tasks1–2完了：教師41 tests PASS。Task1の曲線/索引込み728 tests、ruff/formatもPASS。学習本実験は未実施。**
+- 更新日：2026-10-09。**Tasks1–6実装済み。30NN＋4ridgeの本学習、保存重み・独立数値の再検査、core成果の両保管庫からの復元が完了。直近scoped 974 tests PASS。Task7の100反復本計時と追加レビュー修正、Task8の本成果3図・採否・最終レビュー・main反映は未完了。**
 - 本編P0–P8、306節acceptedの状態を変更しない。
 - 本人の「研究ロードマップを完遂せよ」に従い、quote DMLを先行し、既存離散バリア→F04→F08→F06と統合研究の後続候補も保持する。
 
@@ -468,4 +468,6 @@ ruff format --checkは同じ対象Pythonへ実行する。notebook builderの既
 - Task5–6は並行で実装後、独立レビューと一括scoped gateで閉じる。安全wrapperをpolicy.py、MC診断をdiagnostics.py、計時をbenchmark.pyへ分離し、runnerから呼ぶ。各専用testも最終scoped gateへ追加する。
 - 群ID・shock/cost軸・train尺度・fit registryを保存フラグとは独立に再検査する。較正/fit例外では入力と部分成果を返して保存する。
 - 1方式導入のoffline費用はサイズ別train教師＋setup/fit/export、全比較費用は全分割教師＋全fitとし、評価oracle費用を混同しない。
-- main本学習・本計時・教材・最終レビューは未完了。smokeは30本各2updates＋4ridgeで、性能採用へ用いない。
+- 本学習は30本各512updates＋4ridgeを完遂、budget failureなし。fresh独立数値照合はPASS。本計時は保存重みを使う別工程として実行中。
+- 追加レビューでfit metadataの固定条件、計時measurement registry、保存discountとintegrated rateの不変条件の検査不足を検出。負のtestを準備し、本計時終了後にRED→GREENを確認する。
+- notebook builderの小fixtureはartifact-only実行と3図を確認済み。本成果の実行・表示・費用採否・最終レビューはこれから。smokeの性能は主実験の結論へ使わない。

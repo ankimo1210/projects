@@ -72,3 +72,64 @@ S002 v2 の原PDFには、式(3)のGBMドリフトの1/2欠落、式(18)の密�
 - 新規32 tests、既存aad/exotics/quote-risk/pricing-lossと両packageの索引/docstringを含む807 tests PASS。変更Python7ファイルruff/format、独立積分・MC再生成・保存重みからのNumPy推論・4種改竄検査PASS。artifact-only notebook3図をfresh実行し目視確認。
 - 3seedすべてでDMLの価格/delta RMSE改善、deltaは約32–71%減。解析約0.12µs/件、ネット約1.3µs/件、補間もより高精度/高速。速度での標準採用は不採用、教師と教育比較は採用。入力・全seedの誤差/SE/重み/総費用は[研究資料](../../../research/RB-F05/README.md)に保存。
 - 本編台帳/教材/既存vol18配列には変更なし。レビュー修正の検証後にv1をmainへ反映する。離散バリアの監視日/精度は次段階、0DTE/roughは後続。
+
+## 7. 離散バリア段階の具体化（2026-10-09）
+
+状態：次工程の設計。実装・pilot・本比較は未実施。
+本人の研究ロードマップ完遂指示に従い、quote DMLの採否記録後に実施する。
+目的は、経路の途中の不連続性が微分教師と学習・費用へどう影響するかを切り分けること。
+digitalの結果や論文の性能倍率を、この契約の結果として使わない。
+
+### 契約と対象
+
+- 配当なしGBM、K=100、固定H=120、r=3%、sigma=20%、rebate=0のup-and-out call。
+- 主比較は正時点m=12回の等間隔監視に時点0を加える。
+  監視集合={0,T/m,2T/m,...,T}、計13時点。接触S>=HでKO。
+  S=80–119、T=.25–2年を候補領域とし、pilotで参照と教師の数値成立を確認する。
+- spot Deltaのみ。Sを動かしてもK/H/満期/監視回数は固定する。
+  満期方向のNN導関数は契約日程の変更を含むため、Delta教師やヘッジとして評価しない。
+- 監視頻度の診断ではTを固定してm=1/4/12/48を比較し、初回t1=T/mと教師SEを保存する。
+  連続監視への収束を、固定m=12契約の数値参照の収束と区別する。
+- S=Hでは時点0のKOによるジャンプがあり、通常のDeltaを定義しない。
+  Hの下側で価格を強制的に0へ接続するNN制約を入れない。
+  固定H>K・満期監視の価格範囲は0から(H-K)exp(-rT)。Deltaの非負性は要求しない。
+
+### 独立参照と教師
+
+1. **m=1検算。** 満期にK<ST<Hだけ支払うcallの正規CDF式、切断lognormal積分、S中央差分を照合する。
+   通常callを別契約として比較する。Hのindicatorを微分しないPW期待値はPhi(d1K)-Phi(d1H)で、通常call Deltaそのものではない。
+   正しいDeltaは、このPW期待値から(H-K)exp(-rT)phi(d2H)/(S*sigma*sqrt(T))を引く。
+   この密度境界項を直接検算して、接触を落とした負の対照を検出する。
+2. **主参照。** log-priceの正規Markov遷移を、監視時点だけkillして逐次積分する。
+   価格と最初のtransition密度のS微分を別に積分する。
+   積分領域・次数・strikeでの分割の収束を保存し、監視集合mは変えない。
+3. **独立数値検算。** log-priceのGBM PDEを、監視日間はHの上も含む領域で解き、監視日にだけKOする。
+   空間・時間格子を別に倍増し、S bumpの幅を変える。
+   Hを区間内の吸収境界にしない。BGK近似と全node吸収treeは誤差比較器として扱う。
+4. **教師。** raw LRM、最終増分を条件付けしたLRM、途中のindicatorを微分しないPW負対照、one-step survivalを比較する。
+   LRMのscoreは初回Z1/(S*sigma*sqrt(t1))。
+   conditioned LRMはm>=2で最終増分だけを消去し、初回scoreを保持する。m=1は独立解析を使う別の検算。
+   one-step survivalは生存確率の重みと条件付き状態の両方を微分する。
+   指示関数だけを平滑化した教師を不偏と呼ばない。
+5. teacher bias、IID MC SE、CRN bumpのsamplingと幅依存、参照の積分/PDE誤差を分離する。
+   rare survival、SE=0、逆正規CDFのendpoint、重みunderflowは明示的に記録する。
+   pilotは独立streamで、参照次数・許容差・学習budgetを本比較前に固定する。
+
+### 学習と成果の閉じ方
+
+- 主比較は同じconditioned price教師を使うprice-only対conditioned-LRM DML。
+  S/T入力、同じ小型CPU float64ネット、同じ初期/batch seed11/29/47、train-only正規化、共通update/時間budget。
+  同一pathをsplit間で共有しない。validationは診断に使い、testで設定・seedを選ばない。
+- OSSを学習へ追加する場合は、同じOSS価格教師のprice-only対照も追加し、教師平滑化と微分lossを分離する。
+  原典教師の比較・検算を省略して、解析ラベルだけの学習へ置き換えない。
+- 強い比較器は収束した逐次積分、価格と同じ補間器の導関数を使う補間。
+  NN/補間の教師生成・学習・load・OOD判断・fallbackを含む総費用を別々に記録する。
+  参照数値精度または費用回収が不足すれば、速度での採用はしない。
+- 保存成果：契約/全入力/monitoring/stream、教師mean/SE、参照収束、全seed重み/予測/誤差、raw/safe/費用。
+  再学習しないcheck、artifact-only3図、独立レビューと採否記録で完了を判定する。
+- private金融計算はhullkit、torch学習はdeep_hedge_price、記録と教材はresearch/RB-F05/discrete/。
+  公開API、依存、本編台帳、既存digital v1を変更しない。
+  0DTE・rough・動的ヘッジは後続の研究として残す。
+
+出典と確認範囲は[追加調査](RB-F05_DISCRETE_RESEARCH.md)に記録。
+S002のbarrierは中間時点のみのdown-and-outであり、本設計と同じ契約の再現とは呼ばない。
