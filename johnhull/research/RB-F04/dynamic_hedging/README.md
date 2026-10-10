@@ -2,7 +2,7 @@
 
 2026-10-10。**Tasks1–4、Task5統計/protocolとstudy/replay/runner/checkerのprivate source実装・独立レビュー完了（開発branch）。37quotes/18states、tiny全44cells、actual N1024教師を事前測定。Task5全体・正式pilot/freeze/主実験/研究受入・main統合は未完了。** 別execution契約・固定domain・保存再計算・入口の限定source承認を完了。12本の学習・検証sourceと、主実験結果の分割保存接続も限定承認済み。fresh実行器・保存checkerの限定source確認を完了。初回sourceの元3,138ジョブの資源prior・正確cap recipeを独立承認し、正式metadata lockを生成した。初回正式pilotは69件executed＋70番の日付gateでKeyError Nとなり停止（外側580.029秒、資源capなし）。native cacheのoriginal_Nを読む1行修正と実cache→日付gate→保存checkerの2回帰を追加し、関連246tests・2Python Ruff/format PASS。旧partial・原失敗・費用を保持。修正版sourceへのprior再結合・正式metadata lock・別root起動許可を完了し、fresh正式pilotを2026-10-10 10:22:45 UTCに再開した。完走・saved検算・freeze/main・研究受入は未完了。
 
-最新の保存量対策（2026-10-10）：修正版の旧停止gateを原N1024のsaved executedとして確認（金融数値検査は未完了）。非teacher結果の原raw反復と無圧縮NPZを診断し、closed packのexactbyte共有を4,978 filesへ適用、別inode割当143.65GBを削減した。81 runtime source/元数学/入力/原費用は不変、v2の12合成tests/Ruff・全8原journalの実postcheck PASS。JSON床と両復元の再膨張は残り、全phase容量は未保証。正式pilotは同じsession21286で継続、freeze/main/受入は未完了。[測定・証跡・費用](implementation/PILOT_BUDGET_MEASUREMENTS.md#派生結果の保存量と原byte共有2026-10-10)。
+最新の保存量対策（2026-10-10）：修正版の旧停止gateを原N1024のsaved executedとして確認（金融数値検査は未完了）。非teacher結果の原raw反復と無圧縮NPZを診断し、closed packのexactbyte共有を6,369 filesへ適用、別inode割当145.54GBを削減した。81 runtime source/元数学/入力/原費用は不変、v2の12合成tests/Ruff・全9原journalの実postcheck PASS。JSON床と両復元の再膨張は残り、全phase容量は未保証。正式pilotは同じsession21286で継続、freeze/main/受入は未完了。[測定・証跡・費用](implementation/PILOT_BUDGET_MEASUREMENTS.md#派生結果の保存量と原byte共有2026-10-10)。
 
 以下のリンクは各sourceレビュー時点の範囲を記録する。現在の実行状態・root承認・原費用は[正式priorと実起動](implementation/PILOT_BUDGET_MEASUREMENTS.md#正式prior固定と実起動2026-10-10)を参照。
 

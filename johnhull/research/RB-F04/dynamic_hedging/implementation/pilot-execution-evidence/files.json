@@ -6150,6 +6150,42 @@
       "archive": "task-5-storage-proof-root-document-check-v3.json",
       "bytes": 486,
       "sha256": "f4a5b755b43e3fffeef27bca5295c5381cc3a2255ab625f2147e46095b2d1a4e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v8-start.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v8-start.json",
+      "bytes": 655,
+      "sha256": "0efe8d5718be8df9f64c60d33ffcdbaa80f9f85ef2f8ba77d64f3ac3e151c04f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v8.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v8.json",
+      "bytes": 2020,
+      "sha256": "2d58c8b5b4a6dfa96992a381c8f55b001fc3598a49a934265672e3cbf375266f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v8.jsonl",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v8.jsonl",
+      "bytes": 3147126,
+      "sha256": "6ac2a9820b51f9dfef9d65c4f6e848b4329539340e3b1c6e86e6e7eff9e3f77c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-postcheck-v3.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-postcheck-v3.json",
+      "bytes": 684,
+      "sha256": "0e1b18874b7314b05c47c4a1c3ae68e9da6c71b9bc9ab38581066a3dc998ee03"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-closed-proof-cas-root-manifest-v3.json",
+      "archive": "task-5-stage-npz-hardlink-closed-proof-cas-root-manifest-v3.json",
+      "bytes": 1287,
+      "sha256": "a353c59bd2d42a4f260c824ceb851289a6fee50e061a825832d8236d62398a55"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-closed-proof-cas-root-receipt-v3.json",
+      "archive": "task-5-stage-npz-hardlink-closed-proof-cas-root-receipt-v3.json",
+      "bytes": 989,
+      "sha256": "9498f0bfb909c53fef3293e0d6f5670821364cc6197b557b05684ff142752782"
     }
   ],
   "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending",
@@ -6159,8 +6195,10 @@
   "initial_partial_terminal_store_status": "both_primary_and_mirror_byte_storage_PASS; numerical_qualification_unknown",
   "corrected_source_prior_metadata_store_manifest_ref": "artifact:sha256:2dae5d8d261e3db8adbf27c37ecb6597b098d9be9e94c3d0ac4ebc8e754a8c32",
   "corrected_source_prior_metadata_store_status": "both_primary_and_mirror_byte_storage_PASS; live_financial_raw_excluded; numerical_qualification_unknown",
-  "live_closed_npz_byte_share_count": 2124,
-  "live_closed_npz_byte_share_old_single_link_inode_allocated_bytes": 53243871232,
+  "live_closed_npz_byte_share_count": 6369,
+  "live_closed_npz_byte_share_old_single_link_inode_allocated_bytes": 145539321856,
   "closed_storage_operation_proof_store_manifest_ref": "artifact:sha256:3c56884548a8a44d976d2a32300912c5a84f2e028dc370708cbc1ddcf3b456d2",
-  "closed_storage_operation_proof_store_status": "both_primary_and_mirror_byte_storage_PASS; live_financial_tree_excluded"
+  "closed_storage_operation_proof_store_status": "both_primary_and_mirror_byte_storage_PASS; live_financial_tree_excluded",
+  "closed_storage_operation_proof_extension_store_manifest_ref": "artifact:sha256:a353c59bd2d42a4f260c824ceb851289a6fee50e061a825832d8236d62398a55",
+  "closed_storage_operation_proof_extension_store_status": "both copies verified; no financial semantic restore"
 }

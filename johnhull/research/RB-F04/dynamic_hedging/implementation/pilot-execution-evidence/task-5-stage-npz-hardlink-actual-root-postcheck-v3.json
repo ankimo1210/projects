@@ -1,0 +1,17 @@
+{
+  "certain_released_allocated_bytes": 145539321856,
+  "current_paths_checked": 6767,
+  "failures": [],
+  "financial_qualification": "unknown",
+  "financial_regeneration": 0,
+  "financial_source_changed": false,
+  "frozen_financial_source_files": 81,
+  "full_three_suites_run": false,
+  "journals": 9,
+  "npz_byte_evidence": "each actual operation performed full before/after SHA; current latest intent/success/rollback physical stat and original receipt+metadata rechecked; nlink may grow without changing file content",
+  "observed_utc": "2026-10-10T12:36:14.419661+00:00",
+  "rolled_back": 2,
+  "status": "PASS",
+  "successful_links": 6369,
+  "wall_seconds": 1.9797942639997927
+}

@@ -1,0 +1,33 @@
+{
+  "backend_sha256": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+  "cost": {
+    "cpu_seconds": 0.03291124599999999,
+    "final_receipt_write_cost": "not included",
+    "peak_self_rss_bytes": 25387008,
+    "wall_seconds": 1.4806275770024513
+  },
+  "financial_qualification": "unknown",
+  "live_financial_raw_included": false,
+  "manifest_ref": "artifact:sha256:a353c59bd2d42a4f260c824ceb851289a6fee50e061a825832d8236d62398a55",
+  "observed_utc": "2026-10-10T12:38:43.664535+00:00",
+  "original_selected_bytes_unchanged": true,
+  "selected_bytes": 3151772,
+  "selected_paths": 4,
+  "semantic_financial_restore": false,
+  "status": "PASS",
+  "unique_blobs_including_manifest": 5,
+  "vaults": [
+    {
+      "existing_unique_blobs": 0,
+      "new_unique_blobs": 5,
+      "role": "primary",
+      "verified_unique_blobs": 5
+    },
+    {
+      "existing_unique_blobs": 0,
+      "new_unique_blobs": 5,
+      "role": "mirror",
+      "verified_unique_blobs": 5
+    }
+  ]
+}
