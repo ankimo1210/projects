@@ -1,0 +1,50 @@
+{
+  "schema": "rb-f04-external-expense-receipt-adapter-fixed-v2",
+  "files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-v2.py",
+      "bytes": 22807,
+      "sha256": "1b862d0bdcfaa68a740b77c00f3fd0508a8afe5227e0be96c3289cb1df9df6d3"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-preflight-v2.py",
+      "bytes": 10561,
+      "sha256": "041dcb9a1080a4069c3aad8643bbd5f4ce3ad078fa18c8025c0e99d4750cdd96"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-results-v2.json",
+      "bytes": 5025,
+      "sha256": "ee04a2fda90d5df51532eb5c6dce63e82183100493b5182b18a07fa6b0dd2516"
+    }
+  ],
+  "source82_closure": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json",
+    "sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5"
+  },
+  "source_canonical_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "source82_all_original_bytes_unchanged": true,
+  "original_v1_and_producer_bytes": {
+    "task-5-external-expense-receipt-adapter-v1.py": "3b8604e14ce4efa160da29a601ece07376a5097946849832252d862e1ea7f14e",
+    "task-5-external-expense-receipt-adapter-preflight-v1.py": "5c1f88570bef1ce225ad16c50f0c7aa8913d38d667fa8c5e268a502fd9682c28",
+    "task-5-external-expense-receipt-adapter-results-v1.json": "303a5d84064c3d684b6103073c975459b17ed2a9a0f37ba50511a50d179a6d9d",
+    "task-5-external-expense-receipt-adapter-fixed-manifest-v1.json": "33f688701e75f249ef466939326f26df1cc65dfaa9381762506e9d1743ead3fd",
+    "task-5-full-child-expense-observer-v1.py": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57",
+    "task-5-full-child-expense-observer-preflight-v1.py": "99f97dbe4a5fcad6fb6cb3769570cbbf1f90b97e10de2621925514191badf07b",
+    "task-5-full-child-expense-observer-results-v1.json": "9b79e06913bb1223c50635f5f20975b3c0dc8ee845bf5dadb19fed1669712e30",
+    "task-5-full-child-expense-observer-fixed-manifest-v1.json": "1a98e034b87f12e452c9d931686f6ad77947952a7fcc344ef6ccdfece221f82d"
+  },
+  "changed_existing_function_AST": [
+    "build_candidate"
+  ],
+  "adapter_delta": "--- task-5-external-expense-receipt-adapter-v1.py\n+++ task-5-external-expense-receipt-adapter-v2.py\n@@ -213,7 +213,7 @@\n         \"raw_snapshot_sha256\": original_raw_digest,\n     }\n     _require(actual_bindings == expected_bindings, \"original source/plan/input/raw bindings differ\")\n-    accepted, unclosed, provenance, seen = [], [], [], set()\n+    accepted, supplemental, unclosed, provenance, seen = [], [], [], [], set()\n     receipts_by_id = {}\n     for ref in receipt_refs:\n         _require(isinstance(ref, dict), \"receipt reference must be an object\")\n@@ -247,6 +247,20 @@\n                         provided[key] == expected_bindings[key],\n                         \"receipt original source/plan/input/raw binding differs\",\n                     )\n+        if \"administrative_unclosed_expense\" in receipt:\n+            _require(\n+                isinstance(provided, dict) and set(BINDING_KEYS) <= provided.keys(),\n+                \"administrative expense requires original source/plan/input/raw bindings\",\n+            )\n+            administrative = receipt[\"administrative_unclosed_expense\"]\n+            _require(isinstance(administrative, dict), \"administrative expense row required\")\n+            _require(\n+                administrative.get(\"id\") not in EXTERNAL_IDS,\n+                \"supplemental expense cannot replace a required external ID\",\n+            )\n+            row = copy.deepcopy(administrative)\n+            row[\"receipt_provenance\"] = provenance[-1].copy()\n+            supplemental.append(row)\n         reason = None\n         expense = receipt.get(\"expense\")\n         if not isinstance(provided, dict) or not set(BINDING_KEYS) <= provided.keys():\n@@ -310,6 +324,14 @@\n             expense = job[\"expense\"]\n             _require(expense[\"id\"] not in actual_parents, \"duplicate native job/phase expense ID\")\n             actual_parents[expense[\"id\"]] = (expense, job.get(\"timing_events\"))\n+    # Supplemental collisions use the existing expense contract, including\n+    # native IDs that would otherwise be outside the external ancestor subset.\n+    for row in supplemental:\n+        if row.get(\"id\") in actual_parents:\n+            protocol.validate_expenses(\n+                [actual_parents[row[\"id\"]][0], row], required_ids=[row[\"id\"]]\n+            )\n+    supplemental_by_id = {row[\"id\"]: row for row in supplemental}\n     accepted_by_id = {row[\"id\"]: row for row in accepted}\n     _require(\n         not (set(accepted_by_id) & set(actual_parents)), \"external ID collides with native expense\"\n@@ -325,6 +347,8 @@\n             chain.add(parent_id)\n             if parent_id in accepted_by_id:\n                 parent_id = accepted_by_id[parent_id][\"parent_id\"]\n+            elif parent_id in supplemental_by_id:\n+                parent_id = supplemental_by_id[parent_id][\"parent_id\"]\n             elif parent_id in actual_parents:\n                 parent, events = actual_parents[parent_id]\n                 check_actual_clock(parent, events)\n@@ -343,7 +367,9 @@\n         reason = native_ancestors(row)\n         if reason:\n             dropped[row[\"id\"]] = reason\n-    complete_forest = [*native_rows.values(), *accepted]\n+    for row in supplemental:\n+        _require(native_ancestors(row) is None, \"supplemental expense parent remains unclosed\")\n+    complete_forest = [*native_rows.values(), *accepted, *supplemental]\n     by_id = {row[\"id\"]: row for row in complete_forest}\n     # Validate original shape/cycles before dropping unknown coverage. A\n     # malformed known parent graph never becomes a candidate accounting PASS.\n@@ -421,28 +447,33 @@\n     # Include only actual native ancestors still referenced by accepted rows;\n     # their expense remains in the original snapshot, not injected a second time.\n     needed = set()\n-    for row in accepted:\n+    for row in [*accepted, *supplemental]:\n         parent_id = row[\"parent_id\"]\n         while parent_id is not None:\n             if parent_id in native_rows:\n                 needed.add(parent_id)\n             parent_id = by_id[parent_id][\"parent_id\"]\n     native_rows = {eid: row for eid, row in native_rows.items() if eid in needed}\n-    complete_forest = [*native_rows.values(), *accepted]\n+    external_rows = [*accepted, *supplemental]\n+    complete_forest = [*native_rows.values(), *external_rows]\n     expense_validation = protocol.validate_expenses(\n         complete_forest, required_ids=[row[\"id\"] for row in complete_forest]\n+    )\n+    _require(\n+        not ({row[\"id\"] for row in supplemental} & set(expense_validation[\"excluded_ids\"])),\n+        \"unclosed administrative expense cannot be absorbed by an inclusive ancestor\",\n     )\n     if accepted:\n         execution._current_expenses(complete_forest, [row[\"id\"] for row in accepted])\n     missing = [eid for eid in EXTERNAL_IDS if eid not in accepted_by_id]\n     derived = dict(snapshot)\n-    derived[\"external_expenses\"] = accepted\n+    derived[\"external_expenses\"] = external_rows\n     small_lineage = {\n         \"original_raw_snapshot_sha256\": original_raw_digest,\n         \"source_plan_input_raw_bindings\": actual_bindings,\n         \"receipt_refs\": provenance,\n         \"parent_inclusion_receipt_refs\": inclusion_provenance,\n-        \"external_expense_rows_sha256\": payload_digest(accepted),\n+        \"external_expense_rows_sha256\": payload_digest(external_rows),\n     }\n     return {\n         \"snapshot\": derived,\n@@ -463,6 +494,7 @@\n             for eid in EXTERNAL_IDS\n         ],\n         \"missing_external_expense_ids\": missing,\n+        \"supplemental_expense_ids\": [row[\"id\"] for row in supplemental],\n         \"unclosed_receipts\": unclosed,\n         \"authenticated_native_parent_ids\": sorted(native_rows),\n         \"expense_validation\": expense_validation,\n",
+  "required10_order_unchanged": true,
+  "original_raw_not_changed_or_deepcopied": true,
+  "small_lineage_includes_all_emitted_required_and_supplemental_rows": true,
+  "validation_scope": "tiny producer-format receipts; original v1 RED and unknown admin preservation, duplicate/native/cycle/inclusive absorption refusal; no repeated v1 full suite",
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "actual_finance_native_CAS_Git_operations": 0
+}

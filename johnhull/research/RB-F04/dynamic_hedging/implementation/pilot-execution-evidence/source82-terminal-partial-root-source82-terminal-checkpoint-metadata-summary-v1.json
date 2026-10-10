@@ -1,0 +1,84 @@
+{
+  "schema": "rb-f04-root-terminal-checkpoint-metadata-inspection-v1",
+  "UTC": "2026-10-10T17:42:06.811324+00:00",
+  "original_candidate_sha256": "be40aa307820ac9f21e43cd850100838ec2dfa9809dc0207afab5f8a6502dab0",
+  "checkpoint_artifact_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "a11f2164613d1c418a1a657e6049ee79ad19a1544004922a4162492ea0ae19b9",
+    "metadata_sha256": "7daad2985e6737096910f10036f60624f684365156416169346d4330de3add24",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "snapshot_keys": [
+    "artifact_directory",
+    "attempt_bindings",
+    "case_bindings",
+    "events",
+    "execution_phases",
+    "financial_qualification",
+    "history",
+    "input_bindings",
+    "jobs",
+    "locked_plan",
+    "schema",
+    "source",
+    "source_root",
+    "teacher_verification_events",
+    "test_opened",
+    "verification"
+  ],
+  "job_status_counts": {
+    "executed": 213,
+    "unclosed_source_or_solver_defect": 1
+  },
+  "job_rows": 214,
+  "last_jobs": [
+    {
+      "id": "stage:Heston:N1024:coarse:refinement:pnl:cell:local:U2:band:Heston:pnl",
+      "status": "executed",
+      "reason": null,
+      "financial_qualification": "unknown"
+    },
+    {
+      "id": "stage:Heston:N1024:coarse:refinement:pnl:cell:local:U2:band:local:pnl",
+      "status": "executed",
+      "reason": null,
+      "financial_qualification": "unknown"
+    },
+    {
+      "id": "stage:Heston:N1024:coarse:gate",
+      "status": "unclosed_source_or_solver_defect",
+      "reason": "KeyError: 'result'",
+      "financial_qualification": "unknown"
+    }
+  ],
+  "snapshot_metadata": {
+    "schema": "rb-f04-pilot-raw-v1",
+    "financial_qualification": "unknown",
+    "test_opened": false,
+    "verification": null
+  },
+  "original_bindings": {
+    "source_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "plan_sha256": "78d80da8a530bcdb64ecedc1e36082ea955b059e90f06e1e11900a5479d3a9b5",
+    "input_bindings_sha256": "9eb354d71cfc5542c2ddccd46163827cc0f51d3d97a6d57b95b1b1dda53b4cd6",
+    "raw_snapshot_sha256": "9ae030e780becb9d2e1912cc520c7255dd1371602a57a1396375ff2944388333"
+  },
+  "numerical_saved_check_run": false,
+  "financial_regeneration": false,
+  "whole_native_hydration_run": false,
+  "finance_acceptance": false,
+  "timing": {
+    "wall_seconds": 33.786875096,
+    "cpu_seconds": 33.231951206
+  },
+  "timing_events": {
+    "wall_start_ns": 78557807156050,
+    "wall_stop_ns": 78591594031146,
+    "cpu_start_ns": 35724854,
+    "cpu_stop_ns": 33267676060
+  },
+  "kernel_peak_RSS_bytes": 4257521664,
+  "startup_and_own_final_receipt_write_stdout_tail_unknown": true,
+  "not_assigned_to_financial_external10": true
+}

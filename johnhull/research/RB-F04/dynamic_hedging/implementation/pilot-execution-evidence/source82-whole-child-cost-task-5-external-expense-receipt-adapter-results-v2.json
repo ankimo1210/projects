@@ -1,0 +1,91 @@
+{
+  "schema": "rb-f04-external-expense-adapter-admin-retention-pure-v2",
+  "status": "PASS",
+  "original_RED": {
+    "source": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-v1.py",
+      "sha256": "3b8604e14ce4efa160da29a601ece07376a5097946849832252d862e1ea7f14e"
+    },
+    "status": "RED_expected",
+    "trace": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-preflight-v2.py\", line 118, in main\n    assert ADMIN_ID in [row[\"id\"] for row in value[\"snapshot\"][\"external_expenses\"]], (\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: fixed v1 erased producer administrative unknown cost\n"
+  },
+  "initial_v2_RED": {
+    "schema": "rb-f04-external-expense-adapter-admin-retention-pure-v2",
+    "status": "RED_expected",
+    "RED_returncode": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-preflight-v2.py\", line 211, in <module>\n    main()\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-preflight-v2.py\", line 119, in main\n    assert emitted[-1][\"id\"] == ADMIN_ID\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+    "preflight_sha256": "d4e495f4add60692a0455551f70481807a2448a8a0f7d0ae0be4c3d727bbe210",
+    "financial_qualification": "unknown",
+    "actual_finance_native_CAS_Git_operations": 0
+  },
+  "checks": [
+    "producer receipt admin retained detached; required10 complete but full costs unknown",
+    "admin survives when producer whole required scope remains unclosed",
+    {
+      "reject": "duplicate supplemental ID",
+      "reason": "unique expense IDs and known status required"
+    },
+    {
+      "reject": "supplemental native expense ID collision",
+      "reason": "unique expense IDs and known status required"
+    },
+    {
+      "reject": "supplemental self-cycle",
+      "reason": "invalid expense parent cycle"
+    },
+    {
+      "reject": "unknown admin cannot disappear inside inclusive parent",
+      "reason": "unclosed administrative expense cannot be absorbed by an inclusive ancestor"
+    },
+    "immutable raw; fixed10 order and original clocks/provenance unchanged"
+  ],
+  "raw_digest_call_count": 7,
+  "raw_digest_count_scope": "one per build invocation",
+  "source82_all_original_bytes_unchanged": true,
+  "fixed_v1_and_producer_files": {
+    "task-5-external-expense-receipt-adapter-v1.py": "3b8604e14ce4efa160da29a601ece07376a5097946849832252d862e1ea7f14e",
+    "task-5-external-expense-receipt-adapter-preflight-v1.py": "5c1f88570bef1ce225ad16c50f0c7aa8913d38d667fa8c5e268a502fd9682c28",
+    "task-5-external-expense-receipt-adapter-results-v1.json": "303a5d84064c3d684b6103073c975459b17ed2a9a0f37ba50511a50d179a6d9d",
+    "task-5-external-expense-receipt-adapter-fixed-manifest-v1.json": "33f688701e75f249ef466939326f26df1cc65dfaa9381762506e9d1743ead3fd",
+    "task-5-full-child-expense-observer-v1.py": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57",
+    "task-5-full-child-expense-observer-preflight-v1.py": "99f97dbe4a5fcad6fb6cb3769570cbbf1f90b97e10de2621925514191badf07b",
+    "task-5-full-child-expense-observer-results-v1.json": "9b79e06913bb1223c50635f5f20975b3c0dc8ee845bf5dadb19fed1669712e30",
+    "task-5-full-child-expense-observer-fixed-manifest-v1.json": "1a98e034b87f12e452c9d931686f6ad77947952a7fcc344ef6ccdfece221f82d"
+  },
+  "source_canonical_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "financial_qualification": "unknown",
+  "finance_acceptance": false,
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "actual_finance_native_CAS_Git_operations": 0,
+  "pure_probe_wall_seconds": 0.194069067,
+  "pure_probe_cpu_seconds": 1.506810643,
+  "end_of_measurement_receipt_write_tail_seconds": null,
+  "verification": [
+    {
+      "check": "ruff",
+      "returncode": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "check": "format_check",
+      "returncode": 0,
+      "stdout": "2 files already formatted\n",
+      "stderr": ""
+    },
+    {
+      "check": "compile_two_sources",
+      "returncode": 0,
+      "bytecode_write": false
+    }
+  ],
+  "final_preflight_process": {
+    "returncode": 0,
+    "stdout": "{\"status\": \"PASS\", \"check_count\": 7, \"result_sha256\": \"cd00c4157221514fc2e904742404d1798712d568418cb278be11db0215afcc26\"}\n",
+    "stderr": ""
+  },
+  "changed_scope": "D2 adapter-v2 only; original adapter-v1 and full-child producer fixed bytes unchanged"
+}

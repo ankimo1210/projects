@@ -1,0 +1,372 @@
+{
+  "schema": "rb-f04-independent-full-child-expense-observer-source-mechanics-review-v1",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent read-only source/mechanics reviewer",
+  "scope": "Fixed D2 observer809d only: future child lifecycle actual-clock mechanics, unchanged original prefix provenance, pending admin preservation; no end-to-end expense injection or finance.",
+  "approved_source_sha256": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57",
+  "fixed_source_and_manifest_checks": {
+    "status": "PASS",
+    "fixed_file_SHA": {
+      "task-5-full-child-expense-observer-v1.py": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57",
+      "task-5-full-child-expense-observer-preflight-v1.py": "99f97dbe4a5fcad6fb6cb3769570cbbf1f90b97e10de2621925514191badf07b",
+      "task-5-full-child-expense-observer-results-v1.json": "9b79e06913bb1223c50635f5f20975b3c0dc8ee845bf5dadb19fed1669712e30",
+      "task-5-full-child-expense-observer-fixed-manifest-v1.json": "1a98e034b87f12e452c9d931686f6ad77947952a7fcc344ef6ccdfece221f82d",
+      "task-5-full-pilot-root-saved-check-enclosing-v2.py": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc",
+      "task-5-external-expense-receipt-adapter-v1.py": "3b8604e14ce4efa160da29a601ece07376a5097946849832252d862e1ea7f14e",
+      "independent-external-expense-receipt-adapter-v1-decision.json": "36a4f47b9e866c113a96f2bce72f32ac3846d793aad0252fe58b9231fe9a6326"
+    },
+    "manifest_entries": [
+      {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-v1.py",
+        "bytes": 14648,
+        "sha256": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57"
+      },
+      {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-preflight-v1.py",
+        "bytes": 15388,
+        "sha256": "99f97dbe4a5fcad6fb6cb3769570cbbf1f90b97e10de2621925514191badf07b"
+      },
+      {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-results-v1.json",
+        "bytes": 17815,
+        "sha256": "9b79e06913bb1223c50635f5f20975b3c0dc8ee845bf5dadb19fed1669712e30"
+      }
+    ],
+    "source82_current_exact_bytes": true,
+    "dynamic_imports": 0,
+    "helper_imports": [
+      "__future__",
+      "argparse",
+      "hashlib",
+      "json",
+      "math",
+      "os",
+      "resource",
+      "subprocess",
+      "sys",
+      "time",
+      "pathlib"
+    ],
+    "legacy_adapter_unconnected_administrative_expense": true,
+    "actual_root_guard_or_terminal_native_read": false,
+    "finance_RNG_CAS_Git": 0
+  },
+  "independent_tiny_check_groups": [
+    {
+      "name": "false_guard_and_original_binding_rejected_before_Popen_or_output",
+      "status": "PASS",
+      "detail": {
+        "false_guard": "refused",
+        "original_four_binding_difference": "refused",
+        "Popen_calls": 0,
+        "output_created": false
+      }
+    },
+    {
+      "name": "whole_child",
+      "status": "PASS",
+      "detail": {
+        "actual_stub_exit": 0,
+        "original_prefix_bytes_preserved": true,
+        "tail_reap_wall_seconds": 0.02847492,
+        "single_inclusive_CPU_seconds": 0.022867939,
+        "pure_CPU_tail": null,
+        "outer_admin_stays_independent_pending": true,
+        "full_expense_total_with_admin": {
+          "wall_seconds": null,
+          "cpu_seconds": null
+        },
+        "overrun": 0,
+        "whole_child_scope_closed": true,
+        "all10_and_finance_closed": false
+      }
+    },
+    {
+      "name": "failed_child",
+      "status": "PASS",
+      "detail": {
+        "actual_stub_exit": 7,
+        "original_prefix_bytes_preserved": true,
+        "tail_reap_wall_seconds": 0.028368495,
+        "single_inclusive_CPU_seconds": 0.023024908,
+        "pure_CPU_tail": null,
+        "outer_admin_stays_independent_pending": true,
+        "full_expense_total_with_admin": {
+          "wall_seconds": null,
+          "cpu_seconds": null
+        },
+        "overrun": 0,
+        "whole_child_scope_closed": true,
+        "all10_and_finance_closed": false
+      }
+    },
+    {
+      "name": "unknown_overrun",
+      "status": "PASS",
+      "detail": {
+        "actual_stub_exit": 0,
+        "original_prefix_bytes_preserved": true,
+        "tail_reap_wall_seconds": 0.02825872,
+        "single_inclusive_CPU_seconds": 0.022284921,
+        "pure_CPU_tail": null,
+        "outer_admin_stays_independent_pending": true,
+        "full_expense_total_with_admin": {
+          "wall_seconds": null,
+          "cpu_seconds": null
+        },
+        "overrun": null,
+        "whole_child_scope_closed": false,
+        "all10_and_finance_closed": false
+      }
+    }
+  ],
+  "independent_group_count": 4,
+  "isolated_actual_tiny_stub_processes": 3,
+  "source_helper_unresolved_P1_P2": [],
+  "blocking_readiness_issue": {
+    "priority": "P2 for end-to-end accounting composition",
+    "status": "unconnected; no real injection approved",
+    "description": "Legacy fixed adapter3b8604 reads only receipt.expense. It does not retain receipt.administrative_unclosed_expense in snapshot.external_expenses, so a direct composition would omit pending outer bookkeeping from cost aggregate.",
+    "source_lines": {
+      "observer_pending_admin": [
+        322,
+        329
+      ],
+      "observer_all_closed_false": [
+        330,
+        334
+      ],
+      "legacy_adapter_expense_selection": 251,
+      "legacy_adapter_derived_insertion": [
+        431,
+        439
+      ]
+    },
+    "required_preservation": "Any future actual assembly must retain this pending admin scope as a separately charged root expense with timing None. It must not drop or place it beneath a finished inclusive parent, and full all-expense/10-ID closure stays false. Existing adapter-v1 remains unchanged."
+  },
+  "evidence_summary": {
+    "false_guard_and_changed_original_binding": "Rejected before Popen/output",
+    "original_prefix": "Exact original bytes/SHA copied; prefix tail/overrun/whole_scope unknown flags unchanged",
+    "wall_tail": "Original actual perf_counter_ns prefix stop to actual reap+stdout/stderr-close stop, same local boot domain, includes wait/reap delay",
+    "CPU": "Parent process_time_ns plus rounded actual cumulative reaped-child user/system once. No cross-process absolute endpoint comparison or prefix-duration subtraction used as pure CPU tail.",
+    "unknown_budget": "Overrun None and whole_external_id_closed false; actual _current_expenses rejects incomplete measurement",
+    "failed_child": "Actual tiny exit7, reason/cost retained; financial qualification unknown",
+    "outer_admin": "Independent pending parent_id None/includes_children false; actual protocol.validate_expenses([expense,admin]) returns total wall/CPU None",
+    "capacity": "Process/reaped-child highwater only; whole saved checker RAM/volume/capacity fit not proven"
+  },
+  "tiny_original_receipts_and_actual_samples": [
+    {
+      "case": "whole_child",
+      "synthetic_fixture": true,
+      "expense": {
+        "id": "saved_check",
+        "scope": "full fixed enclosing-v2 child lifecycle plus outer measured prefix",
+        "status": "complete",
+        "parent_id": null,
+        "includes_children": true,
+        "timing": {
+          "wall_seconds": 0.047957679,
+          "cpu_seconds": 0.022867939,
+          "overrun_seconds": 0
+        },
+        "timing_events": {
+          "wall_start_ns": 78144535691412,
+          "wall_stop_ns": 78144583649091,
+          "cpu_start_ns": 1468227240,
+          "cpu_stop_ns": 1491095179
+        },
+        "whole_external_id_closed": true,
+        "final_receipt_construction_write_stdout_tail_seconds": 0.02847492
+      },
+      "original_prefix_utf8": "{\"measured_prefix_expense\": {\"id\": \"saved_check\", \"status\": \"complete\", \"scope\": \"future_saved_only_whole_monitor_invocation_measured_prefix\", \"timing\": {\"wall_seconds\": 2.0736e-05, \"cpu_seconds\": 1.8693e-05, \"overrun_seconds\": null}, \"timing_events\": {\"wall_start_ns\": 78144555153435, \"wall_stop_ns\": 78144555174171, \"cpu_start_ns\": 18929628, \"cpu_stop_ns\": 18948321}, \"whole_external_saved_check_expense_closed\": false, \"final_receipt_construction_write_stdout_tail_seconds\": null}, \"monitor_exit_code\": 0, \"guard_sha256\": \"424dbe6e4b401987648fd97dcc76e68172123c08b600ad47e8911e158476ff8f\", \"clock_source_samples\": {\"wall_clock\": \"time.perf_counter_ns\"}, \"scope\": \"tiny stdlib stub only\", \"reason\": null}\n",
+      "original_prefix_sha256": "ea06bebe58209df7e16edb08e5b7d1c55f3311470e4110bdc5d2cb3b3ce765d5",
+      "clock_source_samples": {
+        "wall_clock": "time.perf_counter_ns",
+        "wall_domain": "local boot d9b7ca52-d08f-470d-ae08-876e23fea603",
+        "parent_cpu_start_ns": 1468227240,
+        "parent_cpu_stop_ns": 1468868179,
+        "children_cpu_start": {
+          "ru_utime_seconds": 0,
+          "ru_stime_seconds": 0,
+          "ru_utime_ns_rounded": 0,
+          "ru_stime_ns_rounded": 0,
+          "kernel_peak_RSS_bytes": 0
+        },
+        "children_cpu_stop": {
+          "ru_utime_seconds": 0.022227,
+          "ru_stime_seconds": 0,
+          "ru_utime_ns_rounded": 22227000,
+          "ru_stime_ns_rounded": 0,
+          "kernel_peak_RSS_bytes": 55398400
+        },
+        "sampling_order": "start wall,parentCPU,reaped; stop wait+close,reaped,parentCPU,wall",
+        "cpu_domain": "parent process CPU plus rounded cumulative reaped child user/system CPU",
+        "double_charge_rule": "single inclusive duration; original prefix/nested clocks never added"
+      },
+      "tail_actual_wall_events": {
+        "wall_start_ns": 78144555174171,
+        "wall_stop_ns": 78144583649091,
+        "wall_seconds": 0.02847492,
+        "wall_clock_domain": "same local boot d9b7ca52-d08f-470d-ae08-876e23fea603 time.perf_counter_ns",
+        "includes_reap_delay": true
+      },
+      "child_pid": 425700,
+      "child_exit_code": 0
+    },
+    {
+      "case": "failed_child",
+      "synthetic_fixture": true,
+      "expense": {
+        "id": "saved_check",
+        "scope": "full fixed enclosing-v2 child lifecycle plus outer measured prefix",
+        "status": "failed",
+        "parent_id": null,
+        "includes_children": true,
+        "timing": {
+          "wall_seconds": 0.048090781,
+          "cpu_seconds": 0.023024908,
+          "overrun_seconds": 0
+        },
+        "timing_events": {
+          "wall_start_ns": 78144586361854,
+          "wall_stop_ns": 78144634452635,
+          "cpu_start_ns": 1493814101,
+          "cpu_stop_ns": 1516839009
+        },
+        "whole_external_id_closed": true,
+        "final_receipt_construction_write_stdout_tail_seconds": 0.028368495,
+        "reason": "actual enclosing child exit_code=7; prefix_error=None; original bytes unchanged=True"
+      },
+      "original_prefix_utf8": "{\"measured_prefix_expense\": {\"id\": \"saved_check\", \"status\": \"failed\", \"scope\": \"future_saved_only_whole_monitor_invocation_measured_prefix\", \"timing\": {\"wall_seconds\": 2.1071e-05, \"cpu_seconds\": 1.8774e-05, \"overrun_seconds\": null}, \"timing_events\": {\"wall_start_ns\": 78144606063069, \"wall_stop_ns\": 78144606084140, \"cpu_start_ns\": 19206473, \"cpu_stop_ns\": 19225247}, \"whole_external_saved_check_expense_closed\": false, \"final_receipt_construction_write_stdout_tail_seconds\": null}, \"monitor_exit_code\": 7, \"guard_sha256\": \"ec245e7e3ee3b9caec4aeadf98e77770b870e9f495a55f257425ecc1c5fcd0e3\", \"clock_source_samples\": {\"wall_clock\": \"time.perf_counter_ns\"}, \"scope\": \"tiny stdlib stub only\", \"reason\": \"actual synthetic exit7\"}\n",
+      "original_prefix_sha256": "70fb16b3a4f04843180abbee8aa9e3ed0eb968fb3e7a82aa1c638dfba2d9f820",
+      "clock_source_samples": {
+        "wall_clock": "time.perf_counter_ns",
+        "wall_domain": "local boot d9b7ca52-d08f-470d-ae08-876e23fea603",
+        "parent_cpu_start_ns": 1471587101,
+        "parent_cpu_stop_ns": 1472189009,
+        "children_cpu_start": {
+          "ru_utime_seconds": 0.022227,
+          "ru_stime_seconds": 0,
+          "ru_utime_ns_rounded": 22227000,
+          "ru_stime_ns_rounded": 0,
+          "kernel_peak_RSS_bytes": 55398400
+        },
+        "children_cpu_stop": {
+          "ru_utime_seconds": 0.033438999999999997,
+          "ru_stime_seconds": 0.011210999999999999,
+          "ru_utime_ns_rounded": 33439000,
+          "ru_stime_ns_rounded": 11211000,
+          "kernel_peak_RSS_bytes": 55398400
+        },
+        "sampling_order": "start wall,parentCPU,reaped; stop wait+close,reaped,parentCPU,wall",
+        "cpu_domain": "parent process CPU plus rounded cumulative reaped child user/system CPU",
+        "double_charge_rule": "single inclusive duration; original prefix/nested clocks never added"
+      },
+      "tail_actual_wall_events": {
+        "wall_start_ns": 78144606084140,
+        "wall_stop_ns": 78144634452635,
+        "wall_seconds": 0.028368495,
+        "wall_clock_domain": "same local boot d9b7ca52-d08f-470d-ae08-876e23fea603 time.perf_counter_ns",
+        "includes_reap_delay": true
+      },
+      "child_pid": 425701,
+      "child_exit_code": 7
+    },
+    {
+      "case": "unknown_overrun",
+      "synthetic_fixture": true,
+      "expense": {
+        "id": "saved_check",
+        "scope": "full fixed enclosing-v2 child lifecycle plus outer measured prefix",
+        "status": "complete",
+        "parent_id": null,
+        "includes_children": true,
+        "timing": {
+          "wall_seconds": 0.047425632,
+          "cpu_seconds": 0.022284921,
+          "overrun_seconds": null
+        },
+        "timing_events": {
+          "wall_start_ns": 78144637177226,
+          "wall_stop_ns": 78144684602858,
+          "cpu_start_ns": 1519569612,
+          "cpu_stop_ns": 1541854533
+        },
+        "whole_external_id_closed": false,
+        "final_receipt_construction_write_stdout_tail_seconds": 0.02825872
+      },
+      "original_prefix_utf8": "{\"measured_prefix_expense\": {\"id\": \"saved_check\", \"status\": \"complete\", \"scope\": \"future_saved_only_whole_monitor_invocation_measured_prefix\", \"timing\": {\"wall_seconds\": 2.0324e-05, \"cpu_seconds\": 1.8667e-05, \"overrun_seconds\": null}, \"timing_events\": {\"wall_start_ns\": 78144656323814, \"wall_stop_ns\": 78144656344138, \"cpu_start_ns\": 18662645, \"cpu_stop_ns\": 18681312}, \"whole_external_saved_check_expense_closed\": false, \"final_receipt_construction_write_stdout_tail_seconds\": null}, \"monitor_exit_code\": 0, \"guard_sha256\": \"b6b7fb280806dd8733c5a445b5c29f0c915b22c1c9cd570b4c33afa4d5395881\", \"clock_source_samples\": {\"wall_clock\": \"time.perf_counter_ns\"}, \"scope\": \"tiny stdlib stub only\", \"reason\": null}\n",
+      "original_prefix_sha256": "6665a89dfbb2b7ab21284b06014a6fe0e47645f54d972ab9a297966e817fc7dc",
+      "clock_source_samples": {
+        "wall_clock": "time.perf_counter_ns",
+        "wall_domain": "local boot d9b7ca52-d08f-470d-ae08-876e23fea603",
+        "parent_cpu_start_ns": 1474919612,
+        "parent_cpu_stop_ns": 1475493533,
+        "children_cpu_start": {
+          "ru_utime_seconds": 0.033438999999999997,
+          "ru_stime_seconds": 0.011210999999999999,
+          "ru_utime_ns_rounded": 33439000,
+          "ru_stime_ns_rounded": 11211000,
+          "kernel_peak_RSS_bytes": 55398400
+        },
+        "children_cpu_stop": {
+          "ru_utime_seconds": 0.051531,
+          "ru_stime_seconds": 0.01483,
+          "ru_utime_ns_rounded": 51531000,
+          "ru_stime_ns_rounded": 14830000,
+          "kernel_peak_RSS_bytes": 55398400
+        },
+        "sampling_order": "start wall,parentCPU,reaped; stop wait+close,reaped,parentCPU,wall",
+        "cpu_domain": "parent process CPU plus rounded cumulative reaped child user/system CPU",
+        "double_charge_rule": "single inclusive duration; original prefix/nested clocks never added"
+      },
+      "tail_actual_wall_events": {
+        "wall_start_ns": 78144656344138,
+        "wall_stop_ns": 78144684602858,
+        "wall_seconds": 0.02825872,
+        "wall_clock_domain": "same local boot d9b7ca52-d08f-470d-ae08-876e23fea603 time.perf_counter_ns",
+        "includes_reap_delay": true
+      },
+      "child_pid": 425702,
+      "child_exit_code": 0
+    }
+  ],
+  "permissions": {
+    "candidate_source_mechanics_only": true,
+    "actual_future_root_guard_approved": false,
+    "actual_saved_child_launch_approved": false,
+    "actual_external10_expense_rows_injection_approved": false,
+    "all_expenses_closed": false,
+    "all_external10_closed": false,
+    "numerical_precision_approved": false,
+    "whole_checker_RAM_capacity_approved": false,
+    "formal_main_phase_acceptance": false,
+    "financial_acceptance": false,
+    "financial_qualification": "unknown"
+  },
+  "limits_and_operations": {
+    "private_fixture_method": "Exact helper byte copy and stdlib tiny child in TemporaryDirectory only. CHILD_SHA256 replaced solely on in-memory copied module; production helper/c66/source82 untouched.",
+    "actual_source82_before_after_equal": true,
+    "real_finance_native_RNG_SDE_solver_processes": 0,
+    "actual_root_guard_edits": 0,
+    "CAS_Git_production_changes": 0,
+    "new_persistent_files": "This independent decision only; all tiny fixtures removed",
+    "author_four_case_groups_reference_only": true,
+    "full_observer_or_legacy_finance_suites_rerun": false
+  },
+  "cost": {
+    "direct_tiny_probe_wall_seconds": 0.158088192,
+    "direct_tiny_probe_parent_cpu_seconds": 0.015345772,
+    "nested_helper_CPU_clocks_are_not_additional_charges_to_probe_parent_CPU": true,
+    "full_review_outer_wall_seconds": null,
+    "full_review_outer_CPU_seconds": null,
+    "own_decision_write_stdout_tail_seconds": null,
+    "actual_whole_review_expense_clock_events": null,
+    "any_external_ID_closed_by_this_review": false
+  },
+  "review_process_failures": [],
+  "remaining": "Future actual root terminal/native/source/plan/input authority and real producer receipts plus pending-admin-preserving aggregate consumer. This review does not run or approve them.",
+  "synthetic_receipt_binding_scope": "Fixture-only source-native ef14264e..., plan1*64/input2*64/raw3*64. All actual native/root guards excluded; fixture output references were removed with TemporaryDirectory.",
+  "review_fixed_at_utc": "2026-10-10T17:38:13.914979+00:00"
+}

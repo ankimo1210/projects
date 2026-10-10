@@ -1,0 +1,23 @@
+{
+  "schema": "rb-f04-root-formal-monitor-enclosing-cost-v1",
+  "status": "terminal_requires_native_and_saved_result_inspection",
+  "monitor_exit_code": 0,
+  "monitor_pid": 372315,
+  "guard_sha256": "9e794bd4ec46c72d240a264fdf2dd722297455baf2f3cd0d07243f6d7a0c2842",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5.py",
+    "--guard",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-launch-guard-v3.json"
+  ],
+  "start_UTC": "2026-10-10T14:00:06.210472+00:00",
+  "end_UTC": "2026-10-10T17:36:56.816409+00:00",
+  "wall_seconds": 13010.605841021992,
+  "parent_CPU_seconds": 0.448714011,
+  "children_CPU_seconds": 13006.522441000001,
+  "child_kernel_peak_RSS_bytes": 13039861760,
+  "scope": "enclosing full monitor source/input/plan checks + all actual native experiment + final monitor receipts; nested job/phase/subclocks not added again",
+  "monitor_status_not_reclassified": true,
+  "financial_qualification": "unknown",
+  "own_final_receipt_write_stdout_cost": null
+}

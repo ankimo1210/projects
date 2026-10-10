@@ -1,0 +1,101 @@
+{
+  "schema": "independent-source82-validation-result-shape-diagnosis-v1",
+  "reviewed_UTC": "2026-10-10T17:51:41.335294+00:00",
+  "decision": "confirmed_original_source82_producer_consumer_shape_defect",
+  "scope": "read-only static producer/consumer/cash-replay contract diagnosis; repair candidate not executed or approved",
+  "source": {
+    "closure_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json",
+    "closure_file_sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5",
+    "canonical_identity_recomputed": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "native_payload_identity_root_fixed_reference": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "native_payload_recomputed_this_review": false,
+    "closure_file_count": 82,
+    "dynamic_import_count": 0,
+    "targeted_five_actual_file_sha256": {
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b"
+    },
+    "actual_five_files_match_fixed_closure": true,
+    "all82_files_rehashed_this_review": false,
+    "targeted_five_source_before_after_unchanged": true
+  },
+  "confirmed_contract": {
+    "dispatch": "run_pilot.py:2923-2928,3010-3013 wraps unchanged study return in raw.value",
+    "validation_producer": "_dynamic_hedging_study.py:793-863 produces 2 models x (1 Greek + 6 band widths) = 14 summary rows and a separate complete rollouts[id] mapping",
+    "validation_summary_keys": [
+      "id",
+      "status",
+      "original_n",
+      "mse",
+      "raw_mse",
+      "reason"
+    ],
+    "validation_return_keys": [
+      "id",
+      "generator",
+      "universe",
+      "status",
+      "reason",
+      "original_n",
+      "candidates",
+      "selected_bands",
+      "selected_baseline",
+      "band_failures",
+      "rollouts",
+      "information",
+      "expense"
+    ],
+    "roster_producer": "_dynamic_hedging_study.py:965-1073 supplies result in each of 11 original cells, including unavailable/failed NN or band cells",
+    "consumer_defect": "check_pilot.py:2057-2065 uses row['result'] for both shapes; validation summary has no such key",
+    "all_candidates_retained": "select_validation.py contract in study:830-851 marks incomplete/unqualified/nonfinite-MSE candidates failed, retains raw_mse/reason/original_n and every rollout, and never selects failed rows; all-failed retains 14 and returns selected None",
+    "stopped_unknown": "policy_rollout study:736-783 preserves all original paths, arrays, masks and reasons, marks unqualified outputs unknown; selection converts these summaries to failed but does not drop raw rollouts",
+    "cash_boundary": "_dynamic_hedging_replay.py:699-738,754-834 validates original finance shapes/actions, independent full-path cash/gain recurrence, raw-account/cost/PnL/mask arrays by tolerance; failed paths remain unknown"
+  },
+  "minimum_repair_contract": {
+    "candidate_expression": "row['result'] if operation == 'roster' else value['rollouts'][row['id']]",
+    "required_preserved_precheck": "check_pilot.py:2059-2062 recomputes complete original study output and calls runner._same(_without_timing(computed), _without_timing(value), ...)",
+    "required_preserved_iteration": "iterate every original candidate, including failed/unqualified summaries; no selected-only/status filtering",
+    "roster_expression_unchanged": true,
+    "lookup_uses_original_saved_value": true,
+    "original_N_cash_fee_claim_liquidation_mse_tie_order_expense_math_change": false,
+    "candidate_source_approval_this_review": false
+  },
+  "static_rejection_coverage": [
+    {
+      "case": "missing or extra rollout key / malformed summary schema",
+      "existing_guard": "runner._same dict keyset check run_reference.py:52-56 before any cash access"
+    },
+    {
+      "case": "candidate deletion/duplicate/reorder/ID or status edit, including final failed candidate",
+      "existing_guard": "complete recomputation + list length/order + recursively compared id/status/reason run_reference.py:57-60"
+    },
+    {
+      "case": "missing cash/holdings/raw-account field; NaN replaced by finite fallback; changed original_N or last-path cash",
+      "existing_guard": "whole-rollout keyset/full-array tolerance+equal_nan comparison run_reference.py:62-70, followed by independent check_cash"
+    },
+    {
+      "case": "all failed validation or unknown roster cells",
+      "existing_guard": "keep all 14/11 original entries, raw arrays/reasons and original denominator; no selected/failure skip"
+    }
+  ],
+  "read_existing_tiny_test_evidence_not_executed": [
+    "deep_hedge_price/tests/test_dynamic_hedging_study.py:325 fourteen candidates and tie order",
+    "deep_hedge_price/tests/test_dynamic_hedging_study.py:339 all-failed fourteen candidates and no fallback",
+    "deep_hedge_price/tests/test_dynamic_hedging_study.py:485 reversed-width fixed tie order",
+    "deep_hedge_price/tests/test_dynamic_hedging_study.py:515 roster/validation inclusive expense contracts"
+  ],
+  "limits": {
+    "actual_native_213_executed_214_gate_KeyError_result": "reported by root; no actual native output or terminal artifacts independently read here",
+    "regression_execution": false,
+    "saved_numeric_or_financial_qualification": "unknown",
+    "finance_solver_rng_sde_npz_load_count": 0,
+    "native_live_or_terminal_data_read_count": 0,
+    "production_source_tests_guards_old_artifacts_edits": false,
+    "Git_CAS_operations": false,
+    "author_D_only_patch_and_regression": "separate pending work; not reviewed or approved by this diagnosis",
+    "inspection_failure_preserved": "one read-only tool call indexed past end of study.py and raised IndexError; later bounded read completed, no source or financial side effect"
+  }
+}

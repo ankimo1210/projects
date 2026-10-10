@@ -1,8 +1,8 @@
 # 正式pilot予算のための測定
 
-修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
+source82の正式pilotは2026-10-10 17:36:56 UTCにpartial終了（外側13,010.606秒、約3時間37分）。213jobs executed、214番gateで KeyError: 'result'。行政資源停止はなく、元source/入力/prior/原失敗・費用・全scopeを保持した。元sourceの全保存数値検算を別guardで実行中、完走・数値資格・freeze/mainは未完了。 [原終端](pilot-execution-evidence/source82-terminal-partial-root-source82-terminal-checkpoint-metadata-summary-v1.json)。
 
-2026-10-10。修正版正式金融pilotは214件目の引数binding不一致でpartial停止、mainは未実行。以下の先行測定は**部品の実測と、歴史的教師計算からの外挿**であり、全phaseの実測時間・精度資格ではない。現在の実起動は末尾に記録。
+2026-10-11。旧source81は引数binding不一致、source82はvalidation result形状不一致で214件目partial停止。mainは未実行。以下の先行測定は**部品の実測と、歴史的教師計算からの外挿**であり、全phaseの実測時間・精度資格ではない。現在の実起動は末尾に記録。
 
 ## 実際に測った再較正
 
@@ -422,3 +422,21 @@ metadata生成97.255秒はregistry/serializerを含む一つの親scope。両CAS
 全inclusive祖先への実wall包含とproducer scopeを確認する。同一processは同じPID/CPU clock domainと実端点の包含、別processは元のreaped samples・子PID/scope/durationの包含を確認し、異なるprocessのCPU絶対端点を比較しない。元の子時計を保持し、コピーaliasで外部IDを完了させない。終了済み親の後で発生した子費用も未閉鎖として保持する。[作者18検査](pilot-execution-evidence/source82-expense-adapter-task-5-external-expense-receipt-adapter-results-v1.json)・2Python Ruff/format/構文検査と[独立9境界](pilot-execution-evidence/source82-expense-adapter-independent-external-expense-receipt-adapter-v1-decision.json)はPASS。独立probeの結果key誤りとpublication tool失敗は原記録に保持した。承認は合成receiptを使ったsource/mechanicsのみで、実producer receipt・全native byte・root guardの結合は未確認。
 
 [閉じた5filesの両store保存](pilot-execution-evidence/source82-expense-adapter-root-external-expense-receipt-adapter-closed-proof-store-manifest-v1.json)は131,256 bytesの原byteと標準reader復元がPASS。[保存実費](pilot-execution-evidence/source82-expense-adapter-root-external-expense-receipt-adapter-closed-proof-store-receipt-v1.json)は親測定prefix wall 1.644870秒/CPU 0.026598秒。準備前・最終receipt/stdout tailはunknownで、元金融external10へ割り当てていない。source82と旧receiptは不変、実金融/native検算・実event投入は0。外部10費用の閉鎖・全RAM適合・数値資格・main/phase受入は未完了。
+
+### 全子lifecycle費用と行政pendingの保持（2026-10-11）
+
+[全子observer](pilot-execution-evidence/source82-whole-child-cost-task-5-full-child-expense-observer-v1.py)は固定enclosing-v2のlaunchからwait/reap・stdout/stderr closeまで実wall/CPU端点と原RUSAGE_CHILDREN samplesを観測し、原prefix receiptをbyteで保持する。子完了tailは同一boot wall端点で測り、純粋なCPU tailは推定しない。自分のimport前・測定後provenance/copy/receipt/stdoutは別rootの行政pending/Noneとして保持する。
+
+旧v1 adapterは行政pendingを落とすため、[結合v2](pilot-execution-evidence/source82-whole-child-cost-task-5-external-expense-receipt-adapter-v2.py)のbuild_candidateだけを変更した。4binding/原receipt認証後に行政行を別copyで保持し、必須IDの代替・native ID衝突・循環・inclusive親への吸収を拒否する。必須10が揃っても行政pendingが残れば、総wall/CPUはNone、実check_raw_costs.closedはfalse。旧v1/source82/rawは不変。
+
+observerは[作者4群](pilot-execution-evidence/source82-whole-child-cost-task-5-full-child-expense-observer-results-v1.json)・[独立4群](pilot-execution-evidence/source82-whole-child-cost-independent-full-child-expense-observer-v1-decision.json)、adapter-v2は[作者7確認](pilot-execution-evidence/source82-whole-child-cost-task-5-external-expense-receipt-adapter-results-v2.json)・[独立9境界](pilot-execution-evidence/source82-whole-child-cost-independent-external-expense-receipt-adapter-v2-decision.json)でPASS。4Python Ruff/format/compileはPASS。承認はtiny子・合成receiptのsource/mechanicsに限る。[閉じた10proof](pilot-execution-evidence/source82-whole-child-cost-root-whole-child-and-adapter-v2-closed-proof-store-manifest-v1.json) 130,601 bytesの両store原byte/標準reader復元はPASS。[CAS実費](pilot-execution-evidence/source82-whole-child-cost-root-whole-child-and-adapter-v2-closed-proof-store-receipt-v1.json)のprefix wall 2.969895秒/CPU 0.043734秒、準備前・最終tailはunknown。金融raw全体のCAS・external10へ割り当てていない。
+
+### source82の終端不具合と全保存検算（2026-10-11）
+
+[元enclosing](pilot-execution-evidence/source82-terminal-partial-original-enclosing-parent-cost-and-status.json)・[元monitor](pilot-execution-evidence/source82-terminal-partial-original-monitor-parent-cost-and-status.json)では14:00:06–17:36:56 UTC、outer wall13,010.605841秒/children CPU13,006.522441秒、child kernel peak13,039,861,760 bytes。行政stopなし・上限超過0・3volume shortfall0・source/入力/prior不変。[checkpointの小metadata検査](pilot-execution-evidence/source82-terminal-partial-root-source82-terminal-checkpoint-metadata-summary-v1.json)で213 executedと214番stage:Heston:N1024:coarse:gateのKeyError: 'result'を確認。原exit0は部分raw保存であり、数値PASSや完走ではない。小metadata読取は全job hydrate/数値savedcheckを行っていない。
+
+[作者診断](pilot-execution-evidence/source82-terminal-partial-task-5-source82-validation-result-shape-diagnosis-v1.json)と[独立source読取](pilot-execution-evidence/source82-terminal-partial-independent-source82-validation-result-shape-diagnosis-v1.json)で、select_validationは14summary行と別rollouts[id]、test_rosterは11cell各々のresultを保存するのに、consumerが両方へrowのresultを要求していることを確認した。tiny元producer/consumerの同じKeyError再現は金融精度の検算と区別する。最小案はvalidationだけ元rollouts[rowのid]を読むこと。全valueの許容誤差比較・全候補cash loop・roster経路を保ち、まだproduction反映していない。
+
+終端10,233物理filesと元4bindingを結ぶ別saved-only guardをrootが固定し、限定独立13確認後、2026-10-10 17:51:03 UTCに元source82のまま全保存数値検算を起動した。全job同時hydrateの16GiB適合はunknown。原全3,138/121/51/4N・partial/sourcefault・未計測費用を保持する。結果・費用・precision/freeze/mainは未閉鎖。研究#10/#11は#9後に順次進める。
+
+ETAは未確定。旧rateの全stage条件付き139.050h＋別context cold90.673h×4＝501.742h（連続約20.9日）は既知部分の試算で、全体ETA・下限・上限ではない。#10/#11、不具合対応、未知費用を含まない。3時間37分の部分実行から残ジョブへ単純比例せず、全pilot完走の実測後に更新する。

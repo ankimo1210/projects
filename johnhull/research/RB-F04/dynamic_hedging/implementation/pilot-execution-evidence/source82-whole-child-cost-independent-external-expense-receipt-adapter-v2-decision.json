@@ -1,0 +1,233 @@
+{
+  "schema": "rb-f04-independent-external-expense-receipt-adapter-source-mechanics-review-v2",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent read-only source and pure receipt-mechanics reviewer",
+  "scope": "Fixed D2 adapter-v2 build_candidate administrative-unclosed-cost retention delta only. No actual terminal/native authentication, expense injection, saved-check launch, financial accuracy, wholechecker capacity or phase acceptance.",
+  "approved_source_sha256": "1b862d0bdcfaa68a740b77c00f3fd0508a8afe5227e0be96c3289cb1df9df6d3",
+  "prior_approval": {
+    "path": "independent-external-expense-receipt-adapter-v1-decision.json",
+    "sha256": "36a4f47b9e866c113a96f2bce72f32ac3846d793aad0252fe58b9231fe9a6326",
+    "scope_retained": "Original receipt/actual-clock/inclusive CPU proof contracts; historical bytes and nine v1 fixture results retained, no repeated full suite."
+  },
+  "producer_review": {
+    "path": "independent-full-child-expense-observer-v1-decision.json",
+    "sha256": "e9f71faa56e5eb72f0c8493d6e500f177e4fcecca252287fd65d1e998279e4b5",
+    "legacy_adapter_v1_admin_drop": "Historical integration gap remains recorded in the original decision; v2 fixes retention in tiny producer-format fixtures only."
+  },
+  "source_bindings": {
+    "fixed_manifest_path": "task-5-external-expense-receipt-adapter-fixed-manifest-v2.json",
+    "fixed_manifest_sha256": "b5d995ecee8ef67bb10b967d67b974166f8a1a467f68ba8f96121dabdf5218ad",
+    "expected_files": {
+      "task-5-external-expense-receipt-adapter-v2.py": "1b862d0bdcfaa68a740b77c00f3fd0508a8afe5227e0be96c3289cb1df9df6d3",
+      "task-5-external-expense-receipt-adapter-preflight-v2.py": "041dcb9a1080a4069c3aad8643bbd5f4ce3ad078fa18c8025c0e99d4750cdd96",
+      "task-5-external-expense-receipt-adapter-results-v2.json": "ee04a2fda90d5df51532eb5c6dce63e82183100493b5182b18a07fa6b0dd2516",
+      "task-5-external-expense-receipt-adapter-fixed-manifest-v2.json": "b5d995ecee8ef67bb10b967d67b974166f8a1a467f68ba8f96121dabdf5218ad"
+    },
+    "source_closure_path": "current-production-source-closure-v1.json",
+    "source_closure_sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5",
+    "source_canonical_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "source_native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "source82_before_after_byte_match": true,
+    "dynamic_imports": [],
+    "changed_function_AST": [
+      "build_candidate"
+    ],
+    "other_function_import_constant_AST_unchanged": true,
+    "old_v1_and_producer_and_independent_decisions": {
+      "task-5-external-expense-receipt-adapter-v1.py": "3b8604e14ce4efa160da29a601ece07376a5097946849832252d862e1ea7f14e",
+      "task-5-external-expense-receipt-adapter-preflight-v1.py": "5c1f88570bef1ce225ad16c50f0c7aa8913d38d667fa8c5e268a502fd9682c28",
+      "task-5-external-expense-receipt-adapter-results-v1.json": "303a5d84064c3d684b6103073c975459b17ed2a9a0f37ba50511a50d179a6d9d",
+      "task-5-external-expense-receipt-adapter-fixed-manifest-v1.json": "33f688701e75f249ef466939326f26df1cc65dfaa9381762506e9d1743ead3fd",
+      "independent-external-expense-receipt-adapter-v1-decision.json": "36a4f47b9e866c113a96f2bce72f32ac3846d793aad0252fe58b9231fe9a6326",
+      "task-5-full-child-expense-observer-v1.py": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57",
+      "task-5-full-child-expense-observer-preflight-v1.py": "99f97dbe4a5fcad6fb6cb3769570cbbf1f90b97e10de2621925514191badf07b",
+      "task-5-full-child-expense-observer-results-v1.json": "9b79e06913bb1223c50635f5f20975b3c0dc8ee845bf5dadb19fed1669712e30",
+      "task-5-full-child-expense-observer-fixed-manifest-v1.json": "1a98e034b87f12e452c9d931686f6ad77947952a7fcc344ef6ccdfece221f82d",
+      "independent-full-child-expense-observer-v1-decision.json": "e9f71faa56e5eb72f0c8493d6e500f177e4fcecca252287fd65d1e998279e4b5"
+    },
+    "manifest_entries": [
+      {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-v2.py",
+        "sha256": "1b862d0bdcfaa68a740b77c00f3fd0508a8afe5227e0be96c3289cb1df9df6d3",
+        "bytes": 22807,
+        "status": "PASS"
+      },
+      {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-preflight-v2.py",
+        "sha256": "041dcb9a1080a4069c3aad8643bbd5f4ce3ad078fa18c8025c0e99d4750cdd96",
+        "bytes": 10561,
+        "status": "PASS"
+      },
+      {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-results-v2.json",
+        "sha256": "ee04a2fda90d5df51532eb5c6dce63e82183100493b5182b18a07fa6b0dd2516",
+        "bytes": 5025,
+        "status": "PASS"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "name": "required10 complete + original admin pending cannot close aggregate",
+      "status": "PASS",
+      "detail": {
+        "required10_complete": true,
+        "supplemental_pending_retained": true,
+        "aggregate_wall_cpu": {
+          "wall_seconds": null,
+          "cpu_seconds": null
+        },
+        "actual_check_raw_costs_closed": false,
+        "mutation_detached": true,
+        "financial_qualification": "unknown"
+      }
+    },
+    {
+      "name": "unclosed required producer retains its admin and original prefix",
+      "status": "PASS",
+      "detail": {
+        "required_saved_check_missing": true,
+        "pending_admin_retained": true,
+        "original_prefix_preserved": true
+      }
+    },
+    {
+      "name": "supplemental cannot replace required external ID",
+      "status": "PASS",
+      "detail": {
+        "rejection": "supplemental expense cannot replace a required external ID"
+      }
+    },
+    {
+      "name": "supplemental cannot duplicate original native expense ID",
+      "status": "PASS",
+      "detail": {
+        "rejection": "unique expense IDs and known status required"
+      }
+    },
+    {
+      "name": "two original receipts cannot silently overwrite same admin ID",
+      "status": "PASS",
+      "detail": {
+        "rejection": "unique expense IDs and known status required"
+      }
+    },
+    {
+      "name": "supplemental self-cycle rejected",
+      "status": "PASS",
+      "detail": {
+        "rejection": "invalid expense parent cycle"
+      }
+    },
+    {
+      "name": "pending admin cannot disappear under inclusive completed external parent",
+      "status": "PASS",
+      "detail": {
+        "rejection": "unclosed administrative expense cannot be absorbed by an inclusive ancestor"
+      }
+    },
+    {
+      "name": "self-consistent receipt bytes cannot replace original raw binding",
+      "status": "PASS",
+      "detail": {
+        "rejection": "receipt original source/plan/input/raw binding differs"
+      }
+    },
+    {
+      "name": "stale original receipt SHA rejected before expense injection",
+      "status": "PASS",
+      "detail": {
+        "rejection": "original receipt bytes/SHA differ"
+      }
+    }
+  ],
+  "unique_independent_fixture_boundaries": 9,
+  "failure_count": 0,
+  "unresolved_P1_P2_findings": [],
+  "interpretation": {
+    "admin_delta": "Original authenticated administrative_unclosed_expense is detached and retained in external_expenses, original receipt provenance and small composite lineage before the required whole expense qualification.",
+    "fixed10_ID_order": [
+      "cold_imports",
+      "source_registry",
+      "code_review",
+      "math_review",
+      "pilot_review",
+      "serialization",
+      "saved_check",
+      "CAS_primary",
+      "CAS_mirror",
+      "domain_selection"
+    ],
+    "required10_complete_is_not_cost_closed": true,
+    "unknown_admin": "Original pending status, root parent_id=None, includes_children=False and all three timing fields None retained. No zero/complete/clock inference.",
+    "aggregate": "With all10 whole rows complete plus pending admin, protocol charged wall/CPU remain None and actual check_raw_costs.closed is false.",
+    "unclosed_primary": "If saved_check whole scope remains unclosed, its raw prefix/receipt remains in unclosed_receipts and missing required ID, while pending admin survives in external_expenses.",
+    "sharing": "Original hydrated raw is never deeply copied; jobs/source/plan/history remain original read-only references. Original payload digest once per build, small emitted rows are detached.",
+    "provenance": "Physical SHA authenticates origin only; self-consistent changed receipt digest cannot replace original source/plan/input/raw binding. Composite lineage is separately labelled and is not original native raw digest.",
+    "inherited_cpu_contract": "Parent inclusion proof helpers unchanged. v1 actual wall-domain/CPU producer evidence and alias rejection approval retained, not reclassified as a new financial or full expense qualification.",
+    "scope_limits": "This review does not authenticate actual producer whole-scope claims or measure actual saved-check. Completed row use still requires actual original producer clocks, budgets, tail and proper parent evidence at the existing consumer.",
+    "source_and_roster": "No production source/public API, original financial scope/N/cases/seeds/grids/thresholds/blocks/driver, administrative guard or cap change."
+  },
+  "verification": {
+    "independent_mode": "In-memory source review and nine tiny pure receipt fixtures in an isolated temporary D2 directory; fixed preflight imported as fixture contracts only, never main(). Actual protocol and extracted _current_expenses/_check_actual_expense_clock/check_raw_costs bodies used without financial module import.",
+    "actual_contracts": [
+      "protocol.validate_expenses",
+      "execution._current_expenses",
+      "check_pilot._check_actual_expense_clock",
+      "check_pilot.check_raw_costs"
+    ],
+    "original_digest_per_build_counts": {
+      "build_calls": 9,
+      "original_digest_calls": 9
+    },
+    "author_checks_reference_only": 7,
+    "author_green_not_counted_as_independent": true,
+    "preserved_failures": [
+      {
+        "path": "task-5-external-expense-receipt-adapter-results-v2.json",
+        "sha256": "ee04a2fda90d5df51532eb5c6dce63e82183100493b5182b18a07fa6b0dd2516",
+        "fields": [
+          "original_RED",
+          "initial_v2_RED"
+        ],
+        "classification": "Original fixed-v1 admin omission counterexamples retained; no rewrite."
+      },
+      {
+        "path": "independent-external-expense-receipt-adapter-v1-decision.json",
+        "sha256": "36a4f47b9e866c113a96f2bce72f32ac3846d793aad0252fe58b9231fe9a6326",
+        "classification": "Prior v1 probe harness/output-key and Windows command length failure receipts remain immutable."
+      }
+    ],
+    "independent_failed_attempts": [],
+    "review_cost": {
+      "direct_probe_wall_seconds": 0.12982533,
+      "direct_probe_cpu_seconds": 0.117621545,
+      "scope": "Single independent tiny probe includes imports, bounded source82 authentication, fixtures, AST delta and end-of-probe checks. Does not include preceding/following review tools or this decision construction/write/stdout tail.",
+      "whole_review_wall_seconds": null,
+      "whole_review_cpu_seconds": null,
+      "receipt_write_stdout_tail_seconds": null,
+      "actual_clock_endpoints": null,
+      "cost_closed": false,
+      "external_expense_row_injected": false
+    },
+    "tool_exit_code": 0,
+    "all_real_native_finance_RNG_SDE_solver_subprocess_CAS_Git_operations": 0
+  },
+  "authority": {
+    "source_mechanics_approved": true,
+    "actual_receipt_injection_approved": false,
+    "root_preapproved": false,
+    "execute_saved_check": false,
+    "actual_root_guard_authenticated": false,
+    "actual_terminal_native_bytes_authenticated": false,
+    "full_external10_cost_closure_approved": false,
+    "whole_capacity_RSS_guarantee_approved": false,
+    "financial_qualification": "unknown",
+    "finance_acceptance": false,
+    "main_accepted": false,
+    "phase_accepted": false
+  },
+  "next_required_work": "Root retains actual terminal/raw/source/input/plan/guard authority. Real producer whole-scope receipts must carry their own actual clocks, budgets and tails; missing external10 costs or unmeasured administrative scope remain explicit unknown. This source decision grants no launch or injection permission.",
+  "fixed_at_UTC": "2026-10-10T17:44:13.251909+00:00"
+}
