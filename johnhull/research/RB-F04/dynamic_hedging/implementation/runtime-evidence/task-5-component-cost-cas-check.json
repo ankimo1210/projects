@@ -1,0 +1,162 @@
+{
+  "kind": "dynamic_hedging_component_cost_both_store_verification",
+  "status": "PASS",
+  "manifest": {
+    "schema_version": 1,
+    "kind": "johnhull-evidence-manifest",
+    "entries": [
+      {
+        "path": "raw/task-5-asian-query-cost-results.json",
+        "ref": "artifact:sha256:c4259df822fb75d624d2064b3d47e724cdd07a2df0aa8bf901a17fac439c01f0",
+        "bytes": 10669018,
+        "mime": "application/json"
+      },
+      {
+        "path": "raw/task-5-actual-pilot-input-preparation.json",
+        "ref": "artifact:sha256:745804d59d1c8dc25af6df2f4a1851e7d78ee36fd3dcdf8ace782a2fa6a11ed2",
+        "bytes": 38044,
+        "mime": "application/json"
+      }
+    ]
+  },
+  "checks": {
+    "primary": {
+      "measurement_arithmetic": {
+        "status": "PASS",
+        "asian_query_count": 6912,
+        "integrated_query_count": 936,
+        "table": [
+          {
+            "grid": "coarse",
+            "model": "heston",
+            "asian_ok_mean_ms": 0.1851620165158272,
+            "fit_plus_asian_mean_ms": 0.4658280811890707,
+            "group13_median_ms": 6.150855500891339
+          },
+          {
+            "grid": "coarse",
+            "model": "local",
+            "asian_ok_mean_ms": 0.28753297575408227,
+            "fit_plus_asian_mean_ms": 0.583128277773936,
+            "group13_median_ms": 7.658907499717316
+          },
+          {
+            "grid": "high",
+            "model": "heston",
+            "asian_ok_mean_ms": 0.2095861191264703,
+            "fit_plus_asian_mean_ms": 0.5111162691975598,
+            "group13_median_ms": 6.75718250022328
+          },
+          {
+            "grid": "high",
+            "model": "local",
+            "asian_ok_mean_ms": 0.7144360902960519,
+            "fit_plus_asian_mean_ms": 0.9526381752202258,
+            "group13_median_ms": 12.845774499510298
+          }
+        ],
+        "outer_actual_cost": {
+          "clock": {
+            "wall_start": 16372.922821365,
+            "wall_stop": 16385.63798387,
+            "cpu_start": 0.040318363,
+            "cpu_stop": 12.740372129
+          },
+          "wall_seconds": 12.71516250500099,
+          "cpu_seconds": 12.700053766
+        },
+        "qualification": "unknown"
+      },
+      "input_scope": {
+        "status": "PASS",
+        "original_states": 18,
+        "monthly_queries": 24,
+        "additional_teacher_cases": 4,
+        "formal_plan_locked": false,
+        "qualification": "unknown",
+        "actual_wall_seconds": 4.233482090996404
+      },
+      "restored_bytes": 10707062,
+      "restored_entries": 2,
+      "status": "PASS"
+    },
+    "mirror": {
+      "measurement_arithmetic": {
+        "status": "PASS",
+        "asian_query_count": 6912,
+        "integrated_query_count": 936,
+        "table": [
+          {
+            "grid": "coarse",
+            "model": "heston",
+            "asian_ok_mean_ms": 0.1851620165158272,
+            "fit_plus_asian_mean_ms": 0.4658280811890707,
+            "group13_median_ms": 6.150855500891339
+          },
+          {
+            "grid": "coarse",
+            "model": "local",
+            "asian_ok_mean_ms": 0.28753297575408227,
+            "fit_plus_asian_mean_ms": 0.583128277773936,
+            "group13_median_ms": 7.658907499717316
+          },
+          {
+            "grid": "high",
+            "model": "heston",
+            "asian_ok_mean_ms": 0.2095861191264703,
+            "fit_plus_asian_mean_ms": 0.5111162691975598,
+            "group13_median_ms": 6.75718250022328
+          },
+          {
+            "grid": "high",
+            "model": "local",
+            "asian_ok_mean_ms": 0.7144360902960519,
+            "fit_plus_asian_mean_ms": 0.9526381752202258,
+            "group13_median_ms": 12.845774499510298
+          }
+        ],
+        "outer_actual_cost": {
+          "clock": {
+            "wall_start": 16372.922821365,
+            "wall_stop": 16385.63798387,
+            "cpu_start": 0.040318363,
+            "cpu_stop": 12.740372129
+          },
+          "wall_seconds": 12.71516250500099,
+          "cpu_seconds": 12.700053766
+        },
+        "qualification": "unknown"
+      },
+      "input_scope": {
+        "status": "PASS",
+        "original_states": 18,
+        "monthly_queries": 24,
+        "additional_teacher_cases": 4,
+        "formal_plan_locked": false,
+        "qualification": "unknown",
+        "actual_wall_seconds": 4.233482090996404
+      },
+      "restored_bytes": 10707062,
+      "restored_entries": 2,
+      "status": "PASS"
+    }
+  },
+  "scope": "component timing arithmetic and immutable input scope only; no formal financial qualification",
+  "input_clock_limitation": "input preparation saved elapsed wall/CPU, no interval endpoints; not interval-certified",
+  "failed_schema_attempt": {
+    "log": "task-5-component-cost-cas-schema-error.txt",
+    "financial_role": "none",
+    "cost": "unmeasured"
+  },
+  "store_tool_sha256": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+  "actual_cost": {
+    "clock": {
+      "wall_start": 17039.439340139,
+      "wall_stop": 17039.801985922,
+      "cpu_start": 1.416427918,
+      "cpu_stop": 1.595658233
+    },
+    "wall_seconds": 0.36264578299960704,
+    "cpu_seconds": 0.17923031500000008
+  }
+}

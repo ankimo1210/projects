@@ -1,0 +1,156 @@
+{
+  "date": "2026-10-10",
+  "decision": "diagnostic_component_measurements_only",
+  "owned_source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40"
+  },
+  "all_used_source_stable": true,
+  "original_input_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/pilot/selected-calls/refined/selected-calls.json": {
+      "sha256": "9f9fa7fbfd61c5114881479d8707f482c1a007e0ea47ad8e050eb537cdb2012e",
+      "bytes": 23503
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/reference.npz": {
+      "sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+      "bytes": 30535323
+    }
+  },
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "1641c8172168d9652ba8a16266dcbac8aeb6d68184ea54360b2648d35c264fb4",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+    "johnhull/hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "1641c8172168d9652ba8a16266dcbac8aeb6d68184ea54360b2648d35c264fb4",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+    "johnhull/hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+  },
+  "actual": {
+    "evaluate_asian_queries": 6912,
+    "13_refit_integrated_queries": 936,
+    "13_refit_group_count": 72,
+    "standalone_comparison_fit_queries": 936,
+    "cache_blocks": 16,
+    "full_monthly_dates": 12,
+    "outer_clock_excluding_final_output_serialization": {
+      "clock": {
+        "wall_start": 16372.922821365,
+        "wall_stop": 16385.63798387,
+        "cpu_start": 0.040318363,
+        "cpu_stop": 12.740372129
+      },
+      "wall_seconds": 12.71516250500099,
+      "cpu_seconds": 12.700053766
+    },
+    "predeclared_wall_cap_seconds": 300,
+    "cap_reached": false,
+    "rows": [
+      {
+        "grid": "coarse",
+        "model": "heston",
+        "successful_asian_mean_ms": 0.1851620165158272,
+        "allquery_asian_median_ms": 0.17685649982013274,
+        "allquery_asian_p95_ms": 0.2178078006181748,
+        "mean_actual_13refit_plus_analytic_asian_perquery_ms": 0.4658280811890707,
+        "median_13query_group_ms": 6.150855500891339,
+        "separate_same_queries_fitonly_mean_ms": 0.26527494022351067,
+        "separate_means_difference_asian_and_glue_ms": 0.20055314096556004,
+        "t0_only_mean_ms": 0.18812031258145603,
+        "domain": "full original-axis fixed box",
+        "qualification": "unknown"
+      },
+      {
+        "grid": "coarse",
+        "model": "local",
+        "successful_asian_mean_ms": 0.28753297575408227,
+        "allquery_asian_median_ms": 0.2805989997796132,
+        "allquery_asian_p95_ms": 0.331857399760338,
+        "mean_actual_13refit_plus_analytic_asian_perquery_ms": 0.583128277773936,
+        "median_13query_group_ms": 7.658907499717316,
+        "separate_same_queries_fitonly_mean_ms": 0.25193172252764845,
+        "separate_means_difference_asian_and_glue_ms": 0.3311965552462876,
+        "t0_only_mean_ms": 0.27193862496233123,
+        "domain": "full original-axis fixed box",
+        "qualification": "unknown"
+      },
+      {
+        "grid": "high",
+        "model": "heston",
+        "successful_asian_mean_ms": 0.2095861191264703,
+        "allquery_asian_median_ms": 0.19996499941044021,
+        "allquery_asian_p95_ms": 0.25770714919417503,
+        "mean_actual_13refit_plus_analytic_asian_perquery_ms": 0.5111162691975598,
+        "median_13query_group_ms": 6.75718250022328,
+        "separate_same_queries_fitonly_mean_ms": 0.2782969401241877,
+        "separate_means_difference_asian_and_glue_ms": 0.23281932907337205,
+        "t0_only_mean_ms": 0.21360708336715106,
+        "domain": "full original-axis fixed box",
+        "qualification": "unknown"
+      },
+      {
+        "grid": "high",
+        "model": "local",
+        "successful_asian_mean_ms": 0.7144360902960519,
+        "allquery_asian_median_ms": 0.7204664998425869,
+        "allquery_asian_p95_ms": 0.8940469007939099,
+        "mean_actual_13refit_plus_analytic_asian_perquery_ms": 0.9526381752202258,
+        "median_13query_group_ms": 12.845774499510298,
+        "separate_same_queries_fitonly_mean_ms": 0.25886653424499345,
+        "separate_means_difference_asian_and_glue_ms": 0.6937716409752323,
+        "t0_only_mean_ms": 0.4097041666000223,
+        "domain": "full original-axis fixed box",
+        "qualification": "unknown"
+      }
+    ]
+  },
+  "fixture_scope": "original18 S/Q and saved fitted states, monthly memory fixture; analytic dense mean/16blocks; no financial/teacher/precision authentication",
+  "unknown_preserved": "saved Heston t11/12,S80 ill-conditioned state remains unavailable; direct fast unknown counted separately; no_root/ill_conditioned bump outcomes retained with full raw roots",
+  "formal_original_N_and_main_test_seed_streams": "not opened, drawn, loaded or altered; dense cache original_N=None",
+  "not_claimed": [
+    "formal wall runtime",
+    "financial qualification",
+    "independent IID block uncertainty",
+    "teacher training or precision",
+    "all formal work complete"
+  ],
+  "unmeasured": [
+    "actual teacher generation/precision/eligibility",
+    "formal396evaluations/12fits",
+    "actual validity patches",
+    "arbitrary visited states/support",
+    "serialization/savedchecker/CAS expenses",
+    "total formal runtime"
+  ],
+  "financial_qualification": "unknown",
+  "diagnostic_bumps": {
+    "spot": 0.05,
+    "quote": 0.01,
+    "multipliers": [
+      1.0,
+      0.5,
+      2.0
+    ]
+  },
+  "formal_producer_bumps_not_measured_here": {
+    "spot": 0.02,
+    "quote": 0.0001,
+    "multipliers": [
+      1.0,
+      0.5,
+      2.0
+    ]
+  },
+  "bump_scope_limitation": "Source algorithm/full-domain operations were measured with diagnostic bumps; not the formal input, financial bias, Greek accuracy or original-N run. Larger quote bumps produce different no_root/conditioning/support distributions.",
+  "formal_N_runtime_conversion": "Unmeasured; component-only reference projection requires independent review and is not financial or formal wall qualification."
+}

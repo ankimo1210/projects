@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-component-cost-cas-check.py", line 105, in <module>
+    "input_scope":check_inputs((dest/"raw"/names[1]).read_bytes()),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-component-cost-cas-check.py", line 82, in check_inputs
+    for r in a["measurements"]: clock_check(r)
+                                ^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-component-cost-cas-check.py", line 13, in clock_check
+    c=r["clock"]
+      ~^^^^^^^^^
+KeyError: 'clock'

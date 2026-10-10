@@ -1,0 +1,12 @@
+{
+  "raw_status": "executed",
+  "processed_n": 256,
+  "largest_actual_packed_risk_chunk": {
+    "array_bytes": 30243088,
+    "payload_string_bytes": 30567,
+    "expanded_bytes": 30273655
+  },
+  "risk_worker_wall_seconds": 3.019233777999034,
+  "saved_checker_wall_seconds": 3.029699905000598,
+  "source_stable": true
+}

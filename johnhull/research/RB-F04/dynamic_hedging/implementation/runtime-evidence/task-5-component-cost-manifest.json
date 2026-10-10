@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": "raw/task-5-asian-query-cost-results.json",
+      "ref": "artifact:sha256:c4259df822fb75d624d2064b3d47e724cdd07a2df0aa8bf901a17fac439c01f0",
+      "bytes": 10669018,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation.json",
+      "ref": "artifact:sha256:745804d59d1c8dc25af6df2f4a1851e7d78ee36fd3dcdf8ace782a2fa6a11ed2",
+      "bytes": 38044,
+      "mime": "application/json"
+    }
+  ]
+}

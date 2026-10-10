@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-10",
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40"
+  },
+  "input_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/pilot/selected-calls/refined/selected-calls.json": {
+      "sha256": "9f9fa7fbfd61c5114881479d8707f482c1a007e0ea47ad8e050eb537cdb2012e",
+      "bytes": 23503
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/reference.npz": {
+      "sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+      "bytes": 30535323
+    }
+  },
+  "evidence_sha256": {
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-asian-query-cost-plan.json": "4c7bf520b6aae959543a0734978f3b5d1bf23e062fd190a73871f26b3b042853",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-asian-query-cost-probe.py": "bfcfceb4efd947b844d2a86201c7b926b0d724af841ac27ecc18560dac861ca7",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-asian-query-cost-probe.txt": "332cf427029c2707229426e81ea1036d9216f656f70790261099ec8995faf046",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-asian-query-cost-results.json": "c4259df822fb75d624d2064b3d47e724cdd07a2df0aa8bf901a17fac439c01f0",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-asian-query-cost-summary.json": "0481370886caa687c9517657aeab655b900a77f9091ced61ab1a98d2aa7fe43c",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-asian-query-cost-summary.md": "8dedc79fa7cef364c684501270f6423609422afccb2ac2ebb3588e9cf0c0d4df"
+  },
+  "original_study_N_and_reserved_formal_streams": "not opened or changed",
+  "financial_qualification": "unknown",
+  "source_stability": "all seven used files before/after identical; four frozen files match previous final snapshot",
+  "formal_wall_measurement": false,
+  "diagnostic_formal_bump_mismatch_explicit": true
+}

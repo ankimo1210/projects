@@ -1,0 +1,1 @@
+{"status": "PASS", "entries": 2, "bytes": 10707062, "both_stores_arithmetic": "PASS", "actual_cost": {"clock": {"wall_start": 17039.439340139, "wall_stop": 17039.801985922, "cpu_start": 1.416427918, "cpu_stop": 1.595658233}, "wall_seconds": 0.36264578299960704, "cpu_seconds": 0.17923031500000008}}

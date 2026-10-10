@@ -327,7 +327,7 @@ Task5 helperの[ソース確認](../../../research/RB-F04/dynamic_hedging/implem
 [分割保存接続](../../../research/RB-F04/dynamic_hedging/implementation/MAIN_SINK_SOURCE.md)：実source/rawの事前gate後、元18ケース×2集合の結果を任意sinkへ渡し、次の評価前にcaller配列参照を解放する。sinkなしと旧strict v1は保持。保存例外は伝播し、欠損を補わない。41scoped tests、独立56件（旧main15件を含む）、writer例外probeと限定独立レビュー未解決0、2Pythonruff/format PASS。合成source-unit検査であり、正式金融mainを実行した証拠ではない。全396件の保存・元分母・原費用・数値精度は正式main/checkerで検証し、正式pilot/freeze/最終受入・main統合の未完条件を維持する。
 
 
-追加の[依存cap入口](../../../research/RB-F04/dynamic_hedging/implementation/DEPENDENCY_CAP_SOURCE.md)を限定承認：全runner51PASS・独立6件、元Nを保持しactual helperへ渡す。正式main/金融precisionの代替ではない。[予算測定](../../../research/RB-F04/dynamic_hedging/implementation/PILOT_BUDGET_MEASUREMENTS.md)は元18入力の実2,304 scalar fitと歴史的教師外挿を保存。残るAsian/16block・保存/check費用と正式121/51計画の独立確認が必要。
+追加の[依存cap入口](../../../research/RB-F04/dynamic_hedging/implementation/DEPENDENCY_CAP_SOURCE.md)を限定承認：全runner51PASS・独立6件、元Nを保持しactual helperへ渡す。正式main/金融precisionの代替ではない。[予算測定](../../../research/RB-F04/dynamic_hedging/implementation/PILOT_BUDGET_MEASUREMENTS.md)は元18入力の実2,304 scalar fit、Asian/16block6,912query・13再較正936query、元入力準備と両CAS復元/算術を保存。主実験N256の部品測定はrisk生成＋saved検算の参考外挿約3.87時間、expanded約70–141 GB。正式wall/金融資格には使わない。正式121/51計画のprogressive4N/higher-N oracle資格選択・未使用later-prefix、A原N/first_failure/verification/cap-planとdistinct inclusive expense写像、main resume追加費用・重複viewをsource修復・独立確認してから事前予算を固定する。
 
 
 [fresh4 source](../../../research/RB-F04/dynamic_hedging/implementation/FRESH_SOURCE.md)を独立承認。82専用tests、原5＋追加3のcap/CPU改変拒否、actual N1024/all13/768+1536/16blocksの新規saved-only検査、旧API10比較allclose。I1–I4は解消、正式financial fresh/premium/main・研究受入は未実施。

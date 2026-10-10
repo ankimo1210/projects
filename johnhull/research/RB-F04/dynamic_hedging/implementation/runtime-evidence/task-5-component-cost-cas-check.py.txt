@@ -1,0 +1,123 @@
+import json, math, hashlib, sys, time
+from pathlib import Path
+from collections import Counter
+import numpy as np
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+sys.path.insert(0,str(WT/"johnhull/scripts"))
+import evidence_store as es
+
+def close(a,b):
+ assert math.isclose(float(a),float(b),rel_tol=1e-9,abs_tol=1e-10),(a,b)
+def clock_check(r):
+ c=r["clock"]
+ for v in c.values(): assert math.isfinite(v) and v>=0
+ close(r["wall_seconds"],c["wall_stop"]-c["wall_start"])
+ close(r["cpu_seconds"],c["cpu_stop"]-c["cpu_start"])
+ assert r["wall_seconds"]>=0 and r["cpu_seconds"]>=0
+def check_measurement(data):
+ a=json.loads(data)
+ assert a["financial_qualification"]=="unknown"
+ assert all(a[k] is False for k in ("formal_pilot","formal_main","formal_teachers","synthetic_shape_timings_are_financial_qualification","cap_reached"))
+ assert a["owned_source_stable"] and a["all_used_source_stable"]
+ ts=a["query_timings"]
+ assert len(ts)==6912
+ counts=Counter((r["grid"],r["model"],r["domain"]) for r in ts)
+ assert len(counts)==8 and set(counts.values())=={864}
+ for r in ts: clock_check(r)
+ summaries=[]
+ integrated=0
+ for m in a["measurements"]:
+  clock_check(m)
+  if m["operation"]=="evaluate_asian_only":
+   rows=[r for r in ts if (r["grid"],r["model"],r["domain"])==(m["grid"],m["model"],m["domain"])]
+   w=np.array([r["wall_seconds"] for r in rows])
+   c=np.array([r["cpu_seconds"] for r in rows])
+   assert m["actual_query_count"]==len(rows)==m["planned_query_count"]
+   assert m["status_counts"]==dict(Counter(r["status"] for r in rows))
+   close(m["sum_query_wall_seconds"],sum(w))
+   close(m["sum_query_cpu_seconds"],sum(c))
+   close(m["mean_query_wall_seconds"],np.mean(w))
+   close(m["mean_query_cpu_seconds"],np.mean(c))
+   close(m["median_query_wall_seconds"],np.median(w))
+   close(m["p95_query_wall_seconds"],np.percentile(w,95))
+   if m["domain"]=="full_fixed_box":
+    ok=[r["wall_seconds"] for r in rows if r["status"]=="ok"]
+    close(m["by_status_reason"]["ok:"]["mean_wall_seconds"],np.mean(ok))
+    summaries.append({"grid":m["grid"],"model":m["model"],"asian_ok_mean_ms":float(np.mean(ok)*1000)})
+  elif m["operation"]=="actual_13_refit_plus_analytic_asian":
+   gs=m["all_group_timings"]
+   assert len(gs)==m["actual_group_count"]==18
+   assert sum(r["queries"] for r in gs)==m["actual_query_count"]==234
+   for r in gs:
+    clock_check(r)
+    assert r["queries"]==13
+    assert sum(r["status_counts"].values())==13
+    assert sum(r["asian_status_counts"].values())==13
+   wall=sum(r["wall_seconds"] for r in gs)
+   cpu=sum(r["cpu_seconds"] for r in gs)
+   close(wall,m["sum_actual_group_wall_seconds"])
+   close(cpu,m["sum_actual_group_cpu_seconds"])
+   close(wall/234,m["mean_integrated_query_wall_seconds"])
+   close(np.median([r["wall_seconds"] for r in gs]),m["median_13query_group_wall_seconds"])
+   assert m["separate_same_query_fit_only"]["actual_query_count"]==234
+   assert m["extrapolation_is_formal_wall_measurement"] is False
+   integrated+=234
+   row=next(r for r in summaries if (r["grid"],r["model"])==(m["grid"],m["model"]))
+   row["fit_plus_asian_mean_ms"]=wall/234*1000
+   row["group13_median_ms"]=m["median_13query_group_wall_seconds"]*1000
+ assert integrated==936
+ clock_check(a["outer_actual_cost"])
+ return {"status":"PASS","asian_query_count":6912,"integrated_query_count":936,"table":summaries,"outer_actual_cost":a["outer_actual_cost"],"qualification":"unknown"}
+
+def check_inputs(data):
+ a=json.loads(data)
+ assert a["formal_plan_locked"] is False and a["formal_pilot"] is False
+ assert a["financial_qualification"]=="unknown"
+ assert len(a["original_states18"])==18
+ assert {k:len(v) for k,v in a["diagnostic_queries24"].items()}=={"Heston":12,"local":12}
+ assert {k:len(v) for k,v in a["additional_teacher_cases"].items()}=={"Heston":2,"local":2}
+ assert len(a["diagnostic_observations_raw"])==14
+ assert a["source_before"]==a["source_after"]
+ for r in a["measurements"]:
+  for k in ("wall_seconds","cpu_seconds"): assert math.isfinite(r[k]) and r[k]>=0
+ assert a["outer_wall_seconds"]>0 and a["outer_cpu_seconds"]>0
+ assert a["stream_receipts_status"].startswith("not generated")
+ return {"status":"PASS","original_states":18,"monthly_queries":24,"additional_teacher_cases":4,"formal_plan_locked":False,"qualification":"unknown","actual_wall_seconds":a["outer_wall_seconds"]}
+
+started=time.perf_counter(); cpu=time.process_time()
+primary=es.Store.open("/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",role="primary")
+mirror=es.Store.open("/mnt/f/ProjectArtifacts/projects-backup",role="mirror")
+names=["task-5-asian-query-cost-results.json","task-5-actual-pilot-input-preparation.json"]
+manifest={"schema_version":1,"kind":"johnhull-evidence-manifest","entries":[]}
+for name in names:
+ raw=(D/name).read_bytes()
+ info=primary.put_bytes(raw)
+ es.replicate(primary,mirror,[info["sha256"]])
+ manifest["entries"].append(es.manifest_entry("raw/"+name,raw))
+es.load_manifest(manifest)
+checks={}
+for store in (primary,mirror):
+ dest=D/("task-5-component-cost-restored-v2-"+store.role)
+ assert not dest.exists(),str(dest)
+ report=es.restore([store],manifest,dest)
+ checks[store.role]={
+  "measurement_arithmetic":check_measurement((dest/"raw"/names[0]).read_bytes()),
+  "input_scope":check_inputs((dest/"raw"/names[1]).read_bytes()),
+  "restored_bytes":sum(e["bytes"] for e in manifest["entries"]),
+  "restored_entries":len(report["entries"]),
+  "status":"PASS"}
+out={
+ "kind":"dynamic_hedging_component_cost_both_store_verification",
+ "status":"PASS","manifest":manifest,"checks":checks,
+ "scope":"component timing arithmetic and immutable input scope only; no formal financial qualification",
+ "input_clock_limitation":"input preparation saved elapsed wall/CPU, no interval endpoints; not interval-certified",
+ "failed_schema_attempt":{"log":"task-5-component-cost-cas-schema-error.txt","financial_role":"none","cost":"unmeasured"},
+ "store_tool_sha256":hashlib.sha256((WT/"johnhull/scripts/evidence_store.py").read_bytes()).hexdigest(),
+ "actual_cost":{"clock":{"wall_start":started,"wall_stop":time.perf_counter(),"cpu_start":cpu,"cpu_stop":time.process_time()}}}
+c=out["actual_cost"]["clock"]
+out["actual_cost"]["wall_seconds"]=c["wall_stop"]-c["wall_start"]
+out["actual_cost"]["cpu_seconds"]=c["cpu_stop"]-c["cpu_start"]
+(D/"task-5-component-cost-manifest.json").write_text(json.dumps(manifest,indent=2)+"\n")
+(D/"task-5-component-cost-cas-check.json").write_text(json.dumps(out,indent=2)+"\n")
+print(json.dumps({"status":out["status"],"entries":2,"bytes":checks["primary"]["restored_bytes"],"both_stores_arithmetic":"PASS","actual_cost":out["actual_cost"]}))

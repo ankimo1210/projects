@@ -1,0 +1,15 @@
+{
+  "original_states": 18,
+  "diagnostic_dates_per_model": 12,
+  "additional_cases": {
+    "Heston": 2,
+    "local": 2
+  },
+  "local_fit_statuses": [
+    "ok",
+    "ok"
+  ],
+  "source_stable": true,
+  "outer_wall_seconds": 4.233482090996404,
+  "financial_qualification": "unknown"
+}

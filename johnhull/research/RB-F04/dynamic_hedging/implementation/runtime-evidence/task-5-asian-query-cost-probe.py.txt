@@ -1,0 +1,202 @@
+"""Cost diagnostic only; analytic blocks are not teachers or financial evidence."""
+from pathlib import Path
+import time, sys, json, hashlib, math
+from unittest.mock import patch
+from collections import Counter
+BEGIN, CPU_BEGIN = time.perf_counter(), time.process_time()
+CAP = 300.0
+DEADLINE = BEGIN + CAP
+ROOT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D = ROOT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+sys.path[:0] = [str(ROOT/"johnhull/hullkit/src"),str(ROOT/"deep_hedge_price/src"),str(ROOT/"johnhull/research/RB-F04/dynamic_hedging")]
+import numpy as np
+from hullkit._dynamic_hedging_surfaces import build_asian_cache,evaluate_asian,build_call_cache,fit_quote_state
+from hullkit._heston_local_surface import HestonParameters,LocalVarianceGrid
+from run_pilot import teacher_axes,bump_query_chunk
+BASE = ROOT/"johnhull/research/RB-F04/dynamic_hedging"
+SELECTED = BASE/"pilot/selected-calls/refined/selected-calls.json"
+FIELD = BASE/"pilot/initial-quotes/reference.npz"
+SHA=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+OWNED=[BASE/s for s in ("reference_methods.py","run_fresh.py","check_fresh.py")]
+OWNED += [ROOT/"deep_hedge_price/tests/test_dynamic_hedging_fresh.py"]
+USED=OWNED+[BASE/"run_pilot.py",ROOT/"johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",ROOT/"johnhull/hullkit/src/hullkit/_heston_local_surface.py"]
+before={str(p.relative_to(ROOT)):SHA(p) for p in USED}
+selected=json.loads(SELECTED.read_text());parameters=HestonParameters(**selected["parameters"])
+inputs={str(p.relative_to(ROOT)):{"sha256":SHA(p),"bytes":p.stat().st_size} for p in (SELECTED,FIELD)}
+plan={"scope":"scratch computation costs; no formal pilot/main/financial/teacher qualification",
+ "predeclared_wall_cap_seconds":CAP,"phase_start":BEGIN,"deadline_wall":DEADLINE,
+ "axes":"actual run_pilot.teacher_axes coarse/high;12monthlydates;all nodes;local dedicated5-node t0 sheet",
+ "blocks":"16 deterministic analytic block curves; no IID claim, no original teacher N declared",
+ "analytic_f":"0.45*future_mean-0.01*threshold+0.02*state(H); +0.02*log(ell)+0.01*log(S/100)(L)",
+ "block_formula":"f+linspace(-0.001,0.001,16),duplicated3channels",
+ "memory_fixture":"post-fixing n=round(12t);n0 sum0;otherwise n-1 prior fixings100 plus latest/current S",
+ "selected_queries":"original18 S/Q/saved fitted state; missing state remains NaN",
+ "additional_dates":"3queries each12dates; t0S99.95/100/100.05;later80/100/120;H.02/.04/.08;L.8/1/1.4",
+ "direct_repeats":16,"direct_domains":["global","full_fixed_box"],
+ "bump":"original bump_query_chunk widths1,.5,2;hS.05,hQ.01;18states per grid/model;all13roots refit",
+ "call_domain":"same root scalar probe:6selecteddates,S65 geom50..200,Hv33 full1e-5..0.5,ell7 full.25..4",
+ "source_before":before,"original_inputs":inputs,"original_study_N_streams":"not opened or altered",
+ "qualification":"unknown","extrapolation_is_formal_wall_measurement":False}
+(D/"task-5-asian-query-cost-plan.json").write_text(json.dumps(plan,indent=2)+"\n")
+out={"plan":plan,"analytic_input_bindings":{},"measurements":[],"query_timings":[],"raw_first_repeat":[],"bump_raw":[],"fit_first_repeat":[],
+ "financial_qualification":"unknown","formal_pilot":False,"formal_main":False,"formal_teachers":False,
+ "unmeasured":["actual teacher generation/precision/eligibility","formal396evaluations/12fits","actual validity patches",
+ "arbitrary visited states/support","serialization/savedchecker/CAS expenses","total formal runtime"],
+ "synthetic_shape_timings_are_financial_qualification":False}
+def expired():return time.perf_counter()>=DEADLINE
+def clean(x):
+ if isinstance(x,dict):return {str(k):clean(v) for k,v in x.items()}
+ if isinstance(x,np.ndarray):return clean(x.tolist())
+ if isinstance(x,(list,tuple)):return [clean(v) for v in x]
+ if isinstance(x,np.generic):return clean(x.item())
+ if isinstance(x,float) and not math.isfinite(x):return {"nonfinite":"nan" if math.isnan(x) else "inf" if x>0 else "-inf"}
+ return x
+def clock(w,c):
+ stop,cs=time.perf_counter(),time.process_time()
+ return {"clock":{"wall_start":w,"wall_stop":stop,"cpu_start":c,"cpu_stop":cs},"wall_seconds":stop-w,"cpu_seconds":cs-c}
+def stats(rows):
+ if not rows:return {"actual_query_count":0}
+ wall=np.array([r["wall_seconds"] for r in rows]);cpu=np.array([r["cpu_seconds"] for r in rows])
+ groups={}
+ for label in sorted({r["status"]+":"+r.get("reason","") for r in rows}):
+  subset=[r for r in rows if r["status"]+":"+r.get("reason","")==label]
+  groups[label]={"count":len(subset),"mean_wall_seconds":float(np.mean([r["wall_seconds"] for r in subset])),
+   "median_wall_seconds":float(np.median([r["wall_seconds"] for r in subset]))}
+ return {"actual_query_count":len(rows),"mean_query_wall_seconds":float(wall.mean()),
+ "median_query_wall_seconds":float(np.median(wall)),"p95_query_wall_seconds":float(np.quantile(wall,.95)),
+ "mean_query_cpu_seconds":float(cpu.mean()),"sum_query_wall_seconds":float(wall.sum()),"sum_query_cpu_seconds":float(cpu.sum()),
+ "status_counts":dict(Counter(r["status"] for r in rows)),"by_status_reason":groups}
+def memory(date,spot):
+ n=round(date*12)
+ return n,0. if n==0 else 100.*(n-1)+spot
+def analytic_groups(axes,model):
+ f=[];t0_f=None
+ for j,t in enumerate(axes["dates"]):
+  n=round(t*12);mean=np.exp(.03*(np.arange(n+1,13)/12-t)).sum()
+  if model=="heston":value=.45*mean-.01*axes["threshold"][j][None,:]+.02*axes["state"][:,None]
+  else:
+   value=.45*mean-.01*axes["threshold"][j][None,None,:]+.02*np.log(axes["state"])[None,:,None]+.01*np.log(axes["spot"]/100)[:,None,None]
+   if j==0:t0_f=.45*mean-.01*axes["threshold"][j][None,None,:]+.02*np.log(axes["state"])[None,:,None]+.01*np.log(axes["t0_spot"]/100)[:,None,None]
+  f.append(value)
+ f=np.stack(f);offset=np.linspace(-.001,.001,16)
+ def blocks(x):return np.broadcast_to(x[...,None,None]+offset[None,:,None],(*x.shape,16,3)).copy()
+ groups={"parameters":parameters,"f":f,"block_means":blocks(f)}
+ if t0_f is not None:groups.update(t0_f=t0_f,t0_block_means=blocks(t0_f))
+ return groups
+def domains(axes,model):
+ return [({"spot":[0,len(axes["t0_spot"]) if j==0 else len(axes["spot"])]} if model=="local" else {})|
+   {"state":[0,len(axes["state"])],"threshold":[0,len(axes["threshold"][j])]} for j in range(12)]
+def queries(model,axes):
+ actual=[]
+ for i,r in enumerate(selected["rows"]):
+  state=r["models"][model]["state"];state=np.nan if state is None else state
+  n,a=memory(r["date"],r["spot"])
+  actual.append({"kind":"actual_selected_input_with_analytic_cache","index":i,"date_index":round(r["date"]*12),
+   "date":r["date"],"spot":r["spot"],"quote":r["quote"],"state":state,"saved_fit_status":r["models"][model]["status"],
+   "saved_fit_reason":r["models"][model]["reason"],"memory_count":n,"memory_sum":a})
+ fixture=[]
+ for j,t in enumerate(axes["dates"]):
+  for i,s in enumerate([99.95,100.,100.05] if j==0 else [80.,100.,120.]):
+   state=[.02,.04,.08][i] if model=="heston" else [.8,1.,1.4][i]
+   n,a=memory(t,s)
+   fixture.append({"kind":"explained_12date_query_fixture","index":3*j+i,"date_index":j,"date":float(t),
+    "spot":s,"state":state,"memory_count":n,"memory_sum":a})
+ return actual+fixture
+def forbid(*a,**k):raise AssertionError("diagnostic must not open any random stream")
+caches={}
+
+with patch.object(np.random,"default_rng",side_effect=forbid),patch.object(np.random,"standard_normal",side_effect=forbid),patch.object(np.random,"normal",side_effect=forbid):
+ for grid in ("coarse","high"):
+  for model,label in (("heston","Heston"),("local","local")):
+   if expired():break
+   axes=teacher_axes(grid,label);groups=analytic_groups(axes,model)
+   out["analytic_input_bindings"][grid+":"+model]={"axes":axes.copy(),
+    "dense_arrays":{k:{"shape":list(np.shape(v)),"dtype":str(v.dtype),
+       "sha256":hashlib.sha256(np.ascontiguousarray(v).tobytes()).hexdigest()}
+     for k,v in groups.items() if isinstance(v,np.ndarray)}}
+   for domain in ("global","full_fixed_box"):
+    if expired():break
+    w,c=time.perf_counter(),time.process_time()
+    cache=build_asian_cache(groups,model=model,axes=axes,evaluation_domains=None if domain=="global" else domains(axes,model))
+    buildcost=clock(w,c);buildcost.update(operation="analytic_cache_build",grid=grid,model=model,domain=domain,
+      axis_sizes={k:list(np.shape(v)) for k,v in axes.items()},f_shape=list(cache["f"].shape),
+      block_shape=list(cache["block_means"].shape),original_N=cache["original_N"])
+    out["measurements"].append(buildcost)
+    if domain=="full_fixed_box":caches[(grid,model)]=cache
+    rows=queries(model,axes);duration=[];w,c=time.perf_counter(),time.process_time()
+    for repeat in range(plan["direct_repeats"]):
+     if expired():break
+     for row in rows:
+      if expired():break
+      t,tc=time.perf_counter(),time.process_time()
+      raw=evaluate_asian(cache,row["date_index"],row["spot"],row["state"],row["memory_sum"],row["memory_count"])
+      measured=clock(t,tc);measured.update(grid=grid,model=model,domain=domain,repeat=repeat,**row,status=raw["status"],reason=raw["reason"])
+      duration.append(measured);out["query_timings"].append(measured)
+      if repeat==0:out["raw_first_repeat"].append({"grid":grid,"model":model,"domain":domain,"input":row,"raw":raw})
+    out["measurements"].append({"operation":"evaluate_asian_only","grid":grid,"model":model,"domain":domain,
+     **clock(w,c),**stats(duration),"planned_query_count":len(rows)*plan["direct_repeats"],
+     "cold_first_query_wall_seconds":duration[0]["wall_seconds"] if duration else None,
+     "qualification":"unknown","timing_input":"actual selected inputs plus explained fixture;analytic cached f/16blocks",
+     "actual_selected_stats":stats([r for r in duration if r["kind"].startswith("actual_selected")]),
+     "all12date_fixture_stats":stats([r for r in duration if r["kind"].startswith("explained")])})
+ dates=np.array(sorted({row["date"] for row in selected["rows"]}));spot_nodes=np.geomspace(50,200,65)
+ h=np.r_[np.linspace(0,.08,17),np.linspace(.08,.5,17)[1:]];h[0]=1e-5
+ l=np.array([.25,.5,.75,1,1.5,2,4])
+ with np.load(FIELD,allow_pickle=False) as a:
+  prefix="field257x321.surface."
+  field=LocalVarianceGrid(a[prefix+"times"],a[prefix+"z_nodes"],a[prefix+"local_variance"],parameters,a[prefix+"wing_boundaries"])
+ calls={}
+ for model,states in (("heston",h),("local",l)):
+  if expired():break
+  w,c=time.perf_counter(),time.process_time()
+  calls[model]=build_call_cache(parameters,field,dates=dates,spot_nodes=spot_nodes,state_nodes=states,model=model)
+  out["measurements"].append({"operation":"actual_call_cache_build","model":model,**clock(w,c),
+   "spot_count":65,"state_count":len(states),"date_count":len(dates),"reference_status":calls[model]["reference_status"],
+   "financial_qualification":"unknown"})
+ for grid in ("coarse","high"):
+  for model in ("heston","local"):
+   if expired() or model not in calls:break
+   joint={model:{"asian":caches[(grid,model)],"call":calls[model]}}
+   times=[];fit_times=[];w,c=time.perf_counter(),time.process_time()
+   for i,row in enumerate(selected["rows"]):
+    if expired():break
+    n,a=memory(row["date"],row["spot"])
+    dataset={"times":np.array([row["date"]]),"prices":np.array([[[row["spot"],row["quote"]]]]),
+     "memory_sum":np.array([[a]]),"memory_count":np.array([[n]])}
+    q0,qcpu=time.perf_counter(),time.process_time()
+    raw=bump_query_chunk(dataset,joint,model=model,date_index=0,path_start=0,path_stop=1,spot_bump=.05,quote_bump=.01)
+    measured=clock(q0,qcpu)
+    measured.update(grid=grid,model=model,selected_index=i,date=row["date"],queries=13,
+     status_counts=dict(Counter(q["fits"][0]["status"] for q in raw["queries"])),
+     asian_status_counts=dict(Counter(q["claims"][0]["status"] for q in raw["queries"])),memory_count=n,memory_sum=a)
+    times.append(measured);out["bump_raw"].append({"input":measured,"raw":raw})
+    call={**calls[model],"asian_state_bounds":[caches[(grid,model)]["state_nodes"][0],caches[(grid,model)]["state_nodes"][-1]]}
+    ci=int(np.flatnonzero(np.isclose(dates,row["date"],atol=1e-12,rtol=0))[0])
+    for k,query in enumerate(raw["queries"]):
+     f0,fcpu=time.perf_counter(),time.process_time()
+     fit=fit_quote_state(call,ci,float(query["spots"][0]),float(query["quotes"][0]),state_scale=.04 if model=="heston" else 1.)
+     cost=clock(f0,fcpu);cost.update(status=fit["status"],reason=fit["reason"],query=k,selected_index=i,grid=grid,model=model)
+     fit_times.append(cost)
+     if i==0:out["fit_first_repeat"].append({"input":cost,"fit":fit})
+   total=clock(w,c)
+   out["measurements"].append({"operation":"actual_13_refit_plus_analytic_asian","grid":grid,"model":model,
+    "actual_group_count":len(times),"actual_query_count":13*len(times),**total,
+    "sum_actual_group_wall_seconds":sum(x["wall_seconds"] for x in times),
+    "sum_actual_group_cpu_seconds":sum(x["cpu_seconds"] for x in times),
+    "mean_integrated_query_wall_seconds":sum(x["wall_seconds"] for x in times)/(13*len(times)) if times else None,
+    "median_13query_group_wall_seconds":float(np.median([x["wall_seconds"] for x in times])) if times else None,
+    "all_group_timings":times,"separate_same_query_fit_only":stats(fit_times),
+    "note":"phase includes separately repeated fit-only comparison;integrated group times do not",
+    "financial_qualification":"unknown","extrapolation_is_formal_wall_measurement":False})
+after={str(p.relative_to(ROOT)):SHA(p) for p in USED}
+out["source_after"]=after;out["owned_source_stable"]=all(before[str(p.relative_to(ROOT))]==after[str(p.relative_to(ROOT))] for p in OWNED)
+out["all_used_source_stable"]=before==after
+out["cap_reached"]=expired()
+out["outer_actual_cost"]=clock(BEGIN,CPU_BEGIN)
+out["observed_overrun_seconds"]=max(0.,time.perf_counter()-DEADLINE)
+out["input_sha256"]=inputs
+(D/"task-5-asian-query-cost-results.json").write_text(json.dumps(clean(out),indent=2,allow_nan=False)+"\n")
+print(json.dumps(clean({"outer":out["outer_actual_cost"],"source_stable":out["all_used_source_stable"],
+ "owned_stable":out["owned_source_stable"],"cap_reached":out["cap_reached"],
+ "measurements":[{k:v for k,v in r.items() if k not in {"all_group_timings"}} for r in out["measurements"]]}),indent=2,allow_nan=False),flush=True)
+assert out["owned_source_stable"]

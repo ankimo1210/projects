@@ -1,0 +1,98 @@
+"""Bounded deterministic source-unit payload cost; no formal streams or teachers."""
+from pathlib import Path
+import hashlib
+import json
+import sys
+import time
+from unittest.mock import patch
+
+ROOT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D = ROOT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+sys.path[:0] = [str(ROOT / "johnhull/hullkit/src"), str(ROOT / "deep_hedge_price/src"),
+                str(ROOT / "johnhull/research/RB-F04/dynamic_hedging")]
+import numpy as np
+import run_main as main
+import check_main
+from hullkit._dynamic_hedging_surfaces import build_asian_cache
+from hullkit._heston_local_surface import LocalVarianceGrid
+
+started = time.perf_counter()
+n = 256
+p = main.HestonParameters(100, .03, 0, .04, 2, .04, .3, -.7)
+files = [ROOT / "johnhull/research/RB-F04/dynamic_hedging" / name
+         for name in ("run_main.py", "check_main.py", "run_pilot.py")]
+sha = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+before = {str(path.relative_to(ROOT)): sha(path) for path in files}
+field_file = ROOT / "johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/reference.npz"
+with np.load(field_file, allow_pickle=False) as arrays:
+    prefix = "field257x321.surface."
+    field = LocalVarianceGrid(arrays[prefix + "times"], arrays[prefix + "z_nodes"],
+                              arrays[prefix + "local_variance"], p, arrays[prefix + "wing_boundaries"])
+dates = np.arange(13) / 12
+caches, dimensions = {}, {}
+
+def forbid(*args, **kwargs):
+    raise AssertionError("source-unit payload probe cannot open random streams")
+
+with patch.object(np.random, "default_rng", side_effect=forbid):
+    for model, label in (("heston", "Heston"), ("local", "local")):
+        axes = main.pilot.teacher_axes("high", label)
+        count = 12 - np.arange(12)
+        if model == "heston":
+            f = .4 * count[:, None, None] + .1 * axes["state"][None, :, None] - .01 * axes["threshold"][:, None, :]
+        else:
+            f = (.4 * count[:, None, None, None] + .01 * np.log(axes["state"])[None, None, :, None]
+                 - .01 * axes["threshold"][:, None, None, :] + np.zeros((1, len(axes["spot"]), 1, 1)))
+        block = np.broadcast_to(f[..., None, None], (*f.shape, 16, 3)).copy()
+        block += (np.arange(16) - 7.5).reshape((1,) * f.ndim + (16, 1)) * 1e-4
+        groups = {"parameters": p, "f": f, "block_means": block}
+        if model == "local":
+            t0 = np.broadcast_to(f[0, :1], (len(axes["t0_spot"]), *f.shape[2:])).copy()
+            groups.update(t0_f=t0, t0_block_means=np.broadcast_to(t0[..., None, None], (*t0.shape, 16, 3)).copy())
+        asian = build_asian_cache(groups, model=model, axes=axes)
+        call = main.runner._tiny_call_cache(model, p, dates, np.geomspace(40, 250, 65),
+                                            np.linspace(.00001, .5, 33) if model == "heston" else np.geomspace(.25, 4, 7))
+        caches[model] = {"asian": asian, "call": call}
+        dimensions[model] = {"axes": {k: list(np.shape(v)) for k, v in axes.items()},
+                             "f_shape": list(f.shape), "block_shape": list(block.shape),
+                             "cache_array_bytes": main._array_bytes(caches[model]),
+                             "original_teacher_n": asian["original_N"]}
+    spots = np.broadcast_to(np.linspace(80, 120, n)[:, None], (n, 13)).copy()
+    spots[:, 0] = 100
+    prices = np.stack([spots, .2 * spots - 10 + .2], axis=-1)
+    memory = np.c_[np.zeros(n), np.cumsum(spots[:, 1:], axis=1)]
+    data = {"original_n": n, "path_ids": np.arange(n), "times": dates, "prices": prices,
+            "memory_sum": memory, "memory_count": np.arange(13),
+            "payoff": np.maximum(memory[:, -1] / 12 - 100, 0), "cashflows": np.zeros_like(prices),
+            "cost_rates": [.0005, .005], "premium": 5., "rate": .03,
+            "primitives": {"calendar_times": np.arange(1537) / 1536}}
+    worker_start = time.perf_counter()
+    raw = main.run_risk_job(p, field, data, caches, chunk_paths=n, wall_cap_seconds=180.)
+    worker_wall = time.perf_counter() - worker_start
+    checker_start = time.perf_counter()
+    checked = check_main.check_risk_job(raw, p, field, data, caches)
+    checker_wall = time.perf_counter() - checker_start
+    sizes = [main.chunk_payload_sizes(chunk["risk"]) for chunk in raw["chunks"]]
+    largest = max(sizes, key=lambda value: value["expanded_bytes"]) if sizes else None
+    full_wrapper_size = main.chunk_payload_sizes(raw)
+    after = {str(path.relative_to(ROOT)): sha(path) for path in files}
+    result = {"scope": "actual source-unit risk code, deterministic observable paths/full high axes/analytic16blocks/tiny affine quote caches",
+              "formal_main": False, "formal_pilot": False, "formal_teachers": False,
+              "financial_qualification": "unknown", "random_stream_opened": False,
+              "actual_source_unit_n": n, "original_main_n": 32768, "original_risk_jobs": 18,
+              "source_before": before, "source_after": after, "source_stable": before == after,
+              "field_input_sha256": sha(field_file), "cache_dimensions": dimensions,
+              "raw_status": raw["status"], "processed_n": raw["processed_n"], "saved_checker_integrity": checked["integrity"],
+              "largest_actual_packed_risk_chunk": largest,
+              "actual_one_job_wrapper_expanded_bytes": full_wrapper_size,
+              "hypothetical_original_n_extrapolation": None if largest is None else {
+                  "chunks_per_risk_job":128, "one_risk_raw_chunks_expanded_bytes":largest["expanded_bytes"] * 128,
+                  "all18_risk_raw_chunks_expanded_bytes":largest["expanded_bytes"] * 128 * 18,
+                  "one_risk_wrapper_expanded_bytes":full_wrapper_size["expanded_bytes"] * 128,
+                  "all18_risk_wrapper_expanded_bytes":full_wrapper_size["expanded_bytes"] * 128 * 18,
+                  "formula":"linear256pathshapeextrapolation; not formal measured disk/RAM/time; actual failed/root multiplicity/status strings can differ"},
+              "risk_worker_wall_seconds":worker_wall,"saved_checker_wall_seconds":checker_wall,
+              "probe_outer_wall_seconds":time.perf_counter()-started,
+              "unmeasured":["original financial teachers/cache eligibility", "all396 cash/policies/weights", "formal overall wall", "formal compressed disk", "arbitrary actual raw root multiplicity", "serialization/checker/cap-resume overall expenses"]}
+    (D / "task-6-main-chunk-cost-results.json").write_text(json.dumps(result, indent=2) + "\n")
+    print(json.dumps({k:result[k] for k in ("raw_status","processed_n","largest_actual_packed_risk_chunk","risk_worker_wall_seconds","saved_checker_wall_seconds","source_stable")}, indent=2))
