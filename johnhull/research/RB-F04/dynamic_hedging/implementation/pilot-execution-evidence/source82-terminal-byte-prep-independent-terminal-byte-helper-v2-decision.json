@@ -1,0 +1,38 @@
+{
+  "schema": "rb-f04-independent-terminal-byte-candidate-source-mechanics-review-v2",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent limited candidate source and pure metadata reviewer",
+  "approval_scope": "D2-only v2 false terminal provenance candidate helper ownership cleanup and stable terminal .tmp evidence compatibility; no actual root permission",
+  "fixed_helper_sha256": "179d4475e3dadaa591aa6c401f613188a590268d9fd34d786b830b660c2a6dde",
+  "fixed_preflight_sha256": "684665bb5a6aa8eec754bd06e8daf5160a86da2b14d009e4215d4928c0be9849",
+  "fixed_manifest_sha256": "eebd369f171253fd56f2a57f1c06d8c9cbe14c08f2f88e6a047db25d4dc0a0f5",
+  "results": {
+    "path": "independent-terminal-byte-helper-v2-results.json",
+    "sha256": "186b291152200e5c4a7e6725fedd1698a3bf235d492d9fe54e8ab259f73e6427",
+    "checks": 29,
+    "runtime_boundary_cases": 4,
+    "status": "PASS"
+  },
+  "source_delta": "AST differences confined to _publish_new ownership-aware cleanup and _native_inventory removal of .tmp name-only rejection; all other AST unchanged",
+  "v1_original_37_checks_35PASS_2FAIL_not_approved_preserved": true,
+  "historical_v1_decision": {
+    "path": "independent-terminal-byte-helper-v1-decision.json",
+    "sha256": "63974bff8e72ff93bf18836fc0f87dbcc49f6fba54bf237c5063e85710105101"
+  },
+  "v2_repaired_boundaries": [
+    "existing temporary collision preserves original bytes",
+    "normal false candidate publication",
+    "terminal stable .tmp remains in all5 physical bytes with unknown/nonzero status",
+    "created temporary path replacement retained and simulated I/O failure propagates"
+  ],
+  "original_source82_bytes_and_contract_SHA_match": true,
+  "original_N_counts_limits_external10_unknown_unchanged": true,
+  "actual_root_permission_savedlaunch_wholeRSS_capacity_finance_precision_main_phase_approved": false,
+  "genuine_native_inventory_decode_finance_worker_RNG_SDE_solver_CAS_Git_production_edits": 0,
+  "financial_qualification": "unknown",
+  "probe_wall_before_result_write": 0.05114637299266178,
+  "probe_CPU_before_result_write": 0.036744126,
+  "review_outer_and_tail_cost": "unknown",
+  "limitations": "The candidate does not guarantee future path immutability, whole checker capacity or financial qualification. Root owns any real terminal inventory, resource prior and later launch; actual observer reauthenticates bound saved bytes."
+}

@@ -1,0 +1,82 @@
+{
+  "passed": 14,
+  "results": [
+    {
+      "probe": "complete_four_files_unknown_source_fault_preserved",
+      "status": "PASS",
+      "inventory_calls": 1
+    },
+    {
+      "probe": "live_pid_rejected_before_inventory",
+      "status": "PASS",
+      "inventory_calls": 0
+    },
+    {
+      "probe": "missing_terminal_receipt",
+      "status": "PASS",
+      "inventory_calls": 0
+    },
+    {
+      "probe": "wrong_guard_binding",
+      "status": "PASS",
+      "inventory_calls": 0
+    },
+    {
+      "probe": "noninteger_monitor_exit",
+      "status": "PASS",
+      "inventory_calls": 0
+    },
+    {
+      "probe": "missing_monitor_pid",
+      "status": "PASS",
+      "inventory_calls": 0
+    },
+    {
+      "probe": "nonterminal_enclosing_receipt",
+      "status": "PASS",
+      "inventory_calls": 0
+    },
+    {
+      "probe": "existing_output_rejected",
+      "status": "PASS",
+      "inventory_calls": 0
+    },
+    {
+      "probe": "temporary_file_rejected",
+      "status": "PASS",
+      "inventory_calls": 1
+    },
+    {
+      "probe": "symlink_rejected",
+      "status": "PASS",
+      "inventory_calls": 1
+    },
+    {
+      "probe": "extra_after_inventory_rejected",
+      "status": "PASS",
+      "inventory_calls": 1
+    },
+    {
+      "probe": "latest_checkpoint_after_inventory_rejected",
+      "status": "PASS",
+      "inventory_calls": 1
+    },
+    {
+      "probe": "checkpoint_receipt_changed_rejected",
+      "status": "PASS",
+      "inventory_calls": 1
+    },
+    {
+      "probe": "terminal_receipt_changed_after_inventory_rejected",
+      "status": "PASS",
+      "inventory_calls": 1
+    }
+  ],
+  "financial_execution": 0,
+  "genuine_native_inventory_or_raw_decode": 0,
+  "Popen": 0,
+  "fixture_native_files": 4,
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "finance_acceptance": false
+}

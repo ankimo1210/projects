@@ -1,0 +1,42 @@
+--- task-5-native-terminal-byte-candidate-v1.py
++++ task-5-native-terminal-byte-candidate-v2.py
+@@ -95,10 +95,6 @@
+     files, stats = {}, {}
+     for path in paths:
+         observer.require(not path.is_symlink(), "native symbolic links are unsupported")
+-        observer.require(
+-            not path.name.endswith(".tmp"),
+-            "native temporary writer file/directory remains unclosed",
+-        )
+         if path.is_file():
+             relative = str(path.relative_to(root))
+             before = witness(path)
+@@ -167,8 +163,11 @@
+ def _publish_new(observer, output, data):
+     """No-replace publication; a pre-existing user path is never overwritten."""
+     temporary = output.with_name(output.name + ".candidate-" + uuid.uuid4().hex + ".tmp")
++    created_identity = None
+     try:
+         with temporary.open("x") as stream:
++            created = os.fstat(stream.fileno())
++            created_identity = (created.st_dev, created.st_ino)
+             stream.write(data)
+             stream.flush()
+             os.fsync(stream.fileno())
+@@ -176,8 +175,14 @@
+     except FileExistsError as exc:
+         raise observer.GuardRejectedError("candidate output already exists") from exc
+     finally:
+-        if temporary.exists():
+-            temporary.unlink()
++        if created_identity is not None:
++            try:
++                current = temporary.stat(follow_symlinks=False)
++            except FileNotFoundError:
++                pass
++            else:
++                if (current.st_dev, current.st_ino) == created_identity:
++                    temporary.unlink()
+ 
+ 
+ def freeze_candidate(observer, template, output, *, capacity_reader=None):

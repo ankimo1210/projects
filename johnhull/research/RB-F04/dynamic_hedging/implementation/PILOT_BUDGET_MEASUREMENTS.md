@@ -386,3 +386,13 @@ source82の元3,138jobs/121cases/51義務/20teachers/10drivers/全4Nを保持し
 [標準形式v2 store manifest](pilot-execution-evidence/source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-manifest-v2.json)は30entries/216,785 bytes。両storeの実backend manifest readerと各原byte復元がPASS。先行v1はbyte照合後にmanifest.kindの不一致を検出したため、[原失敗](pilot-execution-evidence/source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-validation-failure-v1.json)・v1 manifest/receiptを保持した。v1の実費7.239秒はその履歴に残し、[修正版v2の実費](pilot-execution-evidence/source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-receipt-v2.json)1.176秒/CPU0.046秒/kernel peak20.46MBへ加算していない。各receipt書込末尾はunknown。v2 manifest/receiptを含む閉じた32filesを本archiveへ原byteで保存し、live native raw/logsは含めていない。
 
 正式pilotの完走・金融精度・whole saved-check RAM/容量・freeze/main・研究受入は未完了。次は元pilotの終了を確認してactual saved-checkを監視実行し、実結果に基づく選択・freezeへ進む。
+
+## 終了後のnative byte固定準備（2026-10-11）
+
+正式pilot終了後に、元3PIDの終了・元2terminal receiptsを認証してから全physical byte集合と最新checkpointの全parts/receiptを固定するD2 helperを準備した。元source/input/planと全byteを収集前後に再照合し、false候補だけを新規排他出版する。容量snapshotは観測データであり、起動許可・whole RSS/容量/所要時間の保証ではない。実nativeの収集・decode・検算・金融起動はまだ0。
+
+[独立v1判断](pilot-execution-evidence/source82-terminal-byte-prep-independent-terminal-byte-helper-v1-decision.json)は37件中35PASS/2FAIL・not_approved。UUID temp名の衝突で既存fileを削除する経路と、terminal partialの.tmpを名称だけで拒否する追加制限を確認した。原v1・失敗trace・費用を保持し、rootの当初の.tmp拒否指示も訂正した。
+
+[最小v2修復](pilot-execution-evidence/source82-terminal-byte-prep-task-5-native-terminal-byte-candidate-fixed-manifest-v2.json)は2関数だけを変更。初作成tempのdevice/inodeが同pathに残るときだけcleanupし、既存・差替えfileを保全する。安定したterminal .tmpは全finite集合に含め、変化はwitness/既存再認証で拒否する。作者21pure検査・Ruff/format/compileはPASS。[独立限定判断](pilot-execution-evidence/source82-terminal-byte-prep-independent-terminal-byte-helper-v2-decision.json)も元2反例・通常false出版・path差替えとI/Oエラー伝播を確認した。旧observer/template/source82と原scope/limits/external10/unknownは不変。承認はhelperのsource/mechanicsに限る。
+
+[閉じた証跡store manifest](pilot-execution-evidence/source82-terminal-byte-prep-root-terminal-byte-helper-closed-proof-store-manifest-v1.json)は28entries/113,190 bytesを両storeへ保存し、標準readerと各原byte復元がPASS。[保存実費](pilot-execution-evidence/source82-terminal-byte-prep-root-terminal-byte-helper-closed-proof-store-receipt-v1.json)は6.688秒/CPU0.090秒/kernel peak20.46MB、receipt書込末尾unknown。旧generation/checker費用に加算せず、store manifest/receipt込み30filesを原byteで本archiveへ保存した。live native raw/観測ログは含まない。実root許可・全saved検算・金融precision/main/phase受入は未完了で、起動は正式pilotの終了後に判断する。

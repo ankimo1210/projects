@@ -1,0 +1,174 @@
+{
+  "entries": [
+    {
+      "bytes": 1869,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v1-decision.json",
+      "ref": "artifact:sha256:63974bff8e72ff93bf18836fc0f87dbcc49f6fba54bf237c5063e85710105101"
+    },
+    {
+      "bytes": 7067,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v1-probe.py",
+      "ref": "artifact:sha256:8ea2df069e3428b9393f69e47543a96c449c49c932263f8be79ee77f7780b05f"
+    },
+    {
+      "bytes": 9205,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v1-results.json",
+      "ref": "artifact:sha256:6b0111f4daaeba2e82252083f2df9698962ba991ac06659666fa6747915705f1"
+    },
+    {
+      "bytes": 2422,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v2-decision.json",
+      "ref": "artifact:sha256:49beef645c167862a7740214eb20627422c208903265551fe6cbb83221da6359"
+    },
+    {
+      "bytes": 7899,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v2-probe.py",
+      "ref": "artifact:sha256:5f1ac9a1425292d09488e6c8cd7908b287ba1234a6c497f9bbfc29d02eb63e36"
+    },
+    {
+      "bytes": 4437,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v2-results.json",
+      "ref": "artifact:sha256:186b291152200e5c4a7e6725fedd1698a3bf235d492d9fe54e8ab259f73e6427"
+    },
+    {
+      "bytes": 2070,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-GREEN-fixed-v1.log",
+      "ref": "artifact:sha256:efc81c39060feeaf6343cb7a11a935a73a4abeb1c8d76c80b7ea95b861f542d7"
+    },
+    {
+      "bytes": 2070,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-GREEN-v1.log",
+      "ref": "artifact:sha256:efc81c39060feeaf6343cb7a11a935a73a4abeb1c8d76c80b7ea95b861f542d7"
+    },
+    {
+      "bytes": 2621,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-GREEN-v2.log",
+      "ref": "artifact:sha256:1f7d4800a6437bfd8f8aad1db0f69394dd4300caaced86119f8c6a18b8e18263"
+    },
+    {
+      "bytes": 1227,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-RED-v1.log",
+      "ref": "artifact:sha256:a8cf6ffc8ce7c8fa05e89ee633f1548f765103ca81192f605ee9bef9c593a9d2"
+    },
+    {
+      "bytes": 1827,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-first-v1.log",
+      "ref": "artifact:sha256:c783aa053de603b8af7e731cc2959f5acaf27bcbc802891ed1d6c59e3bc96893"
+    },
+    {
+      "bytes": 3496,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-fixed-manifest-v1.json",
+      "ref": "artifact:sha256:898908fe5c3dcd74b7853241e3cd6155f874a8fa599eea0005820eb4d3e43b6d"
+    },
+    {
+      "bytes": 2710,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-fixed-manifest-v2.json",
+      "ref": "artifact:sha256:eebd369f171253fd56f2a57f1c06d8c9cbe14c08f2f88e6a047db25d4dc0a0f5"
+    },
+    {
+      "bytes": 1485,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-fixed-results-v1.json",
+      "ref": "artifact:sha256:a50a4515964a04e66a6d16fc5712d2ac66eaff7a0e44b24cc4e3fd54662d1433"
+    },
+    {
+      "bytes": 1879,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-fixed-results-v2.json",
+      "ref": "artifact:sha256:1c67e1725954f688a1d0958eab7566d73408dc31859cc2cf1242c17d7f8f67a5"
+    },
+    {
+      "bytes": 11046,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-preflight-v1.py",
+      "ref": "artifact:sha256:94cc8770608e10756dc3b29012fc02050519200f605d8cb7a96e82d267b937ad"
+    },
+    {
+      "bytes": 16369,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-preflight-v2.py",
+      "ref": "artifact:sha256:684665bb5a6aa8eec754bd06e8daf5160a86da2b14d009e4215d4928c0be9849"
+    },
+    {
+      "bytes": 2070,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-pure-fixed-results-v1.json",
+      "ref": "artifact:sha256:5edc5acc95b9754a4f621ec1e706d6c1ad24101044f0afc633e5d5639f7780ec"
+    },
+    {
+      "bytes": 2621,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-results-v2.json",
+      "ref": "artifact:sha256:1f7d4800a6437bfd8f8aad1db0f69394dd4300caaced86119f8c6a18b8e18263"
+    },
+    {
+      "bytes": 1682,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-source-v2.diff",
+      "ref": "artifact:sha256:6a318d2f66753493689779d9e70da8b38826369bca87350c3f6c446ec54a644e"
+    },
+    {
+      "bytes": 399,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-tools-fixed-v1.json",
+      "ref": "artifact:sha256:db8e6be20eb15ac956e51ec09b59671c322475491018b71520199653835411bf"
+    },
+    {
+      "bytes": 418,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-tools-v2.json",
+      "ref": "artifact:sha256:25cf5962762c524d8d8b12842bb0a1ebdb6880e061c5051abbb3581b7c12e03c"
+    },
+    {
+      "bytes": 11796,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-v1.py",
+      "ref": "artifact:sha256:5e213f68be278ee087f08171966b24c3bcc0cb3526ab83b89b639f92491c667c"
+    },
+    {
+      "bytes": 865,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-v2-on-v1-RED-results.json",
+      "ref": "artifact:sha256:7c54f0b3e20797924ee306a44807fd38d24b6e98d2c5b6323f34d19b4af505bd"
+    },
+    {
+      "bytes": 865,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-v2-on-v1-RED.log",
+      "ref": "artifact:sha256:7c54f0b3e20797924ee306a44807fd38d24b6e98d2c5b6323f34d19b4af505bd"
+    },
+    {
+      "bytes": 12034,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-v2.py",
+      "ref": "artifact:sha256:179d4475e3dadaa591aa6c401f613188a590268d9fd34d786b830b660c2a6dde"
+    },
+    {
+      "bytes": 359,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-verification-cost-v1.json",
+      "ref": "artifact:sha256:0daf4368d4d27b5245fe70c9e8d6d614957c83f31e9b64c55eac9eab57150507"
+    },
+    {
+      "bytes": 382,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-verification-cost-v2.json",
+      "ref": "artifact:sha256:7e59a1893f79640c517417e286c6decbee1d7725d8cd1aafed1ec22722a0d157"
+    }
+  ],
+  "kind": "johnhull-evidence-manifest",
+  "schema_version": 1
+}

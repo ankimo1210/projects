@@ -1,0 +1,44 @@
+{
+  "schema": "rb-f04-independent-terminal-byte-candidate-source-mechanics-review-v1",
+  "decision": "not_approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent limited candidate source and pure metadata reviewer",
+  "fixed_helper_sha256": "5e213f68be278ee087f08171966b24c3bcc0cb3526ab83b89b639f92491c667c",
+  "fixed_manifest_sha256": "898908fe5c3dcd74b7853241e3cd6155f874a8fa599eea0005820eb4d3e43b6d",
+  "results": {
+    "path": "independent-terminal-byte-helper-v1-results.json",
+    "sha256": "6b0111f4daaeba2e82252083f2df9698962ba991ac06659666fa6747915705f1",
+    "checks": 37,
+    "passed": 35,
+    "failed": 2
+  },
+  "findings": [
+    {
+      "priority": "P2",
+      "function": "_publish_new",
+      "lines": [
+        169,
+        180
+      ],
+      "counterexample": "fixed UUID existing temporary path; open x rejects then finally unlinks the existing user file",
+      "minimum_fix": "only clean a temporary file successfully created and still owned by this call"
+    },
+    {
+      "priority": "P2",
+      "function": "_native_inventory",
+      "lines": [
+        98,
+        101
+      ],
+      "counterexample": "terminal/nonzero/unknown 5-file saved tree including solver-state.tmp is valid for existing closed_native_binding but helper rejects the name",
+      "minimum_fix": "retain every stable physical file in the authenticated terminal finite set; do not add a .tmp name-only filter"
+    }
+  ],
+  "existing_source82_bytes_match": true,
+  "historical_fixed_v1_bytes_preserved": true,
+  "root_permission_savedlaunch_fullRSS_capacity_finance_main_phase_approved": false,
+  "genuine_native_inventory_decode_finance_worker_RNG_SDE_solver_CAS_Git_production_edits": 0,
+  "probe_wall_seconds_before_result_write": 0.05719948899059091,
+  "probe_CPU_seconds_before_result_write": 0.052105855,
+  "review_outer_tail_cost": "unknown"
+}

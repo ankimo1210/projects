@@ -1,0 +1,241 @@
+{
+  "schema": "rb-f04-independent-terminal-byte-helper-pure-results-v1",
+  "status": "FAIL",
+  "checks": [
+    {
+      "name": "fixed:task-5-native-terminal-byte-candidate-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-native-terminal-byte-candidate-preflight-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-native-terminal-byte-candidate-fixed-manifest-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-GREEN-fixed-v1.log",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-GREEN-v1.log",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-RED-v1.log",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-first-v1.log",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-fixed-results-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-preflight-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-pure-fixed-results-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-tools-fixed-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-verification-cost-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "legacy:task-5-full-pilot-root-saved-check-enclosing-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "legacy:task-5-full-pilot-root-saved-check-fixed-manifest-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "legacy:task-5-full-pilot-root-saved-check-observer-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "legacy:task-5-full-pilot-root-saved-check-resource-candidate-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "source82_bytes",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "normal_nonzero_unknown_false_candidate",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "normal_nonzero_unknown_false_candidate:template_unchanged",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "approval_rejected",
+      "PASS": true,
+      "detail": {
+        "exception": "GuardRejectedError",
+        "reason": "candidate cannot supply approval: execute_saved_check",
+        "inventory_calls": 0
+      }
+    },
+    {
+      "name": "approval_rejected:template_unchanged",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "approval_before_inventory",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "bool_child_exit_rejected",
+      "PASS": true,
+      "detail": {
+        "exception": "GuardRejectedError",
+        "reason": "original monitor has no authenticated terminal child",
+        "inventory_calls": 0
+      }
+    },
+    {
+      "name": "bool_child_exit_rejected:template_unchanged",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "bool_before_inventory",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "bool_monitor_exit_rejected",
+      "PASS": true,
+      "detail": {
+        "exception": "GuardRejectedError",
+        "reason": "original enclosing receipt is missing or nonterminal",
+        "inventory_calls": 0
+      }
+    },
+    {
+      "name": "bool_monitor_exit_rejected:template_unchanged",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "original_job_count_tamper_rejected",
+      "PASS": true,
+      "detail": {
+        "exception": "GuardRejectedError",
+        "reason": "original closed source/plan/input authority differs: original_counts",
+        "inventory_calls": 0
+      }
+    },
+    {
+      "name": "original_job_count_tamper_rejected:template_unchanged",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "original_N_tamper_rejected",
+      "PASS": true,
+      "detail": {
+        "exception": "GuardRejectedError",
+        "reason": "original closed source/plan/input authority differs: original_teacher_N_candidates",
+        "inventory_calls": 0
+      }
+    },
+    {
+      "name": "original_N_tamper_rejected:template_unchanged",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "existing_temp_collision_preserves_original_bytes",
+      "PASS": false,
+      "detail": {
+        "observed_existing_temp_survives": false,
+        "output_published": false,
+        "exception": {
+          "type": "GuardRejectedError",
+          "reason": "candidate output already exists",
+          "trace": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-v1.py\", line 171, in _publish_new\n    with temporary.open(\"x\") as stream:\n         ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/pathlib.py\", line 1015, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileExistsError: [Errno 17] File exists: '/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/ind-terminal-publish-bvtsig58/candidate.json.candidate-occupied.tmp'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v1-probe.py\", line 64, in <module>\n    try:helper._publish_new(o,out,'false candidate\\n')\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-v1.py\", line 177, in _publish_new\n    raise observer.GuardRejectedError(\"candidate output already exists\") from exc\nsynthetic_terminal_observer.GuardRejectedError: candidate output already exists\n"
+        }
+      }
+    },
+    {
+      "name": "terminal_partial_tmp_evidence_remains_collectable",
+      "PASS": false,
+      "detail": {
+        "existing_observer_accepts_all5files": true,
+        "helper_exception": {
+          "type": "GuardRejectedError",
+          "reason": "native temporary writer file/directory remains unclosed",
+          "trace": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v1-probe.py\", line 76, in <module>\n    try:helper.freeze_candidate(o,p,root/'partial-false.json',capacity_reader=lambda p:{'fixture_only':True})\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-v1.py\", line 215, in freeze_candidate\n    binding, stats = _native_inventory(observer)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-v1.py\", line 98, in _native_inventory\n    observer.require(\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-observer-v1.py\", line 87, in require\n    raise GuardRejectedError(message)\nsynthetic_terminal_observer.GuardRejectedError: native temporary writer file/directory remains unclosed\n"
+        },
+        "financial_qualification": "unknown"
+      }
+    },
+    {
+      "name": "fixed_after:task-5-native-terminal-byte-candidate-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed_after:task-5-native-terminal-byte-candidate-preflight-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed_after:task-5-native-terminal-byte-candidate-fixed-manifest-v1.json",
+      "PASS": true,
+      "detail": null
+    }
+  ],
+  "check_count": 37,
+  "defects": [
+    "existing_temp_collision_preserves_original_bytes",
+    "terminal_partial_tmp_evidence_remains_collectable"
+  ],
+  "fixture_native_files": 4,
+  "counterexample_partial_files": 5,
+  "genuine_native_inventory_or_decode": 0,
+  "finance_RNG_SDE_solver_worker_CAS_Git_production": 0,
+  "wall_before_result_write": 0.05719948899059091,
+  "CPU_before_result_write": 0.052105855,
+  "total_review_outer_and_tail_cost": "unknown",
+  "financial_qualification": "unknown",
+  "actual_root_permission_and_savedlaunch": false
+}

@@ -1,0 +1,169 @@
+{
+  "schema": "rb-f04-independent-terminal-byte-helper-pure-results-v2",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "fixed:task-5-native-terminal-byte-candidate-v2.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-native-terminal-byte-candidate-preflight-v2.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-native-terminal-byte-candidate-fixed-manifest-v2.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-GREEN-v2.log",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-fixed-results-v2.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-preflight-v2.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-results-v2.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-source-v2.diff",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-tools-v2.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-v2-on-v1-RED-results.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-v2-on-v1-RED.log",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-v2.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-native-terminal-byte-candidate-verification-cost-v2.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "legacy:task-5-full-pilot-root-saved-check-observer-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "legacy:task-5-full-pilot-root-saved-check-resource-candidate-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "legacy:task-5-native-terminal-byte-candidate-fixed-manifest-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "immutable_v1_helper",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "v1_failure_records_unchanged",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "only_two_function_AST_changes",
+      "PASS": true,
+      "detail": [
+        "_native_inventory",
+        "_publish_new"
+      ]
+    },
+    {
+      "name": "source82_exactbytes",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "normal_false_publication",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "original_scope_limits_external_unknown_preserved",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "original_source_authority_rechecked",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "existing_temp_collision_preserves_original_bytes",
+      "PASS": true,
+      "detail": {
+        "exception": "candidate output already exists"
+      }
+    },
+    {
+      "name": "terminal_partial_tmp_original_all5bytes",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "created_then_replaced_temp_preserved_IO_error_propagates",
+      "PASS": true,
+      "detail": {
+        "type": "OSError",
+        "reason": "simulated publication I/O failure after path replacement"
+      }
+    },
+    {
+      "name": "fixed_after:task-5-native-terminal-byte-candidate-v2.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed_after:task-5-native-terminal-byte-candidate-preflight-v2.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed_after:task-5-native-terminal-byte-candidate-fixed-manifest-v2.json",
+      "PASS": true,
+      "detail": null
+    }
+  ],
+  "check_count": 29,
+  "runtime_boundary_cases": 4,
+  "historical_v1_37_checks_not_reexecuted": true,
+  "author21_probes_not_recounted_as_independent": true,
+  "genuine_native_hash_or_decode_finance_worker_RNG_SDE_solver_CAS_Git_production_edits": 0,
+  "actual_root_permission_and_savedlaunch": false,
+  "financial_qualification": "unknown",
+  "wall_before_result_write": 0.05114637299266178,
+  "CPU_before_result_write": 0.036744126,
+  "review_outer_and_tail_cost": "unknown"
+}

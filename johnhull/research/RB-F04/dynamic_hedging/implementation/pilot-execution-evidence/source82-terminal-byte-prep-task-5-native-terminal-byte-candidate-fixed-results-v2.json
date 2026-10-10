@@ -1,0 +1,41 @@
+{
+  "Popen": 0,
+  "Ruff_check_format_compile_files": 2,
+  "actual_guard_created": false,
+  "actual_native_inventory_or_large_raw_decode": 0,
+  "administrative_stop_or_source_fault_financial_promotion": false,
+  "base_synthetic_native_files": 4,
+  "changed_helper_functions": [
+    "_native_inventory",
+    "_publish_new"
+  ],
+  "cleanup_ownership": "only created device/inode still at that path; existing/replacement paths retained",
+  "execute_saved_check": false,
+  "existing_fixed_refs": {
+    "task-5-full-pilot-root-saved-check-observer-v1.py": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4",
+    "task-5-full-pilot-root-saved-check-resource-candidate-v1.json": "a5face84365a5ee437d55e680da1414075b7ef761894e842f2377aff73a5723e",
+    "task-5-native-terminal-byte-candidate-fixed-manifest-v1.json": "898908fe5c3dcd74b7853241e3cd6155f874a8fa599eea0005820eb4d3e43b6d"
+  },
+  "finance_acceptance": false,
+  "finance_execution": 0,
+  "financial_qualification": "unknown",
+  "limits_and_original_authority_costs_N_counts_preserved": true,
+  "new_saved_check_budget_approved": false,
+  "other_helper_function_AST_unchanged": true,
+  "pure_probes_failed": 0,
+  "pure_probes_passed": 21,
+  "red_original_v1": {
+    "FAIL": 3,
+    "PASS": 1,
+    "reason": "occupied path deletion, replacement path deletion, tmp name-only rejection"
+  },
+  "root_named_tmp_rejection_instruction_superseded": true,
+  "root_preapproved": false,
+  "scope": "D2-only minimal ownership/stable-terminal-tmp repair, synthetic verification",
+  "source82_bytes_unchanged": true,
+  "source82_file_count": 82,
+  "stable_partial_tmp_synthetic_native_files": 5,
+  "stable_terminal_tmp": "same exact finite byte and checkpoint binding as existing canonical observer",
+  "v1_immutable_sha256": "5e213f68be278ee087f08171966b24c3bcc0cb3526ab83b89b639f92491c667c",
+  "whole_checker_RSS_fit": null
+}
