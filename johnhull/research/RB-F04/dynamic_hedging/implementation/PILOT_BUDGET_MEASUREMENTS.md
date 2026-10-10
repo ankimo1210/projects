@@ -196,3 +196,13 @@ M4/M5の保存表を部品参照として使用し、graph原controls={}と明�
 [実装記録](pilot-execution-evidence/task-5-conditional-n-prior-cap-consumer-author-v2-report.md)は修復前8 failed/14 passed、追加22 passed・関連既存16 passed、2Python Ruff/format PASS。[独立限定判断](pilot-execution-evidence/task-5-fullmixed-prior-budget-independent-v2-source-decision.json)で4N/複数親順・actual cap guardsを確認した。実closure81/dynamic0の変更はcheckerのみ、他80 sourceは不変。現identityはdc7631fe…、元N測定/false予算候補の408f2bc2…は原由来として保持する。
 
 全3,138-job prior候補は未承認。全20 teacher_domain_selectionは元N/格子別の保存検算を明示推計し、local high/N65536は52,972秒・3倍余裕の159,000秒を候補とした。16 teacher_candidate_gate・2 teacher_selectionと最初のactivationにも保存SDE再検算が含まれるため、単なるmetadataの600秒候補を実測にもとづく見積へ補足中。元required rosterの反復は省かず、金融精度・正式lock・freeze・main・phaseの承認へ広げない。
+
+## 全stage実行時の再検算反復と工程見積り
+
+[原required rosterに基づく未承認補足v4](pilot-execution-evidence/task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.md)は、16gate・2selector・初回activationの保存SDE再検算を費用見積へ追加した。最大local-high stageのrequired213件には4教師rawと4domain-selectionの全検算が含まれ、selectorは各modelの最大8 executed gatesを再検算する。activationは14 cache unitsの最大1回を予測に含め、2332 eligible jobsへ配る保守予算の総和を実時間へ加えていない。
+
+全stageが必要な初期phaseの既知部分外挿は、ordinary174157.908秒＋20domain163210.857秒＋16gate700138.342秒＋2selector700138.342秒＋activation447126.751秒＝2184772.200秒（606.881時間、約25.3日）。未観測kernel/IO/外部10費用/resumeは含まない。実際の終了時間や確定した仕事量ではなく、qualified prefixで短縮され得る一方、数日以内の完了を裏付けない。
+
+数日の工程見積りを取り下げ、同じ不変source/input/job/raw/driverの全N検算結果をphase内で安全に再利用できるか、既存context境界を調査する。元N/全case/閾値/数学・初回の全SDE/11labels/16blocks/covariance検算と原失敗/unknownは維持する。fresh・独立検証・両保管庫semanticは別contextで実施する。再利用案は未実装・未承認であり、v1–v4の原費用見積と正式lock未完了を保持する。
+
+独立の[変更検知・保持範囲の読取調査](pilot-execution-evidence/task-5-phase-local-saved-check-memo-independent-tamper-review-v1.md)では、同一実行contextのbounded teacher-grid検算結果に限る条件付き案を確認した。各利用で実入力・全node/driverの物理証跡を再結合し、fresh・独立検証・保管庫復元では空contextから検算する。入力読取・hash費用と短縮後の所要時間は未測定で、現在source・金融計算は変更していない。
