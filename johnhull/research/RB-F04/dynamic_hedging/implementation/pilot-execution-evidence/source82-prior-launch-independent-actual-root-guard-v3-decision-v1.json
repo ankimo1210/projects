@@ -1,0 +1,45 @@
+{
+  "schema": "rb-f04-independent-actual-root-guard-v3-preflight-decision-v1",
+  "decision": "approved",
+  "status": "approved_fixed_actual_guard_monitor_observer_preflight_bindings",
+  "reviewer": "progressive_graph_review",
+  "role": "independent prelaunch metadata and operational binding reviewer",
+  "scope": "actual root guard/source82/newclosed metadata/typedinput/currentvolume/observer bindings only; no new launch authorization or financial qualification",
+  "guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-launch-guard-v3.json",
+    "sha256": "9e794bd4ec46c72d240a264fdf2dd722297455baf2f3cd0d07243f6d7a0c2842"
+  },
+  "monitor": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5.py",
+    "sha256": "a53a73cfc420e2745f8d8d2cb72a6171ab2d166781126b9a96869afb88053981"
+  },
+  "observer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observer-v3.py",
+    "sha256": "8fc535679dc5b2bc04d490dcc2b5c9cdbdc60dd047056289b102ccbd05659064"
+  },
+  "proof": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-actual-root-guard-v3-bindingproof-v1.json",
+    "sha256": "3fa337dbce478857cf409ce18d0142a72512b923363a1842ce5805ce27e78ea0"
+  },
+  "passed": 23,
+  "failed": 0,
+  "actual_monitor_load_guard_source_binding_tree_binding_plan_input_volume_sample": "PASS",
+  "source82_before_after_stable": true,
+  "source_counts_N_cap_recipe_history_unknown_original_scope_unchanged": true,
+  "full_independent_prior_and_actualroot_materialization_reused_not_reaudited": true,
+  "root_already_authorized_fresh3138_pilot": true,
+  "reviewer_financial_launch_authorization": false,
+  "full_phase_capacity_or_runtime_guarantee": false,
+  "financial_precision_phase_main_accepted": false,
+  "financial_qualification": "unknown",
+  "old_raw_resume_or_relabel_authorized": false,
+  "Popen_financial_RNG_SDE_solver_worker_calls": 0,
+  "production_source_guard_observer_Git_CAS_oldW1_modified": false,
+  "receipt_tail_cost_unknown": true,
+  "cost": {
+    "wall_before_record_seconds": 0.15345528000034392,
+    "CPU_before_record_seconds": 0.151326621,
+    "kernel_peak_RSS_bytes": 54415360,
+    "final_write_tail_seconds": null
+  }
+}

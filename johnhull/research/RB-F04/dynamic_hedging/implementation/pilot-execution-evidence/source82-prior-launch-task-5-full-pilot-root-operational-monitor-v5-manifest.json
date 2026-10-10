@@ -1,0 +1,102 @@
+{
+  "schema": "rb-f04-root-operational-monitor-candidate-fixed-v5",
+  "status": "fixed_candidate_independent_review_pending",
+  "root_preapproved": false,
+  "formal_financial_launch_authorized": false,
+  "financial_qualification": "unknown",
+  "files": {
+    "task-5-full-pilot-root-operational-monitor-v5.py": {
+      "sha256": "a53a73cfc420e2745f8d8d2cb72a6171ab2d166781126b9a96869afb88053981",
+      "bytes": 45733
+    },
+    "task-5-full-pilot-root-launch-guard-candidate-v5.json": {
+      "sha256": "842fdd4ce09d83b1b674e108b65ea5d69c21b15a3590c46bf989494ce67550dd",
+      "bytes": 44630
+    },
+    "task-5-full-pilot-root-operational-monitor-v5-preflight.py": {
+      "sha256": "245ae139271af5d18da94a841f2356c10035f276d06a7f7a2381efd4b184daee",
+      "bytes": 10972
+    },
+    "task-5-full-pilot-root-operational-monitor-v5-preflight-results.json": {
+      "sha256": "4e4adbb8b0ee567df19220bcc52b93cb7360bd9558fd8148be63c1c4f5628237",
+      "bytes": 3508
+    },
+    "task-5-full-pilot-root-operational-monitor-v5-preflight-results-initial.json": {
+      "sha256": "9da5ded327cd650a28286de7f14f89fe285d2d8dae723f58b1973b01b753dea7",
+      "bytes": 3110
+    },
+    "task-5-full-pilot-root-operational-monitor-v5-preflight-results-intermediate.json": {
+      "sha256": "d3bf2f1754d2519a18175effe4fe922592d2535ece4921c6e433a1a5c54356c8",
+      "bytes": 3102
+    },
+    "task-5-full-pilot-root-operational-monitor-v5-author-initial-failures.json": {
+      "sha256": "a36c91345be39d14c0ef1227358ef71274044a3fff2f488c712c9560dcfd31ef",
+      "bytes": 357
+    },
+    "task-5-full-pilot-root-operational-monitor-v5-scoped-checks.json": {
+      "sha256": "ee3e4afd89be45227a5afe58b2bf0811099b5152622287549923a79f2597fd34",
+      "bytes": 778
+    },
+    "task-5-full-pilot-root-operational-monitor-v5-source.diff": {
+      "sha256": "43f45910479672fd6cf6227b46ae295644e6dcb7a5162609d11ec42d798a466c",
+      "bytes": 29296
+    },
+    "task-5-full-pilot-root-operational-monitor-v5-report.md": {
+      "sha256": "8949a234ae680bdd008c4da9b9fc543f236e5d8bdd8faec5499bc10b2cad758b",
+      "bytes": 4156
+    }
+  },
+  "readonly_inputs": {
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v4.py": {
+      "sha256": "94ddf018576ab107a6c3146088713a9e30da29416f419941a9831fb60e938626",
+      "bytes": 27741
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py": {
+      "sha256": "b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a",
+      "bytes": 47581
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-interface-v1.json": {
+      "sha256": "943021eca1e38396cf44821f727dd307c2e6d19fbb45fb02dc86e4b56039fc1b",
+      "bytes": 5558
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v5.json": {
+      "sha256": "d5eab8376c819367defb650f228a0cb844fe4588b77c3f09464f9e18785e9571",
+      "bytes": 4068
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json": {
+      "sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5",
+      "bytes": 34372
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-codec-v2-decision.json": {
+      "sha256": "26aa45f5902e816053decce2aec2364c58161c387fdcc5378d27e8255a906262",
+      "bytes": 2417
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-decision.json": {
+      "sha256": "f2fd826e399a08e20e848ac00bfbbb1132433be189779716f66a7e61d1868ea2",
+      "bytes": 2860
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v3.json": {
+      "sha256": "145bdf322aacd4e699e297c2a4e747d1a021c43771e4b162783f9eb35a390881",
+      "bytes": 3421
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-decision-v1.json": {
+      "sha256": "5cb82ff33fcca56bbbda87939cea53bc3caec43149df8cedbda5c5be51376b24",
+      "bytes": 10634
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v3.json": {
+      "sha256": "a3cc7cfc6c39b29465634b7c953506f9c4e987060cf043fd7515b8c818f8e55e",
+      "bytes": 6429654
+    }
+  },
+  "source_files": 82,
+  "current_canonical_source": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "current_native_source": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "complete_materialized_root_receipt": null,
+  "financial_Popen_RNG_solver_calls": 0,
+  "production_source_docs_tests_Git_CAS_edits": 0,
+  "evidence_assembly_cost_before_final_manifest": {
+    "wall_seconds": 0.005155658996955026,
+    "CPU_seconds": 0.005155341000000001,
+    "final_manifest_write_tail_seconds": null
+  }
+}

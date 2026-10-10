@@ -1,0 +1,34 @@
+{
+  "schema": "root-actual82-guard-and-saved-metadata-proof-cas-v1",
+  "status": "verified_both_stores",
+  "manifest_ref": "artifact:sha256:716aed49b357087513fff2e12ed498a0179b919542d7f8e5392bb428932f92ec",
+  "prior_metadata_full_store_manifest_ref": "artifact:sha256:aa5ca5656f4d953e8698c8bdc5f92f10436965568ed1273e8b6ef4c21b919598",
+  "entries": 23,
+  "unique_blobs_including_manifest": 24,
+  "unique_bytes_including_manifest": 770304,
+  "source82_unchanged": true,
+  "actual_guard_sha256": "9e794bd4ec46c72d240a264fdf2dd722297455baf2f3cd0d07243f6d7a0c2842",
+  "actual_guard_binding_independent_decision_sha256": "1026320dadbd84fa5e1646f68446e863fa9864f3bba0b01326ca5156e0c4109e",
+  "scope": "closed actual root fresh-launch guard/observer and independent actual saved metadata/guard/source proof; exact CAS only, no full financial semantic restore/acceptance",
+  "financial_workers_or_RNG_calls": 0,
+  "financial_qualification": "unknown",
+  "formal_phase_acceptance": false,
+  "stores": [
+    {
+      "role": "primary",
+      "root": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",
+      "free_before": 111074185216,
+      "free_after": 111072763904
+    },
+    {
+      "role": "mirror",
+      "root": "/mnt/f/ProjectArtifacts/projects-backup",
+      "free_before": 182023880704,
+      "free_after": 182020341760
+    }
+  ],
+  "wall_seconds": 6.313171868001518,
+  "process_CPU_seconds": 0.091913874,
+  "peak_RSS_bytes": 21671936,
+  "final_receipt_write_in_observation": false
+}

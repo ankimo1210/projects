@@ -1,0 +1,34 @@
+{
+  "schema": "root-current82-prior-metadata-closed-proof-cas-v1",
+  "status": "verified_both_stores",
+  "manifest_ref": "artifact:sha256:aa5ca5656f4d953e8698c8bdc5f92f10436965568ed1273e8b6ef4c21b919598",
+  "manifest_file": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-new82-prior-metadata-and-closed-proof-store-manifest-v1.json",
+  "entries": 153,
+  "unique_blobs_including_manifest": 152,
+  "unique_bytes_including_manifest": 23956188,
+  "stores": [
+    {
+      "role": "primary",
+      "root": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",
+      "free_bytes_before": 108285227008,
+      "free_bytes_after": 108256620544
+    },
+    {
+      "role": "mirror",
+      "root": "/mnt/f/ProjectArtifacts/projects-backup",
+      "free_bytes_before": 182053502976,
+      "free_bytes_after": 182023880704
+    }
+  ],
+  "source82_bytes_unchanged": true,
+  "source_plain_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "scope": "new actual prior metadata including all573122 options/pages/source-snapshot and fixed candidate/independent/outer-cost proofs; exact blob backup only; no full financial semantic restore/acceptance",
+  "financial_workers_RNG_or_solver_calls": 0,
+  "financial_qualification": "unknown",
+  "formal_financial_launch_authorized": false,
+  "wall_seconds": 19.749798559998453,
+  "process_CPU_seconds": 0.39302102,
+  "peak_RSS_bytes": 51494912,
+  "receipt_final_write_in_observation": false
+}

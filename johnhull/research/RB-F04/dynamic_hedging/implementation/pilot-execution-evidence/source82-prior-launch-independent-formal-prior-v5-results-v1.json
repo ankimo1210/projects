@@ -1,0 +1,766 @@
+{
+  "schema": "rb-f04-independent-v5-resource-prior-static-results-v1",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "fixed:task-5-formal-prior-lock-preparation-v5.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-formal-prior-lock-preparation-v5-manifest-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-formal-prior-lock-preparation-v5-interface-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-formal-prior-lock-preparation-pending-example-v5.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-pending-example-v5.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-interface-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-original-preflight-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-preflight-failure-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-red-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-report-v1.md",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-scoped-metadata-checks-original-v1.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-scoped-metadata-checks.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-scoped-metadata-results-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-scoped-metadata-results-v2.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-scoped-probe-correction-v2.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5-source-binding-results-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5.diff",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v5.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-rebind-evidence-v5.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v4.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-actual-root-approval-v2.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-rebind-independent-decision-v4.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-rebind-evidence-v3.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-date-gate-N-independent-current-source-closure-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-fullmixed-prior-budget-candidate-author-v1-config.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-fullmixed-prior-budget-candidate-author-v1-builder.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-formal-pilot-plan-producer.py",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-fullmixed-prior-budget-assembly-author-v2-config.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-fullmixed-prior-budget-assembly-author-v2-manifest.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:current-production-source-closure-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:root-current-production-source-delta-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:independent-transport-codec-v2-decision.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest:independent-stage-cap-binding-v1-decision.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "manifest_total32",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "stdlib_import_only",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-formal-prior-lock-rebind-independent-decision-v4.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-fullmixed-prior-budget-independent-effective-rows-v1.json",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "all3138_original_rows_exact_except_review_reference",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "normalized02da",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "raw_author_false_root_pending",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "no_financial_or_old_resume",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "actual_validate_assembly_binding_all3138",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "actual_v5_source_lineage_guard",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "canonical75ac",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "new_source_decision_collection_authentic",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "source_collection6233",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "old_recipe43eb",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "new_recipe83d009",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "recipe_single_source_identity_delta",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "573122_arithmetic_no_expansion",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "121cases51attempts_templates",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "original_roster_N_seeds_grids",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "original_controls36",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "10external_unknown_preserved",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "history_failures_preserved",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "actual_original_bound:candidate",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "actual_original_bound:selection_overlay",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "actual_original_bound:replay_budget_supplement",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "actual_original_bound:replay_budget_manifest",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "actual_original_bound:producer",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "actual_original_bound:candidate_helper",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "original_rate_markers12_and3126",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "conditional4_rows",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "four_N:final:additional:24:Heston",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:24:Heston:1024",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:24:Heston:16384",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:24:Heston:4096",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:24:Heston:65536",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "four_N:final:additional:24:local",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:24:local:1024",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:24:local:16384",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:24:local:4096",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:24:local:65536",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "four_N:final:additional:48:Heston",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:48:Heston:1024",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:48:Heston:16384",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:48:Heston:4096",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:48:Heston:65536",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "four_N:final:additional:48:local",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:48:local:1024",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:48:local:16384",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:48:local:4096",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "branch_geometry:final:additional:48:local:65536",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "original_all_positive_wall_and_chunkceilings",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "actual18binding_interface_equality",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "12_other_binding_values_preserved",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "math_AST_unchanged:normalized_budget_rows",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "math_AST_unchanged:cap_recipe_payload",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "math_AST_unchanged:prediction_work",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "math_AST_unchanged:numeric_bytes",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "math_AST_unchanged:validate_budget_rows",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "math_AST_unchanged:positive",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "math_AST_unchanged:assembly_review_basis",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "reject:absent_root",
+      "PASS": true,
+      "detail": "actual root approval JSON is required"
+    },
+    {
+      "name": "reject:pending_actual_root",
+      "PASS": true,
+      "detail": "pending/rejected approval cannot materialize prior metadata"
+    },
+    {
+      "name": "reject:source_only_not_all3138prior:codec",
+      "PASS": true,
+      "detail": "actual full3138 resource prior decision required; source-only/counter review is insufficient"
+    },
+    {
+      "name": "reject:source_only_not_all3138prior:stage",
+      "PASS": true,
+      "detail": "actual full3138 resource prior decision required; source-only/counter review is insufficient"
+    },
+    {
+      "name": "reject:old_W1_resource_not_new_W2:task-5-formal-prior-lock-rebind-independent-decision-v4.json",
+      "PASS": true,
+      "detail": "new actual independent prior must bind current82 source before attempts"
+    },
+    {
+      "name": "reject:old_W1_resource_not_new_W2:task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+      "PASS": true,
+      "detail": "new actual independent prior must bind current82 source before attempts"
+    },
+    {
+      "name": "reject:stale_source_decision_sha",
+      "PASS": true,
+      "detail": "stale or changed actual review/binding file"
+    },
+    {
+      "name": "reject:missing_codec_review",
+      "PASS": true,
+      "detail": "both actual limited codec and stage source decisions required"
+    },
+    {
+      "name": "reject:altered_budget_wall",
+      "PASS": true,
+      "detail": "actual approval may only bind reviewSHA/explicit rate markers to assembled rows"
+    },
+    {
+      "name": "reject:altered_original_work",
+      "PASS": true,
+      "detail": "actual approval may only bind reviewSHA/explicit rate markers to assembled rows"
+    },
+    {
+      "name": "reject:unknown_rate_promoted_measured",
+      "PASS": true,
+      "detail": "unknown rates cannot become measured; retain original measured labels"
+    },
+    {
+      "name": "reject:missing_original_N65536_branch",
+      "PASS": true,
+      "detail": "actual approval may only bind reviewSHA/explicit rate markers to assembled rows"
+    },
+    {
+      "name": "actual_no_prepare_lock_worker_import",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "actual_source82_before_after_stable",
+      "PASS": true,
+      "detail": null
+    },
+    {
+      "name": "fixed_candidate_before_after_stable",
+      "PASS": true,
+      "detail": null
+    }
+  ],
+  "check_count": 112,
+  "source_canonical_identity": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_payload_identity": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "source_files": 82,
+  "source82_before_after_stable": true,
+  "approved_bindings": {
+    "candidate_sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "selection_overlay_sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+    "replay_budget_supplement_sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+    "replay_budget_manifest_sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9",
+    "source_native_payload_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "source_limited_decisions_sha256": "6233eda48b17b862a3922042d80a8a7b1b54d8009be1ece436a972769068f47f",
+    "source_rebind_evidence_sha256": "d5eab8376c819367defb650f228a0cb844fe4588b77c3f09464f9e18785e9571",
+    "budget_rows_assembly_sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5",
+    "budget_rows_assembly_manifest_sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3",
+    "raw_assembled_candidate_rows_digest": "fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f",
+    "raw_assembled_candidate_cap_recipe_digest": "d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d",
+    "activation_v4_origin_sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+    "activation_potential_first_job_budget_candidates_digest": "a82f3c33d71a918f51131c8c77917793ceec75850a2181815c867f1a1e243c04",
+    "source_identity_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "budget_rows_without_review_SHA_digest": "02da310d0bed91d6883171eed44cb22ae872cc6a2888837a5979755d9c68aee5",
+    "cap_recipe_digest": "83d0099dd31974d01d6f3fad202d669a92aa778242b7b13f76efc1b6b4aa96e1",
+    "materializer_sha256": "b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a",
+    "literal_cap_options": 573122
+  },
+  "references": {
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py": {
+      "sha256": "b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a",
+      "bytes": 47581
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-manifest-v1.json": {
+      "sha256": "be2b70146893b25ce6836f4158f45bcb5be286ed295c06363919e303b4c87fd3",
+      "bytes": 9627
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-interface-v1.json": {
+      "sha256": "943021eca1e38396cf44821f727dd307c2e6d19fbb45fb02dc86e4b56039fc1b",
+      "bytes": 5558
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v5.json": {
+      "sha256": "c6f6d4f3ffeae5558f886c327ccc88bd5b1fb04e6ff292da83cab1685326a950",
+      "bytes": 6426995
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-original-preflight-v1.py": {
+      "sha256": "f11b0d7901057a6cc146c4762af53276b3feaa4fea926419401a85a77ae7661c",
+      "bytes": 47595
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-preflight-failure-v1.json": {
+      "sha256": "0ee9e3f371cf3dce6497cf4fa9c7a81489585ed87f4939ce96e057ca60989a56",
+      "bytes": 437
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-red-v1.json": {
+      "sha256": "aae495a2d5a226e100214976efdafb064970e3713f1bb1217103293b6d516882",
+      "bytes": 555
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-report-v1.md": {
+      "sha256": "29e1da6d1a58fdb386141c83abce41249d6cd03a0fa177efb74fa11fb8525a9d",
+      "bytes": 3605
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-checks-original-v1.py": {
+      "sha256": "6af2af71d2b414b9870efb4c6ed0e784eb83915722fe1d37aa7a48d82fd2b62c",
+      "bytes": 10421
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-checks.py": {
+      "sha256": "f4381d0d894e55d20320eb0b2abb6c7ceb4b7b751eca05ea3fd9952c367864fc",
+      "bytes": 10461
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-results-v1.json": {
+      "sha256": "55ee90f58d8c49ee3144cd9c5f669b5a6cca1f17433652e894b067c357a0214e",
+      "bytes": 2799
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-results-v2.json": {
+      "sha256": "c46c40312219dd8a9a99f1ff0f9fbc2fdf5321bceb8498049245abc8b897269d",
+      "bytes": 2170
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-probe-correction-v2.json": {
+      "sha256": "5cdf62eb88ac28aa67ce12f546dac5ae2b0e3b27b5ae78975d6ff122b872ac5a",
+      "bytes": 785
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-source-binding-results-v1.json": {
+      "sha256": "f08d7b174177ab92972f62f4706092b0d5ad3ed59687fe28a2d38a1618fcd629",
+      "bytes": 2637
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.diff": {
+      "sha256": "20492e0d8ef0828fa5593a5a69f71b68fbf2ff95856560e69fd4b76165a2c21b",
+      "bytes": 27751
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v5.json": {
+      "sha256": "d5eab8376c819367defb650f228a0cb844fe4588b77c3f09464f9e18785e9571",
+      "bytes": 4068
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v4.py": {
+      "sha256": "e800b93de39329d0076692f925f6c10fdf2c18ccfe9b43dea7aca2c045a1dca0",
+      "bytes": 37424
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-actual-root-approval-v2.json": {
+      "sha256": "cd77af11dd47dad6576e6a677a106a279330b65cf0d594d12472f706d866c4f8",
+      "bytes": 6426747
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-independent-decision-v4.json": {
+      "sha256": "ef4b8cbe88da24f163e2177dd95045b4069f6dfbbf0341c656432dc6a8d7296a",
+      "bytes": 14789
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-evidence-v3.json": {
+      "sha256": "fb52036f054356c96700f18ca8feadb2397ac0e51bad4bf602c5a0b4f317c0df",
+      "bytes": 4552
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-independent-current-source-closure-v1.json": {
+      "sha256": "4183b1e707cfb40d01808a45e1fc5042e54ba26d8a2892e3ac3703f76a30f768",
+      "bytes": 33985
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-config.json": {
+      "sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+      "bytes": 9598904
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-builder.py": {
+      "sha256": "6b1bbc35351dc3879b8954c14e4f974c668d3b32cda0d5b3b41b3c3b00a3df3d",
+      "bytes": 39079
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py": {
+      "sha256": "33815db7a624e3c7e1d815e79475cd335f30af4e06f098d9ca054363b9adb3e8",
+      "bytes": 24395
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-assembly-author-v2-config.json": {
+      "sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5",
+      "bytes": 25529170
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-assembly-author-v2-manifest.json": {
+      "sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3",
+      "bytes": 3334
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json": {
+      "sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+      "bytes": 45889
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json": {
+      "sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+      "bytes": 47437
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json": {
+      "sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9",
+      "bytes": 1859
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json": {
+      "sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5",
+      "bytes": 34372
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-current-production-source-delta-v1.json": {
+      "sha256": "5644c3e49debb84cb6a9155749b9079e2e832f2a5ecd0421f62581cdda32052a",
+      "bytes": 1453
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-codec-v2-decision.json": {
+      "sha256": "26aa45f5902e816053decce2aec2364c58161c387fdcc5378d27e8255a906262",
+      "bytes": 2417
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-decision.json": {
+      "sha256": "f2fd826e399a08e20e848ac00bfbbb1132433be189779716f66a7e61d1868ea2",
+      "bytes": 2860
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-decision-v2.json": {
+      "sha256": "3cf7446276873a13e45c8c4c2f3562fa8d644302a52eb07c07c73753c98e5b4b",
+      "bytes": 10494
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-effective-rows-v1.json": {
+      "sha256": "31bde8af1b6ffec29066ca7260f0a9b0d8ca84fa952aa602515de7613b02690b",
+      "bytes": 5978398
+    }
+  },
+  "summary": {
+    "rows": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "teacher_candidates": 20,
+    "drivers": 10,
+    "literal_cap_options_arithmetic": 573122,
+    "literal_cap_options_expanded": 0,
+    "rate_markers": {
+      "independently_reviewed_estimate": 3126,
+      "measured_prior_job": 12
+    },
+    "conditional_rows": 4,
+    "unknown_runtime_rows": 2894,
+    "unknown_expected_physical_rows": 3138,
+    "original_controls": 36,
+    "external_unknown": 10,
+    "history_records": 46,
+    "history_parse_failures": 2,
+    "thresholds": 65,
+    "blocks": 16
+  },
+  "cost": {
+    "direct_wall_seconds_before_result_write": 1.6117658139992272,
+    "direct_CPU_seconds_before_result_write": 1.611764351,
+    "write_and_result_tail_seconds": null,
+    "all_review_cost_seconds": null
+  },
+  "financial_RNG_SDE_solver_Popen_calls": 0,
+  "prepare_lock_cap_expansion_root_approval_calls": 0,
+  "financial_qualification": "unknown",
+  "formal_launch_approved": false,
+  "main_or_phase_approval": false
+}

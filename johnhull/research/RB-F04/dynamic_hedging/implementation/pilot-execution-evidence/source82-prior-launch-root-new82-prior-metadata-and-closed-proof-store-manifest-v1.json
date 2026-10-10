@@ -1,0 +1,924 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-manifest-v1.json",
+      "ref": "artifact:sha256:be2b70146893b25ce6836f4158f45bcb5be286ed295c06363919e303b4c87fd3",
+      "bytes": 9627,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v5.json",
+      "ref": "artifact:sha256:c6f6d4f3ffeae5558f886c327ccc88bd5b1fb04e6ff292da83cab1685326a950",
+      "bytes": 6426995,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-interface-v1.json",
+      "ref": "artifact:sha256:943021eca1e38396cf44821f727dd307c2e6d19fbb45fb02dc86e4b56039fc1b",
+      "bytes": 5558,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-original-preflight-v1.py",
+      "ref": "artifact:sha256:f11b0d7901057a6cc146c4762af53276b3feaa4fea926419401a85a77ae7661c",
+      "bytes": 47595,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-preflight-failure-v1.json",
+      "ref": "artifact:sha256:0ee9e3f371cf3dce6497cf4fa9c7a81489585ed87f4939ce96e057ca60989a56",
+      "bytes": 437,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-red-v1.json",
+      "ref": "artifact:sha256:aae495a2d5a226e100214976efdafb064970e3713f1bb1217103293b6d516882",
+      "bytes": 555,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-report-v1.md",
+      "ref": "artifact:sha256:29e1da6d1a58fdb386141c83abce41249d6cd03a0fa177efb74fa11fb8525a9d",
+      "bytes": 3605,
+      "mime": "text/markdown"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-checks-original-v1.py",
+      "ref": "artifact:sha256:6af2af71d2b414b9870efb4c6ed0e784eb83915722fe1d37aa7a48d82fd2b62c",
+      "bytes": 10421,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-checks.py",
+      "ref": "artifact:sha256:f4381d0d894e55d20320eb0b2abb6c7ceb4b7b751eca05ea3fd9952c367864fc",
+      "bytes": 10461,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-results-v1.json",
+      "ref": "artifact:sha256:55ee90f58d8c49ee3144cd9c5f669b5a6cca1f17433652e894b067c357a0214e",
+      "bytes": 2799,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-results-v2.json",
+      "ref": "artifact:sha256:c46c40312219dd8a9a99f1ff0f9fbc2fdf5321bceb8498049245abc8b897269d",
+      "bytes": 2170,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-probe-correction-v2.json",
+      "ref": "artifact:sha256:5cdf62eb88ac28aa67ce12f546dac5ae2b0e3b27b5ae78975d6ff122b872ac5a",
+      "bytes": 785,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-source-binding-results-v1.json",
+      "ref": "artifact:sha256:f08d7b174177ab92972f62f4706092b0d5ad3ed59687fe28a2d38a1618fcd629",
+      "bytes": 2637,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.diff",
+      "ref": "artifact:sha256:20492e0d8ef0828fa5593a5a69f71b68fbf2ff95856560e69fd4b76165a2c21b",
+      "bytes": 27751,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py",
+      "ref": "artifact:sha256:b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a",
+      "bytes": 47581,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v5.json",
+      "ref": "artifact:sha256:d5eab8376c819367defb650f228a0cb844fe4588b77c3f09464f9e18785e9571",
+      "bytes": 4068,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-manifest-v1.json",
+      "ref": "artifact:sha256:6e6f22cf1c54be278bce81463075987be7f7bf5aae2baa94b335b0c49ba06147",
+      "bytes": 2599,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-probe-v1.py",
+      "ref": "artifact:sha256:8152a878c322b49ddde9df258392a79f12d4583576022948c6191951dd4b0900",
+      "bytes": 12210,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-probe-v2.py",
+      "ref": "artifact:sha256:1d66b917255d85a323b04c2584f9b047359ff78c914ea7f918a153d99cd8df0e",
+      "bytes": 12320,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-probe-assumption-failure-v1.json",
+      "ref": "artifact:sha256:0b1f63302465184f7d8df7a26857fa3383d6140db69b2a4b2fb2a5e9d96720ef",
+      "bytes": 581,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-results-v1.json",
+      "ref": "artifact:sha256:88a06a1209710497efa2c0c16011384f1e3f69a8afae683c739f10d9661f5d66",
+      "bytes": 27251,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-decision-v1.json",
+      "ref": "artifact:sha256:5cb82ff33fcca56bbbda87939cea53bc3caec43149df8cedbda5c5be51376b24",
+      "bytes": 10634,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-review-v1.md",
+      "ref": "artifact:sha256:8fa6adb3db8b0d12b770d48874f7542ba260c0f26ff61a39b7b415609b66e17a",
+      "bytes": 1704,
+      "mime": "text/markdown"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-actual-review-loader-validation-v1.json",
+      "ref": "artifact:sha256:7c99f563a3eb01c0677773888d972f0e92e197b1b79e4714eeeed660456f5a4e",
+      "bytes": 654,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-manifest.json",
+      "ref": "artifact:sha256:b1ec8be5f58c0e9f9503c0aa4b5def44b8cf5a1345e78ba0e66d511a4af4d2f2",
+      "bytes": 5355,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5.py",
+      "ref": "artifact:sha256:a53a73cfc420e2745f8d8d2cb72a6171ab2d166781126b9a96869afb88053981",
+      "bytes": 45733,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-candidate-v5.json",
+      "ref": "artifact:sha256:842fdd4ce09d83b1b674e108b65ea5d69c21b15a3590c46bf989494ce67550dd",
+      "bytes": 44630,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-preflight.py",
+      "ref": "artifact:sha256:245ae139271af5d18da94a841f2356c10035f276d06a7f7a2381efd4b184daee",
+      "bytes": 10972,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-preflight-results.json",
+      "ref": "artifact:sha256:4e4adbb8b0ee567df19220bcc52b93cb7360bd9558fd8148be63c1c4f5628237",
+      "bytes": 3508,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-preflight-results-initial.json",
+      "ref": "artifact:sha256:9da5ded327cd650a28286de7f14f89fe285d2d8dae723f58b1973b01b753dea7",
+      "bytes": 3110,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-preflight-results-intermediate.json",
+      "ref": "artifact:sha256:d3bf2f1754d2519a18175effe4fe922592d2535ece4921c6e433a1a5c54356c8",
+      "bytes": 3102,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-author-initial-failures.json",
+      "ref": "artifact:sha256:a36c91345be39d14c0ef1227358ef71274044a3fff2f488c712c9560dcfd31ef",
+      "bytes": 357,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-scoped-checks.json",
+      "ref": "artifact:sha256:ee3e4afd89be45227a5afe58b2bf0811099b5152622287549923a79f2597fd34",
+      "bytes": 778,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-source.diff",
+      "ref": "artifact:sha256:43f45910479672fd6cf6227b46ae295644e6dcb7a5162609d11ec42d798a466c",
+      "bytes": 29296,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-report.md",
+      "ref": "artifact:sha256:8949a234ae680bdd008c4da9b9fc543f236e5d8bdd8faec5499bc10b2cad758b",
+      "bytes": 4156,
+      "mime": "text/markdown"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/manifest.json",
+      "ref": "artifact:sha256:00b8101210d492111c0dec555b2a3653f2878c15a213db9bee6a948ef466a8bd",
+      "bytes": 18387,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/root-operational-guard-copy.json",
+      "ref": "artifact:sha256:145bdf322aacd4e699e297c2a4e747d1a021c43771e4b162783f9eb35a390881",
+      "bytes": 3421,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/materialization-progress.json",
+      "ref": "artifact:sha256:b19108b3c28aadb711023a8b716524f48e19660d162961cc8ac79d9e0f3af2d6",
+      "bytes": 1792,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/pending-external-expenses.json",
+      "ref": "artifact:sha256:d8a71f4614e992521c2c2015ce612deaa653f433be7dff16c6fbd41032df4185",
+      "bytes": 3645,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/actual-root-approval-copy.json",
+      "ref": "artifact:sha256:a3cc7cfc6c39b29465634b7c953506f9c4e987060cf043fd7515b8c818f8e55e",
+      "bytes": 6429654,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/source-identity.json",
+      "ref": "artifact:sha256:a08a86b6963e664c84f6da82368fc4de87875bd56291255a0b55680fcbccd274",
+      "bytes": 34372,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/receipt.json",
+      "ref": "artifact:sha256:ba04e6bf5679009a30a6137b363065014e25f1fb004c862882eb594d25b0112c",
+      "bytes": 312,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/metadata.json",
+      "ref": "artifact:sha256:60142174066daac266615bf7c2b295b588670ed57189466a021da02bae42aeb1",
+      "bytes": 1712,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/arrays.npz",
+      "ref": "artifact:sha256:8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/deep_hedge_price/src/deep_hedge_price/pricing_config.py",
+      "ref": "artifact:sha256:94cc052ed4bcef57008b337e63db895da3a8c50a4a6f4f3a336ca6bac0912c9d",
+      "bytes": 7095,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+      "ref": "artifact:sha256:fad2c73a27b8314b9cdfa5db8505fb56c382b4eab79ce4224aa475b450223b3e",
+      "bytes": 39047,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/deep_hedge_price/src/deep_hedge_price/config.py",
+      "ref": "artifact:sha256:f7d8a26b9972448bfab55795ebf84cbe63bbd4056ae1197cbcb0b2bfe95f6957",
+      "bytes": 8802,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py",
+      "ref": "artifact:sha256:ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+      "bytes": 47451,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "ref": "artifact:sha256:15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565",
+      "bytes": 33619,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py",
+      "ref": "artifact:sha256:c233ba0cf6d736401c4f2a4d92dc803810c8066ebf7960534730299759142fca",
+      "bytes": 15015,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py",
+      "ref": "artifact:sha256:c34a9aab22e216a512deafd1205c222fb17e9cc6b60ef46b7ff3267b64417902",
+      "bytes": 23613,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/deep_hedge_price/src/deep_hedge_price/__init__.py",
+      "ref": "artifact:sha256:a8b359e6997c219dec5bc328a2819181a8f24445fd0eb1c66fed78cc3fcf65c7",
+      "bytes": 268,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+      "ref": "artifact:sha256:cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b",
+      "bytes": 39168,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/bsm.py",
+      "ref": "artifact:sha256:e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+      "bytes": 17393,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/mc_advanced.py",
+      "ref": "artifact:sha256:8e2938c3a2e3437d2274b904bde6467a3362c2b6589518ae06c1ca007a5125ff",
+      "bytes": 3837,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/frontier_reference.py",
+      "ref": "artifact:sha256:c306605c2cb0e3745f4e542260b88a40a9406f77d54c984b5be40433fc7c960e",
+      "bytes": 137475,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/fourier.py",
+      "ref": "artifact:sha256:8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
+      "bytes": 3554,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/stochastic_volatility.py",
+      "ref": "artifact:sha256:7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+      "bytes": 8823,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/credit_portfolio.py",
+      "ref": "artifact:sha256:10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
+      "bytes": 19557,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/rates.py",
+      "ref": "artifact:sha256:e2912698d692da5979d80728d1fec90c56d86744af5fca863ef4c1c16840ecf5",
+      "bytes": 6972,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/nbplot.py",
+      "ref": "artifact:sha256:ed55a9403c054bb4866d38b61445cd054a5169951b1848637510592e95bb6144",
+      "bytes": 3510,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/credit_metrics.py",
+      "ref": "artifact:sha256:c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
+      "bytes": 7889,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/jgbi.py",
+      "ref": "artifact:sha256:0cb8eb805aed6afb7fc80b61a32c5b62bf1c1b9f8c6fbb1b69d011b0cf0db5ba",
+      "bytes": 16994,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/mc.py",
+      "ref": "artifact:sha256:abc2a84020b63a4faa4f3928c9d84c81e9a677d8ef14ea0337fbb239f5f6e922",
+      "bytes": 5326,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/liquidation.py",
+      "ref": "artifact:sha256:7c06faa9a4e65f8f1286a5c24ae8c7b0d13be69dfc7a105482ffd209187f5024",
+      "bytes": 11226,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/risk.py",
+      "ref": "artifact:sha256:42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
+      "bytes": 1743,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/surrogate_validation.py",
+      "ref": "artifact:sha256:938c8da86dde56278ec6a584524eeaff731105a499b793d32a1e4c1756312147",
+      "bytes": 9071,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/credit_curve.py",
+      "ref": "artifact:sha256:b7a77e8e65f5a379e03a33ae5fab156bc6174119a6153e0dd76ce678df08b4e4",
+      "bytes": 8805,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+      "ref": "artifact:sha256:d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+      "bytes": 32903,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/zero_dte.py",
+      "ref": "artifact:sha256:e8f99291613b17e0ffb6a29535d9ea08a2ab604e7116513164e91eca6dc07265",
+      "bytes": 15733,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/sde.py",
+      "ref": "artifact:sha256:998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+      "bytes": 4539,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/fd.py",
+      "ref": "artifact:sha256:7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
+      "bytes": 4730,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/swaps.py",
+      "ref": "artifact:sha256:8688dd06573ade6d9a93d21c5c8c8da78ed60f25c9accd4613b85aaa1d017035",
+      "bytes": 5275,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py",
+      "ref": "artifact:sha256:78ad0cc9e32628476da2023755cd688ea8363aee9be5f5655c204c6ab6fa5777",
+      "bytes": 18145,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/amm.py",
+      "ref": "artifact:sha256:a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
+      "bytes": 8732,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/copula.py",
+      "ref": "artifact:sha256:79aad8fca34960f4e1ad5358c496d5b8ae847982dbf5750dff3313a73b9b999b",
+      "bytes": 2373,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/perpetual_american.py",
+      "ref": "artifact:sha256:cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+      "bytes": 5099,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/perpetuals.py",
+      "ref": "artifact:sha256:bb4ea974fa5e8b9e94b9fb43bc6ce47793ce2d1a2a1ab2af185925e5f52fea7f",
+      "bytes": 12063,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/hedging.py",
+      "ref": "artifact:sha256:d019a75ac53c0f35db92359a5b3ca25f6fec14b58a0042eb22f6ed2dbcbd9447",
+      "bytes": 2690,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/var_backtest.py",
+      "ref": "artifact:sha256:617be582584df7b60f2a142ca5285672fcbdb52b9cb718c46b98bc0a8236b515",
+      "bytes": 9375,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/plotly_viz.py",
+      "ref": "artifact:sha256:c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+      "bytes": 83837,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+      "ref": "artifact:sha256:b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622",
+      "bytes": 17009,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py",
+      "ref": "artifact:sha256:9007e30a45375fbb7c8b4afe5fa4e4f694b5bc68e924b138bd993d8bdbf2b025",
+      "bytes": 23592,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/ppa.py",
+      "ref": "artifact:sha256:74d1b649d2cb4056714d228ad6361959276647df3fc4034d5543455783152320",
+      "bytes": 10530,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/heston.py",
+      "ref": "artifact:sha256:cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+      "bytes": 2659,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/teaching.py",
+      "ref": "artifact:sha256:69a2c11bdf0583ee208a16a75dbf5e781282d4ee1f58033c0130b4f2d21a2724",
+      "bytes": 1714,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/rfr.py",
+      "ref": "artifact:sha256:36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+      "bytes": 16167,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/sabr_normal.py",
+      "ref": "artifact:sha256:3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
+      "bytes": 22877,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/sabr.py",
+      "ref": "artifact:sha256:e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+      "bytes": 5916,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/cds.py",
+      "ref": "artifact:sha256:77c2e8866a76cfde54299268f82e562fc8f29eb639b9958b8b78c3e23da6936c",
+      "bytes": 8470,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/payoffs.py",
+      "ref": "artifact:sha256:b8b0a73a357a2149ac8b1bfdda4bff99577ff865c3c5dc6ec796272c078568a9",
+      "bytes": 1987,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/credit.py",
+      "ref": "artifact:sha256:5b278583bd0025224ed255b785b26d9f50cd05442f876e8c24dee8ff8ee0e50d",
+      "bytes": 3434,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/alternative_models.py",
+      "ref": "artifact:sha256:a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+      "bytes": 8043,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/ir_options.py",
+      "ref": "artifact:sha256:c0fe4c19c95e66597dd709be41a74d870eb1f39de3931bf98fd4100636b5b4fb",
+      "bytes": 4922,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/pnl_explain.py",
+      "ref": "artifact:sha256:802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+      "bytes": 9624,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/rfr_options.py",
+      "ref": "artifact:sha256:d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
+      "bytes": 5713,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/weather.py",
+      "ref": "artifact:sha256:b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
+      "bytes": 9504,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/nonstandard_american.py",
+      "ref": "artifact:sha256:ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+      "bytes": 5208,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/trees.py",
+      "ref": "artifact:sha256:b21a1f7896bd8fd144becf5776f2e20b8b5c82d2e4bf8d292381a960c22201ee",
+      "bytes": 2364,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/hull_white.py",
+      "ref": "artifact:sha256:09e6fa5140b3a0958c854c25f1893d4a293e0832c21e33f89c29490930040ba5",
+      "bytes": 11829,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/inflation.py",
+      "ref": "artifact:sha256:f7b30df76bbc63645a280eb6f51126c86b632f943b2734e6d882cf88e9b9a46a",
+      "bytes": 12147,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/tail_risk.py",
+      "ref": "artifact:sha256:bbaaf7579741d9621e0911ebde7d6f62759c56b2c88ed6aa6de800e971f26128",
+      "bytes": 11916,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/spx_vix.py",
+      "ref": "artifact:sha256:610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472",
+      "bytes": 18799,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/vol_surface.py",
+      "ref": "artifact:sha256:849e3cb14a87d13acfbad5a43c239f18219fa0812d1165ed1807af68089e3e9c",
+      "bytes": 11060,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/exotics.py",
+      "ref": "artifact:sha256:83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+      "bytes": 32606,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py",
+      "ref": "artifact:sha256:d07d4d1524a005d5b9ebe765922748aadab2175ace98ff12c941c1a38e8497ce",
+      "bytes": 17428,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/__init__.py",
+      "ref": "artifact:sha256:f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+      "bytes": 1707,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/jarrow_yildirim.py",
+      "ref": "artifact:sha256:4a697ee3337c1f686224897428067dba2fad3f018020788b4aa6ae9e795de01e",
+      "bytes": 18678,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/surrogate_data.py",
+      "ref": "artifact:sha256:251a883394722e33e38259c133681166c7444c5c570d8100e08d9f9a2f969459",
+      "bytes": 15343,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/carbon.py",
+      "ref": "artifact:sha256:7c48f441679f075eda0b118eba73b225120fbba1002708c7dfa053ee6b1dea65",
+      "bytes": 10333,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/risk_allocation.py",
+      "ref": "artifact:sha256:a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+      "bytes": 6205,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py",
+      "ref": "artifact:sha256:585ea869a96a6076fedd7749d88824dde5ebbbd99d0ca60a646ac829e39be50e",
+      "bytes": 11740,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/volatility.py",
+      "ref": "artifact:sha256:4a955552641c86effabd016c7c4118b999955165826b457fe1175d34043193a6",
+      "bytes": 8189,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/hullkit/src/hullkit/xva.py",
+      "ref": "artifact:sha256:a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+      "bytes": 4877,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+      "ref": "artifact:sha256:6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+      "bytes": 11841,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py",
+      "ref": "artifact:sha256:681548eb4753946fe6c896a588b2314cb47e85736f347ca92ee2d2513a46f9a1",
+      "bytes": 6030,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "ref": "artifact:sha256:2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "bytes": 215493,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/check_fresh.py",
+      "ref": "artifact:sha256:7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+      "bytes": 63342,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+      "ref": "artifact:sha256:7fe16943f2ead6dbe17a17e969930afde863681ed9eb24b9ea8b7b18c4a004d4",
+      "bytes": 12377,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "ref": "artifact:sha256:9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5",
+      "bytes": 176874,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+      "ref": "artifact:sha256:b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+      "bytes": 68869,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/run_fresh.py",
+      "ref": "artifact:sha256:46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+      "bytes": 19118,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/run_main.py",
+      "ref": "artifact:sha256:0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771",
+      "bytes": 121028,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "ref": "artifact:sha256:849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef",
+      "bytes": 51440,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+      "ref": "artifact:sha256:ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd",
+      "bytes": 33301,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/check_main.py",
+      "ref": "artifact:sha256:a988c164ca8f64f5dfc78165fc2f9620c2abc857eac745715f4749908839e230",
+      "bytes": 39222,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/metadata-00000001/receipt.json",
+      "ref": "artifact:sha256:f994295a42c5246644ed562c446f9041153ef259333d6392c64963fa8b033a3e",
+      "bytes": 317,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/metadata-00000001/metadata.json",
+      "ref": "artifact:sha256:1afb5d7fca58e189edc5eaa2a93b914e6a46602ac58c1a74ac32bd5b5659e8d1",
+      "bytes": 229,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/metadata-00000001/arrays.npz",
+      "ref": "artifact:sha256:793c9b6ab99a9ae46d3b845820bffba317895971e8fc899d17e8a41f2419f01d",
+      "bytes": 882177,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/arrays-00000000/receipt.json",
+      "ref": "artifact:sha256:e378b18b59864267cd9a0000a8a5a1e335928ef91ce9ab5df5ffe38d2e332c4f",
+      "bytes": 315,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/arrays-00000000/metadata.json",
+      "ref": "artifact:sha256:249843e7896c0cd46b1b699b419e5beb5baca3e19972f42d84a9bc24bd2649a9",
+      "bytes": 213,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/arrays-00000000/arrays.npz",
+      "ref": "artifact:sha256:6518d9217b934058093eaa70633795ea85e9320663719a6924357dd02162d75c",
+      "bytes": 5769,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/metadata-00000000/receipt.json",
+      "ref": "artifact:sha256:37c8275eb4500d2aa3696d87afe578035f24664b3615af593f35767bcc3d2cf6",
+      "bytes": 318,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/metadata-00000000/metadata.json",
+      "ref": "artifact:sha256:f91e80615d7ad1fcfe0fbf667b418038745cf5fc1e574669d4e8799771146347",
+      "bytes": 224,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/metadata-00000000/arrays.npz",
+      "ref": "artifact:sha256:dc9c12d733fe6771280282b807e38b4841f7add2c37e508f6d2effba7e25374c",
+      "bytes": 7793144,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v3.json",
+      "ref": "artifact:sha256:a3cc7cfc6c39b29465634b7c953506f9c4e987060cf043fd7515b8c818f8e55e",
+      "bytes": 6429654,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-binding-receipt-v4.json",
+      "ref": "artifact:sha256:cbb50a4dfb4a8eec3f21e7f1ed8f3cea46459b49312c637cc0b0bbba9786cae8",
+      "bytes": 1212,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v3.json",
+      "ref": "artifact:sha256:145bdf322aacd4e699e297c2a4e747d1a021c43771e4b162783f9eb35a390881",
+      "bytes": 3421,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-metadata-root-observer-v4.py",
+      "ref": "artifact:sha256:ac44f30e0d951aab0b9d4b0740e5f944256749223aca0252a7f1f52ea10e3e6b",
+      "bytes": 5142,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-metadata-root-observer-v4.diff",
+      "ref": "artifact:sha256:dc2e9774adfad6133fc81aeac9c5ff0bdc8a7a39c9a7354b8db965d820e43a6c",
+      "bytes": 1552,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-current-source-administrative-prior-and-metadata-observer-v1.json",
+      "ref": "artifact:sha256:c7c9725fe3922843eefb0bb16b158b7cb756eb99c0f1b95bb266c59fec11e4cd",
+      "bytes": 1481,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-current-metadata-observer-and-operational-limit-delta-v1.json",
+      "ref": "artifact:sha256:d17e692ca92003c5638385e31e4529068cb56e01adc2ada9a21f245d864cf902",
+      "bytes": 782,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-pending-prior-v5-origin-and-fixed-archive-check-v1.json",
+      "ref": "artifact:sha256:bf31e3e0b85aab783d755bc73416f1f33ca9e44c567a12c29a337baa5b7c92c9",
+      "bytes": 809,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json",
+      "ref": "artifact:sha256:248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5",
+      "bytes": 34372,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-current-production-source-delta-v1.json",
+      "ref": "artifact:sha256:5644c3e49debb84cb6a9155749b9079e2e832f2a5ecd0421f62581cdda32052a",
+      "bytes": 1453,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-codec-v2-decision.json",
+      "ref": "artifact:sha256:26aa45f5902e816053decce2aec2364c58161c387fdcc5378d27e8255a906262",
+      "bytes": 2417,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-decision.json",
+      "ref": "artifact:sha256:f2fd826e399a08e20e848ac00bfbbb1132433be189779716f66a7e61d1868ea2",
+      "bytes": 2860,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-private-source-proof-push-v1.json",
+      "ref": "artifact:sha256:f4ce4f9d367e28fa47a50c7130962f52f823bd58dc5d50b564d8138a08c54c85",
+      "bytes": 394,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v3/observer-progress.json",
+      "ref": "artifact:sha256:f196f1b487b8b00ca6c2ba5fbf7b08607a772cf69a8e13765e1a7ee585341742",
+      "bytes": 371,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v3/stderr.log",
+      "ref": "artifact:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v3/stdout.log",
+      "ref": "artifact:sha256:5d817842a6b386626e4d61b73c388b68827b4975abcdc53fbc95bdf50617c7ab",
+      "bytes": 1696,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v3/actual-root-approval-reference.json",
+      "ref": "artifact:sha256:32f85c72a0c0499c7802a09b0ab5ed29e787f55d8ac6c880fd27e5f677ff6996",
+      "bytes": 243,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v3/parent-cost-and-status.json",
+      "ref": "artifact:sha256:94a8bd84a5587cbd7862c77b0cacc10b847ea0d8e7d0e81211c66fffc31ce733",
+      "bytes": 1463,
+      "mime": "application/json"
+    }
+  ]
+}

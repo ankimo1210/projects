@@ -1,0 +1,40 @@
+{
+  "schema": "rb-f04-independent-saved-metadata-tool-enclosing-receipt-v1",
+  "status": "completed",
+  "exit_code": 0,
+  "argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu",
+    "--",
+    "/usr/bin/timeout",
+    "--signal=TERM",
+    "3600",
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-B",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-probe-v1.py"
+  ],
+  "tool_session_id": 98078,
+  "tool_initial_wait_wall_seconds": 10.0074613,
+  "tool_final_poll_wall_seconds": 8.6e-06,
+  "tool_waits_are_not_process_enclosing_wall_and_must_not_be_added": true,
+  "enclosing_wall_seconds": null,
+  "enclosing_parent_CPU_seconds": null,
+  "script_inclusive_wall_seconds_before_receipt_write": 19.498324011001387,
+  "script_inclusive_CPU_seconds_before_receipt_write": 19.364342044999997,
+  "script_kernel_peak_RSS_bytes": 4282847232,
+  "script_sampled_peak_individual_RSS_bytes": 3634991104,
+  "cap": null,
+  "financial_cap_projection": false,
+  "original_root_metadata_attempt": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v3/parent-cost-and-status.json",
+    "sha256": "94a8bd84a5587cbd7862c77b0cacc10b847ea0d8e7d0e81211c66fffc31ce733",
+    "wall_seconds": 97.25502551400132,
+    "children_CPU_seconds": 94.993546,
+    "kernel_peak_RSS_bytes": 4355092480,
+    "scope": "independent and root costs are distinct actual attempts, nested phases not summed"
+  },
+  "independent_attempt_and_root_attempt_are_distinct_not_nested": true,
+  "all_review_tail_and_full_cost_seconds": null,
+  "financial_qualification": "unknown"
+}

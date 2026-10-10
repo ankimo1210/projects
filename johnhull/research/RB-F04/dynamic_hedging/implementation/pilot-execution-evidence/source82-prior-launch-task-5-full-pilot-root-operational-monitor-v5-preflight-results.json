@@ -1,0 +1,125 @@
+{
+  "status": "PASS",
+  "scope": "candidate refusal, current limited evidence, pure administrative semantics only",
+  "probes": [
+    {
+      "probe": "false-root",
+      "status": "PASS",
+      "reason": "root prior approval required; candidate cannot execute",
+      "Popen_calls": 0,
+      "output_mutation": false
+    },
+    {
+      "probe": "false-launch",
+      "status": "PASS",
+      "reason": "separate root financial launch authorization required",
+      "Popen_calls": 0,
+      "output_mutation": false
+    },
+    {
+      "probe": "pending-full-budget",
+      "status": "PASS",
+      "reason": "all3138/cap recipe independent review required",
+      "Popen_calls": 0,
+      "output_mutation": false
+    },
+    {
+      "probe": "source-only-not-budget",
+      "status": "PASS",
+      "reason": "v6 static counter/source approval is not whole budget approval",
+      "Popen_calls": 0,
+      "output_mutation": false
+    },
+    {
+      "probe": "missing-stage",
+      "status": "PASS",
+      "reason": "both actual limited codec and stage source decisions required",
+      "Popen_calls": 0,
+      "output_mutation": false
+    },
+    {
+      "probe": "old81-identity",
+      "status": "PASS",
+      "reason": "native source binding differs",
+      "Popen_calls": 0,
+      "output_mutation": false
+    },
+    {
+      "probe": "old81-evidence",
+      "status": "PASS",
+      "reason": "reference is absent or outside its fixed evidence root",
+      "Popen_calls": 0,
+      "output_mutation": false
+    },
+    {
+      "probe": "pending-root-metadata",
+      "status": "PASS",
+      "reason": "pending reference SHA cannot authorize execution",
+      "Popen_calls": 0,
+      "output_mutation": false
+    },
+    {
+      "probe": "old-W1-actual-guard",
+      "status": "PASS",
+      "Popen_calls": 0
+    },
+    {
+      "probe": "actual-source82-two-decisions",
+      "status": "PASS",
+      "source_files": 82,
+      "authority_scope": "limited source only"
+    },
+    {
+      "probe": "actual-full3138-resource-review",
+      "status": "PASS",
+      "authority_scope": "resource prior only; candidate launch still false"
+    },
+    {
+      "probe": "actual-root-prior-still-requires-closed-metadata",
+      "status": "PASS",
+      "Popen_calls": 0,
+      "live_metadata_tree_read": false,
+      "reason": "pending reference SHA cannot authorize execution"
+    },
+    {
+      "probe": "original-administration-AST",
+      "status": "PASS",
+      "unchanged_functions": [
+        "digest",
+        "sha",
+        "clock",
+        "save",
+        "require",
+        "absolute",
+        "positive",
+        "tree_binding",
+        "rss",
+        "volume_sample",
+        "choose_stop",
+        "terminal_status",
+        "run",
+        "main"
+      ]
+    },
+    {
+      "probe": "original-cap-and-unknown-principles",
+      "status": "PASS",
+      "pure_stop_cases": 5,
+      "pure_terminal_cases": 7
+    }
+  ],
+  "Popen_calls": 0,
+  "financial_RNG_solver_calls": 0,
+  "source82_before_after_stable": true,
+  "actual_new_metadata_or_prior_validated": false,
+  "actual_financial_launch_authorized": false,
+  "financial_qualification": "unknown",
+  "monitor_sha256": "a53a73cfc420e2745f8d8d2cb72a6171ab2d166781126b9a96869afb88053981",
+  "candidate_sha256": "842fdd4ce09d83b1b674e108b65ea5d69c21b15a3590c46bf989494ce67550dd",
+  "cost": {
+    "outer_wall_seconds": 0.06401591200119583,
+    "CPU_seconds": 0.06401633500000001,
+    "kernel_peak_RSS_bytes": 48607232,
+    "final_report_write_stdout_tail": null
+  }
+}

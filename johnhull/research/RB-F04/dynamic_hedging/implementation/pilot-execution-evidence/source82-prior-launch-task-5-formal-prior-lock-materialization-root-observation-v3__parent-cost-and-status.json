@@ -1,0 +1,29 @@
+{
+  "schema": "rb-f04-root-metadata-materialization-enclosing-cost-v1",
+  "status": "completed",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py",
+    "--approval",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v3.json",
+    "--out",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5"
+  ],
+  "child_pid": 368477,
+  "exit_code": 0,
+  "cap": null,
+  "root_approval_sha256": "a3cc7cfc6c39b29465634b7c953506f9c4e987060cf043fd7515b8c818f8e55e",
+  "start_UTC": "2026-10-10T13:45:11.725896+00:00",
+  "end_UTC": "2026-10-10T13:46:48.983210+00:00",
+  "wall_seconds": 97.25502551400132,
+  "parent_CPU_seconds": 0.161982783,
+  "children_CPU_seconds": 94.993546,
+  "sampled_child_peak_individual_process_RSS_bytes": 3627294720,
+  "child_kernel_peak_RSS_bytes": 4355092480,
+  "sampled_parent_peak_RSS_bytes": 34451456,
+  "observations": 97,
+  "scope": "metadata generation including source/input checks, exact cap expansion, artifact writer and manifest; not financial RNG/SDE or any numerical acceptance",
+  "financial_workers": 0,
+  "financial_qualification": "unknown",
+  "own_final_receipt_write_stdout_cost": null
+}

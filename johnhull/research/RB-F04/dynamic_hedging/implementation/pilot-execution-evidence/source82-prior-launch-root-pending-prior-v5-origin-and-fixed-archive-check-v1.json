@@ -1,0 +1,23 @@
+{
+  "schema": "root-pending-prior-v5-origin-and-fixed-archive-check-v1",
+  "manifest_size_SHA_files_verified": 15,
+  "budget_rows": 3138,
+  "all_budget_values_original": true,
+  "metadata_functions_AST_unchanged": [
+    "normalized_budget_rows",
+    "cap_recipe_payload",
+    "validate_budget_rows",
+    "prediction_work",
+    "numeric_bytes",
+    "write_json"
+  ],
+  "financial_workers_or_RNG_or_import": 0,
+  "approved": false,
+  "formal_financial_launch_authorized": false,
+  "wall_seconds": 0.1270823710001423,
+  "original_root_probe_failure": {
+    "type": "TypeError",
+    "reason": "root probe treated reviewed_budgets dictionary as a list; failed before assertion/financial/source execution; runtime/source unchanged",
+    "corrected_probe": "iterate dictionary values matching original schema"
+  }
+}

@@ -1,6 +1,6 @@
 # 動的モデル横断ヘッジ — 研究v1
 
-最新：新しいprivate source82は、保存transportとstage引数照合の修正を接続し、2件の独立レビューでsourceの範囲を限定承認した。固定sourceの対象80tests・変更10PythonのRuff/formatがPASS。正式214件目のpartial、旧source81の原失敗/費用/unknownを保持し、新prior・別rootの正式pilot・saved数値検算・freeze/mainは未完了。 genuine N1024全payloadの保存量は122.96MB→40.23MB（1件の測定）。[修正・実測](implementation/PILOT_BUDGET_MEASUREMENTS.md#保存transportとstage引数照合の限定修正2026-10-10)。
+最新：source82の別root正式pilotを2026-10-10 14:00:06 UTCに起動し、親・監視・金融childの生存を確認した。元3,138jobs/121cases/51義務/全4Nを保持。新prior112検査、実保存計画3,906検査＋全573,122 cap設定、monitor16検査、実guard23検査がPASS。計画と起動証跡は両保管庫に保存済み。qualification unknown、完走・saved数値検算・freeze/mainは未完了。 [再開証跡](implementation/PILOT_BUDGET_MEASUREMENTS.md#新sourceへのprior結合metadata生成正式pilot再開2026-10-10)。
 
 修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](implementation/pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
 

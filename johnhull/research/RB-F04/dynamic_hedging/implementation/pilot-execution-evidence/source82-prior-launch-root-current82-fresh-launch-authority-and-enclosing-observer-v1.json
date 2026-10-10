@@ -1,0 +1,42 @@
+{
+  "schema": "root-current82-fresh-launch-authority-and-enclosing-observer-v1",
+  "actual_root_guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-launch-guard-v3.json",
+    "sha256": "9e794bd4ec46c72d240a264fdf2dd722297455baf2f3cd0d07243f6d7a0c2842"
+  },
+  "enclosing_observer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observer-v3.py",
+    "sha256": "8fc535679dc5b2bc04d490dcc2b5c9cdbdc60dd047056289b102ccbd05659064"
+  },
+  "old_enclosing_observer": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-enclosing-observer-v2.py",
+    "sha256": "0297fa697c12e762c8017b30341047e1e11f246cab3ca4f5a0ba8b7537908a83"
+  },
+  "observer_changes_only": [
+    "D2 path",
+    "v5 monitor",
+    "v3 guard/observation filename",
+    "fixed guard SHA"
+  ],
+  "source82_before_after_verified": true,
+  "original3138_121_51_4N_and_cap_unchanged": true,
+  "independent_prelaunch_evidence": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-decision-v1.json",
+      "sha256": "11e4861b09129def334dfc1f957f44549c178f193dd5287472a3c252fa8a9427",
+      "scope": "fixed monitor implementation/refusal/administrative stop+cost and actual closed metadata binding only; not actual launch guard or financial outcome"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-decision-v1.json",
+      "sha256": "ac8a0176c68ea3b6610a665b22c953af94df2358eb260d5ccae8808d676d90b7",
+      "scope": "Actual saved W2 metadata/root-prior/source/typed-input/cap-roster structural binding only. Original mathematical budgets are reused unchanged; no numerical financial qualification."
+    }
+  ],
+  "actual_financial_launch_authorized_by_root": true,
+  "Popen_financial_RNG_solver_calls_in_this_authority_binding": 0,
+  "source_and_oldraw_resume_or_relabel": false,
+  "financial_qualification": "unknown",
+  "formal_phase_or_main_acceptance": false,
+  "actual_guard_current_binding_independent_confirmation_before_child_required": true,
+  "both_store_metadata_ref": "artifact:sha256:aa5ca5656f4d953e8698c8bdc5f92f10436965568ed1273e8b6ef4c21b919598"
+}
