@@ -1,0 +1,1 @@
+{"status": "completed_resource_component", "exit_code": 0, "financial_qualification": "unknown"}

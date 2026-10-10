@@ -1,0 +1,43 @@
+{
+  "candidate_executed": false,
+  "financial_RNG_SDE_CF_PDE_generation": false,
+  "live_snapshot_fixed": false,
+  "production_source_tests_docs_Git_CAS_changed": false,
+  "read_sources": {
+    "check_pilot.py": {
+      "bytes": 214120,
+      "sha256": "4b54c52c273f1ae90cfbb417b1dc039619658ddea3f8f2de206b5de6c01f1b5a"
+    },
+    "run_pilot.py": {
+      "bytes": 176147,
+      "sha256": "5f8c94a8a191beda7f016762f7912739f0b311c3effc928ba76d0bfe7f69b6f8"
+    }
+  },
+  "reported_concrete_issue": {
+    "author_notified": true,
+    "cause": "not reused means gate recalculated, while teacher-grid memo may all be warm and actual SDE replay zero",
+    "location": "candidate run_pilot.py activation event sde_replayed_this_call",
+    "requested_minimal_correction": "distinguish gate recalculation from actually executed teacher SDE, preserve real inclusive timing",
+    "resolution_fixed_yet": false,
+    "root_notified": true
+  },
+  "scope": "D-only read-only pre-fixed static connection review; not approval",
+  "source_after_root": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-source-after-v1",
+  "static_findings": {
+    "activation_gate_cache": "observed before guard + first calculation after guard + copied result digest; existing first gate retained",
+    "every_hit_physical_inventory": "observed all teacher_grid node directories plus every declared driver chunk recursively collected; all file bytes hashed",
+    "fresh_formal_context": "observed run_pilot entry and check_pilot_records entry create new context; snapshot persists events only, not entries",
+    "immutable_source_and_field_content": "observed actual transitive source file bytes and input_identity actual field grids",
+    "incomplete_unknown": "raw cacheNone/status not executed normal path; completed report financial unknown unchanged",
+    "initial_full_N_then_bounded_register": "observed check_pilot._checked_teacher_grid complete condition and before/after guard",
+    "typed_arguments_Q_envelope": "existing external check_resolved_job_arguments/Q required checks remain outside memo"
+  },
+  "status": "pending_fixed_author_snapshot_and_independent_saved_probes",
+  "unverified": [
+    "fixed candidate source closure",
+    "independent saved fixture probes",
+    "physical same-size/mtime mutation rejection",
+    "first-to-hit measured expense and retention",
+    "actual activation result tamper"
+  ]
+}

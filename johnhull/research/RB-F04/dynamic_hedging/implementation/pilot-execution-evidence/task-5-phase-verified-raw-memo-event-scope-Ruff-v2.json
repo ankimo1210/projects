@@ -1,0 +1,30 @@
+{
+  "scope": "3 changed deliverable files; original mathematical N806 names ignored",
+  "parent_wall_seconds": 0.027854838,
+  "results": [
+    {
+      "command": [
+        "format"
+      ],
+      "exit": 0,
+      "output": "3 files left unchanged\n"
+    },
+    {
+      "command": [
+        "check",
+        "--ignore",
+        "N806"
+      ],
+      "exit": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "command": [
+        "format",
+        "--check"
+      ],
+      "exit": 0,
+      "output": "3 files already formatted\n"
+    }
+  ]
+}

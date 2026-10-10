@@ -1,0 +1,37 @@
+{
+  "schema": "rb-f04-independent-phase-local-memo-resource-review-manifest-v1",
+  "decision": "resource observation approved only",
+  "financial_qualification": "unknown",
+  "formal_phase_main_or_budget_approved": false,
+  "new_financial_numeric_execution": false,
+  "files": {
+    "task-5-phase-local-memo-resource-independent-probe-v1.py": {
+      "sha256": "79a5c5578617920fe9d3caa75c895ff29d0c1bb3e8e3b00d0b614d4f6be56b34",
+      "bytes": 21092
+    },
+    "task-5-phase-local-memo-resource-independent-probe-v2.py": {
+      "sha256": "afb02684fa7710214c3a820f2ab98ccb994b71c10d2bbdd1885a686301ad8f82",
+      "bytes": 22097
+    },
+    "task-5-phase-local-memo-resource-independent-results-v1.json": {
+      "sha256": "d0e6628375661332da2e5642f0aa06496e61ecb02da948d93b5a85b5b646d2ff",
+      "bytes": 1918
+    },
+    "task-5-phase-local-memo-resource-independent-results-v2.json": {
+      "sha256": "0585a3bc83ab5ac642d77c25be0e646c1842649ae852df18582d8ea8e64e3b91",
+      "bytes": 10167
+    },
+    "task-5-phase-local-memo-resource-independent-decision-v1.json": {
+      "sha256": "6e9ead1a305743c3561976860711fb0c2bd70d182587d4198393f90b660e166e",
+      "bytes": 5125
+    },
+    "task-5-phase-local-memo-resource-independent-review-v1.md": {
+      "sha256": "dedd7c26180617eb4bbe59a6bc314b786f97052c190c1c622e9a69127bb684c3",
+      "bytes": 1713
+    }
+  },
+  "original_receipt_and_report_physical_bindings": "results-v2.input_files and results-v2.physical_report_files; all saved roots/packs retained",
+  "old_failed_review_raw_and_expense_preserved": true,
+  "old_producer_and_old_saved_checker_provenance_preserved": true,
+  "final_manifest_write_and_tool_tail_cost_seconds": null
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-source-after-v2/deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+    "--confcutdir",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging",
+    "-q",
+    "-k",
+    "activation_event_reports_registered_teacher_proof_scope"
+  ],
+  "exit": 0,
+  "parent_wall_seconds": 2.27745464,
+  "scope": "targeted administrative stub; finance/RNG/SDE0"
+}

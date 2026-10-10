@@ -1,0 +1,6 @@
+{
+  "scope": "static closure/byte/AST/diff freeze; finance0",
+  "wall_seconds": 1.267890183,
+  "cpu_seconds": 0.851472058,
+  "excludes": "this cost receipt and final manifest writes"
+}

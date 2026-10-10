@@ -7,9 +7,11 @@ stated numerical boundary. It does not create an independent-review decision.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import sys
 from pathlib import Path
+from time import perf_counter_ns, process_time_ns
 
 if __name__ == "__main__":
     _CLI_ROOT = Path(__file__).resolve().parents[4]
@@ -2740,15 +2742,234 @@ def project_attempt(identifier, job_ids, jobs, checks, candidate, context):
     return projected
 
 
+def _file_byte_sha(path):
+    digest = hashlib.sha256()
+    try:
+        with Path(path).open("rb") as stream:
+            for part in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(part)
+    except OSError as error:
+        raise ValueError("memo physical/source file unavailable") from error
+    return digest.hexdigest()
+
+
+def _new_teacher_verification_context(*, source_root=ROOT, source=None, plan_sha256=None):
+    """Fresh invocation-local proofs; never deserialize a verification memo."""
+    source = runner.execution_source_identity(source_root) if source is None else source
+    _require(
+        source.get("files") and not source.get("dynamic_imports"), "memo source closure required"
+    )
+    return {
+        "scope_id": "teacher-verification:" + str(perf_counter_ns()),
+        "source_root": str(Path(source_root).resolve()),
+        "source": copy.deepcopy(source),
+        "plan_sha256": plan_sha256,
+        "owners": {},
+        "entries": {},
+        "events": [],
+    }
+
+
+def _teacher_source_guard(context):
+    root = Path(context["source_root"])
+    source = context["source"]
+    for name, digest in source["files"].items():
+        path = (root / name).resolve()
+        _require(
+            path.is_relative_to(root) and _file_byte_sha(path) == digest, "memo source changed"
+        )
+    return runner.payload_digest(source)
+
+
+def _artifact_byte_guard(directory):
+    """Seal exact physical inventory; the first native check authenticates its schema."""
+    directory = Path(directory).resolve()
+    _require(directory.is_dir(), "memo physical artifact missing")
+    files, directories = {}, []
+    for path in sorted(directory.rglob("*")):
+        _require(path.resolve().is_relative_to(directory), "memo artifact path escaped")
+        name = str(path.relative_to(directory))
+        if path.is_dir():
+            directories.append(name)
+        elif path.is_file():
+            files[name] = _file_byte_sha(path)
+        else:
+            raise ValueError("memo unsupported physical inventory entry")
+    _require(files, "memo physical artifact is empty")
+    return {"path": str(directory), "files": files, "directories": directories}
+
+
+def _teacher_physical_guard(value, artifact_context=None):
+    from run_pilot import bound_artifact_path
+
+    paths = set()
+
+    def visit(item):
+        if isinstance(item, dict):
+            if item.get("kind") == "teacher_grid":
+                for node in item["nodes"]:
+                    paths.add(bound_artifact_path(node["path"], artifact_context).resolve())
+            if {"directory", "chunks", "calendar_times", "original_n"} <= set(item):
+                root = bound_artifact_path(item["directory"], artifact_context)
+                for chunk in item["chunks"]:
+                    _require(Path(chunk["path"]).name == chunk["path"], "memo driver chunk escaped")
+                    paths.add((root / chunk["path"]).resolve())
+            for child in item.values():
+                visit(child)
+        elif isinstance(item, (list, tuple)):
+            for child in item:
+                visit(child)
+
+    visit(value)
+    return {str(p): _artifact_byte_guard(p) for p in sorted(paths)}
+
+
+def _teacher_verification_guard(value, *, verification_context=None, artifact_context=None):
+    from run_pilot import input_identity
+
+    context = verification_context
+    if context is None:
+        context = _new_teacher_verification_context()
+    return {
+        "scope_id": None if verification_context is None else context["scope_id"],
+        "source_root": context["source_root"],
+        "plan_sha256": context["plan_sha256"],
+        "source_sha256": _teacher_source_guard(context),
+        "content_sha256": input_identity(value),
+        "physical": _teacher_physical_guard(value, artifact_context),
+        "artifact_context_sha256": runner.payload_digest(
+            None if artifact_context is None else {k: str(v) for k, v in artifact_context.items()}
+        ),
+    }
+
+
+def _checked_teacher_grid(job, context):
+    """Reuse only a completed bounded numerical proof of one unchanged producer."""
+    from run_pilot import input_identity
+
+    memo = context.get("teacher_verification_context")
+    raw, parameters, surface = job["raw"], context["parameters"], context.get("surface")
+
+    def ordinary():
+        return check_teacher_grid_record(
+            raw,
+            parameters,
+            surface,
+            artifact_context=context.get("artifact_context"),
+            report_mode="bounded",
+        )
+
+    if (
+        memo is None
+        or job.get("status", "executed") != "executed"
+        or raw.get("status", "executed") != "executed"
+        or raw.get("cap_evidence") is not None
+        or raw.get("cache") is None
+    ):
+        return ordinary()
+    _require(job.get("id"), "memo authenticated producer ID required")
+    args = context.get("resolved_arguments", {})
+    for key in ("original_n", "model", "seed", "grid"):
+        _require(
+            key not in args or args[key] == raw[key], "memo original producer arguments differ"
+        )
+    begin, cpu = perf_counter_ns(), process_time_ns()
+    bound_value = {
+        "producer_id": job["id"],
+        "operation": job["operation"],
+        "status": job.get("status", "executed"),
+        "raw": raw,
+        "parameters": parameters,
+        "surface": surface,
+    }
+    guard = _teacher_verification_guard(
+        bound_value,
+        verification_context=memo,
+        artifact_context=context.get("artifact_context"),
+    )
+    owner = (job["id"], job["operation"])
+    owner_sha = runner.payload_digest(guard)
+    previous = memo["owners"].get(owner)
+    _require(previous is None or previous == owner_sha, "memo verified producer changed")
+    args_sha = input_identity(args)
+    key = (*owner, args_sha)
+    entry = memo["entries"].get(key)
+    if entry is not None:
+        _require(
+            entry["binding_sha256"] == owner_sha
+            and entry["result_sha256"] == input_identity(entry["result"]),
+            "memo verified result integrity differs",
+        )
+        result = copy.deepcopy(entry["result"])
+        kind, receipt = "reused", entry["verified_event_id"]
+    else:
+        result = ordinary()
+        complete = (
+            result.get("status") is None
+            and result.get("executed_node_count") == result.get("original_node_count")
+            and result.get("executed_node_count") == len(raw["planned_nodes"])
+            and len(result.get("raw_checks", [])) == len(raw["planned_nodes"])
+            and all(
+                r.get("full_saved_driver_sde_replayed") is True
+                and r.get("labels_reference", {}).get("all_original_N_label_values_compared")
+                is True
+                for r in result["raw_checks"]
+            )
+        )
+        if not complete:
+            return result
+        after = _teacher_verification_guard(
+            bound_value,
+            verification_context=memo,
+            artifact_context=context.get("artifact_context"),
+        )
+        _require(
+            after == guard, "memo source/input/physical bytes changed during first verification"
+        )
+        kind = "verified"
+        receipt = memo["scope_id"] + ":" + str(len(memo["events"]))
+        memo["owners"][owner] = owner_sha
+        memo["entries"][key] = {
+            "binding_sha256": owner_sha,
+            "result": copy.deepcopy(result),
+            "result_sha256": input_identity(result),
+            "verified_event_id": receipt,
+        }
+    result = copy.deepcopy(result)
+    event = {
+        "id": memo["scope_id"] + ":" + str(len(memo["events"])),
+        "kind": kind,
+        "producer_id": job["id"],
+        "operation": job["operation"],
+        "verified_event_id": receipt,
+        "binding_sha256": owner_sha,
+        "resolved_arguments_sha256": args_sha,
+        "original_n": raw["original_n"],
+        "sde_replayed_this_call": kind == "verified",
+        "wall_seconds": (perf_counter_ns() - begin) / 1e9,
+        "cpu_seconds": (process_time_ns() - cpu) / 1e9,
+        "financial_qualification": result["financial_qualification"],
+        "expense_relationship": "included in consuming job/phase; do not add twice",
+    }
+    memo["events"].append(event)
+    return result
+
+
 def _raw_job_check(job, context):
     op, raw = job["operation"], job["raw"]
     if op == "teacher_selected_inputs":
         return check_teacher_selected_inputs_record(
-            raw, **context["resolved_arguments"], artifact_context=context.get("artifact_context")
+            raw,
+            **context["resolved_arguments"],
+            artifact_context=context.get("artifact_context"),
+            verification_context=context.get("teacher_verification_context"),
         )
     if op == "teacher_selection":
         return check_teacher_selection_record(
-            raw, **context["resolved_arguments"], artifact_context=context.get("artifact_context")
+            raw,
+            **context["resolved_arguments"],
+            artifact_context=context.get("artifact_context"),
+            verification_context=context.get("teacher_verification_context"),
         )
     if op == "teacher_domain_selection":
         args = context.get("resolved_arguments", {})
@@ -2759,13 +2980,7 @@ def _raw_job_check(job, context):
         check_teacher_domain_selection_record(
             args["teacher"], raw, selection_rule=args["selection_rule"]
         )
-        return check_teacher_grid_record(
-            raw,
-            context["parameters"],
-            context.get("surface"),
-            artifact_context=context.get("artifact_context"),
-            report_mode="bounded",
-        )
+        return _checked_teacher_grid(job, context)
     if op == "teacher_candidate_gate":
         arguments = context["resolved_arguments"]
         computed = calculate_teacher_candidate_gate(
@@ -2774,6 +2989,7 @@ def _raw_job_check(job, context):
             stage_plan=arguments["stage_plan"],
             evidence=arguments["evidence"],
             artifact_context=context.get("artifact_context"),
+            verification_context=context.get("teacher_verification_context"),
         )
         runner._same(computed, raw, "whole original teacher candidate gate")
         return computed
@@ -2892,13 +3108,7 @@ def _raw_job_check(job, context):
     if op == "quotes":
         return check_quotes_record(raw)
     if op == "teacher_grid":
-        return check_teacher_grid_record(
-            raw,
-            context["parameters"],
-            context.get("surface"),
-            artifact_context=context.get("artifact_context"),
-            report_mode="bounded",
-        )
+        return _checked_teacher_grid(job, context)
     if op == "teacher":
         return check_teacher_record(
             raw,
@@ -3416,7 +3626,15 @@ def check_teacher_selection_record(record, **arguments):
 
 
 def check_unused_teacher_job(
-    job, planned, *, inputs, jobs, planned_jobs, activation_cache, artifact_context=None
+    job,
+    planned,
+    *,
+    inputs,
+    jobs,
+    planned_jobs,
+    activation_cache,
+    artifact_context=None,
+    verification_context=None,
 ):
     from run_pilot import teacher_activation_decision, unused_teacher_prefix_raw
 
@@ -3425,7 +3643,13 @@ def check_unused_teacher_job(
         "actual unused prefix status required",
     )
     decision = teacher_activation_decision(
-        planned, inputs, jobs, planned_jobs, activation_cache, artifact_context=artifact_context
+        planned,
+        inputs,
+        jobs,
+        planned_jobs,
+        activation_cache,
+        artifact_context=artifact_context,
+        verification_context=verification_context,
     )
     _require(decision["execute"] is False, "actual original lower candidate must be qualified")
     runner._same(
@@ -3777,7 +4001,7 @@ def check_teacher_stage_risk_sources(parameters, surface, *, stage_plan, rows):
 
 
 def calculate_teacher_candidate_gate(
-    parameters, surface, *, stage_plan, evidence, artifact_context=None
+    parameters, surface, *, stage_plan, evidence, artifact_context=None, verification_context=None
 ):
     """Recompute a whole original teacher candidate from typed saved evidence.
 
@@ -3865,12 +4089,22 @@ def calculate_teacher_candidate_gate(
         set(cache_risk_binding["bound_producer_ids"]) <= set(stage_plan["required_job_ids"]),
         "original stage cache/risk producer evidence scope missing",
     )
-    context = {"parameters": parameters, "surface": surface, "artifact_context": artifact_context}
+    context = {
+        "parameters": parameters,
+        "surface": surface,
+        "artifact_context": artifact_context,
+        "teacher_verification_context": verification_context,
+    }
     checks = {}
     for identifier, row in rows.items():
         manifest = {"n_paths": row["raw"].get("original_path_count")}
         checks[identifier] = _raw_job_check(
-            {"operation": row["operation"], "raw": row["raw"], "argument_manifest": manifest},
+            {
+                "id": identifier,
+                "operation": row["operation"],
+                "raw": row["raw"],
+                "argument_manifest": manifest,
+            },
             dict(context, resolved_arguments=row.get("arguments", {})),
         )
     teacher = rows[stage_plan["teacher_job_id"]]["raw"]
@@ -4418,6 +4652,16 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
     jobs = {j["id"]: j for j in snapshot.get("jobs", [])}
     _require(len(jobs) == len(snapshot.get("jobs", [])), "repeated pilot job ID")
     context = dict(context or {})
+    source = snapshot.get("source", {})
+    context["teacher_verification_context"] = (
+        _new_teacher_verification_context(
+            source_root=context.get("source_root", snapshot.get("source_root", ROOT)),
+            source=source,
+            plan_sha256=runner.payload_digest(snapshot.get("locked_plan")),
+        )
+        if source.get("files")
+        else None
+    )
     if "inputs" in context and "parameters" in context["inputs"]:
         from run_pilot import input_identity
 
@@ -4486,6 +4730,7 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
                         planned_jobs=planned_jobs,
                         activation_cache=activation_cache,
                         artifact_context=context.get("artifact_context"),
+                        verification_context=context.get("teacher_verification_context"),
                     )
                 elif job.get("status") == "unexecuted_dependency_cap":
                     _require(expected_plan is not None, "prior dependency cap plan required")
@@ -4758,6 +5003,11 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
         "case_results": case_results,
         "attempt_results": attempt_results,
         "raw_checks": checks,
+        "teacher_verification_events": (
+            []
+            if context["teacher_verification_context"] is None
+            else copy.deepcopy(context["teacher_verification_context"]["events"])
+        ),
         "costs": cost_check,
         "issues": issues,
         "missing_cases": missing_cases,

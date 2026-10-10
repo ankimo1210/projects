@@ -1,0 +1,313 @@
+"""Root-approved genuine saved-grid memo resource probe. Preparation only until fixed API."""
+from __future__ import annotations
+import argparse
+import builtins
+import copy
+import hashlib
+import importlib.util
+import io
+import json
+import os
+from pathlib import Path
+import resource
+import subprocess
+import sys
+import time
+import traceback
+
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+R=WT/"johnhull/research/RB-F04/dynamic_hedging"
+INPUT=D/"task-5-phase-local-memo-measurement-inputs-v1.json"
+INPUT_SHA="9befb4ce8e2fd7dcd94bccfa4063d520f6ebb19b4733fe5b9a22b07cfb44fcf4"
+STORAGE_SHA="6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac"
+CAP=180.0
+RSS_CAP=8*1024**3
+
+def require(v,s):
+    if not v:raise ValueError(s)
+def file_sha(p):
+    h=hashlib.sha256()
+    with Path(p).open("rb") as f:
+        for data in iter(lambda:f.read(1024**2),b""):h.update(data)
+    return h.hexdigest()
+def load(p):return json.loads(Path(p).read_text())
+def save(p,v):Path(p).write_text(json.dumps(v,indent=2,ensure_ascii=False,allow_nan=False)+"\n")
+def within_d(p):
+    p=Path(p).resolve()
+    require(p.is_relative_to(D),"resource evidence/output outside D")
+    return p
+def validate_budget(path):
+    b=load(within_d(path))
+    require(b.get("schema")=="rb-f04-phase-local-memo-resource-prior-v1","actual component prior schema")
+    require(b.get("root_preapproved") is True and b.get("approved") is True,"candidate has no root approval")
+    require(b.get("probe_source_sha256")==file_sha(__file__),"root prior must bind exact probe")
+    require(b.get("single_child_wall_limit_seconds")==CAP and b.get("single_child_RSS_limit_bytes")==RSS_CAP,
+            "original single180s/8GiB administrative component limits")
+    require(b.get("saved_inputs",{}).get("path")==str(INPUT)
+            and b["saved_inputs"]["sha256"]==INPUT_SHA==file_sha(INPUT),"immutable saved inputs changed")
+    require(b.get("new_runtime_API_fixed_interface",{}).get("status")=="fixed_source_API",
+            "runtime memo API is not fixed; no measurement allowed")
+    require(isinstance(b.get("new_runtime_source_bindings"),dict)
+            and len(b["new_runtime_source_bindings"])==81,"actual static81 runtime bindings required")
+    require(isinstance(b.get("new_runtime_source_identity"),str)
+            and len(b["new_runtime_source_identity"])==64,"actual runtime canonical source identity required")
+    require(b.get("financial_qualification")=="unknown"
+            and b.get("financial_phase_main_approved") is False,"resource prior is not financial approval")
+    require(b.get("new_financial_generation_RNG_solver_permitted") is False,"fresh financial generation prohibited")
+    for name,expected in b["new_runtime_source_bindings"].items():
+        require(file_sha(WT/name)==expected,"changed actual runtime source")
+    require(file_sha(R/"_teacher_storage.py")==STORAGE_SHA,"original storage recipe must remain unchanged")
+    return b,load(INPUT)
+
+class IOCount:
+    """Python binary read/sha input counters, not disk-device bytes or C/mmap coverage."""
+    def __init__(self):
+        self.count={"binary_file_bytes_read":0,"binary_read_calls":0,"SHA256_input_bytes":0}
+    def enter(self):
+        owner=self
+        self.original_builtin_open=builtins.open
+        self.original_io_open=io.open
+        self.original_sha=hashlib.sha256
+        class Reader:
+            def __init__(self,f):self.f=f
+            def __getattr__(self,k):return getattr(self.f,k)
+            def __enter__(self):self.f.__enter__();return self
+            def __exit__(self,*a):return self.f.__exit__(*a)
+            def add(self,v):
+                owner.count["binary_file_bytes_read"]+=len(v)
+                owner.count["binary_read_calls"]+=1
+                return v
+            def read(self,*a):return self.add(self.f.read(*a))
+            def read1(self,*a):return self.add(self.f.read1(*a))
+            def readline(self,*a):return self.add(self.f.readline(*a))
+            def readlines(self,*a):
+                value=self.f.readlines(*a)
+                owner.count["binary_file_bytes_read"]+=sum(map(len,value))
+                owner.count["binary_read_calls"]+=1
+                return value
+            def readinto(self,b):
+                n=self.f.readinto(b)
+                owner.count["binary_file_bytes_read"]+=n or 0
+                owner.count["binary_read_calls"]+=1
+                return n
+            def readinto1(self,b):
+                n=self.f.readinto1(b)
+                owner.count["binary_file_bytes_read"]+=n or 0
+                owner.count["binary_read_calls"]+=1
+                return n
+            def __iter__(self):return self
+            def __next__(self):
+                v=self.readline()
+                if not v:raise StopIteration
+                return v
+        def opener(original,*a,**kw):
+            f=original(*a,**kw)
+            return Reader(f) if "b" in getattr(f,"mode","") and f.readable() else f
+        builtins.open=lambda *a,**kw:opener(self.original_builtin_open,*a,**kw)
+        io.open=lambda *a,**kw:opener(self.original_io_open,*a,**kw)
+        class Hash:
+            def __init__(self,data=b"",**kw):
+                self.h=owner.original_sha(data,**kw)
+                owner.count["SHA256_input_bytes"]+=memoryview(data).nbytes
+            def __getattr__(self,k):return getattr(self.h,k)
+            def update(self,data):
+                owner.count["SHA256_input_bytes"]+=memoryview(data).nbytes
+                return self.h.update(data)
+            def copy(self):
+                result=object.__new__(Hash);result.h=self.h.copy();return result
+        hashlib.sha256=Hash
+    def leave(self):
+        builtins.open=self.original_builtin_open;io.open=self.original_io_open
+        hashlib.sha256=self.original_sha
+
+def delta(after,before):return {k:after[k]-before[k] for k in after}
+def clock():return {"wall":time.perf_counter(),"CPU":time.process_time()}
+def child(budget_path,out):
+    started=clock();observed=IOCount();observed.enter()
+    progress={"status":"started","stages":[],"financial_qualification":"unknown",
+              "formal_financial_phase_approved":False,"new_generation_RNG_solver_calls":0}
+    try:
+        b,inputs=validate_budget(budget_path);spec=inputs["original_spec"]
+        guard_started=clock();guard_bytes=0
+        for name,expected in inputs["input_file_SHA_bindings"].items():
+            p=WT/name
+            require(p.stat().st_size==inputs["physical_stat_bytes_by_file"][name],"changed original physical size")
+            require(file_sha(p)==expected,"changed original physical input SHA")
+            guard_bytes+=p.stat().st_size
+        require(guard_bytes==64420530,"original selected physical file inventory changed")
+        old=inputs["old_generation_snapshot_manifest"]
+        require(file_sha(old["path"])==old["sha256"],"old generation snapshot manifest changed")
+        oldsource=load(old["path"])
+        require(oldsource["generation_identity_sha256"]==inputs["generation_source_identity"],
+                "old producer identity must not be rewritten")
+        sys.path[:0]=[str(R),str(WT/"johnhull/hullkit/src"),str(WT/"deep_hedge_price/src")]
+        import numpy as np
+        import check_pilot as checker
+        import run_pilot as pilot
+        import run_reference as runner
+        from hullkit._heston_local_surface import HestonParameters
+        def forbidden(*a,**kw):raise AssertionError("genuine saved-only memo probe forbids new financial generation")
+        for name in ("default_rng","SeedSequence","RandomState","normal","standard_normal","randn","rand","seed"):
+            setattr(np.random,name,forbidden)
+        for name in ("_dispatch","run_teacher_grid","run_teacher_job","teacher_primitives"):
+            if hasattr(pilot,name):setattr(pilot,name,forbidden)
+        source=runner.execution_source_identity(WT)
+        require(source["files"]==b["new_runtime_source_bindings"] and not source["dynamic_imports"]
+                and runner._digest(source)==b["new_runtime_source_identity"],"actual runtime source closure mismatch")
+        # Original generation math and writer recipe bytes; only run/check transport may differ.
+        changed=[name for name,oldsha in oldsource["generation_identity"]["files"].items()
+                 if source["files"].get(name)!=oldsha]
+        require(set(changed)<={"johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+                              "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"},
+                "resource probe does not permit original financial math/recipe source changes")
+        prepared=load(WT/inputs["prepared_input_json"]);parameters=HestonParameters(**prepared["parameters"])
+        field,field_receipt=pilot.read_pilot_artifact(WT/inputs["field_artifact"])
+        surface=pilot.materialize_field(field)
+        grid,grid_receipt=pilot.read_pilot_artifact(WT/spec["raw_grid_artifact"])
+        driver,driver_receipt=pilot.read_pilot_artifact(WT/inputs["driver"]["artifact"])
+        require(grid_receipt==inputs["original_metadata_root_bindings"]["grid_receipt"]
+                and driver_receipt==inputs["original_metadata_root_bindings"]["driver_receipt"],
+                "original native root receipts changed")
+        require(grid["cache"] is not None and grid["status"]=="executed"
+                and grid["financial_qualification"]=="unknown" and grid["unexecuted_node_count"]==0,
+                "original genuine grid not memo eligible; no rewrite or synthetic substitution")
+        priorargs=load(WT/spec["original_prior_class_obligation_json"])["measurement_typed_arguments"]
+        args=copy.deepcopy(priorargs)
+        args.update(parameters=prepared["parameters"],surface=surface,driver=driver)
+        job={"id":spec["generation_job_id"],"operation":"teacher_grid","status":"executed",
+             "raw":grid,"arguments":priorargs}
+        helper_path=D/"task-5-M6-saved-recheck-measurement-v1.py"
+        require(file_sha(helper_path)==b["new_runtime_API_fixed_interface"]["coverage_helper_sha256"],
+                "existing metadata coverage helper changed")
+        modspec=importlib.util.spec_from_file_location("original_M6_metadata_coverage",helper_path)
+        helper=importlib.util.module_from_spec(modspec);modspec.loader.exec_module(helper)
+        original_full=checker.check_teacher_grid_record
+        full_calls=0
+        def full_counted(*a,**kw):
+            nonlocal full_calls
+            full_calls+=1
+            return original_full(*a,**kw)
+        checker.check_teacher_grid_record=full_counted
+        plan_sha=file_sha(budget_path)
+        memo=None;initial_scope=None
+        common={"parameters":parameters,"surface":surface,"resolved_arguments":args,
+                "artifact_context":None}
+        progress.update(guard={"explicit_physical_file_SHA_bytes":guard_bytes,
+            "wall_seconds":clock()["wall"]-guard_started["wall"]},
+            original_generation_source_identity=inputs["generation_source_identity"],
+            original_bounded_checker_source_identity=inputs["old_bounded_saved_checker_source_identity"],
+            new_runtime_source_identity=b["new_runtime_source_identity"],
+            actual_original_math_and_storage_unchanged=True,changed_run_check_source_files=changed,
+            original_grid_receipt=grid_receipt,original_driver_receipt=driver_receipt,
+            original_raw_status=grid["status"],original_financial_qualification=grid["financial_qualification"],
+            fullcheck_counter_function="check_pilot.check_teacher_grid_record")
+        save(out/"progress.json",progress)
+        for index,label in enumerate(b["stages"]):
+            start=clock();before=dict(observed.count);calls_before=full_calls
+            if index in (0,2):
+                memo=checker._new_teacher_verification_context(source_root=WT,source=source,plan_sha256=plan_sha)
+            if index==0:initial_scope=memo["scope_id"]
+            if index==1:require(memo["scope_id"]==initial_scope,"hit must use same invocation context")
+            if index==2:require(memo["scope_id"]!=initial_scope,"fresh must have independent empty context")
+            context=dict(common,teacher_verification_context=memo)
+            report=checker._raw_job_check(job,context)
+            stop=clock()
+            coverage=helper.report_coverage(report,grid,spec)
+            require(coverage["full_original_coverage"],"all originalN/108/11labels coverage missing")
+            count_delta=full_calls-calls_before
+            require(memo["events"][-1]["kind"]==["verified","reused","verified"][index],
+                    "actual event must be full verified / immutable reused / fresh verified")
+            require(count_delta==[1,0,1][index],"first/hit/fresh must actually call fullchecker1/0/1")
+            row={"stage":label,"wall_seconds":stop["wall"]-start["wall"],
+                 "CPU_seconds":stop["CPU"]-start["CPU"],"full_grid_checker_calls":count_delta,
+                 "coverage":coverage,"context_scope_id":memo["scope_id"],
+                 "IO_and_SHA_delta":delta(observed.count,before),
+                 "memo_events":copy.deepcopy(memo["events"])}
+            progress["stages"].append(row)
+            # Thin semantic report transport; no runtime context/memo persisted in original data.
+            pilot.write_pilot_artifact(out/f"report-{index}",report)
+            restored,_=pilot.read_pilot_artifact(out/f"report-{index}")
+            require(helper.report_coverage(restored,grid,spec)==coverage,"thin report transport changed original coverage")
+            save(out/"progress.json",progress)
+            del report,restored,context
+        require(full_calls==2,"two independent empty-context full validations required")
+        for name,expected in b["new_runtime_source_bindings"].items():
+            require(file_sha(WT/name)==expected,"runtime source changed during probe")
+        for name,expected in inputs["input_file_SHA_bindings"].items():
+            require(file_sha(WT/name)==expected,"original immutable saved bytes changed during probe")
+        progress.update(status="completed_resource_probe_only",completed_checkpoint="fresh_context_full_check_and_transport_source_original_stable",
+              fullcheck_calls_total=full_calls,
+              process_kernel_peak_RSS_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,
+              all_IO_and_SHA_counts=dict(observed.count),
+              physical_read_scope="Python binary file APIs only; OS device I/O, text decoding and C/mmap coverage unknown",
+              SHA_input_scope="all SHA256 bytes incl source/metadata/origin arrays; explicit physical guard bytes separate",
+              new_and_old_source_provenance_not_substituted=True)
+    except BaseException as e:
+        progress.update(status="failed_or_partial_resource_probe",error_type=type(e).__name__,
+                        error=str(e),traceback=traceback.format_exc())
+    finally:
+        observed.leave()
+        progress["child_cost_before_final_receipt"]={
+          "wall_seconds":time.perf_counter()-started["wall"],
+          "CPU_seconds":time.process_time()-started["CPU"],"final_receipt_tail_seconds":None}
+        save(out/"progress.json",progress)
+    return 0 if progress["status"]=="completed_resource_probe_only" else 1
+
+def rss(pid):
+    try:
+        lines=Path(f"/proc/{pid}/status").read_text().splitlines()
+        return next(int(row.split()[1])*1024 for row in lines if row.startswith("VmRSS:"))
+    except (OSError,StopIteration):return None
+
+def parent(budget_path,out):
+    started=clock();b,inputs=validate_budget(budget_path)
+    require(str(out)==b["measurement_output_root"] and not out.exists(),"new exact root-approved output required")
+    out.mkdir();save(out/"prior-root-budget.json",b)
+    cpu0=resource.getrusage(resource.RUSAGE_CHILDREN)
+    peak=0;unknown=0;cap=None
+    childstart=time.perf_counter()
+    with (out/"child.log").open("wb") as log:
+        p=subprocess.Popen([sys.executable,"-B",str(Path(__file__)),"--budget",str(budget_path),
+            "--output",str(out),"--child"],stdout=log,stderr=subprocess.STDOUT,
+            env=dict(os.environ,OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1",
+                     PYTHONDONTWRITEBYTECODE="1"))
+        while p.poll() is None:
+            observed=rss(p.pid)
+            if observed is None:unknown+=1
+            else:peak=max(peak,observed)
+            elapsed=time.perf_counter()-childstart
+            if elapsed>CAP:cap={"metric":"child_wall_seconds","observed":elapsed,"limit":CAP}
+            elif observed is not None and observed>RSS_CAP:
+                cap={"metric":"individual_child_RSS_bytes","observed":observed,"limit":RSS_CAP}
+            if cap is not None:p.kill();break
+            time.sleep(.025)
+        code=p.wait()
+    cpu1=resource.getrusage(resource.RUSAGE_CHILDREN)
+    progress=load(out/"progress.json") if (out/"progress.json").exists() else None
+    kernel=progress.get("process_kernel_peak_RSS_bytes") if progress else None
+    if cap is None and kernel is not None and kernel>RSS_CAP:
+        cap={"metric":"child_kernel_peak_RSS_bytes","observed":kernel,"limit":RSS_CAP}
+    complete=code==0 and cap is None and progress is not None and (
+        progress.get("status")=="completed_resource_probe_only") and (
+        progress.get("completed_checkpoint")=="fresh_context_full_check_and_transport_source_original_stable")
+    receipt={"status":"completed_resource_component" if complete else "partial_or_failed_resource_component",
+        "exit_code":code,"actual_administrative_cap":cap,
+        "observed_child_RSS_peak_bytes":peak,"kernel_child_RSS_peak_bytes":kernel,
+        "unknown_RSS_samples":unknown,"progress":progress,
+        "parent_inclusive_wall_before_final_receipt":time.perf_counter()-started["wall"],
+        "parent_CPU_before_final_receipt":time.process_time()-started["CPU"],
+        "child_CPU_seconds":(cpu1.ru_utime-cpu0.ru_utime)+(cpu1.ru_stime-cpu0.ru_stime),
+        "root_enclosing_tail_required":True,"financial_qualification":"unknown",
+        "formal_financial_phase_approved":False,"old_generation_history_added":False}
+    save(out/"parent-cost-and-decision.json",receipt)
+    print(json.dumps({"status":receipt["status"],"exit_code":code,"financial_qualification":"unknown"}))
+    return 0 if complete else 3
+
+def cli():
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--budget",type=Path,required=True);ap.add_argument("--output",type=Path,required=True)
+    ap.add_argument("--child",action="store_true")
+    a=ap.parse_args()
+    return child(a.budget,within_d(a.output)) if a.child else parent(a.budget,within_d(a.output))
+if __name__=="__main__":raise SystemExit(cli())

@@ -1,0 +1,81 @@
+"""Root owned application and proportional scoped regression, no financial phase run."""
+from pathlib import Path
+import argparse, hashlib, json, os, resource, subprocess, sys, time
+W=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=W/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+R=W/"johnhull/research/RB-F04/dynamic_hedging"
+PY="/home/kazumasa/projects/.venv/bin/python"
+RUFF="/home/kazumasa/projects/.venv/bin/ruff"
+NAMES=[
+"johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+"johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+"deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+]
+BEFORE=[
+"7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc",
+"952b8f89c930578db1f6531bd6e73ade947d7cfbef246cc8510d246a54ed6197",
+"ce679b219491725e82da021c34326d06ca782fcf76f3d3b1285c7400854fde20",
+]
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,ensure_ascii=False,indent=2,allow_nan=False)+"\n")
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument("--snapshot",type=Path,required=True)
+ ap.add_argument("--manifest",type=Path,required=True);ap.add_argument("--closure",type=Path,required=True)
+ a=ap.parse_args()
+ start=time.perf_counter();cpu=time.process_time()
+ prefix=D/"task-5-phase-local-reuse-root-regression-v1"
+ record=Path(str(prefix)+"-results.json")
+ if record.exists():raise ValueError("original root application receipt already exists")
+ for p in [a.snapshot,a.manifest,a.closure]:
+  if not p.resolve().is_relative_to(D):raise ValueError("D snapshot required")
+ m=json.loads(a.manifest.read_text());c=json.loads(a.closure.read_text())
+ for name,h in m["files"].items():
+  if sha(D/name)!=h:raise ValueError("candidate manifest changed: "+name)
+ if len(c["files"])!=81 or c["dynamic_imports"]:raise ValueError("static81 closure required")
+ for name in c["files"]:
+  if sha(a.snapshot/name)!=c["files"][name]:raise ValueError("snapshot source mismatch: "+name)
+  if name not in NAMES and sha(W/name)!=c["files"][name]:raise ValueError("unrelated runtime source mismatch: "+name)
+ for name,h in zip(NAMES,BEFORE,strict=True):
+  if sha(W/name)!=h:raise ValueError("production changed before application: "+name)
+ if not (a.snapshot/NAMES[-1]).read_bytes().startswith((W/NAMES[-1]).read_bytes()):
+  raise ValueError("prior tests must remain exact prefix")
+ res={"scope":"actual root application + only two affected existing test files and Ruff",
+      "manifest_sha256":sha(a.manifest),"changed_files":{},
+      "finance_qualification":"unknown","formal_pilot_or_main_executed":False}
+ for name in NAMES:
+  after=(a.snapshot/name).read_bytes()
+  (W/name).write_bytes(after)
+  res["changed_files"][name]={"before_sha256":BEFORE[NAMES.index(name)],"after_sha256":sha(W/name)}
+ env=dict(os.environ,PYTHONPATH=":".join([str(R),str(W/"johnhull/hullkit/src"),str(W/"deep_hedge_price/src")]),
+          OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1",PYTHONDONTWRITEBYTECODE="1")
+ sys.path[:0]=[str(R),str(W/"johnhull/hullkit/src"),str(W/"deep_hedge_price/src")]
+ import run_reference as ref
+ source=ref.execution_source_identity(W)
+ if source["files"]!=c["files"] or source["dynamic_imports"]:raise ValueError("actual applied source closure mismatch")
+ res["actual_source_identity"]=ref._digest(source)
+ res["actual_runtime_files"]=len(source["files"]);res["dynamic_imports"]=len(source["dynamic_imports"])
+ source_path=Path(str(prefix)+"-source-closure.json");save(source_path,source)
+ res["actual_source_closure_sha256"]=sha(source_path)
+ save(Path(str(prefix)+"-application.json"),res)
+ tests=[PY,"-B","-m","pytest","--confcutdir=deep_hedge_price","-q",
+       "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",NAMES[-1]]
+ checks=[("pytest",tests),
+ ("ruff",[RUFF,"check","--ignore","N806",*NAMES]),
+ ("format",[RUFF,"format","--check",*NAMES])]
+ res["checks"]=[]
+ for label,cmd in checks:
+  t=time.perf_counter();c0=resource.getrusage(resource.RUSAGE_CHILDREN)
+  log=Path(str(prefix)+"-"+label+".log")
+  with log.open("wb") as f:q=subprocess.run(cmd,cwd=W,env=env,stdout=f,stderr=subprocess.STDOUT)
+  c1=resource.getrusage(resource.RUSAGE_CHILDREN)
+  row={"check":label,"argv":cmd,"exit_code":q.returncode,"wall_seconds":time.perf_counter()-t,
+       "child_cpu_seconds":c1.ru_utime+c1.ru_stime-c0.ru_utime-c0.ru_stime,
+       "log":str(log.relative_to(D)),"log_sha256":sha(log)}
+  res["checks"].append(row);print(json.dumps(row),flush=True)
+  print(log.read_text()[-2500:],flush=True)
+ res["wall_seconds_before_receipt"]=time.perf_counter()-start
+ res["parent_cpu_seconds_before_receipt"]=time.process_time()-cpu
+ res["status"]="PASS" if all(x["exit_code"]==0 for x in res["checks"]) else "FAIL"
+ save(record,res)
+ return 0 if res["status"]=="PASS" else 1
+if __name__=="__main__":raise SystemExit(main())

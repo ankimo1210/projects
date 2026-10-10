@@ -448,3 +448,177 @@ def test_bounded_cannot_relabel_a_saved_node_coordinate(saved_grid, monkeypatch)
     no_rng(monkeypatch)
     with pytest.raises(ValueError, match="node order"):
         checker.check_teacher_grid_record(changed, parameters, None, report_mode="bounded")
+
+
+def _phase_memo_context(parameters, *, source_root=checker.ROOT, source=None):
+    return {
+        "parameters": parameters,
+        "surface": None,
+        "resolved_arguments": {"model": "Heston", "original_n": 16, "seed": 913},
+        "teacher_verification_context": checker._new_teacher_verification_context(
+            source_root=source_root, source=source, plan_sha256="source-unit-only"
+        ),
+    }
+
+
+def test_phase_memo_first_full_then_hit_copy_and_unknown(saved_grid, monkeypatch):
+    _, parameters, grid = saved_grid
+    no_rng(monkeypatch)
+    context = _phase_memo_context(parameters)
+    job = {"id": "saved-grid", "operation": "teacher_grid", "status": "executed", "raw": grid}
+    actual = checker.check_teacher_record
+    calls = []
+
+    def counted(*args, **kwargs):
+        result = actual(*args, **kwargs)
+        calls.append(result)
+        return result
+
+    monkeypatch.setattr(checker, "check_teacher_record", counted)
+    first = checker._raw_job_check(job, context)
+    assert len(calls) == 108
+    assert all(r["full_saved_driver_sde_replayed"] for r in calls)
+    assert all(r["labels"]["block_means"].shape[0] == 16 for r in calls)
+    second = checker._raw_job_check(job, context)
+    assert len(calls) == 108
+    pilot.runner._same(first, second, "unchanged verified raw reuse")
+    assert second["financial_qualification"] == "unknown"
+    assert all(
+        r["labels_reference"]["all_original_N_label_values_compared"] for r in second["raw_checks"]
+    )
+    finite = np.flatnonzero(np.isfinite(first["cache"]["f"]))[0]
+    first["cache"]["f"].flat[finite] = 12345
+    third = checker._raw_job_check(job, context)
+    assert third["cache"]["f"].flat[finite] != 12345
+    events = context["teacher_verification_context"]["events"]
+    assert [e["kind"] for e in events] == ["verified", "reused", "reused"]
+    assert events[1]["verified_event_id"] == events[0]["id"]
+    assert events[1]["sde_replayed_this_call"] is False
+    assert all(e["wall_seconds"] > 0 for e in events)
+
+
+@pytest.mark.parametrize(
+    "change", ["raw", "parameters", "field", "arguments", "node", "driver", "source"]
+)
+def test_phase_memo_live_tamper_cannot_reuse(saved_grid, monkeypatch, tmp_path, change):
+    _, parameters, grid = saved_grid
+    no_rng(monkeypatch)
+    # A tiny declared unit source isolates provenance mutation from working files.
+    source_file = tmp_path / "declared-source.py"
+    source_file.write_text("# administrative source-guard fixture\n")
+    import hashlib
+
+    source = {
+        "files": {source_file.name: hashlib.sha256(source_file.read_bytes()).hexdigest()},
+        "dynamic_imports": [],
+    }
+    context = _phase_memo_context(parameters, source_root=tmp_path, source=source)
+    job = {
+        "id": "saved-grid",
+        "operation": "teacher_grid",
+        "status": "executed",
+        "raw": copy.deepcopy(grid),
+    }
+    checker._raw_job_check(job, context)
+    if change == "raw":
+        values = job["raw"]["cache"]["f"]
+        values.flat[np.flatnonzero(np.isfinite(values))[0]] += 0.01
+    elif change == "parameters":
+        context["parameters"] = dataclasses.replace(parameters, spot=101)
+    elif change == "field":
+        context["surface"] = {"unit_field_changed": True}
+    elif change == "arguments":
+        context["resolved_arguments"]["seed"] += 1
+    elif change == "source":
+        source_file.write_text("# changed actual bytes, same producer\n")
+    else:
+        origin = (
+            Path(grid["nodes"][-1]["path"])
+            if change == "node"
+            else Path(grid["driver"]["directory"])
+        )
+        moved = tmp_path / "altered-artifact"
+        shutil.copytree(origin, moved)
+        if change == "node":
+            job["raw"]["nodes"][-1]["path"] = str(moved)
+        else:
+            job["raw"]["driver"]["directory"] = str(moved)
+        part = sorted(moved.rglob("arrays.npz"))[-1]
+        altered = bytearray(part.read_bytes())
+        altered[-1] ^= 1
+        part.write_bytes(altered)
+    with pytest.raises(ValueError):
+        checker._raw_job_check(job, context)
+    assert [e["kind"] for e in context["teacher_verification_context"]["events"]] == ["verified"]
+
+
+def test_phase_memo_fresh_context_and_default_still_recheck(saved_grid, monkeypatch):
+    _, parameters, grid = saved_grid
+    no_rng(monkeypatch)
+    actual = checker.check_teacher_record
+    count = []
+
+    def counted(*args, **kwargs):
+        count.append(1)
+        return actual(*args, **kwargs)
+
+    monkeypatch.setattr(checker, "check_teacher_record", counted)
+    job = {"id": "saved-grid", "operation": "teacher_grid", "status": "executed", "raw": grid}
+    for context in (
+        _phase_memo_context(parameters),
+        _phase_memo_context(parameters),
+        {"parameters": parameters, "surface": None},
+    ):
+        checker._raw_job_check(job, context)
+    assert len(count) == 324
+
+
+def test_phase_memo_activation_event_reports_registered_teacher_proof_scope(monkeypatch, tmp_path):
+    # Administrative scope only: no teacher/SDE/RNG is executed by these stubs.
+    import hashlib
+
+    source_file = tmp_path / "unit-source.py"
+    source_file.write_text("# event-scope source unit\n")
+    source = {
+        "files": {"unit-source.py": hashlib.sha256(source_file.read_bytes()).hexdigest()},
+        "dynamic_imports": [],
+    }
+    raw = {"qualification": "unknown", "original_n": 16}
+    prior = {
+        "id": "gate",
+        "operation": "teacher_candidate_gate",
+        "arguments": {"parameters": {}, "surface": None, "stage_plan": {}, "evidence": []},
+    }
+    job = {"activation": {"previous_teacher_gate_job_id": "gate"}}
+    results = {"gate": {"status": "executed", "raw": raw}}
+    gate_calls = []
+
+    for proof_kind, expected in [(None, False), ("reused", False), ("verified", True)]:
+        memo = checker._new_teacher_verification_context(
+            source_root=tmp_path, source=source, plan_sha256="event-scope-only"
+        )
+
+        def administrative_gate(*args, proof_kind=proof_kind, **kwargs):
+            gate_calls.append(proof_kind)
+            if proof_kind is not None:
+                kwargs["verification_context"]["events"].append(
+                    {"kind": proof_kind, "sde_replayed_this_call": proof_kind == "verified"}
+                )
+            return copy.deepcopy(raw)
+
+        monkeypatch.setattr(checker, "calculate_teacher_candidate_gate", administrative_gate)
+        cache = {}
+        for reused in [False, True]:
+            pilot.teacher_activation_decision(
+                job, {}, results, {"gate": prior}, cache, verification_context=memo
+            )
+            event = memo["events"][-1]
+            assert "sde_replayed_this_call" not in event
+            assert event["registered_teacher_proof_sde_replayed_this_call"] is (
+                False if reused else expected
+            )
+            assert event["gate_recomputed_this_call"] is not reused
+            assert event["wall_seconds"] > 0
+            assert event["cpu_seconds"] >= 0
+            assert event["financial_qualification"] == "unknown"
+    assert len(gate_calls) == 3

@@ -1,0 +1,212 @@
+
+"""Saved-only resource receipt/transport review; no numerical checker or RNG."""
+from pathlib import Path
+import ast,hashlib,json,math,os,resource,sys,time,traceback
+BEGIN=time.perf_counter(); CPU=time.process_time()
+for name in ("OMP_NUM_THREADS","OPENBLAS_NUM_THREADS","MKL_NUM_THREADS"):
+    os.environ[name]="1"
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+R=WT/"johnhull/research/RB-F04/dynamic_hedging"
+O=D/"task-5-phase-local-memo-observation-root-v1"
+OUT=D/"task-5-phase-local-memo-resource-independent-results-v1.json"
+sys.path[:0]=[str(R),str(WT/"johnhull/hullkit/src"),str(WT/"deep_hedge_price/src")]
+import numpy as np
+import run_pilot as pilot
+def forbidden(*a,**kw):
+    raise AssertionError("saved-only independent resource review forbids numerical checker/generation/RNG")
+for name in ("default_rng","SeedSequence","RandomState","normal","standard_normal","randn","rand","seed"):
+    setattr(np.random,name,forbidden)
+for name in ("_dispatch","run_teacher_grid","run_teacher_job","teacher_primitives"):
+    if hasattr(pilot,name):setattr(pilot,name,forbidden)
+def load(p):
+    return json.loads(Path(p).read_text())
+def sha(p):
+    h=hashlib.sha256()
+    with Path(p).open("rb") as f:
+        for data in iter(lambda:f.read(1024*1024),b""):
+            h.update(data)
+    return h.hexdigest()
+def digest(value):
+    return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest()
+CHECKS=[]
+def require(c,label):
+    if not c:raise AssertionError(label)
+    CHECKS.append(label)
+comparison={"numeric_arrays":0,"numeric_scalars":0,"array_values":0,"finite_values":0,
+            "NaN_values":0,"infinite_values":0,"max_finite_abs_difference":0.0,
+            "metadata_leaves":0,"rtol":1e-11,"atol":1e-12,"equal_nan":True}
+def same(a,b,path):
+    if isinstance(a,np.ndarray) or isinstance(b,np.ndarray):
+        if not(isinstance(a,np.ndarray) and isinstance(b,np.ndarray) and a.shape==b.shape and a.dtype==b.dtype):
+            raise AssertionError("array shape/dtype "+path)
+        if a.dtype.kind in "fc":
+            if not np.allclose(a,b,rtol=comparison["rtol"],atol=comparison["atol"],equal_nan=True):
+                raise AssertionError("approx array "+path)
+            comparison["numeric_arrays"]+=1;comparison["array_values"]+=int(a.size)
+            finite=np.isfinite(a)&np.isfinite(b)
+            comparison["finite_values"]+=int(np.count_nonzero(finite))
+            comparison["NaN_values"]+=int(np.count_nonzero(np.isnan(a)))
+            comparison["infinite_values"]+=int(np.count_nonzero(np.isinf(a)))
+            if np.any(finite):
+                comparison["max_finite_abs_difference"]=max(comparison["max_finite_abs_difference"],float(np.max(np.abs(a[finite]-b[finite]))))
+        else:
+            if not np.array_equal(a,b):raise AssertionError("array metadata "+path)
+            comparison["metadata_leaves"]+=int(a.size)
+    elif isinstance(a,dict) or isinstance(b,dict):
+        if not(isinstance(a,dict) and isinstance(b,dict) and a.keys()==b.keys()):raise AssertionError("dict keys "+path)
+        for k in a:same(a[k],b[k],path+"/"+str(k))
+    elif isinstance(a,(tuple,list)) or isinstance(b,(tuple,list)):
+        if not(isinstance(a,(tuple,list)) and isinstance(b,(tuple,list)) and len(a)==len(b)):raise AssertionError("sequence "+path)
+        for i,(x,y) in enumerate(zip(a,b)):same(x,y,path+"/"+str(i))
+    elif isinstance(a,(float,np.floating)) or isinstance(b,(float,np.floating)):
+        if not np.isclose(a,b,rtol=comparison["rtol"],atol=comparison["atol"],equal_nan=True):raise AssertionError("approx scalar "+path)
+        comparison["numeric_scalars"]+=1
+    else:
+        if a!=b:raise AssertionError("metadata "+path)
+        comparison["metadata_leaves"]+=1
+result={"schema":"rb-f04-phase-local-memo-independent-saved-resource-review-v1",
+ "reviewer":"pilot_v53_independent_review","scope":"saved original genuine M6 Heston-coarse memo resource observation",
+ "measurement_preparation_author_role_disclosed":True,
+ "independent_check_scope":"saved raw receipts, coverage, physical provenance, report numeric comparison and expense arithmetic; not source implementation approval",
+ "financial_qualification":"unknown","financial_phase_main_approved":False,
+ "new_SDE_RNG_generation_solver_calls":0,"numeric_hash_equality_used_for_comparison":False}
+try:
+    prior_path=D/"task-5-phase-local-memo-resource-root-approved-v1.json"
+    enclosing_path=D/"task-5-phase-local-memo-resource-root-enclosing-v1.json"
+    parent_path=O/"parent-cost-and-decision.json"; progress_path=O/"progress.json"
+    inputs_path=D/"task-5-phase-local-memo-measurement-inputs-v1.json"
+    prior=load(prior_path);enclosing=load(enclosing_path);parent=load(parent_path);progress=load(progress_path)
+    inputs=load(inputs_path);spec=inputs["original_spec"]
+    require(prior["approved"] is True and prior["root_preapproved"] is True,"actual prior approved")
+    require(load(O/"prior-root-budget.json")==prior,"measured prior copy exact administrative input")
+    require(enclosing["prior_sha256"]==sha(prior_path) and enclosing["parent_receipt_sha256"]==sha(parent_path),"outer prior and parent physical receipt binding")
+    require(sha(D/"task-5-phase-local-memo-measurement-v1.py")==prior["probe_source_sha256"]=="d10cc08e2abf8c45c05c5a644ee28c4e9c5d0258d6b764c45aa4b52b311b5498","original measured script unchanged")
+    require(prior["saved_inputs"]["sha256"]==sha(inputs_path)=="9befb4ce8e2fd7dcd94bccfa4063d520f6ebb19b4733fe5b9a22b07cfb44fcf4","original input manifest physical binding")
+    require(parent["progress"]==progress,"parent snapshot and terminal progress receipt agree")
+    require(parent["exit_code"]==enclosing["exit_code"]==0 and parent["status"]=="completed_resource_component" and enclosing["status"]=="completed_resource_probe_only","actual completed exit0 receipts")
+    require(progress["status"]=="completed_resource_probe_only" and progress["completed_checkpoint"]=="fresh_context_full_check_and_transport_source_original_stable","full final checkpoint")
+    require(parent["actual_administrative_cap"] is None,"no actual resource cap")
+    require(prior["single_child_wall_limit_seconds"]==180 and prior["single_child_RSS_limit_bytes"]==8589934592,"actual original180s8GiB prior")
+    require(parent["kernel_child_RSS_peak_bytes"]==progress["process_kernel_peak_RSS_bytes"] and max(parent["observed_child_RSS_peak_bytes"],parent["kernel_child_RSS_peak_bytes"])<8589934592,"actual RSS peaks within resource cap")
+    require(parent["parent_inclusive_wall_before_final_receipt"]<180,"actual inclusive parent wall under proposed child cap as observed")
+    require(progress["new_generation_RNG_solver_calls"]==0,"observed generation/RNG/solver0")
+    for value in (prior,enclosing,parent,progress):
+        require(value["financial_qualification"]=="unknown","financial unknown retained in receipt")
+    require(not prior["financial_phase_main_approved"] and not enclosing["formal_pilot_main_or_acceptance"] and not parent["formal_financial_phase_approved"] and not progress["formal_financial_phase_approved"],"formal finance/main/phase approval false")
+    source=load(D/"task-5-phase-local-reuse-root-regression-v1-source-closure.json")
+    canonical=digest(source)
+    require(canonical==prior["new_runtime_source_identity"]==enclosing["source_canonical_identity"]==progress["new_runtime_source_identity"]=="959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76","canonical source digest separated correctly")
+    require(prior["source_envelope_identity"]==enclosing["source_envelope_identity"]=="0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667","separate native envelope source digest")
+    require(source["files"]==prior["new_runtime_source_bindings"] and len(source["files"])==81 and source["dynamic_imports"]==[],"actual static81 dynamic0 closure")
+    for name, expected in source["files"].items():require(sha(WT/name)==expected,"current runtime origin "+name)
+    old=load(inputs["old_generation_snapshot_manifest"]["path"])
+    require(sha(inputs["old_generation_snapshot_manifest"]["path"])==inputs["old_generation_snapshot_manifest"]["sha256"],"old producer source physical manifest unchanged")
+    require(progress["original_generation_source_identity"]==prior["generation_source_identity"]==old["generation_identity_sha256"]=="4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0","old generation source retained")
+    require(progress["original_bounded_checker_source_identity"]==prior["old_bounded_saved_checker_source_identity"]=="408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652","old saved checker retained")
+    changed=[k for k,v in old["generation_identity"]["files"].items() if source["files"].get(k)!=v]
+    require(set(changed)==set(progress["changed_run_check_source_files"])=={"johnhull/research/RB-F04/dynamic_hedging/check_pilot.py","johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"},"only run/check transport differ from old financial producer")
+    require(sha(R/"_teacher_storage.py")==prior["storage_recipe_source_must_remain"]=="6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac","original teacher recipe unchanged")
+    physical_bytes=0
+    require(len(inputs["input_file_SHA_bindings"])==701,"all original701 physical files retained")
+    for name, expected in inputs["input_file_SHA_bindings"].items():
+        p=WT/name
+        require(p.stat().st_size==inputs["physical_stat_bytes_by_file"][name] and sha(p)==expected,"original physical origin "+name)
+        physical_bytes+=p.stat().st_size
+    require(physical_bytes==progress["guard"]["explicit_physical_file_SHA_bytes"]==64420530,"all701 origin guard bytes")
+    stages=progress["stages"]
+    require([s["stage"] for s in stages]==prior["stages"] and [s["full_grid_checker_calls"] for s in stages]==[1,0,1] and progress["fullcheck_calls_total"]==2,"actual first/hit/fresh counter1/0/1")
+    require(stages[0]["context_scope_id"]==stages[1]["context_scope_id"]!=stages[2]["context_scope_id"],"same context hit and separate empty fresh context")
+    events=[s["memo_events"][-1] for s in stages]
+    require([e["kind"] for e in events]==["verified","reused","verified"] and [e["sde_replayed_this_call"] for e in events]==[True,False,True],"native event per-call replay scope")
+    require(events[0]["id"]==events[1]["verified_event_id"] and events[0]["binding_sha256"]==events[1]["binding_sha256"] and len(stages[1]["memo_events"])==2,"hit consumes first verified evidence")
+    require(all(e["producer_id"]==spec["generation_job_id"] and e["operation"]=="teacher_grid" and e["original_n"]==1024 and e["financial_qualification"]=="unknown" for e in events),"same original producer and N in all events")
+    require(len({e["resolved_arguments_sha256"] for e in events})==1,"same actual arguments origin")
+    for s,e in zip(stages,events):
+        require(0<=e["wall_seconds"]<=s["wall_seconds"] and 0<=e["cpu_seconds"]<=s["CPU_seconds"]+1e-4,"event costs are contained in stage clocks")
+        c=s["coverage"]
+        require(c["original_n"]==1024 and c["original_nodes"]==c["retained_nodes"]==c["sde_replayed_nodes"]==c["all_label_compared_nodes"]==108 and c["partial_or_nonreplayed_nodes"]==c["unexecuted_original_nodes"]==0 and c["full_original_coverage"] and c["financial_qualification"]=="unknown","all original coverage retained")
+    require(progress["original_grid_receipt"]==inputs["original_metadata_root_bindings"]["grid_receipt"] and progress["original_driver_receipt"]==inputs["original_metadata_root_bindings"]["driver_receipt"],"original grid and driver receipts unchanged")
+    reports=[]
+    report_receipts=[]
+    for i in range(3):
+        r,receipt=pilot.read_pilot_artifact(O/("report-"+str(i)))
+        reports.append(r);report_receipts.append(receipt)
+        require(r["original_n"]==1024 and r["original_node_count"]==r["executed_node_count"]==108 and len(r["raw_checks"])==108 and r["financial_qualification"]=="unknown","read back original report coverage")
+    samples=("aux_conditioned_samples","aux_raw_samples","conditioned_samples","conditioned_x_samples","cv_samples","f_samples","f_x_samples","raw_samples","raw_x_samples","unreplaced_cv_samples","unreplaced_cv_x_samples")
+    refcount=0
+    for i,r in enumerate(reports):
+        require("status" not in r and r["cache"] is not None,"completed integrity reports retain cache and unknown qualification")
+        for j,node in enumerate(r["raw_checks"]):
+            ref=node["raw_reference"]; orig=spec["native_node_bindings"][j]
+            require(ref["node_index"]==j and ref["path"]==orig["path"] and ref["raw_binding"]==orig["raw_binding"],"original per-node physical reference retained")
+            same(ref["node"],spec["planned_nodes"][j],"node/"+str(j))
+            require(node["original_n"]==1024 and node["full_saved_driver_sde_replayed"] is True and node["raw_status"]=="executed" and node["financial_qualification"]=="unknown" and node["report_mode"]=="bounded","completed proof per node retained")
+            lab=node["labels_reference"]; fields=lab["array_fields"]
+            require(lab["all_original_N_label_values_compared"] is True and lab["raw_reference"]==ref,"all original labels comparison proof")
+            for k in samples:require(fields[k]=={"dtype":"<f8","shape":[1024,33]},"all11 original fullN label descriptor")
+            require(fields["block_means"]["shape"]==fields["derivative_block_means"]["shape"]==[16,33,3] and fields["block_covariance"]["shape"]==fields["derivative_block_covariance"]["shape"]==[99,99] and fields["joint_block_covariance"]["shape"]==[198,198],"all16blocks and covariance descriptors retained")
+            if i==0:
+                path=Path(ref["path"])
+                root_receipt=load(path/"receipt.json")
+                root_metadata=load(path/"metadata.json")["metadata"]
+                parts={p["id"] for a in root_metadata["arrays"].values() for p in a["parts"]}
+                actualpacks={x:load(path/x/"receipt.json")["artifact_sha256"] for x in parts}
+                binding=ref["raw_binding"]
+                require(root_receipt["artifact_sha256"]==binding["root_artifact_sha256"] and actualpacks==binding["packs"] and digest({"root":root_receipt["artifact_sha256"],"packs":actualpacks})==binding["artifact_sha256"],"physical root plus all pack receipt composition")
+                require(root_metadata["teacher_storage"]["samples"]=={k:fields[k] for k in samples} and root_metadata["teacher_storage"]["source_bindings"]==binding["source_bindings"],"original native recipe and all11 descriptor origin")
+                refcount+=1
+    same(reports[0],reports[1],"cold_vs_hit")
+    same(reports[0],reports[2],"cold_vs_fresh")
+    grid,grid_receipt=pilot.read_pilot_artifact(WT/spec["raw_grid_artifact"])
+    require(grid["status"]=="executed" and grid["cache"] is not None and grid["unexecuted_node_count"]==0 and grid["financial_qualification"]=="unknown","genuine original full grid eligibility unchanged")
+    same(reports[0]["cache"],grid["cache"],"report_cache_vs_original_saved_cache")
+    require(reports[0]["cache"]["threshold_nodes"].shape==(12,33),"original all33threshold cache shape")
+    require(reports[0]["cache"]["original_N"]==1024 and len(reports[0]["cache"]["dates"])==12,"original cache N/dates")
+    stage_wall=sum(s["wall_seconds"] for s in stages)
+    childwall=progress["child_cost_before_final_receipt"]["wall_seconds"]
+    parentwall=parent["parent_inclusive_wall_before_final_receipt"];rootwall=enclosing["root_wall_before_final_receipt"]
+    require(0<=stage_wall<=childwall<=parentwall<=rootwall,"cost interval nesting stages child parent root")
+    require(enclosing["child_descendant_CPU_seconds"]>=parent["child_CPU_seconds"]+parent["parent_CPU_before_final_receipt"]-1e-4,"outer descendant CPU covers inner parent and child")
+    require(not enclosing["original_generation_cost_added"] and not parent["old_generation_history_added"],"old generation history not added")
+    require(enclosing["final_receipt_tail_cost_seconds"] is None and progress["child_cost_before_final_receipt"]["final_receipt_tail_seconds"] is None,"unmeasured final receipt costs remain unknown")
+    for metric in ("binary_file_bytes_read","SHA256_input_bytes","binary_read_calls"):
+        require(sum(s["IO_and_SHA_delta"][metric] for s in stages)<=progress["all_IO_and_SHA_counts"][metric],"stage counters included in inclusive counters "+metric)
+    status={"unknown_node_thresholds":sum(n["unknown_node_count"] for n in reports[0]["raw_checks"]),
+            "invalid_paths":sum(n["invalid_path_count"] for n in reports[0]["raw_checks"]),
+            "nodes_unverified":sum(bool(n["unverified"]) for n in reports[0]["raw_checks"]),
+            "cache_f_nan":int(np.count_nonzero(np.isnan(reports[0]["cache"]["f"]))),
+            "cache_block_means_nan":int(np.count_nonzero(np.isnan(reports[0]["cache"]["block_means"])))}
+    result.update(status="PASS",checks_passed=len(CHECKS),
+        all_original701_physical_origin_and81_source_files_current_stable=True,physical_original_bytes=physical_bytes,
+        all108_root_plus_pack_bindings_checked=refcount,report_comparison=comparison,
+        original_N_nodes_dates_thresholds=[1024,108,12,33],
+        unknown_and_unverified_preserved=status,
+        event_evidence={"full_checker_calls":[1,0,1],"event_kinds":[e["kind"] for e in events],"SDE_replayed_this_call":[e["sde_replayed_this_call"] for e in events],"hit_verified_event_id":events[1]["verified_event_id"],
+         "hit_report_replayed_flags_mean":"reused previously completed proof; per-call event false/counter0",
+         "fresh_binding_difference":"expected because _teacher_verification_guard includes independent scope_id; raw physical references and actual arguments unchanged"},
+        resource_observation={"first_wall_seconds":stages[0]["wall_seconds"],"hit_wall_seconds":stages[1]["wall_seconds"],"fresh_wall_seconds":stages[2]["wall_seconds"],"same_input_first_to_hit_ratio":stages[0]["wall_seconds"]/stages[1]["wall_seconds"],
+         "wholephase_ETA_inference":False,"child_RSS_peak_bytes":max(parent["observed_child_RSS_peak_bytes"],parent["kernel_child_RSS_peak_bytes"]),"unknown_RSS_samples":parent["unknown_RSS_samples"],
+         "actual_administrative_cap":None,"stage_wall_sum_seconds":stage_wall,"child_before_receipt_wall_seconds":childwall,"inner_parent_before_receipt_wall_seconds":parentwall,"root_before_final_receipt_wall_seconds":rootwall,
+         "child_nonstage_wall_seconds":childwall-stage_wall,"parent_outside_child_before_receipt_seconds":parentwall-childwall,"root_outside_inner_parent_before_receipt_seconds":rootwall-parentwall,
+         "inclusive_CPU_to_report_once_seconds":enclosing["root_CPU_before_final_receipt"]+enclosing["child_descendant_CPU_seconds"],
+         "CPU_basis":"root process + descendant CPU once; no nested-stage/inner-parent/child CPU added again; outer final receipt write unknown",
+         "all_IO_and_SHA_counts":progress["all_IO_and_SHA_counts"],"counter_scope":"Python binary APIs only; SHA includes arrays/metadata/source origin, not physical device I/O throughput"},
+        source_provenance={"old_generation":progress["original_generation_source_identity"],"old_saved_checker":progress["original_bounded_checker_source_identity"],"current_runtime_canonical":canonical,"current_runtime_envelope":prior["source_envelope_identity"],"native_math_and_recipe_unchanged":True},
+        actual_saved_report_receipts=report_receipts,
+        input_files={str(p):sha(p) for p in (prior_path,enclosing_path,parent_path,progress_path,inputs_path,D/"task-5-phase-local-memo-measurement-v1.py",D/"task-5-phase-local-reuse-root-regression-v1-source-closure.json")},
+        physical_report_files={str(p.relative_to(O)):{"sha256":sha(p),"bytes":p.stat().st_size} for i in range(3) for p in sorted((O/("report-"+str(i))).rglob("*")) if p.is_file()},
+        financial_accuracy_or_maximumN_or_wholephase_rate_approved=False,
+        original_raw_node_or_label_values_regenerated_in_this_review=False)
+except BaseException as e:
+    result.update(status="FAIL",checks_passed=len(CHECKS),failure_type=type(e).__name__,failure=str(e),traceback=traceback.format_exc())
+finally:
+    result["review_cost_before_final_results_write"]={"wall_seconds":time.perf_counter()-BEGIN,"CPU_seconds":time.process_time()-CPU,
+     "peak_RSS_bytes":resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,"results_write_and_tool_tail_seconds":None,
+     "included_in_measured_component":False,"new_saved_only_review_expense":True}
+    if OUT.exists():raise AssertionError("preserve existing independent result")
+    OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+print(json.dumps({k:result[k] for k in ("status","checks_passed","review_cost_before_final_results_write")},ensure_ascii=False))
+if result["status"]!="PASS":
+    print(result["failure"])
+    raise SystemExit(1)

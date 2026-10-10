@@ -1,0 +1,10 @@
+{
+  "exit_code": 1,
+  "wall_seconds": 2.049480664994917,
+  "inclusive_child_CPU_seconds": 4.6711149999999995,
+  "child_kernel_peak_RSS_bytes": 743723008,
+  "child_peak_baseline_bytes": 0,
+  "scope": "independent fixed-v2 saved-only direct source-bound reuse probes; no new RNG or financial generation",
+  "formal_phase_approved": false,
+  "own_final_receipt_tail": "unknown"
+}

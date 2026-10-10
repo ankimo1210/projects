@@ -1,0 +1,6 @@
+{
+  "failed_check": "B023: administrative stub loop proof_kind unbound at function definition",
+  "failure_count": 4,
+  "wall_seconds": null,
+  "full_tool_record_retained": true
+}

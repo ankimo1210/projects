@@ -1,0 +1,16 @@
+{
+  "schema": "rb-f04-phase-local-memo-resource-probe-preparation-static-v1",
+  "script_sha256": "06fce8c3e478586d2d928004de447d631db01b5abfb59e3d8c6e08628e32ad93",
+  "syntax_compile": "PASS",
+  "measurement_executed": false,
+  "source_API_final_alignment": "pending owner fixed interface/snapshot",
+  "runtime_source_binding": "pending root actual snapshot binding",
+  "budget_root_preapproved": false,
+  "actual_component_approval_created": false,
+  "new_financial_RNG_solver_SDE_calls": 0,
+  "source_docs_tests_Git_CAS_modified": false,
+  "physical_hash_count_scope": "explicit701 input guard plus SHA total process instrumented in proposed child",
+  "physical_read_scope": "Python binary read APIs, C/mmap/text/native device IO unknown",
+  "existing_history_expense_readded": false,
+  "financial_qualification": "unknown"
+}

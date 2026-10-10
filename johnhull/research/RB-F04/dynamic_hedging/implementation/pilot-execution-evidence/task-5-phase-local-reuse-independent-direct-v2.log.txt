@@ -1,0 +1,20 @@
+genuine_saved_cold_original108_N16 PASS
+same_context_hit_current_bytes PASS
+returned_report_mutation_isolation PASS
+internal_result_mutation_refused PASS
+last_original_node_same_size_mtime PASS
+last_original_driver_same_size_mtime PASS
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-independent-direct-probe-v1.py", line 287, in <module>
+    main()
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-independent-direct-probe-v1.py", line 173, in main
+    rejects("in_memory_raw_cache_mutation", lambda: checker._raw_job_check(job, context))
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-independent-direct-probe-v1.py", line 118, in rejects
+    result = timed(name, action)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-independent-direct-probe-v1.py", line 103, in timed
+    result = fn()
+             ^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-independent-direct-probe-v1.py", line 117, in action
+    raise AssertionError(name + " incorrectly accepted")
+AssertionError: in_memory_raw_cache_mutation incorrectly accepted

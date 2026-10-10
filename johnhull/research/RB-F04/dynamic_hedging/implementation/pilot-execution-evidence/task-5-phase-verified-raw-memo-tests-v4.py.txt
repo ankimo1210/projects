@@ -1,0 +1,330 @@
+"""Saved small-N arithmetic and phase-local provenance; no new financial RNG."""
+
+import copy
+import hashlib
+import json
+import os
+import shutil
+import sys
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+D = Path(__file__).parent
+W = Path(
+    os.environ.get("PHASE_MEMO_SOURCE_ROOT", D / "task-5-phase-verified-raw-memo-source-after-v1")
+)
+R = W / "johnhull/research/RB-F04/dynamic_hedging"
+sys.path[:0] = [str(R), str(W / "johnhull/hullkit/src"), str(W / "deep_hedge_price/src")]
+import check_pilot as checker  # noqa: E402
+import run_pilot as pilot  # noqa: E402
+from hullkit._heston_local_surface import HestonParameters  # noqa: E402
+
+FIXTURE = D / "task-5-teacher-check-report-bounded-unit-fixture-v2/teacher-report0"
+
+
+def context(grid, parameters):
+    assert callable(getattr(checker, "_new_teacher_verification_context", None)), (
+        "phase-local complete teacher verification context is missing"
+    )
+    return {
+        "parameters": parameters,
+        "surface": None,
+        "resolved_arguments": {"model": "Heston", "original_n": 16, "seed": 913},
+        "teacher_verification_context": checker._new_teacher_verification_context(
+            source_root=W, plan_sha256="saved-source-unit-plan"
+        ),
+    }
+
+
+@pytest.fixture
+def saved(monkeypatch):
+    monkeypatch.setattr(np.random, "default_rng", lambda *a, **k: pytest.fail("new RNG"))
+    grid, _ = pilot.read_pilot_artifact(FIXTURE / "unit-grid")
+    parameters = HestonParameters(**json.loads((FIXTURE / "unit-parameters.json").read_text()))
+    job = {
+        "id": "saved-original-grid",
+        "operation": "teacher_grid",
+        "status": "executed",
+        "raw": grid,
+    }
+    return grid, parameters, job
+
+
+def test_complete_first_then_hit_preserves_original_coverage_and_small_copy(saved, monkeypatch):
+    grid, parameters, job = saved
+    ctx = context(grid, parameters)
+    native = checker.check_teacher_record
+    count = []
+
+    def watched(*args, **kwargs):
+        result = native(*args, **kwargs)
+        count.append(result)
+        return result
+
+    monkeypatch.setattr(checker, "check_teacher_record", watched)
+    first = checker._raw_job_check(job, ctx)
+    assert len(count) == 108
+    assert all(r["full_saved_driver_sde_replayed"] for r in count)
+    assert all(r["labels"]["block_means"].shape[0] == 16 for r in count)
+    second = checker._raw_job_check(job, ctx)
+    assert len(count) == 108, "same verified producer reran full saved SDE"
+    pilot.runner._same(first, second, "memo preserves numerical result")
+    assert first["financial_qualification"] == second["financial_qualification"] == "unknown"
+    assert all(
+        r["labels_reference"]["all_original_N_label_values_compared"] for r in second["raw_checks"]
+    )
+    first["cache"]["f"].flat[0] = 123456
+    third = checker._raw_job_check(job, ctx)
+    assert third["cache"]["f"].flat[0] != 123456
+    events = ctx["teacher_verification_context"]["events"]
+    assert [e["kind"] for e in events] == ["verified", "reused", "reused"]
+    assert all(e["wall_seconds"] > 0 and e["cpu_seconds"] >= 0 for e in events)
+    assert events[1]["verified_event_id"] == events[0]["id"]
+    assert events[1]["sde_replayed_this_call"] is False
+
+
+_SAVED_GOLDEN = None
+
+
+@pytest.fixture
+def warm(saved, monkeypatch):
+    grid, parameters, job = saved
+    ctx = context(grid, parameters)
+    global _SAVED_GOLDEN
+    if _SAVED_GOLDEN is None:
+        _SAVED_GOLDEN = checker.check_teacher_grid_record(
+            grid, parameters, None, report_mode="bounded"
+        )
+    golden = copy.deepcopy(_SAVED_GOLDEN)
+    calls = []
+
+    def fixed_check(*args, **kwargs):
+        calls.append(1)
+        return copy.deepcopy(golden)
+
+    monkeypatch.setattr(checker, "check_teacher_grid_record", fixed_check)
+    checker._raw_job_check(job, ctx)
+    return grid, parameters, job, ctx, calls
+
+
+@pytest.mark.parametrize(
+    "change", ["raw_price", "seed", "parameters", "arguments", "source", "node_pack", "driver_pack"]
+)
+def test_changed_inputs_or_physical_bytes_cannot_hit(warm, monkeypatch, tmp_path, change):
+    _grid, _parameters, job, ctx, calls = warm
+    altered = copy.deepcopy(job)
+    if change == "raw_price":
+        values = altered["raw"]["cache"]["f"]
+        values.flat[np.flatnonzero(np.isfinite(values))[0]] += 0.01
+    elif change == "seed":
+        altered["raw"]["seed"] += 1
+    elif change == "parameters":
+        ctx["parameters"] = HestonParameters(101, 0.03, 0, 0.04, 2, 0.04, 0.3, -0.7)
+    elif change == "arguments":
+        ctx["resolved_arguments"]["seed"] += 1
+    elif change == "source":
+        path = W / "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+        before = path.read_bytes()
+        try:
+            path.write_bytes(before + b"\n# source provenance mutation\n")
+            with pytest.raises(ValueError):
+                checker._raw_job_check(altered, ctx)
+        finally:
+            path.write_bytes(before)
+        assert len(calls) == 1
+        return
+    else:
+        raw = altered["raw"]
+        if change == "node_pack":
+            original = Path(raw["nodes"][-1]["path"])
+            restored = tmp_path / "node"
+            shutil.copytree(original, restored)
+            raw["nodes"][-1]["path"] = str(restored)
+        else:
+            original = Path(raw["driver"]["directory"])
+            restored = tmp_path / "driver"
+            shutil.copytree(original, restored)
+            raw["driver"]["directory"] = str(restored)
+        pack = sorted(restored.rglob("arrays.npz"))[-1]
+        bytes_ = bytearray(pack.read_bytes())
+        bytes_[-8] ^= 1
+        pack.write_bytes(bytes_)
+    with pytest.raises(ValueError):
+        checker._raw_job_check(altered, ctx)
+    assert len(calls) == 1
+
+
+def test_fresh_context_different_producer_and_full_standalone_do_not_hit(warm):
+    grid, parameters, job, ctx, calls = warm
+    other = dict(job, id="different-producer")
+    checker._raw_job_check(other, ctx)
+    assert len(calls) == 2
+    fresh = context(grid, parameters)
+    checker._raw_job_check(job, fresh)
+    assert len(calls) == 3
+    ctx.pop("teacher_verification_context")
+    checker._raw_job_check(job, ctx)
+    assert len(calls) == 4
+
+
+def test_partial_cacheless_completed_unknown_not_registered(warm, monkeypatch):
+    _grid, _parameters, job, ctx, calls = warm
+    partial = copy.deepcopy(job)
+    partial["id"] = "partial-grid"
+    partial["raw"]["cache"] = None
+    original = checker.check_teacher_grid_record
+
+    def partial_check(*args, **kwargs):
+        result = original(*args, **kwargs)
+        return dict(result, status="unclosed_or_declared_cap")
+
+    monkeypatch.setattr(checker, "check_teacher_grid_record", partial_check)
+    a = checker._raw_job_check(partial, ctx)
+    b = checker._raw_job_check(partial, ctx)
+    assert a["status"] == b["status"] == "unclosed_or_declared_cap"
+    assert len(calls) == 3
+
+
+def test_activation_existing_cache_reauthenticates_physical_bytes(warm, monkeypatch, tmp_path):
+    grid, parameters, _, ctx, _ = warm
+    assert (
+        "verification_context"
+        in __import__("inspect").signature(pilot.teacher_activation_decision).parameters
+    )
+    prior = {
+        "id": "gate",
+        "operation": "teacher_candidate_gate",
+        "arguments": {
+            "parameters": parameters,
+            "surface": None,
+            "stage_plan": {},
+            "evidence": [{"id": "g", "operation": "teacher_grid", "raw": grid, "arguments": {}}],
+        },
+    }
+    raw = {"qualification": "qualified", "original_n": 16}
+    rows = {"gate": {"id": "gate", "status": "executed", "raw": raw}}
+    child = {"id": "child", "activation": {"previous_teacher_gate_job_id": "gate"}}
+    count = []
+
+    def calculated(*args, **kwargs):
+        count.append(1)
+        return copy.deepcopy(raw)
+
+    monkeypatch.setattr(checker, "calculate_teacher_candidate_gate", calculated)
+    cache = {}
+    for _ in range(2):
+        answer = pilot.teacher_activation_decision(
+            child,
+            {},
+            rows,
+            {"gate": prior},
+            cache,
+            verification_context=ctx["teacher_verification_context"],
+        )
+        assert answer["execute"] is False
+    assert len(count) == 1, "activation repeated other gate kernels"
+    node = Path(grid["nodes"][-1]["path"])
+    before = (node / "arrays.npz").read_bytes()
+    try:
+        changed = bytearray(before)
+        changed[-2] ^= 1
+        (node / "arrays.npz").write_bytes(changed)
+        with pytest.raises(ValueError):
+            pilot.teacher_activation_decision(
+                child,
+                {},
+                rows,
+                {"gate": prior},
+                cache,
+                verification_context=ctx["teacher_verification_context"],
+            )
+    finally:
+        (node / "arrays.npz").write_bytes(before)
+    assert len(count) == 1
+
+
+@pytest.mark.parametrize("target", ["node", "driver"])
+def test_self_consistent_physical_receipt_change_is_not_reused(warm, target):
+    import struct
+    import zipfile
+
+    grid, _parameters, job, ctx, calls = warm
+    root = (
+        Path(grid["nodes"][-1]["path"]) if target == "node" else Path(grid["driver"]["directory"])
+    )
+    pack = sorted(root.rglob("pack*/arrays.npz"))[-1]
+    receipt_path = pack.parent / "receipt.json"
+    before, old_receipt = pack.read_bytes(), receipt_path.read_bytes()
+    try:
+        with zipfile.ZipFile(pack) as archive:
+            item = archive.infolist()[0]
+        data = bytearray(before)
+        _, _, _, _, _, _, _, _, _, name_len, extra_len = struct.unpack(
+            "<IHHHHHIIIHH", data[item.header_offset : item.header_offset + 30]
+        )
+        offset = item.header_offset + 30 + name_len + extra_len
+        data[offset + min(item.compress_size - 1, 64)] ^= 1
+        pack.write_bytes(data)
+        receipt = json.loads(old_receipt)
+        receipt["arrays_sha256"] = hashlib.sha256(data).hexdigest()
+        receipt.pop("artifact_sha256")
+        receipt["artifact_sha256"] = pilot.protocol._digest(receipt)
+        receipt_path.write_bytes(pilot.protocol._canonical(receipt))
+        with pytest.raises(ValueError, match="producer changed"):
+            checker._raw_job_check(job, ctx)
+    finally:
+        pack.write_bytes(before)
+        receipt_path.write_bytes(old_receipt)
+    assert len(calls) == 1
+
+
+def test_nonexecuted_job_never_uses_registered_completed_result(warm):
+    _grid, _parameters, job, ctx, calls = warm
+    for status in ("failed_at_declared_cap", "unexecuted_dependency_cap"):
+        checker._raw_job_check(dict(job, status=status), ctx)
+    assert len(calls) == 3
+    assert [e["kind"] for e in ctx["teacher_verification_context"]["events"]] == ["verified"]
+
+
+def test_default_standalone_activation_retains_safe_existing_cache(warm, monkeypatch):
+    grid, parameters, _, _ctx, _ = warm
+    prior = {
+        "id": "gate",
+        "operation": "teacher_candidate_gate",
+        "arguments": {
+            "parameters": parameters,
+            "surface": None,
+            "stage_plan": {},
+            "evidence": [{"id": "g", "operation": "teacher_grid", "raw": grid, "arguments": {}}],
+        },
+    }
+    raw = {"qualification": "qualified", "original_n": 16}
+    rows = {"gate": {"id": "gate", "status": "executed", "raw": raw}}
+    child = {"id": "child", "activation": {"previous_teacher_gate_job_id": "gate"}}
+    count = []
+
+    def calculated(*args, **kwargs):
+        count.append(1)
+        return copy.deepcopy(raw)
+
+    monkeypatch.setattr(checker, "calculate_teacher_candidate_gate", calculated)
+    cache = {}
+    for _ in range(2):
+        assert (
+            pilot.teacher_activation_decision(child, {}, rows, {"gate": prior}, cache)["execute"]
+            is False
+        )
+    assert len(count) == 1
+
+
+def test_completed_raw_with_native_cap_never_uses_memo(warm):
+    _grid, _parameters, job, ctx, calls = warm
+    capped = copy.deepcopy(job)
+    capped["raw"]["status"] = "failed_at_declared_cap"
+    capped["raw"]["cap_evidence"] = {"metric": "wall_seconds", "consumed": 301, "limit": 300}
+    result = checker._raw_job_check(capped, ctx)
+    assert result["financial_qualification"] == "unknown"
+    assert len(calls) == 2
+    assert [e["kind"] for e in ctx["teacher_verification_context"]["events"]] == ["verified"]

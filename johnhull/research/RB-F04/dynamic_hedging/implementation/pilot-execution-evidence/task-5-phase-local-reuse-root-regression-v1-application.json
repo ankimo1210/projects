@@ -1,0 +1,24 @@
+{
+  "scope": "actual root application + only two affected existing test files and Ruff",
+  "manifest_sha256": "78a9f5d6f8802b6b6f329eb9c938dee11eb7b3429743ca43886843588f08529d",
+  "changed_files": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+      "before_sha256": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc",
+      "after_sha256": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635"
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "before_sha256": "952b8f89c930578db1f6531bd6e73ade947d7cfbef246cc8510d246a54ed6197",
+      "after_sha256": "392b5d6a9b6bb63ad71d39f276ea60a197cfd3988532f8b7232a89c53c764f40"
+    },
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": {
+      "before_sha256": "ce679b219491725e82da021c34326d06ca782fcf76f3d3b1285c7400854fde20",
+      "after_sha256": "bc52f84e8294887c7555c73b49a9c2bc02661bc1aa3e8dfa25547aa47d4c71d9"
+    }
+  },
+  "finance_qualification": "unknown",
+  "formal_pilot_or_main_executed": false,
+  "actual_source_identity": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+  "actual_runtime_files": 81,
+  "dynamic_imports": 0,
+  "actual_source_closure_sha256": "2b6726185c59b2695e676de5fed4bc21fc99e10c5097d25c707b5029c1c19039"
+}

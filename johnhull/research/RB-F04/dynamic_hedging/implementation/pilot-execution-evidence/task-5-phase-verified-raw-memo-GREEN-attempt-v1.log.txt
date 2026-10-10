@@ -1,0 +1,55 @@
+.F.........                                                              [100%]
+=================================== FAILURES ===================================
+_________ test_changed_inputs_or_physical_bytes_cannot_hit[raw_price] __________
+
+warm = ({'axes': {'dates': array([0.        , 0.08333333, 0.16666667, 0.25      , 0.33333333,
+       0.41666667, 0.5       , ...e584a268ce243370065b20fed9cecfcde8715c0bf7543b97d1c81eef693e790'}, 'plan_sha256': 'saved-source-unit-plan', ...}}, [1])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x788a348620c0>
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3913/test_changed_inputs_or_physica0')
+change = 'raw_price'
+
+    @pytest.mark.parametrize("change", ["raw_price", "seed", "parameters", "arguments", "source", "node_pack", "driver_pack"])
+    def test_changed_inputs_or_physical_bytes_cannot_hit(warm, monkeypatch, tmp_path, change):
+        grid, parameters, job, ctx, calls = warm
+        altered = copy.deepcopy(job)
+        if change == "raw_price":
+            altered["raw"]["cache"]["f"].flat[-1] += 0.01
+        elif change == "seed":
+            altered["raw"]["seed"] += 1
+        elif change == "parameters":
+            ctx["parameters"] = HestonParameters(101, 0.03, 0, 0.04, 2, 0.04, 0.3, -0.7)
+        elif change == "arguments":
+            ctx["resolved_arguments"]["seed"] += 1
+        elif change == "source":
+            path = W / "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+            before = path.read_bytes()
+            try:
+                path.write_bytes(before + b"\n# source provenance mutation\n")
+                with pytest.raises(ValueError):
+                    checker._raw_job_check(altered, ctx)
+            finally:
+                path.write_bytes(before)
+            assert len(calls) == 1
+            return
+        else:
+            raw = altered["raw"]
+            if change == "node_pack":
+                original = Path(raw["nodes"][-1]["path"])
+                restored = tmp_path / "node"
+                shutil.copytree(original, restored)
+                raw["nodes"][-1]["path"] = str(restored)
+            else:
+                original = Path(raw["driver"]["directory"])
+                restored = tmp_path / "driver"
+                shutil.copytree(original, restored)
+                raw["driver"]["directory"] = str(restored)
+            pack = sorted(restored.rglob("arrays.npz"))[-1]
+            bytes_ = bytearray(pack.read_bytes()); bytes_[-8] ^= 1
+            pack.write_bytes(bytes_)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+task-5-phase-verified-raw-memo-tests-v1.py:128: Failed
+=========================== short test summary info ============================
+FAILED task-5-phase-verified-raw-memo-tests-v1.py::test_changed_inputs_or_physical_bytes_cannot_hit[raw_price]
+1 failed, 10 passed in 39.57s

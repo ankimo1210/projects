@@ -1,0 +1,7 @@
+{
+  "scope": "static byte/AST/diff/closure freeze; financial execution0",
+  "wall_seconds": 0.842898734,
+  "cpu_seconds": 0.83304034,
+  "source_bytes_authenticated": 3623922,
+  "measurement_excludes": "this receipt and final manifest serialization/writes; no financial expense or old generation cost added"
+}

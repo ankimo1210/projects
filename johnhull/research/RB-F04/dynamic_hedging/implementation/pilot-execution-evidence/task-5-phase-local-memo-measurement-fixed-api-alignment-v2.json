@@ -1,0 +1,160 @@
+{
+  "schema": "rb-f04-phase-local-memo-measurement-fixed-api-alignment-v2",
+  "role": "D-only measurement preparation author; not an independent source approval",
+  "status": "static API alignment complete; actual root prior/regression/independent source review required before measurement",
+  "measurement_executed": false,
+  "new_financial_generation_RNG_solver_SDE_execution": false,
+  "financial_qualification": "unknown",
+  "financial_phase_main_approved": false,
+  "independent_source_approval_created": false,
+  "root_budget_approval_created": false,
+  "original_preparation_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-preparation-manifest-v1.json",
+    "sha256": "d485af3b70a7ec46902f8335d2ab9c8b4e3e41f333b77da1a2f9599d99e04c80",
+    "all10files_SHA_and_bytes_unchanged": true
+  },
+  "probe": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-measurement-v1.py",
+    "sha256": "d10cc08e2abf8c45c05c5a644ee28c4e9c5d0258d6b764c45aa4b52b311b5498",
+    "AST_compile_only_passed": true,
+    "no_renamed_outer_activation_flag_consumed": true
+  },
+  "saved_inputs": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-measurement-inputs-v1.json",
+    "sha256": "9befb4ce8e2fd7dcd94bccfa4063d520f6ebb19b4733fe5b9a22b07cfb44fcf4",
+    "physical_inventory_count": 701,
+    "physical_SHA_reauthentication_deferred_to_measured_runtime": true
+  },
+  "candidate": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-budget-candidate-v3.json",
+    "sha256": "84839f513bb0a099bff93c40e6a830eafa0ce134138dab85f8127e96cbc4d54c",
+    "approved": false,
+    "root_preapproved": false
+  },
+  "fixed_source_snapshot_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-fixed-v2-manifest.json",
+    "sha256": "78a9f5d6f8802b6b6f329eb9c938dee11eb7b3429743ca43886843588f08529d"
+  },
+  "root_application_record": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-root-regression-v1-application.json",
+    "sha256": "c1140c02e2ec7f0917388d7d6871307017c6be59b1fb83dab6e9c7535fb679bc"
+  },
+  "actual_root_source_closure": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-root-regression-v1-source-closure.json",
+    "sha256": "2b6726185c59b2695e676de5fed4bc21fc99e10c5097d25c707b5029c1c19039",
+    "source81bytes_live_and_v2_snapshot_match": true,
+    "dynamic_imports": 0,
+    "all_values_equal_owner_v2_closure": true
+  },
+  "source_identity_formulas": {
+    "canonical": {
+      "value": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+      "formula": "run_reference._digest(source): sha256(json.dumps(source,sort_keys=True,separators=(',',':'),allow_nan=False).encode())",
+      "verified_here_without_source_import": true,
+      "measurement_prior_field": "new_runtime_source_identity"
+    },
+    "envelope_tree": {
+      "value": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+      "formula": "run_reference.payload_digest(source)",
+      "source_owner_confirmed_in_message": true,
+      "computed_here": false,
+      "role": "run_pilot envelope / memo guard; optional separate prior provenance field, not substitute for canonical"
+    }
+  },
+  "API_alignment": {
+    "constructor": "check_pilot._new_teacher_verification_context(*, source_root, source, plan_sha256)",
+    "entrypoint": "check_pilot._raw_job_check(job, context)",
+    "context_field": "teacher_verification_context",
+    "source_v1_v2_checker_byte_identical": true,
+    "v1_to_v2_runtime_delta": "run_pilot outer activation event key only: sde_replayed_this_call -> registered_teacher_proof_sde_replayed_this_call",
+    "native_teacher_event_key_unchanged": "sde_replayed_this_call",
+    "measurement_event_contract": [
+      "verified",
+      "reused",
+      "verified"
+    ],
+    "measurement_full_grid_function_counter_deltas": [
+      1,
+      0,
+      1
+    ],
+    "measurement_context_contract": "first and hit same scope_id; fresh new empty context different scope_id"
+  },
+  "original_inputs_eligibility": {
+    "genuine_M6_Heston_coarse": true,
+    "original_n": 1024,
+    "original_nodes": 108,
+    "original_dates": 12,
+    "all_original_thresholds": 33,
+    "cache_present_metadata": true,
+    "raw_status": "executed",
+    "unexecuted_node_count": 0,
+    "financial_qualification": "unknown",
+    "first_and_fresh_full_saved_integrity_actual_execution_pending": true,
+    "old_generation_source_identity": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+    "old_bounded_saved_checker_source_identity": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+    "old_envelope_and_original_native_bytes_not_rewritten": true,
+    "new_runtime_changes_relative_generation": [
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+    ],
+    "storage_recipe_source_SHA": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac"
+  },
+  "root_prior_minimum": {
+    "new_file_path_proposal": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-budget-root-fixed-v1.json",
+    "clone_from_candidate_v3_preserve_original_false_candidate": true,
+    "required_top_level_assignments": {
+      "schema": "rb-f04-phase-local-memo-resource-prior-v1",
+      "approved": "true only after actual root decision",
+      "root_preapproved": "true only after actual root decision",
+      "probe_source_sha256": "d10cc08e2abf8c45c05c5a644ee28c4e9c5d0258d6b764c45aa4b52b311b5498",
+      "single_child_wall_limit_seconds": 180.0,
+      "single_child_RSS_limit_bytes": 8589934592,
+      "saved_inputs": {
+        "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-measurement-inputs-v1.json",
+        "sha256": "9befb4ce8e2fd7dcd94bccfa4063d520f6ebb19b4733fe5b9a22b07cfb44fcf4"
+      },
+      "new_runtime_source_bindings": "copy exact actual_root_source_closure.files (81) after final root regression/current-byte confirmation",
+      "new_runtime_source_identity": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+      "financial_qualification": "unknown",
+      "financial_phase_main_approved": false,
+      "new_financial_generation_RNG_solver_permitted": false,
+      "measurement_output_root": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-observation-root-v1",
+      "stages": [
+        "first_empty_context_full_check",
+        "same_context_immutable_hit",
+        "fresh_empty_context_full_check"
+      ]
+    },
+    "new_runtime_API_fixed_interface": {
+      "status": "fixed_source_API",
+      "coverage_helper_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-measurement-v1.py",
+      "coverage_helper_sha256": "e16a706848f496d10bfba213aec82190b7b2829887ed22aa279f11ece750164d",
+      "source_owner_fixed_snapshot_manifest": {
+        "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-fixed-v2-manifest.json",
+        "sha256": "78a9f5d6f8802b6b6f329eb9c938dee11eb7b3429743ca43886843588f08529d"
+      }
+    },
+    "retain_actual_root_decision_and_scoped_regression_and_independent_source_review_references": "root adds actual received evidence; this preparation does not mint approvals",
+    "optional_separate_runtime_source_envelope_identity": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+    "candidate_or_wrong_canonical_prior_rejected_by_existing_script": true
+  },
+  "root_launch_command": {
+    "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging:/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src:/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src /home/kazumasa/projects/.venv/bin/python -B /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-measurement-v1.py --budget /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-budget-root-fixed-v1.json --output /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-observation-root-v1",
+    "working_directory": "/home/kazumasa/worktrees/johnhull-research-roadmap",
+    "executed": false,
+    "monitor": "existing script parent launches one child and polls child wall/RSS every 0.025s; actual 180s / 8GiB cap and postexit kernel RSS highwater",
+    "output_must_be_new": true,
+    "root_enclosing_cost": "root wraps this one approved invocation; RUSAGE_CHILDREN captures inner parent+child CPU; wall includes validation/import/startup/report transport/guards/child+parent receipts; do not add internal clocks or prior history twice",
+    "root_final_enclosing_receipt_write_cost": "unknown",
+    "cap_or_failure": "keep raw progress/exit/cap evidence as partial or failed resource component; never financial/case/phase cap PASS",
+    "qualification": "unknown; no whole-phase/full-N rate or formal finance approval"
+  },
+  "preparation_cost_before_final_manifest_write": {
+    "wall_seconds": 0.034434373999829404,
+    "CPU_seconds": 0.03310727,
+    "peak_RSS_bytes": 39530496,
+    "final_manifest_write_and_tool_tail_seconds": null,
+    "scope": "D-only metadata/AST and 81 small runtime-source SHA comparison; no binary native decode/SDE/RNG"
+  }
+}

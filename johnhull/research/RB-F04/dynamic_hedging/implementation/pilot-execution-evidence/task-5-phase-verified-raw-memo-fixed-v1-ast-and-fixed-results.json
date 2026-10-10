@@ -1,0 +1,126 @@
+{
+  "scope": "D-only candidate; production application/review/resource measurement pending",
+  "status": "author_scoped_source_candidate_complete",
+  "financial_qualification": "unknown",
+  "source_root": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-source-after-v1",
+  "source_identity_sha256": "b34ba2a4c2bd0cd66a984e6bb059d1601fa022ac604ceee9b1ea578f61c04217",
+  "runtime_file_count": 81,
+  "dynamic_import_count": 0,
+  "changed_runtime_files": [
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+  ],
+  "other_runtime_files_unchanged": 79,
+  "production_all_original81_bytes_unchanged": true,
+  "source_after_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "a0a66df589839ace47b7d2771538dd16cdac09e52b3e382796ae312de83b409b",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "392b5d6a9b6bb63ad71d39f276ea60a197cfd3988532f8b7232a89c53c764f40",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": "6134af78f636f71379d3f52588049de28f2c68b77c2d9ec9d226f4b0ac08736e"
+  },
+  "native_storage_source_unchanged": true,
+  "diff_stats": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+      "added_lines": 125,
+      "removed_lines": 16
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "added_lines": 271,
+      "removed_lines": 21
+    },
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": {
+      "added_lines": 123,
+      "removed_lines": 0
+    }
+  },
+  "ast_delta": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+      "changed_old": [
+        "_dispatch",
+        "run_teacher_selected_inputs_job",
+        "run_teacher_selection_job",
+        "run_teacher_candidate_gate_job",
+        "teacher_activation_decision",
+        "run_pilot"
+      ],
+      "new": [],
+      "removed": []
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "changed_old": [
+        "_raw_job_check",
+        "check_unused_teacher_job",
+        "calculate_teacher_candidate_gate",
+        "check_pilot_records"
+      ],
+      "new": [
+        "_file_byte_sha",
+        "_new_teacher_verification_context",
+        "_teacher_source_guard",
+        "_artifact_byte_guard",
+        "_teacher_physical_guard",
+        "_teacher_verification_guard",
+        "_checked_teacher_grid"
+      ],
+      "removed": []
+    },
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": {
+      "changed_old": [],
+      "new": [
+        "_phase_memo_context",
+        "test_phase_memo_first_full_then_hit_copy_and_unknown",
+        "test_phase_memo_live_tamper_cannot_reuse",
+        "test_phase_memo_fresh_context_and_default_still_recheck"
+      ],
+      "removed": []
+    }
+  },
+  "teacher_numeric_checker_asts_unchanged": [
+    "check_teacher_record",
+    "check_teacher_grid_record"
+  ],
+  "all_prior_teacher_check_report_test_asts_unchanged": true,
+  "tests": {
+    "saved_unit": {
+      "passed": 16,
+      "log": "task-5-phase-verified-raw-memo-GREEN-saved-unit-final-v2.log",
+      "seconds": 25.61
+    },
+    "selfcontained": {
+      "passed": 9,
+      "log": "task-5-phase-verified-raw-memo-GREEN-selfcontained-and-resume-v1.log",
+      "same_run_resume_failure_preserved": true
+    },
+    "resume_after_fix": {
+      "passed": 1,
+      "log": "task-5-phase-verified-raw-memo-GREEN-resume-final-v1.log",
+      "seconds": 1.46
+    },
+    "ruff_format": {
+      "files": 4,
+      "log": "task-5-phase-verified-raw-memo-ruff-final-v2.json",
+      "passed": true,
+      "ruff_ignore": "N806: pre-existing mathematical variable names retain original AST"
+    }
+  },
+  "not_executed": [
+    "formal3138_jobs",
+    "whole_financial_phase",
+    "full_pilot_suite",
+    "M6_resource_reuse_measurement"
+  ],
+  "api": {
+    "constructor": "_new_teacher_verification_context(*, source_root, source, plan_sha256)",
+    "shared_context_key": "teacher_verification_context",
+    "raw_entry": "_raw_job_check(job, context)",
+    "activation": "teacher_activation_decision(..., verification_context=memo)",
+    "native_counter_boundary": "module-global check_teacher_grid_record: same context first/hit expected1/0; fresh1",
+    "events": "memo[events]: verified/reused/activation_verified/activation_reused; actual clocks and initial verified_event_id",
+    "rebasing": "artifact_context original_root/restored_root runtime only; source_root=A and source=execution_source_identity(A)"
+  },
+  "limitations": [
+    "resource speedup not measured",
+    "no phase runtime promise",
+    "independent review pending",
+    "source-only approval cannot qualify numerical finance"
+  ]
+}
