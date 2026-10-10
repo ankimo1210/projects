@@ -1,0 +1,64 @@
+--- 4517f766e435ac34feafb89301442839e1d797ec646e87aaae4cf7e31fb168bd
++++ 4956903ea0b6f25a2a556fc1e0745b2d98d253ff3d26731e6cf55e5fc253cbc4
+@@ -1336,20 +1336,45 @@
+     return result
+ 
+ 
+-def _prior_three_stream_records(records, candidate):
++def _prior_three_stream_records(records, candidate, rows):
+     identities = []
+     for slot, record in enumerate(records):
+         _require(isinstance(record, dict), "original refinement producer reference required")
+-        if "$job" in record:
++        if set(record) in ({"job"}, {"job", "path"}):
++            identifier = record["job"]
+             _require(
+-                isinstance(record["$job"], str) and record["$job"],
+-                "original refinement producer ID required",
+-            )
+-            identities.append(("job", record["$job"]))
++                isinstance(identifier, str) and identifier in rows and record.get("path", []) == [],
++                "whole declared original refinement producer required",
++            )
++            producer = rows[identifier]
++            spec = producer["arguments"]
++            _require(
++                producer["original_n"] == 4096 and spec["operation"] in ("cell_pair", "paired_pnl"),
++                "actual original paired producer operation/denominator required",
++            )
++            reference = spec["arguments"].get("shared_market") or {}
++            _require(
++                set(reference) in ({"job"}, {"job", "path"})
++                and reference["job"] in rows
++                and reference.get("path", []) == [],
++                "declared original reserved market producer required",
++            )
++            market = rows[reference["job"]]
++            arguments = market["arguments"]["arguments"]
++            _require(
++                market["arguments"]["operation"] == "market_pair"
++                and market["original_n"] == arguments.get("original_n") == 4096
++                and arguments.get("seed") == candidate["seeds"]["refinement"][slot]
++                and arguments.get("model") in MODELS,
++                "original ordered reserved producer streams/denominators required",
++            )
++            identities.append(("job", identifier))
+         else:
+             market = record.get("shared_market") or {}
+             _require(
+-                market.get("seed") == candidate["seeds"]["refinement"][slot]
++                record.get("kind") == "paired_pnl"
++                and record.get("original_n") == 4096
++                and market.get("seed") == candidate["seeds"]["refinement"][slot]
+                 and market.get("role") == "refinement"
+                 and market.get("original_n") == 4096,
+                 "original ordered reserved inline refinement streams required",
+@@ -1404,7 +1429,7 @@
+                 "original paired refinement outcome/group/three-stream/N contract required",
+             )
+             for key in keys:
+-                _prior_three_stream_records(args[key], candidate)
++                _prior_three_stream_records(args[key], candidate, rows)
+             found.append(args.get("comparison_id"))
+         _require(
+             len(found) == 24 and set(found) == comparisons,

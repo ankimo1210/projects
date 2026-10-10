@@ -1,0 +1,112 @@
+from pathlib import Path
+import ast,copy,inspect,json,time
+import numpy as np
+import run_pilot as pilot
+import reference_methods
+from hullkit._dynamic_hedging_surfaces import build_call_cache
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+B=WT/"johnhull/research/RB-F04/dynamic_hedging"
+start={"wall_start":time.perf_counter(),"cpu_start":time.process_time()}
+src=(D/"progressive-preflight-independent.py").read_text()
+guard=src[src.index("candidate=pilot.execution.execution_candidate()"):src.index("baseline=audit(draft)")]
+needle='   req(plan["reference_rule"]==("next_prefix" if n<65536 else "independent_reserved_stream_grid_max"),"reserved reference altered")\n'
+insert=needle+'''
+   for key,expected_n,expected_grid in (("teacher_job_id",n,g),("next_teacher_job_id",rn,g),("grid_teacher_job_id",n,"high" if g=="coarse" else "coarse")):
+    selected=rows[plan[key]]
+    req(selected["operation"]=="teacher_domain_selection","stage uses unselected raw teacher")
+    raw=rows[selected["arguments"]["teacher"]["job"]]; ta=raw["arguments"]
+    req(raw["operation"]=="teacher_grid" and raw["original_n"]==selected["original_n"]==ta["original_n"]==expected_n and ta["model"]==m and ta["grid"]==expected_grid,"actual teacher N/grid/model differs from candidate")
+'''
+assert needle in guard
+guard=guard.replace(needle,insert)
+prepared=json.loads((D/"task-5-actual-pilot-input-preparation-v4.json").read_text())
+inputs={k:prepared[k] for k in ("original_states18","diagnostic_queries24","additional_teacher_cases")}
+with np.load(B/"pilot/initial-quotes/reference.npz",allow_pickle=False) as a:
+ times=a["field257x321.surface.times"].copy();z=a["field257x321.surface.z_nodes"].copy()
+h=np.r_[np.linspace(0,.08,17),np.linspace(.08,.5,17)[1:]];h[0]=1e-5
+l=np.array([.25,.5,.75,1.,1.5,2.,4.])
+controls={"field":{"times":times,"z_nodes":z,"order":1024,"frequency_scale":512,"density_floor":1e-10},
+ "call":{"Heston":{"state_nodes":h},"local":{"state_nodes":l}}}
+draft,receipt=pilot.read_pilot_artifact(D/"task-5-progressive-pilot-plan-draft-source-unit")
+exec(compile(guard,"independent-strengthened-guard","exec"))
+dry=(D/"task-5-progressive-pilot-plan-dry-run.py").read_text()
+nodes=ast.parse(dry).body
+function_node=next(n for n in nodes if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=="functions" for t in n.targets))
+exec(compile(ast.Module(body=[function_node],type_ignores=[]),"root-signature-map","exec"))
+root_guard="\n".join(dry.splitlines()[64:97])+"\nassert not errors\n"
+def root_accept(x):
+ scope=dict(globals());scope["draft"]=x
+ try:exec(compile(root_guard,"actual-root-dryrun-declared-checks","exec"),scope)
+ except (AssertionError,KeyError,ValueError,TypeError):return False
+ return True
+def synchronize(x):
+ rows={r["id"]:r for r in x["jobs"]}
+ for r in x["jobs"]:
+  if r["operation"]=="teacher_candidate_gate":
+   for e in r["arguments"]["evidence"]:
+    e["operation"]=rows[e["id"]]["operation"]
+    e["arguments"]=copy.deepcopy(rows[e["id"]]["arguments"])
+ ancestors={}
+ for j in x["jobs"]:
+  dd=deps(j["arguments"]);ancestors[j["id"]]=dd|set().union(*(ancestors[i] for i in dd))
+ for j in x["jobs"]:
+  j["cap_scope"]["job_ids"]=[r["id"] for r in x["jobs"] if r["id"]==j["id"] or j["id"] in ancestors[r["id"]]]
+def row(x,i):return next(j for j in x["jobs"] if j["id"]==i)
+def gate(x,m="Heston",n=1024,g="coarse"):return row(x,f"stage:{m}:N{n}:{g}:gate")
+def risk_swap(x):
+ p=gate(x)["arguments"]["stage_plan"];b=p["pnl_bindings"]["teacher_N"][0]
+ row(x,b["refined_risk_job_id"])["arguments"]["caches"]["heston"]["asian"]=ref(p["teacher_job_id"],"cache")
+def principal_seed(x):
+ row(x,"teacher-driver:Heston:N1024")["arguments"]["seed"]=seeds["oracle"][0]
+ for r in x["jobs"]:
+  if r["operation"]=="teacher_grid" and r["arguments"]["driver"]["job"]=="teacher-driver:Heston:N1024":r["arguments"]["seed"]=seeds["oracle"][0]
+def max_seed(x):
+ i="teacher-driver-reference:local:N65536"
+ r=row(x,i);r["arguments"]["seed"]=42;r["arguments"]["teacher_reference"]["seed"]=42;r["teacher_reference"]["seed"]=42
+ for r in x["jobs"]:
+  if r["operation"]=="teacher_grid" and r["arguments"]["driver"]["job"]==i:
+   r["arguments"]["seed"]=42;r["arguments"]["teacher_reference"]["seed"]=42;r["teacher_reference"]["seed"]=42
+def oracle_shrink(x):
+ r=row(x,"oracle:state00:Heston:referenceN4096");r["arguments"]["n_paths"]=r["original_n"]=1024
+ r["prediction"].update(path_steps=1024*1536,total_path_steps=1024*1536*26)
+def width_swap(x):
+ b=gate(x)["arguments"]["stage_plan"]["pnl_bindings"]["position"][0]
+ r=row(x,b["job_id"]);r["arguments"]["refined_risk_width_index"]=2;r["arguments"]["refined_risk"]=ref(b["refined_risk_job_id"],"risk_variants",2)
+def unreserved_N(x):
+ i="teacher-driver-reference:local:N65536";r=row(x,i);r["arguments"]["original_n"]=r["original_n"]=262144
+ for r in x["jobs"]:
+  if r["operation"]=="teacher_grid" and r["arguments"]["driver"]["job"]==i:r["arguments"]["original_n"]=r["original_n"]=262144
+  if r["operation"]=="teacher_domain_selection" and r["arguments"]["teacher"]["job"].startswith("teacher-reference:local:N65536:"):r["original_n"]=262144
+cases=[
+ ("actual_refined_cache_substitution",risk_swap),
+ ("principal_teacher_uses_oracle_namespace",principal_seed),
+ ("max_teacher_unreserved_seed",max_seed),
+ ("max_teacher_unreserved_N262144",unreserved_N),
+ ("oracle_original_N_shrink",oracle_shrink),
+ ("position_width_substitution",width_swap),
+ ("local_shared_driver_other_model_gate",lambda x:row(x,"teacher-driver:local:N16384").update(activation={"previous_teacher_gate_job_id":"stage:Heston:N1024:high:gate"})),
+ ("field_fixed_cutoff_order_substitution",lambda x:row(x,"field-current")["arguments"].update(order=2048)),
+ ("original121_case_identity_substitution",lambda x:x["original_pilot_case_descriptors"][0]["identity"].update(unknown="invented")),
+ ("original51_obligation_identity_substitution",lambda x:x["original_required_attempt_ids"].__setitem__(0,"invented")),
+]
+assert root_accept(draft)
+baseline=audit(draft)
+results=[]
+for name,mutation in cases:
+ x=copy.deepcopy(draft);mutation(x);synchronize(x)
+ accepted=root_accept(x)
+ try:audit(x)
+ except (ValueError,KeyError) as e:refused=True;reason=str(e)
+ else:refused=False;reason=None
+ results.append({"id":name,"metadata_and_evidence_selfconsistent":True,"root_count_signature_topology_guards_accept":accepted,"independent_guard_refused":refused,"reason":reason})
+assert all(r["independent_guard_refused"] for r in results)
+assert all(r["root_count_signature_topology_guards_accept"] for r in results)
+clock={**start,"wall_stop":time.perf_counter(),"cpu_stop":time.process_time()}
+out={"scope":"copied selfconsistent negative graph probes; no finance or original source edit",
+ "baseline":baseline,"results":results,"interpretation":"root basic dryrun is not a financial/reference identity validator; current graph passes added exact metadata guards, formal saved numerical gates still mandatory",
+ "financial_RNG_performed":False,"financial_worker_performed":False,"formal_plan_locked":False,
+ "clock":clock,"wall_seconds":clock["wall_stop"]-clock["wall_start"],"cpu_seconds":clock["cpu_stop"]-clock["cpu_start"],
+ "report_self_write_expense":{"status":"pending","wall_seconds":None,"cpu_seconds":None}}
+(D/"progressive-preflight-selfconsistent-results.json").write_text(json.dumps(out,indent=2)+"\n")
+print(json.dumps(out,indent=2))

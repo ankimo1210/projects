@@ -1,0 +1,62 @@
+{
+  "schema": "rb-f04-progressive-selection-metadata-review-v1",
+  "verdict": "approved_selection_only_metadata_preflight",
+  "critical_findings": 0,
+  "important_findings": 0,
+  "findings": [],
+  "producer_sha256": "0d719eb1379455a12239fbc543c940f1f7913fad00b451812c18664bcd106985",
+  "whole_financial_source_approved": false,
+  "formal_plan_lock_approved": false,
+  "formal_financial_execution_approved": false,
+  "financial_qualification": "unknown",
+  "baseline": {
+    "job_count": 2748,
+    "stage_count": 16,
+    "state_count": 288,
+    "date_count": 192,
+    "position_pairs": 768,
+    "other_pairs": 1024,
+    "principal_drivers": 8,
+    "reserved_reference_drivers": 2,
+    "full_raw_teachers": 20,
+    "original_cases": 121,
+    "original_attempts": 51,
+    "actual_risk_cache_bindings": "checked",
+    "actual_numeric_closure": "checked"
+  },
+  "negative_probe_count": {
+    "initial_stale_or_structural": 16,
+    "selfconsistent_graph": 10
+  },
+  "selfconsistent_refusals": 10,
+  "root_basic_dryrun_accepts_all_selfconsistent_negative_probes": true,
+  "v2_json_and_graph_recheck": {
+    "v2_json_parse": "PASS",
+    "v2_parent_clock_math": "PASS",
+    "v1_to_v2_graph_identity": "PASS",
+    "script_AST_delta": "only report/artifact paths and literal-newline repair",
+    "producer_sha256": "0d719eb1379455a12239fbc543c940f1f7913fad00b451812c18664bcd106985",
+    "formal_plan_locked": false,
+    "financial_qualification": "unknown"
+  },
+  "financial_worker_or_RNG_execution_performed": false,
+  "unfinished_formal_conditions": [
+    "full selected mixed-cache121cases51obligations16comparisons A bridge",
+    "selected next/opposite cache4additional dates with actual caps/unused proof",
+    "ten actual expense aliases plus all prior work/bytes/rates/budgets",
+    "final whole financial source closure review",
+    "formal pilot freeze main fresh both stores plots notebook acceptance"
+  ],
+  "report": "progressive-preflight-review.md",
+  "manifest": "progressive-preflight-manifest.json",
+  "source_snapshot_note": "financial source snapshots are provenance only; concurrent author updates remain outside this approval",
+  "review_expense_parent_seconds": {
+    "baseline": 15.090570627999114,
+    "selfconsistent": 20.27694282200173
+  },
+  "unmeasured_expense_items": [
+    "initial script-creation SyntaxError",
+    "v2 report reread outside dedicated parent",
+    "final report/manifest residual self-write"
+  ]
+}

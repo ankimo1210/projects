@@ -1,0 +1,12 @@
+{
+  "clock": {
+    "wall_start": 21552.892322835,
+    "cpu_start": 0.0,
+    "wall_stop": 21567.982893463,
+    "cpu_stop": 15.077634999999999
+  },
+  "wall_seconds": 15.090570627999114,
+  "cpu_seconds": 15.077634999999999,
+  "returncode": 0,
+  "scope": "whole metadata-review subprocess including imports/artifact load/audit/tamper/log write; inner cost included, not additive"
+}

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "task-6-main-source-root-cas-check-v2.py", line 38, in <module>
+    es.load_manifest(manifest)
+  File "johnhull/scripts/evidence_store.py", line 145, in load_manifest
+    validate_entries(manifest.get("entries"), "manifest.entries")
+  File "johnhull/scripts/evidence_store.py", line 131, in validate_entries
+    raise StoreError(f"{where}: conflicting size or MIME for {digest}")
+evidence_store.StoreError: manifest.entries[179]: conflicting size or MIME for c6486b51f483249343d4a4bdb91c41be31f0bdc28887b2f4cd4800e174f8bd6b

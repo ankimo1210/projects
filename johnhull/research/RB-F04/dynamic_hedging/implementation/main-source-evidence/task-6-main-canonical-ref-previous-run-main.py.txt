@@ -1,0 +1,2919 @@
+"""Frozen dynamic RB-F04 main finance coordinator with immutable job boundaries.
+
+Only ``run_main_experiment`` opens the reserved main stream. Lower-level workers
+accept explicit source-unit inputs and do not certify a freeze or precision.
+Generation, observable quote risk and fixed-policy execution are distinct jobs.
+"""
+
+from __future__ import annotations
+
+import argparse
+import copy
+import hashlib
+import json
+import sys
+from collections.abc import Mapping
+from itertools import pairwise
+from pathlib import Path
+from time import perf_counter, process_time
+
+ROOT = Path(__file__).resolve().parents[4]
+_IMPORT_START, _IMPORT_CPU = perf_counter(), process_time()
+if __name__ == "__main__":
+    sys.path[:0] = [str(ROOT / "johnhull/hullkit/src"), str(ROOT / "deep_hedge_price/src")]
+
+import numpy as np
+import run_pilot as pilot
+import run_reference as runner
+from hullkit._dynamic_hedging_core import cash_account
+from hullkit._dynamic_hedging_statistics import (
+    family_assessment,
+    make_bootstrap_indices,
+    paired_statistics,
+    risk_summary,
+)
+from hullkit._heston_local_surface import HestonParameters
+
+from deep_hedge_price import _dynamic_hedging_closure as closure
+from deep_hedge_price import _dynamic_hedging_protocol as protocol
+from deep_hedge_price import _dynamic_hedging_study as study
+
+SCHEMA = "rb-f04-main-raw-v1.1"
+MODELS = ("Heston", "local")
+_IMPORT_WALL, _IMPORT_CPU_SECONDS = perf_counter() - _IMPORT_START, process_time() - _IMPORT_CPU
+_IMPORT_ACCOUNTED = False
+
+
+def _require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def artifact_digest(value):
+    """Bind the same lossless actual-field encoding used by saved artifacts."""
+    return runner.payload_digest(pilot.pack_inputs(value))
+
+
+def _expense(identifier, scope, wall, cpu, *, reason=None, parent=None):
+    return {
+        "id": identifier,
+        "scope": scope,
+        "status": "failed" if reason else "complete",
+        "parent_id": parent,
+        "includes_children": True,
+        "reason": reason,
+        "timing": {"wall_seconds": wall, "cpu_seconds": cpu, "overrun_seconds": 0.0},
+    }
+
+
+def _import_expense():
+    """Charge this interpreter's measured cold import once across API resumes."""
+    global _IMPORT_ACCOUNTED
+    row = _expense(
+        "cold_imports",
+        "warm_interpreter_no_new_cold_imports" if _IMPORT_ACCOUNTED else "cold_interpreter_imports",
+        0.0 if _IMPORT_ACCOUNTED else _IMPORT_WALL,
+        0.0 if _IMPORT_ACCOUNTED else _IMPORT_CPU_SECONDS,
+    )
+    row["import_clock"] = {"wall_start": _IMPORT_START, "cpu_start": _IMPORT_CPU}
+    _IMPORT_ACCOUNTED = True
+    return row
+
+
+def history_expenses(history):
+    """Namespace retained original expense trees without changing unknown values."""
+    result = []
+    _require(isinstance(history, list) and bool(history), "original expense history required")
+    for snapshot in history:
+        _require(
+            snapshot.get("id")
+            and isinstance(snapshot.get("expenses"), list)
+            and snapshot["expenses"],
+            "complete original expense history records required",
+        )
+        rows = snapshot["expenses"]
+        protocol.validate_expenses(rows, required_ids=[row["id"] for row in rows])
+        for row in rows:
+            prefix = f"history:{snapshot['id']}:"
+            result.append(
+                {
+                    **copy.deepcopy(row),
+                    "id": prefix + row["id"],
+                    "parent_id": None if row["parent_id"] is None else prefix + row["parent_id"],
+                    "original_expense_id": row["id"],
+                    "history_id": snapshot["id"],
+                }
+            )
+    return result
+
+
+def _save_serialization_cost(directory, identifier, expense, bindings):
+    path = Path(directory) / "costs" / identifier.replace(":", "_")
+    value = {"id": identifier, "bindings": bindings, "expense": expense}
+    receipt = write_main_artifact(path, value)
+    return {"path": str(path), "receipt": receipt, "payload_sha256": artifact_digest(value)}
+
+
+def _read_cost(reference, *, directory=None):
+    path = reference["path"] if directory is None else saved_path(directory, reference["path"])
+    saved, receipt = read_main_artifact(path)
+    runner._same(reference["receipt"], receipt, "original serialization expense bytes")
+    _require(
+        reference["payload_sha256"] == artifact_digest(saved),
+        "original serialization expense payload mismatch",
+    )
+    return saved
+
+
+def _pending_expense(identifier, scope, reason):
+    """Preserve an interrupted measurement as unknown; never estimate past time."""
+    return {
+        **_expense(identifier, scope, None, None),
+        "status": "pending",
+        "reason": reason,
+        "timing": {"wall_seconds": None, "cpu_seconds": None, "overrun_seconds": None},
+    }
+
+
+def resume_work_paths(directory):
+    """Inventory only the append-only local cost ledger, including partial writes."""
+    root = Path(directory) / "resume_work"
+    if not root.exists():
+        return []
+    paths = sorted(root.iterdir())
+    _require(
+        [path.name for path in paths] == [f"{i:08d}" for i in range(1, len(paths) + 1)]
+        and all(path.is_dir() for path in paths),
+        "contiguous immutable resume work receipt inventory required",
+    )
+    return paths
+
+
+def resume_work_references(directory):
+    """Read small immutable cost metadata without rereading original finance arrays."""
+    references = []
+    for path in resume_work_paths(directory):
+        saved, receipt = read_main_artifact(path / "work")
+        references.append(
+            {
+                "path": str((path / "work").relative_to(directory)),
+                "receipt": receipt,
+                "payload_sha256": artifact_digest(saved),
+            }
+        )
+    return references
+
+
+def save_resume_work(directory, scope, target, bindings, start, cpu, *, observations=()):
+    """Charge new work separately while preserving every original artifact and cost.
+
+    The clock covers this boundary's actual reading and binding work. External
+    observations cover already completed policy/statistics/checker work outside
+    that interval. Receipt serialization is charged separately; the final
+    measurement receipt's own write remains explicitly unknown, never zero.
+    """
+    directory = Path(directory)
+    sequence = len(resume_work_paths(directory)) + 1
+    path = directory / "resume_work" / f"{sequence:08d}"
+    identifier = f"resume:{sequence:08d}"
+    reference = relative_reference(
+        {key: target[key] for key in ("path", "receipt", "payload_sha256")}, directory
+    )
+    record = {
+        "kind": "additional_main_work",
+        "sequence": sequence,
+        "id": identifier,
+        "scope": scope,
+        "bindings": bindings,
+        "target": reference,
+        "observations": copy.deepcopy(list(observations)),
+        "clock": {
+            "wall_start": start,
+            "wall_stop": perf_counter(),
+            "cpu_start": cpu,
+            "cpu_stop": process_time(),
+        },
+    }
+    serialization_start, serialization_cpu = perf_counter(), process_time()
+    receipt = write_main_artifact(path / "work", record)
+    cost = {
+        "bindings": bindings,
+        "work_receipt": receipt,
+        "clock": {
+            "wall_start": serialization_start,
+            "wall_stop": perf_counter(),
+            "cpu_start": serialization_cpu,
+            "cpu_stop": process_time(),
+        },
+        "measurement_receipt_write": _pending_expense(
+            f"{identifier}:measurement_receipt_write",
+            "additional_work_final_measurement_receipt_write",
+            "final receipt self-write and return metadata are outside its completed clock",
+        ),
+    }
+    write_main_artifact(path / "serialization", cost)
+    return {
+        "path": str((path / "work").relative_to(directory)),
+        "receipt": receipt,
+        "payload_sha256": artifact_digest(record),
+    }
+
+
+def save_statistics_boundary(directory, statistics, expenses, bindings, resume):
+    """Resume immutable original statistics and their separate measured costs."""
+    directory = Path(directory)
+    path, cost_path = directory / "statistics", directory / "statistics_costs"
+    replayed = copy.deepcopy(expenses)
+    existed = path.exists()
+    if existed:
+        start, cpu = perf_counter(), process_time()
+        _require(resume, "existing immutable statistics require exact resume")
+        saved, receipt = read_main_artifact(path)
+        from check_main import same_finance
+
+        same_finance(saved, statistics, "resumed original statistics")
+        if cost_path.exists():
+            costs, _ = read_main_artifact(cost_path)
+            runner._same(costs["bindings"], bindings, "original statistics cost binding")
+            runner._same(costs["receipt"], receipt, "original statistics cost receipt")
+            save_resume_work(
+                directory,
+                "statistics_load_and_binding",
+                {"path": str(path), "receipt": receipt, "payload_sha256": artifact_digest(saved)},
+                bindings,
+                start,
+                cpu,
+                observations=[
+                    {"scope": "replayed_statistics", "observed": row}
+                    for row in expenses
+                    if row["id"] == "main_statistics"
+                ],
+            )
+            return receipt, costs["expenses"]
+        expenses = [
+            _pending_expense(
+                identifier,
+                "interrupted_statistics_boundary",
+                "original measurement interrupted before receipt",
+            )
+            for identifier in ("main_statistics", "serialization:main_statistics")
+        ]
+    else:
+        start, cpu = perf_counter(), process_time()
+        receipt = write_main_artifact(path, statistics)
+        if not any(row["id"] == "serialization:main_statistics" for row in expenses):
+            expenses = [
+                *expenses,
+                _expense(
+                    "serialization:main_statistics",
+                    "main_statistics_serialization",
+                    perf_counter() - start,
+                    process_time() - cpu,
+                ),
+            ]
+    write_main_artifact(cost_path, {"bindings": bindings, "receipt": receipt, "expenses": expenses})
+    if existed:
+        save_resume_work(
+            directory,
+            "statistics_load_and_binding",
+            {"path": str(path), "receipt": receipt, "payload_sha256": artifact_digest(saved)},
+            bindings,
+            start,
+            cpu,
+            observations=[
+                {"scope": "replayed_statistics", "observed": row}
+                for row in replayed
+                if row["id"] == "main_statistics"
+            ],
+        )
+    return receipt, expenses
+
+
+def write_main_artifact(directory, payload):
+    """Write a new bounded split tree; partial writes remain visible and immutable."""
+    return pilot.write_pilot_artifact(
+        directory, {"main_schema": SCHEMA, "payload": pilot.pack_inputs(payload)}
+    )
+
+
+def read_main_artifact(directory):
+    """Load exact saved bytes and complete array coverage without financial solvers."""
+    saved, receipt = pilot.read_pilot_artifact(directory)
+    _require(saved.get("main_schema") == SCHEMA, "main artifact schema mismatch")
+    return pilot.unpack_inputs(saved["payload"]), receipt
+
+
+def _merged_datasets(parts, n):
+    first = parts[0]
+    result = dict(first)
+    for key in ("prices", "memory_sum", "payoff", "cashflows", "path_mask", "reasons"):
+        result[key] = np.concatenate([part[key] for part in parts], axis=0)
+    result.update(
+        original_n=n,
+        path_ids=np.arange(n),
+        qualification="qualified"
+        if all(part["qualification"] == "qualified" for part in parts)
+        else "unknown",
+    )
+    market = dict(first["market"])
+    for key in ("spot", "variance", "path_mask", "reasons"):
+        market[key] = np.concatenate([part["market"][key] for part in parts], axis=0)
+    market["diagnostics"] = {
+        "original_path_count": n,
+        "failed_path_count": int((~market["path_mask"]).sum()),
+        "raw_chunk_diagnostics": [part["market"]["diagnostics"] for part in parts],
+    }
+    result["market"] = market
+    actual = dict(first["actual_call"])
+    for key in ("value", "status", "reason"):
+        actual[key] = np.concatenate([part["actual_call"][key] for part in parts], axis=0)
+    # evaluate_call omits optional raw derivative fields on unsupported chunks.
+    # Keep their original distinct dictionaries rather than filling absent fields.
+    actual["raw"] = [
+        {"chunks": [part["actual_call"]["raw"][j] for part in parts]}
+        for j in range(len(first["times"]))
+    ]
+    result["actual_call"] = actual
+    result["primitives"] = dict(first["primitives"])
+    result["diagnostics"] = {
+        "original_n": n,
+        "failed_count": int((~result["path_mask"]).sum()),
+        "raw_chunk_diagnostics": [part["diagnostics"] for part in parts],
+    }
+    return result
+
+
+def run_market_job(
+    parameters,
+    surface,
+    *,
+    model,
+    seed,
+    original_n,
+    chunk_paths,
+    levels,
+    frequency,
+    call_cache,
+    premium,
+    cost_rates,
+    role="test",
+    wall_cap_seconds=None,
+):
+    """Generate actual traded quotes and twelve-fixing Asian paths on shared levels.
+
+    A local PCG64 stream draws in absolute path/step/factor order. Chunk sizes
+    change storage only. Every level aggregates one fine driver; independent
+    generator IDs share the declared test CRN. Unsupported quotes remain NaN.
+    """
+    _require(model in MODELS, "original generator required")
+    _require(isinstance(original_n, int) and original_n > 0, "positive original N required")
+    _require(isinstance(chunk_paths, int) and chunk_paths > 0, "positive chunk paths required")
+    levels = list(levels)
+    _require(levels and len(set(levels)) == len(levels), "distinct original levels required")
+    fine_level = max(levels)
+    _require(frequency in (12, 24, 48), "original frequency required")
+    _require(
+        all(
+            isinstance(level, int)
+            and level > 0
+            and fine_level % level == 0
+            and level % frequency == 0
+            for level in levels
+        ),
+        "nested exact event levels required",
+    )
+    _require(original_n * sum(levels) <= 1_000_000_000, "job exceeds original path-step cap")
+    _require(
+        chunk_paths * fine_level * 16 <= 256 * 1024**2, "normal chunk exceeds original 256 MiB cap"
+    )
+    if role == "test":
+        _require(
+            levels == [192, 384, 768] and frequency == 12,
+            "formal main levels and monthly frequency cannot change",
+        )
+    rng = np.random.default_rng(seed)
+    full_digest = hashlib.sha256()
+    start, cpu = perf_counter(), process_time()
+    chunks, grouped = [], {str(level): [] for level in levels}
+    identity = runner._digest(
+        {
+            "seed": int(seed),
+            "fine_level": fine_level,
+            "order": "absolute_path/step/factor",
+            "role": role,
+        }
+    )
+    for lo in range(0, original_n, chunk_paths):
+        if wall_cap_seconds is not None and perf_counter() - start >= wall_cap_seconds:
+            break
+        hi = min(original_n, lo + chunk_paths)
+        fine = rng.standard_normal((hi - lo, fine_level, 2))
+        full_digest.update(fine.tobytes())
+        raw = {
+            "path_start": lo,
+            "path_stop": hi,
+            "fine_normals": fine,
+            "fine_sha256": hashlib.sha256(fine.tobytes()).hexdigest(),
+            "normal_expanded_bytes": fine.nbytes,
+            "path_steps": (hi - lo) * sum(levels),
+            "datasets": {},
+        }
+        for level in levels:
+            factor = fine_level // level
+            normals = fine.reshape(hi - lo, level, factor, 2).sum(axis=2) / np.sqrt(factor)
+            times = np.arange(level + 1) / level
+            indices = np.arange(frequency + 1) * (level // frequency)
+            dataset = study.market_dataset(
+                model,
+                parameters,
+                surface,
+                normals,
+                times,
+                indices,
+                np.arange(1, 13) / 12,
+                call_cache,
+                premium=premium,
+                cost_rates=cost_rates,
+            )
+            dataset["path_ids"] = np.arange(lo, hi, dtype=np.int64)
+            dataset["primitives"].pop("normals")
+            raw["datasets"][str(level)] = dataset
+            grouped[str(level)].append(dataset)
+        chunks.append(raw)
+    processed = sum(c["path_stop"] - c["path_start"] for c in chunks)
+    complete = processed == original_n
+    reason = None if complete else "declared market generation wall cap reached"
+    datasets = (
+        {key: _merged_datasets(values, original_n) for key, values in grouped.items()}
+        if complete
+        else None
+    )
+    return {
+        "kind": "main_market",
+        "model": model,
+        "original_n": original_n,
+        "path_ids": np.arange(original_n),
+        "processed_n": processed,
+        "unexecuted_n": original_n - processed,
+        "seed": int(seed),
+        "role": role,
+        "levels": levels,
+        "fine_level": fine_level,
+        "frequency": frequency,
+        "stream_identity": identity,
+        "global_driver_id": full_digest.hexdigest(),
+        "normal_order": "absolute_path/step/factor",
+        "chunks": chunks,
+        "datasets": datasets,
+        "call_cache": call_cache,
+        "premium": float(premium),
+        "cost_rates": np.asarray(cost_rates),
+        "status": "executed" if complete else "failed_at_declared_cap",
+        "reason": reason,
+        "cap_evidence": None
+        if complete
+        else {
+            "metric": "wall_seconds",
+            "limit": wall_cap_seconds,
+            "consumed": perf_counter() - start,
+        },
+        "expense": _expense(
+            "market",
+            "SDE/memory/actual_traded_call",
+            perf_counter() - start,
+            process_time() - cpu,
+            reason=reason,
+        ),
+        "financial_qualification": "unknown",
+    }
+
+
+def qualified_pair_statistics(
+    baseline,
+    candidate,
+    baseline_mask,
+    candidate_mask,
+    indices,
+    *,
+    numerical_envelope=None,
+):
+    """Preserve raw finite scores while qualification masks govern primary inference."""
+    baseline, candidate = np.asarray(baseline, float), np.asarray(candidate, float)
+    a, b = np.asarray(baseline_mask, bool), np.asarray(candidate_mask, bool)
+    _require(
+        baseline.shape == candidate.shape == a.shape == b.shape,
+        "all original paired loss and qualification axes required",
+    )
+    qualified = a & b
+    result = paired_statistics(
+        np.where(qualified, baseline, np.nan),
+        np.where(qualified, candidate, np.nan),
+        indices,
+        numerical_envelope=numerical_envelope,
+    )
+    with np.errstate(over="ignore", invalid="ignore"):
+        raw_scores = {
+            "absolute": candidate**2 - baseline**2,
+            "relative": candidate**2 - 0.95 * baseline**2,
+        }
+    result.update(
+        raw_scores=raw_scores,
+        raw_baseline_loss=baseline.copy(),
+        raw_candidate_loss=candidate.copy(),
+        qualified_pair_mask=qualified,
+        qualification_unknown_count=int((~qualified).sum()),
+        finite_only={
+            "status": "descriptive_only",
+            "baseline": risk_summary(baseline),
+            "candidate": risk_summary(candidate),
+        },
+    )
+    return result
+
+
+def empty_claim_diagnostics(dataset):
+    """Save empty-claim adapted stock/call gross gains and genuine fee burdens."""
+    n = dataset["original_n"]
+    prices = np.asarray(dataset["prices"])
+    _require(prices.shape == (n, len(dataset["times"]), 2), "original diagnostic prices required")
+    holdings = np.ones((n, prices.shape[1] - 1, 2))
+    holdings[..., 1] = 0.25
+    with np.errstate(divide="ignore", invalid="ignore"):
+        adapted = np.stack(
+            [np.tanh(np.log(prices[:, :-1, 0] / 100)), 0.25 * np.tanh(prices[:, :-1, 1] / 100)],
+            axis=-1,
+        )
+    payoff, controls = np.zeros(n), {}
+    for name, held in (("fixed_stock_call", holdings), ("observable_adapted", adapted)):
+        net = cash_account(
+            dataset["times"],
+            prices,
+            held,
+            payoff,
+            premium=0,
+            rate=dataset["rate"],
+            cashflows=dataset["cashflows"],
+            cost_rates=dataset["cost_rates"],
+        )
+        gross = cash_account(
+            dataset["times"],
+            prices,
+            held,
+            payoff,
+            premium=0,
+            rate=dataset["rate"],
+            cashflows=dataset["cashflows"],
+            cost_rates=np.zeros(2),
+        )
+        controls[name] = {
+            "holdings": held,
+            "net": net,
+            "gross": gross,
+            "original_n": n,
+            "information": "current S/Q only before next increment",
+        }
+    return {
+        "original_n": n,
+        "payoff": payoff,
+        "premium": 0.0,
+        "controls": controls,
+        "financial_qualification": "unknown",
+        "claim_payment_is_zero": True,
+    }
+
+
+def slice_observable_dataset(dataset, lo, hi):
+    """Keep fixed dates and select original observable path rows without latent state."""
+    n = dataset["original_n"]
+    _require(0 <= lo < hi <= n, "original risk chunk path range invalid")
+    result = {
+        key: dataset[key] for key in ("times", "rate", "premium", "cost_rates") if key in dataset
+    }
+    for key in ("prices", "memory_sum", "payoff", "cashflows", "path_mask", "reasons"):
+        if key in dataset:
+            result[key] = np.asarray(dataset[key])[lo:hi]
+    counts = np.asarray(dataset["memory_count"])
+    result["memory_count"] = counts[lo:hi] if counts.ndim == 2 else counts
+    result["original_n"] = hi - lo
+    result["path_ids"] = np.asarray(dataset.get("path_ids", np.arange(n)))[lo:hi]
+    result["primitives"] = {
+        "calendar_times": dataset.get("primitives", {}).get("calendar_times", np.array([]))
+    }
+    return result
+
+
+def _array_bytes(value):
+    """Count saved array bytes in one actual chunk including string/raw arrays."""
+    if isinstance(value, np.ndarray):
+        return value.nbytes
+    if isinstance(value, dict):
+        return sum(_array_bytes(item) for item in value.values())
+    if isinstance(value, (list, tuple)):
+        return sum(_array_bytes(item) for item in value)
+    return 0
+
+
+def chunk_payload_sizes(value):
+    """Measure lossless packed arrays and UTF-8 raw metadata before chunk saving."""
+    arrays = {}
+    tree = runner._encode_tree(pilot.pack_inputs(value), arrays)
+    strings = len(json.dumps(tree, sort_keys=True, separators=(",", ":")).encode())
+    expanded = sum(array.nbytes for array in arrays.values())
+    return {
+        "array_bytes": expanded,
+        "payload_string_bytes": strings,
+        "expanded_bytes": expanded + strings,
+    }
+
+
+def _merged_risks(parts, original_n):
+    """Merge path arrays and retain date-major all-root offsets and original raw chunks."""
+    _require(
+        bool(parts) and sum(part["original_n"] for part in parts) == original_n,
+        "all original risk path chunks required",
+    )
+    result = {"original_n": original_n, "times": parts[0]["times"], "models": {}}
+    for model in ("heston", "local"):
+        rows = [part["models"][model] for part in parts]
+        row = {}
+        for key, value in rows[0].items():
+            if key in ("fit_roots_flat", "fit_roots_offsets_date_major", "raw", "diagnostics"):
+                continue
+            row[key] = (
+                np.concatenate([item[key] for item in rows], axis=0)
+                if isinstance(value, np.ndarray)
+                else copy.deepcopy(value)
+            )
+        roots, lengths = [], []
+        for date in range(len(result["times"])):
+            for part, item in zip(parts, rows, strict=True):
+                n = part["original_n"]
+                offsets = item["fit_roots_offsets_date_major"]
+                first, last = date * n, (date + 1) * n
+                roots.append(item["fit_roots_flat"][offsets[first] : offsets[last]])
+                lengths.extend(np.diff(offsets[first : last + 1]).tolist())
+        row["fit_roots_flat"] = np.concatenate(roots)
+        row["fit_roots_offsets_date_major"] = np.r_[0, np.cumsum(lengths)].astype(np.int64)
+        row["raw"] = {"original_path_chunks": [item["raw"] for item in rows]}
+        row["diagnostics"] = {
+            **rows[0]["diagnostics"],
+            "original_n": original_n,
+            "unknown_points": int(np.sum(row["qualification"] != "qualified")),
+            "fit_unknown_points": int(np.sum(row["fit_status"] != "ok")),
+        }
+        result["models"][model] = row
+    return result
+
+
+def _policy_risks(parts, original_n):
+    """Project only actual policy inputs; full quote/root evidence stays in chunks."""
+    _require(
+        bool(parts) and sum(part["original_n"] for part in parts) == original_n,
+        "all original risk path chunks required",
+    )
+    keys = (
+        "u2_target",
+        "u1_target",
+        "price_covariance",
+        "qualification",
+        "band_qualification",
+        "arithmetic_valid",
+        "band_arithmetic_valid",
+    )
+    return {
+        "original_n": original_n,
+        "times": parts[0]["times"],
+        "models": {
+            model: {
+                key: np.concatenate([part["models"][model][key] for part in parts], axis=0)
+                for key in keys
+            }
+            for model in ("heston", "local")
+        },
+    }
+
+
+def run_risk_job(
+    parameters,
+    surface,
+    dataset,
+    caches,
+    *,
+    chunk_paths=256,
+    wall_cap_seconds=None,
+    retain_full_merged=True,
+):
+    """Run observable risk in prior fixed chunks, preserving actual partial work at a cap.
+
+    A deadline is checked before each chunk and before final cash diagnostics.
+    At most one bounded chunk can overrun it. Partial targets never authorize
+    a policy. Original paths and previous raw fits remain saved on a defect.
+    """
+    start, cpu = perf_counter(), process_time()
+    n, dates = dataset["original_n"], len(dataset["times"]) - 1
+    _require(isinstance(chunk_paths, int) and chunk_paths > 0, "prior risk chunk size required")
+    _require(
+        chunk_paths * 2 * dates * 1024 * 8 <= 256 * 1024**2,
+        "prior conservative risk chunk array budget exceeds 256 MiB",
+    )
+    _require(
+        wall_cap_seconds is None or wall_cap_seconds > 0, "positive prior risk wall cap required"
+    )
+    _require(isinstance(retain_full_merged, bool), "explicit merged risk scope required")
+    result = {
+        "kind": "main_risk",
+        "original_n": n,
+        "path_ids": np.arange(n),
+        "chunk_paths": chunk_paths,
+        "retain_full_merged": retain_full_merged,
+        "chunks": [],
+        "processed_n": 0,
+        "unexecuted_n": n,
+        "risk": None,
+        "status": "executed",
+        "reason": None,
+        "cap_evidence": None,
+        "financial_qualification": "unknown",
+        "phase": "observable_risk",
+    }
+
+    def reached_deadline():
+        elapsed = perf_counter() - start
+        if wall_cap_seconds is None or elapsed < wall_cap_seconds:
+            return False
+        result.update(
+            status="failed_at_declared_cap",
+            reason="original observable risk soft deadline reached between bounded chunks",
+            cap_evidence={"metric": "wall_seconds", "limit": wall_cap_seconds, "consumed": elapsed},
+        )
+        return True
+
+    for lo in range(0, n, chunk_paths):
+        if reached_deadline():
+            break
+        hi = min(n, lo + chunk_paths)
+        try:
+            value = study.quote_risk_dataset(
+                parameters, surface, slice_observable_dataset(dataset, lo, hi), caches
+            )
+            size = chunk_payload_sizes(value)
+            _require(
+                size["expanded_bytes"] <= 256 * 1024**2,
+                "actual risk chunk expanded bytes exceed 256 MiB",
+            )
+        except (
+            ValueError,
+            KeyError,
+            RuntimeError,
+            FloatingPointError,
+            TypeError,
+            AttributeError,
+        ) as error:
+            result.update(
+                status="unclosed_source_or_solver_defect",
+                reason=f"{type(error).__name__}: {error}",
+                failed_chunk={"path_start": lo, "path_stop": hi},
+            )
+            break
+        result["chunks"].append({"path_start": lo, "path_stop": hi, "risk": value, **size})
+        result["processed_n"], result["unexecuted_n"] = hi, n - hi
+    if result["status"] == "executed":
+        result["phase"] = "finalize_empty_claim"
+        if not reached_deadline():
+            try:
+                merge = _merged_risks if retain_full_merged else _policy_risks
+                risk = merge([part["risk"] for part in result["chunks"]], n)
+                risk["empty_claim"] = empty_claim_diagnostics(dataset)
+                result["risk"], result["phase"] = risk, "complete"
+            except (
+                ValueError,
+                KeyError,
+                RuntimeError,
+                FloatingPointError,
+                TypeError,
+                AttributeError,
+            ) as error:
+                result.update(
+                    status="unclosed_source_or_solver_defect",
+                    reason=f"{type(error).__name__}: {error}",
+                )
+    result["expense"] = {
+        "scope": "all_original_observable_risk_chunks_and_empty_claim_cash",
+        "wall_seconds": perf_counter() - start,
+        "cpu_seconds": process_time() - cpu,
+        "includes_children": True,
+    }
+    return result
+
+
+def q_qualification(references):
+    """Use actual whole/bin drift measurements; missing or sparse bins stay unknown."""
+    from check_pilot import check_q_record
+
+    records = {model: [] for model in MODELS}
+    for ref in references:
+        if not ref["id"].startswith("refinement:"):
+            continue
+        saved = read_main_artifact(ref["path"])[0]
+        raw = saved["raw"]
+        if raw.get("kind") == "Q":
+            row = check_q_record(raw)
+            row["execution"] = check_execution_status(saved)
+            records[raw["model"]].append(row)
+    result = {}
+    for model, rows in records.items():
+        measurements = [item for row in rows for item in [row["whole"], *row["bins"]]]
+        qualified = (
+            bool(measurements)
+            and all(row["execution"]["qualified"] for row in rows)
+            and all(
+                item["qualification"] == "measured"
+                and item["call_accumulated_drift_error"] is not None
+                and item["call_accumulated_drift_error"] <= 0.01
+                for item in measurements
+            )
+        )
+        result[model] = {
+            "qualified": qualified,
+            "records": rows,
+            "reason": None
+            if qualified
+            else "original Q whole/bin drift gate missing or not qualified",
+        }
+    return result
+
+
+def score_refinement(
+    base_baseline_loss,
+    base_candidate_loss,
+    refined_baseline_loss,
+    refined_candidate_loss,
+    base_baseline_mask,
+    base_candidate_mask,
+    refined_baseline_mask,
+    refined_candidate_mask,
+    *,
+    original_n,
+    group,
+    comparison_id,
+):
+    """Measure empirical paired-score changes on all independent reserved paths.
+
+    The envelope is |equal-seed mean change| + 6 IID SE. It is an empirical
+    numerical diagnostic, not a probabilistic bias bound. A single unqualified
+    original path keeps both envelopes unknown, including zero-event samples.
+    """
+    names = (
+        "base_baseline_loss",
+        "base_candidate_loss",
+        "refined_baseline_loss",
+        "refined_candidate_loss",
+    )
+    losses = [
+        np.asarray(value, float)
+        for value in (
+            base_baseline_loss,
+            base_candidate_loss,
+            refined_baseline_loss,
+            refined_candidate_loss,
+        )
+    ]
+    mask_names = (
+        "base_baseline_mask",
+        "base_candidate_mask",
+        "refined_baseline_mask",
+        "refined_candidate_mask",
+    )
+    masks = [
+        np.asarray(value, bool)
+        for value in (
+            base_baseline_mask,
+            base_candidate_mask,
+            refined_baseline_mask,
+            refined_candidate_mask,
+        )
+    ]
+    _require(
+        all(value.shape == (3, original_n) for value in [*losses, *masks]) and original_n >= 2,
+        "all original three-seed refinement paths required",
+    )
+    _require(group in ("sde", "teacher_n", "teacher_grid"), "numeric refinement group required")
+    a, b, ar, br = losses
+    with np.errstate(over="ignore", invalid="ignore"):
+        changes = {
+            "absolute": br**2 - ar**2 - (b**2 - a**2),
+            "relative": br**2 - 0.95 * ar**2 - (b**2 - 0.95 * a**2),
+        }
+    valid = np.logical_and.reduce(masks) & np.logical_and.reduce([np.isfinite(v) for v in losses])
+    valid &= np.logical_and.reduce([np.isfinite(v) for v in changes.values()])
+    complete = bool(valid.all())
+    moments = {}
+    for name, value in changes.items():
+        if complete:
+            mean = float(np.mean(value))
+            se = float(np.sqrt(np.sum(np.var(value, axis=1, ddof=1)) / (9 * original_n)))
+            envelope = abs(mean) + 6 * se
+        else:
+            mean = se = envelope = None
+        moments[name] = {"mean": mean, "iid_se": se, "envelope": envelope}
+    return {
+        "kind": "paired_score_refinement",
+        "comparison_id": comparison_id,
+        "group": group,
+        "original_n_per_seed": original_n,
+        "original_count": original_n * 3,
+        **dict(zip(names, losses, strict=True)),
+        **dict(zip(mask_names, masks, strict=True)),
+        "qualified_path_mask": valid,
+        "raw_score_changes": changes,
+        "moments": moments,
+        "envelope": {key: value["envelope"] for key, value in moments.items()},
+        "qualification": "qualified" if complete else "unknown",
+        "rule": "absolute_equal_seed_mean_plus_6_IID_SE; empirical_not_bias_bound",
+    }
+
+
+def numerical_envelopes(references):
+    """Combine saved independent diagnostics by sum of per-group maxima."""
+    grouped = {}
+    for reference in references:
+        if not reference["id"].startswith("refinement:"):
+            continue
+        saved = read_main_artifact(reference["path"])[0]
+        raw = saved["raw"]
+        if raw.get("kind") != "paired_score_refinement":
+            continue
+        from check_main import check_score_refinement
+
+        checked = check_score_refinement(raw)
+        if not check_execution_status(saved)["qualified"]:
+            checked = {
+                **checked,
+                "qualification": "unknown",
+                "envelope": {
+                    "absolute": None,
+                    "relative": None,
+                },
+            }
+        grouped.setdefault(raw["comparison_id"], {}).setdefault(raw["group"], []).append(checked)
+    result = {}
+    for key, groups in grouped.items():
+        complete = set(groups) == {"sde", "teacher_n", "teacher_grid"}
+        complete &= all(
+            row["qualification"] == "qualified" for rows in groups.values() for row in rows
+        )
+        result[key] = {
+            name: sum(max(row["envelope"][name] for row in rows) for rows in groups.values())
+            if complete
+            else None
+            for name in ("absolute", "relative")
+        }
+    return result
+
+
+def require_position_refinement(record):
+    """A position tag needs the actual all-path, all-date full-refit producer."""
+    if record.get("refinement_kind") != "position":
+        return
+    source = record.get("refined_risk_source") or {}
+    _require(source.get("kind") == "bump_risk", "actual full-refit position producer required")
+    n = record["original_n"]
+    dataset = record.get("refined_dataset") or {}
+    dates = len(dataset.get("times", [])) - 1
+    _require(
+        source.get("original_n") == n
+        and dates > 0
+        and source.get("original_query_path_count") == 2 * 13 * n * dates
+        and source.get("width_multipliers") == [1.0, 0.5, 2.0]
+        and len(source.get("risk_variants", [])) == 3,
+        "original all-path/date three-width full-refit evidence required",
+    )
+    runner._same(source["dataset"], dataset, "position producer original dataset")
+    from check_pilot import check_bump_risk_record
+
+    check_bump_risk_record(source)
+
+
+def score_refinement_from_rollouts(
+    *, base_records, refined_records, original_n, group, comparison_id
+):
+    """Derive envelopes from real baseline/NN paired cash on reserved streams.
+
+    Three ``paired_pnl`` producers contain original datasets, risk, fixed policy
+    arguments, holdings, fees and losses. Supplying standalone score arrays is
+    deliberately insufficient at this formal finance dispatch boundary.
+    """
+    _require(
+        isinstance(base_records, list)
+        and isinstance(refined_records, list)
+        and len(base_records) == len(refined_records) == 3,
+        "all original three-seed rollout producers required",
+    )
+    from check_pilot import check_paired_pnl_record
+
+    losses = [[] for _ in range(4)]
+    masks = [[] for _ in range(4)]
+    seeds = protocol.candidate_protocol()["seeds"]["refinement"]
+    for slot, (base, refined) in enumerate(zip(base_records, refined_records, strict=True)):
+        require_independent_refinement_change(base, refined, group)
+        for record in (base, refined):
+            shared = record.get("shared_market") or {}
+            _require(
+                record.get("kind") == "paired_pnl"
+                and record.get("original_n") == original_n
+                and shared.get("seed") == seeds[slot]
+                and shared.get("original_n") == original_n,
+                "actual independent original rollout producer/stream required",
+            )
+            _require(
+                record["base_arguments"].get("policy") in ("greek", "band")
+                and record["refined_arguments"].get("policy") == "nn",
+                "fixed selected baseline and NN rollout producers required",
+            )
+            _require(
+                all(
+                    (record.get(f"{prefix}_risk_source") or {}).get("kind")
+                    in ("quote_risk", "bump_risk")
+                    for prefix in ("base", "refined")
+                ),
+                "actual observable risk rollout producers required",
+            )
+            require_position_refinement(record)
+            check_paired_pnl_record(record)
+        for key in ("base_arguments", "refined_arguments"):
+            runner._same(base[key], refined[key], "frozen refinement policy/weights")
+        for target, record in ((0, base), (2, refined)):
+            for offset, prefix in enumerate(("base", "refined")):
+                rollout = record[f"{prefix}_rollout"]
+                losses[target + offset].append(rollout["loss"])
+                masks[target + offset].append(rollout["qualified_path_mask"])
+    expected = score_refinement(
+        *[np.stack(rows) for rows in losses],
+        *[np.stack(rows) for rows in masks],
+        original_n=original_n,
+        group=group,
+        comparison_id=comparison_id,
+    )
+    expected["producer_evidence"] = {
+        "base_records": base_records,
+        "refined_records": refined_records,
+        "original_seeds": seeds,
+        "scope": "actual paired cash/policy/mask; fixed weights; independent reserved drivers",
+    }
+    return expected
+
+
+def score_refinement_from_cell_pairs(
+    *, baseline_records, candidate_records, original_n, group, comparison_id
+):
+    """Convert six typed coarse/fine policies to paired baseline-versus-NN scores.
+
+    Each producer retains both full cash rollouts. Their within-policy P&L
+    differences are never substituted for the absolute or relative score.
+    """
+    _require(
+        len(baseline_records) == len(candidate_records) == 3,
+        "all original three-seed typed cell producers required",
+    )
+    from check_pilot import check_paired_pnl_record
+
+    base_records, refined_records = [], []
+    identity, validation, fits = None, None, None
+    for baseline, candidate in zip(baseline_records, candidate_records, strict=True):
+        for record in (baseline, candidate):
+            slot = record.get("identity")
+            selected = record.get("selection_inputs") or {}
+            _require(
+                slot in protocol.study_roster()["primary_cells"]
+                and selected.get("identity") == slot,
+                "original typed producer identity required",
+            )
+            _require(
+                record.get("comparison_quantity", "cash") == "cash",
+                "numerical envelope needs original cash losses",
+            )
+            val, closed = selected["validation"], selected["fits"]
+            _require(
+                val["generator"] == slot["generator"] and val["universe"] == slot["universe"],
+                "typed producer validation generator/universe identity differs",
+            )
+            expected = {"universe": slot["universe"], "policy": slot["policy"]}
+            if slot["policy"] in ("greek", "band"):
+                expected["model"] = slot["valuation"]
+            if slot["policy"] == "band":
+                band = val["selected_bands"][slot["valuation"]]
+                expected.update(
+                    selection=val, width=None if band is None else float(band.split(":width")[1])
+                )
+            if slot["policy"] == "nn":
+                identifier = f"fit:{slot['training_generator']}:{slot['universe']}:init{slot['initialization']}"
+                rows = [r for r in closed if r["id"] == identifier]
+                _require(len(rows) <= 1, "typed original fit slot repeated")
+                expected["fit"] = rows[0]["raw_fit"] if rows else None
+            runner._same(
+                record["base_arguments"], expected, "typed original policy/selection/weights"
+            )
+            runner._same(
+                record["refined_arguments"], expected, "typed fixed refined policy/weights"
+            )
+            check_paired_pnl_record(record)
+        b, c = baseline["identity"], candidate["identity"]
+        _require(
+            b["policy"] in ("greek", "band")
+            and c["policy"] == "nn"
+            and (b["generator"], b["universe"]) == (c["generator"], c["universe"]),
+            "typed baseline/NN generator/universe identity differs",
+        )
+        if identity is None:
+            identity, validation, fits = (
+                c,
+                candidate["selection_inputs"]["validation"],
+                candidate["selection_inputs"]["fits"],
+            )
+        runner._same(c, identity, "fixed original NN initialization identity")
+        for record in (baseline, candidate):
+            runner._same(
+                record["selection_inputs"]["validation"],
+                validation,
+                "fixed prior typed validation selection",
+            )
+            runner._same(record["selection_inputs"]["fits"], fits, "all prior closed typed NN fits")
+        selected_baseline = validation["selected_baseline"]
+        _require(
+            selected_baseline is None
+            or selected_baseline.split(":")[:2] == [b["policy"], b["valuation"]],
+            "typed producer differs from prior selected baseline",
+        )
+        runner._same(
+            baseline["shared_driver_binding"],
+            candidate["shared_driver_binding"],
+            "typed baseline/NN original shared path binding",
+        )
+        for prefix, rows in (("base", base_records), ("refined", refined_records)):
+            row = {
+                k: baseline[k]
+                for k in (
+                    "kind",
+                    "original_n",
+                    "path_ids",
+                    "refinement_kind",
+                    "shared_market",
+                    "shared_driver_binding",
+                )
+            }
+            row["comparison_quantity"] = "cash"
+            index = 0 if prefix == "base" else 1
+            row["dataset_indices"] = [
+                baseline["dataset_indices"][index],
+                candidate["dataset_indices"][index],
+            ]
+            for target, source in (("base", baseline), ("refined", candidate)):
+                row[target] = source[f"{prefix}_rollout"]["discounted_pnl"]
+                for key in ("dataset", "risk", "risk_source", "arguments", "rollout"):
+                    row[f"{target}_{key}"] = source[f"{prefix}_{key}"]
+            rows.append(row)
+    expected_id = f"{identity['generator']}:{identity['universe']}:level768:nn:train{identity['training_generator']}:init{identity['initialization']}"
+    _require(
+        comparison_id == expected_id,
+        "original numerical comparison initialization identity differs",
+    )
+    seeds = protocol.candidate_protocol()["seeds"]["refinement"]
+    for slot, (coarse, fine) in enumerate(zip(base_records, refined_records, strict=True)):
+        require_independent_refinement_change(coarse, fine, group)
+        for record in (coarse, fine):
+            _require(
+                record["original_n"] == original_n
+                and record["shared_market"]["original_n"] == original_n
+                and record["shared_market"]["seed"] == seeds[slot],
+                "actual original independent typed stream/denominator required",
+            )
+            runner._same(
+                record["base_dataset"],
+                record["refined_dataset"],
+                "typed baseline/NN same original path/market at each level",
+            )
+            _require(
+                all(
+                    (record.get(f"{p}_risk_source") or {}).get("kind")
+                    in ("quote_risk", "bump_risk")
+                    for p in ("base", "refined")
+                ),
+                "actual typed observable risk producer required",
+            )
+        for key in ("base_arguments", "refined_arguments"):
+            runner._same(coarse[key], fine[key], "frozen typed numerical policy/weights")
+    values = [
+        np.stack([record[f"{p}_rollout"][key] for record in records])
+        for key in ("loss", "qualified_path_mask")
+        for records in (base_records, refined_records)
+        for p in ("base", "refined")
+    ]
+    result = score_refinement(
+        *values, original_n=original_n, group=group, comparison_id=comparison_id
+    )
+    if validation["selected_baseline"] is None:
+        result = score_refinement(
+            np.full((3, original_n), np.nan),
+            result["base_candidate_loss"],
+            np.full((3, original_n), np.nan),
+            result["refined_candidate_loss"],
+            np.zeros((3, original_n), bool),
+            result["base_candidate_mask"],
+            np.zeros((3, original_n), bool),
+            result["refined_candidate_mask"],
+            original_n=original_n,
+            group=group,
+            comparison_id=comparison_id,
+        )
+    result["producer_evidence"] = {
+        "kind": "typed_cell_pairs",
+        "baseline_records": baseline_records,
+        "candidate_records": candidate_records,
+        "original_seeds": protocol.candidate_protocol()["seeds"]["refinement"],
+        "identity": identity,
+        "selected_baseline": validation["selected_baseline"],
+        "baseline_unknown_reason": validation.get("reason")
+        if validation["selected_baseline"] is None
+        else None,
+        "scope": "both-level actual cash scores; all original paths; fixed NN initialization/weights",
+    }
+    return result
+
+
+def require_independent_refinement_change(base, refined, group):
+    """Check the actual changed ingredient, preserving its independent source."""
+    if group == "sde":
+        _require(
+            base.get("dataset_indices") == [0, 0]
+            and refined.get("dataset_indices") == [1, 1]
+            and base.get("shared_driver_binding") == refined.get("shared_driver_binding")
+            and base.get("shared_market", {}).get("levels") == [768, 1536]
+            and refined.get("shared_market", {}).get("levels") == [768, 1536]
+            and base.get("shared_market", {}).get("frequencies") == [12, 12]
+            and refined.get("shared_market", {}).get("frequencies") == [12, 12],
+            "original independent SDE refinement ingredient required",
+        )
+        return
+    _require(group in ("teacher_n", "teacher_grid"), "original numerical refinement required")
+    _require(
+        base.get("dataset_indices") == refined.get("dataset_indices")
+        and base.get("shared_driver_binding") == refined.get("shared_driver_binding"),
+        "single teacher refinement must preserve original market/CRN",
+    )
+    changed = False
+    for prefix in ("base", "refined"):
+        a, b = base.get(f"{prefix}_risk_source"), refined.get(f"{prefix}_risk_source")
+        _require(
+            a
+            and b
+            and a.get("kind") == b.get("kind") == "quote_risk"
+            and pilot.input_identity(a) != pilot.input_identity(b),
+            "different actual teacher refinement risk producers required",
+        )
+        caches_a = pilot.unpack_inputs(a["arguments"])["caches"]
+        caches_b = pilot.unpack_inputs(b["arguments"])["caches"]
+        for model in ("heston", "local"):
+            ca, cb = caches_a[model], caches_b[model]
+            runner._same(ca["call"], cb["call"], "teacher refinement fixed common call")
+            aa, ab = ca["asian"], cb["asian"]
+            if group == "teacher_n":
+                ladder = protocol.candidate_protocol()["teacher"]["n_candidates"]
+                pair = (aa["N"], ab["N"])
+                _require(
+                    all(n in ladder for n in pair), "original teacher N refinement ladder required"
+                )
+                changed |= pair in list(pairwise(ladder))
+                if pair == (ladder[-1], ladder[-1]):
+                    changed |= pilot.input_identity(aa) != pilot.input_identity(ab)
+            else:
+                runner._same(aa["N"], ab["N"], "state-grid refinement fixed original N")
+                changed |= any(
+                    not np.array_equal(aa[key], ab[key])
+                    for key in ("state_nodes", "threshold_nodes")
+                )
+    _require(changed, "actual independent teacher N/grid refinement ingredient required")
+
+
+def required_main_jobs(levels=(192, 384, 768)):
+    """Enumerate six market, eighteen risk and thirty-six eleven-policy jobs."""
+    result = []
+    for model in MODELS:
+        for slot in range(3):
+            result.append(f"market:{model}:seed{slot}")
+            for level in levels:
+                result.append(f"risk:{model}:seed{slot}:level{level}")
+                result.extend(
+                    f"evaluation:{model}:seed{slot}:level{level}:{universe}"
+                    for universe in ("U1", "U2")
+                )
+    return result
+
+
+def main_cap_scopes():
+    """The fixed original risk/policy descendants of each actual main cap."""
+    result = {}
+    for model in MODELS:
+        for slot in range(3):
+            market_id = f"market:{model}:seed{slot}"
+            market_jobs, market_cells = [market_id], []
+            for level in (192, 384, 768):
+                risk_id = f"risk:{model}:seed{slot}:level{level}"
+                jobs, cells = [risk_id], []
+                for universe in ("U1", "U2"):
+                    evaluation = f"evaluation:{model}:seed{slot}:level{level}:{universe}"
+                    selected = [
+                        f"{row['id']}:seed{slot}:level{level}"
+                        for row in protocol.study_roster()["primary_cells"]
+                        if row["generator"] == model and row["universe"] == universe
+                    ]
+                    result[evaluation] = {"job_ids": [evaluation], "evaluation_cell_ids": selected}
+                    jobs.append(evaluation)
+                    cells.extend(selected)
+                result[risk_id] = {"job_ids": jobs, "evaluation_cell_ids": cells}
+                market_jobs.extend(jobs)
+                market_cells.extend(cells)
+            result[market_id] = {"job_ids": market_jobs, "evaluation_cell_ids": market_cells}
+    return result
+
+
+def _prior_three_stream_records(records, candidate):
+    identities = []
+    for slot, record in enumerate(records):
+        _require(isinstance(record, dict), "original refinement producer reference required")
+        if "$job" in record:
+            _require(
+                isinstance(record["$job"], str) and record["$job"],
+                "original refinement producer ID required",
+            )
+            identities.append(("job", record["$job"]))
+        else:
+            market = record.get("shared_market") or {}
+            _require(
+                market.get("seed") == candidate["seeds"]["refinement"][slot]
+                and market.get("role") == "refinement"
+                and market.get("original_n") == 4096,
+                "original ordered reserved inline refinement streams required",
+            )
+            identities.append(("inline", market["seed"]))
+    _require(
+        len(set(identities)) == 3, "three distinct original refinement producer streams required"
+    )
+
+
+def validate_refinement_outcomes(plan, candidate):
+    """Require distinct typed outcomes; shared producers remain outside these groups.
+
+    This checks the original minimum roster before test access. Full original
+    date/state/one-step/empty-claim/bin and producer DAG scope still require the
+    formal plan and saved raw gates; this metadata boundary cannot approve them.
+    """
+    rows = {row["id"]: row for row in plan["refinement_jobs"]}
+    groups = plan["refinement_groups"]
+    ids = [identifier for group in groups.values() for identifier in group]
+    _require(
+        set(groups) == {"sde", "teacher_n", "teacher_grid", "frequency", "Q"}
+        and len(set(ids)) == len(ids)
+        and all(ids_ for ids_ in groups.values())
+        and set(ids) <= set(rows),
+        "distinct original typed outcome groups required",
+    )
+    roster = protocol.study_roster()["primary_cells"]
+    comparisons = {
+        f"{cell['generator']}:{cell['universe']}:level768:{cell['policy_id']}"
+        for cell in roster
+        if cell["policy"] == "nn"
+    }
+    for group in ("sde", "teacher_n", "teacher_grid"):
+        found = []
+        for identifier in groups[group]:
+            row = rows[identifier]
+            spec, args = row["arguments"], row["arguments"]["arguments"]
+            op = spec["operation"]
+            keys = (
+                ("baseline_records", "candidate_records")
+                if op == "paired_score_cell_refinement"
+                else ("base_records", "refined_records")
+            )
+            _require(
+                op in ("paired_score_cell_refinement", "paired_score_refinement")
+                and row["original_n"] == args.get("original_n") == 4096
+                and args.get("group") == group
+                and all(
+                    isinstance(args.get(key), (list, tuple)) and len(args[key]) == 3 for key in keys
+                ),
+                "original paired refinement outcome/group/three-stream/N contract required",
+            )
+            for key in keys:
+                _prior_three_stream_records(args[key], candidate)
+            found.append(args.get("comparison_id"))
+        _require(
+            len(found) == 24 and set(found) == comparisons,
+            "all original24 comparison identities required per numerical outcome group",
+        )
+    selected = {cell["id"]: cell for cell in roster if cell["policy"] in ("greek", "band")}
+    expected_frequency = {
+        (cell, frequency, seed) for cell in selected for frequency in (24, 48) for seed in range(3)
+    }
+    found = []
+    for identifier in groups["frequency"]:
+        row = rows[identifier]
+        spec, args, binding = (
+            row["arguments"],
+            row["arguments"]["arguments"],
+            row.get("diagnostic_binding", {}),
+        )
+        cell = binding.get("cell_id")
+        _require(
+            spec["operation"] == "cell_pair"
+            and args.get("refinement_kind") == "frequency"
+            and row["original_n"] == 4096
+            and cell in selected
+            and args.get("identity") == selected[cell]
+            and set(binding) == {"cell_id", "frequency", "seed_slot"},
+            "original selected Greek/band frequency outcome binding required",
+        )
+        found.append((cell, binding["frequency"], binding["seed_slot"]))
+    _require(
+        len(found) == 96 and set(found) == expected_frequency,
+        "all original96 selected frequency outcome slots required",
+    )
+    q_slots = set()
+    for identifier in groups["Q"]:
+        row = rows[identifier]
+        spec, args = row["arguments"], row["arguments"]["arguments"]
+        _require(
+            spec["operation"] == "Q" and row["original_n"] == args.get("original_n") == 4096,
+            "original typed Q outcome denominator required",
+        )
+        q_slots.add((args.get("model"), args.get("seed")))
+    _require(
+        q_slots == {(model, seed) for model in MODELS for seed in candidate["seeds"]["refinement"]},
+        "all original Q model/reserved stream outcome slots required",
+    )
+    return {
+        "numeric_comparisons_per_group": 24,
+        "frequency_original_slots": 96,
+        "Q_model_stream_slots": 6,
+        "full_formal_date_state_scope": "requires_plan_and_raw_gate",
+    }
+
+
+def check_refinement_outcome_raw(job, raw, plan, candidate):
+    """Bind each declared outcome to actual metadata before numerical replay."""
+    groups = [group for group, ids in plan["refinement_groups"].items() if job["id"] in ids]
+    if not groups:
+        return  # Shared producer, never used to fill an outcome roster slot.
+    _require(len(groups) == 1, "distinct original outcome group required")
+    group = groups[0]
+    args = job["arguments"]["arguments"]
+    if group in ("sde", "teacher_n", "teacher_grid"):
+        _require(
+            raw.get("kind") == "paired_score_refinement"
+            and raw.get("group") == group
+            and raw.get("comparison_id") == args["comparison_id"]
+            and raw.get("original_n_per_seed") == job["original_n"] == 4096,
+            "actual original numerical outcome group/comparison/N mismatch",
+        )
+    elif group == "frequency":
+        binding, market = job["diagnostic_binding"], raw.get("shared_market") or {}
+        indices = raw.get("dataset_indices", [])
+        identity = raw.get("selection_inputs", {}).get("identity")
+        _require(
+            raw.get("kind") == "paired_pnl"
+            and raw.get("refinement_kind") == "frequency"
+            and identity == args["identity"]
+            and identity["id"] == binding["cell_id"]
+            and raw.get("original_n") == market.get("original_n") == 4096
+            and market.get("model") == identity["generator"]
+            and market.get("role") == "refinement"
+            and market.get("seed") == candidate["seeds"]["refinement"][binding["seed_slot"]]
+            and len(indices) == 2
+            and [market["frequencies"][i] for i in indices] == [12, binding["frequency"]],
+            "actual original selected frequency policy/stream/date/N mismatch",
+        )
+    else:
+        _require(
+            raw.get("kind") == "Q"
+            and raw.get("model") == args["model"]
+            and raw.get("seed") == args["seed"]
+            and raw.get("original_n") == 4096,
+            "actual original Q model/stream/N outcome mismatch",
+        )
+
+
+def validate_main_plan(plan, candidate, *, test_n):
+    """Reject reduced original rosters and undeclared numerical/frequency work."""
+    _require(
+        plan.get("schema") == "rb-f04-main-plan-v1.1" and plan.get("test_opened") is False,
+        "locked unopened main plan required",
+    )
+    _require(
+        plan.get("levels") == candidate["sde"]["main_levels"]
+        and plan.get("test_seeds") == candidate["seeds"]["test"],
+        "all original levels/seeds required",
+    )
+    _require(
+        plan.get("test_n") == test_n and test_n in candidate["test"]["n_candidates"],
+        "fixed original main N required",
+    )
+    _require(
+        plan.get("original_cells") == protocol.study_roster()["primary_cells"],
+        "all 44 original policy cells required",
+    )
+    _require(plan.get("limits") == candidate["limits"], "original job/chunk caps required")
+    chunk = plan.get("chunk_paths")
+    _require(
+        isinstance(chunk, int)
+        and not isinstance(chunk, bool)
+        and chunk > 0
+        and min(chunk, test_n) * 768 * 16 <= candidate["limits"]["chunk_uncompressed_bytes"],
+        "original main normal chunk cap required",
+    )
+    _require(
+        chunk * 2 * 12 * 1024 * 8 <= candidate["limits"]["chunk_uncompressed_bytes"],
+        "prior original observable risk chunk budget required",
+    )
+    _require(
+        test_n * sum(plan["levels"]) <= candidate["limits"]["job_path_steps"],
+        "original main market job path-step cap exceeded",
+    )
+    required = required_main_jobs()
+    refinement = plan.get("refinement_jobs", [])
+    identifiers = [row["id"] for row in plan.get("jobs", [])]
+    extra = [row["id"] for row in refinement]
+    _require(
+        len(set(identifiers)) == len(identifiers) and set(identifiers) == set(required + extra),
+        "all original main and explicit refinement jobs required",
+    )
+    groups = plan.get("refinement_groups", {})
+    _require(
+        set(groups) == {"sde", "teacher_n", "teacher_grid", "frequency", "Q"}
+        and all(ids and set(ids) <= set(extra) for ids in groups.values()),
+        "original independent SDE/N/grid/frequency/Q refinement groups required",
+    )
+    validate_refinement_outcomes(plan, candidate)
+    _require(
+        plan.get("main_cap_scopes") == main_cap_scopes(),
+        "all original main dependency cap scopes must be bound before test",
+    )
+    for row in refinement:
+        _require(
+            isinstance(row.get("original_n"), int) and row["original_n"] >= 0,
+            "every independent refinement original denominator must precede test",
+        )
+    _require(
+        plan.get("refinement_seeds") == candidate["seeds"]["refinement"]
+        and plan.get("independent_refinement_n") == 4096
+        and plan.get("independent_sde_levels") == [768, 1536]
+        and plan.get("teacher_n_candidates") == candidate["teacher"]["n_candidates"]
+        and plan.get("teacher_grid_candidates") == ["coarse", "high"]
+        and plan.get("selected_frequencies") == [24, 48],
+        "original independent seed/N/grid/frequency refinement roster required",
+    )
+    _require(plan.get("history"), "original failed/unknown expense history required")
+    history_expenses(plan["history"])
+    _require(
+        plan.get("numerical_envelope_rule") == "sum_group_max_absolute_mean_plus_6_IID_SE",
+        "pretest paired-score envelope rule required",
+    )
+    for identifier in identifiers:
+        row = _job_plan(plan, identifier)
+        if identifier.startswith("market:"):
+            _require(
+                row["prediction"]["path_steps"] == test_n * sum(plan["levels"]),
+                "original predicted market work differs from all levels/N",
+            )
+    return {
+        "original_main_jobs": len(required),
+        "original_main_records": 396,
+        "refinement_jobs": extra,
+    }
+
+
+def _parameters(inputs):
+    value = inputs["parameters"]
+    return value if isinstance(value, HestonParameters) else HestonParameters(**value)
+
+
+def _surface(inputs):
+    value = inputs["field"]
+    return pilot.materialize_field(value) if isinstance(value, dict) else value
+
+
+def _pretest(inputs, plan, source_root):
+    _require(inputs.get("frozen"), "complete actual frozen execution contract required")
+    _require(inputs.get("candidate"), "actual frozen candidate required")
+    from check_pilot import check_pilot_records
+
+    candidate = inputs["candidate"]["original_candidate"]
+    checked = check_pilot_records(
+        inputs["pilot"], expected_plan=inputs["pilot_plan"], context=inputs.get("pilot_context")
+    )
+    _require(
+        checked.get("closed") is True
+        and checked.get("verification", {}).get("integrity") == "pass",
+        "actual all-case pilot raw saved checker must pass before test access",
+    )
+    raw = inputs["closure"]
+    closed = closure.check_training_closure(raw, **inputs["closure_inputs"])
+    _require(closed["closure_status"] == "closed", "source-defective fit closure remains unclosed")
+    _require(raw["test_opened"] is False, "closure must precede main test")
+    _require(candidate == protocol.candidate_protocol(), "original financial candidate required")
+    validate_main_plan(plan, candidate, test_n=inputs["frozen"]["selection"]["test_n"])
+    _require(
+        inputs["frozen"]["selection"].get("main_plan_sha256") == artifact_digest(plan),
+        "main job/cap/refinement plan must be frozen before test access",
+    )
+    source = runner.execution_source_identity(source_root)["protocol_source"]
+    runner._same(source, inputs["source"], "main frozen source")
+    bindings = {
+        "plan": artifact_digest(plan),
+        "inputs": pilot.input_identity(inputs),
+        "source": runner._digest(source),
+        "frozen": inputs["frozen"]["frozen_sha256"],
+    }
+    for name in (
+        "pilot",
+        "closure",
+        "closure_inputs",
+        "teacher",
+        "fresh_plan",
+        "parameters",
+        "field",
+        "caches",
+    ):
+        _require(
+            plan.get("anchors", {}).get(name) == pilot.input_identity(inputs[name]),
+            f"pretest {name} anchor differs from actual raw input",
+        )
+    from run_fresh import _validate_inputs
+
+    _require(
+        inputs.get("fresh_original_artifact_identity"),
+        "actual pretest fresh artifact anchor required",
+    )
+    _validate_inputs(
+        plan=inputs["fresh_plan"],
+        frozen=inputs["frozen"],
+        candidate=inputs["candidate"],
+        source=source,
+        original_artifact_identity=inputs["fresh_original_artifact_identity"],
+        parameters=_parameters(inputs),
+        surface=_surface(inputs),
+    )
+    return candidate, bindings, checked, closed
+
+
+def _job_plan(plan, identifier):
+    found = [row for row in plan["jobs"] if row["id"] == identifier]
+    _require(len(found) == 1, f"one original planned job required: {identifier}")
+    row = found[0]
+    _require(
+        0 <= row["prediction"]["path_steps"] <= 1_000_000_000
+        and 0 <= row["prediction"]["chunk_expanded_bytes"] <= 256 * 1024**2,
+        "predicted original job caps exceeded",
+    )
+    _require(
+        row["budget"]["planned_before_attempt"] is True
+        and row["budget"]["wall_seconds"] > 0
+        and row["prediction"].get("rate_source"),
+        "cost prediction and declared cap must precede financial work",
+    )
+    return row
+
+
+def check_execution_status(saved, *, directory=None):
+    """Recompute deadline outcome from the immutable prior cap and raw work."""
+    _require(saved.get("status") != "unclosed_source_defect", "unclosed source defect")
+    if saved.get("status") == "unexecuted_dependency_cap":
+        _require(directory is not None, "actual dependency artifact directory required")
+        return check_dependency_job(saved, directory)
+    cap = saved["identity"]["plan"]["budget"]["wall_seconds"]
+    elapsed = saved["expense"]["timing"]["wall_seconds"]
+    _require(elapsed is not None and elapsed >= 0 and cap > 0, "actual measured job/cap required")
+    raw = saved["raw"]
+    # These are current worker measurements. Nested producer/history expenses
+    # were paid earlier and are intentionally excluded from this interval.
+    observations = [
+        (raw.get("expense"), raw.get("kind") in {"main_market", "main_risk", "Q", "bump_risk"}),
+        (raw.get("result", {}).get("expense"), "result" in raw),
+        (raw.get("chunked_worker", {}).get("expense"), "chunked_worker" in raw),
+    ]
+    outer = saved["expense"]["timing"]
+    for observation, required in observations:
+        _require(
+            not required or isinstance(observation, dict),
+            "actual current worker measured expense must be retained",
+        )
+        if observation is None:
+            continue
+        timing = observation.get("timing", observation)
+        for key in ("wall_seconds", "cpu_seconds"):
+            value = timing.get(key)
+            _require(
+                not required or value is not None,
+                "actual current worker measured wall/CPU timing must be retained",
+            )
+            _require(
+                value is None
+                or (
+                    np.isfinite(value)
+                    and value >= 0
+                    and outer[key] is not None
+                    and value <= outer[key] + 2e-8
+                ),
+                "actual current worker expense exceeds outer measured timing",
+            )
+    raw_capped = saved["raw"].get("status") == "failed_at_declared_cap"
+    if raw_capped:
+        evidence = saved["raw"].get("cap_evidence") or {}
+        _require(
+            evidence.get("metric") == "wall_seconds"
+            and evidence.get("limit") is not None
+            and 0 < evidence["limit"] <= cap
+            and evidence.get("consumed") is not None
+            and evidence["limit"] <= evidence["consumed"] <= elapsed + 2e-8,
+            "actual original raw cap boundary must match measured prior budget",
+        )
+    failed = raw_capped or elapsed > cap
+    _require(
+        np.isclose(outer["overrun_seconds"], max(0.0, elapsed - cap), atol=2e-8, rtol=2e-9)
+        and saved["expense"]["status"] == ("failed" if failed else "complete"),
+        "original worker expense/overrun status mismatch",
+    )
+    _require(
+        saved["status"] == ("failed_at_declared_cap" if failed else "executed")
+        and bool(saved["reason"]) == failed,
+        "original measured job cap status mismatch",
+    )
+    return {
+        "qualified": not failed,
+        "reason": saved["reason"],
+        "declared_wall_cap": cap,
+        "measured_wall_seconds": elapsed,
+        "overrun_seconds": max(0.0, elapsed - cap),
+    }
+
+
+def execution_checks(references):
+    """Retain all original job outcomes; a cap cannot disappear from statistics."""
+    return {
+        reference["id"]: check_execution_status(
+            read_main_artifact(reference["path"])[0],
+            directory=Path(reference["path"]).parent.parent,
+        )
+        for reference in references
+    }
+
+
+def relative_reference(reference, directory):
+    """Keep all serialized job/cost paths inside each independently restored copy."""
+    root = Path(directory).resolve()
+    result = {**reference, "path": str(Path(reference["path"]).resolve().relative_to(root))}
+    if "serialization_cost" in reference:
+        cost = reference["serialization_cost"]
+        result["serialization_cost"] = {
+            **cost,
+            "path": str(Path(cost["path"]).resolve().relative_to(root)),
+        }
+    return result
+
+
+def check_dependency_job(saved, directory, *, ancestors=()):
+    """Verify an actual parent cap, never transfer its clock to unexecuted work."""
+    raw, identity = saved["raw"], saved["identity"]
+    identifier = identity["id"]
+    _require(identifier not in ancestors, "dependency cap cycle")
+    _require(
+        saved["status"] == raw["kind"] == "unexecuted_dependency_cap"
+        and saved.get("cap_evidence") is None
+        and saved["expense"]["status"] == "failed"
+        and saved["reason"]
+        and isinstance(raw["original_n"], int)
+        and raw["original_n"] >= 0
+        and raw["executed_n"] == 0
+        and raw["unexecuted_n"] == raw["original_n"]
+        and np.array_equal(raw["path_ids"], np.arange(raw["original_n"])),
+        "original unexecuted dependency cap evidence required",
+    )
+    references = raw["dependency_references"]
+    _require(references, "actual saved dependency cap parent required")
+    parents = _ReferenceJobs(references, directory=directory)
+    roots = {}
+    for key in parents:
+        parent = parents[key]
+        runner._same(
+            parent["identity"]["bindings"],
+            identity["bindings"],
+            "dependency original source/input/plan binding",
+        )
+        if parent["status"] == "unexecuted_dependency_cap":
+            check = check_dependency_job(parent, directory, ancestors=(*ancestors, identifier))
+            roots.update(check["parent_caps"])
+        else:
+            check = check_execution_status(parent, directory=directory)
+            if not check["qualified"]:
+                roots[key] = {
+                    "payload_sha256": artifact_digest(parent),
+                    "reason": parent["reason"],
+                    "expense": parent["expense"],
+                    "prior_budget": parent["identity"]["plan"]["budget"],
+                    "raw_cap_evidence": parent["raw"].get("cap_evidence"),
+                }
+    _require(roots, "actual failed parent cap missing")
+    runner._same(raw["parent_caps"], roots, "actual original parent cap/raw/expense binding")
+    return {
+        "qualified": False,
+        "reason": saved["reason"],
+        "parent_caps": roots,
+        "original_n": raw["original_n"],
+        "executed_n": 0,
+        "unexecuted_n": raw["original_n"],
+        "financial_qualification": "unknown",
+    }
+
+
+def save_dependency_job(
+    directory,
+    identifier,
+    operation,
+    original_n,
+    dependency_refs,
+    plan,
+    bindings,
+    resume,
+    *,
+    additional_raw=None,
+):
+    """Save all original unexecuted paths and actual consumed parent evidence."""
+    start, cpu = perf_counter(), process_time()
+    directory = Path(directory)
+    references = [relative_reference(ref, directory) for ref in dependency_refs]
+    identity = {
+        "id": identifier,
+        "operation": operation,
+        "bindings": bindings,
+        "plan": _job_plan(plan, identifier),
+        "argument_identity": pilot.input_identity(
+            {"original_n": original_n, "dependencies": references}
+        ),
+    }
+    path = directory / "jobs" / identifier.replace(":", "_")
+    roots = {}
+    for key, parent in _ReferenceJobs(references, directory=directory).items():
+        runner._same(parent["identity"]["bindings"], bindings, "actual parent cap binding")
+        check = check_execution_status(parent, directory=directory)
+        if parent["status"] == "unexecuted_dependency_cap":
+            roots.update(check["parent_caps"])
+        elif not check["qualified"]:
+            roots[key] = {
+                "payload_sha256": artifact_digest(parent),
+                "reason": parent["reason"],
+                "expense": parent["expense"],
+                "prior_budget": parent["identity"]["plan"]["budget"],
+                "raw_cap_evidence": parent["raw"].get("cap_evidence"),
+            }
+    _require(roots, "actual consumed parent cap required before unexecuted dependency")
+    reason = "unexecuted because actual parent cap: " + ",".join(sorted(roots))
+    raw = {
+        **(additional_raw or {}),
+        "kind": "unexecuted_dependency_cap",
+        "planned_operation": operation,
+        "original_n": original_n,
+        "path_ids": np.arange(original_n),
+        "executed_n": 0,
+        "unexecuted_n": original_n,
+        "dependency_references": references,
+        "parent_caps": roots,
+        "financial_qualification": "unknown",
+        "reason": reason,
+    }
+    saved = {
+        "identity": identity,
+        "raw": raw,
+        "status": "unexecuted_dependency_cap",
+        "reason": reason,
+        "cap_evidence": None,
+        "expense": _expense(
+            identifier,
+            "actual_dependency_inspection_no_finance_execution",
+            perf_counter() - start,
+            process_time() - cpu,
+            reason=reason,
+        ),
+    }
+    cost_path = directory / "costs" / f"serialization_{identifier.replace(':', '_')}"
+    existed = path.exists()
+    if existed:
+        _require(resume, "existing immutable dependency requires exact resume")
+        old, receipt = read_main_artifact(path)
+        from check_main import same_finance
+
+        same_finance(old, saved, "exact resumed unexecuted dependency binding")
+        saved = old
+    else:
+        start, cpu = perf_counter(), process_time()
+        receipt = write_main_artifact(path, saved)
+        _save_serialization_cost(
+            directory,
+            f"serialization:{identifier}",
+            _expense(
+                f"serialization:{identifier}",
+                "unexecuted_original_paths_serialization",
+                perf_counter() - start,
+                process_time() - cpu,
+            ),
+            bindings,
+        )
+    check_dependency_job(saved, directory)
+    if not cost_path.exists():
+        _save_serialization_cost(
+            directory,
+            f"serialization:{identifier}",
+            _pending_expense(
+                f"serialization:{identifier}",
+                "interrupted_dependency_serialization",
+                "original measurement interrupted before receipt",
+            ),
+            bindings,
+        )
+    cost, cost_receipt = read_main_artifact(cost_path)
+    reference = {
+        "id": identifier,
+        "path": str(path),
+        "receipt": receipt,
+        "payload_sha256": artifact_digest(saved),
+        "serialization_cost": {
+            "path": str(cost_path),
+            "receipt": cost_receipt,
+            "payload_sha256": artifact_digest(cost),
+        },
+    }
+    if existed:
+        observations = []
+        if additional_raw is not None:
+            observations = [
+                {
+                    "scope": "replayed_dependency_inspection",
+                    "observed": additional_raw["result"]["expense"],
+                }
+            ]
+        save_resume_work(
+            directory,
+            "dependency_load_and_binding",
+            reference,
+            bindings,
+            start,
+            cpu,
+            observations=observations,
+        )
+    return saved["raw"], reference
+
+
+def dependency_cap_evaluation(case, universe, original_n):
+    """Retain eleven unexecuted original slots after a proved saved parent cap.
+
+    No market, quote, policy, cash, holding, zero or implicit safe rule is made.
+    Only unknown loss arrays and path masks are allocated for original statistics.
+    """
+    start, cpu = perf_counter(), process_time()
+    _require(
+        case["execution_status"] == "unexecuted_dependency_cap"
+        and case["original_n"] == original_n
+        and universe in ("U1", "U2"),
+        "original dependency case/cap/N required",
+    )
+    reference, directory = case["dependency_reference"], case["artifact_directory"]
+    expected_id = f"risk:{case['generator']}:seed{case['seed_slot']}:level{case['level']}"
+    _require(reference["id"] == expected_id, "original dependency case risk identity mismatch")
+    saved = _ReferenceJobs([reference], directory=directory)[expected_id]
+    runner._same(
+        saved["identity"]["bindings"],
+        case["bindings"],
+        "actual dependency case input/source binding",
+    )
+    _require(saved["raw"]["original_n"] == original_n, "dependency original N differs")
+    check = check_execution_status(saved, directory=directory)
+    _require(not check["qualified"], "actual original risk or market cap required")
+    roots = check.get("parent_caps", {expected_id: {"reason": saved["reason"]}})
+    allowed_roots = {expected_id, f"market:{case['generator']}:seed{case['seed_slot']}"}
+    _require(set(roots) <= allowed_roots, "unrelated parent cap cannot substitute original case")
+    reason = saved["reason"]
+    cells = []
+    for slot in protocol.study_roster()["primary_cells"]:
+        if slot["generator"] != case["generator"] or slot["universe"] != universe:
+            continue
+        result = {
+            "status": "unexecuted_dependency_cap",
+            "reason": reason,
+            "original_n": original_n,
+            "path_ids": np.arange(original_n),
+            "loss": np.full(original_n, np.nan),
+            "path_mask": np.zeros(original_n, bool),
+            "qualified_path_mask": np.zeros(original_n, bool),
+            "reasons": {
+                "codes": np.zeros(original_n, dtype=np.uint8),
+                "labels": np.asarray([reason], dtype="<U192"),
+            },
+            "cash_executed": False,
+            "policy_executed": False,
+            "financial_qualification": "unknown",
+        }
+        cells.append(
+            {
+                **slot,
+                "status": result["status"],
+                "reason": reason,
+                "original_n": original_n,
+                "result": result,
+            }
+        )
+    _require(len(cells) == 11, "all original eleven unexecuted policy slots required")
+    return {
+        "cells": cells,
+        "original_cell_slots": 11,
+        "original_n": original_n,
+        "generator": case["generator"],
+        "universe": universe,
+        "execution_status": "unexecuted_dependency_cap",
+        "dependency_reference": reference,
+        "bindings": case["bindings"],
+        "financial_qualification": "unknown",
+        "expense": {
+            "scope": "actual_dependency_inspection_no_finance_execution",
+            "wall_seconds": perf_counter() - start,
+            "cpu_seconds": process_time() - cpu,
+            "includes_children": True,
+        },
+    }
+
+
+def _execute(directory, identifier, operation, arguments, plan, bindings, resume):
+    start, cpu = perf_counter(), process_time()
+    job = _job_plan(plan, identifier)
+    path = Path(directory) / "jobs" / identifier.replace(":", "_")
+    identity = {
+        "id": identifier,
+        "operation": operation,
+        "bindings": bindings,
+        "plan": job,
+        "argument_identity": pilot.input_identity(arguments),
+    }
+    if path.exists():
+        _require(resume, "existing immutable main job requires explicit resume")
+        saved, receipt = read_main_artifact(path)
+        runner._same(identity, saved["identity"], "exact resume job binding")
+        _require(
+            saved["status"] != "unclosed_source_defect",
+            "saved original source defect remains unclosed",
+        )
+        cost_path = Path(directory) / "costs" / f"serialization_{identifier.replace(':', '_')}"
+        if not cost_path.exists():
+            _save_serialization_cost(
+                directory,
+                f"serialization:{identifier}",
+                _pending_expense(
+                    f"serialization:{identifier}",
+                    "interrupted_original_serialization",
+                    "original measurement interrupted before receipt",
+                ),
+                bindings,
+            )
+        cost, cost_receipt = read_main_artifact(cost_path)
+        reference = {
+            "id": identifier,
+            "path": str(path),
+            "receipt": receipt,
+            "payload_sha256": artifact_digest(saved),
+            "serialization_cost": {
+                "path": str(cost_path),
+                "receipt": cost_receipt,
+                "payload_sha256": artifact_digest(cost),
+            },
+        }
+        save_resume_work(directory, "exact_job_load_and_binding", reference, bindings, start, cpu)
+        return saved["raw"], reference
+    try:
+        if operation == "market":
+            raw = run_market_job(**arguments, wall_cap_seconds=job["budget"]["wall_seconds"])
+        elif operation == "risk":
+            raw = run_risk_job(**arguments, wall_cap_seconds=job["budget"]["wall_seconds"])
+        elif operation == "refinement":
+            worker_arguments = copy.deepcopy(arguments)
+            if worker_arguments.get("operation") in {
+                "frequency_market",
+                "market_pair",
+                "quote_risk",
+                "teacher",
+                "teacher_grid",
+                "bump_risk",
+                "Q",
+                "oracle",
+                "call_table",
+            }:
+                worker_arguments["arguments"]["wall_cap_seconds"] = job["budget"]["wall_seconds"]
+            raw = _dispatch_refinement(worker_arguments)
+            if plan.get("refinement_groups") and "source" not in str(raw.get("status", "")):
+                outcome = next(row for row in plan["refinement_jobs"] if row["id"] == identifier)
+                check_refinement_outcome_raw(outcome, raw, plan, protocol.candidate_protocol())
+        else:
+            raise ValueError(f"unimplemented main finance operation: {operation}")
+        if "source" in str(raw.get("status", "")) or "solver_defect" in str(raw.get("status", "")):
+            status = "unclosed_source_defect"
+            reason = (
+                raw.get("reason") or "actual original worker source/solver defect remains unclosed"
+            )
+        else:
+            reason = (
+                (raw.get("reason") or "declared original finance job cap reached")
+                if raw.get("status") == "failed_at_declared_cap"
+                else None
+            )
+            status = "failed_at_declared_cap" if reason else "executed"
+    except (
+        ValueError,
+        KeyError,
+        RuntimeError,
+        FloatingPointError,
+        TypeError,
+        AttributeError,
+    ) as error:
+        raw = {"kind": "unclosed_source_defect", "reason": f"{type(error).__name__}: {error}"}
+        status, reason = "unclosed_source_defect", raw["reason"]
+    elapsed, consumed_cpu = perf_counter() - start, process_time() - cpu
+    cap = job["budget"]["wall_seconds"]
+    overrun = max(0.0, elapsed - cap)
+    if overrun and status == "executed":
+        status, reason = "failed_at_declared_cap", "completed raw work exceeded declared wall cap"
+    expense = _expense(identifier, operation, elapsed, consumed_cpu, reason=reason)
+    expense["timing"]["overrun_seconds"] = overrun
+    saved = {
+        "identity": identity,
+        "raw": raw,
+        "status": status,
+        "reason": reason,
+        "expense": expense,
+        "cap_evidence": None
+        if status != "failed_at_declared_cap"
+        else {
+            "metric": "wall_seconds",
+            "limit": cap,
+            "consumed": elapsed,
+            "finished_raw_work_preserved": raw.get("status") != "failed_at_declared_cap",
+        },
+    }
+    serialization_start, serialization_cpu = perf_counter(), process_time()
+    receipt = write_main_artifact(path, saved)
+    serialization = _expense(
+        f"serialization:{identifier}",
+        "immutable_array_serialization",
+        perf_counter() - serialization_start,
+        process_time() - serialization_cpu,
+    )
+    cost_ref = _save_serialization_cost(
+        directory, f"serialization:{identifier}", serialization, bindings
+    )
+    ref = {
+        "id": identifier,
+        "path": str(path),
+        "receipt": receipt,
+        "payload_sha256": artifact_digest(saved),
+        "serialization_cost": cost_ref,
+    }
+    # Preserve source-defective raw work and refuse to turn it into a finance failure.
+    _require(status != "unclosed_source_defect", f"saved unclosed main source defect: {reason}")
+    return raw, ref
+
+
+def _dispatch_refinement(arguments):
+    """Run only explicitly planned independent market/teacher/grid/frequency work."""
+    operation, kwargs = arguments["operation"], arguments["arguments"]
+    if operation == "frequency_market":
+        _require(kwargs["frequency"] in (24, 48), "selected frequency diagnostic required")
+        _require(kwargs.get("role") == "refinement", "independent refinement stream required")
+        return run_market_job(**kwargs)
+    if operation == "paired_score_refinement":
+        _require(
+            "base_records" in kwargs and "refined_records" in kwargs,
+            "actual original rollout producer evidence required",
+        )
+        return score_refinement_from_rollouts(**kwargs)
+    if operation == "paired_score_cell_refinement":
+        return score_refinement_from_cell_pairs(**kwargs)
+    allowed = {
+        "market_pair",
+        "teacher",
+        "teacher_grid",
+        "quote_risk",
+        "policy",
+        "paired_pnl",
+        "cell_pair",
+        "bump_risk",
+        "Q",
+        "oracle",
+        "call_table",
+        "asian_cache",
+        "call_cache",
+    }
+    _require(operation in allowed, "explicit original refinement finance operation required")
+    raw = pilot._dispatch(operation, kwargs)
+    if operation in ("paired_pnl", "cell_pair"):
+        require_position_refinement(raw)
+    return raw
+
+
+class _LazyCase(Mapping):
+    def __init__(self, metadata, market_path, risk_path):
+        self.metadata, self.market_path, self.risk_path = metadata, market_path, risk_path
+        self.market, self.risk = None, None
+
+    def __getitem__(self, key):
+        if key == "dataset":
+            if self.market is None:
+                self.market = read_main_artifact(self.market_path)[0]["raw"]
+            return self.market["datasets"][str(self.metadata["level"])]
+        if key == "risk":
+            if self.risk is None:
+                self.risk = read_main_artifact(self.risk_path)[0]["raw"]["risk"]
+            return self.risk
+        return self.metadata[key]
+
+    def __iter__(self):
+        return iter([*self.metadata, "dataset", "risk"])
+
+    def __len__(self):
+        return len(self.metadata) + 2
+
+
+class _CaseSequence:
+    def __init__(self, references):
+        self.references = references
+
+    def __iter__(self):
+        for metadata, market, risk in self.references:
+            yield _LazyCase(metadata, market, risk)
+
+
+class _ReferenceJobs(Mapping):
+    """Load only the requested immutable job; never retain a study in memory."""
+
+    def __init__(self, references, *, directory=None):
+        self.references = {row["id"]: row for row in references}
+        self.directory = None if directory is None else Path(directory).resolve()
+        _require(len(self.references) == len(references), "duplicate immutable job reference")
+
+    def __getitem__(self, key):
+        reference = self.references[key]
+        path = (
+            reference["path"]
+            if self.directory is None
+            else saved_path(self.directory, reference["path"])
+        )
+        saved, receipt = read_main_artifact(path)
+        runner._same(receipt, reference["receipt"], "immutable original job receipt")
+        _require(
+            artifact_digest(saved) == reference["payload_sha256"],
+            "immutable original job payload mismatch",
+        )
+        return saved
+
+    def __iter__(self):
+        return iter(self.references)
+
+    def __len__(self):
+        return len(self.references)
+
+
+def saved_path(directory, relative):
+    """Resolve an artifact inside this restored copy, never a surviving original."""
+    root = Path(directory).resolve()
+    path = Path(relative)
+    _require(
+        not path.is_absolute() and ".." not in path.parts,
+        "saved artifact must belong to this restored copy",
+    )
+    target = (root / path).resolve()
+    _require(target.is_relative_to(root), "saved artifact escapes this restored copy")
+    return target
+
+
+def local_references(references, directory):
+    """Hydrate relative main references against exactly one restored copy."""
+    return [{**row, "path": str(saved_path(directory, row["path"]))} for row in references]
+
+
+def check_evaluation_row_metadata(row, identifier):
+    """Bind labels used by statistics to the original evaluation reference ID."""
+    pieces = identifier.split(":")
+    _require(
+        len(pieces) == 5 and pieces[0] == "evaluation",
+        "original evaluation metadata identity required",
+    )
+    model, slot, level, universe = pieces[1:]
+    _require(
+        slot.startswith("seed") and level.startswith("level"),
+        "original evaluation metadata identity required",
+    )
+    slot, level = int(slot[4:]), int(level[5:])
+    expected = {"generator": model, "seed_slot": slot, "level": level, "universe": universe}
+    _require(
+        model in MODELS
+        and slot in (0, 1, 2)
+        and level in (192, 384, 768)
+        and universe in ("U1", "U2")
+        and all(row.get(key) == value for key, value in expected.items())
+        and type(row["seed_slot"]) is int
+        and type(row["level"]) is int,
+        "original evaluation metadata differs from reference identity",
+    )
+
+
+def save_evaluation_job(directory, row, plan, bindings, resume):
+    """Save one actual roster or charge its repeated computation separately."""
+    directory = Path(directory)
+    identifier = f"evaluation:{row['generator']}:seed{row['seed_slot']}:level{row['level']}:{row['universe']}"
+    check_evaluation_row_metadata(row, identifier)
+    job = _job_plan(plan, identifier)
+    path = directory / "jobs" / identifier.replace(":", "_")
+    consumed = row["result"]["expense"]
+    wall, cpu = consumed["wall_seconds"], consumed["cpu_seconds"]
+    cap = job["budget"]["wall_seconds"]
+    reason = "completed fixed policy work exceeded declared wall cap" if wall > cap else None
+    expense = _expense(identifier, "fixed_main_policy_roster", wall, cpu, reason=reason)
+    expense["timing"]["overrun_seconds"] = max(0.0, wall - cap)
+    result = {
+        "identity": {"id": identifier, "bindings": bindings, "plan": job},
+        "raw": row,
+        "expense": expense,
+        "status": "failed_at_declared_cap" if reason else "executed",
+        "reason": reason,
+    }
+    existed = path.exists()
+    start, clock_cpu = perf_counter(), process_time()
+    if existed:
+        _require(resume, "existing immutable evaluation requires exact resume")
+        saved, receipt = read_main_artifact(path)
+        from check_main import same_finance
+
+        check_execution_status(saved)
+        runner._same(saved["identity"], result["identity"], "exact resumed evaluation binding")
+        same_finance(saved["raw"], result["raw"], "resumed evaluation finance")
+        result = saved
+        cost_path = directory / "costs" / f"serialization_{identifier.replace(':', '_')}"
+        if not cost_path.exists():
+            _save_serialization_cost(
+                directory,
+                f"serialization:{identifier}",
+                _pending_expense(
+                    f"serialization:{identifier}",
+                    "interrupted_evaluation_serialization",
+                    "original measurement interrupted before receipt",
+                ),
+                bindings,
+            )
+        cost, cost_receipt = read_main_artifact(cost_path)
+        cost_ref = {
+            "path": str(cost_path),
+            "receipt": cost_receipt,
+            "payload_sha256": artifact_digest(cost),
+        }
+    else:
+        receipt = write_main_artifact(path, result)
+        cost_ref = _save_serialization_cost(
+            directory,
+            f"serialization:{identifier}",
+            _expense(
+                f"serialization:{identifier}",
+                "evaluation_serialization",
+                perf_counter() - start,
+                process_time() - clock_cpu,
+            ),
+            bindings,
+        )
+    reference = {
+        "id": identifier,
+        "path": str(path),
+        "receipt": receipt,
+        "payload_sha256": artifact_digest(result),
+        "serialization_cost": cost_ref,
+    }
+    if existed:
+        save_resume_work(
+            directory,
+            "evaluation_load_and_binding",
+            reference,
+            bindings,
+            start,
+            clock_cpu,
+            observations=[{"scope": "replayed_evaluation", "observed": consumed}],
+        )
+    return reference
+
+
+def run_main_experiment(
+    directory, *, inputs, locked_plan, source_root=ROOT, resume=False, input_load_expense=None
+):
+    """Close real raw pilot/NN validation, then generate and evaluate every main slot.
+
+    The reference entry owns the test-opening guard and all 396 evaluations.
+    Its optional sink serializes each eleven-policy result at a completed cell
+    boundary. Exact source/plan/input bindings alone permit resume. There is no
+    main financial job launch from importing this module or running its checker.
+    """
+    pretest_start, pretest_cpu = perf_counter(), process_time()
+    inputs, plan = copy.deepcopy((inputs, locked_plan))
+    candidate, bindings, pilot_check, closure_check = _pretest(inputs, plan, source_root)
+    import_expense = _import_expense()
+    directory = Path(directory)
+    if (directory / "main").exists():
+        _require(resume, "completed immutable main requires explicit resume")
+        from check_main import check_main
+
+        saved, receipt = read_main_artifact(directory / "main")
+        runner._same(saved["bindings"], bindings, "exact completed main resume binding")
+        if not (directory / "main_serialization").exists():
+            write_main_artifact(
+                directory / "main_serialization",
+                {
+                    "bindings": bindings,
+                    "main_receipt": receipt,
+                    "expense": _pending_expense(
+                        "serialization:main_snapshot",
+                        "interrupted_main_snapshot",
+                        "original measurement interrupted before receipt",
+                    ),
+                },
+            )
+        save_resume_work(
+            directory,
+            "completed_resume_readiness",
+            {
+                "path": str(directory / "main"),
+                "receipt": receipt,
+                "payload_sha256": artifact_digest(saved),
+            },
+            bindings,
+            pretest_start,
+            pretest_cpu,
+            observations=[
+                {
+                    "scope": "main_input_load",
+                    "observed": input_load_expense
+                    or _expense("main_input_load", "immutable_original_input_load", None, None),
+                },
+                {"scope": "cold_imports", "observed": import_expense},
+            ],
+        )
+        check_path = (
+            directory / "posttest_checks" / f"check_{len(resume_work_paths(directory)) + 1:08d}"
+        )
+        checked = check_main(
+            directory, inputs=inputs, source_root=source_root, save_receipt=check_path
+        )
+        return {
+            "directory": str(directory),
+            "receipt": receipt,
+            "snapshot": saved,
+            "resume_check": checked["integrity"],
+            "additional_costs": resume_work_references(directory),
+        }
+    references, cases, expenses = [], [], []
+    parameters, surface = _parameters(inputs), _surface(inputs)
+    n = plan["test_n"]
+    pretest_expense = _expense(
+        "pretest_readiness",
+        "raw_pilot/closure/source/input_binding",
+        perf_counter() - pretest_start,
+        process_time() - pretest_cpu,
+    )
+
+    def loader():
+        if directory.exists():
+            _require(resume, "immutable experiment exists; exact resume required")
+            saved, receipt = read_main_artifact(directory / "pretest")
+            runner._same(saved["bindings"], bindings, "exact main resume binding")
+            cost_path = directory / "costs" / "serialization_pretest"
+            if not cost_path.exists():
+                _save_serialization_cost(
+                    directory,
+                    "serialization:pretest",
+                    _pending_expense(
+                        "serialization:pretest",
+                        "interrupted_pretest_serialization",
+                        "original measurement interrupted before receipt",
+                    ),
+                    bindings,
+                )
+            # This interval includes the fresh readiness check and its saved reread.
+            target = {
+                "path": str(directory / "pretest"),
+                "receipt": receipt,
+                "payload_sha256": artifact_digest(saved),
+            }
+            save_resume_work(
+                directory,
+                "resumed_pretest_readiness",
+                target,
+                bindings,
+                pretest_start,
+                pretest_cpu,
+                observations=[
+                    {
+                        "scope": "main_input_load",
+                        "observed": input_load_expense
+                        or _expense("main_input_load", "immutable_original_input_load", None, None),
+                    },
+                    {"scope": "cold_imports", "observed": import_expense},
+                ],
+            )
+        else:
+            directory.mkdir(parents=True)
+            start, cpu = perf_counter(), process_time()
+            write_main_artifact(
+                directory / "pretest",
+                {
+                    "bindings": bindings,
+                    "plan": plan,
+                    "pilot_check": pilot_check,
+                    "closure_check": closure_check,
+                    "input_identity": bindings["inputs"],
+                    "test_opened": False,
+                    "expenses": [
+                        pretest_expense,
+                        input_load_expense
+                        or _expense("main_input_load", "immutable_original_input_load", None, None),
+                        import_expense,
+                    ],
+                },
+            )
+            _save_serialization_cost(
+                directory,
+                "serialization:pretest",
+                _expense(
+                    "serialization:pretest",
+                    "pretest_serialization",
+                    perf_counter() - start,
+                    process_time() - cpu,
+                ),
+                bindings,
+            )
+        for model in MODELS:
+            for slot, seed in enumerate(plan["test_seeds"]):
+                market_id = f"market:{model}:seed{slot}"
+                market, ref = _execute(
+                    directory,
+                    market_id,
+                    "market",
+                    {
+                        "parameters": parameters,
+                        "surface": surface,
+                        "model": model,
+                        "seed": seed,
+                        "original_n": n,
+                        "chunk_paths": plan["chunk_paths"],
+                        "levels": plan["levels"],
+                        "frequency": 12,
+                        "call_cache": inputs["caches"][model.lower()]["call"],
+                        "premium": inputs["frozen"]["selection"]["premium"]["value"],
+                        "cost_rates": candidate["hedging"]["half_spreads"],
+                        "role": "test",
+                    },
+                    plan,
+                    bindings,
+                    resume,
+                )
+                references.append(ref)
+                market_saved = read_main_artifact(ref["path"])[0]
+                market_failed = not check_execution_status(market_saved, directory=directory)[
+                    "qualified"
+                ]
+                for level in plan["levels"]:
+                    risk_id = f"risk:{model}:seed{slot}:level{level}"
+                    if market_failed:
+                        _, risk_ref = save_dependency_job(
+                            directory, risk_id, "risk", n, [ref], plan, bindings, resume
+                        )
+                        risk_failed = True
+                    else:
+                        _, risk_ref = _execute(
+                            directory,
+                            risk_id,
+                            "risk",
+                            {
+                                "parameters": parameters,
+                                "surface": surface,
+                                "dataset": market["datasets"][str(level)],
+                                "caches": inputs["caches"],
+                                "chunk_paths": plan["chunk_paths"],
+                                "retain_full_merged": False,
+                            },
+                            plan,
+                            bindings,
+                            resume,
+                        )
+                        risk_failed = not check_execution_status(
+                            read_main_artifact(risk_ref["path"])[0], directory=directory
+                        )["qualified"]
+                    references.append(risk_ref)
+                    metadata = {"generator": model, "seed_slot": slot, "level": level}
+                    if risk_failed:
+                        metadata.update(
+                            execution_status="unexecuted_dependency_cap",
+                            original_n=n,
+                            artifact_directory=str(directory),
+                            bindings=bindings,
+                            dependency_reference=relative_reference(risk_ref, directory),
+                        )
+                    cases.append(
+                        (
+                            metadata,
+                            ref["path"],
+                            risk_ref["path"],
+                        )
+                    )
+        return {"test_cases": _CaseSequence(cases), "fits": inputs["closure"]["closed_fits"]}
+
+    def sink(row):
+        identifier = f"evaluation:{row['generator']}:seed{row['seed_slot']}:level{row['level']}:{row['universe']}"
+        if row["result"].get("execution_status") == "unexecuted_dependency_cap":
+            risk_id = f"risk:{row['generator']}:seed{row['seed_slot']}:level{row['level']}"
+            risk_ref = next(ref for ref in references if ref["id"] == risk_id)
+            _, ref = save_dependency_job(
+                directory,
+                identifier,
+                "evaluation",
+                n,
+                [risk_ref],
+                plan,
+                bindings,
+                resume,
+                additional_raw=row,
+            )
+            references.append(ref)
+            return ref
+        ref = save_evaluation_job(directory, row, plan, bindings, resume)
+        references.append(ref)
+        return ref
+
+    gated = runner.run_execution_main(
+        frozen=inputs["frozen"],
+        candidate=inputs["candidate"],
+        source=inputs["source"],
+        selection_receipts=inputs["selection_receipts"],
+        raw_validation=inputs["closure"]["raw_validation"],
+        closed_fits=inputs["closure"]["closed_fits"],
+        main_test_loader=loader,
+        evaluation_sink=sink,
+    )
+    for job in plan["refinement_jobs"]:
+        dependency_ids = pilot._dependency_ids(job["arguments"])
+        dependencies = [ref for ref in references if ref["id"] in dependency_ids]
+        _require(
+            len(dependencies) == len(dependency_ids), "actual prior refinement dependency missing"
+        )
+        if dependencies and any(
+            not value["qualified"] for value in execution_checks(dependencies).values()
+        ):
+            _require(
+                isinstance(job.get("original_n"), int) and job["original_n"] >= 0,
+                "original unexecuted refinement denominator must be declared before test",
+            )
+            _, ref = save_dependency_job(
+                directory,
+                job["id"],
+                "refinement",
+                job["original_n"],
+                dependencies,
+                plan,
+                bindings,
+                resume,
+            )
+            references.append(ref)
+            continue
+        args = pilot._resolve(job["arguments"], inputs, _ReferenceJobs(references))
+        if args["operation"] in ("paired_score_refinement", "paired_score_cell_refinement"):
+            _require(
+                args["arguments"]["original_n"] == plan["independent_refinement_n"],
+                "independent envelope original N cannot be reduced",
+            )
+        if job["id"] in plan["refinement_groups"]["frequency"] and args["operation"] == "policy":
+            _require(
+                args["arguments"]["policy"] in ("greek", "band"),
+                "frequency diagnostics retain selected Greek/band only",
+            )
+        _, ref = _execute(directory, job["id"], "refinement", args, plan, bindings, resume)
+        references.append(ref)
+    start, cpu = perf_counter(), process_time()
+    if (directory / "statistics").exists():
+        _require(resume, "original statistics require exact resume")
+        indices = read_main_artifact(directory / "statistics")[0]["bootstrap_indices"]
+    else:
+        indices = make_bootstrap_indices(
+            n // 64, seed=candidate["seeds"]["bootstrap"][0], replicates=2000
+        )
+    envelopes = numerical_envelopes(references)
+    q_checks = q_qualification(references)
+    statistics = main_statistics(
+        references,
+        inputs["selection_receipts"],
+        indices,
+        envelopes,
+        q_checks=q_checks,
+        job_checks=execution_checks(references),
+    )
+    expenses.append(
+        _expense(
+            "main_statistics",
+            "indices/paired_bootstrap/IUT/Q/envelopes",
+            perf_counter() - start,
+            process_time() - cpu,
+        )
+    )
+    stats_receipt, expenses = save_statistics_boundary(
+        directory, statistics, expenses, bindings, resume
+    )
+
+    def relative_ref(row):
+        return relative_reference(row, directory)
+
+    start, cpu = perf_counter(), process_time()
+    snapshot = {
+        "schema": SCHEMA,
+        "bindings": bindings,
+        "plan": plan,
+        "jobs": [relative_ref(row) for row in references],
+        "main_gate": {**gated, "evaluations": [relative_ref(row) for row in gated["evaluations"]]},
+        "statistics_receipt": stats_receipt,
+        "statistics_path": "statistics",
+        "expenses": expenses,
+        "original_evaluation_records": 396,
+        "precision_selection": gated["precision_selection"],
+        "financial_qualification": "unknown",
+        "test_opened": True,
+        "fresh_pretest_plan_sha256": pilot.input_identity(inputs["fresh_plan"]),
+    }
+    snapshot["resume_work"] = resume_work_references(directory)
+    receipt = write_main_artifact(directory / "main", snapshot)
+    write_main_artifact(
+        directory / "main_serialization",
+        {
+            "bindings": bindings,
+            "main_receipt": receipt,
+            "expense": _expense(
+                "serialization:main_snapshot",
+                "main_snapshot_serialization",
+                perf_counter() - start,
+                process_time() - cpu,
+            ),
+        },
+    )
+    return {"directory": str(directory), "receipt": receipt, "snapshot": snapshot}
+
+
+def main_statistics(references, selections, indices, envelopes, *, q_checks=None, job_checks=None):
+    """Recalculate all levels, eight families and three init paired raw scores."""
+    rows = {}
+    for ref in references:
+        if not ref["id"].startswith("evaluation:"):
+            continue
+        raw = read_main_artifact(ref["path"])[0]["raw"]
+        check_evaluation_row_metadata(raw, ref["id"])
+        for cell in raw["result"]["cells"]:
+            rows[
+                (
+                    raw["generator"],
+                    raw["universe"],
+                    raw["level"],
+                    raw["seed_slot"],
+                    cell["policy_id"],
+                )
+            ] = {name: cell["result"][name] for name in ("loss", "qualified_path_mask")}
+    validations = {r["id"]: r for r in selections["validation"]}
+    summaries, comparisons, families = {}, {}, {}
+    for level in [192, 384, 768]:
+        for model in MODELS:
+            for universe in ("U1", "U2"):
+                selection = validations[f"selection:{model}:{universe}"]
+                baseline_id = selection["selected_baseline"]
+                base_policy = None if baseline_id is None else ":".join(baseline_id.split(":")[:2])
+                for policy_id in {key[-1] for key in rows if key[:3] == (model, universe, level)}:
+                    losses = np.stack(
+                        [rows[(model, universe, level, s, policy_id)]["loss"] for s in range(3)]
+                    )
+                    mask = np.stack(
+                        [
+                            rows[(model, universe, level, s, policy_id)]["qualified_path_mask"]
+                            for s in range(3)
+                        ]
+                    )
+                    source_mask = mask.copy()
+                    execution_reasons = [[] for _ in range(3)]
+                    if job_checks is not None:
+                        for slot in range(3):
+                            for identifier in (
+                                f"market:{model}:seed{slot}",
+                                f"risk:{model}:seed{slot}:level{level}",
+                                f"evaluation:{model}:seed{slot}:level{level}:{universe}",
+                            ):
+                                check = job_checks[identifier]
+                                if not check["qualified"]:
+                                    mask[slot] = False
+                                    execution_reasons[slot].append(check["reason"])
+                    if q_checks is None or not q_checks[model]["qualified"]:
+                        mask[:] = False
+                    key = f"{model}:{universe}:level{level}:{policy_id}"
+                    summaries[key] = {
+                        "primary": risk_summary(np.where(mask, losses, np.nan)),
+                        "finite_only": risk_summary(losses),
+                        "qualified_mask": mask,
+                        "source_qualified_mask": source_mask,
+                        "losses": losses,
+                        "original_n_per_seed": losses.shape[1],
+                        "execution_reasons": execution_reasons,
+                    }
+                for training in MODELS:
+                    family_id = f"{model}:{universe}:train{training}:level{level}"
+                    results = {}
+                    for init in (11, 29, 47):
+                        policy_id = f"nn:train{training}:init{init}"
+                        key = f"{model}:{universe}:level{level}:{policy_id}"
+                        nn = summaries[key]
+                        if base_policy is None:
+                            baseline = np.full(nn["losses"].shape, np.nan)
+                            baseline_mask = np.zeros(nn["losses"].shape, bool)
+                        else:
+                            base = summaries[f"{model}:{universe}:level{level}:{base_policy}"]
+                            baseline, baseline_mask = base["losses"], base["qualified_mask"]
+                        paired = qualified_pair_statistics(
+                            baseline,
+                            nn["losses"],
+                            baseline_mask,
+                            nn["qualified_mask"],
+                            indices,
+                            numerical_envelope=envelopes.get(key),
+                        )
+                        paired["selected_baseline"] = baseline_id
+                        comparisons[key] = paired
+                        results[init] = paired
+                    families[family_id] = family_assessment(results)
+    _require(
+        len(rows) == 396 and len(summaries) == 132 and len(families) == 24,
+        "original 396 records/132 summaries/24 level-family records required",
+    )
+    return {
+        "schema": "rb-f04-main-statistics-v1.1",
+        "summaries": summaries,
+        "comparisons": comparisons,
+        "families": families,
+        "bootstrap_indices": indices,
+        "alpha": 0.05 / 8,
+        "original_records": 396,
+        "primary_level": 768,
+        "Q_checks": q_checks,
+        "execution_checks": job_checks,
+        "financial_qualification": "unknown",
+    }
+
+
+def main(argv=None):
+    """Run an explicitly supplied frozen plan or perform saved-only replay."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--phase", choices=["main", "check"], required=True)
+    parser.add_argument("--input", type=Path, required=True)
+    parser.add_argument("--plan", type=Path)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--resume", action="store_true")
+    args = parser.parse_args(argv)
+    load_start, load_cpu = perf_counter(), process_time()
+    inputs, _ = read_main_artifact(args.input)
+    load_expense = _expense(
+        "main_input_load",
+        "immutable_original_input_load",
+        perf_counter() - load_start,
+        process_time() - load_cpu,
+    )
+    if args.phase == "check":
+        from check_main import check_main
+
+        _require(args.output, "saved check requires main output directory")
+        result = check_main(args.output, inputs=inputs)
+    else:
+        _require(args.plan and args.output, "main requires locked plan and output")
+        result = run_main_experiment(
+            args.output,
+            inputs=inputs,
+            locked_plan=json.loads(args.plan.read_text()),
+            resume=args.resume,
+            input_load_expense=load_expense,
+        )
+    print(
+        json.dumps(
+            {key: value for key, value in result.items() if key != "snapshot"},
+            sort_keys=True,
+            default=str,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

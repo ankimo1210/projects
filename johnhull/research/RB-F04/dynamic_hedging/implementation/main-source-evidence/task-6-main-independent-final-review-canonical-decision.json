@@ -1,0 +1,29 @@
+{
+  "decision": "approved",
+  "scope": "fixed3 main source; canonical dependency connection addition to historical main review",
+  "unresolved_critical": 0,
+  "unresolved_important": 0,
+  "reviewed_sources": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "4956903ea0b6f25a2a556fc1e0745b2d98d253ff3d26731e6cf55e5fc253cbc4",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "ada38ad09270ce4468f33840dba48b83ad74f1922a388103f65ec76b4d3a8134",
+    "deep_hedge_price/tests/test_dynamic_hedging_main.py": "f24564687cbfd54501dbba7e2318b52b96c3808e3461a8e9e57bcde42e06faad"
+  },
+  "independent_scoped_tests": {
+    "passed": 14,
+    "deselected": 66,
+    "seconds": 1.34
+  },
+  "author_full_scoped_tests": {
+    "passed": 80,
+    "seconds": 31.26,
+    "independently_reexecuted": false
+  },
+  "canonical_connection": "actual dependency_ids -> resolve -> prior guard, unresolved and resolved records",
+  "independent_self_consistent_receipt_mutations": 18,
+  "unchanged_top_level_nodes_except": [
+    "_prior_three_stream_records",
+    "validate_refinement_outcomes"
+  ],
+  "formal_plan_freeze_financial_allcost_approved": false,
+  "supersedes_pending": "task-6-main-independent-final-review-canonical-ref-followup.json"
+}

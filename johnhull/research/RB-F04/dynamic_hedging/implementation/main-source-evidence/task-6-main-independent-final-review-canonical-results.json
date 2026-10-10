@@ -1,0 +1,139 @@
+{
+  "reviewed_sources": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "4956903ea0b6f25a2a556fc1e0745b2d98d253ff3d26731e6cf55e5fc253cbc4",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "ada38ad09270ce4468f33840dba48b83ad74f1922a388103f65ec76b4d3a8134",
+    "deep_hedge_price/tests/test_dynamic_hedging_main.py": "f24564687cbfd54501dbba7e2318b52b96c3808e3461a8e9e57bcde42e06faad"
+  },
+  "source_stable": true,
+  "canonical_6_producer_dependencies": [
+    "refinement:actual:Heston:baseline:seed0",
+    "refinement:actual:Heston:baseline:seed1",
+    "refinement:actual:Heston:baseline:seed2",
+    "refinement:actual:Heston:nn:seed0",
+    "refinement:actual:Heston:nn:seed1",
+    "refinement:actual:Heston:nn:seed2"
+  ],
+  "original_reserved_seeds": [
+    3858740885,
+    1001519867,
+    310817098
+  ],
+  "original_n": 4096,
+  "actual_dependency_resolver_connected": true,
+  "each_producer_market_dependency_connected": true,
+  "unresolved_and_resolved_guard_positive": true,
+  "mutations": [
+    {
+      "case": "duplicate_producer",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved producer streams/denominators required"
+    },
+    {
+      "case": "legacy_unresolved",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved inline refinement streams required"
+    },
+    {
+      "case": "missing_producer",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "whole declared original refinement producer required"
+    },
+    {
+      "case": "partial_raw_path",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "whole declared original refinement producer required"
+    },
+    {
+      "case": "producer_reduced_N",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "actual original paired producer operation/denominator required"
+    },
+    {
+      "case": "producer_wrong_operation",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "actual original paired producer operation/denominator required"
+    },
+    {
+      "case": "market_reduced_N",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved producer streams/denominators required"
+    },
+    {
+      "case": "market_argument_reduced_N",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved producer streams/denominators required"
+    },
+    {
+      "case": "market_wrong_seed",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved producer streams/denominators required"
+    },
+    {
+      "case": "market_wrong_operation",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved producer streams/denominators required"
+    },
+    {
+      "case": "missing_market",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "declared original reserved market producer required"
+    },
+    {
+      "case": "producer_partial_market",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "declared original reserved market producer required"
+    },
+    {
+      "case": "inline_record_N_only",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved inline refinement streams required"
+    },
+    {
+      "case": "inline_missing_record_N",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved inline refinement streams required"
+    },
+    {
+      "case": "inline_wrong_market_N",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved inline refinement streams required"
+    },
+    {
+      "case": "inline_wrong_role",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved inline refinement streams required"
+    },
+    {
+      "case": "inline_swapped_seeds",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved inline refinement streams required"
+    },
+    {
+      "case": "inline_wrong_kind",
+      "rejected": true,
+      "self_consistent_receipt": true,
+      "reason": "original ordered reserved inline refinement streams required"
+    }
+  ],
+  "mutation_count": 18,
+  "financial_RNG_performed": false,
+  "financial_dispatch_performed": false,
+  "formal_plan_approved": false
+}

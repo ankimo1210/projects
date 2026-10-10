@@ -1,0 +1,32 @@
+{
+  "decision": "approved",
+  "scope": "fixed3 main implementation sources only",
+  "unresolved_critical": 0,
+  "unresolved_important": 0,
+  "reviewed_sources": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "4517f766e435ac34feafb89301442839e1d797ec646e87aaae4cf7e31fb168bd",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "ada38ad09270ce4468f33840dba48b83ad74f1922a388103f65ec76b4d3a8134",
+    "deep_hedge_price/tests/test_dynamic_hedging_main.py": "0e7368d0a50fc508e42c8b6e13763bf8592376ddd5870d985b768005e6595bbb"
+  },
+  "scoped_pytest": {
+    "passed": 72,
+    "seconds": 30.6
+  },
+  "ruff": "PASS",
+  "format": "3 files PASS",
+  "independent_self_consistent_receipt_mutations": 24,
+  "actual_saved_source_unit": {
+    "N": 32,
+    "chunks": 2,
+    "all8_full_view_cash_equal": true,
+    "financial_qualification": "unknown",
+    "all_used_source_stable": true
+  },
+  "formal_plan_approved": false,
+  "formal_source_freeze_approved": false,
+  "formal_main_financial_approved": false,
+  "all_cost_completion_approved": false,
+  "original_source_and_raw_changed": false,
+  "code_git_canonical_docs_changed": false,
+  "report": "task-6-main-independent-final-review.md"
+}

@@ -1,0 +1,17 @@
+from pathlib import Path
+import os,subprocess,time,json,resource
+wt=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+d=wt/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+env=os.environ.copy()
+env.update(PYTHONPATH=str(wt/"johnhull/hullkit/src")+":"+str(wt/"deep_hedge_price/src")+":"+str(wt/"johnhull/research/RB-F04/dynamic_hedging"),OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1")
+ru=resource.getrusage(resource.RUSAGE_CHILDREN)
+clock={"wall_start":time.perf_counter(),"cpu_start":ru.ru_utime+ru.ru_stime}
+r=subprocess.run(["/home/kazumasa/projects/.venv/bin/python",str(d/"task-5-progressive-pilot-plan-dry-run.py")],cwd=wt,env=env,capture_output=True,text=True)
+(d/"task-5-progressive-pilot-plan-dry-run.log").write_text(r.stdout+r.stderr)
+ru=resource.getrusage(resource.RUSAGE_CHILDREN)
+clock.update(wall_stop=time.perf_counter(),cpu_stop=ru.ru_utime+ru.ru_stime)
+cost={"clock":clock,"wall_seconds":clock["wall_stop"]-clock["wall_start"],"cpu_seconds":clock["cpu_stop"]-clock["cpu_start"],"returncode":r.returncode,"scope":"compiler subprocess and log write; no financial generation"}
+(d/"task-5-progressive-pilot-plan-dry-run-parent-cost.json").write_text(json.dumps(cost,indent=2)+"\\n")
+print(json.dumps(cost,indent=2))
+print((r.stdout+r.stderr)[-5000:])
+raise SystemExit(r.returncode)

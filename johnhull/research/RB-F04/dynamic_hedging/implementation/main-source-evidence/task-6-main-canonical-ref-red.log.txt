@@ -1,0 +1,124 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_ test_outcome_plan_requires_original24_scores_selected_frequency_and_Q_rosters _
+
+    def test_outcome_plan_requires_original24_scores_selected_frequency_and_Q_rosters():
+        plan, candidate = outcome_plan_fixture()
+>       result = main_module().validate_refinement_outcomes(plan, candidate)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_main.py:1506: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_main.py:1407: in validate_refinement_outcomes
+    _prior_three_stream_records(args[key], candidate)
+johnhull/research/RB-F04/dynamic_hedging/run_main.py:1351: in _prior_three_stream_records
+    _require(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False
+message = 'original ordered reserved inline refinement streams required'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: original ordered reserved inline refinement streams required
+
+johnhull/research/RB-F04/dynamic_hedging/run_main.py:49: ValueError
+_ test_canonical_refinement_refs_use_actual_resolver_and_original_reserved_producers _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x77d27e29c0b0>
+
+    def test_canonical_refinement_refs_use_actual_resolver_and_original_reserved_producers(monkeypatch):
+        module = main_module()
+        plan, candidate = outcome_plan_fixture()
+        monkeypatch.setattr(np.random, "default_rng", lambda *a, **k: pytest.fail("RNG opened"))
+        monkeypatch.setattr(module.pilot, "_dispatch", lambda *a, **k: pytest.fail("finance dispatched"))
+>       module.validate_refinement_outcomes(plan, candidate)
+
+deep_hedge_price/tests/test_dynamic_hedging_main.py:1541: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_main.py:1407: in validate_refinement_outcomes
+    _prior_three_stream_records(args[key], candidate)
+johnhull/research/RB-F04/dynamic_hedging/run_main.py:1351: in _prior_three_stream_records
+    _require(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False
+message = 'original ordered reserved inline refinement streams required'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: original ordered reserved inline refinement streams required
+
+johnhull/research/RB-F04/dynamic_hedging/run_main.py:49: ValueError
+_ test_prior_guard_rejects_all_unresolved_legacy_refs_or_inline_reduced_record_N[True] _
+
+legacy = True
+
+    @pytest.mark.parametrize("legacy", [True, False])
+    def test_prior_guard_rejects_all_unresolved_legacy_refs_or_inline_reduced_record_N(legacy):
+        module = main_module()
+        plan, candidate = outcome_plan_fixture()
+        numeric = set().union(*(plan["refinement_groups"][g] for g in ("sde", "teacher_n", "teacher_grid")))
+        for job in plan["refinement_jobs"]:
+            if job["id"] not in numeric:
+                continue
+            args = job["arguments"]["arguments"]
+            for key in ("baseline_records", "candidate_records"):
+                args[key] = [
+                    {"$job": ref["job"]}
+                    if legacy
+                    else {
+                        "kind": "paired_pnl",
+                        "original_n": 64 if slot == 0 else 4096,
+                        "shared_market": {
+                            "seed": candidate["seeds"]["refinement"][slot],
+                            "role": "refinement",
+                            "original_n": 4096,
+                        },
+                    }
+                    for slot, ref in enumerate(args[key])
+                ]
+>       with pytest.raises(ValueError, match=r"original|producer|refinement"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_main.py:1575: Failed
+_ test_prior_guard_rejects_all_unresolved_legacy_refs_or_inline_reduced_record_N[False] _
+
+legacy = False
+
+    @pytest.mark.parametrize("legacy", [True, False])
+    def test_prior_guard_rejects_all_unresolved_legacy_refs_or_inline_reduced_record_N(legacy):
+        module = main_module()
+        plan, candidate = outcome_plan_fixture()
+        numeric = set().union(*(plan["refinement_groups"][g] for g in ("sde", "teacher_n", "teacher_grid")))
+        for job in plan["refinement_jobs"]:
+            if job["id"] not in numeric:
+                continue
+            args = job["arguments"]["arguments"]
+            for key in ("baseline_records", "candidate_records"):
+                args[key] = [
+                    {"$job": ref["job"]}
+                    if legacy
+                    else {
+                        "kind": "paired_pnl",
+                        "original_n": 64 if slot == 0 else 4096,
+                        "shared_market": {
+                            "seed": candidate["seeds"]["refinement"][slot],
+                            "role": "refinement",
+                            "original_n": 4096,
+                        },
+                    }
+                    for slot, ref in enumerate(args[key])
+                ]
+>       with pytest.raises(ValueError, match=r"original|producer|refinement"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_main.py:1575: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_main.py::test_outcome_plan_requires_original24_scores_selected_frequency_and_Q_rosters
+FAILED deep_hedge_price/tests/test_dynamic_hedging_main.py::test_canonical_refinement_refs_use_actual_resolver_and_original_reserved_producers
+FAILED deep_hedge_price/tests/test_dynamic_hedging_main.py::test_prior_guard_rejects_all_unresolved_legacy_refs_or_inline_reduced_record_N[True]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_main.py::test_prior_guard_rejects_all_unresolved_legacy_refs_or_inline_reduced_record_N[False]
+4 failed, 76 deselected in 1.40s

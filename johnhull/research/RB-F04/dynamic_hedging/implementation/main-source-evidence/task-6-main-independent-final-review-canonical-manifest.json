@@ -1,0 +1,354 @@
+{
+  "files": [
+    {
+      "path": "task-6-main-canonical-ref-final-test.log",
+      "sha256": "13d56ea53c4dc0e6efbaf53bfd0dcc172dad7f757781c4119e9a6b5b73f6a25f",
+      "bytes": 180
+    },
+    {
+      "path": "task-6-main-canonical-ref-green.log",
+      "sha256": "8b4a701e537462ff9c0468d4f2aff0421dfcaa437438ad7c4c95a8bc51cabe9e",
+      "bytes": 114
+    },
+    {
+      "path": "task-6-main-canonical-ref-previous-run-main.py.txt",
+      "sha256": "4517f766e435ac34feafb89301442839e1d797ec646e87aaae4cf7e31fb168bd",
+      "bytes": 117693
+    },
+    {
+      "path": "task-6-main-canonical-ref-red.log",
+      "sha256": "33dbcb56e3ddcd6e5daa721984abf47fff3a057e265a022f91fcb4192fc522e2",
+      "bytes": 6367
+    },
+    {
+      "path": "task-6-main-canonical-ref-run-main.py.txt",
+      "sha256": "4956903ea0b6f25a2a556fc1e0745b2d98d253ff3d26731e6cf55e5fc253cbc4",
+      "bytes": 119058
+    },
+    {
+      "path": "task-6-main-canonical-ref-source.diff",
+      "sha256": "44319577b9bc672ae5ab93396f6a2724bb8e93196b8761630b151306fe6cf1bc",
+      "bytes": 3199
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-ast-scope.json",
+      "sha256": "4cdce93d3abbaef6cee98f1a52bebe3b6f0059ceb0bc9ec8b159e6bbb7cb26ad",
+      "bytes": 315
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-decision.json",
+      "sha256": "61940a136ca7684f9d280f1f4f6d1b12323b9b1149ede7cf4b6f5d237c469fd6",
+      "bytes": 1242
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-format.txt",
+      "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "bytes": 26
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-ref-followup.json",
+      "sha256": "da11d5ea49e84fd973053c3866935b9a0588bbbd9760c5bff929a905a5bc3bcc",
+      "bytes": 816
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-results.json",
+      "sha256": "1d1e77f769b52500ebbdadd9080568f068f82264fc29ae620afd2113178d71e7",
+      "bytes": 4608
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-ruff.txt",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-tests.txt",
+      "sha256": "4a89a8877971a3e7a1449bc7cee83003e42585237f8dd83273f75d4f32c8697e",
+      "bytes": 114
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/duplicate_producer/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/duplicate_producer/metadata.json",
+      "sha256": "40ac55aebad003c266dd6a3b275d9c8fe8fcf6cd577f04f70cc58b729ceb4570",
+      "bytes": 2288
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/duplicate_producer/receipt.json",
+      "sha256": "b36836d1822a84801745f6fd9a86304e2eedd151fd63cc120bc13166b2b6cc17",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_missing_record_N/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_missing_record_N/metadata.json",
+      "sha256": "dd257e23c32234d10b7cff01e9b13f8bd8d220ea75871cb899605b3f856a6b25",
+      "bytes": 2872
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_missing_record_N/receipt.json",
+      "sha256": "b3739dadaf7304d26a3dbc31b2255fd608fa000ef3f10b5766bcb908a2e22084",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_record_N_only/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_record_N_only/metadata.json",
+      "sha256": "9eb7daf14111a90e318ecb398ac352651c5811be6d15caa97bde0b7a9c91fd22",
+      "bytes": 2888
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_record_N_only/receipt.json",
+      "sha256": "4c1d2e15daa3f2e26730f8b843fccd58b53f46b52cd36e2feb2ccc3503ed1d4b",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_swapped_seeds/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_swapped_seeds/metadata.json",
+      "sha256": "d3dda7bddcf16220f8715984aa22b84036e7a0dccdb200db1131ef6af720cec4",
+      "bytes": 2890
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_swapped_seeds/receipt.json",
+      "sha256": "da084df062515b44b942220f058cb506dedaf4de89a7529461827ac20183858f",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_wrong_kind/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_wrong_kind/metadata.json",
+      "sha256": "2486d27681f88aa181456a60e7cab30649aa8fabfcc9354a5aa01aac6ea1b018",
+      "bytes": 2890
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_wrong_kind/receipt.json",
+      "sha256": "196521bf932bcf2da86e3df287e57373bd6e5b507c2099737ca8217d5328cbc6",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_wrong_market_N/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_wrong_market_N/metadata.json",
+      "sha256": "7afb8cd95373c479511aca09d6c675e859c05ccd8664d7df7be329b68c716b3e",
+      "bytes": 2888
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_wrong_market_N/receipt.json",
+      "sha256": "62bc9c06e21a0cf272ca72475a2c52c0eb801e0aa578f22d0cb6c87fa35abb6a",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_wrong_role/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_wrong_role/metadata.json",
+      "sha256": "a2fa039deee328fe1378ec60ff41fbe9243beb53d653549c61982ae16c42e1d7",
+      "bytes": 2884
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/inline_wrong_role/receipt.json",
+      "sha256": "3036d81fa98f6b0a0f431ecdb30b1493a804e834568d3bf5726de757ed589479",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/legacy_unresolved/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/legacy_unresolved/metadata.json",
+      "sha256": "e956af44b55a4d9232f291a24a5353c1a62f0f2856f109b8d0d11b3f3df71b9e",
+      "bytes": 2289
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/legacy_unresolved/receipt.json",
+      "sha256": "439bbf0bb9e60e32426cbf68dc6e20d47efbeca9ebd2398e0969155329a85626",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_argument_reduced_N/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_argument_reduced_N/metadata.json",
+      "sha256": "446a7ce81eda9162ea0aef40dc75d7f1448e35651b0d5a5348bb778f616da9d9",
+      "bytes": 2288
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_argument_reduced_N/receipt.json",
+      "sha256": "a1172b6c30061800eb9ec452ffc71e6c3e8d14aa20bea039132d8a7fbd30adf8",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_reduced_N/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_reduced_N/metadata.json",
+      "sha256": "53fde4b236c39bd70afcbb85332a6025e17769b4e256e3c4b3096480c4ddc750",
+      "bytes": 2288
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_reduced_N/receipt.json",
+      "sha256": "9339ad06e6730effc6e9b3ea82c54c3825db55c4c3331b9f175d9b56047852e2",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_wrong_operation/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_wrong_operation/metadata.json",
+      "sha256": "97ba6af6d4c35950caae252a19def9c7da8c7c13d02b70ed5023006e5dbd9ec6",
+      "bytes": 2293
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_wrong_operation/receipt.json",
+      "sha256": "e4a75e533b3f5f7ac075908be89824d9793e05754f4e71031b6bb75236ceacb9",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_wrong_seed/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_wrong_seed/metadata.json",
+      "sha256": "60779b6cd93503d98027924b0da633ecd30964c35cb586e2e44d83b4195f957a",
+      "bytes": 2288
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/market_wrong_seed/receipt.json",
+      "sha256": "076b565008951998b18cce6aeaab199ab2974f3f5c644a25b32c17b2e87b7db6",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/missing_market/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/missing_market/metadata.json",
+      "sha256": "92cb44ae2572e47525f9feb6e2026bff4b942ed769578315ad5e99f910d258ad",
+      "bytes": 2076
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/missing_market/receipt.json",
+      "sha256": "2f6d929fddf9fe29182779bf7a0034dd35ca4a0e207871452595203acb08b098",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/missing_producer/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/missing_producer/metadata.json",
+      "sha256": "8f1de982f49e0564ca3ed2a68caf56ea790d3a421a77e71ae60f6280eb49e6cc",
+      "bytes": 2259
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/missing_producer/receipt.json",
+      "sha256": "ede2a09856d15d82b205528bf385049be1a2e06946f99e584ba836849dc142fa",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/partial_raw_path/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/partial_raw_path/metadata.json",
+      "sha256": "b8e5fcdefd407e96a0001346911d0d83f567ca4f3eea90757f1d87384561fce2",
+      "bytes": 2312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/partial_raw_path/receipt.json",
+      "sha256": "ccc5fc61ee67624d10b283277f3f1db12ff3d9d1cc919a6d04def56cda9da932",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/producer_partial_market/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/producer_partial_market/metadata.json",
+      "sha256": "aadd2717c8ac8940847b7f3b914ddf15706f1d9ff86fca1f41cc995c88943b99",
+      "bytes": 2310
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/producer_partial_market/receipt.json",
+      "sha256": "9039e6294ea9e56adb6f9d0e1bd71187fbf527c352e6707235c4f08ee35f7a80",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/producer_reduced_N/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/producer_reduced_N/metadata.json",
+      "sha256": "a04c547c9c7179b2442bae2df0d9b6f475c621a44ab4c1a5453b961e0179ea2c",
+      "bytes": 2288
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/producer_reduced_N/receipt.json",
+      "sha256": "a19200a9f88a8b360481f6c26a46b7b7aa60765636224cee3392f64e1cb6a8d4",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/producer_wrong_operation/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/producer_wrong_operation/metadata.json",
+      "sha256": "8828747ef563fbec3323ab32f20ce80efa5e4c08cca2b2a80b90218d673ceceb",
+      "bytes": 2285
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit/producer_wrong_operation/receipt.json",
+      "sha256": "abf0b2a969e2373b3fb24794dc964f13c87e5ce23752ec3683834a141f7a322c",
+      "bytes": 312
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit.py",
+      "sha256": "c9ab580a881cbf51ef158b80a39464f0af52f74a00ab31548dd01ecdcc209dee",
+      "bytes": 6692
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical-unit.txt",
+      "sha256": "26849ee5f10c3c46625a0879c0ac3de8a03b51d73b70d2db4f4919d243e2bb95",
+      "bytes": 142
+    },
+    {
+      "path": "task-6-main-independent-final-review-canonical.md",
+      "sha256": "544da86a68c61e4cd7627ba82b2bfdc29ca99ef9057063090434ed54723d05b1",
+      "bytes": 3361
+    }
+  ]
+}

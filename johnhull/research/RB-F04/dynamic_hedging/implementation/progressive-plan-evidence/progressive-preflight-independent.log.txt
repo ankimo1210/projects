@@ -1,0 +1,120 @@
+{
+  "scope": "independent selection-only DAG metadata preflight, not a financial/source/budget approval",
+  "baseline": {
+    "job_count": 2748,
+    "stage_count": 16,
+    "state_count": 288,
+    "date_count": 192,
+    "position_pairs": 768,
+    "other_pairs": 1024,
+    "principal_drivers": 8,
+    "reserved_reference_drivers": 2,
+    "full_raw_teachers": 20,
+    "original_cases": 121,
+    "original_attempts": 51,
+    "actual_risk_cache_bindings": "checked",
+    "actual_numeric_closure": "checked"
+  },
+  "tamper_probes": [
+    {
+      "id": "actual_refined_cache_substitution",
+      "refused": true,
+      "reason": "cap descendants narrowed"
+    },
+    {
+      "id": "field_order_substitution",
+      "refused": true,
+      "reason": "original257x321 field controls changed"
+    },
+    {
+      "id": "original_case_identity_substitution",
+      "refused": true,
+      "reason": "original121 identity altered"
+    },
+    {
+      "id": "original_obligation_substitution",
+      "refused": true,
+      "reason": "original51 identity altered"
+    },
+    {
+      "id": "principal_oracle_seed_substitution",
+      "refused": true,
+      "reason": "actual evidence producer binding altered"
+    },
+    {
+      "id": "unreserved_max_reference",
+      "refused": true,
+      "reason": "actual evidence producer binding altered"
+    },
+    {
+      "id": "oracle_original_N_shrink",
+      "refused": true,
+      "reason": "actual evidence producer binding altered"
+    },
+    {
+      "id": "original_state_memory_change",
+      "refused": true,
+      "reason": "actual evidence producer binding altered"
+    },
+    {
+      "id": "field_cap_scope_narrow",
+      "refused": true,
+      "reason": "cap descendants narrowed"
+    },
+    {
+      "id": "expense_alias_relabel",
+      "refused": true,
+      "reason": "expense identity altered"
+    },
+    {
+      "id": "stage_own_activation_other_model",
+      "refused": true,
+      "reason": "stage not activated by own previous gate"
+    },
+    {
+      "id": "common_market_other_model_activation",
+      "refused": true,
+      "reason": "invalid activation"
+    },
+    {
+      "id": "stage_cache_risk_width_substitution",
+      "refused": true,
+      "reason": "actual evidence producer binding altered"
+    },
+    {
+      "id": "SDE_same_level_substitution",
+      "refused": true,
+      "reason": "actual evidence producer binding altered"
+    },
+    {
+      "id": "future_test_scope_promotion",
+      "refused": true,
+      "reason": "scope promoted"
+    },
+    {
+      "id": "formal_lock_scope_promotion",
+      "refused": true,
+      "reason": "scope promoted"
+    }
+  ],
+  "forbidden_calls": [],
+  "financial_RNG_performed": false,
+  "financial_worker_performed": false,
+  "formal_plan_locked": false,
+  "financial_qualification": "unknown",
+  "changed_unexecuted_financial_source": [],
+  "clock": {
+    "wall_start": 21552.959907956,
+    "cpu_start": 0.06744621,
+    "wall_stop": 21567.572200868,
+    "cpu_stop": 14.66767752
+  },
+  "wall_seconds": 14.612292911999248,
+  "cpu_seconds": 14.60023131,
+  "expense_scope": "subprocess arithmetic metadata audit before final report serialization",
+  "self_write_expense": {
+    "status": "pending",
+    "wall_seconds": null,
+    "cpu_seconds": null
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "scope": "copied selfconsistent negative graph probes; no finance or original source edit",
+  "baseline": {
+    "job_count": 2748,
+    "stage_count": 16,
+    "state_count": 288,
+    "date_count": 192,
+    "position_pairs": 768,
+    "other_pairs": 1024,
+    "principal_drivers": 8,
+    "reserved_reference_drivers": 2,
+    "full_raw_teachers": 20,
+    "original_cases": 121,
+    "original_attempts": 51,
+    "actual_risk_cache_bindings": "checked",
+    "actual_numeric_closure": "checked"
+  },
+  "results": [
+    {
+      "id": "actual_refined_cache_substitution",
+      "metadata_and_evidence_selfconsistent": true,
+      "root_count_signature_topology_guards_accept": true,
+      "independent_guard_refused": true,
+      "reason": "declared cache differs from actual risk references"
+    },
+    {
+      "id": "principal_teacher_uses_oracle_namespace",
+      "metadata_and_evidence_selfconsistent": true,
+      "root_count_signature_topology_guards_accept": true,
+      "independent_guard_refused": true,
+      "reason": "principal teacher namespace altered"
+    },
+    {
+      "id": "max_teacher_unreserved_seed",
+      "metadata_and_evidence_selfconsistent": true,
+      "root_count_signature_topology_guards_accept": true,
+      "independent_guard_refused": true,
+      "reason": "maximum unreserved teacher reference"
+    },
+    {
+      "id": "max_teacher_unreserved_N262144",
+      "metadata_and_evidence_selfconsistent": true,
+      "root_count_signature_topology_guards_accept": true,
+      "independent_guard_refused": true,
+      "reason": "actual teacher N/grid/model differs from candidate"
+    },
+    {
+      "id": "oracle_original_N_shrink",
+      "metadata_and_evidence_selfconsistent": true,
+      "root_count_signature_topology_guards_accept": true,
+      "independent_guard_refused": true,
+      "reason": "next-prefix oracle N/grid altered"
+    },
+    {
+      "id": "position_width_substitution",
+      "metadata_and_evidence_selfconsistent": true,
+      "root_count_signature_topology_guards_accept": true,
+      "independent_guard_refused": true,
+      "reason": "position width/risk substitution"
+    },
+    {
+      "id": "local_shared_driver_other_model_gate",
+      "metadata_and_evidence_selfconsistent": true,
+      "root_count_signature_topology_guards_accept": true,
+      "independent_guard_refused": true,
+      "reason": "shared driver gated by unrelated other model"
+    },
+    {
+      "id": "field_fixed_cutoff_order_substitution",
+      "metadata_and_evidence_selfconsistent": true,
+      "root_count_signature_topology_guards_accept": true,
+      "independent_guard_refused": true,
+      "reason": "original257x321 field controls changed"
+    },
+    {
+      "id": "original121_case_identity_substitution",
+      "metadata_and_evidence_selfconsistent": true,
+      "root_count_signature_topology_guards_accept": true,
+      "independent_guard_refused": true,
+      "reason": "original121 identity altered"
+    },
+    {
+      "id": "original51_obligation_identity_substitution",
+      "metadata_and_evidence_selfconsistent": true,
+      "root_count_signature_topology_guards_accept": true,
+      "independent_guard_refused": true,
+      "reason": "original51 identity altered"
+    }
+  ],
+  "interpretation": "root basic dryrun is not a financial/reference identity validator; current graph passes added exact metadata guards, formal saved numerical gates still mandatory",
+  "financial_RNG_performed": false,
+  "financial_worker_performed": false,
+  "formal_plan_locked": false,
+  "clock": {
+    "wall_start": 21731.881700969,
+    "cpu_start": 1.203301774,
+    "wall_stop": 21750.583650981,
+    "cpu_stop": 19.902409394
+  },
+  "wall_seconds": 18.701950012000452,
+  "cpu_seconds": 18.69910762,
+  "report_self_write_expense": {
+    "status": "pending",
+    "wall_seconds": null,
+    "cpu_seconds": null
+  }
+}

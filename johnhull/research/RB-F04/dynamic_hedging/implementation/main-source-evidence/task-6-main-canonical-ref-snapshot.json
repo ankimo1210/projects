@@ -1,0 +1,102 @@
+{
+  "scope": "canonical ref-only final source checkpoint; formal DAG/finance/freeze/full costs excluded",
+  "source_files": [
+    {
+      "source": "johnhull/research/RB-F04/dynamic_hedging/run_main.py",
+      "sha256": "4956903ea0b6f25a2a556fc1e0745b2d98d253ff3d26731e6cf55e5fc253cbc4",
+      "copy": "task-6-main-canonical-ref-run_main.py.txt"
+    },
+    {
+      "source": "johnhull/research/RB-F04/dynamic_hedging/check_main.py",
+      "sha256": "ada38ad09270ce4468f33840dba48b83ad74f1922a388103f65ec76b4d3a8134",
+      "copy": "task-6-main-canonical-ref-check_main.py.txt"
+    },
+    {
+      "source": "deep_hedge_price/tests/test_dynamic_hedging_main.py",
+      "sha256": "f24564687cbfd54501dbba7e2318b52b96c3808e3461a8e9e57bcde42e06faad",
+      "copy": "task-6-main-canonical-ref-test_dynamic_hedging_main.py.txt"
+    }
+  ],
+  "author_scoped_tests": {
+    "count": 80,
+    "wall_seconds": 31.26,
+    "result": "pass"
+  },
+  "ruff_check": "pass",
+  "ruff_format": "pass",
+  "independent_scope": "canonical dependency_ids/resolve/prior metadata guard; original main arithmetic source byte unchanged",
+  "independent_scoped_tests": {
+    "count": 14,
+    "wall_seconds": 1.34,
+    "result": "pass"
+  },
+  "independent_refusal_probes": 18,
+  "independent_verdict": "approved_limited",
+  "files": [
+    {
+      "file": "task-6-main-canonical-ref-red.log",
+      "sha256": "33dbcb56e3ddcd6e5daa721984abf47fff3a057e265a022f91fcb4192fc522e2",
+      "bytes": 6367
+    },
+    {
+      "file": "task-6-main-canonical-ref-green.log",
+      "sha256": "8b4a701e537462ff9c0468d4f2aff0421dfcaa437438ad7c4c95a8bc51cabe9e",
+      "bytes": 114
+    },
+    {
+      "file": "task-6-main-canonical-ref-final-test.log",
+      "sha256": "13d56ea53c4dc0e6efbaf53bfd0dcc172dad7f757781c4119e9a6b5b73f6a25f",
+      "bytes": 180
+    },
+    {
+      "file": "task-6-main-canonical-ref-lint.log",
+      "sha256": "c6486b51f483249343d4a4bdb91c41be31f0bdc28887b2f4cd4800e174f8bd6b",
+      "bytes": 45
+    },
+    {
+      "file": "task-6-main-canonical-ref-source.diff",
+      "sha256": "44319577b9bc672ae5ab93396f6a2724bb8e93196b8761630b151306fe6cf1bc",
+      "bytes": 3199
+    },
+    {
+      "file": "task-6-main-canonical-ref-previous-run-main.py.txt",
+      "sha256": "4517f766e435ac34feafb89301442839e1d797ec646e87aaae4cf7e31fb168bd",
+      "bytes": 117693
+    },
+    {
+      "file": "task-6-main-canonical-ref-run-main.py.txt",
+      "sha256": "4956903ea0b6f25a2a556fc1e0745b2d98d253ff3d26731e6cf55e5fc253cbc4",
+      "bytes": 119058
+    },
+    {
+      "file": "task-6-main-canonical-ref-run_main.py.txt",
+      "sha256": "4956903ea0b6f25a2a556fc1e0745b2d98d253ff3d26731e6cf55e5fc253cbc4",
+      "bytes": 119058
+    },
+    {
+      "file": "task-6-main-canonical-ref-check_main.py.txt",
+      "sha256": "ada38ad09270ce4468f33840dba48b83ad74f1922a388103f65ec76b4d3a8134",
+      "bytes": 37474
+    },
+    {
+      "file": "task-6-main-canonical-ref-test_dynamic_hedging_main.py.txt",
+      "sha256": "f24564687cbfd54501dbba7e2318b52b96c3808e3461a8e9e57bcde42e06faad",
+      "bytes": 69119
+    },
+    {
+      "file": "task-6-main-independent-final-review-canonical.md",
+      "sha256": "544da86a68c61e4cd7627ba82b2bfdc29ca99ef9057063090434ed54723d05b1",
+      "bytes": 3361
+    },
+    {
+      "file": "task-6-main-independent-final-review-canonical-decision.json",
+      "sha256": "61940a136ca7684f9d280f1f4f6d1b12323b9b1149ede7cf4b6f5d237c469fd6",
+      "bytes": 1242
+    },
+    {
+      "file": "task-6-main-independent-final-review-canonical-manifest.json",
+      "sha256": "e4cd41055d2ec36ef2b6ae1a91bc8194e2871141685300b1cba9c49eee7bb329",
+      "bytes": 14740
+    }
+  ]
+}

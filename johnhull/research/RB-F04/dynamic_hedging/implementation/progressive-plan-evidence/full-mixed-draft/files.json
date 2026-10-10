@@ -1,0 +1,35 @@
+{
+  "scope": "root full mixed graph draft only; not independently approved or locked",
+  "files": [
+    {
+      "origin": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-producer-v2.py",
+      "archive": "task-5-progressive-pilot-plan-producer-v2.py.txt",
+      "bytes": 29570,
+      "sha256": "70dd3c8c07c2a1a6688a1e0b38a5b32993e94f11eb59f2d8c76355eac5cacfa0"
+    },
+    {
+      "origin": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-dry-run-v1.py",
+      "archive": "task-5-full-progressive-pilot-plan-dry-run-v1.py.txt",
+      "bytes": 6553,
+      "sha256": "283fe42f1e09320023b6d87f4f3ee4f3786a71845aa570d4e014d9077fc5677d"
+    },
+    {
+      "origin": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-dry-run-v1.json",
+      "archive": "task-5-full-progressive-pilot-plan-dry-run-v1.json",
+      "bytes": 2248,
+      "sha256": "e5e7f86f3fdb428febd5381cd05b8efcff752b0b1c571fd13edda76d9d0ca31d"
+    },
+    {
+      "origin": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-dry-run-v1.log",
+      "archive": "task-5-full-progressive-pilot-plan-dry-run-v1.log.txt",
+      "bytes": 2248,
+      "sha256": "e5e7f86f3fdb428febd5381cd05b8efcff752b0b1c571fd13edda76d9d0ca31d"
+    },
+    {
+      "origin": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-selected-inputs-source-interface-v1.json",
+      "archive": "task-5-selected-inputs-source-interface-v1.json",
+      "bytes": 3773,
+      "sha256": "d7b3068bf366902c2dbc02bfe27d01025bbe7032a94d5d73584a8325fdf7d89b"
+    }
+  ]
+}

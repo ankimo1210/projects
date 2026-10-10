@@ -1,0 +1,282 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-decision.json",
+      "ref": "artifact:sha256:907bf11e5dd0888e6c9c92bd029a3407232203e827b31013856ff50be4f3f088",
+      "bytes": 2435,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-parent-cost.json",
+      "ref": "artifact:sha256:99a563d767722115d6397c043524057784b5c3d4907d67d4d7798ce116931dfc",
+      "bytes": 378,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-parent.py",
+      "ref": "artifact:sha256:2047a4e3390738787e41286ec145831a71955db20642db1cf7701a5d77084c84",
+      "bytes": 1375,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-results.json",
+      "ref": "artifact:sha256:04b102d3eb4a0e73f2e850ca12a35372113b282c7a23db371496baf751b590da",
+      "bytes": 6169,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-snapshots/DESIGN.md",
+      "ref": "artifact:sha256:8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce",
+      "bytes": 41224,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-snapshots/check_pilot.py",
+      "ref": "artifact:sha256:5e5bb22ecf1a7ae1c108453177bd54fe27f94bc343b651d7f03be65716e35f69",
+      "bytes": 184858,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-snapshots/run_pilot.py",
+      "ref": "artifact:sha256:dbd6b6cfb80e4f13bde3539ed77f3e0bd76b9e3e1b946bea730daaeeb02197b2",
+      "bytes": 152206,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-snapshots/task-5-actual-pilot-input-preparation-v4.json",
+      "ref": "artifact:sha256:d80b2666bdc3270784df1ad4eef4aa4283c36dff8c91ff235f7bf0039700691c",
+      "bytes": 43145,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-snapshots/task-5-formal-pilot-plan-producer.py",
+      "ref": "artifact:sha256:33815db7a624e3c7e1d815e79475cd335f30af4e06f098d9ca054363b9adb3e8",
+      "bytes": 24395,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-snapshots/task-5-progressive-pilot-plan-dry-run-parent-cost.json",
+      "ref": "artifact:sha256:069ca26a9ff2d6c1d481fa5ef8d51576c0ce17c8c0bfeea4b3db294cd8dd25b7",
+      "bytes": 294,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-snapshots/task-5-progressive-pilot-plan-dry-run.json",
+      "ref": "artifact:sha256:6fd7d942c5aeef888f472de3db98d5eb7b7161a5515f1b963af989a51493b6c5",
+      "bytes": 2491,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-snapshots/task-5-progressive-pilot-plan-dry-run.py",
+      "ref": "artifact:sha256:055954c43cf2adc499cf7003ebefa0d358bc9c5f6472c7df54b7d024779033de",
+      "bytes": 7374,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent-snapshots/task-5-progressive-pilot-plan-producer.py",
+      "ref": "artifact:sha256:0d719eb1379455a12239fbc543c940f1f7913fad00b451812c18664bcd106985",
+      "bytes": 15869,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent.log",
+      "ref": "artifact:sha256:5573112c513836e3046d1f9c9a276de92a4f7e93ba5be25d61814128fd5ae8fe",
+      "bytes": 3248,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-independent.py",
+      "ref": "artifact:sha256:1e214ed84fca4f79a1015cc8ae0cd2d1c538501021cbc20c06c39592a402a10d",
+      "bytes": 18964,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-review.md",
+      "ref": "artifact:sha256:b075b387be8b1f8b906a6b0412b52133887d267c1e985174cdfeab0fd79dcb71",
+      "bytes": 5260,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-selfconsistent-creation-failure.txt",
+      "ref": "artifact:sha256:5a341b94a2790272e49fb559d4a10839ee2b86ca100f7dd8a7378990b1039682",
+      "bytes": 318,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-selfconsistent-parent-cost.json",
+      "ref": "artifact:sha256:6c2865194f36ea52fd0f3b80dd42c2e5242e8c8aee95a33d8c4284a855435f39",
+      "bytes": 359,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-selfconsistent-parent.py",
+      "ref": "artifact:sha256:5a7b65406bb1ad490584e487a74e34e9b5da8c742422e0bcaca0050a31df169d",
+      "bytes": 1384,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-selfconsistent-results.json",
+      "ref": "artifact:sha256:5820644e36d42499198a616a074a5fe2e0f810b3bdff182a4a315b075577f8dc",
+      "bytes": 3842,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-selfconsistent.log",
+      "ref": "artifact:sha256:5820644e36d42499198a616a074a5fe2e0f810b3bdff182a4a315b075577f8dc",
+      "bytes": 3842,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-selfconsistent.py",
+      "ref": "artifact:sha256:2281830c43f708e60ecd35a7ca644b96b09777cde0f63c297300619febb62d3c",
+      "bytes": 7436,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-v2-report-recheck.json",
+      "ref": "artifact:sha256:704fbff3b651082103137febeedccbcf08bfdd28d5419706d161fab98dd8b92b",
+      "bytes": 340,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-actual-pilot-input-preparation-v4.json",
+      "ref": "artifact:sha256:d80b2666bdc3270784df1ad4eef4aa4283c36dff8c91ff235f7bf0039700691c",
+      "bytes": 43145,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py",
+      "ref": "artifact:sha256:33815db7a624e3c7e1d815e79475cd335f30af4e06f098d9ca054363b9adb3e8",
+      "bytes": 24395,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-draft-source-unit/arrays.npz",
+      "ref": "artifact:sha256:8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-draft-source-unit/metadata.json",
+      "ref": "artifact:sha256:26ec9910f427f2dd0a7d5a654a1d22b036944dbe1c3e56a003d17735739942bc",
+      "bytes": 10340421,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-draft-source-unit/receipt.json",
+      "ref": "artifact:sha256:ec374a4025a3d119a2ff9e7e0482bb2b216a609d7932dc31dcddfd57380edf09",
+      "bytes": 312,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-draft-source-unit-v2/arrays.npz",
+      "ref": "artifact:sha256:8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-draft-source-unit-v2/metadata.json",
+      "ref": "artifact:sha256:26ec9910f427f2dd0a7d5a654a1d22b036944dbe1c3e56a003d17735739942bc",
+      "bytes": 10340421,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-draft-source-unit-v2/receipt.json",
+      "ref": "artifact:sha256:ec374a4025a3d119a2ff9e7e0482bb2b216a609d7932dc31dcddfd57380edf09",
+      "bytes": 312,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run-initial-import-failure.log",
+      "ref": "artifact:sha256:25dec63337c3982008d3955ba06162e672f9be3a676baf5fb0382cbca0240a37",
+      "bytes": 714,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run-parent-cost.json",
+      "ref": "artifact:sha256:069ca26a9ff2d6c1d481fa5ef8d51576c0ce17c8c0bfeea4b3db294cd8dd25b7",
+      "bytes": 294,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run-parent.py",
+      "ref": "artifact:sha256:c417a08dffacc30bb5649d5835da5d5598d2bd0d4b992482d9b86da934dd6c12",
+      "bytes": 1332,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run-v2-parent-cost.json",
+      "ref": "artifact:sha256:1de9f292436e53a7eec9b2200a25663e9cc864adeccb5f69236e0ba13ff4c6c9",
+      "bytes": 294,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run-v2-parent.py",
+      "ref": "artifact:sha256:4f9c786da53d09c679db1f0a2ba3850d745edbeeabf1f30150b6d7fdd94ea0bb",
+      "bytes": 1343,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run-v2.json",
+      "ref": "artifact:sha256:ee17439ed4b95bc2b699a49af73072939605cc2a3a330219ad278f97aedae012",
+      "bytes": 2490,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run-v2.log",
+      "ref": "artifact:sha256:ee17439ed4b95bc2b699a49af73072939605cc2a3a330219ad278f97aedae012",
+      "bytes": 2490,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run-v2.py",
+      "ref": "artifact:sha256:9a20a55f8d318319900c2cd3aaca08ef24c134cdc716b35c49d0389febf2d285",
+      "bytes": 7382,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run.json",
+      "ref": "artifact:sha256:6fd7d942c5aeef888f472de3db98d5eb7b7161a5515f1b963af989a51493b6c5",
+      "bytes": 2491,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run.log",
+      "ref": "artifact:sha256:5c66e5c56aff0fb2fb81499f75858e0f77b03a89897004e847c7735612c32ff8",
+      "bytes": 2490,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run.py",
+      "ref": "artifact:sha256:055954c43cf2adc499cf7003ebefa0d358bc9c5f6472c7df54b7d024779033de",
+      "bytes": 7374,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-producer.py",
+      "ref": "artifact:sha256:0d719eb1379455a12239fbc543c940f1f7913fad00b451812c18664bcd106985",
+      "bytes": 15869,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/johnhull/research/RB-F04/dynamic_hedging/DESIGN.md",
+      "ref": "artifact:sha256:8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce",
+      "bytes": 41224,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/reference.npz",
+      "ref": "artifact:sha256:dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+      "bytes": 30535323,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/progressive-preflight-manifest.json",
+      "ref": "artifact:sha256:688fcaaff57d10d6667e705c78ce1e357204d36bb229adef26b7f59ea7ceb996",
+      "bytes": 11050,
+      "mime": "application/octet-stream"
+    }
+  ]
+}

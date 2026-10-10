@@ -1,0 +1,9 @@
+{
+  "v2_json_parse": "PASS",
+  "v2_parent_clock_math": "PASS",
+  "v1_to_v2_graph_identity": "PASS",
+  "script_AST_delta": "only report/artifact paths and literal-newline repair",
+  "producer_sha256": "0d719eb1379455a12239fbc543c940f1f7913fad00b451812c18664bcd106985",
+  "formal_plan_locked": false,
+  "financial_qualification": "unknown"
+}

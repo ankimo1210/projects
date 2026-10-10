@@ -1,0 +1,56 @@
+from pathlib import Path
+import json,hashlib,time,sys,math
+wt=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+d=wt/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+sys.path.insert(0,str(wt/"johnhull/scripts"))
+import evidence_store as es
+begin={"wall_start":time.perf_counter(),"cpu_start":time.process_time()}
+canonical=json.loads((d/"task-6-main-independent-final-review-canonical-manifest.json").read_text())
+historical=json.loads((d/"task-6-main-independent-final-review-manifest.json").read_text())
+snapshot=json.loads((d/"task-6-main-canonical-ref-snapshot.json").read_text())
+expected=json.loads((d/"task-6-main-independent-final-review-canonical-decision.json").read_text())["reviewed_sources"]
+for row in snapshot["source_files"]:
+ assert hashlib.sha256((d/row["copy"]).read_bytes()).hexdigest()==expected[row["source"]]
+rows={}
+for manifest in (historical,canonical):
+ for r in manifest["files"]:
+  path=r["path"]
+  assert not Path(path).is_absolute() and ".." not in Path(path).parts
+  if path in rows:assert rows[path]==r
+  rows[path]=r
+for r in snapshot["files"]:
+ path=r["file"];row={"path":path,"sha256":r["sha256"],"bytes":r["bytes"]}
+ if path in rows:assert rows[path]==row
+ rows[path]=row
+for name in ("task-6-main-canonical-ref-snapshot.json","task-6-main-canonical-ref-source.md",
+ "task-6-main-independent-final-review.md","task-6-main-independent-final-review-manifest.json"):
+ raw=(d/name).read_bytes()
+ rows[name]={"path":name,"sha256":hashlib.sha256(raw).hexdigest(),"bytes":len(raw)}
+stores=[es.Store.open("/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",role="primary"),
+ es.Store.open("/mnt/f/ProjectArtifacts/projects-backup",role="mirror")]
+manifest={"schema_version":1,"kind":"johnhull-evidence-manifest","entries":[]}
+for path,r in sorted(rows.items()):
+ raw=(d/path).read_bytes()
+ assert len(raw)==r["bytes"] and hashlib.sha256(raw).hexdigest()==r["sha256"],path
+ obj=stores[0].put_bytes(raw)
+ es.replicate(stores[0],stores[1],[obj["sha256"]])
+ manifest["entries"].append(es.manifest_entry("raw/"+path,raw,mime_type="application/octet-stream"))
+es.load_manifest(manifest)
+checks={}
+for store in stores:
+ dest=d/("task-6-main-source-root-restored-v3-"+store.role)
+ assert not dest.exists()
+ report=es.restore([store],manifest,dest)
+ checks[store.role]={"entries":len(report["entries"]),"byte_restore":"PASS",
+                    "financial_semantic_replay":"not repeated by root; independent review scope only"}
+clock={**begin,"wall_stop":time.perf_counter(),"cpu_stop":time.process_time()}
+out={"prior_manifest_mime_failure":{"raw_script":"task-6-main-source-root-cas-check-v2.py","original_stderr":"task-6-main-source-root-cas-check-v2-failure.log","cost":"unmeasured","reason":"identical raw bytes have different inferred MIME under original .log and .txt names; archive bundle now declares application/octet-stream uniformly; original path/bytes preserved"},"prior_interrupted_attempt":{"handle":"52015 missing after session reset","report_missing":True,"cost":"unmeasured","raw_script":"task-6-main-source-root-cas-check.py","partial_CAS_objects":"retained and authenticated on reuse"},"kind":"main_fixed_source_reviews_original_byte_both_store_checkpoint",
+ "status":"PASS","scope":"limited source review provenance; not formal finance/main gate",
+ "source_sha256":expected,"entry_count":len(manifest["entries"]),
+ "bytes":sum(e["bytes"] for e in manifest["entries"]),"checks":checks,
+ "cost":{"clock":clock,"wall_seconds":clock["wall_stop"]-clock["wall_start"],
+         "cpu_seconds":clock["cpu_stop"]-clock["cpu_start"]},
+ "formal_financial_qualification":"unknown","formal_main_run":False}
+(d/"task-6-main-source-root-cas-manifest-v3.json").write_text(json.dumps(manifest,indent=2)+chr(10))
+(d/"task-6-main-source-root-cas-check-v3.json").write_text(json.dumps(out,indent=2)+chr(10))
+print(json.dumps(out,indent=2))
