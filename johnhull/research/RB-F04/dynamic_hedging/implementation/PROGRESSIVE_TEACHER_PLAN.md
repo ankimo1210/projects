@@ -1,6 +1,8 @@
 # 段階教師選択と最終mixed pilot計画
 
-現在（2026-10-10）：修正版fresh正式pilotは同じsession21286で実行中。元N1024の旧停止gateをsaved executedとして確認し、closed NPZ共有で別inode割当145.54GBを削減した。source81/元N/全case/義務/原失敗・費用は不変。全phase容量・金融精度・freeze/mainは未完了。詳細は[保存量と原byte共有](PILOT_BUDGET_MEASUREMENTS.md#派生結果の保存量と原byte共有2026-10-10)。
+修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
+
+現在（2026-10-10）：修正版fresh正式pilotは214件目の引数binding不一致でpartial停止。元N1024の旧停止gateをsaved executedとして確認し、closed NPZ共有で別inode割当145.54GBを削減した。source81/元N/全case/義務/原失敗・費用は不変。全phase容量・金融精度・freeze/mainは未完了。詳細は[保存量と原byte共有](PILOT_BUDGET_MEASUREMENTS.md#派生結果の保存量と原byte共有2026-10-10)。
 
 2026-10-10。初回sourceの元3,138ジョブの資源prior・正確cap recipeを独立承認し、正式metadata lockを生成した。初回正式pilotは69件executed＋70番の日付gateでKeyError Nとなり停止（外側580.029秒、資源capなし）。native cacheのoriginal_Nを読む1行修正と実cache→日付gate→保存checkerの2回帰を追加し、関連246tests・2Python Ruff/format PASS。旧partial・原失敗・費用を保持。修正版sourceへのprior再結合・正式metadata lock・別root起動許可を完了し、fresh正式pilotを2026-10-10 10:22:45 UTCに再開した。完走・saved検算・freeze/main・研究受入は未完了。
 
@@ -39,7 +41,7 @@ count/signature/topologyだけのroot検査は自己整合の改変10件を通�
 
 ## 正式lock後の残り
 
-- 稼働中の修正版正式pilotを同じsessionで観察。旧69executed＋1sourcefaultと全実費は両保管庫へbyte保存済み。旧rawの由来を新sourceへ付け替えず、元--resumeのsource契約を保つ。
+- 修正版正式pilotの214件目の引数binding不一致を原因調査・修復し、修正版sourceへのprior再結合と別rootの実行契約を再確認。旧69executed＋1sourcefaultと全実費は両保管庫へbyte保存済み。旧rawの由来を新sourceへ付け替えず、元--resumeのsource契約を保つ。
 - 修正版正式pilotの完走・原raw保存検算・実結果に基づく教師選択とfreeze。
 - 現行10費用receiptの実測・inclusive会計、元失敗/unknown/historyの保持。
 - 原774-job main・独立fresh・両保管庫からの数値復元、3図/notebook、最終関連3suiteと受入。

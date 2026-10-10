@@ -1,0 +1,1 @@
+{'jobs': 214, 'test_opened': False, 'financial_qualification': 'unknown'}
