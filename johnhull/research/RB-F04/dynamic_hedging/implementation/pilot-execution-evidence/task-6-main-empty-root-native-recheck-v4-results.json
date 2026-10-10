@@ -1,0 +1,159 @@
+{
+  "scope": "root rerun of independently authored fixed3 probe with repaired pilot dependency; not a new independent approval or formal experiment",
+  "AST_changes": {
+    "run_main.py": {
+      "added": [
+        "run_empty_claim_job",
+        "validate_empty_claim_q"
+      ],
+      "modified": [
+        "_dispatch_refinement",
+        "check_execution_status"
+      ],
+      "other_AST_nodes": "unchanged"
+    },
+    "check_main.py": {
+      "added": [
+        "check_empty_claim_job"
+      ],
+      "modified": [
+        "check_main",
+        "check_refinement_binding"
+      ],
+      "other_AST_nodes": "unchanged"
+    },
+    "test_dynamic_hedging_main.py": {
+      "added": [
+        "empty_q_source_unit",
+        "test_main_empty_claim_completed_overrun_keeps_all_original_raw_and_costs",
+        "test_main_empty_claim_dispatch_saves_original_Q_cash_costs_and_replays",
+        "test_main_empty_claim_failed_original_path_is_preserved_without_zero_fallback",
+        "test_main_empty_claim_refuses_changed_original_Q_scope_before_cash",
+        "test_main_empty_claim_worker_measurement_is_required_and_bound"
+      ],
+      "modified": [],
+      "other_AST_nodes": "unchanged"
+    }
+  },
+  "actual_DAG_empty_count": 108,
+  "actual_original_roster": "2models18states3reservedstreamsN4096 checked",
+  "source_unit_results": [
+    {
+      "model": "Heston",
+      "failed_path": false,
+      "original_n": 4096,
+      "rows": 3,
+      "saved_check": "PASS",
+      "hand_cash": "PASS",
+      "resume_original_record": "unchanged",
+      "financial_qualification": "unknown"
+    },
+    {
+      "model": "Heston",
+      "failed_path": true,
+      "original_n": 4096,
+      "rows": 3,
+      "saved_check": "PASS",
+      "hand_cash": "PASS",
+      "resume_original_record": "unchanged",
+      "financial_qualification": "unknown"
+    },
+    {
+      "model": "local",
+      "failed_path": false,
+      "original_n": 4096,
+      "rows": 3,
+      "saved_check": "PASS",
+      "hand_cash": "PASS",
+      "resume_original_record": "unchanged",
+      "financial_qualification": "unknown"
+    },
+    {
+      "model": "local",
+      "failed_path": true,
+      "original_n": 4096,
+      "rows": 3,
+      "saved_check": "PASS",
+      "hand_cash": "PASS",
+      "resume_original_record": "unchanged",
+      "financial_qualification": "unknown"
+    }
+  ],
+  "negative_probes": [
+    {
+      "id": "cash_change",
+      "refused": true,
+      "reason": "empty claim actual zero-claim unit-call cash.rows[0].raw.cash: saved value mismatch"
+    },
+    {
+      "id": "cost_change",
+      "refused": true,
+      "reason": "empty claim actual zero-claim unit-call cash.rows[0].raw.costs: saved value mismatch"
+    },
+    {
+      "id": "path_order",
+      "refused": true,
+      "reason": "empty claim actual zero-claim unit-call cash.path_ids: saved value mismatch"
+    },
+    {
+      "id": "original_N_shrink",
+      "refused": true,
+      "reason": "empty claim actual zero-claim unit-call cash.original_n: saved value mismatch"
+    },
+    {
+      "id": "missing_expense",
+      "refused": true,
+      "reason": "original empty claim raw/worker expense required"
+    },
+    {
+      "id": "unknown_cpu",
+      "refused": true,
+      "reason": "actual empty claim worker timing/clock differs"
+    },
+    {
+      "id": "changed_clock",
+      "refused": true,
+      "reason": "actual empty claim worker timing/clock differs"
+    },
+    {
+      "id": "Q_original_binding",
+      "refused": true,
+      "reason": "original empty claim actual Q producer binding.state_id: saved value mismatch"
+    },
+    {
+      "id": "selfconsistent_worker_overrun_exceeds_parent",
+      "refused": true,
+      "reason": "actual current worker expense exceeds outer measured timing"
+    },
+    {
+      "id": "completed_overrun_relabelled_executed",
+      "refused": true,
+      "reason": "original measured job cap status mismatch"
+    }
+  ],
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "a988c164ca8f64f5dfc78165fc2f9620c2abc857eac745715f4749908839e230",
+    "deep_hedge_price/tests/test_dynamic_hedging_main.py": "6689e4da382ed496a8d583a8d832a10cf1d840d07de2309401aa3d886e2523c6"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "a988c164ca8f64f5dfc78165fc2f9620c2abc857eac745715f4749908839e230",
+    "deep_hedge_price/tests/test_dynamic_hedging_main.py": "6689e4da382ed496a8d583a8d832a10cf1d840d07de2309401aa3d886e2523c6"
+  },
+  "formal_financial_execution_performed": false,
+  "financial_qualification": "unknown",
+  "clock": {
+    "wall_start": 25292.074103798,
+    "cpu_start": 1.318513291,
+    "wall_stop": 25310.983787645,
+    "cpu_stop": 20.215300805
+  },
+  "wall_seconds": 18.909683846999542,
+  "cpu_seconds": 18.896787514,
+  "self_write_expense": {
+    "status": "pending",
+    "wall_seconds": null,
+    "cpu_seconds": null
+  }
+}

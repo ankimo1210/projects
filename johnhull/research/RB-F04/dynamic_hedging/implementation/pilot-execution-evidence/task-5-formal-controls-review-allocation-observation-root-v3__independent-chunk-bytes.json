@@ -1,0 +1,268 @@
+{
+  "chunks": [
+    {
+      "id": "full-original-shapes",
+      "array_payload_bytes": 0,
+      "expanded_bytes_including_NPY_headers": 0,
+      "NPZ_bytes": 22,
+      "headers": []
+    },
+    {
+      "id": "pack000000",
+      "array_payload_bytes": 102575632,
+      "expanded_bytes_including_NPY_headers": 102576912,
+      "NPZ_bytes": 102578194,
+      "headers": [
+        {
+          "name": "value000000",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        },
+        {
+          "name": "value000001",
+          "header_bytes": 128,
+          "payload_bytes": 520
+        },
+        {
+          "name": "value000002",
+          "header_bytes": 128,
+          "payload_bytes": 520
+        },
+        {
+          "name": "value000003",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        },
+        {
+          "name": "value000004",
+          "header_bytes": 128,
+          "payload_bytes": 304200
+        },
+        {
+          "name": "value000005",
+          "header_bytes": 128,
+          "payload_bytes": 24960
+        },
+        {
+          "name": "value000006",
+          "header_bytes": 128,
+          "payload_bytes": 6152
+        },
+        {
+          "name": "value000007",
+          "header_bytes": 128,
+          "payload_bytes": 1560
+        },
+        {
+          "name": "value000008",
+          "header_bytes": 128,
+          "payload_bytes": 1560
+        },
+        {
+          "name": "value000009",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        }
+      ]
+    },
+    {
+      "id": "pack000001",
+      "array_payload_bytes": 102578320,
+      "expanded_bytes_including_NPY_headers": 102579728,
+      "NPZ_bytes": 102581136,
+      "headers": [
+        {
+          "name": "value000000",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        },
+        {
+          "name": "value000001",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        },
+        {
+          "name": "value000002",
+          "header_bytes": 128,
+          "payload_bytes": 304200
+        },
+        {
+          "name": "value000003",
+          "header_bytes": 128,
+          "payload_bytes": 24960
+        },
+        {
+          "name": "value000004",
+          "header_bytes": 128,
+          "payload_bytes": 1560
+        },
+        {
+          "name": "value000005",
+          "header_bytes": 128,
+          "payload_bytes": 1560
+        },
+        {
+          "name": "value000006",
+          "header_bytes": 128,
+          "payload_bytes": 520
+        },
+        {
+          "name": "value000007",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        },
+        {
+          "name": "value000008",
+          "header_bytes": 128,
+          "payload_bytes": 520
+        },
+        {
+          "name": "value000009",
+          "header_bytes": 128,
+          "payload_bytes": 520
+        },
+        {
+          "name": "value000010",
+          "header_bytes": 128,
+          "payload_bytes": 8320
+        }
+      ]
+    },
+    {
+      "id": "pack000002",
+      "array_payload_bytes": 103590448,
+      "expanded_bytes_including_NPY_headers": 103591984,
+      "NPZ_bytes": 103593518,
+      "headers": [
+        {
+          "name": "value000000",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        },
+        {
+          "name": "value000001",
+          "header_bytes": 128,
+          "payload_bytes": 520
+        },
+        {
+          "name": "value000002",
+          "header_bytes": 128,
+          "payload_bytes": 96
+        },
+        {
+          "name": "value000003",
+          "header_bytes": 128,
+          "payload_bytes": 96
+        },
+        {
+          "name": "value000004",
+          "header_bytes": 128,
+          "payload_bytes": 1216800
+        },
+        {
+          "name": "value000005",
+          "header_bytes": 128,
+          "payload_bytes": 49920
+        },
+        {
+          "name": "value000006",
+          "header_bytes": 128,
+          "payload_bytes": 65536
+        },
+        {
+          "name": "value000007",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        },
+        {
+          "name": "value000008",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        },
+        {
+          "name": "value000009",
+          "header_bytes": 128,
+          "payload_bytes": 10400
+        },
+        {
+          "name": "value000010",
+          "header_bytes": 128,
+          "payload_bytes": 10400
+        },
+        {
+          "name": "value000011",
+          "header_bytes": 128,
+          "payload_bytes": 520
+        }
+      ]
+    },
+    {
+      "id": "pack000003",
+      "array_payload_bytes": 71375048,
+      "expanded_bytes_including_NPY_headers": 71376584,
+      "NPZ_bytes": 71378118,
+      "headers": [
+        {
+          "name": "value000000",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        },
+        {
+          "name": "value000001",
+          "header_bytes": 128,
+          "payload_bytes": 34078720
+        },
+        {
+          "name": "value000002",
+          "header_bytes": 128,
+          "payload_bytes": 524288
+        },
+        {
+          "name": "value000003",
+          "header_bytes": 128,
+          "payload_bytes": 524288
+        },
+        {
+          "name": "value000004",
+          "header_bytes": 128,
+          "payload_bytes": 524288
+        },
+        {
+          "name": "value000005",
+          "header_bytes": 128,
+          "payload_bytes": 6152
+        },
+        {
+          "name": "value000006",
+          "header_bytes": 128,
+          "payload_bytes": 96
+        },
+        {
+          "name": "value000007",
+          "header_bytes": 128,
+          "payload_bytes": 96
+        },
+        {
+          "name": "value000008",
+          "header_bytes": 128,
+          "payload_bytes": 524288
+        },
+        {
+          "name": "value000009",
+          "header_bytes": 128,
+          "payload_bytes": 524288
+        },
+        {
+          "name": "value000010",
+          "header_bytes": 128,
+          "payload_bytes": 65536
+        },
+        {
+          "name": "value000011",
+          "header_bytes": 128,
+          "payload_bytes": 524288
+        }
+      ]
+    }
+  ]
+}

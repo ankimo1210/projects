@@ -1,0 +1,31 @@
+{
+  "scope": "root_native_source_regression_v55_no_financial_qualification",
+  "returncode": 0,
+  "wall_seconds": 20.621650384997338,
+  "cpu_seconds": 20.560599,
+  "cap_reached": false,
+  "child_peak_rss_bytes": 851640320,
+  "prior_budget": {
+    "scope": "root_native_source_regression_v55_no_financial_qualification",
+    "original_n": 4096,
+    "models": [
+      "Heston",
+      "local"
+    ],
+    "normal_and_one_failed_original_path": true,
+    "new_random_draws": false,
+    "wall_cap_seconds": 180,
+    "prior_fixed_utc": "2026-10-10T02:53:45Z",
+    "script_sha256": "056ea92b3c23e5dbd8e2e41d9d186ec0687c973c0659c6b6d948a267e8d92d3c",
+    "source_sha256": {
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "14d6f877d8e0e6a9d4f8db0fbe741f7552767b64138952d7572605e9ec3c3486",
+      "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771",
+      "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "a988c164ca8f64f5dfc78165fc2f9620c2abc857eac745715f4749908839e230"
+    }
+  },
+  "source_unchanged": true,
+  "formal_pilot_executed": false,
+  "formal_main_executed": false,
+  "financial_qualification": "unknown"
+}

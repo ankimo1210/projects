@@ -1,0 +1,42 @@
+{
+  "results": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "--fix",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "returncode": 0,
+      "output": "Found 1 error (1 fixed, 0 remaining).\n"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "returncode": 0,
+      "output": "3 files already formatted\n"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "returncode": 0,
+      "output": "All checks passed!\n"
+    }
+  ],
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "14d6f877d8e0e6a9d4f8db0fbe741f7552767b64138952d7572605e9ec3c3486",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "feceea05f0769b7f78140da395637dac0e1282f329d1f1ff101e1fd90eb51dc8"
+  }
+}

@@ -13,13 +13,13 @@
 
 ## 現在の108件接続
 
-実main DAGは774jobs（60本体＋714精度比較）。作者はempty_claim108件のdispatchと、元N4096・seed・state・5日付・cash・Q binding・失敗NaN・費用/時計・resumeを接続し、専用94件/Ruffを確認した。現在の固定3SHAは run_main=0b8fc24f、check_main=a988c164、test=6689e4da。main3差分の限定独立sourceレビューは重要0。依存Qのv55修復を再確認中。
+実main DAGは774jobs（60本体＋714精度比較）。作者はempty_claim108件のdispatchと、元N4096・seed・state・5日付・cash・Q binding・失敗NaN・費用/時計・resumeを接続し、専用94件/Ruffを確認した。現在の固定3SHAは run_main=0b8fc24f、check_main=a988c164、test=6689e4da。main3差分の限定独立sourceレビューは重要0。依存Qのv55修復は[限定独立承認](pilot-execution-evidence/task-5-pilot-v55-independent-review.md)済み。
 
 独立実行で検出したlocal_recordsへのbroadcast配列は、元scalar stateを渡す最小修正を実施。[独立作者probeのroot再実行](pilot-execution-evidence/task-6-main-empty-root-native-recheck-v3-results.json)は原N4096×両model×正常/1failedの4件でsaved check・独立cash式・元NaN/費用・resumeを確認し、改変10件を拒否。main3 SHAは不変、解析toy call cacheを使うsource検査で金融資格unknown、新しい独立承認とは扱わない。parent-inclusive wall20.287878秒/CPU20.274331秒を記録。
 
 [主DAG draft v2](pilot-execution-evidence/task-6-main-plan-draft-v2-dryrun.json)は実main.run_empty_claim_jobのsignature/allowlistへ合わせ、元774jobs（60＋714）・108empty・396枠を保持、未対応dispatch0・signature error0、RNG/worker実行禁止で確認。正式lock不可、全prior budgetは未設定のまま。
 
-v54独立Q検査で入力削除・元workerとraw入力の差し替えの境界を検出し、v55で修正中。元scalar TypeErrorの証跡・費用も保持する。off-month独立call精度・新Q入力結合の独立再確認まで、108件全体の金融実行readyとはしない。
+v54独立Q検査で入力削除・元workerとraw入力の差し替えの境界を検出し、固定v55で修復。[root再実行v4](pilot-execution-evidence/task-6-main-empty-root-native-recheck-v4-results.json)も元N4096×4と10反例拒否がPASS、parent wall20.621650秒/CPU20.560599秒・source不変。元scalar TypeErrorの証跡・費用も保持する。off-month独立call精度と事前予算は未完了で、108件全体の金融実行readyとはしない。
 
 ## 正式実験までに残る条件
 

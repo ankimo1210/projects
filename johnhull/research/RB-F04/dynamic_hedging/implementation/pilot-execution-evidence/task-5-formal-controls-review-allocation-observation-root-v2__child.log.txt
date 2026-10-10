@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-probe-v2.py", line 355, in <module>
+    child(args.output, args.budget_file)
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-probe-v2.py", line 211, in child
+    shape, _fortran_order, dtype = np.lib.format._read_array_header(stream, version)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'numpy.lib.format' has no attribute '_read_array_header'. Did you mean: 'read_array_header_1_0'?

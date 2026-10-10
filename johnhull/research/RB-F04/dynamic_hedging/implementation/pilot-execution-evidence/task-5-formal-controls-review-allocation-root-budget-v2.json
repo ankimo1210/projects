@@ -1,0 +1,34 @@
+{
+  "schema": "rb-f04-allocation-component-prior-budget-v1",
+  "root_preapproved": true,
+  "status": "root_prior_fixed_before_component_execution",
+  "scope": "deterministic_allocation_and_artifact_io_only",
+  "formal_finance_approved": false,
+  "original_n": 65536,
+  "threshold_count": 65,
+  "blocks": 16,
+  "rss_limit_bytes": 4294967296,
+  "wall_limit_seconds": 180.0,
+  "rss_metric": "process_RSS_not_virtual_address_space",
+  "probe_source_sha256": "410ab0cf6d471d29cd7bc5ef8f9584f5c9b30407883ddb73785fbfbe9cdcddb8",
+  "prepared_inputs_sha256": "d80b2666bdc3270784df1ad4eef4aa4283c36dff8c91ff235f7bf0039700691c",
+  "source_bindings": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "cc7183df08f8d4b7942929ccc44cbcc5899be5df74128016c7c6521bac2909b9",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py": "9007e30a45375fbb7c8b4afe5fa4e4f694b5bc68e924b138bd993d8bdbf2b025",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f"
+  },
+  "original_threshold_source": {
+    "function": "run_pilot.teacher_axes",
+    "grid": "high",
+    "model": "local",
+    "date_index": 0
+  },
+  "fixture": "Deterministic varying synthetic primitives; no original financial paths or statistical precision claim",
+  "caps_are_administrative_not_measured_runtime_or_peak_memory": true,
+  "financial_MC_teacher_driver_cost_is_separate_and_pending": true,
+  "version": "v2_style_only",
+  "prior_fixed_utc": "2026-10-10T02:54:38Z",
+  "mem_available_bytes_before_execution": 48237957120,
+  "root_scope_decision": "allocation_and_artifact_IO_only; financial_MC_teacher_rates_qualification_and_formal_plan_remain_pending"
+}

@@ -1,0 +1,39 @@
+[
+  {
+    "file": "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+    "old_sha256": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "new_sha256": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "removed_definitions": [],
+    "added_definitions": [],
+    "changed_definitions": []
+  },
+  {
+    "file": "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+    "old_sha256": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+    "new_sha256": "14d6f877d8e0e6a9d4f8db0fbe741f7552767b64138952d7572605e9ec3c3486",
+    "removed_definitions": [],
+    "added_definitions": [],
+    "changed_definitions": [
+      "check_capped_job_raw",
+      "check_q_record",
+      "check_resolved_job_arguments"
+    ]
+  },
+  {
+    "file": "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "old_sha256": "6f38821f8782ca6d0df9fb3a8db045d68690f3e613ad260b9813b14f58325164",
+    "new_sha256": "feceea05f0769b7f78140da395637dac0e1282f329d1f1ff101e1fd90eb51dc8",
+    "removed_definitions": [],
+    "added_definitions": [
+      "_native_q_locked_input_source_unit",
+      "test_native_q_actual_cap_does_not_waive_required_saved_inputs",
+      "test_native_q_locked_binding_saved_replay_preserves_all_original_paths",
+      "test_native_q_original_chunk_shape_bound_to_resolved_input",
+      "test_native_q_raw_inputs_bound_to_original_locked_worker",
+      "test_native_q_saved_local_field_null_is_rejected_before_sde",
+      "test_native_q_saved_parameter_null_is_not_optional_replay",
+      "test_native_q_saved_required_inputs_cannot_disable_sde_replay"
+    ],
+    "changed_definitions": []
+  }
+]

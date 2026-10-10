@@ -1,0 +1,103 @@
+{
+  "schema": "rb-f04-native-Q-saved-input-binding-v1",
+  "source_version": 55,
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "14d6f877d8e0e6a9d4f8db0fbe741f7552767b64138952d7572605e9ec3c3486",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "feceea05f0769b7f78140da395637dac0e1282f329d1f1ff101e1fd90eb51dc8"
+  },
+  "native_detection": {
+    "kind": "Q",
+    "or_present_keys": [
+      "quoted_calls",
+      "chunks",
+      "parameters",
+      "call_cache"
+    ],
+    "required_fields": [
+      "kind",
+      "model",
+      "parameters",
+      "surface",
+      "initial_spot",
+      "initial_state",
+      "original_n",
+      "seed",
+      "state_id",
+      "times",
+      "spots",
+      "states",
+      "quoted_calls",
+      "call_cache",
+      "cache_indices",
+      "chunks",
+      "path_ids",
+      "path_mask",
+      "failure_reasons",
+      "increments",
+      "half_increments",
+      "delta",
+      "bin_ids",
+      "bin_edges",
+      "reference_error",
+      "rate",
+      "status"
+    ],
+    "kind_required": "Q",
+    "missing_fields": "ValueError; no legacy or cap substitution",
+    "parameters_type": "HestonParameters",
+    "local_field_type": "LocalVarianceGrid after existing unpack_inputs"
+  },
+  "locked_worker_binding": {
+    "entrypoint": "check_resolved_job_arguments",
+    "existing_worker_sha": "resolved_arguments_sha256 must equal resolved immutable arguments",
+    "raw_to_resolved_arguments": {
+      "parameters": "parameters",
+      "surface": "surface",
+      "initial_spot": "spot",
+      "initial_state": "state",
+      "model": "model",
+      "seed": "seed",
+      "original_n": "original_n",
+      "state_id": "state_id (optional argument default None)",
+      "call_cache": "call_cache"
+    },
+    "input_identity": "existing input_identity binds source only; unpack surface before identity",
+    "bin_edges": "input_identity(np.asarray(raw.bin_edges)) == input_identity(np.asarray(arguments.bin_edges))",
+    "dates": "raw.times approximately equals arguments.date + [0,1,2,4,8]/1536",
+    "rate": "raw.rate approximately equals arguments.parameters.rate",
+    "chunk_geometry": "original starts are contiguous; each stop=min(start+arguments.chunk_paths,arguments.original_n)",
+    "no_public_or_private_calculation_API_change": true,
+    "run_pilot_byte_unchanged_from_v54": true
+  },
+  "saved_numeric_replay": {
+    "entrypoint": "check_q_record",
+    "native_SDE": "mandatory saved-normal replay for every retained chunk/factor1,2,4,8",
+    "Heston": "saved per-path initial variance vector unchanged",
+    "local": "original scalar multiplier unchanged",
+    "comparison": "existing runner._same approximate numerical comparison",
+    "new_rng": "prohibited during saved checking",
+    "cap_entrypoint": "check_capped_job_raw(Q) invokes the same native check",
+    "legacy": "bare standalone bin-statistic fixtures remain supported; actual Q wrapper always requires native inputs"
+  },
+  "evidence": {
+    "red_main": "task-5-native-Q-required-binding-red-v55.log",
+    "green_main": "task-5-native-Q-required-binding-green-v55.log",
+    "red_null": "task-5-native-Q-null-input-red-v55.log",
+    "red_cap": "task-5-native-Q-cap-input-red-v55.log",
+    "full_dedicated": "task-5-pilot-source-v55-tests.json",
+    "ruff_format": "task-5-pilot-source-v55-ruff-v2.json",
+    "ast_delta": "task-5-pilot-v55-ast-delta.json"
+  },
+  "scope": {
+    "new_tests": "fixed seed913 / N32 analytic toy cache source units only",
+    "existing_tests": "original131 unchanged",
+    "new_tests_count": 59,
+    "formal_finance": false,
+    "formal_pilot": false,
+    "formal_main": false,
+    "qualification": "unknown",
+    "model_rosters_N_seeds_failures_costs": "unchanged",
+    "full_mixed_121_51_44_cells_4_tiny_final16": "mandatory at root; source transport does not qualify finance"
+  }
+}
