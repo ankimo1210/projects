@@ -1,0 +1,77 @@
+{
+  "schema": "rb-f04-root-external-expense-receipt-adapter-closed-proofs-CAS-v1",
+  "UTC": "2026-10-10T17:02:29.405181+00:00",
+  "manifest_ref": "artifact:sha256:0c3bac845399dd8f3d689e5fe3e3b7a9e750894762424954e8de64579de01f4f",
+  "entries": 5,
+  "source_bytes": 131256,
+  "both_stores_original_bytes_and_standard_reader_PASS": true,
+  "scope": "closed expense adapter source, pure synthetic preflight and independent decision only; excludes original financial native corpus",
+  "parent_measured_prefix": {
+    "id": "closed-expense-adapter-proof-CAS-parent",
+    "scope": "both stores byte/reader verification, local manifest write and source82 rehash before final receipt write",
+    "status": "complete",
+    "includes_children": true,
+    "parent_id": null,
+    "timing": {
+      "wall_seconds": 1.644869985,
+      "cpu_seconds": 0.026597799,
+      "overrun_seconds": null
+    },
+    "timing_events": {
+      "wall_start_ns": 76212543020452,
+      "wall_stop_ns": 76214187890437,
+      "cpu_start_ns": 34935710,
+      "cpu_stop_ns": 61533509
+    }
+  },
+  "component_events": [
+    {
+      "id": "closed-expense-adapter-proof-store-primary",
+      "scope": "new closed expense receipt adapter source/review proof only; excludes financial raw corpus",
+      "status": "complete",
+      "parent_id": "closed-expense-adapter-proof-CAS-parent",
+      "includes_children": false,
+      "timing": {
+        "wall_seconds": 0.204695507,
+        "cpu_seconds": 0.010456713,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": 76212543025535,
+        "wall_stop_ns": 76212747721042,
+        "cpu_start_ns": 34939648,
+        "cpu_stop_ns": 45396361
+      }
+    },
+    {
+      "id": "closed-expense-adapter-proof-store-mirror",
+      "scope": "new closed expense receipt adapter source/review proof only; excludes financial raw corpus",
+      "status": "complete",
+      "parent_id": "closed-expense-adapter-proof-CAS-parent",
+      "includes_children": false,
+      "timing": {
+        "wall_seconds": 1.438470974,
+        "cpu_seconds": 0.014441872,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": 76212747728789,
+        "wall_stop_ns": 76214186199763,
+        "cpu_start_ns": 45402146,
+        "cpu_stop_ns": 59844018
+      }
+    }
+  ],
+  "preparation_before_parent_clock_unknown": true,
+  "receipt_write_and_stdout_tail_unknown": true,
+  "kernel_peak_RSS_bytes": 21172224,
+  "not_assigned_to_original_financial_external10": true,
+  "source82_bytes_unchanged": true,
+  "actual_root_guard_modified": false,
+  "actual_external_event_rows_injected": false,
+  "financial_native_hashed_or_decoded": false,
+  "finance_execution": 0,
+  "all_external10_expenses_closed": false,
+  "financial_qualification": "unknown",
+  "precision_main_phase_approved": false
+}

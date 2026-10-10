@@ -1,0 +1,78 @@
+{
+  "schema": "rb-f04-external-expense-receipt-adapter-fixed-v1",
+  "files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-v1.py",
+      "bytes": 20992,
+      "sha256": "3b8604e14ce4efa160da29a601ece07376a5097946849832252d862e1ea7f14e"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-preflight-v1.py",
+      "bytes": 24127,
+      "sha256": "5c1f88570bef1ce225ad16c50f0c7aa8913d38d667fa8c5e268a502fd9682c28"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-results-v1.json",
+      "bytes": 64723,
+      "sha256": "303a5d84064c3d684b6103073c975459b17ed2a9a0f37ba50511a50d179a6d9d"
+    }
+  ],
+  "source_identity": {
+    "closure": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json",
+      "bytes": 34372,
+      "sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5"
+    },
+    "source_file_count": 82,
+    "canonical_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "all_original_source_files_authenticated_unchanged": true
+  },
+  "verification": {
+    "pure_fixture_checks": 18,
+    "status": "PASS",
+    "Ruff_two_files": "PASS",
+    "format_two_files": "PASS",
+    "compile_without_bytecode_two_files": "PASS",
+    "RED": "original_existing_execution_alias_RED in results; old projected alias accepted before guard, rejected after",
+    "full_observer_or_financial_suite_run": false
+  },
+  "API": "build_candidate(snapshot, receipt_refs, expected_bindings, *, protocol, execution, check_actual_clock, payload_digest)",
+  "invocation": "python -B /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-preflight-v1.py",
+  "candidate_only": true,
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "all_expenses_closed": false,
+  "actual_native_read_or_numerical_run": 0,
+  "CAS_Git_operations": 0,
+  "production_edits": 0,
+  "scope": "original small receipt provenance and existing expense contracts only; future synthetic fixtures",
+  "parent_scope_contract": {
+    "child_clocks": "original actual timing/timing_events preserved; copied execution alias fields are rejected",
+    "ancestor_coverage": "every actual inclusive ancestor needs producer receipt; noninclusive ancestors remain valid and charged as original protocol",
+    "receipt_reference": "original child receipt.parent_inclusion_receipts list of original absolute path+SHA refs",
+    "proof_bindings": "all four original source/plan/input/raw hashes plus parent/child expense SHA, IDs and scopes",
+    "same_process": "same actual wall/CPU domain and PID; actual wall+CPU endpoint containment",
+    "distinct_process": "same actual wall domain; actual distinct PID/CPU domains; original parent reaped samples reconstruct parent composite CPU endpoints; actual reaped child PID/scope/duration coverage, no cross-process absolute CPU comparison",
+    "unknown": "missing coverage/domain/whole scope/tail/actual overrun/failed reason remains unclosed; malformed receipt/provenance/cycle rejected"
+  },
+  "snapshot_contract": {
+    "original_payload_digest_calls": 1,
+    "original_large_fields": "shared readonly references; never mutated/deepcopied",
+    "derived_changes": "new shallow snapshot contains detached small external_expenses rows only",
+    "composite_lineage_digest_is_native_payload_digest": false,
+    "existing_external_expenses": "explicit rejection, never overwrite or discard"
+  },
+  "runtime_authority_unverified": {
+    "actual_terminal_native_tree": true,
+    "actual_root_permission": true,
+    "numerical_qualification": true
+  },
+  "remaining": [
+    "Root must first bind actual terminal/full native bytes, original source/plan/input and real producer receipts before numerical checker use.",
+    "Existing historical/prefix producers lack full external clocks/scope/tail or CPU inclusion proof; adapter supplies none.",
+    "No external10 ID becomes actual complete from this synthetic verification, and no financial saved check has run."
+  ]
+}

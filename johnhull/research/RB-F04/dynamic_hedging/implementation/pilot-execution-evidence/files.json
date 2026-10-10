@@ -7578,6 +7578,48 @@
       "archive": "source82-saved-clock-v2-root-saved-check-enclosing-clock-closed-proof-store-receipt-v2.json",
       "bytes": 2872,
       "sha256": "77ec7c6290092971513c035523a12a447979d78adf241641487f8d83fdf5088f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-v1.py",
+      "archive": "source82-expense-adapter-task-5-external-expense-receipt-adapter-v1.py",
+      "bytes": 20992,
+      "sha256": "3b8604e14ce4efa160da29a601ece07376a5097946849832252d862e1ea7f14e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-preflight-v1.py",
+      "archive": "source82-expense-adapter-task-5-external-expense-receipt-adapter-preflight-v1.py",
+      "bytes": 24127,
+      "sha256": "5c1f88570bef1ce225ad16c50f0c7aa8913d38d667fa8c5e268a502fd9682c28"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-results-v1.json",
+      "archive": "source82-expense-adapter-task-5-external-expense-receipt-adapter-results-v1.json",
+      "bytes": 64723,
+      "sha256": "303a5d84064c3d684b6103073c975459b17ed2a9a0f37ba50511a50d179a6d9d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-fixed-manifest-v1.json",
+      "archive": "source82-expense-adapter-task-5-external-expense-receipt-adapter-fixed-manifest-v1.json",
+      "bytes": 4603,
+      "sha256": "33f688701e75f249ef466939326f26df1cc65dfaa9381762506e9d1743ead3fd"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-external-expense-receipt-adapter-v1-decision.json",
+      "archive": "source82-expense-adapter-independent-external-expense-receipt-adapter-v1-decision.json",
+      "bytes": 16811,
+      "sha256": "36a4f47b9e866c113a96f2bce72f32ac3846d793aad0252fe58b9231fe9a6326"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-external-expense-receipt-adapter-closed-proof-store-manifest-v1.json",
+      "archive": "source82-expense-adapter-root-external-expense-receipt-adapter-closed-proof-store-manifest-v1.json",
+      "bytes": 1521,
+      "sha256": "0c3bac845399dd8f3d689e5fe3e3b7a9e750894762424954e8de64579de01f4f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-external-expense-receipt-adapter-closed-proof-store-receipt-v1.json",
+      "archive": "source82-expense-adapter-root-external-expense-receipt-adapter-closed-proof-store-receipt-v1.json",
+      "bytes": 2833,
+      "sha256": "162c189076daac2f766162b74bfeb5448e33f9c1e46f4baadd270dba91296c70"
     }
   ],
   "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending; corrected81 formal pilot now terminal214 rows with stage gate argument-binding defect; full saved semantic check pending; new82 private storage transport and stage argument comparison source-only approved; single genuineN1024 full-payload storage verified; fresh prior/root and financial saved acceptance still pending; new82 actual prior/metadata/saved structural binding/guard complete; fresh formal pilot launched14:00:06 UTC with original scope; full saved numeric/freeze/main still pending; source82 saved-check preparation: 32 closed files copied exactly, including historical probe/tool and store-format failures; no live native raw/logs; terminal byte helper v1/v2 and original failures: 30 closed archives; excludes live native data",
@@ -7654,5 +7696,7 @@
     }
   ],
   "saved_check_enclosing_clock_v2_store_manifest_ref": "artifact:sha256:68e812d3063a71f7d00e517ce203ef16b4761d54531fb88779b3225bb75f9bed",
-  "saved_check_enclosing_clock_v2_status": "actual clock source/mechanics author5 and independent41 PASS; source82/old v1 unchanged; actual saved check unexecuted, final write tail and whole saved_check plus other9 expenses unclosed; no finance or actual launch approval"
+  "saved_check_enclosing_clock_v2_status": "actual clock source/mechanics author5 and independent41 PASS; source82/old v1 unchanged; actual saved check unexecuted, final write tail and whole saved_check plus other9 expenses unclosed; no finance or actual launch approval",
+  "external_expense_receipt_adapter_store_manifest_ref": "artifact:sha256:0c3bac845399dd8f3d689e5fe3e3b7a9e750894762424954e8de64579de01f4f",
+  "external_expense_receipt_adapter_status": "derived snapshot adapter author18 and independent9 source/mechanics PASS; original raw/source82 unchanged; actual receipt bindings and all external10 costs unclosed; no actual saved execution or financial approval"
 }
