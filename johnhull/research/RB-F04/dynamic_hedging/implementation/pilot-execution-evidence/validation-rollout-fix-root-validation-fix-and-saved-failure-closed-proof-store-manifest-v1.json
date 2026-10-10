@@ -1,0 +1,120 @@
+{
+  "entries": [
+    {
+      "bytes": 11995,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-applied-validation-rollout-binding-and-pytest-v1.json",
+      "ref": "artifact:sha256:28dc6972b9e371a36f57a33d7d9d3602ff43bad1badb6a63e55815e50b131c2c"
+    },
+    {
+      "bytes": 14439,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source82-actual-saved-only-guards-decision-v1.json",
+      "ref": "artifact:sha256:3d342ed72aec15340bc9c98b798221242a11d2a5f30e978366b07cb04201e635"
+    },
+    {
+      "bytes": 5327,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source82-validation-result-binding-patch-decision-v1.json",
+      "ref": "artifact:sha256:f78ad5585a0692ad45263f453a13bdb885bb2af293160ca31d63efd91277cf6b"
+    },
+    {
+      "bytes": 813,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-minimal-validation-rollout-binding-applied-v1.json",
+      "ref": "artifact:sha256:92b4bde415541d8ab8df9ca94724e4352681e763e66e14cda40b058ed499c70c"
+    },
+    {
+      "bytes": 1871,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source82-saved-check-actual-guards-preflight-v1.json",
+      "ref": "artifact:sha256:d15bda05959b281b706c11ea08e6e995a50680a1f88c4eae1866c33fb1f09572"
+    },
+    {
+      "bytes": 2274,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source82-terminal-byte-candidate-actual-invocation-receipt-v1.json",
+      "ref": "artifact:sha256:6261202eaa6ec5c0a828f8c02de79ca7b1925d61a86bf3f46ca8a8fd2769013b"
+    },
+    {
+      "bytes": 2382,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-validation-rollout-binding-focused-tests-v1.json",
+      "ref": "artifact:sha256:4465476c2eb3a4d9a80116efa7e6ff9b1679bb71b8204eccbda5caf7562e2035"
+    },
+    {
+      "bytes": 4031,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-enclosing-observation-v2/parent-cost-and-status.json",
+      "ref": "artifact:sha256:901159b7002cd0edf90cf24de0b1286089a9a08c79a836e944e821840f6aeac0"
+    },
+    {
+      "bytes": 5680,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-full-child-observation-v1/full-child-expense.json",
+      "ref": "artifact:sha256:4b0128ccdabbe1f033c3b459e9b03fdd42d199a7099d1ffae0fb269f7631ee31"
+    },
+    {
+      "bytes": 4031,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-full-child-observation-v1/original-prefix-receipt.bytes",
+      "ref": "artifact:sha256:901159b7002cd0edf90cf24de0b1286089a9a08c79a836e944e821840f6aeac0"
+    },
+    {
+      "bytes": 4634,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-observation-v2/parent-cost-and-status.json",
+      "ref": "artifact:sha256:6b720ba699f0959f2a12d4695f0cc0cd9645e14f43f683c8924e089777c587e3"
+    },
+    {
+      "bytes": 1699155,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json",
+      "ref": "artifact:sha256:1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f"
+    },
+    {
+      "bytes": 2910,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-whole-child-root-guard-v1.json",
+      "ref": "artifact:sha256:4af9c16d8fd090c5537e7dccedb51da776f2d2a41e65124be70c0ad60f945fd1"
+    },
+    {
+      "bytes": 1698067,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-terminal-provenance-candidate-v2.json",
+      "ref": "artifact:sha256:be40aa307820ac9f21e43cd850100838ec2dfa9809dc0207afab5f8a6502dab0"
+    },
+    {
+      "bytes": 581,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-proposed-v1.patch",
+      "ref": "artifact:sha256:697ebf88a8a4a0408769ea9058169c3279ff51ee28044d99c39c9cc3144007ee"
+    },
+    {
+      "bytes": 4336,
+      "mime": "text/plain",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-pytest-proposed-v1.patch",
+      "ref": "artifact:sha256:206d1105fde4e376ff8a337af77e0a4bcc721bf8c6aa9ef4fbee80d577886a91"
+    },
+    {
+      "bytes": 16831,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-pytest-verification-v1.json",
+      "ref": "artifact:sha256:37072a654472511adc2a83627c86b8dc334b50c69f9ff59721c7718c09f6f219"
+    },
+    {
+      "bytes": 170658,
+      "mime": "text/x-python",
+      "path": "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+      "ref": "artifact:sha256:2f2e0100a584144f332d151d6f6881bc25ce51a0e3e94630ed2c3fefa9115f78"
+    },
+    {
+      "bytes": 215580,
+      "mime": "text/x-python",
+      "path": "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "ref": "artifact:sha256:8f11bdf353a5b6cda2a6f449001b23fed775227724260a4699f9dc0dee432d7a"
+    }
+  ],
+  "kind": "johnhull-evidence-manifest",
+  "schema_version": 1
+}

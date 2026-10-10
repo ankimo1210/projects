@@ -1,6 +1,6 @@
 # 正式pilot予算のための測定
 
-source82の正式pilotは2026-10-10 17:36:56 UTCにpartial終了（外側13,010.606秒、約3時間37分）。213jobs executed、214番gateで KeyError: 'result'。行政資源停止はなく、元source/入力/prior/原失敗・費用・全scopeを保持した。元sourceの全保存数値検算を別guardで実行中、完走・数値資格・freeze/mainは未完了。 [原終端](pilot-execution-evidence/source82-terminal-partial-root-source82-terminal-checkpoint-metadata-summary-v1.json)。
+最新：source82の正式pilotは213jobs executed＋214番gateのKeyError: 'result'でpartial終了（約3時間37分）。元sourceの全保存検算は308.541秒で個別16GiB RSS上限を超え、行政partial停止した。原失敗・費用・82source snapshot・元3,138jobs/121cases/51義務/全4Nを保持。validationはsummary行ではなく元rollouts[id]を読む最小修正を適用し、関連220tests/Ruff/format・独立静的12確認はPASS。全件逐次検算が次の作業。金融saved数値結果・新sourceのprior結合・fresh正式pilot完走・freeze/mainは未完了、qualification unknown。 [原停止と修復](#元source82の保存検算停止とvalidation参照修復2026-10-11)。
 
 2026-10-11。旧source81は引数binding不一致、source82はvalidation result形状不一致で214件目partial停止。mainは未実行。以下の先行測定は**部品の実測と、歴史的教師計算からの外挿**であり、全phaseの実測時間・精度資格ではない。現在の実起動は末尾に記録。
 
@@ -437,6 +437,18 @@ observerは[作者4群](pilot-execution-evidence/source82-whole-child-cost-task-
 
 [作者診断](pilot-execution-evidence/source82-terminal-partial-task-5-source82-validation-result-shape-diagnosis-v1.json)と[独立source読取](pilot-execution-evidence/source82-terminal-partial-independent-source82-validation-result-shape-diagnosis-v1.json)で、select_validationは14summary行と別rollouts[id]、test_rosterは11cell各々のresultを保存するのに、consumerが両方へrowのresultを要求していることを確認した。tiny元producer/consumerの同じKeyError再現は金融精度の検算と区別する。最小案はvalidationだけ元rollouts[rowのid]を読むこと。全valueの許容誤差比較・全候補cash loop・roster経路を保ち、まだproduction反映していない。
 
-終端10,233物理filesと元4bindingを結ぶ別saved-only guardをrootが固定し、限定独立13確認後、2026-10-10 17:51:03 UTCに元source82のまま全保存数値検算を起動した。全job同時hydrateの16GiB適合はunknown。原全3,138/121/51/4N・partial/sourcefault・未計測費用を保持する。結果・費用・precision/freeze/mainは未閉鎖。研究#10/#11は#9後に順次進める。
+終端10,233物理filesと元4bindingを結ぶ別saved-only guardをrootが固定し、限定独立13確認後、2026-10-10 17:51:03 UTCに元source82のまま全保存数値検算を起動した。この試行は後述のとおり全job同時hydrateで16GiBを超え行政停止。原全3,138/121/51/4N・partial/sourcefault・未計測費用を保持する。結果・費用・precision/freeze/mainは未閉鎖。研究#10/#11は#9後に順次進める。
 
 ETAは未確定。旧rateの全stage条件付き139.050h＋別context cold90.673h×4＝501.742h（連続約20.9日）は既知部分の試算で、全体ETA・下限・上限ではない。#10/#11、不具合対応、未知費用を含まない。3時間37分の部分実行から残ジョブへ単純比例せず、全pilot完走の実測後に更新する。
+
+### 元source82の保存検算停止とvalidation参照修復（2026-10-11）
+
+元source82の全保存検算は17:51:03–17:56:12 UTCに終了。[元monitor](pilot-execution-evidence/validation-rollout-fix-task-5-formal-pilot-saved-check-observation-v2--parent-cost-and-status.json)はouter wall308.540741秒/child CPU292.349934秒、観測child RSS17,282,850,816 bytes、kernel peak17,416,839,168 bytes。個別16GiB上限超過を観測してsignalを送信、exit−9・administrative_partial_unclosed。observer errors0・原source/入力/prior/nativeのbyteは不変。元金融pilotのKeyErrorとは別の停止であり、保存数値検算は完了していない。
+
+[全子receipt](pilot-execution-evidence/validation-rollout-fix-task-5-formal-pilot-saved-check-full-child-observation-v1--full-child-expense.json)はwall309.452910秒/CPU307.412609秒、failedの理由と実時計を保存した。[内側の原prefix](pilot-execution-evidence/validation-rollout-fix-task-5-formal-pilot-saved-check-full-child-observation-v1--original-prefix-receipt.bytes)はbyteで保持。全子cost scopeの観測は閉じたが、金融結果・全10/総費用は未閉鎖で、自身の行政bookkeepingは別pending/Noneのまま。原失敗・費用を消さず、過去の生成費用や内側prefixを重複加算しない。
+
+全関係processの終了と原82sourceのmaterialized snapshot保存を確認した後、validationの1参照を修復した。元summaryごとのrollouts[id]をcash検算へ渡し、rosterのcell.resultと全value許容誤差比較を保持。既存pytest末尾へ7ケースを追加し、completed/unknownの全14candidate・全11roster、NaN、1e-12程度の丸め差、欠落・不正型・1e-3改変拒否を検査。[rootの実関連220tests/Ruff/format/diffcheck](pilot-execution-evidence/validation-rollout-fix-root-validation-rollout-binding-focused-tests-v1.json)はPASS、[独立静的12確認](pilot-execution-evidence/validation-rollout-fix-independent-applied-validation-rollout-binding-and-pytest-v1.json)もPASS（独立再実行0）。元checker2f5b3e…は原snapshotに保持し、現checker8f11bd…へ変更。旧source82のplan/priorで新sourceを再利用・起動する許可はない。
+
+次は全件逐次検算を限定実装する。既存mainの参照読取は参考になるが、loaderだけではjob辞書・checksのfull値・stage依存evidence・case/attemptのraw list・最終raw_snapshotで再び全量を保持する。pilot専用参照store・検算結果store・依存ビュー・bounded報告を合わせ、全元roster/経路/labels/SDE/cash/unknown/原byteの認証を維持する必要がある。既存payload_digestはMappingを扱わないため、同一logical digestの逐次処理または元checkpointと全row receiptの明示的結合を検証する。単一job/stageの最大RSSは未測定で、修復後16GiB適合は未保証。金融候補/経路数や受入範囲は減らさない。
+
+[closed proof CAS](pilot-execution-evidence/validation-rollout-fix-root-validation-fix-and-saved-failure-closed-proof-store-manifest-v1.json)は修正版2sourceと17proofの計19paths/3,865,595 bytes。両storeの原byteと標準reader復元はPASS。[実保存prefix](pilot-execution-evidence/validation-rollout-fix-root-validation-fix-and-saved-failure-closed-proof-store-receipt-v1.json)はwall 5.169310秒、準備・最終tailはunknown。最初のmanifestは同じ原JSON byteを.jsonと.bytesで異なるMIMEとしたためput前に拒否され、原byteを変えず実JSON MIMEへ修正した。これらのproof保存は金融raw全体のCAS/semantic復元や金融external10完了ではない。全体ETAは引き続き数週間規模、1か月超もあり得る概算で、全pilot完走まで確定しない。

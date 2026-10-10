@@ -1,0 +1,20 @@
+{
+  "schema": "rb-f04-root-minimal-validation-rollout-binding-applied-v1",
+  "UTC": "2026-10-10T17:59:14.010592+00:00",
+  "old_full_saved_attempt_terminal": true,
+  "old82_all_files_preserved_in_materialized_snapshot": true,
+  "original_case_source_id_unchanged_in_history": true,
+  "identity_changes": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "old": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "new": "8f11bdf353a5b6cda2a6f449001b23fed775227724260a4699f9dc0dee432d7a"
+    }
+  },
+  "changed_paths": [
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+  ],
+  "new_source_prior_or_financial_run_authorized": false,
+  "financial_qualification": "unknown",
+  "tests_pending": true
+}

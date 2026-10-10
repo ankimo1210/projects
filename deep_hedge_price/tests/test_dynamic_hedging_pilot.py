@@ -4082,3 +4082,93 @@ def test_uncapped_fixed_n_plan_keeps_existing_projection_contract():
         "parent_expense_id": "fixed:actual",
         "required_job_ids": ["fixed-worker"],
     }
+
+
+def _validation_rollout_binding_fixture(monkeypatch, *, unknown=False):
+    """Actual selection/roster APIs; synthetic rollout/cash work only."""
+    data = {
+        "model": "heston",
+        "original_n": 4,
+        "times": np.array([0.0, 1.0]),
+        "prices": np.zeros((4, 2, 2)),
+        "memory_sum": np.zeros((4, 2)),
+        "memory_count": np.array([0, 12]),
+        "payoff": np.zeros(4),
+        "cost_rates": np.array([0.001, 0.001]),
+    }
+
+    def policy_rollout(dataset, risk, *, universe, policy, model=None, width=0.0, fit=None):
+        loss = np.arange(4.0) / 10 + width
+        return {
+            "status": "unknown" if unknown else "completed",
+            "reason": "synthetic unavailable risk" if unknown else None,
+            "original_n": 4,
+            "loss": np.full(4, np.nan) if unknown else loss,
+        }
+
+    def cash_replay(dataset, result):
+        assert result["original_n"] == len(dataset["prices"])
+        assert np.asarray(result["loss"]).shape == (4,)
+        replayed.append(result)
+        return {"qualification": "unknown"}
+
+    replayed = []
+    monkeypatch.setattr(run_pilot.study, "policy_rollout", policy_rollout)
+    monkeypatch.setattr(check_pilot.replay, "check_cash", cash_replay)
+    monkeypatch.setattr(np.random, "default_rng", lambda *a, **kw: pytest.fail("unexpected RNG"))
+    arguments = {
+        "dataset": data,
+        "risk": {},
+        "generator": "Heston",
+        "universe": "U2",
+        "widths": run_pilot.protocol.candidate_protocol()["hedging"]["band_width_candidates"],
+    }
+    raw = run_pilot._dispatch("validation", arguments)
+    return raw, arguments, replayed
+
+
+@pytest.mark.parametrize("unknown", [False, True])
+@pytest.mark.parametrize("operation", ["validation", "roster"])
+def test_wrapped_native_policy_outputs_use_full_rollouts(monkeypatch, operation, unknown):
+    validation, arguments, replayed = _validation_rollout_binding_fixture(
+        monkeypatch, unknown=unknown
+    )
+    if operation == "validation":
+        raw = copy.deepcopy(validation)
+        # A genuine roundoff-sized change is accepted by the existing numeric tolerance.
+        if not unknown:
+            first = next(iter(raw["value"]["rollouts"].values()))
+            first["loss"][0] += 1e-12
+        expected = [raw["value"]["rollouts"][row["id"]] for row in raw["value"]["candidates"]]
+        assert len(expected) == 14
+    else:
+        arguments = {key: value for key, value in arguments.items() if key != "widths"}
+        arguments.update(fits=[], validation=validation["value"])
+        raw = run_pilot._dispatch("roster", arguments)
+        expected = [cell["result"] for cell in raw["value"]["cells"]]
+        assert len(expected) == 11
+    result = check_pilot.check_wrapped_operation(raw, operation, {})
+    assert len(replayed) == len(expected)
+    for original, actual in zip(expected, replayed, strict=True):
+        assert actual is original
+        np.testing.assert_allclose(actual["loss"], original["loss"], equal_nan=True)
+        assert actual["original_n"] == 4
+    assert result["financial_qualification"] == "unknown"
+    if unknown:
+        assert all(np.isnan(row["loss"]).all() for row in replayed)
+        assert all(row["reason"] for row in replayed)
+
+
+@pytest.mark.parametrize("alteration", ["missing_rollout", "malformed_rollout", "wrong_value"])
+def test_wrapped_validation_rejects_missing_or_corrupted_rollouts(monkeypatch, alteration):
+    raw, _, replayed = _validation_rollout_binding_fixture(monkeypatch)
+    identifier = raw["value"]["candidates"][0]["id"]
+    if alteration == "missing_rollout":
+        raw["value"]["rollouts"].pop(identifier)
+    elif alteration == "malformed_rollout":
+        raw["value"]["rollouts"][identifier].pop("loss")
+    else:
+        raw["value"]["rollouts"][identifier]["loss"][0] += 1e-3
+    with pytest.raises(ValueError, match=r"saved (keyset|value) mismatch"):
+        check_pilot.check_wrapped_operation(raw, "validation", {})
+    assert not replayed

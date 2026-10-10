@@ -7722,6 +7722,120 @@
       "archive": "source82-terminal-partial-independent-source82-validation-result-shape-diagnosis-v1.json",
       "bytes": 6435,
       "sha256": "f79a7ae6ebb8c8a458bd93bb69eb204e75b673d599fbcf11420c17f2b6abb526"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-minimal-validation-rollout-binding-applied-v1.json",
+      "archive": "validation-rollout-fix-root-minimal-validation-rollout-binding-applied-v1.json",
+      "bytes": 813,
+      "sha256": "92b4bde415541d8ab8df9ca94724e4352681e763e66e14cda40b058ed499c70c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-validation-rollout-binding-focused-tests-v1.json",
+      "archive": "validation-rollout-fix-root-validation-rollout-binding-focused-tests-v1.json",
+      "bytes": 2382,
+      "sha256": "4465476c2eb3a4d9a80116efa7e6ff9b1679bb71b8204eccbda5caf7562e2035"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-applied-validation-rollout-binding-and-pytest-v1.json",
+      "archive": "validation-rollout-fix-independent-applied-validation-rollout-binding-and-pytest-v1.json",
+      "bytes": 11995,
+      "sha256": "28dc6972b9e371a36f57a33d7d9d3602ff43bad1badb6a63e55815e50b131c2c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-proposed-v1.patch",
+      "archive": "validation-rollout-fix-task-5-validation-rollout-binding-proposed-v1.patch",
+      "bytes": 581,
+      "sha256": "697ebf88a8a4a0408769ea9058169c3279ff51ee28044d99c39c9cc3144007ee"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-pytest-proposed-v1.patch",
+      "archive": "validation-rollout-fix-task-5-validation-rollout-binding-pytest-proposed-v1.patch",
+      "bytes": 4336,
+      "sha256": "206d1105fde4e376ff8a337af77e0a4bcc721bf8c6aa9ef4fbee80d577886a91"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-pytest-verification-v1.json",
+      "archive": "validation-rollout-fix-task-5-validation-rollout-binding-pytest-verification-v1.json",
+      "bytes": 16831,
+      "sha256": "37072a654472511adc2a83627c86b8dc334b50c69f9ff59721c7718c09f6f219"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source82-validation-result-binding-patch-decision-v1.json",
+      "archive": "validation-rollout-fix-independent-source82-validation-result-binding-patch-decision-v1.json",
+      "bytes": 5327,
+      "sha256": "f78ad5585a0692ad45263f453a13bdb885bb2af293160ca31d63efd91277cf6b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json",
+      "archive": "validation-rollout-fix-task-5-formal-pilot-saved-check-root-launch-guard-v2.json",
+      "bytes": 1699155,
+      "sha256": "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-whole-child-root-guard-v1.json",
+      "archive": "validation-rollout-fix-task-5-formal-pilot-saved-check-whole-child-root-guard-v1.json",
+      "bytes": 2910,
+      "sha256": "4af9c16d8fd090c5537e7dccedb51da776f2d2a41e65124be70c0ad60f945fd1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source82-actual-saved-only-guards-decision-v1.json",
+      "archive": "validation-rollout-fix-independent-source82-actual-saved-only-guards-decision-v1.json",
+      "bytes": 14439,
+      "sha256": "3d342ed72aec15340bc9c98b798221242a11d2a5f30e978366b07cb04201e635"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source82-saved-check-actual-guards-preflight-v1.json",
+      "archive": "validation-rollout-fix-root-source82-saved-check-actual-guards-preflight-v1.json",
+      "bytes": 1871,
+      "sha256": "d15bda05959b281b706c11ea08e6e995a50680a1f88c4eae1866c33fb1f09572"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-terminal-provenance-candidate-v2.json",
+      "archive": "validation-rollout-fix-task-5-full-pilot-root-saved-check-terminal-provenance-candidate-v2.json",
+      "bytes": 1698067,
+      "sha256": "be40aa307820ac9f21e43cd850100838ec2dfa9809dc0207afab5f8a6502dab0"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source82-terminal-byte-candidate-actual-invocation-receipt-v1.json",
+      "archive": "validation-rollout-fix-root-source82-terminal-byte-candidate-actual-invocation-receipt-v1.json",
+      "bytes": 2274,
+      "sha256": "6261202eaa6ec5c0a828f8c02de79ca7b1925d61a86bf3f46ca8a8fd2769013b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-observation-v2/parent-cost-and-status.json",
+      "archive": "validation-rollout-fix-task-5-formal-pilot-saved-check-observation-v2--parent-cost-and-status.json",
+      "bytes": 4634,
+      "sha256": "6b720ba699f0959f2a12d4695f0cc0cd9645e14f43f683c8924e089777c587e3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-enclosing-observation-v2/parent-cost-and-status.json",
+      "archive": "validation-rollout-fix-task-5-formal-pilot-saved-check-enclosing-observation-v2--parent-cost-and-status.json",
+      "bytes": 4031,
+      "sha256": "901159b7002cd0edf90cf24de0b1286089a9a08c79a836e944e821840f6aeac0"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-full-child-observation-v1/full-child-expense.json",
+      "archive": "validation-rollout-fix-task-5-formal-pilot-saved-check-full-child-observation-v1--full-child-expense.json",
+      "bytes": 5680,
+      "sha256": "4b0128ccdabbe1f033c3b459e9b03fdd42d199a7099d1ffae0fb269f7631ee31"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-full-child-observation-v1/original-prefix-receipt.bytes",
+      "archive": "validation-rollout-fix-task-5-formal-pilot-saved-check-full-child-observation-v1--original-prefix-receipt.bytes",
+      "bytes": 4031,
+      "sha256": "901159b7002cd0edf90cf24de0b1286089a9a08c79a836e944e821840f6aeac0"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-validation-fix-and-saved-failure-closed-proof-store-manifest-v1.json",
+      "archive": "validation-rollout-fix-root-validation-fix-and-saved-failure-closed-proof-store-manifest-v1.json",
+      "bytes": 5612,
+      "sha256": "250fd1726532089a535b68cd821c3a2b60253ee2c92fcc95613fd78c2c983f70"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-validation-fix-and-saved-failure-closed-proof-store-receipt-v1.json",
+      "archive": "validation-rollout-fix-root-validation-fix-and-saved-failure-closed-proof-store-receipt-v1.json",
+      "bytes": 4803,
+      "sha256": "ac2799f076022ba44cd94e44bf0f83e086f720727d0fc3d727a49f45868e365d"
     }
   ],
   "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending; corrected81 formal pilot now terminal214 rows with stage gate argument-binding defect; full saved semantic check pending; new82 private storage transport and stage argument comparison source-only approved; single genuineN1024 full-payload storage verified; fresh prior/root and financial saved acceptance still pending; new82 actual prior/metadata/saved structural binding/guard complete; fresh formal pilot launched14:00:06 UTC with original scope; full saved numeric/freeze/main still pending; source82 saved-check preparation: 32 closed files copied exactly, including historical probe/tool and store-format failures; no live native raw/logs; terminal byte helper v1/v2 and original failures: 30 closed archives; excludes live native data",
@@ -7803,5 +7917,8 @@
   "external_expense_receipt_adapter_status": "derived snapshot adapter author18 and independent9 source/mechanics PASS; original raw/source82 unchanged; actual receipt bindings and all external10 costs unclosed; no actual saved execution or financial approval",
   "whole_child_and_adapter_v2_proof_store_manifest_ref": "artifact:sha256:164d0ee1c341df2f388463bac4a63f8f95e6f7a5410dac78359f5c91bc409d9e",
   "whole_child_and_adapter_v2_status": "observer author4/independent4 and adapter-v2 author7/independent9 source mechanics PASS; preserves administrative pending and total unknown; no actual external10 injection/closure or financial approval",
-  "source82_formal_pilot_terminal_status": "213 executed plus 214th stage:Heston:N1024:coarse:gate unclosed_source_or_solver_defect KeyError result; no admin stop; source82 unchanged; original saved-only checker running under separate reviewed guards"
+  "source82_formal_pilot_terminal_status": "213 executed plus 214th stage:Heston:N1024:coarse:gate unclosed_source_or_solver_defect KeyError result; no admin stop; source82 unchanged; original saved-only checker running under separate reviewed guards",
+  "validation_rollout_fix_and_saved_failure_manifest_ref": "artifact:sha256:250fd1726532089a535b68cd821c3a2b60253ee2c92fcc95613fd78c2c983f70",
+  "validation_rollout_fix_status": "one validation rollout access repaired, 7 focused regression cases and whole target220 PASS; root Ruff/format and independent static12 PASS; original source82 all files preserved; new prior/freeze/main unapproved",
+  "source82_saved_only_attempt_status": "administrative_partial_unclosed at whole hydration,308.540741s, observed child17282850816B over16GiB; -9/signaltrue, original bytes unchanged; no saved numerical result; full-child failed cost309.452910s plus administrative pending"
 }

@@ -1,0 +1,87 @@
+{
+  "schema": "rb-f04-root-formal-monitor-enclosing-cost-v1",
+  "status": "terminal_requires_native_and_saved_result_inspection",
+  "monitor_exit_code": 3,
+  "monitor_pid": 429958,
+  "guard_sha256": "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-observer-v1.py",
+    "--guard",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json"
+  ],
+  "start_UTC": "2026-10-10T17:51:03.496716+00:00",
+  "end_UTC": "2026-10-10T17:56:12.916958+00:00",
+  "wall_seconds": 309.42027067199524,
+  "parent_CPU_seconds": 0.380877361,
+  "children_CPU_seconds": 306.999168,
+  "parent_kernel_peak_RSS_bytes": 61353984,
+  "child_kernel_peak_RSS_bytes": 17416839168,
+  "scope": "saved-only enclosing invocation including guard imports/authentication, all full-job hydration/SDE/labels/final serialization, monitor postbinding/receipts; nested clocks not added again",
+  "monitor_status_not_reclassified": true,
+  "financial_qualification": "unknown",
+  "finance_acceptance": false,
+  "original_generation_costs_readded": false,
+  "own_final_receipt_write_stdout_cost": null,
+  "measured_prefix_expense": {
+    "id": "saved_check",
+    "status": "failed",
+    "scope": "future_saved_only_whole_monitor_invocation_measured_prefix",
+    "timing": {
+      "wall_seconds": 309.419488301,
+      "cpu_seconds": 307.379261707,
+      "overrun_seconds": null
+    },
+    "timing_events": {
+      "wall_start_ns": 79128279425775,
+      "wall_stop_ns": 79437698914076,
+      "cpu_start_ns": 21155096,
+      "cpu_stop_ns": 307400416803
+    },
+    "whole_external_saved_check_expense_closed": false,
+    "final_receipt_construction_write_stdout_tail_seconds": null,
+    "financial_qualification": "unknown",
+    "finance_acceptance": false,
+    "external_event_rows_injected": false,
+    "other_external_ids_closed": false
+  },
+  "clock_source_samples": {
+    "wall_clock": "time.perf_counter_ns",
+    "wall_start_ns": 79128279425775,
+    "wall_stop_ns": 79437698914076,
+    "parent_cpu_clock": "time.process_time_ns",
+    "parent_cpu_start_ns": 21155096,
+    "parent_cpu_stop_ns": 401248803,
+    "children_cpu_clock": "resource.getrusage(resource.RUSAGE_CHILDREN)",
+    "children_cpu_start": {
+      "ru_utime_seconds": 0.0,
+      "ru_stime_seconds": 0.0,
+      "ru_utime_ns_rounded": 0,
+      "ru_stime_ns_rounded": 0
+    },
+    "children_cpu_stop": {
+      "ru_utime_seconds": 228.486864,
+      "ru_stime_seconds": 78.512304,
+      "ru_utime_ns_rounded": 228486864000,
+      "ru_stime_ns_rounded": 78512304000
+    },
+    "cpu_composite_domain": "parent process CPU ns plus rounded cumulative reaped-child user/system CPU ns; includes the waited monitor and any descendants included by OS rusage semantics",
+    "children_ns_conversion": "round(each actual cumulative ru_utime/ru_stime seconds sample * 1e9); this preserves sampled precision, not nanosecond kernel precision",
+    "start_sampling_order": [
+      "legacy perf_counter/process_time floats",
+      "perf_counter_ns",
+      "process_time_ns",
+      "getrusage RUSAGE_CHILDREN"
+    ],
+    "stop_sampling_order": [
+      "wait child; close stdout/stderr",
+      "getrusage RUSAGE_CHILDREN",
+      "process_time_ns",
+      "perf_counter_ns"
+    ],
+    "legacy_float_clock_relationship": "legacy float durations use separately sampled endpoints and retain their original parent/children scopes; small sampling-order differences are not missing CPU and are not extra additive expenses",
+    "double_charge_rule": "measured prefix CPU already contains parent and reaped-child deltas once; do not add children_CPU_seconds or nested monitor clocks to it again",
+    "post_stop_receipt_construction_write_stdout_cost": null,
+    "no_historical_duration_endpoint_reconstruction": true
+  }
+}

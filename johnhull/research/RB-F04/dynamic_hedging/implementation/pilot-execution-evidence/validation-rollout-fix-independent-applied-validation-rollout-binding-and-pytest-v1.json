@@ -1,0 +1,225 @@
+{
+  "schema": "rb-f04-independent-applied-validation-rollout-binding-and-pytest-review-v1",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent read-only actual applied source and regression review",
+  "scope": "One actual checker result-access correction and exact appended seven small parameterized producer/consumer regression cases only. No wholepilot capacity, finance, actual numerical closure, prior reuse or new launch authorization.",
+  "approved_checker_sha256": "8f11bdf353a5b6cda2a6f449001b23fed775227724260a4699f9dc0dee432d7a",
+  "approved_test_sha256": "2f2e0100a584144f332d151d6f6881bc25ce51a0e3e94630ed2c3fefa9115f78",
+  "fixed_references": {
+    "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "sha256": "8f11bdf353a5b6cda2a6f449001b23fed775227724260a4699f9dc0dee432d7a",
+      "bytes": 215580
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot.py": {
+      "sha256": "2f2e0100a584144f332d151d6f6881bc25ce51a0e3e94630ed2c3fefa9115f78",
+      "bytes": 170658
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "sha256": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "bytes": 215493
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-pytest-proposed-v1.patch": {
+      "sha256": "206d1105fde4e376ff8a337af77e0a4bcc721bf8c6aa9ef4fbee80d577886a91",
+      "bytes": 4336
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-proposed-v1.patch": {
+      "sha256": "697ebf88a8a4a0408769ea9058169c3279ff51ee28044d99c39c9cc3144007ee",
+      "bytes": 581
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-pytest-verification-v1.json": {
+      "sha256": "37072a654472511adc2a83627c86b8dc334b50c69f9ff59721c7718c09f6f219",
+      "bytes": 16831
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-minimal-validation-rollout-binding-applied-v1.json": {
+      "sha256": "92b4bde415541d8ab8df9ca94724e4352681e763e66e14cda40b058ed499c70c",
+      "bytes": 813
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-validation-rollout-binding-focused-tests-v1.json": {
+      "sha256": "4465476c2eb3a4d9a80116efa7e6ff9b1679bb71b8204eccbda5caf7562e2035",
+      "bytes": 2382
+    }
+  },
+  "checks": [
+    {
+      "name": "source exact fixed SHA and one-access fullbyte delta",
+      "status": "PASS"
+    },
+    {
+      "name": "only check_wrapped_operation AST differs; all other definitions preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "81 remaining runtime files unchanged; full old82 source-snapshot physically preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "actual test patch is exact append; original complete test prefixSHA and all definitions preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "7 parameterized cases target real select_validation/test_roster/_dispatch/check_wrapped_operation; rollout/cash only stubbed",
+      "status": "PASS"
+    },
+    {
+      "name": "validation14 uses full rollouts[id]; roster11 retains cells.result; real producer convention inspected",
+      "status": "PASS"
+    },
+    {
+      "name": "unknown NaN loss and reason retained; financial_qualification remains unknown",
+      "status": "PASS"
+    },
+    {
+      "name": "saved numeric comparison remains tolerance rtol2e-9/atol2e-10/equal_nan; 1e-12 acceptance and 1e-3 rejection covered",
+      "status": "PASS"
+    },
+    {
+      "name": "missing dictionary entry/missing loss/outside-tolerance corruption reject before cash replay via existing saved keyset/value check",
+      "status": "PASS"
+    },
+    {
+      "name": "author real-module RED2/GREEN7 receipt preserved, not counted as independent rerun",
+      "status": "PASS"
+    },
+    {
+      "name": "root applied wholefile220PASS/Ruff/format/diffcheck successful receipt preserved, no independent tests rerun",
+      "status": "PASS"
+    },
+    {
+      "name": "new source not authorized by old82 prior; partial/fault/resource failure historical",
+      "status": "PASS"
+    }
+  ],
+  "independent_static_check_count": 12,
+  "parameterized_cases": [
+    {
+      "test": "test_wrapped_native_policy_outputs_use_full_rollouts",
+      "parameter_axes": {
+        "unknown": [
+          false,
+          true
+        ],
+        "operation": [
+          "validation",
+          "roster"
+        ]
+      },
+      "actual_cases": 4
+    },
+    {
+      "test": "test_wrapped_validation_rejects_missing_or_corrupted_rollouts",
+      "parameter_axes": {
+        "alteration": [
+          "missing_rollout",
+          "malformed_rollout",
+          "wrong_value"
+        ]
+      },
+      "actual_cases": 3
+    }
+  ],
+  "unresolved_P1_P2_findings": [],
+  "source_contract": {
+    "original_source82_checker_sha256": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+    "new_actual_checker_sha256": "8f11bdf353a5b6cda2a6f449001b23fed775227724260a4699f9dc0dee432d7a",
+    "exact_fullbyte_delta": "Within the existing per-row replay loop, roster keeps row['result']; validation reads value['rollouts'][row['id']] and passes that original full body to check_cash.",
+    "changed_existing_function_AST": [
+      "check_wrapped_operation"
+    ],
+    "all_other_existing_definition_AST_unchanged": true,
+    "source82_current_different_paths": [
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+    ],
+    "other81_runtime_bytes_unchanged": true,
+    "original_full82_runtime_snapshot_physically_preserved": true,
+    "producer_validation_contract": "select_validation keeps fourteen summary rows (id/status/original_n/MSE/reason), with full policy_rollout dictionaries keyed by id in value.rollouts; summary rows do not carry result.",
+    "producer_roster_contract": "test_roster retains eleven cell dictionaries with cell.result. Existing same result access is retained.",
+    "saved_comparison": "Existing runner._same compares the complete recomputed saved structure before cash replay; keysets/shapes and numeric rtol=2e-9, atol=2e-10, equal_nan=True are unchanged.",
+    "original_roster_N_thresholds_grids_seeds_models_math_unchanged": true
+  },
+  "regression_meaning": {
+    "exact_original_test_prefix_SHA": "7908711cf9ab62fd6dbb1ae9546d05172e10340ff5fbc97f3dfdbfefc13039d9",
+    "actual_append_patch_SHA": "206d1105fde4e376ff8a337af77e0a4bcc721bf8c6aa9ef4fbee80d577886a91",
+    "existing_entire_test_byte_prefix_and_all_definitions_preserved": true,
+    "real_entrypoints": [
+      "run_pilot._dispatch",
+      "study.select_validation",
+      "study.test_roster",
+      "check_pilot.check_wrapped_operation"
+    ],
+    "stubs": [
+      "study.policy_rollout supplied four-path synthetic outputs",
+      "replay.check_cash records original full result and shape/N; no cash numerical qualification"
+    ],
+    "RNG": "default_rng replaced with pytest.fail; no generation expected in the seven small regressions",
+    "positive_cases": "validation/roster \u00d7 supplied completed/unknown = 4 cases; validation14 and roster11 calls must pass original full body objects",
+    "unknown": "NaN loss and reasons retained; returned financial_qualification remains unknown; no fallback/zero replacement.",
+    "tolerance": "Completed validation accepts an existing-comparison 1e-12 perturbation. A 1e-3 out-of-tolerance loss change rejects before cash callback.",
+    "malformed": "Missing rollout id and missing loss key reject through existing saved keyset/value comparison before cash callback.",
+    "limitation": "Synthetic N4 callbacks test result routing and saved-structure rejection. They do not certify financial cash equations, production original-N accuracy, resource fit or entire pilot."
+  },
+  "existing_verification_receipts": {
+    "author_memory_candidate": "Actual imported producer/consumer RED has two validation KeyError:'result' failures and five passing cases; isolated exact candidate consumer in-memory replacement gives seven pass. The receipt and original failures are retained.",
+    "author_historical_fixture_and_lint_failures": "Namespace fixture setup error and neutral-filename existing per-file lint warnings are retained in the author verification JSON; final original-target Ruff/format PASS. No source defect or erased history inferred.",
+    "root_actual_applied_verification": "root-validation-rollout-binding-focused-tests-v1.json records 220 passed in64.12s plus Ruff/format/diff --check PASS; inspected as root evidence only.",
+    "independent_tests_rerun": 0,
+    "independent_financial_module_imports": 0,
+    "actual_native_financial_NPZ_reads_or_decode": 0,
+    "root_evidence_counted_as_independent_test_PASS": false,
+    "full_three_suites_run": false
+  },
+  "historical_state": {
+    "old_source82_identity_plain": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "old_source82_identity_native": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "original_partial_pilot": "213 executed plus 214th unclosed_source_or_solver_defect, KeyError:'result'; original raw/unknown retained.",
+    "old_source82_saved_attempt": {
+      "provenance": "Parent root terminal report; not re-read/reexecuted by this source/test review",
+      "status": "administrative_partial_unclosed",
+      "wall_seconds": 308.540741,
+      "observed_RSS_bytes": 17282850816,
+      "kernel_peak_RSS_bytes": 17416839168,
+      "child_exit_code": -9,
+      "signal_delivered": true,
+      "full_child_wall_seconds": 309.45291,
+      "failed_cost_retained": true,
+      "administrative_cost_pending": true
+    },
+    "capacity_fit": false,
+    "original_failed_run_reclassified_as_financial_cap_or_PASS": false,
+    "old82_prior_or_guards_authorize_new_source": false,
+    "original_generation_math_scope_and_counts_shrunk": false
+  },
+  "authority": {
+    "applied_source_and_small_test_review_approved": true,
+    "new_source_prior_or_financial_run_authorized": false,
+    "old82_plan_reuse_or_resume_authorized": false,
+    "actual_saved_check_reexecution_authorized": false,
+    "full_external10_cost_closure_approved": false,
+    "capacity_fit_guarantee_approved": false,
+    "root_preapproved": false,
+    "finance_acceptance": false,
+    "main_accepted": false,
+    "phase_accepted": false,
+    "financial_qualification": "unknown"
+  },
+  "review_cost": {
+    "direct_static_probe_wall_seconds": 0.182024921,
+    "direct_static_probe_cpu_seconds": 0.182025965,
+    "scope": "Single static in-memory Python probe: exact byte/AST delta, preserved old82 source snapshot, append-only patch and parameter/receipt checks. Excludes earlier read tools and later decision write/stdout.",
+    "whole_review_wall_seconds": null,
+    "whole_review_cpu_seconds": null,
+    "own_final_receipt_stdout_tail_seconds": null,
+    "actual_expense_clock_endpoints": null,
+    "cost_closed": false,
+    "external10_cost_injected": false
+  },
+  "operations": {
+    "source_or_test_edits": 0,
+    "financial_native_decode": 0,
+    "financial_solver_RNG_worker_calls": 0,
+    "test_reruns": 0,
+    "CAS_Git_mutations": 0
+  },
+  "next_work": "Root may bind the new actual source identity in a new prior/plan separately. Old source82 attempts remain immutable partial/failed history; resource and whole saved-check strategy require their own root work and are not approved by this access correction.",
+  "fixed_at_UTC": "2026-10-10T18:04:38.170525+00:00"
+}

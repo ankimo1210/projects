@@ -1,0 +1,105 @@
+{
+  "schema": "rb-f04-validation-native-pytest-patch-verification-v1",
+  "test_patch": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-pytest-proposed-v1.patch",
+    "sha256": "206d1105fde4e376ff8a337af77e0a4bcc721bf8c6aa9ef4fbee80d577886a91",
+    "bytes": 4336
+  },
+  "production_test_target": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "original_sha256": "7908711cf9ab62fd6dbb1ae9546d05172e10340ff5fbc97f3dfdbfefc13039d9",
+    "original_contents_preserved": true
+  },
+  "companion_source_patch": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-proposed-v1.patch",
+    "sha256": "697ebf88a8a4a0408769ea9058169c3279ff51ee28044d99c39c9cc3144007ee"
+  },
+  "verification": [
+    {
+      "phase": "original_RED",
+      "returncode": 1,
+      "stdout": "FF.....                                                                  [100%]\n=================================== FAILURES ===================================\n____ test_wrapped_native_policy_outputs_use_full_rollouts[validation-False] ____\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x75f78d9da180>\noperation = 'validation', unknown = False\n\n    @pytest.mark.parametrize(\"unknown\", [False, True])\n    @pytest.mark.parametrize(\"operation\", [\"validation\", \"roster\"])\n    def test_wrapped_native_policy_outputs_use_full_rollouts(monkeypatch, operation, unknown):\n        validation, arguments, replayed = _validation_rollout_binding_fixture(\n            monkeypatch, unknown=unknown\n        )\n        if operation == \"validation\":\n            raw = copy.deepcopy(validation)\n            # A genuine roundoff-sized change is accepted by the existing numeric tolerance.\n            if not unknown:\n                first = next(iter(raw[\"value\"][\"rollouts\"].values()))\n                first[\"loss\"][0] += 1e-12\n            expected = [raw[\"value\"][\"rollouts\"][row[\"id\"]] for row in raw[\"value\"][\"candidates\"]]\n            assert len(expected) == 14\n        else:\n            arguments = {key: value for key, value in arguments.items() if key != \"widths\"}\n            arguments.update(fits=[], validation=validation[\"value\"])\n            raw = run_pilot._dispatch(\"roster\", arguments)\n            expected = [cell[\"result\"] for cell in raw[\"value\"][\"cells\"]]\n            assert len(expected) == 11\n>       result = check_pilot.check_wrapped_operation(raw, operation, {})\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n/tmp/validation-actual-pytest-0o1dcukw/test_dynamic_hedging_pilot.py:4150: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nraw = {'arguments': {'dataset': {'cost_rates': array([0.001, 0.001]), 'memory_count': array([ 0, 12]), 'memory_sum': array([...cope': 'all_validation_candidates_and_selection', 'wall_seconds': 0.00018205700325779617}, 'generator': 'Heston', ...}}\noperation = 'validation', context = {}\n\n    def check_wrapped_operation(raw, operation, context):\n        from hullkit._dynamic_hedging_surfaces import evaluate_call\n        from run_pilot import unpack_inputs\n    \n        from deep_hedge_price import _dynamic_hedging_study as study\n    \n        args = unpack_inputs(raw[\"arguments\"])\n        value = raw[\"value\"]\n        _require(raw[\"kind\"] == operation, \"saved operation kind changed\")\n        if operation == \"quote_risk\" and raw.get(\"chunked_worker\") is not None:\n            from check_main import check_risk_job\n    \n            source = raw[\"chunked_worker\"]\n            computed = check_risk_job(\n                source, args[\"parameters\"], args[\"surface\"], args[\"dataset\"], args[\"caches\"]\n            )\n            runner._same(computed[\"risk\"], value, \"saved bounded original quote risk value\")\n            _require(\n                raw[\"status\"] == source[\"status\"]\n                and raw[\"original_n\"] == args[\"dataset\"][\"original_n\"],\n                \"original bounded quote risk status/N changed\",\n            )\n            return {\n                \"original_n\": raw[\"original_n\"],\n                \"value\": value,\n                \"processed_n\": computed[\"processed_n\"],\n                \"financial_qualification\": \"unknown\",\n                \"scope\": \"saved_quote_risk\",\n                \"chunked\": True,\n            }\n        if operation == \"quote_risk\":\n            computed = study.quote_risk_dataset(**args)\n            runner._same(\n                _without_timing(computed), _without_timing(value), \"saved observable quote risk\"\n            )\n        elif operation in (\"roster\", \"validation\"):\n            fn = study.test_roster if operation == \"roster\" else study.select_validation\n            computed = fn(**args)\n            runner._same(\n                _without_timing(computed), _without_timing(value), \"saved original policy roster\"\n            )\n            rows = value[\"cells\"] if operation == \"roster\" else value[\"candidates\"]\n            for row in rows:\n>               replay.check_cash(args[\"dataset\"], row[\"result\"])\n                                                   ^^^^^^^^^^^^^\nE               KeyError: 'result'\n\n../worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:2065: KeyError\n____ test_wrapped_native_policy_outputs_use_full_rollouts[validation-True] _____\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x75f78d9db680>\noperation = 'validation', unknown = True\n\n    @pytest.mark.parametrize(\"unknown\", [False, True])\n    @pytest.mark.parametrize(\"operation\", [\"validation\", \"roster\"])\n    def test_wrapped_native_policy_outputs_use_full_rollouts(monkeypatch, operation, unknown):\n        validation, arguments, replayed = _validation_rollout_binding_fixture(\n            monkeypatch, unknown=unknown\n        )\n        if operation == \"validation\":\n            raw = copy.deepcopy(validation)\n            # A genuine roundoff-sized change is accepted by the existing numeric tolerance.\n            if not unknown:\n                first = next(iter(raw[\"value\"][\"rollouts\"].values()))\n                first[\"loss\"][0] += 1e-12\n            expected = [raw[\"value\"][\"rollouts\"][row[\"id\"]] for row in raw[\"value\"][\"candidates\"]]\n            assert len(expected) == 14\n        else:\n            arguments = {key: value for key, value in arguments.items() if key != \"widths\"}\n            arguments.update(fits=[], validation=validation[\"value\"])\n            raw = run_pilot._dispatch(\"roster\", arguments)\n            expected = [cell[\"result\"] for cell in raw[\"value\"][\"cells\"]]\n            assert len(expected) == 11\n>       result = check_pilot.check_wrapped_operation(raw, operation, {})\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n/tmp/validation-actual-pytest-0o1dcukw/test_dynamic_hedging_pilot.py:4150: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nraw = {'arguments': {'dataset': {'cost_rates': array([0.001, 0.001]), 'memory_count': array([ 0, 12]), 'memory_sum': array([...cope': 'all_validation_candidates_and_selection', 'wall_seconds': 0.00016360200243070722}, 'generator': 'Heston', ...}}\noperation = 'validation', context = {}\n\n    def check_wrapped_operation(raw, operation, context):\n        from hullkit._dynamic_hedging_surfaces import evaluate_call\n        from run_pilot import unpack_inputs\n    \n        from deep_hedge_price import _dynamic_hedging_study as study\n    \n        args = unpack_inputs(raw[\"arguments\"])\n        value = raw[\"value\"]\n        _require(raw[\"kind\"] == operation, \"saved operation kind changed\")\n        if operation == \"quote_risk\" and raw.get(\"chunked_worker\") is not None:\n            from check_main import check_risk_job\n    \n            source = raw[\"chunked_worker\"]\n            computed = check_risk_job(\n                source, args[\"parameters\"], args[\"surface\"], args[\"dataset\"], args[\"caches\"]\n            )\n            runner._same(computed[\"risk\"], value, \"saved bounded original quote risk value\")\n            _require(\n                raw[\"status\"] == source[\"status\"]\n                and raw[\"original_n\"] == args[\"dataset\"][\"original_n\"],\n                \"original bounded quote risk status/N changed\",\n            )\n            return {\n                \"original_n\": raw[\"original_n\"],\n                \"value\": value,\n                \"processed_n\": computed[\"processed_n\"],\n                \"financial_qualification\": \"unknown\",\n                \"scope\": \"saved_quote_risk\",\n                \"chunked\": True,\n            }\n        if operation == \"quote_risk\":\n            computed = study.quote_risk_dataset(**args)\n            runner._same(\n                _without_timing(computed), _without_timing(value), \"saved observable quote risk\"\n            )\n        elif operation in (\"roster\", \"validation\"):\n            fn = study.test_roster if operation == \"roster\" else study.select_validation\n            computed = fn(**args)\n            runner._same(\n                _without_timing(computed), _without_timing(value), \"saved original policy roster\"\n            )\n            rows = value[\"cells\"] if operation == \"roster\" else value[\"candidates\"]\n            for row in rows:\n>               replay.check_cash(args[\"dataset\"], row[\"result\"])\n                                                   ^^^^^^^^^^^^^\nE               KeyError: 'result'\n\n../worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:2065: KeyError\n=========================== short test summary info ============================\nFAILED ../../../tmp/validation-actual-pytest-0o1dcukw/test_dynamic_hedging_pilot.py::test_wrapped_native_policy_outputs_use_full_rollouts[validation-False]\nFAILED ../../../tmp/validation-actual-pytest-0o1dcukw/test_dynamic_hedging_pilot.py::test_wrapped_native_policy_outputs_use_full_rollouts[validation-True]\n2 failed, 5 passed, 213 deselected in 1.47s\n",
+      "stderr": "",
+      "actual_outer_wall_seconds": 2.120962851,
+      "source_modified_on_disk": false,
+      "candidate_scope": null
+    },
+    {
+      "phase": "candidate_GREEN",
+      "returncode": 0,
+      "stdout": ".......                                                                  [100%]\n7 passed, 213 deselected in 0.27s\n",
+      "stderr": "",
+      "actual_outer_wall_seconds": 2.067110176,
+      "source_modified_on_disk": false,
+      "candidate_scope": "one real imported module function in child memory only"
+    },
+    {
+      "phase": "ruff",
+      "returncode": 1,
+      "stdout": "N806 Variable `N` in function should be lowercase\n    --> /tmp/validation-actual-pytest-0o1dcukw/test_dynamic_hedging_pilot.py:2090:9\n     |\n2088 |     stages = []\n2089 |     teachers = {}\n2090 |     for N in (1024, 4096, 16384, 65536):\n     |         ^\n2091 |         for grid in (\"coarse\", \"high\"):\n2092 |             identifier = f\"gate:{N}:{grid}\"\n     |\n\nN802 Function name `test_A_selection_uses_prior_rules_and_measured_premium_not_future_result_hash` should be lowercase\n    --> /tmp/validation-actual-pytest-0o1dcukw/test_dynamic_hedging_pilot.py:2322:5\n     |\n2322 | def test_A_selection_uses_prior_rules_and_measured_premium_not_future_result_hash():\n     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n2323 |     candidate = run_pilot.execution.execution_candidate()\n2324 |     original = candidate[\"original_candidate\"]\n     |\n\nN806 Variable `N` in function should be lowercase\n    --> /tmp/validation-actual-pytest-0o1dcukw/test_dynamic_hedging_pilot.py:2360:9\n     |\n2358 |         },\n2359 |     }\n2360 |     for N in (8192, 16384, 32768):\n     |         ^\n2361 |         identifier = f\"p{N}\"\n2362 |         jobs[identifier] = {\"operation\": \"precision\", \"status\": \"executed\", \"raw\": {}}\n     |\n\nFound 3 errors.\n",
+      "stderr": ""
+    },
+    {
+      "phase": "format",
+      "returncode": 0,
+      "stdout": "1 file already formatted\n",
+      "stderr": ""
+    }
+  ],
+  "compile": true,
+  "source82_all_original_bytes_unchanged": true,
+  "source_canonical_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "regression_scope": "Actual imported check_wrapped_operation/select_validation/test_roster/_dispatch. Only policy_rollout and cash callbacks stubbed, four-path synthetic supplied data; no originalN finance claim.",
+  "test_cases": [
+    "validation/roster x completed/unknown = 4",
+    "missing rollout/missing loss/outside-tolerance value = 3",
+    "completed validation also accepts 1e-12 roundoff"
+  ],
+  "instructions_after_current_saved_check_terminal": [
+    "Root applies the one-access source patch plus this append-only test patch after frozen-source82 saved checker terminal.",
+    "Run shared venv pytest deep_hedge_price/tests/test_dynamic_hedging_pilot.py -k 'wrapped_native_policy_outputs or wrapped_validation_rejects_missing_or_corrupted_rollouts', with original W2 research/hullkit/deep PYTHONPATH and single-thread/bytecode-off environment.",
+    "Run scoped Ruff check/format on the two changed production targets; root rebinds source closure separately. This verification grants no financial qualification or permission."
+  ],
+  "temporary_probe_mechanics": "Original full test file copied with appended tests into an isolated neutral temporary filename; candidate plugin replaces only actual imported consumer function with exact proposed source in child memory; original disk files untouched.",
+  "historical_fixture_setup_failure": {
+    "returncode": 2,
+    "reason": "temp copy under deep_hedge_price/tests made pytest create a namespace package shadowing real deep_hedge_price source",
+    "exception": "ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_protocol'",
+    "trace": "ImportError while importing test module '/tmp/validation-actual-pytest-e4_yzlxr/deep_hedge_price/tests/test_dynamic_hedging_pilot.py'.\n/tmp/validation-actual-pytest-e4_yzlxr/deep_hedge_price/tests/test_dynamic_hedging_pilot.py:12: in <module>\n    import check_pilot\n../worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:24: in <module>\n    import run_reference as runner\n../worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_reference.py:30: in <module>\n    from deep_hedge_price._dynamic_hedging_protocol import candidate_protocol\nE   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_protocol'\n1 error in 0.36s",
+    "original_attempt_outer_wall_seconds": 0.622606505,
+    "complete_tool_outer_seconds": 3.2816311000000002,
+    "separate_failed_candidate_invocation_cost_unknown": true,
+    "repair": "only Temp fixture path changed; no source/test patch change",
+    "financial_source_defect": false
+  },
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "actual_finance_SDE_solver_RNG_native_CAS_Git": 0,
+  "kernel_cumulative_child_peak_RSS_bytes": 692035584,
+  "own_note_write_stdout_tail_seconds": null,
+  "final_scoped_verification": [
+    {
+      "phase": "ruff_correct_original_target_config",
+      "returncode": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": "",
+      "production_file_written": false,
+      "config_scope": "W2 original production target path; established file-specific ignores preserved"
+    },
+    {
+      "phase": "format_correct_original_target_config",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "production_file_written": false,
+      "config_scope": "W2 original production target path; established file-specific ignores preserved"
+    }
+  ],
+  "historical_wrong_scope_lint": "Neutral temp filename lacked the existing deep_hedge_price/tests per-file ignore scope; 3 naming warnings are pre-existing lines 2090/2322/2360. Test/source patch bytes were not changed; final Ruff used original filename/config via stdin.",
+  "status": "PASS",
+  "original_red_summary": "2 failed (actual validation result access), 5 passed, 213 deselected",
+  "candidate_green_summary": "7 passed, 213 deselected; only consumer namespace temporarily patched in child"
+}
