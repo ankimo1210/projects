@@ -1,0 +1,49 @@
+{
+  "schema": "rb-f04-root-terminal-readonly-inspection-v1",
+  "inspected_UTC": "2026-10-10T12:56:47.406788+00:00",
+  "status": "partial_terminal_source_or_solver_defect_needs_repair_and_saved_check",
+  "native_exit_code": 0,
+  "saved_job_count_from_stdout": 214,
+  "job_count_is_not_completed_job_count_or_work_progress_percent": true,
+  "last_saved_job": {
+    "id": "stage:Heston:N1024:coarse:gate",
+    "operation": "teacher_candidate_gate",
+    "status": "unclosed_source_or_solver_defect",
+    "reason": "ValueError: stage risk producer actual argument binding changed",
+    "raw": null,
+    "source_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+    "plan_sha256": "316a2d9a10bc6802aa94e355d312d2e9faebbeec007d8e9d359ef1d6fb5c1418",
+    "expense": {
+      "id": "pilot-job:stage:Heston:N1024:coarse:gate",
+      "includes_children": true,
+      "parent_id": null,
+      "reason": "stage risk producer actual argument binding changed",
+      "scope": "formal_pilot",
+      "status": "failed",
+      "timing": {
+        "cpu_seconds": 2301.372139031,
+        "overrun_seconds": 0.0,
+        "wall_seconds": 2301.727758803
+      }
+    }
+  },
+  "source_files_checked": 81,
+  "source_unchanged": true,
+  "checkpoint_metadata_sha256": "6d898dd25bb66ae03c31b2c0062f1d14aeb912ae9fafbe158babbd36f5877849",
+  "checkpoint_metadata_bytes": 649408353,
+  "checkpoint_metadata_digest_verified_without_parsing": true,
+  "last_job_root_metadata_and_arrays_receipt_digests_verified": true,
+  "full_saved_semantic_check": false,
+  "financial_qualification": "unknown",
+  "test_opened": false,
+  "actual_enclosing_wall_seconds": 7930.370260543001,
+  "actual_enclosing_peak_RSS_bytes": 13478674432,
+  "no_administrative_stop": true,
+  "source_inputs_prior_monitor_unchanged": true,
+  "costs_overlap_do_not_add": true,
+  "proof_inspection_wall_seconds": 0.364084240005468,
+  "proof_inspection_CPU_seconds": 0.360932717,
+  "proof_inspection_peak_RSS_bytes": 26439680,
+  "proof_write_archive_docs_and_git_cost_excluded": true,
+  "archive_of_terminal_proofs_is_not_full_raw_CAS_or_semantic_restore": true
+}

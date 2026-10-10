@@ -1,6 +1,8 @@
 # 正式pilot予算のための測定
 
-2026-10-10。正式金融pilotは実行中、mainは未実行。以下の先行測定は**部品の実測と、歴史的教師計算からの外挿**であり、全phaseの実測時間・精度資格ではない。現在の実起動は末尾に記録。
+修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
+
+2026-10-10。修正版正式金融pilotは214件目の引数binding不一致でpartial停止、mainは未実行。以下の先行測定は**部品の実測と、歴史的教師計算からの外挿**であり、全phaseの実測時間・精度資格ではない。現在の実起動は末尾に記録。
 
 ## 実際に測った再較正
 

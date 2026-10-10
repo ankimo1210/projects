@@ -6186,9 +6186,51 @@
       "archive": "task-5-stage-npz-hardlink-closed-proof-cas-root-receipt-v3.json",
       "bytes": 989,
       "sha256": "9498f0bfb909c53fef3293e0d6f5670821364cc6197b557b05684ff142752782"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-terminal-readonly-summary-v1.json",
+      "archive": "task-5-formal-pilot-root-terminal-readonly-summary-v1.json",
+      "bytes": 2119,
+      "sha256": "65dcf7fcf7b76f7dae673fb88124fc4ff5b3d1bc09f9d105c02d2c01ae751860"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-enclosing-observation-v2/parent-cost-and-status.json",
+      "archive": "task-5-formal-pilot-root-v2-enclosing-terminal-cost.json",
+      "bytes": 1221,
+      "sha256": "63509ee32fbae5d45090c5b5b20b29ed9a9ceec94a338167ce6a5efb24dbd657"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-operational-observation-v2/parent-cost-and-status.json",
+      "archive": "task-5-formal-pilot-root-v2-monitor-terminal-status.json",
+      "bytes": 4386,
+      "sha256": "141f6e8d6d5d56e81114d0dc1ecaf88ec5c639b443966d4caefdbbf91c5c1f55"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-operational-observation-v2/stdout.log",
+      "archive": "task-5-formal-pilot-root-v2-terminal-stdout.log.txt",
+      "bytes": 74,
+      "sha256": "328523e716c8b42d3027e15b19a1389511fe0e5934fa9aabfe1a6831e7e51d91"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/stage:Heston:N1024:coarse:gate/metadata.json",
+      "archive": "task-5-formal-pilot-root-v2-terminal-stage-gate-metadata.json",
+      "bytes": 1854,
+      "sha256": "ec51f36f8f8eb21d776f5cccda7791e49b818c9db66eefe2ff20b15ab6722691"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/stage:Heston:N1024:coarse:gate/receipt.json",
+      "archive": "task-5-formal-pilot-root-v2-terminal-stage-gate-receipt.json",
+      "bytes": 312,
+      "sha256": "e2eecd9a55f90ef33edda6e51e6ed4fcd87369d39f7131120de8e611a58560fa"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/checkpoint0000/receipt.json",
+      "archive": "task-5-formal-pilot-root-v2-terminal-checkpoint-receipt.json",
+      "bytes": 312,
+      "sha256": "ca95b97464c9f19eaddfbdbc5574564fa190bf8b7d96296688f4625f98089f27"
     }
   ],
-  "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending",
+  "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending; corrected81 formal pilot now terminal214 rows with stage gate argument-binding defect; full saved semantic check pending",
   "raw_checkpoint_store_manifest": "task-5-v54-root-checkpoint-cas-manifest-v2.json",
   "initial_prior_metadata_store_manifest_ref": "artifact:sha256:0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc",
   "initial_partial_terminal_store_manifest_ref": "artifact:sha256:34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35",
@@ -6200,5 +6242,6 @@
   "closed_storage_operation_proof_store_manifest_ref": "artifact:sha256:3c56884548a8a44d976d2a32300912c5a84f2e028dc370708cbc1ddcf3b456d2",
   "closed_storage_operation_proof_store_status": "both_primary_and_mirror_byte_storage_PASS; live_financial_tree_excluded",
   "closed_storage_operation_proof_extension_store_manifest_ref": "artifact:sha256:a353c59bd2d42a4f260c824ceb851289a6fee50e061a825832d8236d62398a55",
-  "closed_storage_operation_proof_extension_store_status": "both copies verified; no financial semantic restore"
+  "closed_storage_operation_proof_extension_store_status": "both copies verified; no financial semantic restore",
+  "corrected_source_terminal_status": "partial_source_or_solver_defect;214 saved rows;financial qualification unknown;source81 unchanged"
 }
