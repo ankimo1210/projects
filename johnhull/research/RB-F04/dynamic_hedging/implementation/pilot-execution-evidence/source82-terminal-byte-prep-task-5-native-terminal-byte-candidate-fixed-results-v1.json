@@ -1,0 +1,32 @@
+{
+  "Popen": 0,
+  "Ruff_format_exit_codes": [
+    0,
+    0,
+    0
+  ],
+  "compile_files": 2,
+  "current_source_files": 82,
+  "execute_saved_check": false,
+  "existing_observer_candidate_four_fixed_files_unchanged": true,
+  "finance_acceptance": false,
+  "finance_execution": 0,
+  "financial_qualification": "unknown",
+  "fixture_native_files": 4,
+  "fixture_seam": "freeze_candidate(isolated_observer, template, output, capacity_reader=small_fixture); real CLI offers only --output",
+  "fixture_source_authority": "synthetic source/input/plan stub is explicitly fixture_only; not real metadata authority verification",
+  "genuine_native_hash_or_giant_decode": 0,
+  "historical_failure_cost_and_external10_unchanged": true,
+  "pure_probes_passed": 16,
+  "root_fresh_capacity_snapshot": "data only, no permission, measured fit, capacity or duration guarantee",
+  "root_preapproved": false,
+  "source82_bytes_unchanged": true,
+  "source_canonical_identity": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_identity": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "verification_only_children_CPU_seconds": 0.18957999999999997,
+  "verification_only_children_kernel_peak_RSS_bytes": 30068736,
+  "verification_only_parent_CPU_seconds": 0.0062608149999999994,
+  "verification_only_wall_seconds": 0.19699152300017886,
+  "whole_hydrated_job_result_RSS_fit": null,
+  "whole_native_freeze_runtime_or_checker_capacity_measured": false
+}

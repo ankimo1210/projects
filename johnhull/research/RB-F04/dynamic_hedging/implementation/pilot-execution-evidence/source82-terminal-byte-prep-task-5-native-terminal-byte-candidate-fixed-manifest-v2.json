@@ -1,0 +1,59 @@
+{
+  "actual_candidate_or_permission_created": false,
+  "execute_saved_check": false,
+  "existing_full_observer_and_whole_checker_capacity_not_reapproved": true,
+  "files": {
+    "task-5-native-terminal-byte-candidate-GREEN-v2.log": {
+      "bytes": 2621,
+      "sha256": "1f7d4800a6437bfd8f8aad1db0f69394dd4300caaced86119f8c6a18b8e18263"
+    },
+    "task-5-native-terminal-byte-candidate-fixed-results-v2.json": {
+      "bytes": 1879,
+      "sha256": "1c67e1725954f688a1d0958eab7566d73408dc31859cc2cf1242c17d7f8f67a5"
+    },
+    "task-5-native-terminal-byte-candidate-preflight-v2.py": {
+      "bytes": 16369,
+      "sha256": "684665bb5a6aa8eec754bd06e8daf5160a86da2b14d009e4215d4928c0be9849"
+    },
+    "task-5-native-terminal-byte-candidate-results-v2.json": {
+      "bytes": 2621,
+      "sha256": "1f7d4800a6437bfd8f8aad1db0f69394dd4300caaced86119f8c6a18b8e18263"
+    },
+    "task-5-native-terminal-byte-candidate-source-v2.diff": {
+      "bytes": 1682,
+      "sha256": "6a318d2f66753493689779d9e70da8b38826369bca87350c3f6c446ec54a644e"
+    },
+    "task-5-native-terminal-byte-candidate-tools-v2.json": {
+      "bytes": 418,
+      "sha256": "25cf5962762c524d8d8b12842bb0a1ebdb6880e061c5051abbb3581b7c12e03c"
+    },
+    "task-5-native-terminal-byte-candidate-v2-on-v1-RED-results.json": {
+      "bytes": 865,
+      "sha256": "7c54f0b3e20797924ee306a44807fd38d24b6e98d2c5b6323f34d19b4af505bd"
+    },
+    "task-5-native-terminal-byte-candidate-v2-on-v1-RED.log": {
+      "bytes": 865,
+      "sha256": "7c54f0b3e20797924ee306a44807fd38d24b6e98d2c5b6323f34d19b4af505bd"
+    },
+    "task-5-native-terminal-byte-candidate-v2.py": {
+      "bytes": 12034,
+      "sha256": "179d4475e3dadaa591aa6c401f613188a590268d9fd34d786b830b660c2a6dde"
+    },
+    "task-5-native-terminal-byte-candidate-verification-cost-v2.json": {
+      "bytes": 382,
+      "sha256": "7e59a1893f79640c517417e286c6decbee1d7725d8cd1aafed1ec22722a0d157"
+    }
+  },
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "immutable_v1_sha256": "5e213f68be278ee087f08171966b24c3bcc0cb3526ab83b89b639f92491c667c",
+  "original_contract_refs": {
+    "task-5-full-pilot-root-saved-check-observer-v1.py": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4",
+    "task-5-full-pilot-root-saved-check-resource-candidate-v1.json": "a5face84365a5ee437d55e680da1414075b7ef761894e842f2377aff73a5723e",
+    "task-5-native-terminal-byte-candidate-fixed-manifest-v1.json": "898908fe5c3dcd74b7853241e3cd6155f874a8fa599eea0005820eb4d3e43b6d"
+  },
+  "real_native_work_executed": false,
+  "root_preapproved": false,
+  "scope": "false candidate helper v2 ownership and terminal .tmp contract repair only",
+  "source82_unchanged": true
+}

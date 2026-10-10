@@ -1,0 +1,10 @@
+{
+  "scope": "pure tiny synthetic fixture/Ruff invocation only, not actual native closure or finance",
+  "wall_seconds": 0.2372559520008508,
+  "parent_CPU_seconds": 0.0019430850000000006,
+  "children_CPU_seconds": 0.229763,
+  "children_kernel_peak_RSS_bytes": 30371840,
+  "Popen_or_finance": 0,
+  "actual_native_inventory_or_raw_decode": 0,
+  "financial_qualification": "unknown"
+}

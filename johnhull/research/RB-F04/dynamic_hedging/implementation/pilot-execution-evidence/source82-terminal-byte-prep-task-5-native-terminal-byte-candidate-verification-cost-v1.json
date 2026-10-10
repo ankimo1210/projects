@@ -1,0 +1,9 @@
+{
+  "scope": "pure four-file fixture/Ruff verification invocation only; not actual native closure or financial runtime",
+  "wall_seconds": 0.19278220400155988,
+  "parent_CPU_seconds": 0.0014130540000000004,
+  "child_inclusive_CPU_seconds": 0.195353,
+  "child_kernel_peak_RSS_bytes": 29868032,
+  "Popen_or_finance": 0,
+  "financial_qualification": "unknown"
+}

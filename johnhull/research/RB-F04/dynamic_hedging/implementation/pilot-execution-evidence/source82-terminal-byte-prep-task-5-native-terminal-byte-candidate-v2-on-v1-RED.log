@@ -1,0 +1,31 @@
+{
+  "passed": 1,
+  "failed": 3,
+  "results": [
+    {
+      "probe": "occupied_temp_original_bytes_and_inode_preserved",
+      "status": "FAIL",
+      "reason": "AssertionError: pre-existing temp was deleted"
+    },
+    {
+      "probe": "replacement_temp_on_IO_failure_preserved",
+      "status": "FAIL",
+      "reason": "AssertionError: replacement temp was deleted"
+    },
+    {
+      "probe": "created_owned_temp_cleanup_normal_publication",
+      "status": "PASS"
+    },
+    {
+      "probe": "stable_terminal_partial_tmp_preserved_as_physical_bytes",
+      "status": "FAIL",
+      "reason": "GuardRejectedError: native temporary writer file/directory remains unclosed"
+    }
+  ],
+  "financial_execution": 0,
+  "genuine_native_inventory_or_raw_decode": 0,
+  "Popen": 0,
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "finance_acceptance": false
+}
