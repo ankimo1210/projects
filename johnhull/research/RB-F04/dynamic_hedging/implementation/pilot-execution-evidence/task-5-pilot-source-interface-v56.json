@@ -1,0 +1,27 @@
+{
+  "schema": "rb-f04-pilot-v56-source-closure-interface-v1",
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "a36e691498a92a4e7ee13deb1f7a2f51e25b511e760ca7150fe814a83cb7f5a7",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "0bb854a66ba5aad9174b036b90ed48683d10018930a560a609d5a2b10589e90b"
+  },
+  "changed_inputs_or_outputs": false,
+  "financial_logic_changed": false,
+  "new_API_or_production_dependency": false,
+  "import_contract": {
+    "hashlib": "module-level static stdlib import",
+    "unpack_inputs": "function-local static from run_pilot import unpack_inputs; preserves deferred load without circular module initialisation",
+    "checker_numeric_behaviour": "AST equivalent after3 import substitutions"
+  },
+  "source_identity_contract": "80 required transitive local files, no unresolved dynamic import; exact locked plan and input binding unchanged",
+  "retained_v55_evidence": [
+    "task-5-pilot-source-snapshot-v55",
+    "task-5-pilot-v55-independent-decision.json"
+  ],
+  "original_failure_evidence": [
+    "task-5-formal-pilot-source-closure-v55-main3-v2-inventory.json",
+    "task-5-source-closure-red-v56.log"
+  ],
+  "formal_financial_qualification": "unknown",
+  "formal_pilot_or_main_run": false
+}

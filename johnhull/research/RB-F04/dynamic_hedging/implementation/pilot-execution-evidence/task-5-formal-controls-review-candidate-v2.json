@@ -1,0 +1,692 @@
+{
+  "schema": "rb-f04-formal-controls-independent-candidate-v2",
+  "date": "2026-10-10",
+  "decision": "controls_candidates_and_resource_provenance_only_pending_formal_lock",
+  "formal_plan_locked": false,
+  "formal_pilot_approved": false,
+  "main_budget_approved": false,
+  "this_reviewer_financial_solver_or_RNG_performed": false,
+  "producer_sha256": "0a8124af7dc233a5e41d6278bf612fef3d8afe081c83ed761d0276fb7718f59d",
+  "source_snapshot": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce"
+  },
+  "source_unchanged_during_structure_review": true,
+  "input_binding": {
+    "metadata": "task-5-actual-pilot-input-preparation-v4.json",
+    "sha256": "d80b2666bdc3270784df1ad4eef4aa4283c36dff8c91ff235f7bf0039700691c",
+    "original_cases": 121,
+    "original_attempts": 51,
+    "states": 18,
+    "diagnostic_queries": 24,
+    "additional_teacher_cases": 4,
+    "production_call_dates": 49,
+    "spot_nodes": 65,
+    "spot_bounds": [
+      50.0,
+      200.0
+    ],
+    "Heston_state_nodes": 33,
+    "Heston_state_bounds": [
+      1e-05,
+      0.5
+    ],
+    "local_state_nodes": [
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.5,
+      2.0,
+      4.0
+    ],
+    "streams": "All exact original namespaces retained by bound preparation metadata/structure JSON"
+  },
+  "field_controls": {
+    "shape": [
+      257,
+      321
+    ],
+    "tmin": 0.000244140625,
+    "tmax": 1.25,
+    "z_bounds": [
+      -5,
+      5
+    ],
+    "order": 1024,
+    "frequency_scale": 512,
+    "density_floor": 1e-10,
+    "allow_row_wings": true,
+    "unsupported_original_cells": 0,
+    "no_field129_early_or_wing6_substitution": true
+  },
+  "initial_call_controls_candidate": {
+    "pde_stages": [
+      {
+        "id": "current-base2401x1920",
+        "space_nodes": 2401,
+        "time_steps": 1920,
+        "log_half_width": 1.8
+      },
+      {
+        "id": "current-space4801x1920",
+        "space_nodes": 4801,
+        "time_steps": 1920,
+        "log_half_width": 1.8
+      },
+      {
+        "id": "current-time4801x3840",
+        "space_nodes": 4801,
+        "time_steps": 3840,
+        "log_half_width": 1.8
+      },
+      {
+        "id": "current-domain6401x3840",
+        "space_nodes": 6401,
+        "time_steps": 3840,
+        "log_half_width": 2.4
+      }
+    ]
+  },
+  "initial_direct_current_field_measured_PDE": [
+    {
+      "id": "pde_field_refined",
+      "field": "field257x321",
+      "space_nodes": 2401,
+      "time_steps": 1920,
+      "log_half_width": 1.8,
+      "max_error": 0.00013064409999463678,
+      "wall_s": 6.890527350013144,
+      "cpu_s": 6.883745825000002
+    },
+    {
+      "id": "pde_space4801",
+      "field": "field257x321",
+      "space_nodes": 4801,
+      "time_steps": 1920,
+      "log_half_width": 1.8,
+      "max_error": 0.00010408252889604341,
+      "wall_s": 13.172663402976468,
+      "cpu_s": 13.165837748000001
+    },
+    {
+      "id": "pde_time3840",
+      "field": "field257x321",
+      "space_nodes": 4801,
+      "time_steps": 3840,
+      "log_half_width": 1.8,
+      "max_error": 0.0001041288281009578,
+      "wall_s": 26.585015218006447,
+      "cpu_s": 26.570741581
+    },
+    {
+      "id": "current-domain6401x3840",
+      "field": "field257x321",
+      "space_nodes": 6401,
+      "time_steps": 3840,
+      "log_half_width": 2.4,
+      "original_quote_count": 37,
+      "original_group_count": 8,
+      "max_error": 0.0001041288281053987,
+      "same_dx_domain_difference": 2.2382096176443156e-13,
+      "whole_parent_wall_s": 38.325237144999846,
+      "whole_parent_cpu_s": 38.740570535,
+      "peak_RSS_bytes": 755789824,
+      "evidence": "task-5-formal-controls-review-domain37-observation-root-v2/parent-cost-and-decision.json",
+      "not_formal_financial_qualification": true
+    }
+  ],
+  "initial_domain_6401_pending": false,
+  "initial_pde_stage_connection": "run_quotes_job requires nonempty distinct pde_stages and uses same supplied current field for every stage. This list is a candidate; latest draft has [] and cannot run.",
+  "initial_CF_effective_controls": {
+    "upper": [
+      250,
+      500
+    ],
+    "quadrature_limit": 800,
+    "epsabs": 1e-12,
+    "epsrel": 1e-11,
+    "production_levels": [
+      [
+        1024,
+        512
+      ],
+      [
+        2048,
+        512
+      ],
+      [
+        2048,
+        1024
+      ]
+    ],
+    "saved37_max_combined_adaptive_error": 3.959271899486031e-10
+  },
+  "independent_call_controls_candidate": {
+    "upper": 250.0,
+    "space_nodes": 2401,
+    "time_steps": 1920,
+    "log_half_width": 1.8
+  },
+  "independent_Heston_effective_levels": [
+    {
+      "kind": "base",
+      "upper": 250,
+      "quadrature_limit": 800,
+      "epsabs": 1e-12,
+      "epsrel": 1e-11
+    },
+    {
+      "kind": "cutoff",
+      "upper": 500,
+      "quadrature_limit": 800,
+      "epsabs": 1e-12,
+      "epsrel": 1e-11
+    },
+    {
+      "kind": "quadrature",
+      "upper": 500,
+      "quadrature_limit": 1600,
+      "epsabs": 1e-13,
+      "epsrel": 1e-12
+    }
+  ],
+  "independent_flat_quadrature_keys_intentionally_omitted": "Flat quadrature_limit/epsabs/epsrel override all levels and erase stricter third-level defaults.",
+  "independent_local_effective_levels": [
+    {
+      "kind": "base",
+      "space_nodes": 2401,
+      "time_steps": 1920,
+      "log_half_width": 1.8
+    },
+    {
+      "kind": "space",
+      "space_nodes": 4801,
+      "time_steps": 1920,
+      "log_half_width": 1.8
+    },
+    {
+      "kind": "time",
+      "space_nodes": 2401,
+      "time_steps": 3840,
+      "log_half_width": 1.8
+    },
+    {
+      "kind": "domain",
+      "space_nodes": 2401,
+      "time_steps": 1920,
+      "log_half_width": 2.25
+    }
+  ],
+  "independent_domain_width2_25_pending": "Native method keeps space nodes; dx grows25%. Initial same-dx37quotes atwidth2.4 cannot certify this full local multiplier-domain table.",
+  "production_call_controls": "Actual private defaults Heston Fourierorder1024; local1201/960/width1.8. build_call_cache signature has no PDE-controls argument; no public API edits proposed.",
+  "full_graph_pending": {
+    "jobs": 3138,
+    "expanded_byte_predictions_pending": 3138,
+    "rate_provenance_pending": 3138,
+    "prior_job_wall_budgets_pending": 3138,
+    "real_3138_job_path_work": "task-5-formal-controls-review-structure.json",
+    "109_prediction_difference_interpretation": "Conservative declared envelopes versus shorter actual loop counts, not109 source defects. Original _job_identity envelopes preserved."
+  },
+  "whole_work_if_all_reserved_paths_execute": {
+    "teacher_conditional_transitions": 129482096640,
+    "shared10_driver_transitions": 234356736,
+    "oracle_payoff_transition_upper_before_exact_routes": 54103375872,
+    "oracle_driver_transitions": 2774532096,
+    "production_Heston_scalar_CF": 615615,
+    "production_Heston_frequency_pairs": 630389760,
+    "production_local_state_solves": 161,
+    "production_local_coefficient_points": 186282635,
+    "independent_Heston_CF_calls": 12474,
+    "independent_Heston_integrals": 24948,
+    "independent_local_PDE_solves": 504,
+    "not_runtime_or_ETA": true
+  },
+  "memory_and_serialization": {
+    "protocol_cap_meaning": "NPZ NPY payload+headers per immutablechunk, notliveRSS",
+    "protocol_chunk_limit_bytes": 268435456,
+    "pilot_pack_payload_limit_bytes": 134217728,
+    "static_native_three_simultaneous_float_arrays_lower_bytes": 408944640,
+    "static_two_U40_status_arrays_lower_bytes": 1363148800,
+    "returned_10_distinct_sample_arrays_at_N65536_T65_bytes": 340787200,
+    "root_allocation_v3_component": {
+      "id": "M0-allocation",
+      "status": "root_observed_component_pass",
+      "operation": "native primitive_labels + write_pilot_artifact + read_pilot_artifact",
+      "original_n": 65536,
+      "threshold_count": 65,
+      "blocks": 16,
+      "evidence": "task-5-formal-controls-review-allocation-observation-root-v3/parent-cost-and-decision.json",
+      "wall_seconds": 5.711957767998683,
+      "cpu_seconds": 5.69656,
+      "peak_rss_bytes": 2938032128,
+      "largest_actual_chunk_expanded_bytes": 103591984,
+      "total_actual_expanded_bytes": 380125208,
+      "scope_limit": "Synthetic deterministic varying coefficients only; not financial MC, real primitive/driver/replay/whole grid cost or RSS bound."
+    },
+    "previous_allocation_v2_failure_retained": {
+      "scope": "componentobserver header API failure, notfinancial source defect",
+      "wall_seconds": 4.491934122997918,
+      "cpu_seconds": 4.473477,
+      "peak_rss_bytes": 2937831424,
+      "status": "unknown_component_failure",
+      "evidence": "task-5-formal-controls-review-allocation-observation-root-v2/parent-cost-and-decision.json"
+    },
+    "real_teacher_driver_primitive_replay_cache_combined_peak_RSS": "pending; synthetic peak is not a bound"
+  },
+  "whole_storage": {
+    "all20_grid_10distinct_samples_lower_bytes": 1443051601920,
+    "all20_grid_current_encoder11entries_lower_bytes": 1587356762112,
+    "local_high_N65536_current_encoder11_lower_bytes": 503819796480,
+    "principal_all4_N1024_current_encoder11_lower_bytes": 10653401088,
+    "per_grid_lower_bounds": [
+      {
+        "job_id": "teacher:Heston:N1024:coarse:raw",
+        "original_n": 1024,
+        "original_node_count": 108,
+        "thresholds_per_node": 33,
+        "distinct10_sample_arrays_lower_bytes": 291962880,
+        "actual_encoder11_sample_entries_lower_bytes": 321159168
+      },
+      {
+        "job_id": "teacher:local:N1024:coarse:raw",
+        "original_n": 1024,
+        "original_node_count": 520,
+        "thresholds_per_node": 33,
+        "distinct10_sample_arrays_lower_bytes": 1405747200,
+        "actual_encoder11_sample_entries_lower_bytes": 1546321920
+      },
+      {
+        "job_id": "teacher:Heston:N4096:coarse:raw",
+        "original_n": 4096,
+        "original_node_count": 108,
+        "thresholds_per_node": 33,
+        "distinct10_sample_arrays_lower_bytes": 1167851520,
+        "actual_encoder11_sample_entries_lower_bytes": 1284636672
+      },
+      {
+        "job_id": "teacher:Heston:N1024:high:raw",
+        "original_n": 1024,
+        "original_node_count": 156,
+        "thresholds_per_node": 65,
+        "distinct10_sample_arrays_lower_bytes": 830668800,
+        "actual_encoder11_sample_entries_lower_bytes": 913735680
+      },
+      {
+        "job_id": "teacher:Heston:N4096:high:raw",
+        "original_n": 4096,
+        "original_node_count": 156,
+        "thresholds_per_node": 65,
+        "distinct10_sample_arrays_lower_bytes": 3322675200,
+        "actual_encoder11_sample_entries_lower_bytes": 3654942720
+      },
+      {
+        "job_id": "teacher:Heston:N16384:coarse:raw",
+        "original_n": 16384,
+        "original_node_count": 108,
+        "thresholds_per_node": 33,
+        "distinct10_sample_arrays_lower_bytes": 4671406080,
+        "actual_encoder11_sample_entries_lower_bytes": 5138546688
+      },
+      {
+        "job_id": "teacher:Heston:N16384:high:raw",
+        "original_n": 16384,
+        "original_node_count": 156,
+        "thresholds_per_node": 65,
+        "distinct10_sample_arrays_lower_bytes": 13290700800,
+        "actual_encoder11_sample_entries_lower_bytes": 14619770880
+      },
+      {
+        "job_id": "teacher:Heston:N65536:coarse:raw",
+        "original_n": 65536,
+        "original_node_count": 108,
+        "thresholds_per_node": 33,
+        "distinct10_sample_arrays_lower_bytes": 18685624320,
+        "actual_encoder11_sample_entries_lower_bytes": 20554186752
+      },
+      {
+        "job_id": "teacher:Heston:N65536:high:raw",
+        "original_n": 65536,
+        "original_node_count": 156,
+        "thresholds_per_node": 65,
+        "distinct10_sample_arrays_lower_bytes": 53162803200,
+        "actual_encoder11_sample_entries_lower_bytes": 58479083520
+      },
+      {
+        "job_id": "teacher-reference:Heston:N65536:coarse:raw",
+        "original_n": 65536,
+        "original_node_count": 108,
+        "thresholds_per_node": 33,
+        "distinct10_sample_arrays_lower_bytes": 18685624320,
+        "actual_encoder11_sample_entries_lower_bytes": 20554186752
+      },
+      {
+        "job_id": "teacher-reference:Heston:N65536:high:raw",
+        "original_n": 65536,
+        "original_node_count": 156,
+        "thresholds_per_node": 65,
+        "distinct10_sample_arrays_lower_bytes": 53162803200,
+        "actual_encoder11_sample_entries_lower_bytes": 58479083520
+      },
+      {
+        "job_id": "teacher:local:N4096:coarse:raw",
+        "original_n": 4096,
+        "original_node_count": 520,
+        "thresholds_per_node": 33,
+        "distinct10_sample_arrays_lower_bytes": 5622988800,
+        "actual_encoder11_sample_entries_lower_bytes": 6185287680
+      },
+      {
+        "job_id": "teacher:local:N1024:high:raw",
+        "original_n": 1024,
+        "original_node_count": 1344,
+        "thresholds_per_node": 65,
+        "distinct10_sample_arrays_lower_bytes": 7156531200,
+        "actual_encoder11_sample_entries_lower_bytes": 7872184320
+      },
+      {
+        "job_id": "teacher:local:N4096:high:raw",
+        "original_n": 4096,
+        "original_node_count": 1344,
+        "thresholds_per_node": 65,
+        "distinct10_sample_arrays_lower_bytes": 28626124800,
+        "actual_encoder11_sample_entries_lower_bytes": 31488737280
+      },
+      {
+        "job_id": "teacher:local:N16384:coarse:raw",
+        "original_n": 16384,
+        "original_node_count": 520,
+        "thresholds_per_node": 33,
+        "distinct10_sample_arrays_lower_bytes": 22491955200,
+        "actual_encoder11_sample_entries_lower_bytes": 24741150720
+      },
+      {
+        "job_id": "teacher:local:N16384:high:raw",
+        "original_n": 16384,
+        "original_node_count": 1344,
+        "thresholds_per_node": 65,
+        "distinct10_sample_arrays_lower_bytes": 114504499200,
+        "actual_encoder11_sample_entries_lower_bytes": 125954949120
+      },
+      {
+        "job_id": "teacher:local:N65536:coarse:raw",
+        "original_n": 65536,
+        "original_node_count": 520,
+        "thresholds_per_node": 33,
+        "distinct10_sample_arrays_lower_bytes": 89967820800,
+        "actual_encoder11_sample_entries_lower_bytes": 98964602880
+      },
+      {
+        "job_id": "teacher:local:N65536:high:raw",
+        "original_n": 65536,
+        "original_node_count": 1344,
+        "thresholds_per_node": 65,
+        "distinct10_sample_arrays_lower_bytes": 458017996800,
+        "actual_encoder11_sample_entries_lower_bytes": 503819796480
+      },
+      {
+        "job_id": "teacher-reference:local:N65536:coarse:raw",
+        "original_n": 65536,
+        "original_node_count": 520,
+        "thresholds_per_node": 33,
+        "distinct10_sample_arrays_lower_bytes": 89967820800,
+        "actual_encoder11_sample_entries_lower_bytes": 98964602880
+      },
+      {
+        "job_id": "teacher-reference:local:N65536:high:raw",
+        "original_n": 65536,
+        "original_node_count": 1344,
+        "thresholds_per_node": 65,
+        "distinct10_sample_arrays_lower_bytes": 458017996800,
+        "actual_encoder11_sample_entries_lower_bytes": 503819796480
+      }
+    ],
+    "additional_storage_pending": "All real primitive path/status arrays, shareddrivers once, NPYheaders, otheroutputs/receipts, compactcache and final retention. At least two further full reads per completed teacher node for completion/rebuild, excluding hash/replay reads.",
+    "cap_option_full_path": {
+      "status": "not_feasible_on_reported_volume_pending_design_budget_decision",
+      "provisional_total_bytes": 2199023255552,
+      "warning": "2TiB is an administrative candidate, not a proven whole-storage upper bound; sample entries alone need1.44TiB."
+    },
+    "cap_option_finite_storage": {
+      "status": "pending_root_actualdf_headroom_and_admissible_prior_cap_or_revision",
+      "administrative_ceiling_option_bytes": 137438953472,
+      "warning": "Original quantities retained. This cannot cover every maximum stage. Only actual lower qualification/genuine reviewed caps/revision can justify later nonexecution. Existing NPZ256MiB check is not a whole-disk cap.",
+      "actual_free_space_headroom_after_128GiB_option_bytes": 464718098432,
+      "enforcement": "Notimplemented in current financialsource. Requires separately approved root budget/revision and admissible enforcement/cap evidence before being used as formalcap option."
+    },
+    "no_new_cap_type_or_formal_structural_rejection_approved": true,
+    "actual_df_free_bytes_reported_by_root": 602157051904,
+    "actual_df_free_GiB": 560.8024559020996,
+    "df_provenance": "Root observation reported2026-10-10; no separate df rerun or fabricated receipt here.",
+    "whole_current_maximum_path_fits_actual_free": false,
+    "physical_total_capacity_reported_by_root": "about1.08TB",
+    "no_job_removed_by_unimplemented_storage_cap": true
+  },
+  "minimum_component_observations_and_budget_options": [
+    {
+      "id": "M0-allocation",
+      "status": "root_observed_component_pass",
+      "operation": "native primitive_labels + write_pilot_artifact + read_pilot_artifact",
+      "original_n": 65536,
+      "threshold_count": 65,
+      "blocks": 16,
+      "evidence": "task-5-formal-controls-review-allocation-observation-root-v3/parent-cost-and-decision.json",
+      "wall_seconds": 5.711957767998683,
+      "cpu_seconds": 5.69656,
+      "peak_rss_bytes": 2938032128,
+      "largest_actual_chunk_expanded_bytes": 103591984,
+      "total_actual_expanded_bytes": 380125208,
+      "scope_limit": "Synthetic deterministic varying coefficients only; not financial MC, real primitive/driver/replay/whole grid cost or RSS bound."
+    },
+    {
+      "id": "M1-domain37",
+      "status": "root_observed_current_field_original37_component_pass",
+      "operation": "Eight pde_call solves / all original37 on current field257x321",
+      "controls": {
+        "space_nodes": 6401,
+        "time_steps": 3840,
+        "log_half_width": 2.4
+      },
+      "same_dx_baseline": {
+        "space_nodes": 4801,
+        "time_steps": 3840,
+        "log_half_width": 1.8
+      },
+      "budget_candidate": "task-5-formal-controls-review-domain37-budget-candidate-v2.json",
+      "script": "task-5-formal-controls-review-domain37-probe-v2.py",
+      "prior_rss_candidate_bytes": 4294967296,
+      "prior_wall_candidate_seconds": 180,
+      "not_an_independent_local_table_width2_25_measurement": true,
+      "wall_seconds": 38.325237144999846,
+      "cpu_seconds": 38.740570535,
+      "peak_RSS_bytes": 755789824,
+      "max_absolute_price_error": 0.0001041288281053987,
+      "same_dx_domain_difference": 2.2382096176443156e-13,
+      "evidence": "task-5-formal-controls-review-domain37-observation-root-v2/parent-cost-and-decision.json"
+    },
+    {
+      "id": "M2-production-call-H",
+      "status": "pending_whole_current_job_observation_or_reviewed_estimate",
+      "job_id": "call-current:Heston",
+      "operation": "build_call_cache",
+      "work": {
+        "scalar_fourier_prices": 105105,
+        "frequency_pairs": 107627520
+      },
+      "prior_wall_cap_option_seconds": 300,
+      "prior_basis": "Existing draft call-cache cap; original 14 warm scalar diagnostics do not measure full49x65x33 cache/import/save."
+    },
+    {
+      "id": "M3-production-call-L",
+      "status": "pending_whole_current_job_observation_or_reviewed_estimate",
+      "job_id": "call-current:local",
+      "operation": "build_call_cache",
+      "work": {
+        "state_solves": 7,
+        "space_nodes": 1201,
+        "base_time_steps": 960,
+        "union_intervals": 975,
+        "interior_coefficient_point_evaluations": 8191568
+      },
+      "prior_wall_cap_option_seconds": 300,
+      "prior_basis": "Actual two additional-date cache3.146765925s is component evidence; full49date save/check not measured. PDE complexity tracks exact timeline, not49/2 times that wall."
+    },
+    {
+      "id": "M4-independent-H",
+      "status": "pending_current_full_domain_component_observation_or_reviewed_estimate",
+      "job_id": "independent-table:state00:Heston",
+      "operation": "independent_call_table",
+      "work": {
+        "original_dates": 1,
+        "original_query_spots": 7,
+        "original_state_nodes": 33,
+        "scalar_CF_calls": 693,
+        "probability_integrals": 1386
+      },
+      "controls": {
+        "upper": 250.0
+      },
+      "prior_wall_cap_option_seconds": 120,
+      "prior_basis": "Administrative option only; initial37 CF0.234534s is different strike/state/maturity workload. Full33state extreme tails unmeasured."
+    },
+    {
+      "id": "M5-independent-L",
+      "status": "pending_current_full_domain_component_observation_or_reviewed_estimate",
+      "job_id": "independent-table:state00:local",
+      "operation": "independent_call_table",
+      "work": {
+        "original_dates": 1,
+        "original_query_spots": 7,
+        "original_state_nodes": 7,
+        "PDE_solves": 28
+      },
+      "controls": {
+        "space_nodes": 2401,
+        "time_steps": 1920,
+        "log_half_width": 1.8
+      },
+      "effective_domain_width": 2.25,
+      "domain_space_nodes": 2401,
+      "domain_is_same_dx": false,
+      "prior_wall_cap_option_seconds": 300,
+      "prior_basis": "Administrative option only; multiplier range0.25..4 and full call states/width2.25 have no current qualifying precision/rate observation."
+    },
+    {
+      "id": "M6-current-teacher-classes",
+      "status": "pending_real_financial_component_costs",
+      "operations": [
+        "teacher_driver",
+        "teacher_grid",
+        "saved replay",
+        "CAS",
+        "serialization"
+      ],
+      "original_n": 1024,
+      "grids": [
+        "coarse",
+        "high"
+      ],
+      "models": [
+        "Heston",
+        "local"
+      ],
+      "actual_conditional_steps": {
+        "teacher:Heston:N1024:coarse:raw": 46006272,
+        "teacher:local:N1024:coarse:raw": 214302720,
+        "teacher:Heston:N1024:high:raw": 66453504,
+        "teacher:local:N1024:high:raw": 542244864
+      },
+      "historical_rate_path_steps_per_s": 1822982.358682316,
+      "prior_wall_cap_options_seconds": {
+        "Heston_coarse": 300,
+        "Heston_high": 300,
+        "local_coarse": 600,
+        "local_high": 900
+      },
+      "prior_basis": "Existing independently reviewed draft historical mixed teacher estimate, not current measurement. Whole original grids/N/16blocks retained; later N needs original reserved prefix and authenticated qualification/cap/revision."
+    },
+    {
+      "id": "M7-oracle",
+      "status": "pending_independent_whole_operation_rate_and_byte_basis",
+      "operation": "quote_positions_oracle",
+      "models": [
+        "Heston",
+        "local"
+      ],
+      "reference_n_candidates": [
+        4096,
+        16384,
+        65536
+      ],
+      "original_query_count": 13,
+      "sde_levels": [
+        768,
+        1536
+      ],
+      "original_widths": "Exact graph job arguments; no diagnostic substitute",
+      "prior_wall_cap_option_seconds": null,
+      "prior_basis": "No measured oracle rate. Historical teacher rate cannot be called measured oracle rate; any extrapolation needs independent review and full13query/three-width/coarse-fine/driver/save costs."
+    },
+    {
+      "id": "M8-risk-and-remainder",
+      "status": "pending_whole_worker_costs_or_independently_reviewed_estimates",
+      "operations": [
+        "quote_risk",
+        "market_pair",
+        "state",
+        "date_gate",
+        "validation",
+        "cell_pair",
+        "bump_risk",
+        "teacher gates/selection/adapters",
+        "Q",
+        "empty_claim",
+        "teacher_diagnostic",
+        "frequency_cache",
+        "precision",
+        "tiny_fits",
+        "roster",
+        "source",
+        "stream_receipts"
+      ],
+      "observed_analytic_query_component_mean_s": 0.0014611856837917034,
+      "observed_analytic_query_component_floor_s": 0.002,
+      "limitations": "Old analytic shape diagnostic includes early unknown paths and hS0.05/hQ0.01. Current formal hS0.02/hQ1e-4/full original paths/risk visits are different; not whole worker measured rate."
+    },
+    {
+      "id": "M9-inclusive-expense",
+      "status": "pending_actual_external_receipts_and_prior_phase_parent_scopes",
+      "required_external_receipt_count": 10,
+      "required_case_alias_count": 121,
+      "required_attempt_alias_count": 51,
+      "required_external_ids": "Caller-owned actual required IDs, not fabricated in this review",
+      "rule": "Real interval endpoints/whole costs/history/unknown/failure and includes_children forest; reuse same measured parents without duplicate addition. Metadata compilation/style/allocation components are separately scoped, never fake formal finance attempts."
+    }
+  ],
+  "formal_lock_required": [
+    "Nonempty initial candidate stages are backed by currentfield37 component observations. Full independent-table/multiplier/state-domain precision and formal wrapper source/cost validation remain separate.",
+    "Every real operation has whole-job work and actual largest serializedchunk predictions, using measured priorjob or independently reviewed nonzero estimates; complete cap clocks/aliases/history.",
+    "Original grid/N/seed/121cases/51attempts/16cells/fourkind/48positionpairs retained; highstageunused only by authenticated actual lower gate or admissible prior cap/revision.",
+    "All10 actual inclusive externalreceipts,121+51 matching actual aliases and phaseparent scopes; no invented zero timing, missingID or source-defect-to-cap fallback.",
+    "Actualdf/headroom/whole storage, combined liveRSS and serialization/replay resource costs decided before executing formalworker.",
+    "Formal/main/source/financial acceptance is outside this candidate; current source reviews belong to designated owners."
+  ],
+  "supersedes_candidate_filename_only": "task-5-formal-controls-review-candidate.json",
+  "initial_call_controls_connection_status": "All4 candidate controls now have currentfield37 component evidence. Formal run_quotes wrapper/full cost/checker/prior lock remain separate.",
+  "existing_path_cap_application": {
+    "table": "task-5-formal-controls-review-existing-path-cap-table.json",
+    "cap_path_steps": 1000000000,
+    "all20_perchild_pass": true,
+    "largest_declared_path_steps": 50331648,
+    "largest_actual_chunk_path_steps": 196608,
+    "aggregate_above_cap_count": 15,
+    "jobs_excluded_by_existing_cap": 0,
+    "whole_storage_after_existing_cap_unchanged": true,
+    "source_basis": "run_pilot _job_identity3695 and validate_locked_plan3866; original_teacher_node financialchild",
+    "formal_A_cap_options_candidate": "Real per-child path cap may bind eligible actual observations. Current20 children do not reach it. Aggregate>1e9 is not a rejection reason. Genuine actual parent wall cap/revision needs exact scopes/costs; no globalstoragecap source support claimed."
+  },
+  "root_new_component_observations_financial_scope": "Allocation hasno finance. Domain37 is root-approved pde_call-only component, nofreshCF/RNG/MC; formalpilot/main remainunapproved."
+}

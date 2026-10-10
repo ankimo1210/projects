@@ -1,0 +1,46 @@
+{
+  "schema": "rb-f04-formal-controls-independent-decision-v1",
+  "date": "2026-10-10",
+  "controls_candidate_review": "complete_scoped_candidate_and_evidence_review",
+  "formal_plan_locked": false,
+  "formal_pilot_approved": false,
+  "main_or_budget_approved": false,
+  "whole_financial_source_approval": false,
+  "this_reviewer_fresh_solver_or_RNG_performed": false,
+  "source_snapshot": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce"
+  },
+  "current_source_hashes": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "a36e691498a92a4e7ee13deb1f7a2f51e25b511e760ca7150fe814a83cb7f5a7",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce"
+  },
+  "candidate_snapshot_current_match": false,
+  "candidate_file": "task-5-formal-controls-review-candidate-v2.json",
+  "candidate_sha256": "94e4fcfb5f0106e26102d9effbe4bb9204654cf48db11fcc6dad25ce2adfef91",
+  "report_file": "task-5-formal-controls-review-report.md",
+  "report_sha256": "09602ff80aa8105bd35c990ce68bf0f2bdc88856571697e1fd9688870e8f9607",
+  "whole_storage_fits_current_volume": false,
+  "existing_path_cap_excludes_any_of20_original_grids": false,
+  "global_storage_cap_implemented_or_approved": false,
+  "root_component_observations": [
+    "allocation_original65536x65x16",
+    "current_field_original37_width2_4_same_dx"
+  ],
+  "independent_saved_arithmetic": "task-5-formal-controls-review-domain37-saved-arithmetic.json",
+  "remaining_formal_decisions": [
+    "independent_local_table_width2_25/fullstate controls",
+    "whole_worker rate and actualserializedbyte projections for3138jobs",
+    "actual10externalexpenses/121+51aliases/phaseparents/history/capscopes",
+    "whole_storage/liveRSS priorbudget or admissible revision",
+    "designatedowner sourceclosure and formal lock"
+  ],
+  "scope_of_edits": "Only D unique task-5-formal-controls-review prefix; no Git/source/publicAPI/docs/main edits",
+  "original_failure_preserved": "allocation-v2 header observer failure and all actualcosts preserved, v3 separate"
+}

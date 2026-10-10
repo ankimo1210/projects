@@ -41,3 +41,9 @@ count/signature/topologyだけのroot検査は自己整合の改変10件を通�
 - 現行10費用receiptの実測・inclusive会計、元失敗/unknown/historyの保持。
 
 教師全20cacheを必要とする最大計算量は約1,295億path-stepで、保存後再計算やoracle等は別である。lower qualified停止と実capにより実仕事は変わる。これを所要時間や、金融資格が得られる保証として扱わない。
+
+## 現source封鎖と資源（2026-10-10）
+
+v55の動的import3件が正式source封鎖を妨げることを実検査で確認し、[v56 source封鎖](pilot-execution-evidence/task-5-formal-pilot-source-closure-v56-main3.md)はhashlibとunpack_inputsを静的importへ置換するだけで修復。191専用tests/Ruff PASS、80実source・dynamic import0、既存115test/helperと金融ロジックを保持。[独立限定承認](pilot-execution-evidence/task-5-pilot-v56-independent-review.md)を完了。旧v54 sourceを記録したdraftは保存し、正式lockで現identityへ再結合する。
+
+初期37quoteの現在fieldは同dxの幅2.4を追加計測し、価格/幅差を独立保存算術で確認。全20最大gridの現sample保存下限1.44TiBはvolume空き560.8GiBを超える。既存1e9 capは子計算で全20を許容し、[独立資源候補レビュー](pilot-execution-evidence/task-5-formal-controls-review-report.md)でも全体storage上限の代わりにならないことを確認。全候補を保持し、whole-storage予算/revision・実worker rates/bytes・10費用receipt・A cap optionsの確定が正式pilot前に残る。

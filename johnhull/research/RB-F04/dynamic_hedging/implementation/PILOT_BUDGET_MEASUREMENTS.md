@@ -75,3 +75,9 @@ workload JSONのraw_two_factor_driver_bytes_without_dedupは、fine normalsを�
 [親込み実測](pilot-execution-evidence/task-5-formal-controls-review-allocation-observation-root-v3__parent-cost-and-decision.json)はwall5.711958秒/CPU5.696560秒・peak process RSS2,938,032,128 bytes。10個の別label配列とaliasを全サイズで保存復元し、4packsの総expanded380,125,208 bytes・最大chunk103,591,984 bytesをNPY header込みで独立照合した。256MiBのchunk上限はRSS上限ではない。この部品値には実金融driver・teacher・sourceチェック全体の負荷を含まず、全jobのRSS/時間へ転用しない。
 
 先行v2はlabel生成と保存後にnumpy private header APIのAttributeErrorで失敗した。元script/log・wall4.491934秒/CPU4.473477秒・peakRSS2,937,831,424 bytesを保持し、v3はpublic NPY version readerへの最小変更だけで再実行した。正式pilot/main・金融資格はunknownのまま。
+
+## 現fieldのdomainと全体保存予算（2026-10-10）
+
+[原計測と候補レビュー](pilot-execution-evidence/task-5-formal-controls-review-report.md)は元37quote・8group・field257×321を保持し、同dx0.00075でPDE幅1.8（4801×3840）から2.4（6401×3840）へ広げた。全37値は有限・supported、最大価格誤差0.000104128828、幅による最大差2.23821e-13。rootの親込みwall38.325237秒/CPU38.740571秒・peakRSS755,789,824 bytesで、保存結果を独立に再計算済み。CF/RNGを追加せず、独立コール表の幅2.25・全倍率の精度へ転用しない。
+
+全20teachergridが実行される最大経路のsample保存下限は、現encoderの11 entriesで1,587,356,762,112 bytes（約1.44TiB）。現volumeの空き602,157,051,904 bytes（約560.8GiB）を超え、primitives/driver等は別に加わる。既存1e9 path-step capはfinancial child単位で、全20gridが範囲内。aggregateをglobalcapへ読み替えて候補を除外できない。元N/roster/possible jobsを保ち、全体保存予算・真正capまたはrevisionの判断が正式pilot前に必要。全体storage capは現sourceに未実装で、予算は未承認。

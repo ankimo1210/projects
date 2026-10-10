@@ -1,0 +1,582 @@
+{
+  "schema": "rb-f04-independent-metadata-and-source-manifest-v1",
+  "scope": "Controls/rates/storage candidates, scripts, observed metadata+receipts, original provenance and selected source snapshots; original large NPZ content is not rehashed or independently recomputed by this manifest.",
+  "original_raw_NPZ_provenance": "task-5-formal-controls-review-domain37-budget-candidate-v2.json",
+  "entries": [
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-actual-pilot-input-preparation-v4.json",
+      "bytes": 43145,
+      "sha256": "d80b2666bdc3270784df1ad4eef4aa4283c36dff8c91ff235f7bf0039700691c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-asian-query-cost-summary.json",
+      "bytes": 7884,
+      "sha256": "0481370886caa687c9517657aeab655b900a77f9091ced61ab1a98d2aa7fe43c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-budget-candidate-v2.json",
+      "bytes": 1617,
+      "sha256": "3eaeddaebe14166a9ba4b4bc5008b44e005d090e3e4a4c5c888ab511b0fed081"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-budget-candidate-v3.json",
+      "bytes": 1632,
+      "sha256": "5aab4c1133f8afbdef26625bd75230090027ee3e264510a01dc527aa366f5716"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-budget-candidate.json",
+      "bytes": 1587,
+      "sha256": "4a109a56e7f2f041e740503e8ce636c4ae12d45fdba94205a8dae422ca82e953"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-independent-v3.md",
+      "bytes": 3805,
+      "sha256": "c65ae9750989c3dc5408892fddbaf77bbb892bfe364991b1ba64adb499b640f2"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/child.log",
+      "bytes": 730,
+      "sha256": "0dc6081f7a95e5b1edecea6cea4d6b4572655a36fc896b1e04d015f8640a85dc"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/full-original-shapes/metadata.json",
+      "bytes": 11855,
+      "sha256": "dcb759b5a379af44db66eaa9da82b5be7d29d9f6378d880c48aa2f3412d84d5e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/full-original-shapes/pack000000/metadata.json",
+      "bytes": 1296,
+      "sha256": "84e9234e3f2c328b9e08dde38f72ff328235cf4265ec2536fbe3c7338272b24b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/full-original-shapes/pack000000/receipt.json",
+      "bytes": 320,
+      "sha256": "8720e930481e21ceffc4de7d1f816bfe2f26985f3b608e6b4c8ae9604b402272"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/full-original-shapes/pack000001/metadata.json",
+      "bytes": 1407,
+      "sha256": "576fcba04b356b36c1f1144a715df590451c541129d76e047320a360fc650a10"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/full-original-shapes/pack000001/receipt.json",
+      "bytes": 320,
+      "sha256": "1950942ea734692b28d273bcdba24f4f661d5e2dc5a2b86b455b12c1687e0485"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/full-original-shapes/pack000002/metadata.json",
+      "bytes": 1519,
+      "sha256": "4c801139584ce2660869d4f677577b14f07260a77fd4c0074bf390daa73aee8e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/full-original-shapes/pack000002/receipt.json",
+      "bytes": 320,
+      "sha256": "ef5dc942ceb5b1b8bd15a4b1206b26c9d2c671829e27920c3e67ff33ea01e1a9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/full-original-shapes/pack000003/metadata.json",
+      "bytes": 1540,
+      "sha256": "04e462bdb614f2be5bc80b34dee491dbd93a56d085619e5cfcb2e4b0d829986d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/full-original-shapes/pack000003/receipt.json",
+      "bytes": 319,
+      "sha256": "b6cf453595320945653afb928e65dc86ca01e955f19bcbaecd5b20497303658c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/full-original-shapes/receipt.json",
+      "bytes": 312,
+      "sha256": "927aa47b9b1e4afd9a31f177fdfec903f97d476c8195a53dd9aa77cc2bfc8452"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/parent-cost-and-decision.json",
+      "bytes": 10017,
+      "sha256": "8f30e5850f9b23cd97cfe52ee178d7b791ab836a2a3182aab1c4aa40a735c9b2"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v2/progress.json",
+      "bytes": 5611,
+      "sha256": "2c05efb7b0df2aeb44443ddd5dc76ef8e6240510980b94fb248127cf28728afb"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/child.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/full-original-shapes/metadata.json",
+      "bytes": 11855,
+      "sha256": "dcb759b5a379af44db66eaa9da82b5be7d29d9f6378d880c48aa2f3412d84d5e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/full-original-shapes/pack000000/metadata.json",
+      "bytes": 1296,
+      "sha256": "84e9234e3f2c328b9e08dde38f72ff328235cf4265ec2536fbe3c7338272b24b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/full-original-shapes/pack000000/receipt.json",
+      "bytes": 320,
+      "sha256": "8720e930481e21ceffc4de7d1f816bfe2f26985f3b608e6b4c8ae9604b402272"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/full-original-shapes/pack000001/metadata.json",
+      "bytes": 1407,
+      "sha256": "576fcba04b356b36c1f1144a715df590451c541129d76e047320a360fc650a10"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/full-original-shapes/pack000001/receipt.json",
+      "bytes": 320,
+      "sha256": "1950942ea734692b28d273bcdba24f4f661d5e2dc5a2b86b455b12c1687e0485"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/full-original-shapes/pack000002/metadata.json",
+      "bytes": 1519,
+      "sha256": "4c801139584ce2660869d4f677577b14f07260a77fd4c0074bf390daa73aee8e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/full-original-shapes/pack000002/receipt.json",
+      "bytes": 320,
+      "sha256": "ef5dc942ceb5b1b8bd15a4b1206b26c9d2c671829e27920c3e67ff33ea01e1a9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/full-original-shapes/pack000003/metadata.json",
+      "bytes": 1540,
+      "sha256": "04e462bdb614f2be5bc80b34dee491dbd93a56d085619e5cfcb2e4b0d829986d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/full-original-shapes/pack000003/receipt.json",
+      "bytes": 319,
+      "sha256": "b6cf453595320945653afb928e65dc86ca01e955f19bcbaecd5b20497303658c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/full-original-shapes/receipt.json",
+      "bytes": 312,
+      "sha256": "927aa47b9b1e4afd9a31f177fdfec903f97d476c8195a53dd9aa77cc2bfc8452"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/independent-chunk-bytes.json",
+      "bytes": 6279,
+      "sha256": "31ad763bd783e8225936df22f8806d07a457392fd5eb9c70d94b4e9d9abf9989"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/parent-cost-and-decision.json",
+      "bytes": 10469,
+      "sha256": "75e0939c0e4f22d073e33616a0eabfefd6dd15840b0330326e97115957c38313"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-observation-root-v3/progress.json",
+      "bytes": 5896,
+      "sha256": "455b6303daec50d18943093177289f4d4fb2eceb088d7e8e9f52add188a6127c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-probe-v2.py",
+      "bytes": 18542,
+      "sha256": "410ab0cf6d471d29cd7bc5ef8f9584f5c9b30407883ddb73785fbfbe9cdcddb8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-probe-v3.py",
+      "bytes": 18892,
+      "sha256": "94cab631ba7ded72375ce9396ff9dc912f1bfb05de299cd49b9f4b5a313ec2b5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-probe.py",
+      "bytes": 18541,
+      "sha256": "2036e88c8ef41958bae9217316daf54caf72a97b814cf0d525d762a792e655b9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-root-budget-v2.json",
+      "bytes": 1849,
+      "sha256": "b455917045e1904eee788f7c961ed0172e353ebff5984c1d1c4dd030e56ba244"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-allocation-root-budget-v3.json",
+      "bytes": 1965,
+      "sha256": "a610b11854ce546926db09de48e27a46fdc4f77350682a66b4c06b50bb1e1135"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-candidate-v2.json",
+      "bytes": 27620,
+      "sha256": "94e4fcfb5f0106e26102d9effbe4bb9204654cf48db11fcc6dad25ce2adfef91"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-candidate.json",
+      "bytes": 24624,
+      "sha256": "60f262e703c967609d6ac9b51eadf59a4cf17aa5aa906a33fee8321b1776f314"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-decision.json",
+      "bytes": 3080,
+      "sha256": "b936c5036c8ee9476876b4e7899d04378e7194d6f067a1f37d0d93db5cff7a75"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-budget-candidate-v2.json",
+      "bytes": 3066,
+      "sha256": "3320a3b5ece315c1cadaa5b4ea6bcecefb08f33ec9fa1908e29be5e6062fce61"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-budget-candidate.json",
+      "bytes": 3003,
+      "sha256": "c02b862ab3cf4053a88430fd82eb502a5468e3a7e6c0e6a1478e635557c9fc05"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-budget-root-fixed-v2.json",
+      "bytes": 3303,
+      "sha256": "aae91d54331fa03d4ae7556e33d6936d04b67a441745768868c7ecb27a0a66c4"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/child.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/full-original37/metadata.json",
+      "bytes": 26035,
+      "sha256": "e726512295ddc5c2f546bf4339a269f67d0794058920daad2f73b9c9d61d5812"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/full-original37/pack000000/metadata.json",
+      "bytes": 9249,
+      "sha256": "274bb074536f72226ebf67135772e4a82eaab9d480a157d4484bebb8accc63fe"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/full-original37/pack000000/receipt.json",
+      "bytes": 318,
+      "sha256": "56bf33dd6f78d95b0fceb264af1bcd6d303be04e00b52f48b72b2aa6b77090ce"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/full-original37/receipt.json",
+      "bytes": 312,
+      "sha256": "b65837e3857522f7ea7a2a28079bfc54ec2ff608ea8620268dc798575ed1b9c5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group00/metadata.json",
+      "bytes": 2719,
+      "sha256": "9fa320cbefcdda88986667303c51a70c5015b36149c25a97bc9620c2c349a98e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group00/pack000000/metadata.json",
+      "bytes": 1022,
+      "sha256": "4cf4724c113b54195c37420dc434dee596199ecf8b5aa61f53711c9165170fbf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group00/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "22aa743f9de47578e6c8dbbf05c9f280dc48470cea133183200b8b7599b72736"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group00/receipt.json",
+      "bytes": 312,
+      "sha256": "8ddb4f662aafae38d12120f79e654b9cf68cd7196ca131a544b0f75db8a49072"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group01/metadata.json",
+      "bytes": 2719,
+      "sha256": "5431ed22874e9841cb58fae68ff5e0e19f9d3d4af3ac102c9e62da7490a3fa5c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group01/pack000000/metadata.json",
+      "bytes": 1022,
+      "sha256": "4cf4724c113b54195c37420dc434dee596199ecf8b5aa61f53711c9165170fbf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group01/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "28fe8a56b90dea9b291126dcff0dd8f4a2685cfe08e6f6186fd70f64ea465d26"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group01/receipt.json",
+      "bytes": 312,
+      "sha256": "3db2666bbf1b2613f339cf58de350f91513a9abff3ad55bd45c3ecd6c4839504"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group02/metadata.json",
+      "bytes": 2717,
+      "sha256": "a3008ddce2318e90566d2a1f614e34213a88b65d63a40a2050c19b6c5e3c5ea6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group02/pack000000/metadata.json",
+      "bytes": 1022,
+      "sha256": "4cf4724c113b54195c37420dc434dee596199ecf8b5aa61f53711c9165170fbf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group02/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "52b4557b76b178131a7aa7f0d16228e0fc0e6c3d977b18acec7ad2f1b97a0ef1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group02/receipt.json",
+      "bytes": 312,
+      "sha256": "b78dbb46274bc337674ce94c95b8f071473d8b41c03ddd9fee967dac1ca4ac56"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group03/metadata.json",
+      "bytes": 2719,
+      "sha256": "21257749c16b912f826f9929f8f477a6eb2d7b276acb0484dc4060e85b23a117"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group03/pack000000/metadata.json",
+      "bytes": 1022,
+      "sha256": "4cf4724c113b54195c37420dc434dee596199ecf8b5aa61f53711c9165170fbf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group03/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "a9531da26c36356cf033342638ed8727b6f8c0f1a6e5c8a925f10fdd1ad41b68"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group03/receipt.json",
+      "bytes": 312,
+      "sha256": "408254ccf55d0b3b3fff7df3a12a87c694737942f619f789a9340317a1e3517d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group04/metadata.json",
+      "bytes": 2722,
+      "sha256": "7c00412e1b9aedb05bb1dc93185d6604d81cd46372ba4c3fdfb8dd2313dcaf72"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group04/pack000000/metadata.json",
+      "bytes": 1022,
+      "sha256": "4cf4724c113b54195c37420dc434dee596199ecf8b5aa61f53711c9165170fbf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group04/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "bc2f754a32cfbf8163a5e1b316435b33a4cc186d7a0565dbbe1a8e7e263f861b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group04/receipt.json",
+      "bytes": 312,
+      "sha256": "5661b19c54397b3fe9d227178f20c5de7d4fad974dd029be517f8801865bfb9f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group05/metadata.json",
+      "bytes": 2756,
+      "sha256": "44c2a7853af51dc0083a9da9fd5313cd3368174e0bc1779538138012dfa9ba98"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group05/pack000000/metadata.json",
+      "bytes": 1022,
+      "sha256": "3f249199603faa4ed0f46eea392f0f389c81d1cb9f6751171f997ddb4ceb1885"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group05/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "f8ea9c341ced65ba94f6ffb41889058ed1378cc454c082858301c038f12da2ab"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group05/receipt.json",
+      "bytes": 312,
+      "sha256": "781fdf5f3a636ae9ef9d4c3e14654d588781e3d68109ddb6dcea73f0f6b7a1a1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group06/metadata.json",
+      "bytes": 2753,
+      "sha256": "12ebcc94ee59400dd1e7aff129a7302ecab537b54fd5de811d18e07ebcb26bd6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group06/pack000000/metadata.json",
+      "bytes": 1022,
+      "sha256": "3f249199603faa4ed0f46eea392f0f389c81d1cb9f6751171f997ddb4ceb1885"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group06/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "40b92f3a3a9a6d1aed35843352c777b50bff9755f96411e48a9089cfe01a56bc"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group06/receipt.json",
+      "bytes": 312,
+      "sha256": "7cf2305079dcfe1c1106189223dbcb56fb70152a9b0cf369058b91c7a012f0c3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group07/metadata.json",
+      "bytes": 2726,
+      "sha256": "7ccb49fe7278f2dd7f53d0824f0c53b50dfa3e0cf68cafe4cfb64536eca31a4e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group07/pack000000/metadata.json",
+      "bytes": 1022,
+      "sha256": "3f249199603faa4ed0f46eea392f0f389c81d1cb9f6751171f997ddb4ceb1885"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group07/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "7622cd2872b5105ce40aa0e05de79d521e4679400e92fcbf3eae78ff8932bf93"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/group07/receipt.json",
+      "bytes": 312,
+      "sha256": "b073bff6bb305cb910782c56026fb6b9752385ce1dbf75487568ee4c0e5bb48b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/initial-original37/metadata.json",
+      "bytes": 4583,
+      "sha256": "007be772ff2734853a9df641912344d1f2b7721aa62d809a3377c30e6c4167d8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/initial-original37/pack000000/metadata.json",
+      "bytes": 1885,
+      "sha256": "5114370a13232ddff07255546d28485069f39133e4568eb2140caa0bfc5f406c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/initial-original37/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "26ebe79a9dce52094bc7d28aac7c0c52606bcfc9adac5d2aea1db50fdcd16ad9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/initial-original37/receipt.json",
+      "bytes": 312,
+      "sha256": "212574b2c8c2aff2688081f96aa0cb4df426fcef55147235bf5570e4298aea2c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/parent-cost-and-decision.json",
+      "bytes": 12622,
+      "sha256": "08f0cfe2b1b904d121458474c510f4fb1a724121fa95fb6bb319f22d660fe07a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2/progress.json",
+      "bytes": 6486,
+      "sha256": "66259895aad4cdf6433b9aa4f6a77ebd0a4a1de1efbb955fb6776d230fbbdbe0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-probe-v2.py",
+      "bytes": 14609,
+      "sha256": "675567c26e8c68e527c9c3bd63ff3a5e092192c46a232ee4b131f4227d13fbf6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-probe.py",
+      "bytes": 14144,
+      "sha256": "33517acc551f6bf7f73e3b9938294d07de9db9e430eadfc1e7397be20d40dbe2"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-saved-arithmetic.json",
+      "bytes": 1567,
+      "sha256": "35a15711ded139a209391ac26cbc0f2bca02d9464285836f2b13b4440e86befd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-saved-arithmetic.py",
+      "bytes": 3837,
+      "sha256": "ee61f218f6f3f1dacc9909023ce3cfae6eaa1038e8f529a3f16ad2e3bd25682a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-existing-path-cap-table.json",
+      "bytes": 10449,
+      "sha256": "c4583478fb130f8df5daf80ee37e3a907e82ef3096af3926077b9c80887d86f7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-report.md",
+      "bytes": 7949,
+      "sha256": "09602ff80aa8105bd35c990ce68bf0f2bdc88856571697e1fd9688870e8f9607"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-structure-parent-cost.json",
+      "bytes": 367,
+      "sha256": "d1ca873dbb9420da9da1b3a8a808108217ecdf84a73087d991bccf08f298120a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-structure-parent.py",
+      "bytes": 1364,
+      "sha256": "2489771aca524f4c7cafbb36e9270766283058cc32464cd71971dc07a48c06d7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-structure.json",
+      "bytes": 1286747,
+      "sha256": "2524cfc0d0c77034a6ddf4f5a886a0b81459b80e2ceb05dca5280e2fae303189"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-structure.log",
+      "bytes": 9664,
+      "sha256": "78315cffb35552bbe1d348121464e244a479492c9c0a3f4b46a690fc12fd8fa4"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-structure.py",
+      "bytes": 8565,
+      "sha256": "be6af12206d9cd4212b3a158cc6aecc16e9df67470ad8c01893a8cbf35983cc6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-plan-preflight-review-budget-policy.json",
+      "bytes": 9641,
+      "sha256": "882433a68921a673d6f5c0670d62152a7efd583fd6724d5690e2b1c12ded3930"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-dry-run-v3.json",
+      "bytes": 2248,
+      "sha256": "8973021695f9dddb28e00fe4f3c7f4139553d02ae9be2722fc55241f60e74333"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-dry-run-v3.py",
+      "bytes": 7329,
+      "sha256": "29288af76c4d90912cca6614e407b4beab1067e4254b097e130150b7ea3cb937"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-producer-v3.py",
+      "bytes": 29798,
+      "sha256": "0a8124af7dc233a5e41d6278bf612fef3d8afe081c83ed761d0276fb7718f59d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-preflight.json",
+      "bytes": 675186,
+      "sha256": "50313a08abe3a4ce5abce65b909d44f7b33e7337a2725951b4294a788abc058d"
+    },
+    {
+      "path": "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "bytes": 33564,
+      "sha256": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f"
+    },
+    {
+      "path": "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py",
+      "bytes": 23592,
+      "sha256": "9007e30a45375fbb7c8b4afe5fa4e4f694b5bc68e924b138bd993d8bdbf2b025"
+    },
+    {
+      "path": "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+      "bytes": 32903,
+      "sha256": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe"
+    },
+    {
+      "path": "johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+      "bytes": 17009,
+      "sha256": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md",
+      "bytes": 41224,
+      "sha256": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+      "bytes": 12377,
+      "sha256": "7fe16943f2ead6dbe17a17e969930afde863681ed9eb24b9ea8b7b18c4a004d4"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "bytes": 202885,
+      "sha256": "a36e691498a92a4e7ee13deb1f7a2f51e25b511e760ca7150fe814a83cb7f5a7"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/initial-quotes.json",
+      "bytes": 363825,
+      "sha256": "5fd345af6e7af52fa7072b5b039b609a9deecc85858b0b2a4f139cc3b84f0b6f"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/pilot/selected-calls/refined/selected-calls.json",
+      "bytes": 23503,
+      "sha256": "9f9fa7fbfd61c5114881479d8707f482c1a007e0ea47ad8e050eb537cdb2012e"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+      "bytes": 68869,
+      "sha256": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "bytes": 170614,
+      "sha256": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "bytes": 51412,
+      "sha256": "cc7183df08f8d4b7942929ccc44cbcc5899be5df74128016c7c6521bac2909b9"
+    }
+  ]
+}

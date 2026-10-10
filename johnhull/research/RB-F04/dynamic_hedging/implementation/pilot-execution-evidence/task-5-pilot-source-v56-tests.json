@@ -1,0 +1,40 @@
+{
+  "scope": "existing190 small dedicated source tests plus1 source closure regression; not formal finance or global suite",
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "-q"
+  ],
+  "clock": {
+    "start": {
+      "wall": 25921.477787995,
+      "cpu": 0.023495967,
+      "utc": "2026-10-10T03:04:16.695076+00:00"
+    },
+    "stop": {
+      "wall": 25982.250431063,
+      "cpu": 0.027380602,
+      "utc": "2026-10-10T03:05:17.467718+00:00"
+    }
+  },
+  "outer_wall_seconds": 60.772643067997706,
+  "outer_parent_cpu_seconds": 0.003884635000000001,
+  "exit_code": 0,
+  "log_sha256": "2dd58514f6abb30f81a08a3607fdc167f7756d53859fe20562e32d6bb0cb97d4",
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "a36e691498a92a4e7ee13deb1f7a2f51e25b511e760ca7150fe814a83cb7f5a7",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "0bb854a66ba5aad9174b036b90ed48683d10018930a560a609d5a2b10589e90b"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "a36e691498a92a4e7ee13deb1f7a2f51e25b511e760ca7150fe814a83cb7f5a7",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "0bb854a66ba5aad9174b036b90ed48683d10018930a560a609d5a2b10589e90b"
+  },
+  "source_stable": true,
+  "financial_qualification": "unknown",
+  "formal_pilot_executed": false,
+  "formal_main_executed": false
+}

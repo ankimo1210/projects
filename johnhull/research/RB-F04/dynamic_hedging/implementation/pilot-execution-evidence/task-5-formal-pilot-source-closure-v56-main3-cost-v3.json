@@ -1,0 +1,38 @@
+{
+  "scope": "actual child startup/imports/static source graph inspection/result JSON save; not formal finance or total task/history expense",
+  "clock": {
+    "start": {
+      "wall": 26044.731303526,
+      "cpu": 0.022639798,
+      "utc": "2026-10-10T03:06:19.948591+00:00"
+    },
+    "stop": {
+      "wall": 26047.228454626,
+      "cpu": 0.023037004,
+      "utc": "2026-10-10T03:06:22.445740+00:00"
+    }
+  },
+  "outer_wall_seconds": 2.4971511000003375,
+  "parent_cpu_seconds": 0.00039720600000000064,
+  "child_cpu_seconds": 2.49323,
+  "exit_code": 0,
+  "script_sha256": "27a1abb6a5c0b7490a0727cd66a2ca51bb9cd9952f9bcac441e6872346b63940",
+  "log_sha256": "89cccc35436e41d3c3c92683b739255a4e58267e31149b2b619ae2258cd22deb",
+  "financial_qualification": "unknown",
+  "probe_clock": {
+    "cpu_seconds": 1.998420866,
+    "scope": "imports, static 80-file identity, fixed snapshots, saved metadata read, AST dispatch/provenance/control inspection; excludes earlier exploratory reads and final JSON/report writes",
+    "start": {
+      "cpu": 0.019390011,
+      "utc": "2026-10-10T03:06:19.968150+00:00",
+      "wall": 26044.750864275
+    },
+    "stop": {
+      "cpu": 2.017810877,
+      "utc": "2026-10-10T03:06:21.970204+00:00",
+      "wall": 26046.752918999
+    },
+    "wall_seconds": 2.002054723998299
+  },
+  "inventory_sha256": "6351a8fdd368b8061e19036e62f5eb2587e596fb9fceca9932a0e1bf043eb0c3"
+}

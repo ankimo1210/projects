@@ -1,0 +1,38 @@
+{
+  "schema": "rb-f04-pilot-owned-source-snapshot-v1",
+  "version": 56,
+  "created_utc": "2026-10-10T03:05:47.043223+00:00",
+  "source_files": [
+    {
+      "source": "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "copy": "task-5-pilot-source-snapshot-v56/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "sha256": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829"
+    },
+    {
+      "source": "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "copy": "task-5-pilot-source-snapshot-v56/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "sha256": "a36e691498a92a4e7ee13deb1f7a2f51e25b511e760ca7150fe814a83cb7f5a7"
+    },
+    {
+      "source": "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+      "copy": "task-5-pilot-source-snapshot-v56/deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+      "sha256": "0bb854a66ba5aad9174b036b90ed48683d10018930a560a609d5a2b10589e90b"
+    }
+  ],
+  "baseline_snapshot": "task-5-pilot-source-snapshot-v55",
+  "scope": "Only3 unresolved dynamic imports replaced by static imports;1 true source identity regression",
+  "dedicated_tests": {
+    "total": 191,
+    "baseline": 190,
+    "added": 1,
+    "result": "PASS",
+    "pytest_seconds": 59.7,
+    "receipt": "task-5-pilot-source-v56-tests.json"
+  },
+  "ruff_receipt": "task-5-pilot-source-v56-ruff-final.json",
+  "AST_delta": "task-5-pilot-v56-ast-delta.json",
+  "independent_review": "pending",
+  "formal_pilot_executed": false,
+  "formal_main_executed": false,
+  "financial_qualification": "unknown"
+}

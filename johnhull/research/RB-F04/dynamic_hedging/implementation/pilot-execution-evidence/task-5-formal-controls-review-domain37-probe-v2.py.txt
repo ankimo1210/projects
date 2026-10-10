@@ -1,0 +1,288 @@
+"""Prepared current-field domain PDE component; requires root prior approval.
+
+Keeps all original37 quotes and field257x321. Executes only eight pde_call
+groups at6401x3840,width2.4 (same dx as4801,width1.8). No CF/RNG/MC.
+Component costs and saved comparisons do not qualify the formal pilot.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import resource
+import subprocess
+import sys
+import time
+import traceback
+from pathlib import Path
+
+WT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D = WT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+T = WT / "johnhull/research/RB-F04/dynamic_hedging"
+RAW = T / "pilot/initial-quotes/reference.npz"
+INITIAL = T / "pilot/initial-quotes/initial-quotes.json"
+CONTROLS = {"space_nodes": 6401, "time_steps": 3840, "log_half_width": 2.4}
+RSS_CAP, WALL_CAP = 4 * 1024**3, 180.0
+REL_SOURCES = (
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+    "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+    "johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+)
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def source_bindings():
+    return {p: sha(WT / p) for p in REL_SOURCES}
+
+
+def save(path, data):
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(data, ensure_ascii=False, indent=2) + chr(10))
+    temporary.replace(path)
+
+
+def validate_budget(path):
+    budget = json.loads(path.read_text())
+    assert budget["schema"] == "rb-f04-current-field-domain-component-prior-budget-v1"
+    assert budget["root_preapproved"] is True, "root prior PDE component approval required"
+    assert budget["scope"] == "current_field_original37_domain_PDE_component_only"
+    assert budget["formal_finance_approved"] is False
+    assert budget["original_quote_count"] == 37 and budget["original_groups"] == 8
+    assert budget["controls"] == CONTROLS
+    assert budget["rss_limit_bytes"] == RSS_CAP and budget["wall_limit_seconds"] == WALL_CAP
+    assert budget["probe_source_sha256"] == sha(__file__)
+    assert budget["source_bindings"] == source_bindings()
+    assert budget["initial_raw_sha256"] == sha(RAW)
+    assert budget["initial_metadata_sha256"] == sha(INITIAL)
+    assert budget["field_shape"] == [257, 321]
+    return budget
+
+
+def child(output, budget_path):
+    wall_start, cpu_start = time.perf_counter(), time.process_time()
+    progress = {
+        "scope": "current_field_original37_domain_PDE_component_only",
+        "financial_worker_performed": "pde_call_only_after_root_prior_component_approval",
+        "RNG_performed": False, "formal_plan_locked": False,
+        "financial_qualification": "unknown", "original_quote_count": 37,
+        "original_groups": 8, "controls": CONTROLS, "status": "started",
+        "groups": [], "source_before": source_bindings(),
+    }
+
+    def checkpoint(status):
+        progress["status"] = status
+        progress["last_clock"] = {"wall": time.perf_counter(), "cpu": time.process_time()}
+        progress["process_peak_rss_bytes"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        save(output / "progress.json", progress)
+
+    checkpoint("child_started")
+    try:
+        validate_budget(budget_path)
+        sys.path[:0] = [str(WT / "johnhull/hullkit/src"),
+                       str(WT / "deep_hedge_price/src"), str(T)]
+        from contextlib import ExitStack
+        from unittest.mock import patch
+
+        import numpy as np
+        import run_pilot as pilot
+        from check_initial_quotes import _roster
+        from hullkit._heston_local_surface import HestonParameters, LocalVarianceGrid
+        from reference_methods import pde_call
+
+        def forbidden(*args, **kwargs):
+            raise AssertionError("RNG/MC/CF/formal worker prohibited in PDE component")
+
+        for name in dir(pilot):
+            if name.startswith("run_") and callable(getattr(pilot, name)):
+                setattr(pilot, name, forbidden)
+        metadata = json.loads(INITIAL.read_text())
+        p = HestonParameters(**metadata["parameters"])
+        with ExitStack() as stack:
+            for name in ("default_rng", "normal", "standard_normal", "random",
+                         "rand", "randn", "uniform", "seed"):
+                stack.enter_context(patch.object(np.random, name, forbidden))
+            with np.load(RAW, allow_pickle=False) as a:
+                prefix = "field257x321.surface."
+                times, z, values, wings = [
+                    a[prefix+k].copy()
+                    for k in ("times", "z_nodes", "local_variance", "wing_boundaries")
+                ]
+                baseline = a["pde_time3840.prices"].copy()
+                truth = a["truth500"].copy()
+            assert times.shape == (257,) and z.shape == (321,)
+            assert values.shape == (257, 321) and wings.shape == (257, 2)
+            assert times[0] == 1/4096 and times[-1] == 1.25
+            assert z[0] == -5 and z[-1] == 5
+            assert baseline.shape == truth.shape == (37,)
+            field = LocalVarianceGrid(times, z, values, p, wings)
+            roster = _roster()
+            assert len(roster) == 8 and sum(len(r[2]) for r in roster) == 37
+            prices = np.full(37, np.nan)
+            payload = {
+                "kind": "current_field_original37_domain_component",
+                "original_quote_count": 37, "quote_ids": np.arange(37),
+                "parameters": vars(p), "field_times": times, "field_z_nodes": z,
+                "field_values": values, "field_wing_boundaries": wings,
+                "controls": CONTROLS, "baseline_controls": {
+                    "space_nodes": 4801, "time_steps": 3840, "log_half_width": 1.8},
+                "prices": prices, "truth500_saved": truth,
+                "baseline4801x3840_width1_8_saved": baseline,
+                "groups": [], "financial_qualification": "unknown",
+            }
+            # Preserve all37 NaN slots, exact field and roster before any solver,
+            # so a hard parent kill still leaves the original unprocessed claim.
+            payload["original_roster"] = [
+                {"group_index": i, "role": role, "expiry": expiry, "strikes": strikes}
+                for i, (role, expiry, strikes) in enumerate(roster)
+            ]
+            pilot.write_pilot_artifact(output / "initial-original37", payload)
+            checkpoint("exact_current_field_and_original37_initial_raw_saved")
+            offset = 0
+            for i, (role, expiry, strikes) in enumerate(roster):
+                if time.perf_counter()-wall_start >= WALL_CAP:
+                    checkpoint("unknown_before_next_original_group_at_wall_cap")
+                    break
+                start_w, start_c = time.perf_counter(), time.process_time()
+                result = pde_call(p.spot, strikes, expiry, field.evaluate,
+                                  p.rate, p.dividend_yield, **CONTROLS)
+                stop_w, stop_c = time.perf_counter(), time.process_time()
+                stop = offset + len(strikes)
+                prices[offset:stop] = result["price"]
+                group = {
+                    "group_index": i, "role": role, "expiry": expiry,
+                    "strikes": strikes, "quote_ids": np.arange(offset, stop),
+                    "actual_solver_result": result,
+                    "expense": {"id": f"domain37-group:{i}", "parent_id": "domain37-component",
+                                "includes_children": False,
+                                "wall_start": start_w, "wall_stop": stop_w,
+                                "cpu_start": start_c, "cpu_stop": stop_c,
+                                "wall_seconds": stop_w-start_w, "cpu_seconds": stop_c-start_c},
+                }
+                # Each completed original group is written immutably before the next solve.
+                pilot.write_pilot_artifact(output / f"group{i:02d}", group)
+                payload["groups"].append(group)
+                progress["groups"].append({
+                    "group_index": i, "original_quote_ids": list(range(offset, stop)),
+                    "expense": group["expense"], "supported": bool(result["supported"]),
+                    "failure": result["failure"],
+                })
+                offset = stop
+                checkpoint("completed_original_group_" + str(i))
+            payload["absolute_price_error"] = prices-truth
+            payload["same_dx_domain_difference"] = prices-baseline
+            payload["processed_quote_count"] = offset
+            payload["execution_status"] = "completed_original37" if offset == 37 else "unknown_partial_original37"
+            pilot.write_pilot_artifact(output / "full-original37", payload)
+            progress["processed_quote_count"] = offset
+            progress["all_original37_preserved"] = payload["quote_ids"].shape == (37,)
+            progress["max_absolute_price_error"] = float(np.max(np.abs(prices-truth))) if np.isfinite(prices).all() else None
+            progress["max_same_dx_domain_difference"] = float(np.max(np.abs(prices-baseline))) if np.isfinite(prices).all() else None
+            progress["all_original37_finite"] = bool(np.isfinite(prices).all())
+            progress["all_original_groups_supported"] = all(g["supported"] for g in progress["groups"]) and len(progress["groups"]) == 8
+            progress["source_after"] = source_bindings()
+            assert progress["source_before"] == progress["source_after"]
+            checkpoint("domain_PDE_component_observation_complete")
+    except BaseException as error:
+        progress["error"] = {"type": type(error).__name__, "reason": str(error),
+                             "traceback": traceback.format_exc()}
+        checkpoint("unknown_component_source_or_solver_failure")
+        raise
+    finally:
+        progress["child_interval"] = {"wall_start": wall_start, "wall_stop": time.perf_counter(),
+                                      "cpu_start": cpu_start, "cpu_stop": time.process_time()}
+        progress["source_after"] = source_bindings()
+        checkpoint(progress["status"])
+
+
+def rss(pid):
+    try:
+        rows = Path(f"/proc/{pid}/status").read_text().splitlines()
+    except FileNotFoundError:
+        return None
+    return next((int(row.split()[1])*1024 for row in rows if row.startswith("VmRSS:")), None)
+
+
+def parent(output, budget_path):
+    start_w, start_c = time.perf_counter(), time.process_time()
+    budget = validate_budget(budget_path)
+    output = output.resolve()
+    assert output.parent == D.resolve()
+    assert output.name.startswith("task-5-formal-controls-review-domain37-observation-")
+    output.mkdir(exist_ok=False)
+    before = source_bindings()
+    usage = resource.getrusage(resource.RUSAGE_CHILDREN)
+    environment = dict(os.environ)
+    environment.update(OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1")
+    log = (output / "child.log").open("xb")
+    process = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "--child",
+                                "--budget-file", str(budget_path.resolve()), "--output", str(output)],
+                               stdout=log, stderr=subprocess.STDOUT, env=environment)
+    sampled, cap_boundary = 0, None
+    while process.poll() is None:
+        sampled = max(sampled, rss(process.pid) or 0)
+        if sampled > RSS_CAP:
+            cap_boundary = "actual_process_RSS"
+        elif time.perf_counter()-start_w > WALL_CAP:
+            cap_boundary = "actual_enclosing_wall"
+        if cap_boundary:
+            process.kill()
+            break
+        time.sleep(0.01)
+    code = process.wait()
+    log.close()
+    stop_w, stop_c = time.perf_counter(), time.process_time()
+    actual = resource.getrusage(resource.RUSAGE_CHILDREN)
+    peak = max(sampled, actual.ru_maxrss*1024)
+    if cap_boundary is None and peak > RSS_CAP:
+        cap_boundary = "kernel_peak_RSS_detected_after_stage"
+    if cap_boundary is None and stop_w-start_w > WALL_CAP:
+        cap_boundary = "actual_enclosing_wall_detected_after_completion"
+    checkpoint_path = output / "progress.json"
+    child_progress = json.loads(checkpoint_path.read_text()) if checkpoint_path.exists() else None
+    after = source_bindings()
+    complete = code == 0 and cap_boundary is None and before == after
+    record = {
+        "scope": budget["scope"], "formal_plan_locked": False,
+        "financial_qualification": "unknown", "RNG_performed": False,
+        "financial_worker_performed": "pde_call_only_after_root_prior_component_approval",
+        "original_quote_count": 37, "status": "component_observation_complete" if complete else "unknown_component_failure",
+        "exit_code": code, "failure_boundary": cap_boundary,
+        "actual_peak_rss_bytes": peak, "sampled_peak_rss_bytes": sampled,
+        "rss_metric_is_not_RLIMIT_AS": True, "whole_parent_inclusive_clock": {
+            "wall_start": start_w, "wall_stop": stop_w,
+            "parent_cpu_start": start_c, "parent_cpu_stop": stop_c,
+            "child_cpu_start": usage.ru_utime+usage.ru_stime,
+            "child_cpu_stop": actual.ru_utime+actual.ru_stime},
+        "wall_seconds": stop_w-start_w,
+        "cpu_seconds": stop_c-start_c + actual.ru_utime+actual.ru_stime-usage.ru_utime-usage.ru_stime,
+        "overrun_seconds": max(0, stop_w-start_w-WALL_CAP),
+        "RSS_overrun_bytes": max(0, peak-RSS_CAP),
+        "includes_children": True, "prior_component_budget": budget,
+        "source_before": before, "source_after": after,
+        "latest_component_checkpoint": child_progress,
+        "partial_raw_and_failure_costs_preserved": True,
+        "original_teacher_or_oracle_grid_changed": False,
+        "independent_table_width2_25_measurement": False,
+        "formal_financial_qualification_claim": False,
+    }
+    save(output / "parent-cost-and-decision.json", record)
+    print(json.dumps({k: record[k] for k in ("status", "exit_code", "wall_seconds",
+                                           "cpu_seconds", "actual_peak_rss_bytes")}))
+    return 0 if complete else 1
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--budget-file", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--child", action="store_true")
+    args = parser.parse_args()
+    if args.child:
+        child(args.output, args.budget_file)
+    else:
+        raise SystemExit(parent(args.output, args.budget_file))
