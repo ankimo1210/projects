@@ -1,0 +1,6 @@
+{
+  "scope": "root docs/archive validator; no financial execution or source/data modification",
+  "original_exception": "KeyError: 'original_log_base64'",
+  "explanation": "Attempt assumed all historic carrier schemas use the current log key. Existing archive byte SHA checks are retained; carrier decoding is scoped to this turn owned carriers.",
+  "original_failure_preserved": true
+}

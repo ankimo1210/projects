@@ -1,0 +1,14 @@
+{
+  "tool_sha256": "934f5337c45c6d0e9243477476effdd20155a44cfcf0127401a899f556b2587b",
+  "limits": {
+    "max_read_bytes": 137438953472,
+    "max_links": 2000,
+    "max_seconds": 90
+  },
+  "start_UTC": "2026-10-10T11:17:00.972385+00:00",
+  "root_pid": 329580,
+  "correct_exception_class": "AdministrativeLimitError",
+  "existing_frozen_financial_source_changed": false,
+  "runtime_source_changes": 0,
+  "financial_qualification": "unknown"
+}

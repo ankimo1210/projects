@@ -1,0 +1,18 @@
+{
+  "schema": "rb-f04-closed-npz-hardlink-independent-contract-manifest-v1",
+  "recorded_utc": "2026-10-10T10:59:59.972623+00:00",
+  "financial_qualification": "unknown",
+  "actual_mutations": 0,
+  "files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-closed-npz-hardlink-independent-contract-v1-review.md",
+      "bytes": 3623,
+      "sha256": "a190dfd81f9db829b14c6b6c035d7c1bd7e46ea1d12eb2e932e2db904f5f35f5"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-closed-npz-hardlink-independent-contract-v1-results.json",
+      "bytes": 1862,
+      "sha256": "d40daed267732442196bf5d22fb98aa14d52e9690672b1c8049ad9e809246a88"
+    }
+  ]
+}

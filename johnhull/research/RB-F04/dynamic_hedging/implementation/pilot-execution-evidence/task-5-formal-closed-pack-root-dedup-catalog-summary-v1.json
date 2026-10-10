@@ -1,0 +1,60 @@
+{
+  "actual_deduplication": false,
+  "candidate_groups": 1102,
+  "candidate_saving_bytes": 58227441664,
+  "complete_catalog": {
+    "bytes": 3156194,
+    "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-closed-pack-root-dedup-catalog-v1.json",
+    "sha256": "d9f697e82aab26ba6d748484fce672c5bd2adf9f12b512808d112fd24c6256b9"
+  },
+  "cost": {
+    "cpu_seconds": 0.326346397,
+    "peak_rss_bytes": 19050496,
+    "wall_seconds": 0.4908017630004906
+  },
+  "eligible_npz_files": 7870,
+  "financial_generation": 0,
+  "largest_groups": [
+    {
+      "candidate_saving_bytes": 1300320256,
+      "path_count": 16,
+      "receipt_declared_sha256": "eb992b87e32f2e54d5836c81aa2d00ca35e0d6922aa145d2310a689a8e3a5245",
+      "separate_inodes": 16,
+      "size": 86684966
+    },
+    {
+      "candidate_saving_bytes": 1210470400,
+      "path_count": 10,
+      "receipt_declared_sha256": "f46e86e8077034267ec09e1874daf02c19948b50c8db7240e6cbd6a36a7198f3",
+      "separate_inodes": 10,
+      "size": 134494364
+    },
+    {
+      "candidate_saving_bytes": 1032257536,
+      "path_count": 16,
+      "receipt_declared_sha256": "14aaa9dd9410e9578fcf000f7420c0092ae9f66e0d60d4f8ddb6bff6041b011e",
+      "separate_inodes": 16,
+      "size": 68813550
+    },
+    {
+      "candidate_saving_bytes": 931557376,
+      "path_count": 16,
+      "receipt_declared_sha256": "67e51982c9376344b97d9f47a1cb84ef1606542a9acf859d3c3c96c1490b4d21",
+      "separate_inodes": 16,
+      "size": 62101506
+    },
+    {
+      "candidate_saving_bytes": 913186816,
+      "path_count": 16,
+      "receipt_declared_sha256": "e7b89f28ebab55fe46e453b4909cda54257d40a29092586eb88ad5c29623459b",
+      "separate_inodes": 16,
+      "size": 60876142
+    }
+  ],
+  "logical_eligible_npz_bytes": 83758414568,
+  "observed_utc": "2026-10-10T10:57:28.674922+00:00",
+  "schema": "rb-f04-root-bounded-closed-pack-dedup-catalog-v1",
+  "scope": "receipt/stat candidates only; current binary hashes not validated; no data changed",
+  "skipped": {},
+  "source_changes": 0
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "rb-f04-closed-npz-hardlink-independent-contract-v1",
+  "assessment": "compatible_if_exact_bytes_paths_and_write_once_are_preserved",
+  "approved": false,
+  "scope": "static byte/path/receipt guard, existing CAS and restore contract only",
+  "financial_qualification": "unknown",
+  "phase_accepted": false,
+  "whole_phase_capacity_guaranteed": false,
+  "actual_hardlink_attempts": 0,
+  "raw_mutation": 0,
+  "source_mutation": 0,
+  "financial_generation": 0,
+  "RNG": 0,
+  "SDE_replay": 0,
+  "process_or_CAS_execution": 0,
+  "source_canonical_identity": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_native_identity": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "bindings_are": "relative path inventory, exact bytes, canonical receipt hashes, dtype/shape/expanded bytes and producer source",
+  "bindings_are_not": [
+    "artifact inode",
+    "artifact mtime",
+    "link count"
+  ],
+  "required_conditions": [
+    "closed leaf arrays.npz only",
+    "stream exactbyte equality and receipt/currentbytes stable before/after",
+    "same filesystem/device and uid/gid/mode",
+    "staging outside native inventory",
+    "atomic replacement retains path and data",
+    "no in-place writes after sharing",
+    "metadata/receipt/whole original primitive/N/status/source roster unchanged"
+  ],
+  "restore_limit": "Existing _write_restored allocates a new temporary per manifest entry; native hardlink topology is not restored or guaranteed to conserve storage.",
+  "CAS_limit": "Each independently verified vault is separate; each vault already deduplicates byte blobs by digest.",
+  "physical_savings_measurement": "filesystem free space or distinct device/inode allocated bytes, not sum logical path sizes or unadjusted path st_blocks",
+  "reader_total_seconds": null,
+  "new_financial_seconds": 0
+}

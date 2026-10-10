@@ -1,0 +1,27 @@
+{
+  "CAS_execution": 0,
+  "actual_native_reads": 0,
+  "actual_native_writes": 0,
+  "cpu_seconds": 0.092227254,
+  "exit_code": 0,
+  "financial_executions": 0,
+  "production_source_edits": 0,
+  "scope": "D_synthetic_only",
+  "script_imports": [
+    "argparse",
+    "hashlib",
+    "json",
+    "math",
+    "os",
+    "pathlib",
+    "shutil",
+    "stat",
+    "time",
+    "zipfile"
+  ],
+  "script_sha256": "934f5337c45c6d0e9243477476effdd20155a44cfcf0127401a899f556b2587b",
+  "selftest_sha256": "a0c03454cc736119294bc7a2cbeb4babbb61ad5989df69c61668734dc8b43123",
+  "solver_RNG_SDE_generation_or_numeric_decode": 0,
+  "tests": 11,
+  "wall_seconds": 0.36656232999666827
+}

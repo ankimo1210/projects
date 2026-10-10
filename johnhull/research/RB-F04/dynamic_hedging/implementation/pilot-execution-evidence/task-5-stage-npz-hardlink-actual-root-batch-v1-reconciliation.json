@@ -1,0 +1,28 @@
+{
+  "actual_read_bytes": 193273099669,
+  "actual_termination": "administrative max_read_bytes; root wrapper wrong exception name raised AttributeError",
+  "enclosing_tail_cost": "unknown; no retrospective reconstruction",
+  "financial_generation_or_RNG_calls": 0,
+  "financial_qualification": "unknown",
+  "invocation_limits": {
+    "max_links": 1000,
+    "max_read_bytes": 193273528320,
+    "max_seconds": 120
+  },
+  "journal_sha256": "a348966da4f6ba2518e64d559a4d6f7986a03a4f0d6829285ab76b2ae9bf2ce9",
+  "known_inner_operation_cost": {
+    "CPU_seconds": 77.75627533100001,
+    "peak_rss_bytes": null,
+    "wall_seconds": 87.92842555399693
+  },
+  "original_journal_unchanged": true,
+  "original_reported_termination": "completed",
+  "schema": "rb-f04-root-byte-share-batch-reconciliation-v1",
+  "source_tool_sha256": "934f5337c45c6d0e9243477476effdd20155a44cfcf0127401a899f556b2587b",
+  "status": "partial_storage_links_confirmed_wrapper_failure_preserved",
+  "successful_links": 648,
+  "sum_released_old_single_link_inode_allocated_bytes": 36872978432,
+  "wall_cost_overlaps_financial_phase_not_additive": true,
+  "whole_phase_capacity_guaranteed": false,
+  "within_submitted_read_budget": true
+}

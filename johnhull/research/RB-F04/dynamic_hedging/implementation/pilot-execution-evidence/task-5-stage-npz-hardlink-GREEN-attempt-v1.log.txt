@@ -1,0 +1,45 @@
+test_already_shared_inode_skips_and_detach_restores_independence (__main__.SyntheticDedupTests.test_already_shared_inode_skips_and_detach_restores_independence) ... ERROR
+test_different_actual_bytes_even_self_consistent_receipt_not_shared (__main__.SyntheticDedupTests.test_different_actual_bytes_even_self_consistent_receipt_not_shared) ... ok
+test_exact_duplicate_link_and_receipt_byte_preservation (__main__.SyntheticDedupTests.test_exact_duplicate_link_and_receipt_byte_preservation) ... ERROR
+test_existing_external_hardlink_allocation_not_overclaimed (__main__.SyntheticDedupTests.test_existing_external_hardlink_allocation_not_overclaimed) ... ok
+test_forged_equal_receipt_digest_rejected (__main__.SyntheticDedupTests.test_forged_equal_receipt_digest_rejected) ... ok
+test_incomplete_leaf_pack_and_root_teacher_arrays_excluded (__main__.SyntheticDedupTests.test_incomplete_leaf_pack_and_root_teacher_arrays_excluded) ... ok
+test_read_limit_and_dry_run_keep_original_inode (__main__.SyntheticDedupTests.test_read_limit_and_dry_run_keep_original_inode) ... ok
+test_symlink_and_permissions_mismatch_rejected (__main__.SyntheticDedupTests.test_symlink_and_permissions_mismatch_rejected) ... ok
+test_symlink_staging_or_scope_escape_rejected (__main__.SyntheticDedupTests.test_symlink_staging_or_scope_escape_rejected) ... ok
+
+======================================================================
+ERROR: test_already_shared_inode_skips_and_detach_restores_independence (__main__.SyntheticDedupTests.test_already_shared_inode_skips_and_detach_restores_independence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 143, in test_already_shared_inode_skips_and_detach_restores_independence
+    detached = self.engine(journal=self.base / "detach.jsonl").detach(self.journal)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v1.py", line 427, in detach
+    events = [json.loads(line) for line in data.splitlines()]
+              ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 1 column 421 (char 420)
+
+======================================================================
+ERROR: test_exact_duplicate_link_and_receipt_byte_preservation (__main__.SyntheticDedupTests.test_exact_duplicate_link_and_receipt_byte_preservation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 96, in test_exact_duplicate_link_and_receipt_byte_preservation
+    events = [json.loads(line) for line in self.journal.read_text().splitlines()]
+              ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 1 column 422 (char 421)
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.172s
+
+FAILED (errors=2)

@@ -1,0 +1,177 @@
+"""Fixed metadata only. Default read-only; root may explicitly invoke --store."""
+
+from __future__ import annotations
+
+import argparse
+import gc
+import hashlib
+import json
+import os
+import sys
+import time
+from pathlib import Path
+
+W = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D = W / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+MANIFEST = D / "task-5-formal-prior-metadata-cas-preparation-v3-manifest.json"
+EXPECTED_MANIFEST = "2dae5d8d261e3db8adbf27c37ecb6597b098d9be9e94c3d0ac4ebc8e754a8c32"
+TOOL = W / "johnhull/scripts/evidence_store.py"
+EXPECTED_TOOL = "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3"
+RESERVE = 10 * 1024**3
+
+
+def file_sha(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for part in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(part)
+    return digest.hexdigest()
+
+
+def free_bytes(path):
+    stat = os.statvfs(path)
+    return stat.f_bavail * stat.f_frsize
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--store", action="store_true", help="root-only explicit CAS write")
+    parser.add_argument("--receipt-out", type=Path)
+    args = parser.parse_args()
+    if args.store and args.receipt_out is None:
+        parser.error("--receipt-out required for root CAS write")
+    if args.receipt_out is not None:
+        target = args.receipt_out.resolve()
+        if not target.is_relative_to(D.resolve()) or target.exists():
+            parser.error("receipt must be a new file inside D")
+    start, cpu = time.perf_counter(), time.process_time()
+    if file_sha(TOOL) != EXPECTED_TOOL or file_sha(MANIFEST) != EXPECTED_MANIFEST:
+        raise ValueError("fixed store tool or closed metadata manifest changed")
+    sys.path.insert(0, str(TOOL.parent))
+    import evidence_store as es
+
+    manifest = es.load_manifest(json.loads(MANIFEST.read_text()))
+    stores = [
+        es.store_from_env("PROJECTS_ARTIFACT_STORE", role="primary"),
+        es.store_from_env("PROJECTS_ARTIFACT_MIRROR", role="mirror"),
+    ]
+    if stores[0].root.resolve() == stores[1].root.resolve():
+        raise ValueError("primary and mirror must remain distinct store roots")
+    unique = {}
+    for entry in manifest["entries"]:
+        if not entry["path"].startswith("raw/"):
+            raise ValueError("fixed metadata archive path prefix changed")
+        relative = entry["path"][4:]
+        es.validate_relative_path(relative)
+        source = W / relative
+        if source.is_symlink() or not source.resolve().is_relative_to(W.resolve()):
+            raise ValueError("metadata source path escaped fixed workspace")
+        if source.stat().st_size != entry["bytes"] or file_sha(source) != es.parse_ref(
+            entry["ref"]
+        ):
+            raise ValueError("fixed source metadata bytes changed")
+        unique.setdefault(es.parse_ref(entry["ref"]), (source, entry["bytes"]))
+    # Store the one shared standard manifest itself once in each vault too.
+    unique.setdefault(EXPECTED_MANIFEST, (MANIFEST, MANIFEST.stat().st_size))
+    missing = {
+        store.role: sum(size for digest, (_, size) in unique.items() if not store.has(digest))
+        for store in stores
+    }
+    observations = []
+    for label, path, pending in [
+        ("WSL", W, 0),
+        *[(store.role, store.root, missing[store.role]) for store in stores],
+    ]:
+        available = free_bytes(path)
+        if available - pending < RESERVE:
+            raise ValueError("volume reserve would be breached before metadata archive")
+        observations.append(
+            {
+                "volume": label,
+                "free_bytes": available,
+                "reserve_bytes": RESERVE,
+                "pending_unique_blob_bytes": pending,
+            }
+        )
+    if not args.store:
+        result = {
+            "status": "READ_ONLY_READY",
+            "manifest_ref": es.make_ref(EXPECTED_MANIFEST),
+            "entries": len(manifest["entries"]),
+            "unique_blobs_including_manifest": len(unique),
+            "stores": [{"role": s.role, "root": str(s.root)} for s in stores],
+            "volume_observations": observations,
+            "CAS_writes": 0,
+            "cost": {
+                "wall_seconds": time.perf_counter() - start,
+                "CPU_seconds": time.process_time() - cpu,
+            },
+            "financial_qualification": "unknown",
+        }
+        print(json.dumps(result, indent=2))
+        return
+
+    actions = {s.role: {"new_unique_blobs": 0, "verified_existing_blobs": 0} for s in stores}
+    for digest, (source, size) in unique.items():
+        # One action per digest per vault; duplicate paths share the same blob.
+        for store in stores:
+            if store.has(digest):
+                store.read_verified(digest, size)
+                actions[store.role]["verified_existing_blobs"] += 1
+            else:
+                if free_bytes(store.root) - size < RESERVE:
+                    raise ValueError("volume reserve would be breached during metadata archive")
+                if store.role == "primary":
+                    info = store.put_file(source)
+                    if info != {"sha256": digest, "bytes": size}:
+                        raise ValueError("metadata source changed during immutable CAS publication")
+                else:
+                    es.replicate(stores[0], store, [digest])
+                actions[store.role]["new_unique_blobs"] += 1
+            gc.collect()
+    # Standard writer authenticated every new blob. Recheck the original finite
+    # source set without a restore or any numerical deserialization.
+    for entry in manifest["entries"]:
+        source = W / entry["path"][4:]
+        if source.stat().st_size != entry["bytes"] or file_sha(source) != es.parse_ref(
+            entry["ref"]
+        ):
+            raise ValueError("original D/source bytes changed during archive")
+    if file_sha(MANIFEST) != EXPECTED_MANIFEST or file_sha(TOOL) != EXPECTED_TOOL:
+        raise ValueError("fixed manifest/tool changed during archive")
+    result = {
+        "status": "PASS",
+        "scope": "immutable prior metadata storage only",
+        "manifest_ref": es.make_ref(EXPECTED_MANIFEST),
+        "manifest_sha256": EXPECTED_MANIFEST,
+        "entries": len(manifest["entries"]),
+        "unique_blobs_including_manifest": len(unique),
+        "stores": {
+            s.role: {
+                "root": str(s.root),
+                "manifest_ref": es.make_ref(EXPECTED_MANIFEST),
+                **actions[s.role],
+                "free_bytes_after": free_bytes(s.root),
+            }
+            for s in stores
+        },
+        "volume_observations_before": observations,
+        "original_selected_D_source_bytes_unchanged": True,
+        "deduplicated_per_digest_per_vault": True,
+        "live_financial_artifacts_included": False,
+        "financial_qualification": "unknown",
+        "cost": {
+            "wall_seconds": time.perf_counter() - start,
+            "CPU_seconds": time.process_time() - cpu,
+        },
+        "financial_generation_RNG_solver_workers": 0,
+        "storage_publication_backend": "existing evidence_store only; its platform subprocess counts are not asserted",
+    }
+    with args.receipt_out.open("x") as stream:
+        json.dump(result, stream, indent=2)
+        stream.write("\n")
+    print(json.dumps(result, indent=2))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,25 @@
+{
+  "schema": "rb-f04-live-capacity-independent-diagnosis-manifest-v1",
+  "recorded_utc": "2026-10-10T10:55:54.121175+00:00",
+  "scope": "resource/representation diagnosis only",
+  "financial_qualification": "unknown",
+  "phase_accepted": false,
+  "whole_phase_capacity_guaranteed": false,
+  "files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-live-capacity-independent-v1-results.json",
+      "sha256": "9664de34bfcfa219033421dd39022190f03151d78b77def46c38e5d408057905",
+      "bytes": 7592
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-live-capacity-independent-v1-review.md",
+      "sha256": "20532433360df034e4934f82a38968eba3c3e196985a654fd02e794c60bb0616",
+      "bytes": 4272
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-live-capacity-independent-v1-stat-header-probe.py",
+      "sha256": "1c52183e1ff2689953c3e8b3e54c8d14921c8347c2cbaed0d3b7279f67ff047e",
+      "bytes": 2451
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "actual_native_reads_or_writes": 0,
+  "cpu_seconds": 0.09258717400000001,
+  "exit_code": 0,
+  "financial_executions": 0,
+  "helper": "task-5-stage-npz-hardlink-v2.py",
+  "helper_sha256": "010fb31dd02be6e7be937d1c9923ba8f80abeac2bbb03f05725850be430adf58",
+  "scope": "D_synthetic_only",
+  "tests": 12,
+  "wall_seconds": 1.5075555860021268
+}

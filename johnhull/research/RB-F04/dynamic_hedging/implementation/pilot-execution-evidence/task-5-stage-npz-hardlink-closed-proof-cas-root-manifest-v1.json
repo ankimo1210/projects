@@ -1,0 +1,180 @@
+{
+  "entries": [
+    {
+      "bytes": 3156194,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-closed-pack-root-dedup-catalog-v1.json",
+      "ref": "artifact:sha256:d9f697e82aab26ba6d748484fce672c5bd2adf9f12b512808d112fd24c6256b9"
+    },
+    {
+      "bytes": 6547,
+      "mime": "text/markdown",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-generic-saved-transport-options-readonly-v1.md",
+      "ref": "artifact:sha256:a0f2c46e4e12418d88abb03152f65678a32e61afef4d262be253036fcb298d1a"
+    },
+    {
+      "bytes": 150,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-GREEN-attempt-cost-v1.json",
+      "ref": "artifact:sha256:534f94f56de2ddefdba704e0251460882d4b53de6a782c3ef91ffcbc7b7110ec"
+    },
+    {
+      "bytes": 3774,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-GREEN-attempt-v1.log",
+      "ref": "artifact:sha256:22f48fcb300004e0ff1b67ad456c74da1d54f225c2fe2c9f87d2e88d5a3ed987"
+    },
+    {
+      "bytes": 150,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-GREEN-cost-v2.json",
+      "ref": "artifact:sha256:f66485c0638efd2d34c26557a2b3ff6f7d175c94e84599b1cbb311225dc5be5a"
+    },
+    {
+      "bytes": 1703,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-GREEN-final-v1.log",
+      "ref": "artifact:sha256:ed26e4c5f001aa49f4ab004341a78886b1900fe15bc989adaa3401d2a4f4e878"
+    },
+    {
+      "bytes": 1703,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-GREEN-v2.log",
+      "ref": "artifact:sha256:f4ebb4e481fbfb04e65f149494d5dfaf89831bd9a4fefd3a6935e57c0204873b"
+    },
+    {
+      "bytes": 159,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-RED-cost-v1.json",
+      "ref": "artifact:sha256:c6ec8ae379cf91c5c74550d8a622f886114bbbeddf8b6da90b6f5eab385f0b14"
+    },
+    {
+      "bytes": 7367,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-RED-v1.log",
+      "ref": "artifact:sha256:d23c989dde75b12ffcd7d4b3e63d32c12f3966ec49b3c59dc22e90ffd00d80d5"
+    },
+    {
+      "bytes": 1200,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v1-reconciliation.json",
+      "ref": "artifact:sha256:3cad13e4354c7db185ffb2868480ff794f2e0d5967677d8ad745612a50eef13d"
+    },
+    {
+      "bytes": 960,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v1-wrapper-failure.json",
+      "ref": "artifact:sha256:318678a0bf1cd2b0210572f6a6561b473fe3df90dde7ee6ff3982abff6a1a0bf"
+    },
+    {
+      "bytes": 1456235,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v1.jsonl",
+      "ref": "artifact:sha256:a348966da4f6ba2518e64d559a4d6f7986a03a4f0d6829285ab76b2ae9bf2ce9"
+    },
+    {
+      "bytes": 442,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v2-start.json",
+      "ref": "artifact:sha256:a78185aad41e3eb29626b90b3b1d76fca64919081736460f0b93ad4f9c3d3ff5"
+    },
+    {
+      "bytes": 2096,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v2.json",
+      "ref": "artifact:sha256:a6774c2abbc03b99e332652bfa9c63ba042bb7f78d3ae54cbd097416a628cfce"
+    },
+    {
+      "bytes": 3318713,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v2.jsonl",
+      "ref": "artifact:sha256:edcdb15443c9eabbb20ad4be6665d0bf32133f8f56333ad93b06252453c40f41"
+    },
+    {
+      "bytes": 4276,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-postcheck-v1.json",
+      "ref": "artifact:sha256:db807f3e08ba9c14719e0b8768c0e2591dcc6024b1179257dcaa5bd4f8b76c03"
+    },
+    {
+      "bytes": 4417,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-trial-v1.json",
+      "ref": "artifact:sha256:5122a88d5a16fc66708165d76cb3d8fc79c72ef42a176a5bff525dac5be2fdad"
+    },
+    {
+      "bytes": 3623,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-trial-v1.jsonl",
+      "ref": "artifact:sha256:f437b59faec92611a8f1e71a420259e19699acd0df5a11be0395b06a3ce610b4"
+    },
+    {
+      "bytes": 2754,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-fixed-manifest-v1.json",
+      "ref": "artifact:sha256:a0dee0632c4efa9386d919aecb85f69f18d51d8cc55c4b848760f240abfcd8bc"
+    },
+    {
+      "bytes": 4275,
+      "mime": "text/markdown",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-report-v1.md",
+      "ref": "artifact:sha256:addd028af1bf04797c22d46d608dd72cd1f2bd4de3a8095095a22fcca952f859"
+    },
+    {
+      "bytes": 1703,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-root-verification-v1-0.log",
+      "ref": "artifact:sha256:c0b88467272e36cd2403125efd51fae336f0e3f057aa1d542660d45d7ae9e690"
+    },
+    {
+      "bytes": 19,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-root-verification-v1-1.log",
+      "ref": "artifact:sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "bytes": 26,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-root-verification-v1-2.log",
+      "ref": "artifact:sha256:3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    {
+      "bytes": 19,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-ruff-GREEN-v1.log",
+      "ref": "artifact:sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "bytes": 3361,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-ruff-RED-v1.log",
+      "ref": "artifact:sha256:abd0ef9fd0aee4b2dd025d430d7188070edaa9caaac2c28b1f5c8e4c90e255f0"
+    },
+    {
+      "bytes": 424,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-ruff-format-results-v1.json",
+      "ref": "artifact:sha256:a5df8ca3cb9b1cdebcc40355810277d6670f0ee0d13ef10230b6e4026cc0ab56"
+    },
+    {
+      "bytes": 10371,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py",
+      "ref": "artifact:sha256:a0c03454cc736119294bc7a2cbeb4babbb61ad5989df69c61668734dc8b43123"
+    },
+    {
+      "bytes": 27284,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v1.py",
+      "ref": "artifact:sha256:934f5337c45c6d0e9243477476effdd20155a44cfcf0127401a899f556b2587b"
+    },
+    {
+      "bytes": 663,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-verification-v1.json",
+      "ref": "artifact:sha256:6d04c93a72165db1d50d20d2403cd4f4e215be4b8719b4cba1320435bf2332d5"
+    }
+  ],
+  "kind": "johnhull-evidence-manifest",
+  "schema_version": 1
+}

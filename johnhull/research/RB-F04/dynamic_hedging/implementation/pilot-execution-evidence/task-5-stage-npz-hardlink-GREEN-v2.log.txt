@@ -1,0 +1,16 @@
+test_already_shared_inode_skips_and_detach_restores_independence (__main__.SyntheticDedupTests.test_already_shared_inode_skips_and_detach_restores_independence) ... ok
+test_different_actual_bytes_even_self_consistent_receipt_not_shared (__main__.SyntheticDedupTests.test_different_actual_bytes_even_self_consistent_receipt_not_shared) ... ok
+test_exact_duplicate_link_and_receipt_byte_preservation (__main__.SyntheticDedupTests.test_exact_duplicate_link_and_receipt_byte_preservation) ... ok
+test_existing_external_hardlink_allocation_not_overclaimed (__main__.SyntheticDedupTests.test_existing_external_hardlink_allocation_not_overclaimed) ... ok
+test_forged_equal_receipt_digest_rejected (__main__.SyntheticDedupTests.test_forged_equal_receipt_digest_rejected) ... ok
+test_incomplete_leaf_pack_and_root_teacher_arrays_excluded (__main__.SyntheticDedupTests.test_incomplete_leaf_pack_and_root_teacher_arrays_excluded) ... ok
+test_one_link_limit_preserves_unprocessed_third_pack (__main__.SyntheticDedupTests.test_one_link_limit_preserves_unprocessed_third_pack) ... ok
+test_postcheck_read_cap_rolls_back_original_inode (__main__.SyntheticDedupTests.test_postcheck_read_cap_rolls_back_original_inode) ... ok
+test_read_limit_and_dry_run_keep_original_inode (__main__.SyntheticDedupTests.test_read_limit_and_dry_run_keep_original_inode) ... ok
+test_symlink_and_permissions_mismatch_rejected (__main__.SyntheticDedupTests.test_symlink_and_permissions_mismatch_rejected) ... ok
+test_symlink_staging_or_scope_escape_rejected (__main__.SyntheticDedupTests.test_symlink_staging_or_scope_escape_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.233s
+
+OK

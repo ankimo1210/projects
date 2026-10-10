@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "fixed_manifest_files_verified": 25,
+  "frozen_financial_source_files": 81,
+  "actual_native_operations": 0,
+  "commands": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v2.py"
+      ],
+      "returncode": 0,
+      "log": "task-5-stage-npz-hardlink-v2-root-verification-0.log"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v2.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v2.py"
+      ],
+      "returncode": 0,
+      "log": "task-5-stage-npz-hardlink-v2-root-verification-1.log"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v2.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v2.py"
+      ],
+      "returncode": 0,
+      "log": "task-5-stage-npz-hardlink-v2-root-verification-2.log"
+    }
+  ],
+  "full_three_suites_run": false,
+  "wall_seconds": 0.3050274220004212
+}

@@ -1,0 +1,244 @@
+{
+  "authorizations": {
+    "binary_full_hash": false,
+    "deduplication_performed": false,
+    "financial_execution": false,
+    "formal_financial_qualification": "unknown",
+    "huge_root_metadata_parsed": false,
+    "original_raw_changed": false,
+    "process_started_or_stopped": false,
+    "source_or_tests_or_docs_or_git_or_cas_changed": false
+  },
+  "bounded_headers_previously_observed": [
+    {
+      "compressed_member_bytes": 134156969,
+      "examples": [
+        {
+          "dtype": "<f8",
+          "npy_bytes_each": 6291584,
+          "repeated_shape_members_observed": 4,
+          "shape": [
+            256,
+            1536,
+            2
+          ]
+        },
+        {
+          "dtype": "<U96",
+          "npy_bytes": 5111936,
+          "shape": [
+            1024,
+            13
+          ]
+        }
+      ],
+      "expanded_npy_bytes": 134156969,
+      "job": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE",
+      "members": 1725,
+      "pack": "pack000029"
+    },
+    {
+      "compressed_member_bytes": 129888800,
+      "expanded_npy_bytes": 129888800,
+      "job": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE",
+      "members": 1959,
+      "pack": "pack000014"
+    },
+    {
+      "compressed_member_bytes": 87530560,
+      "expanded_npy_bytes": 87530560,
+      "job": "stage:Heston:N1024:coarse:bump:Heston",
+      "members": 4096,
+      "pack": "pack000420"
+    },
+    {
+      "compressed_member_bytes": 60763224,
+      "examples": [
+        {
+          "dtype": "<f8",
+          "npy_bytes": 4718720,
+          "shape": [
+            1024,
+            12,
+            16,
+            3
+          ]
+        },
+        {
+          "dtype": "<U96",
+          "npy_bytes_each": 4718720,
+          "repeated_shape_members_observed": 4,
+          "shape": [
+            1024,
+            12
+          ]
+        }
+      ],
+      "expanded_npy_bytes": 60763224,
+      "job": "stage:Heston:N1024:coarse:bump:Heston",
+      "members": 4096,
+      "pack": "pack000427"
+    }
+  ],
+  "diagnosis": [
+    "The large output is not a repeated complete locked-plan JSON. Common job rows retain plan/source hashes, their own budget/prediction and original bindings.",
+    "Generic child raws recursively retain the original dataset, market raw_chunks with fine normals, caches, full quote-risk/chunk risk records, and policy base/refined evidence. quote_risk stores the same full risk under value and chunked_worker; paired stores risk sources and extracted risks; bump deep-copies full base risk into three variants and retains one again as value. This keeps original finance evidence but multiplies its physical representation.",
+    "_encode_tree gives a fresh array ID to each array occurrence, with no alias/content reference memo. Generic outputs are literal; only root kind teacher uses the special recipe and compress=True.",
+    "Many small array occurrences cause large tree/descriptor JSON and 4096-member packs. The observed bump root metadata is 549.5MB and position root metadata is 566.5MB, so NPZ-only reductions do not remove that overhead.",
+    "ZIP member expanded and stored bytes match in the inspected generic packs. Large original normals and fixed-width Unicode reason/status arrays are physically written again; matching shapes are not used to claim matching values."
+  ],
+  "immutable_io_contract": {
+    "hardlink_implication": "A same-filesystem, exact-byte replacement of only a closed arrays.npz preserves pathname and existing receipts/byte guards. It does not provide financial approval or skip saved checks.",
+    "limits": "Immutability is the current writer contract, not an OS read-only permission. Any future in-place mutation of a linked target would affect all links; only independently byte-confirmed closed files can be candidates.",
+    "memo": "Physical guard seals relative file/directory inventory and file byte SHA; it does not bind inode, link count, mtime or ctime. Source/raw/financial inputs and original replay remain required.",
+    "reader": "Saved reader authenticates exact metadata/NPZ bytes plus shape/dtype/expanded byte limit. Numeric saved finance checks remain separate.",
+    "writer": "write_artifact rejects an existing directory and uses xb to create metadata, NPZ, then receipt; no in-place rewrite in this path. Pilot writer splits into new immutable pack directories. A complete pack receipt is distinct from whole job/phase completion."
+  },
+  "minimal_candidates": [
+    {
+      "added_work": "Bounded exact-byte/closed-file confirmation and an authorized reversible physical operation; no finance rerun or source revision is intrinsically required.",
+      "declared_pairwise_candidate_saving_bytes": 3318387998,
+      "execution_authorized_here": false,
+      "implemented": false,
+      "limitations": "No actual deduplication or full binary equality check was performed. Observed two-pair candidates do not establish enough capacity for all 3138 jobs. No metadata reduction; no cross-volume sharing. C/F/WSL and CAS restore copies need separate space accounting.",
+      "measured_saving": null,
+      "method_if_separately_authorized": "Select candidates by existing receipt SHA and size; confirm current exact bytes and closed writer state before replacement, create a temporary hardlink on the same st_dev, then atomically replace only the duplicate pathname. Keep receipt/metadata unchanged. A fresh detached copy plus atomic replacement reverses the physical sharing without changing bytes.",
+      "name": "Source-free exact-byte closed NPZ hardlink deduplication",
+      "preserves": "Original arrays, full N/cases/unknown/NaN/status/raw, all receipt bytes/path/driver/source/expense and saved semantic checks.",
+      "source_changes": 0
+    },
+    {
+      "added_work": "One private writer choice plus scoped roundtrip/NaN/failure/expanded-cap checks and original-size I/O observation; actual CPU/RSS/compression ratio is unmeasured.",
+      "execution_authorized_here": false,
+      "implemented": false,
+      "limitations": "Needs new source identity/review/prior binding and a bounded original-shape serialization cost observation before estimating capacity or time. Existing literal artifacts remain untouched/compatible. Compression alone leaves 549-566MB root metadata and duplicated decoded in-memory structures.",
+      "measured_compression_ratio": null,
+      "name": "Use existing lossless compressed pack writer for new generic outputs",
+      "preserves": "Full literal tree/array roster/original N, NaN/failure strings, all shapes/dtypes, original expanded-byte cap, expense and original mathematical checks.",
+      "source_changes": "Small private compress selection change in write_pilot_artifact; no reader/public API/math change is needed by the existing format."
+    }
+  ],
+  "native_output_directory": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2",
+  "not_proposed_here": "Removing evidence/N/axes/queries or dropping the input raw; blind aliasing distinct ndarrays; broad dependency-reference hydration/refactor; pretending whole-phase storage is solved.",
+  "observed_utc": "2026-10-10T10:53:24.740382+00:00",
+  "pairwise_disjoint_declared_npz_candidate_bytes": 3318387998,
+  "probe_history": [
+    {
+      "attempt": "small receipt and source inspection",
+      "corrected_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "original_tool_output_preserved": true,
+      "outcome": "partial output then FileNotFoundError from missing src in protocol path",
+      "source_or_financial_defect": false
+    }
+  ],
+  "receipt_duplicate_candidates": [
+    {
+      "already_same_inode_count": 0,
+      "classification": "receipt-declared candidates; exact current binary bytes not independently hashed or compared",
+      "left_job": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE",
+      "matching_declared_arrays_count": 31,
+      "matching_declared_npz_bytes": 1487274115,
+      "matching_metadata_sha_count": 31,
+      "pack_counts": [
+        31,
+        31
+      ],
+      "right_job": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE",
+      "same_fs_all": true
+    },
+    {
+      "already_same_inode_count": 0,
+      "classification": "receipt-declared candidates; exact current binary bytes not independently hashed or compared",
+      "left_job": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width0",
+      "matching_declared_arrays_count": 446,
+      "matching_declared_npz_bytes": 1831113883,
+      "matching_metadata_sha_count": 446,
+      "pack_counts": [
+        450,
+        450
+      ],
+      "right_job": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width1",
+      "same_fs_all": true
+    }
+  ],
+  "report_write_component_cost": {
+    "child_peak_rss_bytes": 19914752,
+    "scope": "this final stat/small-receipt/source-binding/report component only; not inclusive financial phase cost",
+    "wall_seconds_before_write": 0.05938907800009474
+  },
+  "representative_file_stats": [
+    {
+      "file_count": 96,
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE",
+      "pack_arrays_bytes": 1487274115,
+      "pack_count": 31,
+      "root_metadata_bytes": 28055241,
+      "total_stat_bytes": 1528580379
+    },
+    {
+      "file_count": 96,
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE",
+      "pack_arrays_bytes": 1487274115,
+      "pack_count": 31,
+      "root_metadata_bytes": 28055230,
+      "total_stat_bytes": 1528580368
+    },
+    {
+      "file_count": 1299,
+      "job_id": "stage:Heston:N1024:coarse:bump:Heston",
+      "pack_arrays_bytes": 1223543944,
+      "pack_count": 432,
+      "root_metadata_bytes": 549503661,
+      "total_stat_bytes": 1963712929
+    },
+    {
+      "file_count": 1353,
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width0",
+      "pack_arrays_bytes": 2180557474,
+      "pack_count": 450,
+      "root_metadata_bytes": 566474238,
+      "total_stat_bytes": 2945758597
+    },
+    {
+      "file_count": 1353,
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width1",
+      "pack_arrays_bytes": 2180557474,
+      "pack_count": 450,
+      "root_metadata_bytes": 566474241,
+      "total_stat_bytes": 2945758600
+    }
+  ],
+  "schema": "rb-f04-read-only-storage-amplification-diagnosis-v2",
+  "scope": "D-only static source, per-file stat, small existing receipts, ZIP central directory and bounded NPY headers; live volume observation is non-atomic and does not certify whole job completion",
+  "source_current_canonical": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_current_native_payload": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "source_files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "relevant_locations": "run_quote_risk_job:705-730, run_paired_pnl_job:832-891, run_market_pair_job:1709-1809, write_pilot_artifact:1812-1869, read_pilot_artifact:1949-2003, bump_risk_variants:2445-2488, run_bump_risk_job:2491-2587",
+      "sha256": "8f0df2b35bb04087e7c4a3761d6cf1b8bbb8104e2e5b7516af03ba6c2c8123c4"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "relevant_locations": "_encode_tree:526-543",
+      "sha256": "cc7183df08f8d4b7942929ccc44cbcc5899be5df74128016c7c6521bac2909b9"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "relevant_locations": "_teacher_source_guard:2773-2781, _artifact_byte_guard:2784-2799, _teacher_physical_guard:2802-2824",
+      "sha256": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "relevant_locations": "write_artifact:645-695, read_artifact:698-746",
+      "sha256": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565"
+    }
+  ],
+  "source_scope": "Current source identity is inherited from the already fixed root evidence; source-byte SHA below binds only the four read files, not a new whole-source approval.",
+  "unknowns": [
+    "Whole-phase storage after any candidate",
+    "Actual exact-byte equality of current NPZ files",
+    "Compression ratio and cost for generic artifacts",
+    "Any future artifact mutation outside the immutable writer path"
+  ]
+}

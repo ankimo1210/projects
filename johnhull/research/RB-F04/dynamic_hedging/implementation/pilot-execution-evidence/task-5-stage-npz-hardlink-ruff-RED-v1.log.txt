@@ -1,0 +1,75 @@
+I001 [*] Import block is un-sorted or un-formatted
+  --> /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py:2:1
+   |
+ 1 |   """D-only synthetic byte transport tests; no financial/native/source imports."""
+ 2 | / import hashlib
+ 3 | | import importlib.util
+ 4 | | import io
+ 5 | | import json
+ 6 | | import os
+ 7 | | from pathlib import Path
+ 8 | | import struct
+ 9 | | import tempfile
+10 | | import unittest
+11 | | from unittest.mock import patch
+12 | | import zipfile
+   | |______________^
+13 |
+14 |   D = Path(__file__).resolve().parent
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v1.py:7:1
+   |
+ 5 |   read-ahead and fsync latency are not predicted. A stop is administrative only.
+ 6 |   """
+ 7 | / import argparse
+ 8 | | import hashlib
+ 9 | | import json
+10 | | import os
+11 | | from pathlib import Path
+12 | | import shutil
+13 | | import stat
+14 | | import time
+15 | | import math
+16 | | import zipfile
+   | |______________^
+17 |
+18 |   D = Path("/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging")
+   |
+help: Organize imports
+
+N818 Exception name `AdministrativeLimit` should be named with an Error suffix
+  --> /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v1.py:59:7
+   |
+59 | class AdministrativeLimit(Exception):
+   |       ^^^^^^^^^^^^^^^^^^^
+60 |     pass
+   |
+
+B905 `zip()` without an explicit `strict=` parameter
+   --> /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v1.py:147:53
+    |
+145 |             raise ValueError("staging must be a directory on the native filesystem")
+146 |         self.log = self.journal_path.open("x", encoding="utf-8")
+147 |         self.summary["native_volume_before"] = dict(zip(("total", "used", "free"), shutil.disk_usage(self.root)))
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+148 |         self.event("start", root=str(self.root), staging=str(self.staging), dry_run=self.dry_run)
+    |
+help: Add explicit value for parameter `strict=`
+
+B905 `zip()` without an explicit `strict=` parameter
+   --> /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v1.py:169:52
+    |
+167 |                 self.summary["inventory_after_incomplete"] = True
+168 |         self.summary["selected_unique_inode_allocated_after_bytes"] = sum(identities.values())
+169 |         self.summary["native_volume_after"] = dict(zip(("total", "used", "free"), shutil.disk_usage(self.root)))
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+170 |         self.summary.update(
+171 |             actual_file_read_bytes=self.budget.read_bytes,
+    |
+help: Add explicit value for parameter `strict=`
+
+Found 5 errors.
+[*] 2 fixable with the `--fix` option (2 hidden fixes can be enabled with the `--unsafe-fixes` option).

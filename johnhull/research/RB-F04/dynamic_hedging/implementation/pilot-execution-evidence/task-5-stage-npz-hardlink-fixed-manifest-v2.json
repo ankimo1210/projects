@@ -1,0 +1,66 @@
+{
+  "files": [
+    {
+      "bytes": 28505,
+      "path": "task-5-stage-npz-hardlink-v2.py",
+      "sha256": "010fb31dd02be6e7be937d1c9923ba8f80abeac2bbb03f05725850be430adf58"
+    },
+    {
+      "bytes": 12527,
+      "path": "task-5-stage-npz-hardlink-selftest-v2.py",
+      "sha256": "5ed1c5566ab5f0652633fda10094ecbfe6901fd5b2bd00a585579b02dd099604"
+    },
+    {
+      "bytes": 12527,
+      "path": "task-5-stage-npz-hardlink-selftest-v2-RED-source.py.txt",
+      "sha256": "60883bc16caa640a026f43b2db246053bfe806eccd963f827a93a82f5cf7789d"
+    },
+    {
+      "bytes": 2594,
+      "path": "task-5-stage-npz-hardlink-v2-RED.log",
+      "sha256": "4724a452850444dc04d1796f1440ca25faec71aefadfa39b4e650f92f8e43d80"
+    },
+    {
+      "bytes": 283,
+      "path": "task-5-stage-npz-hardlink-v2-RED-cost.json",
+      "sha256": "d9c171c7c440fd7bf7ca8bfd7d7b26cd58bf51bb9a9643ce29623d2849304e04"
+    },
+    {
+      "bytes": 1885,
+      "path": "task-5-stage-npz-hardlink-v2-GREEN.log",
+      "sha256": "549e8dfb6244bb681288a445275013c09ae232603596dcca466461a7fc7d6e59"
+    },
+    {
+      "bytes": 344,
+      "path": "task-5-stage-npz-hardlink-v2-GREEN-cost.json",
+      "sha256": "2cac43ee494e7585a667ba8907a7d2a19505808b68be1149f8d53572b8725fc8"
+    },
+    {
+      "bytes": 19,
+      "path": "task-5-stage-npz-hardlink-v2-ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "bytes": 1179,
+      "path": "task-5-stage-npz-hardlink-v2-verification.json",
+      "sha256": "e7309eaf72b3c5b23e59549f1ab194a0faf1e82eb1e2e8e4ef6e963b262b55c8"
+    },
+    {
+      "bytes": 2404,
+      "path": "task-5-stage-npz-hardlink-v2-source.diff",
+      "sha256": "ea941d1f2d3d87a0181a87c6918666e117cff814a35f8b2a505f00dbe32a8cbd"
+    },
+    {
+      "bytes": 1740,
+      "path": "task-5-stage-npz-hardlink-report-v2.md",
+      "sha256": "192aad6d088b364903dcdd6e50de8fd4bd7f71f0e870f7b677ff011992d8eecf"
+    }
+  ],
+  "financial_qualification": "unknown",
+  "root_real_execution_authorized": false,
+  "scope": "D-only minimal rollback replacement I/O failure fix",
+  "v1_fixed_manifest": {
+    "path": "task-5-stage-npz-hardlink-fixed-manifest-v1.json",
+    "sha256": "a0dee0632c4efa9386d919aecb85f69f18d51d8cc55c4b848760f240abfcd8bc"
+  }
+}

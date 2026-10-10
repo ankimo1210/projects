@@ -1,0 +1,40 @@
+{
+  "current_source_canonical_identity": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "current_source_native_payload_identity": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "files": {
+    "task-5-formal-prior-metadata-cas-preparation-v3-manifest.json": {
+      "bytes": 109938,
+      "sha256": "2dae5d8d261e3db8adbf27c37ecb6597b098d9be9e94c3d0ac4ebc8e754a8c32"
+    },
+    "task-5-formal-prior-metadata-cas-preparation-v3-readonly-preflight.json": {
+      "bytes": 1046,
+      "sha256": "9434bacac28807f10fcb796287df2da6930caefd1dc020487e6452ad8b856b4a"
+    },
+    "task-5-formal-prior-metadata-cas-preparation-v3-report.json": {
+      "bytes": 30416,
+      "sha256": "a348c994f69e8286cb4e013b7a4a5f52353fe616f6979edf7d32bf8daa8610c0"
+    },
+    "task-5-formal-prior-metadata-cas-preparation-v3-verification.json": {
+      "bytes": 979,
+      "sha256": "540ad72974a9e0240e22e3d643f80619be3b31cb4e280aa8222bff439d7c47e9"
+    },
+    "task-5-formal-prior-metadata-cas-preparation-v3.py": {
+      "bytes": 7465,
+      "sha256": "cac23eb75c44d7aa11a94446360d727b3ae6881aad74b8eb0dd83f4c8b6f9ae1"
+    }
+  },
+  "financial_qualification": "unknown",
+  "old_metadata_manifest_ref": "artifact:sha256:0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc",
+  "old_terminal_manifest_ref": "artifact:sha256:34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35",
+  "production_Git_CAS_edits": 0,
+  "standard_shared_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-metadata-cas-preparation-v3-manifest.json",
+    "ref": "artifact:sha256:2dae5d8d261e3db8adbf27c37ecb6597b098d9be9e94c3d0ac4ebc8e754a8c32",
+    "sha256": "2dae5d8d261e3db8adbf27c37ecb6597b098d9be9e94c3d0ac4ebc8e754a8c32"
+  },
+  "status": "fixed D-only new-current-source metadata; root CAS store pending",
+  "store_tool": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/scripts/evidence_store.py",
+    "sha256": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3"
+  }
+}
