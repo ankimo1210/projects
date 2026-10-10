@@ -1,0 +1,74 @@
+{
+  "schema": "rb-f04-independent-root-monitor-v5-evidence-manifest-v1",
+  "scope": "monitor boundaries/closed metadata binding; actual launch guard pending",
+  "files": {
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-preflight-v1.py": {
+      "sha256": "553ee281bc61ffa26a478ed2c8df93913a5b9d29f8759280aaa2949838e612c7",
+      "bytes": 11253
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-preflight-results-v1.json": {
+      "sha256": "65f6bd1847640803378f33555e718f195cc5f35e270c2ab3284c9eecf56e24b6",
+      "bytes": 2894
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-decision-v1.json": {
+      "sha256": "11e4861b09129def334dfc1f957f44549c178f193dd5287472a3c252fa8a9427",
+      "bytes": 5105
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-review-v1.md": {
+      "sha256": "2e0d66088d7dcbf9b2763e00b8d288428c218c31983f5050bc7eb70948b7c97c",
+      "bytes": 1752
+    }
+  },
+  "readonly_references": {
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5.py": {
+      "sha256": "a53a73cfc420e2745f8d8d2cb72a6171ab2d166781126b9a96869afb88053981",
+      "bytes": 45733
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-candidate-v5.json": {
+      "sha256": "842fdd4ce09d83b1b674e108b65ea5d69c21b15a3590c46bf989494ce67550dd",
+      "bytes": 44630
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-manifest.json": {
+      "sha256": "b1ec8be5f58c0e9f9503c0aa4b5def44b8cf5a1345e78ba0e66d511a4af4d2f2",
+      "bytes": 5355
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v4.py": {
+      "sha256": "94ddf018576ab107a6c3146088713a9e30da29416f419941a9831fb60e938626",
+      "bytes": 27741
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-enclosing-observer-v2.py": {
+      "sha256": "0297fa697c12e762c8017b30341047e1e11f246cab3ca4f5a0ba8b7537908a83",
+      "bytes": 3122
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v2.json": {
+      "sha256": "a36ec860c80f7af29bd1c36669ea98d5737c6e72319dd84cc939e6aa7276f11a",
+      "bytes": 44959
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v3.json": {
+      "sha256": "145bdf322aacd4e699e297c2a4e747d1a021c43771e4b162783f9eb35a390881",
+      "bytes": 3421
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-decision-v1.json": {
+      "sha256": "5cb82ff33fcca56bbbda87939cea53bc3caec43149df8cedbda5c5be51376b24",
+      "bytes": 10634
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v3.json": {
+      "sha256": "a3cc7cfc6c39b29465634b7c953506f9c4e987060cf043fd7515b8c818f8e55e",
+      "bytes": 6429654
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/manifest.json": {
+      "sha256": "00b8101210d492111c0dec555b2a3653f2878c15a213db9bee6a948ef466a8bd",
+      "bytes": 18387
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/materialization-progress.json": {
+      "sha256": "b19108b3c28aadb711023a8b716524f48e19660d162961cc8ac79d9e0f3af2d6",
+      "bytes": 1792
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata/receipt.json": {
+      "sha256": "ba04e6bf5679009a30a6137b363065014e25f1fb004c862882eb594d25b0112c",
+      "bytes": 312
+    }
+  },
+  "financial_launch_or_phase_approved": false,
+  "cost_tail_unknown": true
+}

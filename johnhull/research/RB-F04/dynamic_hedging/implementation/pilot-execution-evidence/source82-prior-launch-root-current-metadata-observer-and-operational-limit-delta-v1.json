@@ -1,0 +1,21 @@
+{
+  "schema": "root-current-metadata-observer-and-operational-limit-delta-v1",
+  "observer_source_path_and_materializer_filename_only": true,
+  "unchanged_operational_fields": [
+    "wall_limit_seconds",
+    "RSS_limit_bytes",
+    "parent_RSS_limit_bytes",
+    "child_RSS_limit_bytes",
+    "RSS_metric",
+    "volume_reserve_bytes",
+    "poll_seconds",
+    "stop_status",
+    "financial_cap_projection",
+    "formal_financial_execution_authorized"
+  ],
+  "financial_calls_or_subprocess_launch": 0,
+  "new_resource_prior_sha256": "145bdf322aacd4e699e297c2a4e747d1a021c43771e4b162783f9eb35a390881",
+  "metadata_observer_sha256": "ac44f30e0d951aab0b9d4b0740e5f944256749223aca0252a7f1f52ea10e3e6b",
+  "financial_qualification": "unknown",
+  "formal_financial_launch_authorized": false
+}

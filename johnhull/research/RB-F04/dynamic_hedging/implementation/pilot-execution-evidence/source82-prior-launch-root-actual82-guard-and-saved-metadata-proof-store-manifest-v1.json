@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-actual-root-guard-v3-bindingproof-v1.json",
+      "ref": "artifact:sha256:3fa337dbce478857cf409ce18d0142a72512b923363a1842ce5805ce27e78ea0",
+      "bytes": 19987,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-actual-root-guard-v3-decision-v1.json",
+      "ref": "artifact:sha256:1026320dadbd84fa5e1646f68446e863fa9864f3bba0b01326ca5156e0c4109e",
+      "bytes": 2496,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-administrative-scope-v1.json",
+      "ref": "artifact:sha256:b944e7216bc45594135185722abcae3dc8b572d91680c7a3eacd3f8797e952e0",
+      "bytes": 1448,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-decision-v1.json",
+      "ref": "artifact:sha256:ac8a0176c68ea3b6610a665b22c953af94df2358eb260d5ccae8808d676d90b7",
+      "bytes": 5370,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-manifest-v1.json",
+      "ref": "artifact:sha256:33e71332b4bef1e4c810b7b51a7c1e0cb70fff39e023c4cc71d966dda96200b9",
+      "bytes": 2465,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-probe-v1.py",
+      "ref": "artifact:sha256:8be90bcd630b1bf70002005a148dd7c8754a5f1f45435d3272659397568ed0b1",
+      "bytes": 15482,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-progress-v1.json",
+      "ref": "artifact:sha256:ad7b2cc9a705299a3225c5c874247ac831fcc09c26e93b3298c1833d2c444f64",
+      "bytes": 975,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-results-v1.json",
+      "ref": "artifact:sha256:ca687aae8ec0d174b43a0ae972874b628014072c8e02fbc60699a461699619ae",
+      "bytes": 532926,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-review-v1.md",
+      "ref": "artifact:sha256:f7d45cb467f125d231c988db25b9779c83eb5c8b1d5e6d481ac913541977e076",
+      "bytes": 1486,
+      "mime": "text/markdown"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-tool-enclosing-receipt-v1.json",
+      "ref": "artifact:sha256:6f2a694bd9d7f4fe6c948350cf9512ebe4db467236e00252ef9538774090d532",
+      "bytes": 1731,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-decision-v1.json",
+      "ref": "artifact:sha256:11e4861b09129def334dfc1f957f44549c178f193dd5287472a3c252fa8a9427",
+      "bytes": 5105,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-manifest-v1.json",
+      "ref": "artifact:sha256:61e444e86774a738a14b5c422cc1cc1a95146d5e5b0f557b1516b0e7f7fffc07",
+      "bytes": 4671,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-preflight-results-v1.json",
+      "ref": "artifact:sha256:65f6bd1847640803378f33555e718f195cc5f35e270c2ab3284c9eecf56e24b6",
+      "bytes": 2894,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-preflight-v1.py",
+      "ref": "artifact:sha256:553ee281bc61ffa26a478ed2c8df93913a5b9d29f8759280aaa2949838e612c7",
+      "bytes": 11253,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-review-v1.md",
+      "ref": "artifact:sha256:2e0d66088d7dcbf9b2763e00b8d288428c218c31983f5050bc7eb70948b7c97c",
+      "bytes": 1752,
+      "mime": "text/markdown"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-actual-guard-numerical-and-origin-scope-delta-v1.json",
+      "ref": "artifact:sha256:086cd93602caecd686ee49368808a70fb02180abb49aaebc8a7ab45598da9094",
+      "bytes": 622,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-current82-fresh-launch-authority-and-enclosing-observer-v1.json",
+      "ref": "artifact:sha256:8bcc9e420b61d566bc7327ca3b9b56a1a6a38c1aa4c2afc21dedf5648e0bc988",
+      "bytes": 2513,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-new82-prior-metadata-and-closed-proof-store-manifest-v1.json",
+      "ref": "artifact:sha256:aa5ca5656f4d953e8698c8bdc5f92f10436965568ed1273e8b6ef4c21b919598",
+      "bytes": 48651,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-new82-prior-metadata-and-closed-proof-store-receipt-v1.json",
+      "ref": "artifact:sha256:6a84c665b4d7c896ea6271f9b9410690f99a7878525d861a0c968eadc7b785a3",
+      "bytes": 1545,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observer-v3.diff",
+      "ref": "artifact:sha256:165cccc55924ff5f75c381c430254f682a96017ef641ee461a5193e413670ed6",
+      "bytes": 1668,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observer-v3.py",
+      "ref": "artifact:sha256:8fc535679dc5b2bc04d490dcc2b5c9cdbdc60dd047056289b102ccbd05659064",
+      "bytes": 3113,
+      "mime": "text/plain"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-launch-guard-v3.json",
+      "ref": "artifact:sha256:9e794bd4ec46c72d240a264fdf2dd722297455baf2f3cd0d07243f6d7a0c2842",
+      "bytes": 48823,
+      "mime": "application/json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-bound-guard-pending-launch-v5.json",
+      "ref": "artifact:sha256:9bc57a89da466ac12e8c54d97482e1d790c7a8df70e206dde988cea640cf476c",
+      "bytes": 46732,
+      "mime": "application/json"
+    }
+  ]
+}

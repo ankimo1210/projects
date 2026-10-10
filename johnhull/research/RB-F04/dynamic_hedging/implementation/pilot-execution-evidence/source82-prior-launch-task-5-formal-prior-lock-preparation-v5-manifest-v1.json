@@ -1,0 +1,144 @@
+{
+  "schema": "rb-f04-prior-v5-rebind-preparation-manifest-v1",
+  "status": "unapproved_candidate_metadata_only",
+  "files": {
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v5.json": {
+      "bytes": 6426995,
+      "sha256": "c6f6d4f3ffeae5558f886c327ccc88bd5b1fb04e6ff292da83cab1685326a950"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-interface-v1.json": {
+      "bytes": 5558,
+      "sha256": "943021eca1e38396cf44821f727dd307c2e6d19fbb45fb02dc86e4b56039fc1b"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-original-preflight-v1.py": {
+      "bytes": 47595,
+      "sha256": "f11b0d7901057a6cc146c4762af53276b3feaa4fea926419401a85a77ae7661c"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-preflight-failure-v1.json": {
+      "bytes": 437,
+      "sha256": "0ee9e3f371cf3dce6497cf4fa9c7a81489585ed87f4939ce96e057ca60989a56"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-red-v1.json": {
+      "bytes": 555,
+      "sha256": "aae495a2d5a226e100214976efdafb064970e3713f1bb1217103293b6d516882"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-report-v1.md": {
+      "bytes": 3605,
+      "sha256": "29e1da6d1a58fdb386141c83abce41249d6cd03a0fa177efb74fa11fb8525a9d"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-checks-original-v1.py": {
+      "bytes": 10421,
+      "sha256": "6af2af71d2b414b9870efb4c6ed0e784eb83915722fe1d37aa7a48d82fd2b62c"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-checks.py": {
+      "bytes": 10461,
+      "sha256": "f4381d0d894e55d20320eb0b2abb6c7ceb4b7b751eca05ea3fd9952c367864fc"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-results-v1.json": {
+      "bytes": 2799,
+      "sha256": "55ee90f58d8c49ee3144cd9c5f669b5a6cca1f17433652e894b067c357a0214e"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-metadata-results-v2.json": {
+      "bytes": 2170,
+      "sha256": "c46c40312219dd8a9a99f1ff0f9fbc2fdf5321bceb8498049245abc8b897269d"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-scoped-probe-correction-v2.json": {
+      "bytes": 785,
+      "sha256": "5cdf62eb88ac28aa67ce12f546dac5ae2b0e3b27b5ae78975d6ff122b872ac5a"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-source-binding-results-v1.json": {
+      "bytes": 2637,
+      "sha256": "f08d7b174177ab92972f62f4706092b0d5ad3ed59687fe28a2d38a1618fcd629"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.diff": {
+      "bytes": 27751,
+      "sha256": "20492e0d8ef0828fa5593a5a69f71b68fbf2ff95856560e69fd4b76165a2c21b"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py": {
+      "bytes": 47581,
+      "sha256": "b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v5.json": {
+      "bytes": 4068,
+      "sha256": "d5eab8376c819367defb650f228a0cb844fe4588b77c3f09464f9e18785e9571"
+    }
+  },
+  "immutable_input_references": {
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v4.py": {
+      "bytes": 37424,
+      "sha256": "e800b93de39329d0076692f925f6c10fdf2c18ccfe9b43dea7aca2c045a1dca0"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-actual-root-approval-v2.json": {
+      "bytes": 6426747,
+      "sha256": "cd77af11dd47dad6576e6a677a106a279330b65cf0d594d12472f706d866c4f8"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-independent-decision-v4.json": {
+      "bytes": 14789,
+      "sha256": "ef4b8cbe88da24f163e2177dd95045b4069f6dfbbf0341c656432dc6a8d7296a"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-evidence-v3.json": {
+      "bytes": 4552,
+      "sha256": "fb52036f054356c96700f18ca8feadb2397ac0e51bad4bf602c5a0b4f317c0df"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-independent-current-source-closure-v1.json": {
+      "bytes": 33985,
+      "sha256": "4183b1e707cfb40d01808a45e1fc5042e54ba26d8a2892e3ac3703f76a30f768"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-config.json": {
+      "bytes": 9598904,
+      "sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-builder.py": {
+      "bytes": 39079,
+      "sha256": "6b1bbc35351dc3879b8954c14e4f974c668d3b32cda0d5b3b41b3c3b00a3df3d"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py": {
+      "bytes": 24395,
+      "sha256": "33815db7a624e3c7e1d815e79475cd335f30af4e06f098d9ca054363b9adb3e8"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-assembly-author-v2-config.json": {
+      "bytes": 25529170,
+      "sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-assembly-author-v2-manifest.json": {
+      "bytes": 3334,
+      "sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json": {
+      "bytes": 45889,
+      "sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json": {
+      "bytes": 47437,
+      "sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb"
+    },
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json": {
+      "bytes": 1859,
+      "sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json": {
+      "bytes": 34372,
+      "sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-current-production-source-delta-v1.json": {
+      "bytes": 1453,
+      "sha256": "5644c3e49debb84cb6a9155749b9079e2e832f2a5ecd0421f62581cdda32052a"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-codec-v2-decision.json": {
+      "bytes": 2417,
+      "sha256": "26aa45f5902e816053decce2aec2364c58161c387fdcc5378d27e8255a906262"
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-decision.json": {
+      "bytes": 2860,
+      "sha256": "f2fd826e399a08e20e848ac00bfbbb1132433be189779716f66a7e61d1868ea2"
+    }
+  },
+  "financial_qualification": "unknown",
+  "root_approval": false,
+  "independent_new_source_resource_prior_approval": false,
+  "financial_launch": false,
+  "production_or_oldD1_changed": false,
+  "financial_imports_lock_worker_RNG_SDE_solver_Popen_calls": 0,
+  "cap_options_expanded": 0,
+  "cost_scope": "source binding/probe clocks in original result files; failed attempts preserved; not added to prior runtime estimates; final receipt/authoring tail unknown"
+}

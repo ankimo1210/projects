@@ -1,0 +1,105 @@
+{
+  "schema": "rb-f04-independent-actual-materialized-prior-binding-review-v5",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent saved metadata and source authority binding reviewer",
+  "created_UTC": "2026-10-10T13:54:16.783902+00:00",
+  "scope": "Actual saved W2 metadata/root-prior/source/typed-input/cap-roster structural binding only. Original mathematical budgets are reused unchanged; no numerical financial qualification.",
+  "source_canonical_identity": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_payload_identity": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "actual_root_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v3.json",
+    "sha256": "a3cc7cfc6c39b29465634b7c953506f9c4e987060cf043fd7515b8c818f8e55e"
+  },
+  "actual_independent_prior_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-decision-v1.json",
+    "sha256": "5cb82ff33fcca56bbbda87939cea53bc3caec43149df8cedbda5c5be51376b24"
+  },
+  "materialized_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/manifest.json",
+    "sha256": "00b8101210d492111c0dec555b2a3653f2878c15a213db9bee6a948ef466a8bd"
+  },
+  "actual_saved_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "942f29bae2314432ef78cf32e7bb6b13c8b67281015814574034ea22b6601f57",
+    "metadata_sha256": "60142174066daac266615bf7c2b295b588670ed57189466a021da02bae42aeb1",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "root_all3138_review_SHA_and18bindings": "PASS",
+  "source82_snapshot_actual_before_after_static_bytes": "PASS",
+  "actual_original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "teachers": 20,
+    "driver_producers": 10,
+    "N_candidates": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "thresholds": 65,
+    "blocks": 16,
+    "cap_options": 573122,
+    "explicit_controls": 36,
+    "external_pending_unknown": 10
+  },
+  "actual_reader_validate_and_locked_bindings": "PASS",
+  "all_legal_cap_options_order_and_actual_independent_decision_binding": "PASS",
+  "original_caps_N_work_limits_case_roster_history_and_unknowns_changed": false,
+  "financial_source_math_precision_main_phase_or_launch_approval": false,
+  "old_raw_resume_relabel_or_previous_unknown_to_qualified_approval": false,
+  "financial_qualification": "unknown",
+  "finance_RNG_SDE_solver_or_worker_calls": 0,
+  "new_materialization_lock_options_expansion_rootapproval_CAS_Git_native_edits": 0,
+  "validation": {
+    "result": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-results-v1.json",
+      "sha256": "ca687aae8ec0d174b43a0ae972874b628014072c8e02fbc60699a461699619ae"
+    },
+    "checks": 3906,
+    "individual_saved_cap_option_bindings": 573122
+  },
+  "cost": {
+    "direct_inclusive_saved_metadata_observation": {
+      "wall_seconds_before_result_write": 19.498324011001387,
+      "CPU_seconds_before_result_write": 19.364342044999997,
+      "kernel_peak_RSS_bytes": 4282847232,
+      "sampled_peak_individual_RSS_bytes": 3634991104,
+      "cap": null,
+      "volume_initial": {
+        "WSL": 480225824768,
+        "CAS_primary": 108255907840,
+        "CAS_mirror": 182023880704
+      },
+      "volume_last": {
+        "WSL": 480225812480,
+        "CAS_primary": 108255834112,
+        "CAS_mirror": 182023880704
+      },
+      "write_and_final_tail_seconds": null,
+      "all_review_cost_seconds": null
+    },
+    "enclosing_receipt": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-tool-enclosing-receipt-v1.json",
+      "sha256": "6f2a694bd9d7f4fe6c948350cf9512ebe4db467236e00252ef9538774090d532"
+    },
+    "root_metadata_attempt": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v3/parent-cost-and-status.json",
+      "sha256": "94a8bd84a5587cbd7862c77b0cacc10b847ea0d8e7d0e81211c66fffc31ce733",
+      "wall_seconds": 97.25502551400132,
+      "children_CPU_seconds": 94.993546,
+      "kernel_peak_RSS_bytes": 4355092480,
+      "scope": "independent and root costs are distinct actual attempts, nested phases not summed"
+    },
+    "all_review_cost_unknown": true,
+    "cumulative_phase_checkpoints_not_added": true
+  },
+  "resource_inference_limit": "4.283GB applies to this saved metadata read/validation only. It does not certify financial teacher/main RSS, whole phase duration, new codec capacity or restore capacity.",
+  "administrative_scope": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-administrative-scope-v1.json",
+    "sha256": "b944e7216bc45594135185722abcae3dc8b572d91680c7a3eacd3f8797e952e0"
+  }
+}

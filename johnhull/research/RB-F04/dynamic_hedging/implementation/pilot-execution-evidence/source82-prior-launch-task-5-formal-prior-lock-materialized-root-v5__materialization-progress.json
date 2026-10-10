@@ -1,0 +1,36 @@
+{
+  "status": "actual_approved_prior_metadata_materialized",
+  "actual_lock_API_validate_and_source_binding": "PASS",
+  "financial_workers_RNG_solver_SDE_calls": 0,
+  "formal_financial_phase_approved": false,
+  "financial_qualification": "unknown",
+  "pilot_started": false,
+  "source_identity": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_payload_identity": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "source82_before_after_stable": true,
+  "jobs": 3138,
+  "cases": 121,
+  "attempts": 51,
+  "teachers": 20,
+  "drivers": 10,
+  "literal_cap_options": 573122,
+  "source_snapshot": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot",
+  "locked_prior_receipt": {
+    "schema": "rb-f04-array-receipt-v1",
+    "metadata_sha256": "60142174066daac266615bf7c2b295b588670ed57189466a021da02bae42aeb1",
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "uncompressed_bytes": 0,
+    "artifact_sha256": "942f29bae2314432ef78cf32e7bb6b13c8b67281015814574034ea22b6601f57"
+  },
+  "actual_root_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v3.json",
+    "sha256": "a3cc7cfc6c39b29465634b7c953506f9c4e987060cf043fd7515b8c818f8e55e"
+  },
+  "actual_independent_review_SHA": "5cb82ff33fcca56bbbda87939cea53bc3caec43149df8cedbda5c5be51376b24",
+  "root_operational_guard_is_financial_cap": false,
+  "cost": {
+    "wall_seconds_before_final_manifest": 95.53430572099751,
+    "CPU_seconds_before_final_manifest": 94.45446428700001,
+    "final_receipt_tail_seconds": null
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "root-current-source-administrative-prior-and-metadata-observer-v1",
+  "scope": "administrative resource selection and metadata-only outer observer; financial launch/qualification not granted",
+  "current_source_files": 82,
+  "current_source_unchanged": true,
+  "resource_prior": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v3.json",
+    "sha256": "145bdf322aacd4e699e297c2a4e747d1a021c43771e4b162783f9eb35a390881"
+  },
+  "metadata_observer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-metadata-root-observer-v4.py",
+    "sha256": "ac44f30e0d951aab0b9d4b0740e5f944256749223aca0252a7f1f52ea10e3e6b"
+  },
+  "historical_observer": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-metadata-root-observer-v3.py",
+    "sha256": "4143b3bcff62a64eaa59e1a8fee8d49e219b7791e9ab230f5abd8d18d900ce29"
+  },
+  "observer_changed_fields_only": [
+    "D worktree path",
+    "materializer filename v4 -> v5"
+  ],
+  "original_limits_unchanged": [
+    "30days administrative wall",
+    "16GiB maximum individual RSS",
+    "10GiB each volume reserve",
+    "partial_unclosed",
+    "no financial cap projection"
+  ],
+  "financial_launch_authorized": false,
+  "source_or_RNG_calls": 0
+}

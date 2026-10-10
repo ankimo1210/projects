@@ -353,3 +353,22 @@ v2のsource81/dynamic0のplain canonical identityは959f879a…（runner._digest
 この1件の結果から全phaseの保存量・速度・RSS・金融精度は保証しない。ページ上限は返却payload全体・DAG表・単一JSONL recordのRAM上限ではない。新sourceへの正式prior/metadata再結合、旧rawの由来を保つ別root、原N/全3,138 jobs/121cases/51義務/全cap optionsの実検証が次の作業である。
 
 証跡：[codec判断](pilot-execution-evidence/storage-codec-root-independent-transport-codec-v2-decision.json)、[stage判断](pilot-execution-evidence/storage-codec-root-independent-stage-cap-binding-v1-decision.json)、[genuine実測](pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-fixed-report-v2.md)、[root80検査](pilot-execution-evidence/storage-codec-root-root-fixed-source-final-targeted-v2.json)、[源差分](pilot-execution-evidence/storage-codec-root-root-current-production-source-delta-v1.json)。
+
+## 新sourceへのprior結合・metadata生成・正式pilot再開（2026-10-10）
+
+source82の元3,138jobs/121cases/51義務/20teachers/10drivers/全4Nを保持し、source-only判断に加えて新しい資源priorと実rootのmetadata許可を固定した。[独立prior判断](pilot-execution-evidence/source82-prior-launch-independent-formal-prior-v5-decision-v1.json)は112件PASS、18bindings・全3138原予算値を確認。57万件のcap recipeの変更はsource bindingだけで、旧partial/原失敗/費用/10外部unknownを保持する。
+
+| 工程 | 実結果 | 費用・scope |
+|---|---|---|
+| 新metadata生成 | 実lock/validate/binding PASS、573,122 options展開 | 外側97.255秒、childCPU94.994秒、kernel peak4.355GB、capなし。内側95.534秒は同区間に含む |
+| 独立saved metadata | 3,906検査＋全573,122 options、現reader/validate/_locked_bindings PASS | 直接inclusive19.498秒、CPU19.364秒、kernel peak4.283GB、capなし。outer tool末尾と全review費用はunknown |
+| monitor実装 | 16検査PASS、旧14停止/費用関数AST不変 | 金融/RNG/Popen0。source82/実metadata99全fileを認証 |
+| 実root guard/observer | 23検査PASS、実load_guard/source/plan/input/volume照合 | 0.153秒、peak54.42MB、金融/RNG/Popen0。旧observerからpath/filename/guardSHAだけ変更 |
+| 両CAS metadata保存 | 153entries/約23.96MB、両store実bytes一致 | 19.750秒。金融の全saved復元や精度受入ではない |
+| 両CAS guard追加保存 | 23entries/約0.77MB、両store実bytes一致 | 6.313秒。unknown/旧partialの状態は不変 |
+
+完全なmetadata/source snapshot・候補/独立proofは[metadata store manifest](pilot-execution-evidence/source82-prior-launch-root-new82-prior-metadata-and-closed-proof-store-manifest-v1.json)、実guard・saved metadata独立proofは[追加store manifest](pilot-execution-evidence/source82-prior-launch-root-actual82-guard-and-saved-metadata-proof-store-manifest-v1.json)に結ぶ。巨大な全rowsと全probe結果はCASに保存し、ここには判断・費用・manifestを残す。
+
+[rootの起動許可](pilot-execution-evidence/source82-prior-launch-task-5-formal-pilot-root-launch-guard-v3.json)は元scopeのfresh正式pilotだけを許可する。2026-10-10 14:00:06 UTCに別D2 rootで起動し、[readonly起動確認](pilot-execution-evidence/source82-prior-launch-root-current82-fresh-native-launch-readonly-confirmation-v1.json)で親372314・monitor372315・金融child372316の実cmdline/生存とsource82の不変性を確認した。launchは金融精度・完走・freeze/main・研究受入を証明しない。ライブraw/観測ログはこの記録やGitへコピーしていない。
+
+今回の97秒/19秒はmetadata処理であり、全phaseの速度・容量・RAM・ETAを保証しない。既知部品の条件付き501.742hという旧rate試算をこの短時間から縮めず、新pilotの実選択と費用で更新する。次は正式結果/saved数値照合、その後にfreeze・主実験・fresh/両復元・phase末3 suites・研究受入。

@@ -1,0 +1,25 @@
+{
+  "schema": "root-actual-new82-prior-binding-receipt-v1",
+  "actual_root_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v3.json",
+    "sha256": "a3cc7cfc6c39b29465634b7c953506f9c4e987060cf043fd7515b8c818f8e55e"
+  },
+  "actual_independent_resource_decision": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-decision-v1.json",
+    "sha256": "5cb82ff33fcca56bbbda87939cea53bc3caec43149df8cedbda5c5be51376b24",
+    "status": "approved"
+  },
+  "source_identity": {
+    "canonical_runner_digest": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "native_payload_digest": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "files": 82,
+    "dynamic_imports": []
+  },
+  "rows": 3138,
+  "original_values_except_actual_review_SHA_unchanged": true,
+  "original_caps_or_N_or_case_changes": false,
+  "financial_worker_RNG_or_lock_calls": 0,
+  "formal_financial_launch_authorized": false,
+  "financial_qualification": "unknown",
+  "current_source_bytes_verified": 82
+}

@@ -1,0 +1,810 @@
+{
+  "RSS_metric": "maximum_individual_process_RSS_not_RLIMIT_AS",
+  "actual_root_metadata_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v3.json",
+    "sha256": "a3cc7cfc6c39b29465634b7c953506f9c4e987060cf043fd7515b8c818f8e55e",
+    "status": "approved_for_prior_materialization_only"
+  },
+  "administrative_guard_only": true,
+  "approved_budget_bindings": {
+    "activation_potential_first_job_budget_candidates_digest": "a82f3c33d71a918f51131c8c77917793ceec75850a2181815c867f1a1e243c04",
+    "activation_v4_origin_sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+    "budget_rows_assembly_manifest_sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3",
+    "budget_rows_assembly_sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5",
+    "budget_rows_without_review_SHA_digest": "02da310d0bed91d6883171eed44cb22ae872cc6a2888837a5979755d9c68aee5",
+    "candidate_sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "cap_recipe_digest": "83d0099dd31974d01d6f3fad202d669a92aa778242b7b13f76efc1b6b4aa96e1",
+    "literal_cap_options": 573122,
+    "materializer_sha256": "b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a",
+    "raw_assembled_candidate_cap_recipe_digest": "d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d",
+    "raw_assembled_candidate_rows_digest": "fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f",
+    "replay_budget_manifest_sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9",
+    "replay_budget_supplement_sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+    "selection_overlay_sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+    "source_identity_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "source_limited_decisions_sha256": "6233eda48b17b862a3922042d80a8a7b1b54d8009be1ece436a972769068f47f",
+    "source_native_payload_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "source_rebind_evidence_sha256": "d5eab8376c819367defb650f228a0cb844fe4588b77c3f09464f9e18785e9571"
+  },
+  "budget_supplement": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json",
+    "sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb"
+  },
+  "budget_supplement_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json",
+    "sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9"
+  },
+  "candidate_only": false,
+  "cap_values_are_runtime_predictions": false,
+  "child_rss_limit_bytes": 17179869184,
+  "closed_prior_metadata_both_store_manifest_ref": "artifact:sha256:aa5ca5656f4d953e8698c8bdc5f92f10436965568ed1273e8b6ef4c21b919598",
+  "created_UTC": "2026-10-10T13:55:37.628496+00:00",
+  "financial_A_cap_projection_approved": false,
+  "financial_qualification": "unknown",
+  "formal_financial_launch_authorized": true,
+  "formal_phase_completion_claimed": false,
+  "full_budget_and_cap_recipe_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-decision-v1.json",
+    "sha256": "5cb82ff33fcca56bbbda87939cea53bc3caec43149df8cedbda5c5be51376b24",
+    "status": "approved"
+  },
+  "independent_prelaunch_binding_evidence": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-decision-v1.json",
+      "scope": "fixed monitor implementation/refusal/administrative stop+cost and actual closed metadata binding only; not actual launch guard or financial outcome",
+      "sha256": "11e4861b09129def334dfc1f957f44549c178f193dd5287472a3c252fa8a9427"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-decision-v1.json",
+      "scope": "Actual saved W2 metadata/root-prior/source/typed-input/cap-roster structural binding only. Original mathematical budgets are reused unchanged; no numerical financial qualification.",
+      "sha256": "ac8a0176c68ea3b6610a665b22c953af94df2358eb260d5ccae8808d676d90b7"
+    }
+  ],
+  "launch_authorized_by": "root",
+  "materializer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py",
+    "sha256": "b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a"
+  },
+  "materializer_interface": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-interface-v1.json",
+    "sha256": "943021eca1e38396cf44821f727dd307c2e6d19fbb45fb02dc86e4b56039fc1b"
+  },
+  "monitor_sha256": "a53a73cfc420e2745f8d8d2cb72a6171ab2d166781126b9a96869afb88053981",
+  "native_output_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v3",
+  "new_source_prior_binding_revalidation": {
+    "actual_metadata_materialized": true,
+    "decision": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-decision-v1.json",
+      "sha256": "5cb82ff33fcca56bbbda87939cea53bc3caec43149df8cedbda5c5be51376b24",
+      "status": "approved"
+    },
+    "financial_launch_still_pending": false,
+    "old_source_prior_raw_remains_historical": true,
+    "root_launch_authority": "separate actual root current-source fresh pilot only; numerical qualification remains unknown",
+    "source82_unchanged": true
+  },
+  "numerical_accuracy_and_research_acceptance_authorized": false,
+  "old_raw_resume_or_relabel_authorized": false,
+  "operational_resource_choice": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v3.json",
+    "sha256": "145bdf322aacd4e699e297c2a4e747d1a021c43771e4b162783f9eb35a390881",
+    "status": "approved_operational_prior"
+  },
+  "original_counts": {
+    "attempts": 51,
+    "cases": 121,
+    "jobs": 3138
+  },
+  "original_teacher_N_candidates": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "parent_rss_limit_bytes": 17179869184,
+  "phase_wall_limit_seconds": 2592000,
+  "plan": {
+    "files": {
+      "arrays-00000000/arrays.npz": "6518d9217b934058093eaa70633795ea85e9320663719a6924357dd02162d75c",
+      "arrays-00000000/metadata.json": "249843e7896c0cd46b1b699b419e5beb5baca3e19972f42d84a9bc24bd2649a9",
+      "arrays-00000000/receipt.json": "e378b18b59864267cd9a0000a8a5a1e335928ef91ce9ab5df5ffe38d2e332c4f",
+      "arrays.npz": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "metadata-00000000/arrays.npz": "dc9c12d733fe6771280282b807e38b4841f7add2c37e508f6d2effba7e25374c",
+      "metadata-00000000/metadata.json": "f91e80615d7ad1fcfe0fbf667b418038745cf5fc1e574669d4e8799771146347",
+      "metadata-00000000/receipt.json": "37c8275eb4500d2aa3696d87afe578035f24664b3615af593f35767bcc3d2cf6",
+      "metadata-00000001/arrays.npz": "793c9b6ab99a9ae46d3b845820bffba317895971e8fc899d17e8a41f2419f01d",
+      "metadata-00000001/metadata.json": "1afb5d7fca58e189edc5eaa2a93b914e6a46602ac58c1a74ac32bd5b5659e8d1",
+      "metadata-00000001/receipt.json": "f994295a42c5246644ed562c446f9041153ef259333d6392c64963fa8b033a3e",
+      "metadata.json": "60142174066daac266615bf7c2b295b588670ed57189466a021da02bae42aeb1",
+      "receipt.json": "ba04e6bf5679009a30a6137b363065014e25f1fb004c862882eb594d25b0112c"
+    },
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata",
+    "receipt_sha256": "ba04e6bf5679009a30a6137b363065014e25f1fb004c862882eb594d25b0112c",
+    "tree_sha256": "f220194f2bf9b2f115626de2309d6112a95a0b12b030b6789e80206268f0233e"
+  },
+  "planned_before_attempt": true,
+  "poll_seconds": 1.0,
+  "previous_full_prior_independent_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-independent-decision-v4.json",
+    "sha256": "ef4b8cbe88da24f163e2177dd95045b4069f6dfbbf0341c656432dc6a8d7296a",
+    "status": "historical_old81_prior_only_not_new_launch_authority"
+  },
+  "prior_metadata_materialization": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/manifest.json",
+    "sha256": "00b8101210d492111c0dec555b2a3653f2878c15a213db9bee6a948ef466a8bd",
+    "status": "closed_actual_metadata"
+  },
+  "prior_role": "root_fixed_operational_prior",
+  "python_executable": "/home/kazumasa/projects/.venv/bin/python",
+  "receipt_directory": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-observation-v3",
+  "resume_requested": false,
+  "root_fresh_capacity_snapshot": {
+    "MemAvailable_bytes": 48649687040,
+    "created_UTC": "2026-10-10T13:55:37.628496+00:00",
+    "volumes": [
+      {
+        "device": 2096,
+        "free_bytes": 480225157120,
+        "id": "WSL",
+        "observed_UTC": "2026-10-10T13:55:37.628496+00:00",
+        "path": "/",
+        "reserve_bytes": 10737418240
+      },
+      {
+        "device": 71,
+        "free_bytes": 111300190208,
+        "id": "C",
+        "observed_UTC": "2026-10-10T13:55:37.628496+00:00",
+        "path": "/mnt/c",
+        "reserve_bytes": 10737418240
+      },
+      {
+        "device": 72,
+        "free_bytes": 182023880704,
+        "id": "F",
+        "observed_UTC": "2026-10-10T13:55:37.628496+00:00",
+        "path": "/mnt/f",
+        "reserve_bytes": 10737418240
+      }
+    ],
+    "whole_capacity_or_duration_guarantee": false
+  },
+  "root_launch_scope": "root authorizes fresh source82 original3138 formal pilot after actual resource prior/materialization/saved-plan/monitor binding review; separate saved financial verification still required",
+  "root_preapproved": true,
+  "schema": "rb-f04-root-full-pilot-operational-prior-v1",
+  "source_approval_scope": "codec storage plus stage argument source reviews only; budget/metadata/launch remain separate",
+  "source_approval_status": "approved_fixed_current_source",
+  "source_identity": {
+    "boundary": "AST local imports and package init; execution branches are not certified",
+    "dynamic_imports": [],
+    "environment": {
+      "distributions": {
+        "IPython": {
+          "ipython": "9.13.0"
+        },
+        "ipywidgets": {
+          "ipywidgets": "8.1.8"
+        },
+        "japanize_matplotlib": {
+          "japanize-matplotlib": "1.1.3"
+        },
+        "matplotlib": {
+          "matplotlib": "3.10.9"
+        },
+        "numpy": {
+          "numpy": "2.4.6"
+        },
+        "plotly": {
+          "plotly": "6.9.0"
+        },
+        "scipy": {
+          "scipy": "1.17.1"
+        },
+        "torch": {
+          "torch": "2.11.0+cu128"
+        },
+        "yaml": {
+          "PyYAML": "6.0.3"
+        }
+      },
+      "implementation": "CPython",
+      "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "python": "3.12.3"
+    },
+    "environment_sha256": "f2ad2aa896b3131965a4281ea706098c9de5d6c4f717bb0f936d9fb36ee4c276",
+    "files": {
+      "deep_hedge_price/src/deep_hedge_price/__init__.py": "a8b359e6997c219dec5bc328a2819181a8f24445fd0eb1c66fed78cc3fcf65c7",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py": "c34a9aab22e216a512deafd1205c222fb17e9cc6b60ef46b7ff3267b64417902",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "fad2c73a27b8314b9cdfa5db8505fb56c382b4eab79ce4224aa475b450223b3e",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py": "c233ba0cf6d736401c4f2a4d92dc803810c8066ebf7960534730299759142fca",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+      "deep_hedge_price/src/deep_hedge_price/config.py": "f7d8a26b9972448bfab55795ebf84cbe63bbd4056ae1197cbcb0b2bfe95f6957",
+      "deep_hedge_price/src/deep_hedge_price/pricing_config.py": "94cc052ed4bcef57008b337e63db895da3a8c50a4a6f4f3a336ca6bac0912c9d",
+      "johnhull/hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py": "9007e30a45375fbb7c8b4afe5fa4e4f694b5bc68e924b138bd993d8bdbf2b025",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py": "78ad0cc9e32628476da2023755cd688ea8363aee9be5f5655c204c6ab6fa5777",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py": "585ea869a96a6076fedd7749d88824dde5ebbbd99d0ca60a646ac829e39be50e",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py": "d07d4d1524a005d5b9ebe765922748aadab2175ace98ff12c941c1a38e8497ce",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+      "johnhull/hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622",
+      "johnhull/hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+      "johnhull/hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
+      "johnhull/hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+      "johnhull/hullkit/src/hullkit/carbon.py": "7c48f441679f075eda0b118eba73b225120fbba1002708c7dfa053ee6b1dea65",
+      "johnhull/hullkit/src/hullkit/cds.py": "77c2e8866a76cfde54299268f82e562fc8f29eb639b9958b8b78c3e23da6936c",
+      "johnhull/hullkit/src/hullkit/copula.py": "79aad8fca34960f4e1ad5358c496d5b8ae847982dbf5750dff3313a73b9b999b",
+      "johnhull/hullkit/src/hullkit/credit.py": "5b278583bd0025224ed255b785b26d9f50cd05442f876e8c24dee8ff8ee0e50d",
+      "johnhull/hullkit/src/hullkit/credit_curve.py": "b7a77e8e65f5a379e03a33ae5fab156bc6174119a6153e0dd76ce678df08b4e4",
+      "johnhull/hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
+      "johnhull/hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
+      "johnhull/hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+      "johnhull/hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
+      "johnhull/hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
+      "johnhull/hullkit/src/hullkit/frontier_reference.py": "c306605c2cb0e3745f4e542260b88a40a9406f77d54c984b5be40433fc7c960e",
+      "johnhull/hullkit/src/hullkit/hedging.py": "d019a75ac53c0f35db92359a5b3ca25f6fec14b58a0042eb22f6ed2dbcbd9447",
+      "johnhull/hullkit/src/hullkit/heston.py": "cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+      "johnhull/hullkit/src/hullkit/hull_white.py": "09e6fa5140b3a0958c854c25f1893d4a293e0832c21e33f89c29490930040ba5",
+      "johnhull/hullkit/src/hullkit/inflation.py": "f7b30df76bbc63645a280eb6f51126c86b632f943b2734e6d882cf88e9b9a46a",
+      "johnhull/hullkit/src/hullkit/ir_options.py": "c0fe4c19c95e66597dd709be41a74d870eb1f39de3931bf98fd4100636b5b4fb",
+      "johnhull/hullkit/src/hullkit/jarrow_yildirim.py": "4a697ee3337c1f686224897428067dba2fad3f018020788b4aa6ae9e795de01e",
+      "johnhull/hullkit/src/hullkit/jgbi.py": "0cb8eb805aed6afb7fc80b61a32c5b62bf1c1b9f8c6fbb1b69d011b0cf0db5ba",
+      "johnhull/hullkit/src/hullkit/liquidation.py": "7c06faa9a4e65f8f1286a5c24ae8c7b0d13be69dfc7a105482ffd209187f5024",
+      "johnhull/hullkit/src/hullkit/mc.py": "abc2a84020b63a4faa4f3928c9d84c81e9a677d8ef14ea0337fbb239f5f6e922",
+      "johnhull/hullkit/src/hullkit/mc_advanced.py": "8e2938c3a2e3437d2274b904bde6467a3362c2b6589518ae06c1ca007a5125ff",
+      "johnhull/hullkit/src/hullkit/nbplot.py": "ed55a9403c054bb4866d38b61445cd054a5169951b1848637510592e95bb6144",
+      "johnhull/hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+      "johnhull/hullkit/src/hullkit/payoffs.py": "b8b0a73a357a2149ac8b1bfdda4bff99577ff865c3c5dc6ec796272c078568a9",
+      "johnhull/hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+      "johnhull/hullkit/src/hullkit/perpetuals.py": "bb4ea974fa5e8b9e94b9fb43bc6ce47793ce2d1a2a1ab2af185925e5f52fea7f",
+      "johnhull/hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+      "johnhull/hullkit/src/hullkit/pnl_explain.py": "802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+      "johnhull/hullkit/src/hullkit/ppa.py": "74d1b649d2cb4056714d228ad6361959276647df3fc4034d5543455783152320",
+      "johnhull/hullkit/src/hullkit/rates.py": "e2912698d692da5979d80728d1fec90c56d86744af5fca863ef4c1c16840ecf5",
+      "johnhull/hullkit/src/hullkit/rfr.py": "36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+      "johnhull/hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
+      "johnhull/hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
+      "johnhull/hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+      "johnhull/hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+      "johnhull/hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
+      "johnhull/hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+      "johnhull/hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472",
+      "johnhull/hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+      "johnhull/hullkit/src/hullkit/surrogate_data.py": "251a883394722e33e38259c133681166c7444c5c570d8100e08d9f9a2f969459",
+      "johnhull/hullkit/src/hullkit/surrogate_validation.py": "938c8da86dde56278ec6a584524eeaff731105a499b793d32a1e4c1756312147",
+      "johnhull/hullkit/src/hullkit/swaps.py": "8688dd06573ade6d9a93d21c5c8c8da78ed60f25c9accd4613b85aaa1d017035",
+      "johnhull/hullkit/src/hullkit/tail_risk.py": "bbaaf7579741d9621e0911ebde7d6f62759c56b2c88ed6aa6de800e971f26128",
+      "johnhull/hullkit/src/hullkit/teaching.py": "69a2c11bdf0583ee208a16a75dbf5e781282d4ee1f58033c0130b4f2d21a2724",
+      "johnhull/hullkit/src/hullkit/trees.py": "b21a1f7896bd8fd144becf5776f2e20b8b5c82d2e4bf8d292381a960c22201ee",
+      "johnhull/hullkit/src/hullkit/var_backtest.py": "617be582584df7b60f2a142ca5285672fcbdb52b9cb718c46b98bc0a8236b515",
+      "johnhull/hullkit/src/hullkit/vol_surface.py": "849e3cb14a87d13acfbad5a43c239f18219fa0812d1165ed1807af68089e3e9c",
+      "johnhull/hullkit/src/hullkit/volatility.py": "4a955552641c86effabd016c7c4118b999955165826b457fe1175d34043193a6",
+      "johnhull/hullkit/src/hullkit/weather.py": "b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
+      "johnhull/hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+      "johnhull/hullkit/src/hullkit/zero_dte.py": "e8f99291613b17e0ffb6a29535d9ea08a2ab604e7116513164e91eca6dc07265",
+      "johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd",
+      "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+      "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+      "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py": "7fe16943f2ead6dbe17a17e969930afde863681ed9eb24b9ea8b7b18c4a004d4",
+      "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "a988c164ca8f64f5dfc78165fc2f9620c2abc857eac745715f4749908839e230",
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py": "681548eb4753946fe6c896a588b2314cb47e85736f347ca92ee2d2513a46f9a1",
+      "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+      "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+      "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771",
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef"
+    },
+    "local_import_graph": {
+      "deep_hedge_price/src/deep_hedge_price/__init__.py": [
+        "deep_hedge_price.config",
+        "deep_hedge_price.pricing_config"
+      ],
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py": [
+        "deep_hedge_price",
+        "deep_hedge_price._dynamic_hedging_policy",
+        "deep_hedge_price._dynamic_hedging_protocol",
+        "deep_hedge_price._dynamic_hedging_study"
+      ],
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": [
+        "deep_hedge_price",
+        "deep_hedge_price._dynamic_hedging_protocol"
+      ],
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py": [],
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": [],
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": [
+        "hullkit._dynamic_hedging_conditional",
+        "hullkit._dynamic_hedging_core",
+        "hullkit._dynamic_hedging_statistics",
+        "hullkit._dynamic_hedging_surfaces",
+        "hullkit._heston_local_surface"
+      ],
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py": [
+        "deep_hedge_price._dynamic_hedging_policy",
+        "deep_hedge_price._dynamic_hedging_protocol",
+        "hullkit._dynamic_hedging_core",
+        "hullkit._dynamic_hedging_risk",
+        "hullkit._dynamic_hedging_surfaces"
+      ],
+      "deep_hedge_price/src/deep_hedge_price/config.py": [],
+      "deep_hedge_price/src/deep_hedge_price/pricing_config.py": [],
+      "johnhull/hullkit/src/hullkit/__init__.py": [
+        "hullkit",
+        "hullkit.alternative_models",
+        "hullkit.amm",
+        "hullkit.bsm",
+        "hullkit.carbon",
+        "hullkit.cds",
+        "hullkit.credit",
+        "hullkit.credit_curve",
+        "hullkit.credit_metrics",
+        "hullkit.credit_portfolio",
+        "hullkit.exotics",
+        "hullkit.fd",
+        "hullkit.frontier_reference",
+        "hullkit.hedging",
+        "hullkit.hull_white",
+        "hullkit.inflation",
+        "hullkit.ir_options",
+        "hullkit.jarrow_yildirim",
+        "hullkit.jgbi",
+        "hullkit.liquidation",
+        "hullkit.mc",
+        "hullkit.nbplot",
+        "hullkit.nonstandard_american",
+        "hullkit.payoffs",
+        "hullkit.perpetual_american",
+        "hullkit.perpetuals",
+        "hullkit.plotly_viz",
+        "hullkit.pnl_explain",
+        "hullkit.ppa",
+        "hullkit.rates",
+        "hullkit.rfr",
+        "hullkit.rfr_options",
+        "hullkit.risk",
+        "hullkit.risk_allocation",
+        "hullkit.sabr",
+        "hullkit.sabr_normal",
+        "hullkit.sde",
+        "hullkit.spx_vix",
+        "hullkit.stochastic_volatility",
+        "hullkit.surrogate_data",
+        "hullkit.surrogate_validation",
+        "hullkit.swaps",
+        "hullkit.tail_risk",
+        "hullkit.teaching",
+        "hullkit.trees",
+        "hullkit.var_backtest",
+        "hullkit.vol_surface",
+        "hullkit.volatility",
+        "hullkit.weather",
+        "hullkit.zero_dte"
+      ],
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py": [
+        "hullkit._dynamic_hedging_core",
+        "hullkit._heston_local_surface"
+      ],
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py": [
+        "hullkit._heston_local_surface"
+      ],
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py": [],
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py": [],
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": [
+        "hullkit._heston_local_surface"
+      ],
+      "johnhull/hullkit/src/hullkit/_heston_local_surface.py": [],
+      "johnhull/hullkit/src/hullkit/alternative_models.py": [
+        "hullkit",
+        "hullkit.bsm"
+      ],
+      "johnhull/hullkit/src/hullkit/amm.py": [],
+      "johnhull/hullkit/src/hullkit/bsm.py": [],
+      "johnhull/hullkit/src/hullkit/carbon.py": [],
+      "johnhull/hullkit/src/hullkit/cds.py": [
+        "hullkit.credit_curve"
+      ],
+      "johnhull/hullkit/src/hullkit/copula.py": [],
+      "johnhull/hullkit/src/hullkit/credit.py": [],
+      "johnhull/hullkit/src/hullkit/credit_curve.py": [],
+      "johnhull/hullkit/src/hullkit/credit_metrics.py": [],
+      "johnhull/hullkit/src/hullkit/credit_portfolio.py": [],
+      "johnhull/hullkit/src/hullkit/exotics.py": [
+        "hullkit",
+        "hullkit.bsm"
+      ],
+      "johnhull/hullkit/src/hullkit/fd.py": [],
+      "johnhull/hullkit/src/hullkit/fourier.py": [],
+      "johnhull/hullkit/src/hullkit/frontier_reference.py": [
+        "hullkit",
+        "hullkit.amm",
+        "hullkit.bsm",
+        "hullkit.carbon",
+        "hullkit.cds",
+        "hullkit.credit_curve",
+        "hullkit.credit_metrics",
+        "hullkit.credit_portfolio",
+        "hullkit.hull_white",
+        "hullkit.inflation",
+        "hullkit.jarrow_yildirim",
+        "hullkit.jgbi",
+        "hullkit.liquidation",
+        "hullkit.perpetuals",
+        "hullkit.pnl_explain",
+        "hullkit.ppa",
+        "hullkit.rates",
+        "hullkit.rfr",
+        "hullkit.rfr_options",
+        "hullkit.risk",
+        "hullkit.risk_allocation",
+        "hullkit.sabr_normal",
+        "hullkit.spx_vix",
+        "hullkit.surrogate_validation",
+        "hullkit.swaps",
+        "hullkit.tail_risk",
+        "hullkit.var_backtest",
+        "hullkit.volatility",
+        "hullkit.weather",
+        "hullkit.xva",
+        "hullkit.zero_dte"
+      ],
+      "johnhull/hullkit/src/hullkit/hedging.py": [
+        "hullkit",
+        "hullkit.mc"
+      ],
+      "johnhull/hullkit/src/hullkit/heston.py": [],
+      "johnhull/hullkit/src/hullkit/hull_white.py": [
+        "hullkit",
+        "hullkit.rates"
+      ],
+      "johnhull/hullkit/src/hullkit/inflation.py": [
+        "hullkit.rates"
+      ],
+      "johnhull/hullkit/src/hullkit/ir_options.py": [],
+      "johnhull/hullkit/src/hullkit/jarrow_yildirim.py": [
+        "hullkit.hull_white",
+        "hullkit.inflation",
+        "hullkit.rates"
+      ],
+      "johnhull/hullkit/src/hullkit/jgbi.py": [
+        "hullkit.inflation",
+        "hullkit.jarrow_yildirim",
+        "hullkit.rates"
+      ],
+      "johnhull/hullkit/src/hullkit/liquidation.py": [
+        "hullkit.perpetuals"
+      ],
+      "johnhull/hullkit/src/hullkit/mc.py": [],
+      "johnhull/hullkit/src/hullkit/mc_advanced.py": [
+        "hullkit",
+        "hullkit.bsm",
+        "hullkit.mc"
+      ],
+      "johnhull/hullkit/src/hullkit/nbplot.py": [],
+      "johnhull/hullkit/src/hullkit/nonstandard_american.py": [],
+      "johnhull/hullkit/src/hullkit/payoffs.py": [],
+      "johnhull/hullkit/src/hullkit/perpetual_american.py": [],
+      "johnhull/hullkit/src/hullkit/perpetuals.py": [],
+      "johnhull/hullkit/src/hullkit/plotly_viz.py": [
+        "hullkit",
+        "hullkit.bsm",
+        "hullkit.copula",
+        "hullkit.credit",
+        "hullkit.exotics",
+        "hullkit.fd",
+        "hullkit.fourier",
+        "hullkit.hedging",
+        "hullkit.heston",
+        "hullkit.mc",
+        "hullkit.mc_advanced",
+        "hullkit.payoffs",
+        "hullkit.rates",
+        "hullkit.risk",
+        "hullkit.sabr",
+        "hullkit.sde",
+        "hullkit.swaps",
+        "hullkit.trees",
+        "hullkit.volatility",
+        "hullkit.xva"
+      ],
+      "johnhull/hullkit/src/hullkit/pnl_explain.py": [],
+      "johnhull/hullkit/src/hullkit/ppa.py": [],
+      "johnhull/hullkit/src/hullkit/rates.py": [],
+      "johnhull/hullkit/src/hullkit/rfr.py": [],
+      "johnhull/hullkit/src/hullkit/rfr_options.py": [],
+      "johnhull/hullkit/src/hullkit/risk.py": [],
+      "johnhull/hullkit/src/hullkit/risk_allocation.py": [
+        "hullkit",
+        "hullkit.risk"
+      ],
+      "johnhull/hullkit/src/hullkit/sabr.py": [],
+      "johnhull/hullkit/src/hullkit/sabr_normal.py": [
+        "hullkit",
+        "hullkit.rfr_options",
+        "hullkit.sabr"
+      ],
+      "johnhull/hullkit/src/hullkit/sde.py": [],
+      "johnhull/hullkit/src/hullkit/spx_vix.py": [],
+      "johnhull/hullkit/src/hullkit/stochastic_volatility.py": [
+        "hullkit",
+        "hullkit.bsm",
+        "hullkit.fourier",
+        "hullkit.heston"
+      ],
+      "johnhull/hullkit/src/hullkit/surrogate_data.py": [
+        "hullkit",
+        "hullkit.bsm",
+        "hullkit.fourier",
+        "hullkit.heston",
+        "hullkit.sabr",
+        "hullkit.volatility"
+      ],
+      "johnhull/hullkit/src/hullkit/surrogate_validation.py": [],
+      "johnhull/hullkit/src/hullkit/swaps.py": [
+        "hullkit",
+        "hullkit.rates"
+      ],
+      "johnhull/hullkit/src/hullkit/tail_risk.py": [
+        "hullkit",
+        "hullkit.risk"
+      ],
+      "johnhull/hullkit/src/hullkit/teaching.py": [],
+      "johnhull/hullkit/src/hullkit/trees.py": [],
+      "johnhull/hullkit/src/hullkit/var_backtest.py": [],
+      "johnhull/hullkit/src/hullkit/vol_surface.py": [],
+      "johnhull/hullkit/src/hullkit/volatility.py": [
+        "hullkit",
+        "hullkit.bsm"
+      ],
+      "johnhull/hullkit/src/hullkit/weather.py": [],
+      "johnhull/hullkit/src/hullkit/xva.py": [
+        "hullkit",
+        "hullkit.mc"
+      ],
+      "johnhull/hullkit/src/hullkit/zero_dte.py": [],
+      "johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py": [],
+      "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py": [
+        "deep_hedge_price",
+        "deep_hedge_price._dynamic_hedging_protocol",
+        "dynamic_research.run_reference",
+        "hullkit",
+        "hullkit._dynamic_hedging_conditional"
+      ],
+      "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": [
+        "deep_hedge_price",
+        "deep_hedge_price._dynamic_hedging_replay",
+        "dynamic_research.check_pilot",
+        "dynamic_research.reference_methods",
+        "dynamic_research.run_fresh",
+        "dynamic_research.run_pilot",
+        "dynamic_research.run_reference",
+        "hullkit._heston_local_surface"
+      ],
+      "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py": [],
+      "johnhull/research/RB-F04/dynamic_hedging/check_main.py": [
+        "deep_hedge_price",
+        "deep_hedge_price._dynamic_hedging_protocol",
+        "deep_hedge_price._dynamic_hedging_replay",
+        "deep_hedge_price._dynamic_hedging_study",
+        "dynamic_research.check_pilot",
+        "dynamic_research.run_main",
+        "dynamic_research.run_reference"
+      ],
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": [
+        "deep_hedge_price",
+        "deep_hedge_price._dynamic_hedging_closure",
+        "deep_hedge_price._dynamic_hedging_execution",
+        "deep_hedge_price._dynamic_hedging_policy",
+        "deep_hedge_price._dynamic_hedging_protocol",
+        "deep_hedge_price._dynamic_hedging_replay",
+        "deep_hedge_price._dynamic_hedging_study",
+        "dynamic_research.check_fresh",
+        "dynamic_research.check_initial_quotes",
+        "dynamic_research.check_main",
+        "dynamic_research.check_selected_calls",
+        "dynamic_research.reference_methods",
+        "dynamic_research.run_pilot",
+        "dynamic_research.run_reference",
+        "hullkit._dynamic_hedging_conditional",
+        "hullkit._dynamic_hedging_core",
+        "hullkit._dynamic_hedging_risk",
+        "hullkit._dynamic_hedging_surfaces",
+        "hullkit._heston_local_surface"
+      ],
+      "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py": [
+        "hullkit._dynamic_hedging_surfaces"
+      ],
+      "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": [],
+      "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": [
+        "deep_hedge_price",
+        "deep_hedge_price._dynamic_hedging_execution",
+        "dynamic_research.reference_methods",
+        "dynamic_research.run_pilot",
+        "dynamic_research.run_reference",
+        "hullkit._dynamic_hedging_conditional",
+        "hullkit._heston_local_surface"
+      ],
+      "johnhull/research/RB-F04/dynamic_hedging/run_main.py": [
+        "deep_hedge_price",
+        "deep_hedge_price._dynamic_hedging_closure",
+        "deep_hedge_price._dynamic_hedging_protocol",
+        "deep_hedge_price._dynamic_hedging_study",
+        "dynamic_research.check_main",
+        "dynamic_research.check_pilot",
+        "dynamic_research.run_fresh",
+        "dynamic_research.run_pilot",
+        "dynamic_research.run_reference",
+        "hullkit._dynamic_hedging_core",
+        "hullkit._dynamic_hedging_statistics",
+        "hullkit._heston_local_surface"
+      ],
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": [
+        "deep_hedge_price",
+        "deep_hedge_price._dynamic_hedging_closure",
+        "deep_hedge_price._dynamic_hedging_execution",
+        "deep_hedge_price._dynamic_hedging_policy",
+        "deep_hedge_price._dynamic_hedging_protocol",
+        "deep_hedge_price._dynamic_hedging_replay",
+        "deep_hedge_price._dynamic_hedging_study",
+        "dynamic_research._pilot_transport",
+        "dynamic_research._teacher_storage",
+        "dynamic_research.check_initial_quotes",
+        "dynamic_research.check_pilot",
+        "dynamic_research.check_selected_calls",
+        "dynamic_research.reference_methods",
+        "dynamic_research.run_main",
+        "dynamic_research.run_reference",
+        "hullkit._dynamic_hedging_conditional",
+        "hullkit._dynamic_hedging_core",
+        "hullkit._dynamic_hedging_risk",
+        "hullkit._dynamic_hedging_surfaces",
+        "hullkit._heston_local_surface"
+      ],
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": [
+        "deep_hedge_price",
+        "deep_hedge_price._dynamic_hedging_execution",
+        "deep_hedge_price._dynamic_hedging_protocol",
+        "deep_hedge_price._dynamic_hedging_replay",
+        "deep_hedge_price._dynamic_hedging_study",
+        "dynamic_research.check_initial_quotes",
+        "dynamic_research.run_main",
+        "hullkit._dynamic_hedging_conditional",
+        "hullkit._dynamic_hedging_surfaces",
+        "hullkit._heston_local_surface"
+      ]
+    },
+    "protocol_source": {
+      "deep_hedge_price/src/deep_hedge_price/__init__.py": "a8b359e6997c219dec5bc328a2819181a8f24445fd0eb1c66fed78cc3fcf65c7",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py": "c34a9aab22e216a512deafd1205c222fb17e9cc6b60ef46b7ff3267b64417902",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "fad2c73a27b8314b9cdfa5db8505fb56c382b4eab79ce4224aa475b450223b3e",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py": "c233ba0cf6d736401c4f2a4d92dc803810c8066ebf7960534730299759142fca",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py": "cb6aa06426f93705cf5613c57e8966fc7d8b0395d33e990abc95c7fe8b18a12b",
+      "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+      "deep_hedge_price/src/deep_hedge_price/config.py": "f7d8a26b9972448bfab55795ebf84cbe63bbd4056ae1197cbcb0b2bfe95f6957",
+      "deep_hedge_price/src/deep_hedge_price/pricing_config.py": "94cc052ed4bcef57008b337e63db895da3a8c50a4a6f4f3a336ca6bac0912c9d",
+      "environment:versions": "f2ad2aa896b3131965a4281ea706098c9de5d6c4f717bb0f936d9fb36ee4c276",
+      "johnhull/hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py": "9007e30a45375fbb7c8b4afe5fa4e4f694b5bc68e924b138bd993d8bdbf2b025",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py": "78ad0cc9e32628476da2023755cd688ea8363aee9be5f5655c204c6ab6fa5777",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py": "585ea869a96a6076fedd7749d88824dde5ebbbd99d0ca60a646ac829e39be50e",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py": "d07d4d1524a005d5b9ebe765922748aadab2175ace98ff12c941c1a38e8497ce",
+      "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+      "johnhull/hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622",
+      "johnhull/hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+      "johnhull/hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
+      "johnhull/hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+      "johnhull/hullkit/src/hullkit/carbon.py": "7c48f441679f075eda0b118eba73b225120fbba1002708c7dfa053ee6b1dea65",
+      "johnhull/hullkit/src/hullkit/cds.py": "77c2e8866a76cfde54299268f82e562fc8f29eb639b9958b8b78c3e23da6936c",
+      "johnhull/hullkit/src/hullkit/copula.py": "79aad8fca34960f4e1ad5358c496d5b8ae847982dbf5750dff3313a73b9b999b",
+      "johnhull/hullkit/src/hullkit/credit.py": "5b278583bd0025224ed255b785b26d9f50cd05442f876e8c24dee8ff8ee0e50d",
+      "johnhull/hullkit/src/hullkit/credit_curve.py": "b7a77e8e65f5a379e03a33ae5fab156bc6174119a6153e0dd76ce678df08b4e4",
+      "johnhull/hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
+      "johnhull/hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
+      "johnhull/hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+      "johnhull/hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
+      "johnhull/hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
+      "johnhull/hullkit/src/hullkit/frontier_reference.py": "c306605c2cb0e3745f4e542260b88a40a9406f77d54c984b5be40433fc7c960e",
+      "johnhull/hullkit/src/hullkit/hedging.py": "d019a75ac53c0f35db92359a5b3ca25f6fec14b58a0042eb22f6ed2dbcbd9447",
+      "johnhull/hullkit/src/hullkit/heston.py": "cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+      "johnhull/hullkit/src/hullkit/hull_white.py": "09e6fa5140b3a0958c854c25f1893d4a293e0832c21e33f89c29490930040ba5",
+      "johnhull/hullkit/src/hullkit/inflation.py": "f7b30df76bbc63645a280eb6f51126c86b632f943b2734e6d882cf88e9b9a46a",
+      "johnhull/hullkit/src/hullkit/ir_options.py": "c0fe4c19c95e66597dd709be41a74d870eb1f39de3931bf98fd4100636b5b4fb",
+      "johnhull/hullkit/src/hullkit/jarrow_yildirim.py": "4a697ee3337c1f686224897428067dba2fad3f018020788b4aa6ae9e795de01e",
+      "johnhull/hullkit/src/hullkit/jgbi.py": "0cb8eb805aed6afb7fc80b61a32c5b62bf1c1b9f8c6fbb1b69d011b0cf0db5ba",
+      "johnhull/hullkit/src/hullkit/liquidation.py": "7c06faa9a4e65f8f1286a5c24ae8c7b0d13be69dfc7a105482ffd209187f5024",
+      "johnhull/hullkit/src/hullkit/mc.py": "abc2a84020b63a4faa4f3928c9d84c81e9a677d8ef14ea0337fbb239f5f6e922",
+      "johnhull/hullkit/src/hullkit/mc_advanced.py": "8e2938c3a2e3437d2274b904bde6467a3362c2b6589518ae06c1ca007a5125ff",
+      "johnhull/hullkit/src/hullkit/nbplot.py": "ed55a9403c054bb4866d38b61445cd054a5169951b1848637510592e95bb6144",
+      "johnhull/hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+      "johnhull/hullkit/src/hullkit/payoffs.py": "b8b0a73a357a2149ac8b1bfdda4bff99577ff865c3c5dc6ec796272c078568a9",
+      "johnhull/hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+      "johnhull/hullkit/src/hullkit/perpetuals.py": "bb4ea974fa5e8b9e94b9fb43bc6ce47793ce2d1a2a1ab2af185925e5f52fea7f",
+      "johnhull/hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+      "johnhull/hullkit/src/hullkit/pnl_explain.py": "802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+      "johnhull/hullkit/src/hullkit/ppa.py": "74d1b649d2cb4056714d228ad6361959276647df3fc4034d5543455783152320",
+      "johnhull/hullkit/src/hullkit/rates.py": "e2912698d692da5979d80728d1fec90c56d86744af5fca863ef4c1c16840ecf5",
+      "johnhull/hullkit/src/hullkit/rfr.py": "36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+      "johnhull/hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
+      "johnhull/hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
+      "johnhull/hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+      "johnhull/hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+      "johnhull/hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
+      "johnhull/hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+      "johnhull/hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472",
+      "johnhull/hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+      "johnhull/hullkit/src/hullkit/surrogate_data.py": "251a883394722e33e38259c133681166c7444c5c570d8100e08d9f9a2f969459",
+      "johnhull/hullkit/src/hullkit/surrogate_validation.py": "938c8da86dde56278ec6a584524eeaff731105a499b793d32a1e4c1756312147",
+      "johnhull/hullkit/src/hullkit/swaps.py": "8688dd06573ade6d9a93d21c5c8c8da78ed60f25c9accd4613b85aaa1d017035",
+      "johnhull/hullkit/src/hullkit/tail_risk.py": "bbaaf7579741d9621e0911ebde7d6f62759c56b2c88ed6aa6de800e971f26128",
+      "johnhull/hullkit/src/hullkit/teaching.py": "69a2c11bdf0583ee208a16a75dbf5e781282d4ee1f58033c0130b4f2d21a2724",
+      "johnhull/hullkit/src/hullkit/trees.py": "b21a1f7896bd8fd144becf5776f2e20b8b5c82d2e4bf8d292381a960c22201ee",
+      "johnhull/hullkit/src/hullkit/var_backtest.py": "617be582584df7b60f2a142ca5285672fcbdb52b9cb718c46b98bc0a8236b515",
+      "johnhull/hullkit/src/hullkit/vol_surface.py": "849e3cb14a87d13acfbad5a43c239f18219fa0812d1165ed1807af68089e3e9c",
+      "johnhull/hullkit/src/hullkit/volatility.py": "4a955552641c86effabd016c7c4118b999955165826b457fe1175d34043193a6",
+      "johnhull/hullkit/src/hullkit/weather.py": "b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
+      "johnhull/hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+      "johnhull/hullkit/src/hullkit/zero_dte.py": "e8f99291613b17e0ffb6a29535d9ea08a2ab604e7116513164e91eca6dc07265",
+      "johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd",
+      "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+      "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+      "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py": "7fe16943f2ead6dbe17a17e969930afde863681ed9eb24b9ea8b7b18c4a004d4",
+      "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "a988c164ca8f64f5dfc78165fc2f9620c2abc857eac745715f4749908839e230",
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py": "681548eb4753946fe6c896a588b2314cb47e85736f347ca92ee2d2513a46f9a1",
+      "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+      "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+      "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771",
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5",
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef"
+    }
+  },
+  "source_identity_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_limited_decisions": {
+    "codec": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-codec-v2-decision.json",
+      "sha256": "26aa45f5902e816053decce2aec2364c58161c387fdcc5378d27e8255a906262",
+      "status": "approved"
+    },
+    "stage": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-decision.json",
+      "sha256": "f2fd826e399a08e20e848ac00bfbbb1132433be189779716f66a7e61d1868ea2",
+      "status": "approved"
+    }
+  },
+  "source_native_payload_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "source_rebind_evidence": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v5.json",
+    "sha256": "d5eab8376c819367defb650f228a0cb844fe4588b77c3f09464f9e18785e9571"
+  },
+  "typed_inputs": {
+    "files": {
+      "arrays.npz": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "metadata.json": "009e9985203af577c80db48c5874c865b3205414092ce3ee9727feb669b1e7f1",
+      "pack000000/arrays.npz": "a17385a4c24a6db9e403ec07479e52dbbd54a68ed936354e16d7afb2a5e73b4a",
+      "pack000000/metadata.json": "02a77e8111f3661bda06669af37a3c988f6805f3097a0a69fdcddbcb433a19f6",
+      "pack000000/receipt.json": "f7b3c862f94705651e71d1eab3177c8f9f2683b818a0e7287834da3f1fb51c2f",
+      "receipt.json": "36c0d914168f4cdceca55b570471fbb180a11f96939b02cfdc7e34a16e6d8284"
+    },
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs",
+    "receipt_sha256": "36c0d914168f4cdceca55b570471fbb180a11f96939b02cfdc7e34a16e6d8284",
+    "tree_sha256": "1e298d809691a98e3c55df52101142d5b432b417f5886e69efc9ed1ff811f4c7"
+  },
+  "volume_probes": [
+    {
+      "id": "WSL",
+      "path": "/",
+      "reserve_bytes": 10737418240
+    },
+    {
+      "id": "C",
+      "path": "/mnt/c",
+      "reserve_bytes": 10737418240
+    },
+    {
+      "id": "F",
+      "path": "/mnt/f",
+      "reserve_bytes": 10737418240
+    }
+  ]
+}

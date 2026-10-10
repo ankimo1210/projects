@@ -1,0 +1,93 @@
+{
+  "schema": "rb-f04-independent-root-monitor-v5-boundaries-v1",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "author_fixed_manifest_actual10_file_bytes",
+      "passed": true
+    },
+    {
+      "name": "original14_administrative_cost_stop_functions_AST",
+      "passed": true
+    },
+    {
+      "name": "actual_false_guard_run_rejects_before_Popen_or_output",
+      "passed": true
+    },
+    {
+      "name": "actual_old_W1_guard_rejected_before_Popen",
+      "passed": true
+    },
+    {
+      "name": "closed_actual_metadata_root_prior_plan_receipt_full_file_authentication",
+      "passed": true
+    },
+    {
+      "name": "actual_current82_source_all_bytes_with_closed_metadata",
+      "passed": true
+    },
+    {
+      "name": "actual_root_authority_missing_sha_rejected",
+      "passed": true
+    },
+    {
+      "name": "changed_prior_wall_allowance_rejected",
+      "passed": true
+    },
+    {
+      "name": "changed_per_process_RSS_allowance_rejected",
+      "passed": true
+    },
+    {
+      "name": "changed_poll_allowance_rejected",
+      "passed": true
+    },
+    {
+      "name": "actual_plan_receipt_tamper_rejected",
+      "passed": true
+    },
+    {
+      "name": "old_raw_resume_cannot_be_authorized",
+      "passed": true
+    },
+    {
+      "name": "resource_allowance_cannot_be_financial_acceptance",
+      "passed": true
+    },
+    {
+      "name": "source_only_review_cannot_be_all3138_prior",
+      "passed": true
+    },
+    {
+      "name": "unclosed_metadata_unknown_cannot_be_completed",
+      "passed": true
+    },
+    {
+      "name": "fault_stop_race_unknown_and_exact_boundary_semantics",
+      "passed": true
+    }
+  ],
+  "passed": 16,
+  "failed": 0,
+  "monitor_sha256": "a53a73cfc420e2745f8d8d2cb72a6171ab2d166781126b9a96869afb88053981",
+  "candidate_sha256": "842fdd4ce09d83b1b674e108b65ea5d69c21b15a3590c46bf989494ce67550dd",
+  "author_manifest_sha256": "b1ec8be5f58c0e9f9503c0aa4b5def44b8cf5a1345e78ba0e66d511a4af4d2f2",
+  "actual_metadata_manifest_sha256": "00b8101210d492111c0dec555b2a3653f2878c15a213db9bee6a948ef466a8bd",
+  "actual_closed_metadata_files_sha_authenticated": 99,
+  "actual_current_source_bytes_authenticated": 82,
+  "actual_root_launch_guard_validated": false,
+  "launch_authority_or_financial_accuracy_or_phase_accepted": false,
+  "source_math_N_caps_expenses_changed": false,
+  "Popen_RNG_SDE_solver_worker_calls": 0,
+  "real_native_launch_output_mutated": false,
+  "source_before_after_stable": true,
+  "financial_qualification": "unknown",
+  "physical_sha_scope": "immutable closed source/metadata transport authenticity; not numerical price/Greek agreement",
+  "all_cap_options_expanded_or_plan_semantics_revalidated_here": false,
+  "cost": {
+    "wall_before_record_seconds": 0.39531965700007277,
+    "CPU_before_record_seconds": 0.395320968,
+    "kernel_peak_RSS_bytes": 54280192,
+    "own_final_record_tail_seconds": null
+  }
+}

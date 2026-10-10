@@ -1,0 +1,87 @@
+{
+  "schema": "rb-f04-prior-v5-source-rebind-consumer-interface-v1",
+  "materializer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py",
+    "sha256": "b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a"
+  },
+  "approval_schema_unchanged": "rb-f04-root-prior-lock-approval-v1",
+  "independent_prior_review_schema_unchanged": "rb-f04-independent-fullmixed-prior-budget-review-v1",
+  "new_source": {
+    "canonical_runner_digest": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "native_payload_digest": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "files": 82,
+    "dynamic_imports": []
+  },
+  "source_review_collection": {
+    "codec": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-codec-v2-decision.json",
+      "sha256": "26aa45f5902e816053decce2aec2364c58161c387fdcc5378d27e8255a906262",
+      "status": "approved"
+    },
+    "stage": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-decision.json",
+      "sha256": "f2fd826e399a08e20e848ac00bfbbb1132433be189779716f66a7e61d1868ea2",
+      "status": "approved"
+    }
+  },
+  "approved_binding_set": {
+    "candidate_sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "selection_overlay_sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+    "replay_budget_supplement_sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+    "replay_budget_manifest_sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9",
+    "source_native_payload_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "source_limited_decisions_sha256": "6233eda48b17b862a3922042d80a8a7b1b54d8009be1ece436a972769068f47f",
+    "source_rebind_evidence_sha256": "d5eab8376c819367defb650f228a0cb844fe4588b77c3f09464f9e18785e9571",
+    "budget_rows_assembly_sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5",
+    "budget_rows_assembly_manifest_sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3",
+    "raw_assembled_candidate_rows_digest": "fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f",
+    "raw_assembled_candidate_cap_recipe_digest": "d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d",
+    "activation_v4_origin_sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+    "activation_potential_first_job_budget_candidates_digest": "a82f3c33d71a918f51131c8c77917793ceec75850a2181815c867f1a1e243c04",
+    "source_identity_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "budget_rows_without_review_SHA_digest": "02da310d0bed91d6883171eed44cb22ae872cc6a2888837a5979755d9c68aee5",
+    "cap_recipe_digest": "83d0099dd31974d01d6f3fad202d669a92aa778242b7b13f76efc1b6b4aa96e1",
+    "materializer_sha256": "b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a",
+    "literal_cap_options": 573122
+  },
+  "approved_binding_key_count": 18,
+  "source_collection_digest_rule": "digest({codec: actual codec decision file SHA, stage: actual stage decision file SHA}); stdlib sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False",
+  "effective_budget_rows_digest_rule": "remove only budget.review_sha256 from every one of3138rows; all branch/numeric/None/order values remain",
+  "cap_recipe_digest_rule": "existing v4 cap_recipe_payload unchanged; current canonical source replaces source_identity only",
+  "required_new_actual_authority": [
+    "D2 independent all3138 resource prior decision binding exact18keys, current plain/native source, producer/helper SHA and exact573122 recipe",
+    "D2 actual root prior approval with all3138 budget.review_sha256 set to that actual new decision SHA",
+    "new actual root operational guard prior with per-volume reserves; separate administrative scope",
+    "separate actual financial launch guard/approval after metadata materialization"
+  ],
+  "actual_root_approval_fields_to_replace": [
+    "status",
+    "approved_by",
+    "created_UTC",
+    "independent_reviews.prior_budget_and_cap_recipe",
+    "reviewed_budgets[*].budget.review_sha256",
+    "cap_options_authority.status",
+    "cap_options_authority.decision_template",
+    "root_operational_guard_prior"
+  ],
+  "fresh_output_contract": "new direct D2 directory named task-5-formal-prior-lock-materialized-*; never overwrite, resume or relabel old W1 artifacts",
+  "actual_API_unchanged": [
+    "validate_budget_rows",
+    "producer.lock_job_graph",
+    "helper.branch_plan",
+    "helper.materialize_options",
+    "pilot.validate_locked_plan",
+    "pilot._locked_bindings"
+  ],
+  "pending_candidate": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v5.json",
+    "sha256": "c6f6d4f3ffeae5558f886c327ccc88bd5b1fb04e6ff292da83cab1685326a950",
+    "approved": false
+  },
+  "full_capacity_new_codec_measurement_or_timing_approved": false,
+  "budget_source_limited_reviews_grant_resource_authority": false,
+  "financial_launch_authorized": false,
+  "financial_qualification": "unknown",
+  "financial_imports_lock_RNG_SDE_solver_Popen_calls": 0,
+  "literal_cap_options_expanded": 0
+}

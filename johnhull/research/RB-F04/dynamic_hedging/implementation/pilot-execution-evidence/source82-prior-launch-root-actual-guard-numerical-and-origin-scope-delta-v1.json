@@ -1,0 +1,19 @@
+{
+  "schema": "root-actual-guard-numerical-and-origin-scope-delta-v1",
+  "changed_root_authority_fields": [
+    "candidate_only",
+    "closed_prior_metadata_both_store_manifest_ref",
+    "created_UTC",
+    "formal_financial_launch_authorized",
+    "independent_prelaunch_binding_evidence",
+    "launch_authorized_by",
+    "new_source_prior_binding_revalidation",
+    "root_fresh_capacity_snapshot",
+    "root_launch_scope",
+    "root_preapproved"
+  ],
+  "source_plan_inputs_N_jobs_caps_unchanged": true,
+  "Popen_financial_or_solver_calls": 0,
+  "financial_qualification": "unknown",
+  "main_or_phase_acceptance": false
+}

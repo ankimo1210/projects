@@ -6918,9 +6918,225 @@
       "archive": "storage-codec-root-root-source-and-closed-proof-store-receipt-v1.json",
       "bytes": 1938,
       "sha256": "655adde302351eae439cc7bf5ab8412e59f5cb340671ffe34692d07b32a6cf9c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-interface-v1.json",
+      "archive": "source82-prior-launch-task-5-formal-prior-lock-preparation-v5-interface-v1.json",
+      "bytes": 5558,
+      "sha256": "943021eca1e38396cf44821f727dd307c2e6d19fbb45fb02dc86e4b56039fc1b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-report-v1.md",
+      "archive": "source82-prior-launch-task-5-formal-prior-lock-preparation-v5-report-v1.md",
+      "bytes": 3605,
+      "sha256": "29e1da6d1a58fdb386141c83abce41249d6cd03a0fa177efb74fa11fb8525a9d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5-manifest-v1.json",
+      "archive": "source82-prior-launch-task-5-formal-prior-lock-preparation-v5-manifest-v1.json",
+      "bytes": 9627,
+      "sha256": "be2b70146893b25ce6836f4158f45bcb5be286ed295c06363919e303b4c87fd3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-decision-v1.json",
+      "archive": "source82-prior-launch-independent-formal-prior-v5-decision-v1.json",
+      "bytes": 10634,
+      "sha256": "5cb82ff33fcca56bbbda87939cea53bc3caec43149df8cedbda5c5be51376b24"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-review-v1.md",
+      "archive": "source82-prior-launch-independent-formal-prior-v5-review-v1.md",
+      "bytes": 1704,
+      "sha256": "8fa6adb3db8b0d12b770d48874f7542ba260c0f26ff61a39b7b415609b66e17a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-manifest-v1.json",
+      "archive": "source82-prior-launch-independent-formal-prior-v5-manifest-v1.json",
+      "bytes": 2599,
+      "sha256": "6e6f22cf1c54be278bce81463075987be7f7bf5aae2baa94b335b0c49ba06147"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-results-v1.json",
+      "archive": "source82-prior-launch-independent-formal-prior-v5-results-v1.json",
+      "bytes": 27251,
+      "sha256": "88a06a1209710497efa2c0c16011384f1e3f69a8afae683c739f10d9661f5d66"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-binding-receipt-v4.json",
+      "archive": "source82-prior-launch-task-5-formal-prior-actual-root-binding-receipt-v4.json",
+      "bytes": 1212,
+      "sha256": "cbb50a4dfb4a8eec3f21e7f1ed8f3cea46459b49312c637cc0b0bbba9786cae8"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v3.json",
+      "archive": "source82-prior-launch-task-5-formal-pilot-root-operational-resource-prior-v3.json",
+      "bytes": 3421,
+      "sha256": "145bdf322aacd4e699e297c2a4e747d1a021c43771e4b162783f9eb35a390881"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-current-source-administrative-prior-and-metadata-observer-v1.json",
+      "archive": "source82-prior-launch-root-current-source-administrative-prior-and-metadata-observer-v1.json",
+      "bytes": 1481,
+      "sha256": "c7c9725fe3922843eefb0bb16b158b7cb756eb99c0f1b95bb266c59fec11e4cd"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-current-metadata-observer-and-operational-limit-delta-v1.json",
+      "archive": "source82-prior-launch-root-current-metadata-observer-and-operational-limit-delta-v1.json",
+      "bytes": 782,
+      "sha256": "d17e692ca92003c5638385e31e4529068cb56e01adc2ada9a21f245d864cf902"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-pending-prior-v5-origin-and-fixed-archive-check-v1.json",
+      "archive": "source82-prior-launch-root-pending-prior-v5-origin-and-fixed-archive-check-v1.json",
+      "bytes": 809,
+      "sha256": "bf31e3e0b85aab783d755bc73416f1f33ca9e44c567a12c29a337baa5b7c92c9"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/materialization-progress.json",
+      "archive": "source82-prior-launch-task-5-formal-prior-lock-materialized-root-v5__materialization-progress.json",
+      "bytes": 1792,
+      "sha256": "b19108b3c28aadb711023a8b716524f48e19660d162961cc8ac79d9e0f3af2d6"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v3/parent-cost-and-status.json",
+      "archive": "source82-prior-launch-task-5-formal-prior-lock-materialization-root-observation-v3__parent-cost-and-status.json",
+      "bytes": 1463,
+      "sha256": "94a8bd84a5587cbd7862c77b0cacc10b847ea0d8e7d0e81211c66fffc31ce733"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-new82-prior-metadata-and-closed-proof-store-manifest-v1.json",
+      "archive": "source82-prior-launch-root-new82-prior-metadata-and-closed-proof-store-manifest-v1.json",
+      "bytes": 48651,
+      "sha256": "aa5ca5656f4d953e8698c8bdc5f92f10436965568ed1273e8b6ef4c21b919598"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-new82-prior-metadata-and-closed-proof-store-receipt-v1.json",
+      "archive": "source82-prior-launch-root-new82-prior-metadata-and-closed-proof-store-receipt-v1.json",
+      "bytes": 1545,
+      "sha256": "6a84c665b4d7c896ea6271f9b9410690f99a7878525d861a0c968eadc7b785a3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-decision-v1.json",
+      "archive": "source82-prior-launch-independent-materialized-prior-v5-decision-v1.json",
+      "bytes": 5370,
+      "sha256": "ac8a0176c68ea3b6610a665b22c953af94df2358eb260d5ccae8808d676d90b7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-review-v1.md",
+      "archive": "source82-prior-launch-independent-materialized-prior-v5-review-v1.md",
+      "bytes": 1486,
+      "sha256": "f7d45cb467f125d231c988db25b9779c83eb5c8b1d5e6d481ac913541977e076"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-manifest-v1.json",
+      "archive": "source82-prior-launch-independent-materialized-prior-v5-manifest-v1.json",
+      "bytes": 2465,
+      "sha256": "33e71332b4bef1e4c810b7b51a7c1e0cb70fff39e023c4cc71d966dda96200b9"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-tool-enclosing-receipt-v1.json",
+      "archive": "source82-prior-launch-independent-materialized-prior-v5-tool-enclosing-receipt-v1.json",
+      "bytes": 1731,
+      "sha256": "6f2a694bd9d7f4fe6c948350cf9512ebe4db467236e00252ef9538774090d532"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-report.md",
+      "archive": "source82-prior-launch-task-5-full-pilot-root-operational-monitor-v5-report.md",
+      "bytes": 4156,
+      "sha256": "8949a234ae680bdd008c4da9b9fc543f236e5d8bdd8faec5499bc10b2cad758b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-preflight-results.json",
+      "archive": "source82-prior-launch-task-5-full-pilot-root-operational-monitor-v5-preflight-results.json",
+      "bytes": 3508,
+      "sha256": "4e4adbb8b0ee567df19220bcc52b93cb7360bd9558fd8148be63c1c4f5628237"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5-manifest.json",
+      "archive": "source82-prior-launch-task-5-full-pilot-root-operational-monitor-v5-manifest.json",
+      "bytes": 5355,
+      "sha256": "b1ec8be5f58c0e9f9503c0aa4b5def44b8cf5a1345e78ba0e66d511a4af4d2f2"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-decision-v1.json",
+      "archive": "source82-prior-launch-independent-root-monitor-v5-decision-v1.json",
+      "bytes": 5105,
+      "sha256": "11e4861b09129def334dfc1f957f44549c178f193dd5287472a3c252fa8a9427"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-review-v1.md",
+      "archive": "source82-prior-launch-independent-root-monitor-v5-review-v1.md",
+      "bytes": 1752,
+      "sha256": "2e0d66088d7dcbf9b2763e00b8d288428c218c31983f5050bc7eb70948b7c97c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-manifest-v1.json",
+      "archive": "source82-prior-launch-independent-root-monitor-v5-manifest-v1.json",
+      "bytes": 4671,
+      "sha256": "61e444e86774a738a14b5c422cc1cc1a95146d5e5b0f557b1516b0e7f7fffc07"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v5-preflight-results-v1.json",
+      "archive": "source82-prior-launch-independent-root-monitor-v5-preflight-results-v1.json",
+      "bytes": 2894,
+      "sha256": "65f6bd1847640803378f33555e718f195cc5f35e270c2ab3284c9eecf56e24b6"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-launch-guard-v3.json",
+      "archive": "source82-prior-launch-task-5-formal-pilot-root-launch-guard-v3.json",
+      "bytes": 48823,
+      "sha256": "9e794bd4ec46c72d240a264fdf2dd722297455baf2f3cd0d07243f6d7a0c2842"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-current82-fresh-launch-authority-and-enclosing-observer-v1.json",
+      "archive": "source82-prior-launch-root-current82-fresh-launch-authority-and-enclosing-observer-v1.json",
+      "bytes": 2513,
+      "sha256": "8bcc9e420b61d566bc7327ca3b9b56a1a6a38c1aa4c2afc21dedf5648e0bc988"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-actual-guard-numerical-and-origin-scope-delta-v1.json",
+      "archive": "source82-prior-launch-root-actual-guard-numerical-and-origin-scope-delta-v1.json",
+      "bytes": 622,
+      "sha256": "086cd93602caecd686ee49368808a70fb02180abb49aaebc8a7ab45598da9094"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-actual-root-guard-v3-decision-v1.json",
+      "archive": "source82-prior-launch-independent-actual-root-guard-v3-decision-v1.json",
+      "bytes": 2496,
+      "sha256": "1026320dadbd84fa5e1646f68446e863fa9864f3bba0b01326ca5156e0c4109e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-actual-root-guard-v3-bindingproof-v1.json",
+      "archive": "source82-prior-launch-independent-actual-root-guard-v3-bindingproof-v1.json",
+      "bytes": 19987,
+      "sha256": "3fa337dbce478857cf409ce18d0142a72512b923363a1842ce5805ce27e78ea0"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-actual82-guard-and-saved-metadata-proof-store-manifest-v1.json",
+      "archive": "source82-prior-launch-root-actual82-guard-and-saved-metadata-proof-store-manifest-v1.json",
+      "bytes": 6596,
+      "sha256": "716aed49b357087513fff2e12ed498a0179b919542d7f8e5392bb428932f92ec"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-actual82-guard-and-saved-metadata-proof-store-receipt-v1.json",
+      "archive": "source82-prior-launch-root-actual82-guard-and-saved-metadata-proof-store-receipt-v1.json",
+      "bytes": 1483,
+      "sha256": "e7964977529ce27835a33e2082e0ac49e59678d156089c5825e6bd00ae4f1ed5"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-current82-fresh-native-launch-readonly-confirmation-v1.json",
+      "archive": "source82-prior-launch-root-current82-fresh-native-launch-readonly-confirmation-v1.json",
+      "bytes": 2420,
+      "sha256": "72095d79033b28d7421fb1fbb7887aa4ade2d25fc4118b3b34b841d16c5d4c9f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-observation-v3/before-bindings-and-command.json",
+      "archive": "source82-prior-launch-task-5-formal-pilot-root-operational-observation-v3__before-bindings-and-command.json",
+      "bytes": 16196,
+      "sha256": "4121c0d29bc4ed916bd69d336b51f6300ec611dfd9a02b60cdc0c8b30123dad3"
     }
   ],
-  "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending; corrected81 formal pilot now terminal214 rows with stage gate argument-binding defect; full saved semantic check pending; new82 private storage transport and stage argument comparison source-only approved; single genuineN1024 full-payload storage verified; fresh prior/root and financial saved acceptance still pending",
+  "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending; corrected81 formal pilot now terminal214 rows with stage gate argument-binding defect; full saved semantic check pending; new82 private storage transport and stage argument comparison source-only approved; single genuineN1024 full-payload storage verified; fresh prior/root and financial saved acceptance still pending; new82 actual prior/metadata/saved structural binding/guard complete; fresh formal pilot launched14:00:06 UTC with original scope; full saved numeric/freeze/main still pending",
   "raw_checkpoint_store_manifest": "task-5-v54-root-checkpoint-cas-manifest-v2.json",
   "initial_prior_metadata_store_manifest_ref": "artifact:sha256:0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc",
   "initial_partial_terminal_store_manifest_ref": "artifact:sha256:34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35",
@@ -6946,5 +7162,8 @@
     "whole_phase_forecast": false
   },
   "private_pilot_storage_stage_source_and_proof_store_manifest_ref": "artifact:sha256:830ce805fde12e886f537063dd95676fd681b0a400b4ebde6582faf407c21cd6",
-  "private_pilot_storage_stage_source_and_proof_store_status": "verified_both_stores; source/closed proofs only; fresh resource prior and financial launch not approved"
+  "private_pilot_storage_stage_source_and_proof_store_status": "verified_both_stores; source/closed proofs only; fresh resource prior and financial launch not approved",
+  "current82_actual_prior_metadata_store_manifest_ref": "artifact:sha256:aa5ca5656f4d953e8698c8bdc5f92f10436965568ed1273e8b6ef4c21b919598",
+  "current82_actual_guard_saved_binding_store_manifest_ref": "artifact:sha256:716aed49b357087513fff2e12ed498a0179b919542d7f8e5392bb428932f92ec",
+  "current82_formal_pilot_status": "launched 2026-10-10T14:00:06.210472+00:00; last readonly proof confirms all3processes live; qualification unknown; no full completion/acceptance"
 }
