@@ -1,0 +1,91 @@
+{
+  "actual_source_canonical_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "count": 18,
+  "files": {
+    "task-5-formal-prior-lock-preparation-initial-v2-before-rate-guard.py": {
+      "bytes": 33199,
+      "sha256": "36c0da6d44a930471330df4d06e4e09dd3bcac2634e260cc28609d73ee3abcc1"
+    },
+    "task-5-formal-prior-lock-preparation-pending-example-v2.json": {
+      "bytes": 4430,
+      "sha256": "316f32db2261565306016e15bf2507fbd4c07c2802a133d9be495c7f88c0fcab"
+    },
+    "task-5-formal-prior-lock-preparation-v1-to-v2-final.diff": {
+      "bytes": 18767,
+      "sha256": "b60958ee4b99bf2fb55f5ea56fbda6424455d0d2544b22bf0ddaaf8a87f46dc2"
+    },
+    "task-5-formal-prior-lock-preparation-v1-to-v2.diff": {
+      "bytes": 18139,
+      "sha256": "9fdf186fafb9fdc2c602910015bbf398509fe17189183ff50c9df714798a33ba"
+    },
+    "task-5-formal-prior-lock-preparation-v1.py": {
+      "bytes": 24522,
+      "sha256": "a9773d211d2611e98b54135495e002e78147020a9a9b4d95cc0648ab883427f9"
+    },
+    "task-5-formal-prior-lock-preparation-v2.py": {
+      "bytes": 33818,
+      "sha256": "9a27b3943fc57beac7d0f869901fd7b31c5becae7504f04773ba39ed65ce7830"
+    },
+    "task-5-formal-prior-lock-rebind-GREEN-v2.json": {
+      "bytes": 4349,
+      "sha256": "0127246a0c11590baafb6e186083ecdab0c4d915301a022137f293cdd31e9bd5"
+    },
+    "task-5-formal-prior-lock-rebind-RED-v2.json": {
+      "bytes": 974,
+      "sha256": "49f2e7adce7861280b9612410c6af23ea5dce27744429db584f3154b851efe12"
+    },
+    "task-5-formal-prior-lock-rebind-evidence-v2.json": {
+      "bytes": 9770,
+      "sha256": "1e83ebae5b76c0560a40cd1ec21faf6e342e722111d725feaa1faadb846f14a1"
+    },
+    "task-5-formal-prior-lock-rebind-final-static-v2.json": {
+      "bytes": 1290,
+      "sha256": "44c69dda6e2061d0989c08590b355a83575140e76e470a28ed4f988609497ce7"
+    },
+    "task-5-formal-prior-lock-rebind-interface-v2.json": {
+      "bytes": 4426,
+      "sha256": "b6f39d3d96e95640db8769cc76181f576a2fc71bef547302005d2f58c359ae89"
+    },
+    "task-5-formal-prior-lock-rebind-preparation-v2.md": {
+      "bytes": 2796,
+      "sha256": "3b726879758952608644ce7c3e71bfd843888f1dd72b78ea6e9396ab34f266a9"
+    },
+    "task-5-formal-prior-lock-rebind-rate-metadata-verification-v2.json": {
+      "bytes": 547,
+      "sha256": "6890e838b7fa0cb137569f34ff356304cf37e97844961270ade881e224521e98"
+    },
+    "task-5-full-pilot-root-operational-monitor-v1-to-v2-final.diff": {
+      "bytes": 6230,
+      "sha256": "81883ec3180b4ed6997b736eac543aaf4992b2bce655a6402732a1c2e29ee3b0"
+    },
+    "task-5-full-pilot-root-operational-monitor-v1-to-v2.diff": {
+      "bytes": 6230,
+      "sha256": "81883ec3180b4ed6997b736eac543aaf4992b2bce655a6402732a1c2e29ee3b0"
+    },
+    "task-5-full-pilot-root-operational-monitor-v1.py": {
+      "bytes": 22503,
+      "sha256": "6c71f2692d2867fd6b91fe6a631e0f8274119615509f4bad3e5d8fe3f4de08a9"
+    },
+    "task-5-full-pilot-root-operational-monitor-v2-guard-candidate.json": {
+      "bytes": 38389,
+      "sha256": "392b3ca0780443dc4fab38f75197f0ff490bdd634563c86ec2affd474f9162aa"
+    },
+    "task-5-full-pilot-root-operational-monitor-v2.py": {
+      "bytes": 27234,
+      "sha256": "1c8e0c375cfff3d347326b63b1f324177e29bb4216810490c9d468cabbb6181c"
+    }
+  },
+  "financial_qualification": "unknown",
+  "financial_workers_RNG_SDE_solver_Popen": 0,
+  "formal_budget_approved": false,
+  "formal_phase_approved": false,
+  "native_source_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "original_v1_preserved": true,
+  "preparation_finalization_cost": {
+    "CPU_seconds_before_manifest": 0.024202781000000003,
+    "own_tail": "unknown",
+    "wall_seconds_before_manifest": 0.026201503998890985
+  },
+  "schema": "rb-f04-prior-lock-monitor-rebind-preparation-manifest-v2",
+  "status": "fixed_D_only_pending_actual_root_and_independent_full_budget_approval"
+}

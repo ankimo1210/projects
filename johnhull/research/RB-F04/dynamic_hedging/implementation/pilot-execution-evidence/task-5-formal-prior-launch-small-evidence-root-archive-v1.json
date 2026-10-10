@@ -1,0 +1,265 @@
+{
+  "schema": "rb-f04-root-formal-prior-launch-small-evidence-archive-v1",
+  "added_entries": [
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-manifest-v2.json",
+      "archive": "task-5-formal-prior-lock-rebind-manifest-v2.json",
+      "bytes": 3896,
+      "sha256": "552d519f651d784a90ef9f18b5d8d5503143a71e1b12fe0e3133e717143e8419"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v2.py",
+      "archive": "task-5-formal-prior-lock-preparation-v2.py.txt",
+      "bytes": 33818,
+      "sha256": "9a27b3943fc57beac7d0f869901fd7b31c5becae7504f04773ba39ed65ce7830"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v2.py",
+      "archive": "task-5-full-pilot-root-operational-monitor-v2.py.txt",
+      "bytes": 27234,
+      "sha256": "1c8e0c375cfff3d347326b63b1f324177e29bb4216810490c9d468cabbb6181c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-pending-example-v2.json",
+      "archive": "task-5-formal-prior-lock-preparation-pending-example-v2.json",
+      "bytes": 4430,
+      "sha256": "316f32db2261565306016e15bf2507fbd4c07c2802a133d9be495c7f88c0fcab"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v2-guard-candidate.json",
+      "archive": "task-5-full-pilot-root-operational-monitor-v2-guard-candidate.json",
+      "bytes": 38389,
+      "sha256": "392b3ca0780443dc4fab38f75197f0ff490bdd634563c86ec2affd474f9162aa"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-preparation-v2.md",
+      "archive": "task-5-formal-prior-lock-rebind-preparation-v2.md",
+      "bytes": 2796,
+      "sha256": "3b726879758952608644ce7c3e71bfd843888f1dd72b78ea6e9396ab34f266a9"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-interface-v2.json",
+      "archive": "task-5-formal-prior-lock-rebind-interface-v2.json",
+      "bytes": 4426,
+      "sha256": "b6f39d3d96e95640db8769cc76181f576a2fc71bef547302005d2f58c359ae89"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-evidence-v2.json",
+      "archive": "task-5-formal-prior-lock-rebind-evidence-v2.json",
+      "bytes": 9770,
+      "sha256": "1e83ebae5b76c0560a40cd1ec21faf6e342e722111d725feaa1faadb846f14a1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v2-root-launch-checklist.md",
+      "archive": "task-5-full-pilot-root-operational-monitor-v2-root-launch-checklist.md",
+      "bytes": 8267,
+      "sha256": "b11e6f1eea06b2bc2fd2eca791f045fb6c998b47c0e6b366d400b22afb15ec53"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-root-preflight-v1.json",
+      "archive": "task-5-formal-prior-lock-rebind-root-preflight-v1.json",
+      "bytes": 587,
+      "sha256": "30a112ae043d184d570a7d73746c207750e4383fd74a4e3df1780e1d18518abc"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-decision-v1.json",
+      "archive": "task-5-fullmixed-prior-budget-independent-final-decision-v1.json",
+      "bytes": 9959,
+      "sha256": "7571365cea02867948275c675699f318ac2603dbf7152b96f4a482078f254e1c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+      "archive": "task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+      "bytes": 10494,
+      "sha256": "3cf7446276873a13e45c8c4c2f3562fa8d644302a52eb07c07c73753c98e5b4b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-static-results-v1.json",
+      "archive": "task-5-fullmixed-prior-budget-independent-final-static-results-v1.json",
+      "bytes": 3188,
+      "sha256": "9bcf5b1476064e6a816294a293a126b6137b44ece2ccf6f8e5ba503527566ae4"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-static-results-v2.json",
+      "archive": "task-5-fullmixed-prior-budget-independent-final-static-results-v2.json",
+      "bytes": 3027,
+      "sha256": "019ce01dc40a96a31d9677a6ac7a078864db26124ed767ad99633f72362a7a48"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-static-results-v2.json",
+      "archive": "task-5-fullmixed-prior-budget-independent-static-results-v2.json",
+      "bytes": 237136,
+      "sha256": "689590b3bf40b1654c4e846e78d979c3188976555c9b78d092015ba40af0e603"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-assembly-author-v2-manifest.json",
+      "archive": "task-5-fullmixed-prior-budget-assembly-author-v2-manifest.json",
+      "bytes": 3334,
+      "sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-actual-root-approval-builder-v1.py",
+      "archive": "task-5-formal-prior-actual-root-approval-builder-v1.py.txt",
+      "bytes": 6269,
+      "sha256": "3de62e8f8356afa508fd51ab56a17758c41d148dcf16bda63b3b571875731365"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-metadata-root-observer-v1.py",
+      "archive": "task-5-formal-prior-metadata-root-observer-v1.py.txt",
+      "bytes": 5151,
+      "sha256": "f1ba9cf44de466a60a91e604bdbeae1091ebe69e31e2718823706777fed69229"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-builder-v1.py",
+      "archive": "task-5-formal-pilot-root-launch-guard-builder-v1.py.txt",
+      "bytes": 6468,
+      "sha256": "c576f86a10e5d18c4dbc0fef94a1e09ae4bd8fdd5222d55bb7f192b61db9d727"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-enclosing-observer-v1.py",
+      "archive": "task-5-formal-pilot-root-enclosing-observer-v1.py.txt",
+      "bytes": 3122,
+      "sha256": "36bb31e0c58462ccadb029d7eb82bac73904d89f58046bf3225fc565fe1b483c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-actual-root-binding-receipt-v1.json",
+      "archive": "task-5-formal-prior-actual-root-binding-receipt-v1.json",
+      "bytes": 1129,
+      "sha256": "85767bfef6b81fc4a936554d5157053708a59959fd50f4f4f415c61159627a1d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-root-approval-independent-results-v1.json",
+      "archive": "task-5-formal-prior-root-approval-independent-results-v1.json",
+      "bytes": 4207,
+      "sha256": "a2fd933ee1abe0bf1e2c444461493dedad82731e40cfe01f51b588f91aa4e231"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v1.json",
+      "archive": "task-5-formal-pilot-root-launch-guard-v1.json",
+      "bytes": 44487,
+      "sha256": "82b7099f583010950714037068c0182277fab9d0f988b954505e955de1c1f39a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-binding-receipt-v1.json",
+      "archive": "task-5-formal-pilot-root-launch-binding-receipt-v1.json",
+      "bytes": 2359,
+      "sha256": "94e93fd9e961f05bc86e12e1583d9b1d84c5212d7c687b63354cbae31178abef"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-actual-root-exec-handle-v1.json",
+      "archive": "task-5-formal-pilot-actual-root-exec-handle-v1.json",
+      "bytes": 825,
+      "sha256": "1e3c8a2f431d03cc52c4d79426fc688c4d3405b44bc236ad54e2175fc1b1a939"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialized-root-v2/materialization-progress.json",
+      "archive": "task-5-formal-prior-lock-materialized-root-v2__materialization-progress.json",
+      "bytes": 1805,
+      "sha256": "c910c7a9aa9ce95e598c4c45cc3fc4ce33e71a1f409781b89850865523ad9c7b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialized-root-v2/manifest.json",
+      "archive": "task-5-formal-prior-lock-materialized-root-v2__manifest.json",
+      "bytes": 17155,
+      "sha256": "5abfe5216f4167cb42660f15f27c574d0b10f0e4ab90fed38a5ad360880bf243"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialization-root-observation-v1/parent-cost-and-status.json",
+      "archive": "task-5-formal-prior-lock-materialization-root-observation-v1__parent-cost-and-status.json",
+      "bytes": 1498,
+      "sha256": "0bffaedd186f1ff1a9f63502475d5e5f46428c1db639b2e0bef219af75c5a090"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialization-root-observation-v1/stdout.log",
+      "archive": "task-5-formal-prior-lock-materialization-root-observation-v1__stdout.log.txt",
+      "bytes": 1709,
+      "sha256": "2f219d9550268d10446abb2dd8d6b89adca7d65c3b4d2588894c597f4c4882d4"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialization-root-observation-v1/stderr.log",
+      "archive": "task-5-formal-prior-lock-materialization-root-observation-v1__stderr.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-operational-observation-v1/before-bindings-and-command.json",
+      "archive": "task-5-formal-pilot-root-operational-observation-v1__before-bindings-and-command.json",
+      "bytes": 14372,
+      "sha256": "b6451498004ffb59550e70bde800f1c40a5cf5c45a32895d48a842fbf48583ab"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-initial-v2-before-rate-guard.py",
+      "archive": "task-5-formal-prior-lock-preparation-initial-v2-before-rate-guard.py.txt",
+      "bytes": 33199,
+      "sha256": "36c0da6d44a930471330df4d06e4e09dd3bcac2634e260cc28609d73ee3abcc1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v1-to-v2-final.diff",
+      "archive": "task-5-formal-prior-lock-preparation-v1-to-v2-final.diff",
+      "bytes": 18767,
+      "sha256": "b60958ee4b99bf2fb55f5ea56fbda6424455d0d2544b22bf0ddaaf8a87f46dc2"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v1-to-v2.diff",
+      "archive": "task-5-formal-prior-lock-preparation-v1-to-v2.diff",
+      "bytes": 18139,
+      "sha256": "9fdf186fafb9fdc2c602910015bbf398509fe17189183ff50c9df714798a33ba"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v1.py",
+      "archive": "task-5-formal-prior-lock-preparation-v1.py.txt",
+      "bytes": 24522,
+      "sha256": "a9773d211d2611e98b54135495e002e78147020a9a9b4d95cc0648ab883427f9"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-GREEN-v2.json",
+      "archive": "task-5-formal-prior-lock-rebind-GREEN-v2.json",
+      "bytes": 4349,
+      "sha256": "0127246a0c11590baafb6e186083ecdab0c4d915301a022137f293cdd31e9bd5"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-RED-v2.json",
+      "archive": "task-5-formal-prior-lock-rebind-RED-v2.json",
+      "bytes": 974,
+      "sha256": "49f2e7adce7861280b9612410c6af23ea5dce27744429db584f3154b851efe12"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-final-static-v2.json",
+      "archive": "task-5-formal-prior-lock-rebind-final-static-v2.json",
+      "bytes": 1290,
+      "sha256": "44c69dda6e2061d0989c08590b355a83575140e76e470a28ed4f988609497ce7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-rate-metadata-verification-v2.json",
+      "archive": "task-5-formal-prior-lock-rebind-rate-metadata-verification-v2.json",
+      "bytes": 547,
+      "sha256": "6890e838b7fa0cb137569f34ff356304cf37e97844961270ade881e224521e98"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v1-to-v2-final.diff",
+      "archive": "task-5-full-pilot-root-operational-monitor-v1-to-v2-final.diff",
+      "bytes": 6230,
+      "sha256": "81883ec3180b4ed6997b736eac543aaf4992b2bce655a6402732a1c2e29ee3b0"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v1-to-v2.diff",
+      "archive": "task-5-full-pilot-root-operational-monitor-v1-to-v2.diff",
+      "bytes": 6230,
+      "sha256": "81883ec3180b4ed6997b736eac543aaf4992b2bce655a6402732a1c2e29ee3b0"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v1.py",
+      "archive": "task-5-full-pilot-root-operational-monitor-v1.py.txt",
+      "bytes": 22503,
+      "sha256": "6c71f2692d2867fd6b91fe6a631e0f8274119615509f4bad3e5d8fe3f4de08a9"
+    }
+  ],
+  "added_count": 42,
+  "missing_optional_names": [
+    "task-5-formal-prior-lock-rebind-v1-to-v2-final.diff"
+  ],
+  "total_index_entries": 800,
+  "index_SHA256": "d02c62d38e757565e0f9d3d46539c4e1a15a3c9d9ad413c3493c64c7fafb2616",
+  "financial_phase_completion_claimed": false,
+  "large_plan_config_and_live_native_files_not_git_copied": true
+}

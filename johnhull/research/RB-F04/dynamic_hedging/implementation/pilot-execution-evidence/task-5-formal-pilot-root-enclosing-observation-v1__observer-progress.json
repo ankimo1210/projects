@@ -1,0 +1,23 @@
+{
+  "schema": "rb-f04-root-formal-monitor-enclosing-cost-v1",
+  "status": "terminal_requires_native_and_saved_result_inspection",
+  "monitor_exit_code": 0,
+  "monitor_pid": 287117,
+  "guard_sha256": "82b7099f583010950714037068c0182277fab9d0f988b954505e955de1c1f39a",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v2.py",
+    "--guard",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v1.json"
+  ],
+  "start_UTC": "2026-10-10T09:16:40.191593+00:00",
+  "end_UTC": "2026-10-10T09:26:20.220343+00:00",
+  "wall_seconds": 580.0286284199974,
+  "parent_CPU_seconds": 0.019392698000000003,
+  "children_CPU_seconds": 578.566955,
+  "child_kernel_peak_RSS_bytes": 5610414080,
+  "scope": "enclosing full monitor source/input/plan checks + all actual native experiment + final monitor receipts; nested job/phase/subclocks not added again",
+  "monitor_status_not_reclassified": true,
+  "financial_qualification": "unknown",
+  "own_final_receipt_write_stdout_cost": null
+}

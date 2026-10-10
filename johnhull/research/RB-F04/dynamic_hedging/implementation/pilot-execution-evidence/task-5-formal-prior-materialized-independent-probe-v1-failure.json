@@ -1,0 +1,14 @@
+{
+  "status": "independent_probe_failed",
+  "source_defect": false,
+  "error": "reviewer projection reader assumed all execution_projection fields were case/attempt arrays; actual next field is not an array",
+  "tool_session_id": 67206,
+  "exit_code": 1,
+  "offset": 594423884,
+  "financial_RNG_SDE_solver_Popen_calls": 0,
+  "cost": {
+    "wall_seconds": null,
+    "CPU_seconds": null,
+    "cost_unknown_reason": "failure occurred before cost receipt write"
+  }
+}

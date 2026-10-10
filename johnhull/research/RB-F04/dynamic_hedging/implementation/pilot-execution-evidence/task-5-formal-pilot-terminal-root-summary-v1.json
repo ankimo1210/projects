@@ -1,0 +1,159 @@
+{
+  "status_counts": {
+    "executed": 69,
+    "unclosed_source_or_solver_defect": 1
+  },
+  "last5": [
+    {
+      "id": "stage:Heston:N1024:coarse:selected-state:state16:Heston",
+      "status": "executed",
+      "reason": null,
+      "cap_evidence": null
+    },
+    {
+      "id": "independent-table:state17:Heston",
+      "status": "executed",
+      "reason": null,
+      "cap_evidence": null
+    },
+    {
+      "id": "oracle:state17:Heston:referenceN4096",
+      "status": "executed",
+      "reason": null,
+      "cap_evidence": null
+    },
+    {
+      "id": "stage:Heston:N1024:coarse:selected-state:state17:Heston",
+      "status": "executed",
+      "reason": null,
+      "cap_evidence": null
+    },
+    {
+      "id": "stage:Heston:N1024:coarse:date-gate:Heston:0",
+      "status": "unclosed_source_or_solver_defect",
+      "reason": "KeyError: 'N'",
+      "cap_evidence": null
+    }
+  ],
+  "verification": null,
+  "execution_phases": [
+    {
+      "covered_job_ids": [
+        "field-current",
+        "premium-current",
+        "call-current:Heston",
+        "call-current:local",
+        "teacher-driver:Heston:N1024",
+        "teacher-driver:local:N1024",
+        "teacher-driver:Heston:N4096",
+        "teacher:Heston:N1024:coarse:raw",
+        "teacher:Heston:N1024:coarse",
+        "teacher:local:N1024:coarse:raw",
+        "teacher:local:N1024:coarse",
+        "teacher:Heston:N4096:coarse:raw",
+        "teacher:Heston:N4096:coarse",
+        "teacher:Heston:N1024:high:raw",
+        "teacher:Heston:N1024:high",
+        "independent-table:state00:Heston",
+        "oracle:state00:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state00:Heston",
+        "independent-table:state01:Heston",
+        "oracle:state01:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state01:Heston",
+        "independent-table:state02:Heston",
+        "oracle:state02:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state02:Heston",
+        "independent-table:state03:Heston",
+        "oracle:state03:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state03:Heston",
+        "independent-table:state04:Heston",
+        "oracle:state04:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state04:Heston",
+        "independent-table:state05:Heston",
+        "oracle:state05:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state05:Heston",
+        "independent-table:state06:Heston",
+        "oracle:state06:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state06:Heston",
+        "independent-table:state07:Heston",
+        "oracle:state07:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state07:Heston",
+        "independent-table:state08:Heston",
+        "oracle:state08:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state08:Heston",
+        "independent-table:state09:Heston",
+        "oracle:state09:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state09:Heston",
+        "independent-table:state10:Heston",
+        "oracle:state10:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state10:Heston",
+        "independent-table:state11:Heston",
+        "oracle:state11:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state11:Heston",
+        "independent-table:state12:Heston",
+        "oracle:state12:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state12:Heston",
+        "independent-table:state13:Heston",
+        "oracle:state13:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state13:Heston",
+        "independent-table:state14:Heston",
+        "oracle:state14:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state14:Heston",
+        "independent-table:state15:Heston",
+        "oracle:state15:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state15:Heston",
+        "independent-table:state16:Heston",
+        "oracle:state16:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state16:Heston",
+        "independent-table:state17:Heston",
+        "oracle:state17:Heston:referenceN4096",
+        "stage:Heston:N1024:coarse:selected-state:state17:Heston",
+        "stage:Heston:N1024:coarse:date-gate:Heston:0"
+      ],
+      "id": "pilot-execution-phase:0",
+      "includes_children": true,
+      "input_bindings": {
+        "additional_teacher_cases": "b599de9b1073669d03b4faee3a0b8076d19a8ad969ab00002ae95fd4e3be5be2",
+        "diagnostic_queries24": "41bac7ca06197a4a9825c7c545cdf906db2d1ae7e51c791c5310bc349200d071",
+        "original_states18": "0b5baeda11e073f835d83332ad1ae193071c6f3d76161384d14afb3740e4a7f1",
+        "parameters": "bc62835b55c553b55cedcd4c1e8ee3fbb9a0f1d43350072c2f0e49ddfbce8cd1",
+        "seed_namespace": "77f18f806824b547d036788fcbc01650c638a68e06b15d980c025228ad50d47a"
+      },
+      "parent_id": null,
+      "plan_sha256": "a2b4520d914c90326eaade6c3fdab1a1e5c2847947bf55a7085b77ad3aad4a7f",
+      "reason": null,
+      "scope": "actual lifecycle inclusive timer before final checkpoint",
+      "scope_limits": "final checkpoint serialization and later saved check/review/CAS separate",
+      "source_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+      "status": "complete",
+      "timing": {
+        "cpu_seconds": 554.647650777,
+        "overrun_seconds": 0.0,
+        "wall_seconds": 555.031003876
+      },
+      "timing_events": {
+        "cpu_start_ns": 9790453769,
+        "cpu_stop_ns": 564438104546,
+        "wall_start_ns": 48274990770882,
+        "wall_stop_ns": 48830021774758
+      }
+    }
+  ],
+  "last_events": [
+    {
+      "job": "oracle:state17:Heston:referenceN4096",
+      "plan_sha256": "a2b4520d914c90326eaade6c3fdab1a1e5c2847947bf55a7085b77ad3aad4a7f",
+      "status": "executed"
+    },
+    {
+      "job": "stage:Heston:N1024:coarse:selected-state:state17:Heston",
+      "plan_sha256": "a2b4520d914c90326eaade6c3fdab1a1e5c2847947bf55a7085b77ad3aad4a7f",
+      "status": "executed"
+    },
+    {
+      "job": "stage:Heston:N1024:coarse:date-gate:Heston:0",
+      "plan_sha256": "a2b4520d914c90326eaade6c3fdab1a1e5c2847947bf55a7085b77ad3aad4a7f",
+      "status": "unclosed_source_or_solver_defect"
+    }
+  ]
+}

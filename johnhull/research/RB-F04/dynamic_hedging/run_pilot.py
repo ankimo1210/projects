@@ -2829,7 +2829,7 @@ def run_date_gate_job(parameters, surface, *, model, call_cache, asian_cache, da
         "call_cache": call,
         "asian_cache": asian_cache,
         "rows": rows,
-        "original_n": asian_cache["N"],
+        "original_n": asian_cache["original_N"],
         "financial_qualification": "unknown",
     }
 

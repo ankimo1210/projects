@@ -1,0 +1,8 @@
+{
+  "schema": "johnhull.exact-log-carrier.v1",
+  "original_source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-root-source-diff-v1.diff",
+  "original_bytes": 309,
+  "original_sha256": "1404715031d7c43ed1d0451a1d62f1d1fd1023605e97715530e8d05b66779751",
+  "encoding": "base64",
+  "original_log_base64": "LS0tIHYzL3J1bl9waWxvdC5weQorKysgZGF0ZS1nYXRlLWZpeC9ydW5fcGlsb3QucHkKQEAgLTI4MjksNyArMjgyOSw3IEBACiAgICAgICAgICJjYWxsX2NhY2hlIjogY2FsbCwKICAgICAgICAgImFzaWFuX2NhY2hlIjogYXNpYW5fY2FjaGUsCiAgICAgICAgICJyb3dzIjogcm93cywKLSAgICAgICAgIm9yaWdpbmFsX24iOiBhc2lhbl9jYWNoZVsiTiJdLAorICAgICAgICAib3JpZ2luYWxfbiI6IGFzaWFuX2NhY2hlWyJvcmlnaW5hbF9OIl0sCiAgICAgICAgICJmaW5hbmNpYWxfcXVhbGlmaWNhdGlvbiI6ICJ1bmtub3duIiwKICAgICB9CiAK"
+}

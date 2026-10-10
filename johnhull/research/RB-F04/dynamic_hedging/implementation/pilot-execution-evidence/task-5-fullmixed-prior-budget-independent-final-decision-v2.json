@@ -1,0 +1,167 @@
+{
+  "schema": "rb-f04-independent-fullmixed-prior-budget-review-v1",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent static prior resource reviewer",
+  "created_UTC": "2026-10-10T09:08:23.070480+00:00",
+  "planned_before_attempt": true,
+  "source_canonical_identity": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "source_native_payload_identity": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "financial_qualification": "unknown",
+  "formal_pilot_run": false,
+  "main_or_phase_approval": false,
+  "scope": "all original3138 resource prior estimates/positive wall allowances/per-pack expanded bounds/exact original cap recipe/phase inclusive aliases only; no numerical accuracy, whole physical capacity guarantee, actual launch or phase acceptance",
+  "independence_disclosure": "Reviewer authored historical base candidate v1; current assembled v2 by pilot_source_completion and v2 materializer/monitor by progressive_graph_review independently checked here. Historical v5 source/count reviews reused; no self-granted root/source/financial authority.",
+  "approved_bindings": {
+    "candidate_sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "selection_overlay_sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+    "replay_budget_supplement_sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+    "replay_budget_manifest_sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9",
+    "source_native_payload_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+    "source_limited_decision_sha256": "8a000b4612f1f613451acb4cfeeae8324d911221dd0587e62e1ba967cd3c161b",
+    "source_rebind_evidence_sha256": "1e83ebae5b76c0560a40cd1ec21faf6e342e722111d725feaa1faadb846f14a1",
+    "budget_rows_assembly_sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5",
+    "budget_rows_assembly_manifest_sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3",
+    "raw_assembled_candidate_rows_digest": "fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f",
+    "raw_assembled_candidate_cap_recipe_digest": "d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d",
+    "activation_v4_origin_sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+    "activation_potential_first_job_budget_candidates_digest": "a82f3c33d71a918f51131c8c77917793ceec75850a2181815c867f1a1e243c04",
+    "source_identity_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+    "budget_rows_without_review_SHA_digest": "02da310d0bed91d6883171eed44cb22ae872cc6a2888837a5979755d9c68aee5",
+    "cap_recipe_digest": "e8fda1ec6c5bb05e361e428f94340e67b4a8e2e42da68010082331bd7ae54c1e",
+    "materializer_sha256": "9a27b3943fc57beac7d0f869901fd7b31c5becae7504f04773ba39ed65ce7830",
+    "literal_cap_options": 573122
+  },
+  "approved_producer_sha256": "33815db7a624e3c7e1d815e79475cd335f30af4e06f098d9ca054363b9adb3e8",
+  "approved_candidate_helper_sha256": "6b1bbc35351dc3879b8954c14e4f974c668d3b32cda0d5b3b41b3c3b00a3df3d",
+  "explicit_approved_rate_rows": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-effective-rows-v1.json",
+    "sha256": "31bde8af1b6ffec29066ca7260f0a9b0d8ca84fa952aa602515de7613b02690b",
+    "normalization": "remove only budget.review_sha256; root must fill every budget review SHA with this actual decision file SHA before actual lock",
+    "top3126_selection": "raw None to independently_reviewed_estimate: explicit reviewed prior wall allowance estimates, not new measured rates",
+    "four_conditional16_branch_selection": "raw None to independently_reviewed_estimate; original4N work/byte bounds retained",
+    "measured_prior_rows12": [
+      "call-current:Heston",
+      "call-current:local",
+      "independent-table:state00:Heston",
+      "independent-table:state00:local",
+      "oracle:state00:Heston:referenceN4096",
+      "oracle:state00:local:referenceN4096",
+      "teacher-driver:Heston:N1024",
+      "teacher-driver:local:N1024",
+      "teacher:Heston:N1024:coarse:raw",
+      "teacher:Heston:N1024:high:raw",
+      "teacher:local:N1024:coarse:raw",
+      "teacher:local:N1024:high:raw"
+    ],
+    "all_unknown_runtime_physical_output_and_estimate_basis_fields_unchanged": true,
+    "all_existing_plan_work_cap_parent_relative_order_and_573122_options_unchanged": true
+  },
+  "cap_recipe_authority": {
+    "status": "approved",
+    "basis": "exact original plan templates+all4N branches+original genuine cap scopes and parent-relative order, selected3138 original actual parent wall limits; actual plan_sha computed by existing helper per branch/cap before attempt",
+    "all_parent_associations": 266306,
+    "literal_options": 573122,
+    "actual_future_selector_SHA": "existing runtime conditional_selection_binding transport only; not anticipated in prior",
+    "decision_template_fields": {
+      "decision": "approved",
+      "planned_before_attempt": true,
+      "reviewer": "pilot_v53_independent_review"
+    },
+    "root_must_add_independent_review_sha256": "SHA256 of this actual fixed decision; then existing helper computes each exact branch/cap plan SHA, never fake approved placeholder"
+  },
+  "ordinary_inclusive_aliases": {
+    "initial_phase_parent_expense_id": "pilot-execution-phase:0",
+    "resume_requires_actual_covering_phase": true,
+    "actual_nested_clocks_included_once": "job and phase enclosing clocks include proof/activation costs; receipt subclocks/history/cap allowances not added again"
+  },
+  "approved_original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "teacher_candidates": 20,
+    "drivers": 10,
+    "N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "grids": [
+      "coarse",
+      "high"
+    ],
+    "SDE": [
+      768,
+      1536
+    ],
+    "all_original_seeds_thresholds_failures_unknowns": "preserved",
+    "per_pack_expanded_bound_max_bytes": 268435456,
+    "unknown_worker_runtime_rows": 2894,
+    "legacy_component_estimate_rows": 244,
+    "activation_potential_first_wall_choices2332": "reviewed original conservative combined wall proposals; sum not a runtime forecast"
+  },
+  "actual_resource_operational_prior": {
+    "file": "task-5-formal-pilot-root-operational-resource-prior-v2.json",
+    "sha256": "017ef9fe1783cd014d09251b3db33c7d1f2839271dde4a2491fea76338cc1f8d",
+    "scope": "root original30day/16GiB individual process/three10GiB reserves; sampled interruption only yields partial_unclosed, never financial case or A capPASS",
+    "root_capacity_snapshot_must_be_fresh_before_actual_launch": true
+  },
+  "preserved_unknowns": {
+    "whole_phase_runtime_and_project_ETA_seconds": null,
+    "whole_physical_output_upper_bytes": null,
+    "all10_external_actual_expense_timing": null,
+    "history46_malformed2_overlap_total": null,
+    "independent_final_saved_review_each_restore_and_precision_financial_checks": "original requirements preserved; actual execution/results not approved",
+    "v2_same_M6_106x_global_application": false,
+    "new_genuine_v3_operation_rates_measured": false
+  },
+  "validation": {
+    "allrows_and_allparents_branch_checks": 46189,
+    "final_metadata_checks": 47,
+    "failures": [],
+    "prior_results_path": "task-5-fullmixed-prior-budget-independent-static-results-v2.json",
+    "prior_results_sha256": "689590b3bf40b1654c4e846e78d979c3188976555c9b78d092015ba40af0e603",
+    "final_results_path": "task-5-fullmixed-prior-budget-independent-final-static-results-v2.json",
+    "final_results_sha256": "019ce01dc40a96a31d9677a6ac7a078864db26124ed767ad99633f72362a7a48",
+    "source81_current_stable": true,
+    "pure_structural_validate_budget_rows": "passed with honest absent reviewSHA=None; real caller additionally requires actual independent/root approval and actual decision SHA",
+    "materializer_load_actual_approval_without_root": "rejected before prepare; actual materialization/lock/launch not invoked"
+  },
+  "preserved_review_failures": {
+    "preliminary_2_metadata_key_or_unlocked_draft_API_misuses": "raw traces/tool wall receipts preserved in static-results-v2; source/candidate not changed; finance0",
+    "preliminary20_optional_overlay_mismatches": "static-results-v1 preserved; reviewer incorrect overlay replacement corrected to per-row merge, all positive final checks pass",
+    "final_static_v1_false_token_warnings": {
+      "decision_file": "task-5-fullmixed-prior-budget-independent-final-decision-v1.json",
+      "sha256": "7571365cea02867948275c675699f318ac2603dbf7152b96f4a482078f254e1c",
+      "cause": "reviewer sought nonexistent literal field aliases EXPECTED_SOURCE/financial_cap_projection/volume_reserve_bytes; actual fixed monitor uses SOURCE_IDENTITY+SOURCE_NATIVE_IDENTITY, financial_A_cap_projection_approved and volume_probes/reserve_bytes; real semantics checked from load_guard/source_binding/terminal_status, source unchanged",
+      "prior_wall_seconds": 3.1806935019994853,
+      "prior_CPU_seconds": 2.7892731079999997,
+      "financial_execution": 0
+    }
+  },
+  "cost": {
+    "successful_allrows_probe": {
+      "wall_seconds": 4.925433878997865,
+      "CPU_seconds": 4.9036635770000006,
+      "peak_RSS_bytes": 922132480,
+      "scope": "metadata import+native transport read+all3138 rows/recipe pure API checks; excludes final artifact write and earlier incidental reads"
+    },
+    "earlier_completed_false_probe": "4.974592698003107s wall/4.96509617s CPU; original result preserved, not a source failure",
+    "final_metadata_probe": {
+      "wall_seconds": 2.6146396980038844,
+      "CPU_seconds": 2.584879193,
+      "peak_RSS_bytes": 997949440,
+      "scope": "this final static sourcechain/materializer/rows structural preflight only; excludes final writes/tool tail"
+    },
+    "earlier_failed_probe_tool_walls_seconds": [
+      6.1811064,
+      3.5936451
+    ],
+    "unmeasured_receipt_writes_tool_tail_and_initial_incidental_reads": null,
+    "billing_rule": "review cost separate from historical/native finance expenses; nested clocks not double counted"
+  },
+  "new_financial_RNG_SDE_solver_workers": 0,
+  "production_source_tests_docs_Git_CAS_edits": 0,
+  "root_actual_prior_materialization_approval_and_financial_launch_still_required": true
+}

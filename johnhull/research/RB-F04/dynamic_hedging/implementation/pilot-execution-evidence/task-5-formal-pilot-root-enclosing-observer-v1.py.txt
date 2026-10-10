@@ -1,0 +1,45 @@
+
+"""Measure the enclosing monitor invocation, preserving its unknown/failure statuses."""
+import datetime,hashlib,json,os,pathlib,resource,subprocess,time
+D=pathlib.Path("/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging")
+PY="/home/kazumasa/projects/.venv/bin/python"
+guard=D/"task-5-formal-pilot-root-launch-guard-v1.json"
+monitor=D/"task-5-full-pilot-root-operational-monitor-v2.py"
+r=D/"task-5-formal-pilot-root-enclosing-observation-v1"
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def main():
+ prior=json.loads(guard.read_text())
+ assert sha(guard)=="82b7099f583010950714037068c0182277fab9d0f988b954505e955de1c1f39a"
+ assert prior["root_preapproved"] is True and prior["formal_financial_launch_authorized"] is True
+ assert prior["formal_phase_completion_claimed"] is False and prior["financial_qualification"]=="unknown"
+ assert sha(monitor)==prior["monitor_sha256"]
+ assert not r.exists();r.mkdir()
+ argv=[PY,str(monitor),"--guard",str(guard)]
+ env=os.environ.copy();env.update(OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1",PYTHONDONTWRITEBYTECODE="1")
+ started=time.perf_counter();cpu_start=time.process_time();usage_start=resource.getrusage(resource.RUSAGE_CHILDREN)
+ utc=datetime.datetime.now(datetime.timezone.utc).isoformat()
+ with (r/"monitor-stdout.log").open("wb") as stdout,(r/"monitor-stderr.log").open("wb") as stderr:
+  p=subprocess.Popen(argv,cwd=str(D.parents[2]),env=env,stdout=stdout,stderr=stderr)
+  while p.poll() is None:
+   state={"schema":"rb-f04-root-actual-formal-monitor-invocation-v1","status":"running",
+    "monitor_pid":p.pid,"root_pid":os.getpid(),"argv":argv,"guard_sha256":sha(guard),
+    "start_UTC":utc,"elapsed_seconds":time.perf_counter()-started,
+    "financial_phase_completion_claimed":False,"qualification":"unknown"}
+   (r/"observer-progress.json").write_text(json.dumps(state,indent=2)+"\n")
+   time.sleep(10)
+  rc=p.wait()
+ elapsed=time.perf_counter()-started;cpu=time.process_time()-cpu_start;usage=resource.getrusage(resource.RUSAGE_CHILDREN)
+ status={"schema":"rb-f04-root-formal-monitor-enclosing-cost-v1","status":"terminal_requires_native_and_saved_result_inspection",
+  "monitor_exit_code":rc,"monitor_pid":p.pid,"guard_sha256":sha(guard),"argv":argv,
+  "start_UTC":utc,"end_UTC":datetime.datetime.now(datetime.timezone.utc).isoformat(),
+  "wall_seconds":elapsed,"parent_CPU_seconds":cpu,
+  "children_CPU_seconds":usage.ru_utime+usage.ru_stime-usage_start.ru_utime-usage_start.ru_stime,
+  "child_kernel_peak_RSS_bytes":usage.ru_maxrss*1024,
+  "scope":"enclosing full monitor source/input/plan checks + all actual native experiment + final monitor receipts; nested job/phase/subclocks not added again",
+  "monitor_status_not_reclassified":True,"financial_qualification":"unknown",
+  "own_final_receipt_write_stdout_cost":None}
+ (r/"parent-cost-and-status.json").write_text(json.dumps(status,indent=2)+"\n")
+ (r/"observer-progress.json").write_text(json.dumps(status,indent=2)+"\n")
+ print(json.dumps(status),flush=True)
+ return rc
+if __name__=="__main__":raise SystemExit(main())

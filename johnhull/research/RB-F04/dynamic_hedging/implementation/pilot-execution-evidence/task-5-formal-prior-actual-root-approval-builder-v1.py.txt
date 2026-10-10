@@ -1,0 +1,88 @@
+
+"""Root binds an actual independent fixed prior to the existing metadata materializer."""
+from pathlib import Path
+import argparse, copy, datetime, hashlib, importlib.util, json, time
+W=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=W/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def read(p): return json.loads(Path(p).read_text())
+def reference(p,status=None):
+ p=Path(p).resolve(strict=True);p.relative_to(D)
+ r={"path":str(p),"sha256":sha(p)}
+ if status is not None:r["status"]=status
+ return r
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument("--decision",type=Path,required=True)
+ ap.add_argument("--output",type=Path,required=True);args=ap.parse_args()
+ start=time.perf_counter();cpu=time.process_time()
+ decision_path=args.decision.resolve(strict=True);decision_path.relative_to(D)
+ review=read(decision_path);review_sha=sha(decision_path)
+ assert review["decision"]=="approved","actual independent approval required"
+ assert review["schema"]=="rb-f04-independent-fullmixed-prior-budget-review-v1"
+ assert review["role"]=="independent static prior resource reviewer"
+ assert review["financial_qualification"]=="unknown"
+ assert review["formal_pilot_run"] is False and review["main_or_phase_approval"] is False
+ assert review["planned_before_attempt"] is True
+ assert not review["validation"]["failures"]
+ module_path=D/"task-5-formal-prior-lock-preparation-v2.py"
+ assert sha(module_path)=="9a27b3943fc57beac7d0f869901fd7b31c5becae7504f04773ba39ed65ce7830"
+ spec=importlib.util.spec_from_file_location("prior_metadata",module_path)
+ mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+ candidate=D/mod.BASE_NAME;overlay=D/mod.OVERLAY_NAME
+ config=read(candidate);overlay_value=read(overlay)
+ effective_ref=review["explicit_approved_rate_rows"]
+ effective_path=mod.checked_file(effective_ref)
+ rows=read(effective_path)
+ assert len(rows)==3138 and mod.digest(mod.normalized_budget_rows(rows))==review["approved_bindings"]["budget_rows_without_review_SHA_digest"]
+ assert review["approved_bindings"]==mod.approved_binding_set(config,overlay_value,rows,mod.EXPECTED_SOURCE,sha(module_path))
+ for receipt in rows.values():
+  assert receipt["budget"]["review_sha256"] is None
+  receipt["budget"]["review_sha256"]=review_sha
+ binding=mod.approved_binding_set(config,overlay_value,rows,mod.EXPECTED_SOURCE,sha(module_path))
+ assert binding==review["approved_bindings"]
+ pending=read(D/"task-5-formal-prior-lock-preparation-pending-example-v2.json")
+ approval=copy.deepcopy(pending)
+ for name in ["approval_not_promoted_by_author","current_work_stopped","financial_RNG_solver_SDE_execution"]:
+  approval.pop(name,None)
+ approval.update(status="approved_for_prior_materialization_only",approved_by="root",
+   created_UTC=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+   planned_before_attempt=True,approved_bindings=binding,reviewed_budgets=rows,
+   financial_qualification="unknown",formal_financial_phase_approved=False,
+   formal_financial_launch_authorized=False,
+   root_scope="actual independent all3138 prior + exact original573122 cap recipe accepted for metadata only; finance launch follows a separate root guard",
+   effective_rows_original_reference=effective_ref,
+   root_approval_basis="12 measured historical rows and3126 explicitly reviewed prior estimates/allowances; unknown runtime/physical bytes not measured",
+   original_preparatory_candidate_reference=reference(D/"task-5-formal-prior-lock-preparation-pending-example-v2.json"))
+ approval["independent_reviews"]["prior_budget_and_cap_recipe"]=reference(decision_path,"approved")
+ approval["ordinary_inclusive_aliases"]=review["ordinary_inclusive_aliases"]|{"status":"approved"}
+ authority=review["cap_recipe_authority"]
+ assert authority["status"]=="approved" and authority["literal_options"]==573122
+ approval["cap_options_authority"]={"status":"approved","cap_recipe_digest":binding["cap_recipe_digest"],
+    "decision_template":authority["decision_template_fields"]|{"independent_review_sha256":review_sha}}
+ assert "plan_sha256" not in approval["cap_options_authority"]["decision_template"]
+ guard=D/"task-5-formal-pilot-root-operational-resource-prior-v2.json"
+ assert sha(guard)==review["actual_resource_operational_prior"]["sha256"]
+ approval["root_operational_guard_prior"]=reference(guard,"approved_operational_prior")
+ mod.load_review(approval["independent_reviews"]["source"],"source_metadata")
+ mod.load_review(approval["independent_reviews"]["prior_budget_and_cap_recipe"],"prior_budget_and_cap_recipe")
+ mod.validate_assembly_binding(approval,rows)
+ for name,ref in approval["bindings"].items():mod.checked_file(ref)
+ assert sha(Path(approval["bindings"]["producer"]["path"]))==review["approved_producer_sha256"]
+ assert sha(Path(approval["bindings"]["candidate_helper"]["path"]))==review["approved_candidate_helper_sha256"]
+ approval["metadata_preparation_resource_allowance"]={
+    "role":"administrative pre-attempt allowance; not a runtime prediction",
+    "wall_seconds":3600,"individual_process_RSS_bytes":16*1024**3,
+    "volume_reserve_bytes":10*1024**3,"stop_status":"partial_unclosed",
+    "financial_cap_projection":False}
+ output=args.output.resolve();output.relative_to(D);assert output.parent==D and not output.exists()
+ output.write_text(json.dumps(approval,ensure_ascii=False,indent=2,allow_nan=False)+"\n")
+ result={"schema":"rb-f04-root-actual-prior-approval-binding-receipt-v1","status":"approved_for_prior_materialization_only",
+   "approval":reference(output),"actual_prior_independent_decision":reference(decision_path),
+   "all_original_jobs":3138,"all_original_cap_options":573122,
+   "current_source_binding":binding["source_identity_sha256"],"finance_calls":0,
+   "financial_launch_authorized":False,"financial_qualification":"unknown",
+   "cost":{"wall_before_receipt_seconds":time.perf_counter()-start,"CPU_before_receipt_seconds":time.process_time()-cpu,"receipt_tail_seconds":None}}
+ out=D/"task-5-formal-prior-actual-root-binding-receipt-v1.json"
+ assert not out.exists();out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+ print(json.dumps(result,ensure_ascii=False))
+if __name__=="__main__":main()

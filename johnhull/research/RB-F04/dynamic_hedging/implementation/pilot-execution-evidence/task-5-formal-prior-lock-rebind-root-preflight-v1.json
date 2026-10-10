@@ -1,0 +1,17 @@
+{
+  "schema": "rb-f04-root-current-materializer-binding-preflight-v1",
+  "status": "PASS",
+  "fixed_manifest_sha256": "552d519f651d784a90ef9f18b5d8d5503143a71e1b12fe0e3133e717143e8419",
+  "fixed_file_count": 18,
+  "runtime_source_files": 81,
+  "dynamic_imports": 0,
+  "all_before_bytes_stable": true,
+  "actual_financial_RNG_SDE_calls": 0,
+  "financial_qualification": "unknown",
+  "full_prior_approval_consumed": false,
+  "cost": {
+    "wall_before_receipt_seconds": 0.0016944980015978217,
+    "CPU_before_receipt_seconds": 0.0016936720000000002,
+    "receipt_tail_seconds": null
+  }
+}

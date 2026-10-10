@@ -1,0 +1,19 @@
+{
+  "schema": "rb-f04-root-live-session-handoff-v1",
+  "exec_session_id": 15463,
+  "monitor_PID": 287117,
+  "root_PID": 287116,
+  "metadata_session_terminal": 58696,
+  "metadata_exit_code": 0,
+  "guard": "task-5-formal-pilot-root-launch-guard-v1.json",
+  "guard_SHA256": "82b7099f583010950714037068c0182277fab9d0f988b954505e955de1c1f39a",
+  "recorded_UTC": "2026-10-10T09:18:02.255060+00:00",
+  "status_at_capture": "live_ps_confirmed",
+  "native_root": "task-5-formal-pilot-root-v1",
+  "receipts_root": "task-5-formal-pilot-root-operational-observation-v1",
+  "enclosing_receipts_root": "task-5-formal-pilot-root-enclosing-observation-v1",
+  "do_not_restart_on_timeout": true,
+  "financial_completion_claimed": false,
+  "financial_qualification": "unknown",
+  "must_poll_handle_and_confirm_PID_not_this_record_only": true
+}

@@ -1,0 +1,8 @@
+{
+  "schema": "johnhull.exact-log-carrier.v1",
+  "original_source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-enclosing-observation-v1/monitor-stdout.log",
+  "original_bytes": 270,
+  "original_sha256": "5d978c89803e564ba668e7f1378814f9cc9449ddd36e6b1cde5d084637a99ea1",
+  "encoding": "base64",
+  "original_log_base64": "eyJzdGF0dXMiOiAiY2hpbGRfdGVybWluYWxfbmVlZHNfc2F2ZWRfY2hlY2siLCAiY2hpbGRfZXhpdF9jb2RlIjogMCwgInJlY2VpcHQiOiAiL2hvbWUva2F6dW1hc2Evd29ya3RyZWVzL2pvaG5odWxsLXJlc2VhcmNoLXJvYWRtYXAvLnN1cGVycG93ZXJzL3NkZC8yMDI2LTEwLTA5LWR5bmFtaWMtY3Jvc3MtbW9kZWwtaGVkZ2luZy90YXNrLTUtZm9ybWFsLXBpbG90LXJvb3Qtb3BlcmF0aW9uYWwtb2JzZXJ2YXRpb24tdjEvcGFyZW50LWNvc3QtYW5kLXN0YXR1cy5qc29uIn0K"
+}

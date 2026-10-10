@@ -1,0 +1,80 @@
+{
+  "approval_not_promoted_by_author": true,
+  "approved_bindings": null,
+  "bindings": {
+    "budget_rows_assembly": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-assembly-author-v2-config.json",
+      "sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5"
+    },
+    "budget_rows_assembly_manifest": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-assembly-author-v2-manifest.json",
+      "sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3"
+    },
+    "candidate": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-config.json",
+      "sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d"
+    },
+    "candidate_helper": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-builder.py",
+      "sha256": "6b1bbc35351dc3879b8954c14e4f974c668d3b32cda0d5b3b41b3c3b00a3df3d"
+    },
+    "producer": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py",
+      "sha256": "33815db7a624e3c7e1d815e79475cd335f30af4e06f098d9ca054363b9adb3e8"
+    },
+    "replay_budget_manifest": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json",
+      "sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9"
+    },
+    "replay_budget_supplement": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json",
+      "sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb"
+    },
+    "selection_overlay": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json",
+      "sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62"
+    }
+  },
+  "cap_options_authority": {
+    "cap_recipe_digest": null,
+    "decision_template": null,
+    "status": "pending"
+  },
+  "current_work_stopped": "606.881h known-partial replay budget; investigate phase-local immutable check reuse first",
+  "financial_RNG_solver_SDE_execution": 0,
+  "financial_qualification": "unknown",
+  "formal_financial_launch_authorized": false,
+  "formal_financial_phase_approved": false,
+  "independent_reviews": {
+    "prior_budget_and_cap_recipe": {
+      "path": null,
+      "sha256": null,
+      "status": "pending_not_issued"
+    },
+    "source": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-decision-v1.json",
+      "sha256": "8a000b4612f1f613451acb4cfeeae8324d911221dd0587e62e1ba967cd3c161b",
+      "status": "approved"
+    }
+  },
+  "materializer_sha256": "9a27b3943fc57beac7d0f869901fd7b31c5becae7504f04773ba39ed65ce7830",
+  "ordinary_inclusive_aliases": {
+    "initial_phase_parent_expense_id": "pilot-execution-phase:0",
+    "resume_requires_actual_covering_phase": true,
+    "status": "pending"
+  },
+  "planned_before_attempt": false,
+  "reviewed_budgets": null,
+  "reviewed_budgets_source": "assembled_all3138_rows plus explicit independent-approved rate markers only; supplied by actual root approval",
+  "root_operational_guard_prior": {
+    "path": null,
+    "sha256": null,
+    "status": "pending"
+  },
+  "schema": "rb-f04-root-prior-lock-approval-v1",
+  "source_rebind_evidence": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-evidence-v2.json",
+    "sha256": "1e83ebae5b76c0560a40cd1ec21faf6e342e722111d725feaa1faadb846f14a1"
+  },
+  "status": "pending_no_full3138_effective_rows_caprecipe_independent_root_approval"
+}

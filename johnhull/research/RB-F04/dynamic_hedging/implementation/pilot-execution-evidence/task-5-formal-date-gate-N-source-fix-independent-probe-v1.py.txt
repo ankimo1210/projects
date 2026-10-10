@@ -1,0 +1,66 @@
+from pathlib import Path
+import os,sys,ast,json,hashlib,time,resource,subprocess,difflib
+W=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=W/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+R=W/"johnhull/research/RB-F04/dynamic_hedging"
+A=D/"task-5-formal-prior-lock-materialized-root-v2/source-snapshot"
+start=time.perf_counter();cpu=time.process_time()
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def read(p):return json.loads(Path(p).read_text())
+old_run=A/"johnhull/research/RB-F04/dynamic_hedging/run_pilot.py";new_run=R/"run_pilot.py"
+old_source=read(A/"source-identity.json")
+old_bytes=old_run.read_bytes();new_bytes=new_run.read_bytes()
+fail=[];checks=0
+def ck(test,label):
+ global checks
+ checks+=1
+ if not test:fail.append(label)
+ck(old_bytes.count(b'asian_cache["N"]')==1,"one original bad key")
+ck(new_bytes==old_bytes.replace(b'asian_cache["N"]',b'asian_cache["original_N"]'),"whole runner byte exact one-key change")
+ck(sha(new_run)=="8f0df2b35bb04087e7c4a3761d6cf1b8bbb8104e2e5b7516af03ba6c2c8123c4","fixed new run SHA")
+old_ast=ast.parse(old_bytes);new_ast=ast.parse(new_bytes)
+olddefs={n.name:ast.dump(n,include_attributes=False) for n in old_ast.body if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef,ast.ClassDef))}
+newdefs={n.name:ast.dump(n,include_attributes=False) for n in new_ast.body if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef,ast.ClassDef))}
+ck(set(olddefs)==set(newdefs),"same runner defs roster")
+changed=[n for n in olddefs if olddefs[n]!=newdefs[n]]
+ck(changed==["run_date_gate_job"],"one existing function AST delta")
+test_path=W/"deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+before=subprocess.run(["git","show","HEAD:deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"],cwd=W,capture_output=True,check=True).stdout
+ck(hashlib.sha256(before).hexdigest()=="f96fc7be2f7f0ec4a937a35922129324f7128902b348c8c48caeb3f5d27d6a06","fixed read-only HEAD test baseline")
+before_path=D/"task-5-formal-date-gate-N-independent-before-test-v1.py";assert not before_path.exists();before_path.write_bytes(before)
+before_ast=ast.parse(before);after_ast=ast.parse(test_path.read_bytes())
+added_name="test_native_cache_date_gate_saved_check_preserves_original_n_and_unknown"
+added=[n for n in after_ast.body if isinstance(n,ast.FunctionDef) and n.name==added_name]
+ck(len(added)==1,"one new parametrized test")
+filtered=ast.Module(body=[n for n in after_ast.body if n not in added],type_ignores=after_ast.type_ignores)
+ck(ast.dump(filtered,include_attributes=False)==ast.dump(before_ast,include_attributes=False),"all existing tests/module/fixtures AST unchanged")
+test=added[0]
+ck(any(isinstance(n,ast.Call) and isinstance(n.func,ast.Attribute) and n.func.attr=="parametrize" and isinstance(n.args[1],ast.List) and [v.value for v in n.args[1].elts]==[True,False] for n in test.decorator_list),"two original/unknown support cases")
+calls=[n.func.attr if isinstance(n.func,ast.Attribute) else n.func.id if isinstance(n.func,ast.Name) else None for n in ast.walk(test) if isinstance(n,ast.Call)]
+ck(all(n in calls for n in ("run_date_gate_job","write_pilot_artifact","read_pilot_artifact","check_date_gate_record","no_rng","assert_allclose")),"real producer/native transport/checker/tolerance boundary")
+ck(sha(test_path)=="c4fb5df6ff68a744643b0b2fc529254db9362e52f9436e02bdaa34b3e74a6106","fixed new test SHA")
+os.environ.update(OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1",PYTHONDONTWRITEBYTECODE="1")
+sys.path[:0]=[str(R),str(W/"johnhull/hullkit/src"),str(W/"deep_hedge_price/src")]
+import run_pilot as pilot
+def forbidden(*a,**k):raise AssertionError("independent source-only review prohibits numerical/RNG execution")
+for name in ("_dispatch","run_teacher_job","run_teacher_grid","teacher_primitives","run_date_gate_job"):
+ if hasattr(pilot,name):setattr(pilot,name,forbidden)
+pilot.np.random.default_rng=forbidden;pilot.np.random.seed=forbidden
+source=pilot._pilot_source(W)
+canonical=pilot.runner._digest(source);native=pilot.runner.payload_digest(source)
+ck(len(source["files"])==81 and not source["dynamic_imports"],"current81/dynamic0")
+ck(set(source["files"])==set(old_source["files"]),"same source file roster")
+source_delta=[n for n in source["files"] if source["files"][n]!=old_source["files"][n]]
+ck(source_delta==["johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"],"one of81 changed")
+for name,expected in source["files"].items():ck(sha(W/name)==expected,"actual current source bytes "+name)
+red_path=D/"task-5-formal-date-gate-N-root-RED-v1/receipt.json"
+green_path=D/"task-5-formal-date-gate-N-root-GREEN-v1/receipt.json"
+red=read(red_path);green=read(green_path)
+red_log=(red_path.parent/"stdout.log").read_text()
+ck(red["exit_code"]==1 and red["production_sha256"]==sha(old_run) and "2 failed, 31 deselected" in red_log and "KeyError: 'N'" in red_log,"actual RED original2 failures")
+print("GREEN_RECEIPT_KEYS",list(green))
+print("GREEN_RECEIPT",json.dumps(green,ensure_ascii=False))
+source_path=D/"task-5-formal-date-gate-N-independent-current-source-closure-v1.json";assert not source_path.exists();source_path.write_text(json.dumps(source,ensure_ascii=False,indent=2)+"\n")
+results={"schema":"rb-f04-independent-date-gate-source-fix-static-review-v1","checks":checks,"failures":fail,"source_delta":source_delta,"runner_changed_defs":changed,"original_runner_byte_delta":"one canonical cache key N -> original_N; all other bytes identical","test_delta":{"existing_module_AST_unchanged":True,"new_function":added_name,"cases":[True,False],"before_sha256":hashlib.sha256(before).hexdigest(),"after_sha256":sha(test_path),"coverage":"native source-unit canonical cache -> actual producer -> saved native read -> actual checker; original N/unknown/no_root/16block tolerance and N tamper; finite block branch is conditional, not a financial precision qualification"},"source_canonical_runner_digest_sha256":canonical,"source_native_payload_sha256":native,"source_closure":str(source_path),"source81_current_stable":all(sha(W/n)==v for n,v in source["files"].items()),"actual_RED":red,"actual_GREEN":green,"financial_RNG_SDE_solver_calls_by_independent_reviewer":0,"independent_Git_mutations":0,"independent_Git_readonly_show_commands_this_probe":1,"cost":{"wall_before_record_seconds":time.perf_counter()-start,"CPU_before_record_seconds":time.process_time()-cpu,"peak_RSS_bytes":resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,"record_tail_seconds":None}}
+p=D/"task-5-formal-date-gate-N-source-fix-independent-results-v1.json";assert not p.exists();p.write_text(json.dumps(results,ensure_ascii=False,indent=2)+"\n")
+print("SUMMARY",json.dumps({k:results[k] for k in ("checks","failures","source_delta","source_canonical_runner_digest_sha256","source_native_payload_sha256","source81_current_stable","cost")},ensure_ascii=False))

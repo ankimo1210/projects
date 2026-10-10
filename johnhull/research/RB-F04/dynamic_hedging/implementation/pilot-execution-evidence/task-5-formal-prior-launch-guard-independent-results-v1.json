@@ -1,0 +1,45 @@
+{
+  "schema": "rb-f04-independent-actual-launch-guard-binding-review-v1",
+  "decision": "approved",
+  "scope": "static actual root launch authority and saved prior/source/input/receipt integrity only",
+  "checks": 32,
+  "failures": [],
+  "actual_guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v1.json",
+    "sha256": "82b7099f583010950714037068c0182277fab9d0f988b954505e955de1c1f39a"
+  },
+  "monitor": {
+    "sha256": "1c8e0c375cfff3d347326b63b1f324177e29bb4216810490c9d468cabbb6181c",
+    "pure_API_calls": [
+      "actual_budget_review",
+      "source_binding",
+      "tree_binding",
+      "fixed_reference"
+    ],
+    "load_guard_replay_after_launch": false,
+    "reason": "original prelaunch load_guard PASS retained; current output directories are legitimately live"
+  },
+  "enclosing_metadata_resource_receipt": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialization-root-observation-v1/parent-cost-and-status.json",
+    "sha256": "0bffaedd186f1ff1a9f63502475d5e5f46428c1db639b2e0bef219af75c5a090"
+  },
+  "metadata_enclosing_cost": {
+    "wall_seconds": 66.17168880900135,
+    "parent_CPU_seconds": 0.11200992700000001,
+    "children_CPU_seconds": 64.630352,
+    "child_kernel_peak_RSS_bytes": 3884457984,
+    "inner_cost_is_not_added_again": true,
+    "final_receipt_tail_seconds": null
+  },
+  "original_launch_approval_is_root_only": true,
+  "financial_qualification": "unknown",
+  "numeric_main_phase_acceptance_approved": false,
+  "financial_RNG_SDE_solver_Popen_calls_by_reviewer": 0,
+  "source_root_approval_Git_CAS_edits": 0,
+  "cost": {
+    "wall_before_record_seconds": 0.21896639699843945,
+    "CPU_before_record_seconds": 0.218188245,
+    "peak_RSS_bytes": 49864704,
+    "record_tail_seconds": null
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "CAS_writes": 0,
+  "added_immutable_files": [
+    {
+      "bytes": 2185,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-and-guard-independent-manifest-v1.json",
+      "sha256": "12660975f7d270b379125bf288b5020cc5475039fbc54a6cd4ae2b2ba5f89a94"
+    },
+    {
+      "bytes": 4207,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-root-approval-independent-results-v1.json",
+      "sha256": "a2fd933ee1abe0bf1e2c444461493dedad82731e40cfe01f51b588f91aa4e231"
+    },
+    {
+      "bytes": 11846,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-independent-probe-v1.py",
+      "sha256": "f8c072d85589bffb92ed1aa4bf977e2d378d02e39dc53de14dd688a3715541a9"
+    },
+    {
+      "bytes": 464,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-independent-probe-v1-failure.json",
+      "sha256": "d0e611b72df9f62f8e1fa393f412677a33e8f27bf9f4e846021d2d2897f99707"
+    },
+    {
+      "bytes": 12254,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-independent-probe-v2.py",
+      "sha256": "adb108ae8a35e371c61cb25854c4855932c38c2abc084a303fb35c227cb8378a"
+    },
+    {
+      "bytes": 2074,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-independent-results-v2.json",
+      "sha256": "a1fb5304ec3b05ac364a35fcefe12ec092e714888e3c36dea96e812bd5534673"
+    },
+    {
+      "bytes": 11279,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-launch-guard-independent-probe-v1.py",
+      "sha256": "aab7f67bf7e9449df99232a41f7c356beae67dbb7222360563515a070cf06330"
+    },
+    {
+      "bytes": 1951,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-launch-guard-independent-results-v1.json",
+      "sha256": "1e46db13d831ca23cde9e4e5f6a372e88f7ef162d0bfe2d539fbd4b5ca744e3f"
+    },
+    {
+      "bytes": 3644,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-and-guard-independent-decision-v1.json",
+      "sha256": "fd05f712c5e02246fe372663dab0f9c1ab4cef03fd99a191c187d330cd56141d"
+    },
+    {
+      "bytes": 1211,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-and-guard-independent-review-v1.md",
+      "sha256": "96615f9ed3c552f7d7576032d904cd093c0775ccf9ff9d031d5d081ceedcf914"
+    },
+    {
+      "bytes": 44487,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v1.json",
+      "sha256": "82b7099f583010950714037068c0182277fab9d0f988b954505e955de1c1f39a"
+    },
+    {
+      "bytes": 2359,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-binding-receipt-v1.json",
+      "sha256": "94e93fd9e961f05bc86e12e1583d9b1d84c5212d7c687b63354cbae31178abef"
+    },
+    {
+      "bytes": 3122,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-enclosing-observer-v1.py",
+      "sha256": "36bb31e0c58462ccadb029d7eb82bac73904d89f58046bf3225fc565fe1b483c"
+    },
+    {
+      "bytes": 2465,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-live-root-observation-v1.json",
+      "sha256": "93b062668a48a320f1256cdb63683e7fd711124871e3f45e8f0d1f9d13812ddf"
+    }
+  ],
+  "cost": {
+    "CPU_seconds": 0.207982366,
+    "wall_seconds": 0.2125830329969176
+  },
+  "financial_RNG_solver_Popen_calls": 0,
+  "financial_qualification": "unknown",
+  "large_metadata_Git_copy": false,
+  "preserved_v1_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-metadata-cas-preparation-v1-manifest.json",
+    "sha256": "f777ec099a8a1b4014f99a5fc3040197dd9831266285c2bdc0661a89bb6e38d8"
+  },
+  "production_source_docs_Git_edits": 0,
+  "scope_excludes_native_live_logs_and_running_directories": true,
+  "selected_sources_original_bytes_unchanged": true,
+  "standard_evidence_manifest": {
+    "entries": 186,
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-metadata-cas-preparation-v2-manifest.json",
+    "path_bytes": 722519150,
+    "sha256": "0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc",
+    "shared_manifest_blob_bytes": 62233,
+    "unique_blobs": 182,
+    "unique_bytes": 716083930
+  },
+  "status": "D-only finite immutable metadata CAS preparation; not stored",
+  "v1_selected_sources_rehashed": 172
+}

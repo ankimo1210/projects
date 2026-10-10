@@ -1,0 +1,59 @@
+{
+  "scope": "one-key date gate repair and related native cache/pilot source-unit tests",
+  "records": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.0203137419957784,
+      "child_CPU_seconds": 0.024885
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.015856776997679844,
+      "child_CPU_seconds": 0.020419999999999997
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.007666553996386938,
+      "child_CPU_seconds": 0.009908
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--confcutdir=deep_hedge_price",
+        "-q",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 136.12426155700086,
+      "child_CPU_seconds": 135.202616
+    }
+  ],
+  "files_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "8f0df2b35bb04087e7c4a3761d6cf1b8bbb8104e2e5b7516af03ba6c2c8123c4",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": "c4fb5df6ff68a744643b0b2fc529254db9362e52f9436e02bdaa34b3e74a6106"
+  },
+  "formal_financial_execution": false,
+  "full_phase_or_full_three_suites": false
+}

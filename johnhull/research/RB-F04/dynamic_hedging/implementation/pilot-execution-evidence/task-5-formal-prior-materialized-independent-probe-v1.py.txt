@@ -1,0 +1,175 @@
+from pathlib import Path
+import os,sys,json,hashlib,time,resource,mmap,importlib.util,copy
+os.environ.update(OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1",PYTHONDONTWRITEBYTECODE="1")
+W=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=W/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+R=W/"johnhull/research/RB-F04/dynamic_hedging"
+sys.path[:0]=[str(R),str(W/"johnhull/hullkit/src"),str(W/"deep_hedge_price/src")]
+start=time.perf_counter();cpu=time.process_time()
+import numpy as np
+import run_pilot as pilot
+def forbidden(*a,**k): raise AssertionError("independent saved metadata review prohibits numerical/RNG execution")
+for name in ("_dispatch","run_teacher_job","run_teacher_grid","teacher_primitives"):
+ if hasattr(pilot,name):setattr(pilot,name,forbidden)
+np.random.default_rng=forbidden;np.random.seed=forbidden
+def read(p):return json.loads(Path(p).read_text())
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open("rb") as f:
+  for b in iter(lambda:f.read(1024*1024),b""):h.update(b)
+ return h.hexdigest()
+fail=[];checks=0
+def ck(test,name):
+ global checks
+ checks+=1
+ if not test:
+  fail.append(name)
+  if len(fail)>20:raise AssertionError("more than20 concrete metadata failures")
+O=D/"task-5-formal-prior-lock-materialized-root-v2"
+approval=read(D/"task-5-formal-prior-actual-root-approval-v1.json")
+review=read(D/"task-5-fullmixed-prior-budget-independent-final-decision-v2.json")
+config=read(D/"task-5-fullmixed-prior-budget-candidate-author-v1-config.json")
+manifest=read(O/"manifest.json");progress=read(O/"materialization-progress.json")
+ck(progress["status"]=="actual_approved_prior_metadata_materialized","terminal success")
+ck(progress["pilot_started"] is False and progress["financial_workers_RNG_solver_SDE_calls"]==0,"no financial calls")
+ck(progress["formal_financial_phase_approved"] is False and progress["financial_qualification"]=="unknown","finance unknown")
+for name,ref in manifest["files"].items():
+ p=O/name
+ ck(p.stat().st_size==ref["bytes"] and sha(p)==ref["sha256"],"immutable materialized file "+name)
+ck(sha(O/"actual-root-approval-copy.json")==sha(D/"task-5-formal-prior-actual-root-approval-v1.json"),"exact actual root approval copy")
+ck(sha(O/"root-operational-guard-copy.json")==approval["root_operational_guard_prior"]["sha256"],"separate root guard copy")
+source=read(O/"source-snapshot/source-identity.json")
+ck(pilot.runner._digest(source)==review["source_canonical_identity"],"snapshot canonical source")
+ck(pilot.runner.payload_digest(source)==review["source_native_payload_identity"],"snapshot native source")
+ck(len(source["files"])==81 and not source["dynamic_imports"],"81 static sources")
+source_before={}
+for name,ref in source["files"].items():
+ source_before[name]=sha(W/name)
+ expected=ref["sha256"] if isinstance(ref,dict) else ref
+ ck(source_before[name]==expected and sha(O/"source-snapshot"/name)==expected,"snapshot/current source "+name)
+spec=importlib.util.spec_from_file_location("independent_existing_cap_helper",D/"task-5-fullmixed-prior-budget-candidate-author-v1-builder.py")
+helper=importlib.util.module_from_spec(spec);spec.loader.exec_module(helper)
+ck(sha(D/"task-5-fullmixed-prior-budget-candidate-author-v1-builder.py")==review["approved_candidate_helper_sha256"],"approved original cap helper")
+parents=config["parent_cap_templates"]
+rows=approval["reviewed_budgets"]
+authority=approval["cap_options_authority"]["decision_template"]
+recipe_maps={g:{r["id"]:r for r in config["cap_options_recipe"][g]} for g in ("cases","attempts")}
+literal_count=0;group_counts={};branch_counts={}
+decoder=json.JSONDecoder();max_window=0
+metadata_path=O/"locked-prior-metadata/metadata.json"
+with metadata_path.open("rb") as fh:
+ mm=mmap.mmap(fh.fileno(),0,access=mmap.ACCESS_READ)
+ def ws(pos):
+  while mm[pos:pos+1] in (b" ",b"\n",b"\r",b"\t"):pos+=1
+  return pos
+ def value(pos):
+  global max_window
+  pos=ws(pos);width=2*1024*1024
+  while True:
+   end=min(len(mm),pos+width)
+   try:
+    text=mm[pos:end].decode("utf-8");v,stop=decoder.raw_decode(text)
+    max_window=max(max_window,end-pos)
+    return v,pos+len(text[:stop].encode("utf-8"))
+   except (json.JSONDecodeError,UnicodeDecodeError):
+    if end==len(mm) or width>=128*1024*1024:raise
+    width*=2
+ def expect(pos,byte):
+  pos=ws(pos)
+  if mm[pos:pos+1]!=byte:raise AssertionError("unexpected saved JSON token at "+str(pos))
+  return pos+1
+ def verify_projection(group,row):
+  global literal_count
+  ident=row["id"];recipe=recipe_maps[group][ident]
+  options=row.pop("cap_options")
+  ck(row["parent_expense_id"]=="pilot-execution-phase:0","actual phase alias "+group+" "+ident)
+  expected_count=len(recipe["parent_indices"])*len(recipe["original_N_branches"])
+  ck(len(options)==expected_count,"all ordered option count "+group+" "+ident)
+  template=config["original_plan_templates"][group][ident];i=0
+  for parent_idx in recipe["parent_indices"]:
+   parent=parents[parent_idx];pid=parent["job_id"]
+   for n in recipe["original_N_branches"]:
+    base=helper.branch_plan(template,n)
+    cap={"metric":"wall_seconds","limit":rows[pid]["budget"]["wall_seconds"],"planned_before_attempt":True}
+    decision=authority|{"plan_sha256":pilot.execution._digest(base|{"cap":cap})}
+    expected={"parent_job_id":pid,"plan":base|{"cap":cap|{"budget_review_sha256":pilot.execution._digest(decision)}},"budget_decision":decision}
+    ck(options[i]==expected,"actual ordered branch/cap/decision "+group+" "+ident+" "+str(i))
+    i+=1
+    branch_counts[str(n)]=branch_counts.get(str(n),0)+1
+  literal_count+=len(options)
+  return row
+ def projection(pos):
+  pos=expect(pos,b"{");result={}
+  while True:
+   group,pos=value(pos);pos=expect(pos,b":");pos=expect(pos,b"[")
+   result[group]=[]
+   while mm[ws(pos):ws(pos)+1]!=b"]":
+    row,pos=value(pos);result[group].append(verify_projection(group,row))
+    pos=ws(pos)
+    if mm[pos:pos+1]==b",":pos+=1
+    elif mm[pos:pos+1]!=b"]":raise AssertionError("projection row delimiter")
+   pos=expect(pos,b"]");group_counts[group]=len(result[group]);pos=ws(pos)
+   if mm[pos:pos+1]==b"}":return result,pos+1
+   pos=expect(pos,b",")
+ # Parse only the saved native metadata and one case/attempt at a time.
+ pos=mm.find(b'"metadata":')+len(b'"metadata":')
+ pos=expect(pos,b"{");metadata={}
+ while True:
+  key,pos=value(pos);pos=expect(pos,b":")
+  if key=="tree":
+   pos=expect(pos,b"{");tree={}
+   while True:
+    field,pos=value(pos);pos=expect(pos,b":")
+    if field=="execution_projection":v,pos=projection(pos)
+    else:v,pos=value(pos)
+    tree[field]=v;pos=ws(pos)
+    if mm[pos:pos+1]==b"}":pos+=1;break
+    pos=expect(pos,b",")
+   metadata[key]=tree
+  else:metadata[key],pos=value(pos)
+  pos=ws(pos)
+  if mm[pos:pos+1]==b"}":pos+=1;break
+  pos=expect(pos,b",")
+ mm.close()
+ck(literal_count==573122 and group_counts=={"attempts":51,"cases":121},"full literal roster")
+receipt=read(O/"locked-prior-metadata/receipt.json")
+ck(receipt==progress["locked_prior_receipt"],"actual root receipt reference")
+ck(receipt["metadata_sha256"]==sha(metadata_path) and receipt["arrays_sha256"]==sha(O/"locked-prior-metadata/arrays.npz"),"actual native receipt physical inputs")
+plan,returned_receipt=pilot._read_packed_pilot(O/"locked-prior-metadata",metadata,receipt)
+ck(returned_receipt==receipt,"existing native bounded pack reader receipt")
+draft,draft_receipt=pilot.read_pilot_artifact(Path(config["origin"]["draft_artifact"]))
+ck(draft_receipt==config["origin"]["draft_receipt"],"immutable original draft")
+inputs,input_receipt=pilot.read_pilot_artifact(Path(config["typed_inputs_artifact"]))
+ck(input_receipt==config["typed_inputs_receipt"],"immutable original typed inputs")
+ck(plan["source"]==source and plan["input_bindings"]=={k:pilot.input_identity(v) for k,v in inputs.items()}==config["input_bindings"],"actual source/typedinput binding")
+ck(plan["history"]==config["history"] and plan["required_external_expense_ids"]==config["required_external_expense_ids"],"all raw history/external10 retained")
+external=read(O/"pending-external-expenses.json")
+ck(external==config["external_expense_candidates"] and len(external)==10 and all(e["status"]=="pending" and all(x is None for x in e["timing"].values()) for e in external),"external10 unknown retained")
+updates={r["job_id"]:r for r in config["job_argument_updates"]["controls_delta"]}
+ck(len(updates)==36,"original36 explicit controls")
+ck(len(plan["jobs"])==3138 and len(plan["case_plan"])==121 and len(plan["attempt_plan"])==51,"original job/case/attempt roster")
+ck(plan["case_plan"]==draft["case_plan"] and plan["attempt_plan"]==draft["attempt_plan"],"original all N/case/obligation templates")
+for original,actual in zip(draft["jobs"],plan["jobs"],strict=True):
+ expected=copy.deepcopy(original)
+ if original["id"] in updates:
+  update=updates[original["id"]]
+  ck(pilot.input_identity(expected["arguments"])==update["original_arguments_sha256"],"original36 arguments "+original["id"])
+  expected["arguments"]["controls"]=copy.deepcopy(update["candidate_controls"])
+  ck(pilot.input_identity(expected["arguments"])==update["candidate_arguments_sha256"],"actual36 arguments "+original["id"])
+ rr=rows[original["id"]]
+ expected["budget"]=copy.deepcopy(rr["budget"]);expected["prediction"].update(rr["prediction"])
+ if rr.get("case_cap_expense_bindings") is not None:expected["case_cap_expense_bindings"]=rr["case_cap_expense_bindings"]
+ ck(pilot.input_identity(actual)==pilot.input_identity(expected),"exact actual job metadata work/source/budget "+original["id"])
+ck(sum(j["operation"]=="teacher_grid" for j in plan["jobs"])==20 and sum(j["operation"]=="teacher_driver" for j in plan["jobs"])==10,"original teachers20/drivers10")
+for group in ("cases","attempts"):
+ originals={r["id"]:r for r in draft["execution_projection"][group]}
+ for row in plan["execution_projection"][group]:
+  expected=copy.deepcopy(originals[row["id"]]);expected.pop("cap_options",None);expected["parent_expense_id"]="pilot-execution-phase:0"
+  ck(pilot.input_identity(row)==pilot.input_identity(expected),"original actual projection scope "+group+" "+row["id"])
+source_after={name:sha(W/name) for name in source["files"]}
+ck(source_before==source_after and pilot._pilot_source(W)==source,"current81 stable after review")
+result={"schema":"rb-f04-independent-materialized-prior-integrity-review-v1","decision":"approved" if not fail else "not_approved","scope":"saved actual prior metadata/source/root guard/ordered exact cap recipe only; no financial launch or numeric qualification","checks":checks,"failures":fail,"all_original_counts":{"jobs":3138,"cases":121,"obligations":51,"teacher_grids":20,"drivers":10,"cap_options":literal_count},"ordered_option_original_n_counts":branch_counts,"source_canonical_identity":pilot.runner._digest(source),"source_native_payload_identity":pilot.runner.payload_digest(source),"source81_stable":source_before==source_after,"actual_independent_prior_decision_sha256":sha(D/"task-5-fullmixed-prior-budget-independent-final-decision-v2.json"),"actual_root_approval_sha256":sha(D/"task-5-formal-prior-actual-root-approval-v1.json"),"materialized_manifest_sha256":sha(O/"manifest.json"),"locked_artifact_receipt":receipt,"bounded_saved_JSON_max_window_bytes":max_window,"formal_financial_launch_or_phase_approval":False,"financial_qualification":"unknown","financial_RNG_SDE_solver_Popen_calls":0,"source_root_approval_Git_CAS_edits":0,"measurement_cost":{"wall_before_result_seconds":time.perf_counter()-start,"CPU_before_result_seconds":time.process_time()-cpu,"peak_RSS_bytes":resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,"result_tail_cost_seconds":None}}
+p=D/"task-5-formal-prior-materialized-independent-results-v1.json";assert not p.exists()
+p.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+print(json.dumps(result,ensure_ascii=False))
+assert not fail,fail

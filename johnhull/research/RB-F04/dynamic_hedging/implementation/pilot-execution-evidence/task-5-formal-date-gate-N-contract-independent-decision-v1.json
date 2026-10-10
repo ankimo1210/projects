@@ -1,0 +1,58 @@
+{
+  "schema": "rb-f04-independent-date-gate-N-source-contract-diagnosis-v1",
+  "status": "confirmed_source_defect",
+  "cause": "date gate consumer uses nonexistent N instead of canonical original_N",
+  "minimum_source_scope": [
+    {
+      "file": "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "function": "run_date_gate_job",
+      "old_snapshot_line": 2832,
+      "change": "asian_cache['N'] -> asian_cache['original_N']"
+    }
+  ],
+  "checker_change_required": false,
+  "cache_producer_schema_change_required": false,
+  "old_financial_qualification": "unknown",
+  "old_partial_not_phase_accepted": true,
+  "cap_reclassification_approved": false,
+  "new_source_or_financial_run_approved": false,
+  "evidence": {
+    "results": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-contract-independent-results-v1.json",
+      "sha256": "7ccce922b1bcf6fb4eda6b188c84308087256f8dd1b26d73b5b1ffac9db1c75a"
+    },
+    "review": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-contract-independent-review-v1.md",
+      "sha256": "a7b7499410468527803b1e31c05e700838813053d35bbac3bb38d9bcff90914c"
+    },
+    "old_run_pilot_sha256": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635",
+    "old_check_pilot_sha256": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+    "failed_record_receipt": {
+      "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "artifact_sha256": "9190aa9e9f4f81fcaebbfe72b1747777becfa893bc07224c3262ddf02bce8f95",
+      "metadata_sha256": "6dd3fa28c2b78ac33f841b8264bf49d17ea28821c506e6fba6ee6919bc0f1325",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 0
+    }
+  },
+  "saved_contract_checks": {
+    "native_caches_checked": 3,
+    "canonical_original_N": 1024,
+    "noncanonical_N_present": false,
+    "same_checker_producer_call": true,
+    "genuine_source_error_below_admin_cap": true
+  },
+  "financial_RNG_SDE_solver_Popen_calls": 0,
+  "source_tests_Git_CAS_edits": 0,
+  "diagnosis_finalization_cost": {
+    "wall_before_record_seconds": 0.06894101700163446,
+    "CPU_before_record_seconds": 0.068348585,
+    "peak_RSS_bytes": 38875136,
+    "record_tail_seconds": null
+  },
+  "prior_wrapper_failure": {
+    "type": "JS quoting error before execution",
+    "source_or_saved_data_touched": false,
+    "cost_seconds": null
+  }
+}
