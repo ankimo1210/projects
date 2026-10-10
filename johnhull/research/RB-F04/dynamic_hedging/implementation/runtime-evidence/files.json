@@ -1,0 +1,31 @@
+{
+  "kind": "pretest_actual_component_cost_and_structural_prediction",
+  "formal_pilot": false,
+  "files": [
+    {
+      "file": "task-5-scalar-fit-cost-probe.py.txt",
+      "bytes": 4139,
+      "sha256": "d4b5db2321228880eca6abc8ccf8be78dd221ec397174f413e37031ffe84feae"
+    },
+    {
+      "file": "task-5-scalar-fit-cost-probe.json",
+      "bytes": 30576,
+      "sha256": "aa2b799aed47f48486966624927bcfe33bcc3294cecd355126d0c1106a6f678d"
+    },
+    {
+      "file": "task-5-scalar-fit-cost-probe.txt",
+      "bytes": 1783,
+      "sha256": "3e6ffe3de9a1cd46caf1ff51f16242dce58fa4a032a219576e391c6a2266b352"
+    },
+    {
+      "file": "task-5-current-teacher-workload-v2.json",
+      "bytes": 7288,
+      "sha256": "574f4b2a0c3cb43f7f044d8b07d76701d5cff37cb2271008c3b0d1b89077fb8b"
+    },
+    {
+      "file": "task-5-teacher-preflight.json",
+      "bytes": 675186,
+      "sha256": "50313a08abe3a4ce5abce65b909d44f7b33e7337a2725951b4294a788abc058d"
+    }
+  ]
+}

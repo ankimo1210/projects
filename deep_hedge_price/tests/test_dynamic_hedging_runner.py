@@ -995,3 +995,113 @@ def test_initial_quote_saved_checker_rejects_a_loaded_foreign_alias(monkeypatch,
     with pytest.raises(ValueError, match="loaded source"):
         runner.initial_quote_pilot(saved)
     assert sys.path == before
+
+
+def _dependency_cap_cases_for_boundary():
+    class Case(dict):
+        def __getitem__(self, key):
+            if key in ("dataset", "risk"):
+                pytest.fail("unexecuted dependency cannot load fictional financial arrays")
+            return super().__getitem__(key)
+
+    return [
+        Case(
+            generator=g,
+            seed_slot=slot,
+            level=level,
+            execution_status="unexecuted_dependency_cap",
+            original_n=32768,
+        )
+        for g in ["Heston", "local"]
+        for slot in range(3)
+        for level in [192, 384, 768]
+    ]
+
+
+def test_execution_dependency_cap_preserves_all_original_slots_without_financial_call(monkeypatch):
+    _, fixture, frozen, receipts, validation, closed = actual_execution_inputs()
+    monkeypatch.setattr(
+        runner, "execution_source_identity", lambda: {"protocol_source": fixture["source"]}
+    )
+    calls = []
+    module = types.ModuleType("run_main")
+
+    def bounded(case, universe, original_n):
+        assert case["execution_status"] == "unexecuted_dependency_cap"
+        assert case["original_n"] == original_n == 32768
+        calls.append((case["generator"], case["seed_slot"], case["level"], universe))
+        return {
+            "source_unit_only": True,
+            "original_n": original_n,
+            "loss": np.full(original_n, np.nan),
+            "qualification": "unknown",
+            "execution_status": case["execution_status"],
+        }
+
+    module.dependency_cap_evaluation = bounded
+    monkeypatch.setitem(sys.modules, "run_main", module)
+    monkeypatch.setattr(
+        runner.study,
+        "test_roster",
+        lambda *a, **k: pytest.fail("unexecuted case must not run a policy"),
+    )
+    out = runner.run_execution_main(
+        frozen=frozen,
+        candidate=fixture["candidate"],
+        source=fixture["source"],
+        selection_receipts=receipts,
+        raw_validation=validation,
+        closed_fits=closed,
+        main_test_loader=lambda: {"test_cases": _dependency_cap_cases_for_boundary()},
+        evaluation_sink=lambda row: {
+            "case": tuple(row[k] for k in ("generator", "seed_slot", "level", "universe")),
+            "original_n": row["result"]["original_n"],
+        },
+    )
+    assert len(calls) == len(out["evaluations"]) == 36
+    assert all(row["original_n"] == 32768 for row in out["evaluations"])
+    assert out["qualification"] == "unknown"
+
+
+def test_execution_dependency_cap_helper_failure_propagates_without_fallback(monkeypatch):
+    _, fixture, frozen, receipts, validation, closed = actual_execution_inputs()
+    monkeypatch.setattr(
+        runner, "execution_source_identity", lambda: {"protocol_source": fixture["source"]}
+    )
+    module = types.ModuleType("run_main")
+
+    def rejected(*args):
+        raise ValueError("actual parent cap binding differs")
+
+    module.dependency_cap_evaluation = rejected
+    monkeypatch.setitem(sys.modules, "run_main", module)
+    sinks = []
+    with pytest.raises(ValueError, match="actual parent cap binding differs"):
+        runner.run_execution_main(
+            frozen=frozen,
+            candidate=fixture["candidate"],
+            source=fixture["source"],
+            selection_receipts=receipts,
+            raw_validation=validation,
+            closed_fits=closed,
+            main_test_loader=lambda: {"test_cases": _dependency_cap_cases_for_boundary()},
+            evaluation_sink=lambda row: sinks.append(row),
+        )
+    assert sinks == []
+
+
+def test_dependency_cap_branch_requires_separate_execution_revision(monkeypatch):
+    _, fixture, frozen, receipts, validation, closed = actual_execution_inputs()
+    source = fixture["source"]
+    monkeypatch.setattr(runner, "source_identity", lambda: {"protocol_source": source})
+    monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+    with pytest.raises(ValueError, match="dependency cap requires execution revision"):
+        runner.run_main(
+            frozen=frozen,
+            candidate=fixture["candidate"]["original_candidate"],
+            source=source,
+            selection_receipts=receipts,
+            raw_validation=validation,
+            closed_fits=closed,
+            main_test_loader=lambda: {"test_cases": _dependency_cap_cases_for_boundary()},
+        )

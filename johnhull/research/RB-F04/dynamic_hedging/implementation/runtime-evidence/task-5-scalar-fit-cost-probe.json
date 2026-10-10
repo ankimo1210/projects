@@ -1,0 +1,1206 @@
+{
+  "kind": "pretest_scalar_fit_cost_probe",
+  "formal_pilot": false,
+  "financial_qualification": "unknown",
+  "scope": "actual original18 S/Q states with same scalar not-a-knot full-call fit; saved selected6dates cache, S65/Hv33/ell7; no Asian teacher/risk/policy/main performed",
+  "predeclared_probe_budget_seconds": 300.0,
+  "input_source": {
+    "pilot/selected-calls/refined/selected-calls.json": {
+      "bytes": 23503,
+      "sha256": "9f9fa7fbfd61c5114881479d8707f482c1a007e0ea47ad8e050eb537cdb2012e"
+    },
+    "pilot/initial-quotes/reference.npz": {
+      "bytes": 30535323,
+      "sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591"
+    }
+  },
+  "measurements": [
+    {
+      "operation": "call_cache",
+      "model": "heston",
+      "date_count": 6,
+      "spot_nodes": 65,
+      "state_nodes": 33,
+      "wall_seconds": 5.475101840000207,
+      "cpu_seconds": 5.430403835
+    },
+    {
+      "operation": "scalar_fit_only",
+      "model": "heston",
+      "actual_query_count": 1152,
+      "wall_seconds": 0.3391486209984578,
+      "cpu_seconds": 0.33914660900000015,
+      "median_query_wall_seconds": 0.00028547400052048033,
+      "p95_query_wall_seconds": 0.00034553954983493893,
+      "statuses": {
+        "ok": 1088,
+        "unknown": 64
+      },
+      "missing_costs": [
+        "Asian scalar cache and 16-block Greek evaluation",
+        "all-path13refit FD",
+        "serialization/savedcheck/CAS",
+        "arbitrary visited S/Q states and support"
+      ],
+      "extrapolation_is_formal_wall_measurement": false
+    },
+    {
+      "operation": "call_cache",
+      "model": "local",
+      "date_count": 6,
+      "spot_nodes": 65,
+      "state_nodes": 7,
+      "wall_seconds": 3.07565934899867,
+      "cpu_seconds": 3.0708368959999994
+    },
+    {
+      "operation": "scalar_fit_only",
+      "model": "local",
+      "actual_query_count": 1152,
+      "wall_seconds": 0.3000838059997477,
+      "cpu_seconds": 0.30008588699999983,
+      "median_query_wall_seconds": 0.000252705000093556,
+      "p95_query_wall_seconds": 0.00030033175016797037,
+      "statuses": {
+        "ok": 1152
+      },
+      "missing_costs": [
+        "Asian scalar cache and 16-block Greek evaluation",
+        "all-path13refit FD",
+        "serialization/savedcheck/CAS",
+        "arbitrary visited S/Q states and support"
+      ],
+      "extrapolation_is_formal_wall_measurement": false
+    }
+  ],
+  "raw_first_repeat": [
+    {
+      "model": "heston",
+      "state_index": 0,
+      "original_S": 99.95,
+      "original_Q": 9.686255823501824,
+      "date": 0.0,
+      "fit": {
+        "state": 0.019999999386537636,
+        "root": 0.019999999386537636,
+        "residual": 0.0,
+        "Ctheta": 41.75283178197937,
+        "condition": 0.0059876178292630365,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.019999999386537647
+        ],
+        "extrema": [],
+        "extrema_values": [
+          8.806460772686235,
+          21.246098232064284
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.6701638898874762,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 1,
+      "original_S": 100.0,
+      "original_Q": 10.516798237664773,
+      "date": 0.0,
+      "fit": {
+        "state": 0.04,
+        "root": 0.04,
+        "residual": -7.105427357601002e-15,
+        "Ctheta": 38.11351750888069,
+        "condition": 0.006559352595617773,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.04000000000000019
+        ],
+        "extrema": [],
+        "extrema_values": [
+          8.840340681770336,
+          21.278907108197686
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.6658364428393727,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 2,
+      "original_S": 100.05,
+      "original_Q": 11.963004033155933,
+      "date": 0.0,
+      "fit": {
+        "state": 0.08000000047505296,
+        "root": 0.08000000047505296,
+        "residual": 0.0,
+        "Ctheta": 32.898468955063386,
+        "condition": 0.0075991378304406665,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.08000000047505297
+        ],
+        "extrema": [],
+        "extrema_values": [
+          8.87427124421118,
+          21.31173462375484
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.659585780816319,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 3,
+      "original_S": 80.0,
+      "original_Q": 0.7902091085377894,
+      "date": 0.08333333333333333,
+      "fit": {
+        "state": 0.01999985208690485,
+        "root": 0.01999985208690485,
+        "residual": -2.298161660974074e-14,
+        "Ctheta": 19.787912471519196,
+        "condition": 0.012633975431204569,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.01999985208690601
+        ],
+        "extrema": [],
+        "extrema_values": [
+          0.42609441579382784,
+          9.613896844505259
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.15933232713208836,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 4,
+      "original_S": 100.0,
+      "original_Q": 10.102927051591251,
+      "date": 0.08333333333333333,
+      "fit": {
+        "state": 0.04,
+        "root": 0.04,
+        "residual": -7.105427357601002e-15,
+        "Ctheta": 38.98975778539993,
+        "condition": 0.006411940319711726,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.04000000000000018
+        ],
+        "extrema": [],
+        "extrema_values": [
+          8.377096066853213,
+          20.939279102028365
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.6626618754157719,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 5,
+      "original_S": 120.0,
+      "original_Q": 26.95672741135637,
+      "date": 0.08333333333333333,
+      "fit": {
+        "state": 0.08000005605956552,
+        "root": 0.08000005605956552,
+        "residual": 0.0,
+        "Ctheta": 25.24809860550311,
+        "condition": 0.009901735726963203,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.08000005605956549
+        ],
+        "extrema": [],
+        "extrema_values": [
+          24.81465751168333,
+          35.31915854166655
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.8573845643728899,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 6,
+      "original_S": 80.0,
+      "original_Q": 0.4901428115538735,
+      "date": 0.25,
+      "fit": {
+        "state": 0.019999907372917573,
+        "root": 0.019999907372917573,
+        "residual": -2.6478819137309983e-14,
+        "Ctheta": 16.486274871981507,
+        "condition": 0.015164129067438761,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.019999907372919182
+        ],
+        "extrema": [],
+        "extrema_values": [
+          0.20707874395808523,
+          9.053326769992434
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.1170922234322622,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 7,
+      "original_S": 100.0,
+      "original_Q": 9.242521073959068,
+      "date": 0.25,
+      "fit": {
+        "state": 0.04,
+        "root": 0.04,
+        "residual": 2.1316282072803006e-14,
+        "Ctheta": 40.72483563970681,
+        "condition": 0.006138760195664225,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.03999999999999944
+        ],
+        "extrema": [],
+        "extrema_values": [
+          7.412223922269604,
+          20.17695668968988
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.6556504242754458,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 8,
+      "original_S": 120.0,
+      "original_Q": 26.135795097422715,
+      "date": 0.25,
+      "fit": {
+        "state": 0.0800000635155003,
+        "root": 0.0800000635155003,
+        "residual": 0.0,
+        "Ctheta": 25.182701651692227,
+        "condition": 0.00992744954285715,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.08000006351550029
+        ],
+        "extrema": [],
+        "extrema_values": [
+          24.008841119715424,
+          34.46421876874776
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.8612036403550144,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 9,
+      "original_S": 80.0,
+      "original_Q": 0.16795940706832013,
+      "date": 0.5,
+      "fit": {
+        "state": 0.02000050944299057,
+        "root": 0.02000050944299057,
+        "residual": 3.657629754627578e-13,
+        "Ctheta": 9.530189641178815,
+        "condition": 0.026232426574155435,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.020000509442952192
+        ],
+        "extrema": [],
+        "extrema_values": [
+          0.03538998212761036,
+          7.984982489996754
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.05451489789510422,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 10,
+      "original_S": 100.0,
+      "original_Q": 7.847973573300706,
+      "date": 0.5,
+      "fit": {
+        "state": 0.04,
+        "root": 0.04,
+        "residual": 1.0658141036401503e-13,
+        "Ctheta": 42.952615940869364,
+        "condition": 0.005820367270393078,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.03999999999999753
+        ],
+        "extrema": [],
+        "extrema_values": [
+          5.853569255847802,
+          18.71602284687151
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.6427148838151419,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 11,
+      "original_S": 120.0,
+      "original_Q": 24.79901346796848,
+      "date": 0.5,
+      "fit": {
+        "state": 0.08000008337866991,
+        "root": 0.08000008337866991,
+        "residual": 3.552713678800501e-15,
+        "Ctheta": 24.120088116040606,
+        "condition": 0.01036480458932247,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.08000008337866975
+        ],
+        "extrema": [],
+        "extrema_values": [
+          22.807573900669702,
+          32.8482853585813
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.8699125376923019,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 12,
+      "original_S": 80.0,
+      "original_Q": 0.023505102229885666,
+      "date": 0.75,
+      "fit": {
+        "state": 0.020003157938542897,
+        "root": 0.020003157938542897,
+        "residual": -7.598088824778415e-16,
+        "Ctheta": 2.5084968817916034,
+        "condition": 0.09966127596756132,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.0200031579385432
+        ],
+        "extrema": [],
+        "extrema_values": [
+          0.0009742093135220674,
+          6.423262471884339
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.011201054649251715,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 13,
+      "original_S": 100.0,
+      "original_Q": 6.264680928938759,
+      "date": 0.75,
+      "fit": {
+        "state": 0.04,
+        "root": 0.04,
+        "residual": 4.263256414560601e-14,
+        "Ctheta": 43.556315026642224,
+        "condition": 0.005739695836231365,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.03999999999999902
+        ],
+        "extrema": [],
+        "extrema_values": [
+          4.130813029789621,
+          16.55767812393649
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.6245920375081588,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 14,
+      "original_S": 120.0,
+      "original_Q": 23.2776594403188,
+      "date": 0.75,
+      "fit": {
+        "state": 0.08000013672836151,
+        "root": 0.08000013672836151,
+        "residual": 3.552713678800501e-15,
+        "Ctheta": 20.826985835195067,
+        "condition": 0.012003657273225322,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.0800001367283613
+        ],
+        "extrema": [],
+        "extrema_values": [
+          21.681858729417062,
+          30.524466822144547
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.8864368879779402,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 15,
+      "original_S": 80.0,
+      "original_Q": 0.0017373254975669161,
+      "date": 0.9166666666666666,
+      "fit": {
+        "state": null,
+        "root": 0.020006427993336136,
+        "residual": -1.46224178598775e-14,
+        "Ctheta": 0.30947281173915614,
+        "condition": 0.8078254066813348,
+        "status": "unknown",
+        "reason": "ill_conditioned",
+        "roots": [
+          0.020006427993383386
+        ],
+        "extrema": [],
+        "extrema_values": [
+          5.330124745187734e-06,
+          4.8744023695923575
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ]
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 16,
+      "original_S": 100.0,
+      "original_Q": 5.025233054519283,
+      "date": 0.9166666666666666,
+      "fit": {
+        "state": 0.04,
+        "root": 0.04,
+        "residual": -2.1316282072803006e-14,
+        "Ctheta": 41.49934960380486,
+        "condition": 0.00602419079784997,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.040000000000000514
+        ],
+        "extrema": [],
+        "extrema_values": [
+          2.869741666027487,
+          14.358778327795115
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.6068739075230687,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "heston",
+      "state_index": 17,
+      "original_S": 120.0,
+      "original_Q": 22.121583467349467,
+      "date": 0.9166666666666666,
+      "fit": {
+        "state": 0.08000025928068259,
+        "root": 0.08000025928068259,
+        "residual": 0.0,
+        "Ctheta": 16.188040472065076,
+        "condition": 0.015443499812803964,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.08000025928068248
+        ],
+        "extrema": [],
+        "extrema_values": [
+          21.03593591659717,
+          28.242098935203778
+        ],
+        "state_bounds": [
+          1e-05,
+          0.5
+        ],
+        "CS": 0.9080388550759084,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 0,
+      "original_S": 99.95,
+      "original_Q": 9.686255823501824,
+      "date": 0.0,
+      "fit": {
+        "state": 0.8171800155228437,
+        "root": 0.8171800155228437,
+        "residual": 6.217248937900877e-14,
+        "Ctheta": 4.618290287623068,
+        "condition": 0.002165303473192193,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.8171800155228306
+        ],
+        "extrema": [],
+        "extrema_values": [
+          6.348039325723291,
+          18.892555404553836
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.5409868462866609,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 1,
+      "original_S": 100.0,
+      "original_Q": 10.516798237664773,
+      "date": 0.0,
+      "fit": {
+        "state": 1.0000277716379595,
+        "root": 1.0000277716379595,
+        "residual": 8.771650072958437e-11,
+        "Ctheta": 4.1912682736108,
+        "condition": 0.002385912651538516,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          1.0000277716170314
+        ],
+        "extrema": [],
+        "extrema_values": [
+          6.378717858864258,
+          18.917104873575262
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.5322546959702773,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 2,
+      "original_S": 100.05,
+      "original_Q": 11.963004033155933,
+      "date": 0.0,
+      "fit": {
+        "state": 1.367614789736292,
+        "root": 1.367614789736292,
+        "residual": 0.0,
+        "Ctheta": 3.578557680192194,
+        "condition": 0.002794421913429359,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          1.3676147897362918
+        ],
+        "extrema": [],
+        "extrema_values": [
+          6.409486510659649,
+          18.941677533036895
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.5194817159724047,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 3,
+      "original_S": 80.0,
+      "original_Q": 0.7902091085377894,
+      "date": 0.08333333333333333,
+      "fit": {
+        "state": 0.3930161964383429,
+        "root": 0.3930161964383429,
+        "residual": -3.090860900556436e-13,
+        "Ctheta": 3.3585880351748245,
+        "condition": 0.0029774416794405897,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.3930161964384349
+        ],
+        "extrema": [],
+        "extrema_values": [
+          0.32685080198349814,
+          10.05185224056391
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.11068673878125063,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 4,
+      "original_S": 100.0,
+      "original_Q": 10.102927051591251,
+      "date": 0.08333333333333333,
+      "fit": {
+        "state": 1.001197589243624,
+        "root": 1.001197589243624,
+        "residual": -1.7763568394002505e-15,
+        "Ctheta": 4.052810597724839,
+        "condition": 0.002467423472889107,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          1.0011975892436245
+        ],
+        "extrema": [],
+        "extrema_values": [
+          6.090044499889721,
+          18.213386874798076
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.5339611635741461,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 5,
+      "original_S": 120.0,
+      "original_Q": 26.95672741135637,
+      "date": 0.08333333333333333,
+      "fit": {
+        "state": 2.2180762018537763,
+        "root": 2.2180762018537763,
+        "residual": 3.552713678800501e-15,
+        "Ctheta": 1.9880940722481324,
+        "condition": 0.0050299430693900825,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          2.218076201853775
+        ],
+        "extrema": [],
+        "extrema_values": [
+          23.463601594031207,
+          30.274078006544965
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.7847905035357137,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 6,
+      "original_S": 80.0,
+      "original_Q": 0.4901428115538735,
+      "date": 0.25,
+      "fit": {
+        "state": 0.37700170507364855,
+        "root": 0.37700170507364855,
+        "residual": -4.6460779667967245e-11,
+        "Ctheta": 2.5078353645928733,
+        "condition": 0.003987502585371436,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.3770017050921748
+        ],
+        "extrema": [],
+        "extrema_values": [
+          0.19286363020455904,
+          8.681873864012276
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.08247296321010929,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 7,
+      "original_S": 100.0,
+      "original_Q": 9.242521073959068,
+      "date": 0.25,
+      "fit": {
+        "state": 1.0014065509027514,
+        "root": 1.0014065509027514,
+        "residual": -1.7763568394002505e-15,
+        "Ctheta": 3.770588037154057,
+        "condition": 0.002652106223608491,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          1.0014065509027519
+        ],
+        "extrema": [],
+        "extrema_values": [
+          5.501446049649496,
+          16.768335959965256
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.5370024847853193,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 8,
+      "original_S": 120.0,
+      "original_Q": 26.135795097422715,
+      "date": 0.25,
+      "fit": {
+        "state": 2.2986489916705395,
+        "root": 2.2986489916705395,
+        "residual": 1.0658141036401503e-14,
+        "Ctheta": 1.7642117967989341,
+        "condition": 0.0056682536746123415,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          2.298648991670535
+        ],
+        "extrema": [],
+        "extrema_values": [
+          22.97155172613121,
+          28.954256082123273
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.7891457517648324,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 9,
+      "original_S": 80.0,
+      "original_Q": 0.16795940706832013,
+      "date": 0.5,
+      "fit": {
+        "state": 0.34513289485765347,
+        "root": 0.34513289485765347,
+        "residual": 1.5543122344752192e-15,
+        "Ctheta": 1.2588435687425217,
+        "condition": 0.007943798775561253,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.3451328948576522
+        ],
+        "extrema": [],
+        "extrema_values": [
+          0.06314518384870778,
+          6.499658472411624
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.04017861394806684,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 10,
+      "original_S": 100.0,
+      "original_Q": 7.847973573300706,
+      "date": 0.5,
+      "fit": {
+        "state": 1.0001334065043592,
+        "root": 1.0001334065043592,
+        "residual": 8.881784197001252e-16,
+        "Ctheta": 3.2998829834010204,
+        "condition": 0.0030304104873723468,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          1.0001334065043588
+        ],
+        "extrema": [],
+        "extrema_values": [
+          4.5733260905328414,
+          14.422657998657563
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.538972114762247,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 11,
+      "original_S": 120.0,
+      "original_Q": 24.79901346796848,
+      "date": 0.5,
+      "fit": {
+        "state": 2.4132450792859963,
+        "root": 2.4132450792859963,
+        "residual": 0.0,
+        "Ctheta": 1.4289932138914823,
+        "condition": 0.0069979338619584235,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          2.4132450792859954
+        ],
+        "extrema": [],
+        "extrema_values": [
+          22.231557101213433,
+          26.94148655217531
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.8057330636028592,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 12,
+      "original_S": 80.0,
+      "original_Q": 0.023505102229885666,
+      "date": 0.75,
+      "fit": {
+        "state": 0.31427879840269995,
+        "root": 0.31427879840269995,
+        "residual": -3.3678615452004124e-13,
+        "Ctheta": 0.3059294305735458,
+        "condition": 0.03268727687052648,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.3142787984038008
+        ],
+        "extrema": [],
+        "extrema_values": [
+          0.00873877592649716,
+          4.167629836878857
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.009611993919496846,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 13,
+      "original_S": 100.0,
+      "original_Q": 6.264680928938759,
+      "date": 0.75,
+      "fit": {
+        "state": 1.0011706100240352,
+        "root": 1.0011706100240352,
+        "residual": -8.881784197001252e-16,
+        "Ctheta": 2.7224428975087993,
+        "condition": 0.003673171624334383,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          1.0011706100240354
+        ],
+        "extrema": [],
+        "extrema_values": [
+          3.5535125060776,
+          11.688035615240313
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.5365483020999792,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 14,
+      "original_S": 120.0,
+      "original_Q": 23.2776594403188,
+      "date": 0.75,
+      "fit": {
+        "state": 2.5571047366692827,
+        "root": 2.5571047366692827,
+        "residual": 0.0,
+        "Ctheta": 1.0395665288005083,
+        "condition": 0.009619393971387655,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          2.557104736669282
+        ],
+        "extrema": [
+          0.25713788441068236
+        ],
+        "extrema_values": [
+          21.49000807636706,
+          21.489974671994755,
+          24.713716798730434
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.8374868299217766,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 15,
+      "original_S": 80.0,
+      "original_Q": 0.0017373254975669161,
+      "date": 0.9166666666666666,
+      "fit": {
+        "state": 0.321048274461999,
+        "root": 0.321048274461999,
+        "residual": -4.339410775155983e-15,
+        "Ctheta": 0.04722350850236513,
+        "condition": 0.21175893780740926,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          0.32104827446209094
+        ],
+        "extrema": [
+          0.2674672545050974
+        ],
+        "extrema_values": [
+          0.000604556942186256,
+          0.00046878681348342153,
+          2.5152320905213745
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.0015108856399187254,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 16,
+      "original_S": 100.0,
+      "original_Q": 5.025233054519283,
+      "date": 0.9166666666666666,
+      "fit": {
+        "state": 1.0054854952392427,
+        "root": 1.0054854952392427,
+        "residual": -2.531308496145357e-13,
+        "Ctheta": 2.234706097007412,
+        "condition": 0.004474861375905949,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          1.0054854952393562
+        ],
+        "extrema": [],
+        "extrema_values": [
+          2.7824536927526697,
+          9.47852279651413
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.5319381509964262,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    },
+    {
+      "model": "local",
+      "state_index": 17,
+      "original_S": 120.0,
+      "original_Q": 22.121583467349467,
+      "date": 0.9166666666666666,
+      "fit": {
+        "state": 2.684729757208699,
+        "root": 2.684729757208699,
+        "residual": -6.679101716144942e-13,
+        "Ctheta": 0.7138739714722208,
+        "condition": 0.01400807481378964,
+        "status": "ok",
+        "reason": "",
+        "roots": [
+          2.6847297572096345
+        ],
+        "extrema": [
+          0.2922294074843415
+        ],
+        "extrema_values": [
+          20.995119079133097,
+          20.99477777849315,
+          23.040755185098845
+        ],
+        "state_bounds": [
+          0.25,
+          4.0
+        ],
+        "CS": 0.8731050908653539,
+        "derivative_error": null,
+        "reference_status": "unmeasured"
+      }
+    }
+  ],
+  "source": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+    "johnhull/hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+  },
+  "outer_observed_wall_seconds": 9.59646795899971,
+  "outer_observed_cpu_seconds": 9.546929538
+}

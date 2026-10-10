@@ -1,0 +1,30 @@
+{
+  "kind": "limited_dependency_cap_source_evidence",
+  "source": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "cc7183df08f8d4b7942929ccc44cbcc5899be5df74128016c7c6521bac2909b9",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "f44c0bd50b5ddec76aa9f2dca7e7363d72a355156817984bb9977a2e96032f54"
+  },
+  "files": [
+    {
+      "file": "task-6-dependency-cap-runner-red.txt",
+      "bytes": 7642,
+      "sha256": "e47767c90f6d79543c88ec7be30c9a91484f749d087c3c44a0c79d0a974f6d76"
+    },
+    {
+      "file": "task-6-dependency-cap-runner-green.txt",
+      "bytes": 100,
+      "sha256": "412be8058a052820bcee51a979ede65ff9541e5b190389eb015228a03ca8a97b"
+    },
+    {
+      "file": "task-6-main-dependency-runner-review.md",
+      "bytes": 1878,
+      "sha256": "c17464314892fcce627ce1e21c281bbfae763509db8aaa88706c6d117d693bdd"
+    },
+    {
+      "file": "task-6-main-dependency-runner-review.log.txt",
+      "bytes": 113,
+      "sha256": "47bb5f646b836e849e35c5244f9c27e50f2e097adfa97410794448cba0b4acb2"
+    }
+  ],
+  "financial_qualification": "unknown"
+}

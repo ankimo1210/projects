@@ -374,6 +374,7 @@ def run_execution_main(
         readiness_guard=execution.assert_execution_ready,
         source_provider=execution_source_identity,
         evaluation_sink=evaluation_sink,
+        allow_dependency_caps=True,
     )
     return result | {
         "precision_selection": precision,
@@ -395,6 +396,7 @@ def _run_closed_main(
     readiness_guard,
     source_provider,
     evaluation_sink=None,
+    allow_dependency_caps=False,
 ):
     """Recalculate raw closed selections before either gated test loader."""
     frozen, candidate, gate_candidate, source, selection_receipts, raw_validation, closed_fits = (
@@ -475,17 +477,31 @@ def _run_closed_main(
     by_selection = {row["id"]: row for row in validations}
     evaluated = []
     for case in loaded["test_cases"]:
-        if case["dataset"]["original_n"] != frozen["selection"]["test_n"]:
+        dependency_cap = case.get("execution_status") == "unexecuted_dependency_cap"
+        if dependency_cap and not allow_dependency_caps:
+            raise ValueError("dependency cap requires execution revision")
+        original_n = frozen["selection"]["test_n"]
+        if dependency_cap:
+            if case.get("original_n") != original_n:
+                raise ValueError("main original N differs from frozen selection")
+        elif case["dataset"]["original_n"] != original_n:
             raise ValueError("main original N differs from frozen selection")
         for universe in UNIVERSES:
-            result = study.test_roster(
-                case["dataset"],
-                case["risk"],
-                fits,
-                by_selection[f"selection:{case['generator']}:{universe}"],
-                generator=case["generator"],
-                universe=universe,
-            )
+            if dependency_cap:
+                # The fixed helper verifies immutable actual parent cap evidence.
+                # It records unexecuted original paths without running a policy.
+                from run_main import dependency_cap_evaluation
+
+                result = dependency_cap_evaluation(case, universe, original_n)
+            else:
+                result = study.test_roster(
+                    case["dataset"],
+                    case["risk"],
+                    fits,
+                    by_selection[f"selection:{case['generator']}:{universe}"],
+                    generator=case["generator"],
+                    universe=universe,
+                )
             row = {k: case[k] for k in ["generator", "seed_slot", "level"]} | {
                 "universe": universe,
                 "result": result,

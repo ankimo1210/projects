@@ -1,0 +1,49 @@
+{
+  "scope": "root limited dependency cap source and measured component records",
+  "validation": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+      ],
+      "returncode": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+      ],
+      "returncode": 0,
+      "stdout": "2 files already formatted\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+        "johnhull/ROADMAP.md",
+        "johnhull/docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md",
+        "johnhull/research/RB-F04/dynamic_hedging/README.md"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "links_and_archived_original_bytes": "PASS",
+  "runner_tests": "51 passed in 32.54s; exact source remains fixed; original log preserved",
+  "independent_review": "approved; 6 passed in 4.08s",
+  "formal_financial_pilot_main": "not performed",
+  "raw_logs_whitespace": "Original RED bytes retained, including pytest indentation/trailing whitespace. Git whitespace check scoped to source and authored docs."
+}

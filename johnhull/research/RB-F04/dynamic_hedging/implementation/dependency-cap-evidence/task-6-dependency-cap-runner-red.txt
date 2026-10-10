@@ -1,0 +1,134 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_ test_execution_dependency_cap_preserves_all_original_slots_without_financial_call _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71d40a9d4cb0>
+
+    def test_execution_dependency_cap_preserves_all_original_slots_without_financial_call(monkeypatch):
+        _, fixture, frozen, receipts, validation, closed = actual_execution_inputs()
+        monkeypatch.setattr(runner, "execution_source_identity",
+                            lambda: {"protocol_source": fixture["source"]})
+        calls = []
+        module = types.ModuleType("run_main")
+    
+        def bounded(case, universe, original_n):
+            assert case["execution_status"] == "unexecuted_dependency_cap"
+            assert case["original_n"] == original_n == 32768
+            calls.append((case["generator"], case["seed_slot"], case["level"], universe))
+            return {"source_unit_only": True, "original_n": original_n,
+                    "loss": np.full(original_n, np.nan),
+                    "qualification": "unknown", "execution_status": case["execution_status"]}
+    
+        module.dependency_cap_evaluation = bounded
+        monkeypatch.setitem(sys.modules, "run_main", module)
+        monkeypatch.setattr(runner.study, "test_roster",
+                            lambda *a, **k: pytest.fail("unexecuted case must not run a policy"))
+>       out = runner.run_execution_main(
+            frozen=frozen, candidate=fixture["candidate"], source=fixture["source"],
+            selection_receipts=receipts, raw_validation=validation, closed_fits=closed,
+            main_test_loader=lambda: {"test_cases": _dependency_cap_cases_for_boundary()},
+            evaluation_sink=lambda row: {
+                "case": tuple(row[k] for k in ("generator", "seed_slot", "level", "universe")),
+                "original_n": row["result"]["original_n"],
+            },
+        )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:1035: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:365: in run_execution_main
+    result = _run_closed_main(
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:478: in _run_closed_main
+    if case["dataset"]["original_n"] != frozen["selection"]["test_n"]:
+       ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = {'generator': 'Heston', 'seed_slot': 0, 'level': 192, 'execution_status': 'unexecuted_dependency_cap', 'original_n': 32768}
+key = 'dataset'
+
+    def __getitem__(self, key):
+        if key in ("dataset", "risk"):
+>           pytest.fail("unexecuted dependency cannot load fictional financial arrays")
+E           Failed: unexecuted dependency cannot load fictional financial arrays
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:1004: Failed
+___ test_execution_dependency_cap_helper_failure_propagates_without_fallback ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71d409f156d0>
+
+    def test_execution_dependency_cap_helper_failure_propagates_without_fallback(monkeypatch):
+        _, fixture, frozen, receipts, validation, closed = actual_execution_inputs()
+        monkeypatch.setattr(runner, "execution_source_identity",
+                            lambda: {"protocol_source": fixture["source"]})
+        module = types.ModuleType("run_main")
+    
+        def rejected(*args):
+            raise ValueError("actual parent cap binding differs")
+    
+        module.dependency_cap_evaluation = rejected
+        monkeypatch.setitem(sys.modules, "run_main", module)
+        sinks = []
+        with pytest.raises(ValueError, match="actual parent cap binding differs"):
+>           runner.run_execution_main(
+                frozen=frozen, candidate=fixture["candidate"], source=fixture["source"],
+                selection_receipts=receipts, raw_validation=validation, closed_fits=closed,
+                main_test_loader=lambda: {"test_cases": _dependency_cap_cases_for_boundary()},
+                evaluation_sink=lambda row: sinks.append(row),
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:1062: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:365: in run_execution_main
+    result = _run_closed_main(
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:478: in _run_closed_main
+    if case["dataset"]["original_n"] != frozen["selection"]["test_n"]:
+       ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = {'generator': 'Heston', 'seed_slot': 0, 'level': 192, 'execution_status': 'unexecuted_dependency_cap', 'original_n': 32768}
+key = 'dataset'
+
+    def __getitem__(self, key):
+        if key in ("dataset", "risk"):
+>           pytest.fail("unexecuted dependency cannot load fictional financial arrays")
+E           Failed: unexecuted dependency cannot load fictional financial arrays
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:1004: Failed
+_______ test_dependency_cap_branch_requires_separate_execution_revision ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71d40a1479e0>
+
+    def test_dependency_cap_branch_requires_separate_execution_revision(monkeypatch):
+        _, fixture, frozen, receipts, validation, closed = actual_execution_inputs()
+        source = fixture["source"]
+        monkeypatch.setattr(runner, "source_identity", lambda: {"protocol_source": source})
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        with pytest.raises(ValueError, match="dependency cap requires execution revision"):
+>           runner.run_main(
+                frozen=frozen, candidate=fixture["candidate"]["original_candidate"], source=source,
+                selection_receipts=receipts, raw_validation=validation, closed_fits=closed,
+                main_test_loader=lambda: {"test_cases": _dependency_cap_cases_for_boundary()},
+            )
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:1077: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:329: in run_main
+    return _run_closed_main(
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:478: in _run_closed_main
+    if case["dataset"]["original_n"] != frozen["selection"]["test_n"]:
+       ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = {'generator': 'Heston', 'seed_slot': 0, 'level': 192, 'execution_status': 'unexecuted_dependency_cap', 'original_n': 32768}
+key = 'dataset'
+
+    def __getitem__(self, key):
+        if key in ("dataset", "risk"):
+>           pytest.fail("unexecuted dependency cannot load fictional financial arrays")
+E           Failed: unexecuted dependency cannot load fictional financial arrays
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:1004: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_dependency_cap_preserves_all_original_slots_without_financial_call
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_dependency_cap_helper_failure_propagates_without_fallback
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_dependency_cap_branch_requires_separate_execution_revision
+3 failed, 48 deselected in 1.50s

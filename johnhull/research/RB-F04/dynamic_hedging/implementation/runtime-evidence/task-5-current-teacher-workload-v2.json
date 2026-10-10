@@ -1,0 +1,198 @@
+{
+  "kind": "structural_prediction_not_formal_run",
+  "historical_measurement": {
+    "original_path_steps": 82247680,
+    "wall_seconds": 45.117101439999715,
+    "steps_per_second": 1822982.358682316,
+    "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-preflight.json",
+    "source_sha256": "50313a08abe3a4ce5abce65b909d44f7b33e7337a2725951b4294a788abc058d",
+    "measurement_scope": "whole child process including startup/imports/all checkpoints/final serialization",
+    "limitations": "historical mixed teachers includes old startup/save; current workload has different state/date composition, and extra new scalar-cache refit, saved-check and archive costs; extrapolation is not formal wall"
+  },
+  "scope": "N ladder entries are alternatives/attempts, not instruction to run every combination",
+  "candidate_jobs": [
+    {
+      "model": "Heston",
+      "grid": "coarse",
+      "original_n": 1024,
+      "nodes": 108,
+      "conditional_path_steps": 46006272,
+      "global_driver_path_steps": 84934656,
+      "largest_child_path_steps": 786432,
+      "conditional_seconds_at_historical_rate": 25.23681690109944,
+      "raw_two_factor_driver_bytes_without_dedup": 1358954496
+    },
+    {
+      "model": "Heston",
+      "grid": "coarse",
+      "original_n": 4096,
+      "nodes": 108,
+      "conditional_path_steps": 184025088,
+      "global_driver_path_steps": 339738624,
+      "largest_child_path_steps": 3145728,
+      "conditional_seconds_at_historical_rate": 100.94726760439777,
+      "raw_two_factor_driver_bytes_without_dedup": 5435817984
+    },
+    {
+      "model": "Heston",
+      "grid": "coarse",
+      "original_n": 16384,
+      "nodes": 108,
+      "conditional_path_steps": 736100352,
+      "global_driver_path_steps": 1358954496,
+      "largest_child_path_steps": 12582912,
+      "conditional_seconds_at_historical_rate": 403.78907041759106,
+      "raw_two_factor_driver_bytes_without_dedup": 21743271936
+    },
+    {
+      "model": "Heston",
+      "grid": "coarse",
+      "original_n": 65536,
+      "nodes": 108,
+      "conditional_path_steps": 2944401408,
+      "global_driver_path_steps": 5435817984,
+      "largest_child_path_steps": 50331648,
+      "conditional_seconds_at_historical_rate": 1615.1562816703643,
+      "raw_two_factor_driver_bytes_without_dedup": 86973087744
+    },
+    {
+      "model": "Heston",
+      "grid": "high",
+      "original_n": 1024,
+      "nodes": 156,
+      "conditional_path_steps": 66453504,
+      "global_driver_path_steps": 122683392,
+      "largest_child_path_steps": 786432,
+      "conditional_seconds_at_historical_rate": 36.45317996825475,
+      "raw_two_factor_driver_bytes_without_dedup": 1962934272
+    },
+    {
+      "model": "Heston",
+      "grid": "high",
+      "original_n": 4096,
+      "nodes": 156,
+      "conditional_path_steps": 265814016,
+      "global_driver_path_steps": 490733568,
+      "largest_child_path_steps": 3145728,
+      "conditional_seconds_at_historical_rate": 145.812719873019,
+      "raw_two_factor_driver_bytes_without_dedup": 7851737088
+    },
+    {
+      "model": "Heston",
+      "grid": "high",
+      "original_n": 16384,
+      "nodes": 156,
+      "conditional_path_steps": 1063256064,
+      "global_driver_path_steps": 1962934272,
+      "largest_child_path_steps": 12582912,
+      "conditional_seconds_at_historical_rate": 583.250879492076,
+      "raw_two_factor_driver_bytes_without_dedup": 31406948352
+    },
+    {
+      "model": "Heston",
+      "grid": "high",
+      "original_n": 65536,
+      "nodes": 156,
+      "conditional_path_steps": 4253024256,
+      "global_driver_path_steps": 7851737088,
+      "largest_child_path_steps": 50331648,
+      "conditional_seconds_at_historical_rate": 2333.003517968304,
+      "raw_two_factor_driver_bytes_without_dedup": 125627793408
+    },
+    {
+      "model": "local",
+      "grid": "coarse",
+      "original_n": 1024,
+      "nodes": 520,
+      "conditional_path_steps": 214302720,
+      "global_driver_path_steps": 408944640,
+      "largest_child_path_steps": 786432,
+      "conditional_seconds_at_historical_rate": 117.55611291537775,
+      "raw_two_factor_driver_bytes_without_dedup": 6543114240
+    },
+    {
+      "model": "local",
+      "grid": "coarse",
+      "original_n": 4096,
+      "nodes": 520,
+      "conditional_path_steps": 857210880,
+      "global_driver_path_steps": 1635778560,
+      "largest_child_path_steps": 3145728,
+      "conditional_seconds_at_historical_rate": 470.224451661511,
+      "raw_two_factor_driver_bytes_without_dedup": 26172456960
+    },
+    {
+      "model": "local",
+      "grid": "coarse",
+      "original_n": 16384,
+      "nodes": 520,
+      "conditional_path_steps": 3428843520,
+      "global_driver_path_steps": 6543114240,
+      "largest_child_path_steps": 12582912,
+      "conditional_seconds_at_historical_rate": 1880.897806646044,
+      "raw_two_factor_driver_bytes_without_dedup": 104689827840
+    },
+    {
+      "model": "local",
+      "grid": "coarse",
+      "original_n": 65536,
+      "nodes": 520,
+      "conditional_path_steps": 13715374080,
+      "global_driver_path_steps": 26172456960,
+      "largest_child_path_steps": 50331648,
+      "conditional_seconds_at_historical_rate": 7523.591226584176,
+      "raw_two_factor_driver_bytes_without_dedup": 418759311360
+    },
+    {
+      "model": "local",
+      "grid": "high",
+      "original_n": 1024,
+      "nodes": 1344,
+      "conditional_path_steps": 542244864,
+      "global_driver_path_steps": 1056964608,
+      "largest_child_path_steps": 786432,
+      "conditional_seconds_at_historical_rate": 297.44932056936864,
+      "raw_two_factor_driver_bytes_without_dedup": 16911433728
+    },
+    {
+      "model": "local",
+      "grid": "high",
+      "original_n": 4096,
+      "nodes": 1344,
+      "conditional_path_steps": 2168979456,
+      "global_driver_path_steps": 4227858432,
+      "largest_child_path_steps": 3145728,
+      "conditional_seconds_at_historical_rate": 1189.7972822774746,
+      "raw_two_factor_driver_bytes_without_dedup": 67645734912
+    },
+    {
+      "model": "local",
+      "grid": "high",
+      "original_n": 16384,
+      "nodes": 1344,
+      "conditional_path_steps": 8675917824,
+      "global_driver_path_steps": 16911433728,
+      "largest_child_path_steps": 12582912,
+      "conditional_seconds_at_historical_rate": 4759.189129109898,
+      "raw_two_factor_driver_bytes_without_dedup": 270582939648
+    },
+    {
+      "model": "local",
+      "grid": "high",
+      "original_n": 65536,
+      "nodes": 1344,
+      "conditional_path_steps": 34703671296,
+      "global_driver_path_steps": 67645734912,
+      "largest_child_path_steps": 50331648,
+      "conditional_seconds_at_historical_rate": 19036.756516439593,
+      "raw_two_factor_driver_bytes_without_dedup": 1082331758592
+    }
+  ],
+  "calculation_source": {
+    "file": "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+    "sha256": "58f8353e382e0154e37e561f580733214459388ea466a003bb5f71aa68113335",
+    "symbol": "teacher_axes"
+  },
+  "storage_interpretation": "worst-case retained full fine drivers per teacher node only; excludes primitives/cache/replays/copies/derived arrays; identical-driver dedup is not assumed",
+  "qualification": "unknown; structural prediction only, no authorized formal budget or completed pilot"
+}
