@@ -1,0 +1,173 @@
+{
+  "scope": "scoped structural unit tests and style checks, not financial pilot costs",
+  "records": [
+    {
+      "file": "task-5-stage-risk-argument-binding-red-v1.json",
+      "scope": "synthetic structural stage argument binding; financial worker stub, no RNG/SDE/financial solver",
+      "stage": "RED_before_checker_change",
+      "returncode": 1,
+      "wall_seconds": 2.065324846000294,
+      "cpu_seconds": 4.832815,
+      "peak_rss_bytes": 752246784,
+      "source_before": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+      "source_after": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+      "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-red-v1.log",
+      "financial_generation_performed": false
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-red-v2.json",
+      "scope": "synthetic structural stage argument binding; financial worker stub, no RNG/SDE/financial solver",
+      "version": "red-v2",
+      "returncode": 1,
+      "wall_seconds": 1.9601893360013491,
+      "cpu_seconds": 4.148801,
+      "peak_rss_bytes": 745111552,
+      "source_before": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+      "source_after": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+      "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-red-v2.log",
+      "financial_generation_performed": false
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-green-v1.json",
+      "scope": "synthetic structural stage argument binding; financial worker stub, no RNG/SDE/financial solver",
+      "version": "green-v1",
+      "returncode": 0,
+      "wall_seconds": 1.8225004929990973,
+      "cpu_seconds": 4.577162,
+      "peak_rss_bytes": 744493056,
+      "source_before": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "source_after": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-green-v1.log",
+      "financial_generation_performed": false
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-format-v1.json",
+      "version": "format-v1",
+      "returncode": 0,
+      "wall_seconds": 0.01784090500586899,
+      "cpu_seconds": 0.020503,
+      "source_before": {
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+        "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py": "cc41d025b9e07700924b728bdc8baebf106578f84de1d4760384cd6d384c444b"
+      },
+      "source_after": {
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+        "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py": "de4b826d255703d91dc0aaf75f482a679c5d6c39dd95ea4828515ed40c8ecc21"
+      },
+      "financial_generation_performed": false,
+      "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-format-v1.log"
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-ruff-v1.json",
+      "version": "ruff-v1",
+      "returncode": 1,
+      "wall_seconds": 0.0174400579999201,
+      "cpu_seconds": 0.02055,
+      "source_before": {
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+        "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py": "de4b826d255703d91dc0aaf75f482a679c5d6c39dd95ea4828515ed40c8ecc21"
+      },
+      "source_after": {
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+        "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py": "de4b826d255703d91dc0aaf75f482a679c5d6c39dd95ea4828515ed40c8ecc21"
+      },
+      "financial_generation_performed": false,
+      "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-ruff-v1.log"
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-green-v2.json",
+      "scope": "synthetic structural stage argument binding; financial worker stub, no RNG/SDE/financial solver",
+      "version": "green-v2",
+      "returncode": 0,
+      "wall_seconds": 2.2715069919941016,
+      "cpu_seconds": 4.442611,
+      "peak_rss_bytes": 744394752,
+      "source_before": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "source_after": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-green-v2.log",
+      "financial_generation_performed": false
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-related-metadata-v1.json",
+      "scope": "synthetic structural stage argument binding; financial worker stub, no RNG/SDE/financial solver",
+      "version": "related-metadata-v1",
+      "returncode": 0,
+      "wall_seconds": 2.3589151129999664,
+      "cpu_seconds": 4.401098999999999,
+      "peak_rss_bytes": 745590784,
+      "source_before": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "source_after": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-related-metadata-v1.log",
+      "financial_generation_performed": false
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-ruff-v2.json",
+      "returncode": 0,
+      "wall_seconds": 0.01073228500172263,
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py"
+      ],
+      "financial_generation_performed": false
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-format-check-v2.json",
+      "returncode": 0,
+      "wall_seconds": 0.009517234000668395,
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py"
+      ],
+      "financial_generation_performed": false
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-green-v3.json",
+      "scope": "synthetic structural stage argument binding; financial worker stub, no RNG/SDE/financial solver",
+      "version": "green-v3",
+      "returncode": 0,
+      "wall_seconds": 1.9614111609989777,
+      "cpu_seconds": 4.209128,
+      "peak_rss_bytes": 744214528,
+      "source_before": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "source_after": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-green-v3.log",
+      "financial_generation_performed": false
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-ruff-v3.json",
+      "returncode": 0,
+      "wall_seconds": 0.009966873003577348,
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py"
+      ],
+      "financial_generation_performed": false
+    },
+    {
+      "file": "task-5-stage-risk-argument-binding-format-check-v3.json",
+      "returncode": 0,
+      "wall_seconds": 0.008467237996228505,
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py"
+      ],
+      "financial_generation_performed": false
+    }
+  ],
+  "component_wall_seconds_sum": 12.513812534001772,
+  "component_wall_sum_is_not_elapsed_turn": true,
+  "parallel_overlap_preserved": true,
+  "unknown_financial_generation_time": null,
+  "financial_generation_performed": false,
+  "history_includes_original_fixture_setup_error_and_ruff_failure": true
+}

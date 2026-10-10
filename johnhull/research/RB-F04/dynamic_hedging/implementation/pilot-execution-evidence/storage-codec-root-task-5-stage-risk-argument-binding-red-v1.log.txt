@@ -1,0 +1,196 @@
+EEEEEEEEEEEE                                                             [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_actual_dispatch_wall_cap_does_not_change_stage_financial_arguments _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x714560f39040>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+_ ERROR at setup of test_preexisting_explicit_cap_argument_keeps_full_stage_binding _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71444ea92a20>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+_ ERROR at setup of test_stage_rejects_changed_original_financial_argument[parameters] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71444ea90260>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+_ ERROR at setup of test_stage_rejects_changed_original_financial_argument[surface] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71444ea91400>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+_ ERROR at setup of test_stage_rejects_changed_original_financial_argument[dataset] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71444ea920f0>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+_ ERROR at setup of test_stage_rejects_changed_original_financial_argument[caches] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71444ea933e0>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+_ ERROR at setup of test_stage_rejects_changed_original_financial_argument[chunk_paths] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71444ea92a50>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+_ ERROR at setup of test_extra_financial_key_is_not_dropped_with_operational_cap[saved_worker] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71444eabe030>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+_ ERROR at setup of test_extra_financial_key_is_not_dropped_with_operational_cap[stage_evidence] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71444eabffe0>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+_ ERROR at setup of test_saved_worker_cap_must_match_original_prior_even_after_stage_binding[False] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71444eabf110>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+_ ERROR at setup of test_saved_worker_cap_must_match_original_prior_even_after_stage_binding[True] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x714560f3b950>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+________ ERROR at setup of test_job_envelope_rejects_replaced_prior_cap ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x71444ea908c0>
+
+    @pytest.fixture(autouse=True)
+    def no_financial_generation(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("this structural regression must not generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+>           monkeypatch.setattr(pilot, name, forbidden)
+E           AttributeError: <module 'run_pilot' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py'> has no attribute 'run_oracle_job'
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:26: AttributeError
+=========================== short test summary info ============================
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_actual_dispatch_wall_cap_does_not_change_stage_financial_arguments
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_preexisting_explicit_cap_argument_keeps_full_stage_binding
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_stage_rejects_changed_original_financial_argument[parameters]
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_stage_rejects_changed_original_financial_argument[surface]
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_stage_rejects_changed_original_financial_argument[dataset]
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_stage_rejects_changed_original_financial_argument[caches]
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_stage_rejects_changed_original_financial_argument[chunk_paths]
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_extra_financial_key_is_not_dropped_with_operational_cap[saved_worker]
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_extra_financial_key_is_not_dropped_with_operational_cap[stage_evidence]
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_saved_worker_cap_must_match_original_prior_even_after_stage_binding[False]
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_saved_worker_cap_must_match_original_prior_even_after_stage_binding[True]
+ERROR deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_job_envelope_rejects_replaced_prior_cap
+12 errors in 1.40s

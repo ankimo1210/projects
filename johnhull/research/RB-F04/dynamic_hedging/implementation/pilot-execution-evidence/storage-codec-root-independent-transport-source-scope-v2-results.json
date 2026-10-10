@@ -1,0 +1,55 @@
+{
+  "run_pilot.py": {
+    "current_sha256": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5",
+    "W1_previous_sha256": "8f0df2b35bb04087e7c4a3761d6cf1b8bbb8104e2e5b7516af03ba6c2c8123c4",
+    "changed_functions": [
+      "read_pilot_artifact",
+      "write_pilot_artifact"
+    ],
+    "added_functions": [],
+    "removed_functions": [],
+    "other_same_definitions": 72
+  },
+  "run_reference.py": {
+    "current_sha256": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef",
+    "W1_previous_sha256": "cc7183df08f8d4b7942929ccc44cbcc5899be5df74128016c7c6521bac2909b9",
+    "changed_functions": [
+      "execution_source_identity"
+    ],
+    "added_functions": [],
+    "removed_functions": [],
+    "other_same_definitions": 23
+  },
+  "_teacher_storage.py": {
+    "current_sha256": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+    "W1_previous_sha256": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+    "changed_functions": [],
+    "added_functions": [],
+    "removed_functions": [],
+    "other_same_definitions": 10
+  },
+  "root_guard_calls": [
+    [
+      1956,
+      "pilot_transport.validate_empty_root_container"
+    ],
+    [
+      1957,
+      "protocol.read_artifact"
+    ]
+  ],
+  "johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py": {
+    "sha256": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd",
+    "bytes": 33301
+  },
+  "johnhull/hullkit/tests/test_dynamic_hedging_transport.py": {
+    "sha256": "1b3f5d5eebc44c95ea22cdf26e18204b3b90e080ed18ca2e3efbdca314b9f8dd",
+    "bytes": 19846
+  },
+  "deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py": {
+    "sha256": "351ac9b435296cd57df5666e417a94b4c6b87f7eafd7c2764620e9a38f6ef46b",
+    "bytes": 6377
+  },
+  "helper_matches_fixed_v2": true,
+  "old_teacher_and_legacy_reader_bodies_unchanged_from_complete_source_diff": true
+}

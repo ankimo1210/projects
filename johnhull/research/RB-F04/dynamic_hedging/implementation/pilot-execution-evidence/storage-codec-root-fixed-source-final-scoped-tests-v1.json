@@ -1,0 +1,20 @@
+{
+  "exit_code": 2,
+  "elapsed_seconds": 59.52742795499944,
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "johnhull/hullkit/tests/test_dynamic_hedging_transport.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_main.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py"
+  ],
+  "helper_sha256": "c2c2e84f68abae13f19b8221da6ca6b95307a9e4a538e7014dfe254f2e675c7e",
+  "financial_generation": false
+}

@@ -1,0 +1,6 @@
+........................................................................ [ 12%]
+.............................................................
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/usr/lib/python3.12/importlib/metadata/__init__.py:485: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+133 passed in 58.16s

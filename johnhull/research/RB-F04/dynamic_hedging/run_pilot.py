@@ -20,6 +20,7 @@ if __name__ == "__main__":
         str(_CLI_ROOT / "deep_hedge_price/src"),
     ]
 
+import _pilot_transport as pilot_transport
 import _teacher_storage as teacher_storage
 import numpy as np
 import run_reference as runner
@@ -1810,13 +1811,16 @@ def run_market_pair_job(
 
 
 def write_pilot_artifact(directory, payload):
-    """Split every array into bounded immutable parts, preserving its full shape.
+    """Save every logical value with bounded pages or the fixed teacher recipe.
 
-    The tree binds array bytes/shapes and exact part coverage. Byte identities
-    establish provenance only, not numerical accuracy.
+    Nonteacher results share physical content within one artifact; reading
+    restores independent writable objects. The original teacher recipe and
+    legacy readers remain available. Byte identities establish provenance only.
     """
     directory = Path(directory)
     payload, storage_descriptor = teacher_storage.prepare_teacher(payload)
+    if storage_descriptor is None:
+        return pilot_transport.write_transport(directory, payload, protocol=protocol, runner=runner)
     arrays = {}
     tree = runner._encode_tree(payload, arrays)
     descriptors, packs = {}, []
@@ -1947,10 +1951,15 @@ def _read_packed_pilot(directory, metadata, receipt):
 
 
 def read_pilot_artifact(directory):
-    """Load bounded parts; reject gaps, reordered indices, or tampered array bytes."""
+    """Read new pages or legacy parts after complete storage provenance checks."""
     directory = Path(directory)
+    pilot_transport.validate_empty_root_container(directory)
     metadata, root_arrays, root_receipt = protocol.read_artifact(directory)
     _require(not root_arrays, "unexpected root raw array")
+    if metadata.get("schema") == pilot_transport.SCHEMA:
+        return pilot_transport.read_transport(
+            directory, metadata, root_receipt, protocol=protocol, runner=runner
+        )
     if metadata.get("schema") == CLOSURE_SCHEMA:
         return read_closure_artifact(directory)
     if metadata.get("schema") == PACK_SCHEMA:

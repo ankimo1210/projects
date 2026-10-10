@@ -1,0 +1,13 @@
+RUF043 Pattern passed to `match=` contains metacharacters but is neither escaped nor raw
+   --> deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:256:42
+    |
+254 |     if rewrite_resolved_sha:
+255 |         row["resolved_arguments_sha256"] = pilot.input_identity(arguments)
+256 |     with pytest.raises(ValueError, match="(saved wrapped worker input|saved resolved original)"):
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+257 |         checker.check_resolved_job_arguments(
+258 |             row, job, inputs=inputs, jobs={}, artifact_directory=None
+    |
+help: Use a raw string or `re.escape()` to make the intention explicit
+
+Found 1 error.

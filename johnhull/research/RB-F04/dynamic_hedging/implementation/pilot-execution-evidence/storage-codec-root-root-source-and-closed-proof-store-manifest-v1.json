@@ -1,0 +1,744 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+      "ref": "artifact:sha256:ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd",
+      "bytes": 33301,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "ref": "artifact:sha256:9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5",
+      "bytes": 176874,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "ref": "artifact:sha256:849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef",
+      "bytes": 51440,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "ref": "artifact:sha256:2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "bytes": 215493,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/hullkit/tests/test_dynamic_hedging_transport.py",
+      "ref": "artifact:sha256:1b3f5d5eebc44c95ea22cdf26e18204b3b90e080ed18ca2e3efbdca314b9f8dd",
+      "bytes": 19846,
+      "mime": "text/plain"
+    },
+    {
+      "path": "deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py",
+      "ref": "artifact:sha256:351ac9b435296cd57df5666e417a94b4c6b87f7eafd7c2764620e9a38f6ef46b",
+      "bytes": 6377,
+      "mime": "text/plain"
+    },
+    {
+      "path": "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py",
+      "ref": "artifact:sha256:2d1f468f1185cbf1f3cfbb22895f99185ff440bd75d74a9733d8c4dec029769f",
+      "bytes": 10453,
+      "mime": "text/plain"
+    },
+    {
+      "path": "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+      "ref": "artifact:sha256:7908711cf9ab62fd6dbb1ae9546d05172e10340ff5fbc97f3dfdbfefc13039d9",
+      "bytes": 166653,
+      "mime": "text/plain"
+    },
+    {
+      "path": "deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+      "ref": "artifact:sha256:02d952530a8674770869964c25fb4927b846bcad4e0a85b91f74a26fda4dac85",
+      "bytes": 42575,
+      "mime": "text/plain"
+    },
+    {
+      "path": "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py",
+      "ref": "artifact:sha256:d85e2090ffb8ce67d80437e8c0dd258611e8442b7fa2e69ce902e154773f4378",
+      "bytes": 16449,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-GREEN-attempt-v1.log.txt",
+      "ref": "artifact:sha256:fa067268408adaea85274351ca788d1d09e9499f37e99b64239e7a25672feec4",
+      "bytes": 574,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-GREEN-attempt-v2.log.txt",
+      "ref": "artifact:sha256:f4dd49adbf30194e512f2d177ccde10d8d3abae947acfc6465d26cb380396947",
+      "bytes": 99,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-GREEN-v1.log.txt",
+      "ref": "artifact:sha256:5d9da551e6cc75b0aa01ce9f16cd09e3162d7196c2e48d2143814a26334fc1c9",
+      "bytes": 99,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-GREEN-v2.log.txt",
+      "ref": "artifact:sha256:aed805488a112a1320eaa955928116bc5f1beea8cc0c29d9dd17cf2780d698e8",
+      "bytes": 99,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-RED-v1.log.txt",
+      "ref": "artifact:sha256:7a9d51ab83013ce42bd035159636b6e50357d7d2d813a8a2aad9d23a3602e66e",
+      "bytes": 1027,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-RED-v2-header.log.txt",
+      "ref": "artifact:sha256:e6de12d82e21c81282386fe10862b6339b253daddb12876ffaedd4c695851366",
+      "bytes": 36608,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-RED-v2.log.txt",
+      "ref": "artifact:sha256:c77ada32d138d5940958d0e50754000fc317b94b4d8fb344321ef6d6de3e61d8",
+      "bytes": 41789,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-manifest-fixed-v1.json",
+      "ref": "artifact:sha256:5c72e37b90c4f9000596560e7527e11efa998ffb097f8ea8558bad403ecdcf00",
+      "bytes": 3726,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-manifest-fixed-v2.json",
+      "ref": "artifact:sha256:f81560c10a793e3e6d7ab829d7ac953b2d947b35ae8654de24aec63eae0d3d48",
+      "bytes": 3949,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-report-fixed-v1.md",
+      "ref": "artifact:sha256:68d8b2a3ac3e4f5d4eacae45aa273e2eab9060cd15816782f6f0153e9e15b1c6",
+      "bytes": 2050,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-report-fixed-v2.md",
+      "ref": "artifact:sha256:bd1765528b769d6fae3c4519441c3021c9084969bf10ed111790c468b67564d8",
+      "bytes": 1314,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-ruff-v1.log.txt",
+      "ref": "artifact:sha256:afa20b27dacc9bf0aba3c1d265964c21e04ab42f6e39e2dd4769718ceded003a",
+      "bytes": 45,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-ruff-v2.log.txt",
+      "ref": "artifact:sha256:afa20b27dacc9bf0aba3c1d265964c21e04ab42f6e39e2dd4769718ceded003a",
+      "bytes": 45,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-source-fixed-v1__johnhull__hullkit__tests__test_dynamic_hedging_transport.py.txt",
+      "ref": "artifact:sha256:56a81037f3b55e34caa7ba921e3a491685de157bee44b1b46376fcdd1d3124c0",
+      "bytes": 16382,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-source-fixed-v1__johnhull__research__RB-F04__dynamic_hedging___pilot_transport.py.txt",
+      "ref": "artifact:sha256:c2c2e84f68abae13f19b8221da6ca6b95307a9e4a538e7014dfe254f2e675c7e",
+      "bytes": 31087,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-source-fixed-v2__johnhull__hullkit__tests__test_dynamic_hedging_transport.py.txt",
+      "ref": "artifact:sha256:1b3f5d5eebc44c95ea22cdf26e18204b3b90e080ed18ca2e3efbdca314b9f8dd",
+      "bytes": 19846,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-source-fixed-v2__johnhull__research__RB-F04__dynamic_hedging___pilot_transport.py.txt",
+      "ref": "artifact:sha256:ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd",
+      "bytes": 33301,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-author-source-v2.diff.txt",
+      "ref": "artifact:sha256:4a7d40d7bad7fd6bf7a09a2b8ad1ebc263f05fda8e53c0407a8c2b83c221b50b",
+      "bytes": 7784,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-baseline-scoped-tests.json",
+      "ref": "artifact:sha256:a5d7faedce087115ec256bb575125870ce3121a99dffbc4a055a10fd28d0a5c3",
+      "bytes": 492,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-baseline-scoped-tests.log.txt",
+      "ref": "artifact:sha256:228ab7cd8fe381cb3fb040704f6c197c9815ef87ad5d67557b59c383f361e4cf",
+      "bytes": 432,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-current-production-source-closure-v1.json",
+      "ref": "artifact:sha256:248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5",
+      "bytes": 34372,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-fixed-source-c2-test-interruption.json",
+      "ref": "artifact:sha256:c0fcda40f6ce3761aae0f06ba17c520518a1151966a00c99012b035449a55a9d",
+      "bytes": 920,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-fixed-source-final-scoped-tests-v1.json",
+      "ref": "artifact:sha256:0abf341fab469f1e70d683d5df8ba61f457ba319ec8b15e5704550b26317217f",
+      "bytes": 804,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-fixed-source-final-scoped-tests-v1.log.txt",
+      "ref": "artifact:sha256:65aca7305e57e0bb8aa4a734ad78d98fe07e8217dde8a92db498aa1f5bd234fe",
+      "bytes": 383,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-fixed-manifest-v2.json",
+      "ref": "artifact:sha256:7d9aa7709a1e672e38105bb734e2f35714f81700b62c4cc49db4183592670473",
+      "bytes": 11993,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-fixed-report-v2.md",
+      "ref": "artifact:sha256:838224b19f677bfa2feedb228d9bad43eaf48e75ef5a4c1d8f0ec59dec9cbe0f",
+      "bytes": 2593,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-input-manifest-v1.json",
+      "ref": "artifact:sha256:90a07773c0b3d1b46ed273124ad1f4b9cfb074cac92bc3d81be2065dbafc5256",
+      "bytes": 3592,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-measurement-v1.log.txt",
+      "ref": "artifact:sha256:9a047a1dc1a462821a7895595c28f701f450cffd760c0e364d40f9981b25da74",
+      "bytes": 397,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-measurement-v1.py.txt",
+      "ref": "artifact:sha256:caa33d0ddefbe3e2c05c10d5ae398f127d8e97c629d91cee8cc1674eb470f343",
+      "bytes": 14627,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-measurement-v2.log.txt",
+      "ref": "artifact:sha256:f1655859a094a38d2edc5c0786f92f0191fd5b8d93c6909986cb81f90c4d5a2c",
+      "bytes": 2784,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-measurement-v2.py.txt",
+      "ref": "artifact:sha256:a54dd6ef476e79ab4cc4a9f03e5a8d60828dff901744eb6a93059e078f09e453",
+      "bytes": 16179,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-observation-v1__child-result.json",
+      "ref": "artifact:sha256:edbc1c9a7cfd03473f017833bb676776e68e3fd6b8fa2115449d3e7257c7f081",
+      "bytes": 3793,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-observation-v1__enclosing-cost-and-status.json",
+      "ref": "artifact:sha256:49208b626262760d8bc7597587ad5df6a3f8745510d5a8b19758265863e7305c",
+      "bytes": 419,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-observation-v1__initial.json",
+      "ref": "artifact:sha256:1dd5f9a1b73824ec5b7279893e8f0a428f909e2fa47b62984691613726b08b78",
+      "bytes": 3612,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-observation-v1__progress.json",
+      "ref": "artifact:sha256:92b00160ea00268f62ef797a56d721e77be1d884c96dc0d5872784d6f0df0070",
+      "bytes": 2011,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-observation-v2__child-result.json",
+      "ref": "artifact:sha256:3b17d7ed3c60ab92efffa3e3c040f6e1c1bb2a9c77153baa64c4e77b44502522",
+      "bytes": 7595,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-observation-v2__enclosing-cost-and-status.json",
+      "ref": "artifact:sha256:3b539693cb24d0df2f6989388df067f7a324c732ed7268bf048ad47c7bc19b2d",
+      "bytes": 3502,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-observation-v2__initial.json",
+      "ref": "artifact:sha256:ab89594411b747d5da83b1ccec007c7a7396dfacfbb400d3e38a92b46dad8e01",
+      "bytes": 4556,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-observation-v2__progress.json",
+      "ref": "artifact:sha256:ee54dcc81c409e1d452deb93ef8ba93e33af873d2c12525416b406eeb3bed2d5",
+      "bytes": 3696,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-premeasurement-v1.md",
+      "ref": "artifact:sha256:71335fd80440d110b3eb7e5c79fbd9e71d7ef3bf8e95171d07a137a0022b2b60",
+      "bytes": 1198,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-root-authorized-budget-v1.json",
+      "ref": "artifact:sha256:0856fd8a9062e317ae756900f0b0352cc839ca1ee988295dabfd8b5e46317960",
+      "bytes": 3329,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-root-authorized-budget-v2.json",
+      "ref": "artifact:sha256:78920098b17eb14ffe012b2144ed6085f2be12e0a499b4f7a2eca2b728241ec5",
+      "bytes": 4251,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-page-blob-header-RED-v1.md",
+      "ref": "artifact:sha256:aae56b75161dbec90947fc619a286056c01c590a03360320604a6ac303217d8c",
+      "bytes": 2804,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-stage-cap-binding-scoped-pytest-v1-results.json",
+      "ref": "artifact:sha256:1be6cfa70e4ae3f8c26965e2fe0b7eb7673b9b5a8f95a9af00777daf7385eb0d",
+      "bytes": 782,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-stage-cap-binding-scoped-pytest-v1.log.txt",
+      "ref": "artifact:sha256:bd2ad399fc0b11a7771ebe6831e765aad13b4df3e556b162b21fd25db79b15a7",
+      "bytes": 880,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-stage-cap-binding-v1-decision.json",
+      "ref": "artifact:sha256:f2fd826e399a08e20e848ac00bfbbb1132433be189779716f66a7e61d1868ea2",
+      "bytes": 2860,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-stage-cap-binding-v1-manifest.json",
+      "ref": "artifact:sha256:a948b91ee5efe414bf163f4b417164f4e5cdc91f030534052a0bdce336450da8",
+      "bytes": 1777,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-stage-cap-binding-v1-probe.py.txt",
+      "ref": "artifact:sha256:30d44753695a6eb9c5edbdd90c9404c5197d0dfd8ba9f9e58e3e56b193b223db",
+      "bytes": 7627,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-stage-cap-binding-v1-results.json",
+      "ref": "artifact:sha256:1b82a8c1483d53d0270c66f9a5b04bb4a066b169b1d8524ea86b1fea7921bbdb",
+      "bytes": 3777,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-stage-cap-binding-v1-review.md",
+      "ref": "artifact:sha256:8b4685f12bc7e547804cda4952c07b4abd043fb69fd44c32ee190b09eb910d4d",
+      "bytes": 2507,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-transport-codec-v2-decision.json",
+      "ref": "artifact:sha256:26aa45f5902e816053decce2aec2364c58161c387fdcc5378d27e8255a906262",
+      "bytes": 2417,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-transport-codec-v2-manifest.json",
+      "ref": "artifact:sha256:923e0e5c409460bd2128cbb2d93098f18f44efdc2639a009863947503ff9fedd",
+      "bytes": 2877,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-transport-codec-v2-review.md",
+      "ref": "artifact:sha256:99f790e7b55a0a5f7b58530c3202ba8038df578b8bfd415bc1440063d291b7e0",
+      "bytes": 2462,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-transport-fixed-binding-v2-results.json",
+      "ref": "artifact:sha256:27627275d19d0aea113ddb26c12552658661f8b0b86fc4e9f47481f64cb0c2e9",
+      "bytes": 2077,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-transport-scoped-pytest-environment-failure-v1.log.txt",
+      "ref": "artifact:sha256:335a8518169fb5b0777680c0cea3545d506e5b77c0240443e1bdceeb43a1679f",
+      "bytes": 328,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-transport-scoped-pytest-v2-results.json",
+      "ref": "artifact:sha256:3f18530f3fd869478d381d03dbefc0bebf2ab75e18ecd070371ec46fe68e4e21",
+      "bytes": 1629,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-transport-scoped-pytest-v2.log.txt",
+      "ref": "artifact:sha256:85bf0c988a5c43b435fbe259c1a057ac52821267e623f198dca36f03c055db9d",
+      "bytes": 1728,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-transport-small-probe-v2-results.json",
+      "ref": "artifact:sha256:10c29fe13dbacafdabdf812945ff5d9f59e95e89015978720608879a96276e14",
+      "bytes": 1701,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-transport-small-probe-v2.py.txt",
+      "ref": "artifact:sha256:1e5e93ca964f6ee9bf2155cb6543bae88e65143987d201a1b1a842fe30ac83a3",
+      "bytes": 8853,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-independent-transport-source-scope-v2-results.json",
+      "ref": "artifact:sha256:93bb0a6f58220da0e715da57ad3c45144c18fb3015fb7ec1247742513cee72fb",
+      "bytes": 1904,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-integration-green-scoped-tests-v1.json",
+      "ref": "artifact:sha256:2f8bfd0d26c4bf9147da02f07156b0d0a376b62adaf3a3aa7d0bd39de07b4f6f",
+      "bytes": 723,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-integration-green-scoped-tests-v1.log.txt",
+      "ref": "artifact:sha256:bed15f82771ffca246eb4b136123a263f9c8fa7404fa098f18e7342720ec2489",
+      "bytes": 12183,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-integration-red-tests.json",
+      "ref": "artifact:sha256:08b32c60ced89e067d955028a1bf811fdbee70249234065ea6d280acaaf75c54",
+      "bytes": 235,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-integration-red-tests.log.txt",
+      "ref": "artifact:sha256:e471d8335b9d717add7dec287847ccd1a9a14fbbff4b94bdbe1471f978f3f42a",
+      "bytes": 3702,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-local-reference-fixture-restoration.json",
+      "ref": "artifact:sha256:5c29f2377fb4f1f4b9c7eb47d118e8b15253735217f3a1a51802cc5361b8e268",
+      "bytes": 501,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-current-production-source-delta-v1.json",
+      "ref": "artifact:sha256:5644c3e49debb84cb6a9155749b9079e2e832f2a5ecd0421f62581cdda32052a",
+      "bytes": 1453,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-empty-container-and-fixed-regressions-v2.json",
+      "ref": "artifact:sha256:2903fb03a0dd98fcb3707373a7dda0e007d85596d8fce5eb985250beef1567a9",
+      "bytes": 682,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-empty-container-and-fixed-regressions-v2.log.txt",
+      "ref": "artifact:sha256:b1868e6cd52fc719b105a6b66bde33a663c0be5235220531dd16ff46fd27fc2b",
+      "bytes": 275,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-empty-container-and-fixed-regressions-v3.json",
+      "ref": "artifact:sha256:f357baea0a2ff947a4d41fc3e2d9ed7dcf7d3c6734d5065ddafcdc9181d877e4",
+      "bytes": 752,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-empty-container-and-fixed-regressions-v3.log.txt",
+      "ref": "artifact:sha256:99841082cc02e2ca53206d2d2de0c60f2c20f6b3c90b54b4c4e760378c3fe430",
+      "bytes": 98,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-final-owned-python-ruff-v2.json",
+      "ref": "artifact:sha256:fbc7ec83e8a2a15e18d268afb69e2be578368f4e03337ca35c89a2f41cedb75b",
+      "bytes": 1923,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-fixed-source-final-targeted-v2.json",
+      "ref": "artifact:sha256:6c889c77aed5936fb5561b4291ea2a7417d193ff1bef42bbdb60b929136a16fa",
+      "bytes": 2031,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-fixed-source-final-targeted-v2.log.txt",
+      "ref": "artifact:sha256:441508f293a7611c1e0b13a4b6e868814e12ce81f094b7b0a4ac8c72b8ea5cc0",
+      "bytes": 180,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-header-preallocation-RED-v1.log.txt",
+      "ref": "artifact:sha256:4d33f397fe34fa7492f3d88730889ce64dc4ef8fe8016fa8db777e6e15130116",
+      "bytes": 3349,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-wiring-ruff-check.log.txt",
+      "ref": "artifact:sha256:dd4166d77616ef163d05cada6dedde9dffde676c6ad94f2725b75721a7a7cb3e",
+      "bytes": 673,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-root-wiring-ruff-format.log.txt",
+      "ref": "artifact:sha256:18e6d980f3240b191032244b3052f2ba69c5625810c41885654eb7d5488ac1e1",
+      "bytes": 43,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-scope-and-rollout.md",
+      "ref": "artifact:sha256:e8269b93c2ca8909a5ccfb8a7764eb8062197b302fe89d6525c7a102cf6866f3",
+      "bytes": 980,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-author-decision-v1.json",
+      "ref": "artifact:sha256:75d6f8a4cbe5c32d61b777323a630c139afc192ccfbccaaec1b37ba6b2df1341",
+      "bytes": 2123,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-cost-v1.json",
+      "ref": "artifact:sha256:967b7d1876fae29191b95b5a8221b08d929af4bd0d44a898c310f6bcc5bc08f7",
+      "bytes": 8770,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-format-check-v2.json",
+      "ref": "artifact:sha256:f1d3be772a6c7bfa98a4d516c00bef0d94b636c3a202f037f87b0b4918fbf4bf",
+      "bytes": 337,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-format-check-v2.log.txt",
+      "ref": "artifact:sha256:3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938",
+      "bytes": 26,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-format-check-v3.json",
+      "ref": "artifact:sha256:b2f6468f8627054b486dbbc98c1651aea02d85e9d0bf4a23edac81c7ae7820eb",
+      "bytes": 337,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-format-check-v3.log.txt",
+      "ref": "artifact:sha256:3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938",
+      "bytes": 26,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-format-v1.json",
+      "ref": "artifact:sha256:a0ea7ebb4b6e4c1928984883a229134dd24ee5055933426b9a0edbde56a101ba",
+      "bytes": 913,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-format-v1.log.txt",
+      "ref": "artifact:sha256:10869b88a75066aa23546ef1f95fcd4678c3fb92a56ed46ef91688052b67976a",
+      "bytes": 42,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-green-v1.json",
+      "ref": "artifact:sha256:5196c007ccd0a864bc91a8f162ae5fee9391b36b671e871184720f5ebbc7b215",
+      "bytes": 627,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-green-v1.log.txt",
+      "ref": "artifact:sha256:75f4a064f87bd463b7b54ef3cc264d78cb394817fbf6e4357c8993da19b950a3",
+      "bytes": 99,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-green-v2.json",
+      "ref": "artifact:sha256:287e8f6656c1e50bacace1919b990640c2d3606ea3192596b4f82f33b08d901a",
+      "bytes": 627,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-green-v2.log.txt",
+      "ref": "artifact:sha256:84ea7d21478bdf1fbf5329ee8112f5f671a8c17932348361f4a97426899b540f",
+      "bytes": 99,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-green-v3.json",
+      "ref": "artifact:sha256:b0f1cc8e4c2a684428828976fa938e7df876549cd22ef82d450c274d65996ad8",
+      "bytes": 627,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-green-v3.log.txt",
+      "ref": "artifact:sha256:6e03b5e9df83e48958d85dda784f2a48ad43c865839798b783155e0590c614f4",
+      "bytes": 99,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-manifest-v1.json",
+      "ref": "artifact:sha256:e7bde12b8021f211028535e65366bfe865614b8a11d1318a27302e03e590e496",
+      "bytes": 10332,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-red-v1.json",
+      "ref": "artifact:sha256:797868abbc00941410b80ab1cd36dc0b5f03ce56b8b8b7bee5b6db3234e55be1",
+      "bytes": 639,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-red-v1.log.txt",
+      "ref": "artifact:sha256:b7684362a3f435adea168ad0f989c539c02befc7fbaa1ef6262ba67197dac575",
+      "bytes": 12435,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-red-v2.json",
+      "ref": "artifact:sha256:1b0e26b66f0a711549b53a2f6e9042782aac2b8a6836251dc2c2f014f0c6718f",
+      "bytes": 623,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-red-v2.log.txt",
+      "ref": "artifact:sha256:73be27ce1d6b67cac48cbf0d65fadf10ff0bc374598d7c6a71da57fe357ab3ec",
+      "bytes": 1653,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-related-metadata-v1.json",
+      "ref": "artifact:sha256:4ae3a7af24d38d305c9346a3d6ad9eb3a19771db8162a69ccb71a9584ff56c53",
+      "bytes": 658,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-related-metadata-v1.log.txt",
+      "ref": "artifact:sha256:003b151876d3e466053b38a70d71ab8bb1ede2ce20f3f4076126e48c69ce843e",
+      "bytes": 115,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-report-v1.md",
+      "ref": "artifact:sha256:0bca126baca08858d45eaf9796da629ce2e0e290a65e4fed541950ef018839ea",
+      "bytes": 1356,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-ruff-v1.json",
+      "ref": "artifact:sha256:c789265d48d2c0037c78898782b09ff569d12cbbf56f1e9ffd6e650eb0ad1118",
+      "bytes": 907,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-ruff-v1.log.txt",
+      "ref": "artifact:sha256:2d3f51ed6c710f8610b26d549e8f3fe860473950b0dfa9784671c37a3f58af48",
+      "bytes": 720,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-ruff-v2.json",
+      "ref": "artifact:sha256:dce984fc829e2897eceef7776cea804d90d33157070575cf8e3d10f8ee10d3d3",
+      "bytes": 320,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-ruff-v2.log.txt",
+      "ref": "artifact:sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-ruff-v3.json",
+      "ref": "artifact:sha256:ea45d52c51410464e29aab1e7e37e7e5df856a1a8cbf6bdaa79be605495e2ef9",
+      "bytes": 321,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-ruff-v3.log.txt",
+      "ref": "artifact:sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-source-after-v1.py.txt",
+      "ref": "artifact:sha256:2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+      "bytes": 215493,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-source-before-v1.py.txt",
+      "ref": "artifact:sha256:901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+      "bytes": 215063,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-source-closure-after-v1.json",
+      "ref": "artifact:sha256:ed7073d77075622bed9a8738484deae4a29452d9a272dabfd1d1e92737a9f70f",
+      "bytes": 34372,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-source-closure-before-v1.json",
+      "ref": "artifact:sha256:621aeca8f0250d8a0b91ebd7ea34aa016cb98fb49ef651b4fdabab62711112c5",
+      "bytes": 34372,
+      "mime": "application/json"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-source-diff-v1.patch.txt",
+      "ref": "artifact:sha256:f8ef6d439a717d74e073f9b446f4a51cba0643e52758ddd43f02f54064da8517",
+      "bytes": 1070,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-test-after-v1.py.txt",
+      "ref": "artifact:sha256:2d1f468f1185cbf1f3cfbb22895f99185ff440bd75d74a9733d8c4dec029769f",
+      "bytes": 10453,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-test-original-v1.py.txt",
+      "ref": "artifact:sha256:5b1fb7bb2c7c056f50d4c2ed3e707e09ed6a30cf6b77f935b50ce65d01167af9",
+      "bytes": 10294,
+      "mime": "text/plain"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/storage-codec-root-task-5-stage-risk-argument-binding-test-red-v2.py.txt",
+      "ref": "artifact:sha256:cc41d025b9e07700924b728bdc8baebf106578f84de1d4760384cd6d384c444b",
+      "bytes": 10276,
+      "mime": "text/plain"
+    }
+  ]
+}

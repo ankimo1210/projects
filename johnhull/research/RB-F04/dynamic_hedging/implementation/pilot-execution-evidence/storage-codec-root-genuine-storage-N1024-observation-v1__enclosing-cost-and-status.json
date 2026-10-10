@@ -1,0 +1,12 @@
+{
+  "child_exitcode": 1,
+  "child_final_checkpoint_present": true,
+  "child_peak_rss_bytes": 381702144,
+  "cpu_seconds": 0.528809,
+  "final_receipt_write_cost_not_in_preceding_clock": true,
+  "financial_qualification": "unknown",
+  "parent_peak_rss_bytes": 20070400,
+  "phase_expenses_are_subsets_not_added_to_inclusive": true,
+  "status": "incomplete_storage_observation_unknown",
+  "wall_seconds": 0.54187345700484
+}

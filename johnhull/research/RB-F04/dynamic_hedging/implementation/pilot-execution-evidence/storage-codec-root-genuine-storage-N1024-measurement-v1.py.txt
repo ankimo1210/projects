@@ -1,0 +1,350 @@
+"""One original N1024 storage roundtrip; no financial arithmetic or RNG."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import multiprocessing
+import os
+import resource
+import signal
+import sys
+import time
+import traceback
+from itertools import pairwise
+from pathlib import Path
+
+START_WALL = time.perf_counter()
+START_USAGE = resource.getrusage(resource.RUSAGE_SELF)
+W2 = Path("/home/kazumasa/worktrees/johnhull-storage-codec")
+D2 = W2 / ".superpowers/sdd/2026-10-10-dynamic-storage-codec"
+PRIOR = D2 / "genuine-storage-N1024-root-authorized-budget-v1.json"
+OBSERVATION = D2 / "genuine-storage-N1024-observation-v1"
+
+
+def digest_file(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        while chunk := stream.read(1024**2):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def save_json(path, value):
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("x") as stream:
+        json.dump(value, stream, sort_keys=True, indent=2, allow_nan=False)
+        stream.write("\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(path)
+
+
+def source_check(prior):
+    for binding in prior["runtime_source_files"]:
+        if digest_file(binding["path"]) != binding["sha256"]:
+            raise ValueError("current storage source changed")
+
+
+def input_check(manifest):
+    root = Path(manifest["source_directory"])
+    actual = sorted(str(path.relative_to(root)) for path in root.rglob("*") if path.is_file())
+    expected = sorted(binding["relative_path"] for binding in manifest["files"])
+    if actual != expected:
+        raise ValueError("original closed input roster changed")
+    for binding in manifest["files"]:
+        path = Path(binding["path"])
+        before = path.stat()
+        if path.is_symlink() or before.st_size != binding["bytes"]:
+            raise ValueError("original input type/size changed")
+        if digest_file(path) != binding["sha256"]:
+            raise ValueError("original input bytes changed")
+        after = path.stat()
+        if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns) != (
+            after.st_dev,
+            after.st_ino,
+            after.st_size,
+            after.st_mtime_ns,
+        ):
+            raise ValueError("input changed during byte authentication")
+
+
+def mutable_occurrences(value, runner, np, arrays, containers):
+    if isinstance(value, np.ndarray):
+        arrays.append(value)
+    elif isinstance(value, (dict, list, runner.HestonParameters)):
+        containers.append(value)
+        children = (
+            value.values()
+            if isinstance(value, dict)
+            else (vars(value).values() if isinstance(value, runner.HestonParameters) else value)
+        )
+        for child in children:
+            mutable_occurrences(child, runner, np, arrays, containers)
+
+
+def child():
+    prior = json.loads(PRIOR.read_bytes())
+    resource.setrlimit(resource.RLIMIT_AS, (prior["child_address_space_bytes"],) * 2)
+    signal.signal(
+        signal.SIGALRM, lambda *args: (_ for _ in ()).throw(TimeoutError("child wall limit"))
+    )
+    signal.alarm(prior["child_wall_seconds"])
+    wall, cpu = time.perf_counter(), time.process_time()
+    records = []
+    result = {
+        "scope": "same full genuine saved payload storage only",
+        "financial_qualification": "unknown",
+        "original_n": 1024,
+        "seed": 57346572,
+        "original_generation_sha256": prior["original_generation_sha256"],
+        "new_runtime_source_files": prior["runtime_source_files"],
+        "rng_generation_calls": 0,
+        "financial_solver_calls": 0,
+        "completed": False,
+        "phase_expenses": records,
+    }
+
+    def phase(name, operation):
+        before_wall, before_cpu = time.perf_counter(), time.process_time()
+        try:
+            value = operation()
+        finally:
+            records.append(
+                {
+                    "phase": name,
+                    "wall_seconds": time.perf_counter() - before_wall,
+                    "cpu_seconds": time.process_time() - before_cpu,
+                    "process_peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+                    * 1024,
+                }
+            )
+            save_json(OBSERVATION / "progress.json", result)
+        return value
+
+    try:
+        if digest_file(__file__) != prior["script_sha256"]:
+            raise ValueError("measurement script changed")
+        source_check(prior)
+        input_path = Path(prior["input_manifest"]["path"])
+        if digest_file(input_path) != prior["input_manifest"]["sha256"]:
+            raise ValueError("input manifest changed")
+        manifest = json.loads(input_path.read_bytes())
+        phase("input_bytes_before", lambda: input_check(manifest))
+        sys.path[:0] = [
+            str(W2 / "johnhull/research/RB-F04/dynamic_hedging"),
+            str(W2 / "johnhull/hullkit/src"),
+            str(W2 / "deep_hedge_price/src"),
+        ]
+        import _pilot_transport as codec
+        import numpy as np
+        import run_pilot as pilot
+        import run_reference as runner
+
+        from deep_hedge_price import _dynamic_hedging_protocol as protocol
+
+        def no_rng(*args, **kwargs):
+            raise AssertionError("RNG forbidden for storage-only observation")
+
+        np.random.default_rng = no_rng
+
+        original, receipt = phase(
+            "legacy_read", lambda: pilot.read_pilot_artifact(manifest["source_directory"])
+        )
+        if receipt != manifest["root_receipt"]:
+            raise ValueError("original root receipt changed")
+        if (
+            original["id"] != manifest["job_id"]
+            or original["raw"]["original_n"] != 1024
+            or original["raw"]["processed_n"] != 1024
+            or original["raw"]["seed"] != 57346572
+            or original["financial_qualification"] != "unknown"
+        ):
+            raise ValueError("original N/seed/unknown metadata changed")
+        original_digest = phase(
+            "original_logical_provenance", lambda: runner.payload_digest(original)
+        )
+        output = OBSERVATION / "new-artifact"
+        new_receipt = phase(
+            "typed_dag_write",
+            lambda: codec.write_transport(output, original, protocol=protocol, runner=runner),
+        )
+
+        def new_read():
+            metadata, root_arrays, read_receipt = protocol.read_artifact(output)
+            if root_arrays or read_receipt != new_receipt:
+                raise ValueError("new root receipt mismatch")
+            return metadata, codec.read_transport(
+                output, metadata, new_receipt, protocol=protocol, runner=runner
+            )[0]
+
+        metadata, recovered = phase("typed_dag_read", new_read)
+
+        def compare():
+            runner._same(recovered, original, "entire saved payload tolerance/equal_nan")
+            if runner.payload_digest(recovered) != original_digest:
+                raise ValueError("entire logical storage provenance changed")
+
+        phase("full_tolerance_and_provenance", compare)
+
+        def isolation():
+            arrays, containers = [], []
+            mutable_occurrences(recovered, runner, np, arrays, containers)
+            if len(arrays) != manifest["array_occurrences"]:
+                raise ValueError("array occurrence count changed")
+            if len({id(value) for value in containers}) != len(containers):
+                raise ValueError("shared reconstructed mutable container")
+            spans = []
+            for array in arrays:
+                if not array.flags.writeable or not array.flags.c_contiguous:
+                    raise ValueError("array occurrence not independently writable C layout")
+                if array.nbytes:
+                    start = array.__array_interface__["data"][0]
+                    spans.append((start, start + array.nbytes))
+            spans.sort()
+            if any(left[1] > right[0] for left, right in pairwise(spans)):
+                raise ValueError("reconstructed array memory overlaps")
+            original_arrays, recovered_arrays = {}, {}
+            runner._encode_tree(original, original_arrays)
+            runner._encode_tree(recovered, recovered_arrays)
+            root_metadata = json.loads(
+                (Path(manifest["source_directory"]) / "metadata.json").read_bytes()
+            )["metadata"]
+            groups = {}
+            selected = None
+            for name, descriptor in root_metadata["arrays"].items():
+                key = (descriptor["dtype"], tuple(descriptor["shape"]), descriptor["sha256"])
+                if key in groups and recovered_arrays[name].nbytes:
+                    selected = (groups[key], name)
+                    break
+                groups[key] = name
+            if selected is None:
+                raise ValueError("no nonempty repeated logical array for mutation probe")
+            first_name, second_name = selected
+            first, second = recovered_arrays[first_name], recovered_arrays[second_name]
+            before_second = hashlib.sha256(second.tobytes()).hexdigest()
+            before_original = hashlib.sha256(original_arrays[first_name].tobytes()).hexdigest()
+            view = first.reshape(-1).view("u1")
+            old = int(view[0])
+            try:
+                view[0] ^= np.uint8(1)
+                if (
+                    hashlib.sha256(second.tobytes()).hexdigest() != before_second
+                    or hashlib.sha256(original_arrays[first_name].tobytes()).hexdigest()
+                    != before_original
+                ):
+                    raise ValueError("inplace mutation changed another logical occurrence")
+            finally:
+                view[0] = old
+            if runner.payload_digest(recovered) != original_digest:
+                raise ValueError("mutation restoration changed provenance")
+            return {
+                "all_array_occurrences": len(arrays),
+                "all_mutable_container_occurrences": len(containers),
+                "all_nonempty_array_memory_ranges_disjoint": True,
+                "mutation_pair": list(selected),
+                "mutation_restored": True,
+            }
+
+        result["isolation"] = phase("all_occurrences_and_inplace_isolation", isolation)
+        phase("input_bytes_after", lambda: input_check(manifest))
+        phase("source_bytes_after", lambda: source_check(prior))
+        files = [path for path in output.rglob("*") if path.is_file()]
+        result["new_artifact"] = {
+            "physical_bytes": sum(path.stat().st_size for path in files),
+            "json_bytes": sum(path.stat().st_size for path in files if path.suffix == ".json"),
+            "unique_array_count": metadata["array_count"],
+            "typed_node_count": metadata["node_count"],
+            "physical_page_count": len(metadata["pages"]),
+            "root_receipt": new_receipt,
+            "file_count": len(files),
+            "payload_provenance_sha256": original_digest,
+            "file_bindings": [
+                {"path": str(path), "bytes": path.stat().st_size, "sha256": digest_file(path)}
+                for path in sorted(files)
+            ],
+        }
+        result["old_artifact"] = {
+            key: manifest[key]
+            for key in ("physical_bytes", "json_bytes", "array_occurrences", "declared_array_bytes")
+        }
+        result["status"] = "completed_storage_roundtrip_finance_unknown"
+        result["completed"] = True
+    except BaseException as exc:
+        result["status"] = (
+            "administrative_partial_unknown"
+            if isinstance(exc, (TimeoutError, MemoryError))
+            else "tool_exception_unknown"
+        )
+        result["exception"] = {"type": type(exc).__name__, "message": str(exc)}
+        result["traceback"] = traceback.format_exc()
+    finally:
+        signal.alarm(0)
+        result["child_inclusive_expense"] = {
+            "wall_seconds": time.perf_counter() - wall,
+            "cpu_seconds": time.process_time() - cpu,
+            "peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+        }
+        save_json(OBSERVATION / "child-result.json", result)
+    raise SystemExit(0 if result["completed"] else 1)
+
+
+if __name__ == "__main__":
+    prior = json.loads(PRIOR.read_bytes())
+    if prior.get("root_preapproved") is not True:
+        raise SystemExit("root storage-only authorization missing")
+    if digest_file(__file__) != prior["script_sha256"]:
+        raise SystemExit("fixed script changed")
+    OBSERVATION.mkdir(exist_ok=False)
+    save_json(
+        OBSERVATION / "initial.json",
+        {
+            "prior": prior,
+            "completed": False,
+            "financial_qualification": "unknown",
+            "all_original_n_required": 1024,
+            "original_source_directory_unchanged": True,
+        },
+    )
+    worker = multiprocessing.get_context("fork").Process(target=child)
+    worker.start()
+    worker.join(prior["enclosing_wall_seconds"])
+    stopped = worker.is_alive()
+    if stopped:
+        worker.terminate()
+        worker.join(5)
+        if worker.is_alive():
+            worker.kill()
+            worker.join(5)
+    final = OBSERVATION / "child-result.json"
+    finished = json.loads(final.read_bytes()) if final.exists() else None
+    self_usage = resource.getrusage(resource.RUSAGE_SELF)
+    child_usage = resource.getrusage(resource.RUSAGE_CHILDREN)
+    receipt = {
+        "status": "enclosing_wall_stop_unknown"
+        if stopped
+        else (
+            "completed_storage_roundtrip_finance_unknown"
+            if finished and finished["completed"]
+            else "incomplete_storage_observation_unknown"
+        ),
+        "child_exitcode": worker.exitcode,
+        "child_final_checkpoint_present": final.exists(),
+        "wall_seconds": time.perf_counter() - START_WALL,
+        "cpu_seconds": (
+            self_usage.ru_utime
+            + self_usage.ru_stime
+            - START_USAGE.ru_utime
+            - START_USAGE.ru_stime
+            + child_usage.ru_utime
+            + child_usage.ru_stime
+        ),
+        "parent_peak_rss_bytes": self_usage.ru_maxrss * 1024,
+        "child_peak_rss_bytes": child_usage.ru_maxrss * 1024,
+        "financial_qualification": "unknown",
+        "phase_expenses_are_subsets_not_added_to_inclusive": True,
+        "final_receipt_write_cost_not_in_preceding_clock": True,
+    }
+    save_json(OBSERVATION / "enclosing-cost-and-status.json", receipt)
+    print(json.dumps(receipt, sort_keys=True))
+    raise SystemExit(0 if receipt["status"].startswith("completed") else 1)

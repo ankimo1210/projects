@@ -1,0 +1,31 @@
+{
+  "schema": "rb-f04-root-storage-and-stage-source-delta-v1",
+  "old_source_plain_sha256": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "old_source_native_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "current_source_plain_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "current_source_native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "current_closure_file": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json",
+  "current_closure_file_sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5",
+  "files_added": [
+    "johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py"
+  ],
+  "files_removed": [],
+  "files_changed": [
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py"
+  ],
+  "source_files": 82,
+  "dynamic_imports": [],
+  "before_after_stable": true,
+  "wall_seconds": 1.120120362000307,
+  "financial_workers_or_RNG_calls": 0,
+  "financial_qualification": "unknown",
+  "old_partial_resumed_or_relabelled": false,
+  "resource_prior_or_financial_launch_approval": false,
+  "metadata_fields_changed": [
+    "files",
+    "protocol_source",
+    "local_import_graph"
+  ]
+}

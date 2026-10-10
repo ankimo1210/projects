@@ -1,0 +1,16 @@
+{
+  "version": "format-v1",
+  "returncode": 0,
+  "wall_seconds": 0.01784090500586899,
+  "cpu_seconds": 0.020503,
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+    "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py": "cc41d025b9e07700924b728bdc8baebf106578f84de1d4760384cd6d384c444b"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+    "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py": "de4b826d255703d91dc0aaf75f482a679c5d6c39dd95ea4828515ed40c8ecc21"
+  },
+  "financial_generation_performed": false,
+  "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-format-v1.log"
+}

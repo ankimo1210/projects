@@ -1,0 +1,828 @@
+"""Private paged transport for nonteacher pilot payloads.
+
+Content sharing is local to one immutable artifact. Each decoded occurrence is
+independent; byte digests authenticate storage and do not qualify finance.
+"""
+
+from __future__ import annotations
+
+import ast
+import hashlib
+import io
+import json
+import math
+import os
+import shutil
+import struct
+import tempfile
+import zipfile
+import zlib
+from collections import OrderedDict
+from pathlib import Path
+
+import numpy as np
+
+SCHEMA = "rb-f04-pilot-typed-dag-v1"
+PAGE_SCHEMA = "rb-f04-pilot-typed-dag-page-v1"
+MAX_PAGE_RAW = 64 * 1024**2
+_FILE_NAMES = {"metadata.json", "arrays.npz", "receipt.json"}
+
+
+def _json(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False)
+
+
+def _integer(value, name, minimum=0):
+    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
+        raise ValueError(f"invalid {name}")
+    return value
+
+
+def _path(directory):
+    path = Path(directory).absolute()
+    for part in (path, *path.parents):
+        if part.is_symlink():
+            raise ValueError("symlink artifact path")
+    return path
+
+
+def _file_roster(directory, directories=()):
+    if set(p.name for p in directory.iterdir()) != _FILE_NAMES | set(directories):
+        raise ValueError("artifact file roster mismatch")
+    for name in _FILE_NAMES:
+        path = directory / name
+        if path.is_symlink() or not path.is_file():
+            raise ValueError("invalid artifact file")
+    for name in directories:
+        path = directory / name
+        if path.is_symlink() or not path.is_dir():
+            raise ValueError("invalid artifact page directory")
+
+
+def _array_chunks(array):
+    """C-order logical bytes without a whole-array contiguous temporary."""
+    if array.nbytes == 0:
+        return
+    size = max(1, 1024**2 // max(1, array.dtype.itemsize))
+    opaque = array.view(np.dtype(f"V{array.dtype.itemsize}"))
+    iterator = np.nditer(
+        opaque,
+        flags=["external_loop", "buffered", "zerosize_ok"],
+        op_flags=["readonly"],
+        order="C",
+        buffersize=size,
+    )
+    for chunk in iterator:
+        yield chunk.tobytes(order="C")
+
+
+def _array_hash(array):
+    result = hashlib.sha256()
+    for chunk in _array_chunks(array):
+        result.update(chunk)
+    return result.hexdigest()
+
+
+def _equal_array_bytes(left, right):
+    """Check hash candidates by typed logical bytes, including NaN payloads."""
+    if left.dtype != right.dtype or left.shape != right.shape:
+        return False
+    return all(a == b for a, b in zip(_array_chunks(left), _array_chunks(right), strict=True))
+
+
+def _copy_array(array):
+    # ndarray.copy() assigns structured fields and can discard padding bytes.
+    result = np.ndarray(array.shape, dtype=array.dtype)
+    if array.nbytes:
+        target = memoryview(result).cast("B")
+        offset = 0
+        for chunk in _array_chunks(array):
+            target[offset : offset + len(chunk)] = chunk
+            offset += len(chunk)
+    return result
+
+
+def _write_npy(sink, array):
+    header = {
+        "descr": np.lib.format.dtype_to_descr(array.dtype),
+        "fortran_order": False,
+        "shape": array.shape,
+    }
+    buffer = io.BytesIO()
+    try:
+        np.lib.format.write_array_header_2_0(buffer, header)
+        encoded = buffer.getvalue()
+    except UnicodeEncodeError:
+        # The public 2.0 header writer cannot encode Unicode field names.
+        # NPY 3.0 uses the identical header grammar encoded as UTF-8.
+        raw = repr(header).encode("utf8")
+        padding = (-12 - len(raw) - 1) % 64
+        raw += b" " * padding + b"\n"
+        encoded = np.lib.format.magic(3, 0) + struct.pack("<I", len(raw)) + raw
+    if len(encoded) > MAX_PAGE_RAW:
+        raise ValueError("NPY header exceeds 64 MiB")
+    sink.write(encoded)
+    for chunk in _array_chunks(array):
+        sink.write(chunk)
+
+
+class _PageSink:
+    def __init__(self, directory, kind, limit, protocol):
+        self.directory, self.kind, self.limit, self.protocol = directory, kind, limit, protocol
+        self.buffer = bytearray()
+        self.offset = 0
+        self.refs = []
+
+    def write(self, data):
+        data = memoryview(data).cast("B")
+        written = len(data)
+        while data:
+            count = min(self.limit - len(self.buffer), len(data))
+            self.buffer.extend(data[:count])
+            data = data[count:]
+            if len(self.buffer) == self.limit:
+                self.flush()
+        return written
+
+    def flush(self):
+        if not self.buffer:
+            return
+        index = len(self.refs)
+        name = f"{self.kind}-{index:08d}"
+        metadata = {
+            "schema": PAGE_SCHEMA,
+            "kind": self.kind,
+            "index": index,
+            "offset": self.offset,
+            "expanded_length": len(self.buffer),
+        }
+        compressed = zlib.compress(self.buffer)
+        receipt = self.protocol.write_artifact(
+            self.directory / name,
+            metadata=metadata,
+            arrays={"blob": np.frombuffer(compressed, dtype=np.uint8)},
+            compress=False,
+        )
+        self.refs.append({"path": name, **metadata, "receipt": receipt})
+        self.offset += len(self.buffer)
+        self.buffer.clear()
+
+    def finish(self):
+        self.flush()
+        return self.refs
+
+
+class _Encoder:
+    def __init__(self, sink, runner):
+        self.sink, self.runner = sink, runner
+        self.nodes, self.arrays = [], []
+        self.node_index, self.array_index = {}, {}
+        self.array_values = []
+        self.active = set()
+
+    def _node(self, node):
+        key = _json(node)
+        if key in self.node_index:
+            return self.node_index[key]
+        index = len(self.nodes)
+        self.nodes.append(node)
+        self.node_index[key] = index
+        return index
+
+    def _array(self, value):
+        if value.dtype.hasobject:
+            raise ValueError("object arrays cannot be persisted")
+        description = np.lib.format.dtype_to_descr(value.dtype)
+        key = (_json(description), value.shape, _array_hash(value))
+        for index in self.array_index.get(key, ()):
+            if _equal_array_bytes(value, self.array_values[index]):
+                return self._node(["array", index])
+        index = len(self.arrays)
+        offset = self.sink.offset + len(self.sink.buffer)
+        _write_npy(self.sink, value)
+        length = self.sink.offset + len(self.sink.buffer) - offset
+        descriptor = {
+            "offset": offset,
+            "length": length,
+            "shape": list(value.shape),
+            "dtype": description,
+            "dtype_str": value.dtype.str,
+            "nbytes": value.nbytes,
+            "logical_bytes_sha256": key[2],
+        }
+        self.arrays.append(descriptor)
+        self.array_values.append(value)
+        self.array_index.setdefault(key, []).append(index)
+        return self._node(["array", index])
+
+    def encode(self, value):
+        if isinstance(value, np.ndarray):
+            return self._array(value)
+        if isinstance(value, np.generic):
+            return self.encode(value.item())
+        if isinstance(value, self.runner.HestonParameters):
+            return self._node(["parameters", self.encode(vars(value))])
+        if isinstance(value, dict):
+            if any(not isinstance(key, str) for key in value):
+                raise ValueError("saved dictionary keys must be strings")
+            return self._container(value, "dict")
+        if isinstance(value, (list, tuple)):
+            return self._container(value, "list")
+        if value is None:
+            return self._node(["none"])
+        if isinstance(value, bool):
+            return self._node(["bool", value])
+        if isinstance(value, int):
+            return self._node(["int", value])
+        if isinstance(value, float):
+            token = "nan" if math.isnan(value) else value.hex()
+            return self._node(["float", token])
+        if isinstance(value, str):
+            return self._node(["str", value])
+        raise ValueError(f"unsupported saved value: {type(value).__name__}")
+
+    def _container(self, value, kind):
+        identity = id(value)
+        if identity in self.active:
+            raise ValueError("cyclic saved value")
+        self.active.add(identity)
+        try:
+            children = (
+                [[key, self.encode(value[key])] for key in sorted(value)]
+                if kind == "dict"
+                else [self.encode(item) for item in value]
+            )
+            return self._node([kind, children])
+        finally:
+            self.active.remove(identity)
+
+
+def write_transport(directory, payload, *, protocol, runner, page_raw_limit=MAX_PAGE_RAW):
+    """Write bounded physical pages, then expose a complete exclusive root."""
+    limit = _integer(page_raw_limit, "page raw limit", 1)
+    if limit > MAX_PAGE_RAW:
+        raise ValueError("page raw limit exceeds 64 MiB")
+    directory = _path(directory)
+    if directory.exists():
+        raise FileExistsError(directory)
+    directory.parent.mkdir(parents=True, exist_ok=True)
+    temporary = Path(tempfile.mkdtemp(prefix=f".{directory.name}-transport-", dir=directory.parent))
+    reservation = None
+    try:
+        array_sink = _PageSink(temporary, "arrays", limit, protocol)
+        encoder = _Encoder(array_sink, runner)
+        root_node = encoder.encode(payload)
+        array_pages = array_sink.finish()
+        metadata_sink = _PageSink(temporary, "metadata", limit, protocol)
+        header = {"root": root_node, "nodes": len(encoder.nodes), "arrays": len(encoder.arrays)}
+        records = [["header", header]]
+        for record in records:
+            metadata_sink.write((_json(record) + "\n").encode())
+        for index, node in enumerate(encoder.nodes):
+            metadata_sink.write((_json(["node", index, node]) + "\n").encode())
+        for index, descriptor in enumerate(encoder.arrays):
+            metadata_sink.write((_json(["array", index, descriptor]) + "\n").encode())
+        metadata_pages = metadata_sink.finish()
+        metadata = {
+            "schema": SCHEMA,
+            "page_raw_limit": limit,
+            "payload_sha256": runner.payload_digest(payload),
+            "root_node": root_node,
+            "node_count": len(encoder.nodes),
+            "array_count": len(encoder.arrays),
+            "array_bytes": array_sink.offset,
+            "metadata_bytes": metadata_sink.offset,
+            "pages": [*array_pages, *metadata_pages],
+        }
+        # write_artifact requires a new directory; root receipt is produced only
+        # after every page has closed successfully.
+        index_directory = temporary / ".root-index"
+        receipt = protocol.write_artifact(index_directory, metadata=metadata, arrays={})
+        for name in _FILE_NAMES:
+            (index_directory / name).rename(temporary / name)
+        index_directory.rmdir()
+        # Claim the destination exclusively before replacing our own empty claim.
+        # No other writer's existing directory can be overwritten.
+        directory.mkdir(exist_ok=False)
+        reservation = directory.stat()
+        if set(directory.iterdir()) or directory.stat().st_ino != reservation.st_ino:
+            raise ValueError("artifact destination changed before publish")
+        os.replace(temporary, directory)
+        temporary = None
+        reservation = None
+        return receipt
+    finally:
+        if reservation is not None and directory.exists():
+            if directory.stat().st_ino == reservation.st_ino and not any(directory.iterdir()):
+                directory.rmdir()
+        if temporary is not None and temporary.exists():
+            # This exact sibling was created above and never resolves arbitrary input.
+            shutil.rmtree(temporary)
+
+
+def _decompress(blob, expanded_length, limit):
+    expected = _integer(expanded_length, "expanded page length", 1)
+    if expected > limit:
+        raise ValueError("expanded page exceeds declared limit")
+    decoder = zlib.decompressobj()
+    try:
+        result = decoder.decompress(blob, expected + 1)
+    except zlib.error as exc:
+        raise ValueError("invalid compressed page") from exc
+    if len(result) != expected or not decoder.eof or decoder.unconsumed_tail or decoder.unused_data:
+        raise ValueError("compressed page length/eof/trailing mismatch")
+    return result
+
+
+def _validate_blob_npy_header(archive, member, bound):
+    """Bound the wrapper allocation before the existing protocol reader."""
+    try:
+        with archive.open(member) as stream:
+            version = np.lib.format.read_magic(stream)
+            if version == (1, 0):
+                size_bytes, encoding = 2, "latin1"
+            elif version in ((2, 0), (3, 0)):
+                size_bytes, encoding = 4, "utf8" if version == (3, 0) else "latin1"
+            else:
+                raise ValueError("unsupported page blob NPY version")
+            data = stream.read(size_bytes)
+            if len(data) != size_bytes:
+                raise ValueError("incomplete page blob NPY header")
+            header_size = struct.unpack("<H" if size_bytes == 2 else "<I", data)[0]
+            if header_size > bound or header_size > member.file_size - stream.tell():
+                raise ValueError("oversized page blob NPY header")
+            header = ast.literal_eval(stream.read(header_size).decode(encoding).strip())
+            if not isinstance(header, dict) or set(header) != {"descr", "fortran_order", "shape"}:
+                raise ValueError("invalid page blob NPY header")
+            shape = header["shape"]
+            if (
+                np.lib.format.descr_to_dtype(header["descr"]) != np.dtype("u1")
+                or header["fortran_order"] is not False
+                or not isinstance(shape, tuple)
+                or len(shape) != 1
+            ):
+                raise ValueError("invalid page blob NPY dtype/shape/order")
+            nbytes = _integer(shape[0], "page blob NPY dimension")
+            if nbytes > bound or stream.tell() + nbytes != member.file_size:
+                raise ValueError("page blob NPY body size/allocation mismatch")
+    except (EOFError, TypeError, SyntaxError, UnicodeError, OverflowError, RecursionError) as exc:
+        raise ValueError("invalid page blob NPY header") from exc
+
+
+class _Pages:
+    def __init__(self, directory, refs, kind, total, limit, protocol):
+        self.directory, self.kind, self.total = directory, kind, total
+        self.refs, self.limit, self.protocol = refs, limit, protocol
+        self.cache = OrderedDict()
+        self.validated = set()
+        offset = 0
+        for index, ref in enumerate(refs):
+            expected_name = f"{kind}-{index:08d}"
+            if not isinstance(ref, dict) or set(ref) != {
+                "path",
+                "schema",
+                "kind",
+                "index",
+                "offset",
+                "expanded_length",
+                "receipt",
+            }:
+                raise ValueError("invalid page reference")
+            if (
+                ref["path"] != expected_name
+                or ref["schema"] != PAGE_SCHEMA
+                or ref["kind"] != kind
+                or _integer(ref["index"], "page index") != index
+                or _integer(ref["offset"], "page offset") != offset
+            ):
+                raise ValueError("noncanonical page order or offset")
+            length = _integer(ref["expanded_length"], "page length", 1)
+            if length > limit:
+                raise ValueError("page length exceeds limit")
+            offset += length
+        if offset != total:
+            raise ValueError("page total mismatch")
+
+    def page(self, index):
+        if index in self.cache:
+            self.cache.move_to_end(index)
+            return self.cache[index]
+        ref = self.refs[index]
+        path = _path(self.directory / ref["path"])
+        _file_roster(path)
+        # Existing protocol checks NPZ and its NPY header. Limit physical blob
+        # size first, before that reader can allocate a malicious oversized pack.
+        bound = self.limit + self.limit // 1000 + 65536
+        if (path / "arrays.npz").stat().st_size > bound:
+            raise ValueError("oversized compressed page artifact")
+        try:
+            with zipfile.ZipFile(path / "arrays.npz") as archive:
+                members = archive.infolist()
+                if (
+                    len(members) != 1
+                    or members[0].filename != "blob.npy"
+                    or members[0].compress_type != zipfile.ZIP_STORED
+                    or members[0].file_size > bound
+                ):
+                    raise ValueError("oversized/noncanonical page NPY container")
+                _validate_blob_npy_header(archive, members[0], bound)
+        except zipfile.BadZipFile as exc:
+            raise ValueError("invalid page NPY container") from exc
+        metadata, arrays, receipt = self.protocol.read_artifact(path)
+        expected = {key: value for key, value in ref.items() if key not in ("path", "receipt")}
+        if metadata != expected or receipt != ref["receipt"] or set(arrays) != {"blob"}:
+            raise ValueError("page origin mismatch")
+        blob = arrays["blob"]
+        if blob.dtype != np.dtype("u1") or blob.ndim != 1 or blob.nbytes > bound:
+            raise ValueError("invalid compressed blob")
+        value = _decompress(blob.tobytes(), ref["expanded_length"], self.limit)
+        self.validated.add(index)
+        self.cache[index] = value
+        if len(self.cache) > 2:
+            self.cache.popitem(last=False)
+        return value
+
+    def pieces(self, offset, length):
+        if offset < 0 or length < 0 or offset + length > self.total:
+            raise ValueError("page range outside stream")
+        for index, ref in enumerate(self.refs):
+            start, end = ref["offset"], ref["offset"] + ref["expanded_length"]
+            if end <= offset:
+                continue
+            if start >= offset + length:
+                break
+            raw = self.page(index)
+            yield raw[max(0, offset - start) : min(len(raw), offset + length - start)]
+
+
+class _Window:
+    def __init__(self, pages, offset, length):
+        self.pages, self.offset, self.length, self.position = pages, offset, length, 0
+
+    def read(self, count=-1):
+        if count < 0:
+            count = self.length - self.position
+        count = min(count, self.length - self.position)
+        result = b"".join(self.pages.pieces(self.offset + self.position, count))
+        self.position += len(result)
+        return result
+
+    def seek(self, position, whence=0):
+        if whence != 0 or not 0 <= position <= self.length:
+            raise ValueError("invalid NPY seek")
+        self.position = position
+        return position
+
+    def tell(self):
+        return self.position
+
+
+def _metadata_records(pages):
+    pending = bytearray()
+    for index in range(len(pages.refs)):
+        raw = pages.page(index)
+        start = 0
+        while True:
+            end = raw.find(b"\n", start)
+            if end < 0:
+                pending.extend(raw[start:])
+                break
+            pending.extend(raw[start:end])
+            try:
+                yield json.loads(pending)
+            except (UnicodeError, json.JSONDecodeError) as exc:
+                raise ValueError("invalid metadata record") from exc
+            pending.clear()
+            start = end + 1
+    if pending:
+        raise ValueError("unterminated metadata record")
+
+
+def _read_table(pages, metadata):
+    records = iter(_metadata_records(pages))
+    expected = {
+        "root": metadata["root_node"],
+        "nodes": metadata["node_count"],
+        "arrays": metadata["array_count"],
+    }
+    if next(records, None) != ["header", expected]:
+        raise ValueError("metadata header mismatch")
+    nodes, arrays = [], []
+    for index in range(metadata["node_count"]):
+        record = next(records, None)
+        if (
+            not isinstance(record, list)
+            or len(record) != 3
+            or record[0] != "node"
+            or _integer(record[1], "node index") != index
+        ):
+            raise ValueError("node table order/coverage mismatch")
+        nodes.append(record[2])
+    for index in range(metadata["array_count"]):
+        record = next(records, None)
+        if (
+            not isinstance(record, list)
+            or len(record) != 3
+            or record[0] != "array"
+            or _integer(record[1], "array index") != index
+        ):
+            raise ValueError("array table order/coverage mismatch")
+        arrays.append(record[2])
+    if next(records, None) is not None:
+        raise ValueError("unreferenced metadata records")
+    return nodes, arrays
+
+
+def _node_edges(node, index, array_count):
+    if not isinstance(node, list) or not node or not isinstance(node[0], str):
+        raise ValueError("invalid typed node")
+    kind = node[0]
+    if kind == "none":
+        if len(node) != 1:
+            raise ValueError("invalid none node")
+        return []
+    if len(node) != 2:
+        raise ValueError("invalid typed node arity")
+    value = node[1]
+    if kind == "bool":
+        if not isinstance(value, bool):
+            raise ValueError("invalid bool node")
+    elif kind == "int":
+        _integer(abs(value) if type(value) is int else value, "integer node")
+    elif kind == "str":
+        if not isinstance(value, str):
+            raise ValueError("invalid string node")
+    elif kind == "float":
+        if not isinstance(value, str):
+            raise ValueError("invalid float node")
+        try:
+            number = float("nan") if value == "nan" else float.fromhex(value)
+        except ValueError as exc:
+            raise ValueError("invalid float token") from exc
+        if value != ("nan" if math.isnan(number) else number.hex()):
+            raise ValueError("noncanonical float token")
+    elif kind == "array":
+        _integer(value, "array reference")
+        if value >= array_count:
+            raise ValueError("array reference outside table")
+    elif kind == "parameters":
+        return [_child(value, index)]
+    elif kind == "list":
+        if not isinstance(value, list):
+            raise ValueError("invalid list node")
+        return [_child(child, index) for child in value]
+    elif kind == "dict":
+        if not isinstance(value, list):
+            raise ValueError("invalid dictionary node")
+        keys, edges = [], []
+        for item in value:
+            if not isinstance(item, list) or len(item) != 2 or not isinstance(item[0], str):
+                raise ValueError("invalid dictionary edge")
+            keys.append(item[0])
+            edges.append(_child(item[1], index))
+        if keys != sorted(set(keys)):
+            raise ValueError("dictionary keys unordered or duplicated")
+        return edges
+    else:
+        raise ValueError("unknown typed node")
+    return []
+
+
+def _child(child, index):
+    _integer(child, "node reference")
+    if child >= index:
+        raise ValueError("forward/cyclic node reference")
+    return child
+
+
+def _validate_table(nodes, arrays, metadata):
+    root = _integer(metadata["root_node"], "root node")
+    if root >= len(nodes):
+        raise ValueError("root node outside table")
+    edges = [_node_edges(node, index, len(arrays)) for index, node in enumerate(nodes)]
+    reached, used_arrays, pending = set(), set(), [root]
+    while pending:
+        index = pending.pop()
+        if index in reached:
+            continue
+        reached.add(index)
+        if nodes[index][0] == "array":
+            used_arrays.add(nodes[index][1])
+        pending.extend(edges[index])
+    if reached != set(range(len(nodes))) or used_arrays != set(range(len(arrays))):
+        raise ValueError("unused node or array descriptor")
+    offset = 0
+    for descriptor in arrays:
+        if not isinstance(descriptor, dict) or set(descriptor) != {
+            "offset",
+            "length",
+            "shape",
+            "dtype",
+            "dtype_str",
+            "nbytes",
+            "logical_bytes_sha256",
+        }:
+            raise ValueError("invalid array descriptor")
+        if _integer(descriptor["offset"], "NPY offset") != offset:
+            raise ValueError("NPY descriptor gap/order mismatch")
+        length = _integer(descriptor["length"], "NPY length", 1)
+        _integer(descriptor["nbytes"], "array data length")
+        if not isinstance(descriptor["shape"], list):
+            raise ValueError("invalid array shape")
+        for dimension in descriptor["shape"]:
+            _integer(dimension, "array dimension")
+        digest = descriptor["logical_bytes_sha256"]
+        if not isinstance(digest, str) or len(digest) != 64:
+            raise ValueError("invalid array provenance")
+        offset += length
+    if offset != metadata["array_bytes"]:
+        raise ValueError("NPY stream has unreferenced or missing bytes")
+
+
+def _read_npy(pages, descriptor):
+    window = _Window(pages, descriptor["offset"], descriptor["length"])
+    try:
+        version = np.lib.format.read_magic(window)
+        if version == (1, 0):
+            header_size_bytes, encoding = 2, "latin1"
+        elif version in ((2, 0), (3, 0)):
+            header_size_bytes, encoding = 4, "utf8" if version == (3, 0) else "latin1"
+        else:
+            raise ValueError("unsupported NPY version")
+        size_data = window.read(header_size_bytes)
+        if len(size_data) != header_size_bytes:
+            raise ValueError("incomplete NPY header size")
+        header_size = struct.unpack("<H" if header_size_bytes == 2 else "<I", size_data)[0]
+        if header_size > MAX_PAGE_RAW or header_size > window.length - window.tell():
+            raise ValueError("oversized NPY header")
+        header = ast.literal_eval(window.read(header_size).decode(encoding).strip())
+        if not isinstance(header, dict) or set(header) != {"descr", "fortran_order", "shape"}:
+            raise ValueError("invalid NPY header")
+        dtype = np.lib.format.descr_to_dtype(header["descr"])
+        shape = header["shape"]
+        if (
+            dtype.hasobject
+            or not isinstance(shape, tuple)
+            or type(header["fortran_order"]) is not bool
+        ):
+            raise ValueError("unsupported NPY header dtype/shape/order")
+        for dimension in shape:
+            _integer(dimension, "NPY dimension")
+        nbytes = math.prod(shape) * dtype.itemsize
+        if (
+            list(shape) != descriptor["shape"]
+            or dtype.str != descriptor["dtype_str"]
+            or _json(np.lib.format.dtype_to_descr(dtype)) != _json(descriptor["dtype"])
+            or nbytes != descriptor["nbytes"]
+            or window.tell() + nbytes != window.length
+        ):
+            raise ValueError("NPY header differs from descriptor or exact body length")
+        if header["fortran_order"]:
+            raise ValueError("noncanonical Fortran-order NPY header")
+        array = np.ndarray(shape, dtype=dtype)
+        if nbytes:
+            target = memoryview(array).cast("B")
+            offset = 0
+            while offset < nbytes:
+                count = min(1024**2, nbytes - offset)
+                chunk = window.read(count)
+                if len(chunk) != count:
+                    raise ValueError("incomplete NPY body")
+                target[offset : offset + count] = chunk
+                offset += count
+        if (
+            window.tell() != window.length
+            or _array_hash(array) != descriptor["logical_bytes_sha256"]
+        ):
+            raise ValueError("NPY body provenance mismatch")
+        return array
+    except (EOFError, TypeError, SyntaxError, UnicodeError, OSError) as exc:
+        raise ValueError("invalid NPY payload") from exc
+
+
+class _Decoder:
+    def __init__(self, nodes, arrays, pages, runner, cache_limit):
+        self.nodes, self.arrays, self.pages, self.runner = nodes, arrays, pages, runner
+        self.cache, self.cache_bytes, self.cache_limit = OrderedDict(), 0, cache_limit
+
+    def array(self, index):
+        if index in self.cache:
+            self.cache.move_to_end(index)
+            return _copy_array(self.cache[index])
+        array = _read_npy(self.pages, self.arrays[index])
+        if array.nbytes <= self.cache_limit:
+            while self.cache and self.cache_bytes + array.nbytes > self.cache_limit:
+                _, old = self.cache.popitem(last=False)
+                self.cache_bytes -= old.nbytes
+            array.setflags(write=False)
+            self.cache[index] = array
+            self.cache_bytes += array.nbytes
+            return _copy_array(array)
+        # Oversized unique arrays are not retained as a second hidden cache.
+        array.setflags(write=True)
+        return array
+
+    def decode(self, index):
+        kind, *rest = self.nodes[index]
+        value = rest[0] if rest else None
+        if kind == "none":
+            return None
+        if kind in ("bool", "int", "str"):
+            return value
+        if kind == "float":
+            return float("nan") if value == "nan" else float.fromhex(value)
+        if kind == "array":
+            return self.array(value)
+        if kind == "list":
+            return [self.decode(child) for child in value]
+        if kind == "dict":
+            return {key: self.decode(child) for key, child in value}
+        if kind == "parameters":
+            return self.runner.HestonParameters(**self.decode(value))
+        raise ValueError("unknown typed node")
+
+
+def validate_empty_root_container(directory):
+    """Reject any root array allocation before invoking the protocol reader."""
+    directory = _path(directory)
+    if not directory.is_dir():
+        raise ValueError("missing transport directory")
+    for name in _FILE_NAMES:
+        path = directory / name
+        if path.is_symlink() or not path.is_file():
+            raise ValueError("invalid transport root file")
+    try:
+        with zipfile.ZipFile(directory / "arrays.npz") as archive:
+            if archive.infolist() or (directory / "arrays.npz").stat().st_size > 1024:
+                raise ValueError("transport root must not contain arrays")
+    except zipfile.BadZipFile as exc:
+        raise ValueError("invalid root NPY container") from exc
+
+
+def read_transport(directory, root_metadata, root_receipt, *, protocol, runner):
+    """Authenticate all pages and restore each writable logical occurrence."""
+    directory = _path(directory)
+    validate_empty_root_container(directory)
+    actual_metadata, root_arrays, actual_receipt = protocol.read_artifact(directory)
+    if actual_metadata != root_metadata or actual_receipt != root_receipt or root_arrays:
+        raise ValueError("root origin mismatch")
+    metadata = actual_metadata
+    if (
+        not isinstance(metadata, dict)
+        or set(metadata)
+        != {
+            "schema",
+            "page_raw_limit",
+            "payload_sha256",
+            "root_node",
+            "node_count",
+            "array_count",
+            "array_bytes",
+            "metadata_bytes",
+            "pages",
+        }
+        or metadata["schema"] != SCHEMA
+    ):
+        raise ValueError("invalid transport root")
+    limit = _integer(metadata["page_raw_limit"], "page raw limit", 1)
+    if limit > MAX_PAGE_RAW:
+        raise ValueError("transport page limit exceeds 64 MiB")
+    _integer(metadata["node_count"], "node count", 1)
+    _integer(metadata["array_count"], "array count")
+    for name in ("array_bytes", "metadata_bytes"):
+        _integer(metadata[name], name)
+    refs = metadata["pages"]
+    if not isinstance(refs, list) or not refs:
+        raise ValueError("missing transport pages")
+    arrays_refs, metadata_refs = [], []
+    for ref in refs:
+        if not isinstance(ref, dict):
+            raise ValueError("invalid page reference")
+        if ref.get("kind") == "arrays" and not metadata_refs:
+            arrays_refs.append(ref)
+        elif ref.get("kind") == "metadata":
+            metadata_refs.append(ref)
+        else:
+            raise ValueError("page kind/order mismatch")
+    if not metadata_refs:
+        raise ValueError("missing metadata page")
+    names = [ref.get("path") for ref in refs]
+    if any(not isinstance(name, str) or Path(name).name != name for name in names):
+        raise ValueError("unsafe page name")
+    if len(set(names)) != len(names):
+        raise ValueError("duplicate page reference")
+    _file_roster(directory, names)
+    array_pages = _Pages(directory, arrays_refs, "arrays", metadata["array_bytes"], limit, protocol)
+    metadata_pages = _Pages(
+        directory, metadata_refs, "metadata", metadata["metadata_bytes"], limit, protocol
+    )
+    nodes, arrays = _read_table(metadata_pages, metadata)
+    _validate_table(nodes, arrays, metadata)
+    recovered = _Decoder(nodes, arrays, array_pages, runner, limit).decode(metadata["root_node"])
+    if metadata_pages.validated != set(range(len(metadata_refs))) or array_pages.validated != set(
+        range(len(arrays_refs))
+    ):
+        raise ValueError("unvalidated page")
+    if runner.payload_digest(recovered) != metadata["payload_sha256"]:
+        raise ValueError("logical payload provenance mismatch")
+    return recovered, actual_receipt

@@ -1,0 +1,23 @@
+{
+  "root_owned_test_only": true,
+  "exact_argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "johnhull/hullkit/tests/test_dynamic_hedging_transport.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_main.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py"
+  ],
+  "signal": "SIGINT",
+  "pids": [
+    351352
+  ],
+  "reason": "independent page NPY allocation P2 requires source revision; preserve unfinished c2 test log and avoid source mutation while memo guard runs",
+  "live_financial_session_21286_untouched": true
+}

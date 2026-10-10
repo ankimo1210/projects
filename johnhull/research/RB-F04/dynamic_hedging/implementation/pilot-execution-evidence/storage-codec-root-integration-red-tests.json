@@ -1,0 +1,11 @@
+{
+  "exit_code": 1,
+  "elapsed_seconds": 2.995199466997292,
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py"
+  ]
+}

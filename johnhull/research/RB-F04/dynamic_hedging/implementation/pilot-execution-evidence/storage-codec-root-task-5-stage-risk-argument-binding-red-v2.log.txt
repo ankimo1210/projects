@@ -1,0 +1,32 @@
+F...........                                                             [100%]
+=================================== FAILURES ===================================
+___ test_actual_dispatch_wall_cap_does_not_change_stage_financial_arguments ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7079c57d1d30>
+
+    def test_actual_dispatch_wall_cap_does_not_change_stage_financial_arguments(monkeypatch):
+        case = stage_case(monkeypatch)
+        before = pilot.input_identity(case[2:4])
+>       checked = check_stage(case)
+                  ^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py:138: in check_stage
+    return checker.check_teacher_stage_risk_sources(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:3930: in check_teacher_stage_risk_sources
+    _require(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False
+message = 'stage risk producer actual argument binding changed'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: stage risk producer actual argument binding changed
+
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:35: ValueError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_actual_dispatch_wall_cap_does_not_change_stage_financial_arguments
+1 failed, 11 passed in 1.36s

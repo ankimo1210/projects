@@ -962,7 +962,8 @@ def test_small_raw_arrays_pack_losslessly_without_one_file_per_query(tmp_path):
     run_pilot.write_pilot_artifact(tmp_path / "packed", raw)
     loaded, _ = run_pilot.read_pilot_artifact(tmp_path / "packed")
     run_pilot.runner._same(raw, loaded, "original packed raw")
-    assert len([p for p in (tmp_path / "packed").iterdir() if p.is_dir()]) == 1
+    # A shared blob page and metadata page stay bounded independently of query count.
+    assert len([p for p in (tmp_path / "packed").iterdir() if p.is_dir()]) <= 2
     assert loaded["empty"].shape == (0, 3) and loaded["scalar"].shape == ()
 
 

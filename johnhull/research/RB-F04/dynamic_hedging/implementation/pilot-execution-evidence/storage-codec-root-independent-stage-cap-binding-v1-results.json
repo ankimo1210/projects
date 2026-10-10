@@ -1,0 +1,108 @@
+{
+  "schema": "rb-f04-stage-cap-independent-tiny-probe-v1",
+  "checks": [
+    {
+      "name": "planned_five_financial_arguments_plus_actual_cap",
+      "status": "PASS",
+      "financial_qualification": "unknown",
+      "original_n": 1024,
+      "thresholds": 65,
+      "blocks": 16
+    },
+    {
+      "name": "missing_original_financial_parameters",
+      "status": "PASS",
+      "rejection": "stage risk producer actual argument binding changed"
+    },
+    {
+      "name": "missing_original_financial_surface",
+      "status": "PASS",
+      "rejection": "stage risk producer actual argument binding changed"
+    },
+    {
+      "name": "missing_original_financial_dataset",
+      "status": "PASS",
+      "rejection": "stage risk producer actual argument binding changed"
+    },
+    {
+      "name": "missing_original_financial_caches",
+      "status": "PASS",
+      "rejection": "stage risk producer actual argument binding changed"
+    },
+    {
+      "name": "missing_original_financial_chunk_paths",
+      "status": "PASS",
+      "rejection": "stage risk producer actual argument binding changed"
+    },
+    {
+      "name": "extra_financial_key_raw",
+      "status": "PASS",
+      "rejection": "stage risk producer actual argument binding changed"
+    },
+    {
+      "name": "extra_financial_key_stage",
+      "status": "PASS",
+      "rejection": "stage risk producer actual argument binding changed"
+    },
+    {
+      "name": "self_consistent_resolved_SHA_bad_cap_481.0",
+      "status": "PASS",
+      "rejection": "saved resolved original worker arguments changed"
+    },
+    {
+      "name": "self_consistent_resolved_SHA_bad_cap_None",
+      "status": "PASS",
+      "rejection": "saved resolved original worker arguments changed"
+    },
+    {
+      "name": "self_consistent_resolved_SHA_bad_cap_False",
+      "status": "PASS",
+      "rejection": "saved resolved original worker arguments changed"
+    },
+    {
+      "name": "self_consistent_resolved_SHA_bad_cap_'480'",
+      "status": "PASS",
+      "rejection": "saved resolved original worker arguments changed"
+    },
+    {
+      "name": "extra_key_on_both_stage_and_raw_with_self_consistent_SHA",
+      "status": "PASS",
+      "rejection": "saved resolved original worker arguments changed"
+    },
+    {
+      "name": "envelope_cap_differs_from_original_job",
+      "status": "PASS",
+      "rejection": "job prior prediction/budget mismatch"
+    },
+    {
+      "name": "envelope_original_plan_hash_changed",
+      "status": "PASS",
+      "rejection": "job prior plan mismatch"
+    }
+  ],
+  "check_count": 15,
+  "fixed_checker_sha256": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+  "test_sha256": "2d1f468f1185cbf1f3cfbb22895f99185ff440bd75d74a9733d8c4dec029769f",
+  "source_canonical_runner_digest_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_payload_digest_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "actual_source_file_count": 82,
+  "dynamic_imports": [],
+  "source_matches_author_saved_identity": true,
+  "all_source_bytes_match": true,
+  "changed_definitions": [
+    "check_teacher_stage_risk_sources"
+  ],
+  "source_file_delta": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "before": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+      "after": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e"
+    }
+  },
+  "strict_cap_functions_AST_unchanged": true,
+  "codec_fixed_unchanged": true,
+  "wall_seconds": 0.7015728299957118,
+  "cpu_seconds": 0.7009886300000001,
+  "financial_generation_RNG_solver_SDE_largeNPZ_checkpoint_Git_CAS_operations": 0,
+  "financial_qualification": "unknown",
+  "formal_pilot_main_budget_phase_approved": false
+}

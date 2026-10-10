@@ -3927,8 +3927,15 @@ def check_teacher_stage_risk_sources(parameters, surface, *, stage_plan, rows):
                     )
                     if expected_op == "quote_risk":
                         args = unpack_inputs(risk["arguments"])
+                        # Stage evidence binds planned financial inputs; the job's
+                        # actual cap stays bound by resolved-argument/envelope checks.
                         _require(
-                            input_identity(args) == input_identity(source_args),
+                            input_identity(
+                                {k: v for k, v in args.items() if k != "wall_cap_seconds"}
+                            )
+                            == input_identity(
+                                {k: v for k, v in source_args.items() if k != "wall_cap_seconds"}
+                            ),
                             "stage risk producer actual argument binding changed",
                         )
                         _require(

@@ -1,0 +1,51 @@
+{
+  "manifest_sha256": "f81560c10a793e3e6d7ab829d7ac953b2d947b35ae8654de24aec63eae0d3d48",
+  "checks": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/source-fixed-v2/johnhull/hullkit/tests/test_dynamic_hedging_transport.py",
+      "sha_match": true,
+      "bytes_match": true
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/source-fixed-v2/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+      "sha_match": true,
+      "bytes_match": true
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/RED-v2-header.log",
+      "sha_match": true,
+      "bytes_match": true
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/GREEN-v2.log",
+      "sha_match": true,
+      "bytes_match": true
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/ruff-v2.log",
+      "sha_match": true,
+      "bytes_match": true
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/source-v2.diff",
+      "sha_match": true,
+      "bytes_match": true
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/report-fixed-v2.md",
+      "sha_match": true,
+      "bytes_match": true
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+      "sha_match": true,
+      "snapshot_equal": true
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/tests/test_dynamic_hedging_transport.py",
+      "sha_match": true,
+      "snapshot_equal": true
+    }
+  ],
+  "basis": "completed independent check transcript prior to freeze release"
+}

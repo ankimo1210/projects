@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "wall_seconds": 1.040463997000188,
+  "cpu_seconds": 1.034787841,
+  "scope": "five financial value alterations and bad cap with old/rewritten resolvedSHA; structural worker stub only",
+  "args": [
+    "-ra",
+    "--strict-markers",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price",
+    "-q",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_stage_rejects_changed_original_financial_argument",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py::test_saved_worker_cap_must_match_original_prior_even_after_stage_binding"
+  ],
+  "financial_generation_RNG_SDE_solver_Git_CAS": 0
+}

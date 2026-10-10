@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+__ ERROR collecting johnhull/hullkit/tests/test_dynamic_hedging_transport.py ___
+ImportError while importing test module '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/tests/test_dynamic_hedging_transport.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:16: in <module>
+    import run_reference as runner  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:30: in <module>
+    from deep_hedge_price._dynamic_hedging_protocol import candidate_protocol
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_protocol'
+=========================== short test summary info ============================
+ERROR johnhull/hullkit/tests/test_dynamic_hedging_transport.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.16s

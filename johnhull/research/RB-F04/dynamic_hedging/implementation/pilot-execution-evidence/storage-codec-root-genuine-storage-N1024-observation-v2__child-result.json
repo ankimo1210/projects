@@ -1,0 +1,183 @@
+{
+  "child_inclusive_expense": {
+    "cpu_seconds": 2.9892170649999996,
+    "peak_rss_bytes": 986394624,
+    "wall_seconds": 3.037452270000358
+  },
+  "completed": true,
+  "financial_qualification": "unknown",
+  "financial_solver_calls": 0,
+  "isolation": {
+    "all_array_occurrences": 1648,
+    "all_mutable_container_occurrences": 392,
+    "all_nonempty_array_memory_ranges_disjoint": true,
+    "mutation_pair": [
+      "a000009",
+      "a000015"
+    ],
+    "mutation_restored": true
+  },
+  "new_artifact": {
+    "file_bindings": [
+      {
+        "bytes": 40186151,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/arrays-00000000/arrays.npz",
+        "sha256": "9949cf4529ac0b4c4f122d2ead950221e4ad2efe5d31f3092a24c39c5f783d64"
+      },
+      {
+        "bytes": 224,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/arrays-00000000/metadata.json",
+        "sha256": "2020e68fbbc320b0e7df2618989d835647055a175b5db079b6005851e57938b1"
+      },
+      {
+        "bytes": 319,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/arrays-00000000/receipt.json",
+        "sha256": "801d72e547423ab06615edfe73051757d072b2c4f9f11ddde26a3c07a7a558d8"
+      },
+      {
+        "bytes": 22,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/arrays.npz",
+        "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+      },
+      {
+        "bytes": 36989,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata-00000000/arrays.npz",
+        "sha256": "38d9eca48f8e5bba449790fc572a8a845643c46d5f9b720999c14dae6fd39f16"
+      },
+      {
+        "bytes": 218,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata-00000000/metadata.json",
+        "sha256": "1cd5b76c734ce6a11ada0ef5c03222ce0a1b747777c6ab1ac2dafd06aece47d0"
+      },
+      {
+        "bytes": 316,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata-00000000/receipt.json",
+        "sha256": "b9fc416bb8eac199eb4bd622fe1654c7338502dd0d0b490c7577b194d945f979"
+      },
+      {
+        "bytes": 1239,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata.json",
+        "sha256": "f9c1df28430a78798726eb2832f80bb7af8037245a4f14e93909c1a6f266d390"
+      },
+      {
+        "bytes": 312,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/receipt.json",
+        "sha256": "a277da4c595f7ba2caa92aaf193ed2dada6b3ac110d53f339c5738de3aa6bbbf"
+      }
+    ],
+    "file_count": 9,
+    "json_bytes": 2628,
+    "payload_provenance_sha256": "ba295309023d172361698d175fe08e0c95ecd7c06171dc88c0f1bbfd288d8832",
+    "physical_bytes": 40225790,
+    "physical_page_count": 2,
+    "root_receipt": {
+      "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "artifact_sha256": "8de00f241e35f1405634a65071989a5576d4c977bf9476a6c6d59872a408e4da",
+      "metadata_sha256": "f9c1df28430a78798726eb2832f80bb7af8037245a4f14e93909c1a6f266d390",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 0
+    },
+    "typed_node_count": 838,
+    "unique_array_count": 509
+  },
+  "new_runtime_source_files": [
+    {
+      "bytes": 176874,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "sha256": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5"
+    },
+    {
+      "bytes": 51440,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "sha256": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef"
+    },
+    {
+      "bytes": 33301,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+      "sha256": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd"
+    },
+    {
+      "bytes": 11841,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+      "sha256": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac"
+    },
+    {
+      "bytes": 33619,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "sha256": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565"
+    },
+    {
+      "bytes": 17009,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+      "sha256": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+    }
+  ],
+  "old_artifact": {
+    "array_occurrences": 1648,
+    "declared_array_bytes": 121960001,
+    "json_bytes": 579746,
+    "physical_bytes": 122958383
+  },
+  "original_generation_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "original_n": 1024,
+  "phase_expenses": [
+    {
+      "cpu_seconds": 0.034974142,
+      "phase": "input_bytes_before",
+      "process_peak_rss_bytes": 15568896,
+      "wall_seconds": 0.0349719619989628
+    },
+    {
+      "cpu_seconds": 0.2917273610000002,
+      "phase": "legacy_read",
+      "process_peak_rss_bytes": 863096832,
+      "wall_seconds": 0.29174507199786603
+    },
+    {
+      "cpu_seconds": 0.03766612799999991,
+      "phase": "original_logical_provenance",
+      "process_peak_rss_bytes": 863096832,
+      "wall_seconds": 0.03767227800562978
+    },
+    {
+      "cpu_seconds": 1.007559799,
+      "phase": "typed_dag_write",
+      "process_peak_rss_bytes": 923090944,
+      "wall_seconds": 1.0076327759961714
+    },
+    {
+      "cpu_seconds": 0.36585392500000014,
+      "phase": "typed_dag_read",
+      "process_peak_rss_bytes": 986394624,
+      "wall_seconds": 0.3658519790042192
+    },
+    {
+      "cpu_seconds": 0.13541001200000036,
+      "phase": "full_tolerance_and_provenance",
+      "process_peak_rss_bytes": 986394624,
+      "wall_seconds": 0.1354070809975383
+    },
+    {
+      "cpu_seconds": 0.04489793800000008,
+      "phase": "all_occurrences_and_inplace_isolation",
+      "process_peak_rss_bytes": 986394624,
+      "wall_seconds": 0.044896230996528175
+    },
+    {
+      "cpu_seconds": 0.034509275000000006,
+      "phase": "input_bytes_after",
+      "process_peak_rss_bytes": 986394624,
+      "wall_seconds": 0.03450873400288401
+    },
+    {
+      "cpu_seconds": 0.00020669299999998003,
+      "phase": "source_bytes_after",
+      "process_peak_rss_bytes": 986394624,
+      "wall_seconds": 0.00020717299776151776
+    }
+  ],
+  "rng_generation_calls": 0,
+  "scope": "same full genuine saved payload storage only",
+  "seed": 57346572,
+  "status": "completed_storage_roundtrip_finance_unknown"
+}

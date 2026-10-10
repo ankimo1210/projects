@@ -1,0 +1,77 @@
+{
+  "checks": {
+    "cpu_seconds": null,
+    "dedicated_passed": 37,
+    "format": "PASS",
+    "pytest_seconds": 1.59,
+    "ruff": "PASS",
+    "test_command_observed_wall_seconds": 2.9953203
+  },
+  "files": [
+    {
+      "bytes": 16382,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/source-fixed-v1/johnhull/hullkit/tests/test_dynamic_hedging_transport.py",
+      "sha256": "56a81037f3b55e34caa7ba921e3a491685de157bee44b1b46376fcdd1d3124c0"
+    },
+    {
+      "bytes": 31087,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/source-fixed-v1/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+      "sha256": "c2c2e84f68abae13f19b8221da6ca6b95307a9e4a538e7014dfe254f2e675c7e"
+    },
+    {
+      "bytes": 1027,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/RED-v1.log",
+      "sha256": "7a9d51ab83013ce42bd035159636b6e50357d7d2d813a8a2aad9d23a3602e66e"
+    },
+    {
+      "bytes": 41789,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/RED-v2.log",
+      "sha256": "c77ada32d138d5940958d0e50754000fc317b94b4d8fb344321ef6d6de3e61d8"
+    },
+    {
+      "bytes": 574,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/GREEN-attempt-v1.log",
+      "sha256": "fa067268408adaea85274351ca788d1d09e9499f37e99b64239e7a25672feec4"
+    },
+    {
+      "bytes": 99,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/GREEN-attempt-v2.log",
+      "sha256": "f4dd49adbf30194e512f2d177ccde10d8d3abae947acfc6465d26cb380396947"
+    },
+    {
+      "bytes": 99,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/GREEN-v1.log",
+      "sha256": "5d9da551e6cc75b0aa01ce9f16cd09e3162d7196c2e48d2143814a26334fc1c9"
+    },
+    {
+      "bytes": 45,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/ruff-v1.log",
+      "sha256": "afa20b27dacc9bf0aba3c1d265964c21e04ab42f6e39e2dd4769718ceded003a"
+    },
+    {
+      "bytes": 2050,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/report-fixed-v1.md",
+      "sha256": "68d8b2a3ac3e4f5d4eacae45aa273e2eab9060cd15816782f6f0153e9e15b1c6"
+    }
+  ],
+  "financial_qualification": "unknown",
+  "production_integration_approved": false,
+  "schema": "rb-f04-typed-dag-transport-author-fixed-v1",
+  "scope": "two owned files, synthetic checks only",
+  "sources": [
+    {
+      "bytes": 31087,
+      "lines": 786,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+      "sha256": "c2c2e84f68abae13f19b8221da6ca6b95307a9e4a538e7014dfe254f2e675c7e",
+      "snapshot": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/source-fixed-v1/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py"
+    },
+    {
+      "bytes": 16382,
+      "lines": 394,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/tests/test_dynamic_hedging_transport.py",
+      "sha256": "56a81037f3b55e34caa7ba921e3a491685de157bee44b1b46376fcdd1d3124c0",
+      "snapshot": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-pilot-typed-dag-transport/source-fixed-v1/johnhull/hullkit/tests/test_dynamic_hedging_transport.py"
+    }
+  ]
+}

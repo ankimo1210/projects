@@ -1,0 +1,54 @@
+F..FF                                                                    [100%]
+=================================== FAILURES ===================================
+_ test_default_non_teacher_writer_and_reader_use_new_schema_without_mutable_aliases _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3927/test_default_non_teacher_write0')
+
+    def test_default_non_teacher_writer_and_reader_use_new_schema_without_mutable_aliases(tmp_path):
+        array = np.arange(16.0).reshape(4, 4)
+        shared = {"values": array, "status": np.array(["ready", "unknown"]), "expense": {"wall": 3.0}}
+        payload = {"kind": "derived", "rows": [shared, shared], "original_n": 65536,
+                   "thresholds": np.linspace(0, 1, 65), "blocks": np.arange(16)}
+        pilot.write_pilot_artifact(tmp_path / "raw", payload)
+        metadata, _, _ = protocol.read_artifact(tmp_path / "raw")
+>       assert metadata["schema"] == NEW_SCHEMA
+E       AssertionError: assert 'rb-f04-pilot-array-packs-v2' == 'rb-f04-pilot-typed-dag-v1'
+E         
+E         - rb-f04-pilot-typed-dag-v1
+E         + rb-f04-pilot-array-packs-v2
+
+deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py:26: AssertionError
+_________________ test_transport_is_mandatory_execution_source _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3927/test_transport_is_mandatory_ex0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7e2665a28410>
+
+    def test_transport_is_mandatory_execution_source(tmp_path, monkeypatch):
+        names = ["reference_methods", "run_fresh", "check_fresh", "run_pilot", "check_pilot",
+                 "run_main", "check_main", "run_reference", "check_initial_quotes",
+                 "check_selected_calls"]
+        base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+        base.mkdir(parents=True)
+        for name in names:
+            (base / f"{name}.py").write_text("# fake execution source\\n")
+        closure = tmp_path / "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py"
+        closure.parent.mkdir(parents=True)
+        closure.write_text("# fake closure source\\n")
+        monkeypatch.setattr(runner, "source_identity", lambda *a, **k: {})
+>       with pytest.raises(ValueError, match="required execution source missing: _pilot_transport"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py:81: Failed
+____________ test_transport_is_in_the_transitive_execution_closure _____________
+
+    def test_transport_is_in_the_transitive_execution_closure():
+        identity = runner.execution_source_identity()
+>       assert "johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py" in identity["files"]
+E       AssertionError: assert 'johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py' in {'deep_hedge_price/src/deep_hedge_price/__init__.py': 'a8b359e6997c219dec5bc328a2819181a8f24445fd0eb1c66fed78cc3fcf65c.../deep_hedge_price/_dynamic_hedging_policy.py': 'c233ba0cf6d736401c4f2a4d92dc803810c8066ebf7960534730299759142fca', ...}
+
+deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py:87: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py::test_default_non_teacher_writer_and_reader_use_new_schema_without_mutable_aliases
+FAILED deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py::test_transport_is_mandatory_execution_source
+FAILED deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py::test_transport_is_in_the_transitive_execution_closure
+3 failed, 2 passed in 2.25s

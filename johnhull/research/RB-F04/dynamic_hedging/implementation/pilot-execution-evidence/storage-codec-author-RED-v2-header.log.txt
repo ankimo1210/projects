@@ -1,0 +1,696 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+_ test_page_blob_npy_header_is_checked_before_protocol_allocation[|u1-False-shape0-] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c0')
+descriptor = '|u1', order = False, shape = (1073741824,), body = b''
+
+    @pytest.mark.parametrize(
+        "descriptor,order,shape,body",
+        [
+            ("|u1", False, (1073741824,), b""),
+            ("|u1", False, (17,), b""),
+            ("<i4", False, (1,), b"\0" * 4),
+            ("|u1", True, (1,), b"\0"),
+            ("|u1", False, (1, 1), b"\0"),
+            ("|u1", False, (True,), b"\0"),
+        ],
+    )
+    def test_page_blob_npy_header_is_checked_before_protocol_allocation(
+        tmp_path, descriptor, order, shape, body
+    ):
+        import io
+        import struct
+        import zipfile
+    
+        path, metadata, _, _ = write_read(tmp_path, np.arange(3), 256)
+        altered = copy.deepcopy(metadata)
+        ref = next(p for p in altered["pages"] if p["kind"] == "arrays")
+        page = path / ref["path"]
+        manifest = json.loads((page / "metadata.json").read_bytes())
+        header = repr({"descr": descriptor, "fortran_order": order, "shape": shape}).encode()
+        header += b" " * max(0, 70 - len(header) - 1) + b"\n"
+        npy = np.lib.format.magic(1, 0) + struct.pack("<H", len(header)) + header + body
+        packed = io.BytesIO()
+        with zipfile.ZipFile(packed, "w", compression=zipfile.ZIP_STORED) as archive:
+            archive.writestr("blob.npy", npy)
+        manifest["arrays"] = {
+            "blob": {"dtype": descriptor, "shape": list(shape),
+                     "nbytes": int(np.prod(shape)) * np.dtype(descriptor).itemsize}
+        }
+        manifest_bytes = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
+        npz = packed.getvalue()
+        page_receipt = {
+            "schema": "rb-f04-array-receipt-v1",
+            "metadata_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+            "arrays_sha256": hashlib.sha256(npz).hexdigest(),
+            "uncompressed_bytes": len(npy),
+        }
+        page_receipt["artifact_sha256"] = runner._digest(page_receipt)
+        (page / "metadata.json").write_bytes(manifest_bytes)
+        (page / "arrays.npz").write_bytes(npz)
+        (page / "receipt.json").write_text(
+            json.dumps(page_receipt, sort_keys=True, separators=(",", ":"))
+        )
+        ref["receipt"] = page_receipt
+        receipt, _ = replace_root(path, altered)
+    
+        class ObservedProtocol:
+            def __init__(self):
+                self.forbidden_reads = 0
+    
+            def read_artifact(self, directory):
+                if Path(directory) == page:
+                    self.forbidden_reads += 1
+                    pytest.fail("page array allocation reached before NPY header validation")
+                return protocol.read_artifact(directory)
+    
+        observer = ObservedProtocol()
+        with pytest.raises(ValueError):
+>           codec().read_transport(path, altered, receipt, protocol=observer, runner=runner)
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:459: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:779: in read_transport
+    recovered = _Decoder(nodes, arrays, array_pages, runner, limit).decode(metadata["root_node"])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:699: in decode
+    return self.array(value)
+           ^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:676: in array
+    array = _read_npy(self.pages, self.arrays[index])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:609: in _read_npy
+    version = np.lib.format.read_magic(window)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:242: in read_magic
+    magic_str = _read_bytes(fp, MAGIC_LEN, "magic string")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:1013: in _read_bytes
+    r = fp.read(size - len(data))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:430: in read
+    result = b"".join(self.pages.pieces(self.offset + self.position, count))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:418: in pieces
+    raw = self.page(index)
+          ^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:395: in page
+    metadata, arrays, receipt = self.protocol.read_artifact(path)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <johnhull.hullkit.tests.test_dynamic_hedging_transport.test_page_blob_npy_header_is_checked_before_protocol_allocation.<locals>.ObservedProtocol object at 0x7fc22911c950>
+directory = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c0/saved/arrays-00000000')
+
+    def read_artifact(self, directory):
+        if Path(directory) == page:
+            self.forbidden_reads += 1
+>           pytest.fail("page array allocation reached before NPY header validation")
+E           Failed: page array allocation reached before NPY header validation
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:454: Failed
+_ test_page_blob_npy_header_is_checked_before_protocol_allocation[|u1-False-shape1-] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c1')
+descriptor = '|u1', order = False, shape = (17,), body = b''
+
+    @pytest.mark.parametrize(
+        "descriptor,order,shape,body",
+        [
+            ("|u1", False, (1073741824,), b""),
+            ("|u1", False, (17,), b""),
+            ("<i4", False, (1,), b"\0" * 4),
+            ("|u1", True, (1,), b"\0"),
+            ("|u1", False, (1, 1), b"\0"),
+            ("|u1", False, (True,), b"\0"),
+        ],
+    )
+    def test_page_blob_npy_header_is_checked_before_protocol_allocation(
+        tmp_path, descriptor, order, shape, body
+    ):
+        import io
+        import struct
+        import zipfile
+    
+        path, metadata, _, _ = write_read(tmp_path, np.arange(3), 256)
+        altered = copy.deepcopy(metadata)
+        ref = next(p for p in altered["pages"] if p["kind"] == "arrays")
+        page = path / ref["path"]
+        manifest = json.loads((page / "metadata.json").read_bytes())
+        header = repr({"descr": descriptor, "fortran_order": order, "shape": shape}).encode()
+        header += b" " * max(0, 70 - len(header) - 1) + b"\n"
+        npy = np.lib.format.magic(1, 0) + struct.pack("<H", len(header)) + header + body
+        packed = io.BytesIO()
+        with zipfile.ZipFile(packed, "w", compression=zipfile.ZIP_STORED) as archive:
+            archive.writestr("blob.npy", npy)
+        manifest["arrays"] = {
+            "blob": {"dtype": descriptor, "shape": list(shape),
+                     "nbytes": int(np.prod(shape)) * np.dtype(descriptor).itemsize}
+        }
+        manifest_bytes = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
+        npz = packed.getvalue()
+        page_receipt = {
+            "schema": "rb-f04-array-receipt-v1",
+            "metadata_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+            "arrays_sha256": hashlib.sha256(npz).hexdigest(),
+            "uncompressed_bytes": len(npy),
+        }
+        page_receipt["artifact_sha256"] = runner._digest(page_receipt)
+        (page / "metadata.json").write_bytes(manifest_bytes)
+        (page / "arrays.npz").write_bytes(npz)
+        (page / "receipt.json").write_text(
+            json.dumps(page_receipt, sort_keys=True, separators=(",", ":"))
+        )
+        ref["receipt"] = page_receipt
+        receipt, _ = replace_root(path, altered)
+    
+        class ObservedProtocol:
+            def __init__(self):
+                self.forbidden_reads = 0
+    
+            def read_artifact(self, directory):
+                if Path(directory) == page:
+                    self.forbidden_reads += 1
+                    pytest.fail("page array allocation reached before NPY header validation")
+                return protocol.read_artifact(directory)
+    
+        observer = ObservedProtocol()
+        with pytest.raises(ValueError):
+>           codec().read_transport(path, altered, receipt, protocol=observer, runner=runner)
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:459: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:779: in read_transport
+    recovered = _Decoder(nodes, arrays, array_pages, runner, limit).decode(metadata["root_node"])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:699: in decode
+    return self.array(value)
+           ^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:676: in array
+    array = _read_npy(self.pages, self.arrays[index])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:609: in _read_npy
+    version = np.lib.format.read_magic(window)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:242: in read_magic
+    magic_str = _read_bytes(fp, MAGIC_LEN, "magic string")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:1013: in _read_bytes
+    r = fp.read(size - len(data))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:430: in read
+    result = b"".join(self.pages.pieces(self.offset + self.position, count))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:418: in pieces
+    raw = self.page(index)
+          ^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:395: in page
+    metadata, arrays, receipt = self.protocol.read_artifact(path)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <johnhull.hullkit.tests.test_dynamic_hedging_transport.test_page_blob_npy_header_is_checked_before_protocol_allocation.<locals>.ObservedProtocol object at 0x7fc2289f5eb0>
+directory = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c1/saved/arrays-00000000')
+
+    def read_artifact(self, directory):
+        if Path(directory) == page:
+            self.forbidden_reads += 1
+>           pytest.fail("page array allocation reached before NPY header validation")
+E           Failed: page array allocation reached before NPY header validation
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:454: Failed
+_ test_page_blob_npy_header_is_checked_before_protocol_allocation[<i4-False-shape2-\x00\x00\x00\x00] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c2')
+descriptor = '<i4', order = False, shape = (1,), body = b'\x00\x00\x00\x00'
+
+    @pytest.mark.parametrize(
+        "descriptor,order,shape,body",
+        [
+            ("|u1", False, (1073741824,), b""),
+            ("|u1", False, (17,), b""),
+            ("<i4", False, (1,), b"\0" * 4),
+            ("|u1", True, (1,), b"\0"),
+            ("|u1", False, (1, 1), b"\0"),
+            ("|u1", False, (True,), b"\0"),
+        ],
+    )
+    def test_page_blob_npy_header_is_checked_before_protocol_allocation(
+        tmp_path, descriptor, order, shape, body
+    ):
+        import io
+        import struct
+        import zipfile
+    
+        path, metadata, _, _ = write_read(tmp_path, np.arange(3), 256)
+        altered = copy.deepcopy(metadata)
+        ref = next(p for p in altered["pages"] if p["kind"] == "arrays")
+        page = path / ref["path"]
+        manifest = json.loads((page / "metadata.json").read_bytes())
+        header = repr({"descr": descriptor, "fortran_order": order, "shape": shape}).encode()
+        header += b" " * max(0, 70 - len(header) - 1) + b"\n"
+        npy = np.lib.format.magic(1, 0) + struct.pack("<H", len(header)) + header + body
+        packed = io.BytesIO()
+        with zipfile.ZipFile(packed, "w", compression=zipfile.ZIP_STORED) as archive:
+            archive.writestr("blob.npy", npy)
+        manifest["arrays"] = {
+            "blob": {"dtype": descriptor, "shape": list(shape),
+                     "nbytes": int(np.prod(shape)) * np.dtype(descriptor).itemsize}
+        }
+        manifest_bytes = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
+        npz = packed.getvalue()
+        page_receipt = {
+            "schema": "rb-f04-array-receipt-v1",
+            "metadata_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+            "arrays_sha256": hashlib.sha256(npz).hexdigest(),
+            "uncompressed_bytes": len(npy),
+        }
+        page_receipt["artifact_sha256"] = runner._digest(page_receipt)
+        (page / "metadata.json").write_bytes(manifest_bytes)
+        (page / "arrays.npz").write_bytes(npz)
+        (page / "receipt.json").write_text(
+            json.dumps(page_receipt, sort_keys=True, separators=(",", ":"))
+        )
+        ref["receipt"] = page_receipt
+        receipt, _ = replace_root(path, altered)
+    
+        class ObservedProtocol:
+            def __init__(self):
+                self.forbidden_reads = 0
+    
+            def read_artifact(self, directory):
+                if Path(directory) == page:
+                    self.forbidden_reads += 1
+                    pytest.fail("page array allocation reached before NPY header validation")
+                return protocol.read_artifact(directory)
+    
+        observer = ObservedProtocol()
+        with pytest.raises(ValueError):
+>           codec().read_transport(path, altered, receipt, protocol=observer, runner=runner)
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:459: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:779: in read_transport
+    recovered = _Decoder(nodes, arrays, array_pages, runner, limit).decode(metadata["root_node"])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:699: in decode
+    return self.array(value)
+           ^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:676: in array
+    array = _read_npy(self.pages, self.arrays[index])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:609: in _read_npy
+    version = np.lib.format.read_magic(window)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:242: in read_magic
+    magic_str = _read_bytes(fp, MAGIC_LEN, "magic string")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:1013: in _read_bytes
+    r = fp.read(size - len(data))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:430: in read
+    result = b"".join(self.pages.pieces(self.offset + self.position, count))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:418: in pieces
+    raw = self.page(index)
+          ^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:395: in page
+    metadata, arrays, receipt = self.protocol.read_artifact(path)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <johnhull.hullkit.tests.test_dynamic_hedging_transport.test_page_blob_npy_header_is_checked_before_protocol_allocation.<locals>.ObservedProtocol object at 0x7fc2289f7a40>
+directory = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c2/saved/arrays-00000000')
+
+    def read_artifact(self, directory):
+        if Path(directory) == page:
+            self.forbidden_reads += 1
+>           pytest.fail("page array allocation reached before NPY header validation")
+E           Failed: page array allocation reached before NPY header validation
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:454: Failed
+_ test_page_blob_npy_header_is_checked_before_protocol_allocation[|u1-True-shape3-\x00] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c3')
+descriptor = '|u1', order = True, shape = (1,), body = b'\x00'
+
+    @pytest.mark.parametrize(
+        "descriptor,order,shape,body",
+        [
+            ("|u1", False, (1073741824,), b""),
+            ("|u1", False, (17,), b""),
+            ("<i4", False, (1,), b"\0" * 4),
+            ("|u1", True, (1,), b"\0"),
+            ("|u1", False, (1, 1), b"\0"),
+            ("|u1", False, (True,), b"\0"),
+        ],
+    )
+    def test_page_blob_npy_header_is_checked_before_protocol_allocation(
+        tmp_path, descriptor, order, shape, body
+    ):
+        import io
+        import struct
+        import zipfile
+    
+        path, metadata, _, _ = write_read(tmp_path, np.arange(3), 256)
+        altered = copy.deepcopy(metadata)
+        ref = next(p for p in altered["pages"] if p["kind"] == "arrays")
+        page = path / ref["path"]
+        manifest = json.loads((page / "metadata.json").read_bytes())
+        header = repr({"descr": descriptor, "fortran_order": order, "shape": shape}).encode()
+        header += b" " * max(0, 70 - len(header) - 1) + b"\n"
+        npy = np.lib.format.magic(1, 0) + struct.pack("<H", len(header)) + header + body
+        packed = io.BytesIO()
+        with zipfile.ZipFile(packed, "w", compression=zipfile.ZIP_STORED) as archive:
+            archive.writestr("blob.npy", npy)
+        manifest["arrays"] = {
+            "blob": {"dtype": descriptor, "shape": list(shape),
+                     "nbytes": int(np.prod(shape)) * np.dtype(descriptor).itemsize}
+        }
+        manifest_bytes = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
+        npz = packed.getvalue()
+        page_receipt = {
+            "schema": "rb-f04-array-receipt-v1",
+            "metadata_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+            "arrays_sha256": hashlib.sha256(npz).hexdigest(),
+            "uncompressed_bytes": len(npy),
+        }
+        page_receipt["artifact_sha256"] = runner._digest(page_receipt)
+        (page / "metadata.json").write_bytes(manifest_bytes)
+        (page / "arrays.npz").write_bytes(npz)
+        (page / "receipt.json").write_text(
+            json.dumps(page_receipt, sort_keys=True, separators=(",", ":"))
+        )
+        ref["receipt"] = page_receipt
+        receipt, _ = replace_root(path, altered)
+    
+        class ObservedProtocol:
+            def __init__(self):
+                self.forbidden_reads = 0
+    
+            def read_artifact(self, directory):
+                if Path(directory) == page:
+                    self.forbidden_reads += 1
+                    pytest.fail("page array allocation reached before NPY header validation")
+                return protocol.read_artifact(directory)
+    
+        observer = ObservedProtocol()
+        with pytest.raises(ValueError):
+>           codec().read_transport(path, altered, receipt, protocol=observer, runner=runner)
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:459: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:779: in read_transport
+    recovered = _Decoder(nodes, arrays, array_pages, runner, limit).decode(metadata["root_node"])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:699: in decode
+    return self.array(value)
+           ^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:676: in array
+    array = _read_npy(self.pages, self.arrays[index])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:609: in _read_npy
+    version = np.lib.format.read_magic(window)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:242: in read_magic
+    magic_str = _read_bytes(fp, MAGIC_LEN, "magic string")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:1013: in _read_bytes
+    r = fp.read(size - len(data))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:430: in read
+    result = b"".join(self.pages.pieces(self.offset + self.position, count))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:418: in pieces
+    raw = self.page(index)
+          ^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:395: in page
+    metadata, arrays, receipt = self.protocol.read_artifact(path)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <johnhull.hullkit.tests.test_dynamic_hedging_transport.test_page_blob_npy_header_is_checked_before_protocol_allocation.<locals>.ObservedProtocol object at 0x7fc2289f5220>
+directory = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c3/saved/arrays-00000000')
+
+    def read_artifact(self, directory):
+        if Path(directory) == page:
+            self.forbidden_reads += 1
+>           pytest.fail("page array allocation reached before NPY header validation")
+E           Failed: page array allocation reached before NPY header validation
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:454: Failed
+_ test_page_blob_npy_header_is_checked_before_protocol_allocation[|u1-False-shape4-\x00] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c4')
+descriptor = '|u1', order = False, shape = (1, 1), body = b'\x00'
+
+    @pytest.mark.parametrize(
+        "descriptor,order,shape,body",
+        [
+            ("|u1", False, (1073741824,), b""),
+            ("|u1", False, (17,), b""),
+            ("<i4", False, (1,), b"\0" * 4),
+            ("|u1", True, (1,), b"\0"),
+            ("|u1", False, (1, 1), b"\0"),
+            ("|u1", False, (True,), b"\0"),
+        ],
+    )
+    def test_page_blob_npy_header_is_checked_before_protocol_allocation(
+        tmp_path, descriptor, order, shape, body
+    ):
+        import io
+        import struct
+        import zipfile
+    
+        path, metadata, _, _ = write_read(tmp_path, np.arange(3), 256)
+        altered = copy.deepcopy(metadata)
+        ref = next(p for p in altered["pages"] if p["kind"] == "arrays")
+        page = path / ref["path"]
+        manifest = json.loads((page / "metadata.json").read_bytes())
+        header = repr({"descr": descriptor, "fortran_order": order, "shape": shape}).encode()
+        header += b" " * max(0, 70 - len(header) - 1) + b"\n"
+        npy = np.lib.format.magic(1, 0) + struct.pack("<H", len(header)) + header + body
+        packed = io.BytesIO()
+        with zipfile.ZipFile(packed, "w", compression=zipfile.ZIP_STORED) as archive:
+            archive.writestr("blob.npy", npy)
+        manifest["arrays"] = {
+            "blob": {"dtype": descriptor, "shape": list(shape),
+                     "nbytes": int(np.prod(shape)) * np.dtype(descriptor).itemsize}
+        }
+        manifest_bytes = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
+        npz = packed.getvalue()
+        page_receipt = {
+            "schema": "rb-f04-array-receipt-v1",
+            "metadata_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+            "arrays_sha256": hashlib.sha256(npz).hexdigest(),
+            "uncompressed_bytes": len(npy),
+        }
+        page_receipt["artifact_sha256"] = runner._digest(page_receipt)
+        (page / "metadata.json").write_bytes(manifest_bytes)
+        (page / "arrays.npz").write_bytes(npz)
+        (page / "receipt.json").write_text(
+            json.dumps(page_receipt, sort_keys=True, separators=(",", ":"))
+        )
+        ref["receipt"] = page_receipt
+        receipt, _ = replace_root(path, altered)
+    
+        class ObservedProtocol:
+            def __init__(self):
+                self.forbidden_reads = 0
+    
+            def read_artifact(self, directory):
+                if Path(directory) == page:
+                    self.forbidden_reads += 1
+                    pytest.fail("page array allocation reached before NPY header validation")
+                return protocol.read_artifact(directory)
+    
+        observer = ObservedProtocol()
+        with pytest.raises(ValueError):
+>           codec().read_transport(path, altered, receipt, protocol=observer, runner=runner)
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:459: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:779: in read_transport
+    recovered = _Decoder(nodes, arrays, array_pages, runner, limit).decode(metadata["root_node"])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:699: in decode
+    return self.array(value)
+           ^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:676: in array
+    array = _read_npy(self.pages, self.arrays[index])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:609: in _read_npy
+    version = np.lib.format.read_magic(window)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:242: in read_magic
+    magic_str = _read_bytes(fp, MAGIC_LEN, "magic string")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:1013: in _read_bytes
+    r = fp.read(size - len(data))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:430: in read
+    result = b"".join(self.pages.pieces(self.offset + self.position, count))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:418: in pieces
+    raw = self.page(index)
+          ^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:395: in page
+    metadata, arrays, receipt = self.protocol.read_artifact(path)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <johnhull.hullkit.tests.test_dynamic_hedging_transport.test_page_blob_npy_header_is_checked_before_protocol_allocation.<locals>.ObservedProtocol object at 0x7fc2289c90d0>
+directory = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c4/saved/arrays-00000000')
+
+    def read_artifact(self, directory):
+        if Path(directory) == page:
+            self.forbidden_reads += 1
+>           pytest.fail("page array allocation reached before NPY header validation")
+E           Failed: page array allocation reached before NPY header validation
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:454: Failed
+_ test_page_blob_npy_header_is_checked_before_protocol_allocation[|u1-False-shape5-\x00] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c5')
+descriptor = '|u1', order = False, shape = (True,), body = b'\x00'
+
+    @pytest.mark.parametrize(
+        "descriptor,order,shape,body",
+        [
+            ("|u1", False, (1073741824,), b""),
+            ("|u1", False, (17,), b""),
+            ("<i4", False, (1,), b"\0" * 4),
+            ("|u1", True, (1,), b"\0"),
+            ("|u1", False, (1, 1), b"\0"),
+            ("|u1", False, (True,), b"\0"),
+        ],
+    )
+    def test_page_blob_npy_header_is_checked_before_protocol_allocation(
+        tmp_path, descriptor, order, shape, body
+    ):
+        import io
+        import struct
+        import zipfile
+    
+        path, metadata, _, _ = write_read(tmp_path, np.arange(3), 256)
+        altered = copy.deepcopy(metadata)
+        ref = next(p for p in altered["pages"] if p["kind"] == "arrays")
+        page = path / ref["path"]
+        manifest = json.loads((page / "metadata.json").read_bytes())
+        header = repr({"descr": descriptor, "fortran_order": order, "shape": shape}).encode()
+        header += b" " * max(0, 70 - len(header) - 1) + b"\n"
+        npy = np.lib.format.magic(1, 0) + struct.pack("<H", len(header)) + header + body
+        packed = io.BytesIO()
+        with zipfile.ZipFile(packed, "w", compression=zipfile.ZIP_STORED) as archive:
+            archive.writestr("blob.npy", npy)
+        manifest["arrays"] = {
+            "blob": {"dtype": descriptor, "shape": list(shape),
+                     "nbytes": int(np.prod(shape)) * np.dtype(descriptor).itemsize}
+        }
+        manifest_bytes = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
+        npz = packed.getvalue()
+        page_receipt = {
+            "schema": "rb-f04-array-receipt-v1",
+            "metadata_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+            "arrays_sha256": hashlib.sha256(npz).hexdigest(),
+            "uncompressed_bytes": len(npy),
+        }
+        page_receipt["artifact_sha256"] = runner._digest(page_receipt)
+        (page / "metadata.json").write_bytes(manifest_bytes)
+        (page / "arrays.npz").write_bytes(npz)
+        (page / "receipt.json").write_text(
+            json.dumps(page_receipt, sort_keys=True, separators=(",", ":"))
+        )
+        ref["receipt"] = page_receipt
+        receipt, _ = replace_root(path, altered)
+    
+        class ObservedProtocol:
+            def __init__(self):
+                self.forbidden_reads = 0
+    
+            def read_artifact(self, directory):
+                if Path(directory) == page:
+                    self.forbidden_reads += 1
+                    pytest.fail("page array allocation reached before NPY header validation")
+                return protocol.read_artifact(directory)
+    
+        observer = ObservedProtocol()
+        with pytest.raises(ValueError):
+>           codec().read_transport(path, altered, receipt, protocol=observer, runner=runner)
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:459: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:779: in read_transport
+    recovered = _Decoder(nodes, arrays, array_pages, runner, limit).decode(metadata["root_node"])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:699: in decode
+    return self.array(value)
+           ^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:676: in array
+    array = _read_npy(self.pages, self.arrays[index])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:609: in _read_npy
+    version = np.lib.format.read_magic(window)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:242: in read_magic
+    magic_str = _read_bytes(fp, MAGIC_LEN, "magic string")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:1013: in _read_bytes
+    r = fp.read(size - len(data))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:430: in read
+    result = b"".join(self.pages.pieces(self.offset + self.position, count))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:418: in pieces
+    raw = self.page(index)
+          ^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py:395: in page
+    metadata, arrays, receipt = self.protocol.read_artifact(path)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <johnhull.hullkit.tests.test_dynamic_hedging_transport.test_page_blob_npy_header_is_checked_before_protocol_allocation.<locals>.ObservedProtocol object at 0x7fc228a29940>
+directory = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_page_blob_npy_header_is_c5/saved/arrays-00000000')
+
+    def read_artifact(self, directory):
+        if Path(directory) == page:
+            self.forbidden_reads += 1
+>           pytest.fail("page array allocation reached before NPY header validation")
+E           Failed: page array allocation reached before NPY header validation
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:454: Failed
+______ test_empty_root_container_guard_is_available_before_protocol_read _______
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3935/test_empty_root_container_guar0')
+
+    def test_empty_root_container_guard_is_available_before_protocol_read(tmp_path):
+        import io
+        import struct
+        import zipfile
+    
+        path = tmp_path / "malformed-root"
+        path.mkdir()
+        header = b"{'descr': '|u1', 'fortran_order': False, 'shape': (1073741824,), }\n"
+        npy = np.lib.format.magic(1, 0) + struct.pack("<H", len(header)) + header
+        packed = io.BytesIO()
+        with zipfile.ZipFile(packed, "w", compression=zipfile.ZIP_STORED) as archive:
+            archive.writestr("blob.npy", npy)
+        (path / "arrays.npz").write_bytes(packed.getvalue())
+        for name in ("metadata.json", "receipt.json"):
+            (path / name).write_text("{}")
+>       assert hasattr(codec(), "validate_empty_root_container")
+E       AssertionError: assert False
+E        +  where False = hasattr(<module '_pilot_transport' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py'>, 'validate_empty_root_container')
+E        +    where <module '_pilot_transport' from '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py'> = codec()
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:478: AssertionError
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_page_blob_npy_header_is_checked_before_protocol_allocation[|u1-False-shape0-]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_page_blob_npy_header_is_checked_before_protocol_allocation[|u1-False-shape1-]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_page_blob_npy_header_is_checked_before_protocol_allocation[<i4-False-shape2-\x00\x00\x00\x00]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_page_blob_npy_header_is_checked_before_protocol_allocation[|u1-True-shape3-\x00]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_page_blob_npy_header_is_checked_before_protocol_allocation[|u1-False-shape4-\x00]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_page_blob_npy_header_is_checked_before_protocol_allocation[|u1-False-shape5-\x00]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_empty_root_container_guard_is_available_before_protocol_read
+7 failed, 37 deselected in 1.78s

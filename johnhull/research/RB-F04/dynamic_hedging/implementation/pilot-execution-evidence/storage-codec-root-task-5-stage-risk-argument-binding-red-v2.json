@@ -1,0 +1,12 @@
+{
+  "scope": "synthetic structural stage argument binding; financial worker stub, no RNG/SDE/financial solver",
+  "version": "red-v2",
+  "returncode": 1,
+  "wall_seconds": 1.9601893360013491,
+  "cpu_seconds": 4.148801,
+  "peak_rss_bytes": 745111552,
+  "source_before": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+  "source_after": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+  "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-red-v2.log",
+  "financial_generation_performed": false
+}

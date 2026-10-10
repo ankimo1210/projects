@@ -1,0 +1,61 @@
+{
+  "child_inclusive_expense": {
+    "cpu_seconds": 0.514054905,
+    "peak_rss_bytes": 381702144,
+    "wall_seconds": 0.5203150769957574
+  },
+  "completed": false,
+  "exception": {
+    "message": "libtorch_cuda.so: failed to map segment from shared object",
+    "type": "ImportError"
+  },
+  "financial_qualification": "unknown",
+  "financial_solver_calls": 0,
+  "new_runtime_source_files": [
+    {
+      "bytes": 176874,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "sha256": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5"
+    },
+    {
+      "bytes": 51440,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "sha256": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef"
+    },
+    {
+      "bytes": 33301,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+      "sha256": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd"
+    },
+    {
+      "bytes": 11841,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+      "sha256": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac"
+    },
+    {
+      "bytes": 33619,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "sha256": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565"
+    },
+    {
+      "bytes": 17009,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+      "sha256": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+    }
+  ],
+  "original_generation_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "original_n": 1024,
+  "phase_expenses": [
+    {
+      "cpu_seconds": 0.036255051,
+      "phase": "input_bytes_before",
+      "process_peak_rss_bytes": 15572992,
+      "wall_seconds": 0.036252862999390345
+    }
+  ],
+  "rng_generation_calls": 0,
+  "scope": "same full genuine saved payload storage only",
+  "seed": 57346572,
+  "status": "tool_exception_unknown",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-measurement-v1.py\", line 141, in child\n    import run_pilot as pilot\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py\", line 24, in <module>\n    import _teacher_storage as teacher_storage\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py\", line 14, in <module>\n    import run_reference as runner\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_reference.py\", line 39, in <module>\n    from deep_hedge_price import _dynamic_hedging_study as study\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py\", line 21, in <module>\n    from ._dynamic_hedging_policy import fit_policy, numpy_policy, observable_features\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py\", line 11, in <module>\n    import torch\n  File \"/home/kazumasa/projects/.venv/lib/python3.12/site-packages/torch/__init__.py\", line 442, in <module>\n    from torch._C import *  # noqa: F403\n    ^^^^^^^^^^^^^^^^^^^^^^\nImportError: libtorch_cuda.so: failed to map segment from shared object\n"
+}

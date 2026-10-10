@@ -1,0 +1,60 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_root_invalid_npy_header_rejected_before_protocol_array_read _______
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3934/test_root_invalid_npy_header_r0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x74bd69964cb0>
+
+    def test_root_invalid_npy_header_rejected_before_protocol_array_read(tmp_path, monkeypatch):
+        path = tmp_path / "malformed-root"
+        path.mkdir()
+        header = io.BytesIO()
+        np.lib.format.write_array_header_1_0(
+            header, {"descr": "|u1", "fortran_order": False, "shape": (1073741824,)}
+        )
+        pack = io.BytesIO()
+        with zipfile.ZipFile(pack, "w", compression=zipfile.ZIP_STORED) as archive:
+            archive.writestr("blob.npy", header.getvalue())
+        manifest = {"schema": "rb-f04-array-chunk-v1", "metadata": {"schema": NEW_SCHEMA},
+                    "arrays": {"blob": {"dtype": "|u1", "shape": [1073741824],
+                                        "nbytes": 1073741824}}}
+        metadata_bytes = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
+        receipt = {"schema": "rb-f04-array-receipt-v1",
+                   "metadata_sha256": hashlib.sha256(metadata_bytes).hexdigest(),
+                   "arrays_sha256": hashlib.sha256(pack.getvalue()).hexdigest(),
+                   "uncompressed_bytes": len(header.getvalue())}
+        receipt["artifact_sha256"] = protocol._digest(receipt)
+        (path / "metadata.json").write_bytes(metadata_bytes)
+        (path / "arrays.npz").write_bytes(pack.getvalue())
+        (path / "receipt.json").write_text(
+            json.dumps(receipt, sort_keys=True, separators=(",", ":"))
+        )
+        calls = []
+    
+        def forbidden(*args, **kwargs):
+            calls.append(1)
+            pytest.fail("protocol array allocation reached before root-empty validation")
+    
+        monkeypatch.setattr(protocol, "read_artifact", forbidden)
+        with pytest.raises(ValueError, match="root must not contain arrays"):
+>           pilot.read_pilot_artifact(path)
+
+deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py:163: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_pilot.py:1956: in read_pilot_artifact
+    metadata, root_arrays, root_receipt = protocol.read_artifact(directory)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (PosixPath('/tmp/pytest-of-kazumasa/pytest-3934/test_root_invalid_npy_header_r0/malformed-root'),)
+kwargs = {}
+
+    def forbidden(*args, **kwargs):
+        calls.append(1)
+>       pytest.fail("protocol array allocation reached before root-empty validation")
+E       Failed: protocol array allocation reached before root-empty validation
+
+deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py:159: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py::test_root_invalid_npy_header_rejected_before_protocol_array_read
+1 failed in 1.66s

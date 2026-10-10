@@ -1,0 +1,8 @@
+.......................                                                  [100%]
+=============================== warnings summary ===============================
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_npy_types_and_layout[array6]
+  /home/kazumasa/projects/.venv/lib/python3.12/site-packages/numpy/lib/_format_impl.py:475: UserWarning: Stored array in format 3.0. It can only be read by NumPy >= 1.17
+    header = _wrap_header_guess_version(header)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+23 passed, 1 warning in 1.75s

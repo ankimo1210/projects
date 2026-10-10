@@ -1,0 +1,140 @@
+"""Independent saved metadata and tiny stage-cap contract probes."""
+import ast
+import copy
+import hashlib
+import importlib.util
+import json
+import os
+import sys
+import time
+from pathlib import Path
+W=Path("/home/kazumasa/worktrees/johnhull-storage-codec")
+D=W/".superpowers/sdd/2026-10-10-dynamic-storage-codec"
+R=W/"johnhull/research/RB-F04/dynamic_hedging"
+os.chdir(W)
+sys.path[:0]=[str(R),str(W/"johnhull/hullkit/src"),str(W/"deep_hedge_price/src")]
+import deep_hedge_price,hullkit
+import numpy as np
+import pytest
+import check_pilot as checker
+import run_pilot as pilot
+import run_reference as runner
+import run_main as main
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+fixed="2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e"
+test=W/"deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py"
+assert sha(R/"check_pilot.py")==fixed
+assert sha(test)=="2d1f468f1185cbf1f3cfbb22895f99185ff440bd75d74a9733d8c4dec029769f"
+startwall,startcpu=time.perf_counter(),time.process_time()
+sp=importlib.util.spec_from_file_location("independent_stage_fixture",test)
+fixture=importlib.util.module_from_spec(sp);sp.loader.exec_module(fixture)
+checks=[]
+def must_reject(name,call):
+ try:call()
+ except ValueError as error:
+  checks.append({"name":name,"status":"PASS","rejection":str(error)})
+ else:raise AssertionError(name+": changed original metadata accepted")
+
+with pytest.MonkeyPatch.context() as monkey:
+ def forbidden(*a,**k):raise AssertionError("financial generation/RNG forbidden")
+ monkey.setattr(np.random,"default_rng",forbidden)
+ monkey.setattr(pilot,"run_teacher_job",forbidden)
+ monkey.setattr(pilot,"run_market_pair_job",forbidden)
+ baseline=fixture.stage_case(monkey,explicit_cap=False)
+ original_digest=pilot.input_identity(baseline[2:4])
+ result=fixture.check_stage(baseline)
+ row,job,plan,inputs=fixture.locked_case(baseline)
+ actual=checker.check_resolved_job_arguments(row,job,inputs=inputs,jobs={},artifact_directory=None)
+ checker.check_job_envelope(row,job,plan)
+ assert set(actual)=={"parameters","surface","dataset","caches","chunk_paths","wall_cap_seconds"}
+ assert actual["wall_cap_seconds"]==480
+ assert result["financial_qualification"]=="unknown"
+ assert original_digest==pilot.input_identity(baseline[2:4])
+ raw=baseline[3]["risk"]["raw"]
+ assert raw["original_n"]==1024 and raw["value"]["blocks"]==16
+ assert np.isnan(raw["value"]["targets"]).all()
+ assert all(v["asian"]["thresholds"].shape==(65,) for v in baseline[5]["caches"].values())
+ checks.append({"name":"planned_five_financial_arguments_plus_actual_cap","status":"PASS",
+                "financial_qualification":"unknown","original_n":1024,"thresholds":65,"blocks":16})
+
+ for key in ["parameters","surface","dataset","caches","chunk_paths"]:
+  changed=copy.deepcopy(baseline)
+  args=pilot.unpack_inputs(changed[3]["risk"]["raw"]["arguments"])
+  args.pop(key)
+  changed[3]["risk"]["raw"]["arguments"]=pilot.pack_inputs(args)
+  must_reject("missing_original_financial_"+key,lambda c=changed:fixture.check_stage(c))
+
+ for side in ["raw","stage"]:
+  changed=copy.deepcopy(baseline)
+  risk=changed[3]["risk"]
+  if side=="raw":
+   args=pilot.unpack_inputs(risk["raw"]["arguments"]);args["independent_extra_financial_key"]=.99
+   risk["raw"]["arguments"]=pilot.pack_inputs(args)
+  else:risk["arguments"]["independent_extra_financial_key"]=.99
+  must_reject("extra_financial_key_"+side,lambda c=changed:fixture.check_stage(c))
+
+ for replacement in [481.0,None,False,"480"]:
+  changed=copy.deepcopy(baseline)
+  row,job,plan,inputs=fixture.locked_case(changed)
+  args=pilot.unpack_inputs(row["raw"]["arguments"])
+  if replacement is None:args.pop("wall_cap_seconds")
+  else:args["wall_cap_seconds"]=replacement
+  row["raw"]["arguments"]=pilot.pack_inputs(args)
+  row["resolved_arguments_sha256"]=pilot.input_identity(args)
+  # Stage cannot certify a cap: it deliberately reports financial unknown.
+  assert fixture.check_stage(changed)["financial_qualification"]=="unknown"
+  must_reject("self_consistent_resolved_SHA_bad_cap_"+repr(replacement),
+     lambda row=row,job=job,inputs=inputs:checker.check_resolved_job_arguments(
+       row,job,inputs=inputs,jobs={},artifact_directory=None))
+
+ changed=copy.deepcopy(baseline)
+ row,job,plan,inputs=fixture.locked_case(changed)
+ args=pilot.unpack_inputs(row["raw"]["arguments"])
+ args["independent_extra_financial_key"]=.99
+ row["raw"]["arguments"]=pilot.pack_inputs(args)
+ changed[3]["risk"]["arguments"]["independent_extra_financial_key"]=.99
+ row["resolved_arguments_sha256"]=pilot.input_identity(args)
+ assert fixture.check_stage(changed)["financial_qualification"]=="unknown"
+ must_reject("extra_key_on_both_stage_and_raw_with_self_consistent_SHA",
+    lambda:checker.check_resolved_job_arguments(row,job,inputs=inputs,jobs={},artifact_directory=None))
+
+ row,job,plan,inputs=fixture.locked_case(copy.deepcopy(baseline))
+ row["budget"]["wall_seconds"]=481
+ must_reject("envelope_cap_differs_from_original_job",lambda:checker.check_job_envelope(row,job,plan))
+ row,job,plan,inputs=fixture.locked_case(copy.deepcopy(baseline))
+ row["plan_sha256"]="0"*64
+ must_reject("envelope_original_plan_hash_changed",lambda:checker.check_job_envelope(row,job,plan))
+
+previous=ast.parse((D/"task-5-stage-risk-argument-binding-source-before-v1.py").read_text())
+current=ast.parse((R/"check_pilot.py").read_text())
+defs=lambda t:{n.name:ast.dump(n,include_attributes=False) for n in t.body if isinstance(n,(ast.FunctionDef,ast.ClassDef))}
+a,b=defs(previous),defs(current)
+changed_defs=sorted(k for k in a.keys()&b.keys() if a[k]!=b[k])
+assert changed_defs==["check_teacher_stage_risk_sources"]
+assert a["check_resolved_job_arguments"]==b["check_resolved_job_arguments"]
+assert a["check_job_envelope"]==b["check_job_envelope"]
+assert a.keys()==b.keys()
+source=runner.execution_source_identity(W)
+canonical,native=runner._digest(source),runner.payload_digest(source)
+assert len(source["files"])==82 and source["dynamic_imports"]==[]
+saved=json.loads((D/"task-5-stage-risk-argument-binding-source-closure-after-v1.json").read_text())
+before=json.loads((D/"task-5-stage-risk-argument-binding-source-closure-before-v1.json").read_text())
+assert source==saved
+file_delta={k:{"before":before["files"].get(k),"after":v} for k,v in source["files"].items() if before["files"].get(k)!=v}
+assert set(file_delta)=={"johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"}
+all_source_bytes_match=all(sha(W/k)==v for k,v in source["files"].items())
+assert all_source_bytes_match and sha(R/"check_pilot.py")==fixed
+assert sha(R/"_pilot_transport.py")=="ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd"
+result={"schema":"rb-f04-stage-cap-independent-tiny-probe-v1","checks":checks,
+ "check_count":len(checks),"fixed_checker_sha256":fixed,"test_sha256":sha(test),
+ "source_canonical_runner_digest_sha256":canonical,"source_native_payload_digest_sha256":native,
+ "actual_source_file_count":len(source["files"]),"dynamic_imports":source["dynamic_imports"],
+ "source_matches_author_saved_identity":True,"all_source_bytes_match":all_source_bytes_match,
+ "changed_definitions":changed_defs,"source_file_delta":file_delta,
+ "strict_cap_functions_AST_unchanged":True,
+ "codec_fixed_unchanged":True,
+ "wall_seconds":time.perf_counter()-startwall,"cpu_seconds":time.process_time()-startcpu,
+ "financial_generation_RNG_solver_SDE_largeNPZ_checkpoint_Git_CAS_operations":0,
+ "financial_qualification":"unknown","formal_pilot_main_budget_phase_approved":False}
+(D/"independent-stage-cap-binding-v1-results.json").write_text(json.dumps(result,indent=2)+"\n")
+print(json.dumps(result,indent=2))

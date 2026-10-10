@@ -1,0 +1,26 @@
+{
+  "schema": "root-fixed-source-targeted-storage-and-stage-verification-v2",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "johnhull/hullkit/tests/test_dynamic_hedging_transport.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_failure_roots_keep_literal_all_raw_and_unknown",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_old_completed_literal_teacher_remains_readable_with_full_keys_and_dtypes",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_small_raw_arrays_pack_losslessly_without_one_file_per_query",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_split_artifact_roundtrip_nan_original_arrays_and_immutable",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_teacher_stage_saved_risk_sources_bind_actual_cache_arrays_and_cash",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_teacher_stage_refuses_swapped_same_shape_actual_sources",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_source_includes_both_phase_roots_and_relative_dependency",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_source_requires_all_saved_phase_checkers",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_source_rejects_missing_actual_financial_closure",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py::test_phase_memo_admin_only_arguments_share_proof_and_record_full_sha",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_initial_quote_saved_checker_uses_static_bound_source_and_restores_path"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 25.092257807998976,
+  "scope": "fixed codec+root guards+stage repair and specifically changed legacy/source tests; full three suites deferred to phase end"
+}

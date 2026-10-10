@@ -1,0 +1,43 @@
+{
+  "schema": "rb-f04-pilot-transport-independent-review-v2",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent limited storage transport reviewer",
+  "scope": "fixed W2 typed-DAG codec v2 plus root dispatch/empty-root prevalidation; tiny synthetic transport only",
+  "helper_sha256": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd",
+  "author_manifest_sha256": "f81560c10a793e3e6d7ab829d7ac953b2d947b35ae8654de24aec63eae0d3d48",
+  "run_pilot_sha256": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5",
+  "run_reference_sha256": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef",
+  "teacher_storage_sha256": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+  "transport_test_sha256": "1b3f5d5eebc44c95ea22cdf26e18204b3b90e080ed18ca2e3efbdca314b9f8dd",
+  "root_integration_test_sha256": "351ac9b435296cd57df5666e417a94b4c6b87f7eafd7c2764620e9a38f6ef46b",
+  "independent_small_probe_checks": 3,
+  "independent_scoped_pytest_passed": 17,
+  "old_v1_page_counterexample_preserved": true,
+  "original_malformed_page_protocol_calls": 0,
+  "original_malformed_root_protocol_calls": 0,
+  "actual_big_array_allocation": 0,
+  "financial_generation_RNG_SDE_solver_CAS_Git_production_changes": 0,
+  "teacher_recipe_unchanged": true,
+  "unknown_failure_N_blocks_and_costs_unchanged": true,
+  "financial_qualification": "unknown",
+  "financial_accuracy_approved": false,
+  "formal_pilot_or_main_approved": false,
+  "phase_acceptance_approved": false,
+  "full_capacity_RSS_runtime_or_budget_approved": false,
+  "resume_with_old_source_identity_approved": false,
+  "cost_scope": {
+    "small_probe_wall_seconds": 0.03625821800233098,
+    "small_probe_cpu_seconds": 0.03625864299999999,
+    "scoped_pytest_wall_seconds": 1.2356183329975465,
+    "scoped_pytest_cpu_seconds": 1.2320991339999998,
+    "initial_environment_failure_tool_wall_seconds": 0.5475657,
+    "full_review_cost_including_import_shell_read_and_recording_seconds": null
+  },
+  "limits": [
+    "page stream/wrapper bounds do not bound complete returned payload, DAG table or a single JSONL record RAM",
+    "underlying protocol root/wrapper JSON reads are not a whole-process RSS guarantee",
+    "no genuine workflow capacity/speed or restore/CAS measurement performed",
+    "old artifact read compatibility does not authorize old-source resume"
+  ]
+}

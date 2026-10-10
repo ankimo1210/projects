@@ -1,0 +1,53 @@
+{
+  "scope": "tiny synthetic transport/value/provenance only",
+  "helper_sha256": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd",
+  "native_financial_generation_RNG_SDE_CAS_Git_changes": 0,
+  "financial_qualification": "unknown",
+  "full_phase_capacity_or_speed_approved": false,
+  "reference_functions_AST_source": {
+    "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_reference.py": [
+      "_decode_tree",
+      "_digest",
+      "_encode_tree",
+      "_same",
+      "payload_digest"
+    ],
+    "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/src/hullkit/_heston_local_surface.py": [
+      "HestonParameters"
+    ],
+    "native_protocol": [
+      "_canonical",
+      "_digest",
+      "read_artifact",
+      "write_artifact"
+    ]
+  },
+  "checks": [
+    {
+      "name": "original_self_consistent_blob_header_counterexample",
+      "status": "PASS",
+      "protocol_reader_calls": 0,
+      "actual_big_array_allocation": 0,
+      "NPZ_physical_bytes": 194,
+      "NPY_expanded_bytes": 80,
+      "declared_nbytes": 1073741824,
+      "rejection": "page blob NPY body size/allocation mismatch"
+    },
+    {
+      "name": "legacy_normalization_dtype_shape_NaN_mutation_isolation",
+      "status": "PASS",
+      "page_raw_limit": 128,
+      "metadata_pages": 20,
+      "array_pages": 11,
+      "unknown_status_and_cost_kept": true,
+      "logical_comparison": "native tolerance+equal_nan; digest provenance only"
+    },
+    {
+      "name": "publication_failure_preserves_absent_root",
+      "status": "PASS"
+    }
+  ],
+  "wall_seconds": 0.03625821800233098,
+  "cpu_seconds": 0.03625864299999999,
+  "source_stable": true
+}

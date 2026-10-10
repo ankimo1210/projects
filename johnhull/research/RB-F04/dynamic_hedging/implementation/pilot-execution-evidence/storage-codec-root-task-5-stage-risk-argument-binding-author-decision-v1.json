@@ -1,0 +1,53 @@
+{
+  "schema": "rb-f04-stage-risk-operational-argument-source-fix-author-v1",
+  "status": "implemented_and_scoped_tested_pending_independent_review",
+  "source_files_changed": [
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+  ],
+  "source_functions_changed": [
+    "check_teacher_stage_risk_sources"
+  ],
+  "strict_cap_functions_ast_unchanged": [
+    "check_resolved_job_arguments",
+    "check_job_envelope"
+  ],
+  "runtime_source_files": 82,
+  "dynamic_imports": [],
+  "source_canonical_runner_digest_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_payload_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "fixed_files": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+    "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py": "2d1f468f1185cbf1f3cfbb22895f99185ff440bd75d74a9733d8c4dec029769f"
+  },
+  "RED": {
+    "file": "task-5-stage-risk-argument-binding-red-v2.log",
+    "expected_failures": 1,
+    "passes": 11
+  },
+  "GREEN": {
+    "file": "task-5-stage-risk-argument-binding-green-v3.log",
+    "passes": 12
+  },
+  "existing_pure_metadata_checks": {
+    "file": "task-5-stage-risk-argument-binding-related-metadata-v1.log",
+    "passes": 20,
+    "deselected": 193
+  },
+  "ruff_and_format": {
+    "files": 2,
+    "status": "pass"
+  },
+  "stage_binding_scope": "all financial keys retained; only wall_cap_seconds excluded at stage financial comparison",
+  "formal_cap_scope": "full saved resolved arguments and original job budget/envelope remain exact",
+  "original_n": 1024,
+  "all_thresholds": 65,
+  "blocks": 16,
+  "financial_worker": "typed dispatch to original wrapper, financial worker replaced by recorded structural stub",
+  "financial_qualification": "unknown",
+  "formal_budget_and_phase_approved": false,
+  "full_suites_performed": false,
+  "original_M6_formal_saved_financial_gate_rechecked": false,
+  "production_dependency_public_API_solver_changes": false,
+  "W1_changed": false,
+  "Git_CAS_changed": false
+}
