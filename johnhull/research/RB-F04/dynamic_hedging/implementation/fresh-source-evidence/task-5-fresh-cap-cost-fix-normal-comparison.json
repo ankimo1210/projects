@@ -1,0 +1,62 @@
+[
+  {
+    "model": "heston",
+    "key": "samples",
+    "allclose": true,
+    "max_absolute_error": 0.0
+  },
+  {
+    "model": "heston",
+    "key": "mean",
+    "allclose": true,
+    "max_absolute_error": 0.0
+  },
+  {
+    "model": "heston",
+    "key": "standard_errors",
+    "allclose": true,
+    "max_absolute_error": 0.0
+  },
+  {
+    "model": "heston",
+    "key": "covariance",
+    "allclose": true,
+    "max_absolute_error": 0.0
+  },
+  {
+    "model": "heston",
+    "key": "three_width_greek_means",
+    "allclose": true,
+    "max_absolute_error": 0.0
+  },
+  {
+    "model": "local",
+    "key": "samples",
+    "allclose": true,
+    "max_absolute_error": 0.0
+  },
+  {
+    "model": "local",
+    "key": "mean",
+    "allclose": true,
+    "max_absolute_error": 0.0
+  },
+  {
+    "model": "local",
+    "key": "standard_errors",
+    "allclose": true,
+    "max_absolute_error": 0.0
+  },
+  {
+    "model": "local",
+    "key": "covariance",
+    "allclose": true,
+    "max_absolute_error": 0.0
+  },
+  {
+    "model": "local",
+    "key": "three_width_greek_means",
+    "allclose": true,
+    "max_absolute_error": 0.0
+  }
+]

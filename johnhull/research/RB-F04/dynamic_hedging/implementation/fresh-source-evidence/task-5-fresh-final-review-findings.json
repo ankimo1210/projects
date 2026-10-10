@@ -1,0 +1,112 @@
+{
+  "status": "request_changes",
+  "source_binding": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "fea28b7456b472fde587e2aa6cff9a6bf794cd1be8998b4493be494d81875d79",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "13f2727b78902406f6da4e987c9de283472610796d9ae38be8ec87805e4426cf",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "f67af225363b4fb76a4564099494beed3144b033b79e8d4e2698d794f3209f65",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "e52d470330a1a0c94ed57db2b08e70c2b976baa2921eb6a2b3dfa03a5ebf729a"
+  },
+  "independent_scoped_tests": {
+    "passed": 56,
+    "seconds": 31.65
+  },
+  "ruff": {
+    "code": 0,
+    "output": "All checks passed!\n"
+  },
+  "format": {
+    "code": 0,
+    "output": "4 files already formatted\n"
+  },
+  "source_stable_owned_files": true,
+  "original_findings": {
+    "I1": "resolved typed full field parameters/class bound and fixed-market guard",
+    "I2": "resolved reason-bearing symmetric derivative boundary unavailable; original13queries/N preserved"
+  },
+  "actionable_findings": [
+    {
+      "id": "I3",
+      "severity": "Important",
+      "file": "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py",
+      "lines": [
+        71,
+        73,
+        283,
+        659,
+        889,
+        1253,
+        1254
+      ],
+      "title": "Raw job cap can be missing or differ from fixed effective job cap",
+      "counterexamples": [
+        {
+          "name": "oracle_budget_not_equal_frozen_job",
+          "result": "invalid_saved_semantics_accepted",
+          "qualification": "unknown"
+        },
+        {
+          "name": "table_budget_not_equal_frozen_job",
+          "result": "invalid_saved_semantics_accepted",
+          "qualification": "unknown"
+        },
+        {
+          "name": "teacher_budget_not_equal_frozen_job",
+          "result": "invalid_saved_semantics_accepted",
+          "qualification": "unknown"
+        },
+        {
+          "name": "oracle_cap_evidence_removed",
+          "result": "invalid_saved_semantics_accepted",
+          "qualification": "unknown"
+        }
+      ],
+      "impact": "The fixed job receipts retain300-second effective budgets, but changing any raw table/oracle/teacher cap_seconds to150 or deleting oracle cap_evidence passes resealed whole check_fresh. _cap validates only internal consistency and allowsNone; no comparison binds raw subjob budget/clock to its frozen effective job receipt. Saved evidence can therefore claim an unrelated cap, or lose its mandatory measured cap, without rejection.",
+      "requested_fix": "Require cap records for each nonexempt frozen fresh job and explicitly bind raw cap_seconds/deadline/clock interval to record.jobs corresponding effective_wall_cap_seconds. Validate all child solver/driver expenses belong to that job and total phase; retain exact branches as explicit exemptions, not implicitNone. Add resealed whole-checker adversarial tests for3cap mismatch variants/missing cap."
+    },
+    {
+      "id": "I4",
+      "severity": "Important",
+      "file": "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py",
+      "lines": [
+        55,
+        68,
+        1213,
+        1251
+      ],
+      "title": "Missing CPU clock and NaN CPU measurement accepted for measured phase cost",
+      "counterexample": {
+        "name": "phase_cpu_measurement_clock_removed",
+        "result": "invalid_saved_semantics_accepted",
+        "qualification": "unknown"
+      },
+      "impact": "Deleting phase cost clock.cpu_start/cpu_stop and setting cpu_seconds NaN passes resealed whole savedcheck. _clock makes CPU checks conditional on cpu_start and otherwise never requires finite/nonnegative CPU measurement. This silently accepts an unmeasured required expense despite the actual-cost contract.",
+      "requested_fix": "Make CPU start/stop and finite nonnegative cpu_seconds mandatory on actual cost/expense records. Permit wall-only cap receipts only through an explicit different validation mode. Test phase/jobs/driver/teacher/oracle/premium cost variants without allowing fabricated zero CPU."
+    }
+  ],
+  "counts": {
+    "Critical": 0,
+    "Important": 2,
+    "Minor": 0
+  },
+  "actual_saved_source_unit": {
+    "scope": "explicit_synthetic_metadata_actual1024/math",
+    "directory": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-source-unit",
+    "full_source_stable_during_run": true,
+    "baseline_result": "pass_no_RNG_CF_PDE_directMC_teacher_restart",
+    "qualification": "unknown",
+    "posttest_parent_plan_preserved": true
+  },
+  "existing_author_source_unit_v2": "stale fullregistry correctly rejected; unchanged oldreceipt/raw preserved in task-5-fresh-final-review-existing-unit.json/txt",
+  "evidence_files": [
+    "task-5-fresh-final-review-live-probes.py/json/txt",
+    "task-5-fresh-final-review-existing-unit.json/txt",
+    "task-5-fresh-final-review-tests.txt",
+    "task-5-fresh-final-review-scoped.json"
+  ],
+  "limits": [
+    "No formalpilot/main/fullpremium/financialprecision/researchacceptance",
+    "No source/tests/Git/docs changes; ignoredreview evidence only",
+    "Independent56 is repeated execution of authors same56tests, not112testcoverage",
+    "Saved checker does not authenticate earlier stochastic path/solver generation or original actual cost history; newfindings concern mandatory recorded semantic bindings"
+  ]
+}

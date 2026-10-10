@@ -1,0 +1,6 @@
+{
+  "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+  "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+  "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+  "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40"
+}

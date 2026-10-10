@@ -1,9 +1,10 @@
 # 動的モデル横断ヘッジ — 研究v1
 
-2026-10-10。**Tasks1–4、Task5統計/protocolとstudy/replay/runner/checkerのprivate source実装・独立レビュー完了（開発branch）。37quotes/18states、tiny全44cells、actual N1024教師を事前測定。Task5全体・正式pilot/freeze/主実験/研究受入・main統合は未完了。** 別execution契約・固定domain・保存再計算・入口の限定source承認を完了。12本の学習・検証sourceと、主実験結果の分割保存接続も限定承認済み。現在は正式pilot/freshと主実験の実行器を開発・確認中。
+2026-10-10。**Tasks1–4、Task5統計/protocolとstudy/replay/runner/checkerのprivate source実装・独立レビュー完了（開発branch）。37quotes/18states、tiny全44cells、actual N1024教師を事前測定。Task5全体・正式pilot/freeze/主実験/研究受入・main統合は未完了。** 別execution契約・固定domain・保存再計算・入口の限定source承認を完了。12本の学習・検証sourceと、主実験結果の分割保存接続も限定承認済み。fresh実行器・保存checkerの限定source確認を完了。現在は正式pilotの入力/事前予算固定と、主実験のchunk/保存checkerを開発・確認中。
 
 - [prefreeze revision候補](PREFREEZE_REVISION.md)：旧v1の精度契約は保持。state15.Hの元quote条件拒否とfull Cartesian cacheの未知tailを受け、別execution-readinessと日付固定domainを検討。[独立設計レビュー](prefreeze-review/README.md)でA/Bの限定設計を承認。[private source/TDD・最終独立レビュー](implementation/PREFREEZE_SOURCE.md)を完了、正式pilot/mainは未開封。候補文書はレビュー前snapshotを保持。
 - [12本の学習・検証source確認](implementation/NN_CLOSURE_SOURCE.md)：元8,192経路・512更新、全12 NNの2,048検証経路、4×14baseline、保存算術と実費用を接続。38tests・独立6群・索引/docstring1,129件、合成経路での実12fitと分割保存/replayを確認。正式金融pilot/主実験は未完了。
+- [独立再計算・保存checker](implementation/FRESH_SOURCE.md)：対象4 sourceを独立承認。82tests、実N1024/13queries/768+1536/16blocksのsaved-only検査、改変8件拒否。正式金融fresh/premium/mainは未実行。
 - [上限に達した依存の入口](implementation/DEPENDENCY_CAP_SOURCE.md)：元N・全396枠を理由付きで保持する入口を限定承認。51runner tests・独立6件、金融mainは未実行。
 - [正式pilotの予算測定](implementation/PILOT_BUDGET_MEASUREMENTS.md)：元18入力の実2,304再較正を計測。歴史的教師の外挿と実測費用を区別し、Asian/16block・保存/check費用は未測定。
 - [正式実験のsource照合](implementation/PHASE_SOURCE_IDENTITY.md)：全10入口と学習closureを必須登録、bare依存・別checkoutのloaded aliasを照合。48scoped tests、独立14件と実在80ファイルinventoryを確認。正式freezeは未実施。

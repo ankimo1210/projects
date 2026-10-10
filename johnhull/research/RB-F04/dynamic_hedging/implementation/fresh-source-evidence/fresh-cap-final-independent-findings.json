@@ -1,0 +1,221 @@
+{
+  "date": "2026-10-10",
+  "decision": "approved",
+  "scope": "owned four-source limited review only; not formal financial acceptance",
+  "findings": {
+    "critical": 0,
+    "important": 0,
+    "minor": 0
+  },
+  "resolved": [
+    "I1",
+    "I2",
+    "I3",
+    "I4"
+  ],
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40"
+  },
+  "scoped_validation": {
+    "tests": 82,
+    "pytest_seconds": 41.85,
+    "ruff": "PASS",
+    "format": "PASS",
+    "source_stable": true
+  },
+  "actual_source_unit": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-source-unit",
+    "original_n": 1024,
+    "queries": 13,
+    "levels": [
+      768,
+      1536
+    ],
+    "blocks": 16,
+    "full_registry_stable": true,
+    "financial_qualification": "unknown",
+    "raw_receipt": {
+      "arrays_sha256": "82f08f530e74bc26dd32ab0785ea36e3333b0200c9cfab8722d2eb8b315497bc",
+      "artifact_sha256": "e6ade6362877a69726d4274ee7ede51e23fa80ec2b19ef6398e299cc25ee9ceb",
+      "metadata_sha256": "0473c6268ebe7734a3f90495bb3b4083f965dbc99b5ec726bdabd3295404fc14",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 18532232
+    },
+    "measurements": {
+      "save": {
+        "clock": {
+          "wall_start": 15820.58476178,
+          "wall_stop": 15820.713470048,
+          "cpu_start": 3.003690327,
+          "cpu_stop": 3.13239196
+        },
+        "wall_seconds": 0.12870826800099167,
+        "cpu_seconds": 0.12870163299999993
+      },
+      "load": {
+        "clock": {
+          "wall_start": 15820.713477244,
+          "wall_stop": 15820.784321325,
+          "cpu_start": 3.132397278,
+          "cpu_stop": 3.203243315
+        },
+        "wall_seconds": 0.07084408099944994,
+        "cpu_seconds": 0.07084603699999992
+      },
+      "saved_check": {
+        "clock": {
+          "wall_start": 15820.784702364,
+          "wall_stop": 15821.34215014,
+          "cpu_start": 3.203622511,
+          "cpu_stop": 3.761073017
+        },
+        "wall_seconds": 0.5574477760001173,
+        "cpu_seconds": 0.5574505060000003
+      },
+      "save_checked": {
+        "clock": {
+          "wall_start": 15821.342157502,
+          "wall_stop": 15821.347944018,
+          "cpu_start": 3.761077137,
+          "cpu_stop": 3.766865444
+        },
+        "wall_seconds": 0.005786515999716357,
+        "cpu_seconds": 0.0057883069999999925
+      }
+    }
+  },
+  "saved_mutations": [
+    {
+      "name": "oracle_budget_not_equal_frozen_job",
+      "result": "rejected",
+      "error": "ValueError: cap budget deadline clock binding changed"
+    },
+    {
+      "name": "table_budget_not_equal_frozen_job",
+      "result": "rejected",
+      "error": "ValueError: cap budget deadline clock binding changed"
+    },
+    {
+      "name": "teacher_budget_not_equal_frozen_job",
+      "result": "rejected",
+      "error": "ValueError: cap budget deadline clock binding changed"
+    },
+    {
+      "name": "oracle_cap_evidence_removed",
+      "result": "rejected",
+      "error": "ValueError: oracle measured cap evidence required"
+    },
+    {
+      "name": "phase_cpu_measurement_clock_removed",
+      "result": "rejected",
+      "error": "ValueError: fresh whole phase cost measured CPU clock required"
+    },
+    {
+      "name": "oracle_internally_consistent_wrong_parent_budget",
+      "result": "rejected",
+      "error": "ValueError: oracle effective cap clock binding changed"
+    },
+    {
+      "name": "table_internally_consistent_wrong_parent_budget",
+      "result": "rejected",
+      "error": "ValueError: call table effective cap clock binding changed"
+    },
+    {
+      "name": "teacher_internally_consistent_wrong_parent_budget",
+      "result": "rejected",
+      "error": "ValueError: teacher replay effective cap clock binding changed"
+    }
+  ],
+  "legacy_normal_comparisons": [
+    {
+      "model": "heston",
+      "key": "samples",
+      "allclose": true,
+      "max_absolute_error": 0.0
+    },
+    {
+      "model": "heston",
+      "key": "mean",
+      "allclose": true,
+      "max_absolute_error": 0.0
+    },
+    {
+      "model": "heston",
+      "key": "standard_errors",
+      "allclose": true,
+      "max_absolute_error": 0.0
+    },
+    {
+      "model": "heston",
+      "key": "covariance",
+      "allclose": true,
+      "max_absolute_error": 0.0
+    },
+    {
+      "model": "heston",
+      "key": "three_width_greek_means",
+      "allclose": true,
+      "max_absolute_error": 0.0
+    },
+    {
+      "model": "local",
+      "key": "samples",
+      "allclose": true,
+      "max_absolute_error": 0.0
+    },
+    {
+      "model": "local",
+      "key": "mean",
+      "allclose": true,
+      "max_absolute_error": 0.0
+    },
+    {
+      "model": "local",
+      "key": "standard_errors",
+      "allclose": true,
+      "max_absolute_error": 0.0
+    },
+    {
+      "model": "local",
+      "key": "covariance",
+      "allclose": true,
+      "max_absolute_error": 0.0
+    },
+    {
+      "model": "local",
+      "key": "three_width_greek_means",
+      "allclose": true,
+      "max_absolute_error": 0.0
+    }
+  ],
+  "evidence_sha256": {
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-ruff.txt": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-check_fresh.py.txt": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-format.txt": "177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-tests.txt": "baa2a162129a6f4b9bdaf79cdd3d1ac0677e8010a9e68cd300f0c3e6ecac4bfc",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-normal-comparison.json": "6a178c25e3b99678aecf44e5d737a0d7d1244ec47116a54167b34cc05b31a23d",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-normal-comparison.txt": "6a178c25e3b99678aecf44e5d737a0d7d1244ec47116a54167b34cc05b31a23d",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-run_fresh.py.txt": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-existing-units.py": "b99c0b531200a6486348df2ab101362af75e5099629fb5b4fcedbba447b303b5",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-live-probes.txt": "f8e81d4ca526ff29d1527c051c4fb2d84e97301f9006bc09fb30e68d26ffa61c",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-normal-comparison.py": "8fb7a65bd37a3fecb120b54d8d7b0017586291979b37a03955ad1b18ecaee88f",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-live-run.json": "81b4fefcb0419c60e16a9af777b15436b851fbf79f53d89af322a24e14af8046",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-findings.md": "aa58dcc16db296f16e6a6bb2947c825d3bd63c0676936310bc02232d88ba3d00",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-live-probes.py": "4804c70d615ac29d954eca719e74c59882f6c61055816ba7d2e50a1290c959d6",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-existing-units.txt": "a3b6dcd9de7588b783f43bf7b6b99e428bbbfda3026d960520f5dda4c6849301",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-existing-units.json": "b88e7c0a5342659ccb6191a4865866f4c368dab6dfc5074a7f677e5da85fbfd2",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-reference_methods.py.txt": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-test_dynamic_hedging_fresh.py.txt": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-scoped.json": "fc785b881560c01716a14474325cd7e3d3dd2e2940b6e748f08fa8f6a790abeb",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-live-probes.json": "bddb314db5fcbf1bceb67dafcc9860c57bed7c0936be286f67896a187f886ae1"
+  },
+  "limits": [
+    "formal financial pilot/main/fresh not executed",
+    "whole-study acceptance not approved",
+    "earlier SDE generation and original-artifact byte authentication unverified",
+    "full related suites not run"
+  ]
+}

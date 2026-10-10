@@ -1,0 +1,146 @@
+{
+  "date": "2026-10-10",
+  "scope": "owned four files only; bounded I3/I4 fixes and saved source-unit, no formal financial approval",
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40"
+  },
+  "source_stable_before_after": true,
+  "registry_stable_before_after": true,
+  "validation": {
+    "scoped_tests": 82,
+    "pytest_seconds": 41.29,
+    "ruff": "PASS",
+    "format": "PASS",
+    "original_review_probes_rejected": 5,
+    "original_normal_api_comparisons": 10,
+    "normal_max_absolute_error": 0.0
+  },
+  "evidence_sha256": {
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-before-sha.json": "d7c4e706f226e91d148d304ff0b8a4418b2b16873cc7aefb5943579a75896663",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-check_fresh.py.diff": "3588cec4e22ec8d8cbe7dd7fda1aae7be8a86172818c72b2d06c9ead379c1a8d",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-cpu-nonnegative-red.txt": "a63ebcfdbe3a76196907ba5942cc442c7725f24bce43af0a4c8eabf01209c287",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-final-format.txt": "177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-final-ruff.txt": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-final-tests.txt": "bad7527cac743be684e5e72741f52e7aee6d0d37f99ffdd7bbf848261d2c2236",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-full-initial.txt": "9a34883f35030032f3496adf67453546a138e34efd55fec13ea446c6e152df3b",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-green-initial.txt": "afebac14f7da1e025568997ffef0cd3240f737390283527afc472892839cdc82",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-live-probes.json": "8442f02cc6f2f0e989c6c460665418beb78cb3dc727d99c4c48228b2767a3887",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-live-probes.py": "a883b3bbdc0f9b8e128325dc9e0af36bf1f487d9c69a9d35115f92f9636ed128",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-live-probes.txt": "69b26822624e261d05333ac0901443ec14a212bc1dd66beb15edb4a0b602df2e",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-normal-comparison.json": "6a178c25e3b99678aecf44e5d737a0d7d1244ec47116a54167b34cc05b31a23d",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-normal-comparison.py": "81b5c61ff2eca9d70e550675f8a7741582258451ea91a882ed1276d3e537a824",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-normal-comparison.txt": "6a178c25e3b99678aecf44e5d737a0d7d1244ec47116a54167b34cc05b31a23d",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-red.txt": "6c58a1cb2b4666befa85a5f1826a6aaef15d550483b955d434a38c6b73b82c58",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-reference_methods.py.diff": "cf47529bd5754b6078a600b24a1f6ae6ff7346e3b977b2d163ec99fc49574a07",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-run_fresh.py.diff": "b91a4302cb9664d1ad14fd2a7a5d12b9812b446ad63469c3803183ac2cde3047",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-test_dynamic_hedging_fresh.py": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-test_dynamic_hedging_fresh.py.diff": "c162e38171af15d73d1ca804275cfbb19fb9e9ad32b3485ed80a0d46c01f4b77",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit/README.json": "2775baca56b62a9411982f70222c69dc17c647bfb109eeb9badd7f711a4cc413",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit/inputs/metadata.json": "dbd8b0f87d94714fcbb8bb516524efd7e6abb9f315f2c3335ed5391f2b27e51a",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit/raw/metadata.json": "40156fd99a9e174343aafdf7f9d4e5f1f2bd362dc829ad7dba96a3b5d368dd81",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit/checked/metadata.json": "038f91e44aaf7b98f447917be8e95592cdfa7740284b5db6b23925b16c47ecb8"
+  },
+  "prior_preserved_evidence_sha256": {
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-probes.json": "f11da4ff7d6d42b591ad222a9764077687e472ba38f0544b407e068e438cbf31",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-ruff.json": "679202228f76d276c4312baf47c4f2151753babe4301e420e062184c8205564d",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-boundary.json": "77f2c7e56cc5d4fd2f8b76afcbd6070095f2accc785ec19cc1aa4e8eda08be43",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-tests.txt": "5b738feca1ad61192540ee41e3f10754fb7e35e8e1bbb303413d82904e006cee",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-initial.json": "272270e7ed8d2b8c3430478b06780c99bcf0055f7c329112b61e3eed184d6cc5",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-boundary.txt": "3040c32b92c489f783c4c117eb72441cda9d704bef87b403613f433f6d4a1455",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-snapshot.md": "48e9e33714ef785d7185dcb79eb77e4aac23e0be93a6dba4f4925139b4350cd7",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-snapshot.json": "4410974e31a1f80e7d9051fd44bea87132050fa8d21c5f5320f1765d1581d292",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-initial.md": "fbc83a906d4b72dc6f3581ff5272e56930587f3c6eebdb7612be60f11c3bfec7",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-fixes-green.txt": "a70825932acb1c82050166d282f42263856c8d868bbeb255ac9a151588151eb7",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-probes.py": "cacc517777d3c28f612799990a714830734839d9c1cc04acd975a9123fc7ed08",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-probes.txt": "5e75bf4a00fe82389c22d4392c5492ad574a609e03f0b25ac619e76e5df3b489",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-boundary.py": "231d29feee56de0b0e3aad9f2a534059b81f82bc86a94d8fb2c0fed96266fbcd",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-review-tests.json": "344880e0d037d58eeab0b5f72c2e827a7cf23a103036f959d5f2bfef4ae5c285",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-ruff.txt": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-live-probes.txt": "2329e2f670fceb3a3aa9049dbed6e30390997fc9c7964251a6dd45bd08d6108e",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-live-probes.py": "3291b04a3c612c923bcf4339ace784824af8afb38ef19b981e481590eef7ccdc",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-findings.json": "b01104f49da5faf6277ed17366992d4abb30f2e516307379e861c19b7fb28b6d",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-findings.md": "047787926b14a968f1b53bdd04e9ea980c7f50cdd05889c7a8ac08406afd3c20",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-format.txt": "177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-tests.txt": "ed66d8fb0f81ee240dff99d86d051e7684915e01b918f6bd68b5b3f50b30ef56",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-live-probes.json": "98bc93b811fc50070ea60ad7691ef0369f7d2ffc2dbb273503adc59d3ab58ba5",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-scoped.json": "62448f56ee209d084d5b4d73fe80119f2c5ff6eafff8ff7fdade70d6a175788e",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-existing-unit.json": "d43f727b1d05f308135501c597b6bcf925f9294aaf25297503f61deffe5a877e",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-existing-unit.txt": "d43f727b1d05f308135501c597b6bcf925f9294aaf25297503f61deffe5a877e",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-revision-cli-red.txt": "252a301aebf47a8390b88dbc352afde9d7ffb88e594e6bb85d4887e9d65e0c79",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-revision-cli-red-counterexample.txt": "f00be0472a358c148c9d8fb3835592bc8cbb76266b9bd535b4cd369f1ff80e67",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-revision-transient-stale-test.txt": "951b3903264b33c06e9962baadc255eaa5420a7ef060939f33207f3217ca7350"
+  },
+  "source_unit": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit",
+    "original_n": 1024,
+    "queries": 13,
+    "independent_levels": [
+      768,
+      1536
+    ],
+    "original_blocks": 16,
+    "metadata": "explicit synthetic source-unit execution metadata; not reviewed formal freeze",
+    "raw_artifact_receipt": {
+      "arrays_sha256": "82f08f530e74bc26dd32ab0785ea36e3333b0200c9cfab8722d2eb8b315497bc",
+      "artifact_sha256": "96a3e371e39eed5b13c52d2d02e2063201d58150783e578ec0c0aacaa81350fa",
+      "metadata_sha256": "40156fd99a9e174343aafdf7f9d4e5f1f2bd362dc829ad7dba96a3b5d368dd81",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 18532232
+    },
+    "measurements": {
+      "save": {
+        "clock": {
+          "wall_start": 15502.89221223,
+          "wall_stop": 15502.999845787,
+          "cpu_start": 3.080298625,
+          "cpu_stop": 3.187933779
+        },
+        "wall_seconds": 0.10763355700146349,
+        "cpu_seconds": 0.10763515400000001
+      },
+      "load": {
+        "clock": {
+          "wall_start": 15502.999851408,
+          "wall_stop": 15503.066890423,
+          "cpu_start": 3.187936916,
+          "cpu_stop": 3.254978726
+        },
+        "wall_seconds": 0.06703901500077336,
+        "cpu_seconds": 0.06704181000000009
+      },
+      "saved_check": {
+        "clock": {
+          "wall_start": 15503.067245652,
+          "wall_stop": 15503.611838666,
+          "cpu_start": 3.255331554,
+          "cpu_stop": 3.799927076
+        },
+        "wall_seconds": 0.5445930139994744,
+        "cpu_seconds": 0.5445955219999998
+      },
+      "save_checked": {
+        "clock": {
+          "wall_start": 15503.611845641,
+          "wall_stop": 15503.617568755,
+          "cpu_start": 3.799931228,
+          "cpu_stop": 3.805655189
+        },
+        "wall_seconds": 0.005723113999920315,
+        "cpu_seconds": 0.005723960999999722
+      }
+    }
+  },
+  "limitations": [
+    "financial_qualification remains unknown",
+    "formal pilot/main/premium not executed",
+    "no solver-internal hard cancellation; deadline tested at actual solve/chunk/query boundaries and overrun saved",
+    "source-unit does not establish earlier SDE generation or original artifact byte authentication",
+    "serialization/import/CAS/check costs remain additional root lifecycle expense scope"
+  ]
+}

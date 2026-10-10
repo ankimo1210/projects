@@ -1,0 +1,487 @@
+FFFFF.FFFFFFFFF                                                          [100%]
+=================================== FAILURES ===================================
+__ test_review_i3_caps_bind_fixed_job_and_real_child_intervals[oracle_budget] __
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+kind = 'oracle_budget'
+
+    @pytest.mark.parametrize("kind",["oracle_budget","table_budget","teacher_budget","oracle_missing_cap",
+        "raw_start_outside_job","child_deadline","child_wall_interval","child_cpu_interval"])
+    def test_review_i3_caps_bind_fixed_job_and_real_child_intervals(cap_cost_fresh_raw,kind):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if kind=="oracle_budget":record["raw"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="table_budget":record["raw"]["call_table"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="teacher_budget":record["teacher_replay"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="oracle_missing_cap":record["raw"]["cap_evidence"]=None
+        elif kind=="raw_start_outside_job":
+            cap=record["raw"]["cap_evidence"]
+            elapsed=cap["wall_seconds"]
+            cap["clock"]["wall_start"]=record["jobs"][1]["clock"]["wall_start"]-1.
+            cap["clock"]["wall_stop"]=cap["clock"]["wall_start"]+elapsed
+        elif kind=="child_deadline":
+            record["raw"]["expenses"][1]["deadline_wall"]+=100.
+        elif kind=="child_wall_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["wall_stop"]+1.
+            expense["clock"]["wall_start"]=start
+            expense["clock"]["wall_stop"]=start+expense["wall_seconds"]
+        elif kind=="child_cpu_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["cpu_stop"]+1.
+            expense["clock"]["cpu_start"]=start
+            expense["clock"]["cpu_stop"]=start+expense["cpu_seconds"]
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1332: Failed
+__ test_review_i3_caps_bind_fixed_job_and_real_child_intervals[table_budget] ___
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+kind = 'table_budget'
+
+    @pytest.mark.parametrize("kind",["oracle_budget","table_budget","teacher_budget","oracle_missing_cap",
+        "raw_start_outside_job","child_deadline","child_wall_interval","child_cpu_interval"])
+    def test_review_i3_caps_bind_fixed_job_and_real_child_intervals(cap_cost_fresh_raw,kind):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if kind=="oracle_budget":record["raw"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="table_budget":record["raw"]["call_table"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="teacher_budget":record["teacher_replay"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="oracle_missing_cap":record["raw"]["cap_evidence"]=None
+        elif kind=="raw_start_outside_job":
+            cap=record["raw"]["cap_evidence"]
+            elapsed=cap["wall_seconds"]
+            cap["clock"]["wall_start"]=record["jobs"][1]["clock"]["wall_start"]-1.
+            cap["clock"]["wall_stop"]=cap["clock"]["wall_start"]+elapsed
+        elif kind=="child_deadline":
+            record["raw"]["expenses"][1]["deadline_wall"]+=100.
+        elif kind=="child_wall_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["wall_stop"]+1.
+            expense["clock"]["wall_start"]=start
+            expense["clock"]["wall_stop"]=start+expense["wall_seconds"]
+        elif kind=="child_cpu_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["cpu_stop"]+1.
+            expense["clock"]["cpu_start"]=start
+            expense["clock"]["cpu_stop"]=start+expense["cpu_seconds"]
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1332: Failed
+_ test_review_i3_caps_bind_fixed_job_and_real_child_intervals[teacher_budget] __
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+kind = 'teacher_budget'
+
+    @pytest.mark.parametrize("kind",["oracle_budget","table_budget","teacher_budget","oracle_missing_cap",
+        "raw_start_outside_job","child_deadline","child_wall_interval","child_cpu_interval"])
+    def test_review_i3_caps_bind_fixed_job_and_real_child_intervals(cap_cost_fresh_raw,kind):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if kind=="oracle_budget":record["raw"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="table_budget":record["raw"]["call_table"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="teacher_budget":record["teacher_replay"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="oracle_missing_cap":record["raw"]["cap_evidence"]=None
+        elif kind=="raw_start_outside_job":
+            cap=record["raw"]["cap_evidence"]
+            elapsed=cap["wall_seconds"]
+            cap["clock"]["wall_start"]=record["jobs"][1]["clock"]["wall_start"]-1.
+            cap["clock"]["wall_stop"]=cap["clock"]["wall_start"]+elapsed
+        elif kind=="child_deadline":
+            record["raw"]["expenses"][1]["deadline_wall"]+=100.
+        elif kind=="child_wall_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["wall_stop"]+1.
+            expense["clock"]["wall_start"]=start
+            expense["clock"]["wall_stop"]=start+expense["wall_seconds"]
+        elif kind=="child_cpu_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["cpu_stop"]+1.
+            expense["clock"]["cpu_start"]=start
+            expense["clock"]["cpu_stop"]=start+expense["cpu_seconds"]
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1332: Failed
+_ test_review_i3_caps_bind_fixed_job_and_real_child_intervals[oracle_missing_cap] _
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+kind = 'oracle_missing_cap'
+
+    @pytest.mark.parametrize("kind",["oracle_budget","table_budget","teacher_budget","oracle_missing_cap",
+        "raw_start_outside_job","child_deadline","child_wall_interval","child_cpu_interval"])
+    def test_review_i3_caps_bind_fixed_job_and_real_child_intervals(cap_cost_fresh_raw,kind):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if kind=="oracle_budget":record["raw"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="table_budget":record["raw"]["call_table"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="teacher_budget":record["teacher_replay"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="oracle_missing_cap":record["raw"]["cap_evidence"]=None
+        elif kind=="raw_start_outside_job":
+            cap=record["raw"]["cap_evidence"]
+            elapsed=cap["wall_seconds"]
+            cap["clock"]["wall_start"]=record["jobs"][1]["clock"]["wall_start"]-1.
+            cap["clock"]["wall_stop"]=cap["clock"]["wall_start"]+elapsed
+        elif kind=="child_deadline":
+            record["raw"]["expenses"][1]["deadline_wall"]+=100.
+        elif kind=="child_wall_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["wall_stop"]+1.
+            expense["clock"]["wall_start"]=start
+            expense["clock"]["wall_stop"]=start+expense["wall_seconds"]
+        elif kind=="child_cpu_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["cpu_stop"]+1.
+            expense["clock"]["cpu_start"]=start
+            expense["clock"]["cpu_stop"]=start+expense["cpu_seconds"]
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1332: Failed
+_ test_review_i3_caps_bind_fixed_job_and_real_child_intervals[raw_start_outside_job] _
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+kind = 'raw_start_outside_job'
+
+    @pytest.mark.parametrize("kind",["oracle_budget","table_budget","teacher_budget","oracle_missing_cap",
+        "raw_start_outside_job","child_deadline","child_wall_interval","child_cpu_interval"])
+    def test_review_i3_caps_bind_fixed_job_and_real_child_intervals(cap_cost_fresh_raw,kind):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if kind=="oracle_budget":record["raw"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="table_budget":record["raw"]["call_table"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="teacher_budget":record["teacher_replay"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="oracle_missing_cap":record["raw"]["cap_evidence"]=None
+        elif kind=="raw_start_outside_job":
+            cap=record["raw"]["cap_evidence"]
+            elapsed=cap["wall_seconds"]
+            cap["clock"]["wall_start"]=record["jobs"][1]["clock"]["wall_start"]-1.
+            cap["clock"]["wall_stop"]=cap["clock"]["wall_start"]+elapsed
+        elif kind=="child_deadline":
+            record["raw"]["expenses"][1]["deadline_wall"]+=100.
+        elif kind=="child_wall_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["wall_stop"]+1.
+            expense["clock"]["wall_start"]=start
+            expense["clock"]["wall_stop"]=start+expense["wall_seconds"]
+        elif kind=="child_cpu_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["cpu_stop"]+1.
+            expense["clock"]["cpu_start"]=start
+            expense["clock"]["cpu_stop"]=start+expense["cpu_seconds"]
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1332: Failed
+_ test_review_i3_caps_bind_fixed_job_and_real_child_intervals[child_wall_interval] _
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+kind = 'child_wall_interval'
+
+    @pytest.mark.parametrize("kind",["oracle_budget","table_budget","teacher_budget","oracle_missing_cap",
+        "raw_start_outside_job","child_deadline","child_wall_interval","child_cpu_interval"])
+    def test_review_i3_caps_bind_fixed_job_and_real_child_intervals(cap_cost_fresh_raw,kind):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if kind=="oracle_budget":record["raw"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="table_budget":record["raw"]["call_table"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="teacher_budget":record["teacher_replay"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="oracle_missing_cap":record["raw"]["cap_evidence"]=None
+        elif kind=="raw_start_outside_job":
+            cap=record["raw"]["cap_evidence"]
+            elapsed=cap["wall_seconds"]
+            cap["clock"]["wall_start"]=record["jobs"][1]["clock"]["wall_start"]-1.
+            cap["clock"]["wall_stop"]=cap["clock"]["wall_start"]+elapsed
+        elif kind=="child_deadline":
+            record["raw"]["expenses"][1]["deadline_wall"]+=100.
+        elif kind=="child_wall_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["wall_stop"]+1.
+            expense["clock"]["wall_start"]=start
+            expense["clock"]["wall_stop"]=start+expense["wall_seconds"]
+        elif kind=="child_cpu_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["cpu_stop"]+1.
+            expense["clock"]["cpu_start"]=start
+            expense["clock"]["cpu_stop"]=start+expense["cpu_seconds"]
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1332: Failed
+_ test_review_i3_caps_bind_fixed_job_and_real_child_intervals[child_cpu_interval] _
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+kind = 'child_cpu_interval'
+
+    @pytest.mark.parametrize("kind",["oracle_budget","table_budget","teacher_budget","oracle_missing_cap",
+        "raw_start_outside_job","child_deadline","child_wall_interval","child_cpu_interval"])
+    def test_review_i3_caps_bind_fixed_job_and_real_child_intervals(cap_cost_fresh_raw,kind):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if kind=="oracle_budget":record["raw"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="table_budget":record["raw"]["call_table"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="teacher_budget":record["teacher_replay"]["cap_evidence"]["cap_seconds"]=150.
+        elif kind=="oracle_missing_cap":record["raw"]["cap_evidence"]=None
+        elif kind=="raw_start_outside_job":
+            cap=record["raw"]["cap_evidence"]
+            elapsed=cap["wall_seconds"]
+            cap["clock"]["wall_start"]=record["jobs"][1]["clock"]["wall_start"]-1.
+            cap["clock"]["wall_stop"]=cap["clock"]["wall_start"]+elapsed
+        elif kind=="child_deadline":
+            record["raw"]["expenses"][1]["deadline_wall"]+=100.
+        elif kind=="child_wall_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["wall_stop"]+1.
+            expense["clock"]["wall_start"]=start
+            expense["clock"]["wall_stop"]=start+expense["wall_seconds"]
+        elif kind=="child_cpu_interval":
+            expense=record["raw"]["expenses"][1]
+            start=record["jobs"][1]["clock"]["cpu_stop"]+1.
+            expense["clock"]["cpu_start"]=start
+            expense["clock"]["cpu_stop"]=start+expense["cpu_seconds"]
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1332: Failed
+_________ test_review_i4_all_actual_costs_require_measured_cpu[phase] __________
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+scope = 'phase'
+
+    @pytest.mark.parametrize("scope",["phase","job","oracle_driver","oracle_query","table","teacher_chunk","teacher_total"])
+    def test_review_i4_all_actual_costs_require_measured_cpu(cap_cost_fresh_raw,scope):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if scope=="phase":cost=bad["cost"]
+        elif scope=="job":cost=record["jobs"][1]
+        elif scope=="oracle_driver":cost=record["raw"]["driver_map"][0]
+        elif scope=="oracle_query":cost=record["raw"]["expenses"][2]
+        elif scope=="table":cost=record["raw"]["call_table"]["expenses"][0]
+        elif scope=="teacher_chunk":cost=record["teacher_replay"]["expenses"][0]
+        elif scope=="teacher_total":cost=record["teacher_replay"]["cost"]
+        cost["clock"].pop("cpu_start");cost["clock"].pop("cpu_stop");cost["cpu_seconds"]=np.nan
+        if scope=="oracle_driver":
+            driver_expense=next(e for e in record["raw"]["expenses"] if e["scope"]=="independent_oracle_driver")
+            driver_expense["clock"]=copy.deepcopy(cost["clock"]);driver_expense["cpu_seconds"]=np.nan
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1355: Failed
+__________ test_review_i4_all_actual_costs_require_measured_cpu[job] ___________
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+scope = 'job'
+
+    @pytest.mark.parametrize("scope",["phase","job","oracle_driver","oracle_query","table","teacher_chunk","teacher_total"])
+    def test_review_i4_all_actual_costs_require_measured_cpu(cap_cost_fresh_raw,scope):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if scope=="phase":cost=bad["cost"]
+        elif scope=="job":cost=record["jobs"][1]
+        elif scope=="oracle_driver":cost=record["raw"]["driver_map"][0]
+        elif scope=="oracle_query":cost=record["raw"]["expenses"][2]
+        elif scope=="table":cost=record["raw"]["call_table"]["expenses"][0]
+        elif scope=="teacher_chunk":cost=record["teacher_replay"]["expenses"][0]
+        elif scope=="teacher_total":cost=record["teacher_replay"]["cost"]
+        cost["clock"].pop("cpu_start");cost["clock"].pop("cpu_stop");cost["cpu_seconds"]=np.nan
+        if scope=="oracle_driver":
+            driver_expense=next(e for e in record["raw"]["expenses"] if e["scope"]=="independent_oracle_driver")
+            driver_expense["clock"]=copy.deepcopy(cost["clock"]);driver_expense["cpu_seconds"]=np.nan
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1355: Failed
+_____ test_review_i4_all_actual_costs_require_measured_cpu[oracle_driver] ______
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+scope = 'oracle_driver'
+
+    @pytest.mark.parametrize("scope",["phase","job","oracle_driver","oracle_query","table","teacher_chunk","teacher_total"])
+    def test_review_i4_all_actual_costs_require_measured_cpu(cap_cost_fresh_raw,scope):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if scope=="phase":cost=bad["cost"]
+        elif scope=="job":cost=record["jobs"][1]
+        elif scope=="oracle_driver":cost=record["raw"]["driver_map"][0]
+        elif scope=="oracle_query":cost=record["raw"]["expenses"][2]
+        elif scope=="table":cost=record["raw"]["call_table"]["expenses"][0]
+        elif scope=="teacher_chunk":cost=record["teacher_replay"]["expenses"][0]
+        elif scope=="teacher_total":cost=record["teacher_replay"]["cost"]
+        cost["clock"].pop("cpu_start");cost["clock"].pop("cpu_stop");cost["cpu_seconds"]=np.nan
+        if scope=="oracle_driver":
+            driver_expense=next(e for e in record["raw"]["expenses"] if e["scope"]=="independent_oracle_driver")
+            driver_expense["clock"]=copy.deepcopy(cost["clock"]);driver_expense["cpu_seconds"]=np.nan
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1355: Failed
+______ test_review_i4_all_actual_costs_require_measured_cpu[oracle_query] ______
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+scope = 'oracle_query'
+
+    @pytest.mark.parametrize("scope",["phase","job","oracle_driver","oracle_query","table","teacher_chunk","teacher_total"])
+    def test_review_i4_all_actual_costs_require_measured_cpu(cap_cost_fresh_raw,scope):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if scope=="phase":cost=bad["cost"]
+        elif scope=="job":cost=record["jobs"][1]
+        elif scope=="oracle_driver":cost=record["raw"]["driver_map"][0]
+        elif scope=="oracle_query":cost=record["raw"]["expenses"][2]
+        elif scope=="table":cost=record["raw"]["call_table"]["expenses"][0]
+        elif scope=="teacher_chunk":cost=record["teacher_replay"]["expenses"][0]
+        elif scope=="teacher_total":cost=record["teacher_replay"]["cost"]
+        cost["clock"].pop("cpu_start");cost["clock"].pop("cpu_stop");cost["cpu_seconds"]=np.nan
+        if scope=="oracle_driver":
+            driver_expense=next(e for e in record["raw"]["expenses"] if e["scope"]=="independent_oracle_driver")
+            driver_expense["clock"]=copy.deepcopy(cost["clock"]);driver_expense["cpu_seconds"]=np.nan
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1355: Failed
+_________ test_review_i4_all_actual_costs_require_measured_cpu[table] __________
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+scope = 'table'
+
+    @pytest.mark.parametrize("scope",["phase","job","oracle_driver","oracle_query","table","teacher_chunk","teacher_total"])
+    def test_review_i4_all_actual_costs_require_measured_cpu(cap_cost_fresh_raw,scope):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if scope=="phase":cost=bad["cost"]
+        elif scope=="job":cost=record["jobs"][1]
+        elif scope=="oracle_driver":cost=record["raw"]["driver_map"][0]
+        elif scope=="oracle_query":cost=record["raw"]["expenses"][2]
+        elif scope=="table":cost=record["raw"]["call_table"]["expenses"][0]
+        elif scope=="teacher_chunk":cost=record["teacher_replay"]["expenses"][0]
+        elif scope=="teacher_total":cost=record["teacher_replay"]["cost"]
+        cost["clock"].pop("cpu_start");cost["clock"].pop("cpu_stop");cost["cpu_seconds"]=np.nan
+        if scope=="oracle_driver":
+            driver_expense=next(e for e in record["raw"]["expenses"] if e["scope"]=="independent_oracle_driver")
+            driver_expense["clock"]=copy.deepcopy(cost["clock"]);driver_expense["cpu_seconds"]=np.nan
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1355: Failed
+_____ test_review_i4_all_actual_costs_require_measured_cpu[teacher_chunk] ______
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+scope = 'teacher_chunk'
+
+    @pytest.mark.parametrize("scope",["phase","job","oracle_driver","oracle_query","table","teacher_chunk","teacher_total"])
+    def test_review_i4_all_actual_costs_require_measured_cpu(cap_cost_fresh_raw,scope):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if scope=="phase":cost=bad["cost"]
+        elif scope=="job":cost=record["jobs"][1]
+        elif scope=="oracle_driver":cost=record["raw"]["driver_map"][0]
+        elif scope=="oracle_query":cost=record["raw"]["expenses"][2]
+        elif scope=="table":cost=record["raw"]["call_table"]["expenses"][0]
+        elif scope=="teacher_chunk":cost=record["teacher_replay"]["expenses"][0]
+        elif scope=="teacher_total":cost=record["teacher_replay"]["cost"]
+        cost["clock"].pop("cpu_start");cost["clock"].pop("cpu_stop");cost["cpu_seconds"]=np.nan
+        if scope=="oracle_driver":
+            driver_expense=next(e for e in record["raw"]["expenses"] if e["scope"]=="independent_oracle_driver")
+            driver_expense["clock"]=copy.deepcopy(cost["clock"]);driver_expense["cpu_seconds"]=np.nan
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1355: Failed
+_____ test_review_i4_all_actual_costs_require_measured_cpu[teacher_total] ______
+
+cap_cost_fresh_raw = (<module 'fresh_saved_checker' from '/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynam...': HestonParameters(spot=100.0, rate=0.03, dividend_yield=0.0, v0=0.04, kappa=2.0, theta=0.04, xi=0.3, rho=-0.7), ...})
+scope = 'teacher_total'
+
+    @pytest.mark.parametrize("scope",["phase","job","oracle_driver","oracle_query","table","teacher_chunk","teacher_total"])
+    def test_review_i4_all_actual_costs_require_measured_cpu(cap_cost_fresh_raw,scope):
+        import copy
+        import run_reference
+        checker,base,kwargs=cap_cost_fresh_raw
+        bad=copy.deepcopy(base)
+        record=bad["records"][0]
+        if scope=="phase":cost=bad["cost"]
+        elif scope=="job":cost=record["jobs"][1]
+        elif scope=="oracle_driver":cost=record["raw"]["driver_map"][0]
+        elif scope=="oracle_query":cost=record["raw"]["expenses"][2]
+        elif scope=="table":cost=record["raw"]["call_table"]["expenses"][0]
+        elif scope=="teacher_chunk":cost=record["teacher_replay"]["expenses"][0]
+        elif scope=="teacher_total":cost=record["teacher_replay"]["cost"]
+        cost["clock"].pop("cpu_start");cost["clock"].pop("cpu_stop");cost["cpu_seconds"]=np.nan
+        if scope=="oracle_driver":
+            driver_expense=next(e for e in record["raw"]["expenses"] if e["scope"]=="independent_oracle_driver")
+            driver_expense["clock"]=copy.deepcopy(cost["clock"]);driver_expense["cpu_seconds"]=np.nan
+        bad["raw_sha256"]=run_reference.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1355: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i3_caps_bind_fixed_job_and_real_child_intervals[oracle_budget]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i3_caps_bind_fixed_job_and_real_child_intervals[table_budget]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i3_caps_bind_fixed_job_and_real_child_intervals[teacher_budget]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i3_caps_bind_fixed_job_and_real_child_intervals[oracle_missing_cap]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i3_caps_bind_fixed_job_and_real_child_intervals[raw_start_outside_job]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i3_caps_bind_fixed_job_and_real_child_intervals[child_wall_interval]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i3_caps_bind_fixed_job_and_real_child_intervals[child_cpu_interval]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i4_all_actual_costs_require_measured_cpu[phase]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i4_all_actual_costs_require_measured_cpu[job]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i4_all_actual_costs_require_measured_cpu[oracle_driver]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i4_all_actual_costs_require_measured_cpu[oracle_query]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i4_all_actual_costs_require_measured_cpu[table]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i4_all_actual_costs_require_measured_cpu[teacher_chunk]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i4_all_actual_costs_require_measured_cpu[teacher_total]
+14 failed, 1 passed, 56 deselected in 11.73s

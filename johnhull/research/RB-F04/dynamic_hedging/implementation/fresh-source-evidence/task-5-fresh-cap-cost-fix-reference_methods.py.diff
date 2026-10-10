@@ -1,0 +1,191 @@
+--- /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-revision-reference_methods.py
++++ /home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/reference_methods.py
+@@ -67,6 +67,7 @@
+     state_bump=None,
+     quadrature_limit=None,
+     wall_cap_seconds=None,
++    deadline_wall=None,
+ ):
+     """Measure independent price/CS/Ctheta refinement at one selected state.
+ 
+@@ -81,7 +82,7 @@
+     from scipy.interpolate import CubicSpline
+ 
+     started = time.perf_counter()
+-    deadline = _deadline(wall_cap_seconds, started)
++    deadline = _deadline(wall_cap_seconds, started, deadline_wall=deadline_wall)
+     p = asdict(parameters) if is_dataclass(parameters) else dict(parameters)
+     state_bump = (0.0001 if model == "heston" else 0.001) if state_bump is None else state_bump
+     if model not in {"heston", "local"} or date < 0 or date >= 1.25 or state <= 2 * state_bump:
+@@ -203,6 +204,7 @@
+             started,
+             len(levels) * 13,
+             len(integration_receipts) if model == "heston" else len(pde_receipts),
++            deadline_wall=deadline,
+         ),
+         "price_unit_error": max(price_unit_errors.values(), default=0.0),
+         "integration_derivative_error": np.max(integration_derivative_errors, axis=(0, 1)),
+@@ -950,6 +952,7 @@
+     state_nodes,
+     controls,
+     wall_cap_seconds=None,
++    deadline_wall=None,
+ ):
+     """Compute full-call-domain independent CF/PDE tables and raw refinements.
+ 
+@@ -963,7 +966,7 @@
+     from scipy.interpolate import CubicSpline
+ 
+     started = time.perf_counter()
+-    deadline = _deadline(wall_cap_seconds, started)
++    deadline = _deadline(wall_cap_seconds, started, deadline_wall=deadline_wall)
+     p = _parameters(parameters)
+     surface_descriptor, surface_signature = _field_binding(surface)
+     dates, spots, nodes = map(lambda x: np.asarray(x, float), (dates, query_spots, state_nodes))
+@@ -1084,6 +1087,7 @@
+             started,
+             prices.size,
+             len(integration) if model == "heston" else len(pdes) * len(dates) * len(spots),
++            deadline_wall=deadline,
+         ),
+     }
+ 
+@@ -1198,12 +1202,16 @@
+     }
+ 
+ 
+-def _deadline(wall_cap_seconds, started):
++def _deadline(wall_cap_seconds, started, *, deadline_wall=None):
+     if wall_cap_seconds is None:
++        if deadline_wall is not None:
++            raise ValueError("absolute deadline requires an explicit effective wall budget")
+         return None
+     if not np.isfinite(wall_cap_seconds) or wall_cap_seconds < 0:
+         raise ValueError("reference wall cap must be finite and nonnegative")
+-    return started + wall_cap_seconds
++    if deadline_wall is not None and not np.isfinite(deadline_wall):
++        raise ValueError("absolute wall deadline must be finite")
++    return started + wall_cap_seconds if deadline_wall is None else deadline_wall
+ 
+ 
+ def _expired(deadline):
+@@ -1212,19 +1220,22 @@
+     return deadline is not None and time.perf_counter() >= deadline
+ 
+ 
+-def _table_cap_receipt(cap, started, planned, completed):
++def _table_cap_receipt(cap, started, planned, completed, *, deadline_wall=None):
+     import time
+ 
+     if cap is None:
+         return None
+     stop = time.perf_counter()
+     elapsed = stop - started
++    deadline = started + cap if deadline_wall is None else deadline_wall
+     return {
+         "cap_seconds": float(cap),
+         "clock": {"wall_start": started, "wall_stop": stop},
++        "budget_wall_start": deadline - cap,
++        "deadline_wall": deadline,
+         "wall_seconds": elapsed,
+-        "overrun_seconds": max(0.0, elapsed - cap),
+-        "cap_reached": elapsed >= cap,
++        "overrun_seconds": max(0.0, stop - deadline),
++        "cap_reached": stop >= deadline,
+         "planned_cells": planned,
+         "completed_cells": completed,
+         "unexecuted_cell_count": planned - completed,
+@@ -1233,13 +1244,14 @@
+     }
+ 
+ 
+-def _cap_receipt(cap, started, statuses, labels):
++def _cap_receipt(cap, started, statuses, labels, *, deadline_wall=None):
+     import time
+ 
+     if cap is None:
+         return None
+     stop = time.perf_counter()
+     elapsed = stop - started
++    deadline = started + cap if deadline_wall is None else deadline_wall
+     remaining = np.zeros(statuses.shape[:-1], dtype=int)
+     for label in ["unmeasured_cap", "unmeasured"]:
+         if label in labels:
+@@ -1247,9 +1259,11 @@
+     return {
+         "cap_seconds": float(cap),
+         "clock": {"wall_start": started, "wall_stop": stop},
++        "budget_wall_start": deadline - cap,
++        "deadline_wall": deadline,
+         "wall_seconds": elapsed,
+-        "overrun_seconds": max(0.0, elapsed - cap),
+-        "cap_reached": elapsed >= cap,
++        "overrun_seconds": max(0.0, stop - deadline),
++        "cap_reached": stop >= deadline,
+         "unexecuted_query_path_counts": remaining,
+         "boundary": "checked before driver chunk and query job; no solver-internal hard cancellation",
+         "financial_qualification": "unknown",
+@@ -1275,6 +1289,7 @@
+     normals=None,
+     chunk_paths=4096,
+     wall_cap_seconds=None,
++    deadline_wall=None,
+ ):
+     """Independent S/Q re-fit direct-payoff oracle with paired raw refinements.
+ 
+@@ -1286,7 +1301,7 @@
+     import time
+ 
+     started = time.perf_counter()
+-    deadline = _deadline(wall_cap_seconds, started)
++    deadline = _deadline(wall_cap_seconds, started, deadline_wall=deadline_wall)
+     p = _parameters(parameters)
+     if steps_per_year % 24 or chunk_paths < 16 or chunk_paths % 16:
+         raise ValueError("oracle needs fine paired monthly level and 16-aligned path chunks")
+@@ -1401,6 +1416,7 @@
+                 wall_cap_seconds=None
+                 if deadline is None
+                 else max(0.0, deadline - time.perf_counter()),
++                deadline_wall=deadline,
+                 **{k: v for k, v in controls.items() if k in permitted},
+             )
+             refinement_status = {
+@@ -1529,7 +1545,9 @@
+         "path_status_encoding": "uint16_dictionary",
+         "first_failure_date": first[1],
+         "driver_map": drivers,
+-        "cap_evidence": _cap_receipt(wall_cap_seconds, started, statuses, status_labels),
++        "cap_evidence": _cap_receipt(
++            wall_cap_seconds, started, statuses, status_labels, deadline_wall=deadline
++        ),
+         "call_table": call_table,
+         "call_refinements": refinement,
+         "call_refinement_status": refinement_status,
+@@ -1563,6 +1581,7 @@
+     steps_per_year=1536,
+     chunk_paths=4096,
+     wall_cap_seconds=None,
++    deadline_wall=None,
+ ):
+     """Execute the exact reserved independent Heston PRICE-only premium pilot.
+ 
+@@ -1574,7 +1593,7 @@
+     import time
+ 
+     started = time.perf_counter()
+-    deadline = _deadline(wall_cap_seconds, started)
++    deadline = _deadline(wall_cap_seconds, started, deadline_wall=deadline_wall)
+     reserved = int(np.random.SeedSequence([2026100904, 8, 0]).generate_state(1)[0])
+     if n_paths != 65536 or steps_per_year != 1536 or int(seed) != reserved:
+         raise ValueError("premium requires original N=65536, grid=1536 and reserved seed")
+@@ -1665,7 +1684,9 @@
+         "first_failure_date": first,
+         "block_means": _blocks(samples.T).T,
+         "driver_map": drivers,
+-        "cap_evidence": _cap_receipt(wall_cap_seconds, started, statuses, status_labels),
++        "cap_evidence": _cap_receipt(
++            wall_cap_seconds, started, statuses, status_labels, deadline_wall=deadline
++        ),
+         "expenses": expenses,
+         "financial_qualification": "unknown",
+         "qualification_reason": "MC and scheme evidence require saved financial checks",

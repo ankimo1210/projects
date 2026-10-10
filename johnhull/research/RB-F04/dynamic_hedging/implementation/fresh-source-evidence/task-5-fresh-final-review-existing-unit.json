@@ -1,0 +1,37 @@
+{
+  "scope": "existing source-unit-v2 savedcheck, no new numerical generation",
+  "source_diff": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": {
+      "saved": "401fbb6b11d94a585b3cdda335c3a6b03165311aaa7f51a1a469c1677c88957a",
+      "actual": "6d0fce646aca81dd26ae0052b28ea74c8c17fe3e7c79490dbe8aee33dae0d9e4"
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+      "saved": "bcd084cc990c59a02e29855f0d2937cfe07801ba221c3bd13c8ea1be95761b61",
+      "actual": "032a15899a4110e5cd90190f2f658c65d5eecc6546a431f68fa8efcd8aa97717"
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "saved": "2169180885250e0fcf2c7e43cbb008a586d9c75616221c4780fd2fe3d9b17656",
+      "actual": "d434958f26cb547055834c70387a720a021bec991ccd4424e57f65691f06b64b"
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": {
+      "saved": "0eee4a19e1c8157c66b5d6d16a5a7245605771332b2dbd90affdee098e1c8466",
+      "actual": "62eedbb915befb7dfae3886372d54c40a606368c809225b992aa4d7aea81e410"
+    }
+  },
+  "inputs_receipt": {
+    "arrays_sha256": "53c234ad8b8a25dfe9b1980244f301371c8cba5a931256ebfc5e81ab48b5980c",
+    "artifact_sha256": "4c4b5fc796de543f8f9acaa34663938efeda4ce2cf6f3092306d90f0241aa8a4",
+    "metadata_sha256": "52cb74738707d6e766e326ed5b17e55406c79a7dd7565bf7e85c6f139de24071",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 4217536
+  },
+  "raw_receipt": {
+    "arrays_sha256": "82f08f530e74bc26dd32ab0785ea36e3333b0200c9cfab8722d2eb8b315497bc",
+    "artifact_sha256": "6b4d9a23cac8c5138e8046dc0a25b734fe0539a0bcd68b7bfef677bc84da28bf",
+    "metadata_sha256": "a0c1086b68c82a546b9cfd39f234a4a08a4d9285afca5ce2623468829363f9a7",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 18532232
+  },
+  "result": "source_identity_rejected",
+  "error": "ValueError: fresh source bytes differ from the exact bound closure"
+}

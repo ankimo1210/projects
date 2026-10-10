@@ -1,0 +1,78 @@
+{"name": "oracle_budget_not_equal_frozen_job", "result": "rejected", "error": "ValueError: cap budget deadline clock binding changed"}
+{"name": "table_budget_not_equal_frozen_job", "result": "rejected", "error": "ValueError: cap budget deadline clock binding changed"}
+{"name": "teacher_budget_not_equal_frozen_job", "result": "rejected", "error": "ValueError: cap budget deadline clock binding changed"}
+{"name": "oracle_cap_evidence_removed", "result": "rejected", "error": "ValueError: oracle measured cap evidence required"}
+{"name": "phase_cpu_measurement_clock_removed", "result": "rejected", "error": "ValueError: fresh whole phase cost measured CPU clock required"}
+{"name": "oracle_internally_consistent_wrong_parent_budget", "result": "rejected", "error": "ValueError: oracle effective cap clock binding changed"}
+{"name": "table_internally_consistent_wrong_parent_budget", "result": "rejected", "error": "ValueError: call table effective cap clock binding changed"}
+{"name": "teacher_internally_consistent_wrong_parent_budget", "result": "rejected", "error": "ValueError: teacher replay effective cap clock binding changed"}
+{
+  "source_stable": true,
+  "records": [
+    {
+      "name": "actual_current_registry_save_load_check",
+      "result": "pass",
+      "qualification": "unknown",
+      "original_n": 1024,
+      "queries": 13,
+      "levels": [
+        768,
+        1536
+      ],
+      "saved_receipt": {
+        "arrays_sha256": "82f08f530e74bc26dd32ab0785ea36e3333b0200c9cfab8722d2eb8b315497bc",
+        "artifact_sha256": "e6ade6362877a69726d4274ee7ede51e23fa80ec2b19ef6398e299cc25ee9ceb",
+        "metadata_sha256": "0473c6268ebe7734a3f90495bb3b4083f965dbc99b5ec726bdabd3295404fc14",
+        "schema": "rb-f04-array-receipt-v1",
+        "uncompressed_bytes": 18532232
+      },
+      "save_seconds": 0.12870826800099167,
+      "saved_check_seconds": 0.5574477760001173
+    },
+    {
+      "name": "oracle_budget_not_equal_frozen_job",
+      "result": "rejected",
+      "error": "ValueError: cap budget deadline clock binding changed"
+    },
+    {
+      "name": "table_budget_not_equal_frozen_job",
+      "result": "rejected",
+      "error": "ValueError: cap budget deadline clock binding changed"
+    },
+    {
+      "name": "teacher_budget_not_equal_frozen_job",
+      "result": "rejected",
+      "error": "ValueError: cap budget deadline clock binding changed"
+    },
+    {
+      "name": "oracle_cap_evidence_removed",
+      "result": "rejected",
+      "error": "ValueError: oracle measured cap evidence required"
+    },
+    {
+      "name": "phase_cpu_measurement_clock_removed",
+      "result": "rejected",
+      "error": "ValueError: fresh whole phase cost measured CPU clock required"
+    },
+    {
+      "name": "oracle_internally_consistent_wrong_parent_budget",
+      "result": "rejected",
+      "error": "ValueError: oracle effective cap clock binding changed"
+    },
+    {
+      "name": "table_internally_consistent_wrong_parent_budget",
+      "result": "rejected",
+      "error": "ValueError: call table effective cap clock binding changed"
+    },
+    {
+      "name": "teacher_internally_consistent_wrong_parent_budget",
+      "result": "rejected",
+      "error": "ValueError: teacher replay effective cap clock binding changed"
+    },
+    {
+      "name": "posttest_parent_does_not_modify_pretest_plan",
+      "result": "pass",
+      "financial_qualification": "unknown"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+--- /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-revision-run_fresh.py
++++ /home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_fresh.py
+@@ -29,7 +29,9 @@
+     ).hexdigest()
+ 
+ 
+-def _production_teacher_replay(parameters, surface, row, *, wall_cap_seconds=None):
++def _production_teacher_replay(
++    parameters, surface, row, *, wall_cap_seconds=None, deadline_wall=None
++):
+     """Replay actual selected production paths with full-N failed/cap closure."""
+     from hullkit._dynamic_hedging_conditional import primitive_labels
+     from hullkit._heston_local_surface import HestonParameters
+@@ -46,7 +48,7 @@
+     from run_reference import payload_digest, teacher_restart
+ 
+     started, cpu_started = perf_counter(), process_time()
+-    deadline = _deadline(wall_cap_seconds, started)
++    deadline = _deadline(wall_cap_seconds, started, deadline_wall=deadline_wall)
+     original = row["original_teacher"]
+     old, n = original["primitives"], row["original_n"]
+     if (
+@@ -172,6 +174,7 @@
+             started,
+             np.where(statuses == "unmeasured_cap", 0, 1),
+             ["unmeasured_cap", "executed"],
++            deadline_wall=deadline,
+         ),
+         "expenses": expenses,
+         "cost": _timing(started, cpu_started, deadline),
+@@ -338,6 +341,7 @@
+                 state_nodes=row["state_nodes"],
+                 controls=row["call_controls"],
+                 wall_cap_seconds=effective,
++                deadline_wall=begin + effective,
+             )
+         jobs.append(
+             {
+@@ -369,6 +373,7 @@
+             quote_bump=row["quote_bump"],
+             chunk_paths=row["chunk_paths"],
+             wall_cap_seconds=effective,
++            deadline_wall=begin + effective,
+         )
+         jobs.append(
+             {
+@@ -383,7 +388,9 @@
+         begin, job_cpu = perf_counter(), process_time()
+         planned = row["wall_caps"]["teacher_replay"]
+         effective = min(planned, max(0.0, phase_deadline - begin))
+-        teacher = _production_teacher_replay(parameters, surface, row, wall_cap_seconds=effective)
++        teacher = _production_teacher_replay(
++            parameters, surface, row, wall_cap_seconds=effective, deadline_wall=begin + effective
++        )
+         jobs.append(
+             {
+                 "id": "teacher_replay",

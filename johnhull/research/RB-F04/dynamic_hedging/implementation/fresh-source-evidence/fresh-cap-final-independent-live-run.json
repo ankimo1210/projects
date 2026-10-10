@@ -1,0 +1,8 @@
+{
+  "exit_code": 0,
+  "wall_seconds": 9.197834388000047,
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fresh-cap-final-independent-live-probes.py"
+  ]
+}

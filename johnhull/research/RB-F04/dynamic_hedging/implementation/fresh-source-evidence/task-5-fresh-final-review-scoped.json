@@ -1,0 +1,28 @@
+{
+  "before": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "fea28b7456b472fde587e2aa6cff9a6bf794cd1be8998b4493be494d81875d79",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "13f2727b78902406f6da4e987c9de283472610796d9ae38be8ec87805e4426cf",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "f67af225363b4fb76a4564099494beed3144b033b79e8d4e2698d794f3209f65",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "e52d470330a1a0c94ed57db2b08e70c2b976baa2921eb6a2b3dfa03a5ebf729a"
+  },
+  "after": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "fea28b7456b472fde587e2aa6cff9a6bf794cd1be8998b4493be494d81875d79",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "13f2727b78902406f6da4e987c9de283472610796d9ae38be8ec87805e4426cf",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "f67af225363b4fb76a4564099494beed3144b033b79e8d4e2698d794f3209f65",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "e52d470330a1a0c94ed57db2b08e70c2b976baa2921eb6a2b3dfa03a5ebf729a"
+  },
+  "jobs": {
+    "tests": {
+      "code": 0,
+      "output": "........................................................                 [100%]\n56 passed in 31.65s\n"
+    },
+    "ruff": {
+      "code": 0,
+      "output": "All checks passed!\n"
+    },
+    "format": {
+      "code": 0,
+      "output": "4 files already formatted\n"
+    }
+  }
+}

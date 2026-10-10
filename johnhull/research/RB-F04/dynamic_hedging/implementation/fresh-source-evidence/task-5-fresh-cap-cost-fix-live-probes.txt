@@ -1,0 +1,60 @@
+{"name": "oracle_budget_not_equal_frozen_job", "result": "rejected", "error": "ValueError: cap budget deadline clock binding changed"}
+{"name": "table_budget_not_equal_frozen_job", "result": "rejected", "error": "ValueError: cap budget deadline clock binding changed"}
+{"name": "teacher_budget_not_equal_frozen_job", "result": "rejected", "error": "ValueError: cap budget deadline clock binding changed"}
+{"name": "oracle_cap_evidence_removed", "result": "rejected", "error": "ValueError: oracle measured cap evidence required"}
+{"name": "phase_cpu_measurement_clock_removed", "result": "rejected", "error": "ValueError: fresh whole phase cost measured CPU clock required"}
+{
+  "source_stable": true,
+  "records": [
+    {
+      "name": "actual_current_registry_save_load_check",
+      "result": "pass",
+      "qualification": "unknown",
+      "original_n": 1024,
+      "queries": 13,
+      "levels": [
+        768,
+        1536
+      ],
+      "saved_receipt": {
+        "arrays_sha256": "82f08f530e74bc26dd32ab0785ea36e3333b0200c9cfab8722d2eb8b315497bc",
+        "artifact_sha256": "96a3e371e39eed5b13c52d2d02e2063201d58150783e578ec0c0aacaa81350fa",
+        "metadata_sha256": "40156fd99a9e174343aafdf7f9d4e5f1f2bd362dc829ad7dba96a3b5d368dd81",
+        "schema": "rb-f04-array-receipt-v1",
+        "uncompressed_bytes": 18532232
+      },
+      "save_seconds": 0.10763355700146349,
+      "saved_check_seconds": 0.5445930139994744
+    },
+    {
+      "name": "oracle_budget_not_equal_frozen_job",
+      "result": "rejected",
+      "error": "ValueError: cap budget deadline clock binding changed"
+    },
+    {
+      "name": "table_budget_not_equal_frozen_job",
+      "result": "rejected",
+      "error": "ValueError: cap budget deadline clock binding changed"
+    },
+    {
+      "name": "teacher_budget_not_equal_frozen_job",
+      "result": "rejected",
+      "error": "ValueError: cap budget deadline clock binding changed"
+    },
+    {
+      "name": "oracle_cap_evidence_removed",
+      "result": "rejected",
+      "error": "ValueError: oracle measured cap evidence required"
+    },
+    {
+      "name": "phase_cpu_measurement_clock_removed",
+      "result": "rejected",
+      "error": "ValueError: fresh whole phase cost measured CPU clock required"
+    },
+    {
+      "name": "posttest_parent_does_not_modify_pretest_plan",
+      "result": "pass",
+      "financial_qualification": "unknown"
+    }
+  ]
+}
