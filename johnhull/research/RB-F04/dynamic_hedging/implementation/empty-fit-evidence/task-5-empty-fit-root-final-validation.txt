@@ -1,0 +1,8 @@
+1 file reformatted, 1 file left unchanged
+
+2 files already formatted
+
+All checks passed!
+
+.................................................................        [100%]
+65 passed in 1.20s

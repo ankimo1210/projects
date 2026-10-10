@@ -1,0 +1,35 @@
+{
+  "source_unit": true,
+  "formal_pilot": false,
+  "fit_case": {
+    "id": "pilot:fit:Heston:U1:init11",
+    "original_n": 4096,
+    "outcome": "measured_precision_failure",
+    "financial_qualification": "unknown",
+    "measurements": {},
+    "unmeasured_reasons": {},
+    "reason": "completed optimizer; original full validation paths remain unsupported",
+    "rejection_kind": null,
+    "first_failure_date": null,
+    "cap_evidence": null,
+    "evidence_sha256": "5c6d44dd6d77f9dcae68791b120bc8451eff0a8b675de9d130d87ca53ef9c970",
+    "expense_id": "case:pilot:fit:Heston:U1:init11",
+    "verification": {
+      "checker": "independent_unit_fixture",
+      "evidence_sha256": "0fa0cdb2c7c7cbc05f99f7000009d621fbd9c192646e7d0640847bd94a99416e",
+      "inputs": {
+        "candidate": "f2f4ef840ded78573e617036af0c84e404a82437b3d00fd41121014c1615b785",
+        "source": "57a4c0da827791909b3f004f5e2c87fd999dcc530f258c46ca7223ed72ca37d5",
+        "domains": "b10342502bd71c6a733faaa12da39cff80588bd4645be7f95a6ce64e58365877",
+        "plan": "76b688dfec79c7ad25d53912b814019d1f4796ef556a270dd3785e168873ae6c",
+        "record": "464a1f775c2c451f499da378ab54eb8410b3094eb6fb8d2a29f9b1d1e8b6c0b5"
+      }
+    },
+    "raw_fit_validation": {
+      "optimizer_status": "completed",
+      "validation_qualification": "unknown"
+    }
+  },
+  "error": "precision failure requires failed or unmeasured original gate",
+  "empty_gate_measurements_pass": true
+}

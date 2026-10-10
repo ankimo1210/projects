@@ -1,0 +1,9 @@
+# Pilot graph producer interface (draft)
+- Producer: `task-5-formal-pilot-plan-producer.py`
+- `build_job_graph(*,inputs,controls,teacher_trials,pilot_training_config)`: all121/51 typed graph; no budgets, measurement or readiness.
+- `lock_job_graph(draft,*,inputs,source,reviewed_budgets,history,required_external_expense_ids)`: exact full job budget roster, source/input bytes and historical costs. Parent must independently review actual budgets before use.
+- Full required input/control/budget schema: adjacent JSON.
+- Each unique(model,N) stores a single fine path-step-factor driver. Original full axes/node/N/raw failures/16blocks remain; oracle/premium/market streams stay distinct.
+- Explicit teacher attempts preserve original N ladder and coarse/high. Current compiler requires two N values and both grids for comparisons; it does not yet authenticate progressive smallest-qualified teacher selection. `selected_teacher_trial` is a calculation base only.
+- Remaining blocker before formal lock: explicit progressive selection/unused-prefix closure and A case/group expense inclusion projection, plus final source/dry-run review. No tiny budget cap substitutes financial precision.
+- Formal pilot has not been executed or approved; all domains/financial results remain unknown.

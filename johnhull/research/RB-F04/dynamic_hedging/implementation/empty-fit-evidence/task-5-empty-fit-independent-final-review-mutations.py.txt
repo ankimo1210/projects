@@ -1,0 +1,82 @@
+from pathlib import Path
+import ast,copy,hashlib,importlib.util,json,os,sys
+import numpy as np
+W=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+D=W/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+P='task-5-empty-fit-independent-final-review'
+def forbidden(*args,**kwargs):raise AssertionError('Financial RNG forbidden in metadata review')
+np.random.default_rng=forbidden
+np.random.normal=forbidden
+np.random.standard_normal=forbidden
+spec=importlib.util.spec_from_file_location('independent_execution_tests',W/'deep_hedge_price/tests/test_dynamic_hedging_execution.py')
+t=importlib.util.module_from_spec(spec);spec.loader.exec_module(t)
+rows=[]
+def fix_unknown(f,index=0):
+ fits=[r for r in f['pilot']['cases'] if r['id'].startswith('pilot:fit:')]
+ row=fits[index];row.update(outcome='measured_precision_failure',financial_qualification='unknown',reason='Independent original validation unknown',first_failure_date=.25)
+ row['fit_validation'].update(validation_status='failed',validation_qualification='unknown',first_failure_date=.25)
+ return row
+def test_mutation(name,mutate,unknown=True):
+ f=t.execution_fixture();row=fix_unknown(f) if unknown else t._empty_gate_fit(f)
+ plan=next(p for p in f['pilot']['case_plan']if p['id']==row['id'])
+ mutate(f,row,plan)
+ t.reseal(f)
+ try:t.freeze(f)
+ except ValueError as e:rows.append({'name':name,'result':'rejected_after_all_verification_and_review_resealed','reason':str(e)})
+ else:raise AssertionError('Mutation accepted: '+name)
+test_mutation('missing_prior_validation_N',lambda f,r,p:p.pop('validation_original_n'))
+test_mutation('zero_prior_validation_N',lambda f,r,p:p.update(validation_original_n=0))
+test_mutation('bool_prior_validation_N',lambda f,r,p:p.update(validation_original_n=True))
+test_mutation('swapped_original_fit_ID',lambda f,r,p:r['fit_validation'].update(fit_id='fit:other'))
+test_mutation('incomplete_optimizer_bool',lambda f,r,p:r['fit_validation'].update(optimizer_complete=False))
+test_mutation('source_defect_optimizer_status',lambda f,r,p:r['fit_validation'].update(optimizer_status='source_error'))
+test_mutation('missing_typed_receipt',lambda f,r,p:r.pop('fit_validation'))
+test_mutation('wrong_typed_training_N',lambda f,r,p:r['fit_validation'].update(training_original_n=1))
+test_mutation('wrong_typed_validation_N',lambda f,r,p:r['fit_validation'].update(validation_original_n=1))
+test_mutation('wrong_typed_raw_evidence',lambda f,r,p:r['fit_validation'].update(evidence_sha256='a'*64))
+test_mutation('different_typed_first_failure',lambda f,r,p:r['fit_validation'].update(first_failure_date=.5))
+test_mutation('missing_typed_first_failure',lambda f,r,p:r['fit_validation'].pop('first_failure_date'))
+test_mutation('missing_case_first_failure',lambda f,r,p:r.pop('first_failure_date'))
+test_mutation('negative_both_first_failure',lambda f,r,p:(r.update(first_failure_date=-.25),r['fit_validation'].update(first_failure_date=-.25)))
+test_mutation('case_false_qualified_only',lambda f,r,p:r.update(outcome='within_envelope',financial_qualification='qualified',reason=None))
+test_mutation('matching_fake_qualified_retains_failure',lambda f,r,p:(r.update(outcome='within_envelope',financial_qualification='qualified',reason=None),r['fit_validation'].update(validation_status='completed',validation_qualification='qualified')))
+test_mutation('execution_completed_is_not_qualified_verdict',lambda f,r,p:r['fit_validation'].update(validation_status='completed'))
+test_mutation('qualified_bare_empty_gates',lambda f,r,p:r.pop('fit_validation'),unknown=False)
+f=t.execution_fixture()
+for i in range(4):fix_unknown(f,i)
+t.reseal(f);out=t.freeze(f)
+assert out['financial_qualification']=='unknown'
+assert out['execution_readiness']=='approved_for_full_roster_evaluation'
+assert all(r['first_failure_date']==.25 for r in out['pilot']['cases']if r['id'].startswith('pilot:fit:'))
+positive={'all_four_original_fits_unknown_closure':True,'full_cases':len(out['pilot']['cases']),'full_attempts':len(out['pilot']['attempts']),'financial_qualification':out['financial_qualification']}
+f=t.execution_fixture()
+r=next(r for r in f['pilot']['cases']if r['id']=='quote00')
+r.update(outcome='measured_precision_failure',financial_qualification='unknown',reason='False failure while all gates passed')
+r['fit_validation']=t._empty_gate_fit(f)['fit_validation']
+t.reseal(f)
+try:t.freeze(f)
+except ValueError as e:rows.append({'name':'typed_fit_receipt_cannot_override_nonempty_quote_gates','result':'rejected_after_reseal','reason':str(e)})
+else:raise AssertionError('Nonnumeric receipt waived numerical quote gates')
+source=W/'deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py'
+old=ast.parse((D/'task-5-empty-fit-root-before-_dynamic_hedging_execution.py.txt').read_text())
+new=ast.parse(source.read_text())
+od={n.name:ast.dump(n,include_attributes=False)for n in old.body if isinstance(n,ast.FunctionDef)}
+nd={n.name:ast.dump(n,include_attributes=False)for n in new.body if isinstance(n,ast.FunctionDef)}
+changed=[n for n in od if od[n]!=nd[n]]
+assert changed==['_pilot'],changed
+added=sorted(set(nd)-set(od));assert added==['_fit_validation']
+oldp=next(n for n in old.body if isinstance(n,ast.FunctionDef)and n.name=='_pilot')
+newp=copy.deepcopy(next(n for n in new.body if isinstance(n,ast.FunctionDef)and n.name=='_pilot'))
+class Strip(ast.NodeTransformer):
+ def visit_If(self,node):
+  if any(isinstance(c,ast.Call)and isinstance(c.func,ast.Name)and c.func.id=='_fit_validation' for c in ast.walk(node)):
+   if len(node.body)==1 and isinstance(node.body[0],ast.Assign):return None
+  return self.generic_visit(node)
+newp=Strip().visit(newp)
+assert ast.dump(oldp,include_attributes=False)==ast.dump(newp,include_attributes=False)
+proto=W/'deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py'
+v1sha=hashlib.sha256(proto.read_bytes()).hexdigest()
+assert v1sha=='5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f'
+result={'decision':'approved_limited_A_empty_fit_guard','mutations':rows,'positive':positive,'unchanged_functions':sorted(n for n in od if n not in changed),'only_changed_original_function':changed,'only_added_function':added,'pilot_without_new_guard_AST_equals_before':True,'strict_v1_sha256':v1sha,'financial_RNG_performed':False,'scope_limit':'A binds detached metadata, not actual raw numerical validation/reviewer authenticity; check_pilot raw replay and formal graph still independently pending'}
+(D/(P+'-mutations.json')).write_text(json.dumps(result,indent=2)+'\n')
+print(json.dumps({'rejects':len(rows),'all_four_unknown_closure':True,'unchanged_functions':len(od)-1,'only_changed_original_function':changed,'strict_v1_unchanged':True,'financial_RNG':False}))

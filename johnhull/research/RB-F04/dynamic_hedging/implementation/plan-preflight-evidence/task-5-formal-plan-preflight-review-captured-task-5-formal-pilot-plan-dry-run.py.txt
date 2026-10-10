@@ -1,0 +1,94 @@
+from pathlib import Path
+import importlib.util,inspect,json,sys,hashlib
+from collections import Counter
+import numpy as np
+root=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+D=root/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+sys.path.insert(0,str(root/'johnhull/research/RB-F04/dynamic_hedging'))
+import run_pilot as pilot
+import reference_methods
+from hullkit._dynamic_hedging_surfaces import build_call_cache
+spec=importlib.util.spec_from_file_location('pilot_graph',D/'task-5-formal-pilot-plan-producer.py')
+graph=importlib.util.module_from_spec(spec);spec.loader.exec_module(graph)
+prepared=json.loads((D/'task-5-actual-pilot-input-preparation.json').read_text())
+inputs={k:prepared[k] for k in ('original_states18','diagnostic_queries24','additional_teacher_cases')}
+from hullkit._heston_local_surface import HestonParameters
+inputs['parameters']=HestonParameters(**prepared['parameters'])
+inputs['seed_namespace']=prepared['declared_stream_namespaces']
+for rows in inputs['additional_teacher_cases'].values():
+ for row in rows:row['thresholds']=np.asarray(row['thresholds'])
+b=root/'johnhull/research/RB-F04/dynamic_hedging'
+with np.load(b/'pilot/initial-quotes/reference.npz',allow_pickle=False) as a:
+ prefix='field257x321.surface.'
+ times=a[prefix+'times'].copy();z=a[prefix+'z_nodes'].copy()
+trials=[]
+for model in ('Heston','local'):
+ for N,grid in ((1024,'coarse'),(4096,'coarse'),(1024,'high')):
+  trials.append({'id':f'teacher:{model}:N{N}:{grid}','model':model,'original_n':N,
+                 'grid':grid,'evaluation_domains':[None]*12})
+selected={m:f'teacher:{m}:N1024:coarse' for m in ('Heston','local')}
+operations=['field','quotes','premium','source','call_cache','teacher_driver','teacher_grid',
+ 'call_table','oracle','state','date_gate','market_pair','quote_risk','tiny_fits','validation',
+ 'roster','cell_pair','bump_risk','Q','empty_claim','teacher_diagnostic','frequency_cache',
+ 'precision','stream_receipts']
+state_h=np.r_[np.linspace(0,.08,17),np.linspace(.08,.5,17)[1:]];state_h[0]=1e-5
+state_l=np.array([.25,.5,.75,1.,1.5,2.,4.])
+controls={'pilot_n':1024,'field':{'times':times,'z_nodes':z,'order':2048,'cutoff':1024},
+ 'initial_call_controls':{'pde_stages':[]},
+ 'call':{m:{'dates':np.arange(13)/12,'spot_nodes':np.geomspace(50,200,65),
+           'state_nodes':state_h if m=='Heston' else state_l} for m in ('Heston','local')},
+ 'independent_state_nodes':{'Heston':state_h,'local':state_l},
+ 'independent_call_controls':{},'bin_edges':np.array([80.,100.,120.]),
+ 'chunk_paths':256,'query_chunk_paths':64,
+ 'expanded_byte_predictions':dict.fromkeys(operations,None),
+ 'selected_teacher_trial':selected,
+ 'teacher_comparisons':{kind:{m:[selected[m],f'teacher:{m}:N{4096 if kind=="teacher_N" else 1024}:{ "coarse" if kind=="teacher_N" else "high"}']
+                       for m in ('Heston','local')} for kind in ('teacher_N','teacher_grid')}}
+config=dict(pilot.protocol.candidate_protocol()['training'])
+config.update(original_n=1024,updates=16,batch_size=256,cap_seconds=60)
+draft=graph.build_job_graph(inputs=inputs,controls=controls,teacher_trials=trials,
+                           pilot_training_config=config)
+functions={
+ 'field':pilot.run_field_job,'quotes':pilot.run_quotes_job,'premium':reference_methods.premium_reference,
+ 'call_cache':build_call_cache,'teacher_driver':pilot.run_teacher_driver_job,'teacher_grid':pilot.run_teacher_grid_job,
+ 'call_table':reference_methods.independent_call_table,'oracle':reference_methods.quote_positions_oracle,
+ 'state':pilot.run_state_job,'date_gate':pilot.run_date_gate_job,'market_pair':pilot.run_market_pair_job,
+ 'quote_risk':pilot.run_quote_risk_job,'tiny_fits':pilot.run_tiny_fits_job,
+ 'validation':pilot.study.select_validation,'roster':pilot.study.test_roster,'cell_pair':pilot.run_cell_pair_job,
+ 'bump_risk':pilot.run_bump_risk_job,'Q':pilot.run_q_job,'empty_claim':pilot.run_empty_claim_job,
+ 'teacher_diagnostic':pilot.run_teacher_diagnostic_job,'frequency_cache':pilot.run_frequency_cache_job,
+ 'precision':pilot.run_precision_job,'stream_receipts':pilot.run_stream_receipts_job}
+errors=[]
+for row in draft['jobs']:
+ op=row['operation']
+ if op=='source':continue
+ keys=set(row['arguments'])
+ if op in ('teacher','teacher_grid','teacher_driver','teacher_diagnostic','bump_risk','precision','quote_risk',
+           'quotes','field','Q','market_pair','oracle','premium','call_table'):keys.add('wall_cap_seconds')
+ if op in ('teacher_grid','teacher_driver'):keys.add('work_directory')
+ try:inspect.signature(functions[op]).bind(**dict.fromkeys(keys))
+ except TypeError as e:errors.append({'job':row['id'],'operation':op,'error':str(e)})
+prior=set();deps_ok=True
+for row in draft['jobs']:
+ deps=pilot._dependency_ids(row['arguments']);deps_ok &= deps<=prior;prior.add(row['id'])
+for model in ('Heston','local'):
+ aid=f'refinement:position:{model}'
+ bound=next(r for r in draft['attempt_bindings'] if r['id']==aid)
+ pairs=[j for j in draft['jobs'] if j['id'] in bound['job_ids'] and j['operation']=='cell_pair']
+ assert len(pairs)==24 and Counter(j['arguments']['refined_risk_width_index'] for j in pairs)=={0:8,1:8,2:8}
+assert len(draft['case_bindings'])==121 and len(draft['attempt_bindings'])==51
+out={'kind':'actual_input_graph_dry_run_only','formal_plan_locked':False,'financial_qualification':'unknown',
+ 'input_preparation_sha256':hashlib.sha256((D/'task-5-actual-pilot-input-preparation.json').read_bytes()).hexdigest(),
+ 'case_count':121,'required_attempt_count':51,'job_count':len(draft['jobs']),
+ 'operation_counts':dict(Counter(j['operation'] for j in draft['jobs'])),
+ 'prior_dependency_order_valid':bool(deps_ok),'worker_signature_errors':errors,
+ 'position_pairs_per_model':24,'position_width_variants':[0,1,2],
+ 'actual_stream_receipts':'assembled only after original market draws; no global IDs in root input',
+ 'teacher_trials':trials,'unmeasured':['expanded_bytes predictions','formal budgets/rates',
+ 'progressive smallest-qualified teacher selection','A case/group inclusive expense binding'],
+ 'formal_execution_performed':False,'financial_RNG_performed':False,
+ 'plan_producer':str(D/'task-5-formal-pilot-plan-producer.py')}
+(D/'task-5-formal-pilot-plan-dry-run.json').write_text(json.dumps(out,indent=2)+chr(10))
+pilot.write_pilot_artifact(D/'task-5-formal-pilot-plan-draft-source-unit',draft)
+print(json.dumps(out,indent=2))
+if errors or not deps_ok:raise SystemExit(1)

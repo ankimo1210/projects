@@ -1,0 +1,18 @@
+"""Adversarial metadata/schema unit; no financial qualification."""
+import json, runpy
+from pathlib import Path
+root=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+helpers=runpy.run_path(str(root/"deep_hedge_price/tests/test_dynamic_hedging_execution.py"))
+fixture=helpers["execution_fixture"]()
+row=next(r for r in fixture["pilot"]["cases"] if r["id"].startswith("pilot:fit:"))
+row.update(outcome="measured_precision_failure",financial_qualification="unknown",
+           reason="completed optimizer; original full validation paths remain unsupported",
+           raw_fit_validation={"optimizer_status":"completed","validation_qualification":"unknown"})
+helpers["reseal"](fixture)
+try:
+    helpers["freeze"](fixture)
+except ValueError as error:
+    print(json.dumps({"source_unit":True,"formal_pilot":False,"fit_case":row,
+                      "error":str(error),"empty_gate_measurements_pass":True},indent=2))
+else:
+    raise AssertionError("historical A contradiction did not reproduce")

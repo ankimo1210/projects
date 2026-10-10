@@ -1,0 +1,27 @@
+from pathlib import Path
+import sys,json,hashlib,math
+import numpy as np
+from unittest.mock import patch
+r=Path('/home/kazumasa/worktrees/johnhull-research-roadmap');d=r/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+sys.path.insert(0,str(r/'johnhull/research/RB-F04/dynamic_hedging'))
+import run_pilot as p
+def no_rng(*a,**k):raise AssertionError('no financial RNG in review')
+with patch.object(np.random,'default_rng',side_effect=no_rng):
+ draft,receipt=p.read_pilot_artifact(d/'task-5-formal-plan-preflight-review-draft-source-unit')
+ jobs={j['id']:j for j in draft['jobs']}; ancestors={}
+ for j in draft['jobs']:
+  deps=p._dependency_ids(j['arguments'])
+  ancestors[j['id']]=deps|set().union(*(ancestors[x] for x in deps))
+ problems=[]
+ for j in draft['jobs']:
+  actual={x for x in jobs if x==j['id'] or j['id'] in ancestors[x]}
+  scope=j['cap_scope']
+  expected_cases={b['id'] for b in draft['case_bindings'] if b['job_id'] in actual}
+  expected_attempts={b['id'] for b in draft['attempt_bindings'] if set(b['job_ids'])&actual}
+  if set(scope['job_ids'])!=actual or set(scope['case_ids'])!=expected_cases or set(scope['attempt_ids'])!=expected_attempts or scope['expense_id']!=j['expense_id']:
+   problems.append(j['id'])
+ out={'raw_DAG_cap_scopes_complete':not problems,'scope_count':len(jobs),'bad_scopes':problems,
+      'A_lifecycle_case_group_cap_expense_projection':'unimplemented; raw cap scopes are not A lifecycle expense binding',
+      'plan_raw_receipt':receipt,'financial_RNG_performed':False}
+ (d/'task-5-formal-plan-preflight-review-cap-scope.json').write_text(json.dumps(out,indent=2)+chr(10))
+ print(json.dumps(out,indent=2))

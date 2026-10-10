@@ -1,0 +1,395 @@
+.FFFFFFFFFFFFF..                                                         [100%]
+=================================== FAILURES ===================================
+_____ test_completed_fit_with_unknown_original_validation_closes_execution _____
+
+    def test_completed_fit_with_unknown_original_validation_closes_execution():
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        row.update(
+            outcome="measured_precision_failure",
+            financial_qualification="unknown",
+            reason="completed optimizer; original validation support remains unknown",
+            first_failure_date=0.25,
+        )
+        row["fit_validation"].update(
+            validation_status="failed",
+            validation_qualification="unknown",
+            first_failure_date=0.25,
+        )
+        reseal(fixture)
+>       result = freeze(fixture)
+                 ^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:755: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:253: in freeze
+    return execution().freeze_execution(
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:726: in freeze_execution
+    financial = _pilot(candidate, source, pilot, selection, domains)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:588: in _pilot
+    _require(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False
+message = 'precision failure requires failed or unmeasured original gate'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: precision failure requires failed or unmeasured original gate
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:34: ValueError
+_ test_empty_fit_gates_require_original_checkpoint_validation[within_envelope] _
+
+outcome = 'within_envelope'
+
+    @pytest.mark.parametrize("outcome", ["within_envelope", "measured_precision_failure"])
+    def test_empty_fit_gates_require_original_checkpoint_validation(outcome):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        del row["fit_validation"]
+        if outcome == "measured_precision_failure":
+            row.update(
+                outcome=outcome,
+                financial_qualification="unknown",
+                reason="unverified validation claim",
+            )
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:776: Failed
+_ test_empty_fit_gates_require_original_checkpoint_validation[measured_precision_failure] _
+
+outcome = 'measured_precision_failure'
+
+    @pytest.mark.parametrize("outcome", ["within_envelope", "measured_precision_failure"])
+    def test_empty_fit_gates_require_original_checkpoint_validation(outcome):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        del row["fit_validation"]
+        if outcome == "measured_precision_failure":
+            row.update(
+                outcome=outcome,
+                financial_qualification="unknown",
+                reason="unverified validation claim",
+            )
+        reseal(fixture)
+        with pytest.raises(ValueError, match="fit validation"):
+>           freeze(fixture)
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:777: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:253: in freeze
+    return execution().freeze_execution(
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:726: in freeze_execution
+    financial = _pilot(candidate, source, pilot, selection, domains)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:588: in _pilot
+    _require(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False
+message = 'precision failure requires failed or unmeasured original gate'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: precision failure requires failed or unmeasured original gate
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py:34: ValueError
+
+During handling of the above exception, another exception occurred:
+
+outcome = 'measured_precision_failure'
+
+    @pytest.mark.parametrize("outcome", ["within_envelope", "measured_precision_failure"])
+    def test_empty_fit_gates_require_original_checkpoint_validation(outcome):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        del row["fit_validation"]
+        if outcome == "measured_precision_failure":
+            row.update(
+                outcome=outcome,
+                financial_qualification="unknown",
+                reason="unverified validation claim",
+            )
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'fit validation'
+E         Actual message: 'precision failure requires failed or unmeasured original gate'
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:776: AssertionError
+_ test_empty_fit_qualified_flag_cannot_override_bound_validation[fit_id-other-original-fit] _
+
+field = 'fit_id', value = 'other-original-fit'
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("fit_id", "other-original-fit"),
+            ("training_original_n", 1),
+            ("validation_original_n", 1),
+            ("optimizer_status", "optimizer_error"),
+            ("optimizer_complete", False),
+            ("validation_status", "failed"),
+            ("validation_qualification", "unknown"),
+            ("first_failure_date", 0.25),
+            ("evidence_sha256", "a" * 64),
+        ],
+    )
+    def test_empty_fit_qualified_flag_cannot_override_bound_validation(field, value):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        row["fit_validation"][field] = value
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:799: Failed
+_ test_empty_fit_qualified_flag_cannot_override_bound_validation[training_original_n-1] _
+
+field = 'training_original_n', value = 1
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("fit_id", "other-original-fit"),
+            ("training_original_n", 1),
+            ("validation_original_n", 1),
+            ("optimizer_status", "optimizer_error"),
+            ("optimizer_complete", False),
+            ("validation_status", "failed"),
+            ("validation_qualification", "unknown"),
+            ("first_failure_date", 0.25),
+            ("evidence_sha256", "a" * 64),
+        ],
+    )
+    def test_empty_fit_qualified_flag_cannot_override_bound_validation(field, value):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        row["fit_validation"][field] = value
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:799: Failed
+_ test_empty_fit_qualified_flag_cannot_override_bound_validation[validation_original_n-1] _
+
+field = 'validation_original_n', value = 1
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("fit_id", "other-original-fit"),
+            ("training_original_n", 1),
+            ("validation_original_n", 1),
+            ("optimizer_status", "optimizer_error"),
+            ("optimizer_complete", False),
+            ("validation_status", "failed"),
+            ("validation_qualification", "unknown"),
+            ("first_failure_date", 0.25),
+            ("evidence_sha256", "a" * 64),
+        ],
+    )
+    def test_empty_fit_qualified_flag_cannot_override_bound_validation(field, value):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        row["fit_validation"][field] = value
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:799: Failed
+_ test_empty_fit_qualified_flag_cannot_override_bound_validation[optimizer_status-optimizer_error] _
+
+field = 'optimizer_status', value = 'optimizer_error'
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("fit_id", "other-original-fit"),
+            ("training_original_n", 1),
+            ("validation_original_n", 1),
+            ("optimizer_status", "optimizer_error"),
+            ("optimizer_complete", False),
+            ("validation_status", "failed"),
+            ("validation_qualification", "unknown"),
+            ("first_failure_date", 0.25),
+            ("evidence_sha256", "a" * 64),
+        ],
+    )
+    def test_empty_fit_qualified_flag_cannot_override_bound_validation(field, value):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        row["fit_validation"][field] = value
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:799: Failed
+_ test_empty_fit_qualified_flag_cannot_override_bound_validation[optimizer_complete-False] _
+
+field = 'optimizer_complete', value = False
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("fit_id", "other-original-fit"),
+            ("training_original_n", 1),
+            ("validation_original_n", 1),
+            ("optimizer_status", "optimizer_error"),
+            ("optimizer_complete", False),
+            ("validation_status", "failed"),
+            ("validation_qualification", "unknown"),
+            ("first_failure_date", 0.25),
+            ("evidence_sha256", "a" * 64),
+        ],
+    )
+    def test_empty_fit_qualified_flag_cannot_override_bound_validation(field, value):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        row["fit_validation"][field] = value
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:799: Failed
+_ test_empty_fit_qualified_flag_cannot_override_bound_validation[validation_status-failed] _
+
+field = 'validation_status', value = 'failed'
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("fit_id", "other-original-fit"),
+            ("training_original_n", 1),
+            ("validation_original_n", 1),
+            ("optimizer_status", "optimizer_error"),
+            ("optimizer_complete", False),
+            ("validation_status", "failed"),
+            ("validation_qualification", "unknown"),
+            ("first_failure_date", 0.25),
+            ("evidence_sha256", "a" * 64),
+        ],
+    )
+    def test_empty_fit_qualified_flag_cannot_override_bound_validation(field, value):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        row["fit_validation"][field] = value
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:799: Failed
+_ test_empty_fit_qualified_flag_cannot_override_bound_validation[validation_qualification-unknown] _
+
+field = 'validation_qualification', value = 'unknown'
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("fit_id", "other-original-fit"),
+            ("training_original_n", 1),
+            ("validation_original_n", 1),
+            ("optimizer_status", "optimizer_error"),
+            ("optimizer_complete", False),
+            ("validation_status", "failed"),
+            ("validation_qualification", "unknown"),
+            ("first_failure_date", 0.25),
+            ("evidence_sha256", "a" * 64),
+        ],
+    )
+    def test_empty_fit_qualified_flag_cannot_override_bound_validation(field, value):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        row["fit_validation"][field] = value
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:799: Failed
+_ test_empty_fit_qualified_flag_cannot_override_bound_validation[first_failure_date-0.25] _
+
+field = 'first_failure_date', value = 0.25
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("fit_id", "other-original-fit"),
+            ("training_original_n", 1),
+            ("validation_original_n", 1),
+            ("optimizer_status", "optimizer_error"),
+            ("optimizer_complete", False),
+            ("validation_status", "failed"),
+            ("validation_qualification", "unknown"),
+            ("first_failure_date", 0.25),
+            ("evidence_sha256", "a" * 64),
+        ],
+    )
+    def test_empty_fit_qualified_flag_cannot_override_bound_validation(field, value):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        row["fit_validation"][field] = value
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:799: Failed
+_ test_empty_fit_qualified_flag_cannot_override_bound_validation[evidence_sha256-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa] _
+
+field = 'evidence_sha256'
+value = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("fit_id", "other-original-fit"),
+            ("training_original_n", 1),
+            ("validation_original_n", 1),
+            ("optimizer_status", "optimizer_error"),
+            ("optimizer_complete", False),
+            ("validation_status", "failed"),
+            ("validation_qualification", "unknown"),
+            ("first_failure_date", 0.25),
+            ("evidence_sha256", "a" * 64),
+        ],
+    )
+    def test_empty_fit_qualified_flag_cannot_override_bound_validation(field, value):
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        row["fit_validation"][field] = value
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:799: Failed
+___________ test_empty_fit_original_validation_count_is_prior_bound ____________
+
+    def test_empty_fit_original_validation_count_is_prior_bound():
+        fixture = execution_fixture()
+        row = _empty_gate_fit(fixture)
+        plan = next(p for p in fixture["pilot"]["case_plan"] if p["id"] == row["id"])
+        del plan["validation_original_n"]
+        reseal(fixture)
+>       with pytest.raises(ValueError, match="fit validation"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_execution.py:809: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_completed_fit_with_unknown_original_validation_closes_execution
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_gates_require_original_checkpoint_validation[within_envelope]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_gates_require_original_checkpoint_validation[measured_precision_failure]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_qualified_flag_cannot_override_bound_validation[fit_id-other-original-fit]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_qualified_flag_cannot_override_bound_validation[training_original_n-1]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_qualified_flag_cannot_override_bound_validation[validation_original_n-1]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_qualified_flag_cannot_override_bound_validation[optimizer_status-optimizer_error]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_qualified_flag_cannot_override_bound_validation[optimizer_complete-False]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_qualified_flag_cannot_override_bound_validation[validation_status-failed]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_qualified_flag_cannot_override_bound_validation[validation_qualification-unknown]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_qualified_flag_cannot_override_bound_validation[first_failure_date-0.25]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_qualified_flag_cannot_override_bound_validation[evidence_sha256-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_execution.py::test_empty_fit_original_validation_count_is_prior_bound
+13 failed, 3 passed, 49 deselected in 0.51s

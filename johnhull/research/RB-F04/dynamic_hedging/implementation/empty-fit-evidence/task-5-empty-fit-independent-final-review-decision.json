@@ -1,0 +1,25 @@
+{
+  "date_utc": "2026-10-10T00:48:55.945915+00:00",
+  "decision": "approved",
+  "scope": "Two-file limited A empty-fit metadata guard only",
+  "critical": 0,
+  "important": 0,
+  "minor": 0,
+  "source_sha256": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "fad2c73a27b8314b9cdfa5db8505fb56c382b4eab79ce4224aa475b450223b3e",
+    "deep_hedge_price/tests/test_dynamic_hedging_execution.py": "f1c9ea790144072e3be186acf72bd900b0e06145ffe054c13c3874cd5b4546ae",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f"
+  },
+  "tests": "65 passed in1.20seconds",
+  "ruff": "PASS",
+  "format": "PASS",
+  "independent_mutations_rejected": 19,
+  "all_four_original_fit_unknown_closures": "PASS 121cases/51attempts financial unknown",
+  "baseline_red": "13failed/3passed corrected root RED inspected",
+  "original_functions_unchanged": 21,
+  "AST_scope": "only added _fit_validation; _pilot equals old after stripping new guard",
+  "financial_execution_performed": false,
+  "formal_plan_lock_approved": false,
+  "formal_pilot_freeze_or_main_approved": false,
+  "pending_external_responsibility": "check_pilot must independently replay actual original raw validation and matching evidence; other preflight I1/I2/I3 remain open"
+}

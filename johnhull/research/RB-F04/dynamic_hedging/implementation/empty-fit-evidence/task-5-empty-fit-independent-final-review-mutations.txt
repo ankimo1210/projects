@@ -1,0 +1,1 @@
+{"rejects": 19, "all_four_unknown_closure": true, "unchanged_functions": 21, "only_changed_original_function": ["_pilot"], "strict_v1_unchanged": true, "financial_RNG": false}

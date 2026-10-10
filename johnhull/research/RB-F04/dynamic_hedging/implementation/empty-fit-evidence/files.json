@@ -1,0 +1,131 @@
+{
+  "kind": "immutable_limited_source_review_evidence",
+  "files": [
+    {
+      "file": "task-5-empty-fit-independent-final-review-_dynamic_hedging_execution-diff.txt",
+      "bytes": 2825,
+      "sha256": "149c18a62f88b042a306dd590300f277186f3177a194b1462f715daeadadb617",
+      "original_file": "task-5-empty-fit-independent-final-review-_dynamic_hedging_execution-diff.txt"
+    },
+    {
+      "file": "task-5-empty-fit-independent-final-review-captured-_dynamic_hedging_execution.py.txt",
+      "bytes": 39047,
+      "sha256": "fad2c73a27b8314b9cdfa5db8505fb56c382b4eab79ce4224aa475b450223b3e",
+      "original_file": "task-5-empty-fit-independent-final-review-captured-_dynamic_hedging_execution.py.txt"
+    },
+    {
+      "file": "task-5-empty-fit-independent-final-review-captured-test_dynamic_hedging_execution.py.txt",
+      "bytes": 30588,
+      "sha256": "f1c9ea790144072e3be186acf72bd900b0e06145ffe054c13c3874cd5b4546ae",
+      "original_file": "task-5-empty-fit-independent-final-review-captured-test_dynamic_hedging_execution.py.txt"
+    },
+    {
+      "file": "task-5-empty-fit-independent-final-review-decision.json",
+      "bytes": 1332,
+      "sha256": "9ed0d4dd739062cfbb79a624b9352f49e4c5869eba4b2d7590fea7feea679ce8",
+      "original_file": "task-5-empty-fit-independent-final-review-decision.json"
+    },
+    {
+      "file": "task-5-empty-fit-independent-final-review-findings.md",
+      "bytes": 2620,
+      "sha256": "04834027f962d05da5da5a355dd84e2548c18e41f8fc64ae06d097b43b34de38",
+      "original_file": "task-5-empty-fit-independent-final-review-findings.md"
+    },
+    {
+      "file": "task-5-empty-fit-independent-final-review-mutations.json",
+      "bytes": 4794,
+      "sha256": "63864d53c64b7fa43f0e6d3ac89e457b8be4aefda1d100bdc5bb67eb17a0baef",
+      "original_file": "task-5-empty-fit-independent-final-review-mutations.json"
+    },
+    {
+      "file": "task-5-empty-fit-independent-final-review-mutations.py.txt",
+      "bytes": 6708,
+      "sha256": "9ae0e15df1b2c00409316c69a0f9ebad7bce245b89c74396f8bd18a37f13f44a",
+      "original_file": "task-5-empty-fit-independent-final-review-mutations.py"
+    },
+    {
+      "file": "task-5-empty-fit-independent-final-review-mutations.txt",
+      "bytes": 176,
+      "sha256": "640a9b384559e9422104bd7e3876ebc4490e824215fc6678598868fe87d1546b",
+      "original_file": "task-5-empty-fit-independent-final-review-mutations.txt"
+    },
+    {
+      "file": "task-5-empty-fit-independent-final-review-test_dynamic_hedging_execution-diff.txt",
+      "bytes": 5051,
+      "sha256": "9cd8314d8ed7c024c731ef0052f239bc0376aa7fa8faa2181998115bfae62e7f",
+      "original_file": "task-5-empty-fit-independent-final-review-test_dynamic_hedging_execution-diff.txt"
+    },
+    {
+      "file": "task-5-empty-fit-independent-final-review-validation.json",
+      "bytes": 1980,
+      "sha256": "cd350e8f0f9b151424a8fac1fc389b29c4376178e5bc36ed9e83f16a47f981e6",
+      "original_file": "task-5-empty-fit-independent-final-review-validation.json"
+    },
+    {
+      "file": "task-5-empty-fit-independent-final-review-manifest.json",
+      "bytes": 1794,
+      "sha256": "d63f55120893806c28fc4b75d2a7529718eba526a4c4226e3753da7390f515d6",
+      "original_file": "task-5-empty-fit-independent-final-review-manifest.json"
+    },
+    {
+      "file": "task-5-empty-fit-root-base-snapshot.json",
+      "bytes": 414,
+      "sha256": "289289fb61c400c08785b569e4f3df2c88264fad1dadadfa30f7f5f50788e1f0",
+      "original_file": "task-5-empty-fit-root-base-snapshot.json"
+    },
+    {
+      "file": "task-5-empty-fit-root-before-_dynamic_hedging_execution.py.txt",
+      "bytes": 36721,
+      "sha256": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494",
+      "original_file": "task-5-empty-fit-root-before-_dynamic_hedging_execution.py.txt"
+    },
+    {
+      "file": "task-5-empty-fit-root-before-test_dynamic_hedging_execution.py.txt",
+      "bytes": 26107,
+      "sha256": "27b5eaca7dec461bb2f4d2360dd263c58df254d82ff41a11ef8620fbdba3a508",
+      "original_file": "task-5-empty-fit-root-before-test_dynamic_hedging_execution.py.txt"
+    },
+    {
+      "file": "task-5-empty-fit-root-red.txt",
+      "bytes": 20582,
+      "sha256": "53e14db060eef4318342c4ceaed2a37c508652bb3016f4f9ee594144c981b5f3",
+      "original_file": "task-5-empty-fit-root-red.txt"
+    },
+    {
+      "file": "task-5-empty-fit-root-red-corrected.txt",
+      "bytes": 17804,
+      "sha256": "f7292debac7071eaf1bcb84a06ce0fbdc786c1680ec59f4fb81cb44893678a01",
+      "original_file": "task-5-empty-fit-root-red-corrected.txt"
+    },
+    {
+      "file": "task-5-empty-fit-root-green.txt",
+      "bytes": 99,
+      "sha256": "4f424aa15b2bb2b8ffcb8998f2ee604007a2b1aadf9618a64f35fda77f3994be",
+      "original_file": "task-5-empty-fit-root-green.txt"
+    },
+    {
+      "file": "task-5-empty-fit-root-final-validation.txt",
+      "bytes": 189,
+      "sha256": "afc8fb0030946e839b92c6b730ae820b9f575bceacb4c7945a7339e6c2a20ec6",
+      "original_file": "task-5-empty-fit-root-final-validation.txt"
+    },
+    {
+      "file": "task-5-empty-fit-root-final-snapshot.json",
+      "bytes": 364,
+      "sha256": "6cd44c840f905486c2748910c5d7b3225cc25580ec024f1eca8d693448a1d5f6",
+      "original_file": "task-5-empty-fit-root-final-snapshot.json"
+    },
+    {
+      "file": "task-5-empty-fit-gate-A-repro.py.txt",
+      "bytes": 1004,
+      "sha256": "0ba95628d1af9bafe5a068b0df5167cd14aed63aed58f8ff2be5e72ad0e4e3d7",
+      "original_file": "task-5-empty-fit-gate-A-repro.py"
+    },
+    {
+      "file": "task-5-empty-fit-gate-A-repro.txt",
+      "bytes": 1452,
+      "sha256": "df7c71aa2d0eb28d9e81a26805619858ac64e90d8ae05af0e1f6f575e11eba90",
+      "original_file": "task-5-empty-fit-gate-A-repro.txt"
+    }
+  ]
+}
