@@ -1,0 +1,66 @@
+{
+  "entries": [
+    {
+      "bytes": 12572,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-external-expense-receipt-adapter-v2-decision.json",
+      "ref": "artifact:sha256:8a3d5fc57ed83625ff3bb715f867e2f0bb6105f1d5e17bd8c882f3da231790c9"
+    },
+    {
+      "bytes": 18553,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-full-child-expense-observer-v1-decision.json",
+      "ref": "artifact:sha256:e9f71faa56e5eb72f0c8493d6e500f177e4fcecca252287fd65d1e998279e4b5"
+    },
+    {
+      "bytes": 9071,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-fixed-manifest-v2.json",
+      "ref": "artifact:sha256:b5d995ecee8ef67bb10b967d67b974166f8a1a467f68ba8f96121dabdf5218ad"
+    },
+    {
+      "bytes": 10561,
+      "mime": "text/x-python",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-preflight-v2.py",
+      "ref": "artifact:sha256:041dcb9a1080a4069c3aad8643bbd5f4ce3ad078fa18c8025c0e99d4750cdd96"
+    },
+    {
+      "bytes": 5025,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-results-v2.json",
+      "ref": "artifact:sha256:ee04a2fda90d5df51532eb5c6dce63e82183100493b5182b18a07fa6b0dd2516"
+    },
+    {
+      "bytes": 22807,
+      "mime": "text/x-python",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-v2.py",
+      "ref": "artifact:sha256:1b862d0bdcfaa68a740b77c00f3fd0508a8afe5227e0be96c3289cb1df9df6d3"
+    },
+    {
+      "bytes": 4161,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-fixed-manifest-v1.json",
+      "ref": "artifact:sha256:1a98e034b87f12e452c9d931686f6ad77947952a7fcc344ef6ccdfece221f82d"
+    },
+    {
+      "bytes": 15388,
+      "mime": "text/x-python",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-preflight-v1.py",
+      "ref": "artifact:sha256:99f97dbe4a5fcad6fb6cb3769570cbbf1f90b97e10de2621925514191badf07b"
+    },
+    {
+      "bytes": 17815,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-results-v1.json",
+      "ref": "artifact:sha256:9b79e06913bb1223c50635f5f20975b3c0dc8ee845bf5dadb19fed1669712e30"
+    },
+    {
+      "bytes": 14648,
+      "mime": "text/x-python",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-v1.py",
+      "ref": "artifact:sha256:809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57"
+    }
+  ],
+  "kind": "johnhull-evidence-manifest",
+  "schema_version": 1
+}

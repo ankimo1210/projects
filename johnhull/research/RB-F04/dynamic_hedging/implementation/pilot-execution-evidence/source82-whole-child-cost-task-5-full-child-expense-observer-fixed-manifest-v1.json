@@ -1,0 +1,68 @@
+{
+  "schema": "rb-f04-full-child-expense-observer-fixed-v1",
+  "files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-v1.py",
+      "bytes": 14648,
+      "sha256": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-preflight-v1.py",
+      "bytes": 15388,
+      "sha256": "99f97dbe4a5fcad6fb6cb3769570cbbf1f90b97e10de2621925514191badf07b"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-results-v1.json",
+      "bytes": 17815,
+      "sha256": "9b79e06913bb1223c50635f5f20975b3c0dc8ee845bf5dadb19fed1669712e30"
+    }
+  ],
+  "original_enclosing_child": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-v2.py",
+    "bytes": 9006,
+    "sha256": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc"
+  },
+  "original_source82_closure": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json",
+    "bytes": 34372,
+    "sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5"
+  },
+  "source82_all_files_unchanged": true,
+  "scope": "future saved-only single fixed enclosing-v2 child lifecycle measurement; synthetic-only mechanics verification",
+  "API": "observe(guard_path, guard_sha256)",
+  "future_CLI": "python -B /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-v1.py --guard <root-fixed-future-guard> --guard-sha256 <actual-SHA>",
+  "future_guard_requires": [
+    "root_preapproved/execute_saved_check true and candidate_only false; formal financial launch/acceptance false",
+    "exact helper SHA/fixed c66 enclosing-v2 child SHA/original saved-only child guard path+SHA",
+    "four original source/plan/input/raw bindings equal in outer and original child guard; source82 75ac/ef14 retained",
+    "original administrative limits/poll/volume fields unchanged and fresh distinct output"
+  ],
+  "prototype_fixture_seam": "copied module and exact tiny stub in TempDirectory; private CHILD_SHA256 override only in copied fixture module. Real CLI permits only c66 child.",
+  "validation": {
+    "tiny_case_groups": 4,
+    "PASS": true,
+    "Ruff_format_compile_two_files": "PASS",
+    "RED": "actual tiny original prefix has tail None; original bytes/SHA/trace in results.baseline_RED",
+    "same_PID_and_wall_domain": "local launch child from same boot using fixed perf_counter_ns producer; original prefix enclosed by actual launch/reap endpoints",
+    "CPU": "parent process_time_ns plus actual rounded cumulative RUSAGE_CHILDREN start/stop, counted once; no absolute cross-process CPU comparison or CPU tail subtraction",
+    "unknown_budget": "overrun remains None; current-expense contract rejects closure",
+    "false_or_missing_guard_and_binding_mismatch": "Popen0/output0"
+  },
+  "preserved_unknown": [
+    "outer imports before sampling and own post-stop provenance/copy/receipt/stdout are a distinct pending admin expense, all timings None",
+    "all external10/all expense/financial phase closure false; actual numerical qualification is not authenticated",
+    "future actual root guard and whole hydrated RSS capacity are not approved by this prototype",
+    "inner child retains resource enforcement; outer measurement scope is not a new financial cap qualification"
+  ],
+  "candidate_only": true,
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "all_expenses_closed": false,
+  "all_external10_closed": false,
+  "production_source_changes": 0,
+  "actual_native_reads": 0,
+  "actual_saved_or_financial_runs": 0,
+  "CAS_Git_operations": 0
+}

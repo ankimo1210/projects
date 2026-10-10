@@ -1,0 +1,168 @@
+{
+  "schema": "rb-f04-source82-validation-result-shape-diagnosis-v1",
+  "confirmed_fault": "validation summary rows have no result; native consumer indexes row['result']",
+  "terminal_observation": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source82-terminal-checkpoint-metadata-summary-v1.json",
+    "sha256": "4f0f6e8c4e3ef7a000cc9021aac5682ffa300e8b8ae06bdccdb8e5fab0fc0d55",
+    "executed_jobs": 213,
+    "failed_job_id": "stage:Heston:N1024:coarse:gate",
+    "failure": "KeyError: 'result'",
+    "administrative_cap": null
+  },
+  "call_chain": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "lines": [
+        2942,
+        2945,
+        3534,
+        3546
+      ],
+      "meaning": "teacher gate dispatch uses native saved-stage checker"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "lines": [
+        4111,
+        4121,
+        3022,
+        3023,
+        2057,
+        2065
+      ],
+      "meaning": "gate visits original typed validation evidence; roster/validation branch assumes cells=result shape"
+    }
+  ],
+  "producer_contract": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py",
+    "lines": [
+      793,
+      831,
+      842,
+      859,
+      863
+    ],
+    "candidate_summary_keys": [
+      "id",
+      "status",
+      "original_n",
+      "mse",
+      "raw_mse",
+      "reason"
+    ],
+    "rollout_body": "value['rollouts'][candidate['id']]",
+    "all14_candidates_and_rollouts_retained": true
+  },
+  "codec_role": {
+    "confirmed_by_source": "run_pilot._saved_operation stores actual producer value unchanged; typed encoder preserves all dict edges and decoder recreates keyset",
+    "source_refs": [
+      {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "lines": [
+          2923,
+          2929,
+          3010,
+          3011
+        ]
+      },
+      {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+        "lines": [
+          225,
+          228,
+          725,
+          741
+        ]
+      }
+    ],
+    "key_absent_before_codec": true,
+    "actual_financial_payload_decode": false,
+    "not_attributed_to_codec_field_loss": true
+  },
+  "reproduction": {
+    "scope": "actual producer select_validation and _saved_operation/pack/unpack; actual consumer source AST, existing runner _same; only policy rollout/cash callbacks and irrelevant import surfaces stubbed",
+    "RED": [
+      {
+        "fixture": "completed",
+        "status": "RED_confirmed",
+        "exception": "KeyError: 'result'",
+        "trace": "Traceback (most recent call last):\n  File \"<string>\", line 77, in <module>\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py\", line 2065, in check_wrapped_operation\n    replay.check_cash(args[\"dataset\"], row[\"result\"])\n                                       ~~~^^^^^^^^^^\nKeyError: 'result'\n",
+        "native_producer_candidate_count": 14,
+        "cash_callbacks_before_failure": 0,
+        "source_array_shape": [
+          4
+        ],
+        "SDE_solver_RNG_actual_finance": 0
+      },
+      {
+        "fixture": "all_unknown",
+        "status": "RED_confirmed",
+        "exception": "KeyError: 'result'",
+        "trace": "Traceback (most recent call last):\n  File \"<string>\", line 77, in <module>\n  File \"/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py\", line 2065, in check_wrapped_operation\n    replay.check_cash(args[\"dataset\"], row[\"result\"])\n                                       ~~~^^^^^^^^^^\nKeyError: 'result'\n",
+        "native_producer_candidate_count": 14,
+        "cash_callbacks_before_failure": 0,
+        "source_array_shape": [
+          4
+        ],
+        "SDE_solver_RNG_actual_finance": 0
+      }
+    ],
+    "in_memory_minimal_recommendation_GREEN": [
+      {
+        "fixture": "completed",
+        "status": "PASS_in_memory_recommendation_only",
+        "cash_callback_count": 14,
+        "consumer_source_file_changed": false,
+        "original_n": 4,
+        "unknown_NaN_preserved": false,
+        "financial_qualification": "unknown"
+      },
+      {
+        "fixture": "all_unknown",
+        "status": "PASS_in_memory_recommendation_only",
+        "cash_callback_count": 14,
+        "consumer_source_file_changed": false,
+        "original_n": 4,
+        "unknown_NaN_preserved": true,
+        "financial_qualification": "unknown"
+      },
+      {
+        "fixture": "rollout_value_changed",
+        "status": "rejected",
+        "reason": "saved original policy roster.rollouts.greek:Heston.loss: saved value mismatch",
+        "comparison": "existing numerical approx/equal_nan"
+      }
+    ],
+    "financial_solver_SDE_RNG_native_actual_jobs": 0
+  },
+  "minimal_repair_recommendation": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+    "line": 2065,
+    "replacement": "replay.check_cash(args['dataset'], row['result'] if operation == 'roster' else value['rollouts'][row['id']])",
+    "keeps": "existing entire native recomputation and _same before cash checks; all14 completed/failed/unknown rollouts, originalN and tolerances retained; roster branch unchanged"
+  },
+  "regression_recommendation": [
+    "wrap actual native select_validation result with _saved_operation; confirm every summary ID resolves to its full rollout and all14 cash callbacks consume those bodies",
+    "repeat all-failed original-N case, preserving reasons/NaNs and unknown qualification",
+    "alter a full rollout value and require existing numerical comparison refusal; no stubbed teacher gate needed"
+  ],
+  "hypotheses_not_asserted": [
+    "No exact financial job214 traceback was decoded; tiny source reproduction confirms the same KeyError path without rerunning real evidence",
+    "Whether additional later stage faults remain is not established by this focused diagnosis"
+  ],
+  "source82_all_file_bytes_unchanged": true,
+  "source_canonical_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "source_hashes": {
+    "_dynamic_hedging_study.py": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e",
+    "check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+    "run_pilot.py": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5",
+    "_pilot_transport.py": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd"
+  },
+  "finance_acceptance": false,
+  "execute_saved_check": false,
+  "actual_native_finance_CAS_Git_guard_operations": 0,
+  "probe_wall_seconds": 0.092537184,
+  "probe_cpu_seconds": 0.299122773,
+  "own_final_note_write_tail_seconds": null
+}
