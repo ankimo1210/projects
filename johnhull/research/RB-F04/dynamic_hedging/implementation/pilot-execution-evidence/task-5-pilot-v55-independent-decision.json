@@ -1,0 +1,40 @@
+{
+  "schema": "rb-f04-v55-independent-source-decision-v1",
+  "decision": "approve_bounded_v55_source_transport_and_saved_native_Q_integrity",
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "14d6f877d8e0e6a9d4f8db0fbe741f7552767b64138952d7572605e9ec3c3486",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "feceea05f0769b7f78140da395637dac0e1282f329d1f1ff101e1fd90eb51dc8"
+  },
+  "independent_tests_passed": 37,
+  "independent_saved_v54_native_cases": 4,
+  "independent_negative_source_probes_refused": 105,
+  "independent_actual_no_draw_caps": 2,
+  "old_v54_test_AST_definitions_unchanged": 107,
+  "changed_source_functions": [
+    "check_q_record",
+    "check_resolved_job_arguments",
+    "check_capped_job_raw"
+  ],
+  "new_RNG": false,
+  "new_financial_paths": false,
+  "source_edits": false,
+  "Git_operations": false,
+  "old_failures_retained": true,
+  "financial_qualification": "unknown",
+  "formal_pilot_approved": false,
+  "main_approved": false,
+  "budget_approved": false,
+  "phase_approved": false,
+  "author_190_PASS_counted_independent": false,
+  "resolved_findings": [
+    "native Q missing inputs cannot disable saved SDE replay",
+    "native Q input explicitly bound to locked producer args"
+  ],
+  "limitations": [
+    "N32 saved analytic toy source units are not original-count finance qualification",
+    "saved input hashes bind provenance, not financial accuracy",
+    "main N4096x4 root replay remains author/root evidence, not new independent approval",
+    "full121cases/51attempts financial gate closure and priorbudget/A options pending"
+  ]
+}

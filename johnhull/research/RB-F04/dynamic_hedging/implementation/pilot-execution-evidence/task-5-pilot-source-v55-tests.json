@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "-q"
+  ],
+  "returncode": 0,
+  "wall_seconds": 61.5620995720019,
+  "log": "task-5-pilot-source-v55-tests.log",
+  "log_sha256": "a6c50ac1364b8052cd8b32072e7ca9a024dc0bfb27453fccbb70b09e212c6822",
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "14d6f877d8e0e6a9d4f8db0fbe741f7552767b64138952d7572605e9ec3c3486",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "feceea05f0769b7f78140da395637dac0e1282f329d1f1ff101e1fd90eb51dc8"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "14d6f877d8e0e6a9d4f8db0fbe741f7552767b64138952d7572605e9ec3c3486",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "feceea05f0769b7f78140da395637dac0e1282f329d1f1ff101e1fd90eb51dc8"
+  },
+  "source_stable": true,
+  "scope": "dedicated pilot suite: original131 plus new59; no global/formal pilot/main"
+}

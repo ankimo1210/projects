@@ -1,0 +1,89 @@
+{
+  "schema": "rb-f04-full-mixed-independent-physical-purpose-cap-preflight-v1",
+  "baseline": {
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "numeric_dependency_edges": 15281,
+    "final44cells": 44,
+    "final16GreekbandSDE": 16,
+    "conditional36states": 36,
+    "conditional31attempts": 31,
+    "selector_control_coverage_missing": {
+      "Heston": {
+        "cases": [],
+        "dates": []
+      },
+      "local": {
+        "cases": [],
+        "dates": []
+      }
+    },
+    "financial_qualification": "unknown",
+    "physical_teacher_purpose_checks": 48,
+    "all_semantic_cap_scopes_checked": 3138
+  },
+  "probes": [
+    {
+      "name": "selfconsistent_next_N_principal",
+      "outcome": "refused",
+      "reason": "Physical selected teacher denominator changed"
+    },
+    {
+      "name": "selfconsistent_max_reference_principal",
+      "outcome": "refused",
+      "reason": "Reserved max reference uses teacher stream"
+    },
+    {
+      "name": "selfconsistent_opposite_grid_principal",
+      "outcome": "refused",
+      "reason": "Physical raw teacher model/grid changed"
+    },
+    {
+      "name": "selfconsistent_wrong_principal_driver",
+      "outcome": "refused",
+      "reason": "Principal actual driver changed"
+    },
+    {
+      "name": "physical_raw_N_relabel",
+      "outcome": "refused",
+      "reason": "Physical raw teacher denominator changed"
+    },
+    {
+      "name": "stage_other_model_cache_refined",
+      "outcome": "refused",
+      "reason": "Stage changes wrong model cache"
+    },
+    {
+      "name": "teacherN_adapter_cap_attempt_missing",
+      "outcome": "refused",
+      "reason": "Semantic attempt/adapter control cap scope changed"
+    },
+    {
+      "name": "teachergrid_adapter_cap_attempt_missing",
+      "outcome": "refused",
+      "reason": "Semantic attempt/adapter control cap scope changed"
+    },
+    {
+      "name": "selector_date_control_cap_missing",
+      "outcome": "refused",
+      "reason": "Conditional control cap coverage incomplete"
+    },
+    {
+      "name": "selector_case_control_cap_missing",
+      "outcome": "refused",
+      "reason": "Conditional control cap coverage incomplete"
+    },
+    {
+      "name": "foreign_semantic_cap_case",
+      "outcome": "refused",
+      "reason": "Semantic case control cap scope changed"
+    }
+  ],
+  "new_rng": false,
+  "formal_finance": false,
+  "formal_lock": false,
+  "financial_qualification": "unknown",
+  "wall_seconds": 11.125576689,
+  "scope": "Physical metadata teacher_N/grid/max reserved driver source binding and exact case/attempt semantic controls across3138jobs. No generated financial caches."
+}

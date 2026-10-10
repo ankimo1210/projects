@@ -67,3 +67,11 @@ workload JSONのraw_two_factor_driver_bytes_without_dedupは、fine normalsを�
 - 正式pilotの全121case/51obligationを実jobと結ぶ。4段階N/higher-N oracleのprogressive資格選択、未使用later-prefix理由、execution Aの原N/first_failure/verification/cap-planとdistinct inclusive expenseの写像を完成し、独立確認する。正式freezeは実結果の保存再検算後に行う。
 
 [原測定・計算・由来](runtime-evidence/files.json)。SHAは由来の照合だけに使い、金融数値は許容誤差/標準誤差で検算する。
+
+## 原サイズlabelのメモリ・保存部品を実測（2026-10-10）
+
+[事前4GiB RSS/180秒の部品予算](pilot-execution-evidence/task-5-formal-controls-review-allocation-root-budget-v3.json)を固定し、決定論的な合成primitiveで原N65536・high/date0の全65thresholds・16blocksを保持してnative label生成と実writer/readerを測った。金融RNG・SDE・教師生成・価格精度の認証は実行していない。
+
+[親込み実測](pilot-execution-evidence/task-5-formal-controls-review-allocation-observation-root-v3__parent-cost-and-decision.json)はwall5.711958秒/CPU5.696560秒・peak process RSS2,938,032,128 bytes。10個の別label配列とaliasを全サイズで保存復元し、4packsの総expanded380,125,208 bytes・最大chunk103,591,984 bytesをNPY header込みで独立照合した。256MiBのchunk上限はRSS上限ではない。この部品値には実金融driver・teacher・sourceチェック全体の負荷を含まず、全jobのRSS/時間へ転用しない。
+
+先行v2はlabel生成と保存後にnumpy private header APIのAttributeErrorで失敗した。元script/log・wall4.491934秒/CPU4.473477秒・peakRSS2,937,831,424 bytesを保持し、v3はpublic NPY version readerへの最小変更だけで再実行した。正式pilot/main・金融資格はunknownのまま。

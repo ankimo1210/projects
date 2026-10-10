@@ -1,0 +1,40 @@
+{
+  "schema": "rb-f04-v55-independent-evidence-manifest-v1",
+  "files": {
+    "task-5-pilot-v55-independent-check_pilot-diff.txt": "be170eb57e696beade7a9a333ad0e15118a3206476cff8f569f5f6aa90e693dd",
+    "task-5-pilot-v55-independent-decision.json": "e7d473ab0ba2be6b039679aedd8f47810ee658fb4e8f8105c4c2be0a3b525db9",
+    "task-5-pilot-v55-independent-native-cap-raw-Heston/arrays.npz": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "task-5-pilot-v55-independent-native-cap-raw-Heston/metadata.json": "133cc3fbc7de43e1d8ed3b64bbbd345a4b355e72476991ed8f6537a11e72b9c9",
+    "task-5-pilot-v55-independent-native-cap-raw-Heston/pack000000/arrays.npz": "c0a659c62a4b74f92c8e1f3283c758284ae6f72078085f1593878d242df8b608",
+    "task-5-pilot-v55-independent-native-cap-raw-Heston/pack000000/metadata.json": "a197022cea5558c970546cf72aed60010d6413f2c0ef5f2e44fa13a55a0016b3",
+    "task-5-pilot-v55-independent-native-cap-raw-Heston/pack000000/receipt.json": "98c4f2fa110f8ed0027ced16648a446d756bb53901a77a5f69c3d5f9a6626ec3",
+    "task-5-pilot-v55-independent-native-cap-raw-Heston/receipt.json": "83ad5ae9d47e35876faf5ecf60eddf10662930b2f945e9742b5b5267618853e1",
+    "task-5-pilot-v55-independent-native-cap-raw-local/arrays.npz": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "task-5-pilot-v55-independent-native-cap-raw-local/metadata.json": "97f2664bec1cb106d1217a71d12f3418665c0dae45d304c9fe77403ee9b0a394",
+    "task-5-pilot-v55-independent-native-cap-raw-local/pack000000/arrays.npz": "1a91a3ef9f9b7294ef19af82cec3d51ec8edc857736d031c65c3d7572e48cd67",
+    "task-5-pilot-v55-independent-native-cap-raw-local/pack000000/metadata.json": "26d0ef41e18a40fe9092b790e841dc7e6dcc7803e5cd1a4fbeb557365aa767ed",
+    "task-5-pilot-v55-independent-native-cap-raw-local/pack000000/receipt.json": "2156bcc3b06cdfe4aaef8913dbc608215ce5fa75aa4b4678be4ad48f3eb64c41",
+    "task-5-pilot-v55-independent-native-cap-raw-local/receipt.json": "a670976f927cd967eacde632cc083f3351337940f9f0519d81f1a4f74e6254f9",
+    "task-5-pilot-v55-independent-native-saved-parent.json": "2fd977c0880df702998f0e27813554ac0e963b0687a4d9e14d6f0db466eb9a4a",
+    "task-5-pilot-v55-independent-native-saved-results.json": "c5fab6501b6848e27987e6b8fda476d97eda00aac4dc038ffa81aa9a00609d06",
+    "task-5-pilot-v55-independent-native-saved.log": "c5fab6501b6848e27987e6b8fda476d97eda00aac4dc038ffa81aa9a00609d06",
+    "task-5-pilot-v55-independent-native-saved.py": "3ebdf1b72bd5a69b8335ce14fa9eef205b89a32ee778f73b8e8e07b0f15feeae",
+    "task-5-pilot-v55-independent-review.md": "0455b6998294e1501a6a0409f0acd71b43f53bdf36be130dc782cb2094365ccc",
+    "task-5-pilot-v55-independent-run_pilot-diff.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "task-5-pilot-v55-independent-source-snapshot/deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "feceea05f0769b7f78140da395637dac0e1282f329d1f1ff101e1fd90eb51dc8",
+    "task-5-pilot-v55-independent-source-snapshot/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "14d6f877d8e0e6a9d4f8db0fbe741f7552767b64138952d7572605e9ec3c3486",
+    "task-5-pilot-v55-independent-source-snapshot/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "task-5-pilot-v55-independent-source-snapshot/manifest.json": "b4a6f564110b31ccfdd625e1cc81799157efe4c5310ee3a5b5716da0202fb775",
+    "task-5-pilot-v55-independent-tests.json": "a33a5d5782e60ba6d9bf4b41cb2c4b33776495658c3aaed74c9587f182be7038",
+    "task-5-pilot-v55-independent-tests.log": "c1c869f5209330b9e8c00a82b56bff6ef90d58a490aa4b75c27de5329b33afc6",
+    "task-5-pilot-v55-independent-tests.py": "b44fa2e009f0b7130340baedb5af4d404ec2c0f65df288c8af9c793bbe710a35"
+  },
+  "reused_v54_native_artifacts": [
+    "task-5-pilot-v54-independent-native-raw-Heston-False",
+    "task-5-pilot-v54-independent-native-raw-Heston-True",
+    "task-5-pilot-v54-independent-native-raw-local-False",
+    "task-5-pilot-v54-independent-native-raw-local-True"
+  ],
+  "reused_native_provenance_manifest": "task-5-pilot-v54-independent-manifest.json",
+  "scope": "bounded source integrity only; formal financial/budget/phase unapproved"
+}
