@@ -1,0 +1,19 @@
+from pathlib import Path
+import json,time,resource,subprocess,os,hashlib
+D=Path('/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging')
+script=D/'task-5-actual-pilot-input-preparation-v2.py'
+root=script.parents[3]
+env=dict(os.environ,OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',
+ PYTHONPATH=str(root/'johnhull/hullkit/src')+':'+str(root/'deep_hedge_price/src')+':'+str(root/'johnhull/research/RB-F04/dynamic_hedging'))
+clock={'wall_start':time.perf_counter(),'cpu_start':resource.getrusage(resource.RUSAGE_CHILDREN).ru_utime+resource.getrusage(resource.RUSAGE_CHILDREN).ru_stime}
+with (D/'task-5-actual-pilot-input-preparation-v2.txt').open('w') as log:
+ result=subprocess.run(['/home/kazumasa/projects/.venv/bin/python',str(script)],cwd=root,env=env,stdout=log,stderr=subprocess.STDOUT)
+clock.update(wall_stop=time.perf_counter(),cpu_stop=resource.getrusage(resource.RUSAGE_CHILDREN).ru_utime+resource.getrusage(resource.RUSAGE_CHILDREN).ru_stime)
+out={'kind':'root_pretest_input_recalculation_cost','status':'completed' if result.returncode==0 else 'failed','returncode':result.returncode,'clock':clock,
+'wall_seconds':clock['wall_stop']-clock['wall_start'],'cpu_seconds':clock['cpu_stop']-clock['cpu_start'],
+'scope':'whole dedicated child process incl startup/imports/current field/input assembly/all serialization; parent wrapper serialization excluded',
+'formal_financial_qualification':'unknown','financial_rng_performed':False,
+'script_sha256':hashlib.sha256(script.read_bytes()).hexdigest()}
+(D/'task-5-actual-pilot-input-preparation-v2-parent-cost.json').write_text(json.dumps(out,indent=2)+'\n')
+print(json.dumps(out,indent=2))
+raise SystemExit(result.returncode)

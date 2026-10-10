@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "entry_count": 22,
+  "archived_original_bytes": true,
+  "raw_cas_entry_count": 32,
+  "raw_cas_bytes": 17216162,
+  "both_store_semantic": {
+    "primary": "PASS",
+    "mirror": "PASS"
+  },
+  "sequential_parent_process_wall_seconds": 19.26519158800147,
+  "sequential_parent_process_cpu_seconds": 19.234093,
+  "scope": "pretest original input/field/clock replay only; formal pilot and main unexecuted",
+  "financial_qualification": "unknown",
+  "failed_reader_first_attempt_cost": "unmeasured"
+}

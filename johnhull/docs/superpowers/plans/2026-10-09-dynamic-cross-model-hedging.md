@@ -337,3 +337,5 @@ Task5 helperの[ソース確認](../../../research/RB-F04/dynamic_hedging/implem
 ## 正式phase source照合の確認（2026-10-10）
 
 [全phase source照合](../../../research/RB-F04/dynamic_hedging/implementation/PHASE_SOURCE_IDENTITY.md)：研究10入口とprivate学習closureを事前必須検査し、bare local importsの閉包・loaded aliasのcheckoutを照合。実在80files/dynamic imports0を確認。48scoped tests/独立14件、Ruff/format/whitespace PASS・限定独立レビュー未解決0。closure欠落の初回反例と、固定quote helperのstatic読み込み修正を保存。全helperの金融実装や正式freezeは未承認。次はformal全121/51 job graph・事前budget・cap/resume・保存算術を整え、原case/分母/失敗/費用を保持して実dispatchする。
+
+2026-10-10 補足：正式field controlsは元field257×321のorder1024/frequency_scale512/√t/density_floor1e-10を指定する。旧固定cutoffは最短dateでunavailable、失敗rawを保持。現行adapterの全82,497点再現と元18/24/4入力・17MB両復元/時計算術を確認（[記録](../../../research/RB-F04/dynamic_hedging/implementation/CURRENT_FIELD_INPUTS.md)）。正式全121/51・progressive graph/A写像/prior予算とsourceレビュー・freeze/mainは未完了。

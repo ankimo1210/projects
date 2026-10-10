@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "stores": [
+    "primary",
+    "mirror"
+  ],
+  "entries": 32,
+  "bytes": 17216162,
+  "actual_cost": {
+    "clock": {
+      "wall_start": 19318.917057054,
+      "cpu_start": 1.056420742,
+      "wall_stop": 19319.943608229,
+      "cpu_stop": 1.430852579
+    },
+    "wall_seconds": 1.0265511750003498,
+    "cpu_seconds": 0.37443183699999993
+  }
+}

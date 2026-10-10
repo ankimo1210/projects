@@ -1,0 +1,17 @@
+{
+  "kind": "root_pretest_input_recalculation_cost",
+  "status": "completed",
+  "returncode": 0,
+  "clock": {
+    "wall_start": 18980.973747371,
+    "cpu_start": 0.0,
+    "wall_stop": 18990.788403644,
+    "cpu_stop": 9.803271
+  },
+  "wall_seconds": 9.814656272999855,
+  "cpu_seconds": 9.803271,
+  "scope": "whole dedicated child process incl startup/imports/current field/input assembly/all serialization; parent wrapper serialization excluded",
+  "formal_financial_qualification": "unknown",
+  "financial_rng_performed": false,
+  "script_sha256": "c49eefc141dc9bd3e986d235d11f2647330f6b59e20586ce6ca2963a24a78b80"
+}

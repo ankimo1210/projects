@@ -1,0 +1,16 @@
+{
+  "kind": "root_both_store_replay_process_cost",
+  "status": "completed",
+  "returncode": 0,
+  "clock": {
+    "wall_start": 19317.855740629,
+    "cpu_start": 0.0,
+    "wall_stop": 19320.169714102,
+    "cpu_stop": 1.6566699999999999
+  },
+  "wall_seconds": 2.3139734730029886,
+  "cpu_seconds": 1.6566699999999999,
+  "scope": "whole child including imports/CAS/restore/semantic/save; inner costs included",
+  "script_sha256": "800f3401c8f60194636e91aee3799d9a2bbb84e70c351da3df9eae4d4823034d",
+  "financial_qualification": "unknown"
+}

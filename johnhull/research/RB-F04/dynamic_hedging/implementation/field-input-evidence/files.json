@@ -1,0 +1,137 @@
+{
+  "kind": "original_pretest_field_input_evidence",
+  "files": [
+    {
+      "original": "task-5-actual-pilot-input-preparation-v2.py",
+      "archive": "task-5-actual-pilot-input-preparation-v2.py.txt",
+      "bytes": 8997,
+      "sha256": "91b58d5dbd1e8206af164c34ad359217fe423a177fb95382a79f5303a4e99023"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v2.txt",
+      "archive": "task-5-actual-pilot-input-preparation-v2.txt",
+      "bytes": 410,
+      "sha256": "91f093c56a924cf54f9c5a58a0d792e44f85d724762fd0bcf76cfec033c2e80d"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v2-parent.py",
+      "archive": "task-5-actual-pilot-input-preparation-v2-parent.py.txt",
+      "bytes": 1750,
+      "sha256": "f232de01fe4c69d3a853c3c559ce421ce20e3d5a4849930fc9f1736ce644960b"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v2-parent-cost.json",
+      "archive": "task-5-actual-pilot-input-preparation-v2-parent-cost.json",
+      "bytes": 614,
+      "sha256": "9eeefcd1328fce80a2cc903555e54a6ecb667553a74a6de4d522bd2ccacd41ec"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v3.py",
+      "archive": "task-5-actual-pilot-input-preparation-v3.py.txt",
+      "bytes": 10025,
+      "sha256": "c49eefc141dc9bd3e986d235d11f2647330f6b59e20586ce6ca2963a24a78b80"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v3.txt",
+      "archive": "task-5-actual-pilot-input-preparation-v3.txt",
+      "bytes": 1408,
+      "sha256": "3669a972f589bffa0d4914d6f80ec1a513e35d7cd204a3ae06bdd3d078c67ffa"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v3-parent.py",
+      "archive": "task-5-actual-pilot-input-preparation-v3-parent.py.txt",
+      "bytes": 1750,
+      "sha256": "4b5a923234ff0c90bb87bfbc64be0360f9d94855d4499dc7c2a953d7dff07400"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v3-parent-cost.json",
+      "archive": "task-5-actual-pilot-input-preparation-v3-parent-cost.json",
+      "bytes": 617,
+      "sha256": "b8e88e32ec672c4e210ab86957f348843596b76b4c211d99699b56056d563b42"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v3.json",
+      "archive": "task-5-actual-pilot-input-preparation-v3.json",
+      "bytes": 42878,
+      "sha256": "ee6ff049c776b12e99013c2ec30ddb0bc42902f4ba6dc7d02b2e009c47ed86d8"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v4.py",
+      "archive": "task-5-actual-pilot-input-preparation-v4.py.txt",
+      "bytes": 9521,
+      "sha256": "9481c0932c58d9f8ca09f1c96a434cd2ee48c6ab5a3955f8b2d6179f7c3041b1"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v4.txt",
+      "archive": "task-5-actual-pilot-input-preparation-v4.txt",
+      "bytes": 1882,
+      "sha256": "1eeb592b394d30ed83c176d77629740de7a9478af21fffd8344d4d985d841ddb"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v4-parent.py",
+      "archive": "task-5-actual-pilot-input-preparation-v4-parent.py.txt",
+      "bytes": 1750,
+      "sha256": "d5d9aeaa2bb13c1de78bd11ec45f18e0e45a478e9530609011098ffaead16df1"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v4-parent-cost.json",
+      "archive": "task-5-actual-pilot-input-preparation-v4-parent-cost.json",
+      "bytes": 614,
+      "sha256": "64ac0d13cd023c66cb55e3afc6437191602fc2b7df35254ab43f68d9ee9c7c82"
+    },
+    {
+      "original": "task-5-actual-pilot-input-preparation-v4.json",
+      "archive": "task-5-actual-pilot-input-preparation-v4.json",
+      "bytes": 43145,
+      "sha256": "d80b2666bdc3270784df1ad4eef4aa4283c36dff8c91ff235f7bf0039700691c"
+    },
+    {
+      "original": "task-5-field-input-cas-check.py",
+      "archive": "task-5-field-input-cas-check.py.txt",
+      "bytes": 6340,
+      "sha256": "7ce342187ada2a5529adcb851f3288d544382972424fa8910d08c32b91cb7302"
+    },
+    {
+      "original": "task-5-field-input-cas-check.txt",
+      "archive": "task-5-field-input-cas-check.txt",
+      "bytes": 341,
+      "sha256": "f5f7de02528b1caeb34fd1fa3d0a6e1f867114ce038c0bff49583f28013afbe0"
+    },
+    {
+      "original": "task-5-field-input-cas-check-v2.py",
+      "archive": "task-5-field-input-cas-check-v2.py.txt",
+      "bytes": 6511,
+      "sha256": "800f3401c8f60194636e91aee3799d9a2bbb84e70c351da3df9eae4d4823034d"
+    },
+    {
+      "original": "task-5-field-input-cas-check-v2.txt",
+      "archive": "task-5-field-input-cas-check-v2.txt",
+      "bytes": 368,
+      "sha256": "f101042e86ceedcd487f025920386577c035b05599dca82cc5ed19bd0099442b"
+    },
+    {
+      "original": "task-5-field-input-cas-check-v2-parent.py",
+      "archive": "task-5-field-input-cas-check-v2-parent.py.txt",
+      "bytes": 1689,
+      "sha256": "588fed4fdffce5e98fdb9d514de51d1cb5a1e402158c979cf2a45ac269a8df5e"
+    },
+    {
+      "original": "task-5-field-input-cas-check-v2-parent-cost.json",
+      "archive": "task-5-field-input-cas-check-v2-parent-cost.json",
+      "bytes": 534,
+      "sha256": "246c0648292cc7267dc336b89823cbd0e0fe1d460ed4bfe507f4d13e671a7d9b"
+    },
+    {
+      "original": "task-5-field-input-manifest.json",
+      "archive": "task-5-field-input-manifest.json",
+      "bytes": 8085,
+      "sha256": "9dc741a37aa76f54a6eb3af534b258a4bb35556d132f174c6d5d96fb600b99f5"
+    },
+    {
+      "original": "task-5-field-input-cas-check.json",
+      "archive": "task-5-field-input-cas-check.json",
+      "bytes": 15767,
+      "sha256": "46f33c27e0658dc8b29f39ec2fc66f457282af4ec4cb692e44ed2f1dcbb4ce90"
+    }
+  ]
+}
