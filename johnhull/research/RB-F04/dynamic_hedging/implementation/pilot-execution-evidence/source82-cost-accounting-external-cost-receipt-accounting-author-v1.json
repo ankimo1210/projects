@@ -1,0 +1,632 @@
+{
+  "schema": "rb-f04-external-cost-receipt-accounting-author-v1",
+  "created_UTC": "2026-10-10T15:51:52.134708+00:00",
+  "scope": "Read-only accounting correspondence of seven closed metadata/proof/review receipts to the original ten required external IDs; no external expense event injection or actual financial validation.",
+  "required_external_expense_ids": [
+    "cold_imports",
+    "source_registry",
+    "code_review",
+    "math_review",
+    "pilot_review",
+    "serialization",
+    "saved_check",
+    "CAS_primary",
+    "CAS_mirror",
+    "domain_selection"
+  ],
+  "rows": [
+    {
+      "id": "cold_imports",
+      "accounting_status": "unclosed",
+      "closed": false,
+      "current_full_scope_timing": {
+        "wall_seconds": null,
+        "cpu_seconds": null,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": null,
+        "wall_stop_ns": null,
+        "cpu_start_ns": null,
+        "cpu_stop_ns": null
+      },
+      "component_receipt_ids": [],
+      "missing_or_scope_mismatch": "No dedicated closed original-source cold-import event is among these receipts. Imports may be inside enclosing attempts, without a separable clock.",
+      "future_producer": "Cold worker bootstrap/module-load observer bound to the original source82, interpreter/environment and current attempt; retain enclosing and import phase clocks without double charging.",
+      "required_raw_clock_keys": [
+        "wall_start_ns",
+        "wall_stop_ns",
+        "cpu_start_ns",
+        "cpu_stop_ns"
+      ],
+      "future_event_requirements": [
+        "Unique current expense ID and original attempt/status/scope",
+        "Actual integer monotonic/process clock endpoints and timing durations checked against them",
+        "Exact source/plan/input/producer/receipt binding as applicable",
+        "Parent-child inclusion and history identified; no duplicated charge",
+        "Missing or tail-unknown expense retained, never fabricated as zero"
+      ]
+    },
+    {
+      "id": "source_registry",
+      "accounting_status": "unclosed",
+      "closed": false,
+      "current_full_scope_timing": {
+        "wall_seconds": null,
+        "cpu_seconds": null,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": null,
+        "wall_stop_ns": null,
+        "cpu_start_ns": null,
+        "cpu_stop_ns": null
+      },
+      "component_receipt_ids": [
+        "metadata_generation_root"
+      ],
+      "missing_or_scope_mismatch": "Source/input checks are included in metadata generation; registry-only duration and original start/stop events are absent.",
+      "future_producer": "Actual runtime source-registry/closure verification producer bound to all82 files, typed inputs and locked plan; emit a scoped current external expense and its raw clock events.",
+      "required_raw_clock_keys": [
+        "wall_start_ns",
+        "wall_stop_ns",
+        "cpu_start_ns",
+        "cpu_stop_ns"
+      ],
+      "future_event_requirements": [
+        "Unique current expense ID and original attempt/status/scope",
+        "Actual integer monotonic/process clock endpoints and timing durations checked against them",
+        "Exact source/plan/input/producer/receipt binding as applicable",
+        "Parent-child inclusion and history identified; no duplicated charge",
+        "Missing or tail-unknown expense retained, never fabricated as zero"
+      ]
+    },
+    {
+      "id": "code_review",
+      "accounting_status": "unclosed",
+      "closed": false,
+      "current_full_scope_timing": {
+        "wall_seconds": null,
+        "cpu_seconds": null,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": null,
+        "wall_stop_ns": null,
+        "cpu_start_ns": null,
+        "cpu_stop_ns": null
+      },
+      "component_receipt_ids": [
+        "independent_terminal_helper_v2_results",
+        "independent_terminal_helper_v2_decision"
+      ],
+      "missing_or_scope_mismatch": "The 0.051-second direct helper probe is only one limited source/mechanics piece. Review outer/tail and full financial source-review clocks are unknown.",
+      "future_producer": "Independent original financial source/protocol review producer; bind source identity, review result, full inclusive attempt and tail clock. Retain limited helper review as a component, not a whole-review proxy.",
+      "required_raw_clock_keys": [
+        "wall_start_ns",
+        "wall_stop_ns",
+        "cpu_start_ns",
+        "cpu_stop_ns"
+      ],
+      "future_event_requirements": [
+        "Unique current expense ID and original attempt/status/scope",
+        "Actual integer monotonic/process clock endpoints and timing durations checked against them",
+        "Exact source/plan/input/producer/receipt binding as applicable",
+        "Parent-child inclusion and history identified; no duplicated charge",
+        "Missing or tail-unknown expense retained, never fabricated as zero"
+      ]
+    },
+    {
+      "id": "math_review",
+      "accounting_status": "unclosed",
+      "closed": false,
+      "current_full_scope_timing": {
+        "wall_seconds": null,
+        "cpu_seconds": null,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": null,
+        "wall_stop_ns": null,
+        "cpu_start_ns": null,
+        "cpu_stop_ns": null
+      },
+      "component_receipt_ids": [],
+      "missing_or_scope_mismatch": "No full mathematical/model/scheme review receipt is in this seven-receipt selection; helper transport/mechanics checks do not supply it.",
+      "future_producer": "Independent original model/scheme/estimator mathematical review producer bound to original source, plan and exact reviewed evidence; provide actual inclusive review clock endpoints and decision provenance.",
+      "required_raw_clock_keys": [
+        "wall_start_ns",
+        "wall_stop_ns",
+        "cpu_start_ns",
+        "cpu_stop_ns"
+      ],
+      "future_event_requirements": [
+        "Unique current expense ID and original attempt/status/scope",
+        "Actual integer monotonic/process clock endpoints and timing durations checked against them",
+        "Exact source/plan/input/producer/receipt binding as applicable",
+        "Parent-child inclusion and history identified; no duplicated charge",
+        "Missing or tail-unknown expense retained, never fabricated as zero"
+      ]
+    },
+    {
+      "id": "pilot_review",
+      "accounting_status": "unclosed",
+      "closed": false,
+      "current_full_scope_timing": {
+        "wall_seconds": null,
+        "cpu_seconds": null,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": null,
+        "wall_stop_ns": null,
+        "cpu_start_ns": null,
+        "cpu_stop_ns": null
+      },
+      "component_receipt_ids": [
+        "independent_materialized_prior_v5_enclosing"
+      ],
+      "missing_or_scope_mismatch": "Saved prior-metadata structural review is a distinct measured attempt, not original whole-pilot numerical review. Its enclosing and review tail clocks remain unknown.",
+      "future_producer": "After terminal closure, independent original-roster pilot review producer bound to immutable native bytes, source82, original plan/inputs and assessment; retain missing, failed, capped, underresolved and unknown outcomes.",
+      "required_raw_clock_keys": [
+        "wall_start_ns",
+        "wall_stop_ns",
+        "cpu_start_ns",
+        "cpu_stop_ns"
+      ],
+      "future_event_requirements": [
+        "Unique current expense ID and original attempt/status/scope",
+        "Actual integer monotonic/process clock endpoints and timing durations checked against them",
+        "Exact source/plan/input/producer/receipt binding as applicable",
+        "Parent-child inclusion and history identified; no duplicated charge",
+        "Missing or tail-unknown expense retained, never fabricated as zero"
+      ]
+    },
+    {
+      "id": "serialization",
+      "accounting_status": "unclosed",
+      "closed": false,
+      "current_full_scope_timing": {
+        "wall_seconds": null,
+        "cpu_seconds": null,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": null,
+        "wall_stop_ns": null,
+        "cpu_start_ns": null,
+        "cpu_stop_ns": null
+      },
+      "component_receipt_ids": [
+        "metadata_generation_root"
+      ],
+      "missing_or_scope_mismatch": "The artifact writer and manifest are inside metadata generation. This is not a dedicated clock for full native job/checkpoint/final result serialization; assigning enclosing duration to both registry and serialization would double charge.",
+      "future_producer": "Original financial writer/reader/checkpoint and saved-result serialization producer; bind exact bytes/receipts and full payload/N. Use scoped parent-child expense aliases once and record final serialization/write/read tails.",
+      "required_raw_clock_keys": [
+        "wall_start_ns",
+        "wall_stop_ns",
+        "cpu_start_ns",
+        "cpu_stop_ns"
+      ],
+      "future_event_requirements": [
+        "Unique current expense ID and original attempt/status/scope",
+        "Actual integer monotonic/process clock endpoints and timing durations checked against them",
+        "Exact source/plan/input/producer/receipt binding as applicable",
+        "Parent-child inclusion and history identified; no duplicated charge",
+        "Missing or tail-unknown expense retained, never fabricated as zero"
+      ]
+    },
+    {
+      "id": "saved_check",
+      "accounting_status": "unclosed",
+      "closed": false,
+      "current_full_scope_timing": {
+        "wall_seconds": null,
+        "cpu_seconds": null,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": null,
+        "wall_stop_ns": null,
+        "cpu_start_ns": null,
+        "cpu_stop_ns": null
+      },
+      "component_receipt_ids": [
+        "saved_check_preparation_proof_CAS"
+      ],
+      "missing_or_scope_mismatch": "This is proof backup for checker preparation, not an executed whole saved numerical check. The actual checker remains unperformed in this accounting snapshot.",
+      "future_producer": "Root-approved post-terminal original source82 saved-check enclosing observer: native checker with original inputs/parameters, full hydration, replay, result serialization/readback and final receipt cost; fresh context/output, no reused unmeasured component timer.",
+      "required_raw_clock_keys": [
+        "wall_start_ns",
+        "wall_stop_ns",
+        "cpu_start_ns",
+        "cpu_stop_ns"
+      ],
+      "future_event_requirements": [
+        "Unique current expense ID and original attempt/status/scope",
+        "Actual integer monotonic/process clock endpoints and timing durations checked against them",
+        "Exact source/plan/input/producer/receipt binding as applicable",
+        "Parent-child inclusion and history identified; no duplicated charge",
+        "Missing or tail-unknown expense retained, never fabricated as zero"
+      ]
+    },
+    {
+      "id": "CAS_primary",
+      "accounting_status": "unclosed",
+      "closed": false,
+      "current_full_scope_timing": {
+        "wall_seconds": null,
+        "cpu_seconds": null,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": null,
+        "wall_stop_ns": null,
+        "cpu_start_ns": null,
+        "cpu_stop_ns": null
+      },
+      "component_receipt_ids": [
+        "new82_prior_metadata_proof_CAS",
+        "saved_check_preparation_proof_CAS",
+        "terminal_byte_helper_proof_CAS"
+      ],
+      "missing_or_scope_mismatch": "All three observed clocks cover both stores together for metadata/proofs. Per-primary duration/endpoints and full financial native-corpus backup/restore verification are absent; do not allocate the entire combined duration or an invented half.",
+      "future_producer": "Primary Store producer for the closed original financial native corpus and exact provenance; record real write/hash/read/verify and receipt/required restore costs, per-store clock endpoints and combined parent scope.",
+      "required_raw_clock_keys": [
+        "wall_start_ns",
+        "wall_stop_ns",
+        "cpu_start_ns",
+        "cpu_stop_ns"
+      ],
+      "future_event_requirements": [
+        "Unique current expense ID and original attempt/status/scope",
+        "Actual integer monotonic/process clock endpoints and timing durations checked against them",
+        "Exact source/plan/input/producer/receipt binding as applicable",
+        "Parent-child inclusion and history identified; no duplicated charge",
+        "Missing or tail-unknown expense retained, never fabricated as zero"
+      ]
+    },
+    {
+      "id": "CAS_mirror",
+      "accounting_status": "unclosed",
+      "closed": false,
+      "current_full_scope_timing": {
+        "wall_seconds": null,
+        "cpu_seconds": null,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": null,
+        "wall_stop_ns": null,
+        "cpu_start_ns": null,
+        "cpu_stop_ns": null
+      },
+      "component_receipt_ids": [
+        "new82_prior_metadata_proof_CAS",
+        "saved_check_preparation_proof_CAS",
+        "terminal_byte_helper_proof_CAS"
+      ],
+      "missing_or_scope_mismatch": "All three observed clocks cover both stores together for metadata/proofs. Per-mirror duration/endpoints and full financial native-corpus backup/restore verification are absent; do not allocate the entire combined duration or an invented half.",
+      "future_producer": "Mirror Store producer for the same closed original financial corpus and manifest; record real write/hash/read/verify and receipt/required restore costs, per-store clock endpoints and combined parent scope.",
+      "required_raw_clock_keys": [
+        "wall_start_ns",
+        "wall_stop_ns",
+        "cpu_start_ns",
+        "cpu_stop_ns"
+      ],
+      "future_event_requirements": [
+        "Unique current expense ID and original attempt/status/scope",
+        "Actual integer monotonic/process clock endpoints and timing durations checked against them",
+        "Exact source/plan/input/producer/receipt binding as applicable",
+        "Parent-child inclusion and history identified; no duplicated charge",
+        "Missing or tail-unknown expense retained, never fabricated as zero"
+      ]
+    },
+    {
+      "id": "domain_selection",
+      "accounting_status": "unclosed",
+      "closed": false,
+      "current_full_scope_timing": {
+        "wall_seconds": null,
+        "cpu_seconds": null,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": null,
+        "wall_stop_ns": null,
+        "cpu_start_ns": null,
+        "cpu_stop_ns": null
+      },
+      "component_receipt_ids": [],
+      "missing_or_scope_mismatch": "No dedicated closed current external domain-selection expense receipt is inspected. Native typed selector kernels can have their own parent clocks; these have not been read or promoted to this external ID.",
+      "future_producer": "Actual original domain/teacher selector producer bound to selected raw, source, original N/grid/driver and all required parents; preserve native expense aliases and count actual selector/full saved checks once. Do not replace it with source-only proof timing.",
+      "required_raw_clock_keys": [
+        "wall_start_ns",
+        "wall_stop_ns",
+        "cpu_start_ns",
+        "cpu_stop_ns"
+      ],
+      "future_event_requirements": [
+        "Unique current expense ID and original attempt/status/scope",
+        "Actual integer monotonic/process clock endpoints and timing durations checked against them",
+        "Exact source/plan/input/producer/receipt binding as applicable",
+        "Parent-child inclusion and history identified; no duplicated charge",
+        "Missing or tail-unknown expense retained, never fabricated as zero"
+      ]
+    }
+  ],
+  "receipt_refs": [
+    {
+      "receipt_id": "metadata_generation_root",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v3/parent-cost-and-status.json",
+      "sha256": "94a8bd84a5587cbd7862c77b0cacc10b847ea0d8e7d0e81211c66fffc31ce733",
+      "bytes": 1463,
+      "original_schema": "rb-f04-root-metadata-materialization-enclosing-cost-v1",
+      "original_status": "completed",
+      "original_scope": "metadata generation including source/input checks, exact cap expansion, artifact writer and manifest; not financial RNG/SDE or any numerical acceptance",
+      "accounting_scope": "Source/input checks, exact cap expansion, artifact writer and manifest in one enclosing metadata-generation attempt; no financial numerical acceptance.",
+      "original_clock_fields": {
+        "wall_seconds": 97.25502551400132,
+        "parent_CPU_seconds": 0.161982783,
+        "children_CPU_seconds": 94.993546,
+        "own_final_receipt_write_stdout_cost": null
+      },
+      "clock_boundary_events_present": {
+        "wall_start_ns": false,
+        "wall_stop_ns": false,
+        "cpu_start_ns": false,
+        "cpu_stop_ns": false
+      },
+      "complete_current_external_id_receipt": false,
+      "original_manifest_ref": null
+    },
+    {
+      "receipt_id": "new82_prior_metadata_proof_CAS",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-new82-prior-metadata-and-closed-proof-store-receipt-v1.json",
+      "sha256": "6a84c665b4d7c896ea6271f9b9410690f99a7878525d861a0c968eadc7b785a3",
+      "bytes": 1545,
+      "original_schema": "root-current82-prior-metadata-closed-proof-cas-v1",
+      "original_status": "verified_both_stores",
+      "original_scope": "new actual prior metadata including all573122 options/pages/source-snapshot and fixed candidate/independent/outer-cost proofs; exact blob backup only; no full financial semantic restore/acceptance",
+      "accounting_scope": "Both-store metadata and closed-proof byte backup; no full financial native corpus or semantic restore.",
+      "original_clock_fields": {
+        "wall_seconds": 19.749798559998453,
+        "process_CPU_seconds": 0.39302102,
+        "receipt_final_write_in_observation": false
+      },
+      "clock_boundary_events_present": {
+        "wall_start_ns": false,
+        "wall_stop_ns": false,
+        "cpu_start_ns": false,
+        "cpu_stop_ns": false
+      },
+      "complete_current_external_id_receipt": false,
+      "original_manifest_ref": "artifact:sha256:aa5ca5656f4d953e8698c8bdc5f92f10436965568ed1273e8b6ef4c21b919598"
+    },
+    {
+      "receipt_id": "saved_check_preparation_proof_CAS",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-check-preparation-closed-proof-store-receipt-v2.json",
+      "sha256": "2fdc63f03ee07aabd66a1324a0fc3af2789f0d96d6d7c1b166ad490f7df43f58",
+      "bytes": 1077,
+      "original_schema": "rb-f04-root-saved-check-preparation-both-stores-validated-v2",
+      "original_status": null,
+      "original_scope": "closed saved-check preparation and original storage-format failure only; no live native data",
+      "accounting_scope": "Both-store saved-check preparation proof backup only; saved numerical checker not executed.",
+      "original_clock_fields": {
+        "elapsed_seconds_before_receipt_write": 1.1758773649926297,
+        "CPU_seconds_before_receipt_write": 0.046353993,
+        "receipt_tail_unknown": true,
+        "v1_original_cost_not_readded": true
+      },
+      "clock_boundary_events_present": {
+        "wall_start_ns": false,
+        "wall_stop_ns": false,
+        "cpu_start_ns": false,
+        "cpu_stop_ns": false
+      },
+      "complete_current_external_id_receipt": false,
+      "original_manifest_ref": "artifact:sha256:97e1bc40483f8ae762992efe462600c2252774d9a1e86cecef88870c52af218f"
+    },
+    {
+      "receipt_id": "terminal_byte_helper_proof_CAS",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-terminal-byte-helper-closed-proof-store-receipt-v1.json",
+      "sha256": "063d086609412ddfb4fb35da119aa4b64a2462582b8aee8abde43168c949d5d7",
+      "bytes": 1074,
+      "original_schema": "rb-f04-root-terminal-byte-helper-both-stores-closed-proofs-v1",
+      "original_status": null,
+      "original_scope": "closed D2 helper source and pure/review proofs only; excludes live native data and observations",
+      "accounting_scope": "Both-store closed helper source and pure/review proofs only; no live or terminal financial native corpus.",
+      "original_clock_fields": {
+        "elapsed_seconds_before_receipt_write": 6.687689614002011,
+        "CPU_seconds_before_receipt_write": 0.0896268,
+        "receipt_write_tail_unknown": true
+      },
+      "clock_boundary_events_present": {
+        "wall_start_ns": false,
+        "wall_stop_ns": false,
+        "cpu_start_ns": false,
+        "cpu_stop_ns": false
+      },
+      "complete_current_external_id_receipt": false,
+      "original_manifest_ref": "artifact:sha256:e6e25fef8a1a05ae1d06a54ecb688e7c812e8a1cfa0a71b65f533ffadb816f33"
+    },
+    {
+      "receipt_id": "independent_terminal_helper_v2_results",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v2-results.json",
+      "sha256": "186b291152200e5c4a7e6725fedd1698a3bf235d492d9fe54e8ab259f73e6427",
+      "bytes": 4437,
+      "original_schema": "rb-f04-independent-terminal-byte-helper-pure-results-v2",
+      "original_status": "PASS",
+      "original_scope": null,
+      "accounting_scope": "Direct pure helper source/mechanics review probe; not whole code, math or financial pilot review.",
+      "original_clock_fields": {
+        "wall_before_result_write": 0.05114637299266178,
+        "CPU_before_result_write": 0.036744126,
+        "review_outer_and_tail_cost": "unknown"
+      },
+      "clock_boundary_events_present": {
+        "wall_start_ns": false,
+        "wall_stop_ns": false,
+        "cpu_start_ns": false,
+        "cpu_stop_ns": false
+      },
+      "complete_current_external_id_receipt": false,
+      "original_manifest_ref": null
+    },
+    {
+      "receipt_id": "independent_terminal_helper_v2_decision",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v2-decision.json",
+      "sha256": "49beef645c167862a7740214eb20627422c208903265551fe6cbb83221da6359",
+      "bytes": 2422,
+      "original_schema": "rb-f04-independent-terminal-byte-candidate-source-mechanics-review-v2",
+      "original_status": null,
+      "original_scope": "D2-only v2 false terminal provenance candidate helper ownership cleanup and stable terminal .tmp evidence compatibility; no actual root permission",
+      "accounting_scope": "Decision refers to the same direct probe as independent_terminal_helper_v2_results; no second expense.",
+      "original_clock_fields": {
+        "probe_wall_before_result_write": 0.05114637299266178,
+        "probe_CPU_before_result_write": 0.036744126,
+        "review_outer_and_tail_cost": "unknown"
+      },
+      "clock_boundary_events_present": {
+        "wall_start_ns": false,
+        "wall_stop_ns": false,
+        "cpu_start_ns": false,
+        "cpu_stop_ns": false
+      },
+      "complete_current_external_id_receipt": false,
+      "original_manifest_ref": null
+    },
+    {
+      "receipt_id": "independent_materialized_prior_v5_enclosing",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-tool-enclosing-receipt-v1.json",
+      "sha256": "6f2a694bd9d7f4fe6c948350cf9512ebe4db467236e00252ef9538774090d532",
+      "bytes": 1731,
+      "original_schema": "rb-f04-independent-saved-metadata-tool-enclosing-receipt-v1",
+      "original_status": "completed",
+      "original_scope": null,
+      "accounting_scope": "Independent saved prior-metadata structural read/review attempt, distinct from root metadata generation; full review outer/tail expense missing.",
+      "original_clock_fields": {
+        "tool_initial_wait_wall_seconds": 10.0074613,
+        "tool_final_poll_wall_seconds": 8.6e-06,
+        "tool_waits_are_not_process_enclosing_wall_and_must_not_be_added": true,
+        "enclosing_wall_seconds": null,
+        "enclosing_parent_CPU_seconds": null,
+        "script_inclusive_wall_seconds_before_receipt_write": 19.498324011001387,
+        "script_inclusive_CPU_seconds_before_receipt_write": 19.364342044999997,
+        "all_review_tail_and_full_cost_seconds": null
+      },
+      "clock_boundary_events_present": {
+        "wall_start_ns": false,
+        "wall_stop_ns": false,
+        "cpu_start_ns": false,
+        "cpu_stop_ns": false
+      },
+      "complete_current_external_id_receipt": false,
+      "original_manifest_ref": null
+    }
+  ],
+  "all_expenses_closed": false,
+  "financial_qualification": "unknown",
+  "current_pilot_modified": false,
+  "actual_external_event_rows_injected": false,
+  "aggregate_external_current_event_rows_injection_supported": false,
+  "aggregate_current_event_rows_status": "Current run_pilot snapshot does not provide aggregate external_expenses event rows; this ledger is evidence correspondence only and is not native checker input.",
+  "root_actual_guard_modified": false,
+  "additional_budget_or_launch_approval": false,
+  "source_binding": {
+    "file_count": 82,
+    "plain_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "owned_source_bytes_verified_unchanged": {
+      "_pilot_transport.py": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd",
+      "run_pilot.py": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5",
+      "run_reference.py": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef",
+      "_teacher_storage.py": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+      "check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e"
+    }
+  },
+  "canonical_requirements": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "lines": [
+        1622,
+        1635
+      ],
+      "requirement": "Each wall/cpu start/stop is an actual integer 0<=start<=stop; seconds must match endpoint difference. Durations/UTC do not reconstruct endpoints."
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "lines": [
+        1639,
+        1644
+      ],
+      "requirement": "Current aliases copy actual parent clocks; parent-child tree charged once."
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "lines": [
+        1781,
+        1807
+      ],
+      "requirement": "Required job and external IDs, unique current rows, missing IDs retained, wall/cpu None prevent cost closure."
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "lines": [
+        4545,
+        4557
+      ],
+      "requirement": "Projected current IDs must have complete or failed status and actual timing_events; this document cannot supply those native rows."
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/DESIGN.md",
+      "lines": [
+        339,
+        345
+      ],
+      "requirement": "All actual construction/pilot/review/training/evaluation/serialization/CAS/load/cold/saved-check/fresh/plot expenses; distinct scopes and unknowns preserved, no double charge."
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/DESIGN.md",
+      "lines": [
+        350,
+        355,
+        411
+      ],
+      "requirement": "Original financial obligations and immutable source/input/raw identity; missing complete expense key/status/scope forbids saved-check PASS."
+    }
+  ],
+  "inclusion_and_deduplication_rules": [
+    {
+      "component": "metadata_generation_root",
+      "rule": "97.25502551400132s is enclosing source/input checks, cap expansion, writer and manifest together. Registry-only and serialization-only clocks are None; never charge that full wall to both external IDs."
+    },
+    {
+      "component": "combined_CAS_components",
+      "rule": "Both primary and mirror included in each actual combined metadata/proof attempt. Preserve combined clock fields without per-store splitting or duplicated total. Full financial native-corpus CAS has not been established here."
+    },
+    {
+      "component": "independent_terminal_helper_v2_results_and_decision",
+      "rule": "Result and decision quote the identical 0.05114637299266178s direct probe. One attempt, not two. Unknown outer/tail prevents interpreting it as entire code/math/pilot review."
+    },
+    {
+      "component": "independent_materialized_prior_v5_enclosing",
+      "rule": "19.498324011001387s structural review script is a distinct actual attempt from root metadata generation. Its nested original_root_metadata_attempt is a reference, not an extra charge. Tool wait times are not process enclosing wall."
+    },
+    {
+      "component": "historical_failure_and_tail",
+      "rule": "Original failed proof-manifest attempt remains historical and is not re-added; receipt writes and outer review tails remain unknown where original receipts say so."
+    }
+  ],
+  "no_cost_total_or_ETA_claim": true,
+  "real_financial_or_saved_numerical_execution": 0,
+  "actual_CAS_operations": 0,
+  "new_tests_executed": 0,
+  "document_validation": {
+    "distinct_closed_receipts_read": 7,
+    "original_receipt_hashes_verified": true,
+    "ten_ids_original_order_verified": true,
+    "no_clock_endpoints_invented": true,
+    "financial_source_files_unchanged": true
+  }
+}

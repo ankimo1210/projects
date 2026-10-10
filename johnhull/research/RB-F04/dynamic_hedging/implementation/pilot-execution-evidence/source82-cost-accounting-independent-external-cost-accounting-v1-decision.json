@@ -1,0 +1,357 @@
+{
+  "schema": "rb-f04-independent-external-cost-accounting-review-v1",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent limited external-cost receipt correspondence reviewer",
+  "scope": "original7 metadata/proof/source-mechanics receipts versus required external10; no expense closure or financial acceptance",
+  "approved_author_documents": [
+    {
+      "path": "external-cost-receipt-accounting-author-v1.json",
+      "sha256": "9c9b0f7c5a9b3254343e1cd19d7514d7dcedcd58aea23838a342a2a03396aa35"
+    },
+    {
+      "path": "external-cost-receipt-accounting-author-v1.md",
+      "sha256": "2f3d48401cf01aba4dc1efe312a579baa43b982a5e6b381cf4fae18676618d01"
+    }
+  ],
+  "required_external_expense_ids": [
+    "cold_imports",
+    "source_registry",
+    "code_review",
+    "math_review",
+    "pilot_review",
+    "serialization",
+    "saved_check",
+    "CAS_primary",
+    "CAS_mirror",
+    "domain_selection"
+  ],
+  "unclosed_external_ids": [
+    "cold_imports",
+    "source_registry",
+    "code_review",
+    "math_review",
+    "pilot_review",
+    "serialization",
+    "saved_check",
+    "CAS_primary",
+    "CAS_mirror",
+    "domain_selection"
+  ],
+  "metadata_reconciliation_items": 62,
+  "failed_items": [],
+  "checks": [
+    {
+      "item": "authorfixed:external-cost-receipt-accounting-author-v1.json",
+      "matches": true
+    },
+    {
+      "item": "authorfixed:external-cost-receipt-accounting-author-v1.md",
+      "matches": true
+    },
+    {
+      "item": "original10_ID_order",
+      "matches": true
+    },
+    {
+      "item": "seven_distinct_original_receipts",
+      "matches": true
+    },
+    {
+      "item": "unclosed_null_clock:cold_imports",
+      "matches": true
+    },
+    {
+      "item": "unclosed_null_clock:source_registry",
+      "matches": true
+    },
+    {
+      "item": "unclosed_null_clock:code_review",
+      "matches": true
+    },
+    {
+      "item": "unclosed_null_clock:math_review",
+      "matches": true
+    },
+    {
+      "item": "unclosed_null_clock:pilot_review",
+      "matches": true
+    },
+    {
+      "item": "unclosed_null_clock:serialization",
+      "matches": true
+    },
+    {
+      "item": "unclosed_null_clock:saved_check",
+      "matches": true
+    },
+    {
+      "item": "unclosed_null_clock:CAS_primary",
+      "matches": true
+    },
+    {
+      "item": "unclosed_null_clock:CAS_mirror",
+      "matches": true
+    },
+    {
+      "item": "unclosed_null_clock:domain_selection",
+      "matches": true
+    },
+    {
+      "item": "physical_receipt:metadata_generation_root",
+      "matches": true
+    },
+    {
+      "item": "original_schema_status_scope:metadata_generation_root",
+      "matches": true
+    },
+    {
+      "item": "original_clock_fields:metadata_generation_root",
+      "matches": true
+    },
+    {
+      "item": "actual_endpoints_not_invented:metadata_generation_root",
+      "matches": true
+    },
+    {
+      "item": "component_not_whole_external:metadata_generation_root",
+      "matches": true
+    },
+    {
+      "item": "physical_receipt:new82_prior_metadata_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "original_schema_status_scope:new82_prior_metadata_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "original_clock_fields:new82_prior_metadata_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "actual_endpoints_not_invented:new82_prior_metadata_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "component_not_whole_external:new82_prior_metadata_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "physical_receipt:saved_check_preparation_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "original_schema_status_scope:saved_check_preparation_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "original_clock_fields:saved_check_preparation_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "actual_endpoints_not_invented:saved_check_preparation_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "component_not_whole_external:saved_check_preparation_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "physical_receipt:terminal_byte_helper_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "original_schema_status_scope:terminal_byte_helper_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "original_clock_fields:terminal_byte_helper_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "actual_endpoints_not_invented:terminal_byte_helper_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "component_not_whole_external:terminal_byte_helper_proof_CAS",
+      "matches": true
+    },
+    {
+      "item": "physical_receipt:independent_terminal_helper_v2_results",
+      "matches": true
+    },
+    {
+      "item": "original_schema_status_scope:independent_terminal_helper_v2_results",
+      "matches": true
+    },
+    {
+      "item": "original_clock_fields:independent_terminal_helper_v2_results",
+      "matches": true
+    },
+    {
+      "item": "actual_endpoints_not_invented:independent_terminal_helper_v2_results",
+      "matches": true
+    },
+    {
+      "item": "component_not_whole_external:independent_terminal_helper_v2_results",
+      "matches": true
+    },
+    {
+      "item": "physical_receipt:independent_terminal_helper_v2_decision",
+      "matches": true
+    },
+    {
+      "item": "original_schema_status_scope:independent_terminal_helper_v2_decision",
+      "matches": true
+    },
+    {
+      "item": "original_clock_fields:independent_terminal_helper_v2_decision",
+      "matches": true
+    },
+    {
+      "item": "actual_endpoints_not_invented:independent_terminal_helper_v2_decision",
+      "matches": true
+    },
+    {
+      "item": "component_not_whole_external:independent_terminal_helper_v2_decision",
+      "matches": true
+    },
+    {
+      "item": "physical_receipt:independent_materialized_prior_v5_enclosing",
+      "matches": true
+    },
+    {
+      "item": "original_schema_status_scope:independent_materialized_prior_v5_enclosing",
+      "matches": true
+    },
+    {
+      "item": "original_clock_fields:independent_materialized_prior_v5_enclosing",
+      "matches": true
+    },
+    {
+      "item": "actual_endpoints_not_invented:independent_materialized_prior_v5_enclosing",
+      "matches": true
+    },
+    {
+      "item": "component_not_whole_external:independent_materialized_prior_v5_enclosing",
+      "matches": true
+    },
+    {
+      "item": "all_component_refs_existing",
+      "matches": true
+    },
+    {
+      "item": "same_helper_probe_one_attempt",
+      "matches": true
+    },
+    {
+      "item": "R7_root_metadata_reference_not_new_expense",
+      "matches": true
+    },
+    {
+      "item": "tail_unknown_preserved",
+      "matches": true
+    },
+    {
+      "item": "source5:_pilot_transport.py",
+      "matches": true
+    },
+    {
+      "item": "source5:run_pilot.py",
+      "matches": true
+    },
+    {
+      "item": "source5:run_reference.py",
+      "matches": true
+    },
+    {
+      "item": "source5:_teacher_storage.py",
+      "matches": true
+    },
+    {
+      "item": "source5:check_pilot.py",
+      "matches": true
+    },
+    {
+      "item": "source82_allphysical_unchanged",
+      "matches": true
+    },
+    {
+      "item": "financial_authority_event_injection_false",
+      "matches": true
+    },
+    {
+      "item": "fixed_after:external-cost-receipt-accounting-author-v1.json",
+      "matches": true
+    },
+    {
+      "item": "fixed_after:external-cost-receipt-accounting-author-v1.md",
+      "matches": true
+    }
+  ],
+  "receipt_refs": [
+    {
+      "receipt_id": "metadata_generation_root",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v3/parent-cost-and-status.json",
+      "sha256": "94a8bd84a5587cbd7862c77b0cacc10b847ea0d8e7d0e81211c66fffc31ce733",
+      "bytes": 1463
+    },
+    {
+      "receipt_id": "new82_prior_metadata_proof_CAS",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-new82-prior-metadata-and-closed-proof-store-receipt-v1.json",
+      "sha256": "6a84c665b4d7c896ea6271f9b9410690f99a7878525d861a0c968eadc7b785a3",
+      "bytes": 1545
+    },
+    {
+      "receipt_id": "saved_check_preparation_proof_CAS",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-check-preparation-closed-proof-store-receipt-v2.json",
+      "sha256": "2fdc63f03ee07aabd66a1324a0fc3af2789f0d96d6d7c1b166ad490f7df43f58",
+      "bytes": 1077
+    },
+    {
+      "receipt_id": "terminal_byte_helper_proof_CAS",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-terminal-byte-helper-closed-proof-store-receipt-v1.json",
+      "sha256": "063d086609412ddfb4fb35da119aa4b64a2462582b8aee8abde43168c949d5d7",
+      "bytes": 1074
+    },
+    {
+      "receipt_id": "independent_terminal_helper_v2_results",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v2-results.json",
+      "sha256": "186b291152200e5c4a7e6725fedd1698a3bf235d492d9fe54e8ab259f73e6427",
+      "bytes": 4437
+    },
+    {
+      "receipt_id": "independent_terminal_helper_v2_decision",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-terminal-byte-helper-v2-decision.json",
+      "sha256": "49beef645c167862a7740214eb20627422c208903265551fe6cbb83221da6359",
+      "bytes": 2422
+    },
+    {
+      "receipt_id": "independent_materialized_prior_v5_enclosing",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-tool-enclosing-receipt-v1.json",
+      "sha256": "6f2a694bd9d7f4fe6c948350cf9512ebe4db467236e00252ef9538774090d532",
+      "bytes": 1731
+    }
+  ],
+  "inclusion_findings": [
+    "97.255025514s metadata construction encloses registry checks and serialization; no independent allocation to either external ID",
+    "three both-store proof/metadata CAS durations are combined components; neither duplicated nor split between CAS_primary and CAS_mirror; full financial corpus CAS remains missing",
+    "0.051146373s helper probe result and decision describe one direct attempt; outer/tail and whole review unknown",
+    "19.498324011s independent prior structural review is a distinct attempt; nested root metadata receipt is a provenance reference, and tool waits do not become enclosing wall"
+  ],
+  "all_expenses_closed": false,
+  "actual_clock_events_supplied": false,
+  "native_external_rows_injected": false,
+  "actual_root_permission_or_budget_changes": false,
+  "financial_qualification": "unknown",
+  "wholefinancial_source_math_pilot_review_savedcheck_rawCAS_precision_main_phase_approved": false,
+  "new_tests_finance_worker_RNG_SDE_solver_production_raw_CAS_Git_changes": 0,
+  "source82_bytes_verified_unchanged": true,
+  "review_cost": {
+    "this_bounded_metadata_reconciliation_wall_seconds_before_decision_write": 0.0023454729962395504,
+    "this_bounded_metadata_reconciliation_CPU_seconds_before_decision_write": 0.002344444999999997,
+    "full_review_outer_tail_cost": "unknown",
+    "this_review_is_not_an_external_actual_clock_event": true
+  }
+}

@@ -7506,6 +7506,36 @@
       "archive": "source82-terminal-byte-prep-root-terminal-byte-helper-closed-proof-store-receipt-v1.json",
       "bytes": 1074,
       "sha256": "063d086609412ddfb4fb35da119aa4b64a2462582b8aee8abde43168c949d5d7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/external-cost-receipt-accounting-author-v1.json",
+      "archive": "source82-cost-accounting-external-cost-receipt-accounting-author-v1.json",
+      "bytes": 30276,
+      "sha256": "9c9b0f7c5a9b3254343e1cd19d7514d7dcedcd58aea23838a342a2a03396aa35"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/external-cost-receipt-accounting-author-v1.md",
+      "archive": "source82-cost-accounting-external-cost-receipt-accounting-author-v1.md",
+      "bytes": 7184,
+      "sha256": "2f3d48401cf01aba4dc1efe312a579baa43b982a5e6b381cf4fae18676618d01"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-external-cost-accounting-v1-decision.json",
+      "archive": "source82-cost-accounting-independent-external-cost-accounting-v1-decision.json",
+      "bytes": 11459,
+      "sha256": "d4505d267fd65e26e5361ad4245ddd6a9a77378cd5a92e1fdf1d731c1776dd42"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-external-cost-accounting-closed-proof-store-manifest-v1.json",
+      "archive": "source82-cost-accounting-root-external-cost-accounting-closed-proof-store-manifest-v1.json",
+      "bytes": 925,
+      "sha256": "6a851ca45cf0dce5b59ac8dc09359f44ac9aac69cb610be4a3390dfda61c5963"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-external-cost-accounting-closed-proof-store-receipt-v1.json",
+      "archive": "source82-cost-accounting-root-external-cost-accounting-closed-proof-store-receipt-v1.json",
+      "bytes": 2721,
+      "sha256": "64a38c5a3546bd169ce11668356d9fac61d30e368ac5258751a7b2aab88941ac"
     }
   ],
   "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending; corrected81 formal pilot now terminal214 rows with stage gate argument-binding defect; full saved semantic check pending; new82 private storage transport and stage argument comparison source-only approved; single genuineN1024 full-payload storage verified; fresh prior/root and financial saved acceptance still pending; new82 actual prior/metadata/saved structural binding/guard complete; fresh formal pilot launched14:00:06 UTC with original scope; full saved numeric/freeze/main still pending; source82 saved-check preparation: 32 closed files copied exactly, including historical probe/tool and store-format failures; no live native raw/logs; terminal byte helper v1/v2 and original failures: 30 closed archives; excludes live native data",
@@ -7541,5 +7571,44 @@
   "saved_check_preparation_store_manifest_ref": "artifact:sha256:97e1bc40483f8ae762992efe462600c2252774d9a1e86cecef88870c52af218f",
   "saved_check_preparation_status": "12 author pure and 66 independent source/mechanics checks PASS; original candidate remains unapproved/unexecuted; actual native saved result, whole RSS/capacity, precision and main/phase acceptance unknown",
   "terminal_byte_preparation_store_manifest_ref": "artifact:sha256:e6e25fef8a1a05ae1d06a54ecb688e7c812e8a1cfa0a71b65f533ffadb816f33",
-  "terminal_byte_preparation_status": "v1 not approved with original37/35PASS2FAIL; v2 ownership/stable terminal tmp repair author21PASS and independent limited source/mechanics PASS; no actual native hash/decode, terminal candidate, permission, saved launch or financial qualification"
+  "terminal_byte_preparation_status": "v1 not approved with original37/35PASS2FAIL; v2 ownership/stable terminal tmp repair author21PASS and independent limited source/mechanics PASS; no actual native hash/decode, terminal candidate, permission, saved launch or financial qualification",
+  "external_cost_accounting_store_manifest_ref": "artifact:sha256:6a851ca45cf0dce5b59ac8dc09359f44ac9aac69cb610be4a3390dfda61c5963",
+  "external_cost_accounting_status": "10 original external IDs remain unclosed; 7 existing closed component receipts reconciled, independent 62 items PASS; no native expense events injected or financial approval",
+  "external_cost_accounting_original_receipt_archives": [
+    {
+      "receipt_id": "metadata_generation_root",
+      "archive": "source82-prior-launch-task-5-formal-prior-lock-materialization-root-observation-v3__parent-cost-and-status.json",
+      "sha256": "94a8bd84a5587cbd7862c77b0cacc10b847ea0d8e7d0e81211c66fffc31ce733"
+    },
+    {
+      "receipt_id": "new82_prior_metadata_proof_CAS",
+      "archive": "source82-prior-launch-root-new82-prior-metadata-and-closed-proof-store-receipt-v1.json",
+      "sha256": "6a84c665b4d7c896ea6271f9b9410690f99a7878525d861a0c968eadc7b785a3"
+    },
+    {
+      "receipt_id": "saved_check_preparation_proof_CAS",
+      "archive": "source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-receipt-v2.json",
+      "sha256": "2fdc63f03ee07aabd66a1324a0fc3af2789f0d96d6d7c1b166ad490f7df43f58"
+    },
+    {
+      "receipt_id": "terminal_byte_helper_proof_CAS",
+      "archive": "source82-terminal-byte-prep-root-terminal-byte-helper-closed-proof-store-receipt-v1.json",
+      "sha256": "063d086609412ddfb4fb35da119aa4b64a2462582b8aee8abde43168c949d5d7"
+    },
+    {
+      "receipt_id": "independent_terminal_helper_v2_results",
+      "archive": "source82-terminal-byte-prep-independent-terminal-byte-helper-v2-results.json",
+      "sha256": "186b291152200e5c4a7e6725fedd1698a3bf235d492d9fe54e8ab259f73e6427"
+    },
+    {
+      "receipt_id": "independent_terminal_helper_v2_decision",
+      "archive": "source82-terminal-byte-prep-independent-terminal-byte-helper-v2-decision.json",
+      "sha256": "49beef645c167862a7740214eb20627422c208903265551fe6cbb83221da6359"
+    },
+    {
+      "receipt_id": "independent_materialized_prior_v5_enclosing",
+      "archive": "source82-prior-launch-independent-materialized-prior-v5-tool-enclosing-receipt-v1.json",
+      "sha256": "6f2a694bd9d7f4fe6c948350cf9512ebe4db467236e00252ef9538774090d532"
+    }
+  ]
 }

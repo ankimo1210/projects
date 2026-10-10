@@ -4,6 +4,8 @@
 
 保存検算の準備：既存APIのinputs/parameters contextを確認し、D2監視候補の作者12件・独立66件がPASS。候補・review等の閉じた30pathsは両保管庫の標準readerで原byteを復元確認済み。全job同時展開のRAM適合はunknownで、元pilotの終了receipt・閉じたcheckpointと全byte集合を結合してから実行guardを固定する。候補は未許可・未実行のまま。 終了後の全byte結合helper v2も、作者21検査・独立限定確認を通過。既存・差替えtempの保全と、terminal partialに残る一時fileを全byte集合へ含める契約を確認した。 [検算準備](implementation/PILOT_BUDGET_MEASUREMENTS.md#正式pilot後の保存検算の準備2026-10-10)。
 
+外部費用整理（2026-10-11）：必須10費用と7原receiptの対応台帳を作成し、独立62項目の照合は差異0。実clock端点・全金融scopeは未結合で全10費用は未閉鎖。proof/metadataのCASと金融raw全体のCASを分け、未知費用を0や完了へ置換していない。 [費用の対応と欠測](implementation/PILOT_BUDGET_MEASUREMENTS.md#外部10費用と原receiptの対応整理2026-10-11)。
+
 旧source81の修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](implementation/pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
 
 2026-10-10。**Tasks1–4、Task5統計/protocolとstudy/replay/runner/checkerのprivate source実装・独立レビュー完了（開発branch）。37quotes/18states、tiny全44cells、actual N1024教師を事前測定。Task5全体・正式pilot/freeze/主実験/研究受入・main統合は未完了。** 別execution契約・固定domain・保存再計算・入口の限定source承認を完了。12本の学習・検証sourceと、主実験結果の分割保存接続も限定承認済み。fresh実行器・保存checkerの限定source確認を完了。初回sourceの元3,138ジョブの資源prior・正確cap recipeを独立承認し、正式metadata lockを生成した。初回正式pilotは69件executed＋70番の日付gateでKeyError Nとなり停止（外側580.029秒、資源capなし）。native cacheのoriginal_Nを読む1行修正と実cache→日付gate→保存checkerの2回帰を追加し、関連246tests・2Python Ruff/format PASS。旧partial・原失敗・費用を保持。修正版sourceへのprior再結合・正式metadata lock・別root起動許可を完了し、fresh正式pilotを2026-10-10 10:22:45 UTCに再開した。完走・saved検算・freeze/main・研究受入は未完了。
