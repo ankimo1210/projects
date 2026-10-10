@@ -1,0 +1,123 @@
+{
+  "schema": "rb-f04-saved-check-enclosing-actual-ns-source-fixed-v2",
+  "fixed_UTC": "2026-10-10T16:14:20.002463+00:00",
+  "candidate_only": true,
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "sha256": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc",
+      "bytes": 9006
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-preflight-v2.py",
+      "sha256": "a69099a22b94946e5772390c7aa97024d8cca16ed42b93bb3197530e50918b49",
+      "bytes": 9951
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-verification-v2.json",
+      "sha256": "8897fa38b03be223ccb0b97af06e07e2b4ae6917b7b718058e3e15b5402bedce",
+      "bytes": 10665
+    }
+  ],
+  "immutable_origins": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-v1.py",
+      "sha256": "2116df010e19aa3bbfcacbbd8ba3872eb7927e05f6525c9b0d9abf036976a503",
+      "bytes": 4802
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-observer-v1.py",
+      "sha256": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4",
+      "bytes": 53941
+    }
+  ],
+  "scope": "Future whole saved-only enclosing-monitor invocation measured prefix; no actual native monitor execution or complete external saved_check closure.",
+  "clock_contract": {
+    "measured_expense_field": "measured_prefix_expense",
+    "wall_domain": "perf_counter_ns actual start/stop",
+    "cpu_domain": "parent process_time_ns plus per-sample round(actual cumulative RUSAGE_CHILDREN user/system seconds * 1e9)",
+    "source_samples_field": "clock_source_samples",
+    "child_cpu_charge": "included once in composite difference, never add nested/child clocks again",
+    "sampling_precision": "RUSAGE float precision retained; ns conversion does not claim kernel nanosecond precision",
+    "legacy_float_duration_relation": "separate legacy sample order preserved; not an added expense",
+    "final_receipt_construction_write_stdout_tail_seconds": null,
+    "other_external_ids_closed": false,
+    "past_elapsed_floats_not_reconstructed_as_endpoints": true
+  },
+  "validation": {
+    "RED_old_v1_missing_endpoints_preserved": true,
+    "GREEN_tiny_actual_subprocess_success_and_failure": true,
+    "false_guard_rejected_before_Popen": true,
+    "private_stub_only_AS_bytes": 1073741824,
+    "private_stub_per_invocation_timeout_seconds": 30,
+    "checks": 5,
+    "compile_files": 2,
+    "original_assertions_CLI_Popen_load_guard_AST_unchanged": true,
+    "only_main_function_AST_modified": true,
+    "old_v1_and_original_observer_bytes_unchanged": true,
+    "Ruff_initial_import_spacing_failure_and_final_fix_preserved": true
+  },
+  "validation_tool_outputs": {
+    "first": [
+      {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "3d1670",
+          "wall_time_seconds": 0.4825507,
+          "exit_code": 0,
+          "original_token_count": 72,
+          "output": "{\"status\": \"PASS\", \"checks\": 5, \"result\": \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-verification-v2.json\", \"sha256\": \"8897fa38b03be223ccb0b97af06e07e2b4ae6917b7b718058e3e15b5402bedce\"}\n"
+        }
+      },
+      {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "5a757a",
+          "wall_time_seconds": 0.4640744,
+          "exit_code": 1,
+          "original_token_count": 215,
+          "output": "I001 [*] Import block is un-sorted or un-formatted\n  --> /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-preflight-v2.py:3:1\n   |\n 1 |   \"\"\"Isolated tiny stub-only clock checks; no real saved monitor or native input.\"\"\"\n 2 |\n 3 | / from __future__ import annotations\n 4 | | import ast\n 5 | | import hashlib\n 6 | | import importlib.util\n 7 | | import json\n 8 | | import math\n 9 | | import os\n10 | | import resource\n11 | | import subprocess\n12 | | import sys\n13 | | import tempfile\n14 | | import time\n15 | | import traceback\n16 | | from pathlib import Path\n17 | | from unittest.mock import patch\n   | |_______________________________^\n18 |\n19 |   D = Path(__file__).resolve().parent\n   |\nhelp: Organize imports\n\nFound 1 error.\n[*] 1 fixable with the `--fix` option.\n"
+        }
+      },
+      {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "e610f0",
+          "wall_time_seconds": 0.5536379,
+          "exit_code": 0,
+          "original_token_count": 7,
+          "output": "2 files already formatted\n"
+        }
+      }
+    ],
+    "final": [
+      {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "cf1344",
+          "wall_time_seconds": 0.5132411,
+          "exit_code": 0,
+          "original_token_count": 5,
+          "output": "All checks passed!\n"
+        }
+      },
+      {
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "6ca425",
+          "wall_time_seconds": 0.5448772,
+          "exit_code": 0,
+          "original_token_count": 7,
+          "output": "2 files already formatted\n"
+        }
+      }
+    ]
+  },
+  "actual_saved_monitor_or_financial_worker_calls": 0,
+  "actual_native_payload_read_or_financial_calculation": 0,
+  "production_native_guard_inputs_Git_CAS_modified": false
+}

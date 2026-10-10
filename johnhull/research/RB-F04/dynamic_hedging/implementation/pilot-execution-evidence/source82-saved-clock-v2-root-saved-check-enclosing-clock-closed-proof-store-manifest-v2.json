@@ -1,0 +1,36 @@
+{
+  "entries": [
+    {
+      "bytes": 13016,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-enclosing-clock-v2-decision.json",
+      "ref": "artifact:sha256:2eac9a65f6c313b71773a3d39e28b54b39fbc6f6bd77e01fdfd88d63ff31a6d8"
+    },
+    {
+      "bytes": 6019,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-fixed-manifest-v2.json",
+      "ref": "artifact:sha256:a4df915bbd7d025da390fcf85e88fc2e1a5f1a331c5334c37c8e9b872f2276e9"
+    },
+    {
+      "bytes": 9951,
+      "mime": "text/x-python",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-preflight-v2.py",
+      "ref": "artifact:sha256:a69099a22b94946e5772390c7aa97024d8cca16ed42b93bb3197530e50918b49"
+    },
+    {
+      "bytes": 9006,
+      "mime": "text/x-python",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "ref": "artifact:sha256:c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc"
+    },
+    {
+      "bytes": 10665,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-verification-v2.json",
+      "ref": "artifact:sha256:8897fa38b03be223ccb0b97af06e07e2b4ae6917b7b718058e3e15b5402bedce"
+    }
+  ],
+  "kind": "johnhull-evidence-manifest",
+  "schema_version": 1
+}

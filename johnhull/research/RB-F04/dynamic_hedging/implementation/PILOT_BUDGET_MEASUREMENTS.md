@@ -383,6 +383,14 @@ source82の元3,138jobs/121cases/51義務/20teachers/10drivers/全4Nを保持し
 
 起動前に元の親・monitor・金融childの3PIDすべてが終了し、元の外側とmonitorの終了receiptが揃うことを確認する。その後、閉じたnative全byte集合、最新checkpointのreceipt、原plan/input/source、fresh出力先を実guardへ結合する。従来の行政監視30日・個別physical RSS16GiB・WSL/C/F各10GiB reserve・1秒pollを維持し、実容量・所要時間の保証に読み替えない。行政停止やsourcefaultはpartial/unclosedとして保存し、金融cap資格へ投影しない。外側wall・親/child CPU・kernel peak・末尾unknownを実測し、既往generationや内側費用を重複加算しない。外部10費用は自動的にclosed/zeroにならない。
 
+### 保存検算の実clock端点（2026-10-11）
+
+[外側計測器v2](pilot-execution-evidence/source82-saved-clock-v2-task-5-full-pilot-root-saved-check-enclosing-v2.py)は元enclosing-v1のCLI/guard/assertion/Popenを保持し、次のsaved-only監視呼出しの実perf_counter_nsとprocess_time_nsの開始・終了、およびRUSAGE_CHILDRENの元user/system samplesを記録する。子CPUは各実sampleをns単位へ丸めた合成clockに一度だけ含める。丸めはkernelのns精度を保証せず、旧float経過秒は別sampling順の診断値として保持する。過去の経過秒から端点を生成せず、nested子時計を再加算しない。
+
+[作者の5検査](pilot-execution-evidence/source82-saved-clock-v2-task-5-full-pilot-root-saved-check-enclosing-verification-v2.json)・2filesのRuff/format/compileと[独立41項目](pilot-execution-evidence/source82-saved-clock-v2-independent-saved-check-enclosing-clock-v2-decision.json)はPASS。元v1の端点欠測REDを保持し、隔離したtiny subprocessの成功/exit7、false候補の起動拒否、元native clock契約との算術一致を確認した。承認はsource/mechanicsに限り、この修正の検査での実saved check/native金融実行は0。元observer-v1・production source82・実起動guardは不変。将来の実起動では終了済みpilot・原全byte/plan/input・実容量を結合するguardに、v2のSHAを別途固定する必要がある。
+
+[閉じた5filesのstore manifest](pilot-execution-evidence/source82-saved-clock-v2-root-saved-check-enclosing-clock-closed-proof-store-manifest-v2.json)は原48,657 bytesを両保管庫へ保存し、標準readerと原byte復元がPASS。[今回の保存実費](pilot-execution-evidence/source82-saved-clock-v2-root-saved-check-enclosing-clock-closed-proof-store-receipt-v2.json)は親測定prefix wall 1.653490秒/CPU 0.024867秒。準備前と最終receipt/stdout tailはunknownで、proof保存を元金融external10へ割り当てていない。実計測の終端はreceipt構築・書込より前にあるため、saved_check全費用と他9費用は未閉鎖。実数値検算・whole RAM適合・金融資格・freeze/main/研究受入は未完了。
+
 [標準形式v2 store manifest](pilot-execution-evidence/source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-manifest-v2.json)は30entries/216,785 bytes。両storeの実backend manifest readerと各原byte復元がPASS。先行v1はbyte照合後にmanifest.kindの不一致を検出したため、[原失敗](pilot-execution-evidence/source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-validation-failure-v1.json)・v1 manifest/receiptを保持した。v1の実費7.239秒はその履歴に残し、[修正版v2の実費](pilot-execution-evidence/source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-receipt-v2.json)1.176秒/CPU0.046秒/kernel peak20.46MBへ加算していない。各receipt書込末尾はunknown。v2 manifest/receiptを含む閉じた32filesを本archiveへ原byteで保存し、live native raw/logsは含めていない。
 
 正式pilotの完走・金融精度・whole saved-check RAM/容量・freeze/main・研究受入は未完了。次は元pilotの終了を確認してactual saved-checkを監視実行し、実結果に基づく選択・freezeへ進む。

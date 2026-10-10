@@ -1,0 +1,361 @@
+{
+  "schema": "rb-f04-independent-saved-check-enclosing-actual-clock-source-mechanics-review-v2",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent limited enclosing actual-clock source and tiny-stub reviewer",
+  "fixed_inputs": [
+    {
+      "path": "task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "sha256": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc"
+    },
+    {
+      "path": "task-5-full-pilot-root-saved-check-enclosing-preflight-v2.py",
+      "sha256": "a69099a22b94946e5772390c7aa97024d8cca16ed42b93bb3197530e50918b49"
+    },
+    {
+      "path": "task-5-full-pilot-root-saved-check-enclosing-verification-v2.json",
+      "sha256": "8897fa38b03be223ccb0b97af06e07e2b4ae6917b7b718058e3e15b5402bedce"
+    },
+    {
+      "path": "task-5-full-pilot-root-saved-check-enclosing-fixed-manifest-v2.json",
+      "sha256": "a4df915bbd7d025da390fcf85e88fc2e1a5f1a331c5334c37c8e9b872f2276e9"
+    }
+  ],
+  "scope": "D2-only enclosing-v2 actual clock measurement prefix, unchanged controls/status, success and failed tiny synthetic monitor fixtures",
+  "items": 41,
+  "failed_items": [],
+  "checks": [
+    {
+      "item": "fixed:task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "PASS": true
+    },
+    {
+      "item": "fixed:task-5-full-pilot-root-saved-check-enclosing-preflight-v2.py",
+      "PASS": true
+    },
+    {
+      "item": "fixed:task-5-full-pilot-root-saved-check-enclosing-verification-v2.json",
+      "PASS": true
+    },
+    {
+      "item": "fixed:task-5-full-pilot-root-saved-check-enclosing-fixed-manifest-v2.json",
+      "PASS": true
+    },
+    {
+      "item": "manifest:task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "PASS": true
+    },
+    {
+      "item": "manifest:task-5-full-pilot-root-saved-check-enclosing-preflight-v2.py",
+      "PASS": true
+    },
+    {
+      "item": "manifest:task-5-full-pilot-root-saved-check-enclosing-verification-v2.json",
+      "PASS": true
+    },
+    {
+      "item": "manifest:task-5-full-pilot-root-saved-check-enclosing-v1.py",
+      "PASS": true
+    },
+    {
+      "item": "manifest:task-5-full-pilot-root-saved-check-observer-v1.py",
+      "PASS": true
+    },
+    {
+      "item": "original_all_assertions_unchanged",
+      "PASS": true
+    },
+    {
+      "item": "original_CLI_flags_unchanged",
+      "PASS": true
+    },
+    {
+      "item": "original_Popen_and_load_guard_AST_unchanged",
+      "PASS": true
+    },
+    {
+      "item": "old_globals_sha_helper_unchanged",
+      "PASS": true
+    },
+    {
+      "item": "mandatory_actual_clock_source_fixed",
+      "PASS": true
+    },
+    {
+      "item": "actual_mandatory_clock_pass:0",
+      "PASS": true
+    },
+    {
+      "item": "actual_integer_wall_and_composite_cpu:0",
+      "PASS": true
+    },
+    {
+      "item": "raw_child_samples_rounding:0:start",
+      "PASS": true
+    },
+    {
+      "item": "raw_child_samples_rounding:0:stop",
+      "PASS": true
+    },
+    {
+      "item": "inclusive_CPU_child_charged_once:0",
+      "PASS": true
+    },
+    {
+      "item": "success_failure_and_old_status_preserved:0",
+      "PASS": true
+    },
+    {
+      "item": "tail_and_other9_not_closed:0",
+      "PASS": true
+    },
+    {
+      "item": "mandatory_clock_duration_tamper_rejected:0:wall",
+      "PASS": true
+    },
+    {
+      "item": "mandatory_clock_duration_tamper_rejected:0:cpu",
+      "PASS": true
+    },
+    {
+      "item": "actual_mandatory_clock_pass:7",
+      "PASS": true
+    },
+    {
+      "item": "actual_integer_wall_and_composite_cpu:7",
+      "PASS": true
+    },
+    {
+      "item": "raw_child_samples_rounding:7:start",
+      "PASS": true
+    },
+    {
+      "item": "raw_child_samples_rounding:7:stop",
+      "PASS": true
+    },
+    {
+      "item": "inclusive_CPU_child_charged_once:7",
+      "PASS": true
+    },
+    {
+      "item": "success_failure_and_old_status_preserved:7",
+      "PASS": true
+    },
+    {
+      "item": "tail_and_other9_not_closed:7",
+      "PASS": true
+    },
+    {
+      "item": "mandatory_clock_duration_tamper_rejected:7:wall",
+      "PASS": true
+    },
+    {
+      "item": "mandatory_clock_duration_tamper_rejected:7:cpu",
+      "PASS": true
+    },
+    {
+      "item": "false_private_guard_before_Popen_and_receipts",
+      "PASS": true
+    },
+    {
+      "item": "fixed_after:task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "PASS": true
+    },
+    {
+      "item": "fixed_after:task-5-full-pilot-root-saved-check-enclosing-preflight-v2.py",
+      "PASS": true
+    },
+    {
+      "item": "fixed_after:task-5-full-pilot-root-saved-check-enclosing-verification-v2.json",
+      "PASS": true
+    },
+    {
+      "item": "fixed_after:task-5-full-pilot-root-saved-check-enclosing-fixed-manifest-v2.json",
+      "PASS": true
+    },
+    {
+      "item": "prior_cost_ledger_immutable:external-cost-receipt-accounting-author-v1.json",
+      "PASS": true
+    },
+    {
+      "item": "prior_cost_ledger_immutable:external-cost-receipt-accounting-author-v1.md",
+      "PASS": true
+    },
+    {
+      "item": "prior_cost_ledger_immutable:independent-external-cost-accounting-v1-decision.json",
+      "PASS": true
+    },
+    {
+      "item": "source82_allbytes_unchanged",
+      "PASS": true
+    }
+  ],
+  "failure_trace": null,
+  "actual_clock_contract": "unmodified check_pilot._check_actual_expense_clock AST from fixed2f5b executed with numpy only; no financial module import",
+  "tiny_actual_stub_processes": 2,
+  "stub_limits": {
+    "AS_bytes": 1073741824,
+    "CPU_seconds": 20,
+    "per_outer_timeout_seconds": 30
+  },
+  "stub_receipts": [
+    {
+      "synthetic_fixture_only": true,
+      "stub_exit_code": 0,
+      "expense": {
+        "id": "saved_check",
+        "status": "complete",
+        "scope": "future_saved_only_whole_monitor_invocation_measured_prefix",
+        "timing": {
+          "wall_seconds": 0.032242804,
+          "cpu_seconds": 0.02392604,
+          "overrun_seconds": null
+        },
+        "timing_events": {
+          "wall_start_ns": 73484177181004,
+          "wall_stop_ns": 73484209423808,
+          "cpu_start_ns": 22538337,
+          "cpu_stop_ns": 46464377
+        },
+        "whole_external_saved_check_expense_closed": false,
+        "final_receipt_construction_write_stdout_tail_seconds": null,
+        "financial_qualification": "unknown",
+        "finance_acceptance": false,
+        "external_event_rows_injected": false,
+        "other_external_ids_closed": false
+      },
+      "clock_source_samples": {
+        "wall_clock": "time.perf_counter_ns",
+        "wall_start_ns": 73484177181004,
+        "wall_stop_ns": 73484209423808,
+        "parent_cpu_clock": "time.process_time_ns",
+        "parent_cpu_start_ns": 22538337,
+        "parent_cpu_stop_ns": 25349377,
+        "children_cpu_clock": "resource.getrusage(resource.RUSAGE_CHILDREN)",
+        "children_cpu_start": {
+          "ru_utime_seconds": 0.0,
+          "ru_stime_seconds": 0.0,
+          "ru_utime_ns_rounded": 0,
+          "ru_stime_ns_rounded": 0
+        },
+        "children_cpu_stop": {
+          "ru_utime_seconds": 0.016892,
+          "ru_stime_seconds": 0.004223,
+          "ru_utime_ns_rounded": 16892000,
+          "ru_stime_ns_rounded": 4223000
+        },
+        "cpu_composite_domain": "parent process CPU ns plus rounded cumulative reaped-child user/system CPU ns; includes the waited monitor and any descendants included by OS rusage semantics",
+        "children_ns_conversion": "round(each actual cumulative ru_utime/ru_stime seconds sample * 1e9); this preserves sampled precision, not nanosecond kernel precision",
+        "start_sampling_order": [
+          "legacy perf_counter/process_time floats",
+          "perf_counter_ns",
+          "process_time_ns",
+          "getrusage RUSAGE_CHILDREN"
+        ],
+        "stop_sampling_order": [
+          "wait child; close stdout/stderr",
+          "getrusage RUSAGE_CHILDREN",
+          "process_time_ns",
+          "perf_counter_ns"
+        ],
+        "legacy_float_clock_relationship": "legacy float durations use separately sampled endpoints and retain their original parent/children scopes; small sampling-order differences are not missing CPU and are not extra additive expenses",
+        "double_charge_rule": "measured prefix CPU already contains parent and reaped-child deltas once; do not add children_CPU_seconds or nested monitor clocks to it again",
+        "post_stop_receipt_construction_write_stdout_cost": null,
+        "no_historical_duration_endpoint_reconstruction": true
+      },
+      "legacy_parent_children_float_timing": {
+        "wall_seconds": 0.032347141997888684,
+        "parent_CPU_seconds": 0.0028110400000000008,
+        "children_CPU_seconds": 0.021115000000000002
+      },
+      "guard_not_valid_for_actual_D2": true,
+      "actualFinancialPopen": false
+    },
+    {
+      "synthetic_fixture_only": true,
+      "stub_exit_code": 7,
+      "expense": {
+        "id": "saved_check",
+        "status": "failed",
+        "scope": "future_saved_only_whole_monitor_invocation_measured_prefix",
+        "timing": {
+          "wall_seconds": 0.032324536,
+          "cpu_seconds": 0.027430621,
+          "overrun_seconds": null
+        },
+        "timing_events": {
+          "wall_start_ns": 73484238453072,
+          "wall_stop_ns": 73484270777608,
+          "cpu_start_ns": 19325416,
+          "cpu_stop_ns": 46756037
+        },
+        "whole_external_saved_check_expense_closed": false,
+        "final_receipt_construction_write_stdout_tail_seconds": null,
+        "financial_qualification": "unknown",
+        "finance_acceptance": false,
+        "external_event_rows_injected": false,
+        "other_external_ids_closed": false
+      },
+      "clock_source_samples": {
+        "wall_clock": "time.perf_counter_ns",
+        "wall_start_ns": 73484238453072,
+        "wall_stop_ns": 73484270777608,
+        "parent_cpu_clock": "time.process_time_ns",
+        "parent_cpu_start_ns": 19325416,
+        "parent_cpu_stop_ns": 23492037,
+        "children_cpu_clock": "resource.getrusage(resource.RUSAGE_CHILDREN)",
+        "children_cpu_start": {
+          "ru_utime_seconds": 0.0,
+          "ru_stime_seconds": 0.0,
+          "ru_utime_ns_rounded": 0,
+          "ru_stime_ns_rounded": 0
+        },
+        "children_cpu_stop": {
+          "ru_utime_seconds": 0.023264,
+          "ru_stime_seconds": 0.0,
+          "ru_utime_ns_rounded": 23264000,
+          "ru_stime_ns_rounded": 0
+        },
+        "cpu_composite_domain": "parent process CPU ns plus rounded cumulative reaped-child user/system CPU ns; includes the waited monitor and any descendants included by OS rusage semantics",
+        "children_ns_conversion": "round(each actual cumulative ru_utime/ru_stime seconds sample * 1e9); this preserves sampled precision, not nanosecond kernel precision",
+        "start_sampling_order": [
+          "legacy perf_counter/process_time floats",
+          "perf_counter_ns",
+          "process_time_ns",
+          "getrusage RUSAGE_CHILDREN"
+        ],
+        "stop_sampling_order": [
+          "wait child; close stdout/stderr",
+          "getrusage RUSAGE_CHILDREN",
+          "process_time_ns",
+          "perf_counter_ns"
+        ],
+        "legacy_float_clock_relationship": "legacy float durations use separately sampled endpoints and retain their original parent/children scopes; small sampling-order differences are not missing CPU and are not extra additive expenses",
+        "double_charge_rule": "measured prefix CPU already contains parent and reaped-child deltas once; do not add children_CPU_seconds or nested monitor clocks to it again",
+        "post_stop_receipt_construction_write_stdout_cost": null,
+        "no_historical_duration_endpoint_reconstruction": true
+      },
+      "legacy_parent_children_float_timing": {
+        "wall_seconds": 0.03240409499267116,
+        "parent_CPU_seconds": 0.004166620999999999,
+        "children_CPU_seconds": 0.023264
+      },
+      "guard_not_valid_for_actual_D2": true,
+      "actualFinancialPopen": false
+    }
+  ],
+  "raw_sampling_scope": "actual perf_counter_ns/process_time_ns and per-side cumulative RUSAGE_CHILDREN user/system float samples rounded separately; composite integer CPU includes parent and reaped children once; no nanosecond kernel precision claim",
+  "old_v1_observer_costledger_source82_immutable": true,
+  "root_actual_permission_savedlaunch_wholecapacity_RSS_budget_finance_precision_main_phase_approved": false,
+  "whole_saved_check_external_expense_closed": false,
+  "other_external9_closed": false,
+  "native_expense_events_injected": false,
+  "financial_qualification": "unknown",
+  "realFinancialMonitor_worker_native_raw_decode_RNG_SDE_solver_Git_CAS_production_edits": 0,
+  "review_cost": {
+    "bounded_source_and_stub_check_wall_seconds_before_decision_write": 0.1642630059941439,
+    "parent_CPU_seconds_before_decision_write": 0.17918240100000005,
+    "whole_review_outer_child_CPU_and_receipt_tail": "unknown",
+    "this_review_is_not_a_formal_external_event": true
+  }
+}
