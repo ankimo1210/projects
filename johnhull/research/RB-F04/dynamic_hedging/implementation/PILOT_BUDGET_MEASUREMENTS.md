@@ -372,3 +372,17 @@ source82の元3,138jobs/121cases/51義務/20teachers/10drivers/全4Nを保持し
 [rootの起動許可](pilot-execution-evidence/source82-prior-launch-task-5-formal-pilot-root-launch-guard-v3.json)は元scopeのfresh正式pilotだけを許可する。2026-10-10 14:00:06 UTCに別D2 rootで起動し、[readonly起動確認](pilot-execution-evidence/source82-prior-launch-root-current82-fresh-native-launch-readonly-confirmation-v1.json)で親372314・monitor372315・金融child372316の実cmdline/生存とsource82の不変性を確認した。launchは金融精度・完走・freeze/main・研究受入を証明しない。ライブraw/観測ログはこの記録やGitへコピーしていない。
 
 今回の97秒/19秒はmetadata処理であり、全phaseの速度・容量・RAM・ETAを保証しない。既知部品の条件付き501.742hという旧rate試算をこの短時間から縮めず、新pilotの実選択と費用で更新する。次は正式結果/saved数値照合、その後にfreeze・主実験・fresh/両復元・phase末3 suites・研究受入。
+
+## 正式pilot後の保存検算の準備（2026-10-10）
+
+[既存checkerの読取確認](pilot-execution-evidence/source82-saved-check-prep-independent-native-saved-check-readiness-v1.md)で、原typed inputsをcontextのinputsキーへ包み、同じparametersを渡す必要があることを確認した。CLIはこの包装を自動追加しない。元3,138jobs/121cases/51義務、全4N・元grid/seed/block/失敗/unknownを保持し、現在source82の実planと原入力を照合する。
+
+現native APIは全jobを同時にhydrateしてsnapshotへ保持し、返却raw_snapshotと最終result保存にも全rawを含む。teacherのbounded報告、圧縮保存、原N1024や最大N一節点の部品測定はwholecheckerのRAM適合を認証しない。全hydrate・数値検算・返却serializationを実監視するため、D2にsaved-check専用monitorと外側observerを準備した。金融source82と公開APIは変更していない。
+
+[作者の固定12検査](pilot-execution-evidence/source82-saved-check-prep-task-5-full-pilot-root-saved-check-preflight-fixed-v1-results.json)と[独立66検査](pilot-execution-evidence/source82-saved-check-prep-independent-saved-check-observer-v1-decision.json)はPASS。Ruff/format/compileもPASS。審査範囲はsource/mechanicsで、候補のroot_preapproved/execute_saved_check/finance_acceptanceはfalseのまま。初期11件の検査記録・tool失敗・独立probeのfixture mock失敗を保存し、固定12件/66件の根拠へ置き換えない。今回の検査では金融・RNG・SDE・巨大raw decode・Popenはいずれも0。
+
+起動前に元の親・monitor・金融childの3PIDすべてが終了し、元の外側とmonitorの終了receiptが揃うことを確認する。その後、閉じたnative全byte集合、最新checkpointのreceipt、原plan/input/source、fresh出力先を実guardへ結合する。従来の行政監視30日・個別physical RSS16GiB・WSL/C/F各10GiB reserve・1秒pollを維持し、実容量・所要時間の保証に読み替えない。行政停止やsourcefaultはpartial/unclosedとして保存し、金融cap資格へ投影しない。外側wall・親/child CPU・kernel peak・末尾unknownを実測し、既往generationや内側費用を重複加算しない。外部10費用は自動的にclosed/zeroにならない。
+
+[標準形式v2 store manifest](pilot-execution-evidence/source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-manifest-v2.json)は30entries/216,785 bytes。両storeの実backend manifest readerと各原byte復元がPASS。先行v1はbyte照合後にmanifest.kindの不一致を検出したため、[原失敗](pilot-execution-evidence/source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-validation-failure-v1.json)・v1 manifest/receiptを保持した。v1の実費7.239秒はその履歴に残し、[修正版v2の実費](pilot-execution-evidence/source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-receipt-v2.json)1.176秒/CPU0.046秒/kernel peak20.46MBへ加算していない。各receipt書込末尾はunknown。v2 manifest/receiptを含む閉じた32filesを本archiveへ原byteで保存し、live native raw/logsは含めていない。
+
+正式pilotの完走・金融精度・whole saved-check RAM/容量・freeze/main・研究受入は未完了。次は元pilotの終了を確認してactual saved-checkを監視実行し、実結果に基づく選択・freezeへ進む。

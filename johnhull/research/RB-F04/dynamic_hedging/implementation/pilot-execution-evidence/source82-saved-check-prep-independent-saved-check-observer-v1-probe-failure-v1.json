@@ -1,0 +1,8 @@
+{
+  "status": "independent_probe_fixture_error",
+  "cause": "Mock of json.loads modified the shared stdlib module and replaced historical launch guard JSON as well as the candidate. Actual guard rejected safely earlier than the expected pending-reference message. Source/candidate unchanged.",
+  "error": "AssertionError both_terminal_refs_pending_before_heavy; GuardRejectedError actual historical launch authority required",
+  "worker_or_live_native_calls": 0,
+  "tool_outer_elapsed_seconds": 0.5026147,
+  "child_CPU_seconds": null
+}

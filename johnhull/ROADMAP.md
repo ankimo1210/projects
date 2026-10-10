@@ -25,7 +25,9 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 115 priv
 
 最新：source82の別root正式pilotを2026-10-10 14:00:06 UTCに起動し、親・監視・金融childの生存を確認した。元3,138jobs/121cases/51義務/全4Nを保持。新prior112検査、実保存計画3,906検査＋全573,122 cap設定、monitor16検査、実guard23検査がPASS。計画と起動証跡は両保管庫に保存済み。qualification unknown、完走・saved数値検算・freeze/mainは未完了。 [再開証跡](research/RB-F04/dynamic_hedging/implementation/PILOT_BUDGET_MEASUREMENTS.md#新sourceへのprior結合metadata生成正式pilot再開2026-10-10)。
 
-修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
+保存検算の準備：既存APIのinputs/parameters contextを確認し、D2監視候補の作者12件・独立66件がPASS。候補・review等の閉じた30pathsは両保管庫の標準readerで原byteを復元確認済み。全job同時展開のRAM適合はunknownで、元pilotの終了receipt・閉じたcheckpointと全byte集合を結合してから実行guardを固定する。候補は未許可・未実行のまま。 [検算準備](research/RB-F04/dynamic_hedging/implementation/PILOT_BUDGET_MEASUREMENTS.md#正式pilot後の保存検算の準備2026-10-10)。
+
+旧source81の修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
 
 **全体：本編P0–P8は306/306節受入済み、研究v1は8テーマ完了・main統合済み。現在は動的モデル横断ヘッジのTask5（接続source/予備測定完了、精度未達の原因測定を完了、prefreeze revisionの限定設計・private source承認済み、初回prior承認・metadata lock完了、初回pilotのsourcefaultを修復・正式pilotの214件目の引数binding不一致を修復、新保存source82の限定承認済み、新prior/metadata/保存計画/実guard検算済み・別root正式pilot実行中、派生保存の重複145.54GBを原byte共有で削減）。その後に多曲線risk/P&L→増分XVA＋IM/資本を進める。** 8/11はテーマ件数であり、残工数の割合ではない。
 

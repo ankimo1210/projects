@@ -1,0 +1,59 @@
+{
+  "results": [
+    {
+      "probe": "candidate_no_authority",
+      "status": "PASS"
+    },
+    {
+      "probe": "separate_execute_missing",
+      "status": "PASS"
+    },
+    {
+      "probe": "finance_acceptance_promotion_rejected",
+      "status": "PASS"
+    },
+    {
+      "probe": "new_financial_launch_rejected",
+      "status": "PASS"
+    },
+    {
+      "probe": "original_three_live_rejected",
+      "status": "PASS"
+    },
+    {
+      "probe": "original_process_binding_not_substituted",
+      "status": "PASS"
+    },
+    {
+      "probe": "pending_terminal_receipt_rejected_before_decode",
+      "status": "PASS"
+    },
+    {
+      "probe": "pending_native_byte_set_rejected",
+      "status": "PASS"
+    },
+    {
+      "probe": "original_admin_caps_unknown_and_source_fault_not_financial_cap",
+      "status": "PASS"
+    },
+    {
+      "probe": "exact_context_inputs_parameters_and16_original_helpers_AST_preserved",
+      "status": "PASS"
+    },
+    {
+      "probe": "CLI_false_candidate_launch0_and_decode0",
+      "status": "PASS"
+    }
+  ],
+  "passed": 11,
+  "new_numerical_execution": 0,
+  "financial_imports_or_large_raw_decode": 0,
+  "Popen_calls": 0,
+  "fixture_scope": "synthetic administrative guards only; no native arrays read",
+  "financial_qualification": "unknown",
+  "finance_acceptance": false,
+  "candidate_authority": false,
+  "elapsed_seconds": 0.02122474499628879,
+  "observer_sha256": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4",
+  "candidate_sha256": "ff35ff72da7cab1949ebaab529f67d8601ef243b47d07c8c98ad68a647b66720"
+}

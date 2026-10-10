@@ -1,0 +1,10 @@
+{
+  "wall_seconds": 0.11391831900982652,
+  "parent_CPU_seconds": 0.0019579129999999986,
+  "child_inclusive_CPU_seconds": 0.112319,
+  "child_kernel_peak_RSS_bytes": 32034816,
+  "numerical_execution": 0,
+  "probe_exit": 0,
+  "observer_and_preflight_only": true,
+  "financial_qualification": "unknown"
+}

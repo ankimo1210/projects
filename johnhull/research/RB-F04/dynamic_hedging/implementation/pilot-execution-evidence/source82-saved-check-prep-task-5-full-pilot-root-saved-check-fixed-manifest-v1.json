@@ -1,0 +1,88 @@
+{
+  "execute_saved_check": false,
+  "files": {
+    "task-5-full-pilot-root-saved-check-enclosing-v1.py": {
+      "bytes": 4802,
+      "sha256": "2116df010e19aa3bbfcacbbd8ba3872eb7927e05f6525c9b0d9abf036976a503"
+    },
+    "task-5-full-pilot-root-saved-check-fixed-results-v1.json": {
+      "bytes": 934,
+      "sha256": "b8b1ff715962466371da770bd2c814a1335277a58ede1d5746ac2a813a693f90"
+    },
+    "task-5-full-pilot-root-saved-check-monitor-diff-v1.patch": {
+      "bytes": 19525,
+      "sha256": "e20d3a6c2a538a5a0f8b905713e37b8053fa77a698e6f20446e89f62f6d6fe88"
+    },
+    "task-5-full-pilot-root-saved-check-observer-v1.py": {
+      "bytes": 53941,
+      "sha256": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4"
+    },
+    "task-5-full-pilot-root-saved-check-preflight-fixed-v1-results.json": {
+      "bytes": 1675,
+      "sha256": "1cb8396f15e64ce43e008773468b30601ba4c68192cd76a3af40c5fd152a3037"
+    },
+    "task-5-full-pilot-root-saved-check-preflight-fixed-v1.log": {
+      "bytes": 1675,
+      "sha256": "12383305cf3b885cec9282ed4e08ec4de9e02318133a3ea66c469f12eed9aae9"
+    },
+    "task-5-full-pilot-root-saved-check-preflight-v1.log": {
+      "bytes": 1576,
+      "sha256": "b70134e4bc2dc947c6c375174e99dcd08254cef18908391b5bb6d8d753137bfa"
+    },
+    "task-5-full-pilot-root-saved-check-preflight-v1.py": {
+      "bytes": 8800,
+      "sha256": "731d047b4d649838839f48a3a7c5c8360654ca09e5f21f444daa9f6b7a7fb4c1"
+    },
+    "task-5-full-pilot-root-saved-check-preparation-cost-v1.json": {
+      "bytes": 301,
+      "sha256": "a04cb8087ddb2465e113f8182d12c516aa713be152ea912d5afd98a8b78b61af"
+    },
+    "task-5-full-pilot-root-saved-check-resource-candidate-v1.json": {
+      "bytes": 50120,
+      "sha256": "a5face84365a5ee437d55e680da1414075b7ef761894e842f2377aff73a5723e"
+    },
+    "task-5-full-pilot-root-saved-check-tools-fixed-v1.json": {
+      "bytes": 419,
+      "sha256": "fc8de531a74f0801471cfc764d591cd96d25a7f21807e8cfc0624dc9be53fc07"
+    },
+    "task-5-full-pilot-root-saved-check-tools-v1.json": {
+      "bytes": 1766,
+      "sha256": "6ff7a0e42cd34e8bfbf3bcd243871d06eef48a0e7b6225097a00fd62ae106e44"
+    },
+    "task-5-native-saved-check-readiness-v1.json": {
+      "bytes": 5629,
+      "sha256": "abcad85735640d80d342e4376f73548b3af5d3a4ff744449762e9ee6f1d3b255"
+    }
+  },
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "immutable_base_monitor_sha256": "a53a73cfc420e2745f8d8d2cb72a6171ab2d166781126b9a96869afb88053981",
+  "original_obligations": {
+    "attempts": 51,
+    "cases": 121,
+    "iid_blocks": 16,
+    "jobs": 3138,
+    "teacher_N_candidates": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "threshold_counts": [
+      33,
+      65
+    ]
+  },
+  "original_source82_bytes_unchanged": true,
+  "pending_root_bindings": [
+    "original terminal monitor receipt",
+    "original terminal enclosing receipt",
+    "closed finite native physical bytes",
+    "actual latest checkpoint receipt",
+    "new saved-only root approval",
+    "fresh resource/capacity observation without16GiB-fit guarantee"
+  ],
+  "root_preapproved": false,
+  "scope": "prepared D2 saved-only observer/resource candidate and pure refusal evidence only",
+  "source_context_contract": "context={'inputs':inputs,'parameters':inputs['parameters']}"
+}

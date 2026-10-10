@@ -1,0 +1,14 @@
+[
+  {
+    "command": "format",
+    "exit_code": 0,
+    "stdout": "2 files reformatted\n",
+    "stderr": ""
+  },
+  {
+    "command": "check",
+    "exit_code": 1,
+    "stdout": "I001 [*] Import block is un-sorted or un-formatted\n  --> /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-preflight-v1.py:3:1\n   |\n 1 |   \"\"\"Pure administrative refusal probes; no financial imports, numerical decode or child.\"\"\"\n 2 |\n 3 | / from __future__ import annotations\n 4 | | import ast\n 5 | | import contextlib\n 6 | | import copy\n 7 | | import hashlib\n 8 | | import importlib.util\n 9 | | import io\n10 | | import json\n11 | | import tempfile\n12 | | import time\n13 | | from pathlib import Path\n14 | | from unittest.mock import patch\n   | |_______________________________^\n15 |\n16 |   D = Path(__file__).resolve().parent\n   |\nhelp: Organize imports\n\nE731 Do not assign a `lambda` expression, use a `def`\n   --> /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-preflight-v1.py:147:5\n    |\n145 |       before = ast.parse((D / \"task-5-full-pilot-root-operational-monitor-v5.py\").read_text())\n146 |       after = ast.parse(OBSERVER.read_text())\n147 | /     functions = lambda tree: {\n148 | |         node.name: node for node in tree.body if isinstance(node, ast.FunctionDef)\n149 | |     }\n    | |_____^\n150 |       old, new = functions(before), functions(after)\n151 |       untouched = (\n    |\nhelp: Rewrite `functions` as a `def`\n\nFound 2 errors.\n[*] 1 fixable with the `--fix` option (1 hidden fix can be enabled with the `--unsafe-fixes` option).\n",
+    "stderr": ""
+  }
+]

@@ -2,7 +2,9 @@
 
 最新：source82の別root正式pilotを2026-10-10 14:00:06 UTCに起動し、親・監視・金融childの生存を確認した。元3,138jobs/121cases/51義務/全4Nを保持。新prior112検査、実保存計画3,906検査＋全573,122 cap設定、monitor16検査、実guard23検査がPASS。計画と起動証跡は両保管庫に保存済み。qualification unknown、完走・saved数値検算・freeze/mainは未完了。 [再開証跡](PILOT_BUDGET_MEASUREMENTS.md#新sourceへのprior結合metadata生成正式pilot再開2026-10-10)。
 
-修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
+保存検算の準備：既存APIのinputs/parameters contextを確認し、D2監視候補の作者12件・独立66件がPASS。候補・review等の閉じた30pathsは両保管庫の標準readerで原byteを復元確認済み。全job同時展開のRAM適合はunknownで、元pilotの終了receipt・閉じたcheckpointと全byte集合を結合してから実行guardを固定する。候補は未許可・未実行のまま。 [検算準備](PILOT_BUDGET_MEASUREMENTS.md#正式pilot後の保存検算の準備2026-10-10)。
+
+旧source81の修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
 
 旧source81の記録（2026-10-10）：修正版fresh正式pilotは214件目の引数binding不一致でpartial停止。元N1024の旧停止gateをsaved executedとして確認し、closed NPZ共有で別inode割当145.54GBを削減した。source81/元N/全case/義務/原失敗・費用は不変。全phase容量・金融精度・freeze/mainは未完了。詳細は[保存量と原byte共有](PILOT_BUDGET_MEASUREMENTS.md#派生結果の保存量と原byte共有2026-10-10)。
 
