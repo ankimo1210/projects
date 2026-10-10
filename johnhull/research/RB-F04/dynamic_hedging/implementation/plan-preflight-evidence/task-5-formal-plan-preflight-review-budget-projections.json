@@ -1,0 +1,59 @@
+{
+  "scope": "independently_reviewable component extrapolation candidate only; no formal runtime/financial approval",
+  "warm_high_grid_per_path_date_two_model_risk_seconds": 0.0014611856837917034,
+  "warm_high_grid_13query_seconds_per_path_date": 0.01902880777743121,
+  "proposal_factor": 3,
+  "projections": [
+    {
+      "original_n": 1024,
+      "monthly_two_model_quote_risk_component_seconds": 17.955049682432453,
+      "monthly_two_model_13query_component_seconds": 233.8259899690747,
+      "proposed_risk_component_budget_seconds": 53.86514904729736,
+      "proposed_13query_component_budget_seconds": 701.4779699072242
+    },
+    {
+      "original_n": 4096,
+      "monthly_two_model_quote_risk_component_seconds": 71.82019872972981,
+      "monthly_two_model_13query_component_seconds": 935.3039598762988,
+      "proposed_risk_component_budget_seconds": 215.46059618918943,
+      "proposed_13query_component_budget_seconds": 2805.9118796288967
+    },
+    {
+      "original_n": 8192,
+      "monthly_two_model_quote_risk_component_seconds": 143.64039745945962,
+      "monthly_two_model_13query_component_seconds": 1870.6079197525976,
+      "proposed_risk_component_budget_seconds": 430.92119237837886,
+      "proposed_13query_component_budget_seconds": 5611.823759257793
+    },
+    {
+      "original_n": 16384,
+      "monthly_two_model_quote_risk_component_seconds": 287.28079491891924,
+      "monthly_two_model_13query_component_seconds": 3741.215839505195,
+      "proposed_risk_component_budget_seconds": 861.8423847567577,
+      "proposed_13query_component_budget_seconds": 11223.647518515587
+    },
+    {
+      "original_n": 32768,
+      "monthly_two_model_quote_risk_component_seconds": 574.5615898378385,
+      "monthly_two_model_13query_component_seconds": 7482.43167901039,
+      "proposed_risk_component_budget_seconds": 1723.6847695135154,
+      "proposed_13query_component_budget_seconds": 22447.295037031174
+    },
+    {
+      "original_n": 65536,
+      "monthly_two_model_quote_risk_component_seconds": 1149.123179675677,
+      "monthly_two_model_13query_component_seconds": 14964.86335802078,
+      "proposed_risk_component_budget_seconds": 3447.369539027031,
+      "proposed_13query_component_budget_seconds": 44894.59007406235
+    }
+  ],
+  "excluded": [
+    "unknown early exits",
+    "solver/MC/teacher generation",
+    "whole-worker glue",
+    "formal bumps different",
+    "serialization/savedcheck/CAS",
+    "actual visited-state distribution"
+  ],
+  "measurements_json": "task-5-asian-query-cost-results.json"
+}

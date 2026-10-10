@@ -409,7 +409,9 @@ def _fit_validation(descriptor, plan, row):
     """
     validation = row.get("fit_validation")
     _require(
-        descriptor["kind"] == "fit" and descriptor["gates"] == [] and isinstance(validation, dict),
+        descriptor["kind"] == "fit"
+        and descriptor["gates"] == []
+        and isinstance(validation, dict),
         "missing original fit validation",
     )
     count = plan.get("validation_original_n")

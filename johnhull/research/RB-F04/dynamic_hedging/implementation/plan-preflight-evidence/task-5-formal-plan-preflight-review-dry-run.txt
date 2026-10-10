@@ -1,0 +1,371 @@
+{
+  "kind": "actual_input_graph_dry_run_only",
+  "formal_plan_locked": false,
+  "financial_qualification": "unknown",
+  "input_preparation_sha256": "745804d59d1c8dc25af6df2f4a1851e7d78ee36fd3dcdf8ace782a2fa6a11ed2",
+  "case_count": 121,
+  "required_attempt_count": 51,
+  "job_count": 532,
+  "operation_counts": {
+    "field": 1,
+    "quotes": 1,
+    "premium": 1,
+    "source": 1,
+    "call_cache": 46,
+    "teacher_driver": 4,
+    "teacher_grid": 6,
+    "call_table": 36,
+    "oracle": 36,
+    "state": 36,
+    "date_gate": 24,
+    "market_pair": 28,
+    "quote_risk": 42,
+    "stream_receipts": 4,
+    "tiny_fits": 1,
+    "validation": 4,
+    "roster": 4,
+    "cell_pair": 172,
+    "bump_risk": 2,
+    "Q": 36,
+    "empty_claim": 36,
+    "teacher_diagnostic": 4,
+    "frequency_cache": 4,
+    "precision": 3
+  },
+  "prior_dependency_order_valid": true,
+  "worker_signature_errors": [],
+  "position_pairs_per_model": 24,
+  "position_width_variants": [
+    0,
+    1,
+    2
+  ],
+  "actual_stream_receipts": "assembled only after original market draws; no global IDs in root input",
+  "teacher_trials": [
+    {
+      "id": "teacher:Heston:N1024:coarse",
+      "model": "Heston",
+      "original_n": 1024,
+      "grid": "coarse",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": "teacher:Heston:N4096:coarse",
+      "model": "Heston",
+      "original_n": 4096,
+      "grid": "coarse",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": "teacher:Heston:N1024:high",
+      "model": "Heston",
+      "original_n": 1024,
+      "grid": "high",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": "teacher:local:N1024:coarse",
+      "model": "local",
+      "original_n": 1024,
+      "grid": "coarse",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": "teacher:local:N4096:coarse",
+      "model": "local",
+      "original_n": 4096,
+      "grid": "coarse",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": "teacher:local:N1024:high",
+      "model": "local",
+      "original_n": 1024,
+      "grid": "high",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "unmeasured": [
+    "expanded_bytes predictions",
+    "formal budgets/rates",
+    "progressive smallest-qualified teacher selection",
+    "A case/group inclusive expense binding"
+  ],
+  "formal_execution_performed": false,
+  "financial_RNG_performed": false,
+  "plan_producer": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py"
+}
+INDEPENDENT_AUDIT {
+  "kind_counts": {
+    "quote": 37,
+    "state": 36,
+    "cell": 44,
+    "fit": 4
+  },
+  "actual_teacher_trials": [
+    {
+      "model": "Heston",
+      "original_n": 1024,
+      "grid": "coarse"
+    },
+    {
+      "model": "Heston",
+      "original_n": 4096,
+      "grid": "coarse"
+    },
+    {
+      "model": "Heston",
+      "original_n": 1024,
+      "grid": "high"
+    },
+    {
+      "model": "local",
+      "original_n": 1024,
+      "grid": "coarse"
+    },
+    {
+      "model": "local",
+      "original_n": 4096,
+      "grid": "coarse"
+    },
+    {
+      "model": "local",
+      "original_n": 1024,
+      "grid": "high"
+    }
+  ],
+  "ladder_metadata": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "teacher_N_without_actual_job": {
+    "Heston": [
+      16384,
+      65536
+    ],
+    "local": [
+      16384,
+      65536
+    ]
+  },
+  "oracle_N_counts": {
+    "1024": 36
+  },
+  "precision_N": [
+    8192,
+    16384,
+    32768
+  ],
+  "quote_raw_n_vs_A_required_n": {
+    "raw": [
+      37
+    ],
+    "A": 1
+  },
+  "attempt_plans_missing_original_n": [
+    "teacher:Heston:date0",
+    "teacher:Heston:date1",
+    "teacher:Heston:date2",
+    "teacher:Heston:date3",
+    "teacher:Heston:date4",
+    "teacher:Heston:date5",
+    "teacher:Heston:date6",
+    "teacher:Heston:date7",
+    "teacher:Heston:date8",
+    "teacher:Heston:date9",
+    "teacher:Heston:date10",
+    "teacher:Heston:date11",
+    "teacher:local:date0",
+    "teacher:local:date1",
+    "teacher:local:date2",
+    "teacher:local:date3",
+    "teacher:local:date4",
+    "teacher:local:date5",
+    "teacher:local:date6",
+    "teacher:local:date7",
+    "teacher:local:date8",
+    "teacher:local:date9",
+    "teacher:local:date10",
+    "teacher:local:date11",
+    "refinement:SDE:Heston",
+    "refinement:SDE:local",
+    "refinement:teacher_N:Heston",
+    "refinement:teacher_N:local",
+    "refinement:teacher_grid:Heston",
+    "refinement:teacher_grid:local",
+    "refinement:position:Heston",
+    "refinement:position:local",
+    "refinement:pnl:Heston",
+    "refinement:pnl:local",
+    "Q:one_step:Heston",
+    "Q:one_step:local",
+    "Q:empty_claim:Heston",
+    "Q:empty_claim:local",
+    "Q:state_bins:Heston",
+    "Q:state_bins:local",
+    "frequency:24",
+    "frequency:48",
+    "initial_common_surface",
+    "premium",
+    "source_closure",
+    "tiny_nn",
+    "tiny_roster",
+    "test_precision",
+    "costs",
+    "domain_selection",
+    "saved_replay"
+  ],
+  "A_case_expense_binding_count": 0,
+  "A_required_external_expenses": [
+    "cold_imports",
+    "source_registry",
+    "code_review",
+    "math_review",
+    "pilot_review",
+    "serialization",
+    "saved_check",
+    "CAS_primary",
+    "CAS_mirror",
+    "domain_selection"
+  ],
+  "domains_defined": 0,
+  "draft_actual_budgets_present": 0,
+  "byte_predictions_missing": 532,
+  "original_state_input_identity": [
+    "state00",
+    "state01",
+    "state02",
+    "state03",
+    "state04",
+    "state05",
+    "state06",
+    "state07",
+    "state08",
+    "state09",
+    "state10",
+    "state11",
+    "state12",
+    "state13",
+    "state14",
+    "state15",
+    "state16",
+    "state17"
+  ],
+  "monthly_query_count": {
+    "Heston": 12,
+    "local": 12
+  },
+  "input_dates_memory_match_original": true,
+  "all_case_graph_jobs_present": true,
+  "unused_later_prefix_worker_operations": [],
+  "source_sha256": {
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py": "071a7ce1fce3a8af6f257ee4a964e42c87ac2d830be22c075db41bd86666d2a6",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "c2dd7c930552c524b6c7aaabb52644d4acc3a8148bb5ff6c36f37ede057a31ad",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "1e6b597bc547e3ac111d0ac54563763e3bb1c656c537c823df78030e387b118e",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494"
+  },
+  "high_N_child_prediction_identity": [
+    {
+      "model": "Heston",
+      "result": "identity_matches_current_prediction",
+      "size": {
+        "original_n": 65536,
+        "path_steps": 50331648,
+        "total_path_steps": 7851737088,
+        "financial_child_count": 156,
+        "child_boundary": "original_teacher_node"
+      }
+    },
+    {
+      "model": "local",
+      "result": "identity_matches_current_prediction",
+      "size": {
+        "original_n": 65536,
+        "path_steps": 50331648,
+        "total_path_steps": 67645734912,
+        "financial_child_count": 1344,
+        "child_boundary": "original_teacher_node"
+      }
+    }
+  ]
+}

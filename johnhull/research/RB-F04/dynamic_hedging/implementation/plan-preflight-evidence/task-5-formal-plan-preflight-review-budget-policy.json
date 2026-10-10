@@ -1,0 +1,239 @@
+{
+  "schema": "rb-f04-independent-prior-budget-policy-candidate-v1",
+  "decision": "draft_not_approved_for_lock",
+  "financial_execution_performed": false,
+  "actual_current_formal_teacher_or_oracle_rate_measured": false,
+  "basis": {
+    "historical_teacher": {
+      "original_path_steps": 82247680,
+      "wall_seconds": 45.117101439999715,
+      "steps_per_second": 1822982.358682316,
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-preflight.json",
+      "source_sha256": "50313a08abe3a4ce5abce65b909d44f7b33e7337a2725951b4294a788abc058d",
+      "measurement_scope": "whole child process including startup/imports/all checkpoints/final serialization",
+      "limitations": "historical mixed teachers includes old startup/save; current workload has different state/date composition, and extra new scalar-cache refit, saved-check and archive costs; extrapolation is not formal wall"
+    },
+    "asian_summary_sha256": "0481370886caa687c9517657aeab655b900a77f9091ced61ab1a98d2aa7fe43c",
+    "asian_results_sha256": "c4259df822fb75d624d2064b3d47e724cdd07a2df0aa8bf901a17fac439c01f0",
+    "actual_outer_component_clock": {
+      "clock": {
+        "wall_start": 16372.922821365,
+        "wall_stop": 16385.63798387,
+        "cpu_start": 0.040318363,
+        "cpu_stop": 12.740372129
+      },
+      "wall_seconds": 12.71516250500099,
+      "cpu_seconds": 12.700053766
+    },
+    "two_model_high_grid_integrated_refit_mean_seconds": 0.0014611856837917034,
+    "conservative_query_floor_seconds": 0.002,
+    "margin_multiplier": 3,
+    "limitation": "Observed means include early unknown/no-root outcomes and different diagnostic bumps; no teacher/MC/full-worker/current-formal qualification."
+  },
+  "teacher_compute_caps": [
+    {
+      "model": "Heston",
+      "grid": "coarse",
+      "original_n": 1024,
+      "conditional_path_steps": 46006272,
+      "conditional_seconds_at_historical_rate": 25.23681690109944,
+      "proposed_compute_cap_seconds": 300
+    },
+    {
+      "model": "Heston",
+      "grid": "coarse",
+      "original_n": 4096,
+      "conditional_path_steps": 184025088,
+      "conditional_seconds_at_historical_rate": 100.94726760439777,
+      "proposed_compute_cap_seconds": 600
+    },
+    {
+      "model": "Heston",
+      "grid": "coarse",
+      "original_n": 16384,
+      "conditional_path_steps": 736100352,
+      "conditional_seconds_at_historical_rate": 403.78907041759106,
+      "proposed_compute_cap_seconds": 1500
+    },
+    {
+      "model": "Heston",
+      "grid": "coarse",
+      "original_n": 65536,
+      "conditional_path_steps": 2944401408,
+      "conditional_seconds_at_historical_rate": 1615.1562816703643,
+      "proposed_compute_cap_seconds": 5100
+    },
+    {
+      "model": "Heston",
+      "grid": "high",
+      "original_n": 1024,
+      "conditional_path_steps": 66453504,
+      "conditional_seconds_at_historical_rate": 36.45317996825475,
+      "proposed_compute_cap_seconds": 300
+    },
+    {
+      "model": "Heston",
+      "grid": "high",
+      "original_n": 4096,
+      "conditional_path_steps": 265814016,
+      "conditional_seconds_at_historical_rate": 145.812719873019,
+      "proposed_compute_cap_seconds": 600
+    },
+    {
+      "model": "Heston",
+      "grid": "high",
+      "original_n": 16384,
+      "conditional_path_steps": 1063256064,
+      "conditional_seconds_at_historical_rate": 583.250879492076,
+      "proposed_compute_cap_seconds": 1800
+    },
+    {
+      "model": "Heston",
+      "grid": "high",
+      "original_n": 65536,
+      "conditional_path_steps": 4253024256,
+      "conditional_seconds_at_historical_rate": 2333.003517968304,
+      "proposed_compute_cap_seconds": 7200
+    },
+    {
+      "model": "local",
+      "grid": "coarse",
+      "original_n": 1024,
+      "conditional_path_steps": 214302720,
+      "conditional_seconds_at_historical_rate": 117.55611291537775,
+      "proposed_compute_cap_seconds": 600
+    },
+    {
+      "model": "local",
+      "grid": "coarse",
+      "original_n": 4096,
+      "conditional_path_steps": 857210880,
+      "conditional_seconds_at_historical_rate": 470.224451661511,
+      "proposed_compute_cap_seconds": 1500
+    },
+    {
+      "model": "local",
+      "grid": "coarse",
+      "original_n": 16384,
+      "conditional_path_steps": 3428843520,
+      "conditional_seconds_at_historical_rate": 1880.897806646044,
+      "proposed_compute_cap_seconds": 5700
+    },
+    {
+      "model": "local",
+      "grid": "coarse",
+      "original_n": 65536,
+      "conditional_path_steps": 13715374080,
+      "conditional_seconds_at_historical_rate": 7523.591226584176,
+      "proposed_compute_cap_seconds": 22800
+    },
+    {
+      "model": "local",
+      "grid": "high",
+      "original_n": 1024,
+      "conditional_path_steps": 542244864,
+      "conditional_seconds_at_historical_rate": 297.44932056936864,
+      "proposed_compute_cap_seconds": 900
+    },
+    {
+      "model": "local",
+      "grid": "high",
+      "original_n": 4096,
+      "conditional_path_steps": 2168979456,
+      "conditional_seconds_at_historical_rate": 1189.7972822774746,
+      "proposed_compute_cap_seconds": 3600
+    },
+    {
+      "model": "local",
+      "grid": "high",
+      "original_n": 16384,
+      "conditional_path_steps": 8675917824,
+      "conditional_seconds_at_historical_rate": 4759.189129109898,
+      "proposed_compute_cap_seconds": 14400
+    },
+    {
+      "model": "local",
+      "grid": "high",
+      "original_n": 65536,
+      "conditional_path_steps": 34703671296,
+      "conditional_seconds_at_historical_rate": 19036.756516439593,
+      "proposed_compute_cap_seconds": 57300
+    }
+  ],
+  "query_component_caps": [
+    {
+      "original_n": 1024,
+      "monthly_dates": 12,
+      "two_model_query_component_floor_seconds": 24.576,
+      "proposed_single_query_component_cap_seconds": 300,
+      "two_model_13query_component_floor_seconds": 319.48800000000006,
+      "proposed_13query_component_cap_seconds": 1200
+    },
+    {
+      "original_n": 4096,
+      "monthly_dates": 12,
+      "two_model_query_component_floor_seconds": 98.304,
+      "proposed_single_query_component_cap_seconds": 300,
+      "two_model_13query_component_floor_seconds": 1277.9520000000002,
+      "proposed_13query_component_cap_seconds": 3900
+    },
+    {
+      "original_n": 8192,
+      "monthly_dates": 12,
+      "two_model_query_component_floor_seconds": 196.608,
+      "proposed_single_query_component_cap_seconds": 600,
+      "two_model_13query_component_floor_seconds": 2555.9040000000005,
+      "proposed_13query_component_cap_seconds": 7800
+    },
+    {
+      "original_n": 16384,
+      "monthly_dates": 12,
+      "two_model_query_component_floor_seconds": 393.216,
+      "proposed_single_query_component_cap_seconds": 1200,
+      "two_model_13query_component_floor_seconds": 5111.808000000001,
+      "proposed_13query_component_cap_seconds": 15600
+    },
+    {
+      "original_n": 32768,
+      "monthly_dates": 12,
+      "two_model_query_component_floor_seconds": 786.432,
+      "proposed_single_query_component_cap_seconds": 2400,
+      "two_model_13query_component_floor_seconds": 10223.616000000002,
+      "proposed_13query_component_cap_seconds": 30900
+    },
+    {
+      "original_n": 65536,
+      "monthly_dates": 12,
+      "two_model_query_component_floor_seconds": 1572.864,
+      "proposed_single_query_component_cap_seconds": 4800,
+      "two_model_13query_component_floor_seconds": 20447.232000000004,
+      "proposed_13query_component_cap_seconds": 61500
+    }
+  ],
+  "call_cache_component_caps": {
+    "Heston": 300,
+    "local": 300,
+    "basis": "Original six-date current scalar costs times49/6 with allowance; full formal controls still unmeasured."
+  },
+  "progressive_policy": [
+    "Reserve original ordered1024/4096/16384/65536 and original streams; execute real1024/4096 and required coarse/high comparisons.",
+    "Advance when original gates unqualified; retain every failed/unknown original case, fullN and16blocks. Metadata alone is not an attempt.",
+    "Higher-N independent oracle retains original cases/all13queries/threewidths/paired768+1536/reserved independent streams.",
+    "Unexecuted later prefix needs authenticated lower-qualified evidence or independently approved prior budget/teacher revision binding real parent-cap costs.",
+    "HighestN failure remains unknown/revision; no unreserved262144 or relaxed thresholds. No automatic N-times-grid Cartesian product."
+  ],
+  "not_yet_budgetable": [
+    "Independent oracle needs job-specific independently reviewed estimate/current original-N observation; teacher historical rate is not measured oracle rate.",
+    "Driver, replay, serialization and CAS need byte-bound allocation and actual interval wall/CPU clocks.",
+    "All10current external expenses need actual measurements; elapsed-only input preparation timing is not formal clock authentication.",
+    "All expanded boundaries include driver/primitives/status/16blocks/serializer and <=256MiB; child path work<=1e9; total storage separate.",
+    "Per-job DAG cap cannot close independent phase tail without actual enclosing phase-parent clock and descendant binding."
+  ],
+  "expense_policy": {
+    "aliases": "121+51 distinct inclusive actual aliases with matching raw parents/all independent caps",
+    "forest": "includes_children avoids duplicate additive charging",
+    "cap_consumption": "actual parent interval wall cannot exceed matching inclusive expense",
+    "history": "Historical unknown remains unknown; no speedup/payback support",
+    "root_preparation_json": "Elapsed wall/CPU lacks interval endpoints; source input only, not formal expense authentication"
+  }
+}

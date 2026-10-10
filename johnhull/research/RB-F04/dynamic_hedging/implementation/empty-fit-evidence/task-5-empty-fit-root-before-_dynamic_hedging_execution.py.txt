@@ -400,57 +400,6 @@ def _measurements(gates, row, original):
     return passed
 
 
-def _fit_validation(descriptor, plan, row):
-    """Bind the original tiny-fit verdict; callers must replay its raw child.
-
-    validation_status is the fixed-checkpoint validation verdict, not the
-    execution status of its checker. A completed optimizer can have a failed
-    validation verdict and unknown financial qualification.
-    """
-    validation = row.get("fit_validation")
-    _require(
-        descriptor["kind"] == "fit" and descriptor["gates"] == [] and isinstance(validation, dict),
-        "missing original fit validation",
-    )
-    count = plan.get("validation_original_n")
-    _require(
-        isinstance(count, int) and not isinstance(count, bool) and count > 0,
-        "fit validation original count missing",
-    )
-    _require(
-        validation.get("fit_id") == descriptor["identity"]["id"]
-        and validation.get("training_original_n") == row["original_n"]
-        and validation.get("validation_original_n") == count
-        and validation.get("evidence_sha256") == row["evidence_sha256"],
-        "fit validation original identity/count/evidence differs",
-    )
-    _require(
-        validation.get("optimizer_status") == "completed"
-        and validation.get("optimizer_complete") is True,
-        "fit validation cannot close an incomplete optimizer or source defect",
-    )
-    pair = (validation.get("validation_status"), validation.get("validation_qualification"))
-    _require(
-        pair in {("completed", "qualified"), ("failed", "unknown")}
-        and row["financial_qualification"] == pair[1],
-        "fit validation verdict/qualification differs",
-    )
-    _require(
-        "first_failure_date" in validation
-        and "first_failure_date" in row
-        and validation["first_failure_date"] == row["first_failure_date"],
-        "fit validation first failure differs",
-    )
-    if row["first_failure_date"] is not None:
-        _number(row["first_failure_date"])
-    passed = pair == ("completed", "qualified")
-    _require(
-        not passed or row["first_failure_date"] is None,
-        "qualified fit validation retains a first failure",
-    )
-    return passed
-
-
 def _selection(candidate, pilot, selection):
     original = candidate["original_candidate"]
     for key in ("teacher_n", "teacher_grid"):
@@ -606,11 +555,6 @@ def _pilot(candidate, source, pilot, selection, domains):
             "unclosed case classification",
         )
         passed = _measurements(descriptor["gates"], row, original)
-        if descriptor["kind"] == "fit" and outcome in {
-            "within_envelope",
-            "measured_precision_failure",
-        }:
-            passed = _fit_validation(descriptor, plan, row)
         if outcome == "within_envelope":
             _require(
                 passed

@@ -1,0 +1,80 @@
+{
+  "date_utc": "2026-10-10T00:45:49.263585+00:00",
+  "decision": "request_changes",
+  "formal_plan_ready": false,
+  "formal_plan_locked": false,
+  "financial_qualification": "unknown",
+  "financial_RNG_performed": false,
+  "critical": 0,
+  "important": 4,
+  "issues": [
+    {
+      "id": "I1",
+      "owner": "producer/plan author",
+      "subject": "Progressive full-original-N teacher selection, higher-N oracle, unused-prefix authentication missing",
+      "state": "unresolved audited draft; author implementing"
+    },
+    {
+      "id": "I2",
+      "owner": "producer/checker author",
+      "subject": "121/51 A original_n, inclusive expense, cap and verification projection missing",
+      "state": "unresolved audited draft; author implementing"
+    },
+    {
+      "id": "I3",
+      "owner": "root prior plan",
+      "subject": "Formal controls/domain/expanded bytes/full prior budget roster not fixed",
+      "state": "unresolved; policy candidate is not approval"
+    },
+    {
+      "id": "I4",
+      "owner": "root limited A repair",
+      "subject": "Four fit empty gates vacuously pass; genuine validation unknown closure rejected",
+      "state": "confirmed current source; typed receipt repair proposed; final SHA review required"
+    }
+  ],
+  "positive": {
+    "signature_errors": 0,
+    "cases": 121,
+    "attempts": 51,
+    "jobs": 532,
+    "all_raw_cap_scopes_complete": true,
+    "all_original_inputs_retained": true,
+    "high_N_child_identity": "author fixed, metadata-only independently checked"
+  },
+  "audited_source_sha256": {
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py": "071a7ce1fce3a8af6f257ee4a964e42c87ac2d830be22c075db41bd86666d2a6",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "c2dd7c930552c524b6c7aaabb52644d4acc3a8148bb5ff6c36f37ede057a31ad",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "1e6b597bc547e3ac111d0ac54563763e3bb1c656c537c823df78030e387b118e",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "473d1352fbcebd2c1255e093e1d4757274c7e51a04add5d6f00c58850c229494"
+  },
+  "current_source_snapshots": {
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py": {
+      "sha256": "33815db7a624e3c7e1d815e79475cd335f30af4e06f098d9ca054363b9adb3e8",
+      "saved_snapshot": "task-5-formal-plan-preflight-review-captured-task-5-formal-pilot-plan-producer.py.txt",
+      "scope": "End-of-review current snapshot; earlier replay uses audited SHA if differing."
+    },
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer-interface.json": {
+      "sha256": "94d7c77a305802644a9fd0e763d4f6b7abc2a3431ccbeebf3bddd5cc742db382",
+      "saved_snapshot": "task-5-formal-plan-preflight-review-captured-task-5-formal-pilot-plan-producer-interface.json.txt",
+      "scope": "End-of-review current snapshot; earlier replay uses audited SHA if differing."
+    },
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer-interface.md": {
+      "sha256": "22c3fede9b070ed58bee4ae90a9e6c0df6cfd4074a0fb59afc8b9c7c107d929b",
+      "saved_snapshot": "task-5-formal-plan-preflight-review-captured-task-5-formal-pilot-plan-producer-interface.md.txt",
+      "scope": "End-of-review current snapshot; earlier replay uses audited SHA if differing."
+    },
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-dry-run.py": {
+      "sha256": "b97a699e1c93493768bfb5ab978dfda2a790116b3188f6778a19c88a90fca5a6",
+      "saved_snapshot": "task-5-formal-plan-preflight-review-captured-task-5-formal-pilot-plan-dry-run.py.txt",
+      "scope": "End-of-review current snapshot; earlier replay uses audited SHA if differing."
+    },
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": {
+      "sha256": "3590284e4e39a568da68c6d2842152fbefe396f0e07c61b0e12579094dfe7e4a",
+      "saved_snapshot": "task-5-formal-plan-preflight-review-captured-_dynamic_hedging_execution.py.txt",
+      "scope": "End-of-review current snapshot; earlier replay uses audited SHA if differing."
+    }
+  },
+  "scope_caveat": "Concurrent formatting/fixes change source; old audit and immutable unit are scoped to recorded SHA only.",
+  "next_review": "Freeze final source SHA; full original-budget dry-run, negative/mutation tests and saved-only independent review. No financial RNG now."
+}

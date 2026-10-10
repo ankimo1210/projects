@@ -5,6 +5,8 @@
 - [prefreeze revision候補](PREFREEZE_REVISION.md)：旧v1の精度契約は保持。state15.Hの元quote条件拒否とfull Cartesian cacheの未知tailを受け、別execution-readinessと日付固定domainを検討。[独立設計レビュー](prefreeze-review/README.md)でA/Bの限定設計を承認。[private source/TDD・最終独立レビュー](implementation/PREFREEZE_SOURCE.md)を完了、正式pilot/mainは未開封。候補文書はレビュー前snapshotを保持。
 - [12本の学習・検証source確認](implementation/NN_CLOSURE_SOURCE.md)：元8,192経路・512更新、全12 NNの2,048検証経路、4×14baseline、保存算術と実費用を接続。38tests・独立6群・索引/docstring1,129件、合成経路での実12fitと分割保存/replayを確認。正式金融pilot/主実験は未完了。
 - [独立再計算・保存checker](implementation/FRESH_SOURCE.md)：対象4 sourceを独立承認。82tests、実N1024/13queries/768+1536/16blocksのsaved-only検査、改変8件拒否。正式金融fresh/premium/mainは未実行。
+- [4fitの元validation接続](implementation/EMPTY_FIT_VALIDATION_SOURCE.md)：空gateからの偽qualifiedを拒否し、completed optimizer＋validation unknownを原N/理由と共に保持。65tests・独立19mutation、限定source未解決0。実raw写像は別確認。
+- [正式planの独立preflight](implementation/FORMAL_PLAN_PREFLIGHT_REVIEW.md)：原121/51・532jobsの構造を保持。段階N選択・全費用/cap結合・正式controls/予算/domainは修復中、正式lock未承認。
 - [上限に達した依存の入口](implementation/DEPENDENCY_CAP_SOURCE.md)：元N・全396枠を理由付きで保持する入口を限定承認。51runner tests・独立6件、金融mainは未実行。
 - [正式pilotの予算測定](implementation/PILOT_BUDGET_MEASUREMENTS.md)：元18入力の実2,304再較正とAsian/16blockの6,912query・13再較正936queryを計測。部品raw・原入力の両保管庫復元/算術PASS。main N256の実chunkからexpanded約70–141 GBを参考推計。正式全phase費用・金融資格は未測定。
 - [正式実験のsource照合](implementation/PHASE_SOURCE_IDENTITY.md)：全10入口と学習closureを必須登録、bare依存・別checkoutのloaded aliasを照合。48scoped tests、独立14件と実在80ファイルinventoryを確認。正式freezeは未実施。

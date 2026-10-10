@@ -1,0 +1,175 @@
+{
+  "kind": "actual_input_graph_dry_run_only",
+  "formal_plan_locked": false,
+  "financial_qualification": "unknown",
+  "input_preparation_sha256": "745804d59d1c8dc25af6df2f4a1851e7d78ee36fd3dcdf8ace782a2fa6a11ed2",
+  "case_count": 121,
+  "required_attempt_count": 51,
+  "job_count": 532,
+  "operation_counts": {
+    "field": 1,
+    "quotes": 1,
+    "premium": 1,
+    "source": 1,
+    "call_cache": 46,
+    "teacher_driver": 4,
+    "teacher_grid": 6,
+    "call_table": 36,
+    "oracle": 36,
+    "state": 36,
+    "date_gate": 24,
+    "market_pair": 28,
+    "quote_risk": 42,
+    "stream_receipts": 4,
+    "tiny_fits": 1,
+    "validation": 4,
+    "roster": 4,
+    "cell_pair": 172,
+    "bump_risk": 2,
+    "Q": 36,
+    "empty_claim": 36,
+    "teacher_diagnostic": 4,
+    "frequency_cache": 4,
+    "precision": 3
+  },
+  "prior_dependency_order_valid": true,
+  "worker_signature_errors": [],
+  "position_pairs_per_model": 24,
+  "position_width_variants": [
+    0,
+    1,
+    2
+  ],
+  "actual_stream_receipts": "assembled only after original market draws; no global IDs in root input",
+  "teacher_trials": [
+    {
+      "id": "teacher:Heston:N1024:coarse",
+      "model": "Heston",
+      "original_n": 1024,
+      "grid": "coarse",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": "teacher:Heston:N4096:coarse",
+      "model": "Heston",
+      "original_n": 4096,
+      "grid": "coarse",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": "teacher:Heston:N1024:high",
+      "model": "Heston",
+      "original_n": 1024,
+      "grid": "high",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": "teacher:local:N1024:coarse",
+      "model": "local",
+      "original_n": 1024,
+      "grid": "coarse",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": "teacher:local:N4096:coarse",
+      "model": "local",
+      "original_n": 4096,
+      "grid": "coarse",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "id": "teacher:local:N1024:high",
+      "model": "local",
+      "original_n": 1024,
+      "grid": "high",
+      "evaluation_domains": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "unmeasured": [
+    "expanded_bytes predictions",
+    "formal budgets/rates",
+    "progressive smallest-qualified teacher selection",
+    "A case/group inclusive expense binding"
+  ],
+  "formal_execution_performed": false,
+  "financial_RNG_performed": false,
+  "plan_producer": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py"
+}

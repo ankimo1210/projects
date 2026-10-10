@@ -1,0 +1,14 @@
+{
+  "raw_DAG_cap_scopes_complete": true,
+  "scope_count": 532,
+  "bad_scopes": [],
+  "A_lifecycle_case_group_cap_expense_projection": "unimplemented; raw cap scopes are not A lifecycle expense binding",
+  "plan_raw_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "da57bbea7875af82c98039f445ab01ef7dbec904ef72c15c13100d2bf51ba8eb",
+    "metadata_sha256": "37d973f776e066f8e96e013e8def4b997fce690d83591a314244d1ce35fb3625",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "financial_RNG_performed": false
+}

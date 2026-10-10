@@ -1,0 +1,50 @@
+{
+  "commands": [
+    {
+      "cmd": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+      ],
+      "returncode": 0,
+      "stdout": ".................................................................        [100%]\n65 passed in 1.20s\n",
+      "stderr": ""
+    },
+    {
+      "cmd": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+      ],
+      "returncode": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "cmd": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_execution.py"
+      ],
+      "returncode": 0,
+      "stdout": "2 files already formatted\n",
+      "stderr": ""
+    }
+  ],
+  "source_before": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "fad2c73a27b8314b9cdfa5db8505fb56c382b4eab79ce4224aa475b450223b3e",
+    "deep_hedge_price/tests/test_dynamic_hedging_execution.py": "f1c9ea790144072e3be186acf72bd900b0e06145ffe054c13c3874cd5b4546ae",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f"
+  },
+  "source_after": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py": "fad2c73a27b8314b9cdfa5db8505fb56c382b4eab79ce4224aa475b450223b3e",
+    "deep_hedge_price/tests/test_dynamic_hedging_execution.py": "f1c9ea790144072e3be186acf72bd900b0e06145ffe054c13c3874cd5b4546ae",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f"
+  },
+  "stable": true
+}

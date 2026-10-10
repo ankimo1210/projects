@@ -1,0 +1,42 @@
+{
+  "task-5-empty-fit-independent-final-review-_dynamic_hedging_execution-diff.txt": {
+    "sha256": "149c18a62f88b042a306dd590300f277186f3177a194b1462f715daeadadb617",
+    "bytes": 2825
+  },
+  "task-5-empty-fit-independent-final-review-captured-_dynamic_hedging_execution.py.txt": {
+    "sha256": "fad2c73a27b8314b9cdfa5db8505fb56c382b4eab79ce4224aa475b450223b3e",
+    "bytes": 39047
+  },
+  "task-5-empty-fit-independent-final-review-captured-test_dynamic_hedging_execution.py.txt": {
+    "sha256": "f1c9ea790144072e3be186acf72bd900b0e06145ffe054c13c3874cd5b4546ae",
+    "bytes": 30588
+  },
+  "task-5-empty-fit-independent-final-review-decision.json": {
+    "sha256": "9ed0d4dd739062cfbb79a624b9352f49e4c5869eba4b2d7590fea7feea679ce8",
+    "bytes": 1332
+  },
+  "task-5-empty-fit-independent-final-review-findings.md": {
+    "sha256": "04834027f962d05da5da5a355dd84e2548c18e41f8fc64ae06d097b43b34de38",
+    "bytes": 2620
+  },
+  "task-5-empty-fit-independent-final-review-mutations.json": {
+    "sha256": "63864d53c64b7fa43f0e6d3ac89e457b8be4aefda1d100bdc5bb67eb17a0baef",
+    "bytes": 4794
+  },
+  "task-5-empty-fit-independent-final-review-mutations.py": {
+    "sha256": "9ae0e15df1b2c00409316c69a0f9ebad7bce245b89c74396f8bd18a37f13f44a",
+    "bytes": 6708
+  },
+  "task-5-empty-fit-independent-final-review-mutations.txt": {
+    "sha256": "640a9b384559e9422104bd7e3876ebc4490e824215fc6678598868fe87d1546b",
+    "bytes": 176
+  },
+  "task-5-empty-fit-independent-final-review-test_dynamic_hedging_execution-diff.txt": {
+    "sha256": "9cd8314d8ed7c024c731ef0052f239bc0376aa7fa8faa2181998115bfae62e7f",
+    "bytes": 5051
+  },
+  "task-5-empty-fit-independent-final-review-validation.json": {
+    "sha256": "cd350e8f0f9b151424a8fac1fc389b29c4376178e5bc36ed9e83f16a47f981e6",
+    "bytes": 1980
+  }
+}

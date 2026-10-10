@@ -332,6 +332,8 @@ Task5 helperの[ソース確認](../../../research/RB-F04/dynamic_hedging/implem
 
 [fresh4 source](../../../research/RB-F04/dynamic_hedging/implementation/FRESH_SOURCE.md)を独立承認。82専用tests、原5＋追加3のcap/CPU改変拒否、actual N1024/all13/768+1536/16blocksの新規saved-only検査、旧API10比較allclose。I1–I4は解消、正式financial fresh/premium/main・研究受入は未実施。
 
+[4fitの空gate・原validation接続](../../../research/RB-F04/dynamic_hedging/implementation/EMPTY_FIT_VALIDATION_SOURCE.md)を追加修復・独立承認。65専用tests/追加独立19mutation、元strict v1と21関数の旧意味は保持。原optimizer完了＋validation unknownをunknown closureへ写し、空measurementだけのqualifiedは拒否する。actual rawの値抽出・写像はcheck_pilotで別に確認する。[正式plan preflight](../../../research/RB-F04/dynamic_hedging/implementation/FORMAL_PLAN_PREFLIGHT_REVIEW.md)は段階4N/最小qualified prefix、原121/51の全費用/cap、正式controls/domain/予算を修復後再レビューする。正式Task5/6/7の完了checkboxは未変更。
+
 ## 正式phase source照合の確認（2026-10-10）
 
 [全phase source照合](../../../research/RB-F04/dynamic_hedging/implementation/PHASE_SOURCE_IDENTITY.md)：研究10入口とprivate学習closureを事前必須検査し、bare local importsの閉包・loaded aliasのcheckoutを照合。実在80files/dynamic imports0を確認。48scoped tests/独立14件、Ruff/format/whitespace PASS・限定独立レビュー未解決0。closure欠落の初回反例と、固定quote helperのstatic読み込み修正を保存。全helperの金融実装や正式freezeは未承認。次はformal全121/51 job graph・事前budget・cap/resume・保存算術を整え、原case/分母/失敗/費用を保持して実dispatchする。

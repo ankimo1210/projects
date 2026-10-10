@@ -1,0 +1,83 @@
+{
+  "schema": "rb-f04-pilot-plan-producer-interface-draft-v1",
+  "producer": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py",
+  "financial_qualification": "unknown",
+  "formal_plan_locked": false,
+  "build_signature": "build_job_graph(*, inputs, controls, teacher_trials, pilot_training_config)",
+  "lock_signature": "lock_job_graph(draft, *, inputs, source, reviewed_budgets, history, required_external_expense_ids)",
+  "required_inputs": {
+    "parameters": "actual HestonParameters bound to accepted local field",
+    "original_states18": "all18 original market Q observations: id/date/date_index/spot/quote/diagnostic_heston_variance/inferred_local_state/memory_sum/memory_count; no Q replacements",
+    "diagnostic_queries24": "Heston/local:12 ordered date lists of actual within-cache queries",
+    "additional_teacher_cases": "Heston/local: exact declared1/24 and1/48 representatives; spot100/A0/n0; actual state, full threshold[0,24], local originalQ fit evidence bound externally",
+    "stream_receipts": "original6 pilot train0/1-validation2/3-primary4/5 seed receipts",
+    "precision_stream_receipts": "original3 refinement seeds/model full N receipts; all6 streams"
+  },
+  "controls_keys": [
+    "pilot_n=1024",
+    "field",
+    "initial_call_controls",
+    "call[Heston/local]",
+    "independent_state_nodes[Heston/local]",
+    "independent_call_controls",
+    "bin_edges",
+    "chunk_paths",
+    "query_chunk_paths",
+    "expanded_byte_predictions[operation]",
+    "selected_teacher_trial[Heston/local]",
+    "teacher_comparisons.teacher_N[Heston/local]",
+    "teacher_comparisons.teacher_grid[Heston/local]"
+  ],
+  "teacher_trial": {
+    "id": "immutable attempt ID",
+    "model": "Heston/local",
+    "original_n": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "grid": [
+      "coarse",
+      "high"
+    ],
+    "evaluation_domains": "per-date explicit contiguous half-open axis ranges; unavailable date None; candidates financially unqualified"
+  },
+  "teacher_rules": [
+    "explicit prior attempt list, never automatic N x grid product",
+    "compiler currently requires >=2 original N values/model and both coarse/high for actual paired comparisons; full original ladder metadata is retained",
+    "progressive smallest-qualified selection and unneeded later prefix closure require root prior plan policy; current explicit selected_teacher_trial is a calculation base, not qualified selection proof",
+    "source current measurement cannot be replaced by historical N1024 measurement",
+    "each unique(model,N) has one immutable fine normal driver shared over grids/dates/nodes, full path IDs and16clusters; independent oracle/market/premium streams separate",
+    "highest N precision failure remains unknown/revision; no unreserved N262144"
+  ],
+  "reviewed_budgets": {
+    "mapping_key": "exact each draft.jobs[i].id, no missing/extra",
+    "value": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": "64-char actual independent prior review",
+        "wall_seconds": "positive measured-rate/prior-review cap"
+      },
+      "prediction": {
+        "path_steps": "per original node/query child <=1e9",
+        "total_path_steps": "all child work",
+        "expanded_bytes": "largest expanded immutable boundary <=256MiB",
+        "rate_source": [
+          "measured_prior_job",
+          "independently_reviewed_estimate"
+        ],
+        "rate_evidence_sha256": "actual prior measured source/input/timers; not tiny full-rate extrapolation"
+      },
+      "case_cap_expense_bindings": "reserved root-reviewed expense inclusion projection; currently compiler copies but lifecycle A alias expense projection is not yet implemented"
+    }
+  },
+  "raw_paths": "run_pilot checkpoint preserves original artifact_directory; restored checker rebases I/O only under original_root/restored_root; byte bindings unchanged",
+  "remaining_obligations": [
+    "source final TDD/Ruff/provenance checks",
+    "dry-run all121/51 graph and dispatch argument validation",
+    "progressive teacher selection policy must be explicit before formal lock",
+    "A per-case/group cap expense actual-parent binding must be finalized",
+    "independent source/budget/input review before formal RNG"
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "decision": "approved_limited_A_empty_fit_guard",
+  "mutations": [
+    {
+      "name": "missing_prior_validation_N",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation original count missing"
+    },
+    {
+      "name": "zero_prior_validation_N",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation original count missing"
+    },
+    {
+      "name": "bool_prior_validation_N",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation original count missing"
+    },
+    {
+      "name": "swapped_original_fit_ID",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation original identity/count/evidence differs"
+    },
+    {
+      "name": "incomplete_optimizer_bool",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation cannot close an incomplete optimizer or source defect"
+    },
+    {
+      "name": "source_defect_optimizer_status",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation cannot close an incomplete optimizer or source defect"
+    },
+    {
+      "name": "missing_typed_receipt",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "missing original fit validation"
+    },
+    {
+      "name": "wrong_typed_training_N",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation original identity/count/evidence differs"
+    },
+    {
+      "name": "wrong_typed_validation_N",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation original identity/count/evidence differs"
+    },
+    {
+      "name": "wrong_typed_raw_evidence",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation original identity/count/evidence differs"
+    },
+    {
+      "name": "different_typed_first_failure",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation first failure differs"
+    },
+    {
+      "name": "missing_typed_first_failure",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation first failure differs"
+    },
+    {
+      "name": "missing_case_first_failure",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation first failure differs"
+    },
+    {
+      "name": "negative_both_first_failure",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "measurement must be finite nonnegative"
+    },
+    {
+      "name": "case_false_qualified_only",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation verdict/qualification differs"
+    },
+    {
+      "name": "matching_fake_qualified_retains_failure",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "qualified fit validation retains a first failure"
+    },
+    {
+      "name": "execution_completed_is_not_qualified_verdict",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "fit validation verdict/qualification differs"
+    },
+    {
+      "name": "qualified_bare_empty_gates",
+      "result": "rejected_after_all_verification_and_review_resealed",
+      "reason": "missing original fit validation"
+    },
+    {
+      "name": "typed_fit_receipt_cannot_override_nonempty_quote_gates",
+      "result": "rejected_after_reseal",
+      "reason": "precision failure requires failed or unmeasured original gate"
+    }
+  ],
+  "positive": {
+    "all_four_original_fits_unknown_closure": true,
+    "full_cases": 121,
+    "full_attempts": 51,
+    "financial_qualification": "unknown"
+  },
+  "unchanged_functions": [
+    "_candidate",
+    "_cap",
+    "_closed_fits",
+    "_closed_validation",
+    "_count",
+    "_current_expenses",
+    "_digest",
+    "_domains",
+    "_measurements",
+    "_number",
+    "_receipt",
+    "_require",
+    "_review",
+    "_rows",
+    "_selection",
+    "_sha",
+    "_snapshot",
+    "_text",
+    "assert_execution_ready",
+    "execution_candidate",
+    "freeze_execution"
+  ],
+  "only_changed_original_function": [
+    "_pilot"
+  ],
+  "only_added_function": [
+    "_fit_validation"
+  ],
+  "pilot_without_new_guard_AST_equals_before": true,
+  "strict_v1_sha256": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f",
+  "financial_RNG_performed": false,
+  "scope_limit": "A binds detached metadata, not actual raw numerical validation/reviewer authenticity; check_pilot raw replay and formal graph still independently pending"
+}

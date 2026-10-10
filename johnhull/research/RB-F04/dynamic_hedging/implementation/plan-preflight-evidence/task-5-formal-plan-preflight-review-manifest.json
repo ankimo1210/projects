@@ -1,0 +1,66 @@
+{
+  "task-5-formal-plan-preflight-review-audit.json": {
+    "sha256": "d0a7d75f31aa02b3eb059555f19f474e1ab57df2cc20f6c4175a2c201b25dbaf",
+    "bytes": 4566
+  },
+  "task-5-formal-plan-preflight-review-budget-policy.json": {
+    "sha256": "882433a68921a673d6f5c0670d62152a7efd583fd6724d5690e2b1c12ded3930",
+    "bytes": 9641
+  },
+  "task-5-formal-plan-preflight-review-budget-projections.json": {
+    "sha256": "87a1ddd7f66640c965f9a2859ac13156d1f5ff51612b3af926769f1df5cc5caa",
+    "bytes": 2539
+  },
+  "task-5-formal-plan-preflight-review-cap-scope.json": {
+    "sha256": "68ace155d09d8788f36733e9fe2d19e50ad4c9bb7339f377eeb661a6da1a2a96",
+    "bytes": 609
+  },
+  "task-5-formal-plan-preflight-review-cap-scope.py": {
+    "sha256": "028e98b510602436e1e53c2644e3945924898e12d6836688e67360ba0f3d70ab",
+    "bytes": 1659
+  },
+  "task-5-formal-plan-preflight-review-cap-scope.txt": {
+    "sha256": "68ace155d09d8788f36733e9fe2d19e50ad4c9bb7339f377eeb661a6da1a2a96",
+    "bytes": 609
+  },
+  "task-5-formal-plan-preflight-review-captured-_dynamic_hedging_execution.py.txt": {
+    "sha256": "3590284e4e39a568da68c6d2842152fbefe396f0e07c61b0e12579094dfe7e4a",
+    "bytes": 39063
+  },
+  "task-5-formal-plan-preflight-review-captured-task-5-formal-pilot-plan-dry-run.py.txt": {
+    "sha256": "b97a699e1c93493768bfb5ab978dfda2a790116b3188f6778a19c88a90fca5a6",
+    "bytes": 6413
+  },
+  "task-5-formal-plan-preflight-review-captured-task-5-formal-pilot-plan-producer-interface.json.txt": {
+    "sha256": "94d7c77a305802644a9fd0e763d4f6b7abc2a3431ccbeebf3bddd5cc742db382",
+    "bytes": 4351
+  },
+  "task-5-formal-plan-preflight-review-captured-task-5-formal-pilot-plan-producer-interface.md.txt": {
+    "sha256": "22c3fede9b070ed58bee4ae90a9e6c0df6cfd4074a0fb59afc8b9c7c107d929b",
+    "bytes": 1286
+  },
+  "task-5-formal-plan-preflight-review-captured-task-5-formal-pilot-plan-producer.py.txt": {
+    "sha256": "33815db7a624e3c7e1d815e79475cd335f30af4e06f098d9ca054363b9adb3e8",
+    "bytes": 24395
+  },
+  "task-5-formal-plan-preflight-review-decision.json": {
+    "sha256": "3e57b2c3cbf0c3a4d27e78c2f8d193c5bf474e5ebebe463585cc51324285d8bf",
+    "bytes": 4462
+  },
+  "task-5-formal-plan-preflight-review-dry-run.json": {
+    "sha256": "360f1037071b45c5424fa0f27b05fe7c6234574fd55dcebd6a773915326b2952",
+    "bytes": 3537
+  },
+  "task-5-formal-plan-preflight-review-dry-run.py": {
+    "sha256": "9f9ef118a3e5a659bd375a831dba3841b3d085e0d1e7d6008fac0bfb7cf60214",
+    "bytes": 10095
+  },
+  "task-5-formal-plan-preflight-review-dry-run.txt": {
+    "sha256": "8d8e5c79e9442a19ca8857c33e0dd8537edb0a800aebd9f65b007bea0eabb80f",
+    "bytes": 8121
+  },
+  "task-5-formal-plan-preflight-review-findings.md": {
+    "sha256": "a5e48af1568615893313435de196c232ae06c652b4d359c182fa799c336fec1f",
+    "bytes": 7052
+  }
+}
