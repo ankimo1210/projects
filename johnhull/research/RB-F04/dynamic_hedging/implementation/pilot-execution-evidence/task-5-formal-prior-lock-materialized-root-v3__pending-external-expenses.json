@@ -1,0 +1,142 @@
+[
+  {
+    "id": "cold_imports",
+    "scope": "formal_pilot_external",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    },
+    "actual_clock_binding": "pending root inclusive expense tree",
+    "claimed_financial_work": false
+  },
+  {
+    "id": "source_registry",
+    "scope": "formal_pilot_external",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    },
+    "actual_clock_binding": "pending root inclusive expense tree",
+    "claimed_financial_work": false
+  },
+  {
+    "id": "code_review",
+    "scope": "formal_pilot_external",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    },
+    "actual_clock_binding": "pending root inclusive expense tree",
+    "claimed_financial_work": false
+  },
+  {
+    "id": "math_review",
+    "scope": "formal_pilot_external",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    },
+    "actual_clock_binding": "pending root inclusive expense tree",
+    "claimed_financial_work": false
+  },
+  {
+    "id": "pilot_review",
+    "scope": "formal_pilot_external",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    },
+    "actual_clock_binding": "pending root inclusive expense tree",
+    "claimed_financial_work": false
+  },
+  {
+    "id": "serialization",
+    "scope": "formal_pilot_external",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    },
+    "actual_clock_binding": "pending root inclusive expense tree",
+    "claimed_financial_work": false
+  },
+  {
+    "id": "saved_check",
+    "scope": "formal_pilot_external",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    },
+    "actual_clock_binding": "pending root inclusive expense tree",
+    "claimed_financial_work": false
+  },
+  {
+    "id": "CAS_primary",
+    "scope": "formal_pilot_external",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    },
+    "actual_clock_binding": "pending root inclusive expense tree",
+    "claimed_financial_work": false
+  },
+  {
+    "id": "CAS_mirror",
+    "scope": "formal_pilot_external",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    },
+    "actual_clock_binding": "pending root inclusive expense tree",
+    "claimed_financial_work": false
+  },
+  {
+    "id": "domain_selection",
+    "scope": "formal_pilot_external",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    },
+    "actual_clock_binding": "pending root inclusive expense tree",
+    "claimed_financial_work": false
+  }
+]

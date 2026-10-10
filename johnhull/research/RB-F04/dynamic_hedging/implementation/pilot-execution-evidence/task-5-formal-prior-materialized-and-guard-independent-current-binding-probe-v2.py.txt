@@ -1,0 +1,128 @@
+import copy,datetime,hashlib,importlib.util,json,mmap,os,resource,sys,time
+from pathlib import Path
+W=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=W/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+O=D/"task-5-formal-prior-lock-materialized-root-v3"
+start=time.perf_counter();cpu=time.process_time();checks=[]
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open("rb") as f:
+  for b in iter(lambda:f.read(1048576),b""):h.update(b)
+ return h.hexdigest()
+def digest(v):return hashlib.sha256(json.dumps(v,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest()
+def read(p):return json.loads(Path(p).read_text())
+def ref(p):return {"path":str(p),"sha256":sha(p)}
+def ok(n,v):
+ checks.append({"name":n,"passed":bool(v)})
+review_path=D/"task-5-formal-prior-lock-rebind-independent-decision-v4.json"
+root_path=D/"task-5-formal-prior-actual-root-approval-v2.json"
+guard_path=D/"task-5-formal-pilot-root-launch-guard-v2.json"
+review=read(review_path);root=read(root_path);guard=read(guard_path)
+manifest=read(O/"manifest.json");progress=read(O/"materialization-progress.json")
+root_expense=read(D/"task-5-formal-prior-lock-materialization-root-observation-v2/parent-cost-and-status.json")
+launch_receipt=read(D/"task-5-formal-pilot-root-launch-binding-receipt-v3.json")
+root_binding_receipt=read(D/"task-5-formal-prior-actual-root-binding-receipt-v3.json")
+source=read(O/"source-snapshot/source-identity.json")
+ok("actual_ef4review_fixed",sha(review_path)=="ef4b8cbe88da24f163e2177dd95045b4069f6dfbbf0341c656432dc6a8d7296a")
+ok("actual_cd77root_approval_fixed",sha(root_path)=="cd77af11dd47dad6576e6a677a106a279330b65cf0d594d12472f706d866c4f8")
+ok("actual_materialized_manifest_fixed",sha(O/"manifest.json")=="6e35597ac5ba5883b1f7f73b5aa82343f01358f304e78a199a3d35a932788c15")
+ok("actual_a36eguard_fixed",sha(guard_path)=="a36ec860c80f7af29bd1c36669ea98d5737c6e72319dd84cc939e6aa7276f11a")
+for name,item in manifest["files"].items():
+ p=O/name;ok("physical_materialized:"+name,p.stat().st_size==item["bytes"] and sha(p)==item["sha256"])
+ok("rootapproval_copy_exact",sha(O/"actual-root-approval-copy.json")==sha(root_path))
+ok("real_current18_bindings",root["approved_bindings"]==review["approved_bindings"]==guard["approved_budget_bindings"])
+ok("sourcecanonical5d",digest(source)==progress["source_identity"]==review["source_canonical_identity"]==guard["source_identity_sha256"]=="5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e")
+ok("native568_actual_source_API_review_reused",progress["source_native_payload_identity"]==review["source_native_payload_identity"]==guard["source_native_payload_sha256"]=="56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7")
+ok("source81_static",len(source["files"])==81 and not source["dynamic_imports"])
+for name,h in source["files"].items():ok("current81_and_snapshot:"+name,sha(W/name)==h==sha(O/"source-snapshot"/name))
+ok("root actual metadata only",root["status"]=="approved_for_prior_materialization_only" and root["planned_before_attempt"] is True and root["formal_financial_launch_authorized"] is False and root["formal_financial_phase_approved"] is False)
+ok("review_bound_all3138_rootrows",len(root["reviewed_budgets"])==3138 and all(r["budget"]["review_sha256"]==sha(review_path) for r in root["reviewed_budgets"].values()))
+effective=read(D/"task-5-fullmixed-prior-budget-independent-effective-rows-v1.json")
+for r in effective.values():r["budget"]["review_sha256"]=sha(review_path)
+ok("rootrows_only_real_reviewSHA_delta",effective==root["reviewed_budgets"])
+ok("actual_both_lineage_refs",progress["actual_root_approval"]==manifest["actual_approval"]==guard["actual_root_metadata_approval"]==ref(root_path))
+ok("root review_ref currentactual",root["independent_reviews"]["prior_budget_and_cap_recipe"]==guard["full_budget_and_cap_recipe_review"] and root["independent_reviews"]["prior_budget_and_cap_recipe"]["sha256"]==sha(review_path))
+ok("root cap authority exactrecipe",root["cap_options_authority"]["status"]=="approved" and root["cap_options_authority"]["cap_recipe_digest"]==review["approved_bindings"]["cap_recipe_digest"]=="43ebacfd81f69043535feafcccc872ea68e4724715ed25ea3dead36dd1e630a5")
+ok("root cap decision actualreview",root["cap_options_authority"]["decision_template"]==review["cap_recipe_authority"]["decision_template_fields"]|{"independent_review_sha256":sha(review_path)})
+config=read(D/"task-5-fullmixed-prior-budget-candidate-author-v1-config.json")
+for key in ("plan","typed_inputs"):
+ bind=guard[key];ok("guard_tree_digest:"+key,digest(bind["files"])==bind["tree_sha256"])
+ for relative,h in bind["files"].items():
+  p=Path(bind["path"])/relative
+  if key=="plan":ok("closedplan_tree:"+relative,manifest["files"]["locked-prior-metadata/"+relative]["sha256"]==h)
+  else:ok("typed_tree:"+relative,sha(p)==h)
+ok("typed receipt original",read(Path(config["typed_inputs_artifact"])/"receipt.json")==config["typed_inputs_receipt"])
+# Read only small root plan fields and the54MB jobs field. Never retain/decode
+# the573122 option array or rerun its mathematical recipe.
+metadata_path=O/"locked-prior-metadata/metadata.json";decoder=json.JSONDecoder();maxwidth=0
+with metadata_path.open("rb") as f:
+ mm=mmap.mmap(f.fileno(),0,access=mmap.ACCESS_READ)
+ def field(name,opening):
+  global maxwidth
+  token=('"'+name+'":'+opening).encode();at=mm.find(token)
+  if at==-1 or mm.find(token,at+len(token))!=-1:raise AssertionError("missing/ambiguous unique root field:"+name)
+  at+=len(token)-1;width=65536
+  while True:
+   stop=min(len(mm),at+width)
+   try:
+    v,_=decoder.raw_decode(mm[at:stop].decode());maxwidth=max(maxwidth,stop-at);return v
+   except (json.JSONDecodeError,UnicodeDecodeError):
+    if width>=128*1048576:raise
+    width*=2
+ jobs=field("jobs","[")
+ ok("saved_actual3138_jobcount",len(jobs)==3138 and set(j["id"] for j in jobs)==set(root["reviewed_budgets"]))
+ for job in jobs:ok("saved_actual_budget_review:"+job["id"],job["budget"]==root["reviewed_budgets"][job["id"]]["budget"])
+ ok("saved20teacher10driver",sum(j["operation"]=="teacher_grid" for j in jobs)==20 and sum(j["operation"]=="teacher_driver" for j in jobs)==10)
+ case_count=len(field("case_plan","["));attempt_count=len(field("attempt_plan","["))
+ ok("saved_case121_attempt51",case_count==121 and attempt_count==51)
+ ok("saved_actual_current81source",field("source","{")==source==guard["source_identity"])
+ ok("saved_original_typedbindings",field("input_bindings","{")==config["input_bindings"])
+ ok("saved_history_and_external_ids",field("history","[")==config["history"] and field("required_external_expense_ids","[")==config["required_external_expense_ids"])
+ mm.close()
+receipt=read(O/"locked-prior-metadata/receipt.json")
+ok("saved_artifact206b_receipt_exact",receipt==progress["locked_prior_receipt"] and receipt["artifact_sha256"]=="206b2c866e9fe7e52ef07293a2429aab1453071a2aedbeac701496e542f51dc1")
+ok("saved_metadata1809_receipt",receipt["metadata_sha256"]==manifest["files"]["locked-prior-metadata/metadata.json"]["sha256"]=="1809cfebb1ce25428f22f0d4165a4ed608d1e51d530d5dffb6ae30842f7ab856")
+ok("root_actual_lock_API_terminal",progress["status"]=="actual_approved_prior_metadata_materialized" and progress["actual_lock_API_validate_and_source_binding"]=="PASS" and progress["source81_before_after_stable"] is True and progress["financial_workers_RNG_solver_SDE_calls"]==0)
+ok("original_count_actual_receipt",progress["jobs"]==3138 and progress["cases"]==121 and progress["attempts"]==51 and progress["teachers"]==20 and progress["drivers"]==10 and progress["literal_cap_options"]==573122)
+ok("10external_pending_original",read(O/"pending-external-expenses.json")==config["external_expense_candidates"] and len(config["external_expense_candidates"])==10 and all(e["status"]=="pending" and all(v is None for v in e["timing"].values()) for e in config["external_expense_candidates"]))
+spec=importlib.util.spec_from_file_location("current_binding_readonly_monitor",D/"task-5-full-pilot-root-operational-monitor-v4.py")
+monitor=importlib.util.module_from_spec(spec);spec.loader.exec_module(monitor)
+def forbidden(*a,**k):raise AssertionError("readonly saved binding review forbids process/numerical execution")
+monitor.subprocess.Popen=forbidden
+ok("existing_API_actual_budget_review",monitor.actual_budget_review(guard)==review)
+ok("existing_API_current_source_binding",monitor.source_binding(guard)["sha256"]==review["source_canonical_identity"])
+ok("root_preattempt_guard_validation_receipt",launch_receipt["status"]=="formal_pilot_launch_authorized_before_attempt" and launch_receipt["guard"]==ref(guard_path) and launch_receipt["materialization"]==ref(O/"manifest.json") and launch_receipt["budget_review"]==guard["full_budget_and_cap_recipe_review"] and launch_receipt["financial_calls_so_far"]==0)
+ok("separate_root_launch_authority",guard["root_preapproved"] is True and guard["launch_authorized_by"]=="root" and guard["formal_financial_launch_authorized"] is True)
+ok("fresh_outputv2_binding_retained",Path(guard["native_output_path"])==D/"task-5-formal-pilot-root-v2" and Path(guard["receipt_directory"])==D/"task-5-formal-pilot-root-operational-observation-v2")
+ok("administrative_partial_not_financialcap",guard["administrative_guard_only"] is True and guard["financial_A_cap_projection_approved"] is False)
+ok("unknown_phase_boundary",guard["financial_qualification"]=="unknown" and guard["formal_phase_completion_claimed"] is False and guard["numerical_accuracy_and_research_acceptance_authorized"] is False)
+ok("root_mater terminal cost receipt",root_expense["status"]=="completed" and root_expense["exit_code"]==0 and root_expense["cap"] is None and root_expense["root_approval_sha256"]==sha(root_path) and root_expense["financial_workers"]==0)
+ok("enclosing_includes_inner_not_added",root_expense["wall_seconds"]>=progress["cost"]["wall_seconds_before_final_manifest"] and root_expense["children_CPU_seconds"]>=progress["cost"]["CPU_seconds_before_final_manifest"])
+ok("RSS_within_actualroot_metadata_prior",root_expense["child_kernel_peak_RSS_bytes"]<root["metadata_preparation_resource_allowance"]["individual_process_RSS_bytes"])
+snap=guard["root_fresh_capacity_snapshot"]
+ok("actual_3volumes_10GiB_reserves",len({r["device"] for r in snap["volumes"].values()})==3 and all(r["free_bytes"]>r["reserve_bytes"]==10*1024**3 for r in snap["volumes"].values()))
+ok("actual16GiB_prior_and_unknowncapacity",snap["memory_bytes"]["MemAvailable"]>guard["child_rss_limit_bytes"]==guard["parent_rss_limit_bytes"]==16*1024**3 and snap["whole_physical_capacity_upper_bytes"] is None and snap["capacity_forecast_not_guaranteed"] is True)
+ok("wall30day notruntimeforecast",guard["phase_wall_limit_seconds"]==30*24*3600 and guard["cap_values_are_runtime_predictions"] is False)
+for name,h in source["files"].items():ok("source_byte_stable_end:"+name,sha(W/name)==h)
+failures=[r for r in checks if not r["passed"]]
+result={
+ "schema":"rb-f04-independent-current-materialized-prior-binding-results-v2","status":"PASS" if not failures else "FAIL",
+ "checks":checks,"checks_passed":len(checks)-len(failures),"failures":failures,
+ "source_canonical_identity":review["source_canonical_identity"],"source_native_payload_identity":review["source_native_payload_identity"],
+ "actual_review":ref(review_path),"actual_root_approval":ref(root_path),"materialized_manifest":ref(O/"manifest.json"),"actual_guard":ref(guard_path),
+ "all_original_counts":{"jobs":len(jobs),"cases":case_count,"obligations":attempt_count,"teachers":20,"drivers":10,"cap_options":progress["literal_cap_options"]},
+ "cap_roster_scope":"573122 exact recipe mathematics reused from old actual independent review and fixed unchanged existing helper; current actual root lock/validate terminal manifest authenticated; not recounted or repriced here",
+ "whole_budget_math_recipe_and_N_thresholds_recomputed":False,
+ "old_partial70_originalsource_failure_costs_and_unknown_preserved":True,
+ "current_root_launch_permission":"root-only actual guard; independent reviewer does not authorize/start financial work",
+ "fresh_predicate_time_scope":"root pre-attempt load_guard receipt reused; current live directories never treated as pre-attempt faults",
+ "late_reader_API_error":{"probe":"task-5-formal-prior-materialized-and-guard-independent-probe-v2.py","GuardRejectedError":"fresh native output and fresh monitor receipts required","cause":"reviewer called pre-attempt-only API after root launch; preserved trace; not source or guard defect","uncompleted_probe_CPU_RSS_and_fullwall_seconds":None,"tool_terminal_output":"preserved in session2968 tool transcript","work_not_counted_as_new_independent_cap_math_PASS":True},
+ "bounded_JSON_max_window_bytes":maxwidth,"actual_root_enclosing_cost":root_expense,
+ "cost_non_doublecount":"outer67.172873635s includes inner65.800521601s; root binding0.621s and launchbinding1.051s separate receipts; failed review/read cost unknown; original formal70 costs retained separately",
+ "cost":{"wall_before_result_seconds":time.perf_counter()-start,"CPU_before_result_seconds":time.process_time()-cpu,"peak_RSS_bytes":resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,"receipt_tail_and_incidental_read_seconds":None},
+ "financial_worker_RNG_SDE_solver_Popen_calls_by_reviewer":0,"source_rootapproval_docs_tests_Git_CAS_mutations":0,
+ "financial_qualification":"unknown","formal_phase_main_accepted":False
+}
+out=D/"task-5-formal-prior-materialized-and-guard-independent-results-v2.json";assert not out.exists()
+out.write_text(json.dumps(result,ensure_ascii=False,indent=2,allow_nan=False)+"\n")
+print(json.dumps({"status":result["status"],"checks":len(checks),"failures":failures,"cost":result["cost"],"max_JSON_window":maxwidth},ensure_ascii=False))

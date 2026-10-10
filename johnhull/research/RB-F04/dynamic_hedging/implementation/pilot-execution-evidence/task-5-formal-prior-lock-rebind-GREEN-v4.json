@@ -1,0 +1,24 @@
+{
+  "checks": [
+    "same original actual source pair accepts exactly two duplicate runner SHA updates",
+    "runner protocol_source/file binding consistent before and after",
+    "every other identity field/key/value remains exact",
+    "other protocol_source SHA change rejected",
+    "runner protocol_source/files inconsistency rejected",
+    "identity field removal rejected",
+    "only rebind_source_evidence AST changed; all math/budget/cap validators unchanged",
+    "monitor identical bytes",
+    "candidate recipe43eb and rows02da unchanged"
+  ],
+  "checks_passed": 9,
+  "compile_scripts": 4,
+  "cost": {
+    "CPU_before_report_seconds": 0.022819202,
+    "final_record_tail_seconds": null,
+    "wall_before_report_seconds": 0.02281659099389799
+  },
+  "new_helper_start_lock_financial_RNG_SDE_solver_Popen": 0,
+  "new_source_prior_or_financial_launch_approved": false,
+  "source_inputs": "same two actual source closure JSONs as RED",
+  "status": "PASS_metadata_predicate_only"
+}

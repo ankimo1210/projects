@@ -1,0 +1,28 @@
+{
+  "schema": "rb-f04-independent-source-prior-rebind-review-manifest-v1",
+  "status": "not_approved_specific_D_consumer_predicate",
+  "files": {
+    "task-5-formal-prior-lock-rebind-independent-probe-v3.py": {
+      "sha256": "bed2f202b2357e1ee1e78224c8b19c1007bd3a4c500d2ecd98e803e6bb9acbf7",
+      "bytes": 13132
+    },
+    "task-5-formal-prior-lock-rebind-independent-results-v3.json": {
+      "sha256": "74d4185bfa716089746e558bfea8dfc44b364b4df1c0a1320cbac38d0f85a8a2",
+      "bytes": 32504
+    },
+    "task-5-formal-prior-lock-rebind-independent-decision-v3.json": {
+      "sha256": "b6f6e3c6e961dd88613fb9a292c3db7ff3e96462e014d83047946ed85b86b87f",
+      "bytes": 6541
+    },
+    "task-5-formal-prior-lock-rebind-independent-review-v3.md": {
+      "sha256": "47e99502f42ba0e0bfb8cffcfa3f63b73fbd6b010011dc2896e524e46e56a9aa",
+      "bytes": 1973
+    }
+  },
+  "original_candidate": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-manifest-v3.json",
+    "sha256": "2e23e50fb235610e980ea9b73450e42429ba0d1f043281ac257245b34aa9811c"
+  },
+  "all_original_files_unchanged": true,
+  "finance_Popen_helper_lock_calls": 0
+}

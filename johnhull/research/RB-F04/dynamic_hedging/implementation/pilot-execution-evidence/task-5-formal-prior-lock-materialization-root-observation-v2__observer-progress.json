@@ -1,0 +1,15 @@
+{
+  "status": "metadata_materializer_running",
+  "pid": 314948,
+  "elapsed_seconds": 66.17253695399995,
+  "child_peak_individual_process_RSS_bytes": 3235053568,
+  "parent_peak_RSS_bytes": 34738176,
+  "volumes_free_bytes": {
+    "/": 590219018240,
+    "/mnt/c": 316393480192,
+    "/mnt/f": 182768762880
+  },
+  "observations": 67,
+  "cap": null,
+  "financial_workers": 0
+}

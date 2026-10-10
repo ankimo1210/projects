@@ -1,0 +1,75 @@
+
+"""Observe the actual metadata-only materializer; preserve failures and partial directories."""
+import argparse, datetime, hashlib, json, os, pathlib, resource, shutil, signal, subprocess, time
+D=pathlib.Path("/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging")
+PY="/home/kazumasa/projects/.venv/bin/python"
+def sha(p):return hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()
+def proc_data(pid):
+ try:
+  value={}
+  for line in pathlib.Path(f"/proc/{pid}/status").read_text().splitlines():
+   if line.startswith(("PPid:","VmRSS:")):
+    key,*items=line.split();value[key[:-1]]=int(items[0])
+  return value
+ except (FileNotFoundError,ProcessLookupError,PermissionError):return {}
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument("--approval",type=pathlib.Path,required=True)
+ ap.add_argument("--out",type=pathlib.Path,required=True);ap.add_argument("--receipts",type=pathlib.Path,required=True)
+ a=ap.parse_args()
+ approval=a.approval.resolve(strict=True);approval.relative_to(D)
+ approved=json.loads(approval.read_text())
+ assert approved["status"]=="approved_for_prior_materialization_only"
+ assert approved["formal_financial_launch_authorized"] is False
+ prior=approved["metadata_preparation_resource_allowance"]
+ r=a.receipts.resolve();r.relative_to(D);assert not r.exists()
+ out=a.out.resolve();out.relative_to(D);assert not out.exists()
+ script=D/"task-5-formal-prior-lock-preparation-v4.py"
+ assert sha(script)==approved["materializer_sha256"]
+ r.mkdir();(r/"actual-root-approval-reference.json").write_text(json.dumps({"path":str(approval),"sha256":sha(approval)},indent=2)+"\n")
+ env=os.environ.copy();env.update(OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1",PYTHONDONTWRITEBYTECODE="1")
+ wall_start=time.perf_counter();cpu_start=time.process_time();usage_start=resource.getrusage(resource.RUSAGE_CHILDREN)
+ start_utc=datetime.datetime.now(datetime.timezone.utc).isoformat()
+ peak_child=0;peak_parent=0;cap=None;observations=0
+ argv=[PY,str(script),"--approval",str(approval),"--out",str(out)]
+ with (r/"stdout.log").open("wb") as stdout,(r/"stderr.log").open("wb") as stderr:
+  p=subprocess.Popen(argv,cwd=str(D.parents[2]),env=env,stdout=stdout,stderr=stderr,start_new_session=True)
+  while p.poll() is None:
+   allp={}
+   for entry in pathlib.Path("/proc").iterdir():
+    if entry.name.isdigit():allp[int(entry.name)]=proc_data(int(entry.name))
+   children={p.pid}
+   for _ in range(8):
+    new=children|{pid for pid,v in allp.items() if v.get("PPid") in children}
+    if new==children:break
+    children=new
+   child_rss=max((allp.get(pid,{}).get("VmRSS",0)*1024 for pid in children),default=0)
+   parent_rss=allp.get(os.getpid(),{}).get("VmRSS",0)*1024
+   peak_child=max(peak_child,child_rss);peak_parent=max(peak_parent,parent_rss);observations+=1
+   volumes={path:shutil.disk_usage(path).free for path in ["/","/mnt/c","/mnt/f"]}
+   elapsed=time.perf_counter()-wall_start
+   if elapsed>prior["wall_seconds"]:cap="administrative_metadata_wall"
+   elif max(child_rss,parent_rss)>prior["individual_process_RSS_bytes"]:cap="administrative_metadata_individual_process_RSS"
+   elif any(value<prior["volume_reserve_bytes"] for value in volumes.values()):cap="administrative_metadata_volume_reserve"
+   progress={"status":"metadata_materializer_running" if cap is None else "partial_unclosed","pid":p.pid,"elapsed_seconds":elapsed,"child_peak_individual_process_RSS_bytes":peak_child,"parent_peak_RSS_bytes":peak_parent,"volumes_free_bytes":volumes,"observations":observations,"cap":cap,"financial_workers":0}
+   (r/"observer-progress.json").write_text(json.dumps(progress,indent=2)+"\n")
+   if cap:
+    os.killpg(p.pid,signal.SIGTERM)
+    try:p.wait(timeout=10)
+    except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait()
+    break
+   time.sleep(1)
+  rc=p.wait()
+ stop=time.perf_counter();parent_cpu=time.process_time()-cpu_start;usage=resource.getrusage(resource.RUSAGE_CHILDREN)
+ result={"schema":"rb-f04-root-metadata-materialization-enclosing-cost-v1","status":"completed" if rc==0 and cap is None else "partial_unclosed",
+  "argv":argv,"child_pid":p.pid,"exit_code":rc,"cap":cap,"root_approval_sha256":sha(approval),
+  "start_UTC":start_utc,"end_UTC":datetime.datetime.now(datetime.timezone.utc).isoformat(),
+  "wall_seconds":stop-wall_start,"parent_CPU_seconds":parent_cpu,
+  "children_CPU_seconds":usage.ru_utime+usage.ru_stime-usage_start.ru_utime-usage_start.ru_stime,
+  "sampled_child_peak_individual_process_RSS_bytes":peak_child,"child_kernel_peak_RSS_bytes":usage.ru_maxrss*1024,
+  "sampled_parent_peak_RSS_bytes":peak_parent,"observations":observations,
+  "scope":"metadata generation including source/input checks, exact cap expansion, artifact writer and manifest; not financial RNG/SDE or any numerical acceptance",
+  "financial_workers":0,"financial_qualification":"unknown","own_final_receipt_write_stdout_cost":None}
+ (r/"parent-cost-and-status.json").write_text(json.dumps(result,indent=2)+"\n")
+ print(json.dumps(result),flush=True)
+ return rc if not cap else 3
+if __name__=="__main__":raise SystemExit(main())

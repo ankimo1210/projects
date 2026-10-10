@@ -1,0 +1,58 @@
+{
+  "schema": "rb-f04-root-formal-financial-launch-binding-receipt-v1",
+  "status": "formal_pilot_launch_authorized_before_attempt",
+  "guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v2.json",
+    "sha256": "a36ec860c80f7af29bd1c36669ea98d5737c6e72319dd84cc939e6aa7276f11a"
+  },
+  "materialization": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialized-root-v3/manifest.json",
+    "sha256": "6e35597ac5ba5883b1f7f73b5aa82343f01358f304e78a199a3d35a932788c15"
+  },
+  "budget_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-independent-decision-v4.json",
+    "sha256": "ef4b8cbe88da24f163e2177dd95045b4069f6dfbbf0341c656432dc6a8d7296a",
+    "status": "approved"
+  },
+  "metadata_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-actual-root-approval-v2.json",
+    "sha256": "cd77af11dd47dad6576e6a677a106a279330b65cf0d594d12472f706d866c4f8"
+  },
+  "current_source_sha256": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "resource_observation": {
+    "UTC": "2026-10-10T10:18:16.718595+00:00",
+    "volumes": {
+      "WSL": {
+        "free_bytes": 590218985472,
+        "reserve_bytes": 10737418240,
+        "device": 2096
+      },
+      "C": {
+        "free_bytes": 316393521152,
+        "reserve_bytes": 10737418240,
+        "device": 71
+      },
+      "F": {
+        "free_bytes": 182768762880,
+        "reserve_bytes": 10737418240,
+        "device": 72
+      }
+    },
+    "memory_bytes": {
+      "MemTotal": 50512646144,
+      "MemAvailable": 48253251584,
+      "SwapTotal": 17179869184,
+      "SwapFree": 14454460416
+    },
+    "whole_physical_capacity_upper_bytes": null,
+    "capacity_forecast_not_guaranteed": true
+  },
+  "financial_calls_so_far": 0,
+  "financial_qualification": "unknown",
+  "main_or_phase_approval": false,
+  "cost": {
+    "wall_before_receipt_seconds": 1.0508198500028811,
+    "CPU_before_receipt_seconds": 1.048743196,
+    "final_receipt_tail_seconds": null
+  }
+}

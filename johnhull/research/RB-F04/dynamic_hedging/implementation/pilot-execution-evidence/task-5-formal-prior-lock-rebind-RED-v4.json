@@ -1,0 +1,21 @@
+{
+  "actual_before_after_json_equal_under_v3_predicate": false,
+  "cause": "protocol_source repeats the same legitimate runner SHA change e771 to 8f0df",
+  "failed_original_predicate": "all identity fields except files equal",
+  "new_helper_start_lock_financial_RNG_SDE_solver_Popen": 0,
+  "original_independent_failure": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-independent-results-v3.json",
+    "sha256": "74d4185bfa716089746e558bfea8dfc44b364b4df1c0a1320cbac38d0f85a8a2"
+  },
+  "source_inputs": {
+    "corrected": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-independent-current-source-closure-v1.json",
+      "sha256": "4183b1e707cfb40d01808a45e1fc5042e54ba26d8a2892e3ac3703f76a30f768"
+    },
+    "previous": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-fixed-v3-source-closure.json",
+      "sha256": "3a8014c8768520912f2a77f0345812e9ef5ea12d850ece53116e6b9c28d265f6"
+    }
+  },
+  "status": "expected_RED_preserved"
+}

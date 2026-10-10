@@ -1,0 +1,36 @@
+{
+  "status": "actual_approved_prior_metadata_materialized",
+  "actual_lock_API_validate_and_source_binding": "PASS",
+  "financial_workers_RNG_solver_SDE_calls": 0,
+  "formal_financial_phase_approved": false,
+  "financial_qualification": "unknown",
+  "pilot_started": false,
+  "source_identity": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_native_payload_identity": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "source81_before_after_stable": true,
+  "jobs": 3138,
+  "cases": 121,
+  "attempts": 51,
+  "teachers": 20,
+  "drivers": 10,
+  "literal_cap_options": 573122,
+  "source_snapshot": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialized-root-v3/source-snapshot",
+  "locked_prior_receipt": {
+    "schema": "rb-f04-array-receipt-v1",
+    "metadata_sha256": "1809cfebb1ce25428f22f0d4165a4ed608d1e51d530d5dffb6ae30842f7ab856",
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "uncompressed_bytes": 0,
+    "artifact_sha256": "206b2c866e9fe7e52ef07293a2429aab1453071a2aedbeac701496e542f51dc1"
+  },
+  "actual_root_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-actual-root-approval-v2.json",
+    "sha256": "cd77af11dd47dad6576e6a677a106a279330b65cf0d594d12472f706d866c4f8"
+  },
+  "actual_independent_review_SHA": "ef4b8cbe88da24f163e2177dd95045b4069f6dfbbf0341c656432dc6a8d7296a",
+  "root_operational_guard_is_financial_cap": false,
+  "cost": {
+    "wall_seconds_before_final_manifest": 65.80052160100604,
+    "CPU_seconds_before_final_manifest": 64.60934197600001,
+    "final_receipt_tail_seconds": null
+  }
+}

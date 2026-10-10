@@ -1,0 +1,38 @@
+{
+  "schema": "rb-f04-root-actual-formal-pilot-exec-handle-v1",
+  "status": "running_requires_actual_native_and_saved_result_inspection",
+  "captured_UTC": "2026-10-10T10:23:27.195497+00:00",
+  "unified_exec_session_id": 21286,
+  "guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v2.json",
+    "sha256": "a36ec860c80f7af29bd1c36669ea98d5737c6e72319dd84cc939e6aa7276f11a"
+  },
+  "root_enclosing_observer": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-enclosing-observer-v2.py",
+  "native": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2",
+  "operational_receipts": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-operational-observation-v2",
+  "initial_observed_states": {
+    "task-5-formal-pilot-root-enclosing-observation-v2/observer-progress.json": {
+      "schema": "rb-f04-root-actual-formal-monitor-invocation-v1",
+      "status": "running",
+      "monitor_pid": 316327,
+      "root_pid": 316326,
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v4.py",
+        "--guard",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v2.json"
+      ],
+      "guard_sha256": "a36ec860c80f7af29bd1c36669ea98d5737c6e72319dd84cc939e6aa7276f11a",
+      "start_UTC": "2026-10-10T10:22:45.858242+00:00",
+      "elapsed_seconds": 40.00397935500223,
+      "financial_phase_completion_claimed": false,
+      "qualification": "unknown"
+    }
+  },
+  "same_handle_poll_required": true,
+  "observer_timeout_not_restart_authority": true,
+  "formal_pilot_completion_claimed": false,
+  "financial_qualification": "unknown",
+  "main_or_phase_approval": false,
+  "original_failed_partial_retained": true
+}

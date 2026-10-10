@@ -1,0 +1,135 @@
+import ast,copy,datetime,hashlib,json,resource,time
+from pathlib import Path
+W=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=W/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+PREFIX="task-5-formal-prior-lock-rebind-independent"
+start=time.perf_counter();cpu=time.process_time()
+checks=[]
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def read(name):return json.loads((D/name).read_text())
+def digest(v):return hashlib.sha256(json.dumps(v,sort_keys=True,separators=(",",":"),ensure_ascii=True,allow_nan=False).encode()).hexdigest()
+def ok(name,value,detail=None):
+ row={"name":name,"passed":bool(value)}
+ if detail is not None:row["detail"]=detail
+ checks.append(row)
+def ref(name):return {"path":str(D/name),"sha256":sha(D/name)}
+def normalized(rows):
+ result=copy.deepcopy(rows)
+ for row in result.values():row["budget"].pop("review_sha256",None)
+ return result
+def functions(name):
+ tree=ast.parse((D/name).read_text())
+ return {n.name:n for n in tree.body if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))}
+def dump(n):return ast.dump(n,include_attributes=False)
+MNAME="task-5-formal-prior-lock-rebind-manifest-v3.json"
+ok("fixed_v3_manifest",sha(D/MNAME)=="2e23e50fb235610e980ea9b73450e42429ba0d1f043281ac257245b34aa9811c")
+manifest=read(MNAME)
+ok("manifest_21_files",manifest["count"]==len(manifest["files"])==21)
+for name,item in manifest["files"].items():
+ p=D/name;ok("manifest:"+name,p.stat().st_size==item["bytes"] and sha(p)==item["sha256"])
+oldname="task-5-fullmixed-prior-budget-independent-final-decision-v2.json"
+old=read(oldname);candidate=read("task-5-formal-prior-lock-rebind-bindings-candidate-v3.json")
+evidence=read("task-5-formal-prior-lock-rebind-evidence-v3.json")
+source_review=read("task-5-formal-date-gate-N-source-fix-independent-decision-v1.json")
+current=read("task-5-formal-date-gate-N-independent-current-source-closure-v1.json")
+previous=read("task-5-phase-verified-raw-memo-fixed-v3-source-closure.json")
+config=read("task-5-fullmixed-prior-budget-candidate-author-v1-config.json")
+rows=read("task-5-fullmixed-prior-budget-independent-effective-rows-v1.json")
+pending=read("task-5-formal-prior-lock-preparation-pending-example-v3.json")
+bounds=candidate["candidate_bindings"]
+for name,item in evidence["references"].items():ok("evidence:"+name,sha(item["path"])==item["sha256"])
+for name,item in pending["bindings"].items():ok("pending_binding:"+name,sha(item["path"])==item["sha256"])
+ok("old_prior_keeps_old_source",old["source_canonical_identity"]=="1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067" and old["source_native_payload_identity"]=="be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532")
+ok("source_only_decision_no_budget_or_launch",source_review["decision"]=="approved" and source_review["whole_budget_and_cap_recipe_approved_for_new_source"] is False and source_review["formal_financial_pilot_launch_authorized_by_reviewer"] is False and source_review["main_phase_or_research_accepted"] is False)
+ok("old_prior_schema_and_scope",old["schema"]=="rb-f04-independent-fullmixed-prior-budget-review-v1" and old["decision"]=="approved" and old["formal_pilot_run"] is False and old["main_or_phase_approval"] is False)
+ok("source_canonical_exact",digest(current)==bounds["source_identity_sha256"]==source_review["source_canonical_runner_digest_sha256"])
+ok("source_native_reused_approved_actual_API_receipt",bounds["source_native_payload_sha256"]==source_review["source_native_payload_sha256"]==manifest["native_source_sha256"])
+ok("source_inventory81_static",len(current["files"])==81 and not current["dynamic_imports"] and set(previous["files"])==set(current["files"]))
+changed=[k for k in previous["files"] if previous["files"][k]!=current["files"][k]]
+ok("only_reviewed_runner_key_repair",changed==source_review["source_changed_files"]==["johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"])
+ok("source_geometry_environment_unchanged",{k:v for k,v in previous.items() if k!="files"}=={k:v for k,v in current.items() if k!="files"})
+before={}
+for name,expected in current["files"].items():
+ before[name]=sha(W/name);ok("source_byte:"+name,before[name]==expected)
+ok("old_source_snapshot_keeps_81",digest(previous)==old["source_canonical_identity"])
+ok("effective_rows_SHA_exact",sha(D/"task-5-fullmixed-prior-budget-independent-effective-rows-v1.json")==old["explicit_approved_rate_rows"]["sha256"]==candidate["old_effective_rows_sha256"])
+ok("effective_3138_null_authority",len(rows)==3138 and all(r["budget"]["review_sha256"] is None for r in rows.values()))
+normal=normalized(rows)
+ok("effective_rows_digest_unchanged",digest(normal)==old["approved_bindings"]["budget_rows_without_review_SHA_digest"]==bounds["budget_rows_without_review_SHA_digest"])
+def cap_payload(identity):
+ return {
+  "schema":"rb-f04-exact-original-cap-recipe-v1","source_identity":identity,
+  "original_plan_templates":config["original_plan_templates"],"cap_options_recipe":config["cap_options_recipe"],
+  "parent_limits":[{"job_id":p["job_id"],"expense_id":p["expense_id"],"metric":"wall_seconds",
+    "limit":rows[p["job_id"]]["budget"]["wall_seconds"],"planned_before_attempt":True,
+    "cap_scope_sha256":p["cap_scope_sha256"]} for p in config["parent_cap_templates"]],
+  "budget_rows_without_review_SHA":normal,"literal_options":573122,
+  "relative_parent_order":"original v3 job order",
+  "selector_SHA_transport":"existing runtime caller conditional_selection_binding"}
+oldrecipe=cap_payload(old["source_canonical_identity"]);newrecipe=cap_payload(bounds["source_identity_sha256"])
+ok("old_exact_recipe_reconstructed",digest(oldrecipe)==old["approved_bindings"]["cap_recipe_digest"]=="e8fda1ec6c5bb05e361e428f94340e67b4a8e2e42da68010082331bd7ae54c1e")
+ok("new_exact_recipe_reconstructed",digest(newrecipe)==bounds["cap_recipe_digest"]=="43ebacfd81f69043535feafcccc872ea68e4724715ed25ea3dead36dd1e630a5")
+ok("recipe_source_only_delta",set(oldrecipe)==set(newrecipe) and [k for k in oldrecipe if oldrecipe[k]!=newrecipe[k]]==["source_identity"])
+ok("literal_original573122",sum(len(r["parent_indices"])*len(r["original_N_branches"]) for group in config["cap_options_recipe"].values() for r in group)==573122)
+ok("parent_original266306",sum(len(r["parent_indices"]) for group in config["cap_options_recipe"].values() for r in group)==old["cap_recipe_authority"]["all_parent_associations"]==266306)
+ok("case_attempt_original_counts",len(config["original_plan_templates"]["cases"])==121 and len(config["original_plan_templates"]["attempts"])==51)
+ok("original_N_unchanged",old["approved_original_scope"]["N"]==evidence["original_teacher_N"]==[1024,4096,16384,65536])
+ok("10_external_unknown_preserved",len(config["external_expense_candidates"])==10 and all(e["status"]=="pending" and all(v is None for v in e["timing"].values()) for e in config["external_expense_candidates"]))
+ok("history46_kept",len(config["history"])==46)
+changed_bindings=[k for k in old["approved_bindings"] if old["approved_bindings"][k]!=bounds[k]]
+expected_changes=["source_native_payload_sha256","source_limited_decision_sha256","source_rebind_evidence_sha256","source_identity_sha256","cap_recipe_digest","materializer_sha256"]
+ok("exact_18_binding_set",set(old["approved_bindings"])==set(bounds) and len(bounds)==18)
+ok("exact_six_source_binding_changes",set(changed_bindings)==set(candidate["changed_binding_keys"])==set(expected_changes),changed_bindings)
+reconstructed=copy.deepcopy(old["approved_bindings"])
+reconstructed.update(source_identity_sha256=digest(current),source_native_payload_sha256=source_review["source_native_payload_sha256"],
+ source_limited_decision_sha256=sha(D/"task-5-formal-date-gate-N-source-fix-independent-decision-v1.json"),
+ source_rebind_evidence_sha256=sha(D/"task-5-formal-prior-lock-rebind-evidence-v3.json"),
+ cap_recipe_digest=digest(newrecipe),materializer_sha256=sha(D/"task-5-formal-prior-lock-preparation-v3.py"))
+ok("actual_18bindings_independent_reconstruction",reconstructed==bounds)
+oldf=functions("task-5-formal-prior-lock-preparation-v2.py");newf=functions("task-5-formal-prior-lock-preparation-v3.py")
+allowed={"rebind_source_evidence","load_review","validate_assembly_binding","prepare"}
+for name in oldf:
+ if name not in allowed:ok("materializer_AST_unchanged:"+name,dump(oldf[name])==dump(newf[name]))
+ok("materializer_only_added_historical_function",set(newf)-set(oldf)=={"_historical_source_evidence"})
+oldm=functions("task-5-full-pilot-root-operational-monitor-v2.py");newm=functions("task-5-full-pilot-root-operational-monitor-v3.py")
+ok("monitor_function_roster_unchanged",set(oldm)==set(newm))
+for name in oldm:
+ if name!="limited_source_review":ok("monitor_AST_unchanged:"+name,dump(oldm[name])==dump(newm[name]))
+for older,newer,replacements in [
+ ("task-5-formal-prior-actual-root-approval-builder-v1.py","task-5-formal-prior-actual-root-approval-builder-v2.py",{
+ "task-5-formal-prior-lock-preparation-v2.py":"task-5-formal-prior-lock-preparation-v3.py",
+ "9a27b3943fc57beac7d0f869901fd7b31c5becae7504f04773ba39ed65ce7830":"fcc35cf3e32548eb06991f87729845f9d205574c79d60eea6b7f7c32401376b7",
+ "task-5-formal-prior-lock-preparation-pending-example-v2.json":"task-5-formal-prior-lock-preparation-pending-example-v3.json",
+ "task-5-formal-prior-actual-root-binding-receipt-v1.json":"task-5-formal-prior-actual-root-binding-receipt-v2.json"}),
+ ("task-5-formal-pilot-root-launch-guard-builder-v1.py","task-5-formal-pilot-root-launch-guard-builder-v2.py",{
+ "task-5-full-pilot-root-operational-monitor-v2.py":"task-5-full-pilot-root-operational-monitor-v3.py",
+ "1c8e0c375cfff3d347326b63b1f324177e29bb4216810490c9d468cabbb6181c":"94ddf018576ab107a6c3146088713a9e30da29416f419941a9831fb60e938626",
+ "task-5-full-pilot-root-operational-monitor-v2-guard-candidate.json":"task-5-full-pilot-root-operational-monitor-v3-guard-candidate.json",
+ "task-5-formal-pilot-root-launch-binding-receipt-v1.json":"task-5-formal-pilot-root-launch-binding-receipt-v2.json"})]:
+ text=(D/older).read_text()
+ for a,b in replacements.items():text=text.replace(a,b)
+ ok("root_builder_only_fixed_refs:"+newer,text==(D/newer).read_text())
+ok("pending_approval_not_promoted",pending["planned_before_attempt"] is False and pending["reviewed_budgets"] is None and pending["approved_bindings"] is None and pending["cap_options_authority"]["status"]=="pending")
+ok("false_candidate_history_preserved",candidate["approved"] is False and evidence["all3138_budget_and_cap_recipe_approved"] is False and manifest["formal_budget_approved_for_new_source"] is False)
+guard=read("task-5-full-pilot-root-operational-monitor-v3-guard-candidate.json")
+ok("guard_false_financial_partial_boundary",guard["root_preapproved"] is False and guard["formal_financial_launch_authorized"] is False and guard["financial_A_cap_projection_approved"] is False and guard["financial_qualification"]=="unknown" and guard["formal_phase_completion_claimed"] is False)
+ok("guard_current_81inventory",guard["source_identity"]==current and guard["source_identity_sha256"]==digest(current) and guard["source_native_payload_sha256"]==source_review["source_native_payload_sha256"])
+ok("guard_exact_fixedmonitor",guard["monitor_sha256"]==sha(D/"task-5-full-pilot-root-operational-monitor-v3.py"))
+for name,expected in before.items():ok("stable_source_byte:"+name,sha(W/name)==expected)
+failures=[r for r in checks if not r["passed"]]
+result={
+ "schema":"rb-f04-independent-source-prior-rebind-static-results-v1","status":"PASS" if not failures else "FAIL",
+ "checks":checks,"checks_passed":len(checks)-len(failures),"failures":failures,
+ "bindings":reconstructed,"source_files":81,"source_only_delta":changed,
+ "old_prior":ref(oldname),"old_recipe":digest(oldrecipe),"new_recipe":digest(newrecipe),
+ "scope":"D-only stdlib AST, physical provenance and exact existing JSON recipe reconstruction; no helper/module execution; no new whole-budget mathematical re-review",
+ "old70_partial_and_unknown":"original raw/failure/expenses untouched; old full prior remains old source only",
+ "native_digest":"reused actual fixed independent source API evidence a907; this probe canonical JSON rederived5d and all81 physical bytes reauthenticated",
+ "financial_RNG_SDE_solver_Popen_helper_lock_calls":0,"production_source_tests_docs_Git_CAS_mutations":0,
+ "cost":{"wall_before_result_seconds":time.perf_counter()-start,"CPU_before_result_seconds":time.process_time()-cpu,
+ "peak_RSS_bytes":resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,
+ "incidental_read_tool_tail_and_result_write_seconds":None},
+ "earlier_metadata_query_error":{"filename":"task-5-formal-prior-lock-preparation-v3.md","correct":"task-5-formal-prior-lock-rebind-preparation-v3.md","cause":"reviewer filename error; source unchanged","tool_log_preserved":True,"CPU_and_billing_cost":None}
+}
+out=D/(PREFIX+"-results-v3.json");assert not out.exists();out.write_text(json.dumps(result,ensure_ascii=False,indent=2,allow_nan=False)+"\n")
+print(json.dumps({"status":result["status"],"checks":len(checks),"failures":failures,"newrecipe":digest(newrecipe),"cost":result["cost"]},ensure_ascii=False))

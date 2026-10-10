@@ -1,0 +1,18 @@
+{
+  "schema": "rb-f04-incidental-postlaunch-metadata-reader-error-v1",
+  "probe": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-and-guard-independent-probe-v2.py",
+    "sha256": "bc654c9741e2aec79b4f208dfe57c4e3edbcb58b4bd96e63ecb030f043c3daf8"
+  },
+  "status": "preserved_postlaunch_reader_API_error",
+  "original_terminal_exit": 1,
+  "session_id": 2968,
+  "trace": "File task-5-formal-prior-materialized-and-guard-independent-probe-v2.py line201: monitor.load_guard(guard_path); File task-5-full-pilot-root-operational-monitor-v4.py line268: require fresh native output and fresh monitor receipts required; GuardRejectedError: fresh native output and fresh monitor receipts required",
+  "cause": "root fresh launch created native-v2/receipts-v2 during independent read; pre-attempt-only load_guard called after launch",
+  "source_guard_or_financial_defect": false,
+  "financial_worker_RNG_SDE_solver_Popen_calls_by_reviewer": 0,
+  "original_tool_initial_wait_wall_seconds": 10.016556,
+  "total_wall_CPU_RSS_billing_unknown": null,
+  "source_original_and_current_touched": false,
+  "new_no_rerun_boundary": "root pre-attempt receipt reused; mathematical caps not re-reviewed and late output existence not interpreted as prior approval failure"
+}

@@ -1,0 +1,587 @@
+
+"""Prepare prior metadata only after root's actual independent approvals.
+
+No financial workers are executed. Existing candidate artifacts remain immutable.
+"""
+from __future__ import annotations
+import argparse
+import copy
+import hashlib
+import importlib.util
+import json
+import math
+import os
+from pathlib import Path
+import shutil
+import sys
+from time import perf_counter, process_time
+
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+R=WT/"johnhull/research/RB-F04/dynamic_hedging"
+EXPECTED_SOURCE="5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e"
+EXPECTED_NATIVE_SOURCE="56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7"
+SOURCE_DECISION_NAME="task-5-formal-date-gate-N-source-fix-independent-decision-v1.json"
+SOURCE_DECISION_SHA="a90705642f36eef595b93e9cbb2302aaa54d547d5deb7ad6ca46024deed1fbf0"
+SOURCE_EVIDENCE_NAME="task-5-formal-prior-lock-rebind-evidence-v3.json"
+SOURCE_EVIDENCE_SHA="fb52036f054356c96700f18ca8feadb2397ac0e51bad4bf602c5a0b4f317c0df"
+ASSEMBLY_NAME="task-5-fullmixed-prior-budget-assembly-author-v2-config.json"
+ASSEMBLY_SHA="257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5"
+ASSEMBLY_MANIFEST_NAME="task-5-fullmixed-prior-budget-assembly-author-v2-manifest.json"
+ASSEMBLY_MANIFEST_SHA="cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3"
+RAW_ASSEMBLED_ROWS_DIGEST="fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f"
+RAW_ASSEMBLED_RECIPE_DIGEST="d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d"
+ACTIVATION_ORIGIN_NAME="task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.json"
+ACTIVATION_ORIGIN_SHA="a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1"
+ACTIVATION_COLLECTION_DIGEST="a82f3c33d71a918f51131c8c77917793ceec75850a2181815c867f1a1e243c04"
+BASE_NAME="task-5-fullmixed-prior-budget-candidate-author-v1-config.json"
+OVERLAY_NAME="task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json"
+BASE_SHA="c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d"
+OVERLAY_SHA="dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62"
+REQUIRED_OPTIONS=573122
+APPROVAL_SCHEMA="rb-f04-root-prior-lock-approval-v1"
+SOURCE_REVIEW_KIND="approved"
+HISTORICAL_BUDGET_SOURCE="1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067"
+HISTORICAL_BUDGET_NATIVE_SOURCE="be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532"
+PRIOR_REVIEW_SCHEMA="rb-f04-independent-fullmixed-prior-budget-review-v1"
+REPLAY_NAME="task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json"
+REPLAY_SHA="b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb"
+REPLAY_MANIFEST_NAME="task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json"
+REPLAY_MANIFEST_SHA="a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9"
+
+def require(value,message):
+    if not value:raise ValueError(message)
+
+def file_sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+def digest(value):
+    # Match run_reference._digest; later assert through the real API.
+    return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(",",":"),
+                          ensure_ascii=True,allow_nan=False).encode()).hexdigest()
+
+def read(path):
+    return json.loads(Path(path).read_text())
+
+def inside_d(path):
+    result=Path(path).resolve()
+    require(result.is_relative_to(D.resolve()),"preparation evidence/output must stay in D")
+    return result
+
+def checked_file(reference):
+    path=inside_d(reference["path"])
+    require(path.is_file(),"actual approved/reviewed file missing")
+    require(file_sha(path)==reference["sha256"],"stale or changed actual review/binding file")
+    return path
+
+def positive(value,name):
+    require(isinstance(value,(int,float)) and not isinstance(value,bool)
+            and math.isfinite(value) and value>0,f"positive finite {name} required")
+    return value
+
+def load_actual_approval(path):
+    # Reject absent/pending approval before importing financial source or writing output.
+    require(path is not None,"actual root approval JSON is required")
+    path=inside_d(path)
+    require(path.is_file(),"actual root approval JSON is absent")
+    value=read(path)
+    require(value.get("schema")==APPROVAL_SCHEMA,"actual root approval schema required")
+    require(value.get("status")=="approved_for_prior_materialization_only",
+            "pending/rejected approval cannot materialize prior metadata")
+    require(value.get("financial_qualification")=="unknown"
+            and value.get("formal_financial_phase_approved") is False,
+            "metadata permission must not imply financial/phase acceptance")
+    require(value.get("planned_before_attempt") is True,"pre-attempt actual root approval required")
+    return value,{"path":str(path),"sha256":file_sha(path)}
+
+def _historical_source_evidence():
+    evidence_path=checked_file({"path":str(D/"task-5-formal-prior-lock-rebind-evidence-v2.json"),"sha256":"1e83ebae5b76c0560a40cd1ec21faf6e342e722111d725feaa1faadb846f14a1"})
+    evidence=read(evidence_path)
+    require(evidence["all3138_budget_and_cap_recipe_approved"] is False
+            and evidence["formal_phase_approved"] is False,
+            "source chain must not become budget or phase approval")
+    for reference in evidence["references"].values():checked_file(reference)
+    refs=evidence["references"]
+    config=read(checked_file(refs[BASE_NAME]))
+    dc=read(checked_file(refs["task-5-conditional-n-prior-cap-consumer-author-v2-source-closure-after.json"]))
+    v2=read(checked_file(refs["task-5-phase-verified-raw-memo-fixed-v2-source-closure.json"]))
+    v3=read(checked_file(refs["task-5-phase-verified-raw-memo-fixed-v3-source-closure.json"]))
+    check="johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+    run="johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+    before=config["source"]["files"]
+    for identity in (dc,v2,v3):
+        require(set(identity["files"])==set(before) and len(before)==81
+                and not identity["dynamic_imports"],"original81 static inventories required")
+        require(all(identity["files"][k]==before[k] for k in before if k not in (check,run)),
+                "a financial source outside reviewed run/check changed")
+    chain=[config["source"],dc,v2,v3]
+    for identity,checkpoint in zip(chain,evidence["source_chain"],strict=True):
+        require(digest(identity)==checkpoint["canonical_sha256"]
+                and {check:identity["files"][check],run:identity["files"][run]}==checkpoint["files"],
+                "actual before/after source inventory SHA changed")
+    old=read(checked_file(refs["task-5-fullmixed-prior-budget-independent-v2-source-decision.json"]))
+    memo=read(checked_file(refs["task-5-phase-local-reuse-independent-decision-v1.json"]))
+    current=read(checked_file(refs["task-5-phase-local-admin-proof-key-independent-decision-v1.json"]))
+    require(old["runtime_closure_sha256"]==digest(dc)
+            and old["checker_sha256"]==dc["files"][check],"predicate source binding changed")
+    require(memo["canonical_source_identity_sha256"]==digest(v2)
+            and memo["check_pilot_sha256"]==v2["files"][check]
+            and memo["run_pilot_sha256"]==v2["files"][run]
+            and memo["independent_direct_cases_passed"]==18
+            and memo["formal_budget_approved"] is False and memo["formal_phase_approved"] is False,
+            "actual v2 limited source decision/inventory required")
+    require(current["source_canonical_runner_digest_sha256"]==digest(v3)
+            and current["checker_sha256"]==v3["files"][check]
+            and current["run_pilot_sha256"]==v3["files"][run],
+            "actual v3 limited source decision/inventory required")
+    for name in ("task-5-phase-local-reuse-root-regression-v1-results.json",
+                 "task-5-phase-local-admin-proof-key-root-v2-results.json"):
+        result=read(checked_file(refs[name]))
+        require(result["status"]=="PASS","saved root regression receipt required")
+        for row in result["checks"]:
+            require(row["exit_code"]==0 and file_sha(D/row["log"])==row["log_sha256"],
+                    "actual root regression log changed")
+    return evidence,v3
+
+def rebind_source_evidence():
+    # Preserve the original full-prior inventory/approvals as historical evidence.
+    _, previous = _historical_source_evidence()
+    evidence = read(checked_file({"path": str(D/SOURCE_EVIDENCE_NAME), "sha256": SOURCE_EVIDENCE_SHA}))
+    require(evidence["all3138_budget_and_cap_recipe_approved"] is False
+            and evidence["formal_phase_approved"] is False
+            and evidence["formal_financial_launch_authorized"] is False,
+            "source-only rebind evidence cannot approve new prior or launch")
+    for reference in evidence["references"].values():
+        checked_file(reference)
+    corrected = read(checked_file(evidence["corrected_source_reference"]))
+    review = read(checked_file(evidence["source_fix_decision"]))
+    run = "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+    check = "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+    require(set(corrected["files"]) == set(previous["files"])
+            and len(corrected["files"]) == 81 and not corrected["dynamic_imports"],
+            "one-key correction must keep the original81 static roster")
+    require([key for key in previous["files"] if previous["files"][key] != corrected["files"][key]]
+            == [run], "only the independently reviewed one-key runner source may change")
+    require(previous["protocol_source"][run] == previous["files"][run]
+            and corrected["protocol_source"][run] == corrected["files"][run],
+            "runner source inventory and protocol source binding disagree")
+    normalized_previous = copy.deepcopy(previous)
+    normalized_previous["files"][run] = corrected["files"][run]
+    normalized_previous["protocol_source"][run] = corrected["protocol_source"][run]
+    require(normalized_previous == corrected,
+            "identity changed outside the same reviewed runner SHA in files/protocol_source")
+    require(digest(corrected) == EXPECTED_SOURCE
+            and review["old_source_canonical_identity"] == digest(previous)
+            and review["old_source_native_payload_identity"] == HISTORICAL_BUDGET_NATIVE_SOURCE
+            and review["fixed_run_pilot_sha256"] == corrected["files"][run]
+            and review["fixed_check_pilot_sha256"] == corrected["files"][check]
+            and review["source_changed_files"] == [run],
+            "actual source-only decision/current inventory delta differs")
+    old = read(checked_file(evidence["references"]["task-5-fullmixed-prior-budget-independent-final-decision-v2.json"]))
+    rows = read(checked_file(evidence["references"]["task-5-fullmixed-prior-budget-independent-effective-rows-v1.json"]))
+    require(old["source_canonical_identity"] == HISTORICAL_BUDGET_SOURCE
+            and old["source_native_payload_identity"] == HISTORICAL_BUDGET_NATIVE_SOURCE
+            and digest(normalized_budget_rows(rows)) == old["approved_bindings"]["budget_rows_without_review_SHA_digest"],
+            "original approved3138 rate rows/source history changed")
+    return evidence, corrected
+
+def load_review(ref,scope):
+    # The actual v3 report has a source-limited decision kind, not generic approval.
+    require(ref.get("status")=="approved","actual independent review is not approved")
+    path=checked_file(ref);value=read(path)
+    require(value.get("financial_qualification")=="unknown",
+            "independent metadata approval must retain financial unknown")
+    if scope=="source_metadata":
+        require(path==D/SOURCE_DECISION_NAME and file_sha(path)==SOURCE_DECISION_SHA,
+                "actual fixed v3 source-only report required")
+        require(value.get("decision")==SOURCE_REVIEW_KIND
+                and value.get("schema")=="rb-f04-independent-date-gate-N-source-fix-review-v1"
+                and value.get("role")=="independent static source and regression evidence reviewer"
+                and value.get("approved_before_new_runtime_attempt") is True
+                and value.get("source_canonical_runner_digest_sha256")==EXPECTED_SOURCE
+                and value.get("source_native_payload_sha256")==EXPECTED_NATIVE_SOURCE
+                and value.get("source_files")==81 and value.get("dynamic_imports")==0,
+                "actual limited source decision must bind current static81 source")
+        require(value.get("whole_budget_and_cap_recipe_approved_for_new_source") is False
+                and value.get("formal_financial_pilot_launch_authorized_by_reviewer") is False
+                and value.get("main_phase_or_research_accepted") is False,
+                "limited source decision cannot grant budget or financial phase approval")
+        rebind_source_evidence()
+    else:
+        require(scope=="prior_budget_and_cap_recipe"
+                and value.get("decision")=="approved"
+                and value.get("schema")==PRIOR_REVIEW_SCHEMA,
+                "actual full3138 resource prior decision required; v6 counter review is insufficient")
+        require(value.get("source_canonical_identity")==EXPECTED_SOURCE
+                and value.get("planned_before_attempt") is True,
+                "actual independent prior must bind current source before attempts")
+        require(isinstance(value.get("reviewer"),str) and value["reviewer"].strip(),
+                "actual independent prior reviewer identity required")
+        require(value.get("role")=="independent static prior resource reviewer",
+                "candidate/root cannot impersonate independent prior reviewer")
+        require(value.get("formal_pilot_run") is False and value.get("main_or_phase_approval") is False,
+                "actual resource prior approval cannot grant financial phase acceptance")
+    return value
+
+def assembly_review_basis(rows):
+    # Rate markers are explicit independently approved metadata, never filled here.
+    result=normalized_budget_rows(rows)
+    for row in result.values():
+        row["prediction"].pop("rate_source",None)
+        for branch in row["prediction"].get("by_original_n",{}).values():
+            branch.pop("rate_source",None)
+    return result
+
+def validate_assembly_binding(approval,rows):
+    assembly_path=checked_file(approval["bindings"]["budget_rows_assembly"])
+    manifest_path=checked_file(approval["bindings"]["budget_rows_assembly_manifest"])
+    require(assembly_path==D/ASSEMBLY_NAME and file_sha(assembly_path)==ASSEMBLY_SHA
+            and manifest_path==D/ASSEMBLY_MANIFEST_NAME
+            and file_sha(manifest_path)==ASSEMBLY_MANIFEST_SHA,"fixed false assembled candidate required")
+    assembly=read(assembly_path)
+    require(assembly["schema"]=="rb-f04-fullmixed-prior-budget-assembly-v2"
+            and assembly["approved"] is False and assembly["formal_plan_locked"] is False
+            and assembly["execution_authorized"] is False,"author assembly remains false")
+    require(assembly["source_canonical_identity"]==HISTORICAL_BUDGET_SOURCE
+            and assembly["source_native_payload_identity"]==HISTORICAL_BUDGET_NATIVE_SOURCE,
+            "assembled candidate source binding changed")
+    raw=assembly["assembled_all3138_rows"]
+    require(len(raw)==3138 and digest(normalized_budget_rows(raw))==RAW_ASSEMBLED_ROWS_DIGEST,
+            "original raw assembled3138 candidate changed")
+    require(assembly_review_basis(rows)==assembly_review_basis(raw),
+            "actual approval may only bind reviewSHA/explicit rate markers to assembled rows")
+    for identifier,candidate in raw.items():
+        actual=rows[identifier]
+        pairs=[(candidate["prediction"],actual["prediction"])]
+        pairs.extend((branch,actual["prediction"]["by_original_n"][n])
+                     for n,branch in candidate["prediction"].get("by_original_n",{}).items())
+        for original,reviewed in pairs:
+            before,after=original.get("rate_source"),reviewed.get("rate_source")
+            require(after==before or (before is None and after=="independently_reviewed_estimate"),
+                    "unknown rates cannot become measured; retain original measured labels")
+    selection=assembly["activation_candidate_selection"]
+    require(selection["source_file_sha256"]==ACTIVATION_ORIGIN_SHA
+            and selection["candidate_collection_canonical_sha256"]==ACTIVATION_COLLECTION_DIGEST,
+            "original2332 activation candidates/history binding changed")
+    return assembly
+
+def normalized_budget_rows(rows):
+    result=copy.deepcopy(rows)
+    # Avoid circular report SHA -> budget rows SHA -> report SHA.
+    for receipt in result.values():
+        receipt["budget"].pop("review_sha256",None)
+    return result
+
+def cap_recipe_payload(config,rows,source_identity):
+    return {
+      "schema":"rb-f04-exact-original-cap-recipe-v1",
+      "source_identity":source_identity,
+      "original_plan_templates":config["original_plan_templates"],
+      "cap_options_recipe":config["cap_options_recipe"],
+      "parent_limits":[{"job_id":p["job_id"],"expense_id":p["expense_id"],
+         "metric":"wall_seconds","limit":rows[p["job_id"]]["budget"]["wall_seconds"],
+         "planned_before_attempt":True,"cap_scope_sha256":p["cap_scope_sha256"]}
+         for p in config["parent_cap_templates"]],
+      "budget_rows_without_review_SHA":normalized_budget_rows(rows),
+      "literal_options":REQUIRED_OPTIONS,
+      "relative_parent_order":"original v3 job order",
+      "selector_SHA_transport":"existing runtime caller conditional_selection_binding"}
+
+def import_module(name,path):
+    spec=importlib.util.spec_from_file_location(name,path)
+    mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+    return mod
+
+def prediction_work(p):
+    result=copy.deepcopy(p)
+    for key in ("expanded_bytes","rate_source"):result.pop(key,None)
+    for row in result.get("by_original_n",{}).values():
+        for key in ("expanded_bytes","rate_source"):row.pop(key,None)
+    return result
+
+def numeric_bytes(value,limit):
+    require(isinstance(value,int) and not isinstance(value,bool) and 0<=value<=limit,
+            "reviewed per-pack expanded byte bound must be integer within original256MiB")
+    return value
+
+def validate_budget_rows(rows,draft,review_sha,pilot):
+    expected={j["id"] for j in draft["jobs"]}
+    require(isinstance(rows,dict) and set(rows)==expected,"all original3138 approved budget rows required")
+    require(len(expected)==3138,"changed original job roster")
+    for job in draft["jobs"]:
+        receipt=rows[job["id"]]; budget=receipt["budget"]; prediction=receipt["prediction"]
+        require(receipt.get("case_cap_expense_bindings") is None,
+                "budget approval cannot change original case/cap expense bindings")
+        require(budget.get("planned_before_attempt") is True
+                and budget.get("review_sha256")==review_sha,
+                "every actual budget must bind the fixed independent prior review SHA")
+        positive(budget.get("wall_seconds"),"reviewed job wall_seconds")
+        require(prediction_work(prediction)==prediction_work(job["prediction"]),
+                "review cannot change original work/N/child count/branch work")
+        numeric_bytes(prediction.get("expanded_bytes"),draft["limits"]["chunk_uncompressed_bytes"])
+        require(prediction.get("rate_source") in
+                ("measured_prior_job","independently_reviewed_estimate"),
+                "actual reviewed rate_source required; pending is not converted")
+        if prediction.get("by_original_n") is not None:
+            require(set(prediction["by_original_n"])=={"1024","4096","16384","65536"},
+                    "all4 original conditional N branches required")
+            for branch in prediction["by_original_n"].values():
+                numeric_bytes(branch.get("expanded_bytes"),draft["limits"]["chunk_uncompressed_bytes"])
+                require(branch.get("rate_source") in
+                    ("measured_prior_job","independently_reviewed_estimate"),
+                    "every4N branch requires actual reviewed rate_source")
+            probe=copy.deepcopy(job);probe["prediction"]=prediction
+            pilot._prediction_for_original_n(probe,1024)
+        estimate=receipt.get("runtime_estimate_seconds")
+        if estimate is not None:
+            require(isinstance(estimate,(int,float)) and not isinstance(estimate,bool)
+                    and math.isfinite(estimate) and estimate>=0,
+                    "unknown runtime must remain null; measured/estimated runtime finite nonnegative")
+        require(receipt.get("financial_qualification","unknown")=="unknown",
+                "prior budget cannot manufacture financial qualification")
+
+def approved_binding_set(config,overlay,rows,source_identity,materializer_sha):
+    return {
+      "candidate_sha256":BASE_SHA,"selection_overlay_sha256":OVERLAY_SHA,
+      "replay_budget_supplement_sha256":REPLAY_SHA,
+      "replay_budget_manifest_sha256":REPLAY_MANIFEST_SHA,
+      "source_native_payload_sha256":EXPECTED_NATIVE_SOURCE,
+      "source_limited_decision_sha256":SOURCE_DECISION_SHA,
+      "source_rebind_evidence_sha256":SOURCE_EVIDENCE_SHA,
+      "budget_rows_assembly_sha256":ASSEMBLY_SHA,
+      "budget_rows_assembly_manifest_sha256":ASSEMBLY_MANIFEST_SHA,
+      "raw_assembled_candidate_rows_digest":RAW_ASSEMBLED_ROWS_DIGEST,
+      "raw_assembled_candidate_cap_recipe_digest":RAW_ASSEMBLED_RECIPE_DIGEST,
+      "activation_v4_origin_sha256":ACTIVATION_ORIGIN_SHA,
+      "activation_potential_first_job_budget_candidates_digest":ACTIVATION_COLLECTION_DIGEST,
+      "source_identity_sha256":source_identity,
+      "budget_rows_without_review_SHA_digest":digest(normalized_budget_rows(rows)),
+      "cap_recipe_digest":digest(cap_recipe_payload(config,rows,source_identity)),
+      "materializer_sha256":materializer_sha,
+      "literal_cap_options":REQUIRED_OPTIONS}
+
+def write_json(path,value):
+    path.write_text(json.dumps(value,indent=2,ensure_ascii=False,allow_nan=False)+"\n")
+
+def prepare(approval_path,out_path):
+    started=perf_counter();cpu=process_time()
+    approval,approval_ref=load_actual_approval(approval_path)
+    source_review=load_review(approval["independent_reviews"]["source"],"source_metadata")
+    prior_ref=approval["independent_reviews"]["prior_budget_and_cap_recipe"]
+    prior_review=load_review(prior_ref,"prior_budget_and_cap_recipe")
+    require(prior_review["reviewer"]!="candidate_author","candidate author cannot grant independent approval")
+    config_path=checked_file(approval["bindings"]["candidate"])
+    overlay_path=checked_file(approval["bindings"]["selection_overlay"])
+    replay_path=checked_file(approval["bindings"]["replay_budget_supplement"])
+    replay_manifest_path=checked_file(approval["bindings"]["replay_budget_manifest"])
+    require(config_path==D/BASE_NAME and file_sha(config_path)==BASE_SHA,"fixed v1 candidate required")
+    require(overlay_path==D/OVERLAY_NAME and file_sha(overlay_path)==OVERLAY_SHA,"fixed20selection overlay required")
+    require(replay_path==D/REPLAY_NAME and file_sha(replay_path)==REPLAY_SHA,
+            "fixed unapproved current v6 reuse supplement required")
+    require(replay_manifest_path==D/REPLAY_MANIFEST_NAME
+            and file_sha(replay_manifest_path)==REPLAY_MANIFEST_SHA,"fixed v6 manifest required")
+    config=read(config_path);overlay=read(overlay_path);replay=read(replay_path)
+    require(config["approved"] is False and overlay["approved"] is False
+            and replay["approved"] is False,"author candidates must stay unapproved")
+    rows=approval["reviewed_budgets"]
+    validate_assembly_binding(approval,rows)
+    require(replay["source"]["canonical_identity_sha256"]==HISTORICAL_BUDGET_SOURCE
+            and replay["source"]["native_payload_sha256"]==HISTORICAL_BUDGET_NATIVE_SOURCE
+            and replay["formal_plan_locked"] is False and replay["execution_authorized"] is False,
+            "v6 source/counter candidate remains unapproved")
+    bound=approved_binding_set(config,overlay,rows,EXPECTED_SOURCE,file_sha(__file__))
+    require(prior_review.get("approved_bindings")==bound
+            and approval.get("approved_bindings")==bound,
+            "actual review/root approval must bind exact3138 rows, source, recipe and this script")
+    require(source_review.get("source_canonical_runner_digest_sha256")==EXPECTED_SOURCE,
+            "actual independent source review must bind current corrected source")
+    cap_authority=approval["cap_options_authority"]
+    require(cap_authority.get("status")=="approved"
+            and cap_authority.get("cap_recipe_digest")==bound["cap_recipe_digest"],
+            "actual independent exact all-options recipe authority required")
+    decision_template=cap_authority["decision_template"]
+    require(decision_template.get("decision")=="approved"
+            and decision_template.get("planned_before_attempt") is True
+            and decision_template.get("reviewer")==prior_review["reviewer"]
+            and decision_template.get("independent_review_sha256")==prior_ref["sha256"],
+            "pending decisions are not promoted; real approved reviewer template required")
+    require("plan_sha256" not in decision_template,
+            "global authority template authorizes recipe; exact per-option SHA is derived, not supplied globally")
+    guard_ref=approval["root_operational_guard_prior"]
+    guard_path=checked_file(guard_ref);guard=read(guard_path)
+    require(guard.get("status")=="approved_operational_prior"
+            and guard.get("stop_status")=="partial_unclosed"
+            and guard.get("financial_cap_projection") is False,
+            "root outer guard must preserve partial/unclosed and never project financial capPASS")
+    positive(guard.get("wall_limit_seconds"),"root operational wall limit")
+    positive(guard.get("RSS_limit_bytes"),"root operational RSS limit")
+    require(isinstance(guard.get("volume_reserve_bytes"),dict)
+            and set(guard["volume_reserve_bytes"])=={"WSL","CAS_primary","CAS_mirror"},
+            "each original working/independent vault volume needs an actual reserve")
+    for value in guard["volume_reserve_bytes"].values():
+        positive(value,"root operational volume reserve")
+    positive(guard.get("poll_seconds"),"root operational poll seconds")
+    out=inside_d(out_path)
+    require(out.parent==D and out.name.startswith("task-5-formal-prior-lock-materialized-")
+            and not out.exists(),"new immediate D output directory required; never overwrite original/candidate")
+    # All author/root/reviewer authority checks precede importing actual financial source.
+    os.environ.update(OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1",
+                      PYTHONDONTWRITEBYTECODE="1")
+    sys.path[:0]=[str(R),str(WT/"johnhull/hullkit/src"),str(WT/"deep_hedge_price/src")]
+    import numpy as np
+    import run_pilot as pilot
+    def forbidden(*args,**kwargs):raise AssertionError("prior preparation forbids financial/RNG execution")
+    for name in ("_dispatch","run_teacher_job","run_teacher_grid","teacher_primitives"):
+        if hasattr(pilot,name):setattr(pilot,name,forbidden)
+    np.random.default_rng=forbidden;np.random.seed=forbidden
+    source=pilot._pilot_source(WT)
+    require(pilot.runner._digest(source)==EXPECTED_SOURCE
+            and pilot.runner.payload_digest(source)==EXPECTED_NATIVE_SOURCE and len(source["files"])==81
+            and not source["dynamic_imports"],"current corrected static81 source closure changed")
+    require(pilot.runner._digest({"unicode":"日本語","float":1.0})==digest({"unicode":"日本語","float":1.0}),
+            "preparer digest must match the actual canonical runtime digest")
+    source_before={name:file_sha(WT/name) for name in source["files"]}
+    require(set(source["files"])==set(config["source"]["files"]),"source roster changed")
+    changed=[name for name in source["files"] if source["files"][name]!=config["source"]["files"][name]]
+    evidence,fixed_current=rebind_source_evidence()
+    require(source==fixed_current and changed==[
+            "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+            "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"],
+            "only exact reviewed run/check before-after source bytes may rebind old candidate")
+    draft,receipt=pilot.read_pilot_artifact(Path(config["origin"]["draft_artifact"]))
+    require(receipt==config["origin"]["draft_receipt"],"original v3 draft artifact changed")
+    require(len(draft["case_plan"])==121 and len(draft["attempt_plan"])==51
+            and sum(j["operation"]=="teacher_grid" for j in draft["jobs"])==20
+            and sum(j["operation"]=="teacher_driver" for j in draft["jobs"])==10,
+            "original121/51/20/10 required")
+    validate_budget_rows(rows,draft,prior_ref["sha256"],pilot)
+    argument_updates={r["job_id"]:r for r in config["job_argument_updates"]["controls_delta"]}
+    require(len(argument_updates)==36,"fixed original36 call table controls delta required")
+    for job in draft["jobs"]:
+        if job["id"] in argument_updates:
+            delta=argument_updates[job["id"]]
+            require(pilot.input_identity(job["arguments"])==delta["original_arguments_sha256"],
+                    "original controls argument source changed")
+            job["arguments"]["controls"]=copy.deepcopy(delta["candidate_controls"])
+            require(pilot.input_identity(job["arguments"])==delta["candidate_arguments_sha256"],
+                    "reviewed explicit controls differ from measured candidate")
+    inputs,input_receipt=pilot.read_pilot_artifact(Path(config["typed_inputs_artifact"]))
+    require(input_receipt==config["typed_inputs_receipt"]
+            and {k:pilot.input_identity(v) for k,v in inputs.items()}==config["input_bindings"],
+            "original typed inputs changed")
+    producer_binding=approval["bindings"]["producer"]
+    require(checked_file(producer_binding)==D/"task-5-formal-pilot-plan-producer.py",
+            "actual existing producer file must be review-bound")
+    require(prior_review["approved_producer_sha256"]==producer_binding["sha256"],
+            "fixed independent review must bind existing lock helper producer")
+    producer=import_module("formal_prior_producer",D/"task-5-formal-pilot-plan-producer.py")
+    # Actual lock/validate API runs once before the large literal cap expansion.
+    plan=producer.lock_job_graph(draft,inputs=inputs,source=source,
+        reviewed_budgets=rows,history=config["history"],
+        required_external_expense_ids=config["required_external_expense_ids"])
+    require(len(plan["jobs"])==3138,"lock API changed original job count")
+    alias=approval["ordinary_inclusive_aliases"]
+    require(alias.get("status")=="approved"
+            and alias.get("initial_phase_parent_expense_id")=="pilot-execution-phase:0"
+            and alias.get("resume_requires_actual_covering_phase") is True,
+            "initial aliases must bind original phase0 and preserve future resume lineage")
+    out.mkdir()
+    write_json(out/"materialization-progress.json",{
+        "status":"partial_materialization","financial_qualification":"unknown",
+        "formal_financial_phase_approved":False,"approval":approval_ref})
+    # Reuse the existing D-only branch/materialization helper exactly.
+    helper_path=D/"task-5-fullmixed-prior-budget-candidate-author-v1-builder.py"
+    require(file_sha(helper_path)==approval["bindings"]["candidate_helper"]["sha256"],
+            "fixed candidate cap helper changed")
+    require(prior_review["approved_candidate_helper_sha256"]==file_sha(helper_path),
+            "actual independent review must bind the existing cap helper")
+    helper=import_module("candidate_cap_helper",helper_path)
+    cap_config=copy.deepcopy(config)
+    for parent in cap_config["parent_cap_templates"]:
+        parent["wall_limit_seconds"]=rows[parent["job_id"]]["budget"]["wall_seconds"]
+    literal_count=0
+    for group in ("cases","attempts"):
+        specs={row["id"]:row for row in plan["execution_projection"][group]}
+        for recipe in cap_config["cap_options_recipe"][group]:
+            identifier=recipe["id"];template=cap_config["original_plan_templates"][group][identifier]
+            decisions={}
+            for index in recipe["parent_indices"]:
+                parent=cap_config["parent_cap_templates"][index]
+                for n in recipe["original_N_branches"]:
+                    base=helper.branch_plan(template,n)
+                    cap={"metric":"wall_seconds","limit":parent["wall_limit_seconds"],
+                         "planned_before_attempt":True}
+                    decisions[f"{parent['job_id']}|{group}|{identifier}|N{n}"]=(
+                        copy.deepcopy(decision_template)|{
+                          "plan_sha256":pilot.execution._digest(base|{"cap":cap})})
+            options=helper.materialize_options(cap_config,group,identifier,decisions)
+            require(len(options)==len(recipe["parent_indices"])*len(recipe["original_N_branches"]),
+                    "all original parent/N cap options required")
+            specs[identifier]["cap_options"]=options
+            specs[identifier]["parent_expense_id"]=alias["initial_phase_parent_expense_id"]
+            literal_count+=len(options)
+            del decisions
+    require(literal_count==REQUIRED_OPTIONS,"changed original573122 exact literal cap roster")
+    pilot.validate_locked_plan(plan)
+    pilot._locked_bindings(inputs,plan,WT)
+    # Preserve pending external clocks; preparation is neither experiment nor expense completion.
+    external=config["external_expense_candidates"]
+    require(len(external)==10 and all(e["status"]=="pending"
+        and all(v is None for v in e["timing"].values()) for e in external),
+        "all10 external expense unknown clocks must remain pending")
+    pilot.protocol.validate_expenses(external,required_ids=config["required_external_expense_ids"])
+    for record in config["history"]:
+        pilot.protocol.validate_expenses(record["expenses"],
+            required_ids=[r["id"] for r in record["expenses"]])
+    # Freeze local source snapshot bytes separately from immutable v1 candidate.
+    snapshot=out/"source-snapshot"
+    for name in source["files"]:
+        target=snapshot/name;target.parent.mkdir(parents=True,exist_ok=True)
+        shutil.copyfile(WT/name,target)
+        require(file_sha(target)==source_before[name],"source snapshot byte changed during copy")
+    write_json(snapshot/"source-identity.json",source)
+    write_json(out/"actual-root-approval-copy.json",approval)
+    write_json(out/"root-operational-guard-copy.json",guard)
+    write_json(out/"pending-external-expenses.json",external)
+    plan_receipt=pilot.write_pilot_artifact(out/"locked-prior-metadata",plan)
+    source_after={name:file_sha(WT/name) for name in source["files"]}
+    require(source_before==source_after and pilot._pilot_source(WT)==source,
+            "source closure changed during materialization; output remains partial, no locked authority")
+    result={"status":"actual_approved_prior_metadata_materialized",
+       "actual_lock_API_validate_and_source_binding":"PASS",
+       "financial_workers_RNG_solver_SDE_calls":0,"formal_financial_phase_approved":False,
+       "financial_qualification":"unknown","pilot_started":False,
+       "source_identity":EXPECTED_SOURCE,"source_native_payload_identity":EXPECTED_NATIVE_SOURCE,"source81_before_after_stable":True,
+       "jobs":3138,"cases":121,"attempts":51,"teachers":20,"drivers":10,
+       "literal_cap_options":literal_count,"source_snapshot":str(snapshot),
+       "locked_prior_receipt":plan_receipt,"actual_root_approval":approval_ref,
+       "actual_independent_review_SHA":prior_ref["sha256"],
+       "root_operational_guard_is_financial_cap":False,
+       "cost":{"wall_seconds_before_final_manifest":perf_counter()-started,
+               "CPU_seconds_before_final_manifest":process_time()-cpu,
+               "final_receipt_tail_seconds":None}}
+    write_json(out/"materialization-progress.json",result)
+    files={}
+    for path in out.rglob("*"):
+        if path.is_file():files[str(path.relative_to(out))]={"sha256":file_sha(path),
+                                                           "bytes":path.stat().st_size}
+    write_json(out/"manifest.json",{"schema":"rb-f04-actual-prior-materialization-manifest-v1",
+        "source_identity":EXPECTED_SOURCE,"actual_approval":approval_ref,"files":files,
+        "financial_phase_approved":False,"cost_final_tail_unknown":True})
+    print(json.dumps(result,ensure_ascii=False))
+    return result
+
+def cli():
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--approval",type=Path)
+    ap.add_argument("--out",type=Path,default=D/"task-5-formal-prior-lock-materialized-root-v2")
+    args=ap.parse_args()
+    try:prepare(args.approval,args.out)
+    except (ValueError,KeyError,FileNotFoundError) as error:
+        print(json.dumps({"status":"materialization_refused","reason":str(error),
+              "financial_calls":0,"approval_or_scope_promoted":False},ensure_ascii=False),file=sys.stderr)
+        return 2
+    return 0
+
+if __name__=="__main__":
+    raise SystemExit(cli())

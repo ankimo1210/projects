@@ -1,0 +1,41 @@
+{
+  "schema": "rb-f04-root-formal-pilot-live-observation-v1",
+  "captured_UTC": "2026-10-10T10:23:48.354261+00:00",
+  "scope": "initial real root operational snapshot; no execution proportion or financial precision claim",
+  "unified_exec_session_id": 21286,
+  "latest_operational_observation": {
+    "clock": {
+      "wall": 52292.928192949,
+      "cpu": 0.233095981,
+      "utc": "2026-10-10T10:23:48.145477+00:00"
+    },
+    "elapsed_seconds": 62.26001385800191,
+    "child_rss_bytes": 3401654272,
+    "parent_rss_bytes": 20967424,
+    "volumes": [
+      {
+        "id": "WSL",
+        "path": "/",
+        "reserve_bytes": 10737418240,
+        "free_bytes": 589556678656
+      },
+      {
+        "id": "C",
+        "path": "/mnt/c",
+        "reserve_bytes": 10737418240,
+        "free_bytes": 315517878272
+      },
+      {
+        "id": "F",
+        "path": "/mnt/f",
+        "reserve_bytes": 10737418240,
+        "free_bytes": 182768762880
+      }
+    ]
+  },
+  "native_output": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2",
+  "current_source_canonical_identity": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "financial_qualification": "unknown",
+  "formal_pilot_completion_claimed": false,
+  "main_or_phase_approval": false
+}

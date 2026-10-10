@@ -1,0 +1,104 @@
+import ast,copy,datetime,hashlib,json,resource,time
+from pathlib import Path
+W=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=W/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+prefix="task-5-formal-prior-lock-rebind-independent"
+start=time.perf_counter();cpu=time.process_time();checks=[]
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def read(name):return json.loads((D/name).read_text())
+def ref(name):return {"path":str(D/name),"sha256":sha(D/name)}
+def ok(name,value,detail=None):
+ row={"name":name,"passed":bool(value)}
+ if detail is not None:row["detail"]=detail
+ checks.append(row)
+def digest(v):return hashlib.sha256(json.dumps(v,sort_keys=True,separators=(",",":"),ensure_ascii=True,allow_nan=False).encode()).hexdigest()
+def functions(name):
+ t=ast.parse((D/name).read_text())
+ return {n.name:ast.dump(n,include_attributes=False) for n in t.body if isinstance(n,ast.FunctionDef)}
+mn="task-5-formal-prior-lock-rebind-manifest-v4.json"
+ok("fixed_v4_manifest",sha(D/mn)=="f1a5eac6941a16dde234cea69804122d2f51ceebadce22951ab6af9db99c36e6")
+manifest=read(mn);ok("manifest21",len(manifest["files"])==manifest["count"]==21)
+for name,r in manifest["files"].items():ok("manifest:"+name,(D/name).stat().st_size==r["bytes"] and sha(D/name)==r["sha256"])
+prior3=read(prefix+"-results-v3.json");old=read("task-5-fullmixed-prior-budget-independent-final-decision-v2.json")
+ok("prior_v3_exact_one_failure_preserved",prior3["checks_passed"]==268 and len(prior3["failures"])==1 and prior3["failures"][0]["name"]=="source_geometry_environment_unchanged")
+ok("not_approved_v3_preserved",sha(D/(prefix+"-decision-v3.json"))=="b6f6e3c6e961dd88613fb9a292c3db7ff3e96462e014d83047946ed85b86b87f" and sha(D/(prefix+"-manifest-v3.json"))=="d14c4e188a55f7e3452abc5cd93d4b984eba2954e48cc1d0237ce5620c2c2c1b")
+oldtext=(D/"task-5-formal-prior-lock-preparation-v3.py").read_text()
+newtext=(D/"task-5-formal-prior-lock-preparation-v4.py").read_text()
+oldblock='''    require({k:v for k,v in corrected.items() if k!="files"}
+            == {k:v for k,v in previous.items() if k!="files"},
+            "source environment/import geometry changed outside the reviewed key repair")'''
+newblock='''    require(previous["protocol_source"][run] == previous["files"][run]
+            and corrected["protocol_source"][run] == corrected["files"][run],
+            "runner source inventory and protocol source binding disagree")
+    normalized_previous = copy.deepcopy(previous)
+    normalized_previous["files"][run] = corrected["files"][run]
+    normalized_previous["protocol_source"][run] = corrected["protocol_source"][run]
+    require(normalized_previous == corrected,
+            "identity changed outside the same reviewed runner SHA in files/protocol_source")'''
+ok("whole_materializer_exact_one_block_change",oldtext.count(oldblock)==1 and oldtext.replace(oldblock,newblock)==newtext)
+oldfn=functions("task-5-formal-prior-lock-preparation-v3.py");newfn=functions("task-5-formal-prior-lock-preparation-v4.py")
+ok("same_materializer_function_roster",set(oldfn)==set(newfn))
+for name in oldfn:
+ if name!="rebind_source_evidence":ok("materializer_AST_unchanged:"+name,oldfn[name]==newfn[name])
+previous=read("task-5-phase-verified-raw-memo-fixed-v3-source-closure.json")
+current=read("task-5-formal-date-gate-N-independent-current-source-closure-v1.json")
+run="johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+def predicate(previous,corrected):
+ if previous["protocol_source"][run]!=previous["files"][run] or corrected["protocol_source"][run]!=corrected["files"][run]:return False
+ normalized=copy.deepcopy(previous);normalized["files"][run]=corrected["files"][run];normalized["protocol_source"][run]=corrected["protocol_source"][run]
+ return normalized==corrected
+ok("same_actual_identity_old_RED", {k:v for k,v in current.items() if k!="files"}!={k:v for k,v in previous.items() if k!="files"})
+ok("same_actual_identity_repair_GREEN",predicate(previous,current))
+other=next(k for k in current["protocol_source"] if k!=run)
+tamper=copy.deepcopy(current);tamper["protocol_source"][other]="0"*64
+ok("negative_other_protocol_SHA_rejected",not predicate(previous,tamper))
+tamper=copy.deepcopy(current);tamper["protocol_source"][run]=previous["protocol_source"][run]
+ok("negative_runner_protocol_files_mismatch_rejected",not predicate(previous,tamper))
+tamper=copy.deepcopy(current);tamper["environment"]["unreviewed_new_field"]=True
+ok("negative_geometry_environment_change_rejected",not predicate(previous,tamper))
+v3=read("task-5-formal-prior-lock-rebind-bindings-candidate-v3.json")
+v4=read("task-5-formal-prior-lock-rebind-bindings-candidate-v4.json")
+b3=v3["candidate_bindings"];b4=v4["candidate_bindings"]
+ok("candidate_v4_binding_only_materializer_SHA_delta",set(b3)==set(b4) and [k for k in b3 if b3[k]!=b4[k]]==["materializer_sha256"])
+derived=copy.deepcopy(prior3["bindings"]);derived["materializer_sha256"]=sha(D/"task-5-formal-prior-lock-preparation-v4.py")
+ok("all_actual18_bindings_reconstructed",derived==b4)
+ok("e800_fixed_materializer",b4["materializer_sha256"]=="e800b93de39329d0076692f925f6c10fdf2c18ccfe9b43dea7aca2c045a1dca0")
+ok("recipe43eb_source_only_scope_reused",b4["cap_recipe_digest"]==prior3["new_recipe"]=="43ebacfd81f69043535feafcccc872ea68e4724715ed25ea3dead36dd1e630a5")
+ok("old_prior3cf_actual_bytes_preserved",sha(D/"task-5-fullmixed-prior-budget-independent-final-decision-v2.json")=="3cf7446276873a13e45c8c4c2f3562fa8d644302a52eb07c07c73753c98e5b4b")
+ok("old_rows31bd_preserved",sha(D/"task-5-fullmixed-prior-budget-independent-effective-rows-v1.json")==old["explicit_approved_rate_rows"]["sha256"]=="31bde8af1b6ffec29066ca7260f0a9b0d8ca84fa952aa602515de7613b02690b")
+ok("original_rows_work_allcaps_parent_limits_reused",b4["budget_rows_without_review_SHA_digest"]==old["approved_bindings"]["budget_rows_without_review_SHA_digest"] and b4["literal_cap_options"]==573122)
+ok("monitor_bytes_unchanged",sha(D/"task-5-full-pilot-root-operational-monitor-v4.py")==sha(D/"task-5-full-pilot-root-operational-monitor-v3.py")=="94ddf018576ab107a6c3146088713a9e30da29416f419941a9831fb60e938626")
+ok("guard_bytes_unchanged_false",sha(D/"task-5-full-pilot-root-operational-monitor-v4-guard-candidate.json")==sha(D/"task-5-full-pilot-root-operational-monitor-v3-guard-candidate.json"))
+for older,newer,replacements in [
+ ("task-5-formal-prior-actual-root-approval-builder-v2.py","task-5-formal-prior-actual-root-approval-builder-v3.py",{
+ "task-5-formal-prior-lock-preparation-v3.py":"task-5-formal-prior-lock-preparation-v4.py",
+ "fcc35cf3e32548eb06991f87729845f9d205574c79d60eea6b7f7c32401376b7":"e800b93de39329d0076692f925f6c10fdf2c18ccfe9b43dea7aca2c045a1dca0",
+ "task-5-formal-prior-lock-preparation-pending-example-v3.json":"task-5-formal-prior-lock-preparation-pending-example-v4.json",
+ "task-5-formal-prior-actual-root-binding-receipt-v2.json":"task-5-formal-prior-actual-root-binding-receipt-v3.json"}),
+ ("task-5-formal-pilot-root-launch-guard-builder-v2.py","task-5-formal-pilot-root-launch-guard-builder-v3.py",{
+ "task-5-full-pilot-root-operational-monitor-v3.py":"task-5-full-pilot-root-operational-monitor-v4.py",
+ "task-5-full-pilot-root-operational-monitor-v3-guard-candidate.json":"task-5-full-pilot-root-operational-monitor-v4-guard-candidate.json",
+ "task-5-formal-pilot-root-launch-binding-receipt-v2.json":"task-5-formal-pilot-root-launch-binding-receipt-v3.json"})]:
+ text=(D/older).read_text()
+ for a,b in replacements.items():text=text.replace(a,b)
+ ok("root_helper_only_fixed_reference_delta:"+newer,text==(D/newer).read_text())
+ok("source81_static_samecanonical",len(current["files"])==81 and not current["dynamic_imports"] and digest(current)==b4["source_identity_sha256"]=="5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e")
+for name,expected in current["files"].items():ok("current_source_byte:"+name,sha(W/name)==expected)
+ok("actual_operational_prior_unchanged",sha(D/old["actual_resource_operational_prior"]["file"])==old["actual_resource_operational_prior"]["sha256"])
+ok("source_fix_a907_preserved",sha(D/"task-5-formal-date-gate-N-source-fix-independent-decision-v1.json")==b4["source_limited_decision_sha256"])
+ok("false_candidates_stay_false",v3["approved"] is False and v4["approved"] is False and manifest["formal_budget_approved_for_new_source"] is False and manifest["formal_financial_launch_authorized"] is False)
+pending=read("task-5-formal-prior-lock-preparation-pending-example-v4.json")
+ok("pending_root_not_promoted",pending["planned_before_attempt"] is False and pending["approved_bindings"] is None and pending["reviewed_budgets"] is None)
+failures=[r for r in checks if not r["passed"]]
+result={
+ "schema":"rb-f04-independent-source-prior-rebind-static-results-v1","status":"PASS" if not failures else "FAIL",
+ "checks":checks,"checks_passed":len(checks)-len(failures),"failures":failures,"bindings":derived,
+ "reused_v3_positive_checks":268,"repaired_original_v3_failure":True,
+ "scope":"v4 exact predicate/source-prior binding delta only; previous268 positive JSON/AST/recipe checks reused; no re-run of all3138 budgets or literal materialization",
+ "all_unknown_financial_N_threshold_work_cap_expenses_preserved":True,
+ "source_canonical_identity":b4["source_identity_sha256"],"source_native_payload_identity":b4["source_native_payload_sha256"],
+ "new_financial_RNG_SDE_solver_Popen_helper_lock_calls":0,"production_source_tests_docs_Git_CAS_mutations":0,
+ "cost":{"wall_before_result_seconds":time.perf_counter()-start,"CPU_before_result_seconds":time.process_time()-cpu,"peak_RSS_bytes":resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,"result_write_and_tool_tail_seconds":None}
+}
+out=D/(prefix+"-results-v4.json");assert not out.exists();out.write_text(json.dumps(result,ensure_ascii=False,indent=2,allow_nan=False)+"\n")
+print(json.dumps({"status":result["status"],"checks":len(checks),"failures":failures,"cost":result["cost"]},ensure_ascii=False))
