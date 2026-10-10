@@ -1,0 +1,62 @@
+{
+  "outer_wall_seconds": 9.59646795899971,
+  "measurements": [
+    {
+      "operation": "call_cache",
+      "model": "heston",
+      "date_count": 6,
+      "spot_nodes": 65,
+      "state_nodes": 33,
+      "wall_seconds": 5.475101840000207,
+      "cpu_seconds": 5.430403835
+    },
+    {
+      "operation": "scalar_fit_only",
+      "model": "heston",
+      "actual_query_count": 1152,
+      "wall_seconds": 0.3391486209984578,
+      "cpu_seconds": 0.33914660900000015,
+      "median_query_wall_seconds": 0.00028547400052048033,
+      "p95_query_wall_seconds": 0.00034553954983493893,
+      "statuses": {
+        "ok": 1088,
+        "unknown": 64
+      },
+      "missing_costs": [
+        "Asian scalar cache and 16-block Greek evaluation",
+        "all-path13refit FD",
+        "serialization/savedcheck/CAS",
+        "arbitrary visited S/Q states and support"
+      ],
+      "extrapolation_is_formal_wall_measurement": false
+    },
+    {
+      "operation": "call_cache",
+      "model": "local",
+      "date_count": 6,
+      "spot_nodes": 65,
+      "state_nodes": 7,
+      "wall_seconds": 3.07565934899867,
+      "cpu_seconds": 3.0708368959999994
+    },
+    {
+      "operation": "scalar_fit_only",
+      "model": "local",
+      "actual_query_count": 1152,
+      "wall_seconds": 0.3000838059997477,
+      "cpu_seconds": 0.30008588699999983,
+      "median_query_wall_seconds": 0.000252705000093556,
+      "p95_query_wall_seconds": 0.00030033175016797037,
+      "statuses": {
+        "ok": 1152
+      },
+      "missing_costs": [
+        "Asian scalar cache and 16-block Greek evaluation",
+        "all-path13refit FD",
+        "serialization/savedcheck/CAS",
+        "arbitrary visited S/Q states and support"
+      ],
+      "extrapolation_is_formal_wall_measurement": false
+    }
+  ]
+}

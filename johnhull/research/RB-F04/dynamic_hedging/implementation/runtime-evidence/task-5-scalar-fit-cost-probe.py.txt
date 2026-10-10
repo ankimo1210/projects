@@ -1,0 +1,39 @@
+
+import time
+begin=time.perf_counter();begin_cpu=time.process_time()
+from pathlib import Path
+import hashlib,json
+import numpy as np
+from hullkit._heston_local_surface import HestonParameters,LocalVarianceGrid
+from hullkit._dynamic_hedging_surfaces import build_call_cache,fit_quote_state
+r=Path('/home/kazumasa/worktrees/johnhull-research-roadmap');b=r/'johnhull/research/RB-F04/dynamic_hedging';d=r/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+selected=json.loads((b/'pilot/selected-calls/refined/selected-calls.json').read_text());p=HestonParameters(**selected['parameters'])
+with np.load(b/'pilot/initial-quotes/reference.npz',allow_pickle=False) as a:
+ prefix='field257x321.surface.'
+ field=LocalVarianceGrid(a[prefix+'times'],a[prefix+'z_nodes'],a[prefix+'local_variance'],p,a[prefix+'wing_boundaries'])
+dates=np.array(sorted(set(row['date'] for row in selected['rows'])))
+spot_nodes=np.geomspace(50,200,65)
+states_h=np.r_[np.linspace(0,.08,17),np.linspace(.08,.5,17)[1:]];states_h[0]=1e-5
+states_l=np.array([.25,.5,.75,1,1.5,2,4])
+out={'kind':'pretest_scalar_fit_cost_probe','formal_pilot':False,'financial_qualification':'unknown','scope':'actual original18 S/Q states with same scalar not-a-knot full-call fit; saved selected6dates cache, S65/Hv33/ell7; no Asian teacher/risk/policy/main performed','predeclared_probe_budget_seconds':300.,'input_source':{},'measurements':[],'raw_first_repeat':[]}
+for name in ['pilot/selected-calls/refined/selected-calls.json','pilot/initial-quotes/reference.npz']:
+ path=b/name;out['input_source'][name]={'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+for model,states in [('heston',states_h),('local',states_l)]:
+ start,cpu=time.perf_counter(),time.process_time()
+ cache=build_call_cache(p,field,dates=dates,spot_nodes=spot_nodes,state_nodes=states,model=model)
+ out['measurements'].append({'operation':'call_cache','model':model,'date_count':len(dates),'spot_nodes':len(spot_nodes),'state_nodes':len(states),'wall_seconds':time.perf_counter()-start,'cpu_seconds':time.process_time()-cpu})
+ start,cpu=time.perf_counter(),time.process_time();durations=[];statuses={};calls=0
+ for repeat in range(64):
+  for index,row in enumerate(selected['rows']):
+   t=time.perf_counter()
+   fitted=fit_quote_state(cache,int(np.flatnonzero(np.isclose(dates,row['date'],rtol=0,atol=1e-12))[0]),row['spot'],row['quote'],state_scale=.04 if model=='heston' else 1.)
+   durations.append(time.perf_counter()-t);calls+=1
+   statuses[fitted['status']]=statuses.get(fitted['status'],0)+1
+   if repeat==0:
+    out['raw_first_repeat'].append({'model':model,'state_index':index,'original_S':row['spot'],'original_Q':row['quote'],'date':row['date'],'fit':{k:None if isinstance(v,(float,np.floating)) and not np.isfinite(v) else v for k,v in fitted.items()}})
+   if time.perf_counter()-begin>300:raise RuntimeError('predeclared diagnostic budget consumed')
+ out['measurements'].append({'operation':'scalar_fit_only','model':model,'actual_query_count':calls,'wall_seconds':time.perf_counter()-start,'cpu_seconds':time.process_time()-cpu,'median_query_wall_seconds':float(np.median(durations)),'p95_query_wall_seconds':float(np.quantile(durations,.95)),'statuses':statuses,'missing_costs':['Asian scalar cache and 16-block Greek evaluation','all-path13refit FD','serialization/savedcheck/CAS','arbitrary visited S/Q states and support'], 'extrapolation_is_formal_wall_measurement':False})
+out['source']={str(path.relative_to(r)):hashlib.sha256(path.read_bytes()).hexdigest() for path in [r/'johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py',r/'johnhull/hullkit/src/hullkit/_heston_local_surface.py']}
+out['outer_observed_wall_seconds']=time.perf_counter()-begin;out['outer_observed_cpu_seconds']=time.process_time()-begin_cpu
+(d/'task-5-scalar-fit-cost-probe.json').write_text(json.dumps(out,indent=2,default=lambda v:v.item() if isinstance(v,np.generic) else v.tolist() if isinstance(v,np.ndarray) else str(v),allow_nan=False)+'\n')
+print(json.dumps({'outer_wall_seconds':out['outer_observed_wall_seconds'],'measurements':out['measurements']},indent=2),flush=True)

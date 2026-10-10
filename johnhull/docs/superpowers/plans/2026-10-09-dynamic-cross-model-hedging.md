@@ -326,6 +326,9 @@ Task5 helperの[ソース確認](../../../research/RB-F04/dynamic_hedging/implem
 
 [分割保存接続](../../../research/RB-F04/dynamic_hedging/implementation/MAIN_SINK_SOURCE.md)：実source/rawの事前gate後、元18ケース×2集合の結果を任意sinkへ渡し、次の評価前にcaller配列参照を解放する。sinkなしと旧strict v1は保持。保存例外は伝播し、欠損を補わない。41scoped tests、独立56件（旧main15件を含む）、writer例外probeと限定独立レビュー未解決0、2Pythonruff/format PASS。合成source-unit検査であり、正式金融mainを実行した証拠ではない。全396件の保存・元分母・原費用・数値精度は正式main/checkerで検証し、正式pilot/freeze/最終受入・main統合の未完条件を維持する。
 
+
+追加の[依存cap入口](../../../research/RB-F04/dynamic_hedging/implementation/DEPENDENCY_CAP_SOURCE.md)を限定承認：全runner51PASS・独立6件、元Nを保持しactual helperへ渡す。正式main/金融precisionの代替ではない。[予算測定](../../../research/RB-F04/dynamic_hedging/implementation/PILOT_BUDGET_MEASUREMENTS.md)は元18入力の実2,304 scalar fitと歴史的教師外挿を保存。残るAsian/16block・保存/check費用と正式121/51計画の独立確認が必要。
+
 ## 正式phase source照合の確認（2026-10-10）
 
 [全phase source照合](../../../research/RB-F04/dynamic_hedging/implementation/PHASE_SOURCE_IDENTITY.md)：研究10入口とprivate学習closureを事前必須検査し、bare local importsの閉包・loaded aliasのcheckoutを照合。実在80files/dynamic imports0を確認。48scoped tests/独立14件、Ruff/format/whitespace PASS・限定独立レビュー未解決0。closure欠落の初回反例と、固定quote helperのstatic読み込み修正を保存。全helperの金融実装や正式freezeは未承認。次はformal全121/51 job graph・事前budget・cap/resume・保存算術を整え、原case/分母/失敗/費用を保持して実dispatchする。
