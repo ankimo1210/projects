@@ -1,0 +1,24 @@
+{
+  "entries": [
+    {
+      "bytes": 30276,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/external-cost-receipt-accounting-author-v1.json",
+      "ref": "artifact:sha256:9c9b0f7c5a9b3254343e1cd19d7514d7dcedcd58aea23838a342a2a03396aa35"
+    },
+    {
+      "bytes": 7184,
+      "mime": "text/markdown",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/external-cost-receipt-accounting-author-v1.md",
+      "ref": "artifact:sha256:2f3d48401cf01aba4dc1efe312a579baa43b982a5e6b381cf4fae18676618d01"
+    },
+    {
+      "bytes": 11459,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-external-cost-accounting-v1-decision.json",
+      "ref": "artifact:sha256:d4505d267fd65e26e5361ad4245ddd6a9a77378cd5a92e1fdf1d731c1776dd42"
+    }
+  ],
+  "kind": "johnhull-evidence-manifest",
+  "schema_version": 1
+}
