@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+    "-k",
+    "source_closure or execution_source or dependency_cap_branch or initial_quote_saved_checker",
+    "--tb=short"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 4.967953362000117,
+  "child_cpu_seconds": 4.960004
+}

@@ -1,0 +1,74 @@
+2 files reformatted, 3 files left unchanged
+I001 [*] Import block is un-sorted or un-formatted
+  --> deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:16:1
+   |
+14 |   RESEARCH = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging"
+15 |   sys.path.insert(0, str(RESEARCH))
+16 | / import run_pilot as pilot  # noqa: E402
+17 | | import run_reference as runner  # noqa: E402
+18 | | from deep_hedge_price import _dynamic_hedging_protocol as protocol  # noqa: E402
+19 | | from hullkit._dynamic_hedging_conditional import primitive_labels, teacher_primitives  # noqa: E402
+20 | | from hullkit._heston_local_surface import HestonParameters  # noqa: E402
+   | |__________________________________________________________^
+21 |
+22 |   SAMPLES = (
+   |
+help: Organize imports
+
+RUF043 Pattern passed to `match=` contains metacharacters but is neither escaped nor raw
+   --> deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:201:42
+    |
+199 |     raw["labels"][field] = raw["labels"][field].copy()
+200 |     raw["labels"][field][0, 2] += 0.01
+201 |     with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+202 |         pilot.write_pilot_artifact(tmp_path / "bad", raw)
+203 |     assert not (tmp_path / "bad").exists()
+    |
+help: Use a raw string or `re.escape()` to make the intention explicit
+
+RUF043 Pattern passed to `match=` contains metacharacters but is neither escaped nor raw
+   --> deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:225:42
+    |
+223 |         physical["labels"][field].flat[0] += 0.01
+224 |     descriptor["physical_payload_sha256"] = runner.payload_digest(physical)
+225 |     with pytest.raises(ValueError, match="teacher.*(summary|label|reconstruct|value)"):
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+226 |         helper.restore_teacher(physical, descriptor)
+    |
+help: Use a raw string or `re.escape()` to make the intention explicit
+
+RUF043 Pattern passed to `match=` contains metacharacters but is neither escaped nor raw
+   --> deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:331:42
+    |
+329 |     changed = copy.deepcopy(node)
+330 |     changed["raw_binding"]["artifact_sha256"] = "0" * 64
+331 |     with pytest.raises(ValueError, match="teacher.*binding"):
+    |                                          ^^^^^^^^^^^^^^^^^^
+332 |         pilot._check_teacher_node_binding(changed, tmp_path / "teacher", restored)
+333 |     literal = {
+    |
+help: Use a raw string or `re.escape()` to make the intention explicit
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> johnhull/research/RB-F04/dynamic_hedging/run_pilot.py:23:1
+   |
+21 |       ]
+22 |
+23 | / import numpy as np
+24 | | import run_reference as runner
+25 | | import _teacher_storage as teacher_storage
+26 | | from hullkit._dynamic_hedging_conditional import primitive_labels, teacher_primitives
+27 | | from hullkit._heston_local_surface import LocalVarianceGrid
+28 | |
+29 | | from deep_hedge_price import _dynamic_hedging_execution as execution
+30 | | from deep_hedge_price import _dynamic_hedging_protocol as protocol
+31 | | from deep_hedge_price import _dynamic_hedging_study as study
+   | |____________________________________________________________^
+32 |
+33 |   ROOT = Path(__file__).resolve().parents[4]
+   |
+help: Organize imports
+
+Found 5 errors.
+[*] 2 fixable with the `--fix` option.

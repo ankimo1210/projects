@@ -1,0 +1,18 @@
+{
+  "decision": "approve_bounded_fixed_codec_transport_source_only",
+  "counts": {
+    "PASS": 15,
+    "REJECTED": 60
+  },
+  "closure": {
+    "files": 81,
+    "dynamic_imports": [],
+    "source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0"
+  },
+  "cost": {
+    "inner_wall_seconds": 2.8707281940005487,
+    "inner_cpu_seconds": 2.715803808,
+    "process_peak_rss_bytes": 635486208,
+    "report_save_cost": "unknown"
+  }
+}

@@ -1,0 +1,236 @@
+"""Independent fixed-source saved-only teacher transport probes."""
+from pathlib import Path
+import ast,copy,hashlib,json,os,resource,shutil,sys,time,zipfile
+from contextlib import ExitStack
+from unittest.mock import patch
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+R=WT/"johnhull/research/RB-F04/dynamic_hedging"
+PREFIX="task-5-teacher-storage-independent-v1"
+OUT=D/(PREFIX+"-artifacts")
+OUT.mkdir(exist_ok=False)
+start=time.perf_counter();cpu=time.process_time()
+result={"scope":"fixed_saved_teacher_codec_transport_only","source_edits":False,"RNG_calls":0,"financial_workers":0,"cases":[],"formal_approved":False,"financial_qualification":"unknown"}
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+manifest=json.loads((D/"task-5-teacher-storage-source-snapshot-v1/manifest.json").read_text())
+before={rel:sha(WT/rel) for rel in manifest["files"]}
+assert before==manifest["files"]
+fixtures=D/"task-5-teacher-storage-source-unit-fixtures-native-v1"
+fixture_manifest=json.loads((D/"task-5-teacher-storage-native-fixture-save-v1.json").read_text())
+fixture_before={rel:sha(fixtures/rel) for rel in fixture_manifest["files"]}
+assert fixture_before==fixture_manifest["files"]
+own=D/(PREFIX+"-snapshot")
+own.mkdir(exist_ok=False)
+for rel in before:
+ target=own/rel;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(WT/rel,target)
+(own/"manifest.json").write_text(json.dumps({"files":before,"scope":result["scope"]},indent=2)+"\n")
+sys.path[:0]=[str(R),str(WT/"johnhull/hullkit/src"),str(WT/"deep_hedge_price/src")]
+import numpy as np
+import _teacher_storage as helper
+import run_pilot as pilot
+import run_reference as runner
+import reference_methods
+from hullkit import _dynamic_hedging_conditional as conditional
+from deep_hedge_price import _dynamic_hedging_protocol as protocol
+def forbidden(*a,**kw):
+ result["financial_workers"]+=1
+ raise AssertionError("new numerical financial execution forbidden")
+def rng_forbidden(*a,**kw):
+ result["RNG_calls"]+=1
+ raise AssertionError("new RNG forbidden")
+def same(a,b,name="root"):
+ if isinstance(a,dict):
+  assert isinstance(b,dict) and set(a)==set(b),name+" keys"
+  for k in a:same(a[k],b[k],name+"."+k)
+ elif isinstance(a,(list,tuple)):
+  assert isinstance(b,(list,tuple)) and len(a)==len(b),name+" sequence"
+  for i,(aa,bb) in enumerate(zip(a,b,strict=True)):same(aa,bb,name+"."+str(i))
+ elif isinstance(a,np.ndarray):
+  assert isinstance(b,np.ndarray) and a.shape==b.shape and a.dtype==b.dtype,name+" array schema"
+  if a.dtype.kind in "fc":
+   assert np.array_equal(np.isnan(a),np.isnan(b)),name+" nan mask"
+   assert np.array_equal(np.isposinf(a),np.isposinf(b)),name+" +inf"
+   assert np.array_equal(np.isneginf(a),np.isneginf(b)),name+" -inf"
+   finite=np.isfinite(a)
+   assert np.allclose(a[finite],b[finite],rtol=2e-9,atol=2e-10),name+" finite"
+  else:assert np.array_equal(a,b),name+" exact array"
+ elif isinstance(a,(float,np.floating)):
+  if np.isnan(a):assert np.isnan(b),name
+  else:assert np.isclose(a,b,rtol=2e-9,atol=2e-10),name
+ else:assert a==b,name
+def positive(name,f):
+ f();result["cases"].append({"case":name,"status":"PASS"})
+def negative(name,f):
+ try:f()
+ except ValueError as e:
+  result["cases"].append({"case":name,"status":"REJECTED","reason":str(e)})
+ else:raise AssertionError(name+" accepted")
+def rewrite_physical_mutation(p,d):
+ d["physical_payload_sha256"]=runner.payload_digest(p)
+ d["origin"]=helper._origin(p)
+def fields(t):
+ return {n.name:ast.dump(n,include_attributes=False) for n in ast.parse(t).body if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef,ast.ClassDef))}
+with ExitStack() as stack:
+ for module in [pilot,reference_methods]:
+  for name in dir(module):
+   if (name.startswith("run_") or name in ("independent_heston_call","calendar_call_snapshots","premium_reference","quote_positions_oracle","independent_call_table","independent_local_call")) and callable(getattr(module,name)):
+    stack.enter_context(patch.object(module,name,forbidden))
+ for name in ("teacher_primitives","cir_implicit_step"):
+  if hasattr(conditional,name):stack.enter_context(patch.object(conditional,name,forbidden))
+ for name in ("heston_records","local_records","teacher_primitives"):
+  if hasattr(pilot,name):stack.enter_context(patch.object(pilot,name,forbidden))
+ for name in ("default_rng","normal","standard_normal","random","rand","randn","uniform","seed","RandomState"):
+  stack.enter_context(patch.object(np.random,name,rng_forbidden))
+ old,_=pilot.read_pilot_artifact(fixtures/"test_old_completed_literal_tea0/old")
+ legacy_sha=runner.payload_digest(old)
+ positive("old_literal_legacy_binding",lambda:pilot._check_teacher_node_binding({"raw_sha256":legacy_sha},fixtures/"test_old_completed_literal_tea0/old",old))
+ observations=[]
+ for i in range(5):
+  path=fixtures/f"test_native_teacher_physically{i}/teacher"
+  metadata,root_arrays,receipt=protocol.read_artifact(path)
+  physical,_=pilot._read_packed_pilot(path,metadata,receipt)
+  raw,_=pilot.read_pilot_artifact(path)
+  assert not root_arrays
+  assert set(physical)==set(raw)
+  assert set(raw["labels"])-set(physical["labels"])==set(helper.SAMPLE_FIELDS)
+  assert set(physical["labels"])==set(raw["labels"])-set(helper.SAMPLE_FIELDS)
+  unchanged=dict(raw,labels={k:v for k,v in raw["labels"].items() if k not in helper.SAMPLE_FIELDS})
+  same(physical,unchanged)
+  assert raw["original_n"]==32 and raw["labels"]["blocks"]==16
+  assert raw["labels"]["f_samples"] is raw["labels"]["cv_samples"]
+  assert raw["financial_qualification"]=="unknown"
+  # Independent reconstruction via explicitly fixed formula only.
+  expected=conditional.primitive_labels(physical["primitives"],physical["thresholds"],blocks=16)
+  expected["shared_driver_id"]=physical["global_driver_id"];expected["date_index"]=physical["date_index"]
+  same(expected,raw["labels"],"saved_"+str(i))
+  independent_binding=helper.physical_artifact_binding(path)
+  assert independent_binding["root_artifact_sha256"]==receipt["artifact_sha256"]
+  assert independent_binding["packs"]=={p.name:protocol.read_artifact(p)[2]["artifact_sha256"] for p in path.glob("pack*")}
+  positive(f"saved_{i}_physical_binding",lambda p=path,r=raw,b=independent_binding:pilot._check_teacher_node_binding({"raw_binding":b},p,r))
+  original_digest=runner.payload_digest(raw)
+  output=OUT/f"reencoded{i}"
+  pilot.write_pilot_artifact(output,raw)
+  assert runner.payload_digest(raw)==original_digest
+  saved,_=pilot.read_pilot_artifact(output);same(raw,saved,f"reencoded{i}")
+  for part in output.glob("pack*"):
+   with zipfile.ZipFile(part/"arrays.npz") as z:assert all(m.compress_type==zipfile.ZIP_DEFLATED for m in z.infolist())
+  # Every pack checked independently using public NPY header parsers.
+  chunks=[]
+  for part in [output,*sorted(output.glob("pack*"))]:
+   m=json.loads((part/"metadata.json").read_text());rec=json.loads((part/"receipt.json").read_text())
+   payload=0;expanded=0
+   with zipfile.ZipFile(part/"arrays.npz") as z:
+    assert len(z.infolist())==len(m["arrays"])
+    for member in z.infolist():
+     key=member.filename.removesuffix(".npy")
+     with z.open(member) as f:
+      ver=np.lib.format.read_magic(f)
+      parser={(1,0):np.lib.format.read_array_header_1_0,(2,0):np.lib.format.read_array_header_2_0}[ver]
+      shape,order,dtype=parser(f);header=f.tell()
+     nbytes=int(np.prod(shape,dtype=np.int64))*dtype.itemsize
+     assert m["arrays"][key]=={"shape":list(shape),"dtype":dtype.str,"nbytes":nbytes}
+     assert member.file_size==header+nbytes
+     payload+=nbytes;expanded+=member.file_size
+   assert expanded==rec["uncompressed_bytes"] and expanded<=256*1024**2
+   if part!=output:assert payload<=128*1024**2
+   chunks.append({"part":part.name,"payload_bytes":payload,"expanded_bytes":expanded,"npz_bytes":(part/"arrays.npz").stat().st_size})
+  observations.append({"fixture":i,"model":raw["model"],"all_n":raw["original_n"],"all_thresholds":raw["thresholds"].tolist(),"label_status":raw["labels"]["status"].tolist(),"path_mask_false":int((~raw["primitives"]["path_mask"]).sum()),"full_step_shape":list(raw["primitives"]["local_step_status"].shape),"failure_dtype":raw["primitives"]["failure_reasons"].dtype.str,"summary_keys":len(physical["labels"]),"restored_11_keys":len(helper.SAMPLE_FIELDS),"chunks":chunks})
+  result["cases"].append({"case":f"saved_{i}_all_keys_masks_dtypes_samples_stats","status":"PASS"})
+ result["observations"]=observations
+ # Samples: catch each original corrupted returned sample before any artifact exists.
+ for field in helper.SAMPLE_FIELDS:
+  raw=copy.deepcopy(old);raw["labels"][field]=raw["labels"][field].copy();raw["labels"][field][0,2]+=.01
+  target=OUT/("bad-sample-"+field)
+  negative("writer_"+field,lambda r=raw,t=target:pilot.write_pilot_artifact(t,r))
+  assert not target.exists()
+ # Rebuild self-consistent provenance to require numeric, not just byte, rejection.
+ phys,desc=helper.prepare_teacher(old)
+ for field,value in phys["labels"].items():
+  if isinstance(value,np.ndarray) and value.size:
+   pp,dd=copy.deepcopy(phys),copy.deepcopy(desc)
+   if value.dtype.kind=="f":pp["labels"][field].flat[0]+=.01
+   elif value.dtype.kind=="U":pp["labels"][field].flat[0]="counterexample"
+   else:continue
+   rewrite_physical_mutation(pp,dd)
+   negative("summary_"+field,lambda p=pp,d=dd:helper.restore_teacher(p,d))
+ # Sample payload/schema and original scope boundary failures.
+ mutations={
+ "unknown_recipe":lambda p,d:d.update(recipe="foreign"),
+ "unknown_schema":lambda p,d:d.update(schema="foreign"),
+ "unknown_source":lambda p,d:d["source_bindings"].update(teacher_storage="0"*64),
+ "source_extra":lambda p,d:d["source_bindings"].update(extra="0"*64),
+ "missing_sample":lambda p,d:d["samples"].pop("f_samples"),
+ "extra_sample":lambda p,d:d["samples"].update(foreign={"shape":[32,6],"dtype":"<f8"}),
+ "sample_shape":lambda p,d:d["samples"]["f_samples"].update(shape=[16,6]),
+ "sample_dtype":lambda p,d:d["samples"]["f_samples"].update(dtype="<f4"),
+ "primitive_float32":lambda p,d:p["primitives"].update(b=p["primitives"]["b"].astype(np.float32)),
+ "primitive_missing":lambda p,d:p["primitives"].pop("last_z"),
+ "original_n":lambda p,d:p.update(original_n=16),
+ "path_order":lambda p,d:p["path_ids"].__setitem__(slice(None),p["path_ids"][::-1]),
+ "cluster_order":lambda p,d:p["cluster_ids"].__setitem__(slice(None),p["cluster_ids"][::-1]),
+ "threshold_order":lambda p,d:p["thresholds"].__setitem__(slice(None),p["thresholds"][::-1]),
+ "extra_descriptor":lambda p,d:d.update(extra="foreign"),
+ "labels_extra":lambda p,d:p["labels"].update(extra=np.zeros(6)),
+ "stepstatus_shape":lambda p,d:p["primitives"].update(local_step_status=p["primitives"]["local_step_status"][:,:-1]),
+ "unknown_status_encoding":lambda p,d:p["primitives"].update(local_step_status_encoding="bitpack"),
+ "invalid_step_dictionary":lambda p,d:p["primitives"]["local_step_status"].__setitem__((0,0),255),
+ }
+ for name,mutation in mutations.items():
+  pp,dd=copy.deepcopy(phys),copy.deepcopy(desc);mutation(pp,dd);rewrite_physical_mutation(pp,dd)
+  negative(name,lambda p=pp,d=dd:helper.restore_teacher(p,d))
+ # SHA is not a reconstructed float qualification gate.
+ tolerance=copy.deepcopy(old);tolerance["labels"]["raw_samples"][0,2]+=1e-12
+ target=OUT/"numeric-tolerance"
+ pilot.write_pilot_artifact(target,tolerance);restored,_=pilot.read_pilot_artifact(target)
+ same(tolerance,restored)
+ assert runner.payload_digest(tolerance)!=runner.payload_digest(restored)
+ binding=pilot._teacher_node_binding(target,tolerance)
+ positive("approx_not_full_sample_sha",lambda:pilot._check_teacher_node_binding({"raw_binding":binding},target,restored))
+ # A different returned producer cannot be promoted by physical binding.
+ other=copy.deepcopy(old);other["seed"]+=1;path=OUT/"other-producer";pilot.write_pilot_artifact(path,other)
+ negative("producer_replacement",lambda:pilot._teacher_node_binding(path,old))
+ negative("unknown_binding_kind",lambda:pilot._check_teacher_node_binding({"raw_binding":{"kind":"foreign"},"raw_sha256":legacy_sha},target,restored))
+ original_path=fixtures/"test_native_teacher_physically0/teacher";raw,_=pilot.read_pilot_artifact(original_path);binding=pilot._teacher_node_binding(original_path,raw)
+ for partname in ("root_artifact_sha256","artifact_sha256","packs"):
+  bad=copy.deepcopy(binding)
+  if partname=="packs":bad[partname][next(iter(bad[partname]))]="0"*64
+  else:bad[partname]="0"*64
+  negative("node_binding_"+partname,lambda b=bad:pilot._check_teacher_node_binding({"raw_binding":b},original_path,raw))
+ for name in ("metadata.json","arrays.npz","receipt.json"):
+  dest=OUT/("byte-tamper-"+name.replace(".","-"));shutil.copytree(original_path,dest)
+  part=next(dest.glob("pack*"))/name;rawbytes=part.read_bytes();part.write_bytes(rawbytes[:-1]+bytes([rawbytes[-1]^1]))
+  negative("pack_byte_tamper_"+name,lambda p=dest:pilot.read_pilot_artifact(p))
+ # Literal failures/nested teacher retain every array/status and default ZIP_STORED.
+ for status in ("failed_at_declared_cap","unclosed_source_or_solver_defect"):
+  failure={"kind":"teacher","status":status,"original_n":32,"labels":None,"raw_chunks":[np.array([np.nan,-np.inf,np.inf,0.])],"executed_path_ids":np.arange(8),"unexecuted_path_count":24,"failure_reason":"independent fixture","expenses":[],"financial_qualification":"unknown"}
+  path=OUT/status;pilot.write_pilot_artifact(path,failure);rr,_=pilot.read_pilot_artifact(path);same(failure,rr)
+  assert "teacher_storage" not in protocol.read_artifact(path)[0]
+  for part in path.glob("pack*"):
+   with zipfile.ZipFile(part/"arrays.npz") as z:assert all(m.compress_type==zipfile.ZIP_STORED for m in z.infolist())
+  result["cases"].append({"case":"literal_"+status,"status":"PASS"})
+ nested={"kind":"nested","raw_teacher":old,"foreign_array":np.array([np.nan,1.])}
+ path=OUT/"nested";pilot.write_pilot_artifact(path,nested);rr,_=pilot.read_pilot_artifact(path);same(nested,rr)
+ assert "teacher_storage" not in protocol.read_artifact(path)[0]
+ result["cases"].append({"case":"nested_unchanged_literal","status":"PASS"})
+ identity=runner.execution_source_identity(WT)
+ closure=json.loads((D/"task-5-teacher-storage-source-closure-v1.json").read_text())
+ assert identity==closure["identity"]
+ digest=hashlib.sha256(json.dumps(identity,sort_keys=True,separators=(",",":")).encode()).hexdigest()
+ assert digest==closure["source_identity_sha256"]
+ result["closure"]={"files":len(identity["files"]),"dynamic_imports":identity.get("dynamic_imports"),"source_identity_sha256":digest}
+ # Independent AST comparison against preserved v56 source for exact changed definitions.
+ baseline=D/"task-5-teacher-storage-source-before-RED-v1";delta={}
+ for rel in before:
+  newfields=fields((WT/rel).read_text());oldp=baseline/rel;oldfields=fields(oldp.read_text()) if oldp.exists() else {}
+  delta[rel]={"added":sorted(set(newfields)-set(oldfields)),"removed":sorted(set(oldfields)-set(newfields)),"changed":sorted(k for k in set(newfields)&set(oldfields) if newfields[k]!=oldfields[k])}
+ result["ast_delta"]=delta
+result["source_after"]={rel:sha(WT/rel) for rel in before};assert result["source_after"]==before
+result["source_before"]=before
+fixture_after={rel:sha(fixtures/rel) for rel in fixture_before};assert fixture_after==fixture_before
+result["fixture_files_stable"]=len(fixture_before)
+result["decision"]="approve_bounded_fixed_codec_transport_source_only"
+result["counts"]={s:sum(c["status"]==s for c in result["cases"]) for s in ("PASS","REJECTED")}
+result["cost"]={"inner_wall_seconds":time.perf_counter()-start,"inner_cpu_seconds":time.process_time()-cpu,"process_peak_rss_bytes":resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,"report_save_cost":"unknown"}
+assert result["RNG_calls"]==result["financial_workers"]==0
+(D/(PREFIX+"-results.json")).write_text(json.dumps(result,indent=2)+"\n")
+print(json.dumps({"decision":result["decision"],"counts":result["counts"],"closure":result["closure"],"cost":result["cost"]},indent=2))

@@ -47,3 +47,8 @@ count/signature/topologyだけのroot検査は自己整合の改変10件を通�
 v55の動的import3件が正式source封鎖を妨げることを実検査で確認し、[v56 source封鎖](pilot-execution-evidence/task-5-formal-pilot-source-closure-v56-main3.md)はhashlibとunpack_inputsを静的importへ置換するだけで修復。191専用tests/Ruff PASS、80実source・dynamic import0、既存115test/helperと金融ロジックを保持。[独立限定承認](pilot-execution-evidence/task-5-pilot-v56-independent-review.md)を完了。旧v54 sourceを記録したdraftは保存し、正式lockで現identityへ再結合する。
 
 初期37quoteの現在fieldは同dxの幅2.4を追加計測し、価格/幅差を独立保存算術で確認。全20最大gridの現sample保存下限1.44TiBはvolume空き560.8GiBを超える。既存1e9 capは子計算で全20を許容し、[独立資源候補レビュー](pilot-execution-evidence/task-5-formal-controls-review-report.md)でも全体storage上限の代わりにならないことを確認。全候補を保持し、whole-storage予算/revision・実worker rates/bytes・10費用receipt・A cap optionsの確定が正式pilot前に残る。
+
+
+## 現在の教師保存source（2026-10-10）
+
+教師専用primitive recipeとphysical node bindingを限定実装し、現在closureは81files/dynamic0。元数学/N/casesを変えず、全primitive・元16block/stat/statusを保持する。100 storage/protocol・191 pilot・14 closure・7 main transport/resume tests、Ruff/format、独立15正例/60反例がPASS。全status付き原N65536/65thresholdの合成I/Oも独立保存検査PASS、外側wall10.928秒・peakRSS3.467GB。詳細は[予算測定](PILOT_BUDGET_MEASUREMENTS.md)。旧v56 source80の原測定/失敗/unknownを保持する。圧縮率はgenuine教師のbudgetへ転用せず、正式lock/volume budgetは未承認。次は原N1024四classを元共通driver二本・生成と保存SDE再計算込みで実測する。

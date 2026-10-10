@@ -1,0 +1,331 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF...FF                                  [100%]
+=================================== FAILURES ===================================
+_ test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[Heston-ordinary] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:128: in test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all
+    assert "teacher_storage" in metadata, "native completed teacher needs explicit storage recipe"
+E   AssertionError: native completed teacher needs explicit storage recipe
+E   assert 'teacher_storage' in {'arrays': {'a000000': {'dtype': '<i8', 'parts': [{'id': 'pack000000', 'start': 0, 'stop': 32, 'value_key': 'value0000...605337d2427ed', 'path_start': 0, ...}], 'cluster_ids': {'__array__': 'a000000'}, 'date_index': 6, 'driver': None, ...}}
+_ test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[local-ordinary] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:128: in test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all
+    assert "teacher_storage" in metadata, "native completed teacher needs explicit storage recipe"
+E   AssertionError: native completed teacher needs explicit storage recipe
+E   assert 'teacher_storage' in {'arrays': {'a000000': {'dtype': '<i8', 'parts': [{'id': 'pack000000', 'start': 0, 'stop': 32, 'value_key': 'value0000...605337d2427ed', 'path_start': 0, ...}], 'cluster_ids': {'__array__': 'a000000'}, 'date_index': 6, 'driver': None, ...}}
+_ test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[Heston-invalid1path] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:128: in test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all
+    assert "teacher_storage" in metadata, "native completed teacher needs explicit storage recipe"
+E   AssertionError: native completed teacher needs explicit storage recipe
+E   assert 'teacher_storage' in {'arrays': {'a000000': {'dtype': '<i8', 'parts': [{'id': 'pack000000', 'start': 0, 'stop': 32, 'value_key': 'value0000...605337d2427ed', 'path_start': 0, ...}], 'cluster_ids': {'__array__': 'a000000'}, 'date_index': 6, 'driver': None, ...}}
+_ test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[Heston-atom] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:122: in test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all
+    raw = native_teacher(model, variant)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:55: in native_teacher
+    parameters = HestonParameters(100, 0, 0, 0, 2, 0, 0, 0)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<string>:11: in __init__
+    ???
+johnhull/hullkit/src/hullkit/_heston_local_surface.py:36: in __post_init__
+    raise ValueError("require spot,kappa,theta>0 and v0,xi>=0")
+E   ValueError: require spot,kappa,theta>0 and v0,xi>=0
+_ test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[Heston-underresolved] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:128: in test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all
+    assert "teacher_storage" in metadata, "native completed teacher needs explicit storage recipe"
+E   AssertionError: native completed teacher needs explicit storage recipe
+E   assert 'teacher_storage' in {'arrays': {'a000000': {'dtype': '<i8', 'parts': [{'id': 'pack000000', 'start': 0, 'stop': 32, 'value_key': 'value0000...a439f50323f4a', 'path_start': 0, ...}], 'cluster_ids': {'__array__': 'a000000'}, 'date_index': 6, 'driver': None, ...}}
+_____ test_writer_rejects_each_original_derived_sample_tamper[raw_samples] _____
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_ test_writer_rejects_each_original_derived_sample_tamper[conditioned_samples] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_____ test_writer_rejects_each_original_derived_sample_tamper[cv_samples] ______
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+______ test_writer_rejects_each_original_derived_sample_tamper[f_samples] ______
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_____ test_writer_rejects_each_original_derived_sample_tamper[f_x_samples] _____
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+____ test_writer_rejects_each_original_derived_sample_tamper[raw_x_samples] ____
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_ test_writer_rejects_each_original_derived_sample_tamper[conditioned_x_samples] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_ test_writer_rejects_each_original_derived_sample_tamper[unreplaced_cv_samples] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_ test_writer_rejects_each_original_derived_sample_tamper[unreplaced_cv_x_samples] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+___ test_writer_rejects_each_original_derived_sample_tamper[aux_raw_samples] ___
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_ test_writer_rejects_each_original_derived_sample_tamper[aux_conditioned_samples] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:153: in test_writer_rejects_each_original_derived_sample_tamper
+    with pytest.raises(ValueError, match="teacher.*(sample|label|reconstruct|value)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_________ test_reader_checks_independently_stored_original_summary[f] __________
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:162: in test_reader_checks_independently_stored_original_summary
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+__ test_reader_checks_independently_stored_original_summary[component_means] ___
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:162: in test_reader_checks_independently_stored_original_summary
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+____ test_reader_checks_independently_stored_original_summary[block_means] _____
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:162: in test_reader_checks_independently_stored_original_summary
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_reader_checks_independently_stored_original_summary[joint_block_covariance] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:162: in test_reader_checks_independently_stored_original_summary
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_______ test_reader_checks_independently_stored_original_summary[status] _______
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:162: in test_reader_checks_independently_stored_original_summary
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+____ test_teacher_reader_rejects_recipe_or_original_scope_mutation[recipe] _____
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+____ test_teacher_reader_rejects_recipe_or_original_scope_mutation[source] _____
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_teacher_reader_rejects_recipe_or_original_scope_mutation[missing_sample_spec] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_teacher_reader_rejects_recipe_or_original_scope_mutation[extra_sample_spec] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_teacher_reader_rejects_recipe_or_original_scope_mutation[sample_shape] __
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_teacher_reader_rejects_recipe_or_original_scope_mutation[sample_dtype] __
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_teacher_reader_rejects_recipe_or_original_scope_mutation[missing_primitive] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_teacher_reader_rejects_recipe_or_original_scope_mutation[primitive_dtype] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_______ test_teacher_reader_rejects_recipe_or_original_scope_mutation[N] _______
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+__ test_teacher_reader_rejects_recipe_or_original_scope_mutation[path_order] ___
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_teacher_reader_rejects_recipe_or_original_scope_mutation[cluster_order] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_teacher_reader_rejects_recipe_or_original_scope_mutation[threshold_order] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+_ test_teacher_reader_rejects_recipe_or_original_scope_mutation[global_driver] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:180: in test_teacher_reader_rejects_recipe_or_original_scope_mutation
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+__ test_new_node_binds_physical_origin_and_legacy_literal_remains_compatible ___
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:246: in test_new_node_binds_physical_origin_and_legacy_literal_remains_compatible
+    assert hasattr(pilot, "_teacher_node_binding"), "teacher nodes need explicit binding kind"
+E   AssertionError: teacher nodes need explicit binding kind
+E   assert False
+E    +  where False = hasattr(pilot, '_teacher_node_binding')
+_____ test_numeric_reconstruction_tolerance_is_not_a_full_sample_sha_gate ______
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:265: in test_numeric_reconstruction_tolerance_is_not_a_full_sample_sha_gate
+    helper = storage()
+             ^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:30: in storage
+    assert importlib.util.find_spec("_teacher_storage") is not None, (
+E   AssertionError: completed native teachers require the private primitive recipe storage
+E   assert None is not None
+E    +  where None = <function find_spec at 0x7bc1142abba0>('_teacher_storage')
+E    +    where <function find_spec at 0x7bc1142abba0> = <module 'importlib.util' (frozen)>.find_spec
+E    +      where <module 'importlib.util' (frozen)> = importlib.util
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[Heston-ordinary]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[local-ordinary]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[Heston-invalid1path]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[Heston-atom]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[Heston-underresolved]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[raw_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[conditioned_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[cv_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[f_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[f_x_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[raw_x_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[conditioned_x_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[unreplaced_cv_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[unreplaced_cv_x_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[aux_raw_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_writer_rejects_each_original_derived_sample_tamper[aux_conditioned_samples]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_reader_checks_independently_stored_original_summary[f]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_reader_checks_independently_stored_original_summary[component_means]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_reader_checks_independently_stored_original_summary[block_means]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_reader_checks_independently_stored_original_summary[joint_block_covariance]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_reader_checks_independently_stored_original_summary[status]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[recipe]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[source]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[missing_sample_spec]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[extra_sample_spec]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[sample_shape]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[sample_dtype]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[missing_primitive]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[primitive_dtype]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[N]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[path_order]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[cluster_order]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[threshold_order]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_teacher_reader_rejects_recipe_or_original_scope_mutation[global_driver]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_new_node_binds_physical_origin_and_legacy_literal_remains_compatible
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_numeric_reconstruction_tolerance_is_not_a_full_sample_sha_gate
+36 failed, 3 passed in 1.82s

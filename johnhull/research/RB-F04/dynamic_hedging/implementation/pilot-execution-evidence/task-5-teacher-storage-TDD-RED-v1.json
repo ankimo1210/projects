@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py",
+    "--tb=short"
+  ],
+  "exit_code": 1,
+  "wall_seconds": 2.9155510009986756,
+  "child_cpu_seconds": 2.8254270000000004,
+  "source_changes": false,
+  "financial_execution": "bounded deterministic source test only; no RNG/CF/PDE/optimizer",
+  "test_sha256": "619a340af6c9d262125feeca208c71176e5184f20fff5dd1af9f841920f96997"
+}

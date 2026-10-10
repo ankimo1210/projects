@@ -1,0 +1,28 @@
+{
+  "schema": "rb-f04-teacher-storage-full-status-io-enclosing-cost-v1",
+  "scope": "synthetic_full_status_teacher_recipe_artifact_io_only",
+  "financial_worker_RNG_performed": false,
+  "financial_qualification": "unknown",
+  "wall_start": 30049.482989312,
+  "wall_stop": 30060.411005535,
+  "wall_seconds": 10.92801622299885,
+  "CPU_child_process_tree_seconds": 11.138593,
+  "CPU_includes_inner_parent_and_child_not_observer": true,
+  "observer_own_CPU_and_final_receipt_write": "unknown",
+  "exit_code": 0,
+  "source81_stable": true,
+  "budget_sha256": "1037516c8dc2f643f01fc850e23a66177093a81aa0d93713d5e42740f36e0666",
+  "inner_parent_receipt_sha256": "97415a0d1f2ca66db0cbfd1a7e11bffd277b69f9cd1daff3e9b6202c949bd38e",
+  "root_log_sha256": "6c776a92434e5db51c5173ae747471ed9c79878b56fcb99361560be7df5d27e8",
+  "not_added_to_inner_cost": true,
+  "outer_overrun_seconds": 0.0,
+  "inner_result": {
+    "status": "allocation_component_complete",
+    "completed_component": true,
+    "failure_boundary": null,
+    "wall_seconds": 10.886324131999572,
+    "cpu_seconds": 10.842932999999999,
+    "actual_peak_rss_bytes": 3466457088,
+    "full_original_returned_payload_restore_finished": true
+  }
+}

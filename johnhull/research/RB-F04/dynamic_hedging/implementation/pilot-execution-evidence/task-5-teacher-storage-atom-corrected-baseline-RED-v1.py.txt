@@ -1,0 +1,16 @@
+"""Corrected atom fixture against preserved v56 writer; no source edits."""
+from pathlib import Path
+import importlib.util
+import sys
+import pytest
+WT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+sys.path[:0] = [str(WT / "johnhull/research/RB-F04/dynamic_hedging"),
+               str(WT / "johnhull/hullkit/src"), str(WT / "deep_hedge_price/src")]
+BASELINE = Path(__file__).parent / "task-5-teacher-storage-source-before-RED-v1/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+spec = importlib.util.spec_from_file_location("run_pilot", BASELINE)
+module = importlib.util.module_from_spec(spec)
+sys.modules["run_pilot"] = module
+spec.loader.exec_module(module)
+assert not hasattr(module, "_teacher_node_binding")
+raise SystemExit(pytest.main(["-q", str(WT / "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py"),
+                            "-k", "native_teacher_physically and atom", "--tb=short"]))

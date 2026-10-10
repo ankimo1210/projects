@@ -1,0 +1,18 @@
+{
+  "scope": "source_schema_static_io_preflight_after_codec_fixed",
+  "probe_sha256": "baed09d155d8d2476329bcf5bd7d6b5cd5bb07fdcdddc506a7cf9dffd590c9db",
+  "source_files_match": 5,
+  "candidate_execution_approved": false,
+  "component_executed": false,
+  "RNG": false,
+  "financial_worker": false,
+  "native_root_missing_keys": [],
+  "native_primitive_missing_keys": [],
+  "metadata_wrapper_correct": true,
+  "full_model_law_qualified": false,
+  "financial_qualification": "unknown",
+  "capacity_rate_precision": "unknown",
+  "outer_cost_requirement": "root separate enclosing receipt; inner and outer must not be added",
+  "field_shape_execution": "pending approved actual IO; static fullN65536/K65/B16/status65536x768 remains",
+  "decision": "schema_preflight_pass_only_not_execution_authorization"
+}

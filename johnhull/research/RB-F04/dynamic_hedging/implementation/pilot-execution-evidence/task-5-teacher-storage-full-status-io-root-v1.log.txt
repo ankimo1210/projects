@@ -1,0 +1,1 @@
+{"status": "allocation_component_complete", "exit_code": 0, "wall_seconds": 10.886324131999572, "cpu_seconds": 10.842932999999999, "actual_peak_rss_bytes": 3466457088}

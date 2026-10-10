@@ -97,4 +97,16 @@ workload JSONのraw_two_factor_driver_bytes_without_dedupは、fine normalsを�
 
 [全cacheの独立判断](pilot-execution-evidence/task-5-current-whole-call-cache-independent-v3-decision.json)は元127,400枠、[独立表の判断](pilot-execution-evidence/task-5-current-independent-call-table-independent-v3-decision.json)は保存CF1,386積分とPDE28曲線から元693/196価格を再構成してPASS。source80/入力/保存34files不変、capなし、新solver/RNGなし。保存検査の計時はM2/M3が9.388497秒、M4/M5は先行import失敗3.216240秒＋成功3.328490秒を別保存し、未測定の準備/報告費用はunknown。正式全state精度・storage budget・pilot/main・phase受入は未承認。
 
-原始全経路/診断/元統計を保持する教師専用保存形式の限定実装と、原N65536・全65threshold・全768stepstatusのI/O測定を準備中。全体storage削減率は未確定。次は同じ原driverを使うgenuine N1024の4教師classを生成＋保存SDE再計算まで測り、全job予算を固定する。
+原始全経路/診断/元統計を保持する教師専用保存形式を限定実装し、原N65536・全65threshold・全768stepstatusの合成I/O測定を完了。全体storage削減率は未確定。次は同じ原driverを使うgenuine N1024の4教師classを生成＋保存SDE再計算まで測り、全job予算を固定する。
+
+## 教師専用保存と全status付き最大Nの検査（2026-10-10）
+
+[限定実装記録](pilot-execution-evidence/task-5-teacher-storage-implementation-report-v1.md)：completed native root teacherだけに固定recipeを適用し、全primitive・元summary/status/16block/covarianceを物理保存する。重複する10種類の全N×threshold標本＋f_samples aliasを読み込み時に再構成する。writerは元全標本/統計を照合してから省略し、readerは独立保存した元統計と照合して元統計を保持する。金融数値は既存rtol=2e-9/atol=2e-10、shape/dtype/NaN/inf/statusは保持。source/input/driver/原物理receiptをSHAで結び、再構成金融標本のビット一致を合否へ用いない。
+
+新nodeのphysical binding、旧literal/raw_sha256・cap/sourcefault/nestedとの互換を保持。private protocolのcompress=False既定を保ち、新teacher自身のpacksのみ圧縮する。public API・依存・金融計算・元N/casesは不変。storage46＋protocol54=100、pilot191、closure14、main transport/resume7のscoped testsと5Python Ruff/formatがPASS。現在の実runtime closureは81files/dynamic0（旧v56測定はsource80のまま保存）。[独立codec検査](pilot-execution-evidence/task-5-teacher-storage-independent-v1-results.json)は保存N32全key/元統計/全標本・旧形式15正例と60改変拒否を確認した。
+
+原N65536・全65threshold・16blocks、9本のfloat64 primitive、65536×768 uint8 stepstatus、U128 failure reasons、U7 statusを含む合成単一nodeを、事前4GiB/180秒の行政上限で生成・保存・復元した。[外側実費](pilot-execution-evidence/task-5-teacher-storage-full-status-io-root-enclosing-cost-v1.json)はwall10.928016秒/CPU11.138593秒、個別peakRSS3,466,457,088 bytes。全11標本と全返却payloadの復元を確認、capなし・81source不変。外側CPUは内部parent+childを含みobserver自身のCPU/最終receipt書込はunknown、内側費用と加算しない。
+
+[独立全N検査](pilot-execution-evidence/task-5-teacher-storage-full-status-io-independent-v1-results.json)は全46 NPY headers、physical payload93,602,864 bytes・expanded93,608,752 bytes・全status/shape/dtype、原raw/aux payoff全行、全N平均/SE・16block/joint covarianceを再計算した。独立検査wall5.471255秒・peakRSS3,126,276,096 bytes。原保存10files不変、新RNG/金融workerなし。
+
+これは合成transportの検査であり、genuine教師の圧縮率・計算速度・金融精度を示さない。原全20gridの353,606,441,728 bytes以上のmandatory展開下限、各volumeの容量、main/oracle/復元の同時占有を保ち、genuine N1024四classの実測後に正式保存/実行予算を判断する。正式pilot/freeze/main・両保管庫の新金融semantic・研究受入は未完了。

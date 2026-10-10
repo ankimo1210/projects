@@ -1,0 +1,26 @@
+{
+  "decision": "approve_saved_synthetic_full_status_native_IO_component_only",
+  "original_N": 65536,
+  "thresholds": 65,
+  "blocks": 16,
+  "saved_files_stable": 10,
+  "independent_cost": {
+    "inner_wall_seconds": 4.800837093000155,
+    "inner_CPU_seconds": 4.60032697,
+    "process_peak_RSS_bytes": 3125952512,
+    "final_record_save": "unknown"
+  },
+  "original_cost": {
+    "root_outer_wall_seconds": 10.92801622299885,
+    "root_outer_CPU_seconds": 11.138593,
+    "root_inner_wall_seconds": 10.886324131999572,
+    "root_inner_child_CPU_seconds": 10.842932999999999,
+    "inner_and_outer_overlap_not_added": true,
+    "root_actual_process_peak_RSS_bytes": 3466457088,
+    "cap_wall_seconds": 180,
+    "cap_RSS_bytes": 4294967296,
+    "overrun": false,
+    "outer_tail_seconds": 0.04169209099927684,
+    "final_observer_own_CPU_and_save": "unknown"
+  }
+}

@@ -642,7 +642,7 @@ def validate_expenses(expenses, *, required_ids) -> dict:
     }
 
 
-def write_artifact(directory, *, metadata, arrays) -> dict:
+def write_artifact(directory, *, metadata, arrays, compress=False) -> dict:
     """Write one new immutable JSON+nonobject NPZ chunk and return its receipt.
 
     metadata.json contains detached metadata and array dtype/shape/nbytes.
@@ -662,7 +662,7 @@ def write_artifact(directory, *, metadata, arrays) -> dict:
     if sum(a.nbytes for a in data.values()) > limit:
         raise ValueError("artifact chunk exceeds 256 MiB uncompressed")
     buffer = io.BytesIO()
-    np.savez(buffer, **data)
+    (np.savez_compressed if compress else np.savez)(buffer, **data)
     array_bytes = buffer.getvalue()
     with zipfile.ZipFile(io.BytesIO(array_bytes)) as archive:
         expanded = sum(item.file_size for item in archive.infolist())

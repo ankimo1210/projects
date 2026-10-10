@@ -1,0 +1,58 @@
+{
+  "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": {
+    "added_functions": [],
+    "changed_functions": [
+      "write_artifact"
+    ],
+    "removed_functions": []
+  },
+  "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py": {
+    "added_functions": [
+      "test_actual_physical_pack_byte_tamper_is_rejected",
+      "test_node_physical_origin_cannot_bind_a_different_returned_producer",
+      "test_old_completed_literal_teacher_remains_readable_with_full_keys_and_dtypes",
+      "test_recipe_parts_extra_directory_is_not_an_ignored_sidecar",
+      "test_unknown_node_binding_kind_never_falls_back_to_literal"
+    ],
+    "changed_functions": [
+      "native_teacher",
+      "test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all"
+    ],
+    "removed_functions": []
+  },
+  "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py": {
+    "added_functions": [
+      "_labels",
+      "_origin",
+      "_require",
+      "_same",
+      "_validate_root",
+      "check_returned_origin",
+      "physical_artifact_binding",
+      "prepare_teacher",
+      "restore_teacher",
+      "source_bindings"
+    ],
+    "changed_functions": [],
+    "removed_functions": []
+  },
+  "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+    "added_functions": [],
+    "changed_functions": [
+      "check_teacher_grid_record"
+    ],
+    "removed_functions": []
+  },
+  "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+    "added_functions": [
+      "_check_teacher_node_binding",
+      "_teacher_node_binding"
+    ],
+    "changed_functions": [
+      "read_pilot_artifact",
+      "run_teacher_grid_job",
+      "write_pilot_artifact"
+    ],
+    "removed_functions": []
+  }
+}

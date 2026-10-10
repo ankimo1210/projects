@@ -1146,6 +1146,7 @@ def _all_cap_bindings(parents):
 
 def check_teacher_grid_record(record, parameters, surface, *, artifact_context=None):
     from run_pilot import (
+        _check_teacher_node_binding,
         _validate_teacher_reference,
         bound_artifact_path,
         read_pilot_artifact,
@@ -1186,11 +1187,9 @@ def check_teacher_grid_record(record, parameters, surface, *, artifact_context=N
                 all(node[k] == expected[index][k] for k in expected[index]),
                 "teacher raw node order changed",
             )
-            row, _ = read_pilot_artifact(bound_artifact_path(node["path"], artifact_context))
-            _require(
-                runner.payload_digest(row) == node["raw_sha256"],
-                "teacher raw node binding mismatch",
-            )
+            directory = bound_artifact_path(node["path"], artifact_context)
+            row, _ = read_pilot_artifact(directory)
+            _check_teacher_node_binding(node, directory, row)
             _require(
                 row["original_n"] == n and row["seed"] == record["seed"],
                 "teacher original N/CRN differs",

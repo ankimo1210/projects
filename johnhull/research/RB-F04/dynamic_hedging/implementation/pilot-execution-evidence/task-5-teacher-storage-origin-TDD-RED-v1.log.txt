@@ -1,0 +1,9 @@
+F......                                                                  [100%]
+=================================== FAILURES ===================================
+_____ test_node_physical_origin_cannot_bind_a_different_returned_producer ______
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:372: in test_node_physical_origin_cannot_bind_a_different_returned_producer
+    with pytest.raises(ValueError, match=r"teacher.*(origin|binding)"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_node_physical_origin_cannot_bind_a_different_returned_producer
+1 failed, 6 passed, 39 deselected in 1.86s

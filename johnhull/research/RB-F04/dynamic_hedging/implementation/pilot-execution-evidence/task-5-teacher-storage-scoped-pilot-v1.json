@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "--tb=short"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 70.47119242400004,
+  "child_cpu_seconds": 69.527021,
+  "scope": "existing dedicated source-unit regressions; not formal finance or whole-project suite"
+}

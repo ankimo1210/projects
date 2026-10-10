@@ -1,0 +1,14 @@
+{
+  "exit_code": 0,
+  "wall_seconds": 5.4712546529990504,
+  "child_cpu_seconds": 5.120084,
+  "sampled_peak_RSS_bytes": 3126276096,
+  "kernel_peak_RSS_bytes": 3125952512,
+  "scope": "independent_saved_full_status_transport_read_only",
+  "new_financial_worker": false,
+  "RNG": false,
+  "safety_ceiling_RSS_bytes": 4294967296,
+  "safety_ceiling_wall_seconds": 180,
+  "actual_failure_boundary": null,
+  "unmeasured_preparation_and_report": "unknown"
+}
