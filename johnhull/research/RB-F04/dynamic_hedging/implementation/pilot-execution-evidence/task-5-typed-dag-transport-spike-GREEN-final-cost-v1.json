@@ -1,0 +1,12 @@
+{
+  "business_NPZ_or_largeJSON_reads": 0,
+  "cpu_seconds": 1.428075727,
+  "exit_code": 0,
+  "financial_execution": 0,
+  "production_source_edits": 0,
+  "prototype_sha256": "16768870e07b602d610cbd1f24af5b41fbe4ff81c7bc7f52fa40423f18f5ef52",
+  "scope": "synthetic_only",
+  "selftest_sha256": "7afadc52170499ac6ca0c3ff688b83d303532fee6dbed49a036bae43e02b6781",
+  "tests": 5,
+  "wall_seconds": 0.11442109599738615
+}

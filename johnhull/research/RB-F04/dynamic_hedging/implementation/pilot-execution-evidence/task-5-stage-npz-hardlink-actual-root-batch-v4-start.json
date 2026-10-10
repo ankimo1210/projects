@@ -1,0 +1,16 @@
+{
+  "catalog_sha256": "642cc79b998fad1349902abaeb97b5b0c738260eb226fb0c14e64878880053fc",
+  "financial_qualification": "unknown",
+  "financial_source_changed": false,
+  "financial_source_files_verified": 81,
+  "helper_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v2.py",
+  "helper_sha256": "010fb31dd02be6e7be937d1c9923ba8f80abeac2bbb03f05725850be430adf58",
+  "helper_version": 2,
+  "limits": {
+    "max_links": 2000,
+    "max_read_bytes": 128849018880,
+    "max_seconds": 60.0
+  },
+  "start_utc": "2026-10-10T11:49:40.897099+00:00",
+  "wrapper_version": 4
+}

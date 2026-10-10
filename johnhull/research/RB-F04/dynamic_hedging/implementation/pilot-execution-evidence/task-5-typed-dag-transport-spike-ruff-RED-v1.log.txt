@@ -1,0 +1,39 @@
+I001 [*] Import block is un-sorted or un-formatted
+ --> /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-selftest-v1.py:2:1
+  |
+1 |   """Small synthetic throwaway-prototype checks; no native artifacts."""
+2 | / import importlib.util
+3 | | from pathlib import Path
+4 | | import unittest
+5 | |
+6 | | import numpy as np
+  | |__________________^
+7 |
+8 |   D = Path(__file__).resolve().parent
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-v1.py:7:1
+   |
+ 5 |   creates a new writable container/array. No native/CAS/financial execution.
+ 6 |   """
+ 7 | / import ast
+ 8 | | from dataclasses import dataclass
+ 9 | | import hashlib
+10 | | import io
+11 | | import json
+12 | | import math
+13 | | from pathlib import Path
+14 | | import time
+15 | | import zlib
+16 | |
+17 | | import numpy as np
+   | |__________________^
+18 |
+19 |   W = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+   |
+help: Organize imports
+
+Found 2 errors.
+[*] 2 fixable with the `--fix` option.

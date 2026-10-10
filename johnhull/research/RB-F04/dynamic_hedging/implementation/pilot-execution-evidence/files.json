@@ -5910,6 +5910,246 @@
       "archive": "task-5-storage-proof-root-document-check-v2.json",
       "bytes": 428,
       "sha256": "49a68ad0fa858aeaea363353ca2698f82479ceeb1e0c0b5a6e05b5fa48bbf623"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-closed-pack-root-dedup-catalog-summary-v2.json",
+      "archive": "task-5-formal-closed-pack-root-dedup-catalog-summary-v2.json",
+      "bytes": 599,
+      "sha256": "71f8cec630ae1cdd32fd0af6a8631a6ce7f15a1710c39401bf3545d342b871b7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-generic-saved-transport-boundaries-addendum-v1.md",
+      "archive": "task-5-generic-saved-transport-boundaries-addendum-v1.md",
+      "bytes": 7494,
+      "sha256": "21284648b7922e2433b9557e27bd07bbe71a9a3c6818ebfa68dfff85a28cc8c6"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v3-start.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v3-start.json",
+      "bytes": 655,
+      "sha256": "487c8361dd7fce53ceca39934241516c8c31fbff222abf05803745d55252c0e4"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v3.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v3.json",
+      "bytes": 2023,
+      "sha256": "2bac3ec79ccf5bda476ac0ce4d893fa9d236d1a7cea18d709cb95baf1fe32f13"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v3.jsonl",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v3.jsonl",
+      "bytes": 807138,
+      "sha256": "7a11362a6ae4c989835b68277af29dfbcccf50d254e80b3fbdf221ee4c8ac8f0"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v4-start.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v4-start.json",
+      "bytes": 655,
+      "sha256": "0d397eb6ce6358334e0617bb23f0dd1f1afd08b8720af16248d133a34241a4f5"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v4.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v4.json",
+      "bytes": 2030,
+      "sha256": "2190acad15f279724f5988bb58b0d21ac0633d5bb5bd8dbcb1ec0e4862d697fb"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v4.jsonl",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v4.jsonl",
+      "bytes": 880373,
+      "sha256": "10c9543c3f31d073814484101162744de69df68867f244039f0d20c3b0f31899"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v5-start.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v5-start.json",
+      "bytes": 655,
+      "sha256": "f051706bdd54d1f2d69583bd06711ebcd2d412162cc8058d7b8998f4ba8d8398"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v5.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v5.json",
+      "bytes": 2020,
+      "sha256": "c66651410f7049d639828e8f01fad78a2568f7339762aa2a7a3af091d3a0be69"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v5.jsonl",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v5.jsonl",
+      "bytes": 1212535,
+      "sha256": "386cb458b7f318a995935b157428594917a7ee704830bb7485b24fe74cfc5e3a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v6-start.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v6-start.json",
+      "bytes": 655,
+      "sha256": "5d72b38f648d24afeff546086c70346cce25908d90d201607b3966d2cb8ef618"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v6.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v6.json",
+      "bytes": 2029,
+      "sha256": "9cfcb4fef5a70a217b8873fadf7e733124fb210cc1ce2faecc1d8b0fadc4bc45"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v6.jsonl",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v6.jsonl",
+      "bytes": 1242776,
+      "sha256": "e8c582e67f8cf0a0d6dc60037689ec8c4fc7c2a37e4195210448de9885228e4d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v7-start.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v7-start.json",
+      "bytes": 655,
+      "sha256": "552b9d2497a3ac96ba6f75ae3641818b43fe486fa1c203e2ce47cd34d541f4c5"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v7.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v7.json",
+      "bytes": 2030,
+      "sha256": "e26934e1eede4f32cd6f444078e779d117457624af7bb8a82c590e357977ef56"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v7.jsonl",
+      "archive": "task-5-stage-npz-hardlink-actual-root-batch-v7.jsonl",
+      "bytes": 2262223,
+      "sha256": "7b5142a7a798ec908a8c5105e710d992914867d82fab1a8b1915f77afec7cbbb"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-postcheck-v2.json",
+      "archive": "task-5-stage-npz-hardlink-actual-root-postcheck-v2.json",
+      "bytes": 640,
+      "sha256": "6eef54581b627f27655149034a70ab87cb896ceb5bb9aeae1c0e9838ad97bd41"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-closed-proof-cas-root-manifest-v2.json",
+      "archive": "task-5-stage-npz-hardlink-closed-proof-cas-root-manifest-v2.json",
+      "bytes": 16104,
+      "sha256": "c6e955c1015c63eabd382fbc31f8d5eb362353921c7f2b580a214c7cedcb0b70"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-closed-proof-cas-root-receipt-v2.json",
+      "archive": "task-5-stage-npz-hardlink-closed-proof-cas-root-receipt-v2.json",
+      "bytes": 1104,
+      "sha256": "b391df6e60cd53d64ad0cdd4cc91d2f49a80d1a65de6c689ee93ef4a4236fbaf"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-GREEN-attempt-cost-v1.json",
+      "archive": "task-5-typed-dag-transport-spike-GREEN-attempt-cost-v1.json",
+      "bytes": 119,
+      "sha256": "73f614ee6c338ccea3e70befed46c677c802bc829dfd47a84f0dd82fe368e897"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-GREEN-attempt-v1.log",
+      "archive": "task-5-typed-dag-transport-spike-GREEN-attempt-v1.log.txt",
+      "bytes": 886,
+      "sha256": "bbc6cd7aa9cdafd9742beb6d35b51dbe04414dec5cffe696898f23a3b8764b24"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-GREEN-final-cost-v1.json",
+      "archive": "task-5-typed-dag-transport-spike-GREEN-final-cost-v1.json",
+      "bytes": 412,
+      "sha256": "56a4759d0b09aacae749a9bdad68ff1666c60d0b8b486a154b6a5a2e2f0828b1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-GREEN-final-v1.log",
+      "archive": "task-5-typed-dag-transport-spike-GREEN-final-v1.log.txt",
+      "bytes": 886,
+      "sha256": "1c7757f2a3711db397d8b78fbe91934f0f7079295c7042fd20cf23fa22fe1e4f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-RED-cost-v1.json",
+      "archive": "task-5-typed-dag-transport-spike-RED-cost-v1.json",
+      "bytes": 119,
+      "sha256": "28cfc79f7b260d42d25f28d96f3dc4848d24e9a518836fe12f209d7d08956c9a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-RED-v1.log",
+      "archive": "task-5-typed-dag-transport-spike-RED-v1.log.txt",
+      "bytes": 4246,
+      "sha256": "b9ec7c3b06c1daf67b7ed7f978d7f8f6832dd9f98ad13bcad1c71c1b5c215dcb"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-fixed-manifest-v1.json",
+      "archive": "task-5-typed-dag-transport-spike-fixed-manifest-v1.json",
+      "bytes": 2540,
+      "sha256": "b62f73b1a9c77f0cae8f16bd247cb077ebc3528f2ee271b27bcb711c0950b2fe"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-independent-review-v1.md",
+      "archive": "task-5-typed-dag-transport-spike-independent-review-v1.md",
+      "bytes": 4714,
+      "sha256": "ee7bd2d7bf31e7c2ef7fe6599a86d66edb60b33308b4ddc048768a6857ebdf7a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-measurements-v1.json",
+      "archive": "task-5-typed-dag-transport-spike-measurements-v1.json",
+      "bytes": 7340,
+      "sha256": "62a75688c5b4f681b62493c761f97788f420239060a968bd86b266ab87f893b3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-report-v1.md",
+      "archive": "task-5-typed-dag-transport-spike-report-v1.md",
+      "bytes": 4222,
+      "sha256": "1f3ee2d9045f45af7f47faff39f9f989745327835ee1b82da1f248effef5bece"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-root-verification-0.log",
+      "archive": "task-5-typed-dag-transport-spike-root-verification-0.log.txt",
+      "bytes": 886,
+      "sha256": "1bba9ccb44277cc9ee6862228e64d24926334639946d48f2798ffb70e0f9ce76"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-root-verification-1.log",
+      "archive": "task-5-typed-dag-transport-spike-root-verification-1.log.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-root-verification-2.log",
+      "archive": "task-5-typed-dag-transport-spike-root-verification-2.log.txt",
+      "bytes": 26,
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-root-verification-v1.json",
+      "archive": "task-5-typed-dag-transport-spike-root-verification-v1.json",
+      "bytes": 1696,
+      "sha256": "5ad39e352a621175aa867361d09ea0e2db3b9cdc3535bc7cd4c830ec4838d835"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-ruff-GREEN-v1.log",
+      "archive": "task-5-typed-dag-transport-spike-ruff-GREEN-v1.log.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-ruff-RED-v1.log",
+      "archive": "task-5-typed-dag-transport-spike-ruff-RED-v1.log.txt",
+      "bytes": 1236,
+      "sha256": "57c095fe5a2ccf14bc71f19db08c076923e622e08e32a61258d4bfb570ffca00"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-selftest-v1.py",
+      "archive": "task-5-typed-dag-transport-spike-selftest-v1.py.txt",
+      "bytes": 7435,
+      "sha256": "7afadc52170499ac6ca0c3ff688b83d303532fee6dbed49a036bae43e02b6781"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-v1.py",
+      "archive": "task-5-typed-dag-transport-spike-v1.py.txt",
+      "bytes": 16467,
+      "sha256": "16768870e07b602d610cbd1f24af5b41fbe4ff81c7bc7f52fa40423f18f5ef52"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-verification-v1.json",
+      "archive": "task-5-typed-dag-transport-spike-verification-v1.json",
+      "bytes": 1038,
+      "sha256": "76c8acc43b938adf973b852a61c7cdef8d5fe98433da72cac0851bdadc007195"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-storage-proof-root-document-check-v3.json",
+      "archive": "task-5-storage-proof-root-document-check-v3.json",
+      "bytes": 486,
+      "sha256": "f4a5b755b43e3fffeef27bca5295c5381cc3a2255ab625f2147e46095b2d1a4e"
     }
   ],
   "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending",

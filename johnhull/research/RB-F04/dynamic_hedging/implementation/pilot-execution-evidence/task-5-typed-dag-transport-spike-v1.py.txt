@@ -1,0 +1,419 @@
+"""Throwaway small synthetic feasibility spike; not a production codec.
+
+Artifact-local DAG and unique nonobject/unstructured NumPy arrays. Metadata is
+losslessly zlib-compressed, arrays NPZ-compressed. Every decoded logical edge
+creates a new writable container/array. No native/CAS/financial execution.
+"""
+
+import ast
+import hashlib
+import io
+import json
+import math
+import time
+import zlib
+from dataclasses import dataclass
+from pathlib import Path
+
+import numpy as np
+
+W = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+REFERENCE_FILES = {
+    "runner": W / "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+    "parameters": W / "johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+}
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
+def sha(value):
+    return hashlib.sha256(value).hexdigest()
+
+
+def load_reference_functions():
+    """Compile only exact static helpers/class AST, never financial modules."""
+    namespace = {
+        "np": np,
+        "json": json,
+        "hashlib": hashlib,
+        "math": math,
+        "dataclass": dataclass,
+        "__name__": "synthetic_spike_reference",
+    }
+    bindings = {}
+    names = {"_digest", "_encode_tree", "_decode_tree", "payload_digest"}
+    for label, path in REFERENCE_FILES.items():
+        source = path.read_bytes()
+        tree = ast.parse(source, filename=str(path))
+        if label == "runner":
+            selected = [
+                node
+                for node in tree.body
+                if isinstance(node, ast.FunctionDef) and node.name in names
+            ]
+            if {node.name for node in selected} != names:
+                raise ValueError("reference helpers missing")
+        else:
+            selected = [
+                node
+                for node in tree.body
+                if isinstance(node, ast.ClassDef) and node.name == "HestonParameters"
+            ]
+            if len(selected) != 1:
+                raise ValueError("parameter class missing")
+        selected_tree = ast.Module(body=selected, type_ignores=[])
+        exec(compile(selected_tree, str(path), "exec", dont_inherit=True), namespace)
+        bindings[label] = {
+            "path": str(path),
+            "source_sha256": sha(source),
+            "selected_ast_sha256": sha(ast.dump(selected_tree, include_attributes=False).encode()),
+        }
+    namespace["bindings"] = bindings
+    return namespace
+
+
+REFERENCE = load_reference_functions()
+KIND = "D-only-typed-dag-synthetic-spike-v1"
+
+
+def compressed_arrays(arrays):
+    target = io.BytesIO()
+    np.savez_compressed(target, **arrays)
+    return target.getvalue()
+
+
+def descriptors(arrays):
+    return {
+        name: {
+            "dtype": value.dtype.str,
+            "shape": list(value.shape),
+            "nbytes": value.nbytes,
+            "sha256": sha(value.tobytes(order="C")),
+        }
+        for name, value in arrays.items()
+    }
+
+
+def encode(payload):
+    nodes, node_index, arrays, array_candidates = [], {}, {}, {}
+    counts = {"nodes": 0, "arrays": 0, "dicts": 0, "lists": 0, "heston": 0}
+
+    def visit(value):
+        if isinstance(value, np.generic):
+            value = value.item()
+        counts["nodes"] += 1
+        if isinstance(value, np.ndarray):
+            if value.dtype.hasobject or value.dtype.fields is not None:
+                raise ValueError("prototype does not claim object/structured-array support")
+            counts["arrays"] += 1
+            data = value.tobytes(order="C")
+            key = (value.dtype.str, value.shape, sha(data))
+            matched = None
+            for name in array_candidates.get(key, []):
+                candidate = arrays[name]
+                # A hash collision cannot merge distinct typed bytes.
+                if (
+                    candidate.dtype == value.dtype
+                    and candidate.shape == value.shape
+                    and candidate.tobytes(order="C") == data
+                ):
+                    matched = name
+                    break
+            if matched is None:
+                matched = f"a{len(arrays):06d}"
+                arrays[matched] = np.array(value, copy=True, order="C", subok=False)
+                array_candidates.setdefault(key, []).append(matched)
+            node = ["array", matched]
+        elif isinstance(value, REFERENCE["HestonParameters"]):
+            counts["heston"] += 1
+            node = ["heston", visit(vars(value))]
+        elif isinstance(value, dict):
+            if not all(isinstance(key, str) for key in value):
+                raise ValueError("prototype scope is string-keyed saved dictionaries")
+            counts["dicts"] += 1
+            node = ["dict", [[key, visit(value[key])] for key in sorted(value)]]
+        elif isinstance(value, (list, tuple)):
+            counts["lists"] += 1
+            node = ["list", [visit(item) for item in value]]
+        elif value is None:
+            node = ["none"]
+        elif isinstance(value, bool):
+            node = ["bool", value]
+        elif isinstance(value, int):
+            node = ["int", value]
+        elif isinstance(value, float):
+            node = ["float", value.hex()]
+        elif isinstance(value, str):
+            node = ["str", value]
+        else:
+            raise ValueError("unsupported prototype value: " + type(value).__name__)
+        key = canonical(node)
+        if key not in node_index:
+            node_index[key] = len(nodes)
+            nodes.append(node)
+        return node_index[key]
+
+    root = visit(payload)
+    unique_descriptors = descriptors(arrays)
+    metadata = {
+        "kind": KIND,
+        "root": root,
+        "nodes": nodes,
+        "unique_arrays": unique_descriptors,
+        "logical_counts": counts,
+    }
+    metadata_bytes = canonical(metadata)
+    metadata_z = zlib.compress(metadata_bytes, level=6)
+    arrays_npz = compressed_arrays(arrays)
+    return {
+        "kind": KIND,
+        "metadata_z": metadata_z,
+        "arrays_npz": arrays_npz,
+        "metadata_z_sha256": sha(metadata_z),
+        "arrays_npz_sha256": sha(arrays_npz),
+        "logical_digest": REFERENCE["payload_digest"](payload),
+        "logical_counts": counts,
+        "unique_arrays": unique_descriptors,
+        "unique_nodes": len(nodes),
+        "metadata_uncompressed_bytes": len(metadata_bytes),
+        "reference_bindings": REFERENCE["bindings"],
+    }
+
+
+def rewrite_metadata_for_probe(packet, mutation):
+    """Synthetic negative-test helper; does not recompute the logical binding."""
+    result = dict(packet)
+    metadata = json.loads(zlib.decompress(packet["metadata_z"]))
+    mutation(metadata)
+    result["metadata_z"] = zlib.compress(canonical(metadata), level=6)
+    result["metadata_z_sha256"] = sha(result["metadata_z"])
+    return result
+
+
+def decode(packet):
+    if packet["kind"] != KIND:
+        raise ValueError("prototype format mismatch")
+    if (
+        sha(packet["metadata_z"]) != packet["metadata_z_sha256"]
+        or sha(packet["arrays_npz"]) != packet["arrays_npz_sha256"]
+    ):
+        raise ValueError("physical byte binding mismatch")
+    metadata_bytes = zlib.decompress(packet["metadata_z"])
+    if len(metadata_bytes) > 16 * 1024 * 1024:
+        raise ValueError("synthetic metadata scope exceeded")
+    metadata = json.loads(metadata_bytes)
+    if canonical(metadata) != metadata_bytes or metadata["kind"] != KIND:
+        raise ValueError("typed metadata canonical/format mismatch")
+    nodes, root = metadata["nodes"], metadata["root"]
+    if type(root) is not int or not 0 <= root < len(nodes):
+        raise ValueError("root reference missing")
+    for index, node in enumerate(nodes):
+        tag = node[0]
+        children = (
+            node[1]
+            if tag == "list"
+            else [item[1] for item in node[1]]
+            if tag == "dict"
+            else [node[1]]
+            if tag == "heston"
+            else []
+        )
+        if any(type(child) is not int or child < 0 or child >= index for child in children):
+            raise ValueError("cycle/missing/non-topological DAG reference")
+    unique = metadata["unique_arrays"]
+    with np.load(io.BytesIO(packet["arrays_npz"]), allow_pickle=False) as saved:
+        if set(saved.files) != set(unique):
+            raise ValueError("array pool coverage mismatch")
+        pool = {}
+        for name, descriptor in unique.items():
+            value = saved[name]
+            expected = descriptors({name: value})[name]
+            if descriptor != expected:
+                raise ValueError("array shape/dtype/byte binding mismatch")
+            value.flags.writeable = False
+            pool[name] = value
+    used_nodes, used_arrays = set(), set()
+    counts = {"nodes": 0, "arrays": 0, "dicts": 0, "lists": 0, "heston": 0}
+
+    def expand(index):
+        used_nodes.add(index)
+        counts["nodes"] += 1
+        node = nodes[index]
+        tag = node[0]
+        if tag == "array":
+            counts["arrays"] += 1
+            used_arrays.add(node[1])
+            return pool[node[1]].copy(order="C")
+        if tag == "dict":
+            counts["dicts"] += 1
+            return {key: expand(child) for key, child in node[1]}
+        if tag == "list":
+            counts["lists"] += 1
+            return [expand(child) for child in node[1]]
+        if tag == "heston":
+            counts["heston"] += 1
+            return REFERENCE["HestonParameters"](**expand(node[1]))
+        if tag == "none":
+            return None
+        if tag == "float":
+            return float.fromhex(node[1])
+        if tag in {"bool", "int", "str"}:
+            return node[1]
+        raise ValueError("unknown typed node")
+
+    payload = expand(root)
+    if used_nodes != set(range(len(nodes))) or used_arrays != set(pool):
+        raise ValueError("unused node/array or missing logical coverage")
+    if counts != metadata["logical_counts"] or counts != packet["logical_counts"]:
+        raise ValueError("all logical occurrence counts were not preserved")
+    if REFERENCE["payload_digest"](payload) != packet["logical_digest"]:
+        raise ValueError("original normalized logical payload digest changed")
+    return payload
+
+
+def literal_encode(payload):
+    """Exact reference normalization, representative uncompressed root JSON."""
+    arrays = {}
+    tree = REFERENCE["_encode_tree"](payload, arrays)
+    array_meta = {
+        key: {"dtype": str(value.dtype), "shape": list(value.shape), "nbytes": value.nbytes}
+        for key, value in arrays.items()
+    }
+    metadata = canonical({"tree": tree, "array_meta": array_meta})
+    npz_bytes = compressed_arrays(arrays)
+    return {
+        "metadata": metadata,
+        "arrays_npz": npz_bytes,
+        "logical_digest": REFERENCE["payload_digest"](payload),
+        "array_occurrences": len(arrays),
+    }
+
+
+def literal_decode(packet):
+    metadata = json.loads(packet["metadata"])
+    with np.load(io.BytesIO(packet["arrays_npz"]), allow_pickle=False) as saved:
+        arrays = {name: saved[name] for name in saved.files}
+    used = set()
+    value = REFERENCE["_decode_tree"](metadata["tree"], arrays, used)
+    if used != set(arrays) or REFERENCE["payload_digest"](value) != packet["logical_digest"]:
+        raise ValueError("literal synthetic reference changed")
+    return value
+
+
+def timed(function, *arguments):
+    wall, cpu = time.perf_counter(), time.process_time()
+    result = function(*arguments)
+    return result, {
+        "wall_seconds": time.perf_counter() - wall,
+        "cpu_seconds": time.process_time() - cpu,
+    }
+
+
+def small_fixtures():
+    def row(array, identity):
+        return {
+            "id": identity,
+            "values": array,
+            "original_N": 1024,
+            "qualification": "unknown",
+            "all_fit_attempts": [
+                {
+                    "id": f"fit-{i}",
+                    "status": "failed_at_declared_cap" if i == 7 else "unverified",
+                    "claim": None,
+                    "cost": {"wall_seconds": 2.5 + i, "cpu_seconds": 1.75 + i, "cap": None},
+                }
+                for i in range(12)
+            ],
+            "blocks": list(range(16)),
+            "explanation": "SYNTHETIC_ONLY; original claim/status/cost retained; " * 8,
+        }
+
+    large_array = np.arange(4096, dtype=np.float64) / 1024
+    return {
+        "tiny_unique": {"rows": [row(np.arange(16, dtype=np.float64), "tiny")]},
+        "repeated_metadata_128": {
+            "rows": [row(np.arange(16, dtype=np.float64), "same") for _ in range(128)]
+        },
+        "repeated_two_MiB": {"rows": [row(large_array, "same") for _ in range(64)]},
+        "unique_arrays_two_MiB": {"rows": [row(large_array + i, f"unique-{i}") for i in range(64)]},
+    }
+
+
+def measure():
+    results = []
+    for name, payload in small_fixtures().items():
+        literal, literal_write = timed(literal_encode, payload)
+        prototype, prototype_write = timed(encode, payload)
+        _, literal_read = timed(literal_decode, literal)
+        reconstructed, prototype_read = timed(decode, prototype)
+        logical_digest = REFERENCE["payload_digest"](payload)
+        index = {
+            "kind": KIND,
+            "metadata_z_sha256": prototype["metadata_z_sha256"],
+            "arrays_npz_sha256": prototype["arrays_npz_sha256"],
+            "logical_digest": prototype["logical_digest"],
+            "logical_counts": prototype["logical_counts"],
+            "unique_arrays_count": len(prototype["unique_arrays"]),
+            "unique_nodes": prototype["unique_nodes"],
+            "reference_bindings": prototype["reference_bindings"],
+        }
+        prototype_index_bytes = len(canonical(index))
+        literal_physical = len(literal["metadata"]) + len(literal["arrays_npz"])
+        prototype_physical = (
+            len(prototype["metadata_z"]) + len(prototype["arrays_npz"]) + prototype_index_bytes
+        )
+        original_arrays = {}
+        REFERENCE["_encode_tree"](payload, original_arrays)
+        results.append(
+            {
+                "fixture": name,
+                "scope": "synthetic_only",
+                "original_array_logical_bytes": sum(
+                    value.nbytes for value in original_arrays.values()
+                ),
+                "logical_array_occurrences": len(original_arrays),
+                "unique_arrays": len(prototype["unique_arrays"]),
+                "logical_node_occurrences": prototype["logical_counts"]["nodes"],
+                "unique_DAG_nodes": prototype["unique_nodes"],
+                "literal_metadata_bytes": len(literal["metadata"]),
+                "prototype_uncompressed_DAG_metadata_bytes": prototype[
+                    "metadata_uncompressed_bytes"
+                ],
+                "prototype_compressed_metadata_bytes": len(prototype["metadata_z"]),
+                "prototype_index_bytes": prototype_index_bytes,
+                "literal_NPZ_bytes": len(literal["arrays_npz"]),
+                "prototype_NPZ_bytes": len(prototype["arrays_npz"]),
+                "literal_total_physical_bytes": literal_physical,
+                "prototype_total_physical_bytes": prototype_physical,
+                "physical_size_fraction": prototype_physical / literal_physical,
+                "literal_write": literal_write,
+                "prototype_write": prototype_write,
+                "literal_read": literal_read,
+                "prototype_read": prototype_read,
+                "logical_digest_equal": logical_digest
+                == REFERENCE["payload_digest"](reconstructed),
+                "logical_digest": logical_digest,
+                "input_fields_retained": {
+                    "original_N": 1024,
+                    "fits_per_row": 12,
+                    "blocks_per_row": 16,
+                    "qualification": "unknown",
+                },
+            }
+        )
+    return {
+        "scope": "throwaway synthetic feasibility measurements only",
+        "production_ready": False,
+        "formal_financial_qualification": "unknown",
+        "business_artifacts_read": 0,
+        "financial_solver_RNG_SDE": 0,
+        "source_native_CAS_Git_changes": 0,
+        "file_IO_measurement": False,
+        "timing_boundary": "in-memory encode/compress/decode plus existing full logical provenance digest",
+        "metadata_page_partitioning_or_256MiB_whole_limits_verified": False,
+        "reference_bindings": REFERENCE["bindings"],
+        "fixtures": results,
+    }

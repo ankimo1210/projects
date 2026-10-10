@@ -1,0 +1,10 @@
+test_compressed_metadata_tamper_and_dag_cycle_are_rejected (__main__.SyntheticDagTests.test_compressed_metadata_tamper_and_dag_cycle_are_rejected) ... ok
+test_dtype_shape_empty_zero_dim_nan_bits_and_signed_zero (__main__.SyntheticDagTests.test_dtype_shape_empty_zero_dim_nan_bits_and_signed_zero) ... ok
+test_original_logical_occurrences_not_omitted_by_interning (__main__.SyntheticDagTests.test_original_logical_occurrences_not_omitted_by_interning) ... ok
+test_repeated_objects_decode_as_independent_writable_occurrences (__main__.SyntheticDagTests.test_repeated_objects_decode_as_independent_writable_occurrences) ... ok
+test_scalar_normalization_heston_instances_and_full_status_cost (__main__.SyntheticDagTests.test_scalar_normalization_heston_instances_and_full_status_cost) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.026s
+
+OK

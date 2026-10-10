@@ -1,0 +1,50 @@
+test_compressed_metadata_tamper_and_dag_cycle_are_rejected (__main__.SyntheticDagTests.test_compressed_metadata_tamper_and_dag_cycle_are_rejected) ... FAIL
+test_dtype_shape_empty_zero_dim_nan_bits_and_signed_zero (__main__.SyntheticDagTests.test_dtype_shape_empty_zero_dim_nan_bits_and_signed_zero) ... FAIL
+test_original_logical_occurrences_not_omitted_by_interning (__main__.SyntheticDagTests.test_original_logical_occurrences_not_omitted_by_interning) ... FAIL
+test_repeated_objects_decode_as_independent_writable_occurrences (__main__.SyntheticDagTests.test_repeated_objects_decode_as_independent_writable_occurrences) ... FAIL
+test_scalar_normalization_heston_instances_and_full_status_cost (__main__.SyntheticDagTests.test_scalar_normalization_heston_instances_and_full_status_cost) ... FAIL
+
+======================================================================
+FAIL: test_compressed_metadata_tamper_and_dag_cycle_are_rejected (__main__.SyntheticDagTests.test_compressed_metadata_tamper_and_dag_cycle_are_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-selftest-v1.py", line 22, in setUp
+    self.assertIsNotNone(self.tool, "throwaway typed-DAG prototype absent")
+AssertionError: unexpectedly None : throwaway typed-DAG prototype absent
+
+======================================================================
+FAIL: test_dtype_shape_empty_zero_dim_nan_bits_and_signed_zero (__main__.SyntheticDagTests.test_dtype_shape_empty_zero_dim_nan_bits_and_signed_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-selftest-v1.py", line 22, in setUp
+    self.assertIsNotNone(self.tool, "throwaway typed-DAG prototype absent")
+AssertionError: unexpectedly None : throwaway typed-DAG prototype absent
+
+======================================================================
+FAIL: test_original_logical_occurrences_not_omitted_by_interning (__main__.SyntheticDagTests.test_original_logical_occurrences_not_omitted_by_interning)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-selftest-v1.py", line 22, in setUp
+    self.assertIsNotNone(self.tool, "throwaway typed-DAG prototype absent")
+AssertionError: unexpectedly None : throwaway typed-DAG prototype absent
+
+======================================================================
+FAIL: test_repeated_objects_decode_as_independent_writable_occurrences (__main__.SyntheticDagTests.test_repeated_objects_decode_as_independent_writable_occurrences)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-selftest-v1.py", line 22, in setUp
+    self.assertIsNotNone(self.tool, "throwaway typed-DAG prototype absent")
+AssertionError: unexpectedly None : throwaway typed-DAG prototype absent
+
+======================================================================
+FAIL: test_scalar_normalization_heston_instances_and_full_status_cost (__main__.SyntheticDagTests.test_scalar_normalization_heston_instances_and_full_status_cost)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-selftest-v1.py", line 22, in setUp
+    self.assertIsNotNone(self.tool, "throwaway typed-DAG prototype absent")
+AssertionError: unexpectedly None : throwaway typed-DAG prototype absent
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.000s
+
+FAILED (failures=5)

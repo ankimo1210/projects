@@ -1,0 +1,36 @@
+{
+  "business_NPZ_or_largeJSON_reads": 0,
+  "finance_RNG_SDE_solver": 0,
+  "fixture_measurements": 4,
+  "old_hardlink_v1_v2_helpers_unchanged": {
+    "task-5-stage-npz-hardlink-v1.py": "934f5337c45c6d0e9243477476effdd20155a44cfcf0127401a899f556b2587b",
+    "task-5-stage-npz-hardlink-v2.py": "010fb31dd02be6e7be937d1c9923ba8f80abeac2bbb03f05725850be430adf58"
+  },
+  "original_logical_digest_equal_all": true,
+  "production_approval": false,
+  "reference_source_bytes_stable": true,
+  "ruff_format_results": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "039df7",
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": "",
+        "wall_time_seconds": 0.5305
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "752695",
+        "exit_code": 0,
+        "original_token_count": 7,
+        "output": "2 files already formatted\n",
+        "wall_time_seconds": 0.5568758
+      }
+    }
+  ],
+  "source_native_CAS_Git_changes": 0,
+  "synthetic_selftests": 5
+}
