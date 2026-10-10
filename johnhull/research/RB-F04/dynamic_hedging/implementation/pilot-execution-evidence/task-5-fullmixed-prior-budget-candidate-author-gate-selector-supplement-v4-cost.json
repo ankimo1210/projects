@@ -1,0 +1,7 @@
+{
+  "scope": "original metadata and saved timing arithmetic only",
+  "wall_seconds_before_final_cost": 0.23752660199534148,
+  "CPU_seconds_before_final_cost": 0.23718760500000002,
+  "peak_RSS_bytes": 222846976,
+  "final_tail_seconds": null
+}

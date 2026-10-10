@@ -3582,6 +3582,36 @@
       "archive": "task-5-fullmixed-prior-budget-independent-v2-source-decision.json",
       "bytes": 1231,
       "sha256": "b53fda5750838bb7db5dfd45d66b7da7985faeff38e2ef67a73c5c53cc5a6918"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.json",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.json",
+      "bytes": 2550526,
+      "sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.md",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.md",
+      "bytes": 1436,
+      "sha256": "7fc249d602292bd249df5804086b2d458a8aa0d0cf0c73b58e73cc30db6f4d27"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.py",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.py.txt",
+      "bytes": 11322,
+      "sha256": "3642c23ef8eed262c6e94dfbc82661a75311b289c8a3e9b2ea3115e5b4576aca"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4-cost.json",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4-cost.json",
+      "bytes": 242,
+      "sha256": "6670e40b7f07b69189b72b5953b7a4ce3f405ee45bb680ebe743cdad8989b0ab"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-saved-check-memo-independent-tamper-review-v1.md",
+      "archive": "task-5-phase-local-saved-check-memo-independent-tamper-review-v1.md",
+      "bytes": 8237,
+      "sha256": "d04584f22fa02b286bbd03cfb6d12a193ec280e5e5518f07c264bb752f848c1c"
     }
   ],
   "scope": "original M0–M7 resource observations; bounded checker and completed saved original M6/M7 independent arithmetic/provenance reviews; static whole-capacity and original prior-budget contract limits; formal financial budget/pilot/main/phase remain unapproved",

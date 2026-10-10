@@ -1,0 +1,149 @@
+
+"""D-only budget arithmetic from original graph and already saved component clocks."""
+from pathlib import Path
+import json,hashlib,math,time,resource
+D=Path('/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging')
+P='task-5-fullmixed-prior-budget-candidate-author-v1'
+OUT='task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4'
+start=time.perf_counter();cpu=time.process_time()
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def read(n):return json.loads((D/n).read_text())
+base=read(P+'-config.json')
+selected=read('task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json')
+tree=read('task-5-full-progressive-pilot-plan-draft-source-unit-v3/metadata.json')['metadata']['tree']
+jobs={j['id']:j for j in tree['jobs']}
+source_fields={}
+gates={};updates={};selectors={};activation={}
+teacher_est=selected['reviewed_budgets_updates']
+for j in jobs.values():
+ if j['operation']!='teacher_candidate_gate':continue
+ evidence=j['arguments']['evidence'];stage=j['arguments']['stage_plan']
+ assert len(evidence)==len(stage['required_job_ids'])==213
+ assert {e['id'] for e in evidence}==set(stage['required_job_ids'])
+ from collections import Counter
+ ops=dict(Counter(e['operation'] for e in evidence))
+ components=[]
+ for e in evidence:
+  if e['operation'] not in ('teacher_grid','teacher_domain_selection'):continue
+  selection_id=e['id'][:-4] if e['operation']=='teacher_grid' else e['id']
+  pred=teacher_est[selection_id]
+  components.append({'original_evidence_job_id':e['id'],'operation':e['operation'],
+   'matched_original_selection_job_id':selection_id,
+   'known_saved_replay_component_estimate_seconds':pred['runtime_estimate_seconds'],
+   'no_dedup_between_raw_and_domain_rows':'both source branches replay full SDE separately'})
+ assert len(components)==8 and ops['teacher_grid']==ops['teacher_domain_selection']==4
+ partial=sum(r['known_saved_replay_component_estimate_seconds'] for r in components)
+ wall=max(300,math.ceil(3*partial/300)*300)
+ gates[j['id']]={'original_required_job_ids':stage['required_job_ids'],'evidence_operation_counts':ops,
+   'teacher_replay_component_rows':components,'teacher_replay_component_estimate_seconds':partial,
+   'other213row_kernel_seconds':None,'whole_gate_runtime_seconds':None,
+   'budget_cap_proposal_seconds':wall,'budget_basis':'3x known8 saved teacher replay component estimates, round up300s; other kernel/I/O unknown'}
+ receipt=dict(base['reviewed_budgets'][j['id']])
+ receipt['budget']={'planned_before_attempt':True,'review_sha256':None,'wall_seconds':wall}
+ receipt['prediction']=dict(receipt['prediction'],rate_source=None)
+ receipt.update(runtime_estimate_seconds=None,known_partial_runtime_estimate_seconds=partial,
+   rate_source_proposal='independently_reviewed_estimate',independent_budget_and_estimate_review='pending',
+   estimate_basis=gates[j['id']]['budget_basis'],financial_qualification='unknown',
+   unknown_other_kernel_and_IO_seconds=None)
+ updates[j['id']]=receipt
+for j in jobs.values():
+ if j['operation']!='teacher_selection':continue
+ stageids=[s['id'] for s in j['arguments']['stages']]
+ assert len(stageids)==8 and len(set(stageids))==8
+ partial=sum(gates[i]['teacher_replay_component_estimate_seconds'] for i in stageids)
+ wall=max(300,math.ceil(3*partial/300)*300)
+ selectors[j['id']]={'original_stage_order':stageids,
+   'worst_all_executed_stages_teacher_replay_component_estimate_seconds':partial,
+   'unused_or_actual_cap_stages':'do not replay executed gate; actual work may be lower, no substituted qualification',
+   'other_gate_kernel_selector_geometry_and_IO_seconds':None,'whole_selector_runtime_seconds':None,
+   'budget_cap_proposal_seconds':wall}
+ receipt=dict(base['reviewed_budgets'][j['id']])
+ receipt['budget']={'planned_before_attempt':True,'review_sha256':None,'wall_seconds':wall}
+ receipt['prediction']=dict(receipt['prediction'],rate_source=None)
+ receipt.update(runtime_estimate_seconds=None,known_partial_runtime_estimate_seconds=partial,
+   rate_source_proposal='independently_reviewed_estimate',independent_budget_and_estimate_review='pending',
+   estimate_basis='3x teacher replay partial for all8 original executed stages; other kernels/IO unknown',
+   financial_qualification='unknown',unknown_other_kernel_and_IO_seconds=None)
+ updates[j['id']]=receipt
+for j in jobs.values():
+ if j.get('activation') is None:continue
+ parent=j['activation']['previous_teacher_gate_job_id']
+ unit=activation.setdefault(parent,{'actual_cache_key':'(gateID, actual_gate_raw_SHA, actual_resolved_argument_SHA)',
+   'static_family_gate_id':parent,'potential_first_job_ids':[],
+   'known_teacher_replay_component_estimate_seconds':gates[parent]['teacher_replay_component_estimate_seconds'],
+   'other_gate_kernel_and_IO_seconds':None,
+   'forecast_multiplicity_max_single_initial_phase_immutable_same_arguments':1,
+   'resume_or_changed_actual_argument_cache_key_extra_expense_seconds':None})
+ unit['potential_first_job_ids'].append(j['id'])
+activation_budget_candidates={}
+for gateid,unit in activation.items():
+ for jobid in unit['potential_first_job_ids']:
+  original=(updates.get(jobid) or teacher_est.get(jobid) or base['reviewed_budgets'][jobid])
+  known=unit['known_teacher_replay_component_estimate_seconds']
+  own=original['budget']['wall_seconds']
+  add=max(300,math.ceil(3*known/300)*300)
+  activation_budget_candidates[jobid]={
+   'job_id':jobid,'previous_teacher_gate_job_id':gateid,
+   'own_operation_wall_cap_proposal_seconds':own,
+   'activation_known_teacher_replay_component_estimate_seconds':known,
+   'activation_allowance_proposal_seconds':add,
+   'combined_wall_cap_proposal_seconds':own+add,
+   'combined_whole_job_runtime_seconds':None,
+   'other_activation_kernel_IO_seconds':None,
+   'rate_source_proposal':'independently_reviewed_estimate','budget_review_sha256':None,
+   'financial_qualification':'unknown',
+   'prediction_original_work_unchanged':True,
+   'this_per_job_assignment_is_not_added_per_job_to_runtime_forecast':True}
+# Distinguish actual repeated worker/kernel work from cache-sharing budget allocations.
+parts={
+ 'v1_known_component_predictions_seconds':base['runtime_totals']['sum_known_linear_component_estimates_seconds'],
+ '20selection_saved_replay_component_estimates_seconds':sum(r['runtime_estimate_seconds'] for r in teacher_est.values()),
+ '16gate_8row_saved_replay_components_seconds':sum(r['teacher_replay_component_estimate_seconds'] for r in gates.values()),
+ '2selector_original8stage_replay_components_seconds':sum(r['worst_all_executed_stages_teacher_replay_component_estimate_seconds'] for r in selectors.values()),
+ 'activation_distinct_actual_gate_family_cache_units_seconds':sum(r['known_teacher_replay_component_estimate_seconds'] for r in activation.values())}
+known=sum(parts.values())
+out={'schema':'rb-f04-fullmixed-author-replay-budget-overlay-v4','approved':False,
+ 'base_sha256':sha(D/(P+'-config.json')),
+ 'selection_overlay_v3_sha256':sha(D/'task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json'),
+ 'source_identity':'dc7631fe73a457cd995d109aa693be9401b266410b9f53aa4e2d51e59f56d39c',
+ 'original_roster':{'jobs':3138,'cases':121,'attempts':51,'teachers':20,'drivers':10},
+ 'reviewed_budgets_updates':updates,'gate_known_partial':gates,'selector_known_partial':selectors,
+ 'activation_cache_units':activation,'activation_potential_first_job_budget_candidates':activation_budget_candidates,
+ 'known_partial_runtime_prediction':{
+   'components':parts,'sum_seconds':known,'sum_hours':known/3600,
+   'scope':'worst all original stages executed in one initial phase; same actual activation cache key shared once',
+   'complete_phase_runtime_seconds':None,
+   'other213rows_kernels_domain_selected_IO_final_saved_check_external10_CAS_and_resume_seconds':None,
+   'cap_sum_is_not_runtime_forecast':True},
+ 'conservative_cap_allocation_summary':{
+   'gate_selector_jobs':len(updates),'activation_cache_families':len(activation),
+   'activation_potential_first_jobs':len(activation_budget_candidates),
+   'activation_allowance_sum_over_all_eligible_jobs_seconds':
+     sum(r['activation_allowance_proposal_seconds'] for r in activation_budget_candidates.values()),
+   'allowance_sum_is_not_an_actual_repeated_work_forecast':True},
+ 'budget_consumer':'root actual independent review must select finalall3138 rows; neither pending status nor null rate is promoted here',
+ 'source_expense_boundaries':{
+  'calculate_gate':'check_pilot.calculate_teacher_candidate_gate loops every original evidence row via _raw_job_check; raw4/domain4 each full saved SDE',
+  'selector':'run_pilot.run_teacher_selection_job recalculates each original executed stage',
+  'activation':'teacher_activation_decision runs gate calculation when actual cachekey missing; lifecycle clock has already started',
+  'scope_limit':'metadata source call graph + existing M6/max saved clocks; no new financial measurement'},
+ 'source_docs_tests_Git_CAS_modified':False,'financial_RNG_solver_SDE_executed':False,
+ 'financial_budget_phase_main_approved':False,'financial_qualification':'unknown'}
+(D/(OUT+'.json')).write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n')
+(D/(OUT+'.md')).write_text(f"""# Gate・selector再検算予算補足 v4（未承認）
+
+元16gate・2selectorを保持。各gateの213 evidenceには raw教師4件とdomain-selected教師4件があり、両方のsource branchが全saved SDEを別々に再検算する。全8件の既知component推計を足して3倍し、300秒単位へ切上げる。他213rows kernel/I/OはNone。selectorは各modelの原8 executed stageを再検算する実重複として別加算する。
+
+activationはlifecycle計時開始後、実cachekey=(gateID, rawSHA, argumentsSHA)の初回にgateを再検算する。原参照を持つ全potential first jobへ保守予算候補を割り当てたが、初期phaseで不変の同一keyに対するruntime外挿はcache unitごと最大1回。再開/変更された実keyの追加費用はunknown。
+
+known partial prediction={known:.6f}秒（{known/3600:.3f}時間）。これは全stage実行を仮定した既知成分の外挿和で、完了時間予測ではない。行政capのsum、potential first job全件への予算割当sumと混同しない。他kernel・保存I/O・最終saved_check・external10/CAS・resumeはunknown。元3138/121/51/20/10、N/軸/閾値/親順を保持。追加finance/RNG/SDE/solver、production/source/docs/Git/CAS操作なし。
+
+rootが実独立審査の後に最終全3138予算を記入する。pending/nullをapprovedへ変換していない。金融精度・正式予算/phase/mainは未承認。
+""")
+cost={'scope':'original metadata and saved timing arithmetic only','wall_seconds_before_final_cost':time.perf_counter()-start,
+ 'CPU_seconds_before_final_cost':time.process_time()-cpu,
+ 'peak_RSS_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,'final_tail_seconds':None}
+(D/(OUT+'-cost.json')).write_text(json.dumps(cost,indent=2)+'\n')
+print(json.dumps({'updates':len(updates),'activation_families':len(activation),
+ 'activation_eligible_jobs':len(activation_budget_candidates),'known_parts':parts,
+ 'known_partial_hours':known/3600,'whole_phase_runtime':None,'sha256':sha(D/(OUT+'.json')),'cost':cost}))
