@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-actual-pilot-input-preparation-v2.py", line 66, in <module>
+    assert current_field["status"]=="executed", "current deterministic field unavailable"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: current deterministic field unavailable

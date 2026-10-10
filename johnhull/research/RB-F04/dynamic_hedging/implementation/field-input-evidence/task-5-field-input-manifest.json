@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v2.py",
+      "ref": "artifact:sha256:91b58d5dbd1e8206af164c34ad359217fe423a177fb95382a79f5303a4e99023",
+      "bytes": 8997,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v2.txt",
+      "ref": "artifact:sha256:91f093c56a924cf54f9c5a58a0d792e44f85d724762fd0bcf76cfec033c2e80d",
+      "bytes": 410,
+      "mime": "text/plain"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v2-parent.py",
+      "ref": "artifact:sha256:f232de01fe4c69d3a853c3c559ce421ce20e3d5a4849930fc9f1736ce644960b",
+      "bytes": 1750,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v2-parent-cost.json",
+      "ref": "artifact:sha256:9eeefcd1328fce80a2cc903555e54a6ecb667553a74a6de4d522bd2ccacd41ec",
+      "bytes": 614,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v2-current-field/arrays.npz",
+      "ref": "artifact:sha256:8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v2-current-field/metadata.json",
+      "ref": "artifact:sha256:a0b227b9ecad51ee981989df408234b8015b718eaff5b966a501a4a811e7557a",
+      "bytes": 3223,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v2-current-field/pack000000/arrays.npz",
+      "ref": "artifact:sha256:2bc489d3e7ca74dbe871e459960ced40153929d7f6e361b0e32e93bc04b1186b",
+      "bytes": 771286,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v2-current-field/pack000000/metadata.json",
+      "ref": "artifact:sha256:3d9971eb84d716a9a451b28b27e78516ea0cd9a8ef0ecb08ee0118c7757ca576",
+      "bytes": 1608,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v2-current-field/pack000000/receipt.json",
+      "ref": "artifact:sha256:780f094e8bbf843868272080f4880b039e51f4b296f23191e2b3fb7392bde62e",
+      "bytes": 317,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v2-current-field/receipt.json",
+      "ref": "artifact:sha256:0fbad45070c9034d4bfaa76ca0bf096d6ff765374c25f7c7142c5a8972e22f8e",
+      "bytes": 312,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3.py",
+      "ref": "artifact:sha256:c49eefc141dc9bd3e986d235d11f2647330f6b59e20586ce6ca2963a24a78b80",
+      "bytes": 10025,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3.txt",
+      "ref": "artifact:sha256:3669a972f589bffa0d4914d6f80ec1a513e35d7cd204a3ae06bdd3d078c67ffa",
+      "bytes": 1408,
+      "mime": "text/plain"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3-parent.py",
+      "ref": "artifact:sha256:4b5a923234ff0c90bb87bfbc64be0360f9d94855d4499dc7c2a953d7dff07400",
+      "bytes": 1750,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3-parent-cost.json",
+      "ref": "artifact:sha256:b8e88e32ec672c4e210ab86957f348843596b76b4c211d99699b56056d563b42",
+      "bytes": 617,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3.json",
+      "ref": "artifact:sha256:ee6ff049c776b12e99013c2ec30ddb0bc42902f4ba6dc7d02b2e009c47ed86d8",
+      "bytes": 42878,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3-current-field/arrays.npz",
+      "ref": "artifact:sha256:8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3-current-field/metadata.json",
+      "ref": "artifact:sha256:ae8a695fe4330996b68371d676547efcbeafbeb8fcd36a5a6afb3df56eb539f7",
+      "bytes": 6330,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3-current-field/pack000000/arrays.npz",
+      "ref": "artifact:sha256:7f092bb7667b996ffd90c7d065bbce01d640ec6223b78d211620d03c3bdc7e6d",
+      "bytes": 8117032,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3-current-field/pack000000/metadata.json",
+      "ref": "artifact:sha256:d5202cb370044b7d966d88635258edd7508c5e24cc24cc8b1684d04d419abf78",
+      "bytes": 2927,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3-current-field/pack000000/receipt.json",
+      "ref": "artifact:sha256:a743c1068ca83cdf2505f59a5b1389c02915dd7bc315ccaec56be1aac403bf30",
+      "bytes": 318,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v3-current-field/receipt.json",
+      "ref": "artifact:sha256:6f5d02ddf3fa188140c02f50803439aed9304622d11181cea4fe0f15c4aaa853",
+      "bytes": 312,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4.py",
+      "ref": "artifact:sha256:9481c0932c58d9f8ca09f1c96a434cd2ee48c6ab5a3955f8b2d6179f7c3041b1",
+      "bytes": 9521,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4.txt",
+      "ref": "artifact:sha256:1eeb592b394d30ed83c176d77629740de7a9478af21fffd8344d4d985d841ddb",
+      "bytes": 1882,
+      "mime": "text/plain"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4-parent.py",
+      "ref": "artifact:sha256:d5d9aeaa2bb13c1de78bd11ec45f18e0e45a478e9530609011098ffaead16df1",
+      "bytes": 1750,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4-parent-cost.json",
+      "ref": "artifact:sha256:64ac0d13cd023c66cb55e3afc6437191602fc2b7df35254ab43f68d9ee9c7c82",
+      "bytes": 614,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4.json",
+      "ref": "artifact:sha256:d80b2666bdc3270784df1ad4eef4aa4283c36dff8c91ff235f7bf0039700691c",
+      "bytes": 43145,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4-current-field/arrays.npz",
+      "ref": "artifact:sha256:8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4-current-field/metadata.json",
+      "ref": "artifact:sha256:d5bbfd4d4725e6cf1015ae929c62b946862647777d52b162768a64f4176de8d9",
+      "bytes": 556606,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4-current-field/pack000000/arrays.npz",
+      "ref": "artifact:sha256:6e1788a5e6405670d008da93498fb49efef124bffdfdb0f5f5bdcf204b348d71",
+      "bytes": 7367670,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4-current-field/pack000000/metadata.json",
+      "ref": "artifact:sha256:b42e1221c477e0c91a7317c8bf334fab77ffebb00d30dfbfe0fa92020b5a9907",
+      "bytes": 262164,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4-current-field/pack000000/receipt.json",
+      "ref": "artifact:sha256:cc63387779ec94a5c625d17d0bdd1ddb4c9fcbc23b035270f2b1ea25b0a96bc6",
+      "bytes": 318,
+      "mime": "application/json"
+    },
+    {
+      "path": "raw/task-5-actual-pilot-input-preparation-v4-current-field/receipt.json",
+      "ref": "artifact:sha256:92576b70f288ffa81678800b3ca113bdbb898cb5e71d847597d5588a6ba51bf4",
+      "bytes": 312,
+      "mime": "application/json"
+    }
+  ]
+}

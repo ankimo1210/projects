@@ -1,0 +1,52 @@
+{
+  "original_states": 18,
+  "diagnostic_dates_per_model": 12,
+  "additional_cases": {
+    "Heston": 2,
+    "local": 2
+  },
+  "local_fit_statuses": [
+    "ok",
+    "ok"
+  ],
+  "source_stable": true,
+  "phase_wall_seconds": 9.174397188002331,
+  "financial_qualification": "unknown"
+}
+{
+  "v1_original_inputs_preserved": true,
+  "current_field_recheck": {
+    "kind": "current_field_pretest_recalculation",
+    "original_shape": [
+      257,
+      321
+    ],
+    "status": "numerical_reproduction_pass",
+    "rtol": 1e-10,
+    "atol": 1e-12,
+    "finite_node_count": 82497,
+    "raw_artifact_directory": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-actual-pilot-input-preparation-v3-current-field",
+    "worker_cost": {
+      "clock": {
+        "wall_start": 18982.052581944,
+        "cpu_start": 1.075261801,
+        "wall_stop": 18987.404500957,
+        "cpu_stop": 6.422417143
+      },
+      "wall_seconds": 5.351919012999133,
+      "cpu_seconds": 5.347155342
+    },
+    "serialization_cost": {
+      "clock": {
+        "wall_start": 18987.404521237,
+        "cpu_start": 6.422435471,
+        "wall_stop": 18987.420179827,
+        "cpu_stop": 6.438095855
+      },
+      "wall_seconds": 0.01565859000038472,
+      "cpu_seconds": 0.01566038400000025
+    },
+    "financial_qualification": "unknown",
+    "formal_rng_performed": false
+  }
+}

@@ -1,0 +1,108 @@
+from pathlib import Path
+import sys,json,hashlib,math,time
+import numpy as np
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+sys.path.insert(0,str(WT/"johnhull/scripts"))
+sys.path.insert(0,str(WT/"johnhull/research/RB-F04/dynamic_hedging"))
+import evidence_store as es
+import run_pilot as pilot
+def clocks(row):
+ c=row["clock"]
+ assert all(math.isfinite(x) and x>=0 for x in c.values())
+ for key,prefix in (("wall_seconds","wall"),("cpu_seconds","cpu")):
+  delta=c[prefix+"_stop"]-c[prefix+"_start"]
+  assert math.isclose(row[key],delta,rel_tol=1e-9,abs_tol=1e-10)
+  assert row[key]>=0
+def rel_file(version,name):
+ return "raw/task-5-actual-pilot-input-preparation-v"+str(version)+name
+start={"wall_start":time.perf_counter(),"cpu_start":time.process_time()}
+stores=[es.Store.open("/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",role="primary"),
+ es.Store.open("/mnt/f/ProjectArtifacts/projects-backup",role="mirror")]
+files=[]
+for version in (2,3,4):
+ base=f"task-5-actual-pilot-input-preparation-v{version}"
+ for suffix in (".py",".txt","-parent.py","-parent-cost.json",".json"):
+  file=D/(base+suffix)
+  if file.exists():files.append(file)
+ raw=D/(base+"-current-field")
+ files.extend(f for f in sorted(raw.rglob("*")) if f.is_file())
+manifest={"schema_version":1,"kind":"johnhull-evidence-manifest","entries":[]}
+for file in files:
+ data=file.read_bytes()
+ object_info=stores[0].put_bytes(data)
+ es.replicate(stores[0],stores[1],[object_info["sha256"]])
+ manifest["entries"].append(es.manifest_entry("raw/"+file.relative_to(D).as_posix(),data))
+es.load_manifest(manifest)
+original=json.loads((D/"task-5-actual-pilot-input-preparation.json").read_text())
+with np.load(WT/"johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/reference.npz",allow_pickle=False) as a:
+ prefix="field257x321.surface."
+ ref={k:a[prefix+k].copy() for k in ("times","z_nodes","local_variance","supported","wing_boundaries")}
+checks={}
+for store in stores:
+ dest=D/("task-5-field-input-restored-"+store.role)
+ assert not dest.exists()
+ report=es.restore([store],manifest,dest)
+ results=[]
+ for version in (2,3,4):
+  base=f"task-5-actual-pilot-input-preparation-v{version}"
+  cost=json.loads((dest/"raw"/(base+"-parent-cost.json")).read_text())
+  clocks(cost)
+  assert cost["financial_rng_performed"] is False
+  assert cost["formal_financial_qualification"]=="unknown"
+  assert cost["status"]==("failed" if version==2 else "completed")
+  raw=pilot.read_pilot_artifact(dest/"raw"/(base+"-current-field"))
+  assert raw["raw_values"].shape==(257,321)
+  assert raw["support_mask"].shape==(257,321)
+  assert raw["status"]==("unavailable" if version==2 else "executed")
+  if version==2:
+   assert raw["reason"]=="unsupported central field node"
+   assert raw["field"] is None and len(raw["rows"])==1
+   results.append({"version":version,"status":"expected_failure_retained",
+    "clock_arithmetic":"PASS","full_declared_field_shape":[257,321],"actual_cost":cost})
+   continue
+  data=json.loads((dest/"raw"/(base+".json")).read_text())
+  assert data["formal_plan_locked"] is False and data["formal_pilot"] is False
+  assert data["financial_qualification"]=="unknown"
+  assert data["original_states18"]==original["original_states18"]
+  assert data["diagnostic_queries24"]==original["diagnostic_queries24"]
+  assert data["declared_stream_namespaces"]==original["declared_stream_namespaces"]
+  assert data["source_before"]==data["source_after"]
+  for row in data["measurements"]:clocks(row)
+  clocks(data["phase_cost_before_final_serialization"])
+  recheck=data["current_field_recheck"]
+  clocks(recheck["worker_cost"]);clocks(recheck["serialization_cost"])
+  assert recheck["financial_qualification"]=="unknown"
+  assert recheck["formal_rng_performed"] is False
+  for key in ("times","z_nodes"):np.testing.assert_allclose(raw[key],ref[key],rtol=1e-10,atol=1e-12)
+  np.testing.assert_allclose(raw["raw_values"],ref["local_variance"],rtol=1e-10,atol=1e-12,equal_nan=True)
+  assert np.array_equal(raw["support_mask"],ref["supported"])
+  assert np.array_equal(raw["field"]["wing_boundaries"],ref["wing_boundaries"])
+  for model in ("Heston","local"):
+   assert len(data["additional_teacher_cases"][model])==2
+   for old,new in zip(original["additional_teacher_cases"][model],data["additional_teacher_cases"][model],strict=True):
+    for key in ("date","spot","quote","memory_count","memory_sum","state","thresholds"):
+     np.testing.assert_allclose(old[key],new[key],rtol=1e-10,atol=1e-12)
+  if version==4:
+   assert recheck["runtime_source"]["stable"] is True
+   assert recheck["original_controls"]=={"order":1024,"frequency_scale":512,"density_floor":1e-10,"cutoff_rule":"frequency_scale/sqrt(t)"}
+   assert len(raw["rows"])==257
+   assert raw["frequency_scale"]==512 and raw["order"]==1024 and raw["density_floor"]==1e-10
+   for row in raw["rows"]:
+    assert math.isclose(row["max_frequency"],512/math.sqrt(row["date"]),rel_tol=1e-12)
+    assert row["order"]==1024 and row["density_floor"]==1e-10
+  results.append({"version":version,"status":"PASS","field_nodes":82497,"original_states":18,
+    "monthly_queries":24,"additional_teacher_cases":4,"clock_arithmetic":"PASS","actual_cost":cost})
+ checks[store.role]={"status":"PASS","entry_count":len(report["entries"]),"results":results}
+stop={"wall_stop":time.perf_counter(),"cpu_stop":time.process_time()}
+clock={**start,**stop}
+out={"kind":"current_field_and_original_input_both_store_replay",
+ "status":"PASS","financial_qualification":"unknown","formal_rng_performed":False,
+ "scope":"byte restore plus original field/input/clock arithmetic; not formal pilot or main acceptance",
+ "manifest":manifest,"checks":checks,
+ "actual_cost":{"clock":clock,"wall_seconds":clock["wall_stop"]-clock["wall_start"],"cpu_seconds":clock["cpu_stop"]-clock["cpu_start"]},
+ "historical_unmeasured_source_edit_costs":"unmeasured; not promoted to formal expense certification"}
+(D/"task-5-field-input-manifest.json").write_text(json.dumps(manifest,indent=2)+"\n")
+(D/"task-5-field-input-cas-check.json").write_text(json.dumps(out,indent=2)+"\n")
+print(json.dumps({"status":"PASS","stores":[s.role for s in stores],"entries":len(manifest["entries"]),
+ "bytes":sum(e["bytes"] for e in manifest["entries"]),"actual_cost":out["actual_cost"]},indent=2))

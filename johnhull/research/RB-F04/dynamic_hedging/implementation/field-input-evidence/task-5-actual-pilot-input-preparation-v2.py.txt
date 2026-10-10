@@ -1,0 +1,139 @@
+
+from pathlib import Path
+import json,hashlib,time,dataclasses
+import numpy as np
+from hullkit._heston_local_surface import HestonParameters,LocalVarianceGrid,fourier_surface
+from hullkit._dynamic_hedging_surfaces import build_call_cache,fit_quote_state
+root=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+b=root/"johnhull/research/RB-F04/dynamic_hedging"
+d=root/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+phase_start={"wall_start":time.perf_counter(),"cpu_start":time.process_time()}
+start,cpu=phase_start["wall_start"],phase_start["cpu_start"]
+def clock_stop(clock):
+ end={**clock,"wall_stop":time.perf_counter(),"cpu_stop":time.process_time()}
+ return {"clock":end,"wall_seconds":end["wall_stop"]-end["wall_start"],"cpu_seconds":end["cpu_stop"]-end["cpu_start"]}
+
+budget=300.
+selected_path=b/"pilot/selected-calls/refined/selected-calls.json"
+historical=d/"task-5-teacher-preflight.json"
+field_path=b/"pilot/initial-quotes/reference.npz"
+sources=[root/"johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+         root/"johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py"]
+before={str(x.relative_to(root)):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}
+selected=json.loads(selected_path.read_text());history=json.loads(historical.read_text())
+p=HestonParameters(**selected["parameters"])
+original=[]
+for i,row in enumerate(selected["rows"]):
+ h=[r for r in history["rows"] if r["original_state_id"]==i and r["model"]=="heston"]
+ assert len(h)==1
+ old=h[0]
+ assert row["date"]==old["date"] and row["spot"]==old["spot"]
+ original.append({"id":f"state{i:02d}","original_state_id":i,"date":row["date"],
+   "date_index":round(row["date"]*12),"spot":row["spot"],"quote":row["quote"],
+   "diagnostic_heston_variance":row["heston_state"],
+   "inferred_local_state":row["models"]["local"]["state"],
+   "memory_sum":old["memory_sum"],"memory_count":old["memory_count"],
+   "quote_source":"original saved selected-state market Q; unchanged",
+   "historical_fit_qualification":"unknown"})
+observations=[];measurements=[]
+for date in sorted(set([float(j/12) for j in range(12)]+[1/24,1/48])):
+ if time.perf_counter()-start>=budget:raise RuntimeError("predeclared root input probe budget exceeded")
+ item_start={"wall_start":time.perf_counter(),"cpu_start":time.process_time()}
+ t,c=item_start["wall_start"],item_start["cpu_start"]
+ raw=fourier_surface(np.array([100.]),1.25-date,p,order=2048,max_frequency=1024.)
+ quote=float(raw["price"][0])
+ observations.append({"id":f"diagnostic-date-{date:.17g}","date":date,"spot":100.,"quote":quote,
+       "memory_count":int(np.floor(date*12+1e-9)),"memory_sum":100.*int(np.floor(date*12+1e-9)),
+       "diagnostic_heston_variance":p.v0,
+       "source":"deterministic original-parameter Heston CF observation; not an independent price oracle",
+       "production_cf_raw":{k:v for k,v in raw.items()}})
+ measurements.append({"operation":"production_cf_diagnostic_observation","date":date,
+   **clock_stop(item_start)})
+with np.load(field_path,allow_pickle=False) as a:
+ prefix="field257x321.surface."
+ times,z=a[prefix+"times"].copy(),a[prefix+"z_nodes"].copy()
+ original_values=a[prefix+"local_variance"].copy()
+ original_support=a[prefix+"supported"].copy()
+ original_wings=a[prefix+"wing_boundaries"].copy()
+import run_pilot as actual_pilot
+field_start={"wall_start":time.perf_counter(),"cpu_start":time.process_time()}
+current_field=actual_pilot.run_field_job(p,times=times,z_nodes=z,order=2048,cutoff=1024,wall_cap_seconds=budget)
+field_measurement=clock_stop(field_start)
+current_field_path=d/"task-5-actual-pilot-input-preparation-v2-current-field"
+save_start={"wall_start":time.perf_counter(),"cpu_start":time.process_time()}
+actual_pilot.write_pilot_artifact(current_field_path,current_field)
+field_save_measurement=clock_stop(save_start)
+assert current_field["status"]=="executed", "current deterministic field unavailable"
+current=current_field["field"]
+np.testing.assert_allclose(current_field["raw_values"],original_values,rtol=1e-10,atol=1e-12,equal_nan=True)
+assert np.array_equal(current_field["support_mask"],original_support)
+assert np.array_equal(current["wing_boundaries"],original_wings)
+field=LocalVarianceGrid(current["times"],current["z_nodes"],current["values"],p,current["wing_boundaries"])
+field_recheck={"kind":"current_field_pretest_recalculation","original_shape":[len(times),len(z)],
+ "status":"numerical_reproduction_pass","rtol":1e-10,"atol":1e-12,
+ "finite_node_count":int(np.count_nonzero(original_support)),
+ "raw_artifact_directory":str(current_field_path),
+ "worker_cost":field_measurement,"serialization_cost":field_save_measurement,
+ "financial_qualification":"unknown","formal_rng_performed":False}
+measurements.extend([{"operation":"current_field_recalculation",**field_measurement},
+ {"operation":"current_field_raw_serialization",**field_save_measurement}])
+extra_dates=np.array([1/48,1/24])
+extra={m:[] for m in ("Heston","local")}
+item_start={"wall_start":time.perf_counter(),"cpu_start":time.process_time()}
+t,c=item_start["wall_start"],item_start["cpu_start"]
+cache=build_call_cache(p,field,dates=extra_dates,spot_nodes=np.geomspace(50,200,65),
+  state_nodes=np.array([.25,.5,.75,1.,1.5,2.,4.]),model="local")
+measurements.append({"operation":"actual_local_additional_dates_call_cache","date_count":2,
+ **clock_stop(item_start)})
+for j,date in enumerate(extra_dates):
+ observed=next(r for r in observations if r["date"]==date)
+ fitted=fit_quote_state(cache,j,100.,observed["quote"],state_scale=1.)
+ for model in extra:
+  extra[model].append({"id":f"additional-{round(1/date)}:{model}","date":float(date),"spot":100.,
+    "quote":observed["quote"],"memory_count":0,"memory_sum":0.,
+    "state":p.v0 if model=="Heston" else fitted["state"],
+    "thresholds":np.linspace(0.,24.,65),
+    "local_fit_evidence":fitted if model=="local" else None,
+    "field_source":"current field257x321 recalculated and approximate-reproduced; no model precision qualification",
+    "financial_qualification":"unknown"})
+diagnostic={m:[[next({k:r[k] for k in ("id","spot","quote","memory_sum","memory_count")}
+                   for r in observations if r["date"]==float(j/12))] for j in range(12)]
+            for m in ("Heston","local")}
+after={str(x.relative_to(root)):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}
+assert before==after
+out={"kind":"actual_pretest_pilot_input_preparation_v2","formal_plan_locked":False,"formal_pilot":False,
+  "financial_qualification":"unknown","predeclared_probe_budget_seconds":budget,
+  "parameters":vars(p),"original_states18":original,"diagnostic_queries24":diagnostic,
+  "additional_teacher_cases":extra,"diagnostic_observations_raw":observations,
+  "declared_stream_namespaces":json.loads((b/"candidate.json").read_text())["seeds"],
+  "measurement_scope":"after imports through input assembly; final serialization and cold start are separately timed by root parent",
+  "stream_receipts_status":"not generated; must bind actual later market job raw, no RNG run here",
+  "measurements":measurements,"source_before":before,"source_after":after,
+  "input_provenance":{str(x.relative_to(root)):{"bytes":x.stat().st_size,"sha256":hashlib.sha256(x.read_bytes()).hexdigest()}
+       for x in (selected_path,historical,field_path)},
+  "current_field_recheck":field_recheck,"phase_cost_before_final_serialization":clock_stop(phase_start)}
+def convert(v):
+ if isinstance(v,np.ndarray):return v.tolist()
+ if isinstance(v,np.generic):return v.item()
+ raise TypeError(type(v))
+def clean(v):
+ if isinstance(v,dict):return {k:clean(x) for k,x in v.items()}
+ if isinstance(v,(list,tuple)):return [clean(x) for x in v]
+ if isinstance(v,np.ndarray):return clean(v.tolist())
+ if isinstance(v,np.generic):return clean(v.item())
+ if isinstance(v,float) and not np.isfinite(v):return None
+ return v
+(d/"task-5-actual-pilot-input-preparation-v2.json").write_text(json.dumps(clean(out),indent=2,allow_nan=False)+"\n")
+print(json.dumps({"original_states":len(original),"diagnostic_dates_per_model":12,
+ "additional_cases":{m:len(a) for m,a in extra.items()},"local_fit_statuses":[r["local_fit_evidence"]["status"] for r in extra["local"]],
+ "source_stable":before==after,"phase_wall_seconds":out["phase_cost_before_final_serialization"]["wall_seconds"],"financial_qualification":"unknown"},indent=2))
+
+v1=json.loads((d/"task-5-actual-pilot-input-preparation.json").read_text())
+v2=json.loads((d/"task-5-actual-pilot-input-preparation-v2.json").read_text())
+assert v1["original_states18"]==v2["original_states18"]
+assert v1["diagnostic_queries24"]==v2["diagnostic_queries24"]
+for m in ("Heston","local"):
+ for a,b in zip(v1["additional_teacher_cases"][m],v2["additional_teacher_cases"][m],strict=True):
+  for k in ("date","spot","quote","memory_count","memory_sum","state","thresholds"):
+   np.testing.assert_allclose(a[k],b[k],rtol=1e-10,atol=1e-12)
+print(json.dumps({"v1_original_inputs_preserved":True,"current_field_recheck":field_recheck},indent=2))
