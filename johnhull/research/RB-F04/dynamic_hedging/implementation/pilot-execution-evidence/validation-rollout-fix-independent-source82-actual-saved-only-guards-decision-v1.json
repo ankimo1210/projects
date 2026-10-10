@@ -1,0 +1,307 @@
+{
+  "schema": "rb-f04-independent-source82-actual-saved-only-guards-review-v1",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent read-only prelaunch structural and physical-reference reviewer",
+  "scope": "Two fixed actual root-created guards for one saved-only numerical bounded attempt and whole-child cost observation. No financial qualification, actual numerical closure, fullcapacity/RAM fit guarantee or phase/main acceptance.",
+  "approved_guards": {
+    "task-5-formal-pilot-saved-check-root-launch-guard-v2.json": "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f",
+    "task-5-formal-pilot-saved-check-whole-child-root-guard-v1.json": "4af9c16d8fd090c5537e7dccedb51da776f2d2a41e65124be70c0ad60f945fd1",
+    "root-source82-terminal-checkpoint-metadata-summary-v1.json": "4f0f6e8c4e3ef7a000cc9021aac5682ffa300e8b8ae06bdccdb8e5fab0fc0d55"
+  },
+  "fixed_helper_and_review_refs": {
+    "task-5-full-pilot-root-saved-check-observer-v1.py": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4",
+    "task-5-full-pilot-root-saved-check-enclosing-v2.py": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc",
+    "task-5-full-child-expense-observer-v1.py": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57",
+    "independent-full-child-expense-observer-v1-decision.json": "e9f71faa56e5eb72f0c8493d6e500f177e4fcecca252287fd65d1e998279e4b5",
+    "independent-external-expense-receipt-adapter-v2-decision.json": "8a3d5fc57ed83625ff3bb715f867e2f0bb6105f1d5e17bd8c882f3da231790c9"
+  },
+  "checks": [
+    {
+      "name": "actual_saved_observer_load_guard_only",
+      "status": "PASS",
+      "detail": {
+        "guard_sha256": "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f",
+        "load_guard": "PASS",
+        "no_native_hash_or_decode": true
+      }
+    },
+    {
+      "name": "actual_full_child_load_guard_only",
+      "status": "PASS",
+      "detail": {
+        "whole_guard_sha256": "4af9c16d8fd090c5537e7dccedb51da776f2d2a41e65124be70c0ad60f945fd1",
+        "child_guard_sha256": "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f",
+        "load_guard": "PASS"
+      }
+    },
+    {
+      "name": "fixed_helper_enclosing_observer_reference_chain",
+      "status": "PASS",
+      "detail": {
+        "helper": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57",
+        "enclosing": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc",
+        "observer": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4"
+      }
+    },
+    {
+      "name": "original4_bindings_match_small_terminal_inspection",
+      "status": "PASS",
+      "detail": {
+        "source_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+        "plan_sha256": "78d80da8a530bcdb64ecedc1e36082ea955b059e90f06e1e11900a5479d3a9b5",
+        "input_bindings_sha256": "9eb354d71cfc5542c2ddccd46163827cc0f51d3d97a6d57b95b1b1dda53b4cd6",
+        "raw_snapshot_sha256": "9ae030e780becb9d2e1912cc520c7255dd1371602a57a1396375ff2944388333"
+      }
+    },
+    {
+      "name": "original_roster_original4N_preserved",
+      "status": "PASS",
+      "detail": {
+        "counts": {
+          "attempts": 51,
+          "cases": 121,
+          "jobs": 3138
+        },
+        "all4N": [
+          1024,
+          4096,
+          16384,
+          65536
+        ],
+        "literal_cap_options": 573122
+      }
+    },
+    {
+      "name": "original_administrative_limits_match",
+      "status": "PASS",
+      "detail": {
+        "wall_seconds": 2592000,
+        "individual_RSS_bytes": 17179869184,
+        "poll_seconds": 1,
+        "three_volume_reserve_bytes": 10737418240,
+        "devices": [
+          2096,
+          71,
+          72
+        ],
+        "limits_are_duration_or_capacity_guarantee": false
+      }
+    },
+    {
+      "name": "four_fresh_distinct_D2_outputs_leave_original_native_untouched",
+      "status": "PASS",
+      "detail": {
+        "paths": [
+          "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-v2",
+          "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-observation-v2",
+          "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-enclosing-observation-v2",
+          "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-full-child-observation-v1"
+        ],
+        "fresh_at_prelaunch": true
+      }
+    },
+    {
+      "name": "authority_saved_only_unknown_cost_capacity_not_finance",
+      "status": "PASS",
+      "detail": {
+        "root_saved_only_authority": true,
+        "finance_launch_acceptance": false,
+        "phase_completion": false,
+        "capacity_fit": null,
+        "all10_cost_closed": false
+      }
+    },
+    {
+      "name": "original3_processes_absent_and_two_terminal_receipts_authenticate_origin",
+      "status": "PASS",
+      "detail": {
+        "original_launch_guard_sha256": "9e794bd4ec46c72d240a264fdf2dd722297455baf2f3cd0d07243f6d7a0c2842",
+        "original_process_ids": [
+          372314,
+          372315,
+          372316
+        ],
+        "monitor": {
+          "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-observation-v3/parent-cost-and-status.json",
+          "sha256": "8d392bba2f346dafc226179f2473cb7b725253ee16718a717126e59c5a076eed"
+        },
+        "enclosing": {
+          "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observation-v3/parent-cost-and-status.json",
+          "sha256": "c54e531cdcd8b0825dfa71db57f1c4aca9ae7a84646a805f726d81db7a1387ba"
+        },
+        "monitor_status": "child_terminal_needs_saved_check",
+        "monitor_exit_code": 0,
+        "native_child_exit_code": 0,
+        "historical_cost_or_failure_reclassified": false
+      }
+    },
+    {
+      "name": "terminal_exit0_does_not_close_partial_failing_phase",
+      "status": "PASS",
+      "detail": {
+        "observed_job_rows": 214,
+        "executed": 213,
+        "source_or_solver_defect": 1,
+        "original_reason": "KeyError: 'result'",
+        "test_opened": false,
+        "qualification": "unknown",
+        "numerical_saved_check_previous": false
+      }
+    },
+    {
+      "name": "fixed82_actual_source_bytes_and_canonical_native_separation",
+      "status": "PASS",
+      "detail": {
+        "files": 82,
+        "canonical": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+        "native": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+        "all82_physical_SHA_match": true,
+        "dynamic_imports": 0
+      }
+    },
+    {
+      "name": "finite_physical_reference_inventory_latest_checkpoint_receipt",
+      "status": "PASS",
+      "detail": {
+        "native_reference_files": 10233,
+        "latest_checkpoint": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v3/checkpoint0000",
+        "checkpoint_reference_files": 12,
+        "tree_digest": "45d39264995258da93118a12c330af59d3ce0fda528a1c57ba24ed71a70b8fe6",
+        "receipt_sha256": "abd2542000b331411d6c3f1a5cf506e7b319c2faad573a2d83fbf54f8dd33b34",
+        "small_receipt_match": true,
+        "actual_native_allbytes_rehashed": false,
+        "financial_native_decoded": false
+      }
+    },
+    {
+      "name": "fixed_reviews_and_external10_unknown_roster",
+      "status": "PASS",
+      "detail": {
+        "external10": [
+          "cold_imports",
+          "source_registry",
+          "code_review",
+          "math_review",
+          "pilot_review",
+          "serialization",
+          "saved_check",
+          "CAS_primary",
+          "CAS_mirror",
+          "domain_selection"
+        ],
+        "source_mechanics_reviews_SHA_authenticated": true,
+        "scope_not_promoted_to_actual_cost_closure": true
+      }
+    }
+  ],
+  "independent_check_count": 13,
+  "unresolved_P1_P2_findings": [],
+  "original_bindings": {
+    "source_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "plan_sha256": "78d80da8a530bcdb64ecedc1e36082ea955b059e90f06e1e11900a5479d3a9b5",
+    "input_bindings_sha256": "9eb354d71cfc5542c2ddccd46163827cc0f51d3d97a6d57b95b1b1dda53b4cd6",
+    "raw_snapshot_sha256": "9ae030e780becb9d2e1912cc520c7255dd1371602a57a1396375ff2944388333"
+  },
+  "execution_authority": {
+    "root_saved_only_preapproved": true,
+    "planned_before_attempt": true,
+    "bounded_saved_only_numerical_attempt_binding_mechanics_approved": true,
+    "whole_child_cost_observation_binding_mechanics_approved": true,
+    "approval_origin": "Root-created exact guard files; this review creates no replacement root permission.",
+    "actual_saved_check_launched_by_this_review": false,
+    "finance_acceptance": false,
+    "formal_financial_launch_authorized": false,
+    "financial_A_cap_projection_approved": false,
+    "full_capacity_fit_guarantee": false,
+    "all_external10_costs_closed": false,
+    "main_accepted": false,
+    "phase_accepted": false,
+    "financial_qualification": "unknown"
+  },
+  "preserved_state": {
+    "original_counts": {
+      "jobs": 3138,
+      "cases": 121,
+      "attempts": 51
+    },
+    "original_teacher_N_candidates": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "original_literal_cap_options": 573122,
+    "actual_partial_rows": 214,
+    "executed": 213,
+    "unclosed_source_or_solver_defect": 1,
+    "original_failure": "KeyError: 'result'",
+    "test_opened": false,
+    "terminal_exit_code_is_financial_or_phase_acceptance": false,
+    "original_producer_financial_qualification": "unknown",
+    "original_generation_cost_or_history_readded": false,
+    "raw_resume_mutation_or_relabel_authorized": false,
+    "full_roster_missing_and_unknown_retained": true
+  },
+  "resource_scope": {
+    "wall_limit_seconds": 2592000,
+    "individual_process_RSS_limit_bytes": 17179869184,
+    "poll_seconds": 1,
+    "volume_reserve_bytes_each": 10737418240,
+    "volumes": [
+      "WSL",
+      "C",
+      "F"
+    ],
+    "whole_hydrated_checker_RSS_fit": null,
+    "administrative_stop": "Partial/unclosed; never financial A cap PASS or source-fault reclassification.",
+    "actual_current_resource_snapshot": "Historical root prelaunch snapshot is provenance only, not a guaranteed full hydration capacity prediction.",
+    "checker_cost_scope": "Root child cost includes guard imports/authentication, native physical reauthentication, whole job hydration, saved SDE/labels and final serialization. Nested original generation/phase costs are not added again.",
+    "outer_cost_tail": "Full-child observer keeps its own unsampled/import/post-stop bookkeeping as administrative pending; required10 and remaining tails are not closed by this guard review."
+  },
+  "verification": {
+    "API_calls": [
+      "fixed observer.load_guard(actual_saved_guard)",
+      "fixed full_child.load_guard(actual_whole_guard,exactSHA)",
+      "fixed observer.terminal_authority(actual_saved_guard)"
+    ],
+    "API_calls_not_made": [
+      "observer.source_binding",
+      "observer.closed_native_binding",
+      "observer.child/run",
+      "full_child.observe",
+      "enclosing.main",
+      "check_pilot.check_pilot"
+    ],
+    "physical_reference_scope": "Fixed guard/helper/review/terminal receipt physical SHA, 82 small source files, canonical identity, finite file-reference digest, latest-checkpoint reference subset and its small receipt JSON. No original native body/page/NPZ values or typed inputs decoded; no whole native byte rehash.",
+    "existing_metadata_authority": "The standard load_guard performs existing authority validation and manifest roster/stat checks with verify_files=False. Actual original mathematical prior/573122 expansion is reused unchanged, not re-reviewed.",
+    "native_inventory_files": 10233,
+    "latest_checkpoint_reference_files": 12,
+    "real_native_typed_financial_decode": 0,
+    "actual_saved_checker_child_Popen_calls": 0,
+    "guard_rootapproval_source_native_CAS_Git_mutations": 0,
+    "all_original_bytes_and_outputs_unchanged": true,
+    "pass_count": 13,
+    "failure_count": 0,
+    "original_failed_probe_attempts": [],
+    "tool_output_note": "Initial direct guard JSON print was truncated by the tool because the finite reference map is large. The exact metadata SHA and compact structured fields were subsequently read without financial/native decoding; no source failure was inferred.",
+    "direct_limited_probe_wall_seconds": 0.1204481,
+    "direct_limited_probe_cpu_seconds": 0.116783562,
+    "kernel_peak_RSS_bytes": 61595648,
+    "cost_scope": "One limited Python probe including imports, two load_guard calls, small source/header/reference checks and after checks. Earlier/following read tools and decision write/stdout are outside this measurement.",
+    "whole_review_wall_seconds": null,
+    "whole_review_cpu_seconds": null,
+    "final_decision_write_stdout_tail_seconds": null,
+    "cost_closed": false,
+    "external10_cost_injection": false
+  },
+  "boundaries": [
+    "Numerical saved-only attempt is permitted by root guards with actual original source/plan/input/raw binding. Its actual outcome remains unknown.",
+    "Original 213 executed and one source/solver fault remain partial; root terminal exit0 does not establish numerical correctness or accept the phase.",
+    "Historical M6/maxnode component results and fresh MemAvailable do not prove whole checker RSS fits 16GiB.",
+    "Real saved-only observer reauthenticates the complete original native byte set at actual execution; this review did not repeat a 10,233-file native hash.",
+    "Fresh output predicates describe this prelaunch observation only. Once root starts the authorized attempt, later existence is expected and is not a defect.",
+    "Required external10 missing/unknown costs, child/prefix/admin tails and original failures remain explicit; no alias clock copy, zero or parent absorption closes them."
+  ],
+  "fixed_at_UTC": "2026-10-10T17:50:24.683637+00:00"
+}

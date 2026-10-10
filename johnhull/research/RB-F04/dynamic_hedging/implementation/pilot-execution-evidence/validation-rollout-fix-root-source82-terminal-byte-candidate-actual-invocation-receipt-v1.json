@@ -1,0 +1,50 @@
+{
+  "schema": "rb-f04-root-terminal-byte-candidate-actual-invocation-v1",
+  "UTC": "2026-10-10T17:38:38.156663+00:00",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-B",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-terminal-byte-candidate-v2.py",
+    "--output",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-terminal-provenance-candidate-v2.json"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"status\": \"unapproved_terminal_provenance_candidate_only\", \"output\": \"/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-terminal-provenance-candidate-v2.json\", \"sha256\": \"be40aa307820ac9f21e43cd850100838ec2dfa9809dc0207afab5f8a6502dab0\", \"physical_files\": 10233, \"root_preapproved\": false, \"execute_saved_check\": false, \"finance_acceptance\": false}\n",
+  "stderr": "",
+  "original_PIDs_all_terminal": true,
+  "scope": "closed native physical byte inventory/source/input/plan/terminal binding and actual capacity snapshot; no numerical decode or financial regeneration",
+  "measured_prefix": {
+    "wall_seconds": 12.348716145,
+    "cpu_seconds": 12.337376375,
+    "timing_events": {
+      "wall_start_ns": 78370590653205,
+      "wall_stop_ns": 78382939369350,
+      "cpu_start_ns": 23946939,
+      "cpu_stop_ns": 12361323314
+    }
+  },
+  "clock_source_samples": {
+    "parent_cpu_start_ns": 23946939,
+    "parent_cpu_stop_ns": 24324314,
+    "children_start": {
+      "ru_utime_seconds": 0.0,
+      "ru_stime_seconds": 0.0,
+      "ru_utime_ns_rounded": 0,
+      "ru_stime_ns_rounded": 0
+    },
+    "children_stop": {
+      "ru_utime_seconds": 9.485693,
+      "ru_stime_seconds": 2.851306,
+      "ru_utime_ns_rounded": 9485693000,
+      "ru_stime_ns_rounded": 2851306000
+    }
+  },
+  "child_kernel_peak_RSS_bytes": 79409152,
+  "preparation_before_timer_unknown": true,
+  "own_final_receipt_write_stdout_tail_unknown": true,
+  "not_assigned_to_financial_external10": true,
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "financial_qualification": "unknown"
+}

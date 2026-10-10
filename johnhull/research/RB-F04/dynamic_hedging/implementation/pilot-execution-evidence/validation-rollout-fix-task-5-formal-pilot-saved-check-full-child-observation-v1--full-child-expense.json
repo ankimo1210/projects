@@ -1,0 +1,122 @@
+{
+  "schema": "rb-f04-full-child-expense-observation-v1",
+  "expense": {
+    "id": "saved_check",
+    "scope": "full fixed enclosing-v2 child lifecycle plus outer measured prefix",
+    "status": "failed",
+    "parent_id": null,
+    "includes_children": true,
+    "timing": {
+      "wall_seconds": 309.45290971,
+      "cpu_seconds": 307.412608572,
+      "overrun_seconds": 0.0
+    },
+    "timing_events": {
+      "wall_start_ns": 79128252944507,
+      "wall_stop_ns": 79437705854217,
+      "cpu_start_ns": 28383519,
+      "cpu_stop_ns": 307440992091
+    },
+    "whole_external_id_closed": true,
+    "final_receipt_construction_write_stdout_tail_seconds": 0.006940141,
+    "reason": "actual enclosing child exit_code=3; prefix_error=None; original bytes unchanged=True"
+  },
+  "original_prefix_receipt": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-enclosing-observation-v2/parent-cost-and-status.json",
+    "sha256": "901159b7002cd0edf90cf24de0b1286089a9a08c79a836e944e821840f6aeac0",
+    "bytes": 4031
+  },
+  "prefix_error": null,
+  "guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-whole-child-root-guard-v1.json",
+    "sha256": "4af9c16d8fd090c5537e7dccedb51da776f2d2a41e65124be70c0ad60f945fd1",
+    "bytes": 2910
+  },
+  "original_child_guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json",
+    "sha256": "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f",
+    "bytes": 1699155
+  },
+  "original_bindings": {
+    "source_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "plan_sha256": "78d80da8a530bcdb64ecedc1e36082ea955b059e90f06e1e11900a5479d3a9b5",
+    "input_bindings_sha256": "9eb354d71cfc5542c2ddccd46163827cc0f51d3d97a6d57b95b1b1dda53b4cd6",
+    "raw_snapshot_sha256": "9ae030e780becb9d2e1912cc520c7255dd1371602a57a1396375ff2944388333"
+  },
+  "bindings": {
+    "source_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "plan_sha256": "78d80da8a530bcdb64ecedc1e36082ea955b059e90f06e1e11900a5479d3a9b5",
+    "input_bindings_sha256": "9eb354d71cfc5542c2ddccd46163827cc0f51d3d97a6d57b95b1b1dda53b4cd6",
+    "raw_snapshot_sha256": "9ae030e780becb9d2e1912cc520c7255dd1371602a57a1396375ff2944388333"
+  },
+  "child_pid": 429957,
+  "child_exit_code": 3,
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-B",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-v2.py",
+    "--guard",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json",
+    "--guard-sha256",
+    "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f"
+  ],
+  "original_bytes_unchanged": true,
+  "observed_child_completion_tail": {
+    "wall_start_ns": 79437698914076,
+    "wall_stop_ns": 79437705854217,
+    "wall_seconds": 0.006940141,
+    "wall_clock_domain": "same local boot d9b7ca52-d08f-470d-ae08-876e23fea603 time.perf_counter_ns",
+    "includes_reap_delay": true,
+    "scope": "observed completion tail includes child receipt/stdout/exit plus wait and close latency; not pure serialization CPU"
+  },
+  "pure_CPU_tail_seconds": null,
+  "clock_source_samples": {
+    "wall_clock": "time.perf_counter_ns",
+    "wall_domain": "local boot d9b7ca52-d08f-470d-ae08-876e23fea603",
+    "parent_cpu_start_ns": 28383519,
+    "parent_cpu_stop_ns": 33866091,
+    "children_cpu_start": {
+      "ru_utime_seconds": 0.0,
+      "ru_stime_seconds": 0.0,
+      "ru_utime_ns_rounded": 0,
+      "ru_stime_ns_rounded": 0,
+      "kernel_peak_RSS_bytes": 0
+    },
+    "children_cpu_stop": {
+      "ru_utime_seconds": 228.775817,
+      "ru_stime_seconds": 78.631309,
+      "ru_utime_ns_rounded": 228775817000,
+      "ru_stime_ns_rounded": 78631309000,
+      "kernel_peak_RSS_bytes": 17416839168
+    },
+    "sampling_order": "start wall,parentCPU,reaped; stop wait+close,reaped,parentCPU,wall",
+    "cpu_domain": "parent process CPU plus rounded cumulative reaped child user/system CPU",
+    "double_charge_rule": "single inclusive duration; original prefix/nested clocks never added"
+  },
+  "parent_kernel_peak_RSS_bytes": 24961024,
+  "child_kernel_peak_RSS_bytes": 17416839168,
+  "RSS_fit_or_full_capacity_guarantee": null,
+  "kernel_RSS_scope": "process/reaped-children cumulative highwater, including prior baseline and bookkeeping; no exclusive full-check fit claim",
+  "administrative_unclosed_expense": {
+    "id": "saved_check:outer_unmeasured_bookkeeping",
+    "scope": "outer imports before sampling and post-stop provenance/copy/receipt/stdout",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    }
+  },
+  "all_expenses_closed": false,
+  "all_external10_closed": false,
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "financial_phase_completion_claimed": false,
+  "root_actual_permission_approved_by_this_helper": false,
+  "actual_numerical_qualification_authenticated": false,
+  "external_expense_rows_injected": false,
+  "original_raw_modified": false,
+  "resource_enforcement": "original fixed child monitor retains original administrative guards; this outer wrapper only measures its declared inclusive expense"
+}

@@ -1,0 +1,116 @@
+{
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-observer-v1.py",
+    "--child",
+    "--guard",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json"
+  ],
+  "child_exit_code": -9,
+  "child_inclusive_CPU_seconds": 292.34993399999996,
+  "child_kernel_highwater_before_bytes": 0,
+  "child_kernel_peak_RSS_bytes": 17416839168,
+  "child_kernel_scope": "waited single child cumulative getrusage; unknown attribution if historical child baseline nonzero",
+  "child_pid": 430063,
+  "child_rss_overrun_bytes": 236969984,
+  "child_rss_unknown_sample_count": 0,
+  "finance_acceptance": false,
+  "financial_A_cap_projection_approved": false,
+  "financial_qualification": "unknown",
+  "formal_pilot_completion_claimed": false,
+  "full_job_hydration_and_final_full_result_serialization_in_child_clock": true,
+  "individual_RSS_is_not_RLIMIT_AS_or_tree_sum": true,
+  "last_volume_observations": [
+    {
+      "free_bytes": 460133572608,
+      "id": "WSL",
+      "path": "/",
+      "reserve_bytes": 10737418240
+    },
+    {
+      "free_bytes": 87463165952,
+      "id": "C",
+      "path": "/mnt/c",
+      "reserve_bytes": 10737418240
+    },
+    {
+      "free_bytes": 182009593856,
+      "id": "F",
+      "path": "/mnt/f",
+      "reserve_bytes": 10737418240
+    }
+  ],
+  "launched": {
+    "cpu": 7.929302635,
+    "utc": "2026-10-10T17:51:12.930449+00:00",
+    "wall": 79137.713165622
+  },
+  "legacy_and_native_expenses": "existing inclusive native phase/jobs/driver/history are breakdowns; do not add them to this outer observation again",
+  "measured_endpoint": "after child wait, final readonly source/input/prior binding and RSS observation; before receipt construction/write/stdout",
+  "monitoring_guarantee": "sampled RSS/free-space only; growth between polls and blocking kill-wait/postbind tail may exceed limits",
+  "native_data_rewritten_by_monitor": false,
+  "native_output_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-v2",
+  "observed_child_peak_RSS_bytes": 17282850816,
+  "observed_parent_peak_RSS_bytes": 46862336,
+  "observed_volume_reserve_shortfall_bytes": {
+    "C": 0,
+    "F": 0,
+    "WSL": 0
+  },
+  "observer_errors": [],
+  "original_N_candidates": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "original_generation_costs_readded": false,
+  "original_obligations": {
+    "attempts": 51,
+    "cases": 121,
+    "jobs": 3138
+  },
+  "outer_wall_seconds": 308.540740551005,
+  "own_final_receipt_write_stdout_cost": "unknown; root enclosing process receipt must measure separately",
+  "parent_CPU_seconds": 14.619042522,
+  "parent_kernel_highwater_before_bytes": 61353984,
+  "parent_kernel_peak_RSS_bytes": 61353984,
+  "parent_kernel_scope": "whole monitor lifetime; baseline retained separately",
+  "parent_rss_overrun_bytes": 0,
+  "parent_rss_unknown_sample_count": 0,
+  "partial_raw_policy": "all native saved/checkpoint files retained; unsaved financial arrays remain unavailable; no N/roster change",
+  "prior_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json",
+  "prior_sha256": "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f",
+  "requested_administrative_stop": {
+    "limit_bytes": 17179869184,
+    "metric": "individual_child_rss",
+    "observed_bytes": 17282850816,
+    "observed_clock": {
+      "cpu": 8.042059563,
+      "utc": "2026-10-10T17:56:05.332966+00:00",
+      "wall": 79430.115686231
+    }
+  },
+  "resource_fault_order": "unknown unless signal/live observation and saved native records establish causation; nonzero exit alone is never a resource cap",
+  "saved_check_result_inspection_required": true,
+  "scope": "root saved-only numerical checker observer; original full native snapshot and fresh output",
+  "signal_delivered": true,
+  "source_inputs_prior_monitor_unchanged": true,
+  "started": {
+    "cpu": 0.024329472,
+    "utc": "2026-10-10T17:51:03.598011+00:00",
+    "wall": 79128.380726259
+  },
+  "status": "administrative_partial_unclosed",
+  "stop_clock": {
+    "cpu": 8.042059563,
+    "utc": "2026-10-10T17:56:05.332966+00:00",
+    "wall": 79430.115686231
+  },
+  "stopped": {
+    "cpu": 14.643371994,
+    "utc": "2026-10-10T17:56:12.138750+00:00",
+    "wall": 79436.92146681
+  },
+  "wall_overrun_seconds": 0.0
+}

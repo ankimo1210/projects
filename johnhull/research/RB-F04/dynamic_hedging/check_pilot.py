@@ -2062,7 +2062,8 @@ def check_wrapped_operation(raw, operation, context):
         )
         rows = value["cells"] if operation == "roster" else value["candidates"]
         for row in rows:
-            replay.check_cash(args["dataset"], row["result"])
+            result = row["result"] if operation == "roster" else value["rollouts"][row["id"]]
+            replay.check_cash(args["dataset"], result)
     elif operation == "call_cache":
         _require(
             np.asarray(value["values"]).shape

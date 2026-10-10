@@ -1,0 +1,93 @@
+{
+  "schema": "rb-f04-root-validation-fix-and-saved-failure-closed-proof-CAS-v1",
+  "UTC": "2026-10-10T18:06:29.200867+00:00",
+  "manifest_ref": "artifact:sha256:250fd1726532089a535b68cd821c3a2b60253ee2c92fcc95613fd78c2c983f70",
+  "entries": 19,
+  "source_bytes": 3865595,
+  "both_stores_original_bytes_and_standard_reader_PASS": true,
+  "scope": "closed source/test revision and source82 failed saved-attempt receipts/guards/byte inventory only; financial native corpus not stored or decoded",
+  "parent_measured_prefix": {
+    "id": "validation-fix-proof-CAS-parent",
+    "includes_children": true,
+    "parent_id": null,
+    "timing": {
+      "wall_seconds": 5.169309839,
+      "cpu_seconds": 0.089436678,
+      "overrun_seconds": null
+    },
+    "timing_events": {
+      "wall_start_ns": 80048814264323,
+      "wall_stop_ns": 80053983574162,
+      "cpu_start_ns": 42237962,
+      "cpu_stop_ns": 131674640
+    }
+  },
+  "components": [
+    {
+      "id": "validation-fix-proof-CAS-primary",
+      "parent_id": "validation-fix-proof-CAS-parent",
+      "includes_children": false,
+      "timing": {
+        "wall_seconds": 0.621362097,
+        "cpu_seconds": 0.033514902,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": 80048814270397,
+        "wall_stop_ns": 80049435632494,
+        "cpu_start_ns": 42242140,
+        "cpu_stop_ns": 75757042
+      }
+    },
+    {
+      "id": "validation-fix-proof-CAS-mirror",
+      "parent_id": "validation-fix-proof-CAS-parent",
+      "includes_children": false,
+      "timing": {
+        "wall_seconds": 4.54783063,
+        "cpu_seconds": 0.055810516,
+        "overrun_seconds": null
+      },
+      "timing_events": {
+        "wall_start_ns": 80049435640222,
+        "wall_stop_ns": 80053983470852,
+        "cpu_start_ns": 75762337,
+        "cpu_stop_ns": 131572853
+      }
+    }
+  ],
+  "startup_preparation_and_own_output_tail_unknown": true,
+  "not_assigned_to_financial_external10": true,
+  "financial_qualification": "unknown",
+  "financial_native_corpus_CAS_or_semantic_restore_done": false,
+  "old82_source_preserved_all_files": true,
+  "current_source_changed_only_validation_consumer": true,
+  "new_prior_or_financial_launch_approved": false,
+  "actual_external_rows_injected": false,
+  "all_external10_or_full_costs_closed": false,
+  "archivable_proof_paths": [
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-minimal-validation-rollout-binding-applied-v1.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-validation-rollout-binding-focused-tests-v1.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-applied-validation-rollout-binding-and-pytest-v1.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-proposed-v1.patch",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-pytest-proposed-v1.patch",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-pytest-verification-v1.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source82-validation-result-binding-patch-decision-v1.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-whole-child-root-guard-v1.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source82-actual-saved-only-guards-decision-v1.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source82-saved-check-actual-guards-preflight-v1.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-terminal-provenance-candidate-v2.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source82-terminal-byte-candidate-actual-invocation-receipt-v1.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-observation-v2/parent-cost-and-status.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-enclosing-observation-v2/parent-cost-and-status.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-full-child-observation-v1/full-child-expense.json",
+    ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-full-child-observation-v1/original-prefix-receipt.bytes"
+  ],
+  "initial_manifest_failure": {
+    "reason": "same original JSON prefix bytes and .json path were declared with conflicting MIME; standard reader rejected before any CAS put",
+    "cost_unknown": true,
+    "fixed_by": "use actual JSON MIME for original-prefix-receipt.bytes; original bytes unchanged"
+  },
+  "kernel_peak_RSS_bytes": 26238976
+}

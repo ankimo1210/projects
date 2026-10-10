@@ -1,0 +1,80 @@
+{
+  "schema": "rb-f04-root-validation-rollout-binding-focused-tests-v1",
+  "UTC": "2026-10-10T18:00:45.471945+00:00",
+  "status": "PASS",
+  "commands": [
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "stdout": "........................................................................ [ 32%]\n........................................................................ [ 65%]\n........................................................................ [ 98%]\n....                                                                     [100%]\n220 passed in 64.12s (0:01:04)\n",
+      "stderr": "",
+      "wall_seconds": 65.119092587
+    },
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": "",
+      "wall_seconds": 0.01750192
+    },
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "exit_code": 0,
+      "stdout": "2 files already formatted\n",
+      "stderr": "",
+      "wall_seconds": 0.016610237
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "wall_seconds": 0.011493291
+    }
+  ],
+  "clock_events": {
+    "wall_start_ns": 79645089771817,
+    "wall_stop_ns": 79710254650047,
+    "parent_cpu_start_ns": 24380437,
+    "parent_cpu_stop_ns": 32506292
+  },
+  "raw_reaped_samples": {
+    "start": {
+      "user_seconds": 0.0,
+      "system_seconds": 0.0
+    },
+    "stop": {
+      "user_seconds": 62.652855,
+      "system_seconds": 1.6742979999999998
+    }
+  },
+  "wall_seconds": 65.16487823,
+  "parent_cpu_seconds": 0.008125855,
+  "reaped_cpu_seconds": 64.327153,
+  "own_output_tail_unknown": true,
+  "full_three_suites_not_run": true,
+  "actual_financial_native_read_or_regeneration": false,
+  "financial_qualification": "unknown"
+}

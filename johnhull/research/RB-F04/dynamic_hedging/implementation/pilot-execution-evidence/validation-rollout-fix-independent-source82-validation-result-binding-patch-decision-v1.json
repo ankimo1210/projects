@@ -1,0 +1,125 @@
+{
+  "schema": "independent-source82-validation-result-binding-patch-decision-v1",
+  "reviewed_UTC": "2026-10-10T17:53:24.808202+00:00",
+  "decision": "approved_limited_D_only_proposed_access_correction",
+  "scope": "one consumer access correction; private source semantics only, production application and financial rerun not authorized by this review",
+  "original_diagnosis": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source82-validation-result-shape-diagnosis-v1.json",
+    "sha256": "f79a7ae6ebb8c8a458bd93bb69eb204e75b673d599fbcf11420c17f2b6abb526"
+  },
+  "fixed_inputs": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-proposed-v1.patch",
+      "sha256": "697ebf88a8a4a0408769ea9058169c3279ff51ee28044d99c39c9cc3144007ee",
+      "bytes": 581
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-preflight-v1.py",
+      "sha256": "74d3a83adc7ec85b83cd5f3df4736c83d99fcdde58ab526d8991f66e32f12c43",
+      "bytes": 11867
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-validation-rollout-binding-results-v1.json",
+      "sha256": "c99fbd3d3787d3e27ea75385b8b96a2bc44402ae7783f01d5f857953eb2329e2",
+      "bytes": 4878
+    }
+  ],
+  "source82_original_checker_sha256": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+  "source82_canonical_identity": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source82_native_payload_identity": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "changed_functions": [
+    "check_wrapped_operation"
+  ],
+  "source82_production_unchanged": true,
+  "patch_contract": {
+    "all_complete_value_recompute_and_same_retained": true,
+    "all_original14_validation_candidates_including_failed_unknown": true,
+    "original11_roster_result_access_unchanged": true,
+    "no_selection_or_status_filter": true,
+    "original_N_arrays_expenses_cash_math_source_roster_changed": false
+  },
+  "author_evidence": {
+    "RED": 2,
+    "GREEN_boundary_checks": 6,
+    "cash_and_policy_callbacks_synthetic": true,
+    "not_financial_cash_precision_test": true
+  },
+  "independent_checks": [
+    {
+      "name": "original_validation_result_KeyError_RED",
+      "status": "expected_rejection",
+      "exception": "KeyError: result"
+    },
+    {
+      "name": "all14_validation_last_unknown_route_GREEN",
+      "status": "PASS",
+      "cash_dispatches": 14,
+      "original_n": 4,
+      "unknown_ids": [
+        "band:Heston:width5",
+        "band:local:width5"
+      ]
+    },
+    {
+      "name": "original_all11_roster_unknown_route",
+      "status": "PASS",
+      "cash_dispatches": 11,
+      "original_n": 4
+    },
+    {
+      "name": "candidate_all11_roster_unknown_route",
+      "status": "PASS",
+      "cash_dispatches": 11,
+      "original_n": 4
+    },
+    {
+      "name": "last_rollout_missing",
+      "status": "rejected_before_cash",
+      "exception": "saved original policy roster.rollouts: saved keyset mismatch"
+    },
+    {
+      "name": "last_rollout_malformed",
+      "status": "rejected_before_cash",
+      "exception": "saved original policy roster.rollouts.band:local:width5: saved value mismatch"
+    },
+    {
+      "name": "last_unknown_path_nan_repaired",
+      "status": "rejected_before_cash",
+      "exception": "saved original policy roster.rollouts.band:local:width5.cash: saved value mismatch"
+    },
+    {
+      "name": "last_finite_path_cash_corrupted",
+      "status": "rejected_before_cash",
+      "exception": "saved original policy roster.rollouts.band:local:width4.cash: saved value mismatch"
+    },
+    {
+      "name": "last_candidate_missing",
+      "status": "rejected_before_cash",
+      "exception": "saved original policy roster.candidates: saved sequence length mismatch"
+    },
+    {
+      "name": "extra_rollout_key",
+      "status": "rejected_before_cash",
+      "exception": "saved original policy roster.rollouts: saved keyset mismatch"
+    }
+  ],
+  "independent_probe_scope": "hand-built N4 fixture; extracted original/candidate check_wrapped_operation plus real original runner._same; independently authored tail-node/NaN/tamper probes. Producer returns copied predefined tiny values and cash callback is a routing spy. No real policy/cash solver/replay or finance validation.",
+  "cash_math_preservation_evidence": "production replay.check_cash is unchanged; original producer/cash contract statically reviewed in prior diagnosis. Genuine accounting precision and terminal saved validation remain unknown.",
+  "financial_qualification": "unknown",
+  "formal_financial_phase_approved": false,
+  "budget_launch_root_approval": false,
+  "execution_counts": {
+    "financial_solver": 0,
+    "RNG": 0,
+    "SDE": 0,
+    "actual_native_decode_or_financial_raw_recompute": 0,
+    "production_source_tests_guard_changes": 0,
+    "Git_CAS": 0
+  },
+  "cost": {
+    "wall_seconds": 0.146972376,
+    "cpu_seconds": 0.146973458,
+    "includes_all_independent_pure_probes": true,
+    "own_receipt_write_tail_seconds": null
+  }
+}

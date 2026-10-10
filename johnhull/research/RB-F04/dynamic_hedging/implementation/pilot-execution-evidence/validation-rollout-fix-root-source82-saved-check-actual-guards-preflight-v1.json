@@ -1,0 +1,53 @@
+{
+  "schema": "rb-f04-root-actual-source82-saved-check-guard-preflight-v1",
+  "status": "PASS",
+  "actual_saved_numerical_launch": false,
+  "guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json",
+    "sha256": "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f"
+  },
+  "outer_guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-whole-child-root-guard-v1.json",
+    "sha256": "4af9c16d8fd090c5537e7dccedb51da776f2d2a41e65124be70c0ad60f945fd1"
+  },
+  "source82_files_verified": 82,
+  "terminal_metadata_status": {
+    "executed": 213,
+    "unclosed_source_or_solver_defect": 1
+  },
+  "full_native_numeric_verification_or_financial_regeneration_run": false,
+  "guard_loads_without_child_or_output_mutation": true,
+  "original_native_byte_stream_not_repeated_this_preflight": true,
+  "fresh_capacity": {
+    "observed_UTC": "2026-10-10T17:46:58.589745+00:00",
+    "MemAvailable_bytes": 48381677568,
+    "volumes": [
+      {
+        "id": "WSL",
+        "path": "/",
+        "reserve_bytes": 10737418240,
+        "free_bytes": 460137607168
+      },
+      {
+        "id": "C",
+        "path": "/mnt/c",
+        "reserve_bytes": 10737418240,
+        "free_bytes": 87765708800
+      },
+      {
+        "id": "F",
+        "path": "/mnt/f",
+        "reserve_bytes": 10737418240,
+        "free_bytes": 182011035648
+      }
+    ],
+    "scope": "fresh root observed resources for saved-only bounded attempt; no full hydration fit guarantee",
+    "whole_hydrated_checker_16GiB_fit": null
+  },
+  "timing": {
+    "wall_seconds": 0.108635473,
+    "cpu_seconds": 0.097866892
+  },
+  "own_output_tail_unknown": true,
+  "finance_acceptance": false
+}

@@ -1,0 +1,61 @@
+{
+  "schema": "rb-f04-full-child-expense-observer-root-guard-v1",
+  "root_preapproved": true,
+  "execute_saved_check": true,
+  "candidate_only": false,
+  "planned_before_attempt": true,
+  "finance_acceptance": false,
+  "formal_financial_launch_authorized": false,
+  "helper_sha256": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57",
+  "child_sha256": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc",
+  "child_guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json",
+    "sha256": "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f"
+  },
+  "original_bindings": {
+    "source_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "plan_sha256": "78d80da8a530bcdb64ecedc1e36082ea955b059e90f06e1e11900a5479d3a9b5",
+    "input_bindings_sha256": "9eb354d71cfc5542c2ddccd46163827cc0f51d3d97a6d57b95b1b1dda53b4cd6",
+    "raw_snapshot_sha256": "9ae030e780becb9d2e1912cc520c7255dd1371602a57a1396375ff2944388333"
+  },
+  "original_administrative_limits": {
+    "phase_wall_limit_seconds": 2592000,
+    "poll_seconds": 1.0,
+    "child_rss_limit_bytes": 17179869184,
+    "parent_rss_limit_bytes": 17179869184,
+    "volume_probes": [
+      {
+        "id": "WSL",
+        "path": "/",
+        "reserve_bytes": 10737418240
+      },
+      {
+        "id": "C",
+        "path": "/mnt/c",
+        "reserve_bytes": 10737418240
+      },
+      {
+        "id": "F",
+        "path": "/mnt/f",
+        "reserve_bytes": 10737418240
+      }
+    ]
+  },
+  "whole_child_observation_wall_budget_seconds": 2592000,
+  "wall_budget_scope": "root pre-attempt administrative cost comparison for whole observed child lifecycle; same 30-day choice, not financial cap or duration prediction",
+  "receipt_directory": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-full-child-observation-v1",
+  "python_executable": "/home/kazumasa/projects/.venv/bin/python",
+  "saved_check_authorized_by": "root",
+  "created_UTC": "2026-10-10T17:46:58.687123+00:00",
+  "source_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-full-child-expense-observer-v1-decision.json",
+    "sha256": "e9f71faa56e5eb72f0c8493d6e500f177e4fcecca252287fd65d1e998279e4b5"
+  },
+  "expense_adapter_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-external-expense-receipt-adapter-v2-decision.json",
+    "sha256": "8a3d5fc57ed83625ff3bb715f867e2f0bb6105f1d5e17bd8c882f3da231790c9"
+  },
+  "original_raw_mutation_or_relabel_authorized": false,
+  "all_external10_closed": false,
+  "independent_prelaunch_guard_review_required": true
+}
