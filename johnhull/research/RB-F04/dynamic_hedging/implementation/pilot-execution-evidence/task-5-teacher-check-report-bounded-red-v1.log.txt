@@ -1,0 +1,22 @@
+
+==================================== ERRORS ====================================
+_____ ERROR collecting tests/test_dynamic_hedging_teacher_check_report.py ______
+ImportError while importing test module '/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py:15: in <module>
+    import check_pilot as checker  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:22: in <module>
+    import run_reference as runner
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:30: in <module>
+    from deep_hedge_price._dynamic_hedging_protocol import candidate_protocol
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_protocol'
+=========================== short test summary info ============================
+ERROR deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py
+1 error in 0.37s
+ERROR: found no collectors for /home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py::test_bounded_grid_keeps_full_default_and_all_original_checks
+

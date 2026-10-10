@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+    "-q",
+    "--tb=short",
+    "--basetemp=/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-unit-fixture-v2"
+  ],
+  "returncode": 0,
+  "wall_seconds": 56.78113201199449,
+  "environment": {
+    "PYTHONPATH": "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src:/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src"
+  },
+  "source_unit_not_formal": true
+}

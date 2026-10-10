@@ -1,0 +1,182 @@
+
+import sys,json,hashlib,time,resource,copy,shutil,weakref,gc,ast
+from pathlib import Path
+W=Path('/home/kazumasa/worktrees/johnhull-research-roadmap');D=W/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+R=W/'johnhull/research/RB-F04/dynamic_hedging';P=D/'task-5-teacher-check-report-bounded-independent-v1'
+F=D/'task-5-teacher-check-report-bounded-unit-fixture-v2/teacher-report0'
+sys.path[:0]=[str(R),str(W/'johnhull/hullkit/src'),str(W/'deep_hedge_price/src')]
+import numpy as np
+import run_pilot as pilot
+import check_pilot as checker
+import hullkit._dynamic_hedging_conditional as conditional
+from hullkit._heston_local_surface import HestonParameters
+T=time.perf_counter();CPU=time.process_time()
+SHA='a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def J(p):return json.loads(p.read_text())
+cl=J(D/'task-5-teacher-check-report-bounded-source-closure-v1.json')
+def source_mismatch():return [p for p,h in cl['files'].items() if sha(W/p)!=h]
+assert not source_mismatch() and len(cl['files'])==81 and not cl['dynamic_imports']
+assert sha(R/'check_pilot.py')==SHA
+IDENTITY=pilot.runner._digest(cl)
+assert IDENTITY=='408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652'
+def forbid(*a,**k):raise AssertionError('new financial generation/RNG/large solver prohibited')
+np.random.default_rng=forbid;pilot.run_teacher_job=forbid;pilot.run_teacher_driver_job=forbid;pilot.run_teacher_grid_job=forbid
+orig_primitives=conditional.teacher_primitives;small_calls=[]
+def small_only(model,parameters,normals,**kw):
+ assert model=='heston' and 0<len(normals)<=16 and normals.shape[1]<=24
+ small_calls.append({'N':len(normals),'remaining_steps':normals.shape[1]})
+ return orig_primitives(model,parameters,normals,**kw)
+conditional.teacher_primitives=small_only
+parameters=HestonParameters(**J(F/'unit-parameters.json'));grid,_=pilot.read_pilot_artifact(F/'unit-grid')
+assert grid['original_n']==16 and len(grid['nodes'])==108 and grid['financial_qualification']=='unknown'
+fixture_before={str(p.relative_to(F)):sha(p) for p in F.rglob('*') if p.is_file()}
+results={'scope':'fixed bounded checker source-unit and saved transport only','fixed_checker_sha256':SHA,
+ 'new_RNG_generation':False,'M6_or_large_finance_execution':False,'source81_before_stable':True,
+ 'financial_qualification':'unknown','formal_phase_pilot_main_budget_volume_approval':False,
+ 'positives':[],'negative_rejections':[]}
+def eq(a,b):assert a==b,(a,b)
+def same(a,b):pilot.runner._same(a,b,'independent saved semantic comparison')
+def reject(name,fn):
+ try:fn()
+ except (ValueError,AssertionError) as e:
+  results['negative_rejections'].append({'name':name,'error':type(e).__name__,'message':str(e)[:300]})
+ else:raise AssertionError('counterexample accepted: '+name)
+def arrays(x):
+ if isinstance(x,np.ndarray):yield x
+ elif isinstance(x,dict):
+  for v in x.values():yield from arrays(v)
+ elif isinstance(x,(list,tuple)):
+  for v in x:yield from arrays(v)
+# Immutable author genuine saved small fixture: all108 allN16 full and bounded.
+calls_before=len(small_calls);full=checker.check_teacher_grid_record(grid,parameters,None)
+eq(len(small_calls)-calls_before,324)
+calls_before=len(small_calls);bounded=checker.check_teacher_grid_record(grid,parameters,None,report_mode='bounded')
+eq(len(small_calls)-calls_before,324);same(full['cache'],bounded['cache'])
+for i,(a,b) in enumerate(zip(full['raw_checks'],bounded['raw_checks'],strict=True)):
+ same({k:v for k,v in a.items() if k!='labels'},{k:v for k,v in b.items() if k not in ('raw_reference','labels_reference','report_mode')})
+ ref=b['labels_reference'];eq(ref['fields'],sorted(a['labels']))
+ eq(ref['array_fields'],{k:{'shape':list(v.shape),'dtype':v.dtype.str} for k,v in a['labels'].items() if isinstance(v,np.ndarray)})
+ assert 'artifact_context' not in b['raw_reference']
+ assert all(v.ndim<=1 for v in arrays(b))
+ eq(b['raw_reference']['node_index'],i);eq(b['raw_reference']['raw_binding'],grid['nodes'][i]['raw_binding'])
+ eq(ref['all_original_N_label_values_compared'],True)
+results['positives'].append({'name':'full_default_vs_bounded_all108_allN16_all11labels_stats_cache','PASS':True,'small_SDE_chunk_calls_each':324})
+# cache=None must consume all108 sequentially and release compared sample/cov arrays.
+cacheless=copy.deepcopy(grid);cacheless['cache']=None
+original_check=checker.check_teacher_record;refs=[];check_count=0
+def watch(*a,**kw):
+ global check_count
+ checked=original_check(*a,**kw);check_count+=1
+ refs.extend(weakref.ref(v) for k,v in checked['labels'].items() if k.endswith('samples') or 'covariance' in k or k in ('block_means','derivative_block_means','joint_block_means'))
+ return checked
+checker.check_teacher_record=watch
+cacheless_report=checker.check_teacher_grid_record(cacheless,parameters,None,report_mode='bounded')
+checker.check_teacher_record=original_check;eq(check_count,108);gc.collect()
+eq(sum(v() is not None for v in refs),0)
+eq(cacheless_report['status'],'unclosed_or_declared_cap')
+results['positives'].append({'name':'cacheless_all108_compared_sample_cov_block_weakrefs_released','PASS':True,'weakrefs':len(refs)})
+# Make an independent transport container, changing provenance paths only.
+# Writer validates same existing primitives/labels; no path generation.
+orig=Path(str(P)+'-transport-original');rest=Path(str(P)+'-transport-restored')
+assert not orig.exists() and not rest.exists();orig.mkdir()
+shutil.copytree(F/'driver',orig/'driver')
+transport=copy.deepcopy(grid);transport['driver']['directory']=str(orig/'driver')
+for i,node in enumerate(grid['nodes']):
+ raw,_=pilot.read_pilot_artifact(node['path']);raw['driver']['directory']=str(orig/'driver')
+ path=orig/('node'+str(i).zfill(4));pilot.write_pilot_artifact(path,raw)
+ transport['nodes'][i]['path']=str(path);transport['nodes'][i]['raw_binding']=pilot._teacher_node_binding(path,raw)
+ # Cached group bindings include original raw provenance; rebuilt cache for
+ # the transport fixture is derived only from the same saved rows.
+def tr_rows():
+ for n in transport['nodes']:
+  row,_=pilot.read_pilot_artifact(n['path']);row['surface']=None;yield row
+transport['cache']=checker.replay.rebuild_asian_cache(tr_rows(),parameters,transport['axes'],model='heston',evaluation_domains=None)['cache']
+golden=checker.check_teacher_grid_record(transport,parameters,None,report_mode='bounded')
+pilot.write_pilot_artifact(orig/'transport-grid',transport)
+pilot.write_pilot_artifact(orig/'bounded-report',golden)
+shutil.copytree(orig,rest)
+unavailable=orig.with_name(orig.name+'-retained-unavailable');assert not unavailable.exists()
+assert orig.resolve().parent==D.resolve() and unavailable.resolve().parent==D.resolve()
+orig.rename(unavailable)
+try:
+ assert not orig.exists()
+ context={'original_root':orig,'restored_root':rest}
+ restored=checker.check_teacher_grid_record(transport,parameters,None,report_mode='bounded',artifact_context=context)
+ same(golden,restored)
+ reread,_=pilot.read_pilot_artifact(rest/'bounded-report');same(restored,reread)
+ for b in restored['raw_checks']:assert 'artifact_context' not in b['raw_reference']
+ for node in transport['nodes']:
+  p=pilot.bound_artifact_path(node['path'],context);assert str(p).startswith(str(rest))
+ results['positives'].append({'name':'full_cached_restored_original_root_actually_absent_Path_context_saved_semantic_comparison','PASS':True})
+finally:unavailable.rename(orig)
+# Genuine last-node numeric counterexamples with fresh valid literal byte origins.
+last,_=pilot.read_pilot_artifact(grid['nodes'][-1]['path'])
+for field in ('f_x_samples','joint_block_covariance','block_means','status'):
+ raw=copy.deepcopy(last);raw['kind']='source_unit_literal_teacher'
+ if field=='status':raw['labels'][field][-1]='ready' if raw['labels'][field][-1]!='ready' else 'unknown_underresolved'
+ else:raw['labels'][field].flat[-1]+=0.25
+ path=Path(str(P)+'-tamper-'+field);pilot.write_pilot_artifact(path,raw)
+ bad=copy.deepcopy(grid);bad['nodes'][-1]['path']=str(path);bad['nodes'][-1]['raw_binding']=pilot._teacher_node_binding(path,raw)
+ reject('last_node_self_consistent_'+field,lambda:checker.check_teacher_grid_record(bad,parameters,None,report_mode='bounded'))
+for name,mut in [('last_missing',lambda g:g['nodes'].pop()),('last_duplicate',lambda g:g['nodes'].__setitem__(-1,g['nodes'][-2])),
+ ('cache_unknown_NaN',lambda g:g['cache']['f'].__setitem__((-1,-1,-1),np.nan))]:
+ bad=copy.deepcopy(grid);mut(bad)
+ reject(name,lambda:checker.check_teacher_grid_record(bad,parameters,None,report_mode='bounded'))
+# Saved report itself must remain a semantic reference, not a self-authorizing flag.
+for field in ('reference_node_index','reference_dtype','compared_flag'):
+ bad=copy.deepcopy(golden);b=bad['raw_checks'][-1]
+ if field=='reference_node_index':b['raw_reference']['node_index']+=1
+ elif field=='reference_dtype':b['labels_reference']['array_fields']['f_x_samples']['dtype']='<f4'
+ else:b['labels_reference']['all_original_N_label_values_compared']=False
+ path=Path(str(P)+'-report-tamper-'+field);pilot.write_pilot_artifact(path,bad);stored,_=pilot.read_pilot_artifact(path)
+ reject('saved_report_fresh_receipt_'+field,lambda:same(golden,stored))
+# Existing source-unit cap has no generated path; its original denominator stays16.
+cap=next((D/'task-5-teacher-check-report-bounded-unit-fixture-v2').glob('test_bounded_partial_cap_retai0/partial'))
+raw,_=pilot.read_pilot_artifact(cap);capgrid=copy.deepcopy(cacheless);capgrid['driver']=None
+capgrid['nodes']=[grid['planned_nodes'][0]|{'path':str(cap),'raw_binding':pilot._teacher_node_binding(cap,raw)}]
+capgrid['unexecuted_node_count']=107
+capped=checker.check_teacher_grid_record(capgrid,parameters,None,report_mode='bounded')
+cq=capped['raw_checks'][0];eq(cq['original_n'],16);eq(cq['unexecuted_n'],16);eq(cq['executed_n'],0)
+assert not cq.get('full_saved_driver_sde_replayed',False) and 'labels_reference' not in cq
+eq(capped['status'],'unclosed_or_declared_cap');eq(cq['financial_qualification'],'unknown')
+results['positives'].append({'name':'saved_partial_cap_N16_all_unexecuted_unknown_no_SDE_upgrade','PASS':True})
+# Legacy literal is authenticated independently and remains reference-compatible.
+legacyraw=copy.deepcopy(last);legacyraw['kind']='source_unit_literal_teacher'
+path=Path(str(P)+'-legacy-literal');pilot.write_pilot_artifact(path,legacyraw)
+legacy=copy.deepcopy(cacheless);legacy['nodes'][-1].pop('raw_binding')
+legacy['nodes'][-1]['path']=str(path);legacy['nodes'][-1]['raw_sha256']=pilot.runner.payload_digest(legacyraw)
+lr=checker.check_teacher_grid_record(legacy,parameters,None,report_mode='bounded')
+eq(lr['raw_checks'][-1]['raw_reference']['raw_sha256'],legacy['nodes'][-1]['raw_sha256'])
+results['positives'].append({'name':'legacy_raw_sha_literal_reference_sourceunit_full_comparison','PASS':True})
+
+# Existing saved invalid path: preserve full-N NaN and unknown qualification.
+unknown_path=D/'task-5-teacher-check-report-bounded-unit-fixture-v2/test_bounded_keeps_invalid_nan0/invalid'
+unknown_raw,_=pilot.read_pilot_artifact(unknown_path)
+unknown_grid=copy.deepcopy(cacheless);unknown_grid['nodes'][-1]['path']=str(unknown_path)
+unknown_grid['nodes'][-1].pop('raw_binding');unknown_grid['nodes'][-1]['raw_sha256']=pilot.runner.payload_digest(unknown_raw)
+unknown_report=checker.check_teacher_grid_record(unknown_grid,parameters,None,report_mode='bounded')
+uq=unknown_report['raw_checks'][-1]
+eq(uq['original_n'],16);eq(uq['invalid_path_count'],1);assert uq['unknown_node_count']>0
+assert not uq['full_saved_driver_sde_replayed'];eq(uq['financial_qualification'],'unknown')
+assert np.isnan(uq['raw_standard_errors']).all()
+assert all(v is None for v in uq['gate_standard_errors'])
+results['positives'].append({'name':'existing_invalid_path_full_N_NaN_unknown_no_SDE_upgrade','PASS':True})
+
+# AST: precisely two formal caller branches request bounded; no standalone edit.
+tree=ast.parse((R/'check_pilot.py').read_text());calls=[]
+for n in ast.walk(next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='_raw_job_check')):
+ if isinstance(n,ast.Call) and isinstance(n.func,ast.Name) and n.func.id=='check_teacher_grid_record':
+  eq([(k.arg,k.value.value) for k in n.keywords if k.arg=='report_mode' and isinstance(k.value,ast.Constant)],[('report_mode','bounded')]);calls.append(n.lineno)
+eq(len(calls),2)
+reject('invalid_report_mode',lambda:checker.check_teacher_grid_record(grid,parameters,None,report_mode='bogus'))
+results['positives'].append({'name':'two_formal_grid_consumers_explicit_bounded_AST','PASS':True,'lines':calls})
+assert not source_mismatch() and sha(R/'check_pilot.py')==SHA
+eq(fixture_before,{str(p.relative_to(F)):sha(p) for p in F.rglob('*') if p.is_file()})
+results.update({'source81_after_stable':True,'canonical_source_identity_sha256':IDENTITY,'original_author_fixture_unchanged':True,
+ 'small_saved_SDE_chunk_calls':len(small_calls),'small_saved_SDE_max_chunk_N':max(v['N'] for v in small_calls),
+ 'positive_count':len(results['positives']),'negative_count':len(results['negative_rejections']),
+ 'review_cost':{'wall_seconds':time.perf_counter()-T,'CPU_seconds':time.process_time()-CPU,
+ 'process_peak_RSS_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024}})
+Path(str(P)+'-results.json').write_text(json.dumps(results,ensure_ascii=False,indent=2))
+print('PASS',json.dumps({k:results[k] for k in ('positive_count','negative_count','review_cost')}),flush=True)

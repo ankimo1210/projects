@@ -1,0 +1,24 @@
+......F..........                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_bounded_rejects_unknown_saved_cache_outside_summary ___________
+deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py:234: in test_bounded_rejects_unknown_saved_cache_outside_summary
+    checker.check_teacher_grid_record(changed, parameters, None, report_mode="bounded")
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:1275: in check_teacher_grid_record
+    result = replay.rebuild_asian_cache(
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py:507: in rebuild_asian_cache
+    _same_asian_cache(cache, saved_cache)
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py:363: in _same_asian_cache
+    _same(expected[key], saved[key], "saved_cache." + key)
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py:55: in _same
+    raise ValueError(f"{name}: saved value differs from recomputation")
+E   ValueError: saved_cache.f: saved value differs from recomputation
+
+During handling of the above exception, another exception occurred:
+deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py:233: in test_bounded_rejects_unknown_saved_cache_outside_summary
+    with pytest.raises(ValueError, match="mismatch"):
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'mismatch'
+E     Actual message: 'saved_cache.f: saved value differs from recomputation'
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py::test_bounded_rejects_unknown_saved_cache_outside_summary
+1 failed, 16 passed in 58.17s

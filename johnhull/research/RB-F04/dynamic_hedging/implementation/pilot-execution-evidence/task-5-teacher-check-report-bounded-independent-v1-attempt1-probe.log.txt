@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-probe.py", line 125, in <module>
+    reject(name,lambda:checker.check_teacher_grid_record(bad,parameters,None,report_mode='bounded'))
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-probe.py", line 44, in reject
+    else:raise AssertionError('counterexample accepted: '+name)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: counterexample accepted: cache_unknown_NaN

@@ -1,0 +1,23 @@
+{
+  "schema": "rb-f04-bounded-checker-root-static-diff-v1",
+  "original_source_identity": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "original_fixed_commit": "7d929800",
+  "changed_original_source_files": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "original": "bfd5b81fd8d356c387a8e313b0c0c8a5b538a26166ad4854572913d4f1608184",
+      "current": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b"
+    }
+  },
+  "standalone_teacher_AST_unchanged": true,
+  "modified_existing_functions": [
+    "check_teacher_grid_record",
+    "_raw_job_check"
+  ],
+  "new_helpers": [
+    "_bounded_teacher_check",
+    "_teacher_check_raw_reference"
+  ],
+  "all_original_generation_math_other80_bytes_unchanged": true,
+  "financial_execution": false,
+  "source_approval": "pending_final_targeted_tests_and_independent_review"
+}

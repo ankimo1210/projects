@@ -1,0 +1,91 @@
+{
+  "administrative_interrupted_attempt_retained": true,
+  "evidence": {
+    "task-5-M6-saved-recheck-terminal-inputs-v1-administrative-probes.py": {
+      "bytes": 7849,
+      "sha256": "fa51363b9592e30c02615e113a6293b1607f0a5a9f7325b1f43ad84545b32cc3"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-administrative-verification.json": {
+      "bytes": 1087,
+      "sha256": "f30d2fedf3498221739e0261f3e620b1b1fbdb28ff6109b2b3b28abace6440c2"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-attempt1-creation-cost.json": {
+      "bytes": 730,
+      "sha256": "04c8d293b2ab883707af628735899e3f4e7ca0fdbba909eeebbdce1c7c7247c2"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-attempt1-producer.log": {
+      "bytes": 712,
+      "sha256": "0c8950a4fd0506fd24cae742ee09fc7b889862498026ac2aadcf4e1293857d77"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-attempt1-producer.py": {
+      "bytes": 20542,
+      "sha256": "90c4c04e2f9911ab5bfe5970e2315d344cb5e4d5c55203f10e87b4d2ed769084"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-attempt2-creation-cost.json": {
+      "bytes": 721,
+      "sha256": "457e6bafac13de83937a154bc330ceb91f0885ca01317e2de44a179e9483f916"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-attempt2-producer.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-attempt2-producer.py": {
+      "bytes": 20543,
+      "sha256": "8f90eec6b0643ff904b75a6a7404f9867064d8232ba57babeeafbb0a4a42eecc"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-creation-cost.json": {
+      "bytes": 720,
+      "sha256": "79e04dee580bed4024a8741d30fb662693eb9912d6ba6fe74cb94f99271e69b6"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-manifest.json": {
+      "bytes": 3067734,
+      "sha256": "e56e2b62b7584a48a0e489d679681b078cbcd545a264b85b0e745c80463b5d15"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-producer.log": {
+      "bytes": 1043,
+      "sha256": "54abd208620032b5d76d7ef4ca177578d64c66536b9dbf8da7fa4d294acc31be"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-producer.py": {
+      "bytes": 20624,
+      "sha256": "7c97ce44a2dcc4f6e79e6316fd5f91f37e079846925fb3569c8e8a91c071911b"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-report.md": {
+      "bytes": 3871,
+      "sha256": "bf2b79c62a806e1e1bebcdc436cf40f9a6007464d5022639fe3979b53bb304ed"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-validation-0.log": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-validation-1.log": {
+      "bytes": 26,
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-validation-2.log": {
+      "bytes": 1120,
+      "sha256": "0bce18e57da87111dffe9dab6183f33d8981d83654e080c528832e6c3a39e6c0"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-validation-cost.json": {
+      "bytes": 2005,
+      "sha256": "847cb031dad2bf4c9de09b56e92daeede1faa51a2941bb128d24f7d26a8668dd"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-verification.json": {
+      "bytes": 1002,
+      "sha256": "b91de7c0623dd7a9b79b97636c38021c64eb9c7b0155ed614e5ce0c3207fb75a"
+    }
+  },
+  "failed_schema_attempt_retained": true,
+  "final_evidence_manifest_save_tail": "unknown",
+  "financial_qualification": "unknown",
+  "generation_source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "known_child_CPU_seconds": 99.120682,
+  "known_creation_and_validation_wall_seconds": 101.1532630820002,
+  "new_checker_source_approval": null,
+  "new_financial_array_decode_RNG_solver_SDE_replay": false,
+  "old_M6_actual_caps_and_unknown_retained": true,
+  "report_and_evidence_inventory_CPU_seconds_before_save": 0.005635436000000001,
+  "report_and_evidence_inventory_wall_seconds_before_save": 0.005634138004097622,
+  "root_preapproved": false,
+  "scope": "terminal_saved_M6_input_closure_only",
+  "terminal_input_manifest_sha256": "e56e2b62b7584a48a0e489d679681b078cbcd545a264b85b0e745c80463b5d15"
+}

@@ -1,0 +1,24 @@
+I001 [*] Import block is un-sorted or un-formatted
+  --> deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py:3:1
+   |
+ 1 |   """Saved grid report source tests; small real paths are not a formal pilot."""
+ 2 |
+ 3 | / import copy
+ 4 | | import dataclasses
+ 5 | | import json
+ 6 | | import gc
+ 7 | | import shutil
+ 8 | | import sys
+ 9 | | import weakref
+10 | | from pathlib import Path
+11 | |
+12 | | import numpy as np
+13 | | import pytest
+   | |_____________^
+14 |
+15 |   RESEARCH = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging"
+   |
+help: Organize imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

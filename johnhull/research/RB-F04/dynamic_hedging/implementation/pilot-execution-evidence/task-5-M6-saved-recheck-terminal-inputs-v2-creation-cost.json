@@ -1,0 +1,38 @@
+{
+  "child_CPU_seconds": 0.103546,
+  "child_kernel_peak_RSS_bytes": 37404672,
+  "commands": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-producer.py"
+      ],
+      "exit_code": 0,
+      "log": "task-5-M6-saved-recheck-terminal-inputs-v2-validation-0.log"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-producer.py"
+      ],
+      "exit_code": 0,
+      "log": "task-5-M6-saved-recheck-terminal-inputs-v2-validation-1.log"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-producer.py"
+      ],
+      "exit_code": 0,
+      "log": "task-5-M6-saved-recheck-terminal-inputs-v2-validation-2.log"
+    }
+  ],
+  "final_cost_receipt_write_tail": "unknown",
+  "new_financial_array_decode_solver_RNG_SDE": false,
+  "parent_CPU_seconds": 0.0013166839999999985,
+  "parent_enclosing_wall_seconds": 0.09777582199603785,
+  "scope": "v2_two_outerinput_authentication_manifest_save_read_launch_ruff_format_logs_only"
+}

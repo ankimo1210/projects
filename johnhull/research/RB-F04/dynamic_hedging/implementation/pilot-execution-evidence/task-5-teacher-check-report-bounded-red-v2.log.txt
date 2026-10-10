@@ -1,0 +1,10 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_bounded_grid_keeps_full_default_and_all_original_checks _________
+deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py:110: in test_bounded_grid_keeps_full_default_and_all_original_checks
+    bounded = checker.check_teacher_grid_record(grid, parameters, None, report_mode="bounded")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: check_teacher_grid_record() got an unexpected keyword argument 'report_mode'
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py::test_bounded_grid_keeps_full_default_and_all_original_checks
+1 failed in 10.27s

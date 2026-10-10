@@ -1,0 +1,135 @@
+{
+  "created_utc": "2026-10-10T05:16:59.947709+00:00",
+  "entries": [
+    {
+      "bytes": 2627,
+      "path": "task-5-teacher-check-report-bounded-author-v1-decision.json",
+      "sha256": "3f36b17159bcdd7cb419e0c2cee0df97037fcedaddf7f161b23b80752034dc4c"
+    },
+    {
+      "bytes": 5929,
+      "path": "task-5-teacher-check-report-bounded-author-v1-report.md",
+      "sha256": "2c7fa08c663f6f10554c05ef6d976246dc1a139464c57a63a3aaa9b0505aa0a7"
+    },
+    {
+      "bytes": 109091,
+      "path": "task-5-teacher-check-report-bounded-author-v1-fixture-manifest.json",
+      "sha256": "250d8113496feb30d56d3ab3e74b3cf75e328014edb4b3f18b22220348c3fbed"
+    },
+    {
+      "bytes": 33985,
+      "path": "task-5-teacher-check-report-bounded-source-closure-v1.json",
+      "sha256": "32b727bc85822d267eee825fb2652b1fff4e25ea3f07d43b27c1de804ef1999d"
+    },
+    {
+      "bytes": 582,
+      "path": "task-5-teacher-check-report-bounded-ast-and-snapshot-v1.json",
+      "sha256": "cd36feacf1b3b105b33b230c91ce2a8ec64d8851dd4a42a12553906cff9ed0b9"
+    },
+    {
+      "bytes": 4721,
+      "path": "task-5-teacher-check-report-bounded-implemented-v1.diff",
+      "sha256": "044ed9a01b755b74f4db323aa31ce9e8845d03f9163688c489b28226ac8e0e1f"
+    },
+    {
+      "bytes": 1491,
+      "path": "task-5-teacher-check-report-bounded-red-v1.log",
+      "sha256": "7fc377607368a13e220503918f44eeb9286b76d98c8cf4a3d2d671d205c0011b"
+    },
+    {
+      "bytes": 344,
+      "path": "task-5-teacher-check-report-bounded-red-v1.json",
+      "sha256": "f64844be578500f9e16b18337d6358228b25b9348c5089cd01bdb425c5657e0d"
+    },
+    {
+      "bytes": 898,
+      "path": "task-5-teacher-check-report-bounded-red-v2.log",
+      "sha256": "b4cefe1375423e32f6dc9a1d3bbf150a2f996d5a049253f43df9e8a2f96c4ed3"
+    },
+    {
+      "bytes": 532,
+      "path": "task-5-teacher-check-report-bounded-red-v2.json",
+      "sha256": "af0088a0d38989332a218ad72c31bc5c23a43c6a48f85db9bb44ce08d95b9b1b"
+    },
+    {
+      "bytes": 720,
+      "path": "task-5-teacher-check-report-bounded-green-attempt-v1.log",
+      "sha256": "cf358ebece91b6a72c019b922cece770c321efc7e386ad2c7b16bb78eb4e23d7"
+    },
+    {
+      "bytes": 441,
+      "path": "task-5-teacher-check-report-bounded-green-attempt-v1.json",
+      "sha256": "59f59560c64f9a68c96c4c0a5b67fd0b914763ed76607bea0380e6232bbc4e7e"
+    },
+    {
+      "bytes": 1760,
+      "path": "task-5-teacher-check-report-bounded-green-v2.log",
+      "sha256": "a1c30f1f2d07a4a02dab31f645b35ef0ff7e3316a42dddad4375ae1062c08403"
+    },
+    {
+      "bytes": 652,
+      "path": "task-5-teacher-check-report-bounded-green-v2.json",
+      "sha256": "6058569d78fa70aaedd5bc6133420553f39ec2e672ac03f51560f51e5bc9a6f2"
+    },
+    {
+      "bytes": 100,
+      "path": "task-5-teacher-check-report-bounded-green-v3.log",
+      "sha256": "e2ab956ec055d534cd3299a16005359e5c00a8d0910e2da9ff20e972f848e6d3"
+    },
+    {
+      "bytes": 652,
+      "path": "task-5-teacher-check-report-bounded-green-v3.json",
+      "sha256": "179fe66b68c577ef84bfaedc63f7249502dccc283e641bd84cd38ac67f34c568"
+    },
+    {
+      "bytes": 5117,
+      "path": "task-5-teacher-check-report-bounded-affected-collection-v1.log",
+      "sha256": "e32ff3bb587f98b86985b4103fc35a6c7fe014ed590857ec2c50f6156663deec"
+    },
+    {
+      "bytes": 116,
+      "path": "task-5-teacher-check-report-bounded-affected-green-v1.log",
+      "sha256": "115e4ed4233dacf4d5c2c4a7e3476f787916caf3d519f5e16a63d9bd21387868"
+    },
+    {
+      "bytes": 521,
+      "path": "task-5-teacher-check-report-bounded-affected-green-v1.json",
+      "sha256": "689f3321058c3cf4b4d89e63a713284e7e9588a13e4474dbe3fae933acc4116c"
+    },
+    {
+      "bytes": 661,
+      "path": "task-5-teacher-check-report-bounded-ruff-v1.log",
+      "sha256": "409afe0436fd9192917c66f44f71c8b50d95306218ae8aceb28e62d79d68dc09"
+    },
+    {
+      "bytes": 19,
+      "path": "task-5-teacher-check-report-bounded-ruff-check-v2.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "bytes": 23,
+      "path": "task-5-teacher-check-report-bounded-ruff-format-v2.log",
+      "sha256": "43affe539ba0ae8b202b306a3294d04f3b7fc062316c1c825399076d966c8f2d"
+    },
+    {
+      "bytes": 202863,
+      "path": "task-5-teacher-check-report-bounded-implementation-before-v1/check_pilot.py",
+      "sha256": "bfd5b81fd8d356c387a8e313b0c0c8a5b538a26166ad4854572913d4f1608184"
+    },
+    {
+      "bytes": 665,
+      "path": "task-5-teacher-check-report-bounded-implementation-before-v1/source-shas.json",
+      "sha256": "724446ac4e05ee48f15c9b28835f10d5349c2b4a01f575921156d3919c101b42"
+    },
+    {
+      "bytes": 13968,
+      "path": "task-5-teacher-check-report-bounded-source-snapshot-v1/snapshot-manifest.json",
+      "sha256": "d39ac64b6925631a5aa479f8798e9ea323d1395b52d427f2d8d85fa13823a325"
+    }
+  ],
+  "execution_source_count": 81,
+  "fixture_manifest": "task-5-teacher-check-report-bounded-author-v1-fixture-manifest.json",
+  "schema": "rb-f04-bounded-grid-check-author-manifest-v1",
+  "scope": "author source-unit evidence only; no formal finance",
+  "source_snapshot_entries": 82
+}

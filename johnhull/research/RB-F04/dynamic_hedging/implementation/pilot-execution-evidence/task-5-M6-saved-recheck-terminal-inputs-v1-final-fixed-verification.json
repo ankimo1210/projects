@@ -1,0 +1,10 @@
+{
+  "CPU_seconds": 0.009327760000000001,
+  "evidence_files_exact": 18,
+  "financial_array_decode_solver_RNG_SDE": false,
+  "financial_qualification": "unknown",
+  "prior_false_candidate_sha_unchanged": true,
+  "terminal_interface_required_keys_verified": true,
+  "this_receipt_write_tail": "unknown",
+  "wall_seconds": 0.009325973995146342
+}

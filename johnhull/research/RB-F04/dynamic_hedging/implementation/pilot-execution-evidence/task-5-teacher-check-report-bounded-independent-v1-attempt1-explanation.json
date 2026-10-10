@@ -1,0 +1,8 @@
+{
+  "original_probe_failure": "counterexample accepted cache_unknown_NaN",
+  "cause": "reviewer mutated an already NaN last cache cell; no actual counterexample was made",
+  "original_last_cell_was_NaN": true,
+  "correction": "mutate a verified finite original cache cell to NaN; preserve original failed script/log/cost",
+  "source_defect": false,
+  "source_or_tests_changed": false
+}

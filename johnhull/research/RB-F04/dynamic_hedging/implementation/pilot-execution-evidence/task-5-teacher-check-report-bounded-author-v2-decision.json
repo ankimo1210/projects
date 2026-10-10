@@ -1,0 +1,66 @@
+{
+  "actual_M6_saved_recheck_executed": false,
+  "actual_execution_source_count": 81,
+  "all_bounded_reports_have_portable_raw_references": true,
+  "author_scoped_source_unit_validation": "PASS",
+  "cacheless_raw_rows_consumed_sequentially": true,
+  "changed_vs_old_m6_source81": [
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+  ],
+  "checker_sha256": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b",
+  "correction_evidence": "task-5-teacher-check-report-bounded-digest-correction-v1.json",
+  "decision": "ready_for_independent_scoped_source_review",
+  "dedicated_test_sha256": "ce679b219491725e82da021c34326d06ca782fcf76f3d3b1285c7400854fde20",
+  "dynamic_imports": [],
+  "earlier_identity_method": "run_reference.payload_digest",
+  "earlier_payload_digest_sha256": "d4a721c67c53a48bbabd7408c52d9ef5a5dfeb1770eaa2f242acaa625bf1c0db",
+  "formal_budget_approved": false,
+  "formal_callers_explicit_bounded": [
+    "teacher_grid",
+    "teacher_domain_selection"
+  ],
+  "formal_finance_approved": false,
+  "formal_pilot_lock": false,
+  "grid_default_report_mode": "full",
+  "independent_source_approval": "pending",
+  "old_M6_generation_raw_cost_failure_receipts_preserved": true,
+  "old_m6_generation_source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "original_all_N_math_thresholds_SDE_labels_blocks_covariances_cache_unchanged": true,
+  "red_evidence": "task-5-teacher-check-report-bounded-red-v2.log",
+  "remaining": [
+    "independent source/transport approval",
+    "root prior budget for saved-only original M6 recheck",
+    "all-original-N65536 single-node resource measurement if needed",
+    "formal pilot/oracle/main budgets and financial gates"
+  ],
+  "retention_test": "weakrefs at each real raw read; prior recomputed sample/cov arrays zero live, prior raw <=2; all dead after return",
+  "runtime_artifact_context_saved": false,
+  "schema": "rb-f04-bounded-grid-check-author-v2",
+  "source_identity_method": "run_reference._digest",
+  "source_identity_sha256": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "source_scope": {
+    "docs_Git_CAS_modified_by_author": false,
+    "edited": [
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+    ]
+  },
+  "source_snapshot": "task-5-teacher-check-report-bounded-source-snapshot-v1",
+  "source_unit_tests": {
+    "affected_existing": {
+      "deselected": 145,
+      "passed": 46,
+      "pytest_seconds": 31.22,
+      "report": "task-5-teacher-check-report-bounded-affected-green-v1.json"
+    },
+    "new": {
+      "passed": 17,
+      "pytest_seconds": 55.71,
+      "report": "task-5-teacher-check-report-bounded-green-v3.json"
+    },
+    "ruff_check_files": 2,
+    "ruff_format_files": 2
+  },
+  "standalone_teacher_AST_unchanged": true,
+  "whole_original_N65536_RSS_proven": false
+}
