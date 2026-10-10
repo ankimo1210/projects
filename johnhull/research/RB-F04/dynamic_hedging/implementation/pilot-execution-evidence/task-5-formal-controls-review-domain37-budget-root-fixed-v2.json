@@ -1,0 +1,60 @@
+{
+  "schema": "rb-f04-current-field-domain-component-prior-budget-v1",
+  "root_preapproved": true,
+  "status": "root_prior_fixed_before_domain_component",
+  "scope": "current_field_original37_domain_PDE_component_only",
+  "formal_finance_approved": false,
+  "original_quote_count": 37,
+  "original_groups": 8,
+  "field_shape": [
+    257,
+    321
+  ],
+  "controls": {
+    "space_nodes": 6401,
+    "time_steps": 3840,
+    "log_half_width": 2.4
+  },
+  "baseline_controls": {
+    "space_nodes": 4801,
+    "time_steps": 3840,
+    "log_half_width": 1.8
+  },
+  "same_dx": 0.00075,
+  "baseline_dx": 0.00075,
+  "rss_limit_bytes": 4294967296,
+  "rss_metric": "process_RSS_not_virtual_address_space",
+  "wall_limit_seconds": 180.0,
+  "probe_source_sha256": "675567c26e8c68e527c9c3bd63ff3a5e092192c46a232ee4b131f4227d13fbf6",
+  "initial_raw_sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+  "initial_metadata_sha256": "5fd345af6e7af52fa7072b5b039b609a9deecc85858b0b2a4f139cc3b84f0b6f",
+  "source_bindings": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py": "7fe16943f2ead6dbe17a17e969930afde863681ed9eb24b9ea8b7b18c4a004d4",
+    "johnhull/hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+  },
+  "budget_basis": {
+    "direct_current_field_baseline_compute_wall_s": 26.585015218006447,
+    "space_count_ratio": 1.3332639033534681,
+    "linear_space_component_estimate_s": 35.44484116027063,
+    "warning": "Scaling estimate only, no domain6401x3840 measurement and no whole-worker runtime claim. 180s is a proposed administrative ceiling."
+  },
+  "planned_coefficient_point_evaluations": 196628472,
+  "planned_financial_work": "Exactly8 native pde_call solves / all37 originalstrikes; current field only; no freshCF/RNG/MC",
+  "not_an_independent_table_width2_25_measurement": true,
+  "original_teacher_or_oracle_grids_unchanged": true,
+  "output_policy": "Each completedgroup immutable; full37 slots preserved includingNaN, allactual solvergrids/receipts saved; cap/failure costs stay unknown",
+  "command_candidate": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-probe-v2.py",
+    "--budget-file",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-budget-root-fixed.json",
+    "--output",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-controls-review-domain37-observation-root-v2"
+  ],
+  "version": "v2_initial_original37_raw_before_any_solver",
+  "prior_fixed_utc": "2026-10-10T03:02:25Z",
+  "mem_available_bytes_before_execution": 48298958848,
+  "root_scope_decision": "original37/current257x321 field/same-dx PDE width component only; teacher_grids/formal_pilot_qualification_not_changed"
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "rb-f04-v56-independent-static-import-decision-v1",
+  "decision": "approve_bounded_static3_import_source_closure_repair",
+  "fixed_source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "a36e691498a92a4e7ee13deb1f7a2f51e25b511e760ca7150fe814a83cb7f5a7",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "0bb854a66ba5aad9174b036b90ed48683d10018930a560a609d5a2b10589e90b"
+  },
+  "scope": "Only3 dynamic import substitutions; v55 prior bounded approval retained. Static phase source checkpoint can use fixedv56/currentmain3 identity; no formal financial plan acceptance.",
+  "AST_equivalent_after_only_3_import_substitutions": true,
+  "run_pilot_byte_unchanged": true,
+  "old_v55_test_helper_definitions_unchanged": 115,
+  "source_files": 80,
+  "dynamic_imports": 0,
+  "manual_static_local_import_checks": 405,
+  "unregistered_local_imports": 0,
+  "fixed_v56_main3_matches": 6,
+  "source_changes_during_static_review": 0,
+  "source_identity_inventory_JSON_sha256": "b04ce2e63dce80eb17e5dae917369e04d661c6dba0d3dc6a08e7178da2610688",
+  "source_identity_locked_bindings_payload_digest": "a99fe94579d0cbd280f8908d1db539f5c7f0b03cd4a42a59896f586f4fe9072c",
+  "independent_metadata_tests_passed": 37,
+  "independent_metadata_tests_deselected": 154,
+  "old_saved_v54_native_Q_cases_reused": 4,
+  "old_source_counterexamples_refused": 105,
+  "actual_no_draw_native_caps": 2,
+  "new_RNG": false,
+  "new_financial_paths": false,
+  "financial_qualification": "unknown",
+  "formal_pilot_approved": false,
+  "formal_main_approved": false,
+  "formal_budget_approved": false,
+  "phase_acceptance_approved": false,
+  "author_191_suite_repeated": false,
+  "source_edits": false,
+  "Git_operations": false,
+  "old_v55_approval_retained": true,
+  "old_failures_retained": true,
+  "measured_child_subprocess_costs": {
+    "static": {
+      "returncode": 1,
+      "wall_start_ns": 26637651048823,
+      "wall_stop_ns": 26640324533538,
+      "wall_seconds": 2.673484715,
+      "new_rng": false,
+      "formal_finance": false
+    },
+    "static-v2": {
+      "returncode": 0,
+      "wall_start_ns": 26681338734759,
+      "wall_stop_ns": 26686892453821,
+      "wall_seconds": 5.553719062,
+      "new_rng": false,
+      "formal_finance": false
+    },
+    "native-saved": {
+      "returncode": 0,
+      "wall_start_ns": 26744576627595,
+      "wall_stop_ns": 26746320597735,
+      "wall_seconds": 1.74397014,
+      "new_rng": false,
+      "formal_finance": false
+    },
+    "tests": {
+      "returncode": 0,
+      "wall_start_ns": 26746321157034,
+      "wall_stop_ns": 26749971376222,
+      "wall_seconds": 3.650219188,
+      "new_rng": false,
+      "formal_finance": false
+    }
+  },
+  "measured_child_wall_sum_seconds": 13.621393105,
+  "unmeasured_reads_preparation_reporting": "unknown"
+}

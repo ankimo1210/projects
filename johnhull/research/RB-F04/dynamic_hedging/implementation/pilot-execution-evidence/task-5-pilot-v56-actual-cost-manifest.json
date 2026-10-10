@@ -1,0 +1,81 @@
+{
+  "schema": "rb-f04-v56-static-import-preparation-cost-manifest-v1",
+  "created_utc": "2026-10-10T03:08:32.121795+00:00",
+  "scope": "Sum of measured disjoint child intervals only; not complete elapsed task/all history cost and not original formal pilot cost",
+  "receipts": [
+    {
+      "receipt": "task-5-formal-pilot-source-closure-v55-main3-cost-v1.json",
+      "sha256": "ae454fb123158480b288b71c94f991898bebbdf33fffec2dab53cbbe0f1792bc",
+      "measured_child_interval_wall_seconds": 2.6010649550007656,
+      "exit_code": 1,
+      "failed_evidence_retained": true
+    },
+    {
+      "receipt": "task-5-formal-pilot-source-closure-v55-main3-v2-cost-v2.json",
+      "sha256": "458ef0ae1cc4c75062039cdbcd1d81e19f2acd47b03996a147adb80c093c622f",
+      "measured_child_interval_wall_seconds": 2.698725459002162,
+      "exit_code": 0,
+      "failed_evidence_retained": false
+    },
+    {
+      "receipt": "task-5-source-closure-red-v56.json",
+      "sha256": "dcad8bec182aa8c3fd75167befd462aae846bd300931de9e054d2c4f09dc92e4",
+      "measured_child_interval_wall_seconds": 3.4116037739986496,
+      "exit_code": 1,
+      "failed_evidence_retained": true
+    },
+    {
+      "receipt": "task-5-source-closure-green-v56.json",
+      "sha256": "e0141f99a3d61cabb72e790675096a2e192817a4b708168c08c4cb4f2fb0e55a",
+      "measured_child_interval_wall_seconds": 3.455903299000056,
+      "exit_code": 0,
+      "failed_evidence_retained": false
+    },
+    {
+      "receipt": "task-5-source-closure-ruff-check-v56.json",
+      "sha256": "5ee775d3167c18be97e89e436c06693a1cc79e4f4ec006a18759121ab59ec229",
+      "measured_child_interval_wall_seconds": 0.019663670002046274,
+      "exit_code": 0,
+      "failed_evidence_retained": false
+    },
+    {
+      "receipt": "task-5-source-closure-ruff-format-check-v56.json",
+      "sha256": "791176f382a09c33ccf86c5de680aa8396b7aad559200a5c9b34d470691daf04",
+      "measured_child_interval_wall_seconds": 0.01801617799719679,
+      "exit_code": 1,
+      "failed_evidence_retained": true
+    },
+    {
+      "receipt": "task-5-source-closure-ruff-format-v56.json",
+      "sha256": "6bcd10e0b71573c6aa5ce567da0741699f06c95abacca96f4a2cbf55dc09cc1b",
+      "measured_child_interval_wall_seconds": 0.018248103999212617,
+      "exit_code": 0,
+      "failed_evidence_retained": false
+    },
+    {
+      "receipt": "task-5-pilot-source-v56-tests.json",
+      "sha256": "cf5a36a130b8b0826c9c956a2ff3c1942204bfb4b3cec0db2143aa330e1aebe7",
+      "measured_child_interval_wall_seconds": 60.772643067997706,
+      "exit_code": 0,
+      "failed_evidence_retained": false
+    },
+    {
+      "receipt": "task-5-pilot-source-v56-ruff-final.json",
+      "sha256": "a34ef8803144b5e512706065baf49322785df973db8fae77dd8aeb474d480fd4",
+      "measured_child_interval_wall_seconds": 0.026197801998932846,
+      "exit_code": null,
+      "failed_evidence_retained": false
+    },
+    {
+      "receipt": "task-5-formal-pilot-source-closure-v56-main3-cost-v3.json",
+      "sha256": "c4c620bdb7fa44f27506e9372befd2b5fdfd32e4ab3046e063c16c56d3d2f52c",
+      "measured_child_interval_wall_seconds": 2.4971511000003375,
+      "exit_code": 0,
+      "failed_evidence_retained": false
+    }
+  ],
+  "sum_measured_child_wall_seconds": 75.51921740899706,
+  "not_measured": "Exploratory reads, source/test/D file editing, AST evidence writes and final report preparation. Parent CPU values are parent only; suite child CPU was not instrumented.",
+  "formal_financial_execution": false,
+  "financial_qualification": "unknown"
+}

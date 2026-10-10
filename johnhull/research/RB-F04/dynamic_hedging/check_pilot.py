@@ -7,6 +7,7 @@ stated numerical boundary. It does not create an independent-review decision.
 
 from __future__ import annotations
 
+import hashlib
 import sys
 from pathlib import Path
 
@@ -120,8 +121,8 @@ def check_teacher_record(record, parameters, surface, *, artifact_context=None):
             and driver["original_n"] == n,
             "original teacher SDE driver changed",
         )
-        full_digest = __import__("hashlib").sha256()
-        slice_digest = __import__("hashlib").sha256()
+        full_digest = hashlib.sha256()
+        slice_digest = hashlib.sha256()
         originals = []
         begin = restart["start_index"]
         for chunk in read_teacher_driver_chunks(driver, artifact_context=artifact_context):
@@ -946,9 +947,10 @@ def check_resolved_job_arguments(row, job, *, inputs, jobs, artifact_directory, 
                 "selected additional-date actual input changed: " + key,
             )
     if "arguments" in raw:
+        from run_pilot import unpack_inputs
+
         _require(
-            input_identity(__import__("run_pilot").unpack_inputs(raw["arguments"]))
-            == input_identity(arguments),
+            input_identity(unpack_inputs(raw["arguments"])) == input_identity(arguments),
             "saved wrapped worker input dependency changed",
         )
     return arguments

@@ -3825,3 +3825,23 @@ def test_native_q_actual_cap_does_not_waive_required_saved_inputs(monkeypatch, m
     del raw["parameters"]
     with pytest.raises(ValueError, match=r"native Q.*input"):
         check_pilot.check_capped_job_raw(row)
+
+
+def test_actual_execution_source_closure_has_no_dynamic_imports(monkeypatch):
+    def forbidden(*args, **kwargs):
+        raise AssertionError("source identity cannot generate financial paths")
+
+    monkeypatch.setattr(np.random, "default_rng", forbidden)
+    root = RESEARCH.parents[3]
+    identity = run_pilot._pilot_source(root)
+    bound = run_pilot._locked_bindings({}, {"input_bindings": {}, "source": identity}, root)
+    assert bound["dynamic_imports"] == []
+    required = {
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_main.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_main.py",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py",
+    }
+    assert required <= bound["files"].keys()
+    assert bound == identity

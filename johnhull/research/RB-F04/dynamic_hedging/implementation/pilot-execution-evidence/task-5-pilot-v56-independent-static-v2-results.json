@@ -1,0 +1,37 @@
+{
+  "schema": "rb-f04-v56-independent-static-source-closure-v1",
+  "fixed_source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "a36e691498a92a4e7ee13deb1f7a2f51e25b511e760ca7150fe814a83cb7f5a7",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "0bb854a66ba5aad9174b036b90ed48683d10018930a560a609d5a2b10589e90b"
+  },
+  "run_source_byte_unchanged": true,
+  "changed_functions": [
+    "check_teacher_record",
+    "check_resolved_job_arguments"
+  ],
+  "AST_equivalent_after_only_3_import_substitutions": true,
+  "old_test_helper_defs_unchanged": 115,
+  "new_regression_only": true,
+  "source_identity_sha256": "a99fe94579d0cbd280f8908d1db539f5c7f0b03cd4a42a59896f586f4fe9072c",
+  "source_files": 80,
+  "dynamic_imports": [],
+  "manual_static_local_import_checks": 405,
+  "unregistered_local_imports": [],
+  "fixed_v56_main3_files": 6,
+  "source_changed_during_review": 0,
+  "old_dynamic3_refused": "unresolved dynamic financial source",
+  "locked_source_tamper_refused": "current transitive source differs from locked pilot source",
+  "graph_jobs": 3138,
+  "graph_operations": 28,
+  "actual_dispatch_supported_operations": 37,
+  "cases": 121,
+  "attempts": 51,
+  "saved_graph_formal_locked": false,
+  "whole_wall_seconds": 3.594158864,
+  "new_RNG": false,
+  "new_financial_workers": false,
+  "financial_qualification": "unknown",
+  "formal_lock_approved": false,
+  "scope": "Only static3 import substitution and current v56/main3 transitive source inventory/draft operation closure; no model/math/runtime budget qualification"
+}

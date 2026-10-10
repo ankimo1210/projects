@@ -1,0 +1,34 @@
+{
+  "scope": "D source closure preparation only; no formal financial approval",
+  "report": {
+    "path": "task-5-formal-pilot-source-closure-v56-main3.md",
+    "sha256": "cdcfe17598abe734d16dfa98b3c7af45386bb947e1c7f0d57763cd54ee14d7ed"
+  },
+  "evidence_files": [
+    {
+      "path": "task-5-pilot-source-snapshot-v56/manifest.json",
+      "sha256": "7ca9235c8279efe67d77d3e2272ee13b1abf648ac3c709e0e8000a0bf8e8b4fc"
+    },
+    {
+      "path": "task-5-pilot-v56-ast-delta.json",
+      "sha256": "841ecd8f14ed5d89f12ef1f58b39772713da93b270894e35d7636dfb535adce4"
+    },
+    {
+      "path": "task-5-pilot-source-interface-v56.json",
+      "sha256": "b3a52a440601769863ce8882e4dda351a18406dfbf99788110a89ef1adaa3a3d"
+    },
+    {
+      "path": "task-5-pilot-v56-actual-cost-manifest.json",
+      "sha256": "2bccbbf1d804eb2b747413ca76c41b795b1ee1e35201ca926be10b472c2a7a85"
+    },
+    {
+      "path": "task-5-formal-pilot-source-closure-v56-main3-inventory.json",
+      "sha256": "6351a8fdd368b8061e19036e62f5eb2587e596fb9fceca9932a0e1bf043eb0c3"
+    },
+    {
+      "path": "task-5-formal-pilot-source-closure-v56-main3-cost-v3.json",
+      "sha256": "c4c620bdb7fa44f27506e9372befd2b5fdfd32e4ab3046e063c16c56d3d2f52c"
+    }
+  ],
+  "financial_qualification": "unknown"
+}

@@ -1,0 +1,29 @@
+{
+  "scope": "source identity regression RED only; no financial worker",
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "-q",
+    "-k",
+    "actual_execution_source_closure"
+  ],
+  "clock": {
+    "start": {
+      "wall": 25859.918160636,
+      "cpu": 0.024939408,
+      "utc": "2026-10-10T03:03:15.135447+00:00"
+    },
+    "stop": {
+      "wall": 25863.32976441,
+      "cpu": 0.025412208,
+      "utc": "2026-10-10T03:03:18.547053+00:00"
+    }
+  },
+  "outer_wall_seconds": 3.4116037739986496,
+  "outer_parent_cpu_seconds": 0.0004727999999999989,
+  "exit_code": 1,
+  "log_sha256": "3e8b8aa5c3f4564431e48aa506f1794f406e6b50c8a73568136d54287ff3bc9c",
+  "financial_qualification": "unknown"
+}

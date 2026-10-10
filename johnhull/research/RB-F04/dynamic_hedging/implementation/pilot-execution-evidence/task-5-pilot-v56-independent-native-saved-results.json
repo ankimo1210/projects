@@ -1,0 +1,616 @@
+{
+  "schema": "rb-f04-v55-independent-native-saved-review-v1",
+  "source_seed_calls": [],
+  "new_rng": false,
+  "new_Q_financial_simulations": false,
+  "existing_v54_source_records": 4,
+  "checks": [
+    {
+      "model": "Heston",
+      "failed": false,
+      "original_n": 32,
+      "path_mask_count": 32,
+      "saved_v54_artifact_reused": true,
+      "locked_native_binding": true,
+      "saved_SDE_replay": true,
+      "independent_cash_formula": true,
+      "financial_qualification": "unknown"
+    },
+    {
+      "model": "Heston",
+      "failed": true,
+      "original_n": 32,
+      "path_mask_count": 31,
+      "saved_v54_artifact_reused": true,
+      "locked_native_binding": true,
+      "saved_SDE_replay": true,
+      "independent_cash_formula": true,
+      "financial_qualification": "unknown"
+    },
+    {
+      "model": "local",
+      "failed": false,
+      "original_n": 32,
+      "path_mask_count": 32,
+      "saved_v54_artifact_reused": true,
+      "locked_native_binding": true,
+      "saved_SDE_replay": true,
+      "independent_cash_formula": true,
+      "financial_qualification": "unknown"
+    },
+    {
+      "model": "local",
+      "failed": true,
+      "original_n": 32,
+      "path_mask_count": 31,
+      "saved_v54_artifact_reused": true,
+      "locked_native_binding": true,
+      "saved_SDE_replay": true,
+      "independent_cash_formula": true,
+      "financial_qualification": "unknown"
+    },
+    {
+      "model": "Heston",
+      "cap_entrypoint": true,
+      "original_n": 32,
+      "draw_count": 0,
+      "actual_rng_initialized": false,
+      "original_unexecuted_mask": 32,
+      "financial_qualification": "unknown",
+      "actual_cap_evidence": {
+        "metric": "wall_seconds",
+        "limit": 1e-12,
+        "consumed": 4.202400305075571e-05
+      }
+    },
+    {
+      "model": "local",
+      "cap_entrypoint": true,
+      "original_n": 32,
+      "draw_count": 0,
+      "actual_rng_initialized": false,
+      "original_unexecuted_mask": 32,
+      "financial_qualification": "unknown",
+      "actual_cap_evidence": {
+        "metric": "wall_seconds",
+        "limit": 1e-12,
+        "consumed": 3.771400224650279e-05
+      }
+    }
+  ],
+  "probes": [
+    {
+      "name": "Heston_wrong_saved_SDE_with_inputs",
+      "outcome": "refused",
+      "reason": "Q saved one-step SDE record.variance: saved value mismatch"
+    },
+    {
+      "name": "Heston_original_F1_remove_parameters_disables_SDE",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_kind",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_model",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_parameters",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_surface",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_initial_spot",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_initial_state",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_original_n",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_seed",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_state_id",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_times",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_spots",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_states",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_quoted_calls",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_call_cache",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_cache_indices",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_chunks",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_path_ids",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_path_mask",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_failure_reasons",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_increments",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_half_increments",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_delta",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_bin_ids",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_bin_edges",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_reference_error",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_rate",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_missing_status",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_null_parameters",
+      "outcome": "refused",
+      "reason": "native Q required parameters input missing or invalid"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_parameters",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: parameters"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_surface",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: surface"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_initial_spot",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: initial_spot"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_initial_state",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: initial_state"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_model",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: model"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_seed",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: seed"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_original_n",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: original_n"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_state_id",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: state_id"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_call_cache",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: call_cache"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_bin_edges",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: bin_edges"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_times",
+      "outcome": "refused",
+      "reason": "Q original date/timeline input: saved value mismatch"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_rate",
+      "outcome": "refused",
+      "reason": "Q original rate input: saved value mismatch"
+    },
+    {
+      "name": "Heston_original_locked_raw_input_changed_chunks",
+      "outcome": "refused",
+      "reason": "Q original chunk_paths input changed"
+    },
+    {
+      "name": "Heston_original_F2_unused_parameter_under_original_worker_hash",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: parameters"
+    },
+    {
+      "name": "Heston_selfconsistent_locked_chunk8_vs_actual7",
+      "outcome": "refused",
+      "reason": "Q original chunk_paths input changed"
+    },
+    {
+      "name": "Heston_capped_Q_missing_kind",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_capped_Q_missing_parameters",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_capped_Q_missing_surface",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_capped_Q_missing_initial_spot",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_capped_Q_missing_initial_state",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_capped_Q_missing_chunks",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "Heston_capped_Q_missing_quoted_calls",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_wrong_saved_SDE_with_inputs",
+      "outcome": "refused",
+      "reason": "Q saved one-step SDE record.variance: saved value mismatch"
+    },
+    {
+      "name": "local_original_F1_remove_parameters_disables_SDE",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_kind",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_model",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_parameters",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_surface",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_initial_spot",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_initial_state",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_original_n",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_seed",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_state_id",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_times",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_spots",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_states",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_quoted_calls",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_call_cache",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_cache_indices",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_chunks",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_path_ids",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_path_mask",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_failure_reasons",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_increments",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_half_increments",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_delta",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_bin_ids",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_bin_edges",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_reference_error",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_rate",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_missing_status",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_null_parameters",
+      "outcome": "refused",
+      "reason": "native Q required parameters input missing or invalid"
+    },
+    {
+      "name": "local_null_local_surface",
+      "outcome": "refused",
+      "reason": "native Q required local field input missing or invalid"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_parameters",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: parameters"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_surface",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: surface"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_initial_spot",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: initial_spot"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_initial_state",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: initial_state"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_model",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: model"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_seed",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: seed"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_original_n",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: original_n"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_state_id",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: state_id"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_call_cache",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: call_cache"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_bin_edges",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: bin_edges"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_times",
+      "outcome": "refused",
+      "reason": "Q original date/timeline input: saved value mismatch"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_rate",
+      "outcome": "refused",
+      "reason": "Q original rate input: saved value mismatch"
+    },
+    {
+      "name": "local_original_locked_raw_input_changed_chunks",
+      "outcome": "refused",
+      "reason": "Q original chunk_paths input changed"
+    },
+    {
+      "name": "local_original_F2_unused_parameter_under_original_worker_hash",
+      "outcome": "refused",
+      "reason": "Q original actual producer input changed: parameters"
+    },
+    {
+      "name": "local_selfconsistent_locked_chunk8_vs_actual7",
+      "outcome": "refused",
+      "reason": "Q original chunk_paths input changed"
+    },
+    {
+      "name": "local_capped_Q_missing_kind",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_capped_Q_missing_parameters",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_capped_Q_missing_surface",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_capped_Q_missing_initial_spot",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_capped_Q_missing_initial_state",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_capped_Q_missing_chunks",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    },
+    {
+      "name": "local_capped_Q_missing_quoted_calls",
+      "outcome": "refused",
+      "reason": "native Q required saved inputs/arrays missing; SDE replay cannot be waived"
+    }
+  ],
+  "refused": 105,
+  "accepted": 0,
+  "whole_wall_seconds": 0.163063741,
+  "formal_pilot": false,
+  "formal_main": false,
+  "formal_lock": false,
+  "financial_qualification": "unknown",
+  "scope": "Original v54 N32 analytic-toy-cache native records reused; saved SDE/cash/input source verification and genuine no-draw native cap only. No original-count financial qualification."
+}

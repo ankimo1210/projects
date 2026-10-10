@@ -1,0 +1,34 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_actual_execution_source_closure_has_no_dynamic_imports __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7bcadafbeb70>
+
+    def test_actual_execution_source_closure_has_no_dynamic_imports(monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("source identity cannot generate financial paths")
+    
+        monkeypatch.setattr(np.random, "default_rng", forbidden)
+        root = RESEARCH.parents[3]
+        identity = run_pilot._pilot_source(root)
+>       bound = run_pilot._locked_bindings(
+            {}, {"input_bindings": {}, "source": identity}, root
+        )
+
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3837: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_pilot.py:3511: in _locked_bindings
+    _require(not source.get("dynamic_imports", []), "unresolved dynamic financial source")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'unresolved dynamic financial source'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: unresolved dynamic financial source
+
+johnhull/research/RB-F04/dynamic_hedging/run_pilot.py:55: ValueError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_actual_execution_source_closure_has_no_dynamic_imports
+1 failed, 190 deselected in 2.62s

@@ -1,0 +1,61 @@
+{
+  "scope": "independent saved37 PDE grid query/error arithmetic only; no fresh solver or financial qualification",
+  "financial_worker_performed": false,
+  "RNG_performed": false,
+  "formal_plan_locked": false,
+  "original37_and_all8_groups_preserved": true,
+  "initial_all37_NaN_artifact_present": true,
+  "group_checks": [
+    {
+      "id": 0,
+      "original_quotes": 5,
+      "saved_query_max_difference": 0.0
+    },
+    {
+      "id": 1,
+      "original_quotes": 5,
+      "saved_query_max_difference": 0.0
+    },
+    {
+      "id": 2,
+      "original_quotes": 5,
+      "saved_query_max_difference": 0.0
+    },
+    {
+      "id": 3,
+      "original_quotes": 5,
+      "saved_query_max_difference": 0.0
+    },
+    {
+      "id": 4,
+      "original_quotes": 5,
+      "saved_query_max_difference": 0.0
+    },
+    {
+      "id": 5,
+      "original_quotes": 4,
+      "saved_query_max_difference": 0.0
+    },
+    {
+      "id": 6,
+      "original_quotes": 4,
+      "saved_query_max_difference": 0.0
+    },
+    {
+      "id": 7,
+      "original_quotes": 4,
+      "saved_query_max_difference": 0.0
+    }
+  ],
+  "max_absolute_price_error": 0.0001041288281053987,
+  "max_same_dx_domain_difference": 2.2382096176443156e-13,
+  "source_before": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+  "source_after": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+  "clock": {
+    "wall_start": 26198.143611591,
+    "wall_stop": 26198.163802527,
+    "cpu_start": 4.253490218,
+    "cpu_stop": 4.273681589
+  },
+  "status": "saved_arithmetic_pass"
+}

@@ -1,0 +1,61 @@
+{
+  "scope": "Ruff3 fixed owned source files; v56 after-format final",
+  "results": [
+    {
+      "kind": "check",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "clock": {
+        "start": {
+          "wall": 26011.797900957,
+          "cpu": 0.023515883,
+          "utc": "2026-10-10T03:05:47.015188+00:00"
+        },
+        "stop": {
+          "wall": 26011.815432687,
+          "cpu": 0.023850199,
+          "utc": "2026-10-10T03:05:47.032718+00:00"
+        }
+      },
+      "outer_wall_seconds": 0.017531729998154333,
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "kind": "format",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "clock": {
+        "start": {
+          "wall": 26011.815466492,
+          "cpu": 0.023881738,
+          "utc": "2026-10-10T03:05:47.032746+00:00"
+        },
+        "stop": {
+          "wall": 26011.824132564,
+          "cpu": 0.024144883,
+          "utc": "2026-10-10T03:05:47.041417+00:00"
+        }
+      },
+      "outer_wall_seconds": 0.008666072000778513,
+      "exit_code": 0,
+      "output": "3 files already formatted\n"
+    }
+  ],
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "a36e691498a92a4e7ee13deb1f7a2f51e25b511e760ca7150fe814a83cb7f5a7",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "0bb854a66ba5aad9174b036b90ed48683d10018930a560a609d5a2b10589e90b"
+  }
+}

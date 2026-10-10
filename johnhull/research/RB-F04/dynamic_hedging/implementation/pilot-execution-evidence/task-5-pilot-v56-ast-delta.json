@@ -1,0 +1,47 @@
+{
+  "schema": "rb-f04-v56-static-import-only-ast-delta-v1",
+  "created_utc": "2026-10-10T03:05:10.167341+00:00",
+  "source_files": [
+    {
+      "source": "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "baseline_sha256": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+      "current_sha256": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+      "existing_top_level_definitions": 72,
+      "changed_definitions": [],
+      "added_definitions": [],
+      "removed_definitions": [],
+      "unchanged_existing_definitions": 72
+    },
+    {
+      "source": "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "baseline_sha256": "14d6f877d8e0e6a9d4f8db0fbe741f7552767b64138952d7572605e9ec3c3486",
+      "current_sha256": "a36e691498a92a4e7ee13deb1f7a2f51e25b511e760ca7150fe814a83cb7f5a7",
+      "existing_top_level_definitions": 70,
+      "changed_definitions": [
+        "check_resolved_job_arguments",
+        "check_teacher_record"
+      ],
+      "added_definitions": [],
+      "removed_definitions": [],
+      "unchanged_existing_definitions": 68
+    },
+    {
+      "source": "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+      "baseline_sha256": "feceea05f0769b7f78140da395637dac0e1282f329d1f1ff101e1fd90eb51dc8",
+      "current_sha256": "0bb854a66ba5aad9174b036b90ed48683d10018930a560a609d5a2b10589e90b",
+      "existing_top_level_definitions": 115,
+      "changed_definitions": [],
+      "added_definitions": [
+        "test_actual_execution_source_closure_has_no_dynamic_imports"
+      ],
+      "removed_definitions": [],
+      "unchanged_existing_definitions": 115
+    }
+  ],
+  "checker_changed_functions_equivalent_after_static_import_substitution": true,
+  "original_v55_test_and_helper_AST_unchanged": true,
+  "financial_logic_change": false,
+  "public_API_change": false,
+  "production_dependencies_added": false,
+  "formal_financial_qualification": "unknown"
+}
