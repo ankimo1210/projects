@@ -1,0 +1,80 @@
+{
+  "all_original_n_required": 1024,
+  "completed": false,
+  "financial_qualification": "unknown",
+  "original_source_directory_unchanged": true,
+  "prior": {
+    "byte_guard": "finite exact six-file original input roster and stream SHA before/after; no hidden additional source paths; new declared page_raw_limit64MiB and protocol expanded bounds retained",
+    "child_address_space_bytes": 68719476736,
+    "child_wall_seconds": 120,
+    "enclosing_wall_seconds": 180,
+    "financial_qualification": "unknown",
+    "full_payload_obligations": {
+      "all_original_status_cost_claims": true,
+      "array_occurrences": 1648,
+      "declared_array_bytes": 121960001,
+      "no_subsampling": true
+    },
+    "individual_rss_bytes": 4294967296,
+    "input_manifest": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-input-manifest-v1.json",
+      "sha256": "90a07773c0b3d1b46ed273124ad1f4b9cfb074cac92bc3d81be2065dbafc5256"
+    },
+    "new_runtime_is_not_original_financial_generation_origin": true,
+    "original_generation_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+    "original_n": 1024,
+    "output_directory": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact",
+    "phase_expenses_are_subsets_not_added_to_inclusive": true,
+    "previous_failed_attempt": {
+      "costs_not_added_to_new_attempt": true,
+      "original_prior_not_rewritten": true,
+      "prior_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-root-authorized-budget-v1.json",
+      "prior_sha256": "0856fd8a9062e317ae756900f0b0352cc839ca1ee988295dabfd8b5e46317960",
+      "reason": "libtorch_cuda.so import mapping failure with AS4GiB before legacy array decode",
+      "result_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v1/child-result.json",
+      "result_sha256": "edbc1c9a7cfd03473f017833bb676776e68e3fd6b8fa2115449d3e7257c7f081"
+    },
+    "root_authorization": "root revised storage-only prior: child individual RSS4GiB observed externally every0.1s; RLIMIT_AS64GiB auxiliary fender; childwall120s/enclosing180s unchanged; one same complete payload retry; real modules/reader without AST extraction",
+    "root_preapproved": true,
+    "rss_poll_seconds": 0.1,
+    "runtime_source_files": [
+      {
+        "bytes": 176874,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "sha256": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5"
+      },
+      {
+        "bytes": 51440,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "sha256": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef"
+      },
+      {
+        "bytes": 33301,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+        "sha256": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd"
+      },
+      {
+        "bytes": 11841,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+        "sha256": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac"
+      },
+      {
+        "bytes": 33619,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+        "sha256": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565"
+      },
+      {
+        "bytes": 17009,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+        "sha256": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+      }
+    ],
+    "scope": "same complete closed N1024 payload storage roundtrip only",
+    "script_sha256": "a54dd6ef476e79ab4cc4a9f03e5a8d60828dff901744eb6a93059e078f09e453",
+    "seed": 57346572,
+    "storage_source_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-codec-v2-decision.json",
+      "sha256": "26aa45f5902e816053decce2aec2364c58161c387fdcc5378d27e8255a906262"
+    }
+  }
+}

@@ -655,6 +655,7 @@ def test_execution_source_includes_both_phase_roots_and_relative_dependency(tmp_
         "check_fresh",
         "run_main",
         "check_main",
+        "_pilot_transport",
     ]:
         monkeypatch.delitem(sys.modules, name, raising=False)
         (base / f"{name}.py").write_text("SCALE = 1\n")
@@ -937,6 +938,7 @@ def test_execution_source_requires_all_saved_phase_checkers(tmp_path, missing):
         "run_reference",
         "check_initial_quotes",
         "check_selected_calls",
+        "_pilot_transport",
     ]:
         if name != missing:
             (base / f"{name}.py").write_text("VALUE = 1\n")
@@ -958,6 +960,7 @@ def test_execution_source_rejects_missing_actual_financial_closure(tmp_path, mon
         "run_reference",
         "check_initial_quotes",
         "check_selected_calls",
+        "_pilot_transport",
     ]:
         (base / f"{name}.py").write_text("VALUE = 1\n")
     (base / "run_main.py").write_text("from deep_hedge_price import _dynamic_hedging_closure\n")

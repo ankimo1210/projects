@@ -1,0 +1,12 @@
+{
+  "returncode": 0,
+  "wall_seconds": 0.008467237996228505,
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/ruff",
+    "format",
+    "--check",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py"
+  ],
+  "financial_generation_performed": false
+}

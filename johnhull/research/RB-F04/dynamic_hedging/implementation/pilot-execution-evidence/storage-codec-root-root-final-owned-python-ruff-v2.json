@@ -1,0 +1,44 @@
+{
+  "schema": "root-scoped-owned-python-style-v2",
+  "results": [
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "johnhull/hullkit/tests/test_dynamic_hedging_transport.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.012328874996455852,
+      "output": "All checks passed!\n"
+    },
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "johnhull/hullkit/tests/test_dynamic_hedging_transport.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.016719500003091525,
+      "output": "10 files already formatted\n"
+    }
+  ]
+}

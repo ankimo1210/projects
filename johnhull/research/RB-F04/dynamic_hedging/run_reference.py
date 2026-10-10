@@ -218,6 +218,7 @@ def execution_source_identity(root=ROOT) -> dict:
         "run_reference",
         "check_initial_quotes",
         "check_selected_calls",
+        "_pilot_transport",
     ]
     for name in required:
         if not (base / f"{name}.py").is_file():

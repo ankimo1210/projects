@@ -1,0 +1,185 @@
+{
+  "schema": "source-scope-fixed-artifact-manifest-v1",
+  "entries": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-author-decision-v1.json",
+      "bytes": 2123,
+      "sha256": "75d6f8a4cbe5c32d61b777323a630c139afc192ccfbccaaec1b37ba6b2df1341"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-cost-v1.json",
+      "bytes": 8770,
+      "sha256": "967b7d1876fae29191b95b5a8221b08d929af4bd0d44a898c310f6bcc5bc08f7"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-format-check-v2.json",
+      "bytes": 337,
+      "sha256": "f1d3be772a6c7bfa98a4d516c00bef0d94b636c3a202f037f87b0b4918fbf4bf"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-format-check-v2.log",
+      "bytes": 26,
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-format-check-v3.json",
+      "bytes": 337,
+      "sha256": "b2f6468f8627054b486dbbc98c1651aea02d85e9d0bf4a23edac81c7ae7820eb"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-format-check-v3.log",
+      "bytes": 26,
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-format-v1.json",
+      "bytes": 913,
+      "sha256": "a0ea7ebb4b6e4c1928984883a229134dd24ee5055933426b9a0edbde56a101ba"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-format-v1.log",
+      "bytes": 42,
+      "sha256": "10869b88a75066aa23546ef1f95fcd4678c3fb92a56ed46ef91688052b67976a"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-green-v1.json",
+      "bytes": 627,
+      "sha256": "5196c007ccd0a864bc91a8f162ae5fee9391b36b671e871184720f5ebbc7b215"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-green-v1.log",
+      "bytes": 99,
+      "sha256": "75f4a064f87bd463b7b54ef3cc264d78cb394817fbf6e4357c8993da19b950a3"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-green-v2.json",
+      "bytes": 627,
+      "sha256": "287e8f6656c1e50bacace1919b990640c2d3606ea3192596b4f82f33b08d901a"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-green-v2.log",
+      "bytes": 99,
+      "sha256": "84ea7d21478bdf1fbf5329ee8112f5f671a8c17932348361f4a97426899b540f"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-green-v3.json",
+      "bytes": 627,
+      "sha256": "b0f1cc8e4c2a684428828976fa938e7df876549cd22ef82d450c274d65996ad8"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-green-v3.log",
+      "bytes": 99,
+      "sha256": "6e03b5e9df83e48958d85dda784f2a48ad43c865839798b783155e0590c614f4"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-red-v1.json",
+      "bytes": 639,
+      "sha256": "797868abbc00941410b80ab1cd36dc0b5f03ce56b8b8b7bee5b6db3234e55be1"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-red-v1.log",
+      "bytes": 12435,
+      "sha256": "b7684362a3f435adea168ad0f989c539c02befc7fbaa1ef6262ba67197dac575"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-red-v2.json",
+      "bytes": 623,
+      "sha256": "1b0e26b66f0a711549b53a2f6e9042782aac2b8a6836251dc2c2f014f0c6718f"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-red-v2.log",
+      "bytes": 1653,
+      "sha256": "73be27ce1d6b67cac48cbf0d65fadf10ff0bc374598d7c6a71da57fe357ab3ec"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-related-metadata-v1.json",
+      "bytes": 658,
+      "sha256": "4ae3a7af24d38d305c9346a3d6ad9eb3a19771db8162a69ccb71a9584ff56c53"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-related-metadata-v1.log",
+      "bytes": 115,
+      "sha256": "003b151876d3e466053b38a70d71ab8bb1ede2ce20f3f4076126e48c69ce843e"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-report-v1.md",
+      "bytes": 1356,
+      "sha256": "0bca126baca08858d45eaf9796da629ce2e0e290a65e4fed541950ef018839ea"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-ruff-v1.json",
+      "bytes": 907,
+      "sha256": "c789265d48d2c0037c78898782b09ff569d12cbbf56f1e9ffd6e650eb0ad1118"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-ruff-v1.log",
+      "bytes": 720,
+      "sha256": "2d3f51ed6c710f8610b26d549e8f3fe860473950b0dfa9784671c37a3f58af48"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-ruff-v2.json",
+      "bytes": 320,
+      "sha256": "dce984fc829e2897eceef7776cea804d90d33157070575cf8e3d10f8ee10d3d3"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-ruff-v2.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-ruff-v3.json",
+      "bytes": 321,
+      "sha256": "ea45d52c51410464e29aab1e7e37e7e5df856a1a8cbf6bdaa79be605495e2ef9"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-ruff-v3.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-source-after-v1.py",
+      "bytes": 215493,
+      "sha256": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-source-before-v1.py",
+      "bytes": 215063,
+      "sha256": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-source-closure-after-v1.json",
+      "bytes": 34372,
+      "sha256": "ed7073d77075622bed9a8738484deae4a29452d9a272dabfd1d1e92737a9f70f"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-source-closure-before-v1.json",
+      "bytes": 34372,
+      "sha256": "621aeca8f0250d8a0b91ebd7ea34aa016cb98fb49ef651b4fdabab62711112c5"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-source-diff-v1.patch",
+      "bytes": 1070,
+      "sha256": "f8ef6d439a717d74e073f9b446f4a51cba0643e52758ddd43f02f54064da8517"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-test-after-v1.py",
+      "bytes": 10453,
+      "sha256": "2d1f468f1185cbf1f3cfbb22895f99185ff440bd75d74a9733d8c4dec029769f"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-test-original-v1.py",
+      "bytes": 10294,
+      "sha256": "5b1fb7bb2c7c056f50d4c2ed3e707e09ed6a30cf6b77f935b50ce65d01167af9"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-risk-argument-binding-test-red-v2.py",
+      "bytes": 10276,
+      "sha256": "cc41d025b9e07700924b728bdc8baebf106578f84de1d4760384cd6d384c444b"
+    }
+  ],
+  "fixed_source_files": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "2f5b3e1e8a9b318521e143bbd24f0a29138e4136f7942e063039686a834ea30e",
+    "deep_hedge_price/tests/test_dynamic_hedging_stage_risk_arguments.py": "2d1f468f1185cbf1f3cfbb22895f99185ff440bd75d74a9733d8c4dec029769f"
+  },
+  "financial_generation_performed": false
+}

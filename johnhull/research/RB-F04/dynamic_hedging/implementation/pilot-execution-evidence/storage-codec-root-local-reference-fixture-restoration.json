@@ -1,0 +1,9 @@
+{
+  "source": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/reference.npz",
+  "destination": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/reference.npz",
+  "bytes": 30535323,
+  "sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+  "verified_against_tracked_manifest": true,
+  "financial_generation": false,
+  "tracked_file_changed": false
+}

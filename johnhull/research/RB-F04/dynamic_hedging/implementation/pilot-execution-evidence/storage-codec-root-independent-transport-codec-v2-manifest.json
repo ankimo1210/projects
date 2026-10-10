@@ -1,0 +1,55 @@
+{
+  "schema": "rb-f04-pilot-transport-independent-manifest-v2",
+  "files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-page-blob-header-RED-v1.md",
+      "bytes": 2804,
+      "sha256": "aae56b75161dbec90947fc619a286056c01c590a03360320604a6ac303217d8c"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-codec-v2-decision.json",
+      "bytes": 2417,
+      "sha256": "26aa45f5902e816053decce2aec2364c58161c387fdcc5378d27e8255a906262"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-codec-v2-review.md",
+      "bytes": 2462,
+      "sha256": "99f790e7b55a0a5f7b58530c3202ba8038df578b8bfd415bc1440063d291b7e0"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-fixed-binding-v2-results.json",
+      "bytes": 2077,
+      "sha256": "27627275d19d0aea113ddb26c12552658661f8b0b86fc4e9f47481f64cb0c2e9"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-scoped-pytest-environment-failure-v1.log",
+      "bytes": 328,
+      "sha256": "335a8518169fb5b0777680c0cea3545d506e5b77c0240443e1bdceeb43a1679f"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-scoped-pytest-v2-results.json",
+      "bytes": 1629,
+      "sha256": "3f18530f3fd869478d381d03dbefc0bebf2ab75e18ecd070371ec46fe68e4e21"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-scoped-pytest-v2.log",
+      "bytes": 1728,
+      "sha256": "85bf0c988a5c43b435fbe259c1a057ac52821267e623f198dca36f03c055db9d"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-small-probe-v2-results.json",
+      "bytes": 1701,
+      "sha256": "10c29fe13dbacafdabdf812945ff5d9f59e95e89015978720608879a96276e14"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-small-probe-v2.py",
+      "bytes": 8853,
+      "sha256": "1e5e93ca964f6ee9bf2155cb6543bae88e65143987d201a1b1a842fe30ac83a3"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-transport-source-scope-v2-results.json",
+      "bytes": 1904,
+      "sha256": "93bb0a6f58220da0e715da57ad3c45144c18fb3015fb7ec1247742513cee72fb"
+    }
+  ]
+}

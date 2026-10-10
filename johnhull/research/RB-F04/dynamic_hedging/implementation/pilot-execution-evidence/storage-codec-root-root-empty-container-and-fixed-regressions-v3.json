@@ -1,0 +1,16 @@
+{
+  "schema": "root-scoped-transport-regression-v3",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py::test_phase_memo_admin_only_arguments_share_proof_and_record_full_sha",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_initial_quote_saved_checker_uses_static_bound_source_and_restores_path"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 10.185369535000063,
+  "scope": "six root integration/storage boundaries and two prior provisional failed boundary cases; not complete finance suite",
+  "prior_v2_wrong_test_selector_exit4_retained": true
+}

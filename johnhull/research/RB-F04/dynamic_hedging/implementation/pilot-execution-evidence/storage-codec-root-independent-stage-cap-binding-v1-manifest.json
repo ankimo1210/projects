@@ -1,0 +1,35 @@
+{
+  "schema": "rb-f04-stage-risk-operational-argument-independent-manifest-v1",
+  "files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-scoped-pytest-v1-results.json",
+      "bytes": 782,
+      "sha256": "1be6cfa70e4ae3f8c26965e2fe0b7eb7673b9b5a8f95a9af00777daf7385eb0d"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-scoped-pytest-v1.log",
+      "bytes": 880,
+      "sha256": "bd2ad399fc0b11a7771ebe6831e765aad13b4df3e556b162b21fd25db79b15a7"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-decision.json",
+      "bytes": 2860,
+      "sha256": "f2fd826e399a08e20e848ac00bfbbb1132433be189779716f66a7e61d1868ea2"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-probe.py",
+      "bytes": 7627,
+      "sha256": "30d44753695a6eb9c5edbdd90c9404c5197d0dfd8ba9f9e58e3e56b193b223db"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-results.json",
+      "bytes": 3777,
+      "sha256": "1b82a8c1483d53d0270c66f9a5b04bb4a066b169b1d8524ea86b1fea7921bbdb"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-review.md",
+      "bytes": 2507,
+      "sha256": "8b4685f12bc7e547804cda4952c07b4abd043fb69fd44c32ee190b09eb910d4d"
+    }
+  ]
+}

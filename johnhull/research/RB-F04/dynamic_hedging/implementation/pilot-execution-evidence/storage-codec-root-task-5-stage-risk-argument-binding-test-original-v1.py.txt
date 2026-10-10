@@ -1,0 +1,264 @@
+"""Stage financial input binding and strict operational caps; no financial generation."""
+
+import copy
+import sys
+from dataclasses import replace
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+RESEARCH = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging"
+sys.path.insert(0, str(RESEARCH))
+import check_pilot as checker  # noqa: E402
+import run_main as main  # noqa: E402
+import run_pilot as pilot  # noqa: E402
+from hullkit._heston_local_surface import HestonParameters  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def no_financial_generation(monkeypatch):
+    def forbidden(*args, **kwargs):
+        raise AssertionError("this structural regression must not generate financial paths")
+
+    monkeypatch.setattr(np.random, "default_rng", forbidden)
+    for name in ("run_teacher_job", "run_market_pair_job", "run_oracle_job"):
+        monkeypatch.setattr(pilot, name, forbidden)
+
+
+def stage_case(monkeypatch, *, explicit_cap=False):
+    """Original-size structural inputs; the financial worker is a recorded stub."""
+    n, cap = 1024, 480.0
+    parameters = HestonParameters(100, 0.03, 0, 0.04, 2, 0.04, 0.3, -0.7)
+    surface = pilot.LocalVarianceGrid(
+        np.array([1e-4, 1.25]),
+        np.array([-4.0, 0.0, 4.0]),
+        np.full((2, 3), 0.04),
+        parameters,
+    )
+    dataset = {
+        "original_n": n,
+        "path_ids": np.arange(n),
+        "prices": np.full((12, n, 3), 100.0),
+        "financial_qualification": "unknown",
+    }
+    caches, rows, declared = {}, {}, {}
+    for model in ("Heston", "local"):
+        call = {"model": model.lower(), "prices": np.array([10.0, np.nan])}
+        asian = {
+            "model": model.lower(),
+            "original_N": n,
+            "thresholds": np.linspace(-1, 1, 65),
+            "blocks": 16,
+            "f": np.full((12, 65), 0.5),
+        }
+        caches[model.lower()] = {"call": call, "asian": asian}
+        ci, ai = "call:" + model, "asian:" + model
+        rows[ci] = {
+            "id": ci,
+            "operation": "call_cache",
+            "raw": {
+                "kind": "call_cache",
+                "value": call,
+                "arguments": pilot.pack_inputs(
+                    {"parameters": parameters, "surface": None if model == "Heston" else surface}
+                ),
+            },
+        }
+        rows[ai] = {
+            "id": ai,
+            "operation": "teacher_grid",
+            "raw": {
+                "kind": "teacher_grid",
+                "model": model,
+                "original_n": n,
+                "grid": "coarse",
+                "cache": asian,
+            },
+        }
+        declared[model] = {"call_job_id": ci, "asian_job_id": ai}
+    planned = {
+        "parameters": parameters,
+        "surface": surface,
+        "dataset": dataset,
+        "caches": caches,
+        "chunk_paths": 256,
+    }
+    actual = planned | {"wall_cap_seconds": cap}
+    risk_value = {
+        "original_n": n,
+        "targets": np.full((12, n), np.nan),
+        "blocks": 16,
+        "financial_qualification": "unknown",
+    }
+    seen = []
+
+    def recorded_worker(**arguments):
+        seen.append(arguments)
+        return {"risk": risk_value, "status": "executed", "reason": None, "cap_evidence": None}
+
+    monkeypatch.setattr(main, "run_risk_job", recorded_worker)
+    raw = pilot._dispatch("quote_risk", actual)
+    assert len(seen) == 1
+    assert seen[0]["wall_cap_seconds"] == pytest.approx(cap)
+    expected = actual if explicit_cap else planned
+    rows["risk"] = {"id": "risk", "operation": "quote_risk", "raw": raw, "arguments": expected}
+    identity = {"id": "structural-cell", "generator": "Heston", "universe": "U1"}
+    pair_arguments = {
+        "base_dataset": dataset,
+        "refined_dataset": dataset,
+        "base_risk": risk_value,
+        "refined_risk": risk_value,
+        "base_risk_source": raw,
+        "refined_risk_source": raw,
+        "identity": identity,
+        "validation": {"status": "unknown", "original_n": n},
+        "fits": [],
+        "refinement_kind": "pnl",
+    }
+    pair = pair_arguments | {
+        "selection_inputs": {k: pair_arguments[k] for k in ("validation", "fits", "identity")},
+        "financial_qualification": "unknown",
+        "expenses": [{"id": "prior-failed-inspection", "status": "failed", "cost": None}],
+    }
+    rows["pair"] = {"id": "pair", "operation": "cell_pair", "raw": pair, "arguments": pair_arguments}
+    stage = {
+        "model": "Heston",
+        "original_n": n,
+        "cache_bindings": {"pnl": {"base": declared, "refined": declared}},
+        "pnl_bindings": {
+            "pnl": [{"job_id": "pair", "base_risk_job_id": "risk", "refined_risk_job_id": "risk"}]
+        },
+    }
+    return parameters, surface, stage, rows, planned, actual
+
+
+def check_stage(case):
+    parameters, surface, stage, rows, _, _ = case
+    return checker.check_teacher_stage_risk_sources(
+        parameters, surface, stage_plan=stage, rows=rows
+    )
+
+
+def test_actual_dispatch_wall_cap_does_not_change_stage_financial_arguments(monkeypatch):
+    case = stage_case(monkeypatch)
+    before = pilot.input_identity(case[2:4])
+    checked = check_stage(case)
+    assert checked["bound_pair_count"] == 1
+    assert checked["financial_qualification"] == "unknown"
+    assert pilot.input_identity(case[2:4]) == before
+    raw = case[3]["risk"]["raw"]
+    assert raw["original_n"] == 1024
+    assert np.isnan(raw["value"]["targets"]).all()
+    assert raw["value"]["blocks"] == 16
+
+
+def test_preexisting_explicit_cap_argument_keeps_full_stage_binding(monkeypatch):
+    assert check_stage(stage_case(monkeypatch, explicit_cap=True))["bound_pair_count"] == 1
+
+
+@pytest.mark.parametrize("key", ["parameters", "surface", "dataset", "caches", "chunk_paths"])
+def test_stage_rejects_changed_original_financial_argument(monkeypatch, key):
+    case = stage_case(monkeypatch, explicit_cap=True)
+    assert check_stage(case)["bound_pair_count"] == 1
+    raw = case[3]["risk"]["raw"]
+    arguments = copy.deepcopy(pilot.unpack_inputs(raw["arguments"]))
+    if key == "parameters":
+        arguments[key] = replace(arguments[key], rate=0.04)
+    elif key == "surface":
+        values = arguments[key].values.copy()
+        values[0, 0] += 0.001
+        arguments[key] = pilot.LocalVarianceGrid(
+            arguments[key].times, arguments[key].z_nodes, values, arguments["parameters"]
+        )
+    elif key == "dataset":
+        arguments[key]["prices"][-1, -1, -1] += 0.01
+    elif key == "caches":
+        arguments[key]["heston"]["asian"]["f"][-1, -1] += 0.01
+    else:
+        arguments[key] += 1
+    raw["arguments"] = pilot.pack_inputs(arguments)
+    with pytest.raises(ValueError, match="stage risk producer actual argument binding changed"):
+        check_stage(case)
+
+
+@pytest.mark.parametrize("side", ["saved_worker", "stage_evidence"])
+def test_extra_financial_key_is_not_dropped_with_operational_cap(monkeypatch, side):
+    case = stage_case(monkeypatch, explicit_cap=True)
+    assert check_stage(case)["bound_pair_count"] == 1
+    risk = case[3]["risk"]
+    if side == "saved_worker":
+        arguments = pilot.unpack_inputs(risk["raw"]["arguments"])
+        arguments["extra_discount_factor"] = 0.99
+        risk["raw"]["arguments"] = pilot.pack_inputs(arguments)
+    else:
+        risk["arguments"] = dict(risk["arguments"], extra_discount_factor=0.99)
+    with pytest.raises(ValueError, match="stage risk producer actual argument binding changed"):
+        check_stage(case)
+
+
+def locked_case(case):
+    _, _, _, rows, planned, actual = case
+    inputs = {k: v for k, v in planned.items() if k != "chunk_paths"}
+    job = {
+        "id": "risk",
+        "operation": "quote_risk",
+        "arguments": {k: {"input": k} for k in inputs} | {"chunk_paths": planned["chunk_paths"]},
+        "prediction": {"path_steps": 0, "expanded_bytes": None},
+        "budget": {"wall_seconds": 480.0, "planned_before_attempt": True, "review_sha256": "unit"},
+        "expense_id": "unit:risk",
+    }
+    plan = {
+        "jobs": [job],
+        "source": {"files": {}},
+        "input_bindings": {k: pilot.input_identity(v) for k, v in inputs.items()},
+    }
+    row = {
+        "id": job["id"],
+        "operation": job["operation"],
+        "status": "executed",
+        "raw": rows["risk"]["raw"],
+        "resolved_arguments_sha256": pilot.input_identity(actual),
+        "plan_sha256": pilot.runner.payload_digest(plan),
+        "source_sha256": pilot.runner.payload_digest(plan["source"]),
+        "input_bindings": plan["input_bindings"],
+        "prediction": copy.deepcopy(job["prediction"]),
+        "budget": copy.deepcopy(job["budget"]),
+        "expense": pilot._expense(job["expense_id"], 1.0, 0.5),
+        "timing_events": {
+            "wall_start_ns": 1_000_000_000,
+            "wall_stop_ns": 2_000_000_000,
+            "cpu_start_ns": 1_000_000_000,
+            "cpu_stop_ns": 1_500_000_000,
+        },
+    }
+    return row, job, plan, inputs
+
+
+@pytest.mark.parametrize("rewrite_resolved_sha", [False, True])
+def test_saved_worker_cap_must_match_original_prior_even_after_stage_binding(
+    monkeypatch, rewrite_resolved_sha
+):
+    case = stage_case(monkeypatch, explicit_cap=True)
+    assert check_stage(case)["financial_qualification"] == "unknown"
+    row, job, _, inputs = locked_case(case)
+    checker.check_resolved_job_arguments(
+        row, job, inputs=inputs, jobs={}, artifact_directory=None
+    )
+    arguments = pilot.unpack_inputs(row["raw"]["arguments"])
+    arguments["wall_cap_seconds"] = 481.0
+    row["raw"]["arguments"] = pilot.pack_inputs(arguments)
+    if rewrite_resolved_sha:
+        row["resolved_arguments_sha256"] = pilot.input_identity(arguments)
+    with pytest.raises(ValueError, match="(saved wrapped worker input|saved resolved original)"):
+        checker.check_resolved_job_arguments(
+            row, job, inputs=inputs, jobs={}, artifact_directory=None
+        )
+
+
+def test_job_envelope_rejects_replaced_prior_cap(monkeypatch):
+    row, job, plan, _ = locked_case(stage_case(monkeypatch, explicit_cap=True))
+    checker.check_job_envelope(row, job, plan)
+    row["budget"]["wall_seconds"] = 481.0
+    with pytest.raises(ValueError, match="job prior prediction/budget mismatch"):
+        checker.check_job_envelope(row, job, plan)

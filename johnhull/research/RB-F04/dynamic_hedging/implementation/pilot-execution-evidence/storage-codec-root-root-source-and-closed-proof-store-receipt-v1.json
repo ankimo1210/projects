@@ -1,0 +1,41 @@
+{
+  "schema": "root-private-source-and-closed-storage-proof-cas-v1",
+  "scope": "10 private Python source/tests and 113 closed source/review/operational proofs only; no financial dataset/40MB benchmark artifact; no semantic financial acceptance",
+  "status": "verified_both_stores",
+  "manifest_ref": "artifact:sha256:830ce805fde12e886f537063dd95676fd681b0a400b4ebde6582faf407c21cd6",
+  "manifest_file": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source-and-closed-proof-store-manifest-v1.json",
+  "backend_sha256": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+  "entries": 123,
+  "unique_blobs_including_manifest": 117,
+  "unique_bytes_including_manifest": 1481751,
+  "stores": [
+    {
+      "role": "primary",
+      "root": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",
+      "free_bytes_before": 108303179776,
+      "free_bytes_after": 108296290304
+    },
+    {
+      "role": "mirror",
+      "root": "/mnt/f/ProjectArtifacts/projects-backup",
+      "free_bytes_before": 182068838400,
+      "free_bytes_after": 182053502976
+    }
+  ],
+  "source_plain_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "source_files": 82,
+  "source_bytes_before_after_verified": true,
+  "financial_workers_or_RNG_calls": 0,
+  "financial_qualification": "unknown",
+  "resource_prior_or_financial_launch_approval": false,
+  "wall_seconds": 30.82161487799749,
+  "process_cpu_seconds": 0.41319243099999997,
+  "peak_RSS_bytes": 21831680,
+  "receipt_final_write_in_observation": false,
+  "prepublication_attempt": {
+    "status": "validation_failed_before_any_blob_write",
+    "reason": "same .py source/.py.txt snapshot bytes received different default MIME; text/plain metadata normalized for Python source; existing backend validation unchanged",
+    "no_financial_or_store_write": true
+  }
+}

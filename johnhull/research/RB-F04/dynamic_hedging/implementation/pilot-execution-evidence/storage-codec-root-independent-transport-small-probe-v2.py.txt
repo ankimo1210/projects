@@ -1,0 +1,165 @@
+"""Independent tiny codec probes; no financial generation or module imports."""
+import ast
+import dataclasses
+import hashlib
+import importlib.util
+import io
+import json
+import math
+import struct
+import sys
+import tempfile
+import time
+import types
+import zipfile
+from pathlib import Path
+
+import numpy as np
+
+W = Path("/home/kazumasa/worktrees/johnhull-storage-codec")
+D = W / ".superpowers/sdd/2026-10-10-dynamic-storage-codec"
+R = W / "johnhull/research/RB-F04/dynamic_hedging"
+SHA = lambda b: hashlib.sha256(b).hexdigest()
+started_wall, started_cpu = time.perf_counter(), time.process_time()
+expected = sys.argv[1]
+actual = SHA((R / "_pilot_transport.py").read_bytes())
+assert actual == expected, (actual, expected)
+spec = importlib.util.spec_from_file_location("independent_transport_v2", R / "_pilot_transport.py")
+codec = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(codec)
+
+def source_definitions(path, names, namespace):
+    tree = ast.parse(path.read_text())
+    chosen = [n for n in tree.body if isinstance(n, (ast.FunctionDef, ast.ClassDef)) and n.name in names]
+    assert set(n.name for n in chosen) == set(names)
+    exec(compile(ast.Module(body=chosen, type_ignores=[]), str(path), "exec"), namespace)
+    return {n.name: ast.dump(n, include_attributes=False) for n in chosen}
+
+runner_ns = {"np": np, "json": json, "hashlib": hashlib, "math": math,
+             "dataclass": dataclasses.dataclass, "__name__": "__independent_boundary__"}
+class_source = W / "johnhull/hullkit/src/hullkit/_heston_local_surface.py"
+class_ast = source_definitions(class_source, ["HestonParameters"], runner_ns)
+ref_ast = source_definitions(R / "run_reference.py",
+                            ["_digest", "_same", "_encode_tree", "_decode_tree", "payload_digest"],
+                            runner_ns)
+runner = types.SimpleNamespace(**runner_ns)
+protocol_ns = {"np": np, "json": json, "hashlib": hashlib, "io": io,
+               "zipfile": zipfile, "Path": Path}
+proto_ast = source_definitions(
+    W / "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+    ["_canonical", "_digest", "write_artifact", "read_artifact"], protocol_ns)
+protocol = types.SimpleNamespace(**protocol_ns)
+checks = []
+with tempfile.TemporaryDirectory(prefix="independent-transport-v2-", dir=D) as temporary:
+    root = Path(temporary)
+    # Physical receipt and manifest are self-consistent. Only the NPY body/header
+    # is malformed; reader spy prevents any giant ndarray allocation.
+    page = root / "malformed" / "metadata-00000000"
+    page.mkdir(parents=True)
+    declared = 1073741824
+    raw_header = ("{'descr': '|u1', 'fortran_order': False, 'shape': (" + str(declared) + ",), }").encode()
+    raw_header += b" " * ((16 - ((10 + len(raw_header) + 1) % 16)) % 16) + b"\n"
+    npy = b"\x93NUMPY\x01\x00" + struct.pack("<H", len(raw_header)) + raw_header
+    container = io.BytesIO()
+    with zipfile.ZipFile(container, "w", compression=zipfile.ZIP_STORED) as archive:
+        archive.writestr("blob.npy", npy)
+    fields = {"schema": codec.PAGE_SCHEMA, "kind": "metadata", "index": 0,
+              "offset": 0, "expanded_length": 1}
+    metadata = protocol._canonical({"schema": "rb-f04-array-chunk-v1", "metadata": fields,
+        "arrays": {"blob": {"dtype": "|u1", "shape": [declared], "nbytes": declared}}})
+    receipt = {"schema": "rb-f04-array-receipt-v1", "metadata_sha256": SHA(metadata),
+               "arrays_sha256": SHA(container.getvalue()), "uncompressed_bytes": len(npy)}
+    receipt["artifact_sha256"] = protocol._digest(receipt)
+    (page / "metadata.json").write_bytes(metadata)
+    (page / "arrays.npz").write_bytes(container.getvalue())
+    (page / "receipt.json").write_bytes(protocol._canonical(receipt))
+    calls = []
+    class Spy:
+        def read_artifact(self, path):
+            calls.append(str(path))
+            raise AssertionError("protocol reached before malformed blob allocation check")
+    ref = {"path": page.name, **fields, "receipt": receipt}
+    try:
+        codec._Pages(page.parent, [ref], "metadata", 1, 256, Spy()).page(0)
+    except ValueError as error:
+        rejection = str(error)
+    else:
+        raise AssertionError("malformed page accepted")
+    assert calls == []
+    checks.append({"name": "original_self_consistent_blob_header_counterexample",
+                   "status": "PASS", "protocol_reader_calls": len(calls),
+                   "actual_big_array_allocation": 0, "NPZ_physical_bytes": len(container.getvalue()),
+                   "NPY_expanded_bytes": len(npy), "declared_nbytes": declared,
+                   "rejection": rejection})
+
+    parameters = runner.HestonParameters(100, .03, 0, .04, 2, .04, .3, -.7)
+    matrix = np.array([[np.nan, -0.0, 2.0], [np.inf, -np.inf, 5.0]], dtype=">f8")
+    shared = {"array": matrix, "list": [None, True, 1, 1.0, -0.0, "未知_日本語"],
+              "status": np.array(["unknown", "failed"])}
+    payload = {"rows": (shared, shared), "parameters": [parameters, parameters],
+               "original_n": 8, "blocks": np.arange(16), "expenses": {"wall": None},
+               "strided": np.arange(24).reshape(4, 6)[:, ::2],
+               "fortran": np.asfortranarray(np.arange(12.).reshape(3, 4)),
+               "zero_dim": np.array(-0.0), "empty": np.empty((0, 2), dtype=">f8")}
+    arrays = {}
+    legacy_tree = runner._encode_tree(payload, arrays)
+    legacy = runner._decode_tree(legacy_tree, arrays, set())
+    saved = root / "normal"
+    write_receipt = codec.write_transport(saved, payload, protocol=protocol, runner=runner,
+                                          page_raw_limit=128)
+    root_metadata, root_arrays, read_receipt = protocol.read_artifact(saved)
+    assert root_arrays == {}
+    recovered, result_receipt = codec.read_transport(saved, root_metadata, read_receipt,
+                                                    protocol=protocol, runner=runner)
+    runner._same(recovered, legacy, "legacy normalized logical payload")
+    assert write_receipt == result_receipt
+    assert runner.payload_digest(recovered) == runner.payload_digest(payload)
+    assert type(recovered["rows"]) is list
+    left, right = recovered["rows"]
+    assert left is not right and left["list"] is not right["list"]
+    assert not np.shares_memory(left["array"], right["array"])
+    assert left["array"].flags.writeable and right["array"].flags.writeable
+    assert left["array"].dtype == matrix.dtype
+    assert recovered["parameters"][0] is not recovered["parameters"][1]
+    assert np.signbit(left["list"][4]) and np.signbit(left["array"][0, 1])
+    left["array"][0, 2] = 77
+    left["list"].append("mutation")
+    assert np.isclose(right["array"][0, 2], 2)
+    assert len(right["list"]) == 6 and np.isclose(matrix[0, 2], 2)
+    checks.append({"name": "legacy_normalization_dtype_shape_NaN_mutation_isolation",
+                   "status": "PASS", "page_raw_limit": 128,
+                   "metadata_pages": sum(p["kind"] == "metadata" for p in root_metadata["pages"]),
+                   "array_pages": sum(p["kind"] == "arrays" for p in root_metadata["pages"]),
+                   "unknown_status_and_cost_kept": True,
+                   "logical_comparison": "native tolerance+equal_nan; digest provenance only"})
+
+    previous = codec.os.replace
+    def failed_publish(*args):
+        raise OSError("independent synthetic publish failure")
+    codec.os.replace = failed_publish
+    destination = root / "failed_publish"
+    try:
+        try:
+            codec.write_transport(destination, {"x": np.arange(3)}, protocol=protocol, runner=runner)
+        except OSError as error:
+            assert "independent synthetic" in str(error)
+        else:
+            raise AssertionError("failed publish accepted")
+    finally:
+        codec.os.replace = previous
+    assert not destination.exists()
+    assert not list(root.glob(".failed_publish-transport-*"))
+    checks.append({"name": "publication_failure_preserves_absent_root", "status": "PASS"})
+
+assert SHA((R / "_pilot_transport.py").read_bytes()) == expected
+result = {"scope": "tiny synthetic transport/value/provenance only", "helper_sha256": expected,
+          "native_financial_generation_RNG_SDE_CAS_Git_changes": 0,
+          "financial_qualification": "unknown", "full_phase_capacity_or_speed_approved": False,
+          "reference_functions_AST_source": {str(R / "run_reference.py"): sorted(ref_ast),
+            str(class_source): sorted(class_ast),
+            "native_protocol": sorted(proto_ast)},
+          "checks": checks, "wall_seconds": time.perf_counter() - started_wall,
+          "cpu_seconds": time.process_time() - started_cpu, "source_stable": True}
+(D / "independent-transport-small-probe-v2-results.json").write_text(
+    json.dumps(result, indent=2, ensure_ascii=False) + "\n")
+print(json.dumps(result, indent=2, ensure_ascii=False))

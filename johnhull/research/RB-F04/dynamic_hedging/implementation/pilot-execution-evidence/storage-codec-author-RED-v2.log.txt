@@ -1,0 +1,878 @@
+FFFFFFFFFFFFFFFFFFFFFFF                                                  [100%]
+=================================== FAILURES ===================================
+___________________ test_empty_payload_has_one_metadata_page ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_empty_payload_has_one_met0')
+
+    def test_empty_payload_has_one_metadata_page(tmp_path):
+>       _, metadata, _, recovered = write_read(tmp_path, {})
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+________________ test_normalization_and_independent_occurrences ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_normalization_and_indepen0')
+
+    def test_normalization_and_independent_occurrences(tmp_path):
+        parameters = runner.HestonParameters(100, 0.03, 0, 0.04, 2, 0.04, 0.3, -0.7)
+        array = np.arange(12.0).reshape(3, 4)
+        shared = {"array": array, "nested": [1, 1.0, True, -0.0, np.float64(2)]}
+        payload = {
+            "a": shared,
+            "b": shared,
+            "parameters": (parameters, parameters),
+            "nonfinite": [np.nan, np.inf, -np.inf],
+            "status": "unknown",
+            "cost": {"seconds": 1.2},
+            "fits": [{"id": i, "status": "failed"} for i in range(12)],
+            "blocks": np.arange(16),
+        }
+>       _, _, _, recovered = write_read(tmp_path, payload)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________________ test_npy_types_and_layout[array0] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_npy_types_and_layout_arra0')
+array = array(3.5)
+
+    @pytest.mark.parametrize(
+        "array",
+        [
+            np.array(3.5),
+            np.empty((0, 2), dtype=">f8"),
+            np.array([1, np.nan, np.inf, -0.0], dtype=">f8"),
+            np.arange(24).reshape(4, 6)[:, ::2],
+            np.asfortranarray(np.arange(12.0).reshape(3, 4)),
+            np.array([(1, 2.5), (3, -0.0)], dtype=[("a", ">i4"), ("b", "<f8")]),
+            np.array([(1,)], dtype=[("\u91d1", "<i4")]),
+        ],
+    )
+    def test_npy_types_and_layout(tmp_path, array):
+>       _, _, _, recovered = write_read(tmp_path, {"x": array, "y": array})
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________________ test_npy_types_and_layout[array1] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_npy_types_and_layout_arra1')
+array = array([], shape=(0, 2), dtype='>f8')
+
+    @pytest.mark.parametrize(
+        "array",
+        [
+            np.array(3.5),
+            np.empty((0, 2), dtype=">f8"),
+            np.array([1, np.nan, np.inf, -0.0], dtype=">f8"),
+            np.arange(24).reshape(4, 6)[:, ::2],
+            np.asfortranarray(np.arange(12.0).reshape(3, 4)),
+            np.array([(1, 2.5), (3, -0.0)], dtype=[("a", ">i4"), ("b", "<f8")]),
+            np.array([(1,)], dtype=[("\u91d1", "<i4")]),
+        ],
+    )
+    def test_npy_types_and_layout(tmp_path, array):
+>       _, _, _, recovered = write_read(tmp_path, {"x": array, "y": array})
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________________ test_npy_types_and_layout[array2] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_npy_types_and_layout_arra2')
+array = array([ 1., nan, inf, -0.], dtype='>f8')
+
+    @pytest.mark.parametrize(
+        "array",
+        [
+            np.array(3.5),
+            np.empty((0, 2), dtype=">f8"),
+            np.array([1, np.nan, np.inf, -0.0], dtype=">f8"),
+            np.arange(24).reshape(4, 6)[:, ::2],
+            np.asfortranarray(np.arange(12.0).reshape(3, 4)),
+            np.array([(1, 2.5), (3, -0.0)], dtype=[("a", ">i4"), ("b", "<f8")]),
+            np.array([(1,)], dtype=[("\u91d1", "<i4")]),
+        ],
+    )
+    def test_npy_types_and_layout(tmp_path, array):
+>       _, _, _, recovered = write_read(tmp_path, {"x": array, "y": array})
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________________ test_npy_types_and_layout[array3] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_npy_types_and_layout_arra3')
+array = array([[ 0,  2,  4],
+       [ 6,  8, 10],
+       [12, 14, 16],
+       [18, 20, 22]])
+
+    @pytest.mark.parametrize(
+        "array",
+        [
+            np.array(3.5),
+            np.empty((0, 2), dtype=">f8"),
+            np.array([1, np.nan, np.inf, -0.0], dtype=">f8"),
+            np.arange(24).reshape(4, 6)[:, ::2],
+            np.asfortranarray(np.arange(12.0).reshape(3, 4)),
+            np.array([(1, 2.5), (3, -0.0)], dtype=[("a", ">i4"), ("b", "<f8")]),
+            np.array([(1,)], dtype=[("\u91d1", "<i4")]),
+        ],
+    )
+    def test_npy_types_and_layout(tmp_path, array):
+>       _, _, _, recovered = write_read(tmp_path, {"x": array, "y": array})
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________________ test_npy_types_and_layout[array4] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_npy_types_and_layout_arra4')
+array = array([[ 0.,  1.,  2.,  3.],
+       [ 4.,  5.,  6.,  7.],
+       [ 8.,  9., 10., 11.]])
+
+    @pytest.mark.parametrize(
+        "array",
+        [
+            np.array(3.5),
+            np.empty((0, 2), dtype=">f8"),
+            np.array([1, np.nan, np.inf, -0.0], dtype=">f8"),
+            np.arange(24).reshape(4, 6)[:, ::2],
+            np.asfortranarray(np.arange(12.0).reshape(3, 4)),
+            np.array([(1, 2.5), (3, -0.0)], dtype=[("a", ">i4"), ("b", "<f8")]),
+            np.array([(1,)], dtype=[("\u91d1", "<i4")]),
+        ],
+    )
+    def test_npy_types_and_layout(tmp_path, array):
+>       _, _, _, recovered = write_read(tmp_path, {"x": array, "y": array})
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________________ test_npy_types_and_layout[array5] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_npy_types_and_layout_arra5')
+array = array([(1,  2.5), (3, -0. )], dtype=[('a', '>i4'), ('b', '<f8')])
+
+    @pytest.mark.parametrize(
+        "array",
+        [
+            np.array(3.5),
+            np.empty((0, 2), dtype=">f8"),
+            np.array([1, np.nan, np.inf, -0.0], dtype=">f8"),
+            np.arange(24).reshape(4, 6)[:, ::2],
+            np.asfortranarray(np.arange(12.0).reshape(3, 4)),
+            np.array([(1, 2.5), (3, -0.0)], dtype=[("a", ">i4"), ("b", "<f8")]),
+            np.array([(1,)], dtype=[("\u91d1", "<i4")]),
+        ],
+    )
+    def test_npy_types_and_layout(tmp_path, array):
+>       _, _, _, recovered = write_read(tmp_path, {"x": array, "y": array})
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________________ test_npy_types_and_layout[array6] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_npy_types_and_layout_arra6')
+array = array([(1,)], dtype=[('金', '<i4')])
+
+    @pytest.mark.parametrize(
+        "array",
+        [
+            np.array(3.5),
+            np.empty((0, 2), dtype=">f8"),
+            np.array([1, np.nan, np.inf, -0.0], dtype=">f8"),
+            np.arange(24).reshape(4, 6)[:, ::2],
+            np.asfortranarray(np.arange(12.0).reshape(3, 4)),
+            np.array([(1, 2.5), (3, -0.0)], dtype=[("a", ">i4"), ("b", "<f8")]),
+            np.array([(1,)], dtype=[("\u91d1", "<i4")]),
+        ],
+    )
+    def test_npy_types_and_layout(tmp_path, array):
+>       _, _, _, recovered = write_read(tmp_path, {"x": array, "y": array})
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____________ test_same_bytes_different_type_and_shape_not_interned _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_same_bytes_different_type0')
+
+    def test_same_bytes_different_type_and_shape_not_interned(tmp_path):
+        payload = {
+            "int": np.array([1065353216], dtype=np.int32),
+            "float": np.array([1.0], dtype=np.float32),
+            "matrix": np.array([[1.0]], dtype=np.float32),
+            "structured1": np.array([(1,)], dtype=[("one", "i4")]),
+            "structured2": np.array([(1,)], dtype=[("two", "i4")]),
+        }
+>       _, metadata, _, recovered = write_read(tmp_path, payload)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+________________ test_pages_cross_array_and_metadata_boundaries ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_pages_cross_array_and_met0')
+
+    def test_pages_cross_array_and_metadata_boundaries(tmp_path):
+        payload = [{"value": np.arange(257.0), "long": "a" * 401} for _ in range(17)]
+>       path, metadata, _, recovered = write_read(tmp_path, payload, 128)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+________ test_root_page_roster_rejects_self_consistent_tamper[missing] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_root_page_roster_rejects_0')
+change = 'missing'
+
+    @pytest.mark.parametrize("change", ["missing", "extra", "reordered", "gap", "unsafe"])
+    def test_root_page_roster_rejects_self_consistent_tamper(tmp_path, change):
+>       path, metadata, _, _ = write_read(tmp_path, np.arange(80), 128)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_root_page_roster_rejects_self_consistent_tamper[extra] __________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_root_page_roster_rejects_1')
+change = 'extra'
+
+    @pytest.mark.parametrize("change", ["missing", "extra", "reordered", "gap", "unsafe"])
+    def test_root_page_roster_rejects_self_consistent_tamper(tmp_path, change):
+>       path, metadata, _, _ = write_read(tmp_path, np.arange(80), 128)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_______ test_root_page_roster_rejects_self_consistent_tamper[reordered] ________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_root_page_roster_rejects_2')
+change = 'reordered'
+
+    @pytest.mark.parametrize("change", ["missing", "extra", "reordered", "gap", "unsafe"])
+    def test_root_page_roster_rejects_self_consistent_tamper(tmp_path, change):
+>       path, metadata, _, _ = write_read(tmp_path, np.arange(80), 128)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_root_page_roster_rejects_self_consistent_tamper[gap] ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_root_page_roster_rejects_3')
+change = 'gap'
+
+    @pytest.mark.parametrize("change", ["missing", "extra", "reordered", "gap", "unsafe"])
+    def test_root_page_roster_rejects_self_consistent_tamper(tmp_path, change):
+>       path, metadata, _, _ = write_read(tmp_path, np.arange(80), 128)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_root_page_roster_rejects_self_consistent_tamper[unsafe] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_root_page_roster_rejects_4')
+change = 'unsafe'
+
+    @pytest.mark.parametrize("change", ["missing", "extra", "reordered", "gap", "unsafe"])
+    def test_root_page_roster_rejects_self_consistent_tamper(tmp_path, change):
+>       path, metadata, _, _ = write_read(tmp_path, np.arange(80), 128)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______ test_bounded_page_decoder_rejects_self_consistent_tamper[overrun] _______
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_bounded_page_decoder_reje0')
+change = 'overrun'
+
+    @pytest.mark.parametrize("change", ["overrun", "trailing", "short", "header"])
+    def test_bounded_page_decoder_rejects_self_consistent_tamper(tmp_path, change):
+>       path, metadata, _, _ = write_read(tmp_path, np.arange(80), 128)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______ test_bounded_page_decoder_rejects_self_consistent_tamper[trailing] ______
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_bounded_page_decoder_reje1')
+change = 'trailing'
+
+    @pytest.mark.parametrize("change", ["overrun", "trailing", "short", "header"])
+    def test_bounded_page_decoder_rejects_self_consistent_tamper(tmp_path, change):
+>       path, metadata, _, _ = write_read(tmp_path, np.arange(80), 128)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_______ test_bounded_page_decoder_rejects_self_consistent_tamper[short] ________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_bounded_page_decoder_reje2')
+change = 'short'
+
+    @pytest.mark.parametrize("change", ["overrun", "trailing", "short", "header"])
+    def test_bounded_page_decoder_rejects_self_consistent_tamper(tmp_path, change):
+>       path, metadata, _, _ = write_read(tmp_path, np.arange(80), 128)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_______ test_bounded_page_decoder_rejects_self_consistent_tamper[header] _______
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_bounded_page_decoder_reje3')
+change = 'header'
+
+    @pytest.mark.parametrize("change", ["overrun", "trailing", "short", "header"])
+    def test_bounded_page_decoder_rejects_self_consistent_tamper(tmp_path, change):
+>       path, metadata, _, _ = write_read(tmp_path, np.arange(80), 128)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_root_supplied_metadata_and_receipt_are_authenticated ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_root_supplied_metadata_an0')
+
+    def test_root_supplied_metadata_and_receipt_are_authenticated(tmp_path):
+>       path, metadata, receipt, _ = write_read(tmp_path, {"value": 1})
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____________ test_rejects_cycles_objects_symlinks_and_existing_root ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_rejects_cycles_objects_sy0')
+
+    def test_rejects_cycles_objects_symlinks_and_existing_root(tmp_path):
+        circular = []
+        circular.append(circular)
+        for index, payload in enumerate((circular, np.array([object()], dtype=object))):
+            with pytest.raises(ValueError):
+>               codec().write_transport(
+                ^^^^^^^
+                    tmp_path / str(index), payload, protocol=protocol, runner=runner
+                )
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+________________________ test_read_rejects_page_symlink ________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3928/test_read_rejects_page_symlink0')
+
+    def test_read_rejects_page_symlink(tmp_path):
+>       path, metadata, receipt, _ = write_read(tmp_path, np.arange(3))
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:227: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:27: in write_read
+    receipt = codec().write_transport(
+              ^^^^^^^
+johnhull/hullkit/tests/test_dynamic_hedging_transport.py:22: in codec
+    return importlib.import_module("_pilot_transport")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = '_pilot_transport', import_ = <function _gcd_import at 0x7d984fd4c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named '_pilot_transport'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_empty_payload_has_one_metadata_page
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_normalization_and_independent_occurrences
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_npy_types_and_layout[array0]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_npy_types_and_layout[array1]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_npy_types_and_layout[array2]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_npy_types_and_layout[array3]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_npy_types_and_layout[array4]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_npy_types_and_layout[array5]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_npy_types_and_layout[array6]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_same_bytes_different_type_and_shape_not_interned
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_pages_cross_array_and_metadata_boundaries
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_root_page_roster_rejects_self_consistent_tamper[missing]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_root_page_roster_rejects_self_consistent_tamper[extra]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_root_page_roster_rejects_self_consistent_tamper[reordered]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_root_page_roster_rejects_self_consistent_tamper[gap]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_root_page_roster_rejects_self_consistent_tamper[unsafe]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_bounded_page_decoder_rejects_self_consistent_tamper[overrun]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_bounded_page_decoder_rejects_self_consistent_tamper[trailing]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_bounded_page_decoder_rejects_self_consistent_tamper[short]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_bounded_page_decoder_rejects_self_consistent_tamper[header]
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_root_supplied_metadata_and_receipt_are_authenticated
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_rejects_cycles_objects_symlinks_and_existing_root
+FAILED johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_read_rejects_page_symlink
+23 failed in 1.76s

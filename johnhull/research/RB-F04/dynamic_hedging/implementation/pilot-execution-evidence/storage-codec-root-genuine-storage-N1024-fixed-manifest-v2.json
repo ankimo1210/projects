@@ -1,0 +1,221 @@
+{
+  "completed_storage_roundtrip": true,
+  "enclosing_expense": {
+    "child_address_space_fender_bytes": 68719476736,
+    "child_exitcode": 0,
+    "child_final_checkpoint_present": true,
+    "child_peak_rss_bytes": 986394624,
+    "cpu_seconds": 3.020272,
+    "final_receipt_write_cost_not_in_preceding_clock": true,
+    "financial_qualification": "unknown",
+    "individual_rss_limit_bytes": 4294967296,
+    "parent_peak_rss_bytes": 20234240,
+    "phase_expenses_are_subsets_not_added_to_inclusive": true,
+    "rss_and_address_space_are_distinct": true,
+    "status": "completed_storage_roundtrip_finance_unknown",
+    "stop_reason": null,
+    "wall_seconds": 3.0648565599985886
+  },
+  "files": [
+    {
+      "bytes": 2593,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-fixed-report-v2.md",
+      "sha256": "838224b19f677bfa2feedb228d9bad43eaf48e75ef5a4c1d8f0ec59dec9cbe0f"
+    },
+    {
+      "bytes": 3592,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-input-manifest-v1.json",
+      "sha256": "90a07773c0b3d1b46ed273124ad1f4b9cfb074cac92bc3d81be2065dbafc5256"
+    },
+    {
+      "bytes": 397,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-measurement-v1.log",
+      "sha256": "9a047a1dc1a462821a7895595c28f701f450cffd760c0e364d40f9981b25da74"
+    },
+    {
+      "bytes": 14627,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-measurement-v1.py",
+      "sha256": "caa33d0ddefbe3e2c05c10d5ae398f127d8e97c629d91cee8cc1674eb470f343"
+    },
+    {
+      "bytes": 2784,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-measurement-v2.log",
+      "sha256": "f1655859a094a38d2edc5c0786f92f0191fd5b8d93c6909986cb81f90c4d5a2c"
+    },
+    {
+      "bytes": 16179,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-measurement-v2.py",
+      "sha256": "a54dd6ef476e79ab4cc4a9f03e5a8d60828dff901744eb6a93059e078f09e453"
+    },
+    {
+      "bytes": 3793,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v1/child-result.json",
+      "sha256": "edbc1c9a7cfd03473f017833bb676776e68e3fd6b8fa2115449d3e7257c7f081"
+    },
+    {
+      "bytes": 419,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v1/enclosing-cost-and-status.json",
+      "sha256": "49208b626262760d8bc7597587ad5df6a3f8745510d5a8b19758265863e7305c"
+    },
+    {
+      "bytes": 3612,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v1/initial.json",
+      "sha256": "1dd5f9a1b73824ec5b7279893e8f0a428f909e2fa47b62984691613726b08b78"
+    },
+    {
+      "bytes": 2011,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v1/progress.json",
+      "sha256": "92b00160ea00268f62ef797a56d721e77be1d884c96dc0d5872784d6f0df0070"
+    },
+    {
+      "bytes": 7595,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/child-result.json",
+      "sha256": "3b17d7ed3c60ab92efffa3e3c040f6e1c1bb2a9c77153baa64c4e77b44502522"
+    },
+    {
+      "bytes": 3502,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/enclosing-cost-and-status.json",
+      "sha256": "3b539693cb24d0df2f6989388df067f7a324c732ed7268bf048ad47c7bc19b2d"
+    },
+    {
+      "bytes": 4556,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/initial.json",
+      "sha256": "ab89594411b747d5da83b1ccec007c7a7396dfacfbb400d3e38a92b46dad8e01"
+    },
+    {
+      "bytes": 224,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/arrays-00000000/metadata.json",
+      "sha256": "2020e68fbbc320b0e7df2618989d835647055a175b5db079b6005851e57938b1"
+    },
+    {
+      "bytes": 319,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/arrays-00000000/receipt.json",
+      "sha256": "801d72e547423ab06615edfe73051757d072b2c4f9f11ddde26a3c07a7a558d8"
+    },
+    {
+      "bytes": 218,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata-00000000/metadata.json",
+      "sha256": "1cd5b76c734ce6a11ada0ef5c03222ce0a1b747777c6ab1ac2dafd06aece47d0"
+    },
+    {
+      "bytes": 316,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata-00000000/receipt.json",
+      "sha256": "b9fc416bb8eac199eb4bd622fe1654c7338502dd0d0b490c7577b194d945f979"
+    },
+    {
+      "bytes": 1239,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata.json",
+      "sha256": "f9c1df28430a78798726eb2832f80bb7af8037245a4f14e93909c1a6f266d390"
+    },
+    {
+      "bytes": 312,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/receipt.json",
+      "sha256": "a277da4c595f7ba2caa92aaf193ed2dada6b3ac110d53f339c5738de3aa6bbbf"
+    },
+    {
+      "bytes": 3696,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/progress.json",
+      "sha256": "ee54dcc81c409e1d452deb93ef8ba93e33af873d2c12525416b406eeb3bed2d5"
+    },
+    {
+      "bytes": 1198,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-premeasurement-v1.md",
+      "sha256": "71335fd80440d110b3eb7e5c79fbd9e71d7ef3bf8e95171d07a137a0022b2b60"
+    },
+    {
+      "bytes": 3329,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-root-authorized-budget-v1.json",
+      "sha256": "0856fd8a9062e317ae756900f0b0352cc839ca1ee988295dabfd8b5e46317960"
+    },
+    {
+      "bytes": 4251,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-root-authorized-budget-v2.json",
+      "sha256": "78920098b17eb14ffe012b2144ed6085f2be12e0a499b4f7a2eca2b728241ec5"
+    }
+  ],
+  "financial_qualification": "unknown",
+  "input_manifest_sha256": "90a07773c0b3d1b46ed273124ad1f4b9cfb074cac92bc3d81be2065dbafc5256",
+  "new_physical_artifact_files": [
+    {
+      "bytes": 40186151,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/arrays-00000000/arrays.npz",
+      "sha256": "9949cf4529ac0b4c4f122d2ead950221e4ad2efe5d31f3092a24c39c5f783d64"
+    },
+    {
+      "bytes": 224,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/arrays-00000000/metadata.json",
+      "sha256": "2020e68fbbc320b0e7df2618989d835647055a175b5db079b6005851e57938b1"
+    },
+    {
+      "bytes": 319,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/arrays-00000000/receipt.json",
+      "sha256": "801d72e547423ab06615edfe73051757d072b2c4f9f11ddde26a3c07a7a558d8"
+    },
+    {
+      "bytes": 22,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "bytes": 36989,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata-00000000/arrays.npz",
+      "sha256": "38d9eca48f8e5bba449790fc572a8a845643c46d5f9b720999c14dae6fd39f16"
+    },
+    {
+      "bytes": 218,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata-00000000/metadata.json",
+      "sha256": "1cd5b76c734ce6a11ada0ef5c03222ce0a1b747777c6ab1ac2dafd06aece47d0"
+    },
+    {
+      "bytes": 316,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata-00000000/receipt.json",
+      "sha256": "b9fc416bb8eac199eb4bd622fe1654c7338502dd0d0b490c7577b194d945f979"
+    },
+    {
+      "bytes": 1239,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/metadata.json",
+      "sha256": "f9c1df28430a78798726eb2832f80bb7af8037245a4f14e93909c1a6f266d390"
+    },
+    {
+      "bytes": 312,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/genuine-storage-N1024-observation-v2/new-artifact/receipt.json",
+      "sha256": "a277da4c595f7ba2caa92aaf193ed2dada6b3ac110d53f339c5738de3aa6bbbf"
+    }
+  ],
+  "no_whole_phase_performance_claim": true,
+  "original_generation_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "original_status_costs_unknown_retained": true,
+  "runtime_source_files": [
+    {
+      "bytes": 176874,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "sha256": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5"
+    },
+    {
+      "bytes": 51440,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "sha256": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef"
+    },
+    {
+      "bytes": 33301,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+      "sha256": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd"
+    },
+    {
+      "bytes": 11841,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+      "sha256": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac"
+    },
+    {
+      "bytes": 33619,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "sha256": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565"
+    },
+    {
+      "bytes": 17009,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+      "sha256": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+    }
+  ],
+  "scope": "same original N1024 storage observation only"
+}

@@ -1,0 +1,171 @@
+--- v1/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py
++++ v2/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py
+@@ -334,6 +334,41 @@
+     return result
+ 
+ 
++def _validate_blob_npy_header(archive, member, bound):
++    """Bound the wrapper allocation before the existing protocol reader."""
++    try:
++        with archive.open(member) as stream:
++            version = np.lib.format.read_magic(stream)
++            if version == (1, 0):
++                size_bytes, encoding = 2, "latin1"
++            elif version in ((2, 0), (3, 0)):
++                size_bytes, encoding = 4, "utf8" if version == (3, 0) else "latin1"
++            else:
++                raise ValueError("unsupported page blob NPY version")
++            data = stream.read(size_bytes)
++            if len(data) != size_bytes:
++                raise ValueError("incomplete page blob NPY header")
++            header_size = struct.unpack("<H" if size_bytes == 2 else "<I", data)[0]
++            if header_size > bound or header_size > member.file_size - stream.tell():
++                raise ValueError("oversized page blob NPY header")
++            header = ast.literal_eval(stream.read(header_size).decode(encoding).strip())
++            if not isinstance(header, dict) or set(header) != {"descr", "fortran_order", "shape"}:
++                raise ValueError("invalid page blob NPY header")
++            shape = header["shape"]
++            if (
++                np.lib.format.descr_to_dtype(header["descr"]) != np.dtype("u1")
++                or header["fortran_order"] is not False
++                or not isinstance(shape, tuple)
++                or len(shape) != 1
++            ):
++                raise ValueError("invalid page blob NPY dtype/shape/order")
++            nbytes = _integer(shape[0], "page blob NPY dimension")
++            if nbytes > bound or stream.tell() + nbytes != member.file_size:
++                raise ValueError("page blob NPY body size/allocation mismatch")
++    except (EOFError, TypeError, SyntaxError, UnicodeError, OverflowError, RecursionError) as exc:
++        raise ValueError("invalid page blob NPY header") from exc
++
++
+ class _Pages:
+     def __init__(self, directory, refs, kind, total, limit, protocol):
+         self.directory, self.kind, self.total = directory, kind, total
+@@ -390,6 +425,7 @@
+                     or members[0].file_size > bound
+                 ):
+                     raise ValueError("oversized/noncanonical page NPY container")
++                _validate_blob_npy_header(archive, members[0], bound)
+         except zipfile.BadZipFile as exc:
+             raise ValueError("invalid page NPY container") from exc
+         metadata, arrays, receipt = self.protocol.read_artifact(path)
+@@ -706,8 +742,8 @@
+         raise ValueError("unknown typed node")
+ 
+ 
+-def read_transport(directory, root_metadata, root_receipt, *, protocol, runner):
+-    """Authenticate all pages and restore each writable logical occurrence."""
++def validate_empty_root_container(directory):
++    """Reject any root array allocation before invoking the protocol reader."""
+     directory = _path(directory)
+     if not directory.is_dir():
+         raise ValueError("missing transport directory")
+@@ -721,6 +757,12 @@
+                 raise ValueError("transport root must not contain arrays")
+     except zipfile.BadZipFile as exc:
+         raise ValueError("invalid root NPY container") from exc
++
++
++def read_transport(directory, root_metadata, root_receipt, *, protocol, runner):
++    """Authenticate all pages and restore each writable logical occurrence."""
++    directory = _path(directory)
++    validate_empty_root_container(directory)
+     actual_metadata, root_arrays, actual_receipt = protocol.read_artifact(directory)
+     if actual_metadata != root_metadata or actual_receipt != root_receipt or root_arrays:
+         raise ValueError("root origin mismatch")
+--- v1/johnhull/hullkit/tests/test_dynamic_hedging_transport.py
++++ v2/johnhull/hullkit/tests/test_dynamic_hedging_transport.py
+@@ -392,3 +392,92 @@
+         codec().write_transport(destination, {"x": np.arange(3)}, protocol=selected, runner=runner)
+     assert not destination.exists()
+     assert list(tmp_path.iterdir()) == []
++
++
++@pytest.mark.parametrize(
++    "descriptor,order,shape,body",
++    [
++        ("|u1", False, (1073741824,), b""),
++        ("|u1", False, (17,), b""),
++        ("<i4", False, (1,), b"\0" * 4),
++        ("|u1", True, (1,), b"\0"),
++        ("|u1", False, (1, 1), b"\0"),
++        ("|u1", False, (True,), b"\0"),
++    ],
++)
++def test_page_blob_npy_header_is_checked_before_protocol_allocation(
++    tmp_path, descriptor, order, shape, body
++):
++    import io
++    import struct
++    import zipfile
++
++    path, metadata, _, _ = write_read(tmp_path, np.arange(3), 256)
++    altered = copy.deepcopy(metadata)
++    ref = next(p for p in altered["pages"] if p["kind"] == "arrays")
++    page = path / ref["path"]
++    manifest = json.loads((page / "metadata.json").read_bytes())
++    header = repr({"descr": descriptor, "fortran_order": order, "shape": shape}).encode()
++    header += b" " * max(0, 70 - len(header) - 1) + b"\n"
++    npy = np.lib.format.magic(1, 0) + struct.pack("<H", len(header)) + header + body
++    packed = io.BytesIO()
++    with zipfile.ZipFile(packed, "w", compression=zipfile.ZIP_STORED) as archive:
++        archive.writestr("blob.npy", npy)
++    manifest["arrays"] = {
++        "blob": {
++            "dtype": descriptor,
++            "shape": list(shape),
++            "nbytes": int(np.prod(shape)) * np.dtype(descriptor).itemsize,
++        }
++    }
++    manifest_bytes = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode()
++    npz = packed.getvalue()
++    page_receipt = {
++        "schema": "rb-f04-array-receipt-v1",
++        "metadata_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
++        "arrays_sha256": hashlib.sha256(npz).hexdigest(),
++        "uncompressed_bytes": len(npy),
++    }
++    page_receipt["artifact_sha256"] = runner._digest(page_receipt)
++    (page / "metadata.json").write_bytes(manifest_bytes)
++    (page / "arrays.npz").write_bytes(npz)
++    (page / "receipt.json").write_text(
++        json.dumps(page_receipt, sort_keys=True, separators=(",", ":"))
++    )
++    ref["receipt"] = page_receipt
++    receipt, _ = replace_root(path, altered)
++
++    class ObservedProtocol:
++        def __init__(self):
++            self.forbidden_reads = 0
++
++        def read_artifact(self, directory):
++            if Path(directory) == page:
++                self.forbidden_reads += 1
++                pytest.fail("page array allocation reached before NPY header validation")
++            return protocol.read_artifact(directory)
++
++    observer = ObservedProtocol()
++    with pytest.raises(ValueError):
++        codec().read_transport(path, altered, receipt, protocol=observer, runner=runner)
++    assert observer.forbidden_reads == 0
++
++
++def test_empty_root_container_guard_is_available_before_protocol_read(tmp_path):
++    import io
++    import struct
++    import zipfile
++
++    path = tmp_path / "malformed-root"
++    path.mkdir()
++    header = b"{'descr': '|u1', 'fortran_order': False, 'shape': (1073741824,), }\n"
++    npy = np.lib.format.magic(1, 0) + struct.pack("<H", len(header)) + header
++    packed = io.BytesIO()
++    with zipfile.ZipFile(packed, "w", compression=zipfile.ZIP_STORED) as archive:
++        archive.writestr("blob.npy", npy)
++    (path / "arrays.npz").write_bytes(packed.getvalue())
++    for name in ("metadata.json", "receipt.json"):
++        (path / name).write_text("{}")
++    assert hasattr(codec(), "validate_empty_root_container")
++    with pytest.raises(ValueError, match="root must not contain arrays"):
++        codec().validate_empty_root_container(path)

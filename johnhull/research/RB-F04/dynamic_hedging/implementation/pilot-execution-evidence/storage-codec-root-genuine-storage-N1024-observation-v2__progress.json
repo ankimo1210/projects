@@ -1,0 +1,108 @@
+{
+  "completed": false,
+  "financial_qualification": "unknown",
+  "financial_solver_calls": 0,
+  "isolation": {
+    "all_array_occurrences": 1648,
+    "all_mutable_container_occurrences": 392,
+    "all_nonempty_array_memory_ranges_disjoint": true,
+    "mutation_pair": [
+      "a000009",
+      "a000015"
+    ],
+    "mutation_restored": true
+  },
+  "new_runtime_source_files": [
+    {
+      "bytes": 176874,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "sha256": "9d007adb6d6d9f9103756e09bccfd115478626b2cb9ee5d19263447a0443d1d5"
+    },
+    {
+      "bytes": 51440,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "sha256": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef"
+    },
+    {
+      "bytes": 33301,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py",
+      "sha256": "ac98536b9738cdfbf431aec9689f094f569c71268879648385b9f8859d69fafd"
+    },
+    {
+      "bytes": 11841,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+      "sha256": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac"
+    },
+    {
+      "bytes": 33619,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "sha256": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565"
+    },
+    {
+      "bytes": 17009,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+      "sha256": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+    }
+  ],
+  "original_generation_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "original_n": 1024,
+  "phase_expenses": [
+    {
+      "cpu_seconds": 0.034974142,
+      "phase": "input_bytes_before",
+      "process_peak_rss_bytes": 15568896,
+      "wall_seconds": 0.0349719619989628
+    },
+    {
+      "cpu_seconds": 0.2917273610000002,
+      "phase": "legacy_read",
+      "process_peak_rss_bytes": 863096832,
+      "wall_seconds": 0.29174507199786603
+    },
+    {
+      "cpu_seconds": 0.03766612799999991,
+      "phase": "original_logical_provenance",
+      "process_peak_rss_bytes": 863096832,
+      "wall_seconds": 0.03767227800562978
+    },
+    {
+      "cpu_seconds": 1.007559799,
+      "phase": "typed_dag_write",
+      "process_peak_rss_bytes": 923090944,
+      "wall_seconds": 1.0076327759961714
+    },
+    {
+      "cpu_seconds": 0.36585392500000014,
+      "phase": "typed_dag_read",
+      "process_peak_rss_bytes": 986394624,
+      "wall_seconds": 0.3658519790042192
+    },
+    {
+      "cpu_seconds": 0.13541001200000036,
+      "phase": "full_tolerance_and_provenance",
+      "process_peak_rss_bytes": 986394624,
+      "wall_seconds": 0.1354070809975383
+    },
+    {
+      "cpu_seconds": 0.04489793800000008,
+      "phase": "all_occurrences_and_inplace_isolation",
+      "process_peak_rss_bytes": 986394624,
+      "wall_seconds": 0.044896230996528175
+    },
+    {
+      "cpu_seconds": 0.034509275000000006,
+      "phase": "input_bytes_after",
+      "process_peak_rss_bytes": 986394624,
+      "wall_seconds": 0.03450873400288401
+    },
+    {
+      "cpu_seconds": 0.00020669299999998003,
+      "phase": "source_bytes_after",
+      "process_peak_rss_bytes": 986394624,
+      "wall_seconds": 0.00020717299776151776
+    }
+  ],
+  "rng_generation_calls": 0,
+  "scope": "same full genuine saved payload storage only",
+  "seed": 57346572
+}

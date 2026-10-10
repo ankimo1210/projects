@@ -1,0 +1,70 @@
+{
+  "array_decode_count": 0,
+  "array_occurrences": 1648,
+  "declared_array_bytes": 121960001,
+  "expense": {
+    "cpu_seconds": 0.075501942,
+    "peak_rss_bytes": 23953408,
+    "wall_seconds": 0.07763604499632493
+  },
+  "files": [
+    {
+      "bytes": 22,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/market:pilot:Heston:1:N1024/arrays.npz",
+      "relative_path": "arrays.npz",
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "bytes": 391903,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/market:pilot:Heston:1:N1024/metadata.json",
+      "relative_path": "metadata.json",
+      "sha256": "5f73e2e77229075831046ea2fa159ac5000a0d99d3fd52d744d92d8607ad15ba"
+    },
+    {
+      "bytes": 122378615,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/market:pilot:Heston:1:N1024/pack000000/arrays.npz",
+      "relative_path": "pack000000/arrays.npz",
+      "sha256": "70060e31af27a099e5f465ec9f0906c05ca2243492c74ddd28e069ad51bea45e"
+    },
+    {
+      "bytes": 187211,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/market:pilot:Heston:1:N1024/pack000000/metadata.json",
+      "relative_path": "pack000000/metadata.json",
+      "sha256": "e0783b827b3fe37914875ede9aec3dd835c42f1b5f2bf05592ffece1db85068b"
+    },
+    {
+      "bytes": 320,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/market:pilot:Heston:1:N1024/pack000000/receipt.json",
+      "relative_path": "pack000000/receipt.json",
+      "sha256": "6ee3e7a67c3cf33e3792ecb45b74e127cb7c0d2fefb694bffb1b18b04a10a566"
+    },
+    {
+      "bytes": 312,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/market:pilot:Heston:1:N1024/receipt.json",
+      "relative_path": "receipt.json",
+      "sha256": "5d7362de2596a8045463d5b6c0e8d4e8f7b3eefbeed12c21e220cd38dec5023a"
+    }
+  ],
+  "finance_solver_calls": 0,
+  "financial_qualification": "unknown",
+  "job_id": "market:pilot:Heston:1:N1024",
+  "json_bytes": 579746,
+  "operation": "market_pair",
+  "original_n": 1024,
+  "physical_bytes": 122958383,
+  "processed_n": 1024,
+  "random_generation_calls": 0,
+  "resolved_arguments_sha256": "ef9686b78abe84e23a1405afd7b1c368f5fdba1db0b784d8cb1c8301d40a0e60",
+  "root_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "890c97a75bef204c86b0aad72740990d40926320d7e75dadd3d0a395c7418409",
+    "metadata_sha256": "5f73e2e77229075831046ea2fa159ac5000a0d99d3fd52d744d92d8607ad15ba",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "scope": "closed genuine original N1024 nonteacher legacy artifact, byte/metadata only",
+  "seed": 57346572,
+  "source_directory": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/market:pilot:Heston:1:N1024",
+  "source_generation_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "status": "executed"
+}

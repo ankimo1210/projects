@@ -1,0 +1,25 @@
+.................                                                        [100%]
+17 passed in 0.96s
+{
+  "status": 0,
+  "wall_seconds": 1.2356183329975465,
+  "cpu_seconds": 1.2320991339999998,
+  "command_args": [
+    "-ra",
+    "--strict-markers",
+    "--import-mode=importlib",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price",
+    "-q",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py::test_root_invalid_npy_header_rejected_before_protocol_array_read",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py::test_genuine_legacy_packed_schema_is_still_readable",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py::test_unknown_schema_is_not_a_legacy_or_new_codec_fallback",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_root_page_roster_rejects_self_consistent_tamper",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_metadata_table_full_coverage_and_types",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/tests/test_dynamic_hedging_transport.py::test_page_physical_receipt_and_root_file_symlink"
+  ],
+  "explicit_package_origin": {
+    "deep_hedge_price": "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/src/deep_hedge_price/__init__.py",
+    "hullkit": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/src/hullkit/__init__.py"
+  },
+  "financial_generation_or_numerical_replay": 0
+}

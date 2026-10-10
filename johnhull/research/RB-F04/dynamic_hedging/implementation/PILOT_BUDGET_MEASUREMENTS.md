@@ -320,3 +320,36 @@ v2のsource81/dynamic0のplain canonical identityは959f879a…（runner._digest
 
 
 追加のbounded v8では1,391 links / 1,891,946,496 B（1.892GB）を共有し、累計6,369 links / 145,539,321,856 B（145.539GB）となった。外側wall60.020秒・CPU46.237秒、行政60秒で正常終了。直前intent1件はreplace前に停止し、2件の過去rollbackと元byteを保持。[全9journalのpostcheck](pilot-execution-evidence/task-5-stage-npz-hardlink-actual-root-postcheck-v3.json)は最新6767paths・原receipt/metadata/source81をPASS。[追加証跡の両保管庫保存](pilot-execution-evidence/task-5-stage-npz-hardlink-closed-proof-cas-root-receipt-v3.json)は4paths/5 unique blobs incl manifest・3.152MB、両PASS（wall1.481秒/CPU0.033秒）。Windows VHD/host volumeの実空き返却は未測定・未保証。金融数値・全phase容量・完了予定日は認定しない。
+
+
+## 保存transportとstage引数照合の限定修正（2026-10-10）
+
+新しいprivate source82は、保存transportとstage引数照合の修正を接続し、2件の独立レビューでsourceの範囲を限定承認した。固定sourceの対象80tests・変更10PythonのRuff/formatがPASS。正式214件目のpartial、旧source81の原失敗/費用/unknownを保持し、新prior・別rootの正式pilot・saved数値検算・freeze/mainは未完了。
+
+### 変更と検査
+
+- stage gateは予定した金融5引数と、実dispatchが時間上限を加えた6引数を完全比較して停止した。金融5引数の照合から実wall_cap_secondsだけを分離し、正式job引数/envelopeのcap完全照合はそのまま維持する。専用RED 1FAIL/11PASS → GREEN12PASS、既存metadata20PASS。独立15probe＋7testsが改変を拒否し、cap2関数のAST不変と実callerの先行認証を確認した。
+- nonteacher保存は型付きDAG・共有配列・最大64MiBの圧縮ページへ接続した。全logical出現を独立した可変値として復元し、旧PACK/PART読取と完成teacherのprimitive recipeは保持する。root/pageの不正NPYヘッダは配列reader前に拒否する。専用44tests、独立3probe＋17tests PASS。元の不正ヘッダ反例・収集失敗・中断した旧検査は残す。
+- 新schemaとprivate helperをsource閉包に追加したため、現在は82files/dynamic import0。旧81→新82はhelper1追加、check_pilot/run_pilot/run_referenceの3変更だけ。全82bytesを確認し、plain75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e/nativeef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7に固定した。
+
+### 同じgenuine payloadの保存実測
+
+対象は旧source81で生成したmarket:pilot:Heston:1:N1024の全payload（seed57346572、executed/financial unknown）。数学solver/RNGを実行せず、generationの由来を保持し、旧read→新write→新readを測った。
+
+| 項目 | 実測 |
+|---|---:|
+| 元physical bytes → 新physical bytes | 122,958,383 → 40,225,790（約67.3%減） |
+| 元JSON bytes → 新JSON bytes | 579,746 → 2,628 |
+| 全logical arrays / 保存unique arrays | 1,648 / 509 |
+| 新blob/metadataページ | 各1、計2 |
+| 外側wall / CPU | 3.064857s / 3.020272s |
+| child kernel peak RSS | 986,394,624B |
+| legacy read / new write / new read | 0.291745s / 1.007633s / 0.365852s（外側の内訳） |
+
+全値をtol/equal_nanで照合し、旧logical provenance digest、1,648配列のメモリ非共有、392可変containerの独立性、inplace変更隔離を確認した。元6files/実使用source6filesは前後byte不変。新raw9filesのSHAを記録したが、今回Gitへ保存したのはsource・閉じた検査/測定証跡のみである。
+
+初回はAS4GiBでTorchのfile mappingに失敗し、array読取前に終了した。原traceと外側0.542s/CPU0.529sを保持した。修正版の運用priorはRSS4GiBを0.1sごとに観察し、AS64GiBは補助fender、child wall120s/outer180sと分けて事前固定した。資源停止なし。内側clockは外側へ再加算しない。
+
+この1件の結果から全phaseの保存量・速度・RSS・金融精度は保証しない。ページ上限は返却payload全体・DAG表・単一JSONL recordのRAM上限ではない。新sourceへの正式prior/metadata再結合、旧rawの由来を保つ別root、原N/全3,138 jobs/121cases/51義務/全cap optionsの実検証が次の作業である。
+
+証跡：[codec判断](pilot-execution-evidence/storage-codec-root-independent-transport-codec-v2-decision.json)、[stage判断](pilot-execution-evidence/storage-codec-root-independent-stage-cap-binding-v1-decision.json)、[genuine実測](pilot-execution-evidence/storage-codec-root-genuine-storage-N1024-fixed-report-v2.md)、[root80検査](pilot-execution-evidence/storage-codec-root-root-fixed-source-final-targeted-v2.json)、[源差分](pilot-execution-evidence/storage-codec-root-root-current-production-source-delta-v1.json)。

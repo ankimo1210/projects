@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "exit_code": 0,
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+  ],
+  "elapsed_seconds": 148.4485310319942,
+  "scope": "existing pilot/teacher save/read/check boundaries only; no actual formal financial generation"
+}

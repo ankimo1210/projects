@@ -1,0 +1,18 @@
+{
+  "exit_code": 1,
+  "elapsed_seconds": 268.8905629849978,
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "deep_hedge_price/tests/test_dynamic_hedging_transport_integration.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_main.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py"
+  ],
+  "scope": "scoped actual codec wiring/legacy/source/main/fresh boundaries; no actual formal finance"
+}

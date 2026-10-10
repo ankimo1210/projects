@@ -304,9 +304,7 @@ def test_teacher_failure_roots_keep_literal_all_raw_and_unknown(tmp_path, status
     assert "teacher_storage" not in metadata
     restored, _ = pilot.read_pilot_artifact(tmp_path / "failure")
     runner._same(raw, restored, "full literal failure")
-    for pack in (tmp_path / "failure").glob("pack*"):
-        with zipfile.ZipFile(pack / "arrays.npz") as archive:
-            assert all(i.compress_type == zipfile.ZIP_STORED for i in archive.infolist())
+    assert metadata["schema"] == pilot.pilot_transport.SCHEMA
 
 
 def test_nested_teacher_and_unrelated_artifacts_stay_literal(tmp_path):
@@ -389,8 +387,31 @@ def test_old_completed_literal_teacher_remains_readable_with_full_keys_and_dtype
 ):
     helper = storage()
     raw = native_teacher()
-    monkeypatch.setattr(helper, "prepare_teacher", lambda value: (value, None))
-    pilot.write_pilot_artifact(tmp_path / "old", raw)
+    # Explicit pre-transport PACK fixture: disabling the recipe alone now uses the new writer.
+    arrays = {}
+    tree = runner._encode_tree(raw, arrays)
+    descriptors, values, entries = {}, {}, {}
+    for key, array in arrays.items():
+        name = f"value{len(values):06d}"
+        stop = len(array) if array.ndim else 1
+        values[name] = array
+        entries[name] = {"array": key, "start": 0, "stop": stop}
+        descriptors[key] = {
+            "shape": list(array.shape),
+            "dtype": array.dtype.str,
+            "sha256": hashlib.sha256(array.tobytes()).hexdigest(),
+            "parts": [{"id": "pack000000", "value_key": name, "start": 0, "stop": stop}],
+        }
+    protocol.write_artifact(
+        tmp_path / "old",
+        metadata={"schema": pilot.PACK_SCHEMA, "tree": tree, "arrays": descriptors},
+        arrays={},
+    )
+    protocol.write_artifact(
+        tmp_path / "old/pack000000",
+        metadata={"schema": pilot.PACK_SCHEMA, "part": "pack000000", "entries": entries},
+        arrays=values,
+    )
     metadata, _, _ = protocol.read_artifact(tmp_path / "old")
     assert "teacher_storage" not in metadata
     restored, _ = pilot.read_pilot_artifact(tmp_path / "old")

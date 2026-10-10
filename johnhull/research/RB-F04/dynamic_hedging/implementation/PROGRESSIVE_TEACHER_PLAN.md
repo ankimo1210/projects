@@ -1,5 +1,7 @@
 # 段階教師選択と最終mixed pilot計画
 
+最新：新しいprivate source82は、保存transportとstage引数照合の修正を接続し、2件の独立レビューでsourceの範囲を限定承認した。固定sourceの対象80tests・変更10PythonのRuff/formatがPASS。正式214件目のpartial、旧source81の原失敗/費用/unknownを保持し、新prior・別rootの正式pilot・saved数値検算・freeze/mainは未完了。 genuine N1024全payloadの保存量は122.96MB→40.23MB（1件の測定）。[修正・実測](PILOT_BUDGET_MEASUREMENTS.md#保存transportとstage引数照合の限定修正2026-10-10)。
+
 修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
 
 現在（2026-10-10）：修正版fresh正式pilotは214件目の引数binding不一致でpartial停止。元N1024の旧停止gateをsaved executedとして確認し、closed NPZ共有で別inode割当145.54GBを削減した。source81/元N/全case/義務/原失敗・費用は不変。全phase容量・金融精度・freeze/mainは未完了。詳細は[保存量と原byte共有](PILOT_BUDGET_MEASUREMENTS.md#派生結果の保存量と原byte共有2026-10-10)。
