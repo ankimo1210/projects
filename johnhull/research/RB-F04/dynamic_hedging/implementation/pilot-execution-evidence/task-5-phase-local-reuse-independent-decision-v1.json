@@ -1,0 +1,167 @@
+{
+  "activation_control_probe_scope": {
+    "first_control_gate_calculations": 1,
+    "full_213_row_stage_numerical_qualification": "unverified_not_executed",
+    "gate_calculator": "explicit synthetic control only",
+    "genuine_saved_teacher_evidence_checked": true,
+    "registered_teacher_proof_sde_replayed_this_call_scope": "registration events only; no assertion about absent ordinary fallback SDE",
+    "unknown_keeps_next_execute": true,
+    "warm_control_gate_recalculations": 0
+  },
+  "all_recorded_probe_attempts": {
+    "costs": [
+      {
+        "child_kernel_peak_RSS_bytes": 743723008,
+        "child_peak_baseline_bytes": 0,
+        "exit_code": 1,
+        "formal_phase_approved": false,
+        "inclusive_child_CPU_seconds": 4.6711149999999995,
+        "own_final_receipt_tail": "unknown",
+        "scope": "independent fixed-v2 saved-only direct source-bound reuse probes; no new RNG or financial generation",
+        "wall_seconds": 2.049480664994917
+      },
+      {
+        "child_kernel_peak_RSS_bytes": 795910144,
+        "child_peak_baseline_bytes": 0,
+        "exit_code": 1,
+        "formal_phase_approved": false,
+        "inclusive_child_CPU_seconds": 39.721201,
+        "own_final_receipt_tail": "unknown",
+        "scope": "independent fixed-v2 saved-only direct source-bound reuse probes; no new RNG or financial generation",
+        "wall_seconds": 6.133421498998359
+      },
+      {
+        "child_kernel_peak_RSS_bytes": 824877056,
+        "child_peak_baseline_bytes": 0,
+        "exit_code": 0,
+        "formal_phase_approved": false,
+        "inclusive_child_CPU_seconds": 140.269746,
+        "own_final_receipt_tail": "unknown",
+        "scope": "independent fixed-v2 saved-only direct source-bound reuse probes; no new RNG or financial generation",
+        "wall_seconds": 14.304380011999456
+      }
+    ],
+    "inclusive_child_CPU_total_seconds": 184.662062,
+    "inclusive_child_wall_total_seconds": 22.487282175992732,
+    "scope": "explicit three independent child attempts only; preparation/identity diagnostic/final receipt tail unknown"
+  },
+  "bounded_memory_scope": {
+    "entire_labels_not_in_bounded_report": "unchanged _bounded_teacher_check strips labels; descriptors/reference only",
+    "f_samples_weakrefs_released_after_all_checks": true,
+    "full_arrays_not_persisted_in_memo": true
+  },
+  "candidate_source_root": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-source-after-v2",
+  "canonical_source_identity_sha256": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+  "check_pilot_sha256": "392b5d6a9b6bb63ad71d39f276ea60a197cfd3988532f8b7232a89c53c764f40",
+  "core_AST_unchanged": {
+    "_bounded_teacher_check": true,
+    "check_job_envelope": true,
+    "check_q_record": true,
+    "check_resolved_job_arguments": true,
+    "check_teacher_grid_record": true,
+    "check_teacher_record": true
+  },
+  "decision": "approve_fixed_v2_source_runtime_immutable_reuse_boundary_only",
+  "expenses": "initial checks billed once in real consuming job/phase; reused events carry actual guard/hash/copy clock and reference initial event, never rebill first replay; no zero-cost assumption",
+  "failed_probes_preserved": [
+    {
+      "attempt": "v1",
+      "financial_or_saved_SDE_started": false,
+      "reason": "identity assertion compared canonical _digest to native payload_digest; source closure all JSON values identical",
+      "source_defect": false
+    },
+    {
+      "attempt": "v2",
+      "passed_prior_cases": 6,
+      "reason": "cache f last cell was NaN; NaN+1e-5 did not change value/content, so invalid tamper probe was accepted; probe corrected to first finite cell and explicit content digest change",
+      "source_defect": false
+    }
+  ],
+  "financial_qualification": "unknown",
+  "formal_budget_approved": false,
+  "formal_phase_approved": false,
+  "full_grid_cold_fresh_restored": {
+    "all11labels_16blocks_covariance_cache": "full native tolerance-based comparison retained",
+    "all_original_108_nodes_each": true,
+    "calls": 3,
+    "original_N_each": 16
+  },
+  "hash_formulas": {
+    "canonical": "runner._digest(source_identity): plain canonical JSON",
+    "native": "runner.payload_digest(source_identity): native encoded payload digest",
+    "not_financial_float_equality": true,
+    "source_closure_all_JSON_values_actual_vs_author": "identical; 81 files/dynamic0"
+  },
+  "in_memory_inputs_and_results": {
+    "activation_result_mutation_refused": true,
+    "actual_parameters_mutation_refused": true,
+    "current_source_byte_mutation_refused": true,
+    "finite_cache_value_mutation_refused": true,
+    "internal_result_mutation_refused": true,
+    "returned_small_report_copy_isolation": true,
+    "typed_seed_mutation_refused": true
+  },
+  "independent_direct_cases_passed": 18,
+  "native_payload_source_identity_sha256": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+  "new_financial_RNG_CF_PDE_generation": 0,
+  "observed_small_fixture_first_grid_wall_seconds": 2.483458757000335,
+  "observed_small_fixture_hit_wall_seconds": 0.2503796910023084,
+  "observed_v3_cost": {
+    "child_kernel_peak_RSS_bytes": 824877056,
+    "child_peak_baseline_bytes": 0,
+    "exit_code": 0,
+    "formal_phase_approved": false,
+    "inclusive_child_CPU_seconds": 140.269746,
+    "own_final_receipt_tail": "unknown",
+    "scope": "independent fixed-v2 saved-only direct source-bound reuse probes; no new RNG or financial generation",
+    "wall_seconds": 14.304380011999456
+  },
+  "original_saved_fixture_before_after_unchanged": true,
+  "original_saved_source_unit_geometry": {
+    "calendar_steps": 24,
+    "grid": "coarse",
+    "model": "Heston",
+    "nodes": 108,
+    "original_n": 16,
+    "seed": 913
+  },
+  "other_original_source_file_count_unchanged": 79,
+  "physical_tamper": {
+    "activation_after_warm_last_node_and_driver": true,
+    "actual_changed_bytes": "last byte XOR1 written on D-copy and guard rejected changed content; original bytes restored",
+    "last_original_driver_chunk": true,
+    "last_original_node": true,
+    "reconstructed_float_SHA_for_financial_comparison": false,
+    "same_file_size_and_mtime": true
+  },
+  "production_source_tests_docs_Git_CAS_changed_by_reviewer": false,
+  "root_M6_resource_measurement": "permitted by this limited source review only after root separate prior; this decision supplies no new financial/budget approval",
+  "run_pilot_sha256": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635",
+  "same_context_hit": {
+    "actual_guard_reads_retained": true,
+    "additional_node_SDE_replays": 0,
+    "initial_verified_event_reference": true
+  },
+  "saved_node_checks_total": 432,
+  "schema": "rb-f04-phase-local-runtime-reuse-independent-decision-v1",
+  "source81_before_after_unchanged": true,
+  "source_changed_vs_original": [
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+  ],
+  "unknown_preserved": {
+    "cache_None_not_registered": true,
+    "financial_qualification": "unknown",
+    "full_saved_driver_sde_replayed": false,
+    "gate_SE": "33 None",
+    "invalid_original_path_count": 1,
+    "raw_SE": "NaN",
+    "unknown_node_count": 33
+  },
+  "unverified": [
+    "genuine full-stage candidate financial gates",
+    "full pilot or main financial qualification",
+    "M6 actual original N1024 or N65536 reuse rate/RSS",
+    "global runtime/ETA"
+  ]
+}

@@ -1,0 +1,291 @@
+"""Independent saved-only direct checks of fixed phase-local teacher proof reuse."""
+import argparse
+import copy
+import dataclasses
+import gc
+import hashlib
+import json
+import os
+import shutil
+import sys
+import time
+import weakref
+from pathlib import Path
+
+def sha(path):
+    h = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 ** 2), b""):
+            h.update(block)
+    return h.hexdigest()
+
+def tree(directory):
+    return {str(p.relative_to(directory)): sha(p)
+            for p in sorted(directory.rglob("*")) if p.is_file()}
+
+def save(path, value):
+    Path(path).write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + chr(10))
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--fixed-config", type=Path, required=True)
+    args = parser.parse_args()
+    started, cpu = time.perf_counter(), time.process_time()
+    cfg = json.loads(args.fixed_config.read_text())
+    assert cfg["fixed_author_snapshot_ready"] is True
+    assert cfg["scope"] == "independent_saved_only_runtime_reuse_boundary"
+    source_root = Path(cfg["source_root"]).resolve()
+    output = Path(cfg["output_directory"])
+    assert not output.exists()
+    for relative, expected in cfg["fixed_source_files"].items():
+        assert sha(source_root / relative) == expected, relative
+    research = source_root / "johnhull/research/RB-F04/dynamic_hedging"
+    sys.path[:0] = [str(research), str(source_root / "johnhull/hullkit/src"),
+                    str(source_root / "deep_hedge_price/src")]
+    import numpy as np
+    import check_pilot as checker
+    import run_pilot as pilot
+    import run_reference as runner
+    from hullkit._heston_local_surface import HestonParameters
+    identity = runner.execution_source_identity(source_root)
+    assert len(identity["files"]) == 81 and not identity["dynamic_imports"]
+    assert runner._digest(identity) == cfg["fixed_source_identity_sha256"]
+    assert identity["files"] == cfg["fixed_source_files"]
+    output.mkdir()
+    cases = []
+    forbidden_calls = []
+
+    def forbidden(*a, **kw):
+        forbidden_calls.append("forbidden_financial_generation")
+        raise AssertionError("independent saved-only scope prohibits new generator/RNG/solver")
+
+    for name in ("run_teacher_driver_job", "run_teacher_job", "run_teacher_grid_job", "run_oracle_job"):
+        if hasattr(pilot, name):
+            setattr(pilot, name, forbidden)
+    np.random.default_rng = forbidden
+    np.random.seed = forbidden
+    np.random.standard_normal = forbidden
+
+    fixture = Path(cfg["saved_fixture"])
+    fixture_before = tree(fixture)
+    copied = output / "saved-copy"
+    shutil.copytree(fixture, copied)
+    source_copy = output / "source-byte-copy"
+    for relative in identity["files"]:
+        target = source_copy / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_root / relative, target)
+    parameters = HestonParameters(**json.loads((copied / "unit-parameters.json").read_text()))
+    grid, _ = pilot.read_pilot_artifact(copied / "unit-grid")
+    original_root = Path(grid["nodes"][0]["path"]).parent
+    artifact_context = {"original_root": str(original_root), "restored_root": str(copied)}
+    job = {"id": "independent-original-saved-Heston-coarse-N16",
+           "operation": "teacher_grid", "status": "executed", "raw": grid}
+    resolved = {"model": grid["model"], "grid": grid["grid"], "seed": grid["seed"],
+                "original_n": grid["original_n"], "parameters": parameters,
+                "surface": None, "driver": grid["driver"]}
+    memo = checker._new_teacher_verification_context(
+        source_root=source_copy, source=identity, plan_sha256="independent-saved-source-unit")
+    context = {"parameters": parameters, "surface": None, "resolved_arguments": resolved,
+               "artifact_context": artifact_context, "teacher_verification_context": memo}
+    calls, sample_refs = [], []
+    original_check = checker.check_teacher_record
+
+    def observed_record(*a, **kw):
+        checked = original_check(*a, **kw)
+        calls.append((a[0]["original_n"], a[0]["date_index"]))
+        sample_refs.append(weakref.ref(checked["labels"]["f_samples"]))
+        return checked
+    checker.check_teacher_record = observed_record
+
+    def timed(name, fn):
+        start, start_cpu, count = time.perf_counter(), time.process_time(), len(calls)
+        result = fn()
+        cases.append({"case": name, "status": "PASS", "wall_seconds": time.perf_counter() - start,
+                      "CPU_seconds": time.process_time() - start_cpu,
+                      "saved_node_checks_delta": len(calls) - count})
+        print(name + " PASS", flush=True)
+        save(output / "progress.json", {"cases": cases, "financial_generation_count": len(forbidden_calls)})
+        return result
+
+    def rejects(name, fn):
+        def action():
+            try:
+                fn()
+            except ValueError as error:
+                return {"rejected": str(error)}
+            raise AssertionError(name + " incorrectly accepted")
+        result = timed(name, action)
+        cases[-1]["rejection"] = result["rejected"]
+
+    cold = timed("genuine_saved_cold_original108_N16", lambda: checker._raw_job_check(job, context))
+    assert len(calls) == 108 and all(n == 16 for n, _ in calls)
+    assert len(cold["raw_checks"]) == 108
+    samples = {"raw_samples", "conditioned_samples", "cv_samples", "f_samples", "f_x_samples",
+               "raw_x_samples", "conditioned_x_samples", "unreplaced_cv_samples",
+               "unreplaced_cv_x_samples", "aux_raw_samples", "aux_conditioned_samples"}
+    for check in cold["raw_checks"]:
+        assert check["full_saved_driver_sde_replayed"] is True
+        label = check["labels_reference"]
+        assert label["all_original_N_label_values_compared"] is True
+        assert samples <= set(label["array_fields"])
+        assert all(label["array_fields"][s]["shape"][0] == 16 for s in samples)
+    warm = timed("same_context_hit_current_bytes", lambda: checker._raw_job_check(job, context))
+    assert len(calls) == 108
+    runner._same(cold, warm, "independent cold/hit numerical report")
+    assert [event["kind"] for event in memo["events"]] == ["verified", "reused"]
+    assert memo["events"][1]["verified_event_id"] == memo["events"][0]["id"]
+    cold["raw_checks"][-1]["unknown_node_count"] = 777
+    isolated = timed("returned_report_mutation_isolation", lambda: checker._raw_job_check(job, context))
+    runner._same(warm, isolated, "independent caller copy isolation")
+    entry = next(iter(memo["entries"].values()))
+    old_result = copy.deepcopy(entry["result"])
+    entry["result"]["raw_checks"][-1]["unknown_node_count"] = 778
+    rejects("internal_result_mutation_refused", lambda: checker._raw_job_check(job, context))
+    entry["result"] = old_result
+
+    def flip_and_refuse(name, file, fn):
+        original = file.read_bytes()
+        stat = file.stat()
+        changed = bytearray(original)
+        changed[-1] ^= 1
+        file.write_bytes(changed)
+        os.utime(file, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+        assert file.stat().st_size == len(original) and file.stat().st_mtime_ns == stat.st_mtime_ns
+        try:
+            rejects(name, fn)
+            cases[-1]["same_size_and_mtime"] = True
+        finally:
+            file.write_bytes(original)
+            os.utime(file, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+    last_node = pilot.bound_artifact_path(grid["nodes"][-1]["path"], artifact_context)
+    last_node_npz = sorted(last_node.rglob("arrays.npz"))[-1]
+    driver = grid["driver"]
+    last_driver = (pilot.bound_artifact_path(driver["directory"], artifact_context)
+                   / driver["chunks"][-1]["path"])
+    last_driver_npz = sorted(last_driver.rglob("arrays.npz"))[-1]
+    flip_and_refuse("last_original_node_same_size_mtime", last_node_npz,
+                    lambda: checker._raw_job_check(job, context))
+    flip_and_refuse("last_original_driver_same_size_mtime", last_driver_npz,
+                    lambda: checker._raw_job_check(job, context))
+    original_cache = grid["cache"]["f"].copy()
+    finite_index = int(np.flatnonzero(np.isfinite(grid["cache"]["f"]))[0])
+    original_digest = pilot.input_identity(grid["cache"]["f"])
+    grid["cache"]["f"].flat[finite_index] += 1e-5
+    assert pilot.input_identity(grid["cache"]["f"]) != original_digest
+    rejects("in_memory_raw_cache_mutation", lambda: checker._raw_job_check(job, context))
+    cases[-1]["actual_finite_cache_value_changed"] = True
+    grid["cache"]["f"][...] = original_cache
+    changed_context = dict(context, parameters=dataclasses.replace(parameters, rate=parameters.rate + 1e-5))
+    rejects("actual_parameters_input_mutation", lambda: checker._raw_job_check(job, changed_context))
+    changed_args = dict(context, resolved_arguments=dict(resolved, seed=resolved["seed"] + 1))
+    rejects("original_typed_seed_mutation", lambda: checker._raw_job_check(job, changed_args))
+    source_file = source_copy / "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+    flip_and_refuse("current_source_same_size_mtime_mutation", source_file,
+                    lambda: checker._raw_job_check(job, context))
+
+    fresh_memo = checker._new_teacher_verification_context(
+        source_root=source_copy, source=identity, plan_sha256="independent-saved-source-unit")
+    fresh = timed("fresh_empty_context_original108", lambda: checker._raw_job_check(
+        job, dict(context, teacher_verification_context=fresh_memo)))
+    assert cases[-1]["saved_node_checks_delta"] == 108
+    runner._same(warm, fresh, "fresh independent full replay")
+    restored = output / "other-restored-copy"
+    shutil.copytree(copied, restored)
+    restored_memo = checker._new_teacher_verification_context(
+        source_root=source_copy, source=identity, plan_sha256="independent-saved-source-unit")
+    restored_context = dict(context, teacher_verification_context=restored_memo,
+                            artifact_context={"original_root": str(original_root), "restored_root": str(restored)})
+    portable = timed("different_restored_root_fresh_original108",
+                     lambda: checker._raw_job_check(job, restored_context))
+    assert cases[-1]["saved_node_checks_delta"] == 108
+    runner._same(warm, portable, "independent portable restored replay")
+    assert all("artifact_context" not in c["raw_reference"] for c in portable["raw_checks"])
+    gc.collect()
+    assert all(ref() is None for ref in sample_refs)
+
+    # Genuine saved teacher evidence; gate calculator below is an explicitly synthetic
+    # control probe only, not a full-stage numerical qualification.
+    gate_calls = []
+    original_gate = checker.calculate_teacher_candidate_gate
+    stage_args = {"parameters": parameters, "surface": None, "stage_plan": {},
+                  "evidence": [{"id": job["id"], "operation": "teacher_grid", "raw": grid}]}
+    gate_value = {"qualification": "unknown", "original_n": 16}
+    previous = {"gate": {"id": "gate", "operation": "teacher_candidate_gate",
+                         "status": "executed", "raw": copy.deepcopy(gate_value)}}
+    planned = {"gate": {"id": "gate", "operation": "teacher_candidate_gate",
+                        "arguments": stage_args}}
+    next_job = {"id": "next", "activation": {"previous_teacher_gate_job_id": "gate"}}
+    gate_cache = {}
+    def controlled_gate(*a, **kw):
+        gate_calls.append("control_probe_gate_calculated")
+        checker._raw_job_check(job, dict(context, teacher_verification_context=kw["verification_context"]))
+        return copy.deepcopy(gate_value)
+    checker.calculate_teacher_candidate_gate = controlled_gate
+    def activate():
+        return pilot.teacher_activation_decision(next_job, {}, previous, planned, gate_cache,
+            artifact_context=artifact_context, verification_context=memo)
+    try:
+        first = timed("activation_first_control_unknown_teacher_already_warm", activate)
+        assert first["execute"] is True and len(gate_calls) == 1
+        second = timed("activation_current_guard_before_cached_control_return", activate)
+        assert second == first and len(gate_calls) == 1
+        event = memo["events"][-1]
+        assert event["kind"] == "activation_reused" and event["gate_recomputed_this_call"] is False
+        assert event["registered_teacher_proof_sde_replayed_this_call"] is False
+        flip_and_refuse("activation_last_driver_mutation_after_warm", last_driver_npz, activate)
+        flip_and_refuse("activation_last_node_mutation_after_warm", last_node_npz, activate)
+        gate_entry = next(iter(gate_cache.values()))
+        gate_entry["value"]["qualification"] = "qualified"
+        rejects("activation_internal_gate_result_mutation", activate)
+        gate_entry["value"] = copy.deepcopy(gate_value)
+        assert len(gate_calls) == 1
+    finally:
+        checker.calculate_teacher_candidate_gate = original_gate
+
+    unknown_path = Path(cfg["saved_invalid_node"])
+    unknown_before = tree(unknown_path)
+    unknown_copy = copied / "independent-saved-invalid-node"
+    shutil.copytree(unknown_path, unknown_copy)
+    invalid_raw, _ = pilot.read_pilot_artifact(unknown_copy)
+    unknown_grid = copy.deepcopy(grid)
+    unknown_grid["cache"] = None
+    unknown_grid["nodes"][-1] = {
+        **{k: grid["nodes"][-1][k] for k in ("date_index", "spot", "state")},
+        "path": str(original_root / unknown_copy.name),
+        "raw_sha256": runner.payload_digest(invalid_raw)}
+    unknown = timed("original_saved_invalid_nan_unknown_no_memo_registration",
+                    lambda: checker._raw_job_check(dict(job, id="invalid-original", raw=unknown_grid), context))
+    last = unknown["raw_checks"][-1]
+    assert last["invalid_path_count"] == 1 and last["unknown_node_count"] == 33
+    assert np.isnan(last["raw_standard_errors"]).all()
+    assert last["gate_standard_errors"] == [None] * 33
+    assert last["financial_qualification"] == "unknown" and last["full_saved_driver_sde_replayed"] is False
+    assert unknown["financial_qualification"] == "unknown"
+    assert all(key[0] != "invalid-original" for key in memo["entries"])
+    assert tree(unknown_path) == unknown_before
+    assert tree(fixture) == fixture_before
+    assert all(sha(source_root / p) == h for p, h in identity["files"].items())
+    assert not forbidden_calls
+    result = {
+        "status": "PASS_independent_runtime_reuse_saved_control_boundary",
+        "cases": cases, "case_count": len(cases),
+        "source_identity_sha256": runner._digest(identity),
+        "source81_before_after_unchanged": True, "original_fixture_before_after_unchanged": True,
+        "saved_node_check_count": len(calls),
+        "activation_gate_calculation_count_control_only": len(gate_calls),
+        "activation_genuine_full_stage_numerical_check": "unverified_not_executed",
+        "full_original_N_preserved_for_source_unit": 16, "original_node_count": 108,
+        "all_cold_fresh_restored_checks_full_original_N": True,
+        "memo_derived_full_samples_retained": False,
+        "financial_new_generation_RNG_CF_PDE_count": 0,
+        "formal_phase_approved": False, "financial_qualification": "unknown",
+        "memo_events": memo["events"],
+        "wall_seconds": time.perf_counter() - started,
+        "CPU_seconds": time.process_time() - cpu,
+        "own_final_receipt_write_tail": "unknown"}
+    save(output / "results.json", result)
+    print(json.dumps({"case_count": len(cases), "status": result["status"]}), flush=True)
+
+if __name__ == "__main__":
+    main()

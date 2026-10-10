@@ -1,0 +1,106 @@
+{
+  "schema": "rb-f04-independent-phase-local-memo-resource-observation-decision-v1",
+  "decision": "approved",
+  "approved_scope": "resource/provenance/transport observation of one original genuine M6 Heston-coarse saved grid at N1024/108nodes/12dates/all33thresholds",
+  "reviewer": "pilot_v53_independent_review",
+  "reviewer_role": "independent saved-result reader; same agent prepared measurement harness, which is disclosed",
+  "source_implementation_approval_created": false,
+  "financial_qualification": "unknown",
+  "formal_pilot_main_phase_budget_accuracy_freeze_approved": false,
+  "maximumN_or_wholephase_volume_rate_or_ETA_approved": false,
+  "new_financial_SDE_RNG_solver_generation_execution": false,
+  "results": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-independent-results-v2.json",
+    "sha256": "0585a3bc83ab5ac642d77c25be0e646c1842649ae852df18582d8ea8e64e3b91"
+  },
+  "findings": {
+    "completed_original_geometry_and_raw_references": [
+      1024,
+      108,
+      12,
+      33
+    ],
+    "all701_original_physical_and81_current_runtime_source_SHA_bindings_checked": true,
+    "all108_native_root_plus_pack_compositions_checked": true,
+    "full_original_N_all11_label_descriptors_and16blocks_covariance_retained": true,
+    "cold_hit_fresh_actual_full_checker_calls": [
+      1,
+      0,
+      1
+    ],
+    "actual_per_call_native_SDE_flags": [
+      true,
+      false,
+      true
+    ],
+    "retained_hit_report_full_SDE_flags": "completed first proof reused; not a claim of replay in this hit",
+    "original_unknown_thresholds": 1304,
+    "all108_nodes_remain_financially_unverified": true,
+    "cache_and_report_NaN_and_unknown_status_preserved": true,
+    "three_reports_and_original_saved_cache_approx_comparison": {
+      "rtol": 1e-11,
+      "atol": 1e-12,
+      "equal_nan": true,
+      "max_finite_abs_difference": 0.0
+    },
+    "numeric_comparison_not_SHA_or_bit_equal": true,
+    "cold_hit_fresh_seconds": [
+      23.670931355001812,
+      0.222289268996974,
+      23.796868252000422
+    ],
+    "same_input_hit_speedup_ratio": 106.48706283398703,
+    "speedup_scope": "one immutable Heston-coarse N1024 grid/context only; no general wholephase ETA inference",
+    "actual_child_RSS_peak_bytes": 696823808,
+    "one_unknown_RSS_sample_retained": true,
+    "actual_cap": null,
+    "actual_root_inclusive_wall_seconds": 52.22623316800309,
+    "actual_root_plus_descendant_CPU_seconds_to_count_once": 54.74142531700001,
+    "inner_costs_are_contained_not_added_again": true,
+    "source_provenance": {
+      "old_generation": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+      "old_saved_checker": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+      "current_runtime_canonical": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+      "current_runtime_envelope": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+      "native_math_and_recipe_unchanged": true
+    }
+  },
+  "history_and_expense": {
+    "original_generation_and_previous_saved_checker_cost_not_added": true,
+    "root_final_receipt_write_cost_seconds": null,
+    "independent_v1_failure": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-independent-results-v1.json",
+      "sha256": "d0e6628375661332da2e5642f0aa06496e61ecb02da948d93b5a85b5b646d2ff",
+      "failure_type": "ValueError",
+      "attribution": "reviewer expected scalar raw_status; actual contract is33threshold status array, corrected in v2; raw failure retained, not production/source or measured component failure",
+      "recorded_cost": {
+        "wall_seconds": 1.463344846997643,
+        "CPU_seconds": 1.4399283360000001,
+        "peak_RSS_bytes": 657645568,
+        "results_write_and_tool_tail_seconds": null,
+        "included_in_measured_component": false,
+        "new_saved_only_review_expense": true
+      }
+    },
+    "independent_v2_recorded_cost": {
+      "wall_seconds": 2.0145630490005715,
+      "CPU_seconds": 1.827809797,
+      "peak_RSS_bytes": 663928832,
+      "results_write_and_tool_tail_seconds": null,
+      "included_in_measured_component": false,
+      "new_saved_only_review_expense": true
+    },
+    "recorded_review_probe_wall_total_seconds": 3.4779078959982144,
+    "recorded_review_probe_CPU_total_seconds": 3.267738133,
+    "other_read_schema_command_and_final_decision_manifest_write_expense_seconds": null,
+    "review_expense_is_separate_from_component_52_226_seconds": true
+  },
+  "remaining_unknowns": [
+    "financial accuracy/independent precision",
+    "maximumN65536 grid/time/RSS behavior",
+    "wholephase rates/capacity/ETA",
+    "device I/O or C/mmap coverage of counters",
+    "unmeasured final receipt/review write tails"
+  ],
+  "next": "root may use this single-grid resource observation as limited evidence when revising its still-unapproved fullmixed budget; do not substitute it for fullphase approval"
+}

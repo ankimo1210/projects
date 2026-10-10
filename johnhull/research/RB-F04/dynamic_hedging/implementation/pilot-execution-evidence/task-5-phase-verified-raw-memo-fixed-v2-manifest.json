@@ -1,0 +1,24 @@
+{
+  "source_identity_sha256": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+  "files": {
+    "task-5-phase-verified-raw-memo-fixed-v2-source-closure.json": "735680b179bde8456897ee0e1c02197a3af6cb27d8bc33db31d3bbb89314d59f",
+    "task-5-phase-verified-raw-memo-fixed-v2-source.diff": "f2f3a45d1cac0edb82bdae98f970b746a800d0a689a9c9acc11e366a7a2e7949",
+    "task-5-phase-verified-raw-memo-fixed-v2-v1-to-v2.diff": "318e34d3427aefa5cc5495c5941ebb05f1453d722aaa5c8fe5acbfd326d1d2d4",
+    "task-5-phase-verified-raw-memo-fixed-v2-results.json": "88ea9e215bc4d51f0bd6d62968292d7a10d06b3b71b9e3783b024f00d7ba3695",
+    "task-5-phase-verified-raw-memo-fixed-v2-report.md": "d283c496c093820be56c7064460783309dd8e4cec8098d013ee46dabbded071c",
+    "task-5-phase-verified-raw-memo-event-scope-RED-v2.log": "9ac18439f335796157dd4f5dda09debd88682a780039173258f17a02c56f0346",
+    "task-5-phase-verified-raw-memo-event-scope-RED-v2-cost.json": "d4d2ce9f74c9d5093ce561873aa7d394db690151dc37743f23ace259759331f4",
+    "task-5-phase-verified-raw-memo-event-scope-GREEN-v2.log": "491477420eeb1fa33df69e99375dbe3555ae4b7995c44a4834a70be758bb9956",
+    "task-5-phase-verified-raw-memo-event-scope-GREEN-v2-cost.json": "cad15f030276d9cd340dbaed45d4de929b5dc228a45cf809c44c305f05680b25",
+    "task-5-phase-verified-raw-memo-event-scope-Ruff-attempt-v2.json": "e4986bae5cc4f4afd2193a0acf72fffcefa1f9cff5fd64b1d41fb4bae9232304",
+    "task-5-phase-verified-raw-memo-event-scope-Ruff-v2.json": "4b2996e0a4559cc2eef540a145f0d88b2052fefe183c3d7fe0c95fc719f8d7c9",
+    "task-5-phase-verified-raw-memo-fixed-v2-cost.json": "d97432c37268e1ca2b69f65f9091821d2005b1b2e7704b83d5f1590017e3b8d4",
+    "task-5-phase-verified-raw-memo-source-after-v2/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635",
+    "task-5-phase-verified-raw-memo-source-after-v2/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "392b5d6a9b6bb63ad71d39f276ea60a197cfd3988532f8b7232a89c53c764f40",
+    "task-5-phase-verified-raw-memo-source-after-v2/deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": "bc52f84e8294887c7555c73b49a9c2bc02661bc1aa3e8dfa25547aa47d4c71d9"
+  },
+  "v1_manifest_sha256": "21e215d9ec2a218cd433ba78b4bc75c75a46dad704efdfe46c6c306eb21b8721",
+  "root_approved": false,
+  "independent_review": "pending",
+  "financial_qualification": "unknown"
+}

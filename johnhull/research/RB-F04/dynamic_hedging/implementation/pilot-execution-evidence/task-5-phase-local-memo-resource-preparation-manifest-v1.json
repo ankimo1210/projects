@@ -1,0 +1,51 @@
+{
+  "schema": "rb-f04-phase-local-memo-resource-preparation-manifest-v1",
+  "approved": false,
+  "positive_measurement_executed": false,
+  "source_api_final_alignment": "pending owner fixed nonce/snapshot; current method names are proposal only",
+  "current_script_and_candidate": "candidate-v3 and interface-pending-v1 bind current script",
+  "earlier_candidates_and_static_script_SHA_are_preserved_provisional_versions": true,
+  "original_financial_SDE_RNG_solver_execution": false,
+  "files": {
+    "task-5-phase-local-memo-measurement-v1.py": {
+      "sha256": "d10cc08e2abf8c45c05c5a644ee28c4e9c5d0258d6b764c45aa4b52b311b5498",
+      "bytes": 18858
+    },
+    "task-5-phase-local-memo-measurement-inputs-v1.json": {
+      "sha256": "9befb4ce8e2fd7dcd94bccfa4063d520f6ebb19b4733fe5b9a22b07cfb44fcf4",
+      "bytes": 418676
+    },
+    "task-5-phase-local-memo-resource-budget-candidate-v1.json": {
+      "sha256": "de8580184abed86e8ec708c6c615b49667747e412f43b0629c153d05fa7a242d",
+      "bytes": 3293
+    },
+    "task-5-phase-local-memo-resource-budget-candidate-v2.json": {
+      "sha256": "fb617faf6c81549d5cf173d14be700957025dbfe4163889848708668b700f3d9",
+      "bytes": 4117
+    },
+    "task-5-phase-local-memo-resource-budget-candidate-v3.json": {
+      "sha256": "84839f513bb0a099bff93c40e6a830eafa0ce134138dab85f8127e96cbc4d54c",
+      "bytes": 4412
+    },
+    "task-5-phase-local-memo-metadata-eligibility-v1.json": {
+      "sha256": "0c1d4ba54278ad2abbb5ad53aa2026b681852d68e9b331b961a423632603241f",
+      "bytes": 1279
+    },
+    "task-5-phase-local-memo-input-preparation-cost-v1.json": {
+      "sha256": "d85b7d2c8a31eb0cafc05c9dea886c4a1f28d927935133781f16bd887f8d82b5",
+      "bytes": 389
+    },
+    "task-5-phase-local-memo-measurement-preparation-static-v1.json": {
+      "sha256": "63a881e2f8c86bddec373485e1a517c57cb93d8819d28610ab0e4405c203bae9",
+      "bytes": 828
+    },
+    "task-5-phase-local-memo-measurement-preparation-v1.md": {
+      "sha256": "6bf8dc7ffb98452c321b085bf32ceec42f6eddef3d54dfc584ecc49c99d977c4",
+      "bytes": 2913
+    },
+    "task-5-phase-local-memo-measurement-interface-pending-v1.json": {
+      "sha256": "066d993b3245144de4dd0b473882072196ca5e30ac7aac75c1ac396d371db581",
+      "bytes": 1763
+    }
+  }
+}

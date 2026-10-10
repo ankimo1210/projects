@@ -2920,16 +2920,20 @@ def _saved_operation(operation, arguments, function):
     }
 
 
-def _dispatch(operation, arguments):
+def _dispatch(operation, arguments, *, verification_context=None):
     # Closed dispatch: no trusted user-returned success callbacks.
     if operation == "teacher_selected_inputs":
-        return run_teacher_selected_inputs_job(**arguments)
+        return run_teacher_selected_inputs_job(
+            **arguments, verification_context=verification_context
+        )
     if operation == "teacher_selection":
-        return run_teacher_selection_job(**arguments)
+        return run_teacher_selection_job(**arguments, verification_context=verification_context)
     if operation == "teacher_domain_selection":
         return run_teacher_domain_selection_job(**arguments)
     if operation == "teacher_candidate_gate":
-        return run_teacher_candidate_gate_job(**arguments)
+        return run_teacher_candidate_gate_job(
+            **arguments, verification_context=verification_context
+        )
     if operation == "market_pair":
         return run_market_pair_job(**arguments)
     if operation == "closure":
@@ -3255,7 +3259,15 @@ def _teacher_selection_source_geometry(*, model, stages, teachers, drivers):
 
 
 def run_teacher_selected_inputs_job(
-    *, model, purpose, selector, selection_arguments, teachers, drivers, artifact_context=None
+    *,
+    model,
+    purpose,
+    selector,
+    selection_arguments,
+    teachers,
+    drivers,
+    artifact_context=None,
+    verification_context=None,
 ):
     """Extract the exact selected purpose; retain genuine unavailable parents as None."""
     _require(
@@ -3269,7 +3281,11 @@ def run_teacher_selected_inputs_job(
         and input_identity(drivers) == input_identity(selection_arguments["drivers"]),
         "selected original producer control maps changed",
     )
-    calculated = run_teacher_selection_job(**selection_arguments, artifact_context=artifact_context)
+    calculated = run_teacher_selection_job(
+        **selection_arguments,
+        artifact_context=artifact_context,
+        verification_context=verification_context,
+    )
     runner._same(calculated, saved, "selected actual teacher selector arithmetic")
     stage = next(
         row
@@ -3341,7 +3357,14 @@ def run_teacher_selected_inputs_job(
 
 
 def run_teacher_selection_job(
-    *, model, stages, teachers, selection_rule, artifact_context=None, drivers=None
+    *,
+    model,
+    stages,
+    teachers,
+    selection_rule,
+    artifact_context=None,
+    drivers=None,
+    verification_context=None,
 ):
     """Select from actual complete stage arithmetic; never from a qualification flag."""
     from check_pilot import calculate_teacher_candidate_gate
@@ -3377,6 +3400,7 @@ def run_teacher_selection_job(
                 stage_plan=args["stage_plan"],
                 evidence=args["evidence"],
                 artifact_context=artifact_context,
+                verification_context=verification_context,
             )
             runner._same(calculated, row["raw"], "actual original teacher selection stage")
             _require(
@@ -3498,12 +3522,18 @@ def run_teacher_selection_job(
     }
 
 
-def run_teacher_candidate_gate_job(parameters, surface, *, stage_plan, evidence):
+def run_teacher_candidate_gate_job(
+    parameters, surface, *, stage_plan, evidence, verification_context=None
+):
     """Use the saved-only whole-original-stage arithmetic for candidate selection."""
     from check_pilot import calculate_teacher_candidate_gate
 
     return calculate_teacher_candidate_gate(
-        parameters, surface, stage_plan=stage_plan, evidence=evidence
+        parameters,
+        surface,
+        stage_plan=stage_plan,
+        evidence=evidence,
+        verification_context=verification_context,
     )
 
 
@@ -3737,7 +3767,7 @@ def _job_identity(job, arguments):
 
 
 def teacher_activation_decision(
-    job, inputs, results, planned_jobs, cache, *, artifact_context=None
+    job, inputs, results, planned_jobs, cache, *, artifact_context=None, verification_context=None
 ):
     """Recompute the lower whole-stage gate once, never trust its saved flag."""
     activation = job.get("activation")
@@ -3770,6 +3800,7 @@ def teacher_activation_decision(
             planned_jobs,
             cache,
             artifact_context=artifact_context,
+            verification_context=verification_context,
         )
         runner._same(
             unused_teacher_prefix_raw(planned_jobs[identifier], prior_decision),
@@ -3792,19 +3823,78 @@ def teacher_activation_decision(
         planned_jobs[identifier]["arguments"], inputs, results, planned_jobs=planned_jobs
     )
     key = (identifier, input_identity(previous["raw"]), input_identity(arguments))
-    if key not in cache:
-        from check_pilot import calculate_teacher_candidate_gate
+    from check_pilot import _teacher_verification_guard, calculate_teacher_candidate_gate
 
+    memo_begin, memo_cpu = perf_counter_ns(), process_time_ns()
+    memo_event_start = 0 if verification_context is None else len(verification_context["events"])
+    guard = _teacher_verification_guard(
+        {"arguments": arguments, "raw": previous["raw"]},
+        verification_context=verification_context,
+        artifact_context=artifact_context,
+    )
+    reused = key in cache
+    if not reused:
         calculated = calculate_teacher_candidate_gate(
             arguments["parameters"],
             arguments.get("surface"),
             stage_plan=arguments["stage_plan"],
             evidence=arguments["evidence"],
             artifact_context=artifact_context,
+            verification_context=verification_context,
         )
         runner._same(calculated, previous["raw"], "actual lower original teacher stage")
-        cache[key] = calculated
-    calculated = cache[key]
+        after = _teacher_verification_guard(
+            {"arguments": arguments, "raw": previous["raw"]},
+            verification_context=verification_context,
+            artifact_context=artifact_context,
+        )
+        _require(after == guard, "activation input/physical/source changed during verification")
+        cache[key] = {
+            "value": copy.deepcopy(calculated),
+            "guard": guard,
+            "value_sha256": input_identity(calculated),
+            "verified_event_id": (
+                "standalone-activation:" + str(memo_begin)
+                if verification_context is None
+                else verification_context["scope_id"]
+                + ":"
+                + str(len(verification_context["events"]))
+            ),
+        }
+    entry = cache[key]
+    _require(
+        entry["guard"] == guard and entry["value_sha256"] == input_identity(entry["value"]),
+        "activation verified physical/source result changed",
+    )
+    calculated = copy.deepcopy(entry["value"])
+    event = {
+        "id": (
+            "standalone-activation:" + str(perf_counter_ns())
+            if verification_context is None
+            else verification_context["scope_id"] + ":" + str(len(verification_context["events"]))
+        ),
+        "kind": "activation_reused" if reused else "activation_verified",
+        "producer_id": identifier,
+        "verified_event_id": entry["verified_event_id"],
+        "binding_sha256": runner.payload_digest(guard),
+        "wall_seconds": (perf_counter_ns() - memo_begin) / 1e9,
+        "cpu_seconds": (process_time_ns() - memo_cpu) / 1e9,
+        "gate_recomputed_this_call": not reused,
+        "registered_teacher_proof_sde_replayed_this_call": (
+            None
+            if verification_context is None
+            else any(
+                e.get("kind") == "verified" and e.get("sde_replayed_this_call") is True
+                for e in verification_context["events"][memo_event_start:]
+            )
+        ),
+        "financial_qualification": "unknown",
+        "expense_relationship": "included in consuming job/phase; do not add twice",
+    }
+    if verification_context is not None:
+        verification_context["events"].append(event)
+    else:
+        entry.setdefault("events", []).append(event)
     qualified = calculated["qualification"] == "qualified"
     return {
         "execute": not qualified,
@@ -4007,6 +4097,15 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
             }
     measured_jobs = []
     activation_cache = {}
+    from check_pilot import _new_teacher_verification_context
+
+    verification_context = (
+        _new_teacher_verification_context(
+            source_root=source_root, source=source, plan_sha256=plan_digest
+        )
+        if source.get("files")
+        else None
+    )
     planned_jobs = {j["id"]: j for j in locked_plan["jobs"]}
     results, events = {}, []
     for job in locked_plan["jobs"]:
@@ -4044,6 +4143,7 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
                     planned_jobs,
                     activation_cache,
                     artifact_context=activation_artifact_context,
+                    verification_context=verification_context,
                 )
                 runner._same(
                     unused_teacher_prefix_raw(job, decision),
@@ -4083,6 +4183,7 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
             planned_jobs,
             activation_cache,
             artifact_context=activation_artifact_context,
+            verification_context=verification_context,
         )
         if not decision["execute"]:
             raw = unused_teacher_prefix_raw(job, decision)
@@ -4195,7 +4296,12 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
             )
             if job["operation"] == "quote_risk":
                 common["argument_manifest"]["original_n"] = arguments["dataset"]["original_n"]
-            raw = _dispatch(job["operation"], arguments)
+            raw = (
+                _dispatch(job["operation"], arguments, verification_context=verification_context)
+                if job["operation"]
+                in ("teacher_candidate_gate", "teacher_selection", "teacher_selected_inputs")
+                else _dispatch(job["operation"], arguments)
+            )
             end_ns, cpu_end_ns = perf_counter_ns(), process_time_ns()
             elapsed = (end_ns - begin_ns) / 1e9
             limit = job["budget"]["wall_seconds"]
@@ -4326,6 +4432,9 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
         "input_bindings": locked_plan["input_bindings"],
         "jobs": list(results.values()),
         "events": events,
+        "teacher_verification_events": (
+            [] if verification_context is None else copy.deepcopy(verification_context["events"])
+        ),
         "case_bindings": copy.deepcopy(locked_plan.get("case_bindings", [])),
         "attempt_bindings": copy.deepcopy(locked_plan.get("attempt_bindings", [])),
         "history": locked_plan["history"],

@@ -1,0 +1,232 @@
+
+from pathlib import Path
+import collections,json,hashlib,time
+W=Path('/home/kazumasa/worktrees/johnhull-research-roadmap');D=W/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+t=time.perf_counter_ns();cpu=time.process_time_ns()
+def load(n):return json.loads((D/n).read_text())
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def digest(x):return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+v1=load('task-5-fullmixed-prior-budget-candidate-author-v1-config.json')
+v3=load('task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json')
+v4=load('task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.json')
+cl=load('task-5-phase-verified-raw-memo-fixed-v2-source-closure.json')
+assert digest(cl)=='959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76'
+assert len(cl['files'])==81 and cl['dynamic_imports']==[]
+assert all(sha(W/n)==h for n,h in cl['files'].items())
+gp=D/'task-5-full-progressive-pilot-plan-draft-source-unit-v3/metadata.json'
+graph=json.loads(gp.read_text())['metadata']['tree'];jobs=graph['jobs'];jm={j['id']:j for j in jobs};ops=collections.Counter(j['operation'] for j in jobs)
+assert len(jobs)==3138 and len(graph['case_plan'])==121 and len(graph['attempt_plan'])==51
+assert ops['teacher_grid']==ops['teacher_domain_selection']==20 and ops['teacher_driver']==10
+keys={};gates={};activ=collections.defaultdict(list)
+for j in jobs:
+ if j.get('activation'):activ[j['activation']['previous_teacher_gate_job_id']].append(j['id'])
+ if j['operation']!='teacher_candidate_gate':continue
+ ev=j['arguments']['evidence'];ec=collections.Counter(r['operation'] for r in ev)
+ assert len(ev)==213 and ec['teacher_grid']==ec['teacher_domain_selection']==4
+ ks=[]
+ for r in ev:
+  if r['operation'] not in ('teacher_grid','teacher_domain_selection'):continue
+  assert r['arguments']==jm[r['id']]['arguments']
+  owner=r['id'];op=r['operation'];a=r['arguments'];base=jm[owner] if op=='teacher_grid' else jm[a['teacher']['job']]
+  key=owner+'|'+op+'|plain_prior_args';ks.append(key);domain=owner[:-4] if owner.endswith(':raw') else owner
+  keys[key]={'producer_job_id':owner,'operation':op,'argument_variant':'plain_prior_args',
+   'symbolic_template_digest':digest(a),'actual_resolved_arguments_sha256':None,
+   **{k:base['arguments'][k] for k in ('model','original_n','grid','seed')},
+   'legacy_cold_component_estimate_seconds':v3['reviewed_budgets_updates'][domain]['runtime_estimate_seconds'],
+   'estimate_not_current_full_guard_wall_or_guarantee':True,'whole_hot_rate_seconds':None}
+ gates[j['id']]={'teacher_keys':ks,'evidence_operation_counts':dict(ec),'all213_roster_digest':digest([r['id'] for r in ev]),'non_teacher_rows':205}
+assert len(keys)==40 and len(gates)==16 and len(activ)==14 and sum(map(len,activ.values()))==2332
+def gate_ids(j):
+ if j['operation']=='teacher_candidate_gate':return [j['id']]
+ if j['operation']=='teacher_selection':return [r['id'] for r in j['arguments']['stages']]
+ if j['operation']=='teacher_selected_inputs':return [r['id'] for r in jm[j['arguments']['selection_arguments']['job_arguments']]['arguments']['stages']]
+ return []
+def trace(saved=False):
+ seen=set();families=set();counts=collections.Counter();uses=collections.Counter();first=[];gc=collections.Counter()
+ def visit(g,consumer,reason):
+  gc[g]+=1;counts['gate_calculations']+=1;counts['non_teacher_nested_row_checks']+=205
+  for k in gates[g]['teacher_keys']:
+   counts['teacher_invocations']+=1;uses[k]+=1
+   if k not in seen:first.append({'key':k,'consumer':consumer,'reason':reason})
+   seen.add(k)
+ for j in jobs:
+  if not saved and j.get('activation'):
+   g=j['activation']['previous_teacher_gate_job_id'];counts['activation_guard_calls']+=1
+   if g not in families:
+    families.add(g);counts['activation_guard_calls']+=1;visit(g,j['id'],'first_activation_family')
+   else:counts['activation_cache_hit_lookups']+=1
+  if saved and j['operation'] in ('teacher_grid','teacher_domain_selection'):
+   k=j['id']+'|'+j['operation']+'|'+('direct_saved_wall_workdir' if j['operation']=='teacher_grid' else 'plain_prior_args')
+   counts['teacher_invocations']+=1;uses[k]+=1
+   if k not in seen:first.append({'key':k,'consumer':j['id'],'reason':'direct_saved_job'})
+   seen.add(k)
+  for g in gate_ids(j):visit(g,j['id'],j['operation'])
+ counts['cold_keys']=len(seen);counts['hot_invocations']=counts['teacher_invocations']-len(seen)
+ counts['teacher_guard_calls']=2*len(seen)+counts['hot_invocations']
+ return dict(counts),dict(uses),first,dict(gc)
+initial,iu,iff,ig=trace();saved,su,sff,sg=trace(True)
+assert (initial['gate_calculations'],initial['cold_keys'],initial['teacher_invocations'],initial['hot_invocations'])==(110,40,880,840)
+assert (saved['gate_calculations'],saved['cold_keys'],saved['teacher_invocations'],saved['hot_invocations'])==(96,60,808,748)
+for k,v in keys.items():
+ v['initial_invocations']=iu[k];v['fresh_saved_invocations']=su[k];v['first_initial_consumer']=next(r for r in iff if r['key']==k)
+for k,v in gates.items():v['initial_gate_calls']=ig[k];v['fresh_saved_gate_calls']=sg[k]
+cold40=sum(v['legacy_cold_component_estimate_seconds'] for v in keys.values());cold60=1.5*cold40
+assert abs(cold40/2-v4['known_partial_runtime_prediction']['components']['20selection_saved_replay_component_estimates_seconds'])<1e-6
+base=v4['known_partial_runtime_prediction']['components']['v1_known_component_predictions_seconds']
+ob=load('task-5-phase-local-memo-observation-root-v1/parent-cost-and-decision.json');pr=ob['progress'];st=pr['stages']
+assert ob['status']=='completed_resource_component' and ob['exit_code']==0 and ob['actual_administrative_cap'] is None
+assert [x['full_grid_checker_calls'] for x in st]==[1,0,1]
+assert all(x['coverage']['original_n']==1024 and x['coverage']['original_nodes']==108 and x['coverage']['full_original_coverage'] for x in st)
+
+names=['task-5-fullmixed-prior-budget-candidate-author-v1-config.json','task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json','task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.json','task-5-fullmixed-prior-budget-candidate-author-manifest-final-v4.json','task-5-phase-verified-raw-memo-fixed-v2-source-closure.json','task-5-phase-local-reuse-independent-decision-v1.json','task-5-phase-local-memo-observation-root-v1/parent-cost-and-decision.json','task-5-phase-local-memo-observation-root-v1/progress.json','task-5-phase-local-memo-resource-root-enclosing-v1.json','task-5-phase-local-memo-resource-root-approved-v1.json','task-5-formal-prior-lock-preparation-v1.py']
+assert all((D/n).is_file() for n in names)
+native='0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667'
+canonical=digest(cl)
+resource={'scope':'genuine saved Heston/coarse/N1024/108 original nodes only; same input hot reference, not whole research rate',
+ 'cold_seconds':st[0]['wall_seconds'],'same_input_hot_reference_seconds':st[1]['wall_seconds'],'fresh_seconds':st[2]['wall_seconds'],
+ 'full_grid_checker_calls':[1,0,1],'root_enclosing_seconds':52.226233168,
+ 'hot_IO_SHA_counts':st[1]['IO_and_SHA_delta'],'cold_IO_SHA_counts':st[0]['IO_and_SHA_delta'],
+ 'same_input_hot_3x_administrative_component_margin_seconds':3*st[1]['wall_seconds'],
+ 'margin_does_not_change_job_or_parent_wall_caps':True,
+ 'actual_resolved_arguments_sha256':st[0]['memo_events'][0]['resolved_arguments_sha256'],
+ 'no_other_grid_N_producer_op_or_plain_argument_guarantee':True,
+ 'hot_ratio_not_applied_to_whole_phase':True,'financial_qualification':'unknown',
+ 'all_original_SDE_label_cache_integrity_coverage':st[0]['coverage'],
+ 'original_generation_source_canonical':pr['original_generation_source_identity'],
+ 'former_bounded_reader_canonical':pr['original_bounded_checker_source_identity'],
+ 'current_runtime_canonical':pr['new_runtime_source_identity']}
+keys['teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args']['same_geometry_observed_reference']=resource
+candidate={
+ 'schema':'rb-f04-fullmixed-phase-local-reuse-budget-supplement-v5',
+ 'approved':False,'formal_plan_locked':False,'execution_authorized':False,'financial_qualification':'unknown',
+ 'scope':'static exact original-roster counters plus saved genuine resource reference; no budget or finance approval',
+ 'source':{'canonical_identity_sha256':canonical,'native_payload_sha256':native,
+  'canonical_formula':'runner._digest: plain canonical JSON','native_formula':'runner.payload_digest: encoded tree/array envelope',
+  'runtime_files':81,'dynamic_imports':0,'actual_production_bytes_match_fixed_v2':True,
+  'v2_author_source_identity_field_was_native_payload_not_canonical':True,
+  'generation_and_former_checker_provenance_not_rewritten':True,
+  'limited_source_decision':'task-5-phase-local-reuse-independent-decision-v1.json',
+  'limited_source_decision_scope':'immutable reuse runtime boundary only; budget/phase/finance still unapproved'},
+ 'original_roster':{'jobs':3138,'cases':121,'attempts':51,'teachers':20,'drivers':10,
+  'N':[1024,4096,16384,65536],'grids':['coarse','high'],'SDE':[768,1536],
+  'all_seeds_paths_thresholds_failure_statuses_case_attempt_parent_order_and_expense_ids':'unchanged',
+  'graph_metadata_sha256':sha(gp),'graph_is_original_draft_not_financial_run':True,
+  'cap_recipe_associations':v1['cap_options_materialization']['associations'],
+  'literal_cap_N_branch_options':v1['cap_options_materialization']['literal_branch_options']},
+ 'counter_assumption':'all original jobs/stages executed with complete unchanged numeric-integrity cache; financial unknown stays unknown',
+ 'key_contract':{'actual_key':['producer ID','operation','input_identity(actual resolved args)'],
+  'owner_seal':['actual raw','parameters','field','runtime source81','all node/driver physical bytes and roster','phase','artifact context'],
+  'symbolic_template_digest_is_not_actual_future_resolved_SHA':True,
+  'raw20_and_domain20_are_distinct_producers_operations_not_shared':True,
+  'first_complete_originalN_SDE_11labels_16blocks_covariance_cache_required':True,
+  'numeric_integrity_complete_unknown_is_eligible_without_qualification_change':True},
+ 'teacher_plain_keys':keys,
+ 'teacher_direct_saved_extra20_keys':{
+  j['id']:{'producer':j['id'],'operation':'teacher_grid','variant':'direct_saved_wall_workdir',
+    'injected_keys':['wall_cap_seconds','work_directory'],
+    'actual_SHA':None,'additional_cold_per_full_fresh_saved_context':1,
+    'retained_original_job_budget_and_artifact_directory_work_job_ID_binding':True}
+  for j in jobs if j['operation']=='teacher_grid'},
+ 'initial_generation_phase':{
+  'counts':initial,'first_cold_consumers':iff,
+  'cold40_legacy_component_estimate_seconds':cold40,
+  'hot_guard_source_hash_copy_and_other_overhead_seconds':None,
+  'native20_domain_selection_finite_box_input_hash_write_read_seconds':None,
+  '110_gate_non_teacher205row_kernel_driver_geometry_IO_seconds':None,
+  'first_proof_and_hits_charge_inside_actual_consuming_job_phase_once':True,
+  'event_clock_is_breakdown_with_original_first_receipt_not_added_twice':True},
+ 'fresh_full_saved_check':{
+  'counts':saved,'first_cold_consumers':sff,
+  'cold_split':{'teacher_grid_direct_injected':20,'teacher_grid_plain_stage':20,'domain_selection':20},
+  'cold60_legacy_component_estimate_seconds':cold60,
+  'generation_memo_never_inherited':True,'actual_runtime_seconds':None,
+  'other_job_loop96gate205row_domain_prefix_driver_IO_seconds':None,
+  'external_expense_id':'saved_check'},
+ 'independent_contexts':{
+  'final_saved':{'empty_context':True,'full_recheck_cold_keys':60,'cold_only_reference_seconds':cold60},
+  'fresh_independent_review':{'empty_context':True,'if_full_saved_checker_invoked_cold_keys':60,'cold_only_reference_seconds':cold60,'actual_review_scope_cost':None},
+  'CAS_primary_restore':{'empty_context':True,'each_full_saved_checker_cold_keys':60,'cold_only_reference_seconds':cold60,'transport_other_cost_seconds':None},
+  'CAS_mirror_restore':{'empty_context':True,'each_full_saved_checker_cold_keys':60,'cold_only_reference_seconds':cold60,'transport_other_cost_seconds':None},
+  'resume':{'empty_context':True,'completed_original_raw_retained':True,'actual_reached_key_count_seconds':None,'actual_covering_phase_alias_required':True},
+  'actual_review_or_restore_recheck_count_not_inferred_from10expense_IDs':True,
+  'serialized_or_cross_process_verified_proof_not_inherited':True},
+ 'ordinary_fallback_and_uncached_paths':{
+  'partial_cacheNone_actualcap_exception':'no registered PASS; original statuses/N and executed-prefix ordinary SDE work retained; can repeat',
+  'dependency_cap_selector_adapter_inspections':'existing check_dependency_cap_job passes no memo; executed stage math can still fully replay and has nonzero unknown cost',
+  'standalone_default_full_checker':'no shared context, no reuse credit',
+  '4_extra_date_diagnostics':'all4 original1case jobs preserve selectedN and full saved SDE/labels; not gridmemo eligible',
+  'domain_rule':'each domain verification recomputes original finite box before any grid proof hit',
+  'changed_raw_args_field_seed_source_or_physical_bytes':'reject tamper; no stale hit; changed valid args key requires fresh first proof',
+  'qualified_prefix_unused':'only actual original numeric qualification changes scheduling; not predicted PASS',
+  'fallback_call_count_and_seconds':None},
+ 'gate_selector_activation':{
+  'per_stage':gates,'native_stage_gates':16,'selectors':2,'selector_stage_calculations':16,
+  'selected_input_adapters':8,'adapter_stage_calculations':64,
+  'first_activation_families':14,'eligible_activation_jobs':2332,'same_family_hits':2318,
+  'activation_guard_calls_including_post_first':2346,
+  'activation_original_job_roster_reference':'gate-selector-supplement-v4.activation_cache_units',
+  'activation_family_roster_digests':{k:{'job_count':len(v),'ordered_job_IDs_sha256':digest(v)} for k,v in activ.items()},
+  'gate_sum':110,'non_teacher_nested_checks':22550,'teacher_guard_calls':920,
+  'gate_recomputed_separate_from_registered_teacher_proof_SDE_replayed':True,
+  'gate_cache_retained_but_not_new_generic_Q_risk_result_memo':True,
+  'nonteacher_other213row_work_prefix_driver_read_geometry_and_all_guards_not_zero':True,
+  'unobserved_full_gate_activation_guard_runtime_seconds':None},
+ 'genuine_same_input_resource_reference':resource,
+ 'known_partial_update':{
+  'old_v4_initial_known_component_seconds':v4['known_partial_runtime_prediction']['sum_seconds'],
+  'old_v4_initial_known_component_hours':v4['known_partial_runtime_prediction']['sum_hours'],
+  'ordinary_generation_components_retained_seconds':base,
+  'initial40_cold_legacy_component_estimate_seconds':cold40,
+  'initial_known_component_sum_seconds':base+cold40,'initial_known_component_sum_hours':(base+cold40)/3600,
+  'per_fullfresh60_cold_component_seconds':cold60,'per_fullfresh60_cold_component_hours':cold60/3600,
+  'legacy_component_extrapolation_not_current_whole_runtime_or_bounds':True,
+  'source_scope_correction':'former20domain saved replay estimates represent cold proof math, not native domain worker SDE; pure native domain worker remains unknown',
+  'hot_guards_nonteacher_kernels_IO_diagnostics_external10_CAS_resume_seconds':None,
+  'complete_phase_runtime_seconds':None,'whole_project_ETA_seconds':None,
+  'cold_hot_single_case_ratio_is_not_project_speedup':True,'cap_sum_not_forecast':True},
+ 'budget_and_prior_delta':{
+  'job_wall_limit_changes':{},'parent_cap_limit_changes':{},
+  'original_N_work_child_count_limits256MiB_changes':{},
+  'v1_v3_v4_caps_proposals_retained_without_shrink_or_approval':True,
+  'resource_hot_reference_only':st[1]['wall_seconds'],'other_N_grids_hot_rates_seconds':None,
+  'existing_3x_legacy_cold_cap_margin_is_not_a_precision_or_runtime_guarantee':True,
+  'all3138_budget_review_sha256':None,'root_actual_prior_approved':False},
+ 'minimal_prior_preparer_rebind':[
+  {'field':'EXPECTED_SOURCE/source_canonical_identity','new_value':canonical,'old_v1_dc_script_retained':True},
+  {'field':'native locked_bindings/job.source_sha256','new_value':native,'formula':'payload_digest'},
+  {'field':'independent_reviews.source','actual_file':'task-5-phase-local-reuse-independent-decision-v1.json',
+   'actual_decision':'approve_fixed_v2_source_runtime_immutable_reuse_boundary_only','do_not_fake_old_approved_schema':True},
+  {'field':'bindings.replay_budget_supplement','new_file':'this false immutable supplemental candidate'},
+  {'field':'reviewed_budgets/approved_bindings','requirement':'real independent/root approved all3138 exact original budget rows+this source/reference; do not fill null rates with fictitious measured provenance'},
+  {'field':'cap_options_authority','requirement':'sourcebound actual reviewed recipe/decisions; preserve573122 full4N options and relative parent order, future selectorSHA remains runtime only'},
+  {'field':'history/external10/ordinaryaliases','requirement':'retain malformed2/overlapunknown and actual inclusive lineage, bill first once/hit costs real; independent checks/restores remain separate parent expenses'},
+  {'field':'operationalguard','requirement':'root separate actual wall/RSS/free-space prior partial_unclosed; component8GiB does not certify phase RSS or financialcap'}],
+ 'history_external_expenses':{
+  'immutable_v1_history_reference':'task-5-fullmixed-prior-budget-candidate-author-v1-config.json',
+  'original_history_records':len(v1['history']),'malformed':len(v1['history_parse_failures']),
+  'original_history_total':v1['history_total_seconds'],'unknown_overlap_preserved':True,
+  'external10_IDs':v1['required_external_expense_ids'],'external_actual_expense_timing':'pending/null, not zero',
+  'old4GiB_failure_and_generation_costs_retained_not_subtracted_or_rebilled':True,
+  'resource_probe_inclusive_parent_only':'new componenthistory, not formalphase expense or per-key forecast addition'},
+ 'evidence':{n:{'sha256':sha(D/n),'bytes':(D/n).stat().st_size} for n in names},
+ 'author_actions':{'financial_generation_RNG_solver_savedSDE_replay':0,'source_tests_docs_Git_CAS_edits':0,
+  'only_static_metadata_source_byte_roster_counting':True,
+  'preparation_failure_preserved':'oversized shell command rejected Windows206 before any financial execution; adapted to D stdlib builder'},
+ 'assembly_cost':{'wall_seconds':(time.perf_counter_ns()-t)/1e9,'cpu_seconds':(time.process_time_ns()-cpu)/1e9,
+  'tail_and_prior_read_command_cost':'not measured in this receipt; no invented zero'},
+}
+out=D/'task-5-fullmixed-phase-local-reuse-budget-supplement-author-v5.json'
+with out.open('x') as f:json.dump(candidate,f,indent=2);f.write('\n')
+text=(
+ '# Phase-local reuse supplemental candidate (not approved)\n\n'
+ 'All3138jobs/121cases/51obligations/20teachers/10drivers and4N are preserved. No prior wall/parentcaps are reduced. Oldv1-v4/history stay immutable. Current source canonical959f879a... and native0df11d81... are separate from old generation4e8f and checker408f.\n\n'
+ 'All-completed initialphase:40 cold keys (raw20+domain20),880 calls/840 hits. Gates still calculate110times (native16+selector16+adapter64+activation14), with205 nonteacher rows each;2332 activation lookups keep byte/source guards. Full fresh saved checks need60 cold keys because direct raw args add wall/workdir. Final saved/review/primaryrestore/mirrorrestore each use independent empty context, not generation PASS.\n\n'
+ 'Genuine Heston/coarse/N1024/108nodes: cold23.670931s/hit0.222289s/fresh23.796868s, nativecounter1/0/1, original unknown preserved. Hot still reads49,985,348B/hashes70,677,598B. This ratio is not used for otherN/grid/producers or wholephase.\n\n'
+ 'After phase reuse, legacy known-component subtotal is'+format((base+cold40)/3600,'.3f')+'h, excluding new hotguard/nonteacher kernels/native domain worker/IO/otherunknowns. Per fullfresh saved checker cold-only subtotal is'+format(cold60/3600,'.3f')+'h. These are partial estimates, not runtime bounds/ETA. Complete phase/project forecast remains null.\n\n'
+ 'The existing D prior preparer needs current canonical/native formulas, actual limited source decision and actual independent/root all3138 budget/recipe bindings; no null rate is fabricated. Partial/cacheNone/caps/no-context paths retain ordinary potentially repeated SDE work. No source/Git/docs/CAS edit or new financial work was done.\n'
+)
+summary=out.with_suffix('.md')
+with summary.open('x') as f:f.write(text)
+assert not candidate['approved'] and not candidate['budget_and_prior_delta']['job_wall_limit_changes']
+assert all(sha(W/n)==h for n,h in cl['files'].items())
+print(json.dumps({'candidate':str(out),'sha256':sha(out),'bytes':out.stat().st_size,'summary_sha256':sha(summary),'initial':initial,'fresh':saved,'known_hours':(base+cold40)/3600,'fresh_cold_hours':cold60/3600,'assembly_cost':candidate['assembly_cost']},indent=2))

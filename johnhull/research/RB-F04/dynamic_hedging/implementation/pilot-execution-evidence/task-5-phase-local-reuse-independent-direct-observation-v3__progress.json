@@ -1,0 +1,147 @@
+{
+  "cases": [
+    {
+      "CPU_seconds": 33.24062223,
+      "case": "genuine_saved_cold_original108_N16",
+      "saved_node_checks_delta": 108,
+      "status": "PASS",
+      "wall_seconds": 2.483458757000335
+    },
+    {
+      "CPU_seconds": 0.2503759530000025,
+      "case": "same_context_hit_current_bytes",
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.2503796910023084
+    },
+    {
+      "CPU_seconds": 0.2064129500000007,
+      "case": "returned_report_mutation_isolation",
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.2064146199991228
+    },
+    {
+      "CPU_seconds": 0.17901922799999426,
+      "case": "internal_result_mutation_refused",
+      "rejection": "memo verified result integrity differs",
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.17903634600224905
+    },
+    {
+      "CPU_seconds": 0.09144334500000184,
+      "case": "last_original_node_same_size_mtime",
+      "rejection": "memo verified producer changed",
+      "same_size_and_mtime": true,
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.0914422120040399
+    },
+    {
+      "CPU_seconds": 0.09548284399999574,
+      "case": "last_original_driver_same_size_mtime",
+      "rejection": "memo verified producer changed",
+      "same_size_and_mtime": true,
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.09548151000490179
+    },
+    {
+      "CPU_seconds": 0.09314016600000485,
+      "actual_finite_cache_value_changed": true,
+      "case": "in_memory_raw_cache_mutation",
+      "rejection": "memo verified producer changed",
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.09313811200263444
+    },
+    {
+      "CPU_seconds": 0.09354047699999768,
+      "case": "actual_parameters_input_mutation",
+      "rejection": "memo verified producer changed",
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.09353900499991141
+    },
+    {
+      "CPU_seconds": 1.5909000005365215e-05,
+      "case": "original_typed_seed_mutation",
+      "rejection": "memo original producer arguments differ",
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 1.6555000911466777e-05
+    },
+    {
+      "CPU_seconds": 0.003733492999998589,
+      "case": "current_source_same_size_mtime_mutation",
+      "rejection": "memo source changed",
+      "same_size_and_mtime": true,
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.0037337620015023276
+    },
+    {
+      "CPU_seconds": 35.095821782,
+      "case": "fresh_empty_context_original108",
+      "saved_node_checks_delta": 108,
+      "status": "PASS",
+      "wall_seconds": 2.6094996679967153
+    },
+    {
+      "CPU_seconds": 33.759651925,
+      "case": "different_restored_root_fresh_original108",
+      "saved_node_checks_delta": 108,
+      "status": "PASS",
+      "wall_seconds": 2.5212279469997156
+    },
+    {
+      "CPU_seconds": 0.409656267999992,
+      "case": "activation_first_control_unknown_teacher_already_warm",
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.4096818290054216
+    },
+    {
+      "CPU_seconds": 0.11253323999999054,
+      "case": "activation_current_guard_before_cached_control_return",
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.11253238299832447
+    },
+    {
+      "CPU_seconds": 0.11438841900000796,
+      "case": "activation_last_driver_mutation_after_warm",
+      "rejection": "activation verified physical/source result changed",
+      "same_size_and_mtime": true,
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.11438636600360041
+    },
+    {
+      "CPU_seconds": 0.11171626400000889,
+      "case": "activation_last_node_mutation_after_warm",
+      "rejection": "activation verified physical/source result changed",
+      "same_size_and_mtime": true,
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.11171467700478388
+    },
+    {
+      "CPU_seconds": 0.11064716599999258,
+      "case": "activation_internal_gate_result_mutation",
+      "rejection": "activation verified physical/source result changed",
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.11064481299399631
+    },
+    {
+      "CPU_seconds": 29.84056728499999,
+      "case": "original_saved_invalid_nan_unknown_no_memo_registration",
+      "saved_node_checks_delta": 108,
+      "status": "PASS",
+      "wall_seconds": 1.9963440159990569
+    }
+  ],
+  "financial_generation_count": 0
+}

@@ -1,0 +1,191 @@
+{
+  "status": "completed_resource_probe_only",
+  "stages": [
+    {
+      "stage": "first_empty_context_full_check",
+      "wall_seconds": 23.670931355001812,
+      "CPU_seconds": 23.651921027,
+      "full_grid_checker_calls": 1,
+      "coverage": {
+        "original_n": 1024,
+        "original_nodes": 108,
+        "retained_nodes": 108,
+        "sde_replayed_nodes": 108,
+        "all_label_compared_nodes": 108,
+        "partial_or_nonreplayed_nodes": 0,
+        "unexecuted_original_nodes": 0,
+        "cache_comparison_returned": true,
+        "full_original_coverage": true,
+        "financial_qualification": "unknown"
+      },
+      "context_scope_id": "teacher-verification:43366660209517",
+      "IO_and_SHA_delta": {
+        "binary_file_bytes_read": 1542700254,
+        "binary_read_calls": 7680,
+        "SHA256_input_bytes": 10390327232
+      },
+      "memo_events": [
+        {
+          "id": "teacher-verification:43366660209517:0",
+          "kind": "verified",
+          "producer_id": "teacher:Heston:N1024:coarse:raw",
+          "operation": "teacher_grid",
+          "verified_event_id": "teacher-verification:43366660209517:0",
+          "binding_sha256": "9688db5ac74cc37766dc4a421538a980a4e108ee886cb31af5a52fb94be4a056",
+          "resolved_arguments_sha256": "de0d1a5baea115f579d5a02276ace6a15e2c364f7d02ac60f802e2a1c5cbbba4",
+          "original_n": 1024,
+          "sde_replayed_this_call": true,
+          "wall_seconds": 23.670686315,
+          "cpu_seconds": 23.65168026,
+          "financial_qualification": "unknown",
+          "expense_relationship": "included in consuming job/phase; do not add twice"
+        }
+      ]
+    },
+    {
+      "stage": "same_context_immutable_hit",
+      "wall_seconds": 0.222289268996974,
+      "CPU_seconds": 0.22228701999999956,
+      "full_grid_checker_calls": 0,
+      "coverage": {
+        "original_n": 1024,
+        "original_nodes": 108,
+        "retained_nodes": 108,
+        "sde_replayed_nodes": 108,
+        "all_label_compared_nodes": 108,
+        "partial_or_nonreplayed_nodes": 0,
+        "unexecuted_original_nodes": 0,
+        "cache_comparison_returned": true,
+        "full_original_coverage": true,
+        "financial_qualification": "unknown"
+      },
+      "context_scope_id": "teacher-verification:43366660209517",
+      "IO_and_SHA_delta": {
+        "binary_file_bytes_read": 49985348,
+        "binary_read_calls": 1518,
+        "SHA256_input_bytes": 70677598
+      },
+      "memo_events": [
+        {
+          "id": "teacher-verification:43366660209517:0",
+          "kind": "verified",
+          "producer_id": "teacher:Heston:N1024:coarse:raw",
+          "operation": "teacher_grid",
+          "verified_event_id": "teacher-verification:43366660209517:0",
+          "binding_sha256": "9688db5ac74cc37766dc4a421538a980a4e108ee886cb31af5a52fb94be4a056",
+          "resolved_arguments_sha256": "de0d1a5baea115f579d5a02276ace6a15e2c364f7d02ac60f802e2a1c5cbbba4",
+          "original_n": 1024,
+          "sde_replayed_this_call": true,
+          "wall_seconds": 23.670686315,
+          "cpu_seconds": 23.65168026,
+          "financial_qualification": "unknown",
+          "expense_relationship": "included in consuming job/phase; do not add twice"
+        },
+        {
+          "id": "teacher-verification:43366660209517:1",
+          "kind": "reused",
+          "producer_id": "teacher:Heston:N1024:coarse:raw",
+          "operation": "teacher_grid",
+          "verified_event_id": "teacher-verification:43366660209517:0",
+          "binding_sha256": "9688db5ac74cc37766dc4a421538a980a4e108ee886cb31af5a52fb94be4a056",
+          "resolved_arguments_sha256": "de0d1a5baea115f579d5a02276ace6a15e2c364f7d02ac60f802e2a1c5cbbba4",
+          "original_n": 1024,
+          "sde_replayed_this_call": false,
+          "wall_seconds": 0.222231974,
+          "cpu_seconds": 0.222235952,
+          "financial_qualification": "unknown",
+          "expense_relationship": "included in consuming job/phase; do not add twice"
+        }
+      ]
+    },
+    {
+      "stage": "fresh_empty_context_full_check",
+      "wall_seconds": 23.796868252000422,
+      "CPU_seconds": 23.780473960000002,
+      "full_grid_checker_calls": 1,
+      "coverage": {
+        "original_n": 1024,
+        "original_nodes": 108,
+        "retained_nodes": 108,
+        "sde_replayed_nodes": 108,
+        "all_label_compared_nodes": 108,
+        "partial_or_nonreplayed_nodes": 0,
+        "unexecuted_original_nodes": 0,
+        "cache_comparison_returned": true,
+        "full_original_coverage": true,
+        "financial_qualification": "unknown"
+      },
+      "context_scope_id": "teacher-verification:43390926309521",
+      "IO_and_SHA_delta": {
+        "binary_file_bytes_read": 1542700254,
+        "binary_read_calls": 7680,
+        "SHA256_input_bytes": 10390327232
+      },
+      "memo_events": [
+        {
+          "id": "teacher-verification:43390926309521:0",
+          "kind": "verified",
+          "producer_id": "teacher:Heston:N1024:coarse:raw",
+          "operation": "teacher_grid",
+          "verified_event_id": "teacher-verification:43390926309521:0",
+          "binding_sha256": "392523115beac694c18e2b863c980eae9340737f4b330ecaab00df272eb86eb2",
+          "resolved_arguments_sha256": "de0d1a5baea115f579d5a02276ace6a15e2c364f7d02ac60f802e2a1c5cbbba4",
+          "original_n": 1024,
+          "sde_replayed_this_call": true,
+          "wall_seconds": 23.795973257,
+          "cpu_seconds": 23.779586027,
+          "financial_qualification": "unknown",
+          "expense_relationship": "included in consuming job/phase; do not add twice"
+        }
+      ]
+    }
+  ],
+  "financial_qualification": "unknown",
+  "formal_financial_phase_approved": false,
+  "new_generation_RNG_solver_calls": 0,
+  "guard": {
+    "explicit_physical_file_SHA_bytes": 64420530,
+    "wall_seconds": 1.957423492000089
+  },
+  "original_generation_source_identity": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "original_bounded_checker_source_identity": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "new_runtime_source_identity": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+  "actual_original_math_and_storage_unchanged": true,
+  "changed_run_check_source_files": [
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+  ],
+  "original_grid_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "1f7424628edb2616d7643cd31bf06be50843543af3af070290f7d98b254c379d",
+    "metadata_sha256": "09ceb73b0f8cb7f10b096aadcd9607b8a79283a321cddb869094042a385de53a",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "original_driver_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "b47a04689ab17e0741ad1f7d5eaaa78e4581948043562883ede82184e7b2d0de",
+    "metadata_sha256": "5c7b12fe1c32d24ad389debeb39b8926149507ce74be5cd5cbdbe7021121202d",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "original_raw_status": "executed",
+  "original_financial_qualification": "unknown",
+  "fullcheck_counter_function": "check_pilot.check_teacher_grid_record",
+  "completed_checkpoint": "fresh_context_full_check_and_transport_source_original_stable",
+  "fullcheck_calls_total": 2,
+  "process_kernel_peak_RSS_bytes": 696537088,
+  "all_IO_and_SHA_counts": {
+    "binary_file_bytes_read": 3313509873,
+    "binary_read_calls": 20184,
+    "SHA256_input_bytes": 21113236191
+  },
+  "physical_read_scope": "Python binary file APIs only; OS device I/O, text decoding and C/mmap coverage unknown",
+  "SHA_input_scope": "all SHA256 bytes incl source/metadata/origin arrays; explicit physical guard bytes separate",
+  "new_and_old_source_provenance_not_substituted": true,
+  "child_cost_before_final_receipt": {
+    "wall_seconds": 50.239463550002256,
+    "CPU_seconds": 50.079578049,
+    "final_receipt_tail_seconds": null
+  }
+}

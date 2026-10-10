@@ -1,0 +1,24 @@
+{
+  "schema": "rb-f04-phase-local-memo-independent-saved-resource-review-v1",
+  "reviewer": "pilot_v53_independent_review",
+  "scope": "saved original genuine M6 Heston-coarse memo resource observation",
+  "measurement_preparation_author_role_disclosed": true,
+  "independent_check_scope": "saved raw receipts, coverage, physical provenance, report numeric comparison and expense arithmetic; not source implementation approval",
+  "financial_qualification": "unknown",
+  "financial_phase_main_approved": false,
+  "new_SDE_RNG_generation_solver_calls": 0,
+  "numeric_hash_equality_used_for_comparison": false,
+  "status": "FAIL",
+  "checks_passed": 828,
+  "failure_type": "ValueError",
+  "failure": "The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-independent-probe-v1.py\", line 144, in <module>\n    require(node[\"original_n\"]==1024 and node[\"full_saved_driver_sde_replayed\"] is True and node[\"raw_status\"]==\"executed\" and node[\"financial_qualification\"]==\"unknown\" and node[\"report_mode\"]==\"bounded\",\"completed proof per node retained\")\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()\n",
+  "review_cost_before_final_results_write": {
+    "wall_seconds": 1.463344846997643,
+    "CPU_seconds": 1.4399283360000001,
+    "peak_RSS_bytes": 657645568,
+    "results_write_and_tool_tail_seconds": null,
+    "included_in_measured_component": false,
+    "new_saved_only_review_expense": true
+  }
+}

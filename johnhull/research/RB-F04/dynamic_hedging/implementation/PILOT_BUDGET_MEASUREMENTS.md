@@ -203,6 +203,26 @@ M4/M5の保存表を部品参照として使用し、graph原controls={}と明�
 
 全stageが必要な初期phaseの既知部分外挿は、ordinary174157.908秒＋20domain163210.857秒＋16gate700138.342秒＋2selector700138.342秒＋activation447126.751秒＝2184772.200秒（606.881時間、約25.3日）。未観測kernel/IO/外部10費用/resumeは含まない。実際の終了時間や確定した仕事量ではなく、qualified prefixで短縮され得る一方、数日以内の完了を裏付けない。
 
-数日の工程見積りを取り下げ、同じ不変source/input/job/raw/driverの全N検算結果をphase内で安全に再利用できるか、既存context境界を調査する。元N/全case/閾値/数学・初回の全SDE/11labels/16blocks/covariance検算と原失敗/unknownは維持する。fresh・独立検証・両保管庫semanticは別contextで実施する。再利用案は未実装・未承認であり、v1–v4の原費用見積と正式lock未完了を保持する。
+数日の工程見積りを取り下げ、同じ不変source/input/job/raw/driverの全N検算結果をphase内で安全に再利用できるか、既存context境界を調査する。元N/全case/閾値/数学・初回の全SDE/11labels/16blocks/covariance検算と原失敗/unknownは維持する。fresh・独立検証・両保管庫semanticは別contextで実施する。再利用案は下記の限定source確認と部品実測まで完了した。v1–v4の原費用見積を履歴として保持し、正式全phase予算・lockは未承認。
 
 独立の[変更検知・保持範囲の読取調査](pilot-execution-evidence/task-5-phase-local-saved-check-memo-independent-tamper-review-v1.md)では、同一実行contextのbounded teacher-grid検算結果に限る条件付き案を確認した。各利用で実入力・全node/driverの物理証跡を再結合し、fresh・独立検証・保管庫復元では空contextから検算する。入力読取・hash費用と短縮後の所要時間は未測定で、現在source・金融計算は変更していない。
+
+## 同じphase内の検算結果再利用（2026-10-10）
+
+[固定v2](pilot-execution-evidence/task-5-phase-verified-raw-memo-fixed-v2-results.json)をrootが適用し、[関連既存240tests・Ruff/format](pilot-execution-evidence/task-5-phase-local-reuse-root-regression-v1-results.json) PASS。[独立source判断](pilot-execution-evidence/task-5-phase-local-reuse-independent-decision-v1.json)は18実probeで限定承認。初回は元の全N/SDE・全11label・16blocks・共分散・cacheを検算し、同一producer/operation/引数の次回だけ小さな検算結果を再利用する。hitにも現在のsource・入力・元node/driver全ファイル内容の確認とcopy費用がある。failed/capped/partialは登録せず、元unknownを保持する。fresh/resume/review/保管庫復元は新しい空contextから検算する。
+
+真正M6 Heston-coarse、原N1024・108節点・12日付・全33閾値を[実事前180秒/8GiB予算](pilot-execution-evidence/task-5-phase-local-memo-resource-root-approved-v1.json)へ結び、一回のsaved-only部品計測を実行した。
+
+| 呼出し | 実wall秒 | 実CPU秒 | 元全grid checkerの新規呼出し |
+|---|---:|---:|---:|
+| 初回・空context | 23.670931 | 23.651921 | 1 |
+| 同じcontextで再利用 | 0.222289 | 0.222287 | 0 |
+| 別の空context | 23.796868 | 23.780474 | 1 |
+
+[実親receipt](pilot-execution-evidence/task-5-phase-local-memo-observation-root-v1__parent-cost-and-decision.json)はcapなし・最大観測child RSS696,823,808 B。[root外側時計](pilot-execution-evidence/task-5-phase-local-memo-resource-root-enclosing-v1.json)はwall52.226233秒、全子CPU50.627967秒。金融生成/RNG 0、原701入力とsourceの終了時再照合PASS、元金融資格unknownを保持。各返却reportの全108節点/全N検算記述は初回証跡を表し、当該呼出しでの実SDE実行有無は別のmemo eventとchecker呼出しcounterで区別する。
+
+この一例の再利用部分は初回比106.5倍。hitでもPython binary read 49,985,348 B・SHA入力70,677,598 Bを観測した（OS device IOやC/mmapは未計測）。全体速度への一般化はしない。大N/別gridでのhit費用、初回検算、非teacher gate、生成、独立fresh/両復元の費用を含む新全phase予算は次に確認する。旧606.881時間は旧方式の既知部分外挿であり、残時間の確定値ではない。
+
+source81/dynamic0のplain canonical identityは959f879a…（runner._digest）、native job/memo payload identityは0df11d81…（runner.payload_digest）。同じ81 sourcebytesの別符号化であり、旧generation4e8f8b…・旧saved checker408f2b…を置き換えない。独立probeの初期hash算式誤認とNaNセルへの無効な改変probe、author接続時の元失敗・実費用は各manifestに保持する。正式pilot/freeze/main・金融受入は未実施。
+
+[現v2の未承認予算補足v5](pilot-execution-evidence/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v5.json)は、全stageが実行される仮定で初回40 cold/840 hit、110 gate・非teacher 22,550 rowsを数えた。旧部品rateだけの更新小計は初回139.050時間、各full saved/fresh/restore contextの60 cold部分は136.009時間。新wall capの承認や全体ETAではなく、hot guard・非teacher kernel・IO・外部費用等は未観測。full savedの余分20 keysが行政引数wall/work-directory差だけに由来する点を調査し、次の限定修正をDで検証中（現productionはv2、未適用）。元3,138jobs/121cases/51obligations/全4N/全capsを保持する。

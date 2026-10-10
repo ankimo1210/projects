@@ -1,0 +1,75 @@
+{
+  "decision": "task-5-phase-local-reuse-independent-decision-v1.json",
+  "files": {
+    "task-5-phase-local-reuse-independent-decision-v1.json": {
+      "bytes": 7512,
+      "sha256": "c09d557dc348bb7b3b32da7041d0512db5538bc370204c1ff26c59ea6aed02d3"
+    },
+    "task-5-phase-local-reuse-independent-direct-observation-v3/progress.json": {
+      "bytes": 4687,
+      "sha256": "272415a4344782324c681041c0b30cd1a55b1d25f10798ac9b74cc5dbd6cee1b"
+    },
+    "task-5-phase-local-reuse-independent-direct-observation-v3/results.json": {
+      "bytes": 9588,
+      "sha256": "409a50e4b8a9436575d6cb5560ae921e6f39be3cd41098120345f0acbf7bb530"
+    },
+    "task-5-phase-local-reuse-independent-direct-probe-v1.py": {
+      "bytes": 15348,
+      "sha256": "dac83888a8491b73971721d782329dc9c954eff5b5856a0c75734a4f76cbfcba"
+    },
+    "task-5-phase-local-reuse-independent-direct-probe-v2.py": {
+      "bytes": 15625,
+      "sha256": "dd7e6bb5c0b0d3d26351c75056198128c2831a4515c66bf893af57feb7122222"
+    },
+    "task-5-phase-local-reuse-independent-direct-v1-parent-cost.json": {
+      "bytes": 377,
+      "sha256": "7a851a72ca76d9c0702659fa3c83d8d4662ba350a5985d8a245b5fe8b9082559"
+    },
+    "task-5-phase-local-reuse-independent-direct-v1.log": {
+      "bytes": 596,
+      "sha256": "4e78d07fcbd47bd1ca598b89d595c7a9335e9da5511f920ebced2e5d8cd79202"
+    },
+    "task-5-phase-local-reuse-independent-direct-v2-parent-cost.json": {
+      "bytes": 368,
+      "sha256": "2bb83aa8522bde09304b97b6324162bf9fd103fd389acdac266d7e971332bbf4"
+    },
+    "task-5-phase-local-reuse-independent-direct-v2.log": {
+      "bytes": 1562,
+      "sha256": "e26438834c76fe086952118b60b45240d9cb72607e1f5ddb9361998d28295f2e"
+    },
+    "task-5-phase-local-reuse-independent-direct-v3-parent-cost.json": {
+      "bytes": 370,
+      "sha256": "9a350117c8aef271ed8ef4248a6e8e5a527508111f64f439054f0649bc3982e4"
+    },
+    "task-5-phase-local-reuse-independent-direct-v3.log": {
+      "bytes": 876,
+      "sha256": "e6a69071b810954ce6044916ed870a392005f40721399dbada8e8e35fc33b6a8"
+    },
+    "task-5-phase-local-reuse-independent-fixed-config-v1.json": {
+      "bytes": 11018,
+      "sha256": "12b9d55fb0ca314a8722cf9479436d360f6041e289e9ec2ba1ac5fc7dd3d191b"
+    },
+    "task-5-phase-local-reuse-independent-fixed-config-v2.json": {
+      "bytes": 11241,
+      "sha256": "fceedd7f915b8d6241ef9b8e8384ab3e802618af63e0a3c540b3c4d0d884c7b4"
+    },
+    "task-5-phase-local-reuse-independent-fixed-config-v3.json": {
+      "bytes": 11396,
+      "sha256": "7d889600e7b28eb7e7bdbd67633556e9d5f1e82c681f2337efb242d0ffecfd24"
+    },
+    "task-5-phase-local-reuse-independent-runtime-identity-v1.json": {
+      "bytes": 35351,
+      "sha256": "43f4b95fbc5183f9fac4c73c67e81147bd3b9929a591f7814a95eaf3a729b867"
+    },
+    "task-5-phase-local-reuse-independent-static-preflight-v1.json": {
+      "bytes": 2484,
+      "sha256": "cb31faa0004110e05d0ca8b21f8e12fd44306cdafca5bc6246746a290dddfed1"
+    },
+    "task-5-phase-verified-raw-memo-fixed-v2-manifest.json": {
+      "bytes": 2424,
+      "sha256": "78a9f5d6f8802b6b6f329eb9c938dee11eb7b3429743ca43886843588f08529d"
+    }
+  },
+  "schema": "rb-f04-phase-local-runtime-reuse-independent-manifest-v1",
+  "scope": "minimal fixed D code/config/log/cost/source-origin and saved-only result; observer copies excluded"
+}

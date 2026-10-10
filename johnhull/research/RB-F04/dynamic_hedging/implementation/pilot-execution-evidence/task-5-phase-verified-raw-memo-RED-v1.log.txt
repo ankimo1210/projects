@@ -1,0 +1,17 @@
+
+==================================== ERRORS ====================================
+_ ERROR collecting .superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-tests-v1.py _
+ImportError while importing test module '/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-tests-v1.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+task-5-phase-verified-raw-memo-tests-v1.py:17: in <module>
+    import check_pilot as checker
+task-5-phase-verified-raw-memo-source-after-v1/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:22: in <module>
+    import run_reference as runner
+task-5-phase-verified-raw-memo-source-after-v1/johnhull/research/RB-F04/dynamic_hedging/run_reference.py:30: in <module>
+    from deep_hedge_price._dynamic_hedging_protocol import candidate_protocol
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_protocol'
+=========================== short test summary info ============================
+ERROR task-5-phase-verified-raw-memo-tests-v1.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.38s

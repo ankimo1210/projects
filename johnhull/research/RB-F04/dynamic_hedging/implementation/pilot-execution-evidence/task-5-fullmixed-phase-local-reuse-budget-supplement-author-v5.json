@@ -1,0 +1,2575 @@
+{
+  "schema": "rb-f04-fullmixed-phase-local-reuse-budget-supplement-v5",
+  "approved": false,
+  "formal_plan_locked": false,
+  "execution_authorized": false,
+  "financial_qualification": "unknown",
+  "scope": "static exact original-roster counters plus saved genuine resource reference; no budget or finance approval",
+  "source": {
+    "canonical_identity_sha256": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+    "native_payload_sha256": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+    "canonical_formula": "runner._digest: plain canonical JSON",
+    "native_formula": "runner.payload_digest: encoded tree/array envelope",
+    "runtime_files": 81,
+    "dynamic_imports": 0,
+    "actual_production_bytes_match_fixed_v2": true,
+    "v2_author_source_identity_field_was_native_payload_not_canonical": true,
+    "generation_and_former_checker_provenance_not_rewritten": true,
+    "limited_source_decision": "task-5-phase-local-reuse-independent-decision-v1.json",
+    "limited_source_decision_scope": "immutable reuse runtime boundary only; budget/phase/finance still unapproved"
+  },
+  "original_roster": {
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "teachers": 20,
+    "drivers": 10,
+    "N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "grids": [
+      "coarse",
+      "high"
+    ],
+    "SDE": [
+      768,
+      1536
+    ],
+    "all_seeds_paths_thresholds_failure_statuses_case_attempt_parent_order_and_expense_ids": "unchanged",
+    "graph_metadata_sha256": "8f83db63308ff6fdfae25d6a44f988361660703e1779a7957f80435553bbb4f3",
+    "graph_is_original_draft_not_financial_run": true,
+    "cap_recipe_associations": 266306,
+    "literal_cap_N_branch_options": 573122
+  },
+  "counter_assumption": "all original jobs/stages executed with complete unchanged numeric-integrity cache; financial unknown stays unknown",
+  "key_contract": {
+    "actual_key": [
+      "producer ID",
+      "operation",
+      "input_identity(actual resolved args)"
+    ],
+    "owner_seal": [
+      "actual raw",
+      "parameters",
+      "field",
+      "runtime source81",
+      "all node/driver physical bytes and roster",
+      "phase",
+      "artifact context"
+    ],
+    "symbolic_template_digest_is_not_actual_future_resolved_SHA": true,
+    "raw20_and_domain20_are_distinct_producers_operations_not_shared": true,
+    "first_complete_originalN_SDE_11labels_16blocks_covariance_cache_required": true,
+    "numeric_integrity_complete_unknown_is_eligible_without_qualification_change": true
+  },
+  "teacher_plain_keys": {
+    "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N1024:coarse:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "332e5451d8e3aeee783ffe0ed65ea745e7a7eaec64151a4597c6501c0ffa5570",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 1024,
+      "grid": "coarse",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 31.008640309002658,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 69,
+      "fresh_saved_invocations": 60,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      "same_geometry_observed_reference": {
+        "scope": "genuine saved Heston/coarse/N1024/108 original nodes only; same input hot reference, not whole research rate",
+        "cold_seconds": 23.670931355001812,
+        "same_input_hot_reference_seconds": 0.222289268996974,
+        "fresh_seconds": 23.796868252000422,
+        "full_grid_checker_calls": [
+          1,
+          0,
+          1
+        ],
+        "root_enclosing_seconds": 52.226233168,
+        "hot_IO_SHA_counts": {
+          "binary_file_bytes_read": 49985348,
+          "binary_read_calls": 1518,
+          "SHA256_input_bytes": 70677598
+        },
+        "cold_IO_SHA_counts": {
+          "binary_file_bytes_read": 1542700254,
+          "binary_read_calls": 7680,
+          "SHA256_input_bytes": 10390327232
+        },
+        "same_input_hot_3x_administrative_component_margin_seconds": 0.666867806990922,
+        "margin_does_not_change_job_or_parent_wall_caps": true,
+        "actual_resolved_arguments_sha256": "de0d1a5baea115f579d5a02276ace6a15e2c364f7d02ac60f802e2a1c5cbbba4",
+        "no_other_grid_N_producer_op_or_plain_argument_guarantee": true,
+        "hot_ratio_not_applied_to_whole_phase": true,
+        "financial_qualification": "unknown",
+        "all_original_SDE_label_cache_integrity_coverage": {
+          "original_n": 1024,
+          "original_nodes": 108,
+          "retained_nodes": 108,
+          "sde_replayed_nodes": 108,
+          "all_label_compared_nodes": 108,
+          "partial_or_nonreplayed_nodes": 0,
+          "unexecuted_original_nodes": 0,
+          "cache_comparison_returned": true,
+          "full_original_coverage": true,
+          "financial_qualification": "unknown"
+        },
+        "original_generation_source_canonical": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+        "former_bounded_reader_canonical": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+        "current_runtime_canonical": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76"
+      }
+    },
+    "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N1024:coarse",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "6be763fd9da5e8fead128a0729f41006fd46e02ce52904b54a2894fff7ab433a",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 1024,
+      "grid": "coarse",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 31.008640309002658,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 69,
+      "fresh_saved_invocations": 61,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:local:N1024:coarse:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "7ee2cd119f866e86288aa07d55beffbb015d9456a7e9d02d5bab19285d83ad09",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 1024,
+      "grid": "coarse",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 186.48641375999432,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 69,
+      "fresh_saved_invocations": 60,
+      "first_initial_consumer": {
+        "key": "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:local:N1024:coarse",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "89b42200e6647e86edf43f54e6a338363fee8d3a574729e978a45879788a4c73",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 1024,
+      "grid": "coarse",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 186.48641375999432,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 69,
+      "fresh_saved_invocations": 61,
+      "first_initial_consumer": {
+        "key": "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N4096:coarse:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N4096:coarse:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "d3dab76fb3307a607e86b9952154316a5a294a2a9db35d41e11c411ba1569ebc",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 4096,
+      "grid": "coarse",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 124.03456123601063,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N4096:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N4096:coarse|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N4096:coarse",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "f62f2b8413c49b056b06c1017c944f778ec4af98c0cd228fc10a90ddf9829fb2",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 4096,
+      "grid": "coarse",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 124.03456123601063,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N4096:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N1024:high:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N1024:high:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "9acae52975658a23f7c1743ed15600f61c24c80a4e7fa0ea0583cd972629a3a9",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 1024,
+      "grid": "high",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 50.18734905900055,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 14,
+      "fresh_saved_invocations": 12,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N1024:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N1024:high|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N1024:high",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "2beab4d6e3a53450579fd1f4363d93dc2ee34c18091469496bfb3511f742a1d9",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 1024,
+      "grid": "high",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 50.18734905900055,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 14,
+      "fresh_saved_invocations": 13,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N1024:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N4096:high:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N4096:high:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "5c626e761108f12f2b362c452e0a932d6e4b1e9a46b0fd4e8546f5280d368525",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 4096,
+      "grid": "high",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 200.7493962360022,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N4096:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N4096:high|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N4096:high",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "cf238cfa5c4a78f16436cae7ca6fbc2624387ac115bb40fb91e56e6626cd9e55",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 4096,
+      "grid": "high",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 200.7493962360022,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N4096:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N1024:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N16384:coarse:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N16384:coarse:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "bc65d23d02ba29f420701ba0fab896e38dd502cc3739878de4501885b03d7086",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 16384,
+      "grid": "coarse",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 496.1382449440425,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N16384:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N4096:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N16384:coarse|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N16384:coarse",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "dd815d5060e68f090e7d69dd66663b5791fb1cf7a83c0709ea0a601445a2b039",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 16384,
+      "grid": "coarse",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 496.1382449440425,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N16384:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N4096:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N16384:high:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N16384:high:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "f64d289dbb657f714e132b87586b6adbaa6acc084bcb73e33a4e4c15e4af0e7f",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 16384,
+      "grid": "high",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 802.9975849440088,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N16384:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N4096:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N16384:high|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N16384:high",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "50d426c7e3d72ce868223e2361eeb55828f3e453f460aa765851a269d037757d",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 16384,
+      "grid": "high",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 802.9975849440088,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N16384:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N4096:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N65536:coarse:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "0ce6939f1fef6693068e036b4722d9de1d291b061adaff73fb7803cad1a395b9",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 65536,
+      "grid": "coarse",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 1984.55297977617,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 20,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N16384:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N65536:coarse",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "dfdcafc4f69c62957ed5a9bd1b74cd20220a1946c7664a88ac4ad394fd2bd9b5",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 65536,
+      "grid": "coarse",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 1984.55297977617,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 20,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N16384:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N65536:high:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N65536:high:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "947561230924f7516823aa0b9cd4b8fb7074f74629320750a3b0860746988443",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 65536,
+      "grid": "high",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 3211.9903397760354,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 20,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N16384:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:Heston:N65536:high|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:Heston:N65536:high",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "9be7a7040163bdbc8eee9a886ac8dad3cb90e34331d517f3a26f0649c609b4bc",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 65536,
+      "grid": "high",
+      "seed": 138674072,
+      "legacy_cold_component_estimate_seconds": 3211.9903397760354,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 20,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:Heston:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N16384:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher-reference:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher-reference:Heston:N65536:coarse:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "eafe93ca96556b72612401b33f310ecab05a7e8d105369c30e24a39ff7da4cd3",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 65536,
+      "grid": "coarse",
+      "seed": 3631740690,
+      "legacy_cold_component_estimate_seconds": 1984.55297977617,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 7,
+      "fresh_saved_invocations": 6,
+      "first_initial_consumer": {
+        "key": "teacher-reference:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N65536:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher-reference:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher-reference:Heston:N65536:coarse",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "b2f23032fd29217b882c78cd6492bd14bf1c65284a9d20a6110d5008859da944",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 65536,
+      "grid": "coarse",
+      "seed": 3631740690,
+      "legacy_cold_component_estimate_seconds": 1984.55297977617,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 7,
+      "fresh_saved_invocations": 7,
+      "first_initial_consumer": {
+        "key": "teacher-reference:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N65536:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher-reference:Heston:N65536:high:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher-reference:Heston:N65536:high:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "5d14c644da2c771b4a55b52f651968fbf847765d668f0393aeb17112d73dab4c",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 65536,
+      "grid": "high",
+      "seed": 3631740690,
+      "legacy_cold_component_estimate_seconds": 3211.9903397760354,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 6,
+      "fresh_saved_invocations": 6,
+      "first_initial_consumer": {
+        "key": "teacher-reference:Heston:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N65536:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher-reference:Heston:N65536:high|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher-reference:Heston:N65536:high",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "b1363fd56f6ce1673f487bf25f6db4de39499594e1074534f4a8a6625fb58f4b",
+      "actual_resolved_arguments_sha256": null,
+      "model": "Heston",
+      "original_n": 65536,
+      "grid": "high",
+      "seed": 3631740690,
+      "legacy_cold_component_estimate_seconds": 3211.9903397760354,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 6,
+      "fresh_saved_invocations": 7,
+      "first_initial_consumer": {
+        "key": "teacher-reference:Heston:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N65536:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N4096:coarse:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:local:N4096:coarse:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "fd8aab8d432a28d7a46b2b9e05f67aa15116ce18c4c3a51ef089bf6f4f589d5f",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 4096,
+      "grid": "coarse",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 745.9456550399773,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:local:N4096:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N4096:coarse|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:local:N4096:coarse",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "363dccf96f147fc6795446fbe03a7d8b0a8231e27b4ba11ec607acc93c012a74",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 4096,
+      "grid": "coarse",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 745.9456550399773,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:local:N4096:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N1024:high:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:local:N1024:high:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "ff01c0a89f5c8a63f8b7491d23c65ec6774a5b52584c6a8cc31a04126e89aae5",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 1024,
+      "grid": "high",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 827.6924734679997,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 14,
+      "fresh_saved_invocations": 12,
+      "first_initial_consumer": {
+        "key": "teacher:local:N1024:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N1024:high|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:local:N1024:high",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "42afe2626128970164d5ddd64283bf78f8dc3752c41e88d328582a4d30c5f357",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 1024,
+      "grid": "high",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 827.6924734679997,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 14,
+      "fresh_saved_invocations": 13,
+      "first_initial_consumer": {
+        "key": "teacher:local:N1024:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N4096:high:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:local:N4096:high:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "bb91dc9b2698783c8bdf6ccf5fa59ffd2aadaff7c2fb23f9eb5cee22e5b30d19",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 4096,
+      "grid": "high",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 3310.7698938719986,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:local:N4096:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N1024:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N4096:high|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:local:N4096:high",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "a36a9d83fbd3b128f9dffb04083222db66b2efb49e43975cdf9ea186abe43181",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 4096,
+      "grid": "high",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 3310.7698938719986,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:local:N4096:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N1024:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N16384:coarse:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:local:N16384:coarse:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "ca7c2bd55476010512b586d6c03782ba8eef90c4aa9cde36e0f28d12a21ff5b8",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 16384,
+      "grid": "coarse",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 2983.782620159909,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:local:N16384:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N4096:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N16384:coarse|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:local:N16384:coarse",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "d9fea4fd19f169d53b96bebd42d2b52e211e1ac1d99f4a014e654465a0c63f55",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 16384,
+      "grid": "coarse",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 2983.782620159909,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:local:N16384:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N4096:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N16384:high:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:local:N16384:high:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "a4304713f1bd02b3e6390a90c95ae0a3187f725287cfaacc0fa558c2ae9bc574",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 16384,
+      "grid": "high",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 13243.079575487995,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:local:N16384:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N4096:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N16384:high|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:local:N16384:high",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "ef671953cb2007f718c1064262d3355cdec7b19879c561d3f7642c261d829b63",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 16384,
+      "grid": "high",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 13243.079575487995,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 21,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:local:N16384:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N4096:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N65536:coarse:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:local:N65536:coarse:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "5f3b878f4aa8160d81f992723090100868795362b4d1d13e37a58e1b02a2f1d2",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 65536,
+      "grid": "coarse",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 11935.130480639637,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 20,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:local:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N16384:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N65536:coarse|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:local:N65536:coarse",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "dccf6e1126762efe47e1f4475183de11865e062f06de2b52cd0810d39fdf415a",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 65536,
+      "grid": "coarse",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 11935.130480639637,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 20,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:local:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N16384:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N65536:high:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher:local:N65536:high:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "4f5bf4becd18878665dbc2cba49aff1f4bafedb98349395f659b6bbc90d3d171",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 65536,
+      "grid": "high",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 52972.31830195198,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 20,
+      "fresh_saved_invocations": 18,
+      "first_initial_consumer": {
+        "key": "teacher:local:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N16384:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher:local:N65536:high|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher:local:N65536:high",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "a9c97812319b2af02dd4444745770e1e3ad0917a2e568b3f0a1b91b534d495c4",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 65536,
+      "grid": "high",
+      "seed": 1345225788,
+      "legacy_cold_component_estimate_seconds": 52972.31830195198,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 20,
+      "fresh_saved_invocations": 19,
+      "first_initial_consumer": {
+        "key": "teacher:local:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N16384:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher-reference:local:N65536:coarse:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher-reference:local:N65536:coarse:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "d5c69703074b8a7aa882c454b21eb8d6442fcee67e37995d42ed1cde91b4235a",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 65536,
+      "grid": "coarse",
+      "seed": 3584985287,
+      "legacy_cold_component_estimate_seconds": 11935.130480639637,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 7,
+      "fresh_saved_invocations": 6,
+      "first_initial_consumer": {
+        "key": "teacher-reference:local:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N65536:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher-reference:local:N65536:coarse|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher-reference:local:N65536:coarse",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "97d0ee7d65c1fa5c5bcdd902b5cd0a650136eb121e9b1e9917bdbc7f772527b4",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 65536,
+      "grid": "coarse",
+      "seed": 3584985287,
+      "legacy_cold_component_estimate_seconds": 11935.130480639637,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 7,
+      "fresh_saved_invocations": 7,
+      "first_initial_consumer": {
+        "key": "teacher-reference:local:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N65536:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher-reference:local:N65536:high:raw|teacher_grid|plain_prior_args": {
+      "producer_job_id": "teacher-reference:local:N65536:high:raw",
+      "operation": "teacher_grid",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "3e6e057ab0bdeb9e01b7545f5b8ff92b075cd99ef1237cd02741187db23d4454",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 65536,
+      "grid": "high",
+      "seed": 3584985287,
+      "legacy_cold_component_estimate_seconds": 52972.31830195198,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 6,
+      "fresh_saved_invocations": 6,
+      "first_initial_consumer": {
+        "key": "teacher-reference:local:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N65536:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    },
+    "teacher-reference:local:N65536:high|teacher_domain_selection|plain_prior_args": {
+      "producer_job_id": "teacher-reference:local:N65536:high",
+      "operation": "teacher_domain_selection",
+      "argument_variant": "plain_prior_args",
+      "symbolic_template_digest": "c7e634aef8547f40a38d08cb7c7eff6ce6fd9823e5201a96025102cc353b3ddf",
+      "actual_resolved_arguments_sha256": null,
+      "model": "local",
+      "original_n": 65536,
+      "grid": "high",
+      "seed": 3584985287,
+      "legacy_cold_component_estimate_seconds": 52972.31830195198,
+      "estimate_not_current_full_guard_wall_or_guarantee": true,
+      "whole_hot_rate_seconds": null,
+      "initial_invocations": 6,
+      "fresh_saved_invocations": 7,
+      "first_initial_consumer": {
+        "key": "teacher-reference:local:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N65536:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    }
+  },
+  "teacher_direct_saved_extra20_keys": {
+    "teacher:Heston:N1024:coarse:raw": {
+      "producer": "teacher:Heston:N1024:coarse:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:local:N1024:coarse:raw": {
+      "producer": "teacher:local:N1024:coarse:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:Heston:N4096:coarse:raw": {
+      "producer": "teacher:Heston:N4096:coarse:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:Heston:N1024:high:raw": {
+      "producer": "teacher:Heston:N1024:high:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:Heston:N4096:high:raw": {
+      "producer": "teacher:Heston:N4096:high:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:Heston:N16384:coarse:raw": {
+      "producer": "teacher:Heston:N16384:coarse:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:Heston:N16384:high:raw": {
+      "producer": "teacher:Heston:N16384:high:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:Heston:N65536:coarse:raw": {
+      "producer": "teacher:Heston:N65536:coarse:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:Heston:N65536:high:raw": {
+      "producer": "teacher:Heston:N65536:high:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher-reference:Heston:N65536:coarse:raw": {
+      "producer": "teacher-reference:Heston:N65536:coarse:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher-reference:Heston:N65536:high:raw": {
+      "producer": "teacher-reference:Heston:N65536:high:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:local:N4096:coarse:raw": {
+      "producer": "teacher:local:N4096:coarse:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:local:N1024:high:raw": {
+      "producer": "teacher:local:N1024:high:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:local:N4096:high:raw": {
+      "producer": "teacher:local:N4096:high:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:local:N16384:coarse:raw": {
+      "producer": "teacher:local:N16384:coarse:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:local:N16384:high:raw": {
+      "producer": "teacher:local:N16384:high:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:local:N65536:coarse:raw": {
+      "producer": "teacher:local:N65536:coarse:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher:local:N65536:high:raw": {
+      "producer": "teacher:local:N65536:high:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher-reference:local:N65536:coarse:raw": {
+      "producer": "teacher-reference:local:N65536:coarse:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    },
+    "teacher-reference:local:N65536:high:raw": {
+      "producer": "teacher-reference:local:N65536:high:raw",
+      "operation": "teacher_grid",
+      "variant": "direct_saved_wall_workdir",
+      "injected_keys": [
+        "wall_cap_seconds",
+        "work_directory"
+      ],
+      "actual_SHA": null,
+      "additional_cold_per_full_fresh_saved_context": 1,
+      "retained_original_job_budget_and_artifact_directory_work_job_ID_binding": true
+    }
+  },
+  "initial_generation_phase": {
+    "counts": {
+      "gate_calculations": 110,
+      "non_teacher_nested_row_checks": 22550,
+      "teacher_invocations": 880,
+      "activation_guard_calls": 2346,
+      "activation_cache_hit_lookups": 2318,
+      "cold_keys": 40,
+      "hot_invocations": 840,
+      "teacher_guard_calls": 920
+    },
+    "first_cold_consumers": [
+      {
+        "key": "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N4096:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N4096:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N1024:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N1024:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N4096:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N4096:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N1024:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N16384:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N4096:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N16384:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N4096:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N16384:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N4096:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N16384:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N4096:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N16384:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N16384:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N16384:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N16384:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N65536:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N65536:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:Heston:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N65536:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:Heston:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:Heston:N65536:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N4096:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N4096:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N1024:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N1024:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N4096:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N1024:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N4096:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N1024:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N16384:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N4096:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N16384:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N4096:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N16384:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N4096:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N16384:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N4096:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N16384:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N16384:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N16384:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N16384:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:local:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N65536:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:local:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N65536:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:local:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N65536:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:local:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "stage:local:N65536:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    ],
+    "cold40_legacy_component_estimate_seconds": 326421.7132256072,
+    "hot_guard_source_hash_copy_and_other_overhead_seconds": null,
+    "native20_domain_selection_finite_box_input_hash_write_read_seconds": null,
+    "110_gate_non_teacher205row_kernel_driver_geometry_IO_seconds": null,
+    "first_proof_and_hits_charge_inside_actual_consuming_job_phase_once": true,
+    "event_clock_is_breakdown_with_original_first_receipt_not_added_twice": true
+  },
+  "fresh_full_saved_check": {
+    "counts": {
+      "teacher_invocations": 808,
+      "gate_calculations": 96,
+      "non_teacher_nested_row_checks": 19680,
+      "cold_keys": 60,
+      "hot_invocations": 748,
+      "teacher_guard_calls": 868
+    },
+    "first_cold_consumers": [
+      {
+        "key": "teacher:Heston:N1024:coarse:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:Heston:N1024:coarse:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:Heston:N1024:coarse",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N1024:coarse:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:local:N1024:coarse:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:local:N1024:coarse",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N4096:coarse:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:Heston:N4096:coarse:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N4096:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:Heston:N4096:coarse",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N1024:high:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:Heston:N1024:high:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N1024:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:Heston:N1024:high",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N4096:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N1024:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N4096:high:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:Heston:N4096:high:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N4096:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:Heston:N4096:high",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N4096:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N1024:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N16384:coarse:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:Heston:N16384:coarse:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N16384:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:Heston:N16384:coarse",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N16384:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N4096:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N16384:high:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:Heston:N16384:high:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N16384:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:Heston:N16384:high",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N16384:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N4096:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N65536:coarse:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:Heston:N65536:coarse:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:Heston:N65536:coarse",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N16384:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:Heston:N65536:high:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:Heston:N65536:high:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:Heston:N65536:high",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:Heston:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N16384:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:Heston:N65536:coarse:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher-reference:Heston:N65536:coarse:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher-reference:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher-reference:Heston:N65536:coarse",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher-reference:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N65536:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:Heston:N65536:high:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher-reference:Heston:N65536:high:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher-reference:Heston:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher-reference:Heston:N65536:high",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher-reference:Heston:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:Heston:N65536:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N4096:coarse:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:local:N4096:coarse:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N4096:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:local:N4096:coarse",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N1024:high:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:local:N1024:high:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N1024:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:local:N1024:high",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N4096:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N1024:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N1024:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N4096:high:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:local:N4096:high:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N4096:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:local:N4096:high",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N4096:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N1024:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N16384:coarse:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:local:N16384:coarse:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N16384:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:local:N16384:coarse",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N16384:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N4096:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N16384:high:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:local:N16384:high:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N16384:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:local:N16384:high",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N16384:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N4096:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N65536:coarse:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:local:N65536:coarse:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:local:N65536:coarse",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N16384:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher:local:N65536:high:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher:local:N65536:high:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher:local:N65536:high",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher:local:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N16384:high:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:local:N65536:coarse:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher-reference:local:N65536:coarse:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher-reference:local:N65536:coarse|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher-reference:local:N65536:coarse",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher-reference:local:N65536:coarse:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N65536:coarse:gate",
+        "reason": "teacher_candidate_gate"
+      },
+      {
+        "key": "teacher-reference:local:N65536:high:raw|teacher_grid|direct_saved_wall_workdir",
+        "consumer": "teacher-reference:local:N65536:high:raw",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher-reference:local:N65536:high|teacher_domain_selection|plain_prior_args",
+        "consumer": "teacher-reference:local:N65536:high",
+        "reason": "direct_saved_job"
+      },
+      {
+        "key": "teacher-reference:local:N65536:high:raw|teacher_grid|plain_prior_args",
+        "consumer": "stage:local:N65536:high:gate",
+        "reason": "teacher_candidate_gate"
+      }
+    ],
+    "cold_split": {
+      "teacher_grid_direct_injected": 20,
+      "teacher_grid_plain_stage": 20,
+      "domain_selection": 20
+    },
+    "cold60_legacy_component_estimate_seconds": 489632.56983841077,
+    "generation_memo_never_inherited": true,
+    "actual_runtime_seconds": null,
+    "other_job_loop96gate205row_domain_prefix_driver_IO_seconds": null,
+    "external_expense_id": "saved_check"
+  },
+  "independent_contexts": {
+    "final_saved": {
+      "empty_context": true,
+      "full_recheck_cold_keys": 60,
+      "cold_only_reference_seconds": 489632.56983841077
+    },
+    "fresh_independent_review": {
+      "empty_context": true,
+      "if_full_saved_checker_invoked_cold_keys": 60,
+      "cold_only_reference_seconds": 489632.56983841077,
+      "actual_review_scope_cost": null
+    },
+    "CAS_primary_restore": {
+      "empty_context": true,
+      "each_full_saved_checker_cold_keys": 60,
+      "cold_only_reference_seconds": 489632.56983841077,
+      "transport_other_cost_seconds": null
+    },
+    "CAS_mirror_restore": {
+      "empty_context": true,
+      "each_full_saved_checker_cold_keys": 60,
+      "cold_only_reference_seconds": 489632.56983841077,
+      "transport_other_cost_seconds": null
+    },
+    "resume": {
+      "empty_context": true,
+      "completed_original_raw_retained": true,
+      "actual_reached_key_count_seconds": null,
+      "actual_covering_phase_alias_required": true
+    },
+    "actual_review_or_restore_recheck_count_not_inferred_from10expense_IDs": true,
+    "serialized_or_cross_process_verified_proof_not_inherited": true
+  },
+  "ordinary_fallback_and_uncached_paths": {
+    "partial_cacheNone_actualcap_exception": "no registered PASS; original statuses/N and executed-prefix ordinary SDE work retained; can repeat",
+    "dependency_cap_selector_adapter_inspections": "existing check_dependency_cap_job passes no memo; executed stage math can still fully replay and has nonzero unknown cost",
+    "standalone_default_full_checker": "no shared context, no reuse credit",
+    "4_extra_date_diagnostics": "all4 original1case jobs preserve selectedN and full saved SDE/labels; not gridmemo eligible",
+    "domain_rule": "each domain verification recomputes original finite box before any grid proof hit",
+    "changed_raw_args_field_seed_source_or_physical_bytes": "reject tamper; no stale hit; changed valid args key requires fresh first proof",
+    "qualified_prefix_unused": "only actual original numeric qualification changes scheduling; not predicted PASS",
+    "fallback_call_count_and_seconds": null
+  },
+  "gate_selector_activation": {
+    "per_stage": {
+      "stage:Heston:N1024:coarse:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N4096:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N4096:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N1024:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:high|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "b5b657483ecfb04a0d58e8cef33670dc25743e0cf2ea0f2ceec4748e82ff4440",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:Heston:N1024:high:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N1024:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N4096:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N4096:high|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "7d2dfa8181d21083eda23c2a05a77c357ce4a27325a20496cf03840c069c15b7",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:Heston:N4096:coarse:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N4096:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N4096:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N16384:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N16384:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N4096:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N4096:high|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "10f748782bc3277cccdf0c6e170473dbcbbfe990c7ddba672a7e9d3d1f34d130",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:Heston:N4096:high:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N4096:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N4096:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N16384:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N16384:high|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N4096:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N4096:coarse|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "8bec313c304e89f844cab57ed13a126ed052f778300de4d892e70b8deb196bfc",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:Heston:N16384:coarse:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N16384:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N16384:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N16384:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N16384:high|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "6acd553dfdae8c3b7248b6b9e5ed4cafa5c82a69850f18b1a1cb6a7027088757",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:Heston:N16384:high:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N16384:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N16384:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N65536:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N65536:high|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N16384:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N16384:coarse|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "44ab0e27da39ea6064704f11e7f9c226d4940846778e76baecf40ef050e3944e",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:Heston:N65536:coarse:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher-reference:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher-reference:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N65536:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N65536:high|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "07f2028f35d43027405c572e2c1df52a8595b96918898ebb647d06899e5d67c5",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:Heston:N65536:high:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N65536:high:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N65536:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher-reference:Heston:N65536:high:raw|teacher_grid|plain_prior_args",
+          "teacher-reference:Heston:N65536:high|teacher_domain_selection|plain_prior_args",
+          "teacher:Heston:N65536:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N65536:coarse|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "2965e99d44e9949d189a366f02f659a4d40b5bc85037babaee2017c4db368f16",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 6,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:local:N1024:coarse:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N4096:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N4096:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:high|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "f407e900a557326caa07b9cbc8346d0d2d9faaf404cfa99ef2cbf29834cea5e7",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:local:N1024:high:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N4096:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N4096:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N1024:coarse|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "6d7db13e1e69713a07cfbf278152ecda36695d68ed38bbfc04097d40ce5a4c42",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:local:N4096:coarse:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N4096:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N4096:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N16384:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N16384:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N4096:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N4096:high|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "62cc6631bbcba740e4d6ed14fc723bb6ee57c96d6311b7be5453c2c8f192c150",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:local:N4096:high:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N4096:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N4096:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N16384:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N16384:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N4096:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N4096:coarse|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "4553d41728f07caf4846de4f533783a7bb38c8db9d5fe2fc9622e278a38c5f86",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:local:N16384:coarse:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N16384:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N16384:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N65536:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N65536:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N16384:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N16384:high|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "a7630004555f5aecadb0cd41d1807b9302fa666458647189922f87b6df8755fb",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:local:N16384:high:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N16384:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N16384:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N65536:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N65536:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N16384:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N16384:coarse|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "7ce62d2257caef238f1c777a932febc87eb887ed0e951e6c56214858a6fcad0f",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:local:N65536:coarse:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N65536:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N65536:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher-reference:local:N65536:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher-reference:local:N65536:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N65536:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N65536:high|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "7ef936c5f8d964ee3843c047e98e3776a782b75cc212e64bdf26c43439b22664",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 7,
+        "fresh_saved_gate_calls": 6
+      },
+      "stage:local:N65536:high:gate": {
+        "teacher_keys": [
+          "teacher:Heston:N1024:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:Heston:N1024:coarse|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N65536:high:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N65536:high|teacher_domain_selection|plain_prior_args",
+          "teacher-reference:local:N65536:high:raw|teacher_grid|plain_prior_args",
+          "teacher-reference:local:N65536:high|teacher_domain_selection|plain_prior_args",
+          "teacher:local:N65536:coarse:raw|teacher_grid|plain_prior_args",
+          "teacher:local:N65536:coarse|teacher_domain_selection|plain_prior_args"
+        ],
+        "evidence_operation_counts": {
+          "field": 1,
+          "premium": 1,
+          "call_cache": 2,
+          "teacher_driver": 3,
+          "teacher_grid": 4,
+          "teacher_domain_selection": 4,
+          "call_table": 18,
+          "oracle": 18,
+          "state": 18,
+          "date_gate": 12,
+          "market_pair": 4,
+          "quote_risk": 10,
+          "validation": 4,
+          "cell_pair": 112,
+          "bump_risk": 2
+        },
+        "all213_roster_digest": "372acabea3d52e05c016cb3e26a45924aaa4e43e9a521f6d95a7afec91ba0005",
+        "non_teacher_rows": 205,
+        "initial_gate_calls": 6,
+        "fresh_saved_gate_calls": 6
+      }
+    },
+    "native_stage_gates": 16,
+    "selectors": 2,
+    "selector_stage_calculations": 16,
+    "selected_input_adapters": 8,
+    "adapter_stage_calculations": 64,
+    "first_activation_families": 14,
+    "eligible_activation_jobs": 2332,
+    "same_family_hits": 2318,
+    "activation_guard_calls_including_post_first": 2346,
+    "activation_original_job_roster_reference": "gate-selector-supplement-v4.activation_cache_units",
+    "activation_family_roster_digests": {
+      "stage:Heston:N1024:coarse:gate": {
+        "job_count": 161,
+        "ordered_job_IDs_sha256": "c59ff60302d60afb283a7ef8275e4e37b662f6f3bfdd44e4e55a487d373daaba"
+      },
+      "stage:Heston:N1024:high:gate": {
+        "job_count": 180,
+        "ordered_job_IDs_sha256": "47c6b9d1872e5aa57432401f6508f79521de1d7e1a623aa45d9a20dfaa1b7800"
+      },
+      "stage:Heston:N4096:coarse:gate": {
+        "job_count": 161,
+        "ordered_job_IDs_sha256": "59bab68a221270d67c7764fa880f64bd70e84d130ca00969faf564ebf52f5ff0"
+      },
+      "stage:Heston:N4096:high:gate": {
+        "job_count": 180,
+        "ordered_job_IDs_sha256": "8f98385262cc5b1b7cca1530147a251bfecec32d58e596238f2724c72ec5ae2a"
+      },
+      "stage:Heston:N16384:coarse:gate": {
+        "job_count": 161,
+        "ordered_job_IDs_sha256": "b8f3f732b9808a5184499f862ab97a5d02b8be8992a4e0982dcca1cd763f5978"
+      },
+      "stage:Heston:N16384:high:gate": {
+        "job_count": 162,
+        "ordered_job_IDs_sha256": "c557448fa3a5ac954a67c3a535186e64e958f4a2d2bc7f08373f2d3306a1e0be"
+      },
+      "stage:Heston:N65536:coarse:gate": {
+        "job_count": 161,
+        "ordered_job_IDs_sha256": "7d91c70b99ec305a084b6348b300c80437661783fda8027e52e613850ffa9ef1"
+      },
+      "stage:local:N1024:coarse:gate": {
+        "job_count": 161,
+        "ordered_job_IDs_sha256": "2a1546189d974e66edc00b60febbbdda9ae3951b7b0859689b02555a30a5efcb"
+      },
+      "stage:local:N1024:high:gate": {
+        "job_count": 180,
+        "ordered_job_IDs_sha256": "78311881a8be3841443a2c1d80c283984a7b40f7bd10efad6b0278d2fa6df9ec"
+      },
+      "stage:local:N4096:coarse:gate": {
+        "job_count": 161,
+        "ordered_job_IDs_sha256": "5021da30da66ff4ce4d2b0c7a4a85138dc764cecf0640ceeefc0334093af275d"
+      },
+      "stage:local:N4096:high:gate": {
+        "job_count": 180,
+        "ordered_job_IDs_sha256": "826b1bea358a31160be4267776e7352cf70767b69380c2d646d5238ea4bac9db"
+      },
+      "stage:local:N16384:coarse:gate": {
+        "job_count": 161,
+        "ordered_job_IDs_sha256": "f49c07e4668fd1ba6864e3ad27fca0aae7969f1a9566075f1bdf6d928a95a3bb"
+      },
+      "stage:local:N16384:high:gate": {
+        "job_count": 162,
+        "ordered_job_IDs_sha256": "4ff4cd2ce97be117efdff5da8b823992d98e2c1316175164c1ab19362e01f1a3"
+      },
+      "stage:local:N65536:coarse:gate": {
+        "job_count": 161,
+        "ordered_job_IDs_sha256": "a62b637d9a426bb2b1fe562c96dcd4a5cef64aa21100f1a872c7b9f7472d7719"
+      }
+    },
+    "gate_sum": 110,
+    "non_teacher_nested_checks": 22550,
+    "teacher_guard_calls": 920,
+    "gate_recomputed_separate_from_registered_teacher_proof_SDE_replayed": true,
+    "gate_cache_retained_but_not_new_generic_Q_risk_result_memo": true,
+    "nonteacher_other213row_work_prefix_driver_read_geometry_and_all_guards_not_zero": true,
+    "unobserved_full_gate_activation_guard_runtime_seconds": null
+  },
+  "genuine_same_input_resource_reference": {
+    "scope": "genuine saved Heston/coarse/N1024/108 original nodes only; same input hot reference, not whole research rate",
+    "cold_seconds": 23.670931355001812,
+    "same_input_hot_reference_seconds": 0.222289268996974,
+    "fresh_seconds": 23.796868252000422,
+    "full_grid_checker_calls": [
+      1,
+      0,
+      1
+    ],
+    "root_enclosing_seconds": 52.226233168,
+    "hot_IO_SHA_counts": {
+      "binary_file_bytes_read": 49985348,
+      "binary_read_calls": 1518,
+      "SHA256_input_bytes": 70677598
+    },
+    "cold_IO_SHA_counts": {
+      "binary_file_bytes_read": 1542700254,
+      "binary_read_calls": 7680,
+      "SHA256_input_bytes": 10390327232
+    },
+    "same_input_hot_3x_administrative_component_margin_seconds": 0.666867806990922,
+    "margin_does_not_change_job_or_parent_wall_caps": true,
+    "actual_resolved_arguments_sha256": "de0d1a5baea115f579d5a02276ace6a15e2c364f7d02ac60f802e2a1c5cbbba4",
+    "no_other_grid_N_producer_op_or_plain_argument_guarantee": true,
+    "hot_ratio_not_applied_to_whole_phase": true,
+    "financial_qualification": "unknown",
+    "all_original_SDE_label_cache_integrity_coverage": {
+      "original_n": 1024,
+      "original_nodes": 108,
+      "retained_nodes": 108,
+      "sde_replayed_nodes": 108,
+      "all_label_compared_nodes": 108,
+      "partial_or_nonreplayed_nodes": 0,
+      "unexecuted_original_nodes": 0,
+      "cache_comparison_returned": true,
+      "full_original_coverage": true,
+      "financial_qualification": "unknown"
+    },
+    "original_generation_source_canonical": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+    "former_bounded_reader_canonical": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+    "current_runtime_canonical": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76"
+  },
+  "known_partial_update": {
+    "old_v4_initial_known_component_seconds": 2184772.200347826,
+    "old_v4_initial_known_component_hours": 606.881166763285,
+    "ordinary_generation_components_retained_seconds": 174157.9081904295,
+    "initial40_cold_legacy_component_estimate_seconds": 326421.7132256072,
+    "initial_known_component_sum_seconds": 500579.6214160367,
+    "initial_known_component_sum_hours": 139.04989483778797,
+    "per_fullfresh60_cold_component_seconds": 489632.56983841077,
+    "per_fullfresh60_cold_component_hours": 136.00904717733633,
+    "legacy_component_extrapolation_not_current_whole_runtime_or_bounds": true,
+    "source_scope_correction": "former20domain saved replay estimates represent cold proof math, not native domain worker SDE; pure native domain worker remains unknown",
+    "hot_guards_nonteacher_kernels_IO_diagnostics_external10_CAS_resume_seconds": null,
+    "complete_phase_runtime_seconds": null,
+    "whole_project_ETA_seconds": null,
+    "cold_hot_single_case_ratio_is_not_project_speedup": true,
+    "cap_sum_not_forecast": true
+  },
+  "budget_and_prior_delta": {
+    "job_wall_limit_changes": {},
+    "parent_cap_limit_changes": {},
+    "original_N_work_child_count_limits256MiB_changes": {},
+    "v1_v3_v4_caps_proposals_retained_without_shrink_or_approval": true,
+    "resource_hot_reference_only": 0.222289268996974,
+    "other_N_grids_hot_rates_seconds": null,
+    "existing_3x_legacy_cold_cap_margin_is_not_a_precision_or_runtime_guarantee": true,
+    "all3138_budget_review_sha256": null,
+    "root_actual_prior_approved": false
+  },
+  "minimal_prior_preparer_rebind": [
+    {
+      "field": "EXPECTED_SOURCE/source_canonical_identity",
+      "new_value": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+      "old_v1_dc_script_retained": true
+    },
+    {
+      "field": "native locked_bindings/job.source_sha256",
+      "new_value": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+      "formula": "payload_digest"
+    },
+    {
+      "field": "independent_reviews.source",
+      "actual_file": "task-5-phase-local-reuse-independent-decision-v1.json",
+      "actual_decision": "approve_fixed_v2_source_runtime_immutable_reuse_boundary_only",
+      "do_not_fake_old_approved_schema": true
+    },
+    {
+      "field": "bindings.replay_budget_supplement",
+      "new_file": "this false immutable supplemental candidate"
+    },
+    {
+      "field": "reviewed_budgets/approved_bindings",
+      "requirement": "real independent/root approved all3138 exact original budget rows+this source/reference; do not fill null rates with fictitious measured provenance"
+    },
+    {
+      "field": "cap_options_authority",
+      "requirement": "sourcebound actual reviewed recipe/decisions; preserve573122 full4N options and relative parent order, future selectorSHA remains runtime only"
+    },
+    {
+      "field": "history/external10/ordinaryaliases",
+      "requirement": "retain malformed2/overlapunknown and actual inclusive lineage, bill first once/hit costs real; independent checks/restores remain separate parent expenses"
+    },
+    {
+      "field": "operationalguard",
+      "requirement": "root separate actual wall/RSS/free-space prior partial_unclosed; component8GiB does not certify phase RSS or financialcap"
+    }
+  ],
+  "history_external_expenses": {
+    "immutable_v1_history_reference": "task-5-fullmixed-prior-budget-candidate-author-v1-config.json",
+    "original_history_records": 46,
+    "malformed": 2,
+    "original_history_total": null,
+    "unknown_overlap_preserved": true,
+    "external10_IDs": [
+      "cold_imports",
+      "source_registry",
+      "code_review",
+      "math_review",
+      "pilot_review",
+      "serialization",
+      "saved_check",
+      "CAS_primary",
+      "CAS_mirror",
+      "domain_selection"
+    ],
+    "external_actual_expense_timing": "pending/null, not zero",
+    "old4GiB_failure_and_generation_costs_retained_not_subtracted_or_rebilled": true,
+    "resource_probe_inclusive_parent_only": "new componenthistory, not formalphase expense or per-key forecast addition"
+  },
+  "evidence": {
+    "task-5-fullmixed-prior-budget-candidate-author-v1-config.json": {
+      "sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+      "bytes": 9598904
+    },
+    "task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json": {
+      "sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+      "bytes": 45889
+    },
+    "task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.json": {
+      "sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+      "bytes": 2550526
+    },
+    "task-5-fullmixed-prior-budget-candidate-author-manifest-final-v4.json": {
+      "sha256": "13d124213b665e2f9d63deb9f2058ef1002a8d4a7421843fd0ef2a9df2de606c",
+      "bytes": 8703
+    },
+    "task-5-phase-verified-raw-memo-fixed-v2-source-closure.json": {
+      "sha256": "735680b179bde8456897ee0e1c02197a3af6cb27d8bc33db31d3bbb89314d59f",
+      "bytes": 33985
+    },
+    "task-5-phase-local-reuse-independent-decision-v1.json": {
+      "sha256": "c09d557dc348bb7b3b32da7041d0512db5538bc370204c1ff26c59ea6aed02d3",
+      "bytes": 7512
+    },
+    "task-5-phase-local-memo-observation-root-v1/parent-cost-and-decision.json": {
+      "sha256": "23e5b8052da348a0c50155538d15b821b0cfd0de725f7d5b3f6cc584851f1391",
+      "bytes": 9019
+    },
+    "task-5-phase-local-memo-observation-root-v1/progress.json": {
+      "sha256": "fed3af881438b2cf253b4438b8275c391f711c85e5c1dde1235636e0215cdc8a",
+      "bytes": 8080
+    },
+    "task-5-phase-local-memo-resource-root-enclosing-v1.json": {
+      "sha256": "5330bd07f70cae864e52128f7b77efe30d336933fd301ba37e638f42447a8d96",
+      "bytes": 1074
+    },
+    "task-5-phase-local-memo-resource-root-approved-v1.json": {
+      "sha256": "495c645442f171b119963fa4656dd29367b9c472d0f4237b488f992a99bd5e46",
+      "bytes": 16124
+    },
+    "task-5-formal-prior-lock-preparation-v1.py": {
+      "sha256": "a9773d211d2611e98b54135495e002e78147020a9a9b4d95cc0648ab883427f9",
+      "bytes": 24522
+    }
+  },
+  "author_actions": {
+    "financial_generation_RNG_solver_savedSDE_replay": 0,
+    "source_tests_docs_Git_CAS_edits": 0,
+    "only_static_metadata_source_byte_roster_counting": true,
+    "preparation_failure_preserved": "oversized shell command rejected Windows206 before any financial execution; adapted to D stdlib builder"
+  },
+  "assembly_cost": {
+    "wall_seconds": 0.233324635,
+    "cpu_seconds": 0.23068758,
+    "tail_and_prior_read_command_cost": "not measured in this receipt; no invented zero"
+  }
+}

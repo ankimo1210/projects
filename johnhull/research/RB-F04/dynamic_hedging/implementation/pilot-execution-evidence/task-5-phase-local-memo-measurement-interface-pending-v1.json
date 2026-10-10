@@ -1,0 +1,42 @@
+{
+  "schema": "rb-f04-phase-local-memo-measurement-prepared-interface-v1",
+  "status": "pending_final_source_snapshot_not_approved_not_executed",
+  "script_sha256": "d10cc08e2abf8c45c05c5a644ee28c4e9c5d0258d6b764c45aa4b52b311b5498",
+  "candidate_v3_sha256": "84839f513bb0a099bff93c40e6a830eafa0ce134138dab85f8127e96cbc4d54c",
+  "proposed_context_constructor": "check_pilot._new_teacher_verification_context(*, source_root, source, plan_sha256)",
+  "entrypoint": "check_pilot._raw_job_check",
+  "job_keys": [
+    "id",
+    "operation",
+    "status",
+    "raw",
+    "arguments"
+  ],
+  "context_keys": [
+    "parameters",
+    "surface",
+    "resolved_arguments",
+    "artifact_context",
+    "teacher_verification_context"
+  ],
+  "producer_id": "teacher:Heston:N1024:coarse:raw",
+  "parameters_object": "HestonParameters from original prepared input JSON",
+  "resolved_parameters_argument": "original prepared parameter dict",
+  "surface": "original saved field materialized with actual runtime",
+  "driver_argument": "original saved genuine shared driver, no regenerated normals",
+  "fullcheck_counter": "check_pilot.check_teacher_grid_record calls, expected1/0/1",
+  "memo_events": [
+    "verified",
+    "reused",
+    "verified"
+  ],
+  "fresh_context_is_another_empty_actual_constructor_call": true,
+  "generation_identity": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "old_saved_check_identity": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "new_runtime_identity": null,
+  "financial_generation_RNG_solver_or_SDE_executed": false,
+  "measurement_or_source_review_approval_created": false,
+  "source_docs_tests_Git_CAS_modified": false,
+  "syntax_compile": "PASS",
+  "positive_runtime_alignment_verified": false
+}

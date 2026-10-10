@@ -1,0 +1,71 @@
+{
+  "scope": "Exact-byte JSON carrier archive correction, original D logs untouched",
+  "previous_receipt_sha256": "ba9b817b2cb754973f94391b1d2bb4d88eea7e1f98dfbe263ad23afe72e5fa37",
+  "removed_archive_entries": [
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-GREEN-selfcontained-and-resume-v1.log",
+      "archive": "task-5-phase-verified-raw-memo-GREEN-selfcontained-and-resume-v1.log.txt",
+      "bytes": 7418,
+      "sha256": "e7ca5996544610622a1d73197c25ef85be693dc1343ec406ef3c57ae70f12f08"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-RED-v2.log",
+      "archive": "task-5-phase-verified-raw-memo-RED-v2.log.txt",
+      "bytes": 19014,
+      "sha256": "1378e63bbd1e030c143d871d349c45a7e2cd42f6c4a6548749b3306b1eba8179"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-default-RED-v1.log",
+      "archive": "task-5-phase-verified-raw-memo-default-RED-v1.log.txt",
+      "bytes": 2724,
+      "sha256": "066e476379b5d30d25f067624fdac204cb48b7e3849b4eae2ed61fe5ed1e480b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-event-scope-RED-v2.log",
+      "archive": "task-5-phase-verified-raw-memo-event-scope-RED-v2.log.txt",
+      "bytes": 3036,
+      "sha256": "9ac18439f335796157dd4f5dda09debd88682a780039173258f17a02c56f0346"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-nativecap-RED-v1.log",
+      "archive": "task-5-phase-verified-raw-memo-nativecap-RED-v1.log.txt",
+      "bytes": 2119,
+      "sha256": "4a17141f2c5db9dbc164d98efc6e2382f2441ea709f73fecb73a91b1da932980"
+    }
+  ],
+  "exact_log_carriers": [
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-GREEN-selfcontained-and-resume-v1.log-carrier.json",
+      "archive": "task-5-phase-verified-raw-memo-GREEN-selfcontained-and-resume-v1.log-carrier.json",
+      "bytes": 10389,
+      "sha256": "ebfccec6b78a6691b00283a72826307afeb25d802ee10f31bfb4358c8e92034d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-RED-v2.log-carrier.json",
+      "archive": "task-5-phase-verified-raw-memo-RED-v2.log-carrier.json",
+      "bytes": 25823,
+      "sha256": "23c0f183eb722b6403bc9dd1180fd31b9fff75014e2b454802db69fdea98ce9d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-default-RED-v1.log-carrier.json",
+      "archive": "task-5-phase-verified-raw-memo-default-RED-v1.log-carrier.json",
+      "bytes": 4110,
+      "sha256": "e0365548250298711198ba0f839ede32880b49cf6ebfa5afb5a4e26da6e12da3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-event-scope-RED-v2.log-carrier.json",
+      "archive": "task-5-phase-verified-raw-memo-event-scope-RED-v2.log-carrier.json",
+      "bytes": 4530,
+      "sha256": "38e6670470f3039114e7d3679f774b19d5d20cf0467ff9626508cd29ead3dc1f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-nativecap-RED-v1.log-carrier.json",
+      "archive": "task-5-phase-verified-raw-memo-nativecap-RED-v1.log-carrier.json",
+      "bytes": 3308,
+      "sha256": "7b62954d62dcab2a96a56da90befde3b617bc66bf344bc71f60def2fb43ad7c8"
+    }
+  ],
+  "original_bytes_preserved": true,
+  "original_failed_costs_preserved": true,
+  "financial_phase_approved": false
+}

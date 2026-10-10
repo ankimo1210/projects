@@ -1,0 +1,10 @@
+{
+  "scope": "D-only saved metadata/physical stat input preparation",
+  "wall_seconds_before_receipt": 0.1665251119993627,
+  "CPU_seconds_before_receipt": 0.06946649499999999,
+  "peak_RSS_bytes": 39006208,
+  "all_binary_hash_or_financial_decode_executed": false,
+  "saved_SDE_replay_executed": false,
+  "source_docs_tests_Git_CAS_modified": false,
+  "receipt_tail_unknown_seconds": null
+}

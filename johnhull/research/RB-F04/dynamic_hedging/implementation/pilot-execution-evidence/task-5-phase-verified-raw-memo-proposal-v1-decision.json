@@ -1,0 +1,36 @@
+{
+  "schema": "phase-verified-raw-memo-read-only-proposal-v1",
+  "status": "proposal_requires_root_implementation_decision",
+  "implementation_approved": false,
+  "formal_budget_approved": false,
+  "financial_qualification": "unknown",
+  "production_edits": 0,
+  "financial_execution": 0,
+  "new_tests": 0,
+  "feasible_minimum_private_fix": true,
+  "initial_memo_scope": [
+    "completed_teacher_grid_bounded_check",
+    "completed_teacher_domain_selection_bounded_check"
+  ],
+  "unresolved": [
+    "authenticated_producer_context_propagation",
+    "byte_only_full_consumed_inventory_guard",
+    "existing_activation_cache_early_return",
+    "non_teacher_runtime_hash_IO_unknown"
+  ],
+  "source_closure_identity": "dc7631fe73a457cd995d109aa693be9401b266410b9f53aa4e2d51e59f56d39c",
+  "current_three_sources_sha256": {
+    "run_pilot.py": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc",
+    "check_pilot.py": "952b8f89c930578db1f6531bd6e73ade947d7cfbef246cc8510d246a54ed6197",
+    "_teacher_storage.py": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac"
+  },
+  "fixed_evidence_sha256": {
+    "task-5-conditional-n-prior-cap-consumer-author-v2-source-closure-after.json": "b3fdeeb26e5d810fdb29216925e44b59843f9efd6c6c8cf69625c4c1e3ae2211",
+    "task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.json": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+    "task-5-phase-local-saved-check-memo-independent-tamper-review-v1.md": "d04584f22fa02b286bbd03cfb6d12a193ec280e5e5518f07c264bb752f848c1c"
+  },
+  "report_sha256": "61a094b803bfbb4cdde11f0d235b8976cd1e75868a9cf8fcd75261eb2b31ac0a",
+  "prior_v4_unapproved_known_partial_seconds": 2184772.200347826,
+  "complete_phase_runtime_seconds": null,
+  "implementation_saved_time_seconds": null
+}

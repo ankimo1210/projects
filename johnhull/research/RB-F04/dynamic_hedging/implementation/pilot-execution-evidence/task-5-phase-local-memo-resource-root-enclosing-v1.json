@@ -1,0 +1,18 @@
+{
+  "scope": "actual root enclosing cost of one saved-only memo resource probe",
+  "exit_code": 0,
+  "prior_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-root-approved-v1.json",
+  "prior_sha256": "495c645442f171b119963fa4656dd29367b9c472d0f4237b488f992a99bd5e46",
+  "parent_receipt_sha256": "23e5b8052da348a0c50155538d15b821b0cfd0de725f7d5b3f6cc584851f1391",
+  "root_wall_before_final_receipt": 52.22623316800309,
+  "root_CPU_before_final_receipt": 4.113458317,
+  "child_descendant_CPU_seconds": 50.627967000000005,
+  "root_kernel_peak_RSS_bytes": 630829056,
+  "source_canonical_identity": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+  "source_envelope_identity": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+  "financial_qualification": "unknown",
+  "formal_pilot_main_or_acceptance": false,
+  "original_generation_cost_added": false,
+  "final_receipt_tail_cost_seconds": null,
+  "status": "completed_resource_probe_only"
+}

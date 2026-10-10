@@ -1,0 +1,215 @@
+{
+  "schema": "rb-f04-phase-local-memo-independent-saved-resource-review-v1",
+  "reviewer": "pilot_v53_independent_review",
+  "scope": "saved original genuine M6 Heston-coarse memo resource observation",
+  "measurement_preparation_author_role_disclosed": true,
+  "independent_check_scope": "saved raw receipts, coverage, physical provenance, report numeric comparison and expense arithmetic; not source implementation approval",
+  "prior_review_attempt_failure": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-independent-results-v1.json",
+    "sha256": "d0e6628375661332da2e5642f0aa06496e61ecb02da948d93b5a85b5b646d2ff",
+    "attribution": "reviewer wrong scalar raw_status assumption; source contract is33threshold status array; raw failure/cost preserved"
+  },
+  "financial_qualification": "unknown",
+  "financial_phase_main_approved": false,
+  "new_SDE_RNG_generation_solver_calls": 0,
+  "numeric_hash_equality_used_for_comparison": false,
+  "status": "PASS",
+  "checks_passed": 6887,
+  "all_original701_physical_origin_and81_source_files_current_stable": true,
+  "physical_original_bytes": 64420530,
+  "all108_root_plus_pack_bindings_checked": 108,
+  "report_comparison": {
+    "numeric_arrays": 4767,
+    "numeric_scalars": 7664,
+    "array_values": 2048769,
+    "finite_values": 1857081,
+    "NaN_values": 191688,
+    "infinite_values": 0,
+    "max_finite_abs_difference": 0.0,
+    "metadata_leaves": 88377,
+    "rtol": 1e-11,
+    "atol": 1e-12,
+    "equal_nan": true
+  },
+  "original_N_nodes_dates_thresholds": [
+    1024,
+    108,
+    12,
+    33
+  ],
+  "unknown_and_unverified_preserved": {
+    "unknown_node_thresholds": 1304,
+    "invalid_paths": 0,
+    "nodes_unverified": 108,
+    "cache_f_nan": 1304,
+    "cache_block_means_nan": 62592
+  },
+  "event_evidence": {
+    "full_checker_calls": [
+      1,
+      0,
+      1
+    ],
+    "event_kinds": [
+      "verified",
+      "reused",
+      "verified"
+    ],
+    "SDE_replayed_this_call": [
+      true,
+      false,
+      true
+    ],
+    "hit_verified_event_id": "teacher-verification:43366660209517:0",
+    "hit_report_replayed_flags_mean": "reused previously completed proof; per-call event false/counter0",
+    "fresh_binding_difference": "expected because _teacher_verification_guard includes independent scope_id; raw physical references and actual arguments unchanged"
+  },
+  "resource_observation": {
+    "first_wall_seconds": 23.670931355001812,
+    "hit_wall_seconds": 0.222289268996974,
+    "fresh_wall_seconds": 23.796868252000422,
+    "same_input_first_to_hit_ratio": 106.48706283398703,
+    "wholephase_ETA_inference": false,
+    "child_RSS_peak_bytes": 696823808,
+    "unknown_RSS_samples": 1,
+    "actual_administrative_cap": null,
+    "stage_wall_sum_seconds": 47.69008887599921,
+    "child_before_receipt_wall_seconds": 50.239463550002256,
+    "inner_parent_before_receipt_wall_seconds": 50.51793634900241,
+    "root_before_final_receipt_wall_seconds": 52.22623316800309,
+    "child_nonstage_wall_seconds": 2.5493746740030474,
+    "parent_outside_child_before_receipt_seconds": 0.27847279900015565,
+    "root_outside_inner_parent_before_receipt_seconds": 1.7082968190006795,
+    "inclusive_CPU_to_report_once_seconds": 54.74142531700001,
+    "CPU_basis": "root process + descendant CPU once; no nested-stage/inner-parent/child CPU added again; outer final receipt write unknown",
+    "all_IO_and_SHA_counts": {
+      "binary_file_bytes_read": 3313509873,
+      "binary_read_calls": 20184,
+      "SHA256_input_bytes": 21113236191
+    },
+    "counter_scope": "Python binary APIs only; SHA includes arrays/metadata/source origin, not physical device I/O throughput"
+  },
+  "source_provenance": {
+    "old_generation": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+    "old_saved_checker": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+    "current_runtime_canonical": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+    "current_runtime_envelope": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+    "native_math_and_recipe_unchanged": true
+  },
+  "actual_saved_report_receipts": [
+    {
+      "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "artifact_sha256": "0f14cc98a03e59641097cbd510d8303522cae9196fc6228babc03c4e04977878",
+      "metadata_sha256": "f634a50b8feab4e85c79c7ce6d69416de7135a42922ba2238314d58e7d8e8d4f",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 0
+    },
+    {
+      "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "artifact_sha256": "0f14cc98a03e59641097cbd510d8303522cae9196fc6228babc03c4e04977878",
+      "metadata_sha256": "f634a50b8feab4e85c79c7ce6d69416de7135a42922ba2238314d58e7d8e8d4f",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 0
+    },
+    {
+      "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "artifact_sha256": "0f14cc98a03e59641097cbd510d8303522cae9196fc6228babc03c4e04977878",
+      "metadata_sha256": "f634a50b8feab4e85c79c7ce6d69416de7135a42922ba2238314d58e7d8e8d4f",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 0
+    }
+  ],
+  "input_files": {
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-root-approved-v1.json": "495c645442f171b119963fa4656dd29367b9c472d0f4237b488f992a99bd5e46",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-resource-root-enclosing-v1.json": "5330bd07f70cae864e52128f7b77efe30d336933fd301ba37e638f42447a8d96",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-observation-root-v1/parent-cost-and-decision.json": "23e5b8052da348a0c50155538d15b821b0cfd0de725f7d5b3f6cc584851f1391",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-observation-root-v1/progress.json": "fed3af881438b2cf253b4438b8275c391f711c85e5c1dde1235636e0215cdc8a",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-measurement-inputs-v1.json": "9befb4ce8e2fd7dcd94bccfa4063d520f6ebb19b4733fe5b9a22b07cfb44fcf4",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-measurement-v1.py": "d10cc08e2abf8c45c05c5a644ee28c4e9c5d0258d6b764c45aa4b52b311b5498",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-root-regression-v1-source-closure.json": "2b6726185c59b2695e676de5fed4bc21fc99e10c5097d25c707b5029c1c19039"
+  },
+  "physical_report_files": {
+    "report-0/arrays.npz": {
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    "report-0/metadata.json": {
+      "sha256": "f634a50b8feab4e85c79c7ce6d69416de7135a42922ba2238314d58e7d8e8d4f",
+      "bytes": 1111136
+    },
+    "report-0/pack000000/arrays.npz": {
+      "sha256": "4c5cf823795cc620fdf42449f038fdea5210b9f034b36fc0a4dc43e48d902d04",
+      "bytes": 7715892
+    },
+    "report-0/pack000000/metadata.json": {
+      "sha256": "0f50d21d1f6b3c6cfca5125be34a871b2f4dfd20b50fb61b40b48ab39d224411",
+      "bytes": 229840
+    },
+    "report-0/pack000000/receipt.json": {
+      "sha256": "5d7bb0333b67ff03cff74ed536b17b033ca18888fd888c074612a8fafae152ac",
+      "bytes": 318
+    },
+    "report-0/receipt.json": {
+      "sha256": "675d09be4d97c05f2937953dd9e3905d3c064cb8da017b563f5f116c7782438a",
+      "bytes": 312
+    },
+    "report-1/arrays.npz": {
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    "report-1/metadata.json": {
+      "sha256": "f634a50b8feab4e85c79c7ce6d69416de7135a42922ba2238314d58e7d8e8d4f",
+      "bytes": 1111136
+    },
+    "report-1/pack000000/arrays.npz": {
+      "sha256": "4c5cf823795cc620fdf42449f038fdea5210b9f034b36fc0a4dc43e48d902d04",
+      "bytes": 7715892
+    },
+    "report-1/pack000000/metadata.json": {
+      "sha256": "0f50d21d1f6b3c6cfca5125be34a871b2f4dfd20b50fb61b40b48ab39d224411",
+      "bytes": 229840
+    },
+    "report-1/pack000000/receipt.json": {
+      "sha256": "5d7bb0333b67ff03cff74ed536b17b033ca18888fd888c074612a8fafae152ac",
+      "bytes": 318
+    },
+    "report-1/receipt.json": {
+      "sha256": "675d09be4d97c05f2937953dd9e3905d3c064cb8da017b563f5f116c7782438a",
+      "bytes": 312
+    },
+    "report-2/arrays.npz": {
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "bytes": 22
+    },
+    "report-2/metadata.json": {
+      "sha256": "f634a50b8feab4e85c79c7ce6d69416de7135a42922ba2238314d58e7d8e8d4f",
+      "bytes": 1111136
+    },
+    "report-2/pack000000/arrays.npz": {
+      "sha256": "4c5cf823795cc620fdf42449f038fdea5210b9f034b36fc0a4dc43e48d902d04",
+      "bytes": 7715892
+    },
+    "report-2/pack000000/metadata.json": {
+      "sha256": "0f50d21d1f6b3c6cfca5125be34a871b2f4dfd20b50fb61b40b48ab39d224411",
+      "bytes": 229840
+    },
+    "report-2/pack000000/receipt.json": {
+      "sha256": "5d7bb0333b67ff03cff74ed536b17b033ca18888fd888c074612a8fafae152ac",
+      "bytes": 318
+    },
+    "report-2/receipt.json": {
+      "sha256": "675d09be4d97c05f2937953dd9e3905d3c064cb8da017b563f5f116c7782438a",
+      "bytes": 312
+    }
+  },
+  "financial_accuracy_or_maximumN_or_wholephase_rate_approved": false,
+  "original_raw_node_or_label_values_regenerated_in_this_review": false,
+  "review_cost_before_final_results_write": {
+    "wall_seconds": 2.0145630490005715,
+    "CPU_seconds": 1.827809797,
+    "peak_RSS_bytes": 663928832,
+    "results_write_and_tool_tail_seconds": null,
+    "included_in_measured_component": false,
+    "new_saved_only_review_expense": true
+  }
+}

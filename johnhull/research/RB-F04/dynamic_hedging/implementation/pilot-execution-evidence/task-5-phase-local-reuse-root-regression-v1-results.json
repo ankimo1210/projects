@@ -1,0 +1,80 @@
+{
+  "scope": "actual root application + only two affected existing test files and Ruff",
+  "manifest_sha256": "78a9f5d6f8802b6b6f329eb9c938dee11eb7b3429743ca43886843588f08529d",
+  "changed_files": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+      "before_sha256": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc",
+      "after_sha256": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635"
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "before_sha256": "952b8f89c930578db1f6531bd6e73ade947d7cfbef246cc8510d246a54ed6197",
+      "after_sha256": "392b5d6a9b6bb63ad71d39f276ea60a197cfd3988532f8b7232a89c53c764f40"
+    },
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": {
+      "before_sha256": "ce679b219491725e82da021c34326d06ca782fcf76f3d3b1285c7400854fde20",
+      "after_sha256": "bc52f84e8294887c7555c73b49a9c2bc02661bc1aa3e8dfa25547aa47d4c71d9"
+    }
+  },
+  "finance_qualification": "unknown",
+  "formal_pilot_or_main_executed": false,
+  "actual_source_identity": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+  "actual_runtime_files": 81,
+  "dynamic_imports": 0,
+  "actual_source_closure_sha256": "2b6726185c59b2695e676de5fed4bc21fc99e10c5097d25c707b5029c1c19039",
+  "checks": [
+    {
+      "check": "pytest",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "--confcutdir=deep_hedge_price",
+        "-q",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 127.67031634200248,
+      "child_cpu_seconds": 127.222147,
+      "log": "task-5-phase-local-reuse-root-regression-v1-pytest.log",
+      "log_sha256": "252cc82ad8c22d43f364701df30300ea373445cfac9767222c7623d014f44cd9"
+    },
+    {
+      "check": "ruff",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "--ignore",
+        "N806",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.0185437969994382,
+      "child_cpu_seconds": 0.029154000000011226,
+      "log": "task-5-phase-local-reuse-root-regression-v1-ruff.log",
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "check": "format",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.01817057199514238,
+      "child_cpu_seconds": 0.02903199999999284,
+      "log": "task-5-phase-local-reuse-root-regression-v1-format.log",
+      "log_sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd"
+    }
+  ],
+  "wall_seconds_before_receipt": 129.43033273799665,
+  "parent_cpu_seconds_before_receipt": 4.347333391,
+  "status": "PASS"
+}

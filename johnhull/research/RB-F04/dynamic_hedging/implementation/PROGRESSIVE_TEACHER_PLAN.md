@@ -60,4 +60,4 @@ v55の動的import3件が正式source封鎖を妨げることを実検査で確�
 
 最大N65536の真正一節点は生成・保存を完了し、旧4GiB停止を保持して全N保存検算を39.414秒/peak3.722GB・新生成0で完了した。元mother1,344節点の完了には読み替えない。conditional cap consumerは追加22/関連既存16件・Ruff/format PASS、独立限定source確認済み。全3,138-job prior候補は未承認。保存検算の3600秒候補をN/格子別の明示推計へ補足した（local high/N65536のcap候補159000秒）。stage gate/selector/最初のactivationの再検算費用も補足中。詳細は[予算測定](PILOT_BUDGET_MEASUREMENTS.md)。
 
-全stage実行時の保存再検算反復を含む既知部分外挿は606.881時間（約25.3日、未知費用別）。数日の見積りを取り下げ、全初回N検算・原義務・失敗/unknown・独立fresh/restoreを維持するphase内の不変検算証跡再利用を読取調査中。正式prior-lock/金融実行はまだ開始しない。原v4は未承認候補として保持する。
+全stage実行時の保存再検算反復を含む既知部分外挿は606.881時間（約25.3日、未知費用別）。数日の見積りは撤回済み。phase内の不変raw検算再利用を限定実装・独立source確認し、真正原N1024/Hcoarse108節点で初回23.671秒・再利用0.222秒・別context全検算23.797秒を実測した。関連既存240tests/Ruff/format PASS。全phase予算の再見積・正式prior-lock/金融実行は未完了。 初回全N検算・原義務・失敗/unknown・独立fresh/restoreを保持し、原v1–v4は未承認の歴史的候補として残す。

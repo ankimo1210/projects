@@ -1,0 +1,11 @@
+{
+  "scope": "current proposal assembly, three source hashes and fixed reference byte hashes only",
+  "wall_seconds": 0.003544137,
+  "cpu_seconds": 0.002340634,
+  "peak_process_rss_bytes": 19185664,
+  "previous_read_only_investigation_total_cost": null,
+  "financial_execution": 0,
+  "cost_receipt_final_write_and_manifest_hashing_included": false,
+  "prior_tool_script_syntax_errors": 1,
+  "failed_script_performed_filesystem_mutations": false
+}

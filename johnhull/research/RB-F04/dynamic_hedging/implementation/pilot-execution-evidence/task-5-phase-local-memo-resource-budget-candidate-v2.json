@@ -1,0 +1,77 @@
+{
+  "schema": "rb-f04-phase-local-memo-resource-prior-v1",
+  "status": "pending_fixed_new_source_API_snapshot",
+  "root_preapproved": false,
+  "approved": false,
+  "scope": "single genuine original M6 Heston-coarse saved verification memo resource probe",
+  "original_n": 1024,
+  "original_nodes": 108,
+  "original_dates": 12,
+  "all_original_thresholds": 33,
+  "stages": [
+    "first_empty_context_full_check",
+    "same_context_immutable_hit",
+    "fresh_empty_context_full_check"
+  ],
+  "expected_full_grid_checker_call_deltas": [
+    1,
+    0,
+    1
+  ],
+  "expected_all11_label_descriptors_each_stage": true,
+  "original_unknown_preserved": true,
+  "single_child_wall_limit_seconds": 180.0,
+  "single_child_RSS_limit_bytes": 8589934592,
+  "RSS_metric": "individual child current RSS plus postexit kernel highwater; parent separate actual cost",
+  "root_enclosing_cost_required": true,
+  "root_receipt_tail_cost_unknown": true,
+  "new_runtime_source_bindings": null,
+  "new_runtime_source_identity": null,
+  "new_runtime_API_fixed_interface": {
+    "status": "pending_fixed_source_API",
+    "proposed_constructor": "check_pilot._new_teacher_verification_context(source_root, source, plan_sha256)",
+    "proposed_entrypoint": "check_pilot._raw_job_check(job, context)",
+    "coverage_helper_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-measurement-v1.py",
+    "coverage_helper_sha256": "e16a706848f496d10bfba213aec82190b7b2829887ed22aa279f11ece750164d",
+    "source_owner_fixed_snapshot_manifest": null
+  },
+  "probe_source_sha256": "06fce8c3e478586d2d928004de447d631db01b5abfb59e3d8c6e08628e32ad93",
+  "saved_inputs": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-measurement-inputs-v1.json",
+    "sha256": "9befb4ce8e2fd7dcd94bccfa4063d520f6ebb19b4733fe5b9a22b07cfb44fcf4"
+  },
+  "generation_source_identity": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "old_bounded_saved_checker_source_identity": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "old_component_cost_reference": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/parent-cost-and-decision.json",
+    "sha256": "e377ee0cca90a2a61a5f9794baf1bd2e633101711c5b5fe927ba6fe73ab1a97b",
+    "observed": {
+      "wall_seconds": 31.008640309002658,
+      "child_cpu_seconds": 30.965846000000003,
+      "financial_qualification": "unknown",
+      "source_identity": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+      "class": "Heston-coarse"
+    }
+  },
+  "do_not_rewrite_old_envelope_source_SHA_to_new_runtime": true,
+  "storage_recipe_source_must_remain": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+  "measurement_output_root": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-memo-observation-root-v1",
+  "budget_includes": [
+    "all source/input authentication/import",
+    "first all-original-N/108 nodes/SDE/11 labels/stats/16block/cov checks",
+    "hit original immutable identity/source/physical root+pack reauthentication",
+    "fresh independent empty-context all checks again",
+    "report/clock/counter/physical read and hash bytes/progress and final receipt write"
+  ],
+  "runtime_estimate_seconds": null,
+  "initial_historical_baseline_seconds": 31.008640309002658,
+  "prediction_is_not_formal_allN_or_wholephase_rate": true,
+  "new_financial_generation_RNG_solver_permitted": false,
+  "saved_SDE_arithmetic_only_after_root_approval": true,
+  "financial_qualification": "unknown",
+  "financial_phase_main_approved": false,
+  "original_raw_grid_cache_is_present_metadata_observed": true,
+  "original_raw_grid_status": "executed",
+  "original_raw_grid_financial_qualification": "unknown",
+  "all701_physical_SHA_guard_in_actual_measurement": true
+}
