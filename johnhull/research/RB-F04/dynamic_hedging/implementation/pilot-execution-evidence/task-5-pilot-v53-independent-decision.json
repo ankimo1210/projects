@@ -1,0 +1,45 @@
+{
+  "schema": "rb-f04-pilot-v53-independent-source-review-v1",
+  "decision": "approve_bounded_v53_source_transport",
+  "reviewed_fixed_source": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "a2b31766ab10f5f4a692b623273e217b5383302ce11c958c48a1af8a222707dc",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "be7df959523742c8cf5863ebd6980ecb98e40d2e4c77dd3d6be015db32160b41",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "6e6e489dfe3982992a73de8db0f5fbf0ab4499664973f6d5abca8c28bb172587"
+  },
+  "reference_source_sha256": "cc7183df08f8d4b7942929ccc44cbcc5899be5df74128016c7c6521bac2909b9",
+  "critical_findings": [],
+  "important_findings": [],
+  "independent_pytest": {
+    "passed": 25,
+    "deselected": 88,
+    "pytest_wall_seconds": 0.66,
+    "subprocess_wall_seconds": 2.43186797
+  },
+  "independent_model_n_grid_purpose_checks": 64,
+  "self_consistent_counterexamples_refused": 21,
+  "genuine_local_next_cap_retained": 1,
+  "hand_constructed_five_refinement_saved_source_binding": "pass, no numerical/cash qualification",
+  "author_reported_dedicated_tests": {
+    "passed": 113,
+    "pytest_wall_seconds": 57.44,
+    "independently_rerun": false
+  },
+  "snapshot_stable": true,
+  "formal_pilot_executed": false,
+  "formal_plan_approved": false,
+  "phase_approved": false,
+  "new_rng": false,
+  "financial_qualification": "unknown",
+  "remaining": [
+    "Root final mixed pilot graph and A metadata bridge are outside v53 and require their own fixed review",
+    "Actual original-count finance and numerical/cache/cash replay, formal full pilot, costs, later phase gates remain required",
+    "v54 subsequent source changes require diff review against this fixed v53 snapshot"
+  ],
+  "original_cases": 121,
+  "original_required_pilot_attempts": 51,
+  "reference_identity_clarification": {
+    "expected_b62_file": "reference_methods.py",
+    "actual_reference_methods_sha256": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "run_reference_difference_is_not_source_change_evidence": true
+  }
+}

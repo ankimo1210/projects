@@ -1,0 +1,301 @@
+{
+  "schema": "rb-f04-source-metadata-checkpoint-archive-v1",
+  "entries": [
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-resume-scoped-v1.json",
+      "archive": "task-5-v54-root-resume-scoped-v1.json",
+      "bytes": 650,
+      "sha256": "18d928b9ae3dc9c38dd79fea7153285aa95b1df6f4bfcc3cdbd7e5daefa410fd"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-resume-scoped-v1.log",
+      "archive": "task-5-v54-root-resume-scoped-v1.log.txt",
+      "bytes": 8043,
+      "sha256": "ff7d48de785fecc39b2c0bb53efe46447eeb54041da7c912b815b530109442b1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-own-cap-trace-v1.json",
+      "archive": "task-5-v54-root-own-cap-trace-v1.json",
+      "bytes": 167,
+      "sha256": "037fad0846c8f2eee78a75fbb3044bff2544dc31d8dde831409a5781f4a4cc7f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-own-cap-trace-v1.log",
+      "archive": "task-5-v54-root-own-cap-trace-v1.log.txt",
+      "bytes": 2389,
+      "sha256": "b5041dfe1e512f3e6d91133547640f375f87ecf64af02ae567510c860fb4d64d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-own-cap-trace-v1.py",
+      "archive": "task-5-v54-root-own-cap-trace-v1.py.txt",
+      "bytes": 886,
+      "sha256": "7a9d9b5ce5278c59faaf485830f468a7bdb9b709615af1a59fbe7b891e695c97"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-own-cap-red-v2.json",
+      "archive": "task-5-v54-root-own-cap-red-v2.json",
+      "bytes": 446,
+      "sha256": "f7b3f86d93a39d4d1b0e9e5db0822509de1c876831ba33aafec69fabe4de3a2e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-own-cap-red-v2.log",
+      "archive": "task-5-v54-root-own-cap-red-v2.log.txt",
+      "bytes": 3423,
+      "sha256": "6e1d3f03154d37fdb27cf5f3fb568691f32f2c10f71c5e3239c364ed13b165a2"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-source-verification-v1.json",
+      "archive": "task-5-v54-root-source-verification-v1.json",
+      "bytes": 2167,
+      "sha256": "e981b7fd763c9759a1d197161db970c20d4026c7202addd167253e798d279ece"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-source-verification-v1.log",
+      "archive": "task-5-v54-root-source-verification-v1.log.txt",
+      "bytes": 7155,
+      "sha256": "46df17bfe984a77388b6a6535b4c9d09fb093c37ec72d940c26458dc551a3d42"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-source-verification-v2.json",
+      "archive": "task-5-v54-root-source-verification-v2.json",
+      "bytes": 2621,
+      "sha256": "a303c8ded8da35065ed9a3ab0e867f2c1bbc13dc8cb39c37d1b126ceaad879ba"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-source-verification-v2.log",
+      "archive": "task-5-v54-root-source-verification-v2.log.txt",
+      "bytes": 1623,
+      "sha256": "25324f5390b04b4c8a0c6b21ebf6ee875b888f32fe870aa2b715016f5641d891"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-fixture-selector-check-v1.json",
+      "archive": "task-5-v54-root-fixture-selector-check-v1.json",
+      "bytes": 468,
+      "sha256": "383544bf9b419373982f593af366440d4b34521bac4b157e2a8f045dc6c3e76b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-fixture-selector-check-v1.log",
+      "archive": "task-5-v54-root-fixture-selector-check-v1.log.txt",
+      "bytes": 5637,
+      "sha256": "f816ffe673d6415118425bba77c36506d1367238716ff3d2a34b0917ee3649e7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-resume-scoped-v2.json",
+      "archive": "task-5-v54-root-resume-scoped-v2.json",
+      "bytes": 590,
+      "sha256": "d693b633abd62e1953e911d6d383a982a553982ce74fd27a5efaa7a6da1b7023"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-resume-scoped-v2.log",
+      "archive": "task-5-v54-root-resume-scoped-v2.log.txt",
+      "bytes": 115,
+      "sha256": "23e990d78249c268b21d100418a1be1177f9013bb024e3c23ca267e6f9c42c53"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-source-v54-checkpoint.json",
+      "archive": "task-5-pilot-source-v54-checkpoint.json",
+      "bytes": 5664,
+      "sha256": "ca26d37fdab0a50c0db6575ebac77a0e2096e59971d0e4b38f48b1ceef9b5ffe"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-source-v54-ast-delta.json",
+      "archive": "task-5-pilot-source-v54-ast-delta.json",
+      "bytes": 1971,
+      "sha256": "437cc71784b8b09804d5ba57ee26a010ded25083a17ecfe7dc8d1a820021aa3c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-checkpoint-cas-v1.py",
+      "archive": "task-5-v54-root-checkpoint-cas-v1.py.txt",
+      "bytes": 4192,
+      "sha256": "e67dcc03aa4ab22cc05af83b0199265d3b8abdb1832dc2a0595d9bc16fa837d5"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-checkpoint-cas-v1.log",
+      "archive": "task-5-v54-root-checkpoint-cas-v1.log.txt",
+      "bytes": 327,
+      "sha256": "43581c722228ed9f66993a378a88c13ff736b1b65e2f05d46a39bb83f1a43d27"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-checkpoint-cas-v1-parent-cost.json",
+      "archive": "task-5-v54-root-checkpoint-cas-v1-parent-cost.json",
+      "bytes": 186,
+      "sha256": "ae4af2af8d37162e1d99ad631e90b498d525d8eab605424033e6f579099e636f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-checkpoint-cas-v2.py",
+      "archive": "task-5-v54-root-checkpoint-cas-v2.py.txt",
+      "bytes": 4328,
+      "sha256": "2766a8736372d5e3e92a58bc7265a6a89aaf879b920ec15da40fb90d8a26df1f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-checkpoint-cas-v2.log",
+      "archive": "task-5-v54-root-checkpoint-cas-v2.log.txt",
+      "bytes": 818,
+      "sha256": "e5365d66f293d92998fcd740adc8e9ab9cb38c468759910366b5611e8309d986"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-checkpoint-cas-v2-parent-cost.json",
+      "archive": "task-5-v54-root-checkpoint-cas-v2-parent-cost.json",
+      "bytes": 187,
+      "sha256": "51bffc4f8283de01ca85f94b1bbd70f5bf7d4b2d63cbb272a5be0fa2a21e3622"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-checkpoint-cas-v2.json",
+      "archive": "task-5-v54-root-checkpoint-cas-v2.json",
+      "bytes": 818,
+      "sha256": "e5365d66f293d92998fcd740adc8e9ab9cb38c468759910366b5611e8309d986"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-checkpoint-cas-manifest-v2.json",
+      "archive": "task-5-v54-root-checkpoint-cas-manifest-v2.json",
+      "bytes": 50116,
+      "sha256": "ee6b7d47e61504c124edafb955972cae63b1d4837d165636a4d3a66c76d63a11"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-checkpoint-cas-original-files-v2.json",
+      "archive": "task-5-v54-root-checkpoint-cas-original-files-v2.json",
+      "bytes": 38904,
+      "sha256": "8dd4cc1a9dfe97f336615c0ac4e5785cf5cf3cafb2df833c7e4098cbbd2a9124"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-dry-run-v3.py",
+      "archive": "task-5-full-progressive-pilot-plan-dry-run-v3.py.txt",
+      "bytes": 7329,
+      "sha256": "29288af76c4d90912cca6614e407b4beab1067e4254b097e130150b7ea3cb937"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-dry-run-v3.json",
+      "archive": "task-5-full-progressive-pilot-plan-dry-run-v3.json",
+      "bytes": 2248,
+      "sha256": "8973021695f9dddb28e00fe4f3c7f4139553d02ae9be2722fc55241f60e74333"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-dry-run-v3.log",
+      "archive": "task-5-full-progressive-pilot-plan-dry-run-v3.log.txt",
+      "bytes": 2248,
+      "sha256": "8973021695f9dddb28e00fe4f3c7f4139553d02ae9be2722fc55241f60e74333"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-dry-run-v3-parent-cost.json",
+      "archive": "task-5-full-progressive-pilot-plan-dry-run-v3-parent-cost.json",
+      "bytes": 193,
+      "sha256": "dc2ab09991880021dc37ad1fa7fa332685ced0ba6982ba435fe630cef5827751"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-producer-v3.py",
+      "archive": "task-5-progressive-pilot-plan-producer-v3.py.txt",
+      "bytes": 29798,
+      "sha256": "0a8124af7dc233a5e41d6278bf612fef3d8afe081c83ed761d0276fb7718f59d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-mixed-independent-preflight.json",
+      "archive": "task-5-full-mixed-independent-preflight.json",
+      "bytes": 5283,
+      "sha256": "d4f2f9052d251bb334d0083c44b00e978d89d5633600e77ff514a2a60e51fa4e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-v54-independent-native-Q-results.json",
+      "archive": "task-5-pilot-v54-independent-native-Q-results.json",
+      "bytes": 2196,
+      "sha256": "d9c4fcd56e2cd7fcc0f3cb38b26280359cd731f574b8e3d8fd2fe5e83e0071e7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-empty-root-native-recheck-v3.py",
+      "archive": "task-6-main-empty-root-native-recheck-v3.py.txt",
+      "bytes": 11006,
+      "sha256": "6653b6517402e8415b5bf54254bd0e63bc028671b55b6e56df7158e827a04985"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-empty-root-native-recheck-v3.log",
+      "archive": "task-6-main-empty-root-native-recheck-v3.log.txt",
+      "bytes": 5144,
+      "sha256": "ec3360ef03a9ca0f6a04132273f32e5ae21a0466da44fefc126de77595b6e927"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-empty-root-native-recheck-v3-results.json",
+      "archive": "task-6-main-empty-root-native-recheck-v3-results.json",
+      "bytes": 5144,
+      "sha256": "ec3360ef03a9ca0f6a04132273f32e5ae21a0466da44fefc126de77595b6e927"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-empty-root-native-recheck-v3-parent-cost.json",
+      "archive": "task-6-main-empty-root-native-recheck-v3-parent-cost.json",
+      "bytes": 1524,
+      "sha256": "96dc3beda6fde30e25098cf8bafab42b360dcf185dd4b46a4b99256e25e83413"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-plan-producer-draft-v2.py",
+      "archive": "task-6-main-plan-producer-draft-v2.py.txt",
+      "bytes": 31652,
+      "sha256": "451d8b7941b91348f36c49e75447423558b68fa819288dfdbf8ca50ea837c711"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-plan-draft-v2-dryrun.json",
+      "archive": "task-6-main-plan-draft-v2-dryrun.json",
+      "bytes": 5403,
+      "sha256": "03381551a02461ebcdb2d61caaeb415c8d0c298ac987968525b79faa856a6255"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-plan-draft-v2-parent.log",
+      "archive": "task-6-main-plan-draft-v2-parent.log.txt",
+      "bytes": 283,
+      "sha256": "2522924507379c106df7172664b2f796f20ec8765d79e39020e512b9cc1e12b8"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-plan-draft-v2-parent-cost.json",
+      "archive": "task-6-main-plan-draft-v2-parent-cost.json",
+      "bytes": 589,
+      "sha256": "f8d549e55536c36776eb368f02405a068a3249abc26d08361b19ac648d51d7dd"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-v53-independent-decision.json",
+      "archive": "task-5-pilot-v53-independent-decision.json",
+      "bytes": 2070,
+      "sha256": "1379f15a2e042fe7166356dcf7b5ea1f48776d95330589626e83575a69948239"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-v53-independent-review.md",
+      "archive": "task-5-pilot-v53-independent-review.md",
+      "bytes": 6009,
+      "sha256": "40ab4381e3b2945742a05cdeaac2d2bee919d136f7579e0663d23a94c0eacbbf"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-v53-independent-manifest.json",
+      "archive": "task-5-pilot-v53-independent-manifest.json",
+      "bytes": 6751,
+      "sha256": "8d0291922097a83cc84593844c3e2880e5e67f81f24cb4c88e464523003b1d7a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-source-snapshot-v54/manifest.json",
+      "archive": "v54-source-manifest.json",
+      "bytes": 505,
+      "sha256": "d977d15666cfd6aa2abf2d96b066bca4ac8a7decdc8e730fa1286bd762599e79"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-v54-independent-control-cap-v4-parent.json",
+      "archive": "task-5-pilot-v54-independent-control-cap-v4-parent.json",
+      "bytes": 169,
+      "sha256": "723ae104be5f78fc07c289335785d13cdd7c4e25d856d16cc53fe4eb85f63774"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-v54-independent-control-cap-v4-results.json",
+      "archive": "task-5-pilot-v54-independent-control-cap-v4-results.json",
+      "bytes": 2136,
+      "sha256": "a293c01bf14b47966cb384ed496d7525bc8a67b24a51fa77817e41b76bc1723b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-v54-independent-control-cap-v4.log",
+      "archive": "task-5-pilot-v54-independent-control-cap-v4.log.txt",
+      "bytes": 2136,
+      "sha256": "a293c01bf14b47966cb384ed496d7525bc8a67b24a51fa77817e41b76bc1723b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-pilot-v54-independent-control-cap-v4.py",
+      "archive": "task-5-pilot-v54-independent-control-cap-v4.py.txt",
+      "bytes": 7551,
+      "sha256": "88c03b4ad2ef80eae4c5eaccdd4249e3efbf8371cc55f054a98cad661bcc207c"
+    }
+  ],
+  "scope": "v54 source tests and source-unit/metadata evidence, not formal pilot or independent v54 approval",
+  "raw_checkpoint_store_manifest": "task-5-v54-root-checkpoint-cas-manifest-v2.json"
+}

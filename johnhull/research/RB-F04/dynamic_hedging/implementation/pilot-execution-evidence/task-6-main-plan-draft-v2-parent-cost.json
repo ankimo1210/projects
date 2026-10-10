@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-plan-producer-draft-v2.py",
+    "--output-prefix",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-plan-draft-v2"
+  ],
+  "returncode": 0,
+  "wall_seconds": 1.5614387259993237,
+  "child_cpu_seconds": 1.538187,
+  "scope": "metadata only, original774 jobs/108 empty claimed; workers/RNG prohibited, formal lock not approved"
+}

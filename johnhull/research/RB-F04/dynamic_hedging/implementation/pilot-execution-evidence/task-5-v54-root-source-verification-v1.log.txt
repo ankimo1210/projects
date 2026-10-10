@@ -1,0 +1,132 @@
+{"command": ["/home/kazumasa/projects/.venv/bin/python", "-m", "pytest", "deep_hedge_price/tests/test_dynamic_hedging_pilot.py", "--confcutdir=deep_hedge_price", "-q"], "returncode": 1, "wall_seconds": 59.043516735000594, "child_cpu_seconds": 58.179404}
+........................................................................ [ 55%]
+.......FF.................................................               [100%]
+=================================== FAILURES ===================================
+_ test_conditional_selected_case_bindings_and_n_are_recomputed_without_fixed_n_changes _
+
+    def test_conditional_selected_case_bindings_and_n_are_recomputed_without_fixed_n_changes():
+        candidate = run_pilot.execution.execution_candidate()
+        descriptor = next(r for r in candidate["pilot_cases"] if r["kind"] == "state")
+        model = descriptor["identity"]["model"]
+        identifier = descriptor["id"]
+        selection = {
+            "id": "selection",
+            "operation": "teacher_selection",
+            "status": "executed",
+            "raw": {
+                "model": model,
+                "original_n": 4096,
+                "grid": "high",
+                "selection_status": "qualified_selection",
+                "selected_teacher_job_id": "domain",
+                "selected_state_case_job_ids": {identifier: "state-4096"},
+                "selected_date_job_ids": {"0": "date-4096"},
+                "financial_qualification": "unknown",
+            },
+        }
+        jobs = {"selection": selection}
+        source = {"teacher_selection_job_id": "selection", "model": model}
+        plan = {"id": identifier, "original_n": None, "original_n_source": source}
+>       concrete = check_pilot.concrete_original_n_plan(plan, jobs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:2298: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:3136: in concrete_original_n_plan
+    raw = _selected_teacher_raw(source, jobs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:2941: in _selected_teacher_raw
+    raw = _teacher_selection_control_raw(jobs[identifier])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/run_pilot.py:2080: in _teacher_selection_control_raw
+    _require(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'conditional original selector inspection missing'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: conditional original selector inspection missing
+
+johnhull/research/RB-F04/dynamic_hedging/run_pilot.py:55: ValueError
+_ test_A_selection_uses_prior_rules_and_measured_premium_not_future_result_hash _
+
+    def test_A_selection_uses_prior_rules_and_measured_premium_not_future_result_hash():
+        candidate = run_pilot.execution.execution_candidate()
+        original = candidate["original_candidate"]
+        static = {
+            k: original["hedging"][k]
+            for k in ("band_width_candidates", "baseline_rule", "checkpoint_rule")
+        }
+        specs = {
+            "teacher_selection_job_ids": {"Heston": "H", "local": "L"},
+            "premium_job_id": "premium",
+            "precision_job_ids": ["p8192", "p16384", "p32768"],
+            "static": static,
+        }
+        jobs = {
+            m: {
+                "operation": "teacher_selection",
+                "status": "executed",
+                "raw": {
+                    "model": model,
+                    "original_n": 4096,
+                    "grid": "high",
+                    "selection_status": "research_only_unqualified",
+                },
+            }
+            for m, model in (("H", "Heston"), ("L", "local"))
+        }
+        jobs["premium"] = {"operation": "premium", "status": "executed", "raw": {}}
+        checks = {
+            "H": {},
+            "L": {},
+            "premium": {
+                "original_n": 65536,
+                "value": 7.3,
+                "standard_error": 0.001,
+                "scheme_error": 0.002,
+            },
+        }
+        for N in (8192, 16384, 32768):
+            identifier = f"p{N}"
+            jobs[identifier] = {"operation": "precision", "status": "executed", "raw": {}}
+            checks[identifier] = {
+                "original_n": N,
+                "qualification": "unknown",
+                "worst_mean_loss_se": None,
+                "worst_mse_se": None,
+                "baseline_mse": None,
+            }
+>       result = check_pilot.derive_execution_selection(specs, jobs, checks)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:2366: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:3951: in derive_execution_selection
+    raw = _selected_teacher_raw({"teacher_selection_job_id": identifier, "model": model}, jobs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:2941: in _selected_teacher_raw
+    raw = _teacher_selection_control_raw(jobs[identifier])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/run_pilot.py:2080: in _teacher_selection_control_raw
+    _require(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'conditional original selector inspection missing'
+
+    def _require(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: conditional original selector inspection missing
+
+johnhull/research/RB-F04/dynamic_hedging/run_pilot.py:55: ValueError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_selected_case_bindings_and_n_are_recomputed_without_fixed_n_changes
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_A_selection_uses_prior_rules_and_measured_premium_not_future_result_hash
+2 failed, 128 passed in 57.98s
+{"command": ["/home/kazumasa/projects/.venv/bin/ruff", "check", "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py", "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py", "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"], "returncode": 0, "wall_seconds": 0.008752020003157668, "child_cpu_seconds": 0.011330000000001839}
+All checks passed!
+{"command": ["/home/kazumasa/projects/.venv/bin/ruff", "format", "--check", "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py", "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py", "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"], "returncode": 0, "wall_seconds": 0.007259322999743745, "child_cpu_seconds": 0.009684000000001802}
+3 files already formatted

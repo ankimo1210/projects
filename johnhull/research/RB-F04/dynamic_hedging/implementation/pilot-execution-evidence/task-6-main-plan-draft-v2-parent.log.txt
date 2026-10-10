@@ -1,0 +1,1 @@
+{"formal_lockable": false, "finance_executed": false, "normal_rng_opened": false, "core_job_count": 60, "core_cell_records": 396, "refinement_job_count": 714, "outcome_group_counts": {"sde": 24, "teacher_n": 24, "teacher_grid": 24, "frequency": 96, "Q": 108}, "source_stable": true}

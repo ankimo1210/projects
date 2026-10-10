@@ -1,0 +1,85 @@
+from pathlib import Path
+import copy,json,importlib.util,time
+import numpy as np,pytest
+import run_pilot as r,check_pilot as c
+D=Path(__file__).parent;S=D/"task-5-pilot-v54-independent-source-snapshot"
+spec=importlib.util.spec_from_file_location("cap_projection_source_tests",S/"deep_hedge_price/tests/test_dynamic_hedging_pilot.py")
+t=importlib.util.module_from_spec(spec);spec.loader.exec_module(t)
+def denied(*a,**k):raise AssertionError("No RNG/finance in actual metadata cap proof")
+np.random.default_rng=denied
+start=time.perf_counter_ns();checks=[]
+original_dispatch=r._dispatch
+original_raw_check=c._raw_job_check
+for model in ("Heston","local"):
+    with pytest.MonkeyPatch.context() as mp:
+        metadata=t._selected_teacher_inputs_source_unit(mp,model=model)
+        inputs,plan=t._lifecycle_source_plan(mp)
+        plan["case_plan"]=copy.deepcopy(plan["case_plan"])
+        template=plan["jobs"][-1]
+        selected=metadata["selector"]["raw"]
+        case_id=next(iter(selected["selected_state_case_job_ids"]))
+        state_id=selected["selected_state_case_job_ids"][case_id]
+        teacher_id=selected["selected_teacher_job_id"]
+        date_id=selected["selected_date_job_ids"]["0"] if isinstance(selected["selected_date_job_ids"],dict) else selected["selected_date_job_ids"][0]
+        if isinstance(date_id,dict):date_id=date_id["job_id"]
+        date_attempt="teacher:"+model+":date0"
+        numerical=[]
+        for jid,op in ((state_id,"state"),(teacher_id,"teacher_domain_selection"),(date_id,"date_gate")):
+            job=copy.deepcopy(template)
+            job.update(id=jid,operation=op,original_n=65536,expense_id=jid+":actual",arguments={})
+            numerical.append(job)
+        def metadata_dispatch(operation,arguments,*,wall_cap_seconds=None):
+            if operation in ("state","teacher_domain_selection","date_gate"):
+                return {"kind":operation,"original_n":65536,"financial_qualification":"unknown","source_unit":"metadata only; no generated prices"}
+            return original_dispatch(operation,arguments)
+        mp.setattr(r,"_dispatch",metadata_dispatch)
+        def metadata_raw_check(job,context):
+            if job["operation"] in ("state","teacher_domain_selection","date_gate"):
+                return {"integrity":"pass","original_n":65536,"financial_qualification":"unknown"}
+            return original_raw_check(job,context)
+        mp.setattr(c,"_raw_job_check",metadata_raw_check)
+        selector=copy.deepcopy(template)
+        selector.update(id="selection:"+model,operation="teacher_selection",original_n=None,expense_id="selector:actual",arguments=metadata["selection_arguments"])
+        selector["budget"]["wall_seconds"]=1e-12
+        adapter=copy.deepcopy(template)
+        adapter.update(id="selected-principal",operation="teacher_selected_inputs",original_n=None,original_n_source={"teacher_selection_job_id":selector["id"],"model":model,"purpose":"principal"},expense_id="adapter:actual",arguments=dict(model=model,purpose="principal",selector={"job_record":selector["id"]},selection_arguments={"job_arguments":selector["id"]},teachers=metadata["teachers"],drivers=metadata["drivers"]))
+        diagnostic=copy.deepcopy(template)
+        diagnostic.update(t._conditional_diagnostic_source_job(selector,model=model),expense_id="diagnostic:actual")
+        diagnostic["arguments"].update(parameters={"input":"parameters"},surface=None,model=model,original_n={"job":adapter["id"],"path":["original_n"]},selected_inputs={"job":adapter["id"]},driver={"job":adapter["id"],"path":["driver"]},seed=r.protocol.candidate_protocol()["seeds"]["teacher"][0 if model=="Heston" else 1],chunk_paths=16,cases=diagnostic["diagnostic_cases"])
+        selector["cap_scope"]={"job_ids":[selector["id"],adapter["id"],diagnostic["id"]],"case_ids":[case_id],"attempt_ids":[date_attempt],"expense_id":selector["expense_id"]}
+        source={"teacher_selection_job_id":selector["id"],"model":model}
+        plan["jobs"]=numerical+[selector,adapter,diagnostic,template]
+        plan["case_bindings"]=[{"id":case_id,"job_id_source":dict(source,case_id=case_id)}]
+        plan["attempt_bindings"]=[{"id":date_attempt,"job_ids_source":dict(source,date_index=0)}]
+        for case in plan["case_plan"]:
+            if case["id"]==case_id:case.update(original_n=None,original_n_source=source)
+        for attempt in plan["attempt_plan"]:
+            if attempt["id"]==date_attempt:attempt.update(original_n=None,original_n_source=source)
+        path=D/("task-5-pilot-v54-independent-control-cap-v4-raw-"+model)
+        snapshot=r.run_pilot(path,inputs=inputs,locked_plan=plan)
+        jobs={row["id"]:row for row in snapshot["jobs"]}
+        assert jobs[selector["id"]]["status"]=="failed_at_declared_cap"
+        assert jobs[selector["id"]]["raw"]["original_n"]==65536
+        assert jobs["independent"]["status"]=="executed"
+        for job in (adapter,diagnostic):
+            row=jobs[job["id"]]
+            assert row["status"]=="unexecuted_dependency_cap"
+            assert row["raw"]["original_n"]==row["raw"]["unexecuted_n"]==65536
+            assert row["raw"]["executed_n"]==0 and row["raw"]["parent_cap_job_ids"]==[selector["id"]]
+        checked=c.check_pilot_records(snapshot,expected_plan=plan,context={"inputs":inputs})
+        case=next(row for row in checked["case_results"] if row["id"]==case_id)
+        date=next(row for row in checked["attempt_results"] if row["id"]==date_attempt)
+        for row in (case,date):
+            assert row["financial_qualification"]=="unknown" and row["cap_parent_job_id"]==selector["id"]
+            assert selector["id"] in row["required_job_ids"]
+        assert jobs[state_id]["status"]=="executed" and case["execution_status"]=="executed"
+        assert checked["closed"] is False
+        for binding,key in ((plan["case_bindings"][0],"required_case_binding"),(plan["attempt_bindings"][0],"required_attempt_binding")):
+            spec=c.concrete_execution_specification({key:binding},jobs)
+            assert selector["id"] in spec["required_job_ids"]
+        resume=r.run_pilot(path,inputs=inputs,locked_plan=plan,resume=True)
+        assert r.input_identity(resume["jobs"])==r.input_identity(snapshot["jobs"])
+        checks.append({"model":model,"original_n":65536,"selector_wall_seconds":jobs[selector["id"]]["expense"]["timing"]["wall_seconds"],"selector_cap_limit":1e-12,"state_numerical_status":jobs[state_id]["status"],"case_cap_parent":case["cap_parent_job_id"],"date_cap_parent":date["cap_parent_job_id"],"case_required_job_ids":case["required_job_ids"],"date_required_job_ids":date["required_job_ids"],"adapter_numerical_status":jobs[adapter["id"]]["status"],"diagnostic_numerical_status":jobs[diagnostic["id"]]["status"],"independent_job_status":jobs["independent"]["status"],"saved_resume_stable":True,"full_pilot_closed":checked["closed"],"financial_qualification":checked["financial_qualification"],"unrelated_unclosed_issues":checked["issues"]})
+out={"schema":"rb-f04-v54-independent-actual-control-cap-projection-v1","checks":checks,"new_rng":False,"formal_finance":False,"formal_lock":False,"financial_qualification":"unknown","wall_seconds":(time.perf_counter_ns()-start)/1e9,"scope":"Actual selector wall cap and source control/case/date/A required-work projection. Numerical state/date validation stubs are explicitly metadata only; 121/51 whole closure intentionally false."}
+(D/"task-5-pilot-v54-independent-control-cap-v4-results.json").write_text(json.dumps(out,indent=2)+"\n")
+print(json.dumps(out,indent=2))

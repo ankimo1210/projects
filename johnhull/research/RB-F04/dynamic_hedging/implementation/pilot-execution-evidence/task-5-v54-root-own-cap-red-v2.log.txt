@@ -1,0 +1,51 @@
+..F                                                                      [100%]
+=================================== FAILURES ===================================
+___ test_actual_selector_own_cap_preserves_control_n_and_no_numerical_inputs ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7885fad4af60>
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3883/test_actual_selector_own_cap_p0')
+
+    def test_actual_selector_own_cap_preserves_control_n_and_no_numerical_inputs(monkeypatch, tmp_path):
+        import copy
+    
+        metadata = _selected_teacher_inputs_source_unit(monkeypatch)
+        inputs, plan = _lifecycle_source_plan(monkeypatch)
+        template = plan["jobs"][-1]
+        selector = copy.deepcopy(template)
+        selector.update(id="selection:Heston", operation="teacher_selection", original_n=None,
+                        expense_id="selector:actual", arguments=metadata["selection_arguments"])
+        selector["budget"]["wall_seconds"] = 1e-12
+        adapter = copy.deepcopy(template)
+        adapter.update(id="selected-principal", operation="teacher_selected_inputs", original_n=None,
+                       original_n_source={"teacher_selection_job_id": selector["id"], "model": "Heston",
+                                          "purpose": "principal"},
+                       expense_id="adapter:actual", arguments=dict(
+                           model="Heston", purpose="principal", selector={"job_record": selector["id"]},
+                           selection_arguments={"job_arguments": selector["id"]},
+                           teachers=metadata["teachers"], drivers=metadata["drivers"]))
+        diagnostic = copy.deepcopy(template)
+        diagnostic.update(_conditional_diagnostic_source_job(selector))
+        diagnostic["expense_id"] = "diagnostic:actual"
+        diagnostic["arguments"].update(
+            parameters={"input": "parameters"}, surface=None, model="Heston",
+            original_n={"job": adapter["id"], "path": ["original_n"]},
+            selected_inputs={"job": adapter["id"]}, driver={"job": adapter["id"], "path": ["driver"]},
+            seed=run_pilot.protocol.candidate_protocol()["seeds"]["teacher"][0], chunk_paths=16,
+            cases=diagnostic["diagnostic_cases"])
+        selector["cap_scope"] = {"job_ids": [selector["id"], adapter["id"], diagnostic["id"]],
+                                 "case_ids": [], "attempt_ids": [], "expense_id": selector["expense_id"]}
+        plan["jobs"] = [selector, adapter, diagnostic, template]
+        monkeypatch.setattr(np.random, "default_rng", lambda *a, **k: pytest.fail("selector cap RNG"))
+        snapshot = run_pilot.run_pilot(tmp_path, inputs=inputs, locked_plan=plan)
+        jobs = {row["id"]: row for row in snapshot["jobs"]}
+        parent = jobs[selector["id"]]
+        assert parent["status"] == "failed_at_declared_cap"
+        assert parent["raw"]["kind"] == "teacher_selection" and parent["raw"]["original_n"] == 65536
+>       assert jobs["independent"]["status"] == "executed"
+               ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'independent'
+
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3419: KeyError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_actual_selector_own_cap_preserves_control_n_and_no_numerical_inputs
+1 failed, 2 passed, 127 deselected in 1.71s

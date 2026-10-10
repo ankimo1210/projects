@@ -1,0 +1,11 @@
+{"command": ["/home/kazumasa/projects/.venv/bin/python", "-m", "pytest", "deep_hedge_price/tests/test_dynamic_hedging_pilot.py", "--confcutdir=deep_hedge_price", "-q", "-k", "conditional_selected_case_bindings or A_selection_uses_prior or actual_selector_own_cap"], "returncode": 0, "wall_seconds": 2.3470018730004085, "child_cpu_seconds": 2.342761}
+....                                                                     [100%]
+4 passed, 127 deselected in 1.66s
+{"command": ["/home/kazumasa/projects/.venv/bin/python", "-m", "pytest", "deep_hedge_price/tests/test_dynamic_hedging_pilot.py", "--confcutdir=deep_hedge_price", "-q"], "returncode": 0, "wall_seconds": 58.73439587100074, "child_cpu_seconds": 58.57132}
+........................................................................ [ 54%]
+...........................................................              [100%]
+131 passed in 57.62s
+{"command": ["/home/kazumasa/projects/.venv/bin/ruff", "check", "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py", "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py", "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"], "returncode": 0, "wall_seconds": 0.015023904001282062, "child_cpu_seconds": 0.017611999999999517}
+All checks passed!
+{"command": ["/home/kazumasa/projects/.venv/bin/ruff", "format", "--check", "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py", "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py", "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"], "returncode": 0, "wall_seconds": 0.015850365998630878, "child_cpu_seconds": 0.01778100000000249}
+3 files already formatted

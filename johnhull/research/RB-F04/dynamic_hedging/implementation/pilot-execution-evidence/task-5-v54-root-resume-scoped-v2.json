@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "--confcutdir=deep_hedge_price",
+    "-q",
+    "-k",
+    "limited_selected_count_attempts or conditional_refinement_binds or conditional_attempt_source_gaps or native_q_scalar or native_q_saved or actual_selector_own_cap or conditional_case_date"
+  ],
+  "returncode": 0,
+  "wall_seconds": 2.9723329700027534,
+  "child_cpu_seconds": 2.952387,
+  "scope": "source metadata/cap and native Q replay only; no formal financial qualification"
+}

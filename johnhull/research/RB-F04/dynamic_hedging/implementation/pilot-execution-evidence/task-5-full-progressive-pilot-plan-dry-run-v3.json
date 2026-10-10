@@ -1,0 +1,59 @@
+{
+  "scope": "full progressive+selected mixed121/51 graph metadata and actual signatures only",
+  "financial_worker_performed": false,
+  "formal_plan_locked": false,
+  "financial_qualification": "unknown",
+  "job_count": 3138,
+  "operation_counts": {
+    "field": 1,
+    "premium": 1,
+    "call_cache": 46,
+    "teacher_driver": 10,
+    "teacher_grid": 20,
+    "teacher_domain_selection": 20,
+    "call_table": 36,
+    "oracle": 108,
+    "state": 288,
+    "date_gate": 192,
+    "market_pair": 28,
+    "quote_risk": 202,
+    "validation": 68,
+    "cell_pair": 1964,
+    "bump_risk": 34,
+    "teacher_candidate_gate": 16,
+    "teacher_selection": 2,
+    "teacher_selected_inputs": 8,
+    "quotes": 1,
+    "source": 1,
+    "stream_receipts": 4,
+    "tiny_fits": 1,
+    "roster": 4,
+    "Q": 36,
+    "empty_claim": 36,
+    "teacher_diagnostic": 4,
+    "frequency_cache": 4,
+    "precision": 3
+  },
+  "worker_signature_errors": [],
+  "original_cases": 121,
+  "original_attempts": 51,
+  "conditional_state_counts": 36,
+  "conditional_attempt_counts": 31,
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc"
+  },
+  "source_stable": true,
+  "producer_sha256": "0a8124af7dc233a5e41d6278bf612fef3d8afe081c83ed761d0276fb7718f59d",
+  "pending_formal_lock": [
+    "independent full mixed graph/source review",
+    "whole original work/bytes/rates/prior budgets and genuine cap options",
+    "ten actual external inclusive expense receipts/aliases and original history"
+  ]
+}

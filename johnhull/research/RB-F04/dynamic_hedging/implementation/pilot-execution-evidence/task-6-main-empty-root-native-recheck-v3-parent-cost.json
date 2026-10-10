@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-main-empty-root-native-recheck-v3.py"
+  ],
+  "returncode": 0,
+  "wall_seconds": 20.287877602000663,
+  "child_cpu_seconds": 20.274330999999997,
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "a988c164ca8f64f5dfc78165fc2f9620c2abc857eac745715f4749908839e230"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "a988c164ca8f64f5dfc78165fc2f9620c2abc857eac745715f4749908839e230"
+  },
+  "scope": "root source-unit rerun; original N4096 toy call cache; no formal finance or independent approval"
+}

@@ -1,0 +1,32 @@
+{
+  "scope": "fixed v54 source/root unit/metadata checkpoint only; independent v54 review pending",
+  "status": "PASS",
+  "entries": 159,
+  "bytes": 131106011,
+  "checks": {
+    "primary": {
+      "entry_count": 159,
+      "original_byte_restore": "PASS",
+      "financial_semantic": "not run"
+    },
+    "mirror": {
+      "entry_count": 159,
+      "original_byte_restore": "PASS",
+      "financial_semantic": "not run"
+    }
+  },
+  "cost": {
+    "clock": {
+      "wall_start": 24418.780292202,
+      "cpu_start": 0.025688816,
+      "wall_stop": 24425.6196348,
+      "cpu_stop": 1.263305517
+    },
+    "wall_seconds": 6.839342598002986,
+    "cpu_seconds": 1.237616701
+  },
+  "startup_and_authoring_cost": "unmeasured",
+  "financial_qualification": "unknown",
+  "formal_plan_locked": false,
+  "phase_accepted": false
+}

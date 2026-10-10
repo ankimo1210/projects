@@ -1,0 +1,108 @@
+from pathlib import Path
+import importlib.util,inspect,json,sys,hashlib
+from collections import Counter
+import numpy as np
+root=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+D=root/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+sys.path.insert(0,str(root/'johnhull/research/RB-F04/dynamic_hedging'))
+import run_pilot as pilot
+import reference_methods
+from hullkit._dynamic_hedging_surfaces import build_call_cache
+spec=importlib.util.spec_from_file_location('pilot_graph',D/'task-5-progressive-pilot-plan-producer-v3.py')
+graph=importlib.util.module_from_spec(spec);spec.loader.exec_module(graph)
+prepared=json.loads((D/'task-5-actual-pilot-input-preparation-v4.json').read_text())
+inputs={k:prepared[k] for k in ('original_states18','diagnostic_queries24','additional_teacher_cases')}
+from hullkit._heston_local_surface import HestonParameters
+inputs['parameters']=HestonParameters(**prepared['parameters'])
+inputs['seed_namespace']=prepared['declared_stream_namespaces']
+for rows in inputs['additional_teacher_cases'].values():
+ for row in rows:row['thresholds']=np.asarray(row['thresholds'])
+b=root/'johnhull/research/RB-F04/dynamic_hedging'
+with np.load(b/'pilot/initial-quotes/reference.npz',allow_pickle=False) as a:
+ prefix='field257x321.surface.'
+ times=a[prefix+'times'].copy();z=a[prefix+'z_nodes'].copy()
+from unittest.mock import patch
+import ast
+before={f:hashlib.sha256((root/f).read_bytes()).hexdigest() for f in (
+ "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+ "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+ "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py")}
+operations=["field","quotes","premium","source","call_cache","teacher_driver","teacher_grid",
+ "teacher_domain_selection","teacher_candidate_gate","teacher_selection","call_table","oracle",
+ "state","date_gate","market_pair","quote_risk","tiny_fits","validation","roster","cell_pair",
+ "bump_risk","Q","empty_claim","teacher_diagnostic","frequency_cache","precision","stream_receipts"]
+state_h=np.r_[np.linspace(0,.08,17),np.linspace(.08,.5,17)[1:]];state_h[0]=1e-5
+state_l=np.array([.25,.5,.75,1.,1.5,2.,4.])
+controls={"pilot_n":1024,"field":{"times":times,"z_nodes":z,"order":1024,"frequency_scale":512,
+ "density_floor":1e-10},
+ "initial_call_controls":{"pde_stages":[]},
+ "call":{m:{"dates":np.arange(49)/48,"spot_nodes":np.geomspace(50,200,65),
+           "state_nodes":state_h if m=="Heston" else state_l} for m in ("Heston","local")},
+ "independent_state_nodes":{"Heston":state_h,"local":state_l},
+ "independent_call_controls":{},"bin_edges":np.array([80.,100.,120.]),
+ "chunk_paths":256,"query_chunk_paths":64,
+ "expanded_byte_predictions":dict.fromkeys(operations,None)}
+config=dict(pilot.protocol.candidate_protocol()["training"])
+config.update(original_n=1024,updates=16,batch_size=256,cap_seconds=60)
+functions={
+ "field":pilot.run_field_job,"quotes":pilot.run_quotes_job,"premium":reference_methods.premium_reference,
+ "call_cache":build_call_cache,"teacher_driver":pilot.run_teacher_driver_job,
+ "teacher_grid":pilot.run_teacher_grid_job,"teacher_domain_selection":pilot.run_teacher_domain_selection_job,
+ "teacher_candidate_gate":pilot.run_teacher_candidate_gate_job,
+ "teacher_selection":pilot.run_teacher_selection_job,
+ "teacher_selected_inputs":pilot.run_teacher_selected_inputs_job,"call_table":reference_methods.independent_call_table,
+ "oracle":reference_methods.quote_positions_oracle,"state":pilot.run_state_job,
+ "date_gate":pilot.run_date_gate_job,"market_pair":pilot.run_market_pair_job,
+ "quote_risk":pilot.run_quote_risk_job,"tiny_fits":pilot.run_tiny_fits_job,
+ "validation":pilot.study.select_validation,"roster":pilot.study.test_roster,
+ "cell_pair":pilot.run_cell_pair_job,"bump_risk":pilot.run_bump_risk_job,
+ "Q":pilot.run_q_job,"empty_claim":pilot.run_empty_claim_job,
+ "teacher_diagnostic":pilot.run_teacher_diagnostic_job,"frequency_cache":pilot.run_frequency_cache_job,
+ "precision":pilot.run_precision_job,"stream_receipts":pilot.run_stream_receipts_job}
+
+def forbidden(*a,**k):
+ raise AssertionError("formal finance/RNG prohibited in metadata compilation")
+with patch("numpy.random.default_rng",forbidden):
+ draft=graph.build_full_progressive_pilot_graph(inputs=inputs,controls=controls,pilot_training_config=config)
+errors=[];prior=set()
+for row in draft["jobs"]:
+ op=row["operation"];keys=set(row["arguments"])
+ if op!="source":
+  if op in ("teacher","teacher_grid","teacher_driver","teacher_diagnostic","bump_risk","precision",
+            "quote_risk","quotes","field","Q","market_pair","oracle","premium","call_table"):keys.add("wall_cap_seconds")
+  if op in ("teacher_grid","teacher_driver"):keys.add("work_directory")
+  try:inspect.signature(functions[op]).bind(**dict.fromkeys(keys))
+  except (TypeError,KeyError) as e:errors.append({"job":row["id"],"operation":op,"error":str(e)})
+ deps=pilot._dependency_ids(row["arguments"])
+ assert deps<=prior,(row["id"],deps-prior)
+ if row.get("activation"):assert row["activation"]["previous_teacher_gate_job_id"] in prior
+ prior.add(row["id"])
+assert len(draft["case_plan"])==len(draft["case_bindings"])==121
+assert len(draft["attempt_plan"])==len(draft["attempt_bindings"])==51
+assert sum(j["operation"]=="tiny_fits" for j in draft["jobs"])==1
+assert sum(j["operation"]=="teacher_selected_inputs" for j in draft["jobs"])==8
+assert not errors,errors
+by_id={j["id"]:j for j in draft["jobs"]}
+for model in ("Heston","local"):
+ selector=by_id["teacher-selection:"+model]
+ expected_cases={p["id"] for p in draft["case_plan"] if p["kind"]=="state" and p["identity"]["model"]==model}
+ expected_dates={f"teacher:{model}:date{j}" for j in range(12)}
+ assert expected_cases<=set(selector["cap_scope"]["case_ids"])
+ assert expected_dates<=set(selector["cap_scope"]["attempt_ids"])
+for adapter in [j for j in draft["jobs"] if j["operation"]=="teacher_selected_inputs" and j["arguments"]["purpose"]!="extra_dates"]:
+ relevant="teacher_grid" if adapter["arguments"]["purpose"]=="teacher_grid" else "teacher_N"
+ expected={f"refinement:{relevant}:{m}" for m in ("Heston","local")}
+ assert expected<=set(adapter["cap_scope"]["attempt_ids"])
+
+after={f:hashlib.sha256((root/f).read_bytes()).hexdigest() for f in before}
+out={"scope":"full progressive+selected mixed121/51 graph metadata and actual signatures only",
+ "financial_worker_performed":False,"formal_plan_locked":False,"financial_qualification":"unknown",
+ "job_count":len(draft["jobs"]),"operation_counts":dict(Counter(j["operation"] for j in draft["jobs"])),
+ "worker_signature_errors":errors,"original_cases":len(draft["case_plan"]),"original_attempts":len(draft["attempt_plan"]),
+ "conditional_state_counts":sum(p.get("original_n_source") is not None for p in draft["case_plan"]),
+ "conditional_attempt_counts":sum(p.get("original_n_source") is not None for p in draft["attempt_plan"]),
+ "source_before":before,"source_after":after,"source_stable":before==after,"producer_sha256":hashlib.sha256((D/"task-5-progressive-pilot-plan-producer-v3.py").read_bytes()).hexdigest(),
+ "pending_formal_lock":draft["pending_formal_lock"]}
+(D/"task-5-full-progressive-pilot-plan-dry-run-v3.json").write_text(json.dumps(out,indent=2)+chr(10))
+pilot.write_pilot_artifact(D/"task-5-full-progressive-pilot-plan-draft-source-unit-v3",draft)
+print(json.dumps(out,indent=2))

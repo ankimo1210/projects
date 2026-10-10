@@ -1,0 +1,15 @@
+{
+  "args": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price",
+    "-q",
+    "-k",
+    "limited_selected_count_attempts or conditional_refinement_binds or conditional_attempt_source_gaps or native_q_scalar or native_q_saved or actual_selector_own_cap or conditional_case_date"
+  ],
+  "returncode": 1,
+  "parent_wall_seconds": 3.238538294001046,
+  "scope": "limited bridge/nativeQ/selector-cap source tests; no formal finance"
+}
