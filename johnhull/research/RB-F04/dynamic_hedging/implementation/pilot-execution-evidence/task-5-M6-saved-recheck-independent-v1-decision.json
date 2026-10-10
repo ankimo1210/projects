@@ -1,0 +1,77 @@
+{
+  "decision": "approve_saved_original_M6_bounded_recheck_resource_observations_only",
+  "timestamp_UTC": "2026-10-10T05:47:36.751420+00:00",
+  "scope": "saved-only independent authentication of original N1024 all-four-class bounded recheck, resource receipts, thin report/cache transport and retained unknowns",
+  "evidence": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-independent-v1-results.json",
+  "source": {
+    "canonical_identity": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+    "identity_method": "run_pilot.runner._digest(execution_source_identity)",
+    "original_generation_identity": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+    "fixed_checker_sha256": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b",
+    "all_81_before_after_stable": true,
+    "old_vs_new_81_diff_only_checker": true
+  },
+  "prior_budget_sha256": "6e85a12b6ea26c966e390596e797e9a5920a89b993a639a8b7591b8fd92a437b",
+  "approved": {
+    "original_geometry": {
+      "N": 1024,
+      "class_node_counts": [
+        108,
+        156,
+        520,
+        1344
+      ],
+      "all_nodes": 2128,
+      "original_thresholds": [
+        33,
+        65,
+        33,
+        65
+      ]
+    },
+    "original_all_11_sample_descriptors": 23408,
+    "all_original_cache_approximately_equal_to_thin_report": true,
+    "all_node_saved_SDE_completed_flags_and_physical_origin_authenticated": true,
+    "all_four_write_read_and_final_checkpoints_authenticated": true,
+    "all_four_resource_caps_absent_in_new_observation": true,
+    "unknown_underresolved_labels_retained": 47182,
+    "old_three_actual_RSS_caps_and_original_failure_costs_preserved": true,
+    "old_13157_file_terminal_authentication_and_prior_independent_M6_provenance_reused": true
+  },
+  "review_execution": {
+    "saved_only": true,
+    "new_SDE_solver_RNG_generation": false,
+    "old_huge_checker_payload_decoded": false,
+    "old_all_file_hash_scan_repeated": false,
+    "root_observed_SDE_was_not_independently_reexecuted": true
+  },
+  "resources": {
+    "root_inclusive_wall_seconds": 774.0913469130028,
+    "root_inclusive_child_tree_CPU_seconds": 777.573424,
+    "maximum_new_child_kernel_peak_RSS_bytes": 1490243584,
+    "thin_reports_total_NPZ_bytes": 247100544,
+    "thin_reports_total_expanded_NPY_bytes": 242001224,
+    "thin_reports_total_metadata_receipt_bytes": 27127740,
+    "root_outer_final_receipt_write_stdout_cost": "unknown",
+    "generation_or_driver_history_not_charged_again": true,
+    "inner_costs_not_added_to_inclusive_outer_cost": true
+  },
+  "not_approved": {
+    "financial_accuracy": true,
+    "financial_qualification": "unknown",
+    "formal_pilot_main": true,
+    "phase_completion": true,
+    "formal_budget_lock": true,
+    "N65536_RSS_or_time_forecast": true,
+    "full_formal_volume_rate_or_precision": true,
+    "genuine_generation_speedup_from_old_vs_new_costs": true
+  },
+  "review_cost": {
+    "scope": "independent M6 saved report/cache/resource review enclosing launch/import",
+    "exit_code": 0,
+    "wall_seconds": 9.811074430996086,
+    "child_CPU_seconds": 9.770509,
+    "child_peak_RSS_bytes": 1267691520,
+    "outer_final_receipt_save": "unknown"
+  }
+}

@@ -1,0 +1,388 @@
+{
+  "CPU_seconds_before_final_save": 1.080719464,
+  "N_ladder": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "all2128_native_metadata_SHA_verified": true,
+  "existing_M6_NPY_headers_inventory_reused_not_decoded": true,
+  "financial_array_decode_RNG_solver_SDE_generation": false,
+  "formal_financial_qualification": "unknown",
+  "genuine_base_N1024_grid_cache_inventory": {
+    "Heston-coarse": {
+      "base_cache_payload": 6594132,
+      "base_embedded_driver_N_ID_payload": 16384,
+      "base_fixed_payload": 6603620,
+      "base_full_grid_payload": 6620004,
+      "whole20_nominal_grid_raw_payload": 35459316,
+      "whole20_raw_and_domain_selection_two_grid_copies": 70918632
+    },
+    "Heston-high": {
+      "base_cache_payload": 18237476,
+      "base_embedded_driver_N_ID_payload": 16384,
+      "base_fixed_payload": 18250068,
+      "base_full_grid_payload": 18266452,
+      "whole20_nominal_grid_raw_payload": 93691556,
+      "whole20_raw_and_domain_selection_two_grid_copies": 187383112
+    },
+    "local-coarse": {
+      "base_cache_payload": 32261212,
+      "base_embedded_driver_N_ID_payload": 16384,
+      "base_fixed_payload": 32270780,
+      "base_full_grid_payload": 32287164,
+      "whole20_nominal_grid_raw_payload": 163795116,
+      "whole20_raw_and_domain_selection_two_grid_copies": 327590232
+    },
+    "local-high": {
+      "base_cache_payload": 159866868,
+      "base_embedded_driver_N_ID_payload": 16384,
+      "base_fixed_payload": 159879588,
+      "base_full_grid_payload": 159895972,
+      "whole20_nominal_grid_raw_payload": 801839156,
+      "whole20_raw_and_domain_selection_two_grid_copies": 1603678312
+    }
+  },
+  "genuine_base_N1024_node_inventory": {
+    "Heston-coarse": {
+      "base_N": 1024,
+      "base_N_dependent_payload_bytes": 117448704,
+      "base_categories_payload_bytes": {
+        "calendar_threshold_means_SE_status_other_fixed": 3788208,
+        "embedded_shared_driver_ID_duplicates": 1769472,
+        "failure_reasons_U128": 56623104,
+        "four_16block_arrays": 5930496,
+        "full_step_uint8": 46006272,
+        "label_mask_duplicate": 110592,
+        "nine_float64_primitive_vectors": 7962624,
+        "primitive_path_mask": 110592,
+        "primitive_status_U7": 3096576,
+        "three_full_covariances": 50808384,
+        "top_path_cluster_ids": 1769472,
+        "variable_step_dictionary": 55296
+      },
+      "base_dictionary_payload_bytes": 55296,
+      "base_fixed_or_dictionary_payload_bytes": 60582384,
+      "base_node_payload_bytes": 178031088,
+      "genuine_base_expanded_headers_bytes": 677376,
+      "genuine_base_metadata_receipt_bytes": 2693943,
+      "genuine_base_physical_NPZ_bytes": 32862385,
+      "new_N_compression_ratio_guaranteed": false,
+      "nodes": 108,
+      "whole_20_nominal_node_payload_bytes_same_dictionary_geometry": 17802768816,
+      "whole_fixed_dictionary_max_payload_bytes": 17837881776,
+      "whole_fixed_dictionary_min_payload_bytes": 17802630576
+    },
+    "Heston-high": {
+      "base_N": 1024,
+      "base_N_dependent_payload_bytes": 169648128,
+      "base_categories_payload_bytes": {
+        "calendar_threshold_means_SE_status_other_fixed": 7868016,
+        "embedded_shared_driver_ID_duplicates": 2555904,
+        "failure_reasons_U128": 81788928,
+        "four_16block_arrays": 16872960,
+        "full_step_uint8": 66453504,
+        "label_mask_duplicate": 159744,
+        "nine_float64_primitive_vectors": 11501568,
+        "primitive_path_mask": 159744,
+        "primitive_status_U7": 4472832,
+        "three_full_covariances": 284731200,
+        "top_path_cluster_ids": 2555904,
+        "variable_step_dictionary": 79872
+      },
+      "base_dictionary_payload_bytes": 79872,
+      "base_fixed_or_dictionary_payload_bytes": 309552048,
+      "base_node_payload_bytes": 479200176,
+      "genuine_base_expanded_headers_bytes": 978432,
+      "genuine_base_metadata_receipt_bytes": 3894768,
+      "genuine_base_physical_NPZ_bytes": 137347851,
+      "new_N_compression_ratio_guaranteed": false,
+      "nodes": 156,
+      "whole_20_nominal_node_payload_bytes_same_dictionary_geometry": 26825331312,
+      "whole_fixed_dictionary_max_payload_bytes": 26876050032,
+      "whole_fixed_dictionary_min_payload_bytes": 26825131632
+    },
+    "local-coarse": {
+      "base_N": 1024,
+      "base_N_dependent_payload_bytes": 558284800,
+      "base_categories_payload_bytes": {
+        "calendar_threshold_means_SE_status_other_fixed": 18122480,
+        "embedded_shared_driver_ID_duplicates": 8519680,
+        "failure_reasons_U128": 272629760,
+        "four_16block_arrays": 28554240,
+        "full_step_uint8": 214302720,
+        "label_mask_duplicate": 532480,
+        "nine_float64_primitive_vectors": 38338560,
+        "primitive_path_mask": 532480,
+        "primitive_status_U7": 14909440,
+        "three_full_covariances": 244632960,
+        "top_path_cluster_ids": 8519680,
+        "variable_step_dictionary": 342272
+      },
+      "base_dictionary_payload_bytes": 342272,
+      "base_fixed_or_dictionary_payload_bytes": 291651952,
+      "base_node_payload_bytes": 849936752,
+      "genuine_base_expanded_headers_bytes": 3261440,
+      "genuine_base_metadata_receipt_bytes": 12968611,
+      "genuine_base_physical_NPZ_bytes": 154528323,
+      "new_N_compression_ratio_guaranteed": false,
+      "nodes": 520,
+      "whole_20_nominal_node_payload_bytes_same_dictionary_geometry": 84642694960,
+      "whole_fixed_dictionary_max_payload_bytes": 84811377200,
+      "whole_fixed_dictionary_min_payload_bytes": 84641649200
+    },
+    "local-high": {
+      "base_N": 1024,
+      "base_N_dependent_payload_bytes": 1431306240,
+      "base_categories_payload_bytes": {
+        "calendar_threshold_means_SE_status_other_fixed": 67294416,
+        "embedded_shared_driver_ID_duplicates": 22020096,
+        "failure_reasons_U128": 704643072,
+        "four_16block_arrays": 145367040,
+        "full_step_uint8": 542244864,
+        "label_mask_duplicate": 1376256,
+        "nine_float64_primitive_vectors": 99090432,
+        "primitive_path_mask": 1376256,
+        "primitive_status_U7": 38535168,
+        "three_full_covariances": 2453068800,
+        "top_path_cluster_ids": 22020096,
+        "variable_step_dictionary": 875008
+      },
+      "base_dictionary_payload_bytes": 875008,
+      "base_fixed_or_dictionary_payload_bytes": 2666605264,
+      "base_node_payload_bytes": 4097911504,
+      "genuine_base_expanded_headers_bytes": 8429568,
+      "genuine_base_metadata_receipt_bytes": 33556673,
+      "genuine_base_physical_NPZ_bytes": 1192068216,
+      "new_N_compression_ratio_guaranteed": false,
+      "nodes": 1344,
+      "whole_20_nominal_node_payload_bytes_same_dictionary_geometry": 226597656080,
+      "whole_fixed_dictionary_max_payload_bytes": 227033682960,
+      "whole_fixed_dictionary_min_payload_bytes": 226595001360
+    }
+  },
+  "geometry": {
+    "Heston-coarse": {
+      "K": 33,
+      "conditional_steps_per_path_across_grid": 44928,
+      "nodes_per_grid": 108,
+      "original_N_sum_five_principal_plus_reference_jobs": 152576
+    },
+    "Heston-high": {
+      "K": 65,
+      "conditional_steps_per_path_across_grid": 64896,
+      "nodes_per_grid": 156,
+      "original_N_sum_five_principal_plus_reference_jobs": 152576
+    },
+    "local-coarse": {
+      "K": 33,
+      "conditional_steps_per_path_across_grid": 209280,
+      "nodes_per_grid": 520,
+      "original_N_sum_five_principal_plus_reference_jobs": 152576
+    },
+    "local-high": {
+      "K": 65,
+      "conditional_steps_per_path_across_grid": 529536,
+      "nodes_per_grid": 1344,
+      "original_N_sum_five_principal_plus_reference_jobs": 152576
+    }
+  },
+  "independent_reserved_reference_N": 65536,
+  "job_count": 3138,
+  "kernel_peak_RSS_bytes": 226856960,
+  "maximum_N_genuine_node_measurement_candidate": {
+    "RSS_limit_bytes": null,
+    "blocks": 16,
+    "calendar": {
+      "formula": "arange(769)/768",
+      "original_shape": [
+        769
+      ],
+      "start_index": 0
+    },
+    "chunk_paths": 256,
+    "driver_normal_payload_bytes": 805306368,
+    "entrypoint": "run_pilot.run_teacher_job",
+    "field_shape": [
+      257,
+      321
+    ],
+    "financial_execution_decode_RNG_solver_SDE_performed": false,
+    "formal_finance_approved": false,
+    "grid": "high",
+    "model": "local",
+    "must_generate_authenticate_full_original_shared_driver_before_node_if_absent": true,
+    "must_keep_all_primitive_failure_status_cap_cost": true,
+    "one_node_cannot_certify_all_N_nodes_compression_rate_or_financial_qualification": true,
+    "original_driver_job_id": "teacher-driver:local:N65536",
+    "original_mother_job_id": "teacher:local:N65536:high:raw",
+    "original_n": 65536,
+    "original_node": {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 1.0
+    },
+    "original_node_index": 17,
+    "root_preapproved": false,
+    "scope": "genuine_max_shape_single_original_node_component_candidate_not_whole_job",
+    "seed": 1345225788,
+    "source_approval_evidence": null,
+    "source_identity_locked": null,
+    "thresholds": {
+      "K": 65,
+      "original_axes_source": "run_pilot.teacher_axes('high','local')['threshold'][0]"
+    },
+    "wall_limit_seconds": null
+  },
+  "new_bounded_saved_report_metadata_observations": {
+    "Heston-coarse": {
+      "NPZ_bytes_not_rehashed_or_decoded_this_scope": true,
+      "array_payload_bytes": 7192884,
+      "cache_payload_bytes": 6594132,
+      "completed_metadata_observation_only_not_independent_recheck_qualification": true,
+      "metadata_SHA": "f634a50b8feab4e85c79c7ce6d69416de7135a42922ba2238314d58e7d8e8d4f",
+      "no_N_by_K_sample_or_covariance_array_in_raw_checks": true,
+      "physical_files_bytes_observed": 9057520,
+      "raw_status_SE_payload_bytes": 598752
+    },
+    "Heston-high": {
+      "NPZ_bytes_not_rehashed_or_decoded_this_scope": true,
+      "array_payload_bytes": 19940996,
+      "cache_payload_bytes": 18237476,
+      "completed_metadata_observation_only_not_independent_recheck_qualification": true,
+      "metadata_SHA": "afcf4344f2d6643b30ed05cdc821962af53a18a8a61fae3c3c673af8e3fffe6c",
+      "no_N_by_K_sample_or_covariance_array_in_raw_checks": true,
+      "physical_files_bytes_observed": 22704743,
+      "raw_status_SE_payload_bytes": 1703520
+    },
+    "local-coarse": {
+      "NPZ_bytes_not_rehashed_or_decoded_this_scope": true,
+      "array_payload_bytes": 35144092,
+      "cache_payload_bytes": 32261212,
+      "completed_metadata_observation_only_not_independent_recheck_qualification": true,
+      "metadata_SHA": "6c0adf1c243011bace5997b02a0c8763f54f06aa59de5e1ebe7dd053fa588a03",
+      "no_N_by_K_sample_or_covariance_array_in_raw_checks": true,
+      "physical_files_bytes_observed": 44108269,
+      "raw_status_SE_payload_bytes": 2882880
+    }
+  },
+  "old_full_grid_report_minimum_arrays_avoided_once_per_20_grids": {
+    "eleven_N_by_K_samples": 1587356762112,
+    "four16blocks": 983623680,
+    "statement": "bounded report still checks every original label; physical raw retains primitives and statistics",
+    "three_covariances": 15166206720
+  },
+  "operation_counts": {
+    "Q": 36,
+    "bump_risk": 34,
+    "call_cache": 46,
+    "call_table": 36,
+    "cell_pair": 1964,
+    "date_gate": 192,
+    "empty_claim": 36,
+    "field": 1,
+    "frequency_cache": 4,
+    "market_pair": 28,
+    "oracle": 108,
+    "precision": 3,
+    "premium": 1,
+    "quote_risk": 202,
+    "quotes": 1,
+    "roster": 4,
+    "source": 1,
+    "state": 288,
+    "stream_receipts": 4,
+    "teacher_candidate_gate": 16,
+    "teacher_diagnostic": 4,
+    "teacher_domain_selection": 20,
+    "teacher_driver": 10,
+    "teacher_grid": 20,
+    "teacher_selected_inputs": 8,
+    "teacher_selection": 2,
+    "tiny_fits": 1,
+    "validation": 68
+  },
+  "origin_input_manifest": {
+    "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-manifest.json",
+    "sha256": "511191b8a3147c03ddebbafd4989e8f51cfd72428e8296338484fd3d15ecfbf8"
+  },
+  "path_node_records": 324681728,
+  "scope": "static_3138_jobs_20_original_teacher_candidates_all_N_full_retention_capacity",
+  "shared_driver_producers": 10,
+  "simultaneous_occupancy": {
+    "CAS_dedup_does_not_pool_C_and_F_free_space": true,
+    "C_single_vault": "T + own temporary staging + own old history",
+    "F_single_vault": "T + own temporary staging + own old history",
+    "T_guaranteed_physical_complete_corpus_bytes": null,
+    "WSL_sequential_restore": "original T + one restored T + stage/work/live history",
+    "WSL_simultaneous_two_restores": "original T + two restored T + stage/work/live history"
+  },
+  "source_byte_SHA": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565",
+    "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc"
+  },
+  "step_status_entries": 129482096640,
+  "teacher_candidates": 20,
+  "volumes": {
+    "C": {
+      "guaranteed_complete_physical_requirement_bytes": null,
+      "historical_free_bytes_not_refreshed": 340566458368,
+      "logical_subset_exceeds_free_bytes": 13039983360,
+      "one_copy_logical_subset_lower_bytes": 353606441728,
+      "one_vault_independent_requirement": "T_physical_complete_corpus + S_peak_own_volume + retained_history_growth + reserve",
+      "ratio_available_to_subset_excluding_staging_overhead": 0.9631228908153473
+    },
+    "F": {
+      "guaranteed_complete_physical_requirement_bytes": null,
+      "historical_free_bytes_not_refreshed": 185710804992,
+      "logical_subset_exceeds_free_bytes": 167895636736,
+      "one_copy_logical_subset_lower_bytes": 353606441728,
+      "one_vault_independent_requirement": "T_physical_complete_corpus + S_peak_own_volume + retained_history_growth + reserve",
+      "ratio_available_to_subset_excluding_staging_overhead": 0.5251906726712062
+    },
+    "WSL": {
+      "guaranteed_complete_physical_requirement_bytes": null,
+      "historical_free_bytes_not_refreshed": 601683951616,
+      "logical_subset_exceeds_free_bytes": 0,
+      "one_copy_logical_subset_lower_bytes": 353606441728,
+      "one_vault_independent_requirement": "T_physical_complete_corpus + S_peak_own_volume + retained_history_growth + reserve",
+      "ratio_available_to_subset_excluding_staging_overhead": 1.7015638874554933
+    }
+  },
+  "wall_seconds_before_final_save": 1.084338177999598,
+  "whole_completed_teacher_payload_structural_nominal": {
+    "forty_bounded_reports_cache_status_SE_array_payload": 2368213200,
+    "omitted": [
+      "metadata_receipts_NPY_ZIP_headers",
+      "initial_obligations",
+      "caps_defects_history",
+      "remaining3088_jobs_outside_teacher_driver_domain_outputs",
+      "teacher_diagnostic_full_checks",
+      "selected_input_duplicate_cache_records",
+      "main_wrapper_savedchecks_copies",
+      "CAS_staging_and_restore"
+    ],
+    "physical_total_lower_or_upper_guarantee": false,
+    "root_node_array_payload_dictionary_max": 356558991968,
+    "root_node_array_payload_dictionary_min": 355864412768,
+    "root_node_array_payload_same_dictionary": 355868451168,
+    "subtotal_array_payload_only": 364185768816,
+    "ten_shared_driver_array_payload": 3759534160,
+    "twenty_raw_and_twenty_domain_grid_array_payload_copies": 2189570288
+  },
+  "whole_original_logical_subset_lower_bytes": 353606441728,
+  "whole_original_logical_subset_lower_components": {
+    "failure_reasons_U128": 166237044736,
+    "four_16block_arrays": 983623680,
+    "full_step_uint8": 129482096640,
+    "nine_float64_primitive_vectors": 23377084416,
+    "primitive_path_mask": 324681728,
+    "primitive_status_U7": 9091088384,
+    "ten_shared_driver_normals_once": 3749707776,
+    "three_full_covariances": 15166206720,
+    "top_path_cluster_ids": 5194907648
+  }
+}

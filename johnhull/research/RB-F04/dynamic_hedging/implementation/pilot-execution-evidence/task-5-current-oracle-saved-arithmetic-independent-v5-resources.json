@@ -1,0 +1,133 @@
+{
+  "charge_policy": "root104.215731821s includes classes; nestedexpenses/driveraliases/referencehistory are breakdowns and not additive",
+  "classes": {
+    "Heston": {
+      "child_CPU_seconds": 13.725373000000001,
+      "driver_alias_accounting": "count once inside433 expenses; model generation costs both retained even if hashes match",
+      "final_parent_receipt_write_stdout_cost": "outside per-class parent timer; included by root outer observation",
+      "grouped_inclusive_expenses": {
+        "independent_asian_quote_oracle": {
+          "count": 416,
+          "cpu_seconds": 9.28298093599999,
+          "path_steps": 122683392,
+          "wall_seconds": 9.282031211012509
+        },
+        "independent_call_refinement": {
+          "count": 1,
+          "cpu_seconds": 0.04029698100000001,
+          "path_steps": 0,
+          "wall_seconds": 0.04029693399934331
+        },
+        "independent_oracle_driver": {
+          "count": 16,
+          "cpu_seconds": 0.25069694300000167,
+          "path_steps": 6291456,
+          "wall_seconds": 0.25063255899294745
+        }
+      },
+      "native_wall_seconds": 9.595765967998886,
+      "observed_cap": false,
+      "old_reused_M4_M5_expenses": "historical dependency expenses retained in immutable table; not charged again",
+      "original_parent_receipt": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/parent-cost-and-decision.json",
+      "parent_wall_seconds": 13.744000597005652,
+      "peak_individual_process_RSS_bytes": 853426176,
+      "selected_baseline_call_expense": {
+        "clock": {
+          "cpu_start": 3.30070011,
+          "cpu_stop": 3.340997091,
+          "wall_start": 35141.374109538,
+          "wall_stop": 35141.414406472
+        },
+        "cpu_seconds": 0.04029698100000001,
+        "deadline_wall": 35738.065078142,
+        "job_id": "independent-selected-call",
+        "original_path_count": 0,
+        "overrun_seconds": 0.0,
+        "path_steps": 0,
+        "scope": "independent_call_refinement",
+        "wall_seconds": 0.04029693399934331
+      },
+      "unitemized_native_wall_seconds": 0.022805263994087
+    },
+    "local": {
+      "child_CPU_seconds": 90.308574,
+      "driver_alias_accounting": "count once inside433 expenses; model generation costs both retained even if hashes match",
+      "final_parent_receipt_write_stdout_cost": "outside per-class parent timer; included by root outer observation",
+      "grouped_inclusive_expenses": {
+        "independent_asian_quote_oracle": {
+          "count": 416,
+          "cpu_seconds": 27.498212584999898,
+          "path_steps": 122683392,
+          "wall_seconds": 27.505620081050438
+        },
+        "independent_call_refinement": {
+          "count": 1,
+          "cpu_seconds": 59.071634204,
+          "path_steps": 0,
+          "wall_seconds": 59.122619357003714
+        },
+        "independent_oracle_driver": {
+          "count": 16,
+          "cpu_seconds": 0.22916699500002125,
+          "path_steps": 6291456,
+          "wall_seconds": 0.22912688100041123
+        }
+      },
+      "native_wall_seconds": 86.87577592699381,
+      "observed_cap": false,
+      "old_reused_M4_M5_expenses": "historical dependency expenses retained in immutable table; not charged again",
+      "original_parent_receipt": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/parent-cost-and-decision.json",
+      "parent_wall_seconds": 90.38445561200206,
+      "peak_individual_process_RSS_bytes": 853979136,
+      "selected_baseline_call_expense": {
+        "clock": {
+          "cpu_start": 2.973966619,
+          "cpu_stop": 62.045600823,
+          "wall_start": 35154.792173605,
+          "wall_stop": 35213.914792962
+        },
+        "cpu_seconds": 59.071634204,
+        "deadline_wall": 35751.809437728,
+        "job_id": "independent-selected-call",
+        "original_path_count": 0,
+        "overrun_seconds": 0.0,
+        "path_steps": 0,
+        "scope": "independent_call_refinement",
+        "wall_seconds": 59.122619357003714
+      },
+      "unitemized_native_wall_seconds": 0.018409607939247508
+    }
+  },
+  "root_enclosing_observation": {
+    "argv": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-measurement-v2.py",
+      "--budget",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-budget-root-fixed-v2.json",
+      "--output",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2"
+    ],
+    "child_tree_CPU_seconds": 104.624358,
+    "exit_code": 0,
+    "financial_qualification": "unknown",
+    "formal_finance_approved": false,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "observer_CPU_before_own_receipt_seconds": 0.000417200999999999,
+    "original_N": 4096,
+    "original_levels": [
+      768,
+      1536
+    ],
+    "original_models": [
+      "Heston",
+      "local"
+    ],
+    "original_queries": 13,
+    "outer_own_final_receipt_write_stdout_cost": "unknown; inner child final receipts/stdout included above",
+    "root_prior_sha256": "8035595d58f5c8976029c8fe8787d415d2bf9842aa2e12e0d69dfd9f550a41a7",
+    "scope": "root enclosing original M7 state00 N4096 two-model independent oracle components including initial obligations, all generation/refits/CF-PDE/payoffs/check/write/read and child final receipts/stdout",
+    "wall_seconds": 104.2157318210011
+  },
+  "whole_phase_budget_approved": false,
+  "whole_phase_runtime_guaranteed": false
+}

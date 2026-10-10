@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v2.py", line 372, in <module>
+    main()
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v2.py", line 214, in main
+    same(raw["call_table"], table, model+" immutable reused whole call table")
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v2.py", line 57, in same
+    same(a[key], b[key], name + "." + key)
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v2.py", line 57, in same
+    same(a[key], b[key], name + "." + key)
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v2.py", line 63, in same
+    eq(a, b, name)
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v2.py", line 48, in eq
+    difference = float(np.max(np.abs(a[finite] - b[finite]))) if finite.any() else None
+                                     ~~~~~~~~~~^~~~~~~~~~~
+TypeError: numpy boolean subtract, the `-` operator, is not supported, use the bitwise_xor, the `^` operator, or the logical_xor function instead.

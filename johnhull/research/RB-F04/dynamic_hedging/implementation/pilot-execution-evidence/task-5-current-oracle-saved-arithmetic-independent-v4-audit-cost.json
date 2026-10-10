@@ -1,0 +1,8 @@
+{
+  "CPU_seconds_after_imports": 1.7627467230000002,
+  "financial_generation_or_RNG_calls": [],
+  "kernel_peak_RSS_bytes": 649031680,
+  "own_finalcostreceipt_write_stdout_cost": "unknown",
+  "scope": "saved-only audit script afterimports through outputs; imports/exploration/setup and own finalcostreceipt tail outside timer",
+  "wall_seconds_after_imports": 1.7633552619954571
+}

@@ -1,0 +1,801 @@
+{
+  "administrative_class_caps_sum_seconds": 1200.0,
+  "all_classes_counted_once": true,
+  "class_receipts": [
+    {
+      "RSS_metric": "sampled_current_RSS_and_saved_kernel_highwater_not_RLIMIT_AS",
+      "RSS_overrun_bytes": 0,
+      "RSS_unknown_sample_count": 0,
+      "actual_cap_evidence": null,
+      "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+      "child_cpu_seconds": 13.725373000000001,
+      "child_progress": {
+        "class": "Heston",
+        "financial_qualification": "unknown",
+        "finite_payoffs": 106496,
+        "formal_pilot_or_main": false,
+        "native_cap_evidence": {
+          "boundary": "checked before driver chunk and query job; no solver-internal hard cancellation",
+          "budget_wall_start": 35138.065078142,
+          "cap_reached": false,
+          "cap_seconds": 600.0,
+          "clock": {
+            "wall_start": 35141.358076325,
+            "wall_stop": 35150.953842293
+          },
+          "deadline_wall": 35738.065078142,
+          "financial_qualification": "unknown",
+          "overrun_seconds": 0.0,
+          "unexecuted_query_path_counts": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "wall_seconds": 9.595765967998886
+        },
+        "native_financial_qualification": "unknown",
+        "new_RNG_in_saved_checker": false,
+        "original_query_paths": 106496,
+        "process_peak_rss_bytes": 853426176,
+        "raw_cap_evidence_present": true,
+        "raw_operational_status": "within_envelope",
+        "raw_receipt": {
+          "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+          "artifact_sha256": "deec8ece6bda51244badcda89fcd31aa2c18eeaf2aa040fb9f92c37600d1f812",
+          "metadata_sha256": "aa70420223a3a156302fc7c08992a0fcbbcf9a2e7657f50909c8c06bcff1048a",
+          "schema": "rb-f04-array-receipt-v1",
+          "uncompressed_bytes": 0
+        },
+        "saved_unresolved": [],
+        "saved_unverified": [
+          "independent_path_generation",
+          "full_common_domain_call_fit"
+        ],
+        "scope": "M7_original_state00_N4096_two_independent_oracle_components_only",
+        "stages": [
+          {
+            "clock": {
+              "cpu": 0.072970331,
+              "utc": "2026-10-10T05:37:53.355681+00:00",
+              "wall": 35138.138393759
+            },
+            "stage": "prior_budget_inputs_and_current_source_verified"
+          },
+          {
+            "clock": {
+              "cpu": 3.204856684,
+              "utc": "2026-10-10T05:37:56.494698+00:00",
+              "wall": 35141.277411134
+            },
+            "dependency_controls_delta": "M4/M5 separately budgeted explicit controls replace graph controls={}; axes/state roster/current field unchanged",
+            "dependency_receipt": {
+              "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+              "artifact_sha256": "8b36ead47a267aa85d09f1975661f3bf9cbe4721d760c4dffdf2489396924d26",
+              "metadata_sha256": "7537796f15e2a75205daeb83e37b3c2d2988681b0702ab9821d56c8c1a935b3a",
+              "schema": "rb-f04-array-receipt-v1",
+              "uncompressed_bytes": 0
+            },
+            "prior_dependency_cost_is_reference_not_added_again": true,
+            "stage": "saved_bound_full_independent_call_table_loaded"
+          },
+          {
+            "clock": {
+              "cpu": 3.210595809,
+              "utc": "2026-10-10T05:37:56.500437+00:00",
+              "wall": 35141.283150782
+            },
+            "stage": "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch"
+          },
+          {
+            "actual_size": {
+              "child_boundary": "level_query",
+              "financial_child_count": 26,
+              "original_n": 4096,
+              "path_steps": 6291456,
+              "total_path_steps": 163577856
+            },
+            "clock": {
+              "cpu": 3.285032695,
+              "utc": "2026-10-10T05:37:56.574874+00:00",
+              "wall": 35141.357587017
+            },
+            "measurement_typed_arguments_sha256": "bd0d701599345997cd81c085827b250144351de96d0308e2adefd69bbac7fb31",
+            "planned_arguments_sha256": "27b59fe0879cfa11db272c9f5197b643af04eb96df9a1956ce390174d075cebe",
+            "resolved_measurement_arguments_sha256": "72907480641400606db59299dd4b0a12ce63845648930d7d5e8afad9fa48a741",
+            "runtime_absolute_deadline_wall": 35738.065078142,
+            "stage": "actual_original_oracle_dispatch_start"
+          },
+          {
+            "clock": {
+              "cpu": 12.880103056,
+              "utc": "2026-10-10T05:38:06.171573+00:00",
+              "wall": 35150.954280238
+            },
+            "stage": "actual_original_oracle_dispatch_returned"
+          },
+          {
+            "clock": {
+              "cpu": 12.977922021,
+              "utc": "2026-10-10T05:38:06.269383+00:00",
+              "wall": 35151.052097573
+            },
+            "stage": "full_returned_raw_saved_before_checker"
+          },
+          {
+            "clock": {
+              "cpu": 13.282559937,
+              "utc": "2026-10-10T05:38:06.574020+00:00",
+              "wall": 35151.35673622
+            },
+            "raw_operational_status": "within_envelope",
+            "raw_receipt": {
+              "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+              "artifact_sha256": "deec8ece6bda51244badcda89fcd31aa2c18eeaf2aa040fb9f92c37600d1f812",
+              "metadata_sha256": "aa70420223a3a156302fc7c08992a0fcbbcf9a2e7657f50909c8c06bcff1048a",
+              "schema": "rb-f04-array-receipt-v1",
+              "uncompressed_bytes": 0
+            },
+            "stage": "raw_read_driver_mapping_and_all_native_generator_expenses_retained"
+          },
+          {
+            "clock": {
+              "cpu": 13.289933645,
+              "utc": "2026-10-10T05:38:06.581398+00:00",
+              "wall": 35151.364106762
+            },
+            "saved_check_receipt": {
+              "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+              "artifact_sha256": "2e81eca3c3e6530c0de5282f22372dc93db9bfe2a9c3dd5ae0005cce514dcba0",
+              "metadata_sha256": "218191aa0b94c50bfc53c3d56b2ad00f23daae43da584894724fbf30e2f6c043",
+              "schema": "rb-f04-array-receipt-v1",
+              "uncompressed_bytes": 0
+            },
+            "source_financial_work_in_checker": false,
+            "stage": "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned"
+          },
+          {
+            "clock": {
+              "cpu": 13.291908427,
+              "utc": "2026-10-10T05:38:06.583367+00:00",
+              "wall": 35151.366085574
+            },
+            "stage": "current_source_stable"
+          }
+        ],
+        "started": {
+          "cpu": 0.0385879,
+          "utc": "2026-10-10T05:37:53.321300+00:00",
+          "wall": 35138.104012461
+        },
+        "status": "completed"
+      },
+      "class": "Heston",
+      "exit_code": 0,
+      "financial_qualification": "unknown",
+      "hard_kill_partial_financial_arrays_unavailable_unless_saved": true,
+      "live_monitor_cap_evidence": null,
+      "measured_endpoint": "after progress/index/RSS read; before receipt construction and immutable receipt write",
+      "native_declared_cap_evidence": {
+        "boundary": "checked before driver chunk and query job; no solver-internal hard cancellation",
+        "budget_wall_start": 35138.065078142,
+        "cap_reached": false,
+        "cap_seconds": 600.0,
+        "clock": {
+          "wall_start": 35141.358076325,
+          "wall_stop": 35150.953842293
+        },
+        "deadline_wall": 35738.065078142,
+        "financial_qualification": "unknown",
+        "overrun_seconds": 0.0,
+        "unexecuted_query_path_counts": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "wall_seconds": 9.595765967998886
+      },
+      "observed_child_peak_RSS_bytes": 847294464,
+      "observed_parent_peak_RSS_bytes": 21053440,
+      "observer_errors": [],
+      "output_file_index_before_final_receipt": [
+        {
+          "bytes": 22,
+          "path": "actual-original-oracle/arrays.npz"
+        },
+        {
+          "bytes": 1578913,
+          "path": "actual-original-oracle/metadata.json"
+        },
+        {
+          "bytes": 3252911,
+          "path": "actual-original-oracle/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 441374,
+          "path": "actual-original-oracle/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "actual-original-oracle/pack000000/receipt.json"
+        },
+        {
+          "bytes": 2515350,
+          "path": "actual-original-oracle/pack000001/arrays.npz"
+        },
+        {
+          "bytes": 2380,
+          "path": "actual-original-oracle/pack000001/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "actual-original-oracle/pack000001/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "actual-original-oracle/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "actual-saved-check/arrays.npz"
+        },
+        {
+          "bytes": 5286,
+          "path": "actual-saved-check/metadata.json"
+        },
+        {
+          "bytes": 302052,
+          "path": "actual-saved-check/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 2432,
+          "path": "actual-saved-check/pack000000/metadata.json"
+        },
+        {
+          "bytes": 317,
+          "path": "actual-saved-check/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "actual-saved-check/receipt.json"
+        },
+        {
+          "bytes": 0,
+          "path": "child.log"
+        },
+        {
+          "bytes": 22,
+          "path": "generator-expenses-and-driver-map/arrays.npz"
+        },
+        {
+          "bytes": 240911,
+          "path": "generator-expenses-and-driver-map/metadata.json"
+        },
+        {
+          "bytes": 484,
+          "path": "generator-expenses-and-driver-map/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 240,
+          "path": "generator-expenses-and-driver-map/pack000000/metadata.json"
+        },
+        {
+          "bytes": 314,
+          "path": "generator-expenses-and-driver-map/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "generator-expenses-and-driver-map/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "initial-original-obligation/arrays.npz"
+        },
+        {
+          "bytes": 2963,
+          "path": "initial-original-obligation/metadata.json"
+        },
+        {
+          "bytes": 1983756,
+          "path": "initial-original-obligation/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 718,
+          "path": "initial-original-obligation/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "initial-original-obligation/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "initial-original-obligation/receipt.json"
+        },
+        {
+          "bytes": 5964,
+          "path": "progress.json"
+        }
+      ],
+      "parent_RSS_unknown_sample_count": 0,
+      "parent_cpu_seconds": 0.07116042400000001,
+      "parent_kernel_peak_RSS_bytes": 22007808,
+      "parent_kernel_peak_before_class_RSS_bytes": 22007808,
+      "parent_kernel_peak_scope": "process lifetime; historical baseline retained, not attributed to new work",
+      "raw_obligation_unknown_and_all_available_returned_raw_retained": true,
+      "saved_child_kernel_peak_RSS_bytes": 853426176,
+      "scope": "M7_original_state00_N4096_two_independent_oracle_components_only",
+      "started": {
+        "cpu": 0.07996463,
+        "utc": "2026-10-10T05:37:53.282371+00:00",
+        "wall": 35138.065078142
+      },
+      "status": "completed_component",
+      "stopped": {
+        "cpu": 0.151125054,
+        "utc": "2026-10-10T05:38:07.026363+00:00",
+        "wall": 35151.809078739
+      },
+      "unmeasured_tail": "receipt construction/helper metadata, final receipt write/stdout need root enclosing execution receipt",
+      "wall_overrun_seconds": 0.0,
+      "wall_seconds": 13.744000597005652
+    },
+    {
+      "RSS_metric": "sampled_current_RSS_and_saved_kernel_highwater_not_RLIMIT_AS",
+      "RSS_overrun_bytes": 0,
+      "RSS_unknown_sample_count": 0,
+      "actual_cap_evidence": null,
+      "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+      "child_cpu_seconds": 90.308574,
+      "child_progress": {
+        "class": "local",
+        "financial_qualification": "unknown",
+        "finite_payoffs": 106496,
+        "formal_pilot_or_main": false,
+        "native_cap_evidence": {
+          "boundary": "checked before driver chunk and query job; no solver-internal hard cancellation",
+          "budget_wall_start": 35151.809437728,
+          "cap_reached": false,
+          "cap_seconds": 600.0,
+          "clock": {
+            "wall_start": 35154.779046433,
+            "wall_stop": 35241.65482236
+          },
+          "deadline_wall": 35751.809437728,
+          "financial_qualification": "unknown",
+          "overrun_seconds": 0.0,
+          "unexecuted_query_path_counts": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "wall_seconds": 86.87577592699381
+        },
+        "native_financial_qualification": "unknown",
+        "new_RNG_in_saved_checker": false,
+        "original_query_paths": 106496,
+        "process_peak_rss_bytes": 853762048,
+        "raw_cap_evidence_present": true,
+        "raw_operational_status": "within_envelope",
+        "raw_receipt": {
+          "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+          "artifact_sha256": "5db41e96d7c336f3fa87c6f591ffdf096d3a2e5cf11c6b67b16621504d2fc11e",
+          "metadata_sha256": "756412f75759592beac7ebba0349a7ddab8e3b7f0544887b2a38cddda01883dc",
+          "schema": "rb-f04-array-receipt-v1",
+          "uncompressed_bytes": 0
+        },
+        "saved_unresolved": [],
+        "saved_unverified": [
+          "independent_path_generation",
+          "full_common_domain_call_fit"
+        ],
+        "scope": "M7_original_state00_N4096_two_independent_oracle_components_only",
+        "stages": [
+          {
+            "clock": {
+              "cpu": 0.058670398,
+              "utc": "2026-10-10T05:38:07.085758+00:00",
+              "wall": 35151.868471946
+            },
+            "stage": "prior_budget_inputs_and_current_source_verified"
+          },
+          {
+            "clock": {
+              "cpu": 2.948214853,
+              "utc": "2026-10-10T05:38:09.983710+00:00",
+              "wall": 35154.766421391
+            },
+            "dependency_controls_delta": "M4/M5 separately budgeted explicit controls replace graph controls={}; axes/state roster/current field unchanged",
+            "dependency_receipt": {
+              "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+              "artifact_sha256": "c94848a692e0dcedc0f7fb3b17671e45be36a053d548d7341192b02c17946857",
+              "metadata_sha256": "92a274eeed074a9a987a6c2d23ce1b444fbf9582cdc8b53d5964f4a933c011ce",
+              "schema": "rb-f04-array-receipt-v1",
+              "uncompressed_bytes": 0
+            },
+            "prior_dependency_cost_is_reference_not_added_again": true,
+            "stage": "saved_bound_full_independent_call_table_loaded"
+          },
+          {
+            "clock": {
+              "cpu": 2.954949136,
+              "utc": "2026-10-10T05:38:09.990442+00:00",
+              "wall": 35154.773156631
+            },
+            "stage": "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch"
+          },
+          {
+            "actual_size": {
+              "child_boundary": "level_query",
+              "financial_child_count": 26,
+              "original_n": 4096,
+              "path_steps": 6291456,
+              "total_path_steps": 163577856
+            },
+            "clock": {
+              "cpu": 2.960540036,
+              "utc": "2026-10-10T05:38:09.996033+00:00",
+              "wall": 35154.778746589
+            },
+            "measurement_typed_arguments_sha256": "d8127fec108d02a5f3450134f6405834087b3335ca2eb4c92d5c6d515c8cfd51",
+            "planned_arguments_sha256": "b7681a994f67ccafd8678a73586f2e9e34beeba574f120e051d31d889a756c2f",
+            "resolved_measurement_arguments_sha256": "ad0995c18f6fd66c1cd1fab8a14a98ec84cdf95f4a0d882fa512395e302304fb",
+            "runtime_absolute_deadline_wall": 35751.809437728,
+            "stage": "actual_original_oracle_dispatch_start"
+          },
+          {
+            "clock": {
+              "cpu": 89.777875005,
+              "utc": "2026-10-10T05:39:36.872938+00:00",
+              "wall": 35241.655644749
+            },
+            "stage": "actual_original_oracle_dispatch_returned"
+          },
+          {
+            "clock": {
+              "cpu": 89.845774776,
+              "utc": "2026-10-10T05:39:36.940830+00:00",
+              "wall": 35241.723543673
+            },
+            "stage": "full_returned_raw_saved_before_checker"
+          },
+          {
+            "clock": {
+              "cpu": 89.931437662,
+              "utc": "2026-10-10T05:39:37.026492+00:00",
+              "wall": 35241.809207701
+            },
+            "raw_operational_status": "within_envelope",
+            "raw_receipt": {
+              "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+              "artifact_sha256": "5db41e96d7c336f3fa87c6f591ffdf096d3a2e5cf11c6b67b16621504d2fc11e",
+              "metadata_sha256": "756412f75759592beac7ebba0349a7ddab8e3b7f0544887b2a38cddda01883dc",
+              "schema": "rb-f04-array-receipt-v1",
+              "uncompressed_bytes": 0
+            },
+            "stage": "raw_read_driver_mapping_and_all_native_generator_expenses_retained"
+          },
+          {
+            "clock": {
+              "cpu": 89.936940806,
+              "utc": "2026-10-10T05:39:37.031995+00:00",
+              "wall": 35241.814711071
+            },
+            "saved_check_receipt": {
+              "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+              "artifact_sha256": "4bc1a78d832036a9ba39a42f0a0fe8a503067ed31dcf251a692438a5e7a1b41e",
+              "metadata_sha256": "177d1fc6a8345fc18219d72c8570f44b906c28a4f99c14ef708dab57de9bb3f7",
+              "schema": "rb-f04-array-receipt-v1",
+              "uncompressed_bytes": 0
+            },
+            "source_financial_work_in_checker": false,
+            "stage": "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned"
+          },
+          {
+            "clock": {
+              "cpu": 89.939028137,
+              "utc": "2026-10-10T05:39:37.034081+00:00",
+              "wall": 35241.816799153
+            },
+            "stage": "current_source_stable"
+          }
+        ],
+        "started": {
+          "cpu": 0.028875482,
+          "utc": "2026-10-10T05:38:07.055965+00:00",
+          "wall": 35151.838677754
+        },
+        "status": "completed"
+      },
+      "class": "local",
+      "exit_code": 0,
+      "financial_qualification": "unknown",
+      "hard_kill_partial_financial_arrays_unavailable_unless_saved": true,
+      "live_monitor_cap_evidence": null,
+      "measured_endpoint": "after progress/index/RSS read; before receipt construction and immutable receipt write",
+      "native_declared_cap_evidence": {
+        "boundary": "checked before driver chunk and query job; no solver-internal hard cancellation",
+        "budget_wall_start": 35151.809437728,
+        "cap_reached": false,
+        "cap_seconds": 600.0,
+        "clock": {
+          "wall_start": 35154.779046433,
+          "wall_stop": 35241.65482236
+        },
+        "deadline_wall": 35751.809437728,
+        "financial_qualification": "unknown",
+        "overrun_seconds": 0.0,
+        "unexecuted_query_path_counts": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "wall_seconds": 86.87577592699381
+      },
+      "observed_child_peak_RSS_bytes": 853979136,
+      "observed_parent_peak_RSS_bytes": 21069824,
+      "observer_errors": [],
+      "output_file_index_before_final_receipt": [
+        {
+          "bytes": 22,
+          "path": "actual-original-oracle/arrays.npz"
+        },
+        {
+          "bytes": 595856,
+          "path": "actual-original-oracle/metadata.json"
+        },
+        {
+          "bytes": 16129919,
+          "path": "actual-original-oracle/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 141566,
+          "path": "actual-original-oracle/pack000000/metadata.json"
+        },
+        {
+          "bytes": 319,
+          "path": "actual-original-oracle/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "actual-original-oracle/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "actual-saved-check/arrays.npz"
+        },
+        {
+          "bytes": 5288,
+          "path": "actual-saved-check/metadata.json"
+        },
+        {
+          "bytes": 302052,
+          "path": "actual-saved-check/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 2432,
+          "path": "actual-saved-check/pack000000/metadata.json"
+        },
+        {
+          "bytes": 317,
+          "path": "actual-saved-check/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "actual-saved-check/receipt.json"
+        },
+        {
+          "bytes": 0,
+          "path": "child.log"
+        },
+        {
+          "bytes": 22,
+          "path": "generator-expenses-and-driver-map/arrays.npz"
+        },
+        {
+          "bytes": 241027,
+          "path": "generator-expenses-and-driver-map/metadata.json"
+        },
+        {
+          "bytes": 484,
+          "path": "generator-expenses-and-driver-map/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 240,
+          "path": "generator-expenses-and-driver-map/pack000000/metadata.json"
+        },
+        {
+          "bytes": 314,
+          "path": "generator-expenses-and-driver-map/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "generator-expenses-and-driver-map/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "initial-original-obligation/arrays.npz"
+        },
+        {
+          "bytes": 2961,
+          "path": "initial-original-obligation/metadata.json"
+        },
+        {
+          "bytes": 1983756,
+          "path": "initial-original-obligation/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 718,
+          "path": "initial-original-obligation/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "initial-original-obligation/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "initial-original-obligation/receipt.json"
+        },
+        {
+          "bytes": 5965,
+          "path": "progress.json"
+        }
+      ],
+      "parent_RSS_unknown_sample_count": 0,
+      "parent_cpu_seconds": 0.43233048900000004,
+      "parent_kernel_peak_RSS_bytes": 22007808,
+      "parent_kernel_peak_before_class_RSS_bytes": 22007808,
+      "parent_kernel_peak_scope": "process lifetime; historical baseline retained, not attributed to new work",
+      "raw_obligation_unknown_and_all_available_returned_raw_retained": true,
+      "saved_child_kernel_peak_RSS_bytes": 853762048,
+      "scope": "M7_original_state00_N4096_two_independent_oracle_components_only",
+      "started": {
+        "cpu": 0.151482661,
+        "utc": "2026-10-10T05:38:07.026718+00:00",
+        "wall": 35151.809437728
+      },
+      "status": "completed_component",
+      "stopped": {
+        "cpu": 0.58381315,
+        "utc": "2026-10-10T05:39:37.411177+00:00",
+        "wall": 35242.19389334
+      },
+      "unmeasured_tail": "receipt construction/helper metadata, final receipt write/stdout need root enclosing execution receipt",
+      "wall_overrun_seconds": 0.0,
+      "wall_seconds": 90.38445561200206
+    }
+  ],
+  "component_child_CPU_sum_seconds": 104.033947,
+  "component_parent_wall_sum_seconds": 104.12845620900771,
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "native_driver_expenses_and_native_generator_expenses_are_subintervals_not_added_to_parent": true,
+  "prior_M4_M5_expenses_are_existing_history_not_new_M7_cost": {
+    "Heston": {
+      "child_peak_rss_bytes": 853876736,
+      "cpu_seconds": 5.209234303,
+      "existing_component_receipt": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-observation-root-m4-v3/parent-cost-and-decision.json",
+      "included_in_new_M7_clock": false,
+      "not_an_oracle_rate_or_runtime_prediction": true,
+      "wall_seconds": 5.425978318999114
+    },
+    "local": {
+      "child_peak_rss_bytes": 854016000,
+      "cpu_seconds": 36.236620963,
+      "existing_component_receipt": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-observation-root-m5-v3/parent-cost-and-decision.json",
+      "included_in_new_M7_clock": false,
+      "not_an_oracle_rate_or_runtime_prediction": true,
+      "wall_seconds": 35.52794575000007
+    }
+  },
+  "runtime_estimate_seconds": null,
+  "saved_checker_is_not_independent_SDE_replay": true,
+  "scope": "M7_original_state00_N4096_two_independent_oracle_components_only",
+  "unmeasured_tail": "root enclosing clock must include final receipt/stdout/parent setup"
+}

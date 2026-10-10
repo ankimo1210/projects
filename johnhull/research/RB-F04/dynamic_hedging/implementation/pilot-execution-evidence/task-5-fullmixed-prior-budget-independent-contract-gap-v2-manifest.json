@@ -1,0 +1,61 @@
+{
+  "scope": "Original contract/read-only minimal gap clarification; no new execution/source changes",
+  "formal_lock_approved": false,
+  "files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-contract-gap-v2-review.md",
+      "bytes": 4784,
+      "sha256": "7eda750c656c49585a57326d0ac91dffcebeb5199266ef184c86229d80d97e2a"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-contract-gap-v2-results.json",
+      "bytes": 1065,
+      "sha256": "c67dd5157920378496053863139741eaef815a8676f2b9091eceb60940960226"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/DESIGN.md",
+      "bytes": 41224,
+      "sha256": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/PREFREEZE_REVISION.md",
+      "bytes": 5338,
+      "sha256": "3728b09ab65b0960a13bc54309dee13f476c606c36c6ce9b6cbcc10281ea271b"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md",
+      "bytes": 32238,
+      "sha256": "d0421dc5fbdeeb2a8010ae822713c3c1d3310688b3bd95ba9adec391a31cb372"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/implementation/PROGRESSIVE_TEACHER_PLAN.md",
+      "bytes": 8419,
+      "sha256": "02568c71c8c677295a1d6bcdd83ddf108b2e172dfceb127bc8d6400cf139165a"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/implementation/PILOT_BUDGET_MEASUREMENTS.md",
+      "bytes": 23771,
+      "sha256": "9363923b76c475bc2fe92ff5618a86f57a7d8e25600645bdf9f0b449f93f0e9c"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "bytes": 172202,
+      "sha256": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "bytes": 205226,
+      "sha256": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-organization-v1-results.json",
+      "bytes": 2177,
+      "sha256": "7529dc369c0da040705fb519125cfaccf89fbdd22a5677a89359c30eab72d832"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-organization-v1-review.md",
+      "bytes": 6539,
+      "sha256": "0e601081e13c02e162509e2882da70d8422afbf6d441a6bc504c9efb3abcba72"
+    }
+  ]
+}

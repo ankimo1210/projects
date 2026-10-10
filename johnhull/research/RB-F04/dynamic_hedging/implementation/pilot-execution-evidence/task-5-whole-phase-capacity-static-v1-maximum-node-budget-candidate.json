@@ -1,0 +1,44 @@
+{
+  "RSS_limit_bytes": null,
+  "blocks": 16,
+  "calendar": {
+    "formula": "arange(769)/768",
+    "original_shape": [
+      769
+    ],
+    "start_index": 0
+  },
+  "chunk_paths": 256,
+  "driver_normal_payload_bytes": 805306368,
+  "entrypoint": "run_pilot.run_teacher_job",
+  "field_shape": [
+    257,
+    321
+  ],
+  "financial_execution_decode_RNG_solver_SDE_performed": false,
+  "formal_finance_approved": false,
+  "grid": "high",
+  "model": "local",
+  "must_generate_authenticate_full_original_shared_driver_before_node_if_absent": true,
+  "must_keep_all_primitive_failure_status_cap_cost": true,
+  "one_node_cannot_certify_all_N_nodes_compression_rate_or_financial_qualification": true,
+  "original_driver_job_id": "teacher-driver:local:N65536",
+  "original_mother_job_id": "teacher:local:N65536:high:raw",
+  "original_n": 65536,
+  "original_node": {
+    "date_index": 0,
+    "spot": 100.0,
+    "state": 1.0
+  },
+  "original_node_index": 17,
+  "root_preapproved": false,
+  "scope": "genuine_max_shape_single_original_node_component_candidate_not_whole_job",
+  "seed": 1345225788,
+  "source_approval_evidence": null,
+  "source_identity_locked": null,
+  "thresholds": {
+    "K": 65,
+    "original_axes_source": "run_pilot.teacher_axes('high','local')['threshold'][0]"
+  },
+  "wall_limit_seconds": null
+}

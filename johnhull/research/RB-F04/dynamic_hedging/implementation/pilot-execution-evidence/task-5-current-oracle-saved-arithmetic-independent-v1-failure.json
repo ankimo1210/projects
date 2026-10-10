@@ -1,0 +1,9 @@
+{
+  "comparison_count": 2,
+  "forbidden_calls": [],
+  "formal_finance_approved": false,
+  "message": "",
+  "status": "FAIL",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v1.py\", line 370, in <module>\n    main()\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v1.py\", line 146, in main\n    headers.append(physical(base/kind)); loaded[kind] = pilot.read_pilot_artifact(base/kind)\n                   ^^^^^^^^^^^^^^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v1.py\", line 104, in physical\n    assert expanded == receipt[\"uncompressed_bytes\"] and expanded <= 256*1024**2\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "type": "AssertionError"
+}

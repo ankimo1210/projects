@@ -1,0 +1,30 @@
+{
+  "scope": "root enclosing original M7 state00 N4096 two-model independent oracle components including initial obligations, all generation/refits/CF-PDE/payoffs/check/write/read and child final receipts/stdout",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-measurement-v2.py",
+    "--budget",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-budget-root-fixed-v2.json",
+    "--output",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 104.2157318210011,
+  "child_tree_CPU_seconds": 104.624358,
+  "observer_CPU_before_own_receipt_seconds": 0.000417200999999999,
+  "root_prior_sha256": "8035595d58f5c8976029c8fe8787d415d2bf9842aa2e12e0d69dfd9f550a41a7",
+  "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "original_N": 4096,
+  "original_models": [
+    "Heston",
+    "local"
+  ],
+  "original_queries": 13,
+  "original_levels": [
+    768,
+    1536
+  ],
+  "formal_finance_approved": false,
+  "financial_qualification": "unknown",
+  "outer_own_final_receipt_write_stdout_cost": "unknown; inner child final receipts/stdout included above"
+}

@@ -51,4 +51,9 @@ v55の動的import3件が正式source封鎖を妨げることを実検査で確�
 
 ## 現在の教師保存source（2026-10-10）
 
-教師専用primitive recipeとphysical node bindingを限定実装し、現在closureは81files/dynamic0。元数学/N/casesを変えず、全primitive・元16block/stat/statusを保持する。100 storage/protocol・191 pilot・14 closure・7 main transport/resume tests、Ruff/format、独立15正例/60反例がPASS。全status付き原N65536/65thresholdの合成I/Oも独立保存検査PASS、外側wall10.928秒・peakRSS3.467GB。詳細は[予算測定](PILOT_BUDGET_MEASUREMENTS.md)。旧v56 source80の原測定/失敗/unknownを保持する。圧縮率はgenuine教師のbudgetへ転用せず、正式lock/volume budgetは未承認。原N1024四class/2,128節点を元共通driver二本で実測し、全生成rawを保存した。Hcoarse検査完了・他3classは検査工程の実RSS cap、外側wall1,401.807秒を保持。現在は全Nのsaved SDE/label/cache比較を維持するboundedレポート修復を限定承認（専用17/既存46・Ruff PASS）し、元raw保存再検算を実行中。M7の元N4096/13queries/2schemeの事前候補は準備済み・金融未実行。全phase予算/正式lockは引き続き未承認。
+教師専用primitive recipeとphysical node bindingを限定実装し、現在closureは81files/dynamic0。元数学/N/casesを変えず、全primitive・元16block/stat/statusを保持する。100 storage/protocol・191 pilot・14 closure・7 main transport/resume tests、Ruff/format、独立15正例/60反例がPASS。全status付き原N65536/65thresholdの合成I/Oも独立保存検査PASS、外側wall10.928秒・peakRSS3.467GB。詳細は[予算測定](PILOT_BUDGET_MEASUREMENTS.md)。旧v56 source80の原測定/失敗/unknownを保持する。圧縮率はgenuine教師のbudgetへ転用せず、正式lock/volume budgetは未承認。原N1024四class/2,128節点を元共通driver二本で実測し、全生成rawを保存した。Hcoarse検査完了・他3classは検査工程の実RSS cap、外側wall1,401.807秒を保持。全Nのsaved SDE/label/cache比較を維持するboundedレポート修復を限定承認（専用17/既存46・Ruff PASS）後、元2,128節点の保存再検算を完了。外側774.091秒・最大kernel RSS1.490GB、capなし、原unknownと旧3caps/費用を保持。M7の元N4096/13queries/2schemeも元state00の両modelで完了（外側104.216秒、全payoff106,496枠ずつ有限、capなし）。いずれも部品実測であり全phase予算/正式lockは引き続き未承認。
+
+
+全体物理容量の保証上界を新しい必須条件にしない。元DESIGNのjob/phase work-cost・予定byte/実測又は明示推計と、実容量監視を区別する。[次priorの契約gap](pilot-execution-evidence/task-5-fullmixed-prior-budget-independent-contract-gap-v2-review.md)を確認し、原3,138jobs/121cases/51obligationsの予算configを組み立てる。行政監視停止はpartial未閉鎖として保持し、金融cap受入へ置換しない。
+
+現在の候補接続ではconditional Nのprior cap consumerが未閉鎖。4N分の不変branchと実selector由来・実親を結ぶ確認を残し、先頭branchや固定Nで代用しない。正式lock/金融実行はこの接続と事前予算の確認後に進める。

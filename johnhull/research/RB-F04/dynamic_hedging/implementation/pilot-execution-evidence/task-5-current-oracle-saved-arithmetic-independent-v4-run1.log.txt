@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v4.py", line 386, in <module>
+    main()
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v4.py", line 349, in main
+    "saved_unverified":saved["saved_unverified"],"unresolved":[],
+                       ~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'saved_unverified'

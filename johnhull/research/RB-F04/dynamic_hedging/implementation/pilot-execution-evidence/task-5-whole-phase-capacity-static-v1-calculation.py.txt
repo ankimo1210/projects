@@ -1,0 +1,442 @@
+"""Static byte arithmetic from authenticated M6 metadata; no array decoding."""
+
+import collections
+import hashlib
+import json
+import math
+import re
+import resource
+import time
+from pathlib import Path
+
+WT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D = WT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+P = "task-5-whole-phase-capacity-static-v1"
+BASE = 1024
+N_LADDER = [1024, 4096, 16384, 65536]
+INPUT_MANIFEST_SHA = "511191b8a3147c03ddebbafd4989e8f51cfd72428e8296338484fd3d15ecfbf8"
+
+
+def sha_bytes(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def load(path):
+    return json.loads(Path(path).read_text())
+
+
+def itemsize(dtype):
+    match = re.fullmatch(r"[<>=|]([biufcUSV])(\d+)", dtype)
+    assert match, dtype
+    return int(match[2]) * (4 if match[1] == "U" else 1)
+
+
+def refs(value, path=""):
+    if isinstance(value, dict):
+        if set(value) == {"__array__"}:
+            yield path, value["__array__"]
+        else:
+            for key, sub in value.items():
+                yield from refs(sub, path + "/" + key)
+    elif isinstance(value, list):
+        for index, sub in enumerate(value):
+            yield from refs(sub, path + "/" + str(index))
+
+
+def descriptors(directory, bindings=None):
+    path = Path(directory) / "metadata.json"
+    data = path.read_bytes()
+    if bindings is not None:
+        assert sha_bytes(data) == bindings[str(path.relative_to(WT))]
+    metadata = json.loads(data)["metadata"]
+    used = set()
+    rows = []
+    for name, key in refs(metadata["tree"]):
+        assert key not in used
+        used.add(key)
+        row = metadata["arrays"][key]
+        rows.append(
+            {
+                "path": name,
+                "shape": row["shape"],
+                "dtype": row["dtype"],
+                "payload_bytes": math.prod(row["shape"]) * itemsize(row["dtype"]),
+            }
+        )
+    assert used == set(metadata["arrays"])
+    return rows, metadata, sha_bytes(data)
+
+
+def category(row):
+    path = row["path"]
+    if path == "/primitives/local_step_status":
+        return "full_step_uint8"
+    if path == "/primitives/primitive_status":
+        return "primitive_status_U7"
+    if path == "/primitives/failure_reasons":
+        return "failure_reasons_U128"
+    if path == "/primitives/path_mask":
+        return "primitive_path_mask"
+    if path.endswith("/local_step_status_labels"):
+        return "variable_step_dictionary"
+    if path.startswith("/primitives/") and row["shape"] == [BASE] and row["dtype"] == "<f8":
+        return "nine_float64_primitive_vectors"
+    if path in {"/path_ids", "/cluster_ids"}:
+        return "top_path_cluster_ids"
+    if path in {"/driver/path_ids", "/driver/cluster_ids"}:
+        return "embedded_shared_driver_ID_duplicates"
+    if path == "/labels/path_mask":
+        return "label_mask_duplicate"
+    if path.endswith("_covariance"):
+        return "three_full_covariances"
+    if path in {
+        "/labels/block_means",
+        "/labels/derivative_block_means",
+        "/labels/joint_block_means",
+        "/labels/f_x_block_means",
+    }:
+        return "four_16block_arrays"
+    return "calendar_threshold_means_SE_status_other_fixed"
+
+
+def save(name, value):
+    path = D / name
+    assert not path.exists()
+    path.write_text(json.dumps(value, sort_keys=True, indent=2) + "\n")
+
+
+def main():
+    start, cpu = time.perf_counter(), time.process_time()
+    input_path = D / "task-5-M6-saved-recheck-terminal-inputs-v2-manifest.json"
+    assert sha_bytes(input_path.read_bytes()) == INPUT_MANIFEST_SHA
+    origin = load(input_path)
+    bindings = dict(origin["files"]["shared"])
+    for mapping in origin["files"]["classes"].values():
+        bindings.update(mapping)
+    initial = load(D / "task-5-M6-saved-recheck-initial-description-v1.json")
+    independent_path = D / "task-5-current-full-teacher-independent-m6-v2-results.json"
+    independent = load(independent_path)
+    graph_path = WT / initial["graph_artifact"] / "metadata.json"
+    assert sha_bytes(graph_path.read_bytes()) == bindings[str(graph_path.relative_to(WT))]
+    graph = load(graph_path)["metadata"]["tree"]
+    jobs = graph["jobs"]
+    assert len(jobs) == 3138
+    teachers = [row for row in jobs if row["operation"] == "teacher_grid"]
+    drivers = [row for row in jobs if row["operation"] == "teacher_driver"]
+    assert len(teachers) == 20 and len(drivers) == 10
+    whole_n = {}
+    for class_id in initial["classes"]:
+        model, grid = class_id.split("-")
+        rows = [
+            row
+            for row in teachers
+            if row["arguments"]["model"] == model and row["arguments"]["grid"] == grid
+        ]
+        assert sorted(row["original_n"] for row in rows) == [*N_LADDER, 65536]
+        whole_n[class_id] = sum(row["original_n"] for row in rows)
+    assert set(whole_n.values()) == {152576}
+    geometry = {}
+    path_nodes = steps = 0
+    for class_id, spec in initial["classes"].items():
+        nodes = spec["planned_nodes"]
+        count = spec["original_nodes"]
+        assert len(nodes) == count
+        path_nodes += count * whole_n[class_id]
+        transition_per_n = sum(768 - 64 * node["date_index"] for node in nodes)
+        steps += transition_per_n * whole_n[class_id]
+        geometry[class_id] = {
+            "nodes_per_grid": count,
+            "K": spec["threshold_count"],
+            "original_N_sum_five_principal_plus_reference_jobs": whole_n[class_id],
+            "conditional_steps_per_path_across_grid": transition_per_n,
+        }
+    assert path_nodes == 324681728 and steps == 129482096640
+    covariance = sum(5 * r["nodes_per_grid"] * 432 * r["K"] ** 2 for r in geometry.values())
+    blocks = sum(5 * r["nodes_per_grid"] * 1664 * r["K"] for r in geometry.values())
+    normal_bytes = sum(row["original_n"] * 768 * 2 * 8 for row in drivers)
+    lower = {
+        "nine_float64_primitive_vectors": path_nodes * 72,
+        "primitive_status_U7": path_nodes * 28,
+        "failure_reasons_U128": path_nodes * 512,
+        "primitive_path_mask": path_nodes,
+        "full_step_uint8": steps,
+        "top_path_cluster_ids": path_nodes * 16,
+        "three_full_covariances": covariance,
+        "four_16block_arrays": blocks,
+        "ten_shared_driver_normals_once": normal_bytes,
+    }
+    assert sum(lower.values()) == 353606441728
+    inventory = {}
+    metadata_origins = {}
+    for class_id, spec in initial["classes"].items():
+        total, scaled, fixed, dictionary = 0, 0, 0, 0
+        groups = collections.Counter()
+        nodes = spec["native_node_bindings"]
+        for node in nodes:
+            rows, metadata, hash_value = descriptors(node["path"], bindings)
+            metadata_origins[str((Path(node["path"]) / "metadata.json").relative_to(WT))] = (
+                hash_value
+            )
+            assert metadata["tree"]["original_n"] == BASE
+            assert len(metadata["teacher_storage"]["samples"]) == 11
+            for row in rows:
+                nbytes = row["payload_bytes"]
+                total += nbytes
+                groups[category(row)] += nbytes
+                if row["shape"] and row["shape"][0] == BASE:
+                    scaled += nbytes
+                else:
+                    fixed += nbytes
+                if category(row) == "variable_step_dictionary":
+                    dictionary += nbytes
+        old = next(row for row in independent["classes"] if row["class"] == class_id)
+        assert total == old["native_node_storage_bytes"]["payload_bytes"]
+        inventory[class_id] = {
+            "base_N": BASE,
+            "nodes": len(nodes),
+            "base_node_payload_bytes": total,
+            "base_N_dependent_payload_bytes": scaled,
+            "base_fixed_or_dictionary_payload_bytes": fixed,
+            "base_dictionary_payload_bytes": dictionary,
+            "base_categories_payload_bytes": dict(groups),
+            "whole_20_nominal_node_payload_bytes_same_dictionary_geometry": scaled * 149
+            + fixed * 5,
+            "whole_fixed_dictionary_min_payload_bytes": scaled * 149
+            + (fixed - dictionary + len(nodes) * 256) * 5,
+            "whole_fixed_dictionary_max_payload_bytes": scaled * 149
+            + (fixed - dictionary + len(nodes) * 65536) * 5,
+            "genuine_base_expanded_headers_bytes": old["native_node_storage_bytes"][
+                "expanded_NPY_bytes"
+            ]
+            - total,
+            "genuine_base_physical_NPZ_bytes": old["native_node_storage_bytes"][
+                "physical_npz_bytes"
+            ],
+            "genuine_base_metadata_receipt_bytes": old["native_node_storage_bytes"][
+                "metadata_receipt_bytes"
+            ],
+            "new_N_compression_ratio_guaranteed": False,
+        }
+    assert len(metadata_origins) == 2128
+    grid_payload = {}
+    for class_id, spec in initial["classes"].items():
+        rows, metadata, _ = descriptors(WT / spec["raw_grid_artifact"], bindings)
+        scaled = sum(
+            row["payload_bytes"] for row in rows if row["shape"] and row["shape"][0] == BASE
+        )
+        fixed = sum(row["payload_bytes"] for row in rows) - scaled
+        cache_payload = sum(
+            row["payload_bytes"] for row in rows if row["path"].startswith("/cache/")
+        )
+        grid_payload[class_id] = {
+            "base_full_grid_payload": scaled + fixed,
+            "base_embedded_driver_N_ID_payload": scaled,
+            "base_fixed_payload": fixed,
+            "base_cache_payload": cache_payload,
+            "whole20_nominal_grid_raw_payload": scaled * 149 + fixed * 5,
+            "whole20_raw_and_domain_selection_two_grid_copies": 2 * (scaled * 149 + fixed * 5),
+        }
+    bounded = {}
+    observed_root = D / "task-5-M6-saved-recheck-observation-root-v1"
+    for class_id in ["Heston-coarse", "Heston-high", "local-coarse"]:
+        directory = observed_root / class_id / "actual-bounded-saved-check"
+        if not (directory / "receipt.json").exists():
+            continue
+        rows, metadata, hash_value = descriptors(directory)
+        check_tree = metadata["tree"]
+        assert len(check_tree["raw_checks"]) == geometry[class_id]["nodes_per_grid"]
+        assert all(
+            "labels" not in row
+            and row["labels_reference"]["all_original_N_label_values_compared"] is True
+            for row in check_tree["raw_checks"]
+        )
+        assert not any(row["shape"] and row["shape"][0] == BASE for row in rows)
+        total = sum(row["payload_bytes"] for row in rows)
+        physical_bytes = sum(p.stat().st_size for p in directory.rglob("*") if p.is_file())
+        bounded[class_id] = {
+            "metadata_SHA": hash_value,
+            "array_payload_bytes": total,
+            "cache_payload_bytes": sum(
+                row["payload_bytes"] for row in rows if row["path"].startswith("/cache/")
+            ),
+            "raw_status_SE_payload_bytes": sum(
+                row["payload_bytes"] for row in rows if row["path"].startswith("/raw_checks/")
+            ),
+            "physical_files_bytes_observed": physical_bytes,
+            "no_N_by_K_sample_or_covariance_array_in_raw_checks": True,
+            "NPZ_bytes_not_rehashed_or_decoded_this_scope": True,
+            "completed_metadata_observation_only_not_independent_recheck_qualification": True,
+        }
+    nominal_nodes = sum(
+        row["whole_20_nominal_node_payload_bytes_same_dictionary_geometry"]
+        for row in inventory.values()
+    )
+    node_min = sum(row["whole_fixed_dictionary_min_payload_bytes"] for row in inventory.values())
+    node_max = sum(row["whole_fixed_dictionary_max_payload_bytes"] for row in inventory.values())
+    shared_driver_array_payload = normal_bytes + sum(
+        row["original_n"] * 32 + 6152 for row in drivers
+    )
+    nominal_grid_twice = sum(
+        row["whole20_raw_and_domain_selection_two_grid_copies"] for row in grid_payload.values()
+    )
+    teacher_bounded_reports_payload = sum(
+        10
+        * (
+            row["base_cache_payload"]
+            + geometry[class_id]["nodes_per_grid"] * geometry[class_id]["K"] * 168
+        )
+        for class_id, row in grid_payload.items()
+    )
+    corpus_nominal = (
+        nominal_nodes
+        + shared_driver_array_payload
+        + nominal_grid_twice
+        + teacher_bounded_reports_payload
+    )
+    free = {"C": 340566458368, "F": 185710804992, "WSL": 601683951616}
+    volume = {
+        label: {
+            "historical_free_bytes_not_refreshed": available,
+            "one_copy_logical_subset_lower_bytes": sum(lower.values()),
+            "logical_subset_exceeds_free_bytes": max(0, sum(lower.values()) - available),
+            "ratio_available_to_subset_excluding_staging_overhead": available / sum(lower.values()),
+            "one_vault_independent_requirement": "T_physical_complete_corpus + S_peak_own_volume + retained_history_growth + reserve",
+            "guaranteed_complete_physical_requirement_bytes": None,
+        }
+        for label, available in free.items()
+    }
+    parent = next(row for row in teachers if row["id"] == "teacher:local:N65536:high:raw")
+    target = initial["classes"]["local-high"]["planned_nodes"][17]
+    assert target == {"date_index": 0, "spot": 100.0, "state": 1.0}
+    candidate = {
+        "scope": "genuine_max_shape_single_original_node_component_candidate_not_whole_job",
+        "root_preapproved": False,
+        "formal_finance_approved": False,
+        "wall_limit_seconds": None,
+        "RSS_limit_bytes": None,
+        "source_approval_evidence": None,
+        "source_identity_locked": None,
+        "original_mother_job_id": parent["id"],
+        "original_driver_job_id": parent["arguments"]["driver"]["job"],
+        "entrypoint": "run_pilot.run_teacher_job",
+        "original_n": 65536,
+        "seed": parent["arguments"]["seed"],
+        "grid": "high",
+        "model": "local",
+        "original_node_index": 17,
+        "original_node": target,
+        "thresholds": {
+            "original_axes_source": "run_pilot.teacher_axes('high','local')['threshold'][0]",
+            "K": 65,
+        },
+        "calendar": {"original_shape": [769], "formula": "arange(769)/768", "start_index": 0},
+        "chunk_paths": 256,
+        "blocks": 16,
+        "field_shape": [257, 321],
+        "must_generate_authenticate_full_original_shared_driver_before_node_if_absent": True,
+        "driver_normal_payload_bytes": 65536 * 768 * 2 * 8,
+        "must_keep_all_primitive_failure_status_cap_cost": True,
+        "one_node_cannot_certify_all_N_nodes_compression_rate_or_financial_qualification": True,
+        "financial_execution_decode_RNG_solver_SDE_performed": False,
+    }
+    result = {
+        "scope": "static_3138_jobs_20_original_teacher_candidates_all_N_full_retention_capacity",
+        "job_count": 3138,
+        "operation_counts": dict(collections.Counter(row["operation"] for row in jobs)),
+        "teacher_candidates": 20,
+        "shared_driver_producers": 10,
+        "N_ladder": N_LADDER,
+        "independent_reserved_reference_N": 65536,
+        "geometry": geometry,
+        "path_node_records": path_nodes,
+        "step_status_entries": steps,
+        "whole_original_logical_subset_lower_components": lower,
+        "whole_original_logical_subset_lower_bytes": sum(lower.values()),
+        "genuine_base_N1024_node_inventory": inventory,
+        "genuine_base_N1024_grid_cache_inventory": grid_payload,
+        "new_bounded_saved_report_metadata_observations": bounded,
+        "whole_completed_teacher_payload_structural_nominal": {
+            "root_node_array_payload_same_dictionary": nominal_nodes,
+            "root_node_array_payload_dictionary_min": node_min,
+            "root_node_array_payload_dictionary_max": node_max,
+            "ten_shared_driver_array_payload": shared_driver_array_payload,
+            "twenty_raw_and_twenty_domain_grid_array_payload_copies": nominal_grid_twice,
+            "forty_bounded_reports_cache_status_SE_array_payload": teacher_bounded_reports_payload,
+            "subtotal_array_payload_only": corpus_nominal,
+            "omitted": [
+                "metadata_receipts_NPY_ZIP_headers",
+                "initial_obligations",
+                "caps_defects_history",
+                "remaining3088_jobs_outside_teacher_driver_domain_outputs",
+                "teacher_diagnostic_full_checks",
+                "selected_input_duplicate_cache_records",
+                "main_wrapper_savedchecks_copies",
+                "CAS_staging_and_restore",
+            ],
+            "physical_total_lower_or_upper_guarantee": False,
+        },
+        "old_full_grid_report_minimum_arrays_avoided_once_per_20_grids": {
+            "eleven_N_by_K_samples": sum(
+                row["original_n"]
+                * geometry[row["arguments"]["model"] + "-" + row["arguments"]["grid"]][
+                    "nodes_per_grid"
+                ]
+                * geometry[row["arguments"]["model"] + "-" + row["arguments"]["grid"]]["K"]
+                * 11
+                * 8
+                for row in teachers
+            ),
+            "three_covariances": covariance,
+            "four16blocks": blocks,
+            "statement": "bounded report still checks every original label; physical raw retains primitives and statistics",
+        },
+        "volumes": volume,
+        "simultaneous_occupancy": {
+            "C_single_vault": "T + own temporary staging + own old history",
+            "F_single_vault": "T + own temporary staging + own old history",
+            "WSL_sequential_restore": "original T + one restored T + stage/work/live history",
+            "WSL_simultaneous_two_restores": "original T + two restored T + stage/work/live history",
+            "CAS_dedup_does_not_pool_C_and_F_free_space": True,
+            "T_guaranteed_physical_complete_corpus_bytes": None,
+        },
+        "maximum_N_genuine_node_measurement_candidate": candidate,
+        "source_byte_SHA": {
+            str(p.relative_to(WT)): sha_bytes(p.read_bytes())
+            for p in [
+                WT / "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+                WT / "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+                WT / "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+                WT / "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+            ]
+        },
+        "origin_input_manifest": {
+            "path": str(input_path.relative_to(WT)),
+            "sha256": INPUT_MANIFEST_SHA,
+        },
+        "all2128_native_metadata_SHA_verified": True,
+        "existing_M6_NPY_headers_inventory_reused_not_decoded": True,
+        "financial_array_decode_RNG_solver_SDE_generation": False,
+        "formal_financial_qualification": "unknown",
+        "wall_seconds_before_final_save": time.perf_counter() - start,
+        "CPU_seconds_before_final_save": time.process_time() - cpu,
+        "kernel_peak_RSS_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+    }
+    save(P + "-results.json", result)
+    save(P + "-metadata-origin-map.json", metadata_origins)
+    save(P + "-maximum-node-budget-candidate.json", candidate)
+    print(
+        json.dumps(
+            {
+                "logical_lower": sum(lower.values()),
+                "whole_node_nominal": nominal_nodes,
+                "success_layout_array_subtotal": corpus_nominal,
+                "bounded_observed": bounded,
+                "runtime": result["wall_seconds_before_final_save"],
+            },
+            sort_keys=True,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

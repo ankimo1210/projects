@@ -1,0 +1,18 @@
+{
+  "scope": "Original contract/read-only minimal gap clarification; no new execution/source changes",
+  "created_UTC": "2026-10-10T05:56:45.013374+00:00",
+  "mandatory_whole_storage_cap_found_in_original_DESIGN_plan_or_current_lock_validator": false,
+  "mandatory_compressed_physical_guarantee_upper_found": false,
+  "original_3138_121_51_20teacher_10driver_N_thresholds_preserved": true,
+  "root_config_budget_gap_and_optional_storage_interruption_source_contract_gap_distinct": true,
+  "logical_353606441728_bytes_not_compressed_vault_shortage_decision": true,
+  "unknown_failed_negative_results_allowed_with_full_original_deliverables": true,
+  "incomplete_required_attempts_or_source_fault_not_readiness_approval": true,
+  "formal_lock_finance_precision_fullcapacity_phase_approval": false,
+  "cost": {
+    "wall_before_final_results_save_seconds": 0.000912871997570619,
+    "CPU_before_final_results_save_seconds": 0.0005000990000000004,
+    "kernel_peak_RSS_bytes": 16502784,
+    "exploratory_contract_read_commands_and_final_manifest_save": "unknown"
+  }
+}

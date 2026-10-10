@@ -1,0 +1,6 @@
+{
+  "exit_code": 0,
+  "wall_seconds": 4.122872582003765,
+  "child_CPU_seconds": 6.883476,
+  "scope": "entire saved-audit child process including imports/report/cost finalwrite; wrapper own finalreceipt tail unknown"
+}

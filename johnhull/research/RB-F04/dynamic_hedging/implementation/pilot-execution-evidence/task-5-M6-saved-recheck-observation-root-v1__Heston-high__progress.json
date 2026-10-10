@@ -1,0 +1,150 @@
+{
+  "class": "Heston-high",
+  "coverage": {
+    "all_label_compared_nodes": 156,
+    "cache_comparison_returned": true,
+    "financial_qualification": "unknown",
+    "full_original_coverage": true,
+    "original_n": 1024,
+    "original_nodes": 156,
+    "partial_or_nonreplayed_nodes": 0,
+    "retained_nodes": 156,
+    "sde_replayed_nodes": 156,
+    "unexecuted_original_nodes": 0
+  },
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "no_financial_generation": true,
+  "no_new_RNG": true,
+  "no_old_generation_or_failed_check_cost_added": true,
+  "old_history_cost_receipts": {
+    "Heston-coarse": {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/classes/Heston-coarse/parent-cost-and-decision.json",
+      "sha256": "52d7113fc8e6cb3cfac37132b898de4db3a2368099e7204f6ad2cb5f8174690d"
+    },
+    "Heston-high": {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/classes/Heston-high/parent-cost-and-decision.json",
+      "sha256": "b67f11c324156c0aa488e32c3aafd459237a5fe3756f56739b331a1e41ee6043"
+    },
+    "driver:Heston": {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/banks/Heston/parent-cost-and-decision.json",
+      "sha256": "ab85d6784801a9a7bef9ba11223b09a1aeeea14f2e66f339131e98b61994a922"
+    },
+    "driver:local": {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/banks/local/parent-cost-and-decision.json",
+      "sha256": "6781261c268d2a533d0e71f6d3e75f920b4ac6ed96ad70d3e752b0af16e40677"
+    },
+    "local-coarse": {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/classes/local-coarse/parent-cost-and-decision.json",
+      "sha256": "a1d80f4eaa1b1e46c8a79d6a8e36dc0449352efed5113998e5f56f29e6d43f8f"
+    },
+    "local-high": {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/classes/local-high/parent-cost-and-decision.json",
+      "sha256": "3c7a57f0f4315ee47e5d86e60550aa6d8176de8c6b1bc74ff42030f39b842e2c"
+    },
+    "root_enclosing": {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-root-enclosing-cost-v2.json",
+      "sha256": "2bd8ead2e8bde5e3f5a539ac18c601192b396deec9af529d098a22d13151d71d"
+    },
+    "terminal": {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/all-costs-and-decision.json",
+      "sha256": "0644283109d4fb6d54077f466cc24bd79dac66ebf2f67957c97e090e19456c5e"
+    }
+  },
+  "original_driver_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "b47a04689ab17e0741ad1f7d5eaaa78e4581948043562883ede82184e7b2d0de",
+    "metadata_sha256": "5c7b12fe1c32d24ad389debeb39b8926149507ce74be5cd5cbdbe7021121202d",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "original_generation_cap_evidence": null,
+  "original_n": 1024,
+  "original_nodes": 156,
+  "original_raw_status": "executed",
+  "original_unexecuted_nodes": 0,
+  "process_peak_rss_bytes": 758280192,
+  "raw_grid_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "127362b1f743121f04db2aa461fab9e129fbae5a467c294b80f82fc52283422d",
+    "metadata_sha256": "4e02181d70151519ddc77af350dad2e7cc154178d75e4f0cacdeb492ebe61836",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "saved_report_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "a99848eadc3390291e7f60aa17f25e27f1deafd4c7b725a8f4bfcdc0df63398a",
+    "metadata_sha256": "afcf4344f2d6643b30ed05cdc821962af53a18a8a61fae3c3c673af8e3fffe6c",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "scope": "M6_saved_original_full_teacher_N1024_four_classes_bounded_check_only",
+  "stages": [
+    {
+      "clock": {
+        "cpu": 0.892525848,
+        "utc": "2026-10-10T05:23:56.679581+00:00",
+        "wall": 34301.462295107
+      },
+      "stage": "root_prior_old_origin_new_checker_sources_verified"
+    },
+    {
+      "clock": {
+        "cpu": 3.069314713,
+        "utc": "2026-10-10T05:23:58.859991+00:00",
+        "wall": 34303.642706213
+      },
+      "stage": "all_original_obligations_driver_and_grid_bindings_authenticated"
+    },
+    {
+      "clock": {
+        "cpu": 49.097919986,
+        "utc": "2026-10-10T05:24:44.924603+00:00",
+        "wall": 34349.707312174
+      },
+      "coverage": {
+        "all_label_compared_nodes": 156,
+        "cache_comparison_returned": true,
+        "financial_qualification": "unknown",
+        "full_original_coverage": true,
+        "original_n": 1024,
+        "original_nodes": 156,
+        "partial_or_nonreplayed_nodes": 0,
+        "retained_nodes": 156,
+        "sde_replayed_nodes": 156,
+        "unexecuted_original_nodes": 0
+      },
+      "stage": "new_bounded_full_original_N_SDE_labels_cache_checker_returned"
+    },
+    {
+      "clock": {
+        "cpu": 49.700299348,
+        "utc": "2026-10-10T05:24:45.526984+00:00",
+        "wall": 34350.309691748
+      },
+      "stage": "thin_report_written_read_full_coverage_authenticated"
+    },
+    {
+      "clock": {
+        "cpu": 49.703114554,
+        "utc": "2026-10-10T05:24:45.529794+00:00",
+        "wall": 34350.31250941
+      },
+      "stage": "new_checker_source_stable"
+    },
+    {
+      "clock": {
+        "cpu": 49.703487709,
+        "utc": "2026-10-10T05:24:45.530166+00:00",
+        "wall": 34350.312884427
+      },
+      "stage": "child_completed_administrative_check"
+    }
+  ],
+  "started": {
+    "cpu": 0.034570306,
+    "utc": "2026-10-10T05:23:55.821607+00:00",
+    "wall": 34300.604319392
+  },
+  "status": "completed"
+}
