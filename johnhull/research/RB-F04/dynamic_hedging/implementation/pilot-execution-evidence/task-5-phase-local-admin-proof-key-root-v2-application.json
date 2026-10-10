@@ -1,0 +1,21 @@
+{
+  "scope": "Root apply only one private checker and append four regression tests; source boundary approval, finance unknown",
+  "formal_phase_or_main_executed": false,
+  "financial_qualification": "unknown",
+  "manifest_sha256": "436dcd1e9a24540113ab4fa71a41d69d005f055d2b0a58bf4f49f798f1a5c37e",
+  "independent_decision_sha256": "8a000b4612f1f613451acb4cfeeae8324d911221dd0587e62e1ba967cd3c161b",
+  "changed_files": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "before_sha256": "392b5d6a9b6bb63ad71d39f276ea60a197cfd3988532f8b7232a89c53c764f40",
+      "after_sha256": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c"
+    },
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": {
+      "before_sha256": "bc52f84e8294887c7555c73b49a9c2bc02661bc1aa3e8dfa25547aa47d4c71d9",
+      "after_sha256": "f96fc7be2f7f0ec4a937a35922129324f7128902b348c8c48caeb3f5d27d6a06"
+    }
+  },
+  "application_recovered_after_root_import_error": true,
+  "original_root_error": "task-5-phase-local-admin-proof-key-root-apply-v1-import-failure.json",
+  "source_canonical_identity_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "source_native_payload_identity_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532"
+}

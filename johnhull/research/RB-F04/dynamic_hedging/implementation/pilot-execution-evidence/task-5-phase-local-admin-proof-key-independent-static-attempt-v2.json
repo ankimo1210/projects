@@ -1,0 +1,12 @@
+{
+  "cause": "Requested name does not exist in actual AST; not a nested function. Original v1 attribution to nesting is corrected here. Actual formal caller check_pilot_records AST is unchanged.",
+  "exception": "KeyError: _raw_job_check2",
+  "files_written_before_failure": [],
+  "financial_generation_count": 0,
+  "followup": "Use actual _bounded_teacher_check and check_pilot_records; preserve original failed diagnostics.",
+  "observed_tool_wall_seconds": 1.1,
+  "process_cpu_seconds": "unknown",
+  "process_wall_seconds": "unknown",
+  "source_defect": false,
+  "status": "FAILED_REVIEW_PREPARATION"
+}

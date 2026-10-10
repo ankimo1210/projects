@@ -2892,7 +2892,11 @@ def _checked_teacher_grid(job, context):
     previous = memo["owners"].get(owner)
     _require(previous is None or previous == owner_sha, "memo verified producer changed")
     args_sha = input_identity(args)
-    key = (*owner, args_sha)
+    # Execution limits/placement are audited outside this unchanged numerical proof.
+    proof_args_sha = input_identity(
+        {k: v for k, v in args.items() if k not in ("wall_cap_seconds", "work_directory")}
+    )
+    key = (*owner, proof_args_sha)
     entry = memo["entries"].get(key)
     if entry is not None:
         _require(
@@ -2944,6 +2948,7 @@ def _checked_teacher_grid(job, context):
         "verified_event_id": receipt,
         "binding_sha256": owner_sha,
         "resolved_arguments_sha256": args_sha,
+        "proof_arguments_sha256": proof_args_sha,
         "original_n": raw["original_n"],
         "sde_replayed_this_call": kind == "verified",
         "wall_seconds": (perf_counter_ns() - begin) / 1e9,

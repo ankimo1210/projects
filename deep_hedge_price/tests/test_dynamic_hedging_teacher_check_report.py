@@ -622,3 +622,105 @@ def test_phase_memo_activation_event_reports_registered_teacher_proof_scope(monk
             assert event["cpu_seconds"] >= 0
             assert event["financial_qualification"] == "unknown"
     assert len(gate_calls) == 3
+
+
+def test_phase_memo_admin_only_arguments_share_proof_and_record_full_sha(saved_grid, monkeypatch):
+    _, parameters, grid = saved_grid
+    no_rng(monkeypatch)
+    context = _phase_memo_context(parameters)
+    job = {"id": "saved-grid", "operation": "teacher_grid", "status": "executed", "raw": grid}
+    actual = checker.check_teacher_record
+    calls = []
+
+    def counted(*args, **kwargs):
+        calls.append(1)
+        return actual(*args, **kwargs)
+
+    monkeypatch.setattr(checker, "check_teacher_record", counted)
+    first = checker._raw_job_check(job, context)
+    original_args = copy.deepcopy(context["resolved_arguments"])
+    variants = [
+        {"wall_cap_seconds": 300.0},
+        {"work_directory": "/source-unit/not-used-by-proof"},
+        {"wall_cap_seconds": 600.0, "work_directory": "/source-unit/other"},
+    ]
+    for administrative in variants:
+        context["resolved_arguments"] = dict(original_args, **administrative)
+        result = checker._raw_job_check(job, context)
+        pilot.runner._same(first, result, "administrative arguments preserve same numerical proof")
+    assert len(calls) == 108, "administrative-only difference repeated saved SDE"
+    events = context["teacher_verification_context"]["events"]
+    assert [e["kind"] for e in events] == ["verified", "reused", "reused", "reused"]
+    assert len({e["proof_arguments_sha256"] for e in events}) == 1
+    assert len({e["resolved_arguments_sha256"] for e in events}) == 4
+    assert events[-1]["resolved_arguments_sha256"] == pilot.input_identity(
+        context["resolved_arguments"]
+    )
+    assert all(e["wall_seconds"] > 0 for e in events)
+    assert all(e["verified_event_id"] == events[0]["id"] for e in events)
+    assert first["financial_qualification"] == "unknown"
+
+
+def test_phase_memo_admin_normalization_keeps_seed_rejection(saved_grid, monkeypatch):
+    _, parameters, grid = saved_grid
+    no_rng(monkeypatch)
+    context = _phase_memo_context(parameters)
+    context["resolved_arguments"]["wall_cap_seconds"] = 300.0
+    job = {"id": "saved-grid", "operation": "teacher_grid", "status": "executed", "raw": grid}
+    checker._raw_job_check(job, context)
+    context["resolved_arguments"]["wall_cap_seconds"] = 600.0
+    context["resolved_arguments"]["seed"] += 1
+    with pytest.raises(ValueError, match="original producer arguments differ"):
+        checker._raw_job_check(job, context)
+    assert len(context["teacher_verification_context"]["events"]) == 1
+
+
+def test_phase_memo_admin_normalization_keeps_driver_and_math_rejection(saved_grid, monkeypatch):
+    _, parameters, grid = saved_grid
+    no_rng(monkeypatch)
+    context = _phase_memo_context(parameters)
+    job = {"id": "saved-grid", "operation": "teacher_grid", "status": "executed", "raw": grid}
+    checker._raw_job_check(job, context)
+    context["resolved_arguments"]["work_directory"] = "/source-unit/other"
+    altered = copy.deepcopy(job)
+    altered["raw"]["driver"]["seed"] += 1
+    with pytest.raises(ValueError, match="verified producer changed"):
+        checker._raw_job_check(altered, context)
+    context["parameters"] = dataclasses.replace(parameters, spot=101)
+    with pytest.raises(ValueError, match="verified producer changed"):
+        checker._raw_job_check(job, context)
+    assert len(context["teacher_verification_context"]["events"]) == 1
+
+
+def test_phase_memo_admin_normalization_fresh_context_runs_full_original_n(saved_grid, monkeypatch):
+    _, parameters, grid = saved_grid
+    no_rng(monkeypatch)
+    actual = checker.check_teacher_record
+    calls = []
+
+    def counted(*args, **kwargs):
+        result = actual(*args, **kwargs)
+        calls.append(result)
+        return result
+
+    monkeypatch.setattr(checker, "check_teacher_record", counted)
+    job = {"id": "saved-grid", "operation": "teacher_grid", "status": "executed", "raw": grid}
+    contexts = [_phase_memo_context(parameters), _phase_memo_context(parameters)]
+    contexts[1]["resolved_arguments"].update(
+        wall_cap_seconds=600.0, work_directory="/source-unit/other"
+    )
+    for context in contexts:
+        result = checker._raw_job_check(job, context)
+        assert result["executed_node_count"] == result["original_node_count"] == 108
+        assert all(
+            r["full_saved_driver_sde_replayed"]
+            and r["labels_reference"]["all_original_N_label_values_compared"]
+            for r in result["raw_checks"]
+        )
+        assert result["financial_qualification"] == "unknown"
+    assert len(calls) == 216
+    assert all(r["labels"]["block_means"].shape[0] == 16 for r in calls)
+    assert [c["teacher_verification_context"]["events"][0]["kind"] for c in contexts] == [
+        "verified",
+        "verified",
+    ]

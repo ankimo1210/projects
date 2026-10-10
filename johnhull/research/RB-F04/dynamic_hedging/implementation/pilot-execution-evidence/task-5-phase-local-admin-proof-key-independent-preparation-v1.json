@@ -1,0 +1,40 @@
+{
+  "direct_probe_after_fixed_v3": [
+    "original saved N16 Hcoarse108 cold full",
+    "wall cap change only => same proof hit/no SDE/full operational arg SHA changed",
+    "work directory change only => same proof hit/no SDE/full operational arg SHA changed",
+    "both administrative fields absent => same proof hit/no SDE/full operational arg SHA changed",
+    "seed change => not reused/original seed reject",
+    "driver resolved-argument change => not reused; outer original driver binding remains required",
+    "actual financial parameters change => unchanged owner guard refuses",
+    "fresh context => original108 full",
+    "separate producer/domain remains isolated by original owner tuple"
+  ],
+  "financial_generation": false,
+  "financial_qualification": "unknown",
+  "fixed_candidate": false,
+  "forbidden_broadening": [
+    "nested key stripping",
+    "seed/driver/financial key stripping",
+    "domain or separate producer sharing",
+    "new cache layer",
+    "node-level caching",
+    "persisted or cross-context result reuse"
+  ],
+  "formal_phase_approved": false,
+  "original_v2_decision_preserved": "task-5-phase-local-reuse-independent-decision-v1.json",
+  "proof_key_normalization_allowed_exact_top_level_keys": [
+    "wall_cap_seconds",
+    "work_directory"
+  ],
+  "retained_every_call": [
+    "full resolved_arguments_sha256 operational/event",
+    "original envelope/resolved args cap audits",
+    "raw/source/physical/parameters/field identity",
+    "producer ID and operation",
+    "fresh independent/restore context"
+  ],
+  "schema": "rb-f04-phase-local-admin-proof-key-independent-preparation-v1",
+  "scope": "D-only independent static/minimal saved boundary v3, not approved",
+  "source/tests/docs/Git/CAS_modified": false
+}

@@ -1,0 +1,13 @@
+{
+  "cases": [
+    {
+      "case": "genuine_original_N16_all108_cold",
+      "cpu_seconds": 33.744348619,
+      "exception": "AssertionError()",
+      "saved_node_checks_delta": 108,
+      "status": "FAIL",
+      "wall_seconds": 2.552820041004452
+    }
+  ],
+  "financial_generation_count": 0
+}

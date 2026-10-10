@@ -1,0 +1,37 @@
+"""Run only the four self-contained regressions against an immutable saved fixture."""
+
+import importlib.util
+import json
+import sys
+from pathlib import Path
+
+import pytest
+
+D = Path(__file__).parent
+A = D / "task-5-phase-verified-raw-memo-source-after-v3"
+sys.path[:0] = [
+    str(A / "johnhull/research/RB-F04/dynamic_hedging"),
+    str(A / "johnhull/hullkit/src"),
+    str(A / "deep_hedge_price/src"),
+]
+spec = importlib.util.spec_from_file_location(
+    "source_tests", A / "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+FIXTURE = D / "task-5-teacher-check-report-bounded-unit-fixture-v2/teacher-report0"
+
+
+@pytest.fixture(scope="module")
+def saved_grid():
+    raw, _ = module.pilot.read_pilot_artifact(FIXTURE / "unit-grid")
+    parameters = module.HestonParameters(
+        **json.loads((FIXTURE / "unit-parameters.json").read_text())
+    )
+    return FIXTURE, parameters, raw
+
+
+test_admin_hit = module.test_phase_memo_admin_only_arguments_share_proof_and_record_full_sha
+test_seed_reject = module.test_phase_memo_admin_normalization_keeps_seed_rejection
+test_driver_math_reject = module.test_phase_memo_admin_normalization_keeps_driver_and_math_rejection
+test_fresh_full = module.test_phase_memo_admin_normalization_fresh_context_runs_full_original_n

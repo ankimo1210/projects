@@ -1,0 +1,49 @@
+{
+  "actual_runtime_delta": "one private checker function; other80 runtime files byte identical to independently approved v2",
+  "all_costs": "task-5-phase-local-admin-proof-key-independent-expense-v1.json",
+  "changed_driver_args_proof": "no reuse; all108 raw saved driver nodes rechecked; external original resolved-argument guard remains mandatory and unchanged",
+  "checker_sha256": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+  "decision": "approve_fixed_v3_administrative_proof_key_normalization_only",
+  "domain_scope": "original ID/operation owner tuple unchanged statically; genuine formal domain-selection finance qualification not run",
+  "dynamic_import_count": 0,
+  "exact_allowed_top_level_keys_excluded_from_proof_only": [
+    "wall_cap_seconds",
+    "work_directory"
+  ],
+  "failure_unknown_cap_scope": "ordinary/fallback/status/cap paths byte/AST unchanged; v2 unknown/tamper decision preserved",
+  "financial_generation_count": 0,
+  "financial_qualification": "unknown",
+  "formal_budget_approved": false,
+  "formal_phase_approved": false,
+  "full_operational_resolved_arguments_sha256_retained": true,
+  "new_RNG_teacher_CF_PDE_solver_generation": false,
+  "original_11_sample_labels_16blocks_covariance_comparisons": "full saved checker; numerical runner._same tolerance",
+  "original_fixture_N": 16,
+  "original_fixture_nodes": 108,
+  "original_source_fixture_unchanged": true,
+  "passed_saved_boundary_probes": 9,
+  "preserved_failures": {
+    "delivery": "String.raw transport parse failure before process execution; saved separately.",
+    "direct": "all108 genuine saved checks completed before erroneous reviewer assertion that descriptors equal exactly11; statistics arrays also present. Required11subset/each originalN verified in final run; source unchanged.",
+    "static": "requested _raw_job_check2 name absent; v1 nesting hypothesis corrected in v2 record, actual unchanged formal caller and bounded helper checked."
+  },
+  "prior_v2_decision": "task-5-phase-local-reuse-independent-decision-v1.json",
+  "prior_v2_decision_unchanged_sha256": "c09d557dc348bb7b3b32da7041d0512db5538bc370204c1ff26c59ea6aed02d3",
+  "producer_ID_operation_scope_unchanged": true,
+  "production_source_tests_docs_Git_CAS_changes": false,
+  "recorded_success_resource": {
+    "child_inclusive_cpu_seconds": 153.55951399999998,
+    "peak_RSS_bytes": 763162624,
+    "wall_seconds": 14.799966041005973
+  },
+  "results": "task-5-phase-local-admin-proof-key-independent-observation-v2/results.json",
+  "run_pilot_sha256": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635",
+  "runtime_file_count": 81,
+  "scope": "D fixed v3 runtime immutable teacher proof reuse boundary; source approval only",
+  "source_canonical_runner_digest_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "source_native_payload_digest_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "source_raw_params_field_physical_guard_and_external_typed_envelope_cap_audit_unchanged": true,
+  "source_root": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-source-after-v3",
+  "successful_saved_node_checks": 432,
+  "wholephase_speed_or_ETA_guaranteed": false
+}

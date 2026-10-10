@@ -1,0 +1,92 @@
+{
+  "source_root": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-source-after-v3",
+  "runtime_file_count": 81,
+  "dynamic_import_count": 0,
+  "source_canonical_identity_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "source_native_payload_identity_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "baseline_canonical_identity_sha256": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+  "baseline_native_payload_identity_sha256": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+  "source_after_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": "f96fc7be2f7f0ec4a937a35922129324f7128902b348c8c48caeb3f5d27d6a06"
+  },
+  "runtime_changed_files": [
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+  ],
+  "runtime_changed_functions": [
+    "_checked_teacher_grid"
+  ],
+  "other80_runtime_files_byte_unchanged": true,
+  "all_original_test_functions_AST_unchanged": true,
+  "new_regressions": [
+    "test_phase_memo_admin_only_arguments_share_proof_and_record_full_sha",
+    "test_phase_memo_admin_normalization_keeps_seed_rejection",
+    "test_phase_memo_admin_normalization_keeps_driver_and_math_rejection",
+    "test_phase_memo_admin_normalization_fresh_context_runs_full_original_n"
+  ],
+  "recipe_storage_sha256": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+  "proof_key": [
+    "producer_id",
+    "operation",
+    "input_identity(top_level_args_except_wall_cap_seconds_work_directory)"
+  ],
+  "proof_event_new_field": "proof_arguments_sha256",
+  "operational_full_arguments_event_field": "resolved_arguments_sha256",
+  "scope": {
+    "production_edit": false,
+    "financial_generation": false,
+    "RNG": false,
+    "formal_phase_run": false,
+    "approval": false
+  },
+  "metadata_wall_seconds": 1.7918586480009253,
+  "status": "D-only minimum v3 fixed candidate; root application and independent review pending",
+  "financial_qualification": "unknown",
+  "production_all81_bytes_unchanged": true,
+  "v2_manifest_and_v5_supplement_preserved": true,
+  "validation": {
+    "RED": "1 failed/3 passed in 26.48s",
+    "GREEN": "4 passed in 17.80s",
+    "ruff": "3 files PASS; original N806 names ignored",
+    "format": "3 files PASS"
+  },
+  "boundaries": {
+    "excluded_proof_fields": [
+      "wall_cap_seconds",
+      "work_directory"
+    ],
+    "exclusion_depth": "top-level only",
+    "operational_args": "full SHA retained each event; outer resolved arguments/envelope/cap checks AST unchanged",
+    "ordinary_proof": "raw/parameters/surface/artifact_context unchanged",
+    "financial_args": "model/N/seed/grid/driver/other fields remain in proof hash",
+    "producers": "owner producer_id/operation preserved; domain/raw producers remain distinct",
+    "fresh": "new empty context requires full saved original N SDE/11-label/16-block/cov/cache verification",
+    "incomplete": "ordinary fallback/partial/cap/failed/unknown numerical completion rules unchanged"
+  },
+  "limitations": [
+    "No formal pilot, financial generation, new RNG, whole suite, Git, docs or CAS changes",
+    "D fixture adapter is saved-only; regression tests in snapshot use existing self-contained saved_grid fixture without D dependency",
+    "driver resolved-argument change remains a proof miss; raw driver mismatch is rejected by unchanged owner guard and outer full worker binding",
+    "No resource-wide speedup claim; v5 cold60 estimates have not been overwritten"
+  ],
+  "preparation_failure_history": [
+    {
+      "scope": "metadata closure import under system python3",
+      "error": "ModuleNotFoundError: plotly",
+      "finance_started": false,
+      "followup": "rechecked using existing project .venv; no dependency change"
+    },
+    {
+      "scope": "first scoped Ruff",
+      "error": "N802 uppercase N in new test name",
+      "followup": "name only changed; initial GREEN and Ruff failure preserved; final targeted4 rerun PASS"
+    },
+    {
+      "scope": "manifest tool composition",
+      "error": "Javascript backtick syntax rejection before execution",
+      "files_modified": false,
+      "followup": "plain-text report composition"
+    }
+  ]
+}

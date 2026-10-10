@@ -1,0 +1,10 @@
+{
+  "scope": "Root verification script import error after reviewed source bytes applied; no tests or financial phase launched",
+  "script_sha256": "0e3490b36668dbbed8e66f0a069a480ad34b1d96bb458adebe66767096b08ccb",
+  "error": "ImportError: cannot import name 'payload_digest' from 'deep_hedge_price._dynamic_hedging_protocol'",
+  "verified_actual_symbol": "run_reference.payload_digest",
+  "tool_process_wall_seconds": 2.2428879,
+  "cpu_seconds": null,
+  "financial_generation": false,
+  "original_source_math_changed": false
+}

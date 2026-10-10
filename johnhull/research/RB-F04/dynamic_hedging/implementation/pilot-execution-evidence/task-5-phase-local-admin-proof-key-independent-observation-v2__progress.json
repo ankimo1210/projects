@@ -1,0 +1,68 @@
+{
+  "cases": [
+    {
+      "case": "genuine_original_N16_all108_cold",
+      "cpu_seconds": 35.410507963,
+      "saved_node_checks_delta": 108,
+      "status": "PASS",
+      "wall_seconds": 2.692638275999343
+    },
+    {
+      "case": "wall_cap_only_hit_full_operational_SHA_diff",
+      "cpu_seconds": 0.3391166860000041,
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.33911675499984995
+    },
+    {
+      "case": "work_directory_only_hit_full_operational_SHA_diff",
+      "cpu_seconds": 0.3302773810000019,
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.3302755629993044
+    },
+    {
+      "case": "both_admin_keys_absent_hit",
+      "cpu_seconds": 0.3237831759999992,
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.3237961089980672
+    },
+    {
+      "case": "seed_change_rejected_before_reuse",
+      "cpu_seconds": 2.3239999997315408e-05,
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 2.3489999875891954e-05
+    },
+    {
+      "case": "financial_parameters_change_rejected",
+      "cpu_seconds": 0.0926414770000008,
+      "saved_node_checks_delta": 0,
+      "status": "PASS",
+      "wall_seconds": 0.09264019999682205
+    },
+    {
+      "case": "driver_resolved_args_difference_not_reused",
+      "cpu_seconds": 40.854120581,
+      "saved_node_checks_delta": 108,
+      "status": "PASS",
+      "wall_seconds": 3.1237675820011646
+    },
+    {
+      "case": "fresh_context_all_original108",
+      "cpu_seconds": 35.455479064,
+      "saved_node_checks_delta": 108,
+      "status": "PASS",
+      "wall_seconds": 2.757610441003635
+    },
+    {
+      "case": "separate_producer_all108_not_shared",
+      "cpu_seconds": 35.688211712,
+      "saved_node_checks_delta": 108,
+      "status": "PASS",
+      "wall_seconds": 2.764526675004163
+    }
+  ],
+  "financial_generation_count": 0
+}
