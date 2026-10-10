@@ -1,0 +1,83 @@
+{
+  "candidate_sha256": "682391d79356350c100295d70bf3f9b4e2fb0446473ae7cd84d4261e1c9f0d40",
+  "description_sha256": "b2bcbe32064f712735e150b41d6fb52b919c9eb37ce58b09cd29afab81958ef7",
+  "files": [
+    {
+      "bytes": 9761,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-administrative-probes.py",
+      "sha256": "b5950cd16421d75066a2158333e1b3ca6c14e72a6b088a063dba91d7dbfc4771"
+    },
+    {
+      "bytes": 367220,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-budget-candidate.json",
+      "sha256": "682391d79356350c100295d70bf3f9b4e2fb0446473ae7cd84d4261e1c9f0d40"
+    },
+    {
+      "bytes": 352,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-final-origin-verification.json",
+      "sha256": "b04c379f514fec55b16d14f44f3b61e6b8db56e9974c9792a45fb27d07f36ec7"
+    },
+    {
+      "bytes": 19,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-final-validation-0.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "bytes": 26,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-final-validation-1.log",
+      "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd"
+    },
+    {
+      "bytes": 2167,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-final-validation-cost.json",
+      "sha256": "83b2e3288a5adbc60bb0dbfeed31efb71a73cb742e730930c6e523a3a2718835"
+    },
+    {
+      "bytes": 5027,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-initial-description.json",
+      "sha256": "b2bcbe32064f712735e150b41d6fb52b919c9eb37ce58b09cd29afab81958ef7"
+    },
+    {
+      "bytes": 616098,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-input-manifest.json",
+      "sha256": "0e943fb89ac0b989fb0bd4432e9d4cfd521c1dfc2f283fdbc5701b500755c1f5"
+    },
+    {
+      "bytes": 336,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-preparation-cost.json",
+      "sha256": "6573ebf7774e76eef1697deff85e4325c11085bbd99cc16eefee1aa4956a321e"
+    },
+    {
+      "bytes": 1779,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-preparation.md",
+      "sha256": "92283e1fc0f1c536ff38d6874d6a77e5157d9876af9531e59a61fe36f07d1f01"
+    },
+    {
+      "bytes": 11171,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-preparation.py",
+      "sha256": "b8faaaee5477689d21fa454bf8f30368140f2b4c72412ac029ab9f76b301f343"
+    },
+    {
+      "bytes": 8265,
+      "path": "task-5-maximum-original-node-saved-recheck-v1-verification.json",
+      "sha256": "649786910b84bf2eb02839f1f3b91e0fb4114a405af7787be3c1786c55525407"
+    },
+    {
+      "bytes": 28312,
+      "path": "task-5-maximum-original-node-saved-recheck-v1.py",
+      "sha256": "06f3c160b248a5e623d1064384c79386bbd2dc75060ffc41ec7c665b4c119fed"
+    }
+  ],
+  "financial_execution_count": 0,
+  "financial_qualification": "unknown",
+  "fixed": true,
+  "input_manifest_sha256": "0e943fb89ac0b989fb0bd4432e9d4cfd521c1dfc2f283fdbc5701b500755c1f5",
+  "original4GiBfailed_evidence_and_v1_submission_unchanged": true,
+  "probe_source_sha256": "06f3c160b248a5e623d1064384c79386bbd2dc75060ffc41ec7c665b4c119fed",
+  "root_preapproved": false,
+  "schema": "rb-f04-maximum-original-node-saved-preparation-fixed-manifest-v1",
+  "scope": "saved-only original maxN resource component preparation",
+  "source81_bytes_unchanged": true,
+  "source_identity": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "verification_sha256": "649786910b84bf2eb02839f1f3b91e0fb4114a405af7787be3c1786c55525407"
+}

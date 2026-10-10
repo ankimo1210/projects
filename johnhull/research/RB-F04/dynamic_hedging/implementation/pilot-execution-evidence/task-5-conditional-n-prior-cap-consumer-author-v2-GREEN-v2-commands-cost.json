@@ -1,0 +1,15 @@
+[
+  {
+    "name": "format-v2",
+    "argv": [
+      "/home/kazumasa/projects/.venv/bin/ruff",
+      "format",
+      "--check",
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+    ],
+    "exit_code": 1,
+    "wall_seconds": 0.016899615002330393,
+    "child_CPU_seconds": 0.018838
+  }
+]

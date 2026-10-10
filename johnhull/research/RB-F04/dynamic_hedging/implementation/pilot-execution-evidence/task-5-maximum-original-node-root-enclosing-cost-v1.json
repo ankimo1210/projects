@@ -1,0 +1,24 @@
+{
+  "scope": "root enclosing original local high N65536 date0/node17 genuine generation/write/read/saved all-N SDE/labels/resource component, including full original bank once and child final receipts/stdout",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1.py",
+    "--budget",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-budget-root-fixed-v1.json",
+    "--output",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-observation-root-v1"
+  ],
+  "exit_code": 1,
+  "wall_seconds": 83.23100619499746,
+  "child_tree_CPU_seconds": 83.450557,
+  "observer_CPU_before_own_receipt_seconds": 0.0005087079999999966,
+  "root_prior_sha256": "e47003d19fb323b23a0ffb7e625e6c895d370c1b26f57e1ec3ea33d195b3fbfc",
+  "log_sha256": "19aaba7e9f99ce5624a52d3957df1efd182b059242625b34e29180a94053af35",
+  "original_N": 65536,
+  "original_mother_nodes": 1344,
+  "executed_component_node": 17,
+  "original_mother_full_grid_execution": false,
+  "formal_finance_approved": false,
+  "financial_qualification": "unknown",
+  "outer_own_final_receipt_write_stdout_cost": "unknown"
+}

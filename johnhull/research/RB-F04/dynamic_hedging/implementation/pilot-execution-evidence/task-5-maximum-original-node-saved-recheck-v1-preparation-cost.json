@@ -1,0 +1,8 @@
+{
+  "CPU_seconds": 0.7146474690000001,
+  "final_receipt_write_and_authoring_tail_cost": "unknown",
+  "financial_array_decode_rng_solver_SDE_generation": false,
+  "kernel_peak_RSS_bytes": 26968064,
+  "scope": "pure old full physical bytes/receipts/central ZIP metadata/input source authentication",
+  "wall_seconds": 0.717654310996295
+}

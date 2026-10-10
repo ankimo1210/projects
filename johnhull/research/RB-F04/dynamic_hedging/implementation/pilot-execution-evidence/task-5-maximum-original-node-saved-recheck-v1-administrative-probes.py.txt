@@ -1,0 +1,244 @@
+"""Minimal saved-only guards/observer/coverage probes; no numerical imports."""
+
+from __future__ import annotations
+
+import ast
+import copy
+import json
+import resource
+import runpy
+import sys
+import time
+from pathlib import Path
+
+D = Path(__file__).resolve().parent
+PREFIX = "task-5-maximum-original-node-saved-recheck-v1"
+
+
+def main():
+    started, cpu = time.perf_counter(), time.process_time()
+    api = runpy.run_path(str(D / (PREFIX + ".py")), run_name="pure_saved_preflight")
+    rows = []
+
+    def check(name, truth):
+        assert truth, name
+        rows.append({"case": name, "result": "PASS", "synthetic": True})
+
+    def rejected(name, function):
+        try:
+            function()
+        except (AssertionError, ValueError, KeyError):
+            rows.append({"case": name, "result": "REJECTED", "synthetic": True})
+        else:
+            raise AssertionError(name + " was accepted")
+
+    budget_path = D / (PREFIX + "-budget-candidate.json")
+    candidate = json.loads(budget_path.read_text())
+    rejected("false candidate blocks runtime", lambda: api["validate_budget"](budget_path))
+    rejected(
+        "false candidate blocks output and child launch",
+        lambda: api["parent"](Path(candidate["measurement_output_root"]), budget_path),
+    )
+    check("financial output absent", not Path(candidate["measurement_output_root"]).exists())
+    unit = D / (PREFIX + "-pure-preflight")
+    unit.mkdir(exist_ok=False)
+    fixture = dict(
+        candidate,
+        root_preapproved=True,
+        status="root_fixed_maximum_original_node_saved_component_approved",
+        source_approval_status="approved_fixed_current_canonical81",
+    )
+    fixture_path = unit / "synthetic-guard-only.json"
+    api["save"](fixture_path, fixture)
+    _, description = api["validate_budget"](fixture_path)
+    check("whole518receipt1609inputsource81 pure guard positive", True)
+    for key, value in [
+        ("new_rng_allowed", True),
+        ("new_driver_or_teacher_generation_allowed", True),
+        ("saved_full_N_SDE_replay_required", False),
+        ("rss_limit_bytes_individual_parent_child", 4 * 1024**3),
+        ("wall_limit_seconds_inclusive", 301),
+        ("formal_finance_approved", True),
+        ("source_approval_status", None),
+        ("source_identity_sha256", "0" * 64),
+        ("saved_input_manifest_sha256", "0" * 64),
+    ]:
+        changed = dict(fixture, **{key: value})
+        path = unit / (key + ".json")
+        api["save"](path, changed)
+        rejected("fixed scope guard " + key, lambda path=path: api["validate_budget"](path))
+    incomplete_map = dict(fixture, input_file_bindings=dict(fixture["input_file_bindings"]))
+    del incomplete_map["input_file_bindings"][next(iter(incomplete_map["input_file_bindings"]))]
+    path = unit / "input-map-omits-one-original-file.json"
+    api["save"](path, incomplete_map)
+    rejected("missing original input cannot close", lambda: api["validate_budget"](path))
+    check(
+        "old4GiBcap remains history",
+        description["original_failure_history"]["status"] == "failed_at_actual_cap",
+    )
+    check(
+        "old failed expense not new saved expense",
+        description["original_failure_history"][
+            "original_generation_and_failed_checker_cost_is_history_not_new_expense"
+        ],
+    )
+    success = {
+        "status": "completed",
+        "original_n": 65536,
+        "mother_node_count": 1344,
+        "component_node_index": 17,
+        "original_bank_processed_n": 65536,
+        "full_saved_driver_sde_replayed": True,
+        "all11_full_original_N_labels_compared": True,
+        "raw_receipt": {"synthetic": True},
+        "check_receipt": {"synthetic": True},
+        "raw_status": None,
+        "raw_returned": True,
+        "all_original_N_returned": True,
+        "new_RNG_generator_count": 0,
+        "new_driver_generation_count": 0,
+        "new_teacher_generation_count": 0,
+        "whole_original_mother_job_executed": False,
+        "stages": [{"stage": name} for name in api["REQUIRED"]],
+    }
+    decision = api["administrative_decision"]
+    check("synthetic administrative complete", decision(0, None, success) == "completed_component")
+    for key, bad in [
+        ("original_n", 1024),
+        ("mother_node_count", 1),
+        ("component_node_index", 0),
+        ("original_bank_processed_n", 1024),
+        ("full_saved_driver_sde_replayed", False),
+        ("all11_full_original_N_labels_compared", False),
+        ("raw_receipt", None),
+        ("check_receipt", None),
+        ("new_RNG_generator_count", 1),
+        ("new_driver_generation_count", 1),
+        ("new_teacher_generation_count", 1),
+        ("whole_original_mother_job_executed", True),
+    ]:
+        check(
+            "completion rejects " + key,
+            decision(0, None, dict(success, **{key: bad})) == "unclosed_child_evidence_incomplete",
+        )
+    for missing in api["REQUIRED"]:
+        changed = dict(
+            success, stages=[row for row in success["stages"] if row["stage"] != missing]
+        )
+        check(
+            "completion rejects missing " + missing,
+            decision(0, None, changed) == "unclosed_child_evidence_incomplete",
+        )
+    cap = {
+        "metric": "individual_child_RSS",
+        "limit_bytes": 8 * 1024**3,
+        "observed_bytes": 8 * 1024**3 + 1,
+    }
+    check("actual8GiBcap retained", decision(-9, cap, success) == "failed_at_actual_cap")
+    check(
+        "missing raw under kill remains unknown", decision(-9, cap, None) == "failed_at_actual_cap"
+    )
+    failure = dict(success, status="unclosed_source_or_solver_defect", error="synthetic")
+    check(
+        "source exception never invented as cap",
+        decision(1, None, failure) == "unclosed_source_or_solver_defect",
+    )
+    check(
+        "source exception and real cap both retained",
+        decision(1, cap, failure) == "unclosed_source_or_solver_defect_with_actual_cap",
+    )
+    check(
+        "observer exception and cap both retained",
+        decision(0, cap, success, ["synthetic"]) == "unclosed_observer_defect_with_actual_cap",
+    )
+    closing = api["closing_observation"]
+    check(
+        "postexit wall observation included",
+        closing(1, 302, 301, None, None, None, None, None) is not None,
+    )
+    check("unknown RSS is not zero", closing(1, 2, 301, None, None, None, None, None) is None)
+    check(
+        "actual8GiB kernel highwater observed",
+        closing(1, 2, 301, None, None, 8 * 1024**3 + 1, None, None)["observations"][0][
+            "limit_bytes"
+        ]
+        == 8 * 1024**3,
+    )
+    report = {
+        "original_n": 65536,
+        "full_saved_driver_sde_replayed": True,
+        "financial_qualification": "unknown",
+        "report_mode": "bounded",
+        "labels_reference": {
+            "all_original_N_label_values_compared": True,
+            "array_fields": {key: {"shape": [65536, 65], "dtype": "<f8"} for key in api["SAMPLES"]},
+        },
+        "raw_reference": {"node_index": 17, "node": {"date_index": 0, "spot": 100.0, "state": 1.0}},
+    }
+    api["bounded_coverage"](report)
+    check("all11 original label descriptors required", True)
+    for key in api["SAMPLES"]:
+        bad = copy.deepcopy(report)
+        bad["labels_reference"]["array_fields"][key]["shape"] = [1024, 65]
+        rejected("allN label descriptor " + key, lambda bad=bad: api["bounded_coverage"](bad))
+    source = (D / (PREFIX + ".py")).read_text()
+    tree = ast.parse(source)
+    runtime = next(
+        row for row in tree.body if isinstance(row, ast.FunctionDef) and row.name == "runtime"
+    )
+    forbidden = next(
+        row
+        for row in ast.walk(runtime)
+        if isinstance(row, ast.FunctionDef) and row.name == "forbidden_work"
+    )
+    sandbox = {"forbidden_attempts": []}
+    exec(
+        compile(
+            ast.Module(body=[forbidden], type_ignores=[]), "<exact saved-only sentinel>", "exec"
+        ),
+        sandbox,
+    )
+    rejected("new RNG/teacher/bank sentinel raises", lambda: sandbox["forbidden_work"](1345225788))
+    check("forbidden attempt remains observed", len(sandbox["forbidden_attempts"]) == 1)
+    child = next(
+        row for row in tree.body if isinstance(row, ast.FunctionDef) and row.name == "child"
+    )
+    calls = {ast.unparse(row.func) for row in ast.walk(child) if isinstance(row, ast.Call)}
+    check(
+        "no bank/teacher generation call in child",
+        not {
+            "pilot.run_teacher_job",
+            "pilot.run_teacher_driver_job",
+            "pilot._dispatch",
+            "np.random.default_rng",
+        }
+        & calls,
+    )
+    check(
+        "actual saved checker and bounded helper connected",
+        {"checker.check_teacher_record", "checker._bounded_teacher_check"} <= calls,
+    )
+    check(
+        "no financial modules loaded",
+        not {"numpy", "run_pilot", "check_pilot", "run_reference"} & set(sys.modules),
+    )
+    result = {
+        "schema": "maximum-original-node-saved-pure-preflight-v1",
+        "cases": rows,
+        "PASS": len(rows),
+        "finance_generation_RNG_SDE_solver_worker": 0,
+        "candidate_sha256": api["sha"](budget_path),
+        "probe_source_sha256": api["sha"](D / (PREFIX + ".py")),
+        "original_failure_history_preserved": True,
+        "formal_financial_qualification": "unknown",
+        "wall_seconds": time.perf_counter() - started,
+        "CPU_seconds": time.process_time() - cpu,
+        "kernel_peak_RSS_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+        "result_write_tail": "unknown",
+    }
+    api["save"](D / (PREFIX + "-verification.json"), result)
+    print(json.dumps({"PASS": len(rows), "finance": 0, "false_candidate": True}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

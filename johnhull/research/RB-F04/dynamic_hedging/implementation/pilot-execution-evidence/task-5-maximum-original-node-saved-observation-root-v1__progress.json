@@ -1,0 +1,3537 @@
+{
+  "all11_full_original_N_labels_compared": true,
+  "all_original_N_returned": true,
+  "check_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "a39c8d63abbf944cad43941d11f64c6734cc2541ad5539c703a101c84f6ad277",
+    "metadata_sha256": "1b4b9b4f995803049c6c8136617c73082d86969c4ec8fe0ca5d68bbbcb13e10a",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "component_node_index": 17,
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "full_saved_driver_sde_replayed": true,
+  "mother_job_id": "teacher:local:N65536:high:raw",
+  "mother_node_count": 1344,
+  "native_cap_evidence": null,
+  "new_RNG_generator_count": 0,
+  "new_driver_generation_count": 0,
+  "new_teacher_generation_count": 0,
+  "original_bank_processed_n": 65536,
+  "original_driver_job_id": "teacher-driver:local:N65536",
+  "original_n": 65536,
+  "process_peak_rss_bytes": 3721367552,
+  "raw_binding": {
+    "artifact_sha256": "8d6ff7e28c2869151478f8d7967e0a5f3440c8c680b565cf0978d2e8ac81f573",
+    "kind": "teacher_recipe_physical_v1",
+    "packs": {
+      "pack000000": "f55f3fda1754b56b824ae3c400ceeda7f737ea81c43482faedff13a0c235b01d"
+    },
+    "recipe": "primitive_labels-global-driver-date-v1",
+    "root_artifact_sha256": "5449fd18802415af7096b24c03204c7009848b369b7689a450319d60c26de029",
+    "source_bindings": {
+      "primitive_labels": "9007e30a45375fbb7c8b4afe5fa4e4f694b5bc68e924b138bd993d8bdbf2b025",
+      "teacher_storage": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac"
+    }
+  },
+  "raw_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "5449fd18802415af7096b24c03204c7009848b369b7689a450319d60c26de029",
+    "metadata_sha256": "6e4151a029e838a9262c74f5573e764e2f55e3430eb5c030dc04037257bb4e43",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "raw_returned": true,
+  "raw_status": null,
+  "saved_only_new_cost_does_not_include_old_generation_or_failed_checker_cost": true,
+  "scope": "saved_original_local_high_N65536_date0_node17_recheck_component_only",
+  "stages": [
+    {
+      "clock": {
+        "cpu": 0.471838498,
+        "utc": "2026-10-10T06:23:39.292372+00:00",
+        "wall": 37884.075087397
+      },
+      "new_financial_generation": false,
+      "old_cap_history": {
+        "actual_cap_evidence": {
+          "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+          "metric": "actual_component_limit_observations",
+          "observations": [
+            {
+              "limit_bytes": 4294967296,
+              "metric": "individual_child_RSS",
+              "observation_phase": "live_parent_monitor",
+              "observed_bytes": 4310867968
+            }
+          ]
+        },
+        "all_original_financial_qualification": "unknown",
+        "original_generation_and_failed_checker_cost_is_history_not_new_expense": true,
+        "outer_receipt_path": "task-5-maximum-original-node-root-enclosing-cost-v1.json",
+        "parent_receipt_path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-observation-root-v1/parent-cost-and-decision.json",
+        "status": "failed_at_actual_cap"
+      },
+      "original_initial_obligation": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-observation-root-v1/initial-original-obligation",
+      "stage": "original_initial_obligation_and_cap_cost_inputs_authenticated"
+    },
+    {
+      "clock": {
+        "cpu": 2.216871522,
+        "utc": "2026-10-10T06:23:41.046210+00:00",
+        "wall": 37885.82892457
+      },
+      "field_receipt": {
+        "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+        "artifact_sha256": "93cdf8fdc0651a0ea82457a6f62dd3650150005f5de5a4036524ec7cf12841a2",
+        "metadata_sha256": "d5bbfd4d4725e6cf1015ae929c62b946862647777d52b162768a64f4176de8d9",
+        "schema": "rb-f04-array-receipt-v1",
+        "uncompressed_bytes": 0
+      },
+      "stage": "current_source81_and_original_field_verified"
+    },
+    {
+      "clock": {
+        "cpu": 3.643111472,
+        "utc": "2026-10-10T06:23:42.474119+00:00",
+        "wall": 37887.25683314
+      },
+      "driver_global_id": "92532b064aaa3df9151d180f8b27df748234ed2b1fbb05bcd0819ec404ab7957",
+      "driver_receipt": {
+        "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+        "artifact_sha256": "e80e04e32ac944cd410ff7908bd21ed5d1048430846aa296953171025843ef10",
+        "metadata_sha256": "51926ce7e24011fdac2df89f084630bf52fa8a6c95dbbaacfa408cff14ca4173",
+        "schema": "rb-f04-array-receipt-v1",
+        "uncompressed_bytes": 0
+      },
+      "new_RNG": 0,
+      "processed_n": 65536,
+      "stage": "original_full_bank_read_authenticated"
+    },
+    {
+      "clock": {
+        "cpu": 3.643451504,
+        "utc": "2026-10-10T06:23:42.474457+00:00",
+        "wall": 37887.257176205
+      },
+      "stage": "original_raw_read_start"
+    },
+    {
+      "clock": {
+        "cpu": 5.782858624,
+        "utc": "2026-10-10T06:23:44.618255+00:00",
+        "wall": 37889.400971733
+      },
+      "logical_returned_array_payload_bytes": 469524240,
+      "native_original_expenses_retained_as_history": [
+        {
+          "id": "teacher_worker",
+          "includes_children": true,
+          "parent_id": null,
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 33.308245125999996,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 33.323655440006405
+          }
+        },
+        {
+          "id": "chunk:0:256",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11717458099999956,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11717183200380532
+          }
+        },
+        {
+          "id": "chunk:256:512",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11845777699999971,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1184540289978031
+          }
+        },
+        {
+          "id": "chunk:512:768",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11751001899999913,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11751705299684545
+          }
+        },
+        {
+          "id": "chunk:768:1024",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11821301099999992,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11822339100035606
+          }
+        },
+        {
+          "id": "chunk:1024:1280",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11675205200000072,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1167477770068217
+          }
+        },
+        {
+          "id": "chunk:1280:1536",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11816660000000034,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11816248499962967
+          }
+        },
+        {
+          "id": "chunk:1536:1792",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11670703999999965,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11670454300474375
+          }
+        },
+        {
+          "id": "chunk:1792:2048",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11967532800000136,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11967203899985179
+          }
+        },
+        {
+          "id": "chunk:2048:2304",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12218710199999983,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1221817710029427
+          }
+        },
+        {
+          "id": "chunk:2304:2560",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12233538999999993,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1223315890019876
+          }
+        },
+        {
+          "id": "chunk:2560:2816",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12066115500000052,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12065741299738875
+          }
+        },
+        {
+          "id": "chunk:2816:3072",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12262168400000029,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12261819499690318
+          }
+        },
+        {
+          "id": "chunk:3072:3328",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12142347300000012,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1214365039995755
+          }
+        },
+        {
+          "id": "chunk:3328:3584",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1244687959999986,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12446571599866729
+          }
+        },
+        {
+          "id": "chunk:3584:3840",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12493074400000026,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1277956829944742
+          }
+        },
+        {
+          "id": "chunk:3840:4096",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12220853400000031,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12220603199966718
+          }
+        },
+        {
+          "id": "chunk:4096:4352",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12077529099999929,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12077208399568917
+          }
+        },
+        {
+          "id": "chunk:4352:4608",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11743972900000088,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11743719500373118
+          }
+        },
+        {
+          "id": "chunk:4608:4864",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12224919400000012,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1222455480019562
+          }
+        },
+        {
+          "id": "chunk:4864:5120",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12428547000000023,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12429506400076207
+          }
+        },
+        {
+          "id": "chunk:5120:5376",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12199164699999976,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12199655499716755
+          }
+        },
+        {
+          "id": "chunk:5376:5632",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1251670029999996,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.125164416996995
+          }
+        },
+        {
+          "id": "chunk:5632:5888",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12083331300000033,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12083074099791702
+          }
+        },
+        {
+          "id": "chunk:5888:6144",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12206122299999933,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12205629800155293
+          }
+        },
+        {
+          "id": "chunk:6144:6400",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.124740568,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12473742700240109
+          }
+        },
+        {
+          "id": "chunk:6400:6656",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12122481599999979,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12122115099919029
+          }
+        },
+        {
+          "id": "chunk:6656:6912",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1246204009999996,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12461640200490365
+          }
+        },
+        {
+          "id": "chunk:6912:7168",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12219258200000027,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12218922999454662
+          }
+        },
+        {
+          "id": "chunk:7168:7424",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1254127589999996,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1254190350009594
+          }
+        },
+        {
+          "id": "chunk:7424:7680",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1225854970000011,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12258295599895064
+          }
+        },
+        {
+          "id": "chunk:7680:7936",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12362206799999953,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12361919999966631
+          }
+        },
+        {
+          "id": "chunk:7936:8192",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1242268089999996,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12422468000295339
+          }
+        },
+        {
+          "id": "chunk:8192:8448",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12190366199999936,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12189952100015944
+          }
+        },
+        {
+          "id": "chunk:8448:8704",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12058458400000127,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12058063299627975
+          }
+        },
+        {
+          "id": "chunk:8704:8960",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1205839529999988,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12058129799697781
+          }
+        },
+        {
+          "id": "chunk:8960:9216",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12028564999999958,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12029252900538268
+          }
+        },
+        {
+          "id": "chunk:9216:9472",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12144726700000064,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12145107900141738
+          }
+        },
+        {
+          "id": "chunk:9472:9728",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12091468899999924,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12091169999621343
+          }
+        },
+        {
+          "id": "chunk:9728:9984",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12222597800000123,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12222345399641199
+          }
+        },
+        {
+          "id": "chunk:9984:10240",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12005376299999959,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12005105400021421
+          }
+        },
+        {
+          "id": "chunk:10240:10496",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12192119200000029,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12202512699877843
+          }
+        },
+        {
+          "id": "chunk:10496:10752",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12107632799999912,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12107376899803057
+          }
+        },
+        {
+          "id": "chunk:10752:11008",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11934871400000091,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1193453870000667
+          }
+        },
+        {
+          "id": "chunk:11008:11264",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12327550100000018,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12327334500150755
+          }
+        },
+        {
+          "id": "chunk:11264:11520",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12330267100000114,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12341994199960027
+          }
+        },
+        {
+          "id": "chunk:11520:11776",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.121156225,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12115325600461802
+          }
+        },
+        {
+          "id": "chunk:11776:12032",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12450341199999926,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1245006969984388
+          }
+        },
+        {
+          "id": "chunk:12032:12288",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12218765599999948,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12218883199966513
+          }
+        },
+        {
+          "id": "chunk:12288:12544",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12148701600000145,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12148329999763519
+          }
+        },
+        {
+          "id": "chunk:12544:12800",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12293185000000051,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12292823899770156
+          }
+        },
+        {
+          "id": "chunk:12800:13056",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12208099900000136,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12207937199855223
+          }
+        },
+        {
+          "id": "chunk:13056:13312",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1247704590000005,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12477627900079824
+          }
+        },
+        {
+          "id": "chunk:13312:13568",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12601890100000013,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1260205729995505
+          }
+        },
+        {
+          "id": "chunk:13568:13824",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12035527000000101,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1203522569994675
+          }
+        },
+        {
+          "id": "chunk:13824:14080",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12054171699999827,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1205390070026624
+          }
+        },
+        {
+          "id": "chunk:14080:14336",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1240311950000006,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12402830299834022
+          }
+        },
+        {
+          "id": "chunk:14336:14592",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12494476100000007,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1278131979997852
+          }
+        },
+        {
+          "id": "chunk:14592:14848",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12485398199999942,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12485141600336647
+          }
+        },
+        {
+          "id": "chunk:14848:15104",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12168325300000049,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12168066499725683
+          }
+        },
+        {
+          "id": "chunk:15104:15360",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11915697499999922,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11915356400277233
+          }
+        },
+        {
+          "id": "chunk:15360:15616",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12127383999999886,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12127136300114216
+          }
+        },
+        {
+          "id": "chunk:15616:15872",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12096862000000108,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12097359900508309
+          }
+        },
+        {
+          "id": "chunk:15872:16128",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12141248500000046,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12140776700107381
+          }
+        },
+        {
+          "id": "chunk:16128:16384",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11996099999999998,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1199579999956768
+          }
+        },
+        {
+          "id": "chunk:16384:16640",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12269427599999894,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12268898500042269
+          }
+        },
+        {
+          "id": "chunk:16640:16896",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12010319400000036,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12009922500146786
+          }
+        },
+        {
+          "id": "chunk:16896:17152",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12078152900000028,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.120777227995859
+          }
+        },
+        {
+          "id": "chunk:17152:17408",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12303245999999923,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12302912599989213
+          }
+        },
+        {
+          "id": "chunk:17408:17664",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12052129799999989,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12052845500147669
+          }
+        },
+        {
+          "id": "chunk:17664:17920",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12060585700000104,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12062570600392064
+          }
+        },
+        {
+          "id": "chunk:17920:18176",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12085583899999719,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12085218400170561
+          }
+        },
+        {
+          "id": "chunk:18176:18432",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12503447499999965,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12502912699710578
+          }
+        },
+        {
+          "id": "chunk:18432:18688",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11846010000000007,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11845711099886103
+          }
+        },
+        {
+          "id": "chunk:18688:18944",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12147479100000069,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12147232200368308
+          }
+        },
+        {
+          "id": "chunk:18944:19200",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12185280500000317,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12184894399979385
+          }
+        },
+        {
+          "id": "chunk:19200:19456",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12136977400000148,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12136677599482937
+          }
+        },
+        {
+          "id": "chunk:19456:19712",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1225383210000004,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12253567899460904
+          }
+        },
+        {
+          "id": "chunk:19712:19968",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12188656700000067,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12192422199586872
+          }
+        },
+        {
+          "id": "chunk:19968:20224",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12249319300000039,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12249019400042016
+          }
+        },
+        {
+          "id": "chunk:20224:20480",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12206661899999816,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12206350899941754
+          }
+        },
+        {
+          "id": "chunk:20480:20736",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11985706600000157,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11985889700008556
+          }
+        },
+        {
+          "id": "chunk:20736:20992",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12163118200000156,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1216287309944164
+          }
+        },
+        {
+          "id": "chunk:20992:21248",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12247713700000062,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12247242999728769
+          }
+        },
+        {
+          "id": "chunk:21248:21504",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12307094899999882,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12306607500067912
+          }
+        },
+        {
+          "id": "chunk:21504:21760",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12487950400000258,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12489014199672965
+          }
+        },
+        {
+          "id": "chunk:21760:22016",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12142875700000033,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12143559999822173
+          }
+        },
+        {
+          "id": "chunk:22016:22272",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12214619799999937,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12214262199995574
+          }
+        },
+        {
+          "id": "chunk:22272:22528",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.123444267,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1234409200042137
+          }
+        },
+        {
+          "id": "chunk:22528:22784",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12025738200000191,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1202536830023746
+          }
+        },
+        {
+          "id": "chunk:22784:23040",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12406511699999712,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12406232800276484
+          }
+        },
+        {
+          "id": "chunk:23040:23296",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12412282700000077,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12412070600112202
+          }
+        },
+        {
+          "id": "chunk:23296:23552",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1241948399999977,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12419161000434542
+          }
+        },
+        {
+          "id": "chunk:23552:23808",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1207122819999995,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1207076450009481
+          }
+        },
+        {
+          "id": "chunk:23808:24064",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12077240099999997,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12076911600161111
+          }
+        },
+        {
+          "id": "chunk:24064:24320",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12049407499999987,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12052484099694993
+          }
+        },
+        {
+          "id": "chunk:24320:24576",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12136523099999863,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12136222400295082
+          }
+        },
+        {
+          "id": "chunk:24576:24832",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11890991399999962,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11892802899819799
+          }
+        },
+        {
+          "id": "chunk:24832:25088",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12125415299999887,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12125174499669811
+          }
+        },
+        {
+          "id": "chunk:25088:25344",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12090661999999952,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12090369799989276
+          }
+        },
+        {
+          "id": "chunk:25344:25600",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12044899900000061,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12044584999966901
+          }
+        },
+        {
+          "id": "chunk:25600:25856",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11884537699999953,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1188404360000277
+          }
+        },
+        {
+          "id": "chunk:25856:26112",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12024543199999727,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12025604199880036
+          }
+        },
+        {
+          "id": "chunk:26112:26368",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11979293699999971,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11988670600112528
+          }
+        },
+        {
+          "id": "chunk:26368:26624",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12318459100000112,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12318149299971992
+          }
+        },
+        {
+          "id": "chunk:26624:26880",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11887951699999988,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11887668699637288
+          }
+        },
+        {
+          "id": "chunk:26880:27136",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1231020619999974,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1230995280056959
+          }
+        },
+        {
+          "id": "chunk:27136:27392",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11930445199999795,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11930122500052676
+          }
+        },
+        {
+          "id": "chunk:27392:27648",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12271279999999862,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12271098799828906
+          }
+        },
+        {
+          "id": "chunk:27648:27904",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11980306999999968,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11980073800077662
+          }
+        },
+        {
+          "id": "chunk:27904:28160",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1189125560000015,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11890956400020514
+          }
+        },
+        {
+          "id": "chunk:28160:28416",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11987952099999788,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11993115199584281
+          }
+        },
+        {
+          "id": "chunk:28416:28672",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11953494200000137,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11953269199875649
+          }
+        },
+        {
+          "id": "chunk:28672:28928",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11985898500000047,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11985663600353291
+          }
+        },
+        {
+          "id": "chunk:28928:29184",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12121226900000082,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12121843500062823
+          }
+        },
+        {
+          "id": "chunk:29184:29440",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12134785099999945,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1213445320026949
+          }
+        },
+        {
+          "id": "chunk:29440:29696",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12153634400000257,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12153423699783161
+          }
+        },
+        {
+          "id": "chunk:29696:29952",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12016504999999711,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1201624780005659
+          }
+        },
+        {
+          "id": "chunk:29952:30208",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12417833900000019,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12418819400045322
+          }
+        },
+        {
+          "id": "chunk:30208:30464",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1197420799999982,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11975207000068622
+          }
+        },
+        {
+          "id": "chunk:30464:30720",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11923476899999841,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11923094899975695
+          }
+        },
+        {
+          "id": "chunk:30720:30976",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12053569600000102,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12053351299982751
+          }
+        },
+        {
+          "id": "chunk:30976:31232",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12111070799999979,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12110731400025543
+          }
+        },
+        {
+          "id": "chunk:31232:31488",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1201150179999999,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12011204099690076
+          }
+        },
+        {
+          "id": "chunk:31488:31744",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12468059600000103,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12467509199632332
+          }
+        },
+        {
+          "id": "chunk:31744:32000",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12254569699999962,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12254291399585782
+          }
+        },
+        {
+          "id": "chunk:32000:32256",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12015217600000128,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12014930700388504
+          }
+        },
+        {
+          "id": "chunk:32256:32512",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12032249900000025,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12031998699967517
+          }
+        },
+        {
+          "id": "chunk:32512:32768",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12109164499999991,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12109744399640476
+          }
+        },
+        {
+          "id": "chunk:32768:33024",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11813576000000126,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11814460499590496
+          }
+        },
+        {
+          "id": "chunk:33024:33280",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11440756300000032,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11440401599975303
+          }
+        },
+        {
+          "id": "chunk:33280:33536",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11753727700000027,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11753430699900491
+          }
+        },
+        {
+          "id": "chunk:33536:33792",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11930524299999945,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11930254600156331
+          }
+        },
+        {
+          "id": "chunk:33792:34048",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11538852900000052,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1153850910050096
+          }
+        },
+        {
+          "id": "chunk:34048:34304",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11636971399999751,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1163664530031383
+          }
+        },
+        {
+          "id": "chunk:34304:34560",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11969507799999946,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11970438099524472
+          }
+        },
+        {
+          "id": "chunk:34560:34816",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1157641439999999,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11576618200342637
+          }
+        },
+        {
+          "id": "chunk:34816:35072",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11736984899999925,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11736706800002139
+          }
+        },
+        {
+          "id": "chunk:35072:35328",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11492657200000167,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1149232440002379
+          }
+        },
+        {
+          "id": "chunk:35328:35584",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11841857399999967,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11841536100109806
+          }
+        },
+        {
+          "id": "chunk:35584:35840",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12072712600000202,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12072451900166925
+          }
+        },
+        {
+          "id": "chunk:35840:36096",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12027623200000193,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12027358100021956
+          }
+        },
+        {
+          "id": "chunk:36096:36352",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12050255499999807,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12050037400331348
+          }
+        },
+        {
+          "id": "chunk:36352:36608",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12265465700000178,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12265167399891652
+          }
+        },
+        {
+          "id": "chunk:36608:36864",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1227514470000024,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12274723000155063
+          }
+        },
+        {
+          "id": "chunk:36864:37120",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12106287199999954,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12106969600426964
+          }
+        },
+        {
+          "id": "chunk:37120:37376",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12121456399999886,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12121082300291164
+          }
+        },
+        {
+          "id": "chunk:37376:37632",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12101242099999965,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12101579600130208
+          }
+        },
+        {
+          "id": "chunk:37632:37888",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12136443600000035,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12136155399639392
+          }
+        },
+        {
+          "id": "chunk:37888:38144",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12234312900000077,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12233968499640469
+          }
+        },
+        {
+          "id": "chunk:38144:38400",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12081693600000065,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12081495800521225
+          }
+        },
+        {
+          "id": "chunk:38400:38656",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12057965500000023,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1205765220001922
+          }
+        },
+        {
+          "id": "chunk:38656:38912",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12081051800000253,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1208182409973233
+          }
+        },
+        {
+          "id": "chunk:38912:39168",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1217154669999978,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1217214040007093
+          }
+        },
+        {
+          "id": "chunk:39168:39424",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12200780799999933,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12200542199570918
+          }
+        },
+        {
+          "id": "chunk:39424:39680",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12156554500000283,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12156184999912512
+          }
+        },
+        {
+          "id": "chunk:39680:39936",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1219102999999997,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12190710499999113
+          }
+        },
+        {
+          "id": "chunk:39936:40192",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.122560631999999,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12255828499473864
+          }
+        },
+        {
+          "id": "chunk:40192:40448",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12076355900000024,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12076109000190627
+          }
+        },
+        {
+          "id": "chunk:40448:40704",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11985708699999975,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11985499000002164
+          }
+        },
+        {
+          "id": "chunk:40704:40960",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.119964772000003,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11996272699616384
+          }
+        },
+        {
+          "id": "chunk:40960:41216",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12261807599999841,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.122621351001726
+          }
+        },
+        {
+          "id": "chunk:41216:41472",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12247715499999856,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12247394100268139
+          }
+        },
+        {
+          "id": "chunk:41472:41728",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12232234400000053,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12231954600429162
+          }
+        },
+        {
+          "id": "chunk:41728:41984",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12019653100000127,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12019446900376352
+          }
+        },
+        {
+          "id": "chunk:41984:42240",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1211806469999992,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12120329900062643
+          }
+        },
+        {
+          "id": "chunk:42240:42496",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1221024419999992,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1220965550019173
+          }
+        },
+        {
+          "id": "chunk:42496:42752",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12029791099999798,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12029488400003174
+          }
+        },
+        {
+          "id": "chunk:42752:43008",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1215753080000006,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12158371700206771
+          }
+        },
+        {
+          "id": "chunk:43008:43264",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12069094800000002,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12069868999969913
+          }
+        },
+        {
+          "id": "chunk:43264:43520",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12316231100000152,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12592361499991966
+          }
+        },
+        {
+          "id": "chunk:43520:43776",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1209243640000004,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12092027199832955
+          }
+        },
+        {
+          "id": "chunk:43776:44032",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12163646099999781,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12163349599723006
+          }
+        },
+        {
+          "id": "chunk:44032:44288",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11805579999999694,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11805291999917245
+          }
+        },
+        {
+          "id": "chunk:44288:44544",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12209128499999977,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12208855300559662
+          }
+        },
+        {
+          "id": "chunk:44544:44800",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12001525799999868,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12001267600135179
+          }
+        },
+        {
+          "id": "chunk:44800:45056",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1211589669999995,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12115536200144561
+          }
+        },
+        {
+          "id": "chunk:45056:45312",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12262175600000091,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12261785800365033
+          }
+        },
+        {
+          "id": "chunk:45312:45568",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12077162099999939,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1207689910006593
+          }
+        },
+        {
+          "id": "chunk:45568:45824",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11901835100000113,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11901534299977357
+          }
+        },
+        {
+          "id": "chunk:45824:46080",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12065884300000107,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12066128599690273
+          }
+        },
+        {
+          "id": "chunk:46080:46336",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12117444299999747,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12117153000144754
+          }
+        },
+        {
+          "id": "chunk:46336:46592",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11992229099999818,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1199193349966663
+          }
+        },
+        {
+          "id": "chunk:46592:46848",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12118662800000024,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12118328799988376
+          }
+        },
+        {
+          "id": "chunk:46848:47104",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1214308509999995,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.121428354003001
+          }
+        },
+        {
+          "id": "chunk:47104:47360",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12078685099999831,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12079442200047197
+          }
+        },
+        {
+          "id": "chunk:47360:47616",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12197895699999961,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12198870100110071
+          }
+        },
+        {
+          "id": "chunk:47616:47872",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12148029000000093,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12147498699778225
+          }
+        },
+        {
+          "id": "chunk:47872:48128",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12113871200000048,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.121136016001401
+          }
+        },
+        {
+          "id": "chunk:48128:48384",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12290110100000007,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12289546700048959
+          }
+        },
+        {
+          "id": "chunk:48384:48640",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12753107099999994,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12752740300493315
+          }
+        },
+        {
+          "id": "chunk:48640:48896",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11967547900000142,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11967192999873077
+          }
+        },
+        {
+          "id": "chunk:48896:49152",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1200625639999977,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12005967600271106
+          }
+        },
+        {
+          "id": "chunk:49152:49408",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12302738300000016,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12302109099982772
+          }
+        },
+        {
+          "id": "chunk:49408:49664",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11927156700000197,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11927986999944551
+          }
+        },
+        {
+          "id": "chunk:49664:49920",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12218557099999927,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.124736441001005
+          }
+        },
+        {
+          "id": "chunk:49920:50176",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12007041899999749,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12006797500362154
+          }
+        },
+        {
+          "id": "chunk:50176:50432",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12037875000000042,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12037508699722821
+          }
+        },
+        {
+          "id": "chunk:50432:50688",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11832852199999877,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11832533399865497
+          }
+        },
+        {
+          "id": "chunk:50688:50944",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12329379099999827,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12329069099359913
+          }
+        },
+        {
+          "id": "chunk:50944:51200",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11794202999999825,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11793892100104131
+          }
+        },
+        {
+          "id": "chunk:51200:51456",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12230727399999708,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12231190699822037
+          }
+        },
+        {
+          "id": "chunk:51456:51712",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12058300700000046,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12058667000383139
+          }
+        },
+        {
+          "id": "chunk:51712:51968",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12126947299999813,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12126530199748231
+          }
+        },
+        {
+          "id": "chunk:51968:52224",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12036951700000031,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12036539200198604
+          }
+        },
+        {
+          "id": "chunk:52224:52480",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12132836600000019,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12132407299941406
+          }
+        },
+        {
+          "id": "chunk:52480:52736",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12140199399999574,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12139945499802707
+          }
+        },
+        {
+          "id": "chunk:52736:52992",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1231402550000027,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12313767399609787
+          }
+        },
+        {
+          "id": "chunk:52992:53248",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11994217899999882,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11993951200565789
+          }
+        },
+        {
+          "id": "chunk:53248:53504",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12350248999999991,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12349777600320522
+          }
+        },
+        {
+          "id": "chunk:53504:53760",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1222733319999989,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12227833400538657
+          }
+        },
+        {
+          "id": "chunk:53760:54016",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12211803299999957,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12211556499823928
+          }
+        },
+        {
+          "id": "chunk:54016:54272",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12206342800000414,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12205997899582144
+          }
+        },
+        {
+          "id": "chunk:54272:54528",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12136814000000129,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12137239500589203
+          }
+        },
+        {
+          "id": "chunk:54528:54784",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12430058300000013,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12430851200042525
+          }
+        },
+        {
+          "id": "chunk:54784:55040",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12053896300000133,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1205363729968667
+          }
+        },
+        {
+          "id": "chunk:55040:55296",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12081348899999966,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12081060899799922
+          }
+        },
+        {
+          "id": "chunk:55296:55552",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12444398600000284,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12444086699542822
+          }
+        },
+        {
+          "id": "chunk:55552:55808",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12107913799999892,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12109477999911178
+          }
+        },
+        {
+          "id": "chunk:55808:56064",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12201587599999897,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1220195470014005
+          }
+        },
+        {
+          "id": "chunk:56064:56320",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1211867689999977,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12372273600340122
+          }
+        },
+        {
+          "id": "chunk:56320:56576",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11973684600000212,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11973358599789208
+          }
+        },
+        {
+          "id": "chunk:56576:56832",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11879658600000198,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11878250599693274
+          }
+        },
+        {
+          "id": "chunk:56832:57088",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1208575269999983,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12085483600094449
+          }
+        },
+        {
+          "id": "chunk:57088:57344",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1241283700000011,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1241255480053951
+          }
+        },
+        {
+          "id": "chunk:57344:57600",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11993573300000548,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11993316799635068
+          }
+        },
+        {
+          "id": "chunk:57600:57856",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12051618299999944,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12051330500253243
+          }
+        },
+        {
+          "id": "chunk:57856:58112",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12446786599999626,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12447128699568566
+          }
+        },
+        {
+          "id": "chunk:58112:58368",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12456388100000026,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12455970099836122
+          }
+        },
+        {
+          "id": "chunk:58368:58624",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1261920099999969,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1261888560038642
+          }
+        },
+        {
+          "id": "chunk:58624:58880",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12545527600000383,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12545130999933463
+          }
+        },
+        {
+          "id": "chunk:58880:59136",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1263825309999973,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12637813800392905
+          }
+        },
+        {
+          "id": "chunk:59136:59392",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11807958800000051,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11807632300042314
+          }
+        },
+        {
+          "id": "chunk:59392:59648",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12546984899999813,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1254670670023188
+          }
+        },
+        {
+          "id": "chunk:59648:59904",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12568369200000262,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1256915129997651
+          }
+        },
+        {
+          "id": "chunk:59904:60160",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1203899619999973,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12039497500518337
+          }
+        },
+        {
+          "id": "chunk:60160:60416",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11953135499999945,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11952873999689473
+          }
+        },
+        {
+          "id": "chunk:60416:60672",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12307995199999766,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12307196400070097
+          }
+        },
+        {
+          "id": "chunk:60672:60928",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12310560599999576,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12310196700127563
+          }
+        },
+        {
+          "id": "chunk:60928:61184",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12304537199999999,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12304212799790548
+          }
+        },
+        {
+          "id": "chunk:61184:61440",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12178669700000455,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12178238799970131
+          }
+        },
+        {
+          "id": "chunk:61440:61696",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11982814599999614,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11982453899690881
+          }
+        },
+        {
+          "id": "chunk:61696:61952",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1256092690000017,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12560551200294867
+          }
+        },
+        {
+          "id": "chunk:61952:62208",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11978712400000546,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11979126599908341
+          }
+        },
+        {
+          "id": "chunk:62208:62464",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12293355500000303,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1229304320004303
+          }
+        },
+        {
+          "id": "chunk:62464:62720",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11744320700000088,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11743973800184904
+          }
+        },
+        {
+          "id": "chunk:62720:62976",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12142479399999928,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12142427599610528
+          }
+        },
+        {
+          "id": "chunk:62976:63232",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11965501599999584,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11965124699781882
+          }
+        },
+        {
+          "id": "chunk:63232:63488",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.11953709100000509,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.11953498900402337
+          }
+        },
+        {
+          "id": "chunk:63488:63744",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12154161699999833,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12153819499508245
+          }
+        },
+        {
+          "id": "chunk:63744:64000",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12557565099999835,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1255725990049541
+          }
+        },
+        {
+          "id": "chunk:64000:64256",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12503039699999619,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.1250444859979325
+          }
+        },
+        {
+          "id": "chunk:64256:64512",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12020723700000246,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12020447299437365
+          }
+        },
+        {
+          "id": "chunk:64512:64768",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12409567600000315,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12408794299699366
+          }
+        },
+        {
+          "id": "chunk:64768:65024",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12064432700000083,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12064159299916355
+          }
+        },
+        {
+          "id": "chunk:65024:65280",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.12218258700000462,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12218009900243487
+          }
+        },
+        {
+          "id": "chunk:65280:65536",
+          "includes_children": true,
+          "parent_id": "teacher_worker",
+          "reason": null,
+          "scope": "formal_pilot",
+          "status": "complete",
+          "timing": {
+            "cpu_seconds": 0.1215890619999982,
+            "overrun_seconds": 0.0,
+            "wall_seconds": 0.12158623799768975
+          }
+        }
+      ],
+      "stage": "one_original_raw_copy_read_and_origin_authenticated"
+    },
+    {
+      "clock": {
+        "cpu": 5.784686652,
+        "utc": "2026-10-10T06:23:44.621669+00:00",
+        "wall": 37889.404387938
+      },
+      "stage": "full_saved_SDE_and_all_labels_check_start"
+    },
+    {
+      "clock": {
+        "cpu": 37.819131493,
+        "utc": "2026-10-10T06:24:16.678725+00:00",
+        "wall": 37921.461440049
+      },
+      "stage": "full_original_N_SDE_all11_labels_and_full16_stats_compared"
+    },
+    {
+      "clock": {
+        "cpu": 37.82218056,
+        "utc": "2026-10-10T06:24:16.681772+00:00",
+        "wall": 37921.464490239
+      },
+      "stage": "bounded_report_write_returned"
+    },
+    {
+      "all_new_RNG_driver_teacher_counts": 0,
+      "clock": {
+        "cpu": 37.825960986,
+        "utc": "2026-10-10T06:24:16.685552+00:00",
+        "wall": 37921.468270543
+      },
+      "stage": "bounded_report_written_read_coverage_verified"
+    },
+    {
+      "clock": {
+        "cpu": 38.221221991,
+        "utc": "2026-10-10T06:24:17.082261+00:00",
+        "wall": 37921.864976739
+      },
+      "stage": "physical_and_expanded_inventory_saved"
+    },
+    {
+      "clock": {
+        "cpu": 38.55931832,
+        "utc": "2026-10-10T06:24:17.424637+00:00",
+        "wall": 37922.207351445
+      },
+      "stage": "source81_and_all_original_inputs_stable"
+    },
+    {
+      "clock": {
+        "cpu": 38.561454549,
+        "utc": "2026-10-10T06:24:17.426771+00:00",
+        "wall": 37922.20948896
+      },
+      "stage": "completed_saved_component_checkpoint"
+    }
+  ],
+  "started": {
+    "cpu": 0.027599305,
+    "utc": "2026-10-10T06:23:38.848128+00:00",
+    "wall": 37883.630842871
+  },
+  "status": "completed",
+  "whole_original_mother_job_executed": false
+}

@@ -1,0 +1,909 @@
+"""Prepared genuine maximum original node; root must fix a separate budget.
+
+D-only instrument. Importing it performs no numerical work. The whole teacher
+mother job stays at 1344 nodes. This component is original node 17, not a one-node
+grid. All financial qualification and whole-phase capacity remain unknown.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import hashlib
+import json
+import os
+import resource
+import subprocess
+import sys
+import time
+import traceback
+from datetime import UTC, datetime
+from pathlib import Path
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+RESEARCH = WT / "johnhull/research/RB-F04/dynamic_hedging"
+PREFIX = "task-5-maximum-original-node-measurement-v1"
+DESCRIPTION = D / f"{PREFIX}-initial-description.json"
+SCOPE = "maximum_original_local_high_N65536_date0_node17_component_only"
+WALL_CAP = 300.0
+RSS_CAP = 4 * 1024**3
+N = 65536
+K = 65
+SEED = 1345225788
+MOTHER = "teacher:local:N65536:high:raw"
+BANK = "teacher-driver:local:N65536"
+SAMPLES = (
+    "raw_samples",
+    "conditioned_samples",
+    "cv_samples",
+    "f_samples",
+    "f_x_samples",
+    "raw_x_samples",
+    "conditioned_x_samples",
+    "unreplaced_cv_samples",
+    "unreplaced_cv_x_samples",
+    "aux_raw_samples",
+    "aux_conditioned_samples",
+)
+PRIMITIVE_VECTORS = (
+    "b",
+    "c",
+    "mu",
+    "sigma",
+    "last_z",
+    "aux_logG_prefix",
+    "last_left_spot",
+    "last_left_variance",
+    "last_left_coefficient",
+)
+REQUIRED = {
+    "all_original_N_unknown_obligation_written",
+    "shared_bank_generation_returned",
+    "shared_bank_written_read_authenticated",
+    "original_node_generation_returned",
+    "original_raw_written_read_origin_authenticated",
+    "full_original_N_SDE_and_all11_labels_compared",
+    "bounded_report_written_read_verified",
+    "physical_inventory_and_expanded_counts_saved",
+    "current_source_and_inputs_stable",
+}
+
+
+def digest(value):
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    ).hexdigest()
+
+
+def sha(path):
+    result = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024**2), b""):
+            result.update(block)
+    return result.hexdigest()
+
+
+def clock():
+    return {
+        "wall": time.perf_counter(),
+        "cpu": time.process_time(),
+        "utc": datetime.now(UTC).isoformat(),
+    }
+
+
+def save(path, value):
+    path = Path(path)
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
+    temporary.replace(path)
+
+
+def within_d(path):
+    result = Path(path).resolve()
+    result.relative_to(D)
+    assert result != D, "the evidence directory itself is never an output"
+    return result
+
+
+def packed_identity(value, descriptors):
+    """Exact original argument provenance, using saved array byte descriptors only."""
+    if isinstance(value, dict) and set(value) == {"__array__"}:
+        data = descriptors[value["__array__"]]
+        return digest(
+            {
+                "tree": {"__array__": "a000000"},
+                "arrays": {"a000000": {key: data[key] for key in ("shape", "dtype", "sha256")}},
+            }
+        )
+    if isinstance(value, dict):
+        value = {key: packed_identity(item, descriptors) for key, item in value.items()}
+    elif isinstance(value, (list, tuple)):
+        value = [packed_identity(item, descriptors) for item in value]
+    return digest({"tree": value, "arrays": {}})
+
+
+def function_ast(path, name):
+    tree = ast.parse(Path(path).read_text())
+    row = next(
+        item for item in tree.body if isinstance(item, ast.FunctionDef) and item.name == name
+    )
+    return hashlib.sha256(ast.dump(row, include_attributes=False).encode()).hexdigest()
+
+
+def validate_budget(path):
+    budget = json.loads(within_d(path).read_text())
+    # This check precedes every numerical import, output creation or worker launch.
+    assert budget["root_preapproved"] is True, "a false candidate never permits execution"
+    assert budget["schema"] == "rb-f04-maximum-original-node-prior-v1"
+    assert budget["scope"] == SCOPE
+    assert budget["formal_finance_approved"] is False
+    assert budget["status"] == "root_fixed_maximum_original_node_component_approved"
+    assert budget["source_approval_status"] == "approved_fixed_current_canonical81"
+    assert budget["wall_limit_seconds_inclusive"] == WALL_CAP
+    assert budget["rss_limit_bytes_individual_parent_child"] == RSS_CAP
+    assert budget["rss_metric"] == "maximum_individual_parent_or_child_RSS_not_AS"
+    assert budget["probe_source_sha256"] == sha(__file__)
+    assert budget["initial_description_sha256"] == sha(DESCRIPTION)
+    assert budget["source_closed_file_count"] == 81
+    assert budget["source_identity_sha256"] == (
+        "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652"
+    )
+    assert len(budget["source_bindings"]) == 81
+    for relative, expected in budget["source_bindings"].items():
+        assert sha(WT / relative) == expected, "current source bytes changed"
+    for relative, expected in budget["input_file_bindings"].items():
+        assert sha(WT / relative) == expected, "original immutable input bytes changed"
+    for relative, expected in budget["administrative_evidence_bindings"].items():
+        assert sha(WT / relative) == expected, "source/API/approval context changed"
+    description = json.loads(DESCRIPTION.read_text())
+    assert description["original_mother_job_id"] == MOTHER
+    assert description["original_driver_job_id"] == BANK
+    assert description["original_n"] == N
+    assert description["seed"] == SEED
+    assert description["chunk_paths"] == 256 and description["blocks"] == 16
+    assert description["calendar"]["shape"] == [769]
+    assert description["calendar"]["sha256"] == (
+        "e0b20dcf9c3601f20823756458df7186479bbfe93cbe965e7a4fb17ac3cbcd71"
+    )
+    assert description["node_index"] == 17
+    assert description["node"] == {"date_index": 0, "spot": 100.0, "state": 1.0}
+    assert description["threshold_count"] == K
+    assert description["primitive_vectors"] == list(PRIMITIVE_VECTORS)
+    assert description["sample_fields"] == list(SAMPLES)
+    assert description["field_shape"] == [257, 321]
+    assert description["mother_node_count"] == 1344
+    assert len(description["original_mother_planned_nodes"]) == 1344
+    assert description["original_mother_planned_nodes"][17] == description["node"]
+    assert description["graph_counts"] == {"jobs": 3138, "cases": 121, "attempts": 51}
+    assert budget["measurement_output_root"] == description["measurement_output_root"]
+    for relative, names in description["api_function_AST_bindings"].items():
+        for name, expected in names.items():
+            assert function_ast(WT / relative, name) == expected, "actual private API changed"
+    return budget, description
+
+
+def rss(pid):
+    try:
+        for row in Path(f"/proc/{pid}/status").read_text().splitlines():
+            if row.startswith("VmRSS:"):
+                return int(row.split()[1]) * 1024
+    except (FileNotFoundError, ProcessLookupError):
+        return None
+    return None
+
+
+def runtime(budget, description):
+    sys.path[:0] = [
+        str(RESEARCH),
+        str(WT / "johnhull/hullkit/src"),
+        str(WT / "deep_hedge_price/src"),
+    ]
+    import check_pilot as checker
+    import numpy as np
+    import run_pilot as pilot
+    import run_reference as runner
+    from hullkit._heston_local_surface import HestonParameters
+
+    identity = runner.execution_source_identity(WT)
+    assert identity["dynamic_imports"] == []
+    assert identity["files"] == budget["source_bindings"]
+    assert runner._digest(identity) == budget["source_identity_sha256"]
+    graph, graph_receipt = pilot.read_pilot_artifact(WT / description["graph_artifact"])
+    field, field_receipt = pilot.read_pilot_artifact(WT / description["field_artifact"])
+    prepared = json.loads((WT / description["prepared_input_json"]).read_text())
+    parameters = HestonParameters(**prepared["parameters"])
+    assert len(graph["jobs"]) == 3138
+    assert len(graph["case_plan"]) == 121 and len(graph["attempt_plan"]) == 51
+    assert field["status"] == "executed" and field["raw_values"].shape == (257, 321)
+    assert (field["order"], field["frequency_scale"], field["density_floor"]) == (
+        1024,
+        512,
+        1e-10,
+    )
+    assert parameters == field["field"]["parameters"]
+    jobs = {row["id"]: row for row in graph["jobs"]}
+    for job_id, key in [(MOTHER, "mother_arguments_sha256"), (BANK, "driver_arguments_sha256")]:
+        assert pilot.input_identity(jobs[job_id]["arguments"]) == description[key]
+        assert jobs[job_id]["original_n"] == N
+    assert jobs[MOTHER]["financial_child_count"] == 1344
+    axes = pilot.teacher_axes("high", "local")
+    assert runner.payload_digest(axes) == description["axes_payload_sha256"]
+    assert axes["threshold"][0].shape == (K,)
+    return (
+        np,
+        pilot,
+        checker,
+        runner,
+        parameters,
+        field,
+        jobs,
+        axes,
+        {
+            "graph": graph_receipt,
+            "field": field_receipt,
+        },
+    )
+
+
+def count_array_bytes(value, np):
+    """Returned logical arrays include repeated public payload fields; not physical bytes."""
+    if isinstance(value, np.ndarray):
+        return int(value.nbytes)
+    if isinstance(value, dict):
+        return sum(count_array_bytes(item, np) for item in value.values())
+    if isinstance(value, (list, tuple)):
+        return sum(count_array_bytes(item, np) for item in value)
+    return 0
+
+
+def inventory(directory):
+    """Physical SHA/NPY descriptor inventory; no additional financial reconstruction."""
+    rows, expanded = [], 0
+    for path in sorted(Path(directory).rglob("*")):
+        if not path.is_file():
+            continue
+        rows.append(
+            {
+                "path": str(path.relative_to(directory)),
+                "bytes": path.stat().st_size,
+                "sha256": sha(path),
+            }
+        )
+        if path.name == "metadata.json":
+            data = json.loads(path.read_text()).get("metadata", {})
+            for descriptor in data.get("arrays", {}).values():
+                dtype = descriptor["dtype"]
+                # NumPy dtype strings are locked simple primitive kinds, no object structs.
+                width = int(dtype[2:]) * (4 if dtype[1] == "U" else 1)
+                count = 1
+                for size in descriptor["shape"]:
+                    count *= size
+                expanded += count * width
+    return {
+        "files": rows,
+        "physical_bytes": sum(row["bytes"] for row in rows),
+        "saved_array_payload_expanded_bytes": expanded,
+        "headers_and_JSON_excluded_from_expanded_bytes": True,
+    }
+
+
+def bounded_coverage(report):
+    assert report["original_n"] == N
+    assert report["full_saved_driver_sde_replayed"] is True
+    assert report["financial_qualification"] == "unknown"
+    assert report["report_mode"] == "bounded" and "labels" not in report
+    labels = report["labels_reference"]
+    assert labels["all_original_N_label_values_compared"] is True
+    for key in SAMPLES:
+        assert labels["array_fields"][key] == {"shape": [N, K], "dtype": "<f8"}
+    assert report["raw_reference"]["node_index"] == 17
+    assert report["raw_reference"]["node"] == {"date_index": 0, "spot": 100.0, "state": 1.0}
+
+
+def child(output, budget_path, deadline):
+    started = clock()
+    output = within_d(output)
+    progress = {
+        "scope": SCOPE,
+        "started": started,
+        "status": "started",
+        "original_n": N,
+        "mother_job_id": MOTHER,
+        "mother_node_count": 1344,
+        "component_node_index": 17,
+        "original_driver_job_id": BANK,
+        "financial_qualification": "unknown",
+        "formal_pilot_or_main": False,
+        "stages": [],
+        "new_RNG_generator_count": 0,
+        "raw_status": None,
+        "native_cap_evidence": None,
+        "whole_original_mother_job_executed": False,
+    }
+
+    def checkpoint(stage, **facts):
+        progress["stages"].append({"stage": stage, "clock": clock(), **facts})
+        progress["process_peak_rss_bytes"] = (
+            resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        )
+        save(output / "progress.json", progress)
+
+    def remaining():
+        value = deadline - time.perf_counter()
+        if value <= 0:
+            progress["status"] = "unexecuted_at_actual_enclosing_cap"
+            checkpoint("administrative_deadline_before_next_worker")
+            raise TimeoutError("original work remains unknown at enclosing deadline")
+        return value
+
+    def stable_source_inputs():
+        for relative, expected in budget["source_bindings"].items():
+            assert sha(WT / relative) == expected
+        for relative, expected in budget["input_file_bindings"].items():
+            assert sha(WT / relative) == expected
+        checkpoint("current_source_and_inputs_stable")
+
+    try:
+        budget, description = validate_budget(budget_path)
+        checkpoint("prior_source_inputs_and_actual_API_verified")
+        np, pilot, checker, runner, parameters, field, jobs, axes, input_receipts = runtime(
+            budget, description
+        )
+        checkpoint(
+            "runtime_closure_current_field_and_original_graph_verified",
+            input_receipts=input_receipts,
+        )
+        n = N
+        initial = {
+            "kind": "original_single_node_component_unknown_obligation",
+            "mother_job_id": MOTHER,
+            "mother_node_count": 1344,
+            "component_node_index": 17,
+            "original_n": n,
+            "seed": SEED,
+            "node": description["node"],
+            "thresholds": axes["threshold"][0].copy(),
+            "blocks": 16,
+            "path_ids": np.arange(n),
+            "cluster_ids": np.arange(n) // (n // 16),
+            "path_status": np.full(n, "unprocessed", dtype="<U16"),
+            "path_mask": np.zeros(n, dtype=bool),
+            "full_step_status": np.zeros((n, 768), dtype=np.uint8),
+            "full_step_status_dictionary": ["unprocessed"],
+            "unknown_primitive_vectors": {
+                key: np.full(n, np.nan) for key in description["primitive_vectors"]
+            },
+            "sample_obligations": {
+                key: {"shape": [n, K], "dtype": "<f8", "status": "unprocessed"} for key in SAMPLES
+            },
+            "initial_f": np.full(K, np.nan),
+            "initial_f_x": np.full(K, np.nan),
+            "financial_qualification": "unknown",
+            "source_identity_sha256": budget["source_identity_sha256"],
+        }
+        pilot.write_pilot_artifact(output / "initial-original-obligation", initial)
+        checkpoint(
+            "all_original_N_unknown_obligation_written",
+            obligation_physical=inventory(output / "initial-original-obligation"),
+        )
+        # The bank worker is the sole Generator creation. Node and check cannot redraw.
+        original_rng = np.random.default_rng
+        rng_calls = []
+
+        def counted_rng(seed=None):
+            assert not rng_calls and seed == SEED, "one original shared-bank RNG only"
+            rng_calls.append(seed)
+            progress["new_RNG_generator_count"] = len(rng_calls)
+            return original_rng(seed)
+
+        np.random.default_rng = counted_rng
+        bank_job = jobs[BANK]
+        bank_arguments = dict(bank_job["arguments"])
+        bank_arguments.update(
+            work_directory=str(output / "bank-work"), wall_cap_seconds=remaining()
+        )
+        checkpoint(
+            "shared_bank_generation_start",
+            original_planned_arguments_sha256=description["driver_arguments_sha256"],
+            actual_arguments_sha256=pilot.input_identity(bank_arguments),
+            actual_size=pilot._job_identity(bank_job, bank_arguments),
+        )
+        driver = pilot._dispatch("teacher_driver", bank_arguments)
+        progress.update(
+            bank_raw_status=driver["status"],
+            bank_processed_n=driver["processed_n"],
+            bank_unexecuted_n=driver["unexecuted_n"],
+            native_cap_evidence=driver.get("cap_evidence"),
+            native_cap_owner="bank",
+        )
+        checkpoint(
+            "shared_bank_generation_returned",
+            native_expense=driver["expense"],
+            processed_n=driver["processed_n"],
+        )
+        np.random.default_rng = lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("node and saved checker must consume the actual shared bank")
+        )
+        checkpoint("shared_bank_write_start")
+        pilot.write_pilot_artifact(output / "actual-driver", driver)
+        checkpoint("shared_bank_write_returned")
+        driver, driver_receipt = pilot.read_pilot_artifact(output / "actual-driver")
+        processed = sum(
+            chunk["path_stop"] - chunk["path_start"]
+            for chunk in pilot.read_teacher_driver_chunks(driver)
+        )
+        assert driver["original_n"] == n and driver["seed"] == SEED
+        assert processed == driver["processed_n"] and driver["teacher_reference"] is None
+        prefix = description["original_N1024_normal_prefix"]
+        for row, original in zip(
+            driver["chunks"][:4], prefix[: len(driver["chunks"][:4])], strict=True
+        ):
+            assert all(
+                row[key] == original[key] for key in ("path_start", "path_stop", "normal_sha256")
+            ), "original prefix stream changed"
+        assert len(rng_calls) == 1
+        progress["bank_receipt"] = driver_receipt
+        checkpoint(
+            "shared_bank_written_read_authenticated",
+            processed_n=processed,
+            driver_global_id=driver["global_driver_id"],
+            bank_physical=inventory(output / "bank-work"),
+            bank_metadata_physical=inventory(output / "actual-driver"),
+        )
+        if driver["status"] != "executed":
+            progress["status"] = "failed_at_declared_cap"
+            checkpoint("bank_native_cap_closed", all_available_bank_paths_retained=True)
+            stable_source_inputs()
+            return 3
+        resolved = pilot._resolve(
+            jobs[MOTHER]["arguments"],
+            {"parameters": parameters},
+            {
+                "field-current": {"raw": field, "status": "executed"},
+                BANK: {"raw": driver, "status": "executed"},
+            },
+        )
+        assert resolved["driver"] is driver and resolved["original_n"] == n
+        assert resolved["grid"] == "high" and resolved["model"] == "local"
+        assert resolved["evaluation_domains"] == [None] * 12
+        node_arguments = {
+            "parameters": resolved["parameters"],
+            "surface": resolved["surface"],
+            "model": resolved["model"],
+            "seed": resolved["seed"],
+            "original_n": resolved["original_n"],
+            "chunk_paths": resolved["chunk_paths"],
+            "calendar_times": driver["calendar_times"],
+            "start_index": 0,
+            "spot": 100.0,
+            "state": 1.0,
+            "thresholds": axes["threshold"][0],
+            "driver": driver,
+            "wall_cap_seconds": remaining(),
+        }
+        checkpoint(
+            "original_node_generation_start",
+            unchanged_mother_arguments_sha256=description["mother_arguments_sha256"],
+            resolved_mother_arguments_sha256=pilot.input_identity(resolved),
+            actual_component_arguments_sha256=pilot.input_identity(node_arguments),
+            original_node_path_steps=n * 768,
+            mother_node_count=1344,
+            new_grid_or_synthetic_financial_substitute=False,
+        )
+        raw = pilot.run_teacher_job(**node_arguments)
+        progress.update(
+            raw_status=raw.get("status"),
+            raw_returned=True,
+            native_cap_evidence=raw.get("cap_evidence"),
+            native_cap_owner="node",
+            all_original_N_returned=raw["original_n"] == n,
+        )
+        if raw.get("status") == "unclosed_source_or_solver_defect":
+            progress["status"] = "unclosed_source_or_solver_defect"
+        checkpoint(
+            "original_node_generation_returned",
+            native_expenses=raw["expenses"],
+            logical_returned_array_payload_bytes=count_array_bytes(raw, np),
+        )
+        checkpoint("original_raw_write_start")
+        pilot.write_pilot_artifact(output / "actual-original-node", raw)
+        checkpoint("original_raw_write_returned")
+        restored, raw_receipt = pilot.read_pilot_artifact(output / "actual-original-node")
+        runner._same(restored, raw, "original full native node immutable write/read")
+        node = dict(
+            description["node"],
+            path=str(output / "actual-original-node"),
+            raw_binding=pilot._teacher_node_binding(output / "actual-original-node", restored),
+        )
+        pilot._check_teacher_node_binding(node, output / "actual-original-node", restored)
+        assert restored["original_n"] == n and restored["seed"] == SEED
+        progress["raw_receipt"] = raw_receipt
+        progress["raw_binding"] = node["raw_binding"]
+        checkpoint(
+            "original_raw_written_read_origin_authenticated",
+            physical=inventory(output / "actual-original-node"),
+            logical_returned_array_payload_bytes=count_array_bytes(restored, np),
+        )
+        if restored.get("status") == "unclosed_source_or_solver_defect":
+            checkpoint("native_source_or_solver_defect_retained", reason=restored["reason"])
+            stable_source_inputs()
+            return 1
+        if restored.get("status") == "failed_at_declared_cap":
+            cap_check = checker.check_cap_partial(restored, expected_n=n)
+            pilot.write_pilot_artifact(output / "actual-partial-cap-check", cap_check)
+            progress["status"] = "failed_at_declared_cap"
+            checkpoint(
+                "node_native_cap_closed", all_original_N_prefix_and_unexecuted_counts_retained=True
+            )
+            return 3
+        assert restored.get("status") is None, "unexpected native completed raw status"
+        assert restored["labels"]["blocks"] == 16
+        assert all(restored["labels"][key].shape == (n, K) for key in SAMPLES)
+        checkpoint("full_saved_SDE_and_labels_check_start")
+        checked = checker.check_teacher_record(restored, parameters, resolved["surface"])
+        assert checked["full_saved_driver_sde_replayed"] is True
+        bounded = checker._bounded_teacher_check(checked, node, 17)
+        bounded_coverage(bounded)
+        # Complete original and restored raw/11 labels stay live through full checking.
+        # Only the already-compared check report loses its redundant NxK labels.
+        del checked
+        progress["full_saved_driver_sde_replayed"] = True
+        progress["all11_full_original_N_labels_compared"] = True
+        checkpoint("full_original_N_SDE_and_all11_labels_compared")
+        pilot.write_pilot_artifact(output / "actual-bounded-saved-check", bounded)
+        checkpoint("bounded_report_write_returned")
+        report, check_receipt = pilot.read_pilot_artifact(output / "actual-bounded-saved-check")
+        runner._same(report, bounded, "bounded report immutable write/read")
+        bounded_coverage(report)
+        progress["check_receipt"] = check_receipt
+        checkpoint(
+            "bounded_report_written_read_verified",
+            saved_SDE_replay_new_RNG_count=0,
+            numerical_qualification="unknown",
+        )
+        component_inventory = {
+            key: inventory(output / directory)
+            for key, directory in (
+                ("bank_work", "bank-work"),
+                ("bank_metadata", "actual-driver"),
+                ("original_raw", "actual-original-node"),
+                ("bounded_report", "actual-bounded-saved-check"),
+                ("initial_obligation", "initial-original-obligation"),
+            )
+        }
+        save(output / "physical-and-expanded-inventory.json", component_inventory)
+        checkpoint("physical_inventory_and_expanded_counts_saved")
+        stable_source_inputs()
+        progress["status"] = "completed"
+        progress["original_bank_processed_n"] = n
+        progress["all_original_N_returned"] = True
+        checkpoint("completed_component_checkpoint")
+        return 0
+    except Exception as error:
+        # Preserve any native fact already checkpointed; an exception never becomes a cap.
+        if progress["status"] != "unexecuted_at_actual_enclosing_cap":
+            progress["status"] = "unclosed_source_or_solver_defect"
+        progress["error"] = f"{type(error).__name__}: {error}"
+        checkpoint("exception_retained")
+        traceback.print_exc()
+        return 1
+
+
+def administrative_decision(exit_code, actual_cap, progress, observer_errors=()):
+    """Caps and source failures coexist without inferring their temporal ordering."""
+    if observer_errors:
+        return (
+            "unclosed_observer_defect_with_actual_cap" if actual_cap else "unclosed_observer_defect"
+        )
+    if isinstance(progress, dict) and progress.get("status") == "unclosed_source_or_solver_defect":
+        return (
+            "unclosed_source_or_solver_defect_with_actual_cap"
+            if actual_cap
+            else "unclosed_source_or_solver_defect"
+        )
+    if not isinstance(progress, dict):
+        return "failed_at_actual_cap" if actual_cap else "unclosed_missing_child_evidence"
+    stages = {row.get("stage") for row in progress.get("stages", []) if isinstance(row, dict)}
+    native = progress.get("native_cap_evidence")
+    cap_claimed = progress.get("status") == "failed_at_declared_cap" or native is not None
+    native_observed = (
+        isinstance(native, dict)
+        and native.get("metric") == "wall_seconds"
+        and isinstance(native.get("limit"), (int, float))
+        and native["limit"] > 0
+        and isinstance(native.get("consumed"), (int, float))
+        and native["consumed"] >= native["limit"]
+    )
+    cap_required = {
+        "current_source_and_inputs_stable",
+        "all_original_N_unknown_obligation_written",
+        "shared_bank_generation_returned",
+        "shared_bank_written_read_authenticated",
+    }
+    if progress.get("native_cap_owner") == "bank":
+        cap_required.add("bank_native_cap_closed")
+        cap_complete = progress.get("bank_receipt") is not None
+    else:
+        cap_required |= {
+            "original_node_generation_returned",
+            "original_raw_written_read_origin_authenticated",
+            "node_native_cap_closed",
+        }
+        cap_complete = progress.get("raw_receipt") is not None
+    native_closed = (
+        native_observed
+        and exit_code == 3
+        and progress.get("status") == "failed_at_declared_cap"
+        and progress.get("original_n") == N
+        and cap_complete
+        and cap_required <= stages
+    )
+    if actual_cap:
+        if native_closed:
+            return "failed_at_actual_and_declared_cap"
+        if cap_claimed:
+            return "failed_at_actual_cap_with_incomplete_declared_cap_evidence"
+        return "failed_at_actual_cap"
+    if cap_claimed:
+        return (
+            "failed_at_declared_cap"
+            if native_closed
+            else "unclosed_declared_cap_evidence_incomplete"
+        )
+    complete = (
+        progress.get("original_n") == N
+        and progress.get("mother_node_count") == 1344
+        and progress.get("component_node_index") == 17
+        and progress.get("original_bank_processed_n") == N
+        and progress.get("all_original_N_returned") is True
+        and progress.get("full_saved_driver_sde_replayed") is True
+        and progress.get("all11_full_original_N_labels_compared") is True
+        and progress.get("new_RNG_generator_count") == 1
+        and progress.get("raw_status") is None
+        and progress.get("raw_returned") is True
+        and progress.get("raw_receipt") is not None
+        and progress.get("check_receipt") is not None
+        and progress.get("whole_original_mother_job_executed") is False
+        and REQUIRED <= stages
+    )
+    if exit_code == 0 and progress.get("status") == "completed" and complete:
+        return "completed_component"
+    return "unclosed_child_evidence_incomplete"
+
+
+def closing_observation(
+    started_wall,
+    ended_wall,
+    deadline,
+    prior_cap,
+    child_sample_peak,
+    child_kernel_peak,
+    parent_sample_peak,
+    parent_kernel_peak,
+):
+    """Pure postexit observation; missing RSS remains missing, never zero."""
+    observations = (
+        [] if prior_cap is None else [dict(prior_cap, observation_phase="live_parent_monitor")]
+    )
+    metrics = {row["metric"] for row in observations}
+    if ended_wall >= deadline and "enclosing_component_wall" not in metrics:
+        observations.append(
+            {
+                "metric": "enclosing_component_wall",
+                "limit_seconds": WALL_CAP,
+                "observed_seconds": ended_wall - started_wall,
+                "observation_phase": "after_progress_index_and_RSS_read",
+            }
+        )
+    for metric, sampled, kernel in (
+        ("individual_child_RSS", child_sample_peak, child_kernel_peak),
+        ("individual_parent_RSS", parent_sample_peak, parent_kernel_peak),
+    ):
+        available = [value for value in (sampled, kernel) if value is not None]
+        if available and max(available) > RSS_CAP and metric not in metrics:
+            observations.append(
+                {
+                    "metric": metric,
+                    "limit_bytes": RSS_CAP,
+                    "observed_bytes": max(available),
+                    "sampled_peak_bytes": sampled,
+                    "kernel_peak_bytes": kernel,
+                    "observation_phase": "after_progress_index_and_RSS_read",
+                }
+            )
+    if not observations:
+        return None
+    return {
+        "metric": "actual_component_limit_observations",
+        "observations": observations,
+        "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+    }
+
+
+def files(directory):
+    return [
+        {"path": str(path.relative_to(directory)), "bytes": path.stat().st_size}
+        for path in sorted(directory.rglob("*"))
+        if path.is_file()
+    ]
+
+
+def parent(output, budget_path):
+    # Inclusive launch clock includes prior validation, all bookkeeping and child work.
+    started = clock()
+    deadline = started["wall"] + WALL_CAP
+    budget, description = validate_budget(budget_path)
+    output = within_d(output)
+    assert str(output) == description["measurement_output_root"]
+    output.mkdir(parents=False, exist_ok=False)
+    save(output / "prior-root-budget.json", budget)
+    save(output / "initial-description.json", description)
+    cpu0 = resource.getrusage(resource.RUSAGE_CHILDREN)
+    parent_kernel_before = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+    peak, parent_peak, unknown_rss, parent_unknown_rss, cap = None, None, 0, 0, None
+    command = [
+        sys.executable,
+        str(Path(__file__).resolve()),
+        "--child",
+        "--budget",
+        str(budget_path),
+        "--output",
+        str(output),
+        "--deadline-wall",
+        str(deadline),
+    ]
+    with (output / "child.log").open("wb") as log:
+        process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT)
+        while process.poll() is None:
+            child_rss, parent_rss = rss(process.pid), rss(os.getpid())
+            if child_rss is None:
+                unknown_rss += 1
+            else:
+                peak = child_rss if peak is None else max(peak, child_rss)
+            if parent_rss is None:
+                parent_unknown_rss += 1
+            else:
+                parent_peak = parent_rss if parent_peak is None else max(parent_peak, parent_rss)
+            if time.perf_counter() >= deadline:
+                cap = {
+                    "metric": "enclosing_component_wall",
+                    "limit_seconds": WALL_CAP,
+                    "observed_seconds": time.perf_counter() - started["wall"],
+                }
+            elif child_rss is not None and child_rss > RSS_CAP:
+                cap = {
+                    "metric": "individual_child_RSS",
+                    "limit_bytes": RSS_CAP,
+                    "observed_bytes": child_rss,
+                }
+            elif parent_rss is not None and parent_rss > RSS_CAP:
+                cap = {
+                    "metric": "individual_parent_RSS",
+                    "limit_bytes": RSS_CAP,
+                    "observed_bytes": parent_rss,
+                }
+            if cap:
+                process.kill()
+                break
+            time.sleep(0.05)
+        exit_code = process.wait()
+    observer_errors = []
+    progress_path = output / "progress.json"
+    try:
+        progress = json.loads(progress_path.read_text()) if progress_path.exists() else None
+    except Exception as error:
+        progress = None
+        observer_errors.append(f"progress_read: {type(error).__name__}: {error}")
+    try:
+        output_index = files(output)
+    except Exception as error:
+        output_index = None
+        observer_errors.append(f"output_index: {type(error).__name__}: {error}")
+    parent_rss = rss(os.getpid())
+    if parent_rss is None:
+        parent_unknown_rss += 1
+    else:
+        parent_peak = parent_rss if parent_peak is None else max(parent_peak, parent_rss)
+    child_kernel_peak = (
+        progress.get("process_peak_rss_bytes") if isinstance(progress, dict) else None
+    )
+    if child_kernel_peak is not None and (
+        not isinstance(child_kernel_peak, (int, float)) or child_kernel_peak < 0
+    ):
+        observer_errors.append("saved child peak RSS is not a nonnegative number")
+        child_kernel_peak = None
+    parent_kernel_peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+    cpu1 = resource.getrusage(resource.RUSAGE_CHILDREN)
+    ended = clock()
+    observed_cap = closing_observation(
+        started["wall"],
+        ended["wall"],
+        deadline,
+        cap,
+        peak,
+        child_kernel_peak,
+        parent_peak,
+        parent_kernel_peak,
+    )
+    available = [
+        value
+        for value in (peak, child_kernel_peak, parent_peak, parent_kernel_peak)
+        if value is not None
+    ]
+    receipt = {
+        "scope": SCOPE,
+        "original_n": N,
+        "mother_job_id": MOTHER,
+        "mother_node_count": 1344,
+        "component_node_index": 17,
+        "started": started,
+        "stopped": ended,
+        "wall_seconds": ended["wall"] - started["wall"],
+        "wall_limit_seconds_inclusive": WALL_CAP,
+        "parent_cpu_seconds": ended["cpu"] - started["cpu"],
+        "child_cpu_seconds": (cpu1.ru_utime + cpu1.ru_stime) - (cpu0.ru_utime + cpu0.ru_stime),
+        "exit_code": exit_code,
+        "observed_child_peak_RSS_bytes": peak,
+        "saved_child_kernel_peak_RSS_bytes": child_kernel_peak,
+        "observed_parent_peak_RSS_bytes": parent_peak,
+        "parent_kernel_peak_RSS_bytes": parent_kernel_peak,
+        "parent_kernel_peak_before_component_RSS_bytes": parent_kernel_before,
+        "parent_kernel_peak_scope": "process lifetime; baseline retained, not attributed",
+        "RSS_unknown_sample_count": unknown_rss,
+        "parent_RSS_unknown_sample_count": parent_unknown_rss,
+        "RSS_metric": "sampled_current_RSS_and_saved_kernel_highwater_not_RLIMIT_AS",
+        "actual_cap_evidence": observed_cap,
+        "live_monitor_cap_evidence": cap,
+        "observer_errors": observer_errors,
+        "wall_overrun_seconds": max(0.0, ended["wall"] - deadline),
+        "RSS_overrun_bytes": None if not available else max(0, max(available) - RSS_CAP),
+        "status": administrative_decision(exit_code, observed_cap, progress, observer_errors),
+        "native_declared_cap_evidence": None
+        if not isinstance(progress, dict)
+        else progress.get("native_cap_evidence"),
+        "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+        "child_progress": progress,
+        "financial_qualification": "unknown",
+        "all_available_raw_and_original_N_unknown_obligations_retained": True,
+        "kill_partial_financial_arrays_unavailable_unless_saved": True,
+        "output_file_index_before_final_receipt": output_index,
+        "component_phases_are_breakdown_not_additional_inclusive_expense": True,
+        "driver_is_generated_once_cost_already_inclusive_not_added_again": True,
+        "measured_endpoint": "after progress/index/RSS read; before final receipt construction/write",
+        "unmeasured_tail": "final receipt construction/write/stdout requires root enclosing receipt",
+        "whole_original_mother_job_executed": False,
+        "formal_pilot_main_phase_or_financial_acceptance": False,
+    }
+    save(output / "parent-cost-and-decision.json", receipt)
+    print(
+        json.dumps(
+            {
+                "scope": SCOPE,
+                "status": receipt["status"],
+                "wall_seconds": receipt["wall_seconds"],
+                "finance": "unknown",
+                "formal_pilot_or_main": False,
+            },
+            sort_keys=True,
+        )
+    )
+    return 0 if receipt["status"] == "completed_component" else 1
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--budget", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--child", action="store_true")
+    parser.add_argument("--deadline-wall", type=float)
+    args = parser.parse_args()
+    if args.child:
+        assert args.deadline_wall is not None
+        return child(args.output, args.budget, args.deadline_wall)
+    assert args.deadline_wall is None
+    return parent(args.output, args.budget)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,36 @@
+{
+  "actual_cap_evidence": null,
+  "component_node_index": 17,
+  "enclosing_wall_seconds": 39.413927307999984,
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "full_saved_SDE_11labels_16blocks_cov_checked": true,
+  "inner_wall_seconds": 39.37945243300055,
+  "inventory_scope": {
+    "driver_metadata": {
+      "physical_bytes": 1120687,
+      "saved_array_payload_expanded_bytes": 1054728
+    },
+    "new_bounded_report": {
+      "physical_bytes": 19035,
+      "saved_array_payload_expanded_bytes": 10920
+    },
+    "original_bank": {
+      "physical_bytes": 807061160,
+      "saved_array_payload_expanded_bytes": 806354944
+    },
+    "original_raw": {
+      "physical_bytes": 6280626,
+      "saved_array_payload_expanded_bytes": 94658320
+    }
+  },
+  "new_rng_and_bank_teacher_generation": 0,
+  "old4GiB_failed_generation_and_checker_expenses_preserved_not_added": true,
+  "original_mother_node_count": 1344,
+  "original_n": 65536,
+  "peak_kernel_child_RSS_bytes": 3721367552,
+  "peak_sampled_child_RSS_bytes": 3721838592,
+  "source81_bytes_stable_after": true,
+  "status": "root_verified_saved_full_N65536_original_node_component_resource_only",
+  "whole_original_mother_job_executed": false
+}

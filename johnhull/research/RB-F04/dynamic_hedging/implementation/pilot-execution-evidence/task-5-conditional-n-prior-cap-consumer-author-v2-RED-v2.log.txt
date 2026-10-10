@@ -1,0 +1,84 @@
+.FFFFFF.FF............                                                   [100%]
+=================================== FAILURES ===================================
+______ test_conditional_cap_selects_actual_original_n_branch[False-4096] _______
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3947: in test_conditional_cap_selects_actual_original_n_branch
+    plan, alias, decision = check_pilot._prior_execution_projection(row, base, spec, jobs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4031: in _prior_execution_projection
+    _require(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:33: in _require
+    raise ValueError(message)
+E   ValueError: prior cap option changes original case/attempt plan
+______ test_conditional_cap_selects_actual_original_n_branch[False-16384] ______
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3947: in test_conditional_cap_selects_actual_original_n_branch
+    plan, alias, decision = check_pilot._prior_execution_projection(row, base, spec, jobs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4031: in _prior_execution_projection
+    _require(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:33: in _require
+    raise ValueError(message)
+E   ValueError: prior cap option changes original case/attempt plan
+______ test_conditional_cap_selects_actual_original_n_branch[False-65536] ______
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3947: in test_conditional_cap_selects_actual_original_n_branch
+    plan, alias, decision = check_pilot._prior_execution_projection(row, base, spec, jobs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4031: in _prior_execution_projection
+    _require(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:33: in _require
+    raise ValueError(message)
+E   ValueError: prior cap option changes original case/attempt plan
+_______ test_conditional_cap_selects_actual_original_n_branch[True-1024] _______
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3947: in test_conditional_cap_selects_actual_original_n_branch
+    plan, alias, decision = check_pilot._prior_execution_projection(row, base, spec, jobs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4031: in _prior_execution_projection
+    _require(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:33: in _require
+    raise ValueError(message)
+E   ValueError: prior cap option changes original case/attempt plan
+_______ test_conditional_cap_selects_actual_original_n_branch[True-4096] _______
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3947: in test_conditional_cap_selects_actual_original_n_branch
+    plan, alias, decision = check_pilot._prior_execution_projection(row, base, spec, jobs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4031: in _prior_execution_projection
+    _require(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:33: in _require
+    raise ValueError(message)
+E   ValueError: prior cap option changes original case/attempt plan
+______ test_conditional_cap_selects_actual_original_n_branch[True-16384] _______
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3947: in test_conditional_cap_selects_actual_original_n_branch
+    plan, alias, decision = check_pilot._prior_execution_projection(row, base, spec, jobs)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4031: in _prior_execution_projection
+    _require(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:33: in _require
+    raise ValueError(message)
+E   ValueError: prior cap option changes original case/attempt plan
+_ test_plural_actual_caps_keep_parent_priority_all_bindings_and_inclusive_costs[parent-A] _
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3968: in test_plural_actual_caps_keep_parent_priority_all_bindings_and_inclusive_costs
+    plan, alias, _ = check_pilot._prior_execution_projection(row, base, spec, jobs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4031: in _prior_execution_projection
+    _require(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:33: in _require
+    raise ValueError(message)
+E   ValueError: prior cap option changes original case/attempt plan
+_ test_plural_actual_caps_keep_parent_priority_all_bindings_and_inclusive_costs[parent-B] _
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3968: in test_plural_actual_caps_keep_parent_priority_all_bindings_and_inclusive_costs
+    plan, alias, _ = check_pilot._prior_execution_projection(row, base, spec, jobs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4031: in _prior_execution_projection
+    _require(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:33: in _require
+    raise ValueError(message)
+E   ValueError: prior cap option changes original case/attempt plan
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_cap_selects_actual_original_n_branch[False-4096]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_cap_selects_actual_original_n_branch[False-16384]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_cap_selects_actual_original_n_branch[False-65536]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_cap_selects_actual_original_n_branch[True-1024]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_cap_selects_actual_original_n_branch[True-4096]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_cap_selects_actual_original_n_branch[True-16384]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_plural_actual_caps_keep_parent_priority_all_bindings_and_inclusive_costs[parent-A]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_plural_actual_caps_keep_parent_priority_all_bindings_and_inclusive_costs[parent-B]
+8 failed, 14 passed, 191 deselected in 1.95s

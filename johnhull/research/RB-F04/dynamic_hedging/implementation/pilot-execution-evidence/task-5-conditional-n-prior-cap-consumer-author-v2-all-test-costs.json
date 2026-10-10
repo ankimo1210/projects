@@ -1,0 +1,154 @@
+{
+  "scope": "recorded RED/format/Ruff/GREEN/affected-test child processes only; prior original source snapshots and own preparation/import/closure/report/manifest write costs are unknown outside these scopes",
+  "observed_wall_seconds": 8.34236644799239,
+  "observed_child_CPU_seconds": 16.805838,
+  "process_receipts": [
+    {
+      "receipt": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-commands-cost.json",
+      "name": "format",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.020148571995378006,
+      "child_CPU_seconds": 0.030758999999999998
+    },
+    {
+      "receipt": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-commands-cost.json",
+      "name": "ruff",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "exit_code": 1,
+      "wall_seconds": 0.018228002998512238,
+      "child_CPU_seconds": 0.026879999999999998
+    },
+    {
+      "receipt": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v2-commands-cost.json",
+      "name": "format-v2",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "exit_code": 1,
+      "wall_seconds": 0.016899615002330393,
+      "child_CPU_seconds": 0.018838
+    },
+    {
+      "receipt": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v3-commands-cost.json",
+      "name": "format-v3",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.02066416999878129,
+      "child_CPU_seconds": 0.022483999999999997
+    },
+    {
+      "receipt": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v3-commands-cost.json",
+      "name": "ruff-v3",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.014357660998939537,
+      "child_CPU_seconds": 0.016315000000000003
+    },
+    {
+      "receipt": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v3-commands-cost.json",
+      "name": "GREEN-v3",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+        "-q",
+        "--tb=short",
+        "-k",
+        "conditional_cap or plural_actual_caps or uncapped_fixed_n_plan"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 2.2420755160055705,
+      "child_CPU_seconds": 4.915671000000001
+    },
+    {
+      "receipt": "task-5-conditional-n-prior-cap-consumer-author-v2-RED-cost.json",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+        "-q",
+        "--tb=short",
+        "-k",
+        "conditional_cap or plural_actual_caps or uncapped_fixed_n_plan"
+      ],
+      "exit_code": 2,
+      "wall_seconds": 0.6601567379984772,
+      "child_CPU_seconds": 1.969593,
+      "scope": "metadata-only source tests; original checker expected refusal",
+      "financial_pilot_run": false
+    },
+    {
+      "receipt": "task-5-conditional-n-prior-cap-consumer-author-v2-RED-v2-cost.json",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+        "-q",
+        "--tb=short",
+        "-k",
+        "conditional_cap or plural_actual_caps or uncapped_fixed_n_plan"
+      ],
+      "PYTHONPATH": "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src:/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src:/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging",
+      "exit_code": 1,
+      "wall_seconds": 2.613832493996597,
+      "child_CPU_seconds": 4.812854,
+      "scope": "metadata-only source tests; original checker expected refusal",
+      "financial_pilot_run": false
+    },
+    {
+      "receipt": "task-5-conditional-n-prior-cap-consumer-author-v2-affected-cost.json",
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_selected_case_bindings_and_n_are_recomputed_without_fixed_n_changes",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_limited_selected_count_attempts_derive_max_both_models_without_changing_path_n",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_refinement_binds_only_actual_selected_purposes_and_fixed_original_work",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_attempt_source_gaps_raise_and_cannot_become_caps",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_A_selection_uses_prior_rules_and_measured_premium_not_future_result_hash",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_execution_expense_aliases_copy_actual_parent_clock_without_double_charge",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_execution_expense_aliases_require_prior_parent_and_explicit_actual_phase_scope",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_actual_lifecycle_phase_clock_is_inclusive_and_resume_keeps_prior_timer",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_execution_projection_refuses_partial_raw_pilot_and_receipt_flags",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_authenticated_unused_jobs_do_not_need_an_unrelated_budget_cap_scope",
+        "-q",
+        "--tb=short"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 2.736003678997804,
+      "child_CPU_seconds": 4.992444,
+      "scope": "related existing metadata-only conditional/cap/expense tests",
+      "financial_pilot_run": false
+    }
+  ],
+  "financial_generation_run": false,
+  "administrative_test_records_are_not_formal_job_budget_approval": true
+}

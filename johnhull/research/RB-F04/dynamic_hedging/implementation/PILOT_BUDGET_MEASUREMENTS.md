@@ -169,7 +169,7 @@ M4/M5の保存表を部品参照として使用し、graph原controls={}と明�
 
 全20教師候補の論理配列部分下限353,606,441,728 Bを元N/全grid/全status/16block/covarianceから再現した。現native項目のnode配列名目量は355,868,451,168 B、共用driver・grid/cache・bounded reportを加えた限定小計は364,185,768,816 B。圧縮後のCAS物理容量の上界・下界ではなく、他3,088 jobs・metadata・複写・旧失敗履歴・stagingは別。N1024の実圧縮率を最大Nへ保証付きで外挿しない。
 
-各volumeの観測空きはC314,778,112,000 B/F185,710,804,992 B/WSL595,309,969,408 B。両保管庫は同じcorpusをそれぞれ保持するので空きを合算しない。whole物理容量と復元ピークは未確定、原N65536/highの真正一節点は次の限定資源測定候補。正式pilot/freeze/main・金融qualification・研究9受入は未完了。
+各volumeの観測空きはC314,778,112,000 B/F185,710,804,992 B/WSL595,309,969,408 B。両保管庫は同じcorpusをそれぞれ保持するので空きを合算しない。whole物理容量と復元ピークは未確定。原N65536/highの真正一節点は下記で生成・保存と全N保存検算を測定した。正式pilot/freeze/main・金融qualification・研究9受入は未完了。
 
 
 ## 事前予算の元契約確認
@@ -178,4 +178,21 @@ M4/M5の保存表を部品参照として使用し、graph原controls={}と明�
 
 容量はvolumeごとの明示推計と実空き/RSS/wall監視で扱う。監視停止は原義務/費用/partialを保存し、金融case/A cap合格へ投影しない。未知の増加速度からディスク枯渇防止を保証しない。原N/全case/閾値、main/fresh・両保管庫の数値復元・3図/notebook・最終関連suite条件を維持する。unknown/不支持は研究成果に許容されるが、未完attemptや未閉鎖source/integrityは完了と数えない。
 
-候補組立で、選択Nが変わるcase/attemptのcap optionをparent jobだけで選ぶconsumer境界に未解決の接続を確認した。正式callerは実selector hashをrow証跡へ分ける既存処理を持つ。4N候補の先頭を無条件に使わず、元template＋選択Nの静的branchと実親費用/事前decisionを照合する必要がある。[最小案](pilot-execution-evidence/task-5-conditional-n-prior-cap-consumer-minimal-proposal-v1.md)はparent＋plan一致を選択条件へ追加し、既存SHA検査と複数親の順序を保つ。元N固定やcap合格への置換は行わない。最大N部品測定後、原入力・数学を保つ限定修正を検討する。
+候補組立で、選択Nが変わるcase/attemptのcap optionをparent jobだけで選ぶconsumer境界に未解決の接続を確認した。正式callerは実selector hashをrow証跡へ分ける既存処理を持つ。4N候補の先頭を無条件に使わず、元template＋選択Nの静的branchと実親費用/事前decisionを照合する必要がある。[最小案](pilot-execution-evidence/task-5-conditional-n-prior-cap-consumer-minimal-proposal-v1.md)はparent＋plan一致を選択条件へ追加し、既存SHA検査と複数親の順序を保つ。元N固定やcap合格への置換は行わない。最大N部品測定後、原入力・数学を保つ限定修正を完了した。
+## 真正最大Nの一節点と保存検算
+
+元local/high・N65536・date0/spot100/state1・node17・65thresholds・16blocks・seed1345225788を保持した。元mother jobは1,344節点のままで、一節点の測定を全母jobの完了や全域の金融精度とは数えない。共用bankの全256chunksと元N1024 prefixを照合した。
+
+生成・full raw保存・native readまで完了したが、最初の保存検算は個別child RSS4,310,867,968 Bで事前4 GiB上限を超えて停止した。[旧外側実費](pilot-execution-evidence/task-5-maximum-original-node-root-enclosing-cost-v1.json)はwall83.231006秒/child tree CPU83.450557秒。元未検算義務・原raw・bank・停止・費用を保持している。生成worker区間33.329730秒は内側の一部で、外側へ加算しない。
+
+[保存専用の新事前予算](pilot-execution-evidence/task-5-maximum-original-node-saved-budget-root-fixed-v1.json)を300秒/親子各8 GiBで固定し、原rawを一コピーだけ読んで再検算した。新RNG・bank生成・teacher生成は実行禁止。全Nの保存SDE、全11標本、元16blocks/covarianceの比較とbounded reportの保存読込が完了した。[外側実費](pilot-execution-evidence/task-5-maximum-original-node-saved-root-enclosing-cost-v1.json)はwall39.413927秒/child tree CPU39.511260秒、sampled child peak RSS3,721,838,592 B、kernel peak3,721,367,552 B、実capなし。内部39.379452秒と旧83.231006秒は別区間・履歴として保持し、今回の費用へ重複加算しない。
+
+[rootの限定確認](pilot-execution-evidence/task-5-maximum-original-node-saved-root-component-review-v1.json)は全N/元geometry/検算完了・生成0・source81不変を確認した。真正raw物理6,280,626 B/保存primitive展開94,658,320 B、共用bank物理807,061,160 B/展開806,354,944 B、新bounded report物理19,035 B。返却された全標本の論理配列469,524,240 Bとは区別する。単一節点の圧縮率や39秒を全1,344節点・全日付の保証へ転用せず、保存検算の予算はN/格子別の明示推計で検討する。金融qualification・全mother/phase完了はunknownのまま。
+
+## Conditional Nのprior cap消費を限定修復
+
+親IDだけで先頭のcap optionを選ぶ条件へ、capを除いた具体化plan全欄の一致を追加した。他Nの枝を通過し、元option順で最初の互換親を選ぶ。元複数親/全費用binding・metric/limit・decision/plan SHAの検査、正式callerの実selector証跡分離は保持する。金融solver・元N・公開APIは変更していない。
+
+[実装記録](pilot-execution-evidence/task-5-conditional-n-prior-cap-consumer-author-v2-report.md)は修復前8 failed/14 passed、追加22 passed・関連既存16 passed、2Python Ruff/format PASS。[独立限定判断](pilot-execution-evidence/task-5-fullmixed-prior-budget-independent-v2-source-decision.json)で4N/複数親順・actual cap guardsを確認した。実closure81/dynamic0の変更はcheckerのみ、他80 sourceは不変。現identityはdc7631fe…、元N測定/false予算候補の408f2bc2…は原由来として保持する。
+
+全3,138-job prior候補は未承認。全20 teacher_domain_selectionは元N/格子別の保存検算を明示推計し、local high/N65536は52,972秒・3倍余裕の159,000秒を候補とした。16 teacher_candidate_gate・2 teacher_selectionと最初のactivationにも保存SDE再検算が含まれるため、単なるmetadataの600秒候補を実測にもとづく見積へ補足中。元required rosterの反復は省かず、金融精度・正式lock・freeze・main・phaseの承認へ広げない。

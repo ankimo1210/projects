@@ -1,0 +1,15 @@
+{
+  "child_tree_cpu_seconds": 39.51125999999999,
+  "endpoint": "after child final receipt and stdout; own final enclosing receipt tail unknown",
+  "exit_code": 0,
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "inner_intervals_included_not_added": true,
+  "log_sha256": "686a9ba81d0526fbba711faf5015f28cd7c5ed7d155b593cd26e5e356c70b3a8",
+  "original_generation_and_4GiB_failure_not_added_to_new_cost": true,
+  "own_cpu_seconds": 0.00029235700000000003,
+  "prior_sha256": "1a5df9249dcbf315d4c0bbc16ea7cd2b643160483c67cedc36a94b0d2a8f9ead",
+  "scope": "saved_original_N65536_node17_enclosing_cost_only",
+  "wall_seconds": 39.413927307999984,
+  "whole_original_mother_job_executed": false
+}

@@ -1,0 +1,123 @@
+
+"""Read saved resource receipts and create an unapproved 20-job budget overlay."""
+from pathlib import Path
+import hashlib,json,math,time,resource
+D=Path('/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging')
+P='task-5-fullmixed-prior-budget-candidate-author-v1'
+OUT='task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3'
+start=time.perf_counter();cpu=time.process_time()
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def load(n):return json.loads((D/n).read_text())
+base=load(P+'-config.json')
+# Recover original raw geometry from the immutable original metadata artifact,
+# without importing/dispatching workers or decoding financial arrays.
+root=load('task-5-full-progressive-pilot-plan-draft-source-unit-v3/metadata.json')
+tree=root['metadata']['tree']
+jobs={row['id']:row for row in tree['jobs']}
+evidence={}
+rates={}
+for cls in ('Heston-coarse','Heston-high','local-coarse','local-high'):
+ n=f'task-5-M6-saved-recheck-observation-root-v1/{cls}/parent-cost-and-decision.json'
+ raw=load(n); assert raw['status']=='completed_saved_only_component'
+ rates[cls]=raw['wall_seconds']
+ evidence[n]={'sha256':sha(D/n),'bytes':(D/n).stat().st_size}
+max_name='task-5-maximum-original-node-saved-root-enclosing-cost-v1.json'
+max_outer=load(max_name)
+evidence[max_name]={'sha256':sha(D/max_name),'bytes':(D/max_name).stat().st_size}
+max_review=load('task-5-maximum-original-node-saved-root-component-review-v1.json')
+assert max_review['original_n']==65536 and max_review['original_mother_node_count']==1344
+assert max_review['financial_qualification']=='unknown' and max_review['whole_original_mother_job_executed'] is False
+actual_max_node=max_outer['wall_seconds']
+updates={}; parent_updates=[]; summaries={}
+for parent_index,parent in enumerate(base['parent_cap_templates']):
+ job=jobs[parent['job_id']]
+ if job['operation']!='teacher_domain_selection':continue
+ producer=jobs[job['arguments']['teacher']['job']]
+ model=producer['arguments']['model'];grid=producer['arguments']['grid']
+ cls=f'{model}-{grid}'; n=job['original_n']
+ assert n==producer['original_n']
+ baseline_grid=rates[cls]*(n/1024)
+ # Apply observed maximum-N local-high node only to its own local-high geometry.
+ # This repeats bank/import/I/O overhead per node and is a conservative estimate
+ # recipe, not a guaranteed ceiling or validated time scaling.
+ maxnode_repeat=(actual_max_node*producer['financial_child_count']*(n/65536)
+                 if cls=='local-high' else None)
+ estimate=max(baseline_grid,maxnode_repeat) if maxnode_repeat is not None else baseline_grid
+ wall_cap=max(300,math.ceil(3*estimate/300)*300)
+ original=base['reviewed_budgets'][job['id']]
+ prediction=dict(original['prediction'])
+ prediction['rate_source']=None
+ updates[job['id']]={
+  'budget':{'planned_before_attempt':True,'review_sha256':None,'wall_seconds':wall_cap},
+  'prediction':prediction,
+  'rate_source_proposal':'independently_reviewed_estimate',
+  'runtime_estimate_seconds':estimate,
+  'estimate_only':True,'financial_qualification':'unknown',
+  'original_n':n,'grid':grid,'model':model,
+  'source_teacher_raw_job_id':producer['id'],
+  'source_original_node_count':producer['financial_child_count'],
+  'runtime_estimate_components':{
+   'measured_saved_N1024_full_class_wall_seconds':rates[cls],
+   'N1024_linear_ratio':n/1024,
+   'full_class_linear_N_extrapolation_seconds':baseline_grid,
+   'observed_local_high_N65536_saved_node17_enclosing_seconds':
+        actual_max_node if cls=='local-high' else None,
+   'single_local_high_node_repeated_original_node_count_estimate_seconds':maxnode_repeat,
+   'maximum_of_applicable_estimates_seconds':estimate,
+   'safety_factor':3,'rounding_seconds':300},
+  'scope':'saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown',
+  'independent_budget_and_estimate_review':'pending',
+  'full_selected_domain_financial_accuracy':'unknown',
+  'whole_class_RSS_guarantee_bytes':None,
+  'whole_class_physical_output_forecast_bytes':None,
+  'teacher_generation_expense_is_separate':True,
+  'full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe':True,
+  'driver_generation_is_in_its_original_shared_producer_job_only':True}
+ parent_updates.append({'index':parent_index,'job_id':job['id'],
+   'old_wall_limit_seconds':parent['wall_limit_seconds'],
+   'candidate_wall_limit_seconds':wall_cap,'new_independent_review_sha256':None,
+   'requires_regenerate_exact_plan_cap_decisions':'all indexed cap options using this original parent'})
+ summaries[job['id']]={'N':n,'class':cls,'nodes':producer['financial_child_count'],
+    'generation_cap_proposal_seconds':base['reviewed_budgets'][producer['id']]['budget']['wall_seconds'],
+    'saved_selection_cap_proposal_seconds':wall_cap,
+    'saved_selection_estimate_seconds':estimate}
+assert len(updates)==20
+out={'schema':'rb-f04-fullmixed-author-selection-budget-overlay-v3','approved':False,
+ 'base_candidate':{'path':P+'-config.json','sha256':sha(D/(P+'-config.json')),
+   'source_canonical_identity_at_fixed_assembly':base['source_canonical_identity'],
+   'current_source_binding':'root will bind repaired consumer closure; no current source approval claimed'},
+ 'maximum_N_saved_only_supplement':'task-5-fullmixed-prior-budget-candidate-author-maxN-supplement-v2.json',
+ 'reviewed_budgets_updates':updates,'parent_cap_template_updates':parent_updates,
+ 'exactly_original20_selection_jobs':True,'original_N_axes_thresholds_parent_roster_and_work_unchanged':True,
+ 'old_v1_3600_limits_retained_as_history':True,
+ 'reason':'old fixed3600 administrative proposal does not cover measured full-N extrapolated saved checker scope',
+ 'basis':{'N1024_full_saved_checker_by_original_class_seconds':rates,
+   'same_local_high_N65536_single_node_saved_only_enclosing_seconds':actual_max_node,
+   'baseline_scaling':'linear N only, unreviewed estimate',
+   'local_high_secondary_recipe':'node17 wall repeated original nodes, linear N; includes repeated bank/import overhead, still not guarantee',
+   'cap_recipe':'3 times maximum applicable estimate, round upwards to300s, minimum300s'},
+ 'evidence':evidence,'no_new_finance_RNG_solver_SDE_or_generation':True,
+ 'financial_budget_phase_main_qualification_or_approval':False,
+ 'other_unmeasured_operation_proposals':'v1 administrative cap candidates, runtime unknown staysNone',
+ 'cap_decision_recipe_effect':'use updated original parent limit for every indexed option; old plan SHA/decision cannot be reused',
+ 'history_cost_rule':'old4GiB failure and old generation retained; inner/enclosing are breakdowns, never added twice',
+ 'phase_guard_followup':'root must choose actual administrative phase limit after overlay; v1 twice-sum cap proposal is not forecast',
+ 'source_subset_I/O_unknowns':'domain-selected full write/read and full母grid intermediate RSS not all observed by saved-component measurements'}
+(D/(OUT+'.json')).write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n')
+lines=['# 全20教師の保存検算予算補足 v3（未承認）','',
+ '元v1の固定3600秒を変更せず、root指摘へのoverlayを追加した。生成と保存SDE/全11label・統計/16block/cov検算を別job予算で扱う。全N/格子/node数とgenuine cap親の原scopeは保持。','',
+ 'N1024全class実測をN比で外挿し、local-highだけはN65536 node17の39.414秒×原node数×N比との大きい方を使う。3倍して300秒単位へ切り上げる。単一nodeのbank/importを反復含む保守recipeであり、時間/RSS/容量の保証ではない。','',
+ '| class | N | 原nodes | 生成cap候補 s | 保存検算推計 s | 保存検算cap候補 s |',
+ '|---|---:|---:|---:|---:|---:|']
+for row in summaries.values():
+ lines.append(f"| {row['class']} | {row['N']} | {row['nodes']} | {row['generation_cap_proposal_seconds']} | {row['saved_selection_estimate_seconds']:.3f} | {row['saved_selection_cap_proposal_seconds']} |")
+lines+=['','全20parent cap limitに反映する際は、その親に属する全static optionのexact-plan decision SHAを作り直す。旧承認decisionを流用しない。rootの新consumer/source closure結合は後続。最大Nの全母1344-node実行、金融精度、全op速度、whole物理容量、正式予算/phase/mainは未承認。','',
+ '他の未測定opのruntimeはNone、行政cap候補と区別。全域domain-selected保存I/Oと母grid intermediate RSSは未確定のまま。原4GiB失敗・元生成費用を新39.414秒へ加算しない。追加金融測定やゲートを提案していない。']
+(D/(OUT+'.md')).write_text('\n'.join(lines)+'\n')
+cost={'scope':'saved receipt metadata selection overlay only',
+ 'wall_seconds_before_final_receipt':time.perf_counter()-start,'cpu_seconds_before_final_receipt':time.process_time()-cpu,
+ 'kernel_peak_RSS_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,'unmeasured_final_tail':None}
+(D/(OUT+'-cost.json')).write_text(json.dumps(cost,indent=2)+'\n')
+print(json.dumps({'updated_selection_jobs':len(updates),'local_high_N65536':[
+ row for row in summaries.values() if row['class']=='local-high' and row['N']==65536],
+ 'source_config_fixed_sha':sha(D/(P+'-config.json')),'overlay_sha256':sha(D/(OUT+'.json')),'cost':cost}))

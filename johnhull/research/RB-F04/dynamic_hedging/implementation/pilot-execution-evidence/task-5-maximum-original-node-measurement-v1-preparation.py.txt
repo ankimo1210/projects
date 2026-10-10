@@ -1,0 +1,261 @@
+"""D-only pure metadata preparation; no numerical imports or financial execution."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import resource
+import runpy
+import time
+from pathlib import Path
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+PREFIX = "task-5-maximum-original-node-measurement-v1"
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for part in iter(lambda: stream.read(1024**2), b""):
+            h.update(part)
+    return h.hexdigest()
+
+
+def save(path, data):
+    assert not path.exists(), f"immutable prepared output already exists: {path}"
+    path.write_text(json.dumps(data, indent=2, sort_keys=True, allow_nan=False) + "\n")
+
+
+def main():
+    started, cpu = time.perf_counter(), time.process_time()
+    api = runpy.run_path(str(D / f"{PREFIX}.py"), run_name="pure_metadata_preparation")
+    context_path = D / "task-5-M6-saved-recheck-budget-root-fixed-v1.json"
+    context = json.loads(context_path.read_text())
+    old_desc = json.loads(
+        (D / "task-5-current-full-teacher-initial-description-v2.json").read_text()
+    )
+    graph = WT / old_desc["graph_artifact"]
+    metadata = json.loads((graph / "metadata.json").read_text())["metadata"]
+    rows = {row["id"]: row for row in metadata["tree"]["jobs"]}
+    mother, driver = rows[api["MOTHER"]], rows[api["BANK"]]
+    calendar = metadata["arrays"][driver["arguments"]["calendar_times"]["__array__"]]
+    assert len(rows) == 3138
+    assert mother["original_n"] == driver["original_n"] == 65536
+    assert mother["financial_child_count"] == 1344
+    assert mother["arguments"]["driver"] == {"job": driver["id"]}
+    assert mother["arguments"]["original_n"] == 65536
+    assert mother["arguments"]["seed"] == driver["arguments"]["seed"] == api["SEED"]
+    assert calendar["shape"] == [769] and calendar["dtype"] == "<f8"
+    input_bindings = {}
+    for root in [graph, WT / old_desc["field_artifact"]]:
+        for path in sorted(root.rglob("*")):
+            if path.is_file():
+                input_bindings[str(path.relative_to(WT))] = sha(path)
+    prep_path = WT / old_desc["prepared_input_json"]
+    input_bindings[str(prep_path.relative_to(WT))] = sha(prep_path)
+    old_bank = D / "task-5-current-full-teacher-observation-root-m6-v2/banks/local"
+    for root in [old_bank / "actual-driver", old_bank / "work"]:
+        for path in sorted(root.rglob("*")):
+            if path.is_file():
+                input_bindings[str(path.relative_to(WT))] = sha(path)
+    bank_meta = json.loads((old_bank / "actual-driver/metadata.json").read_text())["metadata"]
+    bank_tree = bank_meta["tree"]
+    prefix = [
+        {key: row[key] for key in ("path_start", "path_stop", "normal_sha256")}
+        for row in bank_tree["chunks"]
+    ]
+    assert len(prefix) == 4
+    assert (
+        api["packed_identity"](
+            old_desc["drivers"]["local"]["planned_typed_arguments"], metadata["arrays"]
+        )
+        == old_desc["drivers"]["local"]["planned_arguments_sha256"]
+    )
+    source = context["new_checker_source_bindings"]
+    assert len(source) == 81
+    assert context["new_checker_source_identity_sha256"] == (
+        "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652"
+    )
+    for relative, expected in source.items():
+        assert sha(WT / relative) == expected
+    api_names = {
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": [
+            "run_teacher_driver_job",
+            "run_teacher_job",
+            "read_teacher_driver_chunks",
+            "write_pilot_artifact",
+            "read_pilot_artifact",
+            "_teacher_node_binding",
+            "_check_teacher_node_binding",
+            "teacher_axes",
+            "input_identity",
+            "_resolve",
+        ],
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": [
+            "check_teacher_record",
+            "check_cap_partial",
+            "_bounded_teacher_check",
+            "_teacher_check_raw_reference",
+        ],
+    }
+    ast_bindings = {
+        relative: {name: api["function_ast"](WT / relative, name) for name in names}
+        for relative, names in api_names.items()
+    }
+    assert (
+        ast_bindings["johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"]["teacher_axes"]
+        == old_desc["teacher_axes_preparation_ast_sha256"]
+    )
+    description = {
+        "schema": "rb-f04-maximum-original-node-description-v1",
+        "scope": api["SCOPE"],
+        "original_mother_job_id": mother["id"],
+        "original_driver_job_id": driver["id"],
+        "original_mother_job": mother,
+        "original_driver_job": driver,
+        "mother_arguments_sha256": api["packed_identity"](mother["arguments"], metadata["arrays"]),
+        "driver_arguments_sha256": api["packed_identity"](driver["arguments"], metadata["arrays"]),
+        "original_n": 65536,
+        "seed": api["SEED"],
+        "chunk_paths": 256,
+        "blocks": 16,
+        "node_index": 17,
+        "node": old_desc["classes"]["local-high"]["planned_nodes"][17],
+        "mother_node_count": 1344,
+        "original_mother_planned_nodes": old_desc["classes"]["local-high"]["planned_nodes"],
+        "threshold_count": 65,
+        "threshold_source": "teacher_axes('high','local')['threshold'][0]",
+        "axes_payload_sha256": old_desc["classes"]["local-high"]["axes_payload_sha256"],
+        "calendar": calendar,
+        "calendar_formula": "arange(769)/768",
+        "start_index": 0,
+        "monthly_fixing_indices": list(range(64, 769, 64)),
+        "original_N1024_normal_prefix": prefix,
+        "normal_prefix_source": str(old_bank.relative_to(WT)),
+        "prefix_is_not_reused_as_full_N65536_bank": True,
+        "bank_normal_expanded_bytes": 65536 * 768 * 2 * 8,
+        "original_node_path_steps": 65536 * 768,
+        "component_entrypoint": "run_pilot.run_teacher_job",
+        "component_selector_is_not_a_rewritten_grid": True,
+        "no_original_grid_cache_or_other_1343_node_claim": True,
+        "graph_counts": old_desc["graph_counts"],
+        "graph_artifact": old_desc["graph_artifact"],
+        "field_artifact": old_desc["field_artifact"],
+        "prepared_input_json": old_desc["prepared_input_json"],
+        "field_shape": [257, 321],
+        "field_controls": old_desc["field_controls"],
+        "api_function_AST_bindings": ast_bindings,
+        "primitive_vectors": list(api["PRIMITIVE_VECTORS"]),
+        "sample_fields": list(api["SAMPLES"]),
+        "mandatory_retention": [
+            "all originalN path/cluster IDs; driver calendar/ordering/full 256 chunks",
+            "all nine primitive float vectors and original path/failure statuses",
+            "full N65536x768 uint8 step status and original status dictionary",
+            "all eleven original label samples checked against retained recipe reconstruction",
+            "original means/SE/status/covariance and full global16 block moments",
+            "parameters/current field/original axes/seed/fixing/source/input/physical bindings",
+            "all source/solver failures, native/actual caps, original expenses and unknown paths",
+        ],
+        "initial_obligation": {
+            "all_originalN_status": "unprocessed",
+            "nine_float_vector_values": "NaN",
+            "full_step_status_shape": [65536, 768],
+            "all11_sample_obligation_shape": [65536, 65],
+            "unexecuted_financial_values_are_not_zero_filled": True,
+        },
+        "measurement_output_root": str(D / "task-5-maximum-original-node-observation-root-v1"),
+        "scope_is_maximum_shape_component_not_full_original_job": True,
+        "current4GiB_fit_is_unknown": True,
+        "synthetic_fullN_transport_is_not_genuine_memory_or_compression_proof": True,
+        "financial_qualification": "unknown",
+        "formal_pilot_main_phase_approved": False,
+        "new_financial_RNG_solver_SDE_execution_in_preparation": False,
+    }
+    evidence_names = [
+        "task-5-current-full-teacher-initial-description-v2.json",
+        "task-5-current-full-teacher-measurement-v2.py",
+        "task-5-current-oracle-measurement-v2.py",
+        "task-5-M6-saved-recheck-budget-root-fixed-v1.json",
+        "task-5-teacher-storage-independent-v1-decision.json",
+        "task-5-teacher-check-report-bounded-independent-v1-decision.json",
+        "task-5-current-full-teacher-independent-m6-v2-decision.json",
+        "task-5-M6-saved-recheck-terminal-inputs-v2-manifest.json",
+    ]
+    evidence = {str((D / name).relative_to(WT)): sha(D / name) for name in evidence_names}
+    save(D / f"{PREFIX}-initial-description.json", description)
+    candidate = {
+        "schema": "rb-f04-maximum-original-node-prior-v1",
+        "scope": api["SCOPE"],
+        "root_preapproved": False,
+        "status": "prepared_candidate_not_execution_approval",
+        "formal_finance_approved": False,
+        "financial_qualification": "unknown",
+        "source_approval_status": None,
+        "new_component_source_approval_evidence": None,
+        "source_closed_file_count": 81,
+        "source_identity_sha256": context["new_checker_source_identity_sha256"],
+        "source_bindings": source,
+        "source_approval_context_is_not_new_component_approval": True,
+        "current_source_approval_context": context["new_checker_source_approval_evidence"],
+        "probe_source_sha256": sha(D / f"{PREFIX}.py"),
+        "initial_description_sha256": sha(D / f"{PREFIX}-initial-description.json"),
+        "input_file_bindings": input_bindings,
+        "administrative_evidence_bindings": evidence,
+        "measurement_output_root": description["measurement_output_root"],
+        "wall_limit_seconds_inclusive": 300.0,
+        "rss_limit_bytes_individual_parent_child": 4 * 1024**3,
+        "rss_metric": "maximum_individual_parent_or_child_RSS_not_AS",
+        "per_checkpoint_times_are_breakdown_of_one_enclosing_budget": True,
+        "runtime_estimate_seconds": None,
+        "current4GiB_fit_estimate": None,
+        "whole3138_or20candidate_capacity_and_runtime_approved": False,
+        "financial_execution_count_in_preparation": 0,
+        "allowed_RNG_during_later_fixed_execution": "one original full bank Generator only",
+        "node_and_checker_default_rng_is_forbidden": True,
+        "bank_generation_is_counted_once_in_enclosing_cost": True,
+        "budget_includes": [
+            "root prior/source/input/API validation and imports",
+            "all originalN unknown obligation write",
+            "full original65536 bank generate/save/read/authenticate",
+            "genuine originalnode SDE generation with existing bank",
+            "native full raw recipe write/read/all physical origin checks",
+            "saved fullN SDE replay/all11 labels/all16 block covariance comparisons",
+            "bounded report write/read/coverage/physical and expanded byte inventory",
+            "source/input stability and closing progress/index/parent-child RSS reads",
+        ],
+        "measurement_endpoint": "after closing progress/index/RSS; before final receipt write",
+        "receipt_tail_requires_root_enclosing_execution_receipt": True,
+        "failure_rule": "actual caps/native caps/source exception/incomplete checkpoint remain distinct; temporal order unknown",
+        "hard_kill_without_raw_retains_originalN_initial_obligation_not_completed": True,
+    }
+    save(D / f"{PREFIX}-budget-candidate.json", candidate)
+    save(
+        D / f"{PREFIX}-preparation-cost.json",
+        {
+            "scope": "pure metadata/source bytes/hash preparation only",
+            "wall_seconds": time.perf_counter() - started,
+            "CPU_seconds": time.process_time() - cpu,
+            "kernel_peak_RSS_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+            "numerical_array_decode_or_RNG_solver_SDE": False,
+            "source_docs_tests_Git_CAS_edits": False,
+            "report_tail_cost": "unknown",
+        },
+    )
+    print(
+        json.dumps(
+            {
+                "prepared": True,
+                "root_preapproved": False,
+                "source_files": 81,
+                "input_files": len(input_bindings),
+                "node_index": 17,
+                "N": 65536,
+            },
+            sort_keys=True,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

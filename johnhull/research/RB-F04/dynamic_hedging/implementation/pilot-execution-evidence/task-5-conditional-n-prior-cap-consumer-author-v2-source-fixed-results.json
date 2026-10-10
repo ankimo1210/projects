@@ -1,0 +1,27 @@
+{
+  "source_identity_before": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "source_identity_after": "dc7631fe73a457cd995d109aa693be9401b266410b9f53aa4e2d51e59f56d39c",
+  "runtime_source_file_count": 81,
+  "dynamic_imports": [],
+  "changed_runtime_source_files": [
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+  ],
+  "changed_checker_functions": [
+    "_prior_execution_projection"
+  ],
+  "all_80_other_source_bytes_unchanged": true,
+  "all_preexisting_test_functions_AST_unchanged": true,
+  "checker_SHA256": "952b8f89c930578db1f6531bd6e73ade947d7cfbef246cc8510d246a54ed6197",
+  "test_SHA256": "e183f20b876cee2684b9a78bba7b3e00755210740e0758d3efdfcd46301e8d83",
+  "test_file": "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+  "metadata_added_cases": 22,
+  "RED": "8 failed, 14 passed, 191 deselected; original source rejects compatible later N branches",
+  "GREEN": "22 passed, 191 deselected in 1.55s",
+  "affected_existing_tests": "16 passed in 2.02s",
+  "Ruff": "PASS both changed files",
+  "formal_caller_selector_pop_AST_unchanged": true,
+  "formal_budget_approved": false,
+  "formal_phase_approved": false,
+  "financial_pilot_run": false,
+  "solver_RNG_SDE_or_public_API_changed": false
+}

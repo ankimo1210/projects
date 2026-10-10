@@ -1,0 +1,37 @@
+{
+  "authoring_inspection_and_final_receipt_tail_cost": "unknown",
+  "child_CPU_seconds": 0.026255,
+  "financial_array_decode_rng_solver_SDE_generation": false,
+  "kernel_peak_RSS_bytes": 20119552,
+  "old4GiB_financial_expenses_not_added_to_new_saved_probe_cost": true,
+  "parent_CPU_seconds": 0.459025488,
+  "preparation_cost_path": "task-5-maximum-original-node-saved-recheck-v1-preparation-cost.json",
+  "pure_preflight_cost_path": "task-5-maximum-original-node-saved-recheck-v1-verification.json",
+  "scope": "D-only final Ruff/format and all original source/input bytes verification",
+  "validation": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-preparation.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-administrative-probes.py"
+      ],
+      "exit_code": 0,
+      "log": "task-5-maximum-original-node-saved-recheck-v1-final-validation-0.log"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-preparation.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-administrative-probes.py"
+      ],
+      "exit_code": 0,
+      "log": "task-5-maximum-original-node-saved-recheck-v1-final-validation-1.log"
+    }
+  ],
+  "wall_seconds": 0.4826390779999201
+}

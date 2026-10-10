@@ -4020,7 +4020,16 @@ def _prior_execution_projection(row, base_plan, specification, jobs):
     if row.get("cap_evidence") is not None:
         parents = row.get("cap_parent_job_ids", [row["cap_parent_job_id"]])
         options = specification.get("cap_options", [])
-        option = next((r for r in options if r.get("parent_job_id") in parents), None)
+        option = next(
+            (
+                r
+                for r in options
+                if r.get("parent_job_id") in parents
+                and {k: v for k, v in r["plan"].items() if k != "cap"}
+                == {k: v for k, v in base_plan.items() if k != "cap"}
+            ),
+            None,
+        )
         _require(option is not None, "actual cap lacks compatible prior execution option")
         parent = jobs[option["parent_job_id"]]
         _require(

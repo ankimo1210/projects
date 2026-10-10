@@ -1,0 +1,27 @@
+{
+  "candidate_generated": true,
+  "candidate_approved": false,
+  "no_financial_execution_RNG_solver_SDE_regeneration": true,
+  "source81_before_after_stable": true,
+  "source_canonical_identity": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "source_and_actual_typed_input_bindings_API": "PASS",
+  "typed_input_artifact_roundtrip": "PASS",
+  "rosters_work_axes_seeds_caps_dependency_order": "PASS",
+  "cap_scope_actual_descendant_binding": "PASS",
+  "all_original_non_control_fields_preserved": true,
+  "explicit_call_table_controls_updates": 36,
+  "all3138_budget_candidate_rows": 3138,
+  "all4_conditional_jobs_4N_original_work_maxima_preserved": true,
+  "cap_parent_associations": 266306,
+  "literal_cap_branch_options": 573122,
+  "real_lock_job_graph_preflight": "EXPECTED_REJECT_UNREVIEWED_PRIOR",
+  "actual_lock_error": {
+    "type": "ValueError",
+    "message": "prior reviewed job budget required"
+  },
+  "independent_budget_approval_SHA_count": 0,
+  "pending_rate_provenance_jobs": 3126,
+  "observed_prior_geometry_job_count": 12,
+  "projection_consumer_gap": "parent-only first selection remains; formal caller removes selectorSHA already",
+  "financial_phase_main_budget_approval": false
+}

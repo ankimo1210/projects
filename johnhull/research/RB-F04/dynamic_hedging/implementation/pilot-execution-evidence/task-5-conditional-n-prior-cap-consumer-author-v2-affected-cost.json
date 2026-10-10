@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_selected_case_bindings_and_n_are_recomputed_without_fixed_n_changes",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_limited_selected_count_attempts_derive_max_both_models_without_changing_path_n",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_refinement_binds_only_actual_selected_purposes_and_fixed_original_work",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_conditional_attempt_source_gaps_raise_and_cannot_become_caps",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_A_selection_uses_prior_rules_and_measured_premium_not_future_result_hash",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_execution_expense_aliases_copy_actual_parent_clock_without_double_charge",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_execution_expense_aliases_require_prior_parent_and_explicit_actual_phase_scope",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_actual_lifecycle_phase_clock_is_inclusive_and_resume_keeps_prior_timer",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_execution_projection_refuses_partial_raw_pilot_and_receipt_flags",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py::test_authenticated_unused_jobs_do_not_need_an_unrelated_budget_cap_scope",
+    "-q",
+    "--tb=short"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 2.736003678997804,
+  "child_CPU_seconds": 4.992444,
+  "scope": "related existing metadata-only conditional/cap/expense tests",
+  "financial_pilot_run": false
+}

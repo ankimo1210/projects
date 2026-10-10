@@ -1,0 +1,14 @@
+{
+  "source_checker_unchanged": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b",
+  "test_file": "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+  "test_functions": [
+    "test_conditional_cap_does_not_accept_reduced_selector_n",
+    "test_conditional_cap_rejects_missing_changed_or_unapproved_original_branch",
+    "test_conditional_cap_selects_actual_original_n_branch",
+    "test_plural_actual_caps_keep_parent_priority_all_bindings_and_inclusive_costs",
+    "test_uncapped_fixed_n_plan_keeps_existing_projection_contract"
+  ],
+  "expected_metadata_cases": 22,
+  "source_identity_before": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "financial_run": false
+}

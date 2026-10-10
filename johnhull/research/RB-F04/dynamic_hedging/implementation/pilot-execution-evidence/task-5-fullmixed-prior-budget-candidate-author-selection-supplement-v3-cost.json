@@ -1,0 +1,7 @@
+{
+  "scope": "saved receipt metadata selection overlay only",
+  "wall_seconds_before_final_receipt": 0.20790911400399636,
+  "cpu_seconds_before_final_receipt": 0.20790963499999998,
+  "kernel_peak_RSS_bytes": 222613504,
+  "unmeasured_final_tail": null
+}

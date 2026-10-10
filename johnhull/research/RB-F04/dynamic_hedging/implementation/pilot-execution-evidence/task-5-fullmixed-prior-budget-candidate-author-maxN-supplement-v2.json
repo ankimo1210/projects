@@ -1,0 +1,108 @@
+{
+  "schema": "rb-f04-fullmixed-prior-author-maxN-supplement-v2",
+  "approved": false,
+  "base_candidate": {
+    "path": "task-5-fullmixed-prior-budget-candidate-author-v1-config.json",
+    "sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "source_identity": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+    "source_binding_scope": "historical408 frozen assembly; predicate repair/new closure must be rebound by root"
+  },
+  "root_submitted_saved_component": {
+    "actual_cap_evidence": null,
+    "component_node_index": 17,
+    "enclosing_wall_seconds": 39.413927307999984,
+    "financial_qualification": "unknown",
+    "formal_pilot_or_main": false,
+    "full_saved_SDE_11labels_16blocks_cov_checked": true,
+    "inner_wall_seconds": 39.37945243300055,
+    "inventory_scope": {
+      "driver_metadata": {
+        "physical_bytes": 1120687,
+        "saved_array_payload_expanded_bytes": 1054728
+      },
+      "new_bounded_report": {
+        "physical_bytes": 19035,
+        "saved_array_payload_expanded_bytes": 10920
+      },
+      "original_bank": {
+        "physical_bytes": 807061160,
+        "saved_array_payload_expanded_bytes": 806354944
+      },
+      "original_raw": {
+        "physical_bytes": 6280626,
+        "saved_array_payload_expanded_bytes": 94658320
+      }
+    },
+    "new_rng_and_bank_teacher_generation": 0,
+    "old4GiB_failed_generation_and_checker_expenses_preserved_not_added": true,
+    "original_mother_node_count": 1344,
+    "original_n": 65536,
+    "peak_kernel_child_RSS_bytes": 3721367552,
+    "peak_sampled_child_RSS_bytes": 3721838592,
+    "source81_bytes_stable_after": true,
+    "status": "root_verified_saved_full_N65536_original_node_component_resource_only",
+    "whole_original_mother_job_executed": false
+  },
+  "new_saved_only_enclosing_cost": {
+    "wall_seconds": 39.413927307999984,
+    "child_tree_cpu_seconds": 39.51125999999999,
+    "peak_sampled_child_RSS_bytes": 3721838592,
+    "unknown_enclosing_final_receipt_tail_seconds": null
+  },
+  "old4GiB_component_failure": {
+    "wall_seconds": 83.23100619499746,
+    "CPU_seconds": 83.450557,
+    "exit_code": 1,
+    "raw_original_generation_and_bank_retained": true,
+    "is_not_added_to_new_saved_only_clock": true
+  },
+  "evidence": {
+    "task-5-maximum-original-node-saved-root-component-review-v1.json": {
+      "sha256": "5a443b96f6a3f64444c9ca19cb9e54aa79e930fb085e88cad69c87b2dd4a5c91",
+      "bytes": 1223
+    },
+    "task-5-maximum-original-node-saved-root-enclosing-cost-v1.json": {
+      "sha256": "fa81905beb452e63af0e641d0db6296f53116c34e73e28f34ef3953c9c029142",
+      "bytes": 716
+    },
+    "task-5-maximum-original-node-saved-observation-root-v1/parent-cost-and-decision.json": {
+      "sha256": "876003d1634810ed4cd4f3504df018d9cf62c557a03e60c0ffbbf44b00fbad08",
+      "bytes": 118583
+    },
+    "task-5-maximum-original-node-root-enclosing-cost-v1.json": {
+      "sha256": "99056cb326e1cf736ecd805f7137fcf53bf8e37a68b0c0a71549f5d134a8f4db",
+      "bytes": 1408
+    }
+  },
+  "permitted_budget_scope": "saved-only genuine local-high N65536 date0 node17, 11labels/16blocks/cov, full original bank",
+  "teacher_generation_rate_seconds": null,
+  "whole1344_node_checker_rate_seconds": null,
+  "wholemother_RSS_guarantee_bytes": null,
+  "other_models_dates_thresholds_operation_rates": null,
+  "whole_physical_output_upper_bytes": null,
+  "financial_qualification": "unknown",
+  "formal_budget_phase_main_approval": false,
+  "raw_inventory": {
+    "driver_metadata": {
+      "physical_bytes": 1120687,
+      "saved_array_payload_expanded_bytes": 1054728
+    },
+    "new_bounded_report": {
+      "physical_bytes": 19035,
+      "saved_array_payload_expanded_bytes": 10920
+    },
+    "original_bank": {
+      "physical_bytes": 807061160,
+      "saved_array_payload_expanded_bytes": 806354944
+    },
+    "original_raw": {
+      "physical_bytes": 6280626,
+      "saved_array_payload_expanded_bytes": 94658320
+    }
+  },
+  "rate_boundary": "39.414s is saved checker/component enclosing cost, not generator/whole-grid financial rate",
+  "root_RSS_administrative_candidate_bytes": 8589934592,
+  "actual_peak_does_not_guarantee_that_candidate_is_sufficient": true,
+  "candidate_config_was_not_modified": true,
+  "followup": "root bind new source closure after the one-predicate repair; independent prior review still required"
+}
