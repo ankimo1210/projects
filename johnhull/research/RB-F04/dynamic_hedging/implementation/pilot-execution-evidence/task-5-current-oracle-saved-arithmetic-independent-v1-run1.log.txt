@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v1.py", line 370, in <module>
+    main()
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v1.py", line 146, in main
+    headers.append(physical(base/kind)); loaded[kind] = pilot.read_pilot_artifact(base/kind)
+                   ^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v1.py", line 104, in physical
+    assert expanded == receipt["uncompressed_bytes"] and expanded <= 256*1024**2
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,98 @@
+{
+  "scope": "D-only read-only preparation of next original full mixed prior-budget/config; no lock or execution",
+  "formal_lock_approved": false,
+  "financial_qualification": "unknown",
+  "source81_stable": true,
+  "files": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-organization-v1-review.md",
+      "sha256": "0e601081e13c02e162509e2882da70d8422afbf6d441a6bc504c9efb3abcba72",
+      "bytes": 6539
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-organization-v1-results.json",
+      "sha256": "7529dc369c0da040705fb519125cfaccf89fbdd22a5677a89359c30eab72d832",
+      "bytes": 2177
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-draft-source-unit-v3/metadata.json",
+      "sha256": "8f83db63308ff6fdfae25d6a44f988361660703e1779a7957f80435553bbb4f3",
+      "bytes": 54495772
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-budget-root-fixed-v1.json",
+      "sha256": "6e85a12b6ea26c966e390596e797e9a5920a89b993a639a8b7591b8fd92a437b",
+      "bytes": 2514019
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-producer-v3.py",
+      "sha256": "0a8124af7dc233a5e41d6278bf612fef3d8afe081c83ed761d0276fb7718f59d",
+      "bytes": 29798
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-plan-producer.py",
+      "sha256": "33815db7a624e3c7e1d815e79475cd335f30af4e06f098d9ca054363b9adb3e8",
+      "bytes": 24395
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "sha256": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc",
+      "bytes": 172202
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "sha256": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b",
+      "bytes": 205226
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-whole-phase-capacity-static-v1-report.md",
+      "sha256": "4636da2f18262608a349830a523a1ee9be9b3caac53224f1b066272466b484d4",
+      "bytes": 9274
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-root-m2-enclosing-cost-v3.json",
+      "sha256": "57c4ca9497de2bcc8ca00a9ca9a61dea24fefa4d5a300d9f928951e9058e74ff",
+      "bytes": 810
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-root-m3-enclosing-cost-v3.json",
+      "sha256": "7cfce886c261e1f476afcb37b4e788809e76449288f07217b46862f2beb67f33",
+      "bytes": 819
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-root-m4-enclosing-cost-v3.json",
+      "sha256": "4e888a94fc67ab3a83ca52bc1ce0e4979b09cbcf24a4e6a3184013c98a2ccf3f",
+      "bytes": 828
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-root-m5-enclosing-cost-v3.json",
+      "sha256": "4febd077c074568b9b27dd067a1a97c9f01161f93cb08b5ec5dead1a5520e553",
+      "bytes": 838
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-root-enclosing-cost-v2.json",
+      "sha256": "2bd8ead2e8bde5e3f5a539ac18c601192b396deec9af529d098a22d13151d71d",
+      "bytes": 797
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-root-enclosing-cost-v1.json",
+      "sha256": "ebc2f3d4f459e768fc45e616d845a4ac8636675cf34a5563f442e6a38fa9c066",
+      "bytes": 1324
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-root-enclosing-cost-v2.json",
+      "sha256": "0a3c251dc581674b6cd834f1b2187b7f27223165b67b89ea52b4dee76489e879",
+      "bytes": 1455
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-independent-v1-decision.json",
+      "sha256": "07ac90798a05dfe750bc31ce4fdf7c258b48803262f806ac7b7d8bbb55e13e53",
+      "bytes": 3303
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/all-costs-and-decision.json",
+      "sha256": "410ff54fef302cc52573e32fd7fe17e5c2c3fb9d31d5a41413873010016e8689",
+      "bytes": 27519
+    }
+  ]
+}

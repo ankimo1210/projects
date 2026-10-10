@@ -1,0 +1,9 @@
+{
+  "comparison_count": 25366,
+  "forbidden_calls": [],
+  "formal_finance_approved": false,
+  "message": "'saved_unverified'",
+  "status": "FAIL",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v4.py\", line 386, in <module>\n    main()\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v4.py\", line 349, in main\n    \"saved_unverified\":saved[\"saved_unverified\"],\"unresolved\":[],\n                       ~~~~~^^^^^^^^^^^^^^^^^^^^\nKeyError: 'saved_unverified'\n",
+  "type": "KeyError"
+}

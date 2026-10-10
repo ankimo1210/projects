@@ -1,0 +1,670 @@
+{
+  "schema": "rb-f04-original-component-terminal-manifest-v2",
+  "scope": "completed original M6 saved-only all-N recheck and original M7 two state00 oracle measurements; financial qualification/full phase not approved",
+  "entries": [
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/actual-bounded-saved-check/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/actual-bounded-saved-check/metadata.json",
+      "bytes": 1111136,
+      "sha256": "f634a50b8feab4e85c79c7ce6d69416de7135a42922ba2238314d58e7d8e8d4f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/actual-bounded-saved-check/pack000000/arrays.npz",
+      "bytes": 7715892,
+      "sha256": "4c5cf823795cc620fdf42449f038fdea5210b9f034b36fc0a4dc43e48d902d04"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/actual-bounded-saved-check/pack000000/metadata.json",
+      "bytes": 229840,
+      "sha256": "0f50d21d1f6b3c6cfca5125be34a871b2f4dfd20b50fb61b40b48ab39d224411"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/actual-bounded-saved-check/pack000000/receipt.json",
+      "bytes": 318,
+      "sha256": "5d7bb0333b67ff03cff74ed536b17b033ca18888fd888c074612a8fafae152ac"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/actual-bounded-saved-check/receipt.json",
+      "bytes": 312,
+      "sha256": "675d09be4d97c05f2937953dd9e3905d3c064cb8da017b563f5f116c7782438a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/child.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/parent-cost-and-decision.json",
+      "bytes": 8993,
+      "sha256": "e377ee0cca90a2a61a5f9794baf1bd2e633101711c5b5fe927ba6fe73ab1a97b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/prior-saved-recheck-original-obligations.json",
+      "bytes": 118447,
+      "sha256": "2c61e3cb8e3d664d1b293536e0dc561e3f7008a17a6001fb090e5cfee8026fd7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/progress.json",
+      "bytes": 6085,
+      "sha256": "b897091bc05a6c90ae98a8f17672069c9516360bd764ad5a2df61eb5b681cc1c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-high/actual-bounded-saved-check/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-high/actual-bounded-saved-check/metadata.json",
+      "bytes": 1675759,
+      "sha256": "afcf4344f2d6643b30ed05cdc821962af53a18a8a61fae3c3c673af8e3fffe6c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-high/actual-bounded-saved-check/pack000000/arrays.npz",
+      "bytes": 20695652,
+      "sha256": "71052d9da496e6be496a39a0c6fa2b25a36d8556fd475eede4c016a289cdf733"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-high/actual-bounded-saved-check/pack000000/metadata.json",
+      "bytes": 332679,
+      "sha256": "b428907ccad96a325368cacd8811bd4db6e33f5160f3f42578db6a79a8e4a0fd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-high/actual-bounded-saved-check/pack000000/receipt.json",
+      "bytes": 319,
+      "sha256": "c00e77a600d9a10912a73f5048b55fc2795bf8366f2f32bb7c7a89671b112be5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-high/actual-bounded-saved-check/receipt.json",
+      "bytes": 312,
+      "sha256": "5847ee59c407558e4f27f658accb52812e88d40d9829e4310af7071f7972986b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-high/child.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-high/parent-cost-and-decision.json",
+      "bytes": 8987,
+      "sha256": "fbb8f623c3d6a198ab19cb8822074b091d5e460f8287f7379800d7eb903308ad"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-high/prior-saved-recheck-original-obligations.json",
+      "bytes": 168981,
+      "sha256": "988f737e4a20b6e8d479bdfaca213ccf4c2956958b682f01ee6a4925a04a0141"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/Heston-high/progress.json",
+      "bytes": 6083,
+      "sha256": "2bc99d2797d142815e3170e35763713c29bb8882f2d79ae06c88fe2d5505ab26"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/all-new-saved-recheck-costs-and-decision.json",
+      "bytes": 45267,
+      "sha256": "4b21a3f85f96ca589c7252e9fce01faa8f1f04340b0a94d7c1c2d78e9ba72732"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/initial-description.json",
+      "bytes": 2492862,
+      "sha256": "fd185c55ccb8a140b7c2e0c57c07903bc15bca0797d38f84b1fdd138ed7215f7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/metadata.json",
+      "bytes": 5346752,
+      "sha256": "6c0adf1c243011bace5997b02a0c8763f54f06aa59de5e1ebe7dd053fa588a03"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/pack000000/arrays.npz",
+      "bytes": 19963822,
+      "sha256": "847f29e9bea900daedddfc10351415ced6e808d9fb75fbd89b2b4749e8bc5511"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/pack000000/metadata.json",
+      "bytes": 457682,
+      "sha256": "447bff1e4eba0c8f7d804a08493dce8ee4ba9570c8ccdeb49c071fefb07e5d33"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/pack000000/receipt.json",
+      "bytes": 319,
+      "sha256": "b95d02bdabc3e91b728ad75a5a105c57e9fd7773a368a99532cea4c85aacfbd6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/pack000001/arrays.npz",
+      "bytes": 12306782,
+      "sha256": "704a1f72b709251e4e7af3187258e237ca3bda89626dfcbe575258be4118021a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/pack000001/metadata.json",
+      "bytes": 457163,
+      "sha256": "01fd0e8929d7d75b30364f8cfaf45598130535d22c33216f8dafe7e8738ccc5e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/pack000001/receipt.json",
+      "bytes": 319,
+      "sha256": "c5238139ea46892c4e9f8bd071cf323942c23d4d8b129d0de296b18a932698e6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/pack000002/arrays.npz",
+      "bytes": 5385868,
+      "sha256": "16dd4b9019fc04538498df61b08789cfdba17c278c7b6c6baa04b478726de9ea"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/pack000002/metadata.json",
+      "bytes": 188910,
+      "sha256": "9f770f702b90f15cc3b6ce73b3355c83a216ab386f9460f71121f2d86ba23b51"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/pack000002/receipt.json",
+      "bytes": 318,
+      "sha256": "28798e5fbfc3b4cd9337ddbb7a6eb7158d6cbc459d242a21e4fc8b34e54dc9f9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/actual-bounded-saved-check/receipt.json",
+      "bytes": 312,
+      "sha256": "2acc6f823e0c7780823cf57cfc52622e14285746f2b6bd01890ec577231e7df7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/child.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/parent-cost-and-decision.json",
+      "bytes": 9601,
+      "sha256": "3a217c915d64858c6b6d04d64a135a118b14efffe9d9f1d442f0d29516f87b28"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/prior-saved-recheck-original-obligations.json",
+      "bytes": 560728,
+      "sha256": "794f975e21d430c4b2f8ac30e27885215c206aea0df2d9c6713fc7296ce2bb14"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-coarse/progress.json",
+      "bytes": 6088,
+      "sha256": "b8db75307e247b8c6bf64308098a98316006266bb459ea56ea9a6b4c121e441d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/metadata.json",
+      "bytes": 14462741,
+      "sha256": "8802c84fa355c792c997d98f923cafb6a5fa705d02ddc732cc71f3b83fd3493f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000000/arrays.npz",
+      "bytes": 59957838,
+      "sha256": "95cac8926d1c3c4111a74674f203a3cb57f772a70c563396a8654f3c516ee0b1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000000/metadata.json",
+      "bytes": 459629,
+      "sha256": "01704c90f81bcf8ddde5c6e50459e30009a7eae1d27338bb8f972caf4f37a304"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000000/receipt.json",
+      "bytes": 319,
+      "sha256": "6f64d38d285daec35e954006e17bcd53ad02c153e0f82c75f5261f2b8e15b1a9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000001/arrays.npz",
+      "bytes": 23335534,
+      "sha256": "63a2fa3c7032d19172ffcdde7ac3545d9be711e211cb6dac7aaa754ebba8787d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000001/metadata.json",
+      "bytes": 458774,
+      "sha256": "d01c389a7663e4b4275f67e34da65091d8464a642d3e3f1b4b2c047950df6127"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000001/receipt.json",
+      "bytes": 319,
+      "sha256": "0ade9cbf1e1c12fa6bf24bfe6af3278ae9f4f404654540cb785020ae1c7b379b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000002/arrays.npz",
+      "bytes": 23070070,
+      "sha256": "af6950d12efd10354872c697fe8e3569cae899a5bb6b226ad4d36166da721bd0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000002/metadata.json",
+      "bytes": 458638,
+      "sha256": "276dd4e2a41fd344f15dd217dbb179872f0734556fb8dcee2b78d86b3d890fc1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000002/receipt.json",
+      "bytes": 319,
+      "sha256": "5d866fc0c99652cabb3e44e0c7eba6d375ca48dcef56cf204b19fc43700e4ff5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000003/arrays.npz",
+      "bytes": 22820206,
+      "sha256": "8cf9f2ed12d845ac5c367bc00bbb14f777b24d0edf4417767e73d2deef7262e7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000003/metadata.json",
+      "bytes": 458642,
+      "sha256": "87c971f51c07b5460e110096ba3361dd5ffa481135f68ddb91ebbf49cc49f11a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000003/receipt.json",
+      "bytes": 319,
+      "sha256": "8942bc356c51f16ad0efcc704fc1708728f97cc40815efab19a66069da82cfc7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000004/arrays.npz",
+      "bytes": 22562542,
+      "sha256": "6e60e41e6f9f55c9f0195b42419600cce598052247517c601a9303030b25dc50"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000004/metadata.json",
+      "bytes": 458642,
+      "sha256": "a5ef45e5df2066f0efff22cecda048e4c6a19ee0392c87e6920635f84643587a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000004/receipt.json",
+      "bytes": 319,
+      "sha256": "67cdf2a3e21ef8f8e9a381b30b5cef5e2e216a522ce4b070deb1c0564da186d7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000005/arrays.npz",
+      "bytes": 23732994,
+      "sha256": "4b8a916fad3335399fdb82bee953f436529066bdddc09c76f6b9f2eda00d7154"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000005/metadata.json",
+      "bytes": 457283,
+      "sha256": "93a4f93538c5089636ac005712fbbe3e43b2b2a1092fe472b6923b5fec52ab67"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000005/receipt.json",
+      "bytes": 319,
+      "sha256": "a7b579aedf645f481a277b6d9fce6e533af33f3d17474c4e283cd64a3a3addd1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000006/arrays.npz",
+      "bytes": 5553256,
+      "sha256": "64482fe96eb59ee3247507ce741ceab0a1feb69d0c51e51b5cafcdf34b9021a8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000006/metadata.json",
+      "bytes": 108397,
+      "sha256": "bb6746e5d3399e0dbae27280b0e7e6f45ca57e192ab78c922c78213a18efd5d7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/pack000006/receipt.json",
+      "bytes": 318,
+      "sha256": "ed1268a5af7dc6f139e2274395b73cdd8afb06c747cc29e11dc49152d325fb9e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/actual-bounded-saved-check/receipt.json",
+      "bytes": 312,
+      "sha256": "e7d448540e26ede370b7bf59854950663219ebfbe6434a3923382f8a6243d909"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/child.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/parent-cost-and-decision.json",
+      "bytes": 10841,
+      "sha256": "044b1c5d64b7f8c3734bca575ab26ae7fb6b0fb6aad714c65540b6faa23b008f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/prior-saved-recheck-original-obligations.json",
+      "bytes": 1446003,
+      "sha256": "8dcb97f7890664b4c9019979fe9e2cba8126bf33e9d6b9050c6d297ea3933020"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/local-high/progress.json",
+      "bytes": 6091,
+      "sha256": "868b291a610b8046e1615a4704495569a6be2daf43119da62a714ac10fbf1eb6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1/prior-root-budget.json",
+      "bytes": 2514019,
+      "sha256": "6e85a12b6ea26c966e390596e797e9a5920a89b993a639a8b7591b8fd92a437b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-original-oracle/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-original-oracle/metadata.json",
+      "bytes": 1578913,
+      "sha256": "aa70420223a3a156302fc7c08992a0fcbbcf9a2e7657f50909c8c06bcff1048a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-original-oracle/pack000000/arrays.npz",
+      "bytes": 3252911,
+      "sha256": "2933efc4d22e8ea058df9c29aebd17cbcb592f93653859975160188ea827ac83"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-original-oracle/pack000000/metadata.json",
+      "bytes": 441374,
+      "sha256": "86086fe84a255eea4c556ef6074683405dd338e31623ed8c6d7f45feed62636b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-original-oracle/pack000000/receipt.json",
+      "bytes": 318,
+      "sha256": "b0a5321d527480e3ad4dce9e94e863faec3a58614c9683bffe814807e3f17f30"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-original-oracle/pack000001/arrays.npz",
+      "bytes": 2515350,
+      "sha256": "5d42bb3650e4b8ef1e42c95627cf625b3fc884c95d742e47eb1557bb9753b61b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-original-oracle/pack000001/metadata.json",
+      "bytes": 2380,
+      "sha256": "ca4e9692c9243bc2e539c68522b984ea6418899e9b3221c1ae102f525a74422e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-original-oracle/pack000001/receipt.json",
+      "bytes": 318,
+      "sha256": "af5212278c0f05d1b4aa654ef0505e3c80a64d159dd85c9c72d4ce355d707163"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-original-oracle/receipt.json",
+      "bytes": 312,
+      "sha256": "d8fb24f00a48aa0e2e70dd9868c0fafe844219960ae4b7025d93d8796114a469"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-saved-check/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-saved-check/metadata.json",
+      "bytes": 5286,
+      "sha256": "218191aa0b94c50bfc53c3d56b2ad00f23daae43da584894724fbf30e2f6c043"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-saved-check/pack000000/arrays.npz",
+      "bytes": 302052,
+      "sha256": "1ef49ecc24636b63cf81c4aa41d920e5b7d86d9b43b02324a50b5e6e048809c8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-saved-check/pack000000/metadata.json",
+      "bytes": 2432,
+      "sha256": "4f4a3b8ff2df71835d02e1a21b1bef6537d1c99a91ac9c5f8a14b30e5b8defc8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-saved-check/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "ce320efba8ad06468252df06300c1f9c421b60743e09eabbe3d414fadf891a2b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/actual-saved-check/receipt.json",
+      "bytes": 312,
+      "sha256": "6fbd445c96960e03ed95ee42dee1bb135f03dd918cf04ea0031b9eb2f61ed105"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/child.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/generator-expenses-and-driver-map/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/generator-expenses-and-driver-map/metadata.json",
+      "bytes": 240911,
+      "sha256": "7a629b12adf8d4bc971d109eebe2f6b296b0adca505ab8da12c2fb0eef3a858e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/generator-expenses-and-driver-map/pack000000/arrays.npz",
+      "bytes": 484,
+      "sha256": "116ad1dec29f92714b586d4e50ec21ce786023bc35859ee9256ea07dcb30d6a6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/generator-expenses-and-driver-map/pack000000/metadata.json",
+      "bytes": 240,
+      "sha256": "3e47a41eab6c4cee187f31ba068f110bcb41e67e352163a845e92d6414ffcfaf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/generator-expenses-and-driver-map/pack000000/receipt.json",
+      "bytes": 314,
+      "sha256": "2ae2fd0f42703b8d856a155534a620c8b97179c624015e367ca451108750da72"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/generator-expenses-and-driver-map/receipt.json",
+      "bytes": 312,
+      "sha256": "a76102a1105ec36a97ef635895aecf066e6c88bb12c40db18ce26c9bd561ac01"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/initial-original-obligation/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/initial-original-obligation/metadata.json",
+      "bytes": 2963,
+      "sha256": "1dbb1366a071fa1aa233882be9b67a1160ae22fe8d0ca717c5099bdb9a3fdcc8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/initial-original-obligation/pack000000/arrays.npz",
+      "bytes": 1983756,
+      "sha256": "7416cb80ddf76b4ce08aa64197ce0e6cd6ce3a014ba4f374e24aca0619456851"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/initial-original-obligation/pack000000/metadata.json",
+      "bytes": 718,
+      "sha256": "3580412906fd158efb26898a3b2578d33027f0794c8630fee9bbb6e3c0ddeca1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/initial-original-obligation/pack000000/receipt.json",
+      "bytes": 318,
+      "sha256": "b9217a3ee84e521846f135a36fffe243c81e2efa86777e569e4d469b46cce701"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/initial-original-obligation/receipt.json",
+      "bytes": 312,
+      "sha256": "0abbd124c63fd204c7600c4274c1cf3fbbab127c7ac06ce45fb493b14adb5860"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/parent-cost-and-decision.json",
+      "bytes": 11589,
+      "sha256": "6aa791cd46c9d4d5a5d8f6777523bb3d9560c12c504cd43445a7838bb4448665"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/Heston/progress.json",
+      "bytes": 5964,
+      "sha256": "7a5562927b23edb1df734c40bc710cb7bcf51aca330903339edd2c42db645275"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/all-costs-and-decision.json",
+      "bytes": 27519,
+      "sha256": "410ff54fef302cc52573e32fd7fe17e5c2c3fb9d31d5a41413873010016e8689"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-original-oracle/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-original-oracle/metadata.json",
+      "bytes": 595856,
+      "sha256": "756412f75759592beac7ebba0349a7ddab8e3b7f0544887b2a38cddda01883dc"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-original-oracle/pack000000/arrays.npz",
+      "bytes": 16129919,
+      "sha256": "05cfa186355bdd255388aceba9c198dd1007c97c4f67e007ff1642c2f2232fb4"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-original-oracle/pack000000/metadata.json",
+      "bytes": 141566,
+      "sha256": "92646a08b82520c80bb89385f9244313a0dd22a6e9d197f6c309574395d95c4d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-original-oracle/pack000000/receipt.json",
+      "bytes": 319,
+      "sha256": "f1e4b4523907e93565f8d0ca0fae8b1b61ec9eff6b8945dca83f236981d8f98a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-original-oracle/receipt.json",
+      "bytes": 312,
+      "sha256": "a9a43b3473c936b6bd6502b53571ce1f9a5858c1a2bf9a9348656b949ee4e788"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-saved-check/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-saved-check/metadata.json",
+      "bytes": 5288,
+      "sha256": "177d1fc6a8345fc18219d72c8570f44b906c28a4f99c14ef708dab57de9bb3f7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-saved-check/pack000000/arrays.npz",
+      "bytes": 302052,
+      "sha256": "4c2ef45575dd20fa85099c110b4fb18f10d4b30ffb003992b93ca5bc60d142c9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-saved-check/pack000000/metadata.json",
+      "bytes": 2432,
+      "sha256": "4f4a3b8ff2df71835d02e1a21b1bef6537d1c99a91ac9c5f8a14b30e5b8defc8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-saved-check/pack000000/receipt.json",
+      "bytes": 317,
+      "sha256": "97ee5e5267c74e0e146ab062b370cd7230544b8fda543219936804ffebc1df14"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/actual-saved-check/receipt.json",
+      "bytes": 312,
+      "sha256": "b7e853bf107b755d0e3b00254a82abcde60a2c758e6375786895c545bdca3671"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/child.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/generator-expenses-and-driver-map/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/generator-expenses-and-driver-map/metadata.json",
+      "bytes": 241027,
+      "sha256": "8843c47bf9c1c7db31af2072b28a611702773e4ac14e9964f57927edfbe644c2"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/generator-expenses-and-driver-map/pack000000/arrays.npz",
+      "bytes": 484,
+      "sha256": "116ad1dec29f92714b586d4e50ec21ce786023bc35859ee9256ea07dcb30d6a6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/generator-expenses-and-driver-map/pack000000/metadata.json",
+      "bytes": 240,
+      "sha256": "3e47a41eab6c4cee187f31ba068f110bcb41e67e352163a845e92d6414ffcfaf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/generator-expenses-and-driver-map/pack000000/receipt.json",
+      "bytes": 314,
+      "sha256": "2ae2fd0f42703b8d856a155534a620c8b97179c624015e367ca451108750da72"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/generator-expenses-and-driver-map/receipt.json",
+      "bytes": 312,
+      "sha256": "31b7d8ec6d50e736266b976099ac8fbf134aa977e81ae53bbc1243305aa393c3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/initial-original-obligation/arrays.npz",
+      "bytes": 22,
+      "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/initial-original-obligation/metadata.json",
+      "bytes": 2961,
+      "sha256": "ce0cedca7f0da4293e1989fa3e41bb68f7997e9ced84a674169218b23a94274d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/initial-original-obligation/pack000000/arrays.npz",
+      "bytes": 1983756,
+      "sha256": "7416cb80ddf76b4ce08aa64197ce0e6cd6ce3a014ba4f374e24aca0619456851"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/initial-original-obligation/pack000000/metadata.json",
+      "bytes": 718,
+      "sha256": "3580412906fd158efb26898a3b2578d33027f0794c8630fee9bbb6e3c0ddeca1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/initial-original-obligation/pack000000/receipt.json",
+      "bytes": 318,
+      "sha256": "b9217a3ee84e521846f135a36fffe243c81e2efa86777e569e4d469b46cce701"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/initial-original-obligation/receipt.json",
+      "bytes": 312,
+      "sha256": "224759fb49f8bf925a8393b8823f275744ed128253e9663627576660134c935c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/parent-cost-and-decision.json",
+      "bytes": 11285,
+      "sha256": "e30500687a444cab6687642cb44873bf1a25455d88f05c3a38301f7861e82c6c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/local/progress.json",
+      "bytes": 5965,
+      "sha256": "d23d8c0526185d24d9f7265167e22fe1105b76ca2ecf3432b1a7a228fea36c0f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2/prior-root-budget.json",
+      "bytes": 40409,
+      "sha256": "8035595d58f5c8976029c8fe8787d415d2bf9842aa2e12e0d69dfd9f550a41a7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-root-enclosing-cost-v1.json",
+      "bytes": 1324,
+      "sha256": "ebc2f3d4f459e768fc45e616d845a4ac8636675cf34a5563f442e6a38fa9c066"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-root-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-root-enclosing-cost-v2.json",
+      "bytes": 1455,
+      "sha256": "0a3c251dc581674b6cd834f1b2187b7f27223165b67b89ea52b4dee76489e879"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-root-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "file_count": 130,
+  "total_physical_bytes": 311484464,
+  "source_identity_sha256": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "original_M6_N": 1024,
+  "original_M6_nodes": 2128,
+  "new_M6_RNG": false,
+  "original_M7_N": 4096,
+  "original_M7_query_paths_per_model": 106496,
+  "M7_saved_independent_path_generation_verified": false,
+  "formal_pilot_or_main": false,
+  "financial_qualification": "unknown",
+  "creation_wall_seconds_before_own_write": 0.2579635780057288,
+  "creation_CPU_seconds_before_own_write": 0.251552997,
+  "own_final_receipt_write_cost": "unknown"
+}

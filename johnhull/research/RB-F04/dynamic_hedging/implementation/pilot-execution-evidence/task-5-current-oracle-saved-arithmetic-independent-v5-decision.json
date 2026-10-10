@@ -1,0 +1,33 @@
+{
+  "decision": "PASS_saved_arithmetic_resource_and_provenance_only",
+  "scope": "M7 original state00 independent oracle N4096 Heston/local 13queries coarse768/fine1536; complete saved arithmetic/provenance/resource observations",
+  "source_identity_sha256": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "prior_sha256": "8035595d58f5c8976029c8fe8787d415d2bf9842aa2e12e0d69dfd9f550a41a7",
+  "full_original_payoffs_each": 106496,
+  "models": [
+    "Heston",
+    "local"
+  ],
+  "comparison_count": 34149,
+  "compared_values_including_alias_rechecks": 1692611,
+  "numeric_max_abs_difference": 7.105427357601002e-15,
+  "all_sources_inputs_original_observations_unchanged": true,
+  "financial_qualification": "unknown",
+  "formal_budget_approved": false,
+  "formal_phase_approved": false,
+  "whole_phase_runtime_guaranteed": false,
+  "independent_source_or_checker_approval_claimed": false,
+  "unverified": [
+    "independent_path_generation",
+    "full_common_domain_call_fit",
+    "original_controls_equivalence",
+    "underlying_CF_PDE_price_accuracy",
+    "normal_generation_or_SDE_path_replay"
+  ],
+  "normal_arrays_saved": false,
+  "financial_generators_or_RNG_called": false,
+  "successful_source_review_history": "bounded checker independently approved elsewhere; this author did not re-review own source",
+  "original_controls_delta": "graph{} replaced by prior explicitly approved component M4/M5 controls; no original-control financial equivalence established",
+  "baseline_refinement_scope": "saved CF receipt price arithmetic and saved local spatial-array interpolation/three-width derivative arithmetic only; underlying CF/PDE precision not certified",
+  "audit_failure_handling": "v1-v4 original scripts/failure logs/costs retained; failures originated in audit assumptions, not original M7 finance observations"
+}

@@ -1,0 +1,55 @@
+{
+  "all_original_3138jobs_20teacher_10driver_retained": true,
+  "evidence": {
+    "task-5-whole-phase-capacity-static-v1-calculation.py": {
+      "bytes": 19583,
+      "sha256": "02b7fb03422952d1d2b6a1a73b421051e317c5d7c9bcf39bfacc3a2e29a0e461"
+    },
+    "task-5-whole-phase-capacity-static-v1-creation-cost.json": {
+      "bytes": 1489,
+      "sha256": "7002993944c1330f7e4cc745fc6260349a00f4a3ce31408693d8640ff12551b5"
+    },
+    "task-5-whole-phase-capacity-static-v1-final-integer-verification.json": {
+      "bytes": 727,
+      "sha256": "ac328378ee240ecd6582ec29e6a1540ccc944cccd9241a3dda5e3c4d2d4ab700"
+    },
+    "task-5-whole-phase-capacity-static-v1-maximum-node-budget-candidate.json": {
+      "bytes": 1305,
+      "sha256": "8d35f267fe6f03e7e2d819536d3c4a23e1954ca17bb3c23f913f4397991fa11b"
+    },
+    "task-5-whole-phase-capacity-static-v1-metadata-origin-map.json": {
+      "bytes": 495219,
+      "sha256": "3d673ee744472ec9143b1977c48ffd72057abd39f97ab3afd75893244e1ebe24"
+    },
+    "task-5-whole-phase-capacity-static-v1-report.md": {
+      "bytes": 9274,
+      "sha256": "4636da2f18262608a349830a523a1ee9be9b3caac53224f1b066272466b484d4"
+    },
+    "task-5-whole-phase-capacity-static-v1-results.json": {
+      "bytes": 16084,
+      "sha256": "73dce14a81ec35dbced1fca2d9cac1e79a34d0d33f64e408a3f2ff67624151eb"
+    },
+    "task-5-whole-phase-capacity-static-v1-validation-0.log": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "task-5-whole-phase-capacity-static-v1-validation-1.log": {
+      "bytes": 25,
+      "sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50"
+    },
+    "task-5-whole-phase-capacity-static-v1-validation-2.log": {
+      "bytes": 1507,
+      "sha256": "5f59db1caaa016ae8d0b38f667b56d4d15972989c1f069881773bd4e719c52d7"
+    },
+    "task-5-whole-phase-capacity-static-v1-volume-observation.json": {
+      "bytes": 477,
+      "sha256": "9a3458f6dbae7f4ee420d30b727a560c8ab96c32939e0b11e2e865647ed58e62"
+    }
+  },
+  "formal_financial_qualification": "unknown",
+  "genuine_M6_independent_results_sha256": "81318ade25477de05e47f25afb52117b74287cae22268ab5551f4d9df33a9bcd",
+  "new_financial_decode_RNG_solver_SDE_generation": false,
+  "origin_terminal_input_manifest_sha256": "511191b8a3147c03ddebbafd4989e8f51cfd72428e8296338484fd3d15ecfbf8",
+  "root_preapproved": false,
+  "scope": "D_only_static_capacity_retaining_original_whole_scientific_contract"
+}

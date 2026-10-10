@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v3.py", line 372, in <module>
+    main()
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v3.py", line 256, in main
+    eq(derivs,ref["three_width_derivatives"],model+" all independent CF/PDE receipt Greeks")
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-saved-arithmetic-independent-v3.py", line 46, in eq
+    assert np.allclose(a, b, rtol=2e-9, atol=2e-10, equal_nan=True), label
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Heston all independent CF/PDE receipt Greeks

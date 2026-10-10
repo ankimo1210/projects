@@ -1,0 +1,8 @@
+{
+  "scope": "independent M6 saved report/cache/resource review enclosing launch/import",
+  "exit_code": 0,
+  "wall_seconds": 9.811074430996086,
+  "child_CPU_seconds": 9.770509,
+  "child_peak_RSS_bytes": 1267691520,
+  "outer_final_receipt_save": "unknown"
+}

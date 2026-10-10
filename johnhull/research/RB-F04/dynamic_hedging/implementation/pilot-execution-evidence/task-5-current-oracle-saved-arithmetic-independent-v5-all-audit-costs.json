@@ -1,0 +1,60 @@
+{
+  "scope": "all five saved-only independent audit subprocesses; failed probes inclusive; preparation/read/exploration/wrappers/report writes outside these subprocesses remain unitemized unknown",
+  "observed_audit_subprocess_wall_seconds": 17.458260625011462,
+  "observed_audit_subprocess_CPU_seconds": 30.403173,
+  "audit_history": [
+    {
+      "version": 1,
+      "script": "task-5-current-oracle-saved-arithmetic-independent-v1.py",
+      "log": "task-5-current-oracle-saved-arithmetic-independent-v1-run1.log",
+      "cost_receipt": "task-5-current-oracle-saved-arithmetic-independent-v1-run1-parent-cost.json",
+      "exit_code": 1,
+      "wall_seconds": 3.2999548810039414,
+      "child_CPU_seconds": 5.4413409999999995,
+      "audit_status_reason": "NPZ receipt counts NPY headers, audit originally counted only payload bytes"
+    },
+    {
+      "version": 2,
+      "script": "task-5-current-oracle-saved-arithmetic-independent-v2.py",
+      "log": "task-5-current-oracle-saved-arithmetic-independent-v2-run1.log",
+      "cost_receipt": "task-5-current-oracle-saved-arithmetic-independent-v2-run1-parent-cost.json",
+      "exit_code": 1,
+      "wall_seconds": 3.1075347830046667,
+      "child_CPU_seconds": 5.796215,
+      "audit_status_reason": "audit bool subtraction unsupported"
+    },
+    {
+      "version": 3,
+      "script": "task-5-current-oracle-saved-arithmetic-independent-v3.py",
+      "log": "task-5-current-oracle-saved-arithmetic-independent-v3-run1.log",
+      "cost_receipt": "task-5-current-oracle-saved-arithmetic-independent-v3-run1-parent-cost.json",
+      "exit_code": 1,
+      "wall_seconds": 3.1551303480009665,
+      "child_CPU_seconds": 5.778244,
+      "audit_status_reason": "audit assumed baseline refinement query ordering matched oracle ordering"
+    },
+    {
+      "version": 4,
+      "script": "task-5-current-oracle-saved-arithmetic-independent-v4.py",
+      "log": "task-5-current-oracle-saved-arithmetic-independent-v4-run1.log",
+      "cost_receipt": "task-5-current-oracle-saved-arithmetic-independent-v4-run1-parent-cost.json",
+      "exit_code": 1,
+      "wall_seconds": 3.7727680309981224,
+      "child_CPU_seconds": 6.503897,
+      "audit_status_reason": "audit report key used saved_unverified instead of actual unverified"
+    },
+    {
+      "version": 5,
+      "script": "task-5-current-oracle-saved-arithmetic-independent-v5.py",
+      "log": "task-5-current-oracle-saved-arithmetic-independent-v5-run1.log",
+      "cost_receipt": "task-5-current-oracle-saved-arithmetic-independent-v5-run1-parent-cost.json",
+      "exit_code": 0,
+      "wall_seconds": 4.122872582003765,
+      "child_CPU_seconds": 6.883476,
+      "audit_status_reason": "completed saved-only arithmetic/resource audit"
+    }
+  ],
+  "peak_final_audit_RSS_bytes": 697397248,
+  "financial_generation_or_RNG_executed": false,
+  "production_source_or_original_observations_changed": false
+}

@@ -1,0 +1,175 @@
+
+import sys,json,hashlib,time,resource,collections,gc,zipfile
+from pathlib import Path
+W=Path('/home/kazumasa/worktrees/johnhull-research-roadmap');D=W/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+R=W/'johnhull/research/RB-F04/dynamic_hedging';O=D/'task-5-M6-saved-recheck-observation-root-v1'
+P=D/'task-5-M6-saved-recheck-independent-v1'
+sys.path[:0]=[str(R),str(W/'johnhull/hullkit/src'),str(W/'deep_hedge_price/src')]
+import numpy as np
+import run_pilot as pilot
+import check_pilot as checker
+import hullkit._dynamic_hedging_conditional as conditional
+def forbid(*a,**k):raise AssertionError('review is saved-only; no SDE/solver/RNG/generation')
+np.random.default_rng=forbid;np.random.SeedSequence=forbid
+conditional.teacher_primitives=forbid
+for name in ['check_teacher_record','check_teacher_grid_record']:setattr(checker,name,forbid)
+for name in ['run_teacher_job','run_teacher_grid_job','run_teacher_driver_job']:setattr(pilot,name,forbid)
+T=time.perf_counter();CPU=time.process_time()
+def J(p):return json.loads(p.read_text())
+def sha(p):
+ h=hashlib.sha256()
+ with p.open('rb') as f:
+  for s in iter(lambda:f.read(8*1024**2),b''):h.update(s)
+ return h.hexdigest()
+def eq(a,b):assert a==b,(a,b)
+def ap(a,b):assert np.allclose(a,b,rtol=2e-9,atol=2e-10,equal_nan=True)
+B=J(D/'task-5-M6-saved-recheck-budget-root-fixed-v1.json');E=J(D/'task-5-M6-saved-recheck-root-enclosing-cost-v1.json')
+C=J(O/'all-new-saved-recheck-costs-and-decision.json');M=J(W/B['saved_input_manifest']['path'])
+previous=J(D/'task-5-current-full-teacher-independent-m6-v2-results.json')
+oldclasses={v['class']:v for v in previous['classes']}
+eq(sha(D/'task-5-M6-saved-recheck-budget-root-fixed-v1.json'),E['root_prior_sha256'])
+eq(sha(W/B['saved_input_manifest']['path']),B['saved_input_manifest']['sha256'])
+eq(E['exit_code'],0);eq(E['new_RNG'],False);eq(E['original_generation_reexecuted'],False)
+eq(B['formal_finance_approved'],False);eq(B['new_RNG_permitted'],False);eq(B['root_preapproved'],True)
+eq(B['new_checker_source_identity_sha256'],'408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652')
+eq(B['generation_source_identity_sha256'],'4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0')
+eq(M['all_original_nodes'],2128);eq(M['unique_input_file_count'],13157)
+eq(M['all_original_M6_files_covered'],True)
+proof=M['independent_M6_evidence_reused'];eq(sha(W/proof['path']),proof['sha256'])
+eq(J(D/'task-5-current-full-teacher-independent-m6-v2-decision.json')['decision'],
+ 'approve_bounded_saved_original_M6_resource_observations_with_three_actual_RSS_caps')
+for v in M['history_cost_receipts'].values():eq(sha(W/v['path']),v['sha256'])
+def sourcecheck():return [p for p,h in B['new_checker_source_bindings'].items() if sha(W/p)!=h]
+eq(sourcecheck(),[]);eq(len(B['new_checker_source_bindings']),81)
+oldsource=J(D/'task-5-current-full-teacher-budget-root-fixed-v2.json')['source_bindings']
+eq([p for p,h in B['new_checker_source_bindings'].items() if oldsource.get(p)!=h],
+ ['johnhull/research/RB-F04/dynamic_hedging/check_pilot.py'])
+eq(sha(D/'task-5-M6-saved-recheck-measurement-v1.py'),B['probe_source_sha256'])
+results={'scope':'saved original M6 bounded resource observations only','prior_budget_sha256':E['root_prior_sha256'],
+ 'new_source_canonical_identity':B['new_checker_source_identity_sha256'],
+ 'original_generation_source_identity':B['generation_source_identity_sha256'],
+ 'source81_before_stable':True,'all_original_terminal_manifest_authenticated_by_SHA_and_reused':True,
+ 'original_terminal_file_count':13157,'original_terminal_file_hash_scan_repeated':False,
+ 'old_M6_independent_provenance_and_resource_approval_reused':True,
+ 'original_3_RSS_caps_failure_costs_preserved':True,
+ 'new_SDE_solver_RNG_generation_or_original_huge_checker_decode':False,'classes':[],
+ 'financial_qualification':'unknown','formal_finance_budget_lock_phase_volume_rate_approval':False}
+for row in C['classes']:
+ name=row['class'];spec=B['classes'][name];n=spec['original_nodes'];K=spec['threshold_count']
+ out=O/name;progress=J(out/'progress.json');eq(progress,row['child_progress'])
+ eq(row,J(out/'parent-cost-and-decision.json'))
+ eq(row['status'],'completed_saved_only_component');eq(row['exit_code'],0);eq(progress['status'],'completed')
+ for k in ['actual_cap_evidence','live_monitor_cap_evidence']:eq(row[k],None)
+ for k in ['RSS_overrun_bytes','wall_overrun_seconds','RSS_unknown_sample_count','parent_RSS_unknown_sample_count']:eq(row[k],0)
+ eq(row['observer_errors'],[])
+ cap=B['wall_limit_seconds_per_class'][name]
+ assert row['wall_seconds']<=cap
+ assert max(row['observed_child_peak_RSS_bytes'],row['saved_child_kernel_peak_RSS_bytes'],
+ row['observed_parent_peak_RSS_bytes'])<=B['rss_limit_bytes']
+ ap(row['wall_seconds'],row['stopped']['wall']-row['started']['wall'])
+ stages=progress['stages'];names=[v['stage'] for v in stages]
+ expected=['root_prior_old_origin_new_checker_sources_verified',
+ 'all_original_obligations_driver_and_grid_bindings_authenticated',
+ 'new_bounded_full_original_N_SDE_labels_cache_checker_returned',
+ 'thin_report_written_read_full_coverage_authenticated','new_checker_source_stable','child_completed_administrative_check']
+ eq(names,expected)
+ clocks=[v['clock']['wall'] for v in stages];eq(clocks,sorted(clocks))
+ assert row['started']['wall']<=clocks[0]<=clocks[-1]<=row['stopped']['wall']
+ eq(progress['no_new_RNG'],True);eq(progress['no_financial_generation'],True)
+ eq(progress['no_old_generation_or_failed_check_cost_added'],True)
+ coverage=progress['coverage']
+ for k in ['original_nodes','retained_nodes','sde_replayed_nodes','all_label_compared_nodes']:eq(coverage[k],n)
+ eq(coverage['original_n'],1024);eq(coverage['partial_or_nonreplayed_nodes'],0)
+ eq(coverage['unexecuted_original_nodes'],0);eq(coverage['cache_comparison_returned'],True)
+ eq(coverage['full_original_coverage'],True);eq(coverage['financial_qualification'],'unknown')
+ # Read only bounded report and original cache container, never the original
+ # full checker report or per-node financial primitives/samples.
+ reportpath=out/'actual-bounded-saved-check'
+ report,receipt=pilot.read_pilot_artifact(reportpath)
+ eq(receipt,progress['saved_report_receipt'])
+ oldpath=W/spec['raw_grid_artifact'];grid,rawreceipt=pilot.read_pilot_artifact(oldpath)
+ eq(rawreceipt,progress['raw_grid_receipt'])
+ obligation=J(out/'prior-saved-recheck-original-obligations.json')
+ eq(obligation['all_node_bindings'],spec['native_node_bindings'])
+ eq(obligation['planned_nodes'],grid['planned_nodes'])
+ eq(obligation['original_n'],1024);eq(obligation['original_nodes'],n)
+ eq(obligation['generation_source_identity_sha256'],B['generation_source_identity_sha256'])
+ eq(obligation['new_checker_source_identity_sha256'],B['new_checker_source_identity_sha256'])
+ eq(obligation['original_qualification_unknown'],True)
+ eq(report['original_n'],1024);eq(report['original_node_count'],n);eq(report['executed_node_count'],n)
+ eq(len(report['raw_checks']),n);eq(report['financial_qualification'],'unknown');eq(report.get('status'),None)
+ pilot.runner._same(grid['cache'],report['cache'],'original whole saved cache vs bounded report')
+ oldfiles=M['files']['classes'][name]
+ for f in oldpath.rglob('*'):
+  if f.is_file():eq(sha(f),oldfiles[str(f.relative_to(W))])
+ eq(grid['original_n'],1024);eq(len(grid['nodes']),n);eq(grid['unexecuted_node_count'],0)
+ eq(grid['nodes'],spec['native_node_bindings']);eq(grid['financial_qualification'],'unknown')
+ statuscounts=collections.Counter();invalid=0;unknown=0
+ for i,(checked,node) in enumerate(zip(report['raw_checks'],grid['nodes'],strict=True)):
+  eq(checked['original_n'],1024);eq(checked['full_saved_driver_sde_replayed'],True)
+  eq(checked['report_mode'],'bounded');eq(checked['financial_qualification'],'unknown')
+  eq(checked['unverified'],['global_driver_generation','independent_accuracy'])
+  assert 'labels' not in checked
+  ref=checked['raw_reference'];eq(ref['node_index'],i);eq(ref['path'],node['path'])
+  eq(ref['node'],{k:node[k] for k in ('date_index','spot','state')});eq(ref['raw_binding'],node['raw_binding'])
+  assert 'artifact_context' not in ref
+  label=checked['labels_reference'];eq(label['raw_reference'],ref)
+  eq(label['raw_field'],'labels');eq(label['all_original_N_label_values_compared'],True)
+  p=Path(node['path'])/'metadata.json'
+  eq(sha(p),oldfiles[str(p.relative_to(W))])
+  nm=J(p)['metadata'];physical=nm['tree']['labels'];samples=nm['teacher_storage']['samples']
+  eq(label['fields'],sorted(set(physical)|set(samples)))
+  fields={k:{'shape':nm['arrays'][v['__array__']]['shape'],'dtype':nm['arrays'][v['__array__']]['dtype']}
+    for k,v in physical.items() if isinstance(v,dict) and '__array__' in v}
+  fields.update(samples);eq(label['array_fields'],fields)
+  for d in samples.values():eq(d,{'shape':[1024,K],'dtype':'<f8'})
+  state=np.asarray(checked['raw_status']);eq(state.shape,(K,))
+  se=np.asarray(checked['raw_standard_errors']);eq(se.shape,(K,))
+  bad=~np.isin(state,['ready','not_required_linear_claim','not_required_settled_claim'])
+  eq(checked['unknown_node_count'],int(bad.sum()))
+  eq(checked['gate_standard_errors'],[None if b else float(s) for b,s in zip(bad,se,strict=True)])
+  us,ns=np.unique(state,return_counts=True);statuscounts.update({str(u):int(v) for u,v in zip(us,ns)})
+  unknown+=checked['unknown_node_count'];invalid+=checked['invalid_path_count']
+ eq(dict(statuscounts),oldclasses[name]['label_status']);eq(invalid,0)
+ # Physical bytes and expanded header receipts belong to the thin report only.
+ npzbytes=expanded=payload=metareceipt=0;packcount=0
+ for dirp in [reportpath,*sorted(p for p in reportpath.iterdir() if p.is_dir())]:
+  wrapped=J(dirp/'metadata.json');rc=J(dirp/'receipt.json')
+  npzbytes+=(dirp/'arrays.npz').stat().st_size;expanded+=rc['uncompressed_bytes']
+  payload+=sum(v['nbytes'] for v in wrapped['arrays'].values())
+  metareceipt+=(dirp/'metadata.json').stat().st_size+(dirp/'receipt.json').stat().st_size
+  if dirp!=reportpath:packcount+=1
+  with zipfile.ZipFile(dirp/'arrays.npz') as z:eq(sum(v.file_size for v in z.infolist()),rc['uncompressed_bytes'])
+  assert rc['uncompressed_bytes']<=256*1024**2
+ results['classes'].append({'class':name,'original_n':1024,'original_nodes':n,'all_11_samples_descriptor_count':n*11,
+  'all2128_SDE_completed_record_and_all_original_N_comparison_flags_authenticated':True,
+  'all_original_raw_paths_bindings_fields_shapes_dtype_retained':True,
+  'original_whole_cache_vs_thin_report_approximately_equal':True,
+  'label_status_counts':dict(statuscounts),'unknown_nodes':unknown,'invalid_paths':invalid,
+  'financial_qualification':'unknown','all_checkpoints_complete':True,'cap_evidence':None,
+  'wall_seconds':row['wall_seconds'],'child_CPU_seconds':row['child_cpu_seconds'],'parent_CPU_seconds':row['parent_cpu_seconds'],
+  'sampled_child_RSS_bytes':row['observed_child_peak_RSS_bytes'],'child_kernel_highwater_RSS_bytes':row['saved_child_kernel_peak_RSS_bytes'],
+  'thin_report_physical_npz_bytes':npzbytes,'thin_report_expanded_NPY_bytes':expanded,
+  'thin_report_ndarray_payload_bytes':payload,'thin_report_metadata_receipt_bytes':metareceipt,
+  'thin_report_pack_count':packcount})
+ print('class verified',name,n,'unknown',unknown,'thin NPZ',npzbytes,flush=True)
+ del grid,report;gc.collect()
+eq(sum(r['original_nodes'] for r in results['classes']),2128)
+ap(C['new_class_wall_sum_seconds'],sum(r['wall_seconds'] for r in C['classes']))
+ap(C['new_child_CPU_sum_seconds'],sum(r['child_cpu_seconds'] for r in C['classes']))
+eq(C['new_driver_generation_count'],0);eq(C['no_new_RNG'],True)
+eq(C['runtime_estimate_seconds'],None)
+assert E['wall_seconds']>=C['new_class_wall_sum_seconds']
+assert E['child_tree_CPU_seconds']>=sum(r['child_cpu_seconds']+r['parent_cpu_seconds'] for r in C['classes'])
+eq(sourcecheck(),[])
+results['source81_after_stable']=True
+results['inclusive_cost']={'outer_wall_seconds':E['wall_seconds'],'outer_child_tree_CPU_seconds':E['child_tree_CPU_seconds'],
+ 'class_wall_sum_seconds':C['new_class_wall_sum_seconds'],'class_child_CPU_sum_seconds':C['new_child_CPU_sum_seconds'],
+ 'class_parent_CPU_sum_seconds':sum(r['parent_cpu_seconds'] for r in C['classes']),
+ 'outer_own_observer_CPU_seconds':E['observer_CPU_before_own_receipt_seconds'],
+ 'outer_final_receipt_save_stdout_cost':E['outer_own_final_receipt_write_stdout_cost'],
+ 'old_generation_and_failed_checks_history_not_readded':True,'no_new_driver_charge':True,'no_inner_outer_doublecount':True}
+results['review_cost']={'wall_seconds':time.perf_counter()-T,'CPU_seconds':time.process_time()-CPU,
+ 'kernel_peak_RSS_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024}
+Path(str(P)+'-results.json').write_text(json.dumps(results,ensure_ascii=False,indent=2))
+print('PASS',json.dumps(results['review_cost']),flush=True)

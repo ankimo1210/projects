@@ -1,0 +1,399 @@
+"""Independent saved-only M7 arithmetic and resource audit; no financial generators."""
+import hashlib
+import json
+import math
+import resource
+import sys
+import time
+import zipfile
+from collections import Counter
+from pathlib import Path
+WT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D = WT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+P = "task-5-current-oracle-saved-arithmetic-independent-v4"
+OBS = D / "task-5-current-oracle-observation-root-m7-v2"
+PRIOR = D / "task-5-current-oracle-budget-root-fixed-v2.json"
+sys.path[:0] = [str(WT / x) for x in ("johnhull/research/RB-F04/dynamic_hedging", "johnhull/hullkit/src", "deep_hedge_price/src")]
+import numpy as np
+import run_pilot as pilot
+import run_reference as runner
+import reference_methods as reference
+START_WALL, START_CPU = time.perf_counter(), time.process_time()
+FORBIDDEN, COMPARISONS = [], []
+def forbidden(*a, **k):
+    FORBIDDEN.append("financial generation")
+    raise AssertionError("saved-only review cannot generate financial solver/RNG/SDE")
+for key in ("default_rng", "SeedSequence", "RandomState"):
+    setattr(np.random, key, forbidden)
+for key in ("_dispatch", "run_teacher_job", "run_teacher_driver_job", "run_teacher_grid_job"):
+    setattr(pilot, key, forbidden)
+for key in ("direct_asian_price", "quote_positions_oracle", "selected_call_refinement", "independent_heston_call", "calendar_call_snapshots"):
+    setattr(reference, key, forbidden)
+def sha(path):
+    h = hashlib.sha256()
+    with Path(path).open("rb") as f:
+        for block in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(block)
+    return h.hexdigest()
+def load(path):
+    return json.loads(Path(path).read_text())
+def save(suffix, value):
+    (D / (P + "-" + suffix + ".json")).write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
+def eq(a, b, label):
+    a, b = np.asarray(a), np.asarray(b)
+    assert a.shape == b.shape, (label, a.shape, b.shape)
+    if a.dtype.kind in "buifc" and b.dtype.kind in "buifc":
+        assert np.allclose(a, b, rtol=2e-9, atol=2e-10, equal_nan=True), label
+        finite = np.isfinite(a) & np.isfinite(b)
+        difference = float(np.max(np.abs(a[finite].astype(float) - b[finite].astype(float)))) if finite.any() else None
+    else:
+        assert np.array_equal(a, b), label
+        difference = None
+    COMPARISONS.append({"name": label, "values": int(a.size), "shape": list(a.shape), "max_abs_difference": difference})
+def same(a, b, name):
+    if isinstance(a, dict):
+        assert isinstance(b, dict) and set(a) == set(b), name
+        for key in a:
+            same(a[key], b[key], name + "." + key)
+    elif isinstance(a, (tuple, list)):
+        assert isinstance(b, (tuple, list)) and len(a) == len(b), name
+        for i, (x, y) in enumerate(zip(a, b)):
+            same(x, y, name + "." + str(i))
+    elif isinstance(a, (np.ndarray, np.number, int, float, bool)):
+        eq(a, b, name)
+    else:
+        assert a == b, name
+def statistics(v):
+    assert len(v) == 4096 and np.isfinite(v).all()
+    mean = np.sum(v, axis=0) / 4096
+    centered = v - mean
+    cov = centered.T @ centered / (4096 * 4095)
+    blocks = np.stack([np.sum(v[i:i + 256], axis=0) / 256 for i in range(0, 4096, 256)])
+    bc = blocks - np.sum(blocks, axis=0) / 16
+    return {"mean": mean, "covariance": cov, "standard_errors": np.sqrt(np.diag(cov)), "block_means": blocks, "block_covariance": bc.T @ bc / 240}
+def derive(v):
+    widths = np.stack([
+        np.column_stack(((v[1]-v[2])/0.04, (v[7]-v[8])/0.0002)),
+        np.column_stack(((v[3]-v[4])/0.02, (v[9]-v[10])/0.0001)),
+        np.column_stack(((v[5]-v[6])/0.08, (v[11]-v[12])/0.0004))])
+    return np.column_stack((v[0], widths[1])), widths
+def physical(directory):
+    checks = []
+    for pack in [directory] + sorted(directory.glob("pack*")):
+        metadata, receipt = load(pack/"metadata.json"), load(pack/"receipt.json")
+        assert sha(pack/"metadata.json") == receipt["metadata_sha256"]
+        assert sha(pack/"arrays.npz") == receipt["arrays_sha256"]
+        expanded, npy_expanded = 0, 0
+        with zipfile.ZipFile(pack/"arrays.npz") as z:
+            names = z.namelist()
+            assert len(names) == len(set(names)) and set(names) == {k+".npy" for k in metadata["arrays"]}
+            for name in names:
+                with z.open(name) as f:
+                    version = np.lib.format.read_magic(f)
+                    if version == (1, 0):
+                        shape, fortran, dtype = np.lib.format.read_array_header_1_0(f)
+                    elif version == (2, 0):
+                        shape, fortran, dtype = np.lib.format.read_array_header_2_0(f)
+                    else:
+                        raise AssertionError(("unsupported NPY", version))
+                    descriptor = metadata["arrays"][name[:-4]]
+                    size = math.prod(shape) * dtype.itemsize
+                    assert not dtype.hasobject and not fortran
+                    assert list(shape) == descriptor["shape"] and dtype.str == descriptor["dtype"] and size == descriptor["nbytes"]
+                    assert z.getinfo(name).file_size == f.tell()+size
+                    expanded += size
+                    npy_expanded += z.getinfo(name).file_size
+        assert npy_expanded == receipt["uncompressed_bytes"] and npy_expanded <= 256*1024**2
+        checks.append({"pack": str(pack.relative_to(directory)), "arrays": len(metadata["arrays"]), "expanded_bytes": expanded, "npy_expanded_bytes":npy_expanded, "npz_bytes": (pack/"arrays.npz").stat().st_size})
+    return {"path": str(directory.relative_to(WT)), "packs": checks, "expanded_bytes": sum(x["expanded_bytes"] for x in checks), "physical_bytes": sum(x.stat().st_size for x in directory.rglob("*") if x.is_file())}
+def main():
+    assert sha(PRIOR) == "8035595d58f5c8976029c8fe8787d415d2bf9842aa2e12e0d69dfd9f550a41a7"
+    prior = load(PRIOR)
+    sources = {k: sha(WT/k) for k in prior["source_bindings"]}
+    inputs = {k: sha(WT/k) for k in prior["input_file_bindings"]}
+    assert sources == prior["source_bindings"] and inputs == prior["input_file_bindings"]
+    identity = runner.execution_source_identity(WT)
+    assert identity["files"] == sources and len(sources) == 81 and not identity["dynamic_imports"]
+    assert runner._digest(identity) == prior["source_identity_sha256"]
+    assert sha(D/"task-5-current-oracle-measurement-v2.py") == prior["probe_source_sha256"]
+    assert prior["root_preapproved"] and not prior["formal_finance_approved"]
+    assert prior["dependency_reuse_root_approval"]["original_control_equivalence_or_financial_accuracy_approved"] is False
+    originals = {str(f.relative_to(WT)): sha(f) for f in OBS.rglob("*") if f.is_file()}
+    originals[str(PRIOR.relative_to(WT))] = sha(PRIOR)
+    originals[str((D/"task-5-current-oracle-root-enclosing-cost-v2.json").relative_to(WT))] = sha(D/"task-5-current-oracle-root-enclosing-cost-v2.json")
+    save("before-bindings", {"sources": sources, "inputs": inputs, "observations": originals})
+    numeric, costs, headers, normal_hashes = {}, {}, [], {}
+    ids = ["base", "S+.1", "S-.1", "S+..5", "S-..5", "S+.2", "S-.2", "Q+.1", "Q-.1", "Q+..5", "Q-..5", "Q+.2", "Q-.2"]
+    for model in ("Heston", "local"):
+        spec, base = prior["classes"][model], OBS/model
+        parent, progress = load(base/"parent-cost-and-decision.json"), load(base/"progress.json")
+        assert parent["child_progress"] == progress and parent["status"] == "completed_component" and parent["exit_code"] == 0
+        assert parent["actual_cap_evidence"] is None and parent["live_monitor_cap_evidence"] is None and parent["observer_errors"] == []
+        assert progress["status"] == "completed" and progress["finite_payoffs"] == progress["original_query_paths"] == 106496
+        assert parent["financial_qualification"] == progress["financial_qualification"] == "unknown"
+        stages = progress["stages"]; stage_names = [x["stage"] for x in stages]
+        assert len(stage_names) == len(set(stage_names)) and stage_names[-1] == "current_source_stable"
+        assert stage_names.index("all_original_oracle_NaNs_statuses_roster_saved_before_dispatch") < stage_names.index("actual_original_oracle_dispatch_start")
+        assert stage_names.index("full_returned_raw_saved_before_checker") < stage_names.index("actual_saved_arithmetic_checker_and_immutable_check_write_read_returned")
+        assert all(stages[i]["clock"]["wall"] <= stages[i+1]["clock"]["wall"] for i in range(len(stages)-1))
+        eq(parent["wall_seconds"], parent["stopped"]["wall"]-parent["started"]["wall"], model+" parent wall")
+        eq(parent["parent_cpu_seconds"], parent["stopped"]["cpu"]-parent["started"]["cpu"], model+" parent CPU")
+        assert parent["wall_seconds"] < 600 and parent["wall_overrun_seconds"] == parent["RSS_overrun_bytes"] == 0
+        peaks = [parent[k] for k in ("observed_child_peak_RSS_bytes", "saved_child_kernel_peak_RSS_bytes", "observed_parent_peak_RSS_bytes", "parent_kernel_peak_RSS_bytes")]
+        assert all(x is not None and 0 <= x < 4*1024**3 for x in peaks)
+        for index in parent["output_file_index_before_final_receipt"]:
+            assert (base/index["path"]).stat().st_size == index["bytes"]
+        loaded = {}
+        for kind in ("initial-original-obligation", "actual-original-oracle", "actual-saved-check", "generator-expenses-and-driver-map"):
+            headers.append(physical(base/kind)); loaded[kind] = pilot.read_pilot_artifact(base/kind)
+        initial = loaded["initial-original-obligation"][0]
+        raw, receipt = loaded["actual-original-oracle"]
+        saved, check_receipt = loaded["actual-saved-check"]
+        ledger = loaded["generator-expenses-and-driver-map"][0]
+        assert receipt == progress["raw_receipt"] == ledger["raw_receipt"]
+        assert any(x.get("saved_check_receipt") == check_receipt for x in stages)
+        assert initial["N"] == initial["original_path_count"] == raw["N"] == raw["original_path_count"] == 4096
+        assert initial["seed"] == raw["seed"] == 3631740690
+        assert initial["levels"] == raw["scheme_refinement"]["levels"] == [768, 1536]
+        assert initial["query_ids"] == raw["query_ids"] == ids == spec["query_ids"] and initial["queries"] == spec["queries"]
+        assert initial["payoff_samples"].shape == (2,13,4096) and np.isnan(initial["payoff_samples"]).all()
+        assert initial["processed_query_paths"] == 0 and initial["original_query_paths"] == 106496
+        assert np.all(initial["path_status"] == 0) and initial["path_status_labels"] == ["unprocessed"]
+        eq(initial["path_indices"], np.arange(4096), model+" initial allpath IDs")
+        eq(initial["cluster_ids"], np.arange(4096)//256, model+" all16clusters")
+        eq(initial["first_failure_date"], np.zeros((2,13,4096)), model+" initial failure dates")
+        assert initial["source_identity_sha256"] == prior["source_identity_sha256"]
+        assert raw["model"] == spec["model"] and raw["input_state"] == spec["input_state"]
+        assert raw["spot_bump"] == 0.02 and raw["quote_bump"] == 0.0001 and raw["selected_width_index"] == 1 and raw["exact_branch"] is None
+        eq(raw["width_multipliers"], [1,0.5,2], model+" widths")
+        assert raw["operational_status"] == "within_envelope" and raw["statistical_status"] == "measured"
+        assert raw["financial_qualification"] == saved["financial_qualification"] == "unknown"
+        assert saved["unverified"] == ["independent_path_generation", "full_common_domain_call_fit"] and saved["unresolved"] == []
+        payoff = raw["scheme_refinement"]["payoff_samples"]
+        assert payoff.shape == (2,13,4096) and payoff.dtype == np.float64 and np.isfinite(payoff).all()
+        eq(raw["payoff_samples"], payoff[1], model+" fine all payoff")
+        pair, width = zip(*(derive(x) for x in payoff)); pair = np.stack(pair)
+        eq(pair, raw["scheme_refinement"]["samples"], model+" all two-level Greeks")
+        eq(pair[1], raw["samples"], model+" fine Greeks")
+        eq(width[1], raw["width_position_samples"], model+" all3width Greeks")
+        eq(pair[1], saved["samples"], model+" saved Greeks")
+        eq(width[1], saved["width_position_samples"], model+" saved widths")
+        summary = statistics(pair[1])
+        for key in ("mean","covariance","standard_errors","block_means"):
+            eq(summary[key], raw[key], model+" raw "+key)
+        for key in ("mean","block_means","block_covariance"):
+            eq(summary[key], saved[key], model+" saved "+key)
+        eq(summary["standard_errors"], saved["raw_standard_errors"], model+" saved SE")
+        eq(summary["standard_errors"], saved["gate_standard_errors"], model+" gate SE")
+        eq(payoff[1].reshape(13,16,256).sum(axis=2)/256, raw["block_payoff_means"], model+" all13 payoff block means")
+        eq(width[1].sum(axis=1)/4096, raw["three_width_greek_means"], model+" width means")
+        matrix = np.concatenate([width[1][i] for i in range(3)], axis=1)
+        eq(statistics(matrix)["covariance"], raw["width_covariance"], model+" full6Greek covariance")
+        diff = pair[1]-pair[0]
+        eq(diff, raw["scheme_refinement"]["paired_difference_samples"], model+" all scheme differences")
+        eq(statistics(diff)["block_means"], raw["scheme_refinement"]["block_difference_means"], model+" scheme blocks")
+        for key, val in statistics(diff).items():
+            eq(val, saved["scheme_difference_statistics"][key], model+" scheme "+key)
+        for index, i in enumerate((0,2)):
+            for key, val in statistics(width[1][i]-width[1][1]).items():
+                eq(val, saved["width_difference_statistics"][index][key], model+" widthdiff"+str(i)+key)
+        scheme = raw["scheme_refinement"]
+        assert scheme["path_status"].shape == (2,13,4096)
+        assert scheme["path_status"].dtype == np.uint16
+        assert np.all(raw["path_status_labels"][scheme["path_status"]] == "supported")
+        assert np.isnan(scheme["first_failure_date"]).all()
+        eq(raw["path_status"], scheme["path_status"][1], model+" fine status alias")
+        eq(raw["first_failure_date"], scheme["first_failure_date"][1], model+" all failure NaN alias")
+        eq(raw["path_indices"], np.arange(4096), model+" all4096 original path IDs")
+        cap = raw["cap_evidence"]
+        assert not cap["cap_reached"] and cap["cap_seconds"] == 600
+        assert cap["overrun_seconds"] == 0 and not np.any(cap["unexecuted_query_path_counts"])
+        eq(cap["wall_seconds"], cap["clock"]["wall_stop"]-cap["clock"]["wall_start"], model+" native wall")
+        dependency = spec["call_table_dependency"]
+        table, table_receipt = pilot.read_pilot_artifact(WT/dependency["saved_raw_artifact"])
+        same(raw["call_table"], table, model+" immutable reused whole call table")
+        assert dependency["graph_original_controls"] == {}
+        assert table["controls"] == dependency["measurement_controls"]
+        assert table["surface_signature"] == dependency["surface_signature"]
+        assert len(raw["query_fits"]) == 13
+        fit_points = 0
+        for j, fit in enumerate(raw["query_fits"]):
+            assert fit["query_id"] == ids[j] and fit["solver_status"] == "unique_root"
+            assert fit["operational_status"] == "within_envelope"
+            eq(fit["spot"], spec["queries"][j]["spot"], model+" query spot"+str(j))
+            eq(fit["quote"], spec["queries"][j]["quote"], model+" query quote"+str(j))
+            assert fit["full_domain_bounds"] == ([1e-5,0.5] if model == "Heston" else [0.25,4.0])
+            for k, point in enumerate([fit]+fit["refinement_fits"]):
+                nodes, state = point["state_nodes"], point["state"]
+                index = min(max(int(np.searchsorted(nodes,state,side="right"))-1,0),len(nodes)-2)
+                dx = state-nodes[index]; c = point["spline_coefficients"][:,index]
+                value = ((c[0]*dx+c[1])*dx+c[2])*dx+c[3]
+                derivative = (3*c[0]*dx+2*c[1])*dx+c[2]
+                eq(value-point["quote"],point["residual"],model+" saved polynomial residual"+str((j,k)))
+                eq(derivative,point["Ctheta"],model+" saved polynomial derivative"+str((j,k)))
+                fit_points += 1
+        ref = raw["call_refinements"]
+        refn = 3 if model == "Heston" else 4
+        assert ref["prices"].shape == (refn,) and ref["three_width_derivatives"].shape == (refn,2,3)
+        refreceipts = ref["integration_receipts"] if model == "Heston" else ref["pde_receipts"]
+        assert len(refreceipts) == 13*refn
+        assert not (ref["pde_receipts"] if model == "Heston" else ref["integration_receipts"])
+        refcap = ref["cap_evidence"]
+        assert refcap["planned_cells"] == refcap["completed_cells"] == 13*refn
+        assert refcap["unexecuted_cell_count"] == 0 and not refcap["cap_reached"] and refcap["overrun_seconds"] == 0
+        if model == "Heston":
+            refprice = np.asarray([x["price"] for x in refreceipts]).reshape(refn,13)
+        else:
+            from scipy.interpolate import CubicSpline
+            # Evaluate saved spatial arrays only. This does not generate a PDE/CF or qualify its prices.
+            refprice = np.asarray([CubicSpline(np.log(x["spots"]),x["values"][0])(math.log(x["spot"])) for x in refreceipts]).reshape(refn,13)
+        assert np.isfinite(refprice).all()
+        ri = ref["inputs"]
+        spotwidth, statewidth = ri["spot_bump"], ri["state_bump"]
+        refcoordinates=[(ri["spot"],ri["state"])]
+        for scale in (1,.5,2):
+            refcoordinates += [(ri["spot"]+scale*spotwidth,ri["state"]),
+                               (ri["spot"]-scale*spotwidth,ri["state"]),
+                               (ri["spot"],ri["state"]+scale*statewidth),
+                               (ri["spot"],ri["state"]-scale*statewidth)]
+        for index,item in enumerate(refreceipts):
+            assert item["level"] == index//13
+            eq([item["spot"],item["state"]],refcoordinates[index%13],model+" refinement query coordinates"+str(index))
+        derivs = np.stack([
+            np.column_stack(((refprice[:,1]-refprice[:,2])/(2*spotwidth),
+                             (refprice[:,5]-refprice[:,6])/spotwidth,
+                             (refprice[:,9]-refprice[:,10])/(4*spotwidth))),
+            np.column_stack(((refprice[:,3]-refprice[:,4])/(2*statewidth),
+                             (refprice[:,7]-refprice[:,8])/statewidth,
+                             (refprice[:,11]-refprice[:,12])/(4*statewidth)))],axis=1)
+        eq(refprice[:,0],ref["prices"],model+" all baseline independent prices")
+        eq(derivs,ref["three_width_derivatives"],model+" all independent CF/PDE receipt Greeks")
+        eq(derivs[:,0,1],ref["spot_derivatives"],model+" half spot derivatives")
+        eq(derivs[:,1,1],ref["state_derivatives"],model+" half state derivatives")
+        for key in ("price","spot_derivative","state_derivative"):
+            arraykey = {"price":"prices","spot_derivative":"spot_derivatives","state_derivative":"state_derivatives"}[key]
+            eq(ref[key],ref[arraykey][-1],model+" final selected "+key)
+            eq(ref[key+"_error"],np.max(np.abs(ref[arraykey]-ref[arraykey][0])),model+" refinement "+key+" error")
+        eq(ref["finite_width_errors"],np.max(np.abs(derivs-derivs[:,:,1:2]),axis=(0,2)),model+" independent width error")
+        diag, basefit = raw["independent_curve_diagnostics"], raw["query_fits"][0]
+        eq(diag["price_residual"],ref["price"]-basefit["quote"],model+" direct price residual")
+        eq(diag["state_derivative_difference"],basefit["Ctheta"]-ref["state_derivative"],model+" direct state derivative delta")
+        eq(diag["scaled_state_derivative_difference"],abs(diag["state_derivative_difference"])*(.04 if model=="Heston" else 1),model+" scaled derivative delta")
+        eq(diag["curve_condition_number"],(.01/(.04 if model=="Heston" else 1))/abs(basefit["Ctheta"]),model+" fit condition number")
+        eq(diag["direct_condition_number"],(.01/(.04 if model=="Heston" else 1))/abs(ref["state_derivative"]),model+" direct condition number")
+        drivers, expenses = raw["driver_map"], raw["expenses"]
+        assert len(drivers) == 16 and len(expenses) == 433
+        same(ledger["driver_map"],drivers,model+" driver ledger alias")
+        same(ledger["native_expenses"],expenses,model+" expense ledger alias")
+        same(ledger["cap_evidence"],cap,model+" cap ledger alias")
+        assert ledger["driver_expenses_are_already_in_native_expenses"] is True
+        assert ledger["driver_map_is_reference_not_an_extra_cost"] is True
+        assert ledger["normal_arrays_saved_by_native_oracle"] is False
+        assert ledger["driver_generation_replay_not_claimed"] is True
+        assert Counter(x["scope"] for x in expenses) == {"independent_asian_quote_oracle":416,"independent_oracle_driver":16,"independent_call_refinement":1}
+        byid = {x["job_id"]:x for x in expenses}; assert len(byid) == 433
+        grouped = {}
+        for expense in expenses:
+            clock = expense["clock"]
+            assert cap["clock"]["wall_start"] <= clock["wall_start"] <= clock["wall_stop"] <= cap["clock"]["wall_stop"]
+            assert expense["overrun_seconds"] == 0
+            eq(expense["wall_seconds"],clock["wall_stop"]-clock["wall_start"],model+" expense wall "+expense["job_id"])
+            eq(expense["cpu_seconds"],clock["cpu_stop"]-clock["cpu_start"],model+" expense CPU "+expense["job_id"])
+            assert expense["wall_seconds"] >= 0 and expense["cpu_seconds"] >= 0
+            scope = expense["scope"]; row = grouped.setdefault(scope,{"count":0,"wall_seconds":0.0,"cpu_seconds":0.0,"path_steps":0})
+            row["count"]+=1; row["wall_seconds"]+=expense["wall_seconds"]; row["cpu_seconds"]+=expense["cpu_seconds"]
+            row["path_steps"]+=expense["path_steps"]
+        for a,b in zip(expenses,expenses[1:]):
+            assert a["clock"]["wall_stop"] <= b["clock"]["wall_start"]
+        for j, driver in enumerate(drivers):
+            lo=256*j
+            assert driver["chunk_index"] == j and driver["path_range"] == [lo,lo+256]
+            assert driver["fine_shape"] == [256,1536,2] and driver["coarse_shape"] == [256,768,2]
+            assert driver["original_path_count"] == 4096 and driver["reserved_parent_seed"] == 3631740690
+            assert driver["driver_source"] == "reserved_local_rng" and driver["mapping"] == "SeedSequence[parent_seed,7426,chunk_index]; path-major; paired adjacent fine steps"
+            assert isinstance(driver["child_seed"],int) and 0 <= driver["child_seed"] < 2**32
+            assert len(driver["fine_normal_sha256"]) == 64 and driver["max_live_driver_bytes"] == 12582912
+            exp=byid["oracle-driver-"+str(lo)]
+            assert exp["path_steps"] == 256*1536
+            for key,val in driver.items():same(val,exp[key],model+" driver expense alias"+str(j)+"."+key)
+        normal_hashes[model] = [x["fine_normal_sha256"] for x in drivers]
+        jobs = [x for x in expenses if x["scope"]=="independent_asian_quote_oracle"]
+        expected = {(lo,level,q) for lo in range(0,4096,256) for level in (768,1536) for q in ids}
+        assert {(x["path_range"][0],x["level"],x["query_id"]) for x in jobs} == expected
+        for job in jobs:
+            lo=job["path_range"][0]
+            assert job["path_range"] == [lo,lo+256] and job["original_path_count"] == 4096
+            assert job["processed_path_count"] == 256 and job["attempt_status"] == "measured"
+            assert job["path_steps"] == 256*job["level"]
+        assert grouped["independent_asian_quote_oracle"]["path_steps"] == 122683392
+        assert grouped["independent_oracle_driver"]["path_steps"] == 6291456
+        assert spec["declared_conservative_total_path_steps"] == 163577856
+        costs[model] = {
+            "original_parent_receipt":str((base/"parent-cost-and-decision.json").relative_to(WT)),
+            "parent_wall_seconds":parent["wall_seconds"],"child_CPU_seconds":parent["child_cpu_seconds"],
+            "peak_individual_process_RSS_bytes":max(peaks),"observed_cap":False,
+            "native_wall_seconds":cap["wall_seconds"],"grouped_inclusive_expenses":grouped,
+            "selected_baseline_call_expense":byid["independent-selected-call"],
+            "unitemized_native_wall_seconds":cap["wall_seconds"]-sum(x["wall_seconds"] for x in expenses),
+            "old_reused_M4_M5_expenses":"historical dependency expenses retained in immutable table; not charged again",
+            "driver_alias_accounting":"count once inside433 expenses; model generation costs both retained even if hashes match",
+            "final_parent_receipt_write_stdout_cost":"outside per-class parent timer; included by root outer observation"}
+        numeric[model] = {
+            "original_N":4096,"queries":13,"levels":[768,1536],"chunks":16,"chunk_N":256,
+            "all_finite_payoff_values":106496,"selected_mean":summary["mean"].tolist(),
+            "selected_standard_errors":summary["standard_errors"].tolist(),
+            "three_width_Greek_means":(width[1].sum(axis=1)/4096).tolist(),
+            "saved_polynomial_points_checked":fit_points,"independent_refinement_receipt_count":len(refreceipts),
+            "failure_NaN_values_preserved":int(scheme["first_failure_date"].size),"all_path_status":"supported",
+            "financial_qualification":"unknown","formal_finance_approved":False,
+            "saved_unverified":saved["saved_unverified"],"unresolved":[],
+            "actual_payoff_path_steps":122683392,"actual_driver_path_steps":6291456,
+            "declared_conservative_total_path_steps":163577856,
+            "normal_arrays_saved":False,"driver_generation_or_SDE_replay_checked":False}
+    assert normal_hashes["Heston"] == normal_hashes["local"]
+    outer = load(D/"task-5-current-oracle-root-enclosing-cost-v2.json")
+    assert outer["exit_code"] == 0 and outer["root_prior_sha256"] == sha(PRIOR)
+    assert outer["formal_finance_approved"] is False and outer["financial_qualification"] == "unknown"
+    assert outer["wall_seconds"] >= sum(x["parent_wall_seconds"] for x in costs.values())
+    after = {
+        "sources":{k:sha(WT/k) for k in sources},
+        "inputs":{k:sha(WT/k) for k in inputs},
+        "observations":{k:sha(WT/k) for k in originals}}
+    assert after == {"sources":sources,"inputs":inputs,"observations":originals} and not FORBIDDEN
+    save("after-bindings",after)
+    save("results",{
+        "status":"PASS_saved_numeric_arithmetic_and_resource_observation_only",
+        "source_identity_sha256":runner._digest(identity),"source_count":len(sources),
+        "input_file_count":len(inputs),"observation_file_count":len(originals),
+        "rtol":2e-9,"atol":2e-10,"models":numeric,"physical_artifact_headers":headers,
+        "comparisons":COMPARISONS,"comparison_count":len(COMPARISONS),
+        "compared_numeric_values":sum(x["values"] for x in COMPARISONS),
+        "all_bound_sources_inputs_observations_unchanged":True,
+        "forbidden_generator_or_RNG_calls":FORBIDDEN,
+        "source_or_checker_independent_review_claimed":False,
+        "financial_qualification":"unknown","formal_budget_approved":False,
+        "formal_phase_approved":False,"whole_phase_runtime_guaranteed":False,
+        "unverified":["independent_path_generation","full_common_domain_call_fit",
+                      "original_controls_equivalence","underlying_CF_PDE_price_accuracy",
+                      "normal_generation_or_SDE_path_replay"]})
+    save("resources",{
+        "classes":costs,"root_enclosing_observation":outer,
+        "charge_policy":"root104.215731821s includes classes; nestedexpenses/driveraliases/referencehistory are breakdowns and not additive",
+        "whole_phase_runtime_guaranteed":False,"whole_phase_budget_approved":False})
+    print("PASS",len(COMPARISONS),"comparisons",sum(x["values"] for x in COMPARISONS),"values")
+if __name__ == "__main__":
+    try:
+        main()
+    except BaseException as exc:
+        import traceback
+        save("failure",{"status":"FAIL","type":type(exc).__name__,"message":str(exc),
+                        "traceback":traceback.format_exc(),"comparison_count":len(COMPARISONS),
+                        "forbidden_calls":FORBIDDEN,"formal_finance_approved":False})
+        raise
+    finally:
+        save("audit-cost",{"wall_seconds_after_imports":time.perf_counter()-START_WALL,
+                          "CPU_seconds_after_imports":time.process_time()-START_CPU,
+                          "kernel_peak_RSS_bytes":resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,
+                          "scope":"saved-only audit script afterimports through outputs; imports/exploration/setup and own finalcostreceipt tail outside timer",
+                          "own_finalcostreceipt_write_stdout_cost":"unknown",
+                          "financial_generation_or_RNG_calls":FORBIDDEN})

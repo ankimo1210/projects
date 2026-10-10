@@ -1,0 +1,190 @@
+{
+  "scope": "M7 original state00 independent oracle N4096 Heston/local 13queries coarse768/fine1536; complete saved arithmetic/provenance/resource observations",
+  "formal_phase_approved": false,
+  "files": [
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v1-audit-cost.json",
+      "sha256": "a04d2d9336529edc59b19523c04693fbb5b0c8fd58b8379f673d58019653851b",
+      "bytes": 373
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v1-before-bindings.json",
+      "sha256": "48ae5029e21229cbf004119f2bc93a5dba3f4bfd7c8e7e85933915559ddc5b35",
+      "bytes": 31922
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v1-failure.json",
+      "sha256": "840e0b877358cc491701788db4da4d194a2d3487c3ebf364c77f0e088016f48b",
+      "bytes": 1130
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v1-run1-parent-cost.json",
+      "sha256": "5054237328196d41336240709fd2692149afa76aa9928a575c0322d984b3761d",
+      "bytes": 230
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v1-run1.log",
+      "sha256": "1712b3e145d7f41916ca2406c0df21d1ef459a269a4e9d214b0370b2e6ef8c97",
+      "bytes": 939
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v1.py",
+      "sha256": "ea1b663b77460fb2a3e61f6fa15d427831a1710a873489339781eedb1c9ce0b2",
+      "bytes": 27781
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v2-audit-cost.json",
+      "sha256": "a1fa344bd581170e47d693ed9d6ebc2ae644418cf730317881f1972a7d5f3dfd",
+      "bytes": 380
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v2-before-bindings.json",
+      "sha256": "48ae5029e21229cbf004119f2bc93a5dba3f4bfd7c8e7e85933915559ddc5b35",
+      "bytes": 31922
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v2-failure.json",
+      "sha256": "0edda582c4601e3e9ffe08a5a2917ac71045b2845f05c002a3b71d211f42c959",
+      "bytes": 2016
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v2-run1-parent-cost.json",
+      "sha256": "2fc9e0948f217f6d0845d56469aae63ec7cab7f5ebb070d7951f4ad60eaf7cab",
+      "bytes": 219
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v2-run1.log",
+      "sha256": "fbc4f9f43ba263920db9670bfc9153434918e50557eb1d5ac02f8872482538b4",
+      "bytes": 1674
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v2.py",
+      "sha256": "6be56663480d2029f45d83fb5c48c62d4d1df3500c1b50e9aef37c025ac3a47b",
+      "bytes": 27973
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v3-audit-cost.json",
+      "sha256": "3282953c1076b4f4472df76c026d25bb45fa6545e75ce94d1db8d4c71ee4f1c8",
+      "bytes": 380
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v3-before-bindings.json",
+      "sha256": "48ae5029e21229cbf004119f2bc93a5dba3f4bfd7c8e7e85933915559ddc5b35",
+      "bytes": 31922
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v3-failure.json",
+      "sha256": "460bf9309078dd5989e86060d64f9cf9fa063740798ebd19623c4e1d9fac71ef",
+      "bytes": 1160
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v3-run1-parent-cost.json",
+      "sha256": "5ea2956261addbca0d4a5d0a9e7adcd150b9c8555eb11ca71abcd0e70334aba9",
+      "bytes": 219
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v3-run1.log",
+      "sha256": "644975332331f97a7d272f37e7711d940908a5b9508a8b130de8517ad0b89af7",
+      "bytes": 920
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v3.py",
+      "sha256": "1661f2a13f1e651639c3f1443fd7fe6bec77641e860ca426a1cde4336dffc664",
+      "bytes": 28001
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v4-audit-cost.json",
+      "sha256": "620197249c4ac16ec2c7cea1bd77bcd6895c3e037513e6a980c4e25cb6303e4c",
+      "bytes": 380
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v4-before-bindings.json",
+      "sha256": "48ae5029e21229cbf004119f2bc93a5dba3f4bfd7c8e7e85933915559ddc5b35",
+      "bytes": 31922
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v4-failure.json",
+      "sha256": "4996e06ae15f4e75421d63a8c02f6cbf387eb0bf0c7d11396b52d571c611ce99",
+      "bytes": 784
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v4-run1-parent-cost.json",
+      "sha256": "4a30916a038624da6bd0904efb85c073b4ca801066cd0a8daf1f16362d66fa5f",
+      "bytes": 219
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v4-run1.log",
+      "sha256": "f9b139fbcd3db0e648595b7ee9a06b00a9f38eb9f8f940809d941ede1ffa7d65",
+      "bytes": 578
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v4.py",
+      "sha256": "d4e9f723e96185ec6f6c2b46910653be9f9cf4e652022bd230e35a074f2772c7",
+      "bytes": 28941
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5-after-bindings.json",
+      "sha256": "48ae5029e21229cbf004119f2bc93a5dba3f4bfd7c8e7e85933915559ddc5b35",
+      "bytes": 31922
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5-all-audit-costs.json",
+      "sha256": "359329a76979e8be343935a4286f7a3c87ab5b8c76e655bf0c14c6384757a0f8",
+      "bytes": 2910
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5-audit-cost.json",
+      "sha256": "d56fa0e1657cb5be068b0ffc508c396744b5b376444ba8ec5ad9f5d76739997e",
+      "bytes": 379
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5-before-bindings.json",
+      "sha256": "48ae5029e21229cbf004119f2bc93a5dba3f4bfd7c8e7e85933915559ddc5b35",
+      "bytes": 31922
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5-decision.json",
+      "sha256": "ff68959ff2d07bfeecba9ce1a9d28b8d9b57e4e97c3367d7f6dcf9a65d360981",
+      "bytes": 1849
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5-report.md",
+      "sha256": "df91916ffe16a68857ee0d0d70cb83e18777dfe5fecf74fffba544d2144e362a",
+      "bytes": 3725
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5-resources.json",
+      "sha256": "71572f1b1070e605b9a5417a5d07470549656ad1cf7ec345c9685a91a459df48",
+      "bytes": 5820
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5-results.json",
+      "sha256": "2fb53408526850507b628618147eebdb28d655a626165d738a644e92ae1534ea",
+      "bytes": 5921779
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5-run1-parent-cost.json",
+      "sha256": "df5a8bc996a7e0b739c56c7abaa0f774cd96d12513e0cfb351c808baca2c449f",
+      "bytes": 218
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5-run1.log",
+      "sha256": "5a2a83f5b6a15ea1c99594f163a05badc042eb8d2700ff006ff002bb97f2ff25",
+      "bytes": 38
+    },
+    {
+      "path": "task-5-current-oracle-saved-arithmetic-independent-v5.py",
+      "sha256": "6e172e2ca61a636df642b19562d10b838b301186a181e0963448aaca34c3fb3c",
+      "bytes": 28935
+    }
+  ],
+  "current_success_version": 5,
+  "prior_failed_versions_preserved": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "original_observation_bindings": "task-5-current-oracle-saved-arithmetic-independent-v5-before-bindings.json",
+  "post_bindings": "task-5-current-oracle-saved-arithmetic-independent-v5-after-bindings.json"
+}

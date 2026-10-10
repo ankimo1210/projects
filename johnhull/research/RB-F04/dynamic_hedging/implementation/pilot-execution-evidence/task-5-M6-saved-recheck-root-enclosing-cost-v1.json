@@ -1,0 +1,22 @@
+{
+  "scope": "root enclosing sequential saved original M6 four-class all-N SDE/labels/cache/thin-report write/read, including child final receipts and stdout",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-measurement-v1.py",
+    "--budget",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-budget-root-fixed-v1.json",
+    "--output",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-observation-root-v1"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 774.0913469130028,
+  "child_tree_CPU_seconds": 777.573424,
+  "observer_CPU_before_own_receipt_seconds": 0.0005213029999999973,
+  "root_prior_sha256": "6e85a12b6ea26c966e390596e797e9a5920a89b993a639a8b7591b8fd92a437b",
+  "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "new_RNG": false,
+  "original_generation_reexecuted": false,
+  "formal_finance_approved": false,
+  "financial_qualification": "unknown",
+  "outer_own_final_receipt_write_stdout_cost": "unknown; inner child final receipts/stdout are included above"
+}

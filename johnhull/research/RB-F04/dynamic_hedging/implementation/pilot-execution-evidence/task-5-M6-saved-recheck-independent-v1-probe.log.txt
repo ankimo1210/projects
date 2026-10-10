@@ -1,0 +1,5 @@
+class verified Heston-coarse 108 unknown 1304 thin NPZ 7715914
+class verified Heston-high 156 unknown 4022 thin NPZ 20695674
+class verified local-coarse 520 unknown 6733 thin NPZ 37656494
+class verified local-high 1344 unknown 35123 thin NPZ 181032462
+PASS {"wall_seconds": 7.617131396000332, "CPU_seconds": 7.588197205000001, "kernel_peak_RSS_bytes": 1267691520}

@@ -1,0 +1,11 @@
+{
+  "C_available_bytes": 314778112000,
+  "F_available_bytes": 185710804992,
+  "WSL_available_bytes": 595309969408,
+  "WSL_method": "df -B1 target_worktree",
+  "Windows_method": "Get-CimInstance Win32_LogicalDisk DeviceID C/F FreeSpace",
+  "comparison_is_current_readonly_observation_not_prior_budget_lock": true,
+  "observed_utc": "2026-10-10T05:45:07.223152+00:00",
+  "schema": "static_capacity_volume_readonly_observation_v1",
+  "source_CAS_financial_state_changed": false
+}

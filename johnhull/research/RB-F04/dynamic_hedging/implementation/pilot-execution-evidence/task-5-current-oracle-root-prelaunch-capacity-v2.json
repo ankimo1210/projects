@@ -1,0 +1,12 @@
+{
+  "before_original_M7_dispatch": true,
+  "M6_verified_terminal_exit0": true,
+  "M6_enclosing_receipt_sha256": "ebc2f3d4f459e768fc45e616d845a4ac8636675cf34a5563f442e6a38fa9c066",
+  "MemAvailable_kB": 47375876,
+  "free_bytes": {
+    "/home/kazumasa/worktrees/johnhull-research-roadmap": 595340652544,
+    "/mnt/c": 315103342592,
+    "/mnt/f": 185710804992
+  },
+  "source81_SHA_before_launch_PASS": true
+}
