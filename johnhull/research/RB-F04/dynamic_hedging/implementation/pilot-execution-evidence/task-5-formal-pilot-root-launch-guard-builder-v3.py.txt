@@ -1,0 +1,95 @@
+
+"""Root prepares the separately authorized formal financial launch guard."""
+import argparse, copy, datetime, hashlib, importlib.util, json, os, pathlib, shutil, time
+W=pathlib.Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=W/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+def sha(p):return hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()
+def read(p):return json.loads(pathlib.Path(p).read_text())
+def reference(p,status=None):
+ p=pathlib.Path(p).resolve(strict=True);p.relative_to(D)
+ result={"path":str(p),"sha256":sha(p)}
+ if status is not None:result["status"]=status
+ return result
+def tree(root,monitor):
+ root=pathlib.Path(root).resolve(strict=True);root.relative_to(D)
+ files={}
+ for p in sorted(root.rglob("*")):
+  if p.is_file():
+   assert not p.is_symlink()
+   files[str(p.relative_to(root))]=sha(p)
+ result={"path":str(root),"files":files,"tree_sha256":monitor.digest(files),"receipt_sha256":files["receipt.json"]}
+ monitor.tree_binding(result);return result
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument("--materialization",type=pathlib.Path,required=True)
+ ap.add_argument("--native",type=pathlib.Path,required=True);ap.add_argument("--receipts",type=pathlib.Path,required=True)
+ ap.add_argument("--output",type=pathlib.Path,required=True);a=ap.parse_args()
+ start=time.perf_counter();cpu=time.process_time()
+ materialized=a.materialization.resolve(strict=True);materialized.relative_to(D)
+ manifest=read(materialized/"manifest.json");result=read(materialized/"materialization-progress.json")
+ assert result["status"]=="actual_approved_prior_metadata_materialized"
+ assert result["actual_lock_API_validate_and_source_binding"]=="PASS"
+ assert result["financial_workers_RNG_solver_SDE_calls"]==0
+ assert result["source81_before_after_stable"] is True
+ assert result["literal_cap_options"]==573122 and result["jobs"]==3138
+ for name,row in manifest["files"].items():
+  p=materialized/name
+  assert p.stat().st_size==row["bytes"] and sha(p)==row["sha256"],name
+ root_ref=result["actual_root_approval"]
+ root=read(pathlib.Path(root_ref["path"]))
+ assert sha(pathlib.Path(root_ref["path"]))==root_ref["sha256"]
+ assert root["formal_financial_launch_authorized"] is False
+ review_ref=root["independent_reviews"]["prior_budget_and_cap_recipe"]
+ review=read(review_ref["path"]);assert sha(review_ref["path"])==review_ref["sha256"]
+ assert review["decision"]=="approved" and not review["validation"]["failures"]
+ resource_ref=root["root_operational_guard_prior"]
+ operational=read(resource_ref["path"]);assert sha(resource_ref["path"])==resource_ref["sha256"]
+ assert operational["status"]=="approved_operational_prior"
+ script=D/"task-5-full-pilot-root-operational-monitor-v4.py"
+ assert sha(script)=="94ddf018576ab107a6c3146088713a9e30da29416f419941a9831fb60e938626"
+ spec=importlib.util.spec_from_file_location("operational_monitor",script)
+ monitor=importlib.util.module_from_spec(spec);spec.loader.exec_module(monitor)
+ guard=copy.deepcopy(read(D/"task-5-full-pilot-root-operational-monitor-v4-guard-candidate.json"))
+ config=read(root["bindings"]["candidate"]["path"])
+ guard.update(root_preapproved=True,prior_role="root_fixed_operational_prior",
+  formal_financial_launch_authorized=True,
+  full_budget_and_cap_recipe_review=review_ref,
+  approved_budget_bindings=review["approved_bindings"],
+  phase_wall_limit_seconds=operational["wall_limit_seconds"],
+  child_rss_limit_bytes=operational["child_RSS_limit_bytes"],
+  parent_rss_limit_bytes=operational["parent_RSS_limit_bytes"],
+  poll_seconds=operational["poll_seconds"],
+  plan=tree(materialized/"locked-prior-metadata",monitor),
+  typed_inputs=tree(config["typed_inputs_artifact"],monitor),
+  native_output_path=str(a.native.resolve()),receipt_directory=str(a.receipts.resolve()),
+  created_UTC=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+  launch_authorized_by="root",
+  prior_metadata_materialization=reference(materialized/"manifest.json"),
+  actual_root_metadata_approval=root_ref,
+  operational_resource_choice=resource_ref,
+  root_launch_scope="original formal pilot only; execute unmodified N/cases/thresholds/seeds/driver/source; admin stops partial/unclosed; main/phase/numerical acceptance still false",
+  numerical_accuracy_and_research_acceptance_authorized=False)
+ assert not a.native.exists() and not a.receipts.exists()
+ for p in [a.native.resolve(),a.receipts.resolve()]:p.relative_to(D)
+ devices=[os.stat(row["path"]).st_dev for row in guard["volume_probes"]]
+ assert len(set(devices))==3
+ capacities={row["id"]:{"free_bytes":shutil.disk_usage(row["path"]).free,
+  "reserve_bytes":row["reserve_bytes"],"device":dev} for row,dev in zip(guard["volume_probes"],devices,strict=True)}
+ assert all(row["free_bytes"]>row["reserve_bytes"] for row in capacities.values())
+ mem={line.split(":")[0]:int(line.split()[1])*1024 for line in pathlib.Path("/proc/meminfo").read_text().splitlines() if line.startswith(("MemAvailable:","MemTotal:","SwapFree:","SwapTotal:"))}
+ assert mem["MemAvailable"]>guard["child_rss_limit_bytes"]
+ guard["root_fresh_capacity_snapshot"]={"UTC":datetime.datetime.now(datetime.timezone.utc).isoformat(),"volumes":capacities,"memory_bytes":mem,"whole_physical_capacity_upper_bytes":None,"capacity_forecast_not_guaranteed":True}
+ monitor.source_binding(guard);monitor.actual_budget_review(guard)
+ output=a.output.resolve();output.relative_to(D);assert not output.exists()
+ output.write_text(json.dumps(guard,indent=2,ensure_ascii=False,allow_nan=False)+"\n")
+ loaded,_,guard_sha,_=monitor.load_guard(output)
+ assert loaded==guard
+ receipt={"schema":"rb-f04-root-formal-financial-launch-binding-receipt-v1","status":"formal_pilot_launch_authorized_before_attempt",
+ "guard":reference(output),"materialization":reference(materialized/"manifest.json"),
+ "budget_review":review_ref,"metadata_approval":root_ref,"current_source_sha256":guard["source_identity_sha256"],
+ "resource_observation":guard["root_fresh_capacity_snapshot"],"financial_calls_so_far":0,
+ "financial_qualification":"unknown","main_or_phase_approval":False,
+ "cost":{"wall_before_receipt_seconds":time.perf_counter()-start,"CPU_before_receipt_seconds":time.process_time()-cpu,"final_receipt_tail_seconds":None}}
+ r=D/"task-5-formal-pilot-root-launch-binding-receipt-v3.json";assert not r.exists()
+ r.write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
+ print(json.dumps(receipt,ensure_ascii=False))
+if __name__=="__main__":main()

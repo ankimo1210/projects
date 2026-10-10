@@ -1,0 +1,39 @@
+{
+  "schema": "rb-f04-independent-source-prior-rebind-review-manifest-v1",
+  "status": "approved_limited_current_source_prior_binding_addendum",
+  "files": {
+    "task-5-formal-prior-lock-rebind-independent-probe-v4.py": {
+      "sha256": "a3e8fe5c0e32610e12c805cd1d77e7116c8a50a1d103ca3a8c67750cfd839fd6",
+      "bytes": 9975
+    },
+    "task-5-formal-prior-lock-rebind-independent-results-v4.json": {
+      "sha256": "8c4cb8f031caca04050a2b1f88e6851152aaf5bccf761c594fd074dc1e357bb6",
+      "bytes": 19300
+    },
+    "task-5-formal-prior-lock-rebind-independent-decision-v4.json": {
+      "sha256": "ef4b8cbe88da24f163e2177dd95045b4069f6dfbbf0341c656432dc6a8d7296a",
+      "bytes": 14789
+    },
+    "task-5-formal-prior-lock-rebind-independent-review-v4.md": {
+      "sha256": "e698d14d26878399004b6a913b3acde9946ee5b139ffc7646118ecf3016ec1e0",
+      "bytes": 1666
+    }
+  },
+  "fixed_candidate": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-manifest-v4.json",
+    "sha256": "f1a5eac6941a16dde234cea69804122d2f51ceebadce22951ab6af9db99c36e6"
+  },
+  "old_v3_failure": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-independent-decision-v3.json",
+    "sha256": "b6f6e3c6e961dd88613fb9a292c3db7ff3e96462e014d83047946ed85b86b87f"
+  },
+  "old_all3138_prior": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+    "sha256": "3cf7446276873a13e45c8c4c2f3562fa8d644302a52eb07c07c73753c98e5b4b"
+  },
+  "old_source_prior_original_failure_expenses_unknown_preserved": true,
+  "financial_qualification": "unknown",
+  "formal_financial_launch_authorized": false,
+  "main_or_phase_approval": false,
+  "finance_Popen_helper_lock_calls": 0
+}

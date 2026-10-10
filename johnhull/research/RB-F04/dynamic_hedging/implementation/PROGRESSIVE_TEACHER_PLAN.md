@@ -1,6 +1,6 @@
 # 段階教師選択と最終mixed pilot計画
 
-2026-10-10。初回sourceの元3,138ジョブの資源prior・正確cap recipeを独立承認し、正式metadata lockを生成した。初回正式pilotは69件executed＋70番の日付gateでKeyError Nとなり停止（外側580.029秒、資源capなし）。native cacheのoriginal_Nを読む1行修正と実cache→日付gate→保存checkerの2回帰を追加し、関連246tests・2Python Ruff/format PASS。旧partial・原失敗・費用を保持。新sourceへのprior再結合とfresh起動が次であり、完走・saved検算・freeze/main・研究受入は未完了。
+2026-10-10。初回sourceの元3,138ジョブの資源prior・正確cap recipeを独立承認し、正式metadata lockを生成した。初回正式pilotは69件executed＋70番の日付gateでKeyError Nとなり停止（外側580.029秒、資源capなし）。native cacheのoriginal_Nを読む1行修正と実cache→日付gate→保存checkerの2回帰を追加し、関連246tests・2Python Ruff/format PASS。旧partial・原失敗・費用を保持。修正版sourceへのprior再結合・正式metadata lock・別root起動許可を完了し、fresh正式pilotを2026-10-10 10:22:45 UTCに再開した。完走・saved検算・freeze/main・研究受入は未完了。
 
 全budgetレビューは資源priorの限定承認。金融精度・主実験・研究受入は実結果で別に判定する。[現在のroot承認・計画生成・実起動](PILOT_BUDGET_MEASUREMENTS.md#正式prior固定と実起動2026-10-10)。以下は開発段階の計画・検査範囲を保持する。
 
@@ -37,7 +37,7 @@ count/signature/topologyだけのroot検査は自己整合の改変10件を通�
 
 ## 正式lock後の残り
 
-- 旧69executed＋1sourcefaultと全実費を保管し、新sourceへprior/monitorを再結合してfresh起動。旧rawのSHAを新sourceへ書換えず、元--resumeのsource契約を保つ。
+- 稼働中の修正版正式pilotを同じsessionで観察。旧69executed＋1sourcefaultと全実費は両保管庫へbyte保存済み。旧rawの由来を新sourceへ付け替えず、元--resumeのsource契約を保つ。
 - 修正版正式pilotの完走・原raw保存検算・実結果に基づく教師選択とfreeze。
 - 現行10費用receiptの実測・inclusive会計、元失敗/unknown/historyの保持。
 - 原774-job main・独立fresh・両保管庫からの数値復元、3図/notebook、最終関連3suiteと受入。
@@ -62,4 +62,4 @@ v55の動的import3件が正式source封鎖を妨げることを実検査で確�
 
 最大N65536の真正一節点は生成・保存を完了し、旧4GiB停止を保持して全N保存検算を39.414秒/peak3.722GB・新生成0で完了した。元mother1,344節点の完了には読み替えない。conditional cap consumerは追加22/関連既存16件・Ruff/format PASS、独立限定source確認済み。全3,138-job prior候補は未承認。保存検算の3600秒候補をN/格子別の明示推計へ補足した（local high/N65536のcap候補159000秒）。stage gate/selector/最初のactivationの再検算費用も補足中。詳細は[予算測定](PILOT_BUDGET_MEASUREMENTS.md)。
 
-旧方式の全stage実行時の保存再検算反復を含む既知部分外挿は606.881時間（約25.3日、未知費用別）。数日の見積りは撤回済み。phase内の不変raw検算再利用v2を限定実装・独立確認し、真正原N1024/Hcoarse108節点で初回23.671秒・再利用0.222秒・別context全検算23.797秒を実測した（関連既存240tests/Ruff/format PASS）。現v3は計算に無関係なwall/work-directory引数差だけの重複検算を除き、全引数SHA・外側監査を保持。独立9境界/保存432節点とroot14tests/Ruff/format PASS。v6の全job-key件数を独立確認し、全stage時の初回40cold/840hit・別saved context40cold/768hit。旧rateの既知部分は初回139.050h・別context cold部分90.673hで、全ETAは未知。初回sourceの元3,138ジョブの資源prior・正確cap recipeを独立承認し、正式metadata lockを生成した。初回正式pilotは69件executed＋70番の日付gateでKeyError Nとなり停止（外側580.029秒、資源capなし）。native cacheのoriginal_Nを読む1行修正と実cache→日付gate→保存checkerの2回帰を追加し、関連246tests・2Python Ruff/format PASS。旧partial・原失敗・費用を保持。新sourceへのprior再結合とfresh起動が次であり、完走・saved検算・freeze/main・研究受入は未完了。 初回全N検算・原義務・失敗/unknown・独立fresh/restoreを保持し、原v1–v4は未承認の歴史的候補として残す。
+旧方式の全stage実行時の保存再検算反復を含む既知部分外挿は606.881時間（約25.3日、未知費用別）。数日の見積りは撤回済み。phase内の不変raw検算再利用v2を限定実装・独立確認し、真正原N1024/Hcoarse108節点で初回23.671秒・再利用0.222秒・別context全検算23.797秒を実測した（関連既存240tests/Ruff/format PASS）。現v3は計算に無関係なwall/work-directory引数差だけの重複検算を除き、全引数SHA・外側監査を保持。独立9境界/保存432節点とroot14tests/Ruff/format PASS。v6の全job-key件数を独立確認し、全stage時の初回40cold/840hit・別saved context40cold/768hit。旧rateの既知部分は初回139.050h・別context cold部分90.673hで、全ETAは未知。初回sourceの元3,138ジョブの資源prior・正確cap recipeを独立承認し、正式metadata lockを生成した。初回正式pilotは69件executed＋70番の日付gateでKeyError Nとなり停止（外側580.029秒、資源capなし）。native cacheのoriginal_Nを読む1行修正と実cache→日付gate→保存checkerの2回帰を追加し、関連246tests・2Python Ruff/format PASS。旧partial・原失敗・費用を保持。修正版sourceへのprior再結合・正式metadata lock・別root起動許可を完了し、fresh正式pilotを2026-10-10 10:22:45 UTCに再開した。完走・saved検算・freeze/main・研究受入は未完了。 初回全N検算・原義務・失敗/unknown・独立fresh/restoreを保持し、原v1–v4は未承認の歴史的候補として残す。

@@ -1,0 +1,87 @@
+{
+  "UTC_first_sample": "2026-10-10T10:09:29Z",
+  "backend_source": {
+    "functions": "put_bytes -> _publish_without_overwrite -> _move_without_overwrite; replicate calls read_verified",
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/scripts/evidence_store.py",
+    "sha256": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3"
+  },
+  "diagnostic_Popen_RNG_financial_calls": 0,
+  "financial_qualification": "unknown",
+  "identified_cost_mechanism": [
+    "This sampled publication uses the Windows interop fallback: two wslpath conversions and one PowerShell File.Move process per blob.",
+    "Thousands of tiny per-blob publications are serialized, giving fixed process-start/interop latency even for 312-byte receipts.",
+    "Store validates source digest, temporary bytes, and final bytes, and mirror replication reads verified primary data; this explains repeated byte reads beyond unique archive size."
+  ],
+  "identified_stage": "per-digest mirror atomic publication; final manifest and final source SHA/roster pass not yet certified",
+  "last_proc_sample": {
+    "final_receipt_exists": true,
+    "io": {
+      "error": "FileNotFoundError",
+      "message": "[Errno 2] No such file or directory: '/proc/296081/io'"
+    },
+    "status": {
+      "error": "FileNotFoundError",
+      "message": "[Errno 2] No such file or directory: '/proc/296081/status'"
+    },
+    "wchan": {
+      "error": "FileNotFoundError",
+      "message": "[Errno 2] No such file or directory: '/proc/296081/wchan'"
+    }
+  },
+  "last_proc_sample_UTC": "2026-10-10T10:11:47Z",
+  "process_first_sample": {
+    "VmHWM_kB": 1297488,
+    "VmRSS_kB": 51756,
+    "child_pid": 312707,
+    "current_lock": "mirror .lock-636d1db28cd0aaa9ad9ae3838bd0adf5c21c00d90769749aa362401a43c84538",
+    "rchar": 14988430039,
+    "read_bytes": 10163086484,
+    "syscall_read": "denied; no escalation",
+    "wchan": "poll_schedule_timeout.constprop.0",
+    "wchar": 3486016775
+  },
+  "process_pid": 296081,
+  "second_sample": {
+    "UTC_end": "2026-10-10T10:10:20Z",
+    "actual_waited_child": {
+      "executable": "/init",
+      "interop_command": "powershell.exe -NoProfile -NonInteractive",
+      "pid": 313275,
+      "wchan": "poll_schedule_timeout.constprop.0"
+    },
+    "current_blob_bytes": 312,
+    "current_mirror_lock_digest": "6fcd9987ccad7da8c562b750ee6e77916b761495811b8c3d845ad570ba6a48eb",
+    "current_source": "work/teacher:local:N1024:coarse:raw/node0508/receipt.json",
+    "current_unique_blob_index_one_based": 4140,
+    "of_unique_blobs": 4358
+  },
+  "source_API_helper_CAS_original_data_edits": 0,
+  "stat_only_scan_nonsimultaneous": {
+    "cost": {
+      "CPU_seconds": 0.674121968,
+      "wall_seconds": 11.238294406000932
+    },
+    "mirror": {
+      "manifest_present": false,
+      "missing": 7,
+      "missing_bytes": 2362628,
+      "present": 4351,
+      "size_mismatches": 0
+    },
+    "primary": {
+      "manifest_present": false,
+      "missing": 18,
+      "missing_bytes": 2908010,
+      "present": 4340,
+      "size_mismatches": 0
+    },
+    "scope": "existence and size only, not new SHA/restore/integrity approval; counts can differ because process advances during scan"
+  },
+  "status": "read-only live CAS process diagnosis; no intervention",
+  "unknowns": [
+    "exact hardlink/renameat2 errno not sampled",
+    "fraction of total time due to interop, fsync, read verification, or DrvFS not separately measured",
+    "no guaranteed completion ETA",
+    "blob SHA validity/completion needs original writer receipt"
+  ]
+}

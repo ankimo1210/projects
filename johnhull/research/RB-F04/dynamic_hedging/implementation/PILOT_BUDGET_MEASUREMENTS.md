@@ -275,4 +275,18 @@ v2のsource81/dynamic0のplain canonical identityは959f879a…（runner._digest
 
 [閉じた事前metadataの両保管庫保存](pilot-execution-evidence/task-5-formal-prior-metadata-cas-root-receipt-v1.json)は183 unique blobs/186 paths、両copy PASS。原648MB plan・旧source81・root承認と独立レビューを保持した。wall67.486184秒・CPU4.690202秒は保存区間の費用。終端金融raw/checkpointはこのmetadata packetに含まれず、別packetで保管する。
 
-残時間は暫定で数週間規模。前節の5.79日/別context cold3.78日は全stageを仮定した既知部品の外挿で、今回580秒や69件から全完了へ比例計算しない。新source pilotの選択段階・保存検算・main/fresh/両復元・未観測費用により更新する。後続の多曲線risk/P&Lと増分XVA＋IM/資本は未実装。
+残時間は暫定で数週間規模、1か月以上になる余地があり、上限は未確定。元v6は別空contextとしてfinal_saved / fresh_independent_review / CAS_primary_restore / CAS_mirror_restoreの4つを明示する。全stageと元40 cold keysを各contextで検算する同じ仮定なら、既知部品は初回139.050h＋4×90.673h＝501.742h（約20.9日）。初回139.050hは初回coldを含み、初回の90.673hを再加算しない。これは旧部品rateの条件付き成分小計で、保証下限・上限・全体ETAではない。選択が早く閉じれば短縮する一方、再利用guard・非teacher・IO・外部10費用・main/fresh追加生成・図/review等は未測定。新source pilotの実選択と実費で更新し、今回580秒や69件から全完了へ比例計算しない。後続の多曲線risk/P&Lと増分XVA＋IM/資本は調査案までで、正式設計・実装・実測rateは未完了。
+
+### 修正版sourceのprior再結合とfresh再開
+
+[新保存計画とguardの追加独立確認](pilot-execution-evidence/task-5-formal-prior-materialized-and-guard-independent-decision-v2.json)は3447件PASS。原typed inputs/current81・全3138の実review SHA・実ef4→cd77→manifest6e355/artifact206b/metadata1809→guard a36eを照合し、既承認の予算数学を再審査していない。金融実行0、数値精度・main/phaseの承認ではない。live起動後にfresh-directory条件を再評価したreaderの時点誤用は元trace/unknown費用として保持し、source/guard欠陥へ読み替えず、root起動前の実PASS receiptを基準にした。
+
+[限定prior追加判断v4](pilot-execution-evidence/task-5-formal-prior-lock-rebind-independent-decision-v4.json)は、旧3cfの全予算値・rows02da・元3138/121/51/4N/573122を維持し、新source5d/568への6bindingsだけを再確認した。差分151件PASS、数学予算の新規再審査ではない。元v3の268PASS/1FAILを保持し、同じrunner SHAがfilesとprotocol_sourceの2箇所に現れることを正しく扱うD materializer修復だけを確認。その他protocol/env/identityは不変で、3改変を拒否した。金融精度・main/phaseの承認ではない。
+
+[root実追加priorの結合](pilot-execution-evidence/task-5-formal-prior-actual-root-binding-receipt-v3.json)は各budgetへ実decision ef4b8cbe…を結合。[新native計画生成](pilot-execution-evidence/task-5-formal-prior-lock-materialized-root-v3__materialization-progress.json)は実lock API/source binding PASS、source81安定、3138jobs/121cases/51obligations/20teachers/10drivers/573122 optionsを保持。新artifact206b2c86…/metadata1809cfeb…を生成。金融worker0。[最外側metadata費用](pilot-execution-evidence/task-5-formal-prior-lock-materialization-root-observation-v2__parent-cost-and-status.json)は67.172874秒、child CPU65.466859秒、kernel peak RSS3,882,967,040 B、capなし。内側65.800522秒は同区間に含み、重複加算しない。
+
+[別rootの実起動許可](pilot-execution-evidence/task-5-formal-pilot-root-launch-binding-receipt-v3.json)は実a36ec860…guard、新plan全tree/元typed inputs/current81/実ef4 prior/monitor94dd…を結合し、既存load_guardで起動前PASS。観測空きはWSL590.2GB/C316.4GB/F182.8GB、MemAvailable48.3GB。行政30日・各process16GiB・各volume reserve10GiBは精度条件やETAではない。
+
+修正版fresh正式pilotを2026-10-10 10:22:45 UTCに起動。root PID316326、monitor PID316327、実session21286。[起動sessionの引継ぎ](pilot-execution-evidence/task-5-formal-pilot-actual-root-exec-handle-v2.json)と[初期実観測](pilot-execution-evidence/task-5-formal-pilot-live-root-observation-v2.json)を保存した。新native root-v2と旧69executed＋1sourcefaultのroot-v1は別に保持し、旧rawを新sourceへ読み替えていない。同じhandleで観察を継続し、完走・数値saved検算・freeze/main・全研究受入は未完了。
+
+[旧終端pilotの両保管庫保存](pilot-execution-evidence/task-5-formal-pilot-terminal-cas-root-receipt-v1.json)は6245paths/4358 unique blobs、両vault4172new＋186existing、原byte/closed roster不変でPASS。保存区間wall1226.188257秒・CPU52.484495秒。旧failed原raw/checkpointとsource/plan/費用を保持するbyte保管で、数値semantic復元の承認ではない。別の[読み取り診断](pilot-execution-evidence/task-5-formal-pilot-terminal-cas-readonly-process-diagnosis-v1.json)で既存Windows fallback publicationの逐次処理を観察した。新正式pilotのlive rawはこのpacketに含めない。

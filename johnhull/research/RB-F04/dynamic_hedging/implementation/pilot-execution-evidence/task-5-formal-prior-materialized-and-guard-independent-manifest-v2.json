@@ -1,0 +1,46 @@
+{
+  "schema": "rb-f04-independent-current-materialized-binding-manifest-v2",
+  "status": "approved_saved_current_binding_scope_only",
+  "files": {
+    "task-5-formal-prior-materialized-and-guard-independent-probe-v2.py": {
+      "sha256": "bc654c9741e2aec79b4f208dfe57c4e3edbcb58b4bd96e63ecb030f043c3daf8",
+      "bytes": 17777
+    },
+    "task-5-formal-prior-materialized-and-guard-independent-current-binding-probe-v2.py": {
+      "sha256": "364a03ca37d7efa89641d1c4ee4d175f3f06c8976bf1f68f7288b7872ce32c95",
+      "bytes": 13765
+    },
+    "task-5-formal-prior-materialized-and-guard-independent-late-API-reader-error-v2.json": {
+      "sha256": "aec47e233524646b55f1ea68f836ed238ce2c123cd5d4ab868a87b4cf93906df",
+      "bytes": 1356
+    },
+    "task-5-formal-prior-materialized-and-guard-independent-results-v2.json": {
+      "sha256": "f76a1dde09472e387a49378ae5e0c64262f5411cc81158c5bd893779a71f046f",
+      "bytes": 490467
+    },
+    "task-5-formal-prior-materialized-and-guard-independent-decision-v2.json": {
+      "sha256": "60a8eae7a087026ea9cddabbac13df187a948e95dbac48ccfe5b0adc391d0695",
+      "bytes": 6588
+    },
+    "task-5-formal-prior-materialized-and-guard-independent-review-v2.md": {
+      "sha256": "593ed836a8462b0c269f437920d7fb1ea8d0c4fe3860ef29994e31fdc60865bd",
+      "bytes": 1443
+    }
+  },
+  "actual_saved_materialization": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialized-root-v3/manifest.json",
+    "sha256": "6e35597ac5ba5883b1f7f73b5aa82343f01358f304e78a199a3d35a932788c15"
+  },
+  "actual_guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v2.json",
+    "sha256": "a36ec860c80f7af29bd1c36669ea98d5737c6e72319dd84cc939e6aa7276f11a"
+  },
+  "old_exact_metadata_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-and-guard-independent-decision-v1.json",
+    "sha256": "fd05f712c5e02246fe372663dab0f9c1ab4cef03fd99a191c187d330cd56141d"
+  },
+  "financial_qualification": "unknown",
+  "main_or_phase_approval": false,
+  "new_financial_worker_Popen_RNG_SDE_solver_calls": 0,
+  "all_old_partial_failure_unknown_costs_preserved": true
+}

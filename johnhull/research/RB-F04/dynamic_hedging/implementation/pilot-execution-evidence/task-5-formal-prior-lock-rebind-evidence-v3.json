@@ -1,0 +1,69 @@
+{
+  "all3138_budget_and_cap_recipe_approved": false,
+  "corrected_source_reference": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-independent-current-source-closure-v1.json",
+    "sha256": "4183b1e707cfb40d01808a45e1fc5042e54ba26d8a2892e3ac3703f76a30f768"
+  },
+  "financial_qualification": "unknown",
+  "financial_workers_RNG_SDE_solver_Popen_executed": 0,
+  "formal_financial_launch_authorized": false,
+  "formal_phase_approved": false,
+  "new_source_prior_binding_addendum": "pending_actual_independent_decision",
+  "old_approved_cap_recipe": "e8fda1ec6c5bb05e361e428f94340e67b4a8e2e42da68010082331bd7ae54c1e",
+  "old_approved_normalized_rows": "02da310d0bed91d6883171eed44cb22ae872cc6a2888837a5979755d9c68aee5",
+  "old_budget_source_canonical": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "old_budget_source_native": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "old_full_prior_decision_can_authenticate_new_source": false,
+  "old_partial_raw_unknown_and_actual_costs": "immutable original artifacts/receipts retained; no old row relabel, reclassify or import",
+  "original_counts": {
+    "attempts": 51,
+    "cases": 121,
+    "jobs": 3138,
+    "literal_cap_options": 573122
+  },
+  "original_teacher_N": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "references": {
+    "task-5-formal-date-gate-N-independent-current-source-closure-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-independent-current-source-closure-v1.json",
+      "sha256": "4183b1e707cfb40d01808a45e1fc5042e54ba26d8a2892e3ac3703f76a30f768"
+    },
+    "task-5-formal-date-gate-N-root-source-diff-v1.diff": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-root-source-diff-v1.diff",
+      "sha256": "1404715031d7c43ed1d0451a1d62f1d1fd1023605e97715530e8d05b66779751"
+    },
+    "task-5-formal-date-gate-N-source-fix-independent-decision-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-source-fix-independent-decision-v1.json",
+      "sha256": "a90705642f36eef595b93e9cbb2302aaa54d547d5deb7ad6ca46024deed1fbf0"
+    },
+    "task-5-formal-date-gate-N-source-fix-independent-results-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-source-fix-independent-results-v1.json",
+      "sha256": "2e293d628a1955354f86d07de655938e81662933d797914a5c246dae76740f37"
+    },
+    "task-5-formal-prior-lock-rebind-evidence-v2.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-evidence-v2.json",
+      "sha256": "1e83ebae5b76c0560a40cd1ec21faf6e342e722111d725feaa1faadb846f14a1"
+    },
+    "task-5-fullmixed-prior-budget-independent-effective-rows-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-effective-rows-v1.json",
+      "sha256": "31bde8af1b6ffec29066ca7260f0a9b0d8ca84fa952aa602515de7613b02690b"
+    },
+    "task-5-fullmixed-prior-budget-independent-final-decision-v2.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+      "sha256": "3cf7446276873a13e45c8c4c2f3562fa8d644302a52eb07c07c73753c98e5b4b"
+    }
+  },
+  "schema": "rb-f04-date-gate-source-prior-rebind-evidence-v1",
+  "scope": "existing prior consumers source-only fresh-run rebind; old 70 partial immutable",
+  "source_canonical_sha256": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_fix_decision": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-source-fix-independent-decision-v1.json",
+    "sha256": "a90705642f36eef595b93e9cbb2302aaa54d547d5deb7ad6ca46024deed1fbf0"
+  },
+  "source_native_payload_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "source_only_approval_received": true
+}

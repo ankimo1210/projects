@@ -1,0 +1,1145 @@
+{
+  "schema": "rb-f04-independent-source-prior-rebind-static-results-v1",
+  "status": "FAIL",
+  "checks": [
+    {
+      "name": "fixed_v3_manifest",
+      "passed": true
+    },
+    {
+      "name": "manifest_21_files",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-date-gate-N-independent-current-source-closure-v1.json",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-date-gate-N-source-fix-independent-decision-v1.json",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-pilot-root-launch-guard-builder-v1.py",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-pilot-root-launch-guard-builder-v2.py",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-pilot-root-launch-guard-builder-v2.py.from-previous.diff",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-actual-root-approval-builder-v1.py",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-actual-root-approval-builder-v2.py",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-actual-root-approval-builder-v2.py.from-previous.diff",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-pending-example-v3.json",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v2.py",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v3.py",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-preparation-v3.py.from-previous.diff",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-rebind-bindings-candidate-v3.json",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-rebind-evidence-v3.json",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-rebind-preparation-v3.md",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-formal-prior-lock-rebind-static-results-v3.json",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-operational-monitor-v2.py",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-operational-monitor-v3-guard-candidate.json",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-operational-monitor-v3.py",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-operational-monitor-v3.py.from-previous.diff",
+      "passed": true
+    },
+    {
+      "name": "manifest:task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+      "passed": true
+    },
+    {
+      "name": "evidence:task-5-formal-date-gate-N-independent-current-source-closure-v1.json",
+      "passed": true
+    },
+    {
+      "name": "evidence:task-5-formal-date-gate-N-root-source-diff-v1.diff",
+      "passed": true
+    },
+    {
+      "name": "evidence:task-5-formal-date-gate-N-source-fix-independent-decision-v1.json",
+      "passed": true
+    },
+    {
+      "name": "evidence:task-5-formal-date-gate-N-source-fix-independent-results-v1.json",
+      "passed": true
+    },
+    {
+      "name": "evidence:task-5-formal-prior-lock-rebind-evidence-v2.json",
+      "passed": true
+    },
+    {
+      "name": "evidence:task-5-fullmixed-prior-budget-independent-effective-rows-v1.json",
+      "passed": true
+    },
+    {
+      "name": "evidence:task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+      "passed": true
+    },
+    {
+      "name": "pending_binding:budget_rows_assembly",
+      "passed": true
+    },
+    {
+      "name": "pending_binding:budget_rows_assembly_manifest",
+      "passed": true
+    },
+    {
+      "name": "pending_binding:candidate",
+      "passed": true
+    },
+    {
+      "name": "pending_binding:candidate_helper",
+      "passed": true
+    },
+    {
+      "name": "pending_binding:producer",
+      "passed": true
+    },
+    {
+      "name": "pending_binding:replay_budget_manifest",
+      "passed": true
+    },
+    {
+      "name": "pending_binding:replay_budget_supplement",
+      "passed": true
+    },
+    {
+      "name": "pending_binding:selection_overlay",
+      "passed": true
+    },
+    {
+      "name": "old_prior_keeps_old_source",
+      "passed": true
+    },
+    {
+      "name": "source_only_decision_no_budget_or_launch",
+      "passed": true
+    },
+    {
+      "name": "old_prior_schema_and_scope",
+      "passed": true
+    },
+    {
+      "name": "source_canonical_exact",
+      "passed": true
+    },
+    {
+      "name": "source_native_reused_approved_actual_API_receipt",
+      "passed": true
+    },
+    {
+      "name": "source_inventory81_static",
+      "passed": true
+    },
+    {
+      "name": "only_reviewed_runner_key_repair",
+      "passed": true
+    },
+    {
+      "name": "source_geometry_environment_unchanged",
+      "passed": false
+    },
+    {
+      "name": "source_byte:deep_hedge_price/src/deep_hedge_price/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:deep_hedge_price/src/deep_hedge_price/config.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:deep_hedge_price/src/deep_hedge_price/pricing_config.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/alternative_models.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/amm.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/bsm.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/carbon.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/cds.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/copula.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/credit.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/credit_curve.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/credit_metrics.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/credit_portfolio.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/exotics.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/fd.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/fourier.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/frontier_reference.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/hedging.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/heston.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/hull_white.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/inflation.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/ir_options.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/jarrow_yildirim.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/jgbi.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/liquidation.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/mc.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/mc_advanced.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/nbplot.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/nonstandard_american.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/payoffs.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/perpetual_american.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/perpetuals.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/plotly_viz.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/pnl_explain.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/ppa.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/rates.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/rfr.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/rfr_options.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/risk.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/risk_allocation.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/sabr.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/sabr_normal.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/sde.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/spx_vix.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/stochastic_volatility.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/surrogate_data.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/surrogate_validation.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/swaps.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/tail_risk.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/teaching.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/trees.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/var_backtest.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/vol_surface.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/volatility.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/weather.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/xva.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/hullkit/src/hullkit/zero_dte.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/check_fresh.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/check_main.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/run_fresh.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/run_main.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "passed": true
+    },
+    {
+      "name": "source_byte:johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "passed": true
+    },
+    {
+      "name": "old_source_snapshot_keeps_81",
+      "passed": true
+    },
+    {
+      "name": "effective_rows_SHA_exact",
+      "passed": true
+    },
+    {
+      "name": "effective_3138_null_authority",
+      "passed": true
+    },
+    {
+      "name": "effective_rows_digest_unchanged",
+      "passed": true
+    },
+    {
+      "name": "old_exact_recipe_reconstructed",
+      "passed": true
+    },
+    {
+      "name": "new_exact_recipe_reconstructed",
+      "passed": true
+    },
+    {
+      "name": "recipe_source_only_delta",
+      "passed": true
+    },
+    {
+      "name": "literal_original573122",
+      "passed": true
+    },
+    {
+      "name": "parent_original266306",
+      "passed": true
+    },
+    {
+      "name": "case_attempt_original_counts",
+      "passed": true
+    },
+    {
+      "name": "original_N_unchanged",
+      "passed": true
+    },
+    {
+      "name": "10_external_unknown_preserved",
+      "passed": true
+    },
+    {
+      "name": "history46_kept",
+      "passed": true
+    },
+    {
+      "name": "exact_18_binding_set",
+      "passed": true
+    },
+    {
+      "name": "exact_six_source_binding_changes",
+      "passed": true,
+      "detail": [
+        "source_native_payload_sha256",
+        "source_limited_decision_sha256",
+        "source_rebind_evidence_sha256",
+        "source_identity_sha256",
+        "cap_recipe_digest",
+        "materializer_sha256"
+      ]
+    },
+    {
+      "name": "actual_18bindings_independent_reconstruction",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:require",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:file_sha",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:digest",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:read",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:inside_d",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:checked_file",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:positive",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:load_actual_approval",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:assembly_review_basis",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:normalized_budget_rows",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:cap_recipe_payload",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:import_module",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:prediction_work",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:numeric_bytes",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:validate_budget_rows",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:approved_binding_set",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:write_json",
+      "passed": true
+    },
+    {
+      "name": "materializer_AST_unchanged:cli",
+      "passed": true
+    },
+    {
+      "name": "materializer_only_added_historical_function",
+      "passed": true
+    },
+    {
+      "name": "monitor_function_roster_unchanged",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:digest",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:sha",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:clock",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:save",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:require",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:absolute",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:positive",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:tree_binding",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:fixed_reference",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:actual_budget_review",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:source_binding",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:load_guard",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:rss",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:volume_sample",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:choose_stop",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:terminal_status",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:run",
+      "passed": true
+    },
+    {
+      "name": "monitor_AST_unchanged:main",
+      "passed": true
+    },
+    {
+      "name": "root_builder_only_fixed_refs:task-5-formal-prior-actual-root-approval-builder-v2.py",
+      "passed": true
+    },
+    {
+      "name": "root_builder_only_fixed_refs:task-5-formal-pilot-root-launch-guard-builder-v2.py",
+      "passed": true
+    },
+    {
+      "name": "pending_approval_not_promoted",
+      "passed": true
+    },
+    {
+      "name": "false_candidate_history_preserved",
+      "passed": true
+    },
+    {
+      "name": "guard_false_financial_partial_boundary",
+      "passed": true
+    },
+    {
+      "name": "guard_current_81inventory",
+      "passed": true
+    },
+    {
+      "name": "guard_exact_fixedmonitor",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:deep_hedge_price/src/deep_hedge_price/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_execution.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:deep_hedge_price/src/deep_hedge_price/config.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:deep_hedge_price/src/deep_hedge_price/pricing_config.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/_dynamic_hedging_statistics.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/alternative_models.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/amm.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/bsm.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/carbon.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/cds.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/copula.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/credit.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/credit_curve.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/credit_metrics.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/credit_portfolio.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/exotics.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/fd.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/fourier.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/frontier_reference.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/hedging.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/heston.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/hull_white.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/inflation.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/ir_options.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/jarrow_yildirim.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/jgbi.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/liquidation.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/mc.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/mc_advanced.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/nbplot.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/nonstandard_american.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/payoffs.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/perpetual_american.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/perpetuals.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/plotly_viz.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/pnl_explain.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/ppa.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/rates.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/rfr.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/rfr_options.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/risk.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/risk_allocation.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/sabr.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/sabr_normal.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/sde.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/spx_vix.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/stochastic_volatility.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/surrogate_data.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/surrogate_validation.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/swaps.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/tail_risk.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/teaching.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/trees.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/var_backtest.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/vol_surface.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/volatility.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/weather.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/xva.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/hullkit/src/hullkit/zero_dte.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/check_fresh.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/check_main.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/run_fresh.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/run_main.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "passed": true
+    },
+    {
+      "name": "stable_source_byte:johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "passed": true
+    }
+  ],
+  "checks_passed": 268,
+  "failures": [
+    {
+      "name": "source_geometry_environment_unchanged",
+      "passed": false
+    }
+  ],
+  "bindings": {
+    "candidate_sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "selection_overlay_sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+    "replay_budget_supplement_sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+    "replay_budget_manifest_sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9",
+    "source_native_payload_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+    "source_limited_decision_sha256": "a90705642f36eef595b93e9cbb2302aaa54d547d5deb7ad6ca46024deed1fbf0",
+    "source_rebind_evidence_sha256": "fb52036f054356c96700f18ca8feadb2397ac0e51bad4bf602c5a0b4f317c0df",
+    "budget_rows_assembly_sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5",
+    "budget_rows_assembly_manifest_sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3",
+    "raw_assembled_candidate_rows_digest": "fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f",
+    "raw_assembled_candidate_cap_recipe_digest": "d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d",
+    "activation_v4_origin_sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+    "activation_potential_first_job_budget_candidates_digest": "a82f3c33d71a918f51131c8c77917793ceec75850a2181815c867f1a1e243c04",
+    "source_identity_sha256": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+    "budget_rows_without_review_SHA_digest": "02da310d0bed91d6883171eed44cb22ae872cc6a2888837a5979755d9c68aee5",
+    "cap_recipe_digest": "43ebacfd81f69043535feafcccc872ea68e4724715ed25ea3dead36dd1e630a5",
+    "materializer_sha256": "fcc35cf3e32548eb06991f87729845f9d205574c79d60eea6b7f7c32401376b7",
+    "literal_cap_options": 573122
+  },
+  "source_files": 81,
+  "source_only_delta": [
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+  ],
+  "old_prior": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+    "sha256": "3cf7446276873a13e45c8c4c2f3562fa8d644302a52eb07c07c73753c98e5b4b"
+  },
+  "old_recipe": "e8fda1ec6c5bb05e361e428f94340e67b4a8e2e42da68010082331bd7ae54c1e",
+  "new_recipe": "43ebacfd81f69043535feafcccc872ea68e4724715ed25ea3dead36dd1e630a5",
+  "scope": "D-only stdlib AST, physical provenance and exact existing JSON recipe reconstruction; no helper/module execution; no new whole-budget mathematical re-review",
+  "old70_partial_and_unknown": "original raw/failure/expenses untouched; old full prior remains old source only",
+  "native_digest": "reused actual fixed independent source API evidence a907; this probe canonical JSON rederived5d and all81 physical bytes reauthenticated",
+  "financial_RNG_SDE_solver_Popen_helper_lock_calls": 0,
+  "production_source_tests_docs_Git_CAS_mutations": 0,
+  "cost": {
+    "wall_before_result_seconds": 0.24693798400403466,
+    "CPU_before_result_seconds": 0.244594309,
+    "peak_RSS_bytes": 83218432,
+    "incidental_read_tool_tail_and_result_write_seconds": null
+  },
+  "earlier_metadata_query_error": {
+    "filename": "task-5-formal-prior-lock-preparation-v3.md",
+    "correct": "task-5-formal-prior-lock-rebind-preparation-v3.md",
+    "cause": "reviewer filename error; source unchanged",
+    "tool_log_preserved": true,
+    "CPU_and_billing_cost": null
+  }
+}

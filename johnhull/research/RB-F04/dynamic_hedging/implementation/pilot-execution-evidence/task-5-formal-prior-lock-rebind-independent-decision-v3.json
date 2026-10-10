@@ -1,0 +1,110 @@
+{
+  "schema": "rb-f04-independent-fullmixed-prior-budget-review-v1",
+  "decision": "not_approved",
+  "status": "new_D_materializer_source_binding_rejected_by_actual_protocol_source_SHA_delta",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent static prior resource reviewer",
+  "created_UTC": "2026-10-10T10:06:44.787297+00:00",
+  "planned_before_attempt": true,
+  "source_canonical_identity": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_native_payload_identity": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "scope": "minimal source/prior-binding revalidation only; old all3138 mathematical/resource review unchanged",
+  "financial_qualification": "unknown",
+  "formal_pilot_run": false,
+  "main_or_phase_approval": false,
+  "old_prior_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+    "sha256": "3cf7446276873a13e45c8c4c2f3562fa8d644302a52eb07c07c73753c98e5b4b"
+  },
+  "source_only_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-source-fix-independent-decision-v1.json",
+    "sha256": "a90705642f36eef595b93e9cbb2302aaa54d547d5deb7ad6ca46024deed1fbf0"
+  },
+  "candidate_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-manifest-v3.json",
+    "sha256": "2e23e50fb235610e980ea9b73450e42429ba0d1f043281ac257245b34aa9811c"
+  },
+  "candidate_bindings": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-bindings-candidate-v3.json",
+    "sha256": "32d688b8d6b9aee31cb1bc0e301a697ff84b2017328bc3ec37366d031e926d61"
+  },
+  "validated_original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "original_N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "literal_options": 573122,
+    "parent_associations": 266306,
+    "unchanged_effective_rows_digest": "02da310d0bed91d6883171eed44cb22ae872cc6a2888837a5979755d9c68aee5"
+  },
+  "validated_recipe": {
+    "old": "e8fda1ec6c5bb05e361e428f94340e67b4a8e2e42da68010082331bd7ae54c1e",
+    "new": "43ebacfd81f69043535feafcccc872ea68e4724715ed25ea3dead36dd1e630a5",
+    "only_delta": "source_identity"
+  },
+  "validated_six_binding_delta": {
+    "candidate_sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "selection_overlay_sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+    "replay_budget_supplement_sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+    "replay_budget_manifest_sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9",
+    "source_native_payload_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+    "source_limited_decision_sha256": "a90705642f36eef595b93e9cbb2302aaa54d547d5deb7ad6ca46024deed1fbf0",
+    "source_rebind_evidence_sha256": "fb52036f054356c96700f18ca8feadb2397ac0e51bad4bf602c5a0b4f317c0df",
+    "budget_rows_assembly_sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5",
+    "budget_rows_assembly_manifest_sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3",
+    "raw_assembled_candidate_rows_digest": "fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f",
+    "raw_assembled_candidate_cap_recipe_digest": "d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d",
+    "activation_v4_origin_sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+    "activation_potential_first_job_budget_candidates_digest": "a82f3c33d71a918f51131c8c77917793ceec75850a2181815c867f1a1e243c04",
+    "source_identity_sha256": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+    "budget_rows_without_review_SHA_digest": "02da310d0bed91d6883171eed44cb22ae872cc6a2888837a5979755d9c68aee5",
+    "cap_recipe_digest": "43ebacfd81f69043535feafcccc872ea68e4724715ed25ea3dead36dd1e630a5",
+    "materializer_sha256": "fcc35cf3e32548eb06991f87729845f9d205574c79d60eea6b7f7c32401376b7",
+    "literal_cap_options": 573122
+  },
+  "blocker": {
+    "file": "task-5-formal-prior-lock-preparation-v3.py",
+    "function": "rebind_source_evidence",
+    "predicate": "{k:v for k,v in corrected.items() if k!='files'} == {k:v for k,v in previous.items() if k!='files'}",
+    "actual_difference": "/protocol_source/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+    "old_sha256": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635",
+    "new_sha256": "8f0df2b35bb04087e7c4a3761d6cf1b8bbb8104e2e5b7516af03ba6c2c8123c4",
+    "effect": "actual metadata consumer rejects the legitimate reviewed runner1key repair before lock/materialization; not a production numerical source error",
+    "minimal_scope": "D-only predicate separates files/protocol_source byte identities from unchanged environment/import geometry, authenticates same protocol roster and only runner SHA transition against files; new materializer SHA/binding afterward"
+  },
+  "validation": {
+    "checks": 269,
+    "passed": 268,
+    "failures": [
+      {
+        "name": "source_geometry_environment_unchanged",
+        "passed": false
+      }
+    ],
+    "results": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-independent-results-v3.json",
+      "sha256": "74d4185bfa716089746e558bfea8dfc44b364b4df1c0a1320cbac38d0f85a8a2"
+    }
+  },
+  "old70_partial_and_original_failure_costs_retained": true,
+  "old_full_prior3cf_can_authenticate_new_source": false,
+  "metadata_helpers_materializer_monitor_rootapproval_lock_executed": 0,
+  "financial_RNG_SDE_solver_Popen_calls": 0,
+  "production_source_tests_docs_Git_CAS_mutations": 0,
+  "cost": {
+    "probe": {
+      "wall_before_result_seconds": 0.24693798400403466,
+      "CPU_before_result_seconds": 0.244594309,
+      "peak_RSS_bytes": 83218432,
+      "incidental_read_tool_tail_and_result_write_seconds": null
+    },
+    "finalization_wall_before_write_seconds": 0.0004921959989587776,
+    "finalization_CPU_before_write_seconds": 0.00023334600000000233,
+    "receipt_tail_and_incidental_tool_reads_seconds": null
+  }
+}

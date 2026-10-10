@@ -1,0 +1,105 @@
+{
+  "schema": "rb-f04-independent-materialized-prior-integrity-review-v1",
+  "decision": "approved",
+  "status": "approved_saved_current_materialized_source_prior_guard_binding_only",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent saved metadata/source/receipt binding reviewer",
+  "created_UTC": "2026-10-10T10:28:36.008877+00:00",
+  "scope": "new actual saved metadata current5d/native568 and actual ef4/cd77/6e355/a36e source/typedinputs/review/guard/fresh-output lineage only; original all3138 budget/cap mathematics inherited without re-review",
+  "validation": {
+    "checks": 3447,
+    "passed": 3447,
+    "failures": [],
+    "results": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-and-guard-independent-results-v2.json",
+      "sha256": "f76a1dde09472e387a49378ae5e0c64262f5411cc81158c5bd893779a71f046f"
+    }
+  },
+  "source_canonical_identity": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_native_payload_identity": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "source_files": 81,
+  "source81_stable": true,
+  "actual_current_independent_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-rebind-independent-decision-v4.json",
+    "sha256": "ef4b8cbe88da24f163e2177dd95045b4069f6dfbbf0341c656432dc6a8d7296a"
+  },
+  "actual_root_metadata_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-actual-root-approval-v2.json",
+    "sha256": "cd77af11dd47dad6576e6a677a106a279330b65cf0d594d12472f706d866c4f8"
+  },
+  "actual_materialization_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialized-root-v3/manifest.json",
+    "sha256": "6e35597ac5ba5883b1f7f73b5aa82343f01358f304e78a199a3d35a932788c15"
+  },
+  "actual_root_financial_launch_guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v2.json",
+    "sha256": "a36ec860c80f7af29bd1c36669ea98d5737c6e72319dd84cc939e6aa7276f11a"
+  },
+  "actual_locked_artifact_sha256": "206b2c866e9fe7e52ef07293a2429aab1453071a2aedbeac701496e542f51dc1",
+  "actual_metadata_sha256": "1809cfebb1ce25428f22f0d4165a4ed608d1e51d530d5dffb6ae30842f7ab856",
+  "all_original_counts": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "teachers": 20,
+    "drivers": 10,
+    "cap_options": 573122
+  },
+  "original_N": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "original_cap_recipe_sha256": "43ebacfd81f69043535feafcccc872ea68e4724715ed25ea3dead36dd1e630a5",
+  "effective_original_rows_normalized_sha256": "02da310d0bed91d6883171eed44cb22ae872cc6a2888837a5979755d9c68aee5",
+  "old_exact_math_and_literal_validation": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-and-guard-independent-decision-v1.json",
+    "sha256": "fd05f712c5e02246fe372663dab0f9c1ab4cef03fd99a191c187d330cd56141d"
+  },
+  "mathematical_budget_cap_recipe_N_thresholds_recomputed": false,
+  "cap_options_current_scope": "573122 exact recipe mathematics reused from old actual independent review and fixed unchanged existing helper; current actual root lock/validate terminal manifest authenticated; not recounted or repriced here",
+  "original_typed_inputs_physical_and_saved_bindings": "authenticated, same original receipt/files/semantic input-bindings; no value-generation",
+  "existing_validation_API": {
+    "monitor.source_binding": "PASS",
+    "monitor.actual_budget_review": "PASS",
+    "root_actual_lock_validate": "PASS saved terminal receipt",
+    "load_guard": "root pre-attempt PASS receipt reused; later fresh-output predicate not rerun"
+  },
+  "actual_root_preattempt_guard_receipt": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-binding-receipt-v3.json",
+    "sha256": "aad6e83ee0313b0d7bfc47f7224127bf9897ab56e10717fe875def81e50b0f86"
+  },
+  "fresh_native_v2_receipts_v2_lineage": "root actual fresh separate output paths; old-v1 partial not reused/relabelled",
+  "financial_launch_authority": "separate actual root guard only; this reviewer did not start or grant financial execution",
+  "unknown_original_external10_history_and70partial": "preserved; all10 external times pending/null; old69 executed+1 defect and expenses remain original source provenance",
+  "whole_capacity_guarantee_and_eta_approved": false,
+  "financial_qualification": "unknown",
+  "reviewer_formal_financial_launch_or_precision_phase_main_approval": false,
+  "new_financial_worker_RNG_SDE_solver_Popen_calls": 0,
+  "production_source_tests_docs_Git_CAS_and_rootapproval_mutations": 0,
+  "preserved_late_API_reader_error": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-materialized-and-guard-independent-late-API-reader-error-v2.json",
+    "sha256": "aec47e233524646b55f1ea68f836ed238ce2c123cd5d4ab868a87b4cf93906df"
+  },
+  "cost": {
+    "new_saved_only_binding_probe": {
+      "wall_before_result_seconds": 2.1470409110042965,
+      "CPU_before_result_seconds": 2.1470217209999998,
+      "peak_RSS_bytes": 897187840,
+      "receipt_tail_and_incidental_read_seconds": null
+    },
+    "actual_root_metadata_enclosing": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialization-root-observation-v2/parent-cost-and-status.json",
+      "sha256": "c433c36c8c894779ae7211c46ef4adb49ded56fb6fbf19927abeb14a8c1e3641"
+    },
+    "actual_enclosing_wall_seconds": 67.17287363499781,
+    "actual_enclosing_child_CPU_seconds": 65.466859,
+    "actual_metadata_kernel_peak_RSS_bytes": 3882967040,
+    "nested_inner_cost_not_added_again": true,
+    "old_partial_and_late_reader_unknown_cost": "original receipts/error retain unknown and are not double counted",
+    "finalization_wall_before_record_seconds": 0.0006628120027016848,
+    "finalization_CPU_before_record_seconds": 0.000662109000000001,
+    "final_write_tool_tail_seconds": null
+  }
+}

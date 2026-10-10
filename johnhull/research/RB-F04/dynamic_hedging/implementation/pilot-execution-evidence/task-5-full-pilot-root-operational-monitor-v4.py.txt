@@ -1,0 +1,652 @@
+"""Root operational wrapper for the unchanged full pilot CLI; no financial cap projection."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import os
+import resource
+import shutil
+import signal
+import subprocess
+import sys
+import time
+from datetime import UTC, datetime
+from pathlib import Path
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+ENTRY = WT / "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+SOURCE_IDENTITY = "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e"
+SOURCE_NATIVE_IDENTITY = "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7"
+SOURCE_REVIEW_NAME = "task-5-formal-date-gate-N-source-fix-independent-decision-v1.json"
+SOURCE_REVIEW_SHA = "a90705642f36eef595b93e9cbb2302aaa54d547d5deb7ad6ca46024deed1fbf0"
+SOURCE_EVIDENCE_NAME = "task-5-formal-prior-lock-rebind-evidence-v3.json"
+SOURCE_EVIDENCE_SHA = "fb52036f054356c96700f18ca8feadb2397ac0e51bad4bf602c5a0b4f317c0df"
+V6_NAME = "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json"
+V6_SHA = "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb"
+V6_MANIFEST_NAME = "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json"
+V6_MANIFEST_SHA = "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9"
+SCHEMA = "rb-f04-root-full-pilot-operational-prior-v1"
+GiB = 1024**3
+
+
+class GuardRejectedError(ValueError):
+    pass
+
+
+def digest(value):
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    ).hexdigest()
+
+
+def sha(path):
+    result = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024**2), b""):
+            result.update(block)
+    return result.hexdigest()
+
+
+def clock():
+    return {
+        "wall": time.perf_counter(),
+        "cpu": time.process_time(),
+        "utc": datetime.now(UTC).isoformat(),
+    }
+
+
+def save(path, value):
+    path = Path(path)
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + chr(10))
+    temporary.replace(path)
+
+
+def require(condition, message):
+    if not condition:
+        raise GuardRejectedError(message)
+
+
+def absolute(value):
+    require(isinstance(value, str) and Path(value).is_absolute(), "prior path must be absolute")
+    return Path(value)
+
+
+def positive(value):
+    return (
+        isinstance(value, (float, int))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+        and value > 0
+    )
+
+
+def tree_binding(spec):
+    root = absolute(spec["path"])
+    require(root.is_dir(), "bound input artifact directory missing")
+    actual = {}
+    for file in sorted(root.rglob("*")):
+        if file.is_file():
+            require(
+                not file.is_symlink(), "artifact file symlink not supported by prior tree binding"
+            )
+            actual[str(file.relative_to(root))] = sha(file)
+    require(actual and actual == spec["files"], "artifact file set/physical bytes changed")
+    require(digest(actual) == spec["tree_sha256"], "artifact tree SHA differs from prior")
+    require(
+        "receipt.json" in actual and actual["receipt.json"] == spec["receipt_sha256"],
+        "root artifact receipt differs",
+    )
+    return {
+        "path": str(root),
+        "files": actual,
+        "tree_sha256": digest(actual),
+        "receipt_sha256": actual["receipt.json"],
+    }
+
+
+def fixed_reference(spec, name=None, expected_sha=None):
+    path = absolute(spec["path"]).resolve(strict=True)
+    path.relative_to(D)
+    require(sha(path) == spec["sha256"], "actual prior evidence bytes changed")
+    if name is not None:
+        require(path == D / name and sha(path) == expected_sha, "fixed evidence binding changed")
+    return json.loads(path.read_text())
+
+
+def limited_source_review(prior):
+    ref = prior["independent_source_review"]
+    require(ref.get("status") == "approved", "actual limited source review required")
+    value = fixed_reference(ref, SOURCE_REVIEW_NAME, SOURCE_REVIEW_SHA)
+    require(
+        value.get("schema") == "rb-f04-independent-date-gate-N-source-fix-review-v1"
+        and value.get("decision") == "approved"
+        and value.get("role") == "independent static source and regression evidence reviewer"
+        and value.get("approved_before_new_runtime_attempt") is True
+        and value.get("source_canonical_runner_digest_sha256") == SOURCE_IDENTITY
+        and value.get("source_native_payload_sha256") == SOURCE_NATIVE_IDENTITY
+        and value.get("source_files") == 81 and value.get("dynamic_imports") == 0,
+        "actual one-key source-only decision required",
+    )
+    require(
+        value.get("whole_budget_and_cap_recipe_approved_for_new_source") is False
+        and value.get("formal_financial_pilot_launch_authorized_by_reviewer") is False
+        and value.get("main_phase_or_research_accepted") is False
+        and value.get("financial_qualification") == "unknown",
+        "source review cannot become budget/financial approval",
+    )
+    evidence = fixed_reference(prior["source_rebind_evidence"], SOURCE_EVIDENCE_NAME, SOURCE_EVIDENCE_SHA)
+    require(evidence["all3138_budget_and_cap_recipe_approved"] is False
+            and evidence["formal_financial_launch_authorized"] is False,
+            "source rebind evidence cannot approve a prior or launch")
+    current = fixed_reference(evidence["corrected_source_reference"])
+    require(current == prior["source_identity"], "exact corrected source inventory required")
+    require(value["source_closure"] == evidence["corrected_source_reference"],
+            "actual source decision and rebind evidence differ")
+    require(prior["source_native_payload_sha256"] == SOURCE_NATIVE_IDENTITY, "native source binding differs")
+    return value
+
+
+def actual_budget_review(prior):
+    # Source approval and the v6 counter review cannot substitute for all3138/cap approval.
+    fixed_reference(prior["budget_supplement"], V6_NAME, V6_SHA)
+    fixed_reference(prior["budget_supplement_manifest"], V6_MANIFEST_NAME, V6_MANIFEST_SHA)
+    ref = prior["full_budget_and_cap_recipe_review"]
+    require(ref.get("status") == "approved", "all3138/cap recipe independent review required")
+    value = fixed_reference(ref)
+    require(
+        value.get("schema") == "rb-f04-independent-fullmixed-prior-budget-review-v1"
+        and value.get("decision") == "approved"
+        and value.get("role") == "independent static prior resource reviewer"
+        and value.get("planned_before_attempt") is True
+        and value.get("source_canonical_identity") == SOURCE_IDENTITY,
+        "v6 static counter/source approval is not whole budget approval",
+    )
+    require(
+        value.get("financial_qualification") == "unknown" and value.get("formal_pilot_run") is False
+        and value.get("main_or_phase_approval") is False,
+        "resource review must not assert financial acceptance",
+    )
+    bound = value["approved_bindings"]
+    require(
+        bound == prior["approved_budget_bindings"]
+        and bound["source_identity_sha256"] == SOURCE_IDENTITY
+        and bound["source_native_payload_sha256"] == SOURCE_NATIVE_IDENTITY
+        and bound["replay_budget_supplement_sha256"] == V6_SHA
+        and bound["replay_budget_manifest_sha256"] == V6_MANIFEST_SHA
+        and bound["literal_cap_options"] == 573122,
+        "actual full budget/cap bindings differ from root prior",
+    )
+    return value
+
+
+def source_binding(prior):
+    limited_source_review(prior)
+    identity = prior["source_identity"]
+    require(
+        isinstance(identity, dict) and len(identity["files"]) == 81,
+        "current source closure must retain81 files",
+    )
+    require(not identity["dynamic_imports"], "unresolved dynamic source closure")
+    require(
+        digest(identity) == prior["source_identity_sha256"] == SOURCE_IDENTITY,
+        "source prior identity is not current fixed closure",
+    )
+    for relative, expected in identity["files"].items():
+        path = (WT / relative).resolve(strict=True)
+        path.relative_to(WT)
+        require(sha(path) == expected, "current source bytes changed: " + relative)
+    return {"sha256": digest(identity), "file_count": 81, "files": identity["files"]}
+
+
+def load_guard(path):
+    path = Path(path).resolve(strict=True)
+    prior_bytes = path.read_bytes()
+    prior = json.loads(prior_bytes)
+    # Reject unapproved candidates before source/input reads, output mutation or Popen.
+    require(
+        prior.get("root_preapproved") is True,
+        "root prior approval required; candidate cannot execute",
+    )
+    require(prior.get("formal_financial_launch_authorized") is True,
+            "separate root financial launch authorization required")
+    require(
+        prior.get("schema") == SCHEMA and prior.get("prior_role") == "root_fixed_operational_prior",
+        "root separate fixed prior required",
+    )
+    require(
+        prior.get("source_approval_status") == "approved_fixed_current_source",
+        "fixed source approval required",
+    )
+    require(
+        prior.get("administrative_guard_only") is True
+        and prior.get("financial_A_cap_projection_approved") is False,
+        "administrative stop cannot become financial A cap",
+    )
+    limited_source_review(prior)
+    actual_budget_review(prior)
+    require(prior.get("financial_qualification") == "unknown"
+            and prior.get("formal_phase_completion_claimed") is False,
+            "operational prior does not grant financial completion")
+    require(prior["monitor_sha256"] == sha(__file__), "monitor source changed after root prior")
+    require(positive(prior["phase_wall_limit_seconds"]), "phase wall cap must be fixed positive")
+    for key in ("child_rss_limit_bytes", "parent_rss_limit_bytes"):
+        require(
+            positive(prior[key]) and 16 * GiB <= prior[key] <= 24 * GiB,
+            "root RSS choice must be16-24GiB",
+        )
+    require(
+        prior["RSS_metric"] == "maximum_individual_process_RSS_not_RLIMIT_AS", "RSS units changed"
+    )
+    require(positive(prior["poll_seconds"]), "root polling period must be fixed positive")
+    require(
+        prior["original_counts"] == {"jobs": 3138, "cases": 121, "attempts": 51},
+        "original roster obligation counts changed",
+    )
+    require(
+        prior["original_teacher_N_candidates"] == [1024, 4096, 16384, 65536],
+        "original N candidates changed",
+    )
+    require(prior["python_executable"] == sys.executable, "approved Python invocation differs")
+    probes = prior["volume_probes"]
+    require(
+        [row["id"] for row in probes] == ["WSL", "C", "F"], "all distinct original volumes required"
+    )
+    devices = []
+    for row in probes:
+        require(row["reserve_bytes"] == 10 * GiB, "per-volume reserve must retain10GiB")
+        probe = absolute(row["path"])
+        devices.append(os.stat(probe).st_dev)
+    require(len(set(devices)) == 3, "volume reserves cannot be combined/aliased")
+    native = absolute(prior["native_output_path"])
+    receipts = absolute(prior["receipt_directory"])
+    receipts.resolve().relative_to(D)
+    require(
+        not receipts.exists() and not native.exists(),
+        "fresh native output and fresh monitor receipts required",
+    )
+    require(
+        native != receipts and native not in receipts.parents and receipts not in native.parents,
+        "native data and operational receipts must be separate",
+    )
+    return prior, path, hashlib.sha256(prior_bytes).hexdigest(), prior_bytes
+
+
+def rss(pid):
+    try:
+        for line in Path(f"/proc/{pid}/status").read_text().splitlines():
+            if line.startswith("VmRSS:"):
+                return int(line.split()[1]) * 1024
+    except (FileNotFoundError, ProcessLookupError, OSError):
+        return None
+    return None
+
+
+def volume_sample(probes):
+    return [
+        {
+            "id": row["id"],
+            "path": row["path"],
+            "reserve_bytes": row["reserve_bytes"],
+            "free_bytes": shutil.disk_usage(row["path"]).free,
+        }
+        for row in probes
+    ]
+
+
+def choose_stop(elapsed, child_rss, parent_rss, volumes, prior):
+    if elapsed >= prior["phase_wall_limit_seconds"]:
+        return {
+            "metric": "outer_phase_wall",
+            "limit_seconds": prior["phase_wall_limit_seconds"],
+            "observed_seconds": elapsed,
+        }
+    if child_rss is not None and child_rss > prior["child_rss_limit_bytes"]:
+        return {
+            "metric": "individual_child_rss",
+            "limit_bytes": prior["child_rss_limit_bytes"],
+            "observed_bytes": child_rss,
+        }
+    if parent_rss is not None and parent_rss > prior["parent_rss_limit_bytes"]:
+        return {
+            "metric": "individual_parent_rss",
+            "limit_bytes": prior["parent_rss_limit_bytes"],
+            "observed_bytes": parent_rss,
+        }
+    for row in volumes:
+        if row["free_bytes"] <= row["reserve_bytes"]:
+            return {"metric": "volume_reserve", **row}
+    return None
+
+
+def terminal_status(
+    exit_code, requested_stop, signal_delivered, observer_errors, bindings_unchanged
+):
+    if not bindings_unchanged:
+        return "unclosed_source_or_input_binding_changed"
+    if observer_errors:
+        return "unclosed_monitor_observer_error"
+    if exit_code is None:
+        return "unclosed_child_terminal_unknown"
+    if signal_delivered is True:
+        return "administrative_partial_unclosed"
+    if exit_code != 0:
+        return "unclosed_child_exit"
+    if requested_stop is not None:
+        return "administrative_limit_observed_terminal_unclosed"
+    return "child_terminal_needs_saved_check"
+
+
+def run(guard_path):
+    started = clock()
+    prior, fixed_path, prior_sha, prior_bytes = load_guard(guard_path)
+    source_before = source_binding(prior)
+    plan_before = tree_binding(prior["plan"])
+    inputs_before = tree_binding(prior["typed_inputs"])
+    initial_volumes = volume_sample(prior["volume_probes"])
+    receipts = absolute(prior["receipt_directory"])
+    receipts.mkdir(parents=True, exist_ok=False)
+    (receipts / "prior-root-fixed.json").write_bytes(prior_bytes)
+    command = [
+        prior["python_executable"],
+        str(ENTRY),
+        "--plan",
+        prior["plan"]["path"],
+        "--inputs",
+        prior["typed_inputs"]["path"],
+        "--output",
+        prior["native_output_path"],
+    ]
+    python_paths = [
+        str(WT / p)
+        for p in (
+            "johnhull/research/RB-F04/dynamic_hedging",
+            "johnhull/hullkit/src",
+            "deep_hedge_price/src",
+        )
+    ]
+    env = os.environ.copy()
+    env["PYTHONPATH"] = ":".join(python_paths)
+    save(
+        receipts / "before-bindings-and-command.json",
+        {
+            "started": started,
+            "prior_path": str(fixed_path),
+            "prior_sha256": prior_sha,
+            "monitor_sha256": sha(__file__),
+            "source": source_before,
+            "plan": plan_before,
+            "typed_inputs": inputs_before,
+            "argv": command,
+            "PYTHONPATH": python_paths,
+            "python_executable": sys.executable,
+            "python_version": sys.version,
+            "initial_volume_observations": initial_volumes,
+            "original_obligations": prior["original_counts"],
+            "all_original_jobs_cases_N_unchanged_by_monitor": True,
+            "financial_A_cap_projection": False,
+        },
+    )
+    require(sha(fixed_path) == prior_sha, "root fixed prior changed during preflight")
+    require(prior["poll_seconds"] <= 60, "poll must allow bounded observations")
+    child_usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
+    parent_kernel_before = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+    process, code, requested, signal_delivered = None, None, None, False
+    child_peak, parent_peak = None, None
+    child_unknown, parent_unknown = 0, 0
+    observer_errors = []
+    last_volumes = initial_volumes
+    stop_clock = None
+    launched = None
+    try:
+        requested = choose_stop(
+            time.perf_counter() - started["wall"], None, rss(os.getpid()), initial_volumes, prior
+        )
+        if requested is None:
+            with (
+                (receipts / "stdout.log").open("wb") as stdout,
+                (receipts / "stderr.log").open("wb") as stderr,
+                (receipts / "observations.jsonl").open("w") as samples,
+            ):
+                launched = clock()
+                process = subprocess.Popen(
+                    command, cwd=WT, env=env, stdout=stdout, stderr=stderr, start_new_session=True
+                )
+                while process.poll() is None:
+                    child_rss, parent_rss = rss(process.pid), rss(os.getpid())
+                    if child_rss is None:
+                        child_unknown += 1
+                    else:
+                        child_peak = child_rss if child_peak is None else max(child_peak, child_rss)
+                    if parent_rss is None:
+                        parent_unknown += 1
+                    else:
+                        parent_peak = (
+                            parent_rss if parent_peak is None else max(parent_peak, parent_rss)
+                        )
+                    try:
+                        last_volumes = volume_sample(prior["volume_probes"])
+                    except OSError as exc:
+                        observer_errors.append(
+                            "volume_read: " + type(exc).__name__ + ": " + str(exc)
+                        )
+                        requested = {
+                            "metric": "volume_observation_unavailable",
+                            "administrative_reason": "monitor cannot observe prior reserve",
+                        }
+                    now = clock()
+                    observation = {
+                        "clock": now,
+                        "elapsed_seconds": now["wall"] - started["wall"],
+                        "child_rss_bytes": child_rss,
+                        "parent_rss_bytes": parent_rss,
+                        "volumes": last_volumes,
+                    }
+                    samples.write(json.dumps(observation, allow_nan=False) + chr(10))
+                    samples.flush()
+                    if requested is None:
+                        requested = choose_stop(
+                            observation["elapsed_seconds"],
+                            child_rss,
+                            parent_rss,
+                            last_volumes,
+                            prior,
+                        )
+                    if requested is not None:
+                        stop_clock = clock()
+                        requested["observed_clock"] = stop_clock
+                        # Poll again: a solver exit racing the observation is not relabeled a resource stop.
+                        code = process.poll()
+                        if code is None:
+                            try:
+                                os.killpg(process.pid, signal.SIGKILL)
+                                signal_delivered = True
+                            except ProcessLookupError:
+                                requested["signal_delivery"] = (
+                                    "process group already absent; order unknown"
+                                )
+                            except OSError as exc:
+                                observer_errors.append(
+                                    "signal_delivery: " + type(exc).__name__ + ": " + str(exc)
+                                )
+                        break
+                    remaining = prior["phase_wall_limit_seconds"] - (now["wall"] - started["wall"])
+                    time.sleep(min(prior["poll_seconds"], max(0.001, remaining)))
+                code = process.wait()
+        else:
+            stop_clock = clock()
+            requested["observed_clock"] = stop_clock
+    except BaseException as exc:
+        observer_errors.append("parent_operation: " + type(exc).__name__ + ": " + str(exc))
+        if process is not None and process.poll() is None:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+                signal_delivered = True
+            except OSError as cleanup:
+                observer_errors.append(
+                    "observer_cleanup: " + type(cleanup).__name__ + ": " + str(cleanup)
+                )
+            code = process.wait()
+        elif process is not None:
+            code = process.poll()
+    child_usage_after = resource.getrusage(resource.RUSAGE_CHILDREN)
+    child_kernel = (
+        child_usage_after.ru_maxrss * 1024
+        if process is not None and child_usage_before.ru_maxrss == 0
+        else None
+    )
+    bindings_unchanged = True
+    after = {}
+    try:
+        after = {
+            "source": source_binding(prior),
+            "plan": tree_binding(prior["plan"]),
+            "typed_inputs": tree_binding(prior["typed_inputs"]),
+            "prior_sha256": sha(fixed_path),
+            "monitor_sha256": sha(__file__),
+        }
+        bindings_unchanged = (
+            after["prior_sha256"] == prior_sha
+            and after["monitor_sha256"] == prior["monitor_sha256"]
+        )
+        bindings_unchanged = (
+            bindings_unchanged
+            and after["source"] == source_before
+            and after["plan"] == plan_before
+            and after["typed_inputs"] == inputs_before
+        )
+    except (OSError, ValueError, KeyError) as exc:
+        bindings_unchanged = False
+        after["binding_error"] = type(exc).__name__ + ": " + str(exc)
+    save(receipts / "after-bindings.json", after)
+    parent_rss = rss(os.getpid())
+    if parent_rss is None:
+        parent_unknown += 1
+    else:
+        parent_peak = parent_rss if parent_peak is None else max(parent_peak, parent_rss)
+    parent_kernel = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+    try:
+        last_volumes = volume_sample(prior["volume_probes"])
+    except OSError as exc:
+        observer_errors.append("closing_volume_read: " + type(exc).__name__ + ": " + str(exc))
+    stopped = clock()
+    elapsed = stopped["wall"] - started["wall"]
+    child_available = [x for x in (child_peak, child_kernel) if x is not None]
+    parent_available = [x for x in (parent_peak, parent_kernel) if x is not None]
+    closing_stop = choose_stop(
+        elapsed,
+        max(child_available) if child_available else None,
+        max(parent_available) if parent_available else None,
+        last_volumes,
+        prior,
+    )
+    if requested is None and closing_stop is not None:
+        requested = closing_stop | {
+            "observation_phase": "after_child_wait_and_readonly_binding_check"
+        }
+        stop_clock = stopped
+    status = terminal_status(code, requested, signal_delivered, observer_errors, bindings_unchanged)
+    if process is None and requested is not None and not observer_errors and bindings_unchanged:
+        status = "administrative_preflight_partial_unclosed"
+    receipt = {
+        "scope": "root operational monitor; prior unchanged full pilot CLI single child",
+        "status": status,
+        "child_exit_code": code,
+        "child_pid": None if process is None else process.pid,
+        "started": started,
+        "launched": launched,
+        "stopped": stopped,
+        "outer_wall_seconds": elapsed,
+        "parent_CPU_seconds": stopped["cpu"] - started["cpu"],
+        "child_inclusive_CPU_seconds": None
+        if process is None
+        else (
+            child_usage_after.ru_utime
+            + child_usage_after.ru_stime
+            - child_usage_before.ru_utime
+            - child_usage_before.ru_stime
+        ),
+        "observed_child_peak_RSS_bytes": child_peak,
+        "child_kernel_peak_RSS_bytes": child_kernel,
+        "child_kernel_highwater_before_bytes": child_usage_before.ru_maxrss * 1024,
+        "child_kernel_scope": "waited single child cumulative getrusage; unknown attribution if historical child baseline nonzero",
+        "observed_parent_peak_RSS_bytes": parent_peak,
+        "parent_kernel_peak_RSS_bytes": parent_kernel,
+        "parent_kernel_highwater_before_bytes": parent_kernel_before,
+        "parent_kernel_scope": "whole monitor lifetime; baseline retained separately",
+        "child_rss_unknown_sample_count": child_unknown,
+        "parent_rss_unknown_sample_count": parent_unknown,
+        "individual_RSS_is_not_RLIMIT_AS_or_tree_sum": True,
+        "wall_overrun_seconds": max(0.0, elapsed - prior["phase_wall_limit_seconds"]),
+        "child_rss_overrun_bytes": None
+        if not child_available
+        else max(0, max(child_available) - prior["child_rss_limit_bytes"]),
+        "parent_rss_overrun_bytes": None
+        if not parent_available
+        else max(0, max(parent_available) - prior["parent_rss_limit_bytes"]),
+        "requested_administrative_stop": requested,
+        "stop_clock": stop_clock,
+        "signal_delivered": signal_delivered,
+        "last_volume_observations": last_volumes,
+        "observed_volume_reserve_shortfall_bytes": {
+            row["id"]: max(0, row["reserve_bytes"] - row["free_bytes"]) for row in last_volumes
+        },
+        "observer_errors": observer_errors,
+        "source_inputs_prior_monitor_unchanged": bindings_unchanged,
+        "prior_path": str(fixed_path),
+        "prior_sha256": prior_sha,
+        "argv": command,
+        "native_output_path": prior["native_output_path"],
+        "native_data_rewritten_by_monitor": False,
+        "original_obligations": prior["original_counts"],
+        "original_N_candidates": prior["original_teacher_N_candidates"],
+        "financial_qualification": "unknown",
+        "formal_pilot_completion_claimed": False,
+        "financial_A_cap_projection_approved": False,
+        "saved_check_required": True,
+        "legacy_and_native_expenses": "existing inclusive native phase/jobs/driver/history are breakdowns; do not add them to this outer observation again",
+        "resource_fault_order": "unknown unless signal/live observation and saved native records establish causation; nonzero exit alone is never a resource cap",
+        "partial_raw_policy": "all native saved/checkpoint files retained; unsaved financial arrays remain unavailable; no N/roster change",
+        "monitoring_guarantee": "sampled RSS/free-space only; growth between polls and blocking kill-wait/postbind tail may exceed limits",
+        "measured_endpoint": "after child wait, final readonly source/input/prior binding and RSS observation; before receipt construction/write/stdout",
+        "own_final_receipt_write_stdout_cost": "unknown; root enclosing process receipt must measure separately",
+    }
+    save(receipts / "parent-cost-and-status.json", receipt)
+    print(
+        json.dumps(
+            {
+                "status": status,
+                "child_exit_code": code,
+                "receipt": str(receipts / "parent-cost-and-status.json"),
+            }
+        )
+    )
+    return 0 if status == "child_terminal_needs_saved_check" else 3
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--guard", type=Path, required=True)
+    args = parser.parse_args(argv)
+    try:
+        return run(args.guard)
+    except GuardRejectedError as exc:
+        print(
+            json.dumps(
+                {
+                    "status": "guard_rejected_no_child",
+                    "reason": str(exc),
+                    "financial_execution": False,
+                }
+            ),
+            file=sys.stderr,
+        )
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

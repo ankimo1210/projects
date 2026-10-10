@@ -1,0 +1,29 @@
+{
+  "schema": "rb-f04-root-metadata-materialization-enclosing-cost-v1",
+  "status": "completed",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v4.py",
+    "--approval",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-actual-root-approval-v2.json",
+    "--out",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialized-root-v3"
+  ],
+  "child_pid": 314948,
+  "exit_code": 0,
+  "cap": null,
+  "root_approval_sha256": "cd77af11dd47dad6576e6a677a106a279330b65cf0d594d12472f706d866c4f8",
+  "start_UTC": "2026-10-10T10:16:51.666598+00:00",
+  "end_UTC": "2026-10-10T10:17:58.841783+00:00",
+  "wall_seconds": 67.17287363499781,
+  "parent_CPU_seconds": 0.11264092999999999,
+  "children_CPU_seconds": 65.466859,
+  "sampled_child_peak_individual_process_RSS_bytes": 3235053568,
+  "child_kernel_peak_RSS_bytes": 3882967040,
+  "sampled_parent_peak_RSS_bytes": 34738176,
+  "observations": 67,
+  "scope": "metadata generation including source/input checks, exact cap expansion, artifact writer and manifest; not financial RNG/SDE or any numerical acceptance",
+  "financial_workers": 0,
+  "financial_qualification": "unknown",
+  "own_final_receipt_write_stdout_cost": null
+}

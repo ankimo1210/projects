@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "scope": "original terminal pilot byte storage only; numerical qualification unknown",
+  "manifest_ref": "artifact:sha256:34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35",
+  "manifest_sha256": "34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35",
+  "entries": 6245,
+  "unique_blobs_including_manifest": 4358,
+  "stores": {
+    "primary": {
+      "root": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",
+      "manifest_ref": "artifact:sha256:34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35",
+      "new_unique_blobs": 4172,
+      "verified_existing_blobs": 186,
+      "free_bytes_after": 316413673472
+    },
+    "mirror": {
+      "root": "/mnt/f/ProjectArtifacts/projects-backup",
+      "manifest_ref": "artifact:sha256:34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35",
+      "new_unique_blobs": 4172,
+      "verified_existing_blobs": 186,
+      "free_bytes_after": 182768762880
+    }
+  },
+  "volume_observations_before": [
+    {
+      "volume": "WSL",
+      "free_bytes": 590885793792,
+      "reserve_bytes": 10737418240,
+      "pending_unique_blob_bytes": 0
+    },
+    {
+      "volume": "primary",
+      "free_bytes": 318678421504,
+      "reserve_bytes": 10737418240,
+      "pending_unique_blob_bytes": 1752654530
+    },
+    {
+      "volume": "mirror",
+      "free_bytes": 184974835712,
+      "reserve_bytes": 10737418240,
+      "pending_unique_blob_bytes": 1752654530
+    }
+  ],
+  "original_selected_D_source_bytes_unchanged": true,
+  "closed_terminal_tree_rosters_unchanged": true,
+  "original_sourcefault_preserved": "KeyError: N",
+  "whole_financial_experiment_complete": false,
+  "deduplicated_per_digest_per_vault": true,
+  "live_financial_artifacts_included": false,
+  "financial_qualification": "unknown",
+  "cost": {
+    "wall_seconds": 1226.1882566040003,
+    "CPU_seconds": 52.484495136
+  },
+  "financial_generation_RNG_solver_workers": 0,
+  "storage_publication_backend": "existing evidence_store only; its platform subprocess counts are not asserted"
+}
