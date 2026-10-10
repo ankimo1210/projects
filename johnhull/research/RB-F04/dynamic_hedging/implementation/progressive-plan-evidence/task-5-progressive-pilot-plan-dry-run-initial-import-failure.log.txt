@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-progressive-pilot-plan-dry-run.py", line 8, in <module>
+    import run_pilot as pilot
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py", line 24, in <module>
+    import run_reference as runner
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py", line 30, in <module>
+    from deep_hedge_price._dynamic_hedging_protocol import candidate_protocol
+ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_protocol'

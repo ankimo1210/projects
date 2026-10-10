@@ -1,0 +1,62 @@
+{
+  "scope": "progressive teacher DAG metadata only; full mixed pilot remains pending",
+  "formal_plan_locked": false,
+  "formal_execution_performed": false,
+  "financial_RNG_performed": false,
+  "financial_qualification": "unknown",
+  "job_count": 2748,
+  "operation_counts": {
+    "field": 1,
+    "premium": 1,
+    "call_cache": 2,
+    "teacher_driver": 10,
+    "teacher_grid": 20,
+    "teacher_domain_selection": 20,
+    "call_table": 36,
+    "oracle": 108,
+    "state": 288,
+    "date_gate": 192,
+    "market_pair": 4,
+    "quote_risk": 160,
+    "validation": 64,
+    "cell_pair": 1792,
+    "bump_risk": 32,
+    "teacher_candidate_gate": 16,
+    "teacher_selection": 2
+  },
+  "activation_count": 2332,
+  "worker_signature_errors": [],
+  "original_case_count": 121,
+  "original_attempt_count": 51,
+  "stage_count": 16,
+  "state_case_bindings": 288,
+  "date_bindings": 192,
+  "all16_pnl_bindings_per_kind": true,
+  "position48_bindings_per_stage": true,
+  "field_controls": {
+    "times": "257 original times",
+    "z_nodes": "321 original nodes",
+    "order": 1024,
+    "frequency_scale": 512,
+    "density_floor": 1e-10
+  },
+  "call_exact_dates": 49,
+  "tiny_four_phase": "after final mixed selection; not executed in stages",
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "dbd6b6cfb80e4f13bde3539ed77f3e0bd76b9e3e1b946bea730daaeeb02197b2",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "5e5bb22ecf1a7ae1c108453177bd54fe27f94bc343b651d7f03be65716e35f69",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "dbd6b6cfb80e4f13bde3539ed77f3e0bd76b9e3e1b946bea730daaeeb02197b2",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "5e5bb22ecf1a7ae1c108453177bd54fe27f94bc343b651d7f03be65716e35f69",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc"
+  },
+  "pending_full_pilot": [
+    "final mixed-selected caches all121cases/51obligations/all16comparison rerun",
+    "selected next/opposite cache extraction with genuine parent cap",
+    "selected N/driver for four actual additional date diagnostics",
+    "A conditional original-N/producer projection plus exact ten actual expense aliases",
+    "all work/bytes/rates/prior budgets and whole phase source review"
+  ]
+}

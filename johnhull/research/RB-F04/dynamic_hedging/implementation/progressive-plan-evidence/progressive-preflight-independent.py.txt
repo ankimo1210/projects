@@ -1,0 +1,246 @@
+from pathlib import Path
+import copy, hashlib, importlib.util, inspect, json, sys, time
+from contextlib import ExitStack
+from unittest.mock import patch
+import numpy as np
+
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+B=WT/"johnhull/research/RB-F04/dynamic_hedging"
+start={"wall_start":time.perf_counter(),"cpu_start":time.process_time()}
+snap=D/"progressive-preflight-independent-snapshots"
+snap.mkdir(exist_ok=False)
+inspected=[D/"task-5-progressive-pilot-plan-producer.py",D/"task-5-formal-pilot-plan-producer.py",
+ D/"task-5-progressive-pilot-plan-dry-run.py",D/"task-5-progressive-pilot-plan-dry-run.json",
+ D/"task-5-progressive-pilot-plan-dry-run-parent-cost.json",
+ D/"task-5-actual-pilot-input-preparation-v4.json",B/"DESIGN.md",B/"run_pilot.py",B/"check_pilot.py"]
+before={}
+for p in inspected:
+ key=str(p.relative_to(WT)); data=p.read_bytes();before[key]=hashlib.sha256(data).hexdigest()
+ (snap/p.name).write_bytes(data)
+import run_pilot as pilot
+import reference_methods
+from hullkit._heston_local_surface import HestonParameters
+from hullkit._dynamic_hedging_surfaces import build_call_cache
+spec=importlib.util.spec_from_file_location("independent_progressive_graph",snap/"task-5-progressive-pilot-plan-producer.py")
+graph=importlib.util.module_from_spec(spec);spec.loader.exec_module(graph)
+prepared=json.loads((snap/"task-5-actual-pilot-input-preparation-v4.json").read_text())
+inputs={k:prepared[k] for k in ("original_states18","diagnostic_queries24","additional_teacher_cases")}
+inputs["parameters"]=HestonParameters(**prepared["parameters"])
+inputs["seed_namespace"]=prepared["declared_stream_namespaces"]
+for records in inputs["additional_teacher_cases"].values():
+ for record in records:record["thresholds"]=np.asarray(record["thresholds"])
+with np.load(B/"pilot/initial-quotes/reference.npz",allow_pickle=False) as a:
+ times=a["field257x321.surface.times"].copy(); z=a["field257x321.surface.z_nodes"].copy()
+ops=["field","quotes","premium","source","call_cache","teacher_driver","teacher_grid",
+ "teacher_domain_selection","teacher_candidate_gate","teacher_selection","call_table","oracle",
+ "state","date_gate","market_pair","quote_risk","tiny_fits","validation","roster","cell_pair",
+ "bump_risk","Q","empty_claim","teacher_diagnostic","frequency_cache","precision","stream_receipts"]
+h=np.r_[np.linspace(0,.08,17),np.linspace(.08,.5,17)[1:]]; h[0]=1e-5
+l=np.array([.25,.5,.75,1.,1.5,2.,4.])
+controls={"pilot_n":1024,"field":{"times":times,"z_nodes":z,"order":1024,"frequency_scale":512,"density_floor":1e-10},
+ "initial_call_controls":{"pde_stages":[]},"call":{m:{"dates":np.arange(49)/48,"spot_nodes":np.geomspace(50,200,65),
+ "state_nodes":h if m=="Heston" else l} for m in ("Heston","local")},
+ "independent_state_nodes":{"Heston":h,"local":l},"independent_call_controls":{},
+ "bin_edges":np.array([80.,100.,120.]),"chunk_paths":256,"query_chunk_paths":64,
+ "expanded_byte_predictions":dict.fromkeys(ops,None)}
+config=dict(pilot.protocol.candidate_protocol()["training"])
+config.update(original_n=1024,updates=16,batch_size=256,cap_seconds=60)
+called=[]
+def forbidden(*a,**k):
+ called.append("forbidden")
+ raise AssertionError("financial worker or RNG is forbidden in independent metadata review")
+with ExitStack() as stack:
+ for target in ("numpy.random.default_rng","numpy.random.normal","numpy.random.standard_normal",
+                "numpy.random.seed","numpy.random.RandomState"):
+  stack.enter_context(patch(target,forbidden))
+ for name in dir(pilot):
+  if name.startswith("run_") and callable(getattr(pilot,name)):
+   stack.enter_context(patch.object(pilot,name,forbidden))
+ for name in ("premium_reference","independent_call_table","quote_positions_oracle"):
+  stack.enter_context(patch.object(reference_methods,name,forbidden))
+ draft=graph.build_progressive_teacher_graph(inputs=inputs,controls=controls,pilot_training_config=config)
+saved,receipt=pilot.read_pilot_artifact(D/"task-5-progressive-pilot-plan-draft-source-unit")
+assert pilot.input_identity(draft)==pilot.input_identity(saved),"compiled graph differs from actual packed artifact"
+candidate=pilot.execution.execution_candidate()
+seeds=candidate["original_candidate"]["seeds"]
+models=("Heston","local")
+cells=[r for r in candidate["original_roster"]["primary_cells"] if r["policy"] in ("greek","band")]
+def req(cond,msg):
+ if not cond:raise ValueError(msg)
+def deps(value):
+ if isinstance(value,dict):
+  if set(value) in ({"job"},{"job","path"}):return {value["job"]}
+  if set(value) in ({"field_job"},{"job_record"},{"job_arguments"}):return {next(iter(value.values()))}
+  return set().union(*(deps(v) for v in value.values()))
+ if isinstance(value,list):return set().union(*(deps(v) for v in value))
+ return set()
+def eq(a,b):
+ return pilot.input_identity(a)==pilot.input_identity(b)
+def ref(i,*path):
+ return {"job":i,"path":list(path)} if path else {"job":i}
+def audit(x):
+ js=x["jobs"]; rows={j["id"]:j for j in js}
+ req(len(rows)==len(js),"duplicate producer")
+ req(x["formal_plan_locked"] is False and x["test_opened"] is False and x["financial_qualification"]=="unknown","scope promoted")
+ req(eq(x["original_pilot_case_descriptors"],candidate["pilot_cases"]),"original121 identity altered")
+ req(eq(x["original_required_attempt_ids"],candidate["required_pilot_attempt_ids"]),"original51 identity altered")
+ req(eq(x["candidate"],candidate),"original candidate altered")
+ prior=set();ancestors={}
+ for j in js:
+  dd=deps(j["arguments"])
+  req(dd==pilot._dependency_ids(j["arguments"]),"independent dependency parsing differs")
+  req(dd<=prior,"forward real numeric dependency")
+  ancestors[j["id"]]=dd|set().union(*(ancestors[i] for i in dd))
+  if j.get("activation"):
+   a=j["activation"]
+   req(set(a)=={"previous_teacher_gate_job_id"} and a["previous_teacher_gate_job_id"] in prior,"invalid activation")
+   req(rows[a["previous_teacher_gate_job_id"]]["operation"]=="teacher_candidate_gate","non-gate activation")
+  prior.add(j["id"])
+ for j in js:
+  req(j["cap_scope"]["job_ids"]==[r["id"] for r in js if r["id"]==j["id"] or j["id"] in ancestors[r["id"]]],"cap descendants narrowed")
+  req(j["cap_scope"]["case_ids"]==j["cap_scope"]["attempt_ids"]==[],"selection-only closure fabricated A cases")
+  req(j["expense_id"]==j["cap_scope"]["expense_id"]=="pilot-job:"+j["id"],"expense identity altered")
+ field=rows["field-current"]["arguments"]
+ req(eq(field,{"parameters":{"input":"parameters"},**controls["field"]}),"original257x321 field controls changed")
+ for m in models:
+  call=rows["call-current:"+m]["arguments"]
+  req(eq(call["dates"],np.arange(49)/48),"49 exact call dates changed")
+  req(eq(call["state_nodes"],controls["call"][m]["state_nodes"]),"original call state grid changed")
+  expected=[(n,g) for n in (1024,4096,16384,65536) for g in ("coarse","high")]
+  req([(s["original_n"],s["grid"]) for s in x["stages"][m]]==expected,"candidate order changed")
+  for stage_index,s in enumerate(x["stages"][m]):
+   gate=rows[s["id"]]; plan=gate["arguments"]["stage_plan"]
+   n,g=s["original_n"],s["grid"];rn={1024:4096,4096:16384,16384:65536,65536:65536}[n]
+   previous=x["stages"][m][stage_index-1]["id"] if stage_index else None
+   req(gate.get("activation")==({"previous_teacher_gate_job_id":previous} if previous else None),"stage not activated by own previous gate")
+   req(plan["model"]==m and plan["original_n"]==n and plan["grid"]==g and plan["oracle_original_n"]==rn,"stage geometry altered")
+   req(plan["reference_rule"]==("next_prefix" if n<65536 else "independent_reserved_stream_grid_max"),"reserved reference altered")
+   ev=gate["arguments"]["evidence"]
+   req(len({r["id"] for r in ev})==len(ev) and {r["id"] for r in ev}==set(plan["required_job_ids"]),"evidence roster altered")
+   for e in ev:
+    req(e["raw"]==ref(e["id"]) and e["operation"]==rows[e["id"]]["operation"] and eq(e["arguments"],rows[e["id"]]["arguments"]),"actual evidence producer binding altered")
+   req(eq(plan["state_bindings"],s["state_bindings"]) and eq(plan["date_bindings"],s["date_bindings"]),"selector binding differs")
+   expected_states=[r for r in candidate["pilot_cases"] if r["kind"]=="state" and r["identity"]["model"]==m]
+   req({a["id"] for a in plan["state_bindings"]}=={a["id"] for a in expected_states} and len(plan["state_bindings"])==18,"original18 states altered")
+   for b in plan["state_bindings"]:
+    desc=next(r for r in expected_states if r["id"]==b["id"])
+    obs=inputs["original_states18"][desc["identity"]["state_index"]]
+    st=rows[b["job_id"]]; a=st["arguments"]; oracle=rows[a["oracle"]["job"]]
+    req(st["original_n"]==n and a["asian_cache"]==ref(plan["teacher_job_id"],"cache"),"state actual teacher N/cache altered")
+    req(all(a[k]==obs[k] for k in ("date_index","spot","quote","memory_sum","memory_count")),"original state input altered")
+    oa=oracle["arguments"]
+    req(oracle["operation"]=="oracle" and oa["n_paths"]==oracle["original_n"]==rn and oa["steps_per_year"]==1536,"next-prefix oracle N/grid altered")
+    req(oa["seed"]==seeds["oracle"][desc["identity"]["state_index"]%3],"original oracle seed altered")
+    req(oracle["prediction"]["financial_child_count"]==26,"all13queries/twolevels changed")
+    req(all(oa[k]==obs[k] for k in ("date","spot","quote","memory_sum","memory_count")),"oracle observation altered")
+   req(len(plan["date_bindings"])==12 and {b["date_index"] for b in plan["date_bindings"]}==set(range(12)),"12dates altered")
+   for b in plan["date_bindings"]:
+    j=rows[b["job_id"]];a=j["arguments"];di=b["date_index"]
+    req(a["date_index"]==di and j["original_n"]==n and a["asian_cache"]==ref(plan["teacher_job_id"],"cache"),"date teacher reference altered")
+    req(eq(a["queries"],inputs["diagnostic_queries24"][m][di]),"original24 diagnostic queries altered")
+   other=next(mm for mm in models if mm!=m)
+   req(set(plan["pnl_bindings"])=={"SDE","teacher_N","teacher_grid","position","pnl"},"five numeric comparisons changed")
+   for kind,bindings in plan["pnl_bindings"].items():
+    expected_cells={(r["id"],w) for r in cells for w in ((0,1,2) if kind=="position" else (None,))}
+    req(len(bindings)==len(expected_cells) and {(b["cell_id"],b.get("width_index")) for b in bindings}==expected_cells,"all16/position48 changed")
+    for side in ("base","refined"):
+     maps=plan["cache_bindings"][kind][side]
+     own=plan["teacher_job_id"] if side=="base" else {"teacher_N":plan["next_teacher_job_id"],"teacher_grid":plan["grid_teacher_job_id"]}.get(kind,plan["teacher_job_id"])
+     req(maps[m]["asian_job_id"]==own and maps[other]["asian_job_id"]==f"teacher:{other}:N1024:coarse","stage own/other actual cache geometry altered")
+    for b in bindings:
+     p=rows[b["job_id"]];a=p["arguments"];identity=next(r for r in cells if r["id"]==b["cell_id"])
+     req(p["original_n"]==1024 and eq(a["identity"],identity) and a["fits"]==[],"original Greek/band cell altered")
+     req(a["refinement_kind"]==kind,"comparison kind altered")
+     for side in ("base","refined"):
+      ri=b[side+"_risk_job_id"];r=rows[ri];ra=r["arguments"]
+      req(a[side+"_risk_source"]==ref(ri),"pair actual risk source altered")
+      req(ra["dataset"]==a[side+"_dataset"],"pair original dataset differs from actual risk dataset")
+      maps=plan["cache_bindings"][kind][side]
+      wanted={mm.lower():{"call":ref(maps[mm]["call_job_id"],"value"),"asian":ref(maps[mm]["asian_job_id"],"cache")} for mm in models}
+      req(eq(ra["caches"],wanted),"declared cache differs from actual risk references")
+      if kind=="position" and side=="refined":
+       req(r["operation"]=="bump_risk" and a["refined_risk"]==ref(ri,"risk_variants",b["width_index"]),"position width/risk substitution")
+      else:req(r["operation"]=="quote_risk" and a[side+"_risk"]==ref(ri,"value"),"actual quote risk substitution")
+     req(a["base_dataset"]["job"]==a["refined_dataset"]["job"]==a["shared_market"]["job"],"paired markets differ")
+     indices=(0,1) if kind=="SDE" else (1,1)
+     req(tuple(a["dataset_indices"])==indices and a["base_dataset"]["path"]==["datasets",indices[0]] and a["refined_dataset"]["path"]==["datasets",indices[1]],"SDE comparison levels altered")
+     va=rows[a["validation"]["job"]]["arguments"]
+     req(va["generator"]==identity["generator"] and va["universe"]==identity["universe"] and eq(va["widths"],candidate["original_candidate"]["hedging"]["band_width_candidates"]),"original validation candidate scope altered")
+   roots={plan[k] for k in ("teacher_job_id","next_teacher_job_id","grid_teacher_job_id")}
+   roots|={b["job_id"] for b in plan["state_bindings"]+plan["date_bindings"]}
+   roots|={b["job_id"] for group in plan["pnl_bindings"].values() for b in group}
+   needed=roots|set().union(*(ancestors[i] for i in roots))
+   req(needed==set(plan["required_job_ids"]),"actual closure excludes producer or includes irrelevant dummy")
+ for j in js:
+  a=j["arguments"];op=j["operation"]
+  if op=="teacher_driver":
+   m=j["driver_model"]
+   req(a["original_n"]==j["original_n"] and eq(a["calendar_times"],np.arange(769)/768),"teacher driver original denominator/calendar altered")
+   purpose=a.get("teacher_reference")
+   if purpose:
+    req(j["original_n"]==65536 and a["seed"]==seeds["oracle"][models.index(m)] and purpose=={"reference_rule":"independent_reserved_stream_grid_max","stream_namespace":"oracle","seed":a["seed"]},"maximum unreserved teacher reference")
+   else:req(a["seed"]==seeds["teacher"][models.index(m)],"principal teacher namespace altered")
+   if j.get("activation"):req(j["activation"]["previous_teacher_gate_job_id"].startswith("stage:"+m+":"),"shared driver gated by unrelated other model")
+  if op=="teacher_grid":
+   driver=rows[a["driver"]["job"]]
+   req(driver["operation"]=="teacher_driver" and driver["original_n"]==j["original_n"]==a["original_n"] and driver["arguments"]["seed"]==a["seed"],"teacher actual driver differs")
+   req(a.get("teacher_reference")==driver["arguments"].get("teacher_reference"),"reference purpose differs across driver/grid")
+  if op=="market_pair":
+   m=a["model"];slot=int(j["id"].split(":")[3]);req(slot in (1,2),"stage incorrectly includes NN training market")
+   req(a["seed"]==seeds["pilot"][2*slot+models.index(m)] and j["original_n"]==a["original_n"]==1024 and a["levels"]==[768,1536] and a["frequencies"]==[12,12],"original pilot market stream/levels altered")
+   req(j.get("activation") is None,"common pilot market gated by unrelated model")
+ req(not any(j["operation"] in ("tiny_fits","roster") for j in js),"tinyNN run during selection")
+ return {"job_count":len(js),"stage_count":16,"state_count":288,"date_count":192,"position_pairs":16*48,
+ "other_pairs":16*4*16,"principal_drivers":8,"reserved_reference_drivers":2,"full_raw_teachers":20,
+ "original_cases":121,"original_attempts":51,"actual_risk_cache_bindings":"checked","actual_numeric_closure":"checked"}
+
+baseline=audit(draft)
+# Deliberately mutate copies; never alter root source, packed artifact, or prior logs.
+mutations=[]
+def row(x,i):return next(j for j in x["jobs"] if j["id"]==i)
+def gate(x,m="Heston",n=1024,g="coarse"):return row(x,f"stage:{m}:N{n}:{g}:gate")
+def mutate_cache(x):
+ p=gate(x)["arguments"]["stage_plan"];b=p["pnl_bindings"]["teacher_N"][0]
+ row(x,b["refined_risk_job_id"])["arguments"]["caches"]["heston"]["asian"]=ref(p["teacher_job_id"],"cache")
+mutations.append(("actual_refined_cache_substitution",mutate_cache))
+mutations += [
+ ("field_order_substitution",lambda x:row(x,"field-current")["arguments"].update(order=2048)),
+ ("original_case_identity_substitution",lambda x:x["original_pilot_case_descriptors"][0]["identity"].update(unknown="invented")),
+ ("original_obligation_substitution",lambda x:x["original_required_attempt_ids"].__setitem__(0,"invented")),
+ ("principal_oracle_seed_substitution",lambda x:row(x,"teacher-driver:Heston:N1024")["arguments"].update(seed=seeds["oracle"][0])),
+ ("unreserved_max_reference",lambda x:row(x,"teacher-driver-reference:local:N65536")["arguments"].update(seed=42)),
+ ("oracle_original_N_shrink",lambda x:row(x,"oracle:state00:Heston:referenceN4096")["arguments"].update(n_paths=1024)),
+ ("original_state_memory_change",lambda x:row(x,"stage:Heston:N1024:coarse:selected-state:state00:Heston")["arguments"].update(memory_sum=1.)),
+ ("field_cap_scope_narrow",lambda x:row(x,"field-current")["cap_scope"]["job_ids"].pop()),
+ ("expense_alias_relabel",lambda x:row(x,"premium-current").update(expense_id="made-up")),
+ ("stage_own_activation_other_model",lambda x:row(x,"stage:local:N4096:coarse:gate").update(activation={"previous_teacher_gate_job_id":"stage:Heston:N65536:high:gate"})),
+ ("common_market_other_model_activation",lambda x:row(x,"market:pilot:local:2:N1024").update(activation={"previous_teacher_gate_job_id":"stage:Heston:N65536:high:gate"})),
+ ("stage_cache_risk_width_substitution",lambda x:row(x,gate(x)["arguments"]["stage_plan"]["pnl_bindings"]["position"][0]["job_id"])["arguments"].update(refined_risk_width_index=2)),
+ ("SDE_same_level_substitution",lambda x:row(x,gate(x)["arguments"]["stage_plan"]["pnl_bindings"]["SDE"][0]["job_id"])["arguments"].update(dataset_indices=[1,1])),
+ ("future_test_scope_promotion",lambda x:x.update(test_opened=True)),
+ ("formal_lock_scope_promotion",lambda x:x.update(formal_plan_locked=True)),
+]
+results=[]
+for name,mutation in mutations:
+ x=copy.deepcopy(draft);mutation(x)
+ try:audit(x)
+ except (ValueError,KeyError) as e:results.append({"id":name,"refused":True,"reason":str(e)})
+ else:results.append({"id":name,"refused":False})
+assert all(r["refused"] for r in results),"independent negative guard missed a mutation"
+after={k:hashlib.sha256((WT/k).read_bytes()).hexdigest() for k in before}
+changed=[k for k in before if before[k]!=after[k]]
+# Mutable check_pilot is outside this metadata review's called functions.
+used_changed=[k for k in changed if not k.endswith("/check_pilot.py")]
+assert not used_changed,"compiler/actual inputs changed during independent review"
+clock={**start,"wall_stop":time.perf_counter(),"cpu_stop":time.process_time()}
+out={"scope":"independent selection-only DAG metadata preflight, not a financial/source/budget approval",
+ "baseline":baseline,"tamper_probes":results,"forbidden_calls":called,
+ "financial_RNG_performed":False,"financial_worker_performed":False,"formal_plan_locked":False,
+ "financial_qualification":"unknown","source_before":before,"source_after":after,
+ "changed_unexecuted_financial_source":changed,"clock":clock,
+ "wall_seconds":clock["wall_stop"]-clock["wall_start"],"cpu_seconds":clock["cpu_stop"]-clock["cpu_start"],
+ "expense_scope":"subprocess arithmetic metadata audit before final report serialization",
+ "self_write_expense":{"status":"pending","wall_seconds":None,"cpu_seconds":None}}
+(D/"progressive-preflight-independent-results.json").write_text(json.dumps(out,indent=2)+"\n")
+print(json.dumps({k:v for k,v in out.items() if k not in ("source_before","source_after")},indent=2))

@@ -1,0 +1,94 @@
+"""Independent actual canonical reference wiring; no financial dispatcher or RNG."""
+from pathlib import Path
+import copy,hashlib,json,sys
+from unittest.mock import patch
+import numpy as np
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=ROOT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+PREFIX=D/"task-6-main-independent-final-review-canonical"
+sys.path[:0]=[str(ROOT/"johnhull/hullkit/src"),str(ROOT/"deep_hedge_price/src"),str(ROOT/"johnhull/research/RB-F04/dynamic_hedging")]
+import run_main as m
+c=m.protocol.candidate_protocol()
+expected={"johnhull/research/RB-F04/dynamic_hedging/run_main.py":"4956903ea0b6f25a2a556fc1e0745b2d98d253ff3d26731e6cf55e5fc253cbc4",
+          "johnhull/research/RB-F04/dynamic_hedging/check_main.py":"ada38ad09270ce4468f33840dba48b83ad74f1922a388103f65ec76b4d3a8134",
+          "deep_hedge_price/tests/test_dynamic_hedging_main.py":"f24564687cbfd54501dbba7e2318b52b96c3808e3461a8e9e57bcde42e06faad"}
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert expected=={k:sha(ROOT/k) for k in expected}
+out=Path(str(PREFIX)+"-unit")
+assert not out.exists()
+seeds=c["seeds"]["refinement"]
+rows={}
+results={}
+for slot,seed in enumerate(seeds):
+    market_id=f"refinement:actual:Heston:market:seed{slot}"
+    market={"kind":"market_pair","model":"Heston","seed":seed,"role":"refinement","original_n":4096}
+    rows[market_id]={"id":market_id,"original_n":4096,"arguments":{"operation":"market_pair","arguments":{"model":"Heston","seed":seed,"original_n":4096}}}
+    results[market_id]={"raw":market}
+    for policy in ("baseline","nn"):
+        pid=f"refinement:actual:Heston:{policy}:seed{slot}"
+        rows[pid]={"id":pid,"original_n":4096,"arguments":{"operation":"cell_pair","arguments":{"shared_market":{"job":market_id}}}}
+        results[pid]={"raw":{"kind":"paired_pnl","original_n":4096,"actual_producer_id":pid,"shared_market":market,"financial_qualification":"unknown"}}
+args={"operation":"paired_score_cell_refinement","arguments":{
+      "baseline_records":[{"job":f"refinement:actual:Heston:baseline:seed{slot}"} for slot in range(3)],
+      "candidate_records":[{"job":f"refinement:actual:Heston:nn:seed{slot}","path":[]} for slot in range(3)],
+      "original_n":4096,"group":"sde","comparison_id":"Heston:U1:level768:nn:trainHeston:init11"}}
+def forbidden(*a,**k):raise AssertionError("canonical preflight may not run finance or RNG")
+with patch.object(np.random,"default_rng",side_effect=forbidden), patch.object(m.pilot,"_dispatch",side_effect=forbidden):
+    deps=m.pilot._dependency_ids(args)
+    assert deps==set(results)-{x for x in results if ":market:" in x}
+    for key in ("baseline_records","candidate_records"):
+        m._prior_three_stream_records(args["arguments"][key],c,rows)
+    resolved=m.pilot._resolve(args,{},results,planned_jobs=rows)
+    for key in ("baseline_records","candidate_records"):
+        raw=resolved["arguments"][key]
+        assert [x["shared_market"]["seed"] for x in raw]==seeds
+        assert all(x["original_n"]==4096 for x in raw)
+        m._prior_three_stream_records(raw,c,rows)
+    # Resolve each planned producer's own canonical market dependency as well.
+    for identifier in sorted(deps):
+        assert m.pilot._dependency_ids(rows[identifier]["arguments"])=={rows[identifier]["arguments"]["arguments"]["shared_market"]["job"]}
+        producer=m.pilot._resolve(rows[identifier]["arguments"],{},results,planned_jobs=rows)
+        assert producer["arguments"]["shared_market"]["role"]=="refinement"
+mutations=[]
+def reject(name,records,planned):
+    payload={"records":records,"rows":planned}
+    receipt=m.write_main_artifact(out/name,payload)
+    restored,r=m.read_main_artifact(out/name)
+    assert r==receipt
+    try:m._prior_three_stream_records(restored["records"],c,restored["rows"])
+    except (ValueError,AssertionError,KeyError,TypeError) as e:mutations.append({"case":name,"rejected":True,"self_consistent_receipt":True,"reason":str(e)})
+    else:raise AssertionError("accepted mutation "+name)
+base=args["arguments"]["baseline_records"]
+for name,mutate in [
+    ("duplicate_producer",lambda a,b:a.__setitem__(1,copy.deepcopy(a[0]))),
+    ("legacy_unresolved",lambda a,b:a.__setitem__(0,{"$job":a[0]["job"]})),
+    ("missing_producer",lambda a,b:a[0].update(job="undeclared")),
+    ("partial_raw_path",lambda a,b:a[0].update(path=["base_rollout"])),
+    ("producer_reduced_N",lambda a,b:b[a[0]["job"]].update(original_n=1024)),
+    ("producer_wrong_operation",lambda a,b:b[a[0]["job"]]["arguments"].update(operation="oracle")),
+    ("market_reduced_N",lambda a,b:b["refinement:actual:Heston:market:seed0"].update(original_n=1024)),
+    ("market_argument_reduced_N",lambda a,b:b["refinement:actual:Heston:market:seed0"]["arguments"]["arguments"].update(original_n=1024)),
+    ("market_wrong_seed",lambda a,b:b["refinement:actual:Heston:market:seed0"]["arguments"]["arguments"].update(seed=seeds[1])),
+    ("market_wrong_operation",lambda a,b:b["refinement:actual:Heston:market:seed0"]["arguments"].update(operation="frequency_market")),
+    ("missing_market",lambda a,b:b.pop("refinement:actual:Heston:market:seed0")),
+    ("producer_partial_market",lambda a,b:b[a[0]["job"]]["arguments"]["arguments"]["shared_market"].update(path=["datasets",0]))
+]:
+    a,b=copy.deepcopy(base),copy.deepcopy(rows);mutate(a,b);reject(name,a,b)
+inline=resolved["arguments"]["baseline_records"]
+for name,mutate in [
+    ("inline_record_N_only",lambda a:a[0].update(original_n=64)),
+    ("inline_missing_record_N",lambda a:a[0].pop("original_n")),
+    ("inline_wrong_market_N",lambda a:a[0]["shared_market"].update(original_n=64)),
+    ("inline_wrong_role",lambda a:a[0]["shared_market"].update(role="test")),
+    ("inline_swapped_seeds",lambda a:a.__setitem__(slice(0,2),list(reversed(a[:2])))),
+    ("inline_wrong_kind",lambda a:a[0].update(kind="quote_risk"))
+]:
+    a=copy.deepcopy(inline);mutate(a);reject(name,a,rows)
+assert expected=={k:sha(ROOT/k) for k in expected}
+report={"reviewed_sources":expected,"source_stable":True,"canonical_6_producer_dependencies":sorted(deps),
+        "original_reserved_seeds":seeds,"original_n":4096,
+        "actual_dependency_resolver_connected":True,"each_producer_market_dependency_connected":True,
+        "unresolved_and_resolved_guard_positive":True,"mutations":mutations,"mutation_count":len(mutations),
+        "financial_RNG_performed":False,"financial_dispatch_performed":False,"formal_plan_approved":False}
+Path(str(PREFIX)+"-results.json").write_text(json.dumps(report,indent=2)+"\n")
+print(json.dumps({"canonical_connected":True,"mutations_rejected":len(mutations),"actual_reserved_seeds":seeds},indent=2))

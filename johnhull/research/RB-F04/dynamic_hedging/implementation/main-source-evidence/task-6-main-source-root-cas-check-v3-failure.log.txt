@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "task-6-main-source-root-cas-check-v3.py", line 37, in <module>
+    manifest["entries"].append(es.manifest_entry("raw/"+path,raw,mime_type="application/octet-stream"))
+TypeError: manifest_entry() got an unexpected keyword argument "mime_type"

@@ -1,0 +1,416 @@
+"""Actual typed pilot graph draft. Lock only after root source/budget review.
+
+No financial generation or readiness is performed by this graph compiler. Required
+input observations/controls must be real byte-authenticated original values; this
+module never inserts a replacement Q, field, teacher, NN or qualified flag.
+"""
+from __future__ import annotations
+
+import copy
+import numpy as np
+import run_pilot as pilot
+
+def inp(key):
+    return {"input":key}
+
+def ref(identifier,*path):
+    return {"job":identifier,"path":list(path)} if path else {"job":identifier}
+
+def build_job_graph(*, inputs, controls, teacher_trials, pilot_training_config):
+    """Return all121/51 typed work and actual argument dependencies, without budgets.
+
+    inputs keys: parameters, original_states18, diagnostic_queries24,
+    additional_teacher_cases, seed_namespace.
+    controls declares actual field/call grids, independent call-table grids,
+    call/PDE precision levels, bin edges, chunks, 1024pilot paths, selected teacher
+    trial per model, the exact two N trials and coarse/high comparison trials.
+    teacher_trials is a prior explicit list of required attempts, never the
+    N×grid maximum Cartesian product. Draft has no success or reviewed-budget flag.
+    """
+    c=pilot.execution.execution_candidate()
+    original=c["original_candidate"]
+    models=("Heston","local")
+    n=controls["pilot_n"]
+    if n != 1024 or pilot_training_config["original_n"] != 1024:
+        raise ValueError("root-proposed pilot N1024, distinct from main12 closure")
+    states=inputs["original_states18"]
+    if len(states)!=18 or len({r["id"] for r in states})!=18:
+        raise ValueError("all original eighteen market states required")
+    trials={t["id"]:t for t in teacher_trials}
+    if len(trials)!=len(teacher_trials):
+        raise ValueError("duplicate explicit teacher trial")
+    selected=controls["selected_teacher_trial"]
+    for model in models:
+        rows=[t for t in teacher_trials if t["model"]==model]
+        if not rows or any(t["original_n"] not in original["teacher"]["n_candidates"]
+                           or t["grid"] not in ("coarse","high") for t in rows):
+            raise ValueError("original N/grid teacher trials required")
+        if len({t["original_n"] for t in rows})<2 or {t["grid"] for t in rows}!={"coarse","high"}:
+            raise ValueError("explicit actual N and grid comparison required")
+        if selected[model] not in trials or trials[selected[model]]["model"]!=model:
+            raise ValueError("prior selected teacher trial changed")
+    jobs=[]
+    by_id={}
+    def emit(identifier,operation,arguments,original_n=None,steps=0,total_steps=None,**extra):
+        if identifier in by_id:
+            raise ValueError("duplicate typed job")
+        prediction={"path_steps":steps,
+                    "expanded_bytes":controls["expanded_byte_predictions"][operation]}
+        if total_steps is not None:
+            prediction["total_path_steps"]=total_steps
+        for key in ("financial_child_count","child_boundary"):
+            if key in extra:
+                prediction[key]=extra[key]
+        row={"id":identifier,"operation":operation,"arguments":arguments,
+             "original_n":original_n,"expense_id":"pilot-job:"+identifier,
+             "prediction":prediction,**extra}
+        jobs.append(row);by_id[identifier]=row
+        return identifier
+    emit("field-current","field",{"parameters":inp("parameters"),**controls["field"]})
+    field={"field_job":"field-current"}
+    emit("quotes-current","quotes",{"parameters":inp("parameters"),"surface":field,
+                                    "controls":controls["initial_call_controls"]},37)
+    emit("premium-current","premium",{
+        "parameters":inp("parameters"),"seed":original["premium"]["seed"],
+        "n_paths":65536,"steps_per_year":1536,"chunk_paths":controls["chunk_paths"]},
+        65536,65536*1536,65536*1536*2,financial_child_count=2,child_boundary="level_query")
+    emit("source-current","source",{})
+    call={}
+    for model in models:
+        identifier="call-current:"+model
+        call[model]=identifier
+        emit(identifier,"call_cache",{"parameters":inp("parameters"),"surface":field,
+            "model":model.lower(),**controls["call"][model]})
+    drivers={}
+    for trial in teacher_trials:
+        model=trial["model"];N=trial["original_n"]
+        key=(model,N)
+        if key not in drivers:
+            identifier=f"teacher-driver:{model}:N{N}"
+            drivers[key]=identifier
+            emit(identifier,"teacher_driver",{
+                "seed":original["seeds"]["teacher"][0 if model=="Heston" else 1],
+                "original_n":N,"calendar_times":np.arange(769)/768,
+                "chunk_paths":controls["chunk_paths"]},
+                N,N*768,N*768,driver_model=model)
+    for trial in teacher_trials:
+        model=trial["model"];N=trial["original_n"]
+        axes=pilot.teacher_axes(trial["grid"],model)
+        count=(12*len(axes["state"]) if model=="Heston"
+               else (len(axes["t0_spot"])+11*len(axes["spot"]))*len(axes["state"]))
+        emit(trial["id"],"teacher_grid",{
+            "parameters":inp("parameters"),"surface":field,"model":model,
+            "grid":trial["grid"],"original_n":N,
+            "seed":original["seeds"]["teacher"][0 if model=="Heston" else 1],
+            "chunk_paths":controls["chunk_paths"],
+            "evaluation_domains":trial["evaluation_domains"],
+            "driver":ref(drivers[model,N])},
+            N,N*768,N*768*count,financial_child_count=count,
+            child_boundary="original_teacher_node")
+    def caches(overrides=None,call_overrides=None):
+        choice=dict(selected);choice.update(overrides or {})
+        return {m.lower():{"call":ref((call_overrides or {}).get(m,call[m]),"value"),"asian":ref(choice[m],"cache")}
+                for m in models}
+    state_jobs={}
+    oracle_jobs={}
+    for index, observation in enumerate(states):
+        for model in models:
+            # All seven spot bump coordinates are explicitly present in independent table.
+            table="independent-table:"+observation["id"]+":"+model
+            oracle="oracle:"+observation["id"]+":"+model
+            state="selected-state:"+observation["id"]+":"+model
+            oracle_jobs[index,model]=oracle;state_jobs[index,model]=state
+            N=trials[selected[model]]["original_n"]
+            emit(table,"call_table",{"parameters":inp("parameters"),"surface":field,
+                "model":model.lower(),"dates":[observation["date"]],
+                "query_spots":sorted({observation["spot"]} | {
+                    observation["spot"]+sign*.02*w for sign in (-1,1) for w in (1.,.5,2.)}),
+                "state_nodes":controls["independent_state_nodes"][model],
+                "controls":controls["independent_call_controls"]})
+            emit(oracle,"oracle",{"parameters":inp("parameters"),"surface":field,
+                "model":model.lower(),"date":observation["date"],"spot":observation["spot"],
+                "quote":observation["quote"],"memory_sum":observation["memory_sum"],
+                "memory_count":observation["memory_count"],
+                "seed":original["seeds"]["oracle"][index%3],"n_paths":N,
+                "call_table":ref(table),"steps_per_year":1536,
+                "spot_bump":.02,"quote_bump":1e-4,"chunk_paths":controls["chunk_paths"]},
+                N,N*1536,N*1536*26,financial_child_count=26,child_boundary="level_query")
+            emit(state,"state",{"parameters":inp("parameters"),"surface":field,"model":model,
+                "call_cache":ref(call[model],"value"),"asian_cache":ref(selected[model],"cache"),
+                "date_index":observation["date_index"],"spot":observation["spot"],
+                "quote":observation["quote"],"memory_sum":observation["memory_sum"],
+                "memory_count":observation["memory_count"],"oracle":ref(oracle)},N)
+    date_jobs={}
+    for model in models:
+        for di in range(12):
+            identifier=f"date-gate:{model}:{di}"
+            date_jobs[model,di]=identifier
+            queries=inputs["diagnostic_queries24"][model][di]
+            emit(identifier,"date_gate",{
+                "parameters":inp("parameters"),"surface":field,"model":model,
+                "call_cache":ref(call[model],"value"),"asian_cache":ref(selected[model],"cache"),
+                "date_index":di,"queries":queries},trials[selected[model]]["original_n"])
+    # Real paired market producer is common to all requested risk/rollout comparisons.
+    markets={}
+    risks={}
+    def market_pair(model,slot,seed,N=n,frequencies=(12,12),tag="pilot",call_override=None):
+        identifier=f"market:{tag}:{model}:{slot}:N{N}"
+        emit(identifier,"market_pair",{
+            "parameters":inp("parameters"),"surface":field,"model":model,"seed":seed,
+            "original_n":N,"chunk_paths":controls["chunk_paths"],
+            "call_cache":ref(call_override or call[model],"value"),"premium":ref("premium-current","value"),
+            "cost_rates":original["hedging"]["half_spreads"],
+            "levels":[768,1536],"frequencies":list(frequencies)},N,N*1536,N*2304)
+        return identifier
+    def risk(model,market,index,tag,overrides=None,cache_view=None):
+        identifier=f"risk:{tag}:{model}:{index}"
+        emit(identifier,"quote_risk",{"parameters":inp("parameters"),"surface":field,
+            "dataset":ref(market,"datasets",index),"caches":ref(cache_view,"value") if cache_view else caches(overrides),
+            "chunk_paths":controls["query_chunk_paths"]},by_id[market]["original_n"])
+        return identifier
+    for k,model in enumerate(models):
+        for slot,seed in enumerate((original["seeds"]["pilot"][k],
+                original["seeds"]["pilot"][2+k],original["seeds"]["pilot"][4+k])):
+            market=market_pair(model,slot,seed)
+            markets[model,slot]=market
+            for index in (0,1):
+                risks[model,slot,index]=risk(model,market,index,f"pilot:{slot}")
+    receipt_markets={markets[m,s]:ref(markets[m,s]) for m in models for s in (0,1)}
+    emit("pilot-streams","stream_receipts",{
+        "markets":receipt_markets,
+        "roles":{role:{m:markets[m,s] for m in models}
+                 for role,s in (("train",0),("validation",1))},
+        "seed_namespace":inp("seed_namespace")})
+    # 4tiny pilot init11, all14 validation candidates for eachG/U; no main12 substitution.
+    config=copy.deepcopy(pilot_training_config)
+    emit("tiny-four","tiny_fits",{
+        "train_datasets":{m:ref(markets[m,0],"datasets",1) for m in models},
+        "validation_datasets":{m:ref(markets[m,1],"datasets",1) for m in models},
+        "validation_risks":{m:ref(risks[m,1,1],"value") for m in models},
+        "pilot_training_config":config,"stream_receipts":ref("pilot-streams","value")},1024,
+        pilot_training_config=config)
+    validations={}
+    for model in models:
+        for universe in ("U1","U2"):
+            identifier=f"validation:{model}:{universe}"
+            validations[model,universe]=identifier
+            emit(identifier,"validation",{
+                "dataset":ref(markets[model,1],"datasets",1),
+                "risk":ref(risks[model,1,1],"value"),"generator":model,"universe":universe,
+                "widths":original["hedging"]["band_width_candidates"]},1024)
+            emit(f"roster:{model}:{universe}","roster",{
+                "dataset":ref(markets[model,2],"datasets",1),
+                "risk":ref(risks[model,2,1],"value"),"fits":ref("tiny-four","fits"),
+                "validation":ref(identifier,"value"),"generator":model,"universe":universe},1024)
+    cells={}
+    def pair(identity,kind,market,base_risk,refined_risk,index=(0,1),tag="",width_index=None):
+        identifier=(tag or "paired:"+identity["id"])+":"+kind+(f":width{width_index}" if width_index is not None else "")
+        emit(identifier,"cell_pair",{
+            "base_dataset":ref(market,"datasets",index[0]),
+            "refined_dataset":ref(market,"datasets",index[1]),
+            "base_risk":ref(base_risk,"value"),
+            "refined_risk":ref(refined_risk,"risk_variants",width_index) if width_index is not None else ref(refined_risk,"value"),
+            "identity":identity,
+            "validation":ref(validations[identity["generator"],identity["universe"]],"value"),
+            "fits":ref("tiny-four","fits"),"refinement_kind":kind,"refined_risk_width_index":width_index,
+            "shared_market":ref(market),"dataset_indices":list(index),
+            "base_risk_source":ref(base_risk),"refined_risk_source":ref(refined_risk)},
+            by_id[market]["original_n"])
+        return identifier
+    for cell in c["original_roster"]["primary_cells"]:
+        model=cell["generator"];market=markets[model,2]
+        cells[cell["id"]]=pair(cell,"SDE",market,risks[model,2,0],risks[model,2,1])
+    attempt_bindings={}
+    def bind(identifier,identifiers):
+        attempt_bindings[identifier]={"id":identifier,"job_ids":list(dict.fromkeys(identifiers))}
+    for model in models:
+        for di in range(12):
+            bind(f"teacher:{model}:date{di}",[selected[model],date_jobs[model,di]])
+        greek_band=[r for r in c["original_roster"]["primary_cells"]
+                    if r["generator"]==model and r["policy"] in ("greek","band")]
+        bind("refinement:SDE:"+model,[markets[model,2],*[cells[r["id"]] for r in greek_band]])
+        for kind in ("teacher_N","teacher_grid","position","pnl"):
+            market=markets[model,2];base=risks[model,2,1]
+            dependencies=[market]
+            if kind in ("teacher_N","teacher_grid"):
+                compare=controls["teacher_comparisons"][kind]
+                override={m:compare[m][1] for m in models}
+                for m in models:
+                    if compare[m][0] != selected[m]:
+                        raise ValueError("base teacher comparison must match prior selected trial")
+                    dependencies.extend(compare[m])
+                refined=risk(model,market,1,kind,override)
+            elif kind=="position":
+                refined="bump:"+model
+                emit(refined,"bump_risk",{
+                    "parameters":inp("parameters"),"dataset":ref(market,"datasets",1),
+                    "caches":caches(),"base_risk":ref(base,"value"),
+                    "spot_bump":.02,"quote_bump":1e-4,"chunk_paths":controls["query_chunk_paths"]},
+                    n)
+                dependencies.extend(oracle_jobs[i,m] for i in range(18) for m in models)
+                dependencies.append(refined)
+            else:
+                # independent gain reconstruction is a different cash formula,
+                # never two copies of the same position target tagged as a refinement.
+                refined=base
+            pairs=[pair(r,kind,market,base,refined,index=(1,1),
+                        tag=f"refinement:{kind}:"+r["id"],width_index=w)
+                   for r in greek_band for w in ((0,1,2) if kind=="position" else (None,))]
+            bind(f"refinement:{kind}:{model}",[*dependencies,*pairs])
+    for model in models:
+        qjobs=[];empty=[]
+        for index,observation in enumerate(states):
+            # Exact five pricing dates; no Asian time interpolation.
+            qcache=f"Q-call:{model}:{index}"
+            dates=np.array([observation["date"]+k/1536 for k in (0,1,2,4,8)])
+            grid=dict(controls["call"][model]);grid["dates"]=dates
+            emit(qcache,"call_cache",{"parameters":inp("parameters"),"surface":field,
+                 "model":model.lower(),**grid})
+            identifier=f"Q:{model}:{index}"
+            emit(identifier,"Q",{
+                "parameters":inp("parameters"),"surface":field,"model":model,
+                "seed":original["seeds"]["refinement"][index%3],"original_n":n,
+                "chunk_paths":controls["chunk_paths"],"call_cache":ref(qcache,"value"),
+                "date":observation["date"],"spot":observation["spot"],
+                "state":observation["diagnostic_heston_variance"] if model=="Heston"
+                        else observation["inferred_local_state"],
+                "bin_edges":controls["bin_edges"],"state_id":observation["id"]},
+                n,n*8,n*8)
+            qjobs.append(identifier)
+            empty.append(emit(f"empty-Q:{model}:{index}","empty_claim",
+                              {"q_record":ref(identifier)},n))
+        bind("Q:one_step:"+model,qjobs);bind("Q:state_bins:"+model,qjobs)
+        bind("Q:empty_claim:"+model,empty)
+    for frequency in (24,48):
+        dependencies=[]
+        for model in models:
+            declared=[r for r in inputs["additional_teacher_cases"][model]
+                      if np.isclose(r["date"],1/frequency)]
+            if len(declared)!=1:
+                raise ValueError("one original approved representative extra date required")
+            diagnostic=f"additional:{frequency}:{model}"
+            N=trials[selected[model]]["original_n"]
+            emit(diagnostic,"teacher_diagnostic",{
+                "parameters":inp("parameters"),"surface":field,"model":model,"original_n":N,
+                "seed":original["seeds"]["teacher"][0 if model=="Heston" else 1],
+                "chunk_paths":controls["chunk_paths"],"cases":declared,
+                "driver":ref(drivers[model,N])},
+                N,N*768,N*768,diagnostic_cases=declared)
+            freq_calls={}
+            for valuation in models:
+                ci=f"frequency-call:{frequency}:{model}:{valuation}"
+                grid=dict(controls["call"][valuation]);grid["dates"]=np.arange(frequency+1)/frequency
+                emit(ci,"call_cache",{"parameters":inp("parameters"),"surface":field,
+                     "model":valuation.lower(),**grid})
+                freq_calls[valuation]=ci
+            view=f"frequency-view:{frequency}:{model}"
+            emit(view,"frequency_cache",{"caches":caches(call_overrides=freq_calls),
+                 "dates":np.arange(frequency)/frequency})
+            market=market_pair(model,frequency,original["seeds"]["pilot"][4 if model=="Heston" else 5],
+                               frequencies=(12,frequency),tag="frequency",call_override=freq_calls[model])
+            base=risk(model,market,0,"frequency-base"+str(frequency))
+            refined=risk(model,market,1,"frequency-refined"+str(frequency),cache_view=view)
+            row=[r for r in c["original_roster"]["primary_cells"]
+                 if r["generator"]==model and r["policy"] in ("greek","band")]
+            pairs=[pair(r,"frequency",market,base,refined,
+                        tag=f"frequency:{frequency}:"+r["id"]) for r in row]
+            dependencies.extend([diagnostic,market,*pairs])
+        bind("frequency:"+str(frequency),dependencies)
+    precision=[]
+    for N in original["test"]["n_candidates"]:
+        data={};risk_refs={};precision_markets={};precision_roles={m:[] for m in models}
+        for model in models:
+            data[model]=[];risk_refs[model]=[]
+            for slot,seed in enumerate(original["seeds"]["refinement"]):
+                market=market_pair(model,slot,seed,N,tag="precision")
+                r=risk(model,market,1,f"precision:N{N}:{slot}")
+                precision_markets[market]=ref(market);precision_roles[model].append(market)
+                data[model].append(ref(market,"datasets",1))
+                risk_refs[model].append(ref(r,"value"))
+        receipt=f"precision-streams:N{N}"
+        emit(receipt,"stream_receipts",{"markets":precision_markets,
+             "roles":{"precision":precision_roles},"seed_namespace":inp("seed_namespace")})
+        identifier=f"precision:N{N}"
+        emit(identifier,"precision",{
+            "datasets":data,"risks":risk_refs,
+            "validation":{m+":"+u:ref(validations[m,u],"value")
+                          for m in models for u in ("U1","U2")},
+            "stream_receipts":ref(receipt,"value","precision"),"original_n":N},N)
+        precision.append(identifier)
+    bind("test_precision",precision)
+    bind("initial_common_surface",["quotes-current"])
+    bind("premium",["premium-current"])
+    bind("source_closure",["source-current"])
+    bind("tiny_nn",["tiny-four"])
+    bind("tiny_roster",[f"roster:{m}:{u}" for m in models for u in ("U1","U2")])
+    bind("domain_selection",list(selected.values()))
+    # The checker binds these meta obligations to all actual job IDs and expense roster.
+    bind("saved_replay",list(by_id));bind("costs",list(by_id))
+    case_bindings=[];case_plan=[]
+    for descriptor in c["pilot_cases"]:
+        kind=descriptor["kind"];identity=descriptor["identity"]
+        if kind=="quote":
+            job="quotes-current";N=1
+        elif kind=="state":
+            job=state_jobs[identity["state_index"],identity["model"]]
+            N=trials[selected[identity["model"]]]["original_n"]
+        elif kind=="cell":
+            job=cells[identity["id"]];N=n
+        else:
+            job="tiny-four";N=1024
+        case_bindings.append({"id":descriptor["id"],"job_id":job})
+        case_plan.append(copy.deepcopy(descriptor)|{
+            "original_n":N,"expense_id":"pilot-case:"+descriptor["id"],
+            "producer_job_id":job,
+            **({"validation_original_n":1024} if kind=="fit" else {})})
+    # Parent cap may cover actual descendants only. Multiple independent parents
+    # keep disjoint work scopes; obligation coverage uses their explicit union.
+    ancestors={}
+    for row in jobs:
+        deps=pilot._dependency_ids(row["arguments"])
+        ancestors[row["id"]]=deps | set().union(*(ancestors[i] for i in deps))
+    for row in jobs:
+        affected={i for i in by_id if i==row["id"] or row["id"] in ancestors[i]}
+        row["cap_scope"]={
+            "job_ids":[i for i in by_id if i in affected],
+            "case_ids":[b["id"] for b in case_bindings if b["job_id"] in affected],
+            "attempt_ids":[b["id"] for b in attempt_bindings.values()
+                           if affected.intersection(b["job_ids"])],
+            "expense_id":row["expense_id"]}
+    if len(case_bindings)!=121 or set(attempt_bindings)!=set(c["required_pilot_attempt_ids"]):
+        raise ValueError("original full typed denominator changed")
+    return {
+        "schema":"rb-f04-pilot-job-graph-draft-v1","candidate":c,
+        "jobs":jobs,"case_plan":case_plan,"case_bindings":case_bindings,
+        "attempt_plan":[{"id":i,"gates":c["pilot_attempt_gates"][i],
+                         "expense_id":"pilot-attempt:"+i,
+                         "original_n":max((by_id[j].get("original_n") or 1
+                                           for j in attempt_bindings[i]["job_ids"]),default=1)}
+                        for i in c["required_pilot_attempt_ids"]],
+        "attempt_bindings":[attempt_bindings[i] for i in c["required_pilot_attempt_ids"]],
+        "q_state_plan":[{"id":r["id"]} for r in states],
+        "domain_plan":{m:trials[selected[m]]["evaluation_domains"] for m in models},
+        "teacher_n_candidates":original["teacher"]["n_candidates"],
+        "teacher_grid_candidates":original["teacher"]["grid_candidates"],
+        "sde_levels":[768,1536],"frequencies":[12,24,48],
+        "seeds":original["seeds"],"limits":original["limits"],"test_opened":False,
+        "financial_qualification":"unknown",
+        "not_locked_reason":"current source/input/budget review/cap-expense scopes not yet bound",
+    }
+
+
+def lock_job_graph(draft, *, inputs, source, reviewed_budgets, history, required_external_expense_ids):
+    """Root calls after independent prior rate/budget/cap-scope review; no new measurements."""
+    plan=copy.deepcopy(draft);plan["schema"]="rb-f04-pilot-plan-v1"
+    if set(reviewed_budgets)!= {j["id"] for j in plan["jobs"]}:
+        raise ValueError("actual full current job budget roster required")
+    for job in plan["jobs"]:
+        receipt=reviewed_budgets[job["id"]]
+        job["budget"]=copy.deepcopy(receipt["budget"])
+        job["prediction"].update(receipt["prediction"])
+        if receipt.get("case_cap_expense_bindings") is not None:
+            job["case_cap_expense_bindings"]=receipt["case_cap_expense_bindings"]
+    plan.update(source=source, input_bindings={k:pilot.input_identity(v) for k,v in inputs.items()},
+                history=history,required_external_expense_ids=required_external_expense_ids)
+    pilot.validate_locked_plan(plan)
+    return plan

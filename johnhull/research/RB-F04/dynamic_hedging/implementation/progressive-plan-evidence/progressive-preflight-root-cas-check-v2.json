@@ -1,0 +1,37 @@
+{
+  "scope": "independent selection-only metadata checkpoint; no finance or formal lock",
+  "status": "PASS",
+  "entries": 46,
+  "bytes": 51908416,
+  "checks": {
+    "primary": {
+      "entry_count": 46,
+      "original_byte_restore": "PASS",
+      "financial_semantic": "not run"
+    },
+    "mirror": {
+      "entry_count": 46,
+      "original_byte_restore": "PASS",
+      "financial_semantic": "not run"
+    }
+  },
+  "cost": {
+    "clock": {
+      "wall_start": 22284.700595451,
+      "cpu_start": 0.025463559,
+      "wall_stop": 22286.414273882,
+      "cpu_stop": 0.433114802
+    },
+    "wall_seconds": 1.7136784310023359,
+    "cpu_seconds": 0.407651243
+  },
+  "prior_failed_attempt": {
+    "script": "progressive-preflight-root-cas-check-v1.py",
+    "log": "progressive-preflight-root-cas-check-v1.log",
+    "reason": "review/decision paths already in manifest; exact duplicate declarations now deduplicated",
+    "cost": "unmeasured; no retroactive completion clock"
+  },
+  "startup_and_authoring_cost": "unmeasured",
+  "financial_qualification": "unknown",
+  "formal_plan_locked": false
+}

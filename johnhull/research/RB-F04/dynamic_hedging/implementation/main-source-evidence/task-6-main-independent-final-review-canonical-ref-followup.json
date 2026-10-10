@@ -1,0 +1,12 @@
+{
+  "status": "superseded_pending_canonical_reference_fix",
+  "current_decision": "request_changes",
+  "discoverer": "task6_main_coordinator formal DAG dry-run",
+  "unresolved_important": 1,
+  "finding": "main._prior_three_stream_records recognizes $job, while actual pilot._dependency_ids/_resolve use job optional path; canonical producer refs cannot pass prior gate",
+  "prior_report_preserved": "task-6-main-independent-final-review.md",
+  "prior_approval_historical_only": true,
+  "formal_freeze_approved": false,
+  "reviewer_fixture_omission": "independent positive metadata fixture also used $job and did not run through canonical dependency resolver",
+  "next_check": "fixed-source canonical job dependency_ids -> resolve -> prior guard with 3 distinct reserved streams/N4096; duplicates/N/seed mutations"
+}

@@ -8,6 +8,8 @@
 - [4fitの元validation接続](implementation/EMPTY_FIT_VALIDATION_SOURCE.md)：空gateからの偽qualifiedを拒否し、completed optimizer＋validation unknownを原N/理由と共に保持。65tests・独立19mutation、限定source未解決0。実raw写像は別確認。
 - [正式planの独立preflight](implementation/FORMAL_PLAN_PREFLIGHT_REVIEW.md)：原121/51・532jobsの構造を保持。段階N選択・全費用/cap結合・正式controls/予算/domainは修復中、正式lock未承認。
 - [上限に達した依存の入口](implementation/DEPENDENCY_CAP_SOURCE.md)：元N・全396枠を理由付きで保持する入口を限定承認。51runner tests・独立6件、金融mainは未実行。
+- [段階教師選択と最終mixed計画](implementation/PROGRESSIVE_TEACHER_PLAN.md)：2,748-job selection-only計画を独立確認、51MB原byte両復元PASS。3,138-job full draftは元121/51・実signature/依存順序PASS、conditional metadata bridge・予算/source/full graphレビューが残る。
+- [主実験実行器のsource確認](implementation/MAIN_EXECUTOR_SOURCE.md)：既受理の旧source/199MB証跡を両復元。現在empty_claim108接続は作者94tests PASS、独立確認でnative local Qのscalar契約違反を検出し修正中。正式mainは未実行。
 - [現行fieldと元入力の再照合](implementation/CURRENT_FIELD_INPUTS.md)：旧graphの固定cutoff不一致を検出。元設定と修正adapterで82,497点をapprox再現、18/24/4入力を保持。失敗を含む17MB rawの両CAS復元・field/入力/clock算術PASS。正式pilotは未開封。
 - [正式pilotの予算測定](implementation/PILOT_BUDGET_MEASUREMENTS.md)：元18入力の実2,304再較正とAsian/16blockの6,912query・13再較正936queryを計測。部品raw・原入力の両保管庫復元/算術PASS。main N256の実chunkからexpanded約70–141 GBを参考推計。正式全phase費用・金融資格は未測定。
 - [正式実験のsource照合](implementation/PHASE_SOURCE_IDENTITY.md)：全10入口と学習closureを必須登録、bare依存・別checkoutのloaded aliasを照合。48scoped tests、独立14件と実在80ファイルinventoryを確認。正式freezeは未実施。

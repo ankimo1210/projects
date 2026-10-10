@@ -1,0 +1,263 @@
+"""Compile the actual original progressive teacher DAG; never run finance.
+
+The final mixed-selection pilot/A bridge must be appended before formal lock.
+All original cases and obligations remain in pending templates. This draft is
+neither a full pilot nor an accepted source/budget/freeze.
+"""
+from __future__ import annotations
+
+import copy
+import importlib.util
+from pathlib import Path
+import run_pilot as pilot
+
+
+def load_original_compiler():
+    path = Path(__file__).with_name("task-5-formal-pilot-plan-producer.py")
+    spec = importlib.util.spec_from_file_location("original_pilot_graph", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def ref(identifier, *path):
+    return {"job": identifier, "path": list(path)} if path else {"job": identifier}
+
+
+def remap(value, names):
+    if isinstance(value, dict) and set(value) in ({"job"}, {"job", "path"}):
+        return {**value, "job": names[value["job"]]}
+    if isinstance(value, dict) and set(value) == {"field_job"}:
+        return {"field_job": names[value["field_job"]]}
+    if isinstance(value, dict):
+        return {key: remap(item, names) for key, item in value.items()}
+    if isinstance(value, list):
+        return [remap(item, names) for item in value]
+    return value
+
+
+def build_progressive_teacher_graph(*, inputs, controls, pilot_training_config):
+    base = load_original_compiler()
+    candidate = pilot.execution.execution_candidate()
+    original = candidate["original_candidate"]
+    models = ("Heston", "local")
+    ladder = original["teacher"]["n_candidates"]
+    cells = [r for r in candidate["original_roster"]["primary_cells"]
+             if r["policy"] in ("greek", "band")]
+    jobs, by_id, stages = [], {}, {model: [] for model in models}
+    def append(row, previous=None):
+        row = copy.deepcopy(row)
+        row.pop("cap_scope", None)
+        if row["id"] in by_id:
+            old = by_id[row["id"]]
+            for key in ("operation", "arguments", "original_n", "prediction"):
+                if pilot.input_identity(old[key]) != pilot.input_identity(row[key]):
+                    raise ValueError("different actual shared producer: " + row["id"])
+            return
+        if previous is not None:
+            row["activation"] = {"previous_teacher_gate_job_id": previous}
+        row["expense_id"] = "pilot-job:" + row["id"]
+        jobs.append(row)
+        by_id[row["id"]] = row
+
+    for model in models:
+        previous = None
+        for n_index, n in enumerate(ladder):
+            reference_n = ladder[min(n_index + 1, len(ladder) - 1)]
+            for grid in ("coarse", "high"):
+                tag = f"stage:{model}:N{n}:{grid}"
+                chosen = {m: f"teacher:{m}:N1024:coarse" for m in models}
+                chosen[model] = f"teacher:{model}:N{n}:{grid}"
+                next_id = (f"teacher:{model}:N{reference_n}:{grid}" if n != ladder[-1]
+                           else f"teacher-reference:{model}:N{n}:{grid}")
+                opposite = f"teacher:{model}:N{n}:{'high' if grid == 'coarse' else 'coarse'}"
+                trials = []
+                required_trials = {chosen[m]: (m, 1024, "coarse") for m in models}
+                required_trials[chosen[model]] = (model, n, grid)
+                required_trials[next_id] = (model, reference_n, grid)
+                required_trials[opposite] = (model, n, "high" if grid == "coarse" else "coarse")
+                # The original compiler validates a two-N explicit trial list for
+                # each M. Its unused dummy descriptors are removed by real closure.
+                for m in models:
+                    required_trials.setdefault(f"teacher:{m}:N4096:coarse", (m, 4096, "coarse"))
+                    required_trials.setdefault(f"teacher:{m}:N1024:high", (m, 1024, "high"))
+                for identifier, (m, N, g) in required_trials.items():
+                    trials.append({"id": identifier, "model": m, "original_n": N,
+                                   "grid": g, "evaluation_domains": [None] * 12})
+                c = copy.deepcopy(controls)
+                c["selected_teacher_trial"] = chosen
+                c["teacher_comparisons"] = {
+                    kind: {m: [chosen[m], chosen[m]] for m in models}
+                    for kind in ("teacher_N", "teacher_grid")}
+                c["teacher_comparisons"]["teacher_N"][model] = [chosen[model], next_id]
+                c["teacher_comparisons"]["teacher_grid"][model] = [chosen[model], opposite]
+                old = base.build_job_graph(inputs=inputs, controls=c, teacher_trials=trials,
+                                           pilot_training_config=pilot_training_config)
+                names = {}
+                for row in old["jobs"]:
+                    identifier, op = row["id"], row["operation"]
+                    shared = op in ("field", "quotes", "premium", "source", "teacher_driver",
+                                    "teacher_grid", "call_table") or identifier.startswith("call-current:")
+                    shared |= op == "market_pair" and identifier.startswith("market:pilot:")
+                    if op == "oracle":
+                        names[identifier] = identifier + f":referenceN{reference_n}"
+                    else:
+                        names[identifier] = identifier if shared else tag + ":" + identifier
+                selected_rows = []
+                for row in old["jobs"]:
+                    r = copy.deepcopy(row)
+                    r["id"] = names[row["id"]]
+                    r["arguments"] = remap(row["arguments"], names)
+                    if row["operation"] == "cell_pair" and r["arguments"]["identity"]["policy"] in ("greek", "band"):
+                        r["arguments"]["fits"] = []
+                    if row["operation"] == "oracle" and r["arguments"]["model"] == model.lower():
+                        r["arguments"]["n_paths"] = reference_n
+                        r["original_n"] = reference_n
+                        r["prediction"]["path_steps"] = reference_n * 1536
+                        r["prediction"]["total_path_steps"] = reference_n * 1536 * 26
+                    if row["operation"] == "teacher_grid":
+                        raw_id = r["id"] + ":raw"
+                        r["id"] = raw_id
+                        if row["id"] == next_id and n == ladder[-1]:
+                            purpose = {"reference_rule": "independent_reserved_stream_grid_max",
+                                       "stream_namespace": "oracle",
+                                       "seed": original["seeds"]["oracle"][models.index(model)]}
+                            source_driver = next(x for x in old["jobs"]
+                                                 if x["id"] == row["arguments"]["driver"]["job"])
+                            dr = copy.deepcopy(source_driver)
+                            dr["id"] = f"teacher-driver-reference:{model}:N{n}"
+                            dr["arguments"]["seed"] = purpose["seed"]
+                            dr["arguments"]["teacher_reference"] = purpose
+                            dr["teacher_reference"] = purpose
+                            selected_rows.append(dr)
+                            r["arguments"]["driver"] = ref(dr["id"])
+                            r["arguments"]["seed"] = purpose["seed"]
+                            r["arguments"]["teacher_reference"] = purpose
+                            r["teacher_reference"] = purpose
+                        selected_rows.append(r)
+                        selected_rows.append({
+                            "id": names[row["id"]], "operation": "teacher_domain_selection",
+                            "arguments": {"teacher": ref(raw_id),
+                                          "selection_rule": pilot.teacher_domain_rule(row["arguments"]["model"])},
+                            "original_n": row["original_n"],
+                            "prediction": {"path_steps": 0,
+                                           "expanded_bytes": controls["expanded_byte_predictions"].get("teacher_domain_selection")}})
+                    else:
+                        selected_rows.append(r)
+                local_rows = {r["id"]: r for r in selected_rows}
+                state_bindings = []
+                for descriptor in candidate["pilot_cases"]:
+                    if descriptor["kind"] != "state" or descriptor["identity"]["model"] != model:
+                        continue
+                    observation = inputs["original_states18"][descriptor["identity"]["state_index"]]
+                    state_bindings.append({"id": descriptor["id"],
+                        "job_id": names["selected-state:" + observation["id"] + ":" + model]})
+                date_bindings = [{"date_index": di, "job_id": names[f"date-gate:{model}:{di}"]}
+                                 for di in range(12)]
+                bindings = {kind: [] for kind in ("SDE", "teacher_N", "teacher_grid", "position", "pnl")}
+                for kind in bindings:
+                    for cell in cells:
+                        for width in ((0, 1, 2) if kind == "position" else (None,)):
+                            old_id = ("paired:" + cell["id"] + ":SDE" if kind == "SDE"
+                                      else "refinement:" + kind + ":" + cell["id"] + ":" + kind
+                                      + (f":width{width}" if width is not None else ""))
+                            identifier = names[old_id]
+                            args = local_rows[identifier]["arguments"]
+                            binding = {"cell_id": cell["id"], "job_id": identifier,
+                                       "base_risk_job_id": args["base_risk_source"]["job"],
+                                       "refined_risk_job_id": args["refined_risk_source"]["job"]}
+                            if width is not None:
+                                binding["width_index"] = width
+                            bindings[kind].append(binding)
+                roots = {chosen[model], next_id, opposite, *chosen.values()}
+                roots |= {r["job_id"] for r in state_bindings + date_bindings}
+                roots |= {r["job_id"] for group in bindings.values() for r in group}
+                needed = set()
+                def visit(identifier):
+                    if identifier in needed:
+                        return
+                    needed.add(identifier)
+                    for dep in pilot._dependency_ids(local_rows[identifier]["arguments"]):
+                        visit(dep)
+                for identifier in roots:
+                    visit(identifier)
+                evidence_ids = [r["id"] for r in selected_rows if r["id"] in needed]
+                for row in selected_rows:
+                    if row["id"] in needed:
+                        append(row, previous)
+                cache_bindings = {}
+                for kind in bindings:
+                    maps = {}
+                    for side in ("base", "refined"):
+                        asian = dict(chosen)
+                        if side == "refined" and kind in ("teacher_N", "teacher_grid"):
+                            asian[model] = next_id if kind == "teacher_N" else opposite
+                        maps[side] = {m: {"call_job_id": "call-current:" + m,
+                                          "asian_job_id": asian[m]} for m in models}
+                    cache_bindings[kind] = maps
+                plan = {"model": model, "original_n": n, "grid": grid,
+                        "required_job_ids": evidence_ids, "teacher_job_id": chosen[model],
+                        "next_teacher_job_id": next_id, "grid_teacher_job_id": opposite,
+                        "date_bindings": date_bindings, "state_bindings": state_bindings,
+                        "pnl_bindings": bindings, "cache_bindings": cache_bindings,
+                        "reference_rule": "next_prefix" if n != ladder[-1]
+                                          else "independent_reserved_stream_grid_max",
+                        "oracle_original_n": reference_n}
+                gate_id = tag + ":gate"
+                append({"id": gate_id, "operation": "teacher_candidate_gate",
+                        "arguments": {"parameters": {"input": "parameters"},
+                                      "surface": {"field_job": "field-current"},
+                                      "stage_plan": plan,
+                                      "evidence": [{"id": identifier,
+                                                    "operation": by_id[identifier]["operation"],
+                                                    "raw": ref(identifier),
+                                                    "arguments": copy.deepcopy(by_id[identifier]["arguments"])}
+                                                   for identifier in evidence_ids]},
+                        "original_n": n,
+                        "prediction": {"path_steps": 0,
+                                       "expanded_bytes": controls["expanded_byte_predictions"].get("teacher_candidate_gate")}},
+                       previous)
+                stages[model].append({
+                    "id": gate_id, "job": {"job_record": gate_id},
+                    "arguments": {"job_arguments": gate_id},
+                    "teacher_job_id": chosen[model], "original_n": n, "grid": grid,
+                    "state_bindings": state_bindings, "date_bindings": date_bindings})
+                previous = gate_id
+        teacher_ids = {s["teacher_job_id"] for s in stages[model]}
+        identifier = "teacher-selection:" + model
+        append({"id": identifier, "operation": "teacher_selection",
+                "arguments": {"model": model, "stages": stages[model],
+                              "teachers": {i: {"job_record": i} for i in sorted(teacher_ids)},
+                              "selection_rule": pilot.teacher_selection_rule(model)},
+                "original_n": None,
+                "prediction": {"path_steps": 0,
+                               "expanded_bytes": controls["expanded_byte_predictions"].get("teacher_selection")}})
+
+    ancestors = {}
+    for row in jobs:
+        deps = pilot._dependency_ids(row["arguments"])
+        if not deps <= set(ancestors):
+            raise ValueError("actual forward dependency: " + row["id"])
+        ancestors[row["id"]] = deps | set().union(*(ancestors[i] for i in deps))
+        if row.get("activation"):
+            prior_gate = row["activation"]["previous_teacher_gate_job_id"]
+            if prior_gate not in ancestors:
+                raise ValueError("actual forward activation")
+    for row in jobs:
+        row["cap_scope"] = {
+            "job_ids": [r["id"] for r in jobs
+                        if r["id"] == row["id"] or row["id"] in ancestors[r["id"]]],
+            "case_ids": [], "attempt_ids": [], "expense_id": row["expense_id"]}
+    return {"schema": "rb-f04-progressive-teacher-job-graph-draft-v1",
+            "candidate": candidate, "jobs": jobs, "stages": stages,
+            "original_pilot_case_descriptors": candidate["pilot_cases"],
+            "original_required_attempt_ids": candidate["required_pilot_attempt_ids"],
+            "teacher_selection_job_ids": {m: "teacher-selection:" + m for m in models},
+            "test_opened": False, "financial_qualification": "unknown",
+            "formal_plan_locked": False,
+            "pending_full_pilot": [
+                "final mixed-selected caches all121cases/51obligations/all16comparison rerun",
+                "selected next/opposite cache extraction with genuine parent cap",
+                "selected N/driver for four actual additional date diagnostics",
+                "A conditional original-N/producer projection plus exact ten actual expense aliases",
+                "all work/bytes/rates/prior budgets and whole phase source review"]}

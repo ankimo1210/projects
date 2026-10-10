@@ -1,0 +1,55 @@
+{
+  "prior_incorrect_mime_argument": {
+    "script": "task-6-main-source-root-cas-check-v3.py",
+    "stderr": "task-6-main-source-root-cas-check-v3-failure.log",
+    "cost": "unmeasured",
+    "repair": "use supported manifest entry mime field after helper construction; no library changes"
+  },
+  "prior_manifest_mime_failure": {
+    "raw_script": "task-6-main-source-root-cas-check-v2.py",
+    "original_stderr": "task-6-main-source-root-cas-check-v2-failure.log",
+    "cost": "unmeasured",
+    "reason": "identical raw bytes have different inferred MIME under original .log and .txt names; archive bundle now declares application/octet-stream uniformly; original path/bytes preserved"
+  },
+  "prior_interrupted_attempt": {
+    "handle": "52015 missing after session reset",
+    "report_missing": true,
+    "cost": "unmeasured",
+    "raw_script": "task-6-main-source-root-cas-check.py",
+    "partial_CAS_objects": "retained and authenticated on reuse"
+  },
+  "kind": "main_fixed_source_reviews_original_byte_both_store_checkpoint",
+  "status": "PASS",
+  "scope": "limited source review provenance; not formal finance/main gate",
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "4956903ea0b6f25a2a556fc1e0745b2d98d253ff3d26731e6cf55e5fc253cbc4",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "ada38ad09270ce4468f33840dba48b83ad74f1922a388103f65ec76b4d3a8134",
+    "deep_hedge_price/tests/test_dynamic_hedging_main.py": "f24564687cbfd54501dbba7e2318b52b96c3808e3461a8e9e57bcde42e06faad"
+  },
+  "entry_count": 635,
+  "bytes": 199151285,
+  "checks": {
+    "primary": {
+      "entries": 635,
+      "byte_restore": "PASS",
+      "financial_semantic_replay": "not repeated by root; independent review scope only"
+    },
+    "mirror": {
+      "entries": 635,
+      "byte_restore": "PASS",
+      "financial_semantic_replay": "not repeated by root; independent review scope only"
+    }
+  },
+  "cost": {
+    "clock": {
+      "wall_start": 21611.83956086,
+      "cpu_start": 0.028478697,
+      "wall_stop": 21625.633260264,
+      "cpu_stop": 2.264953392
+    },
+    "wall_seconds": 13.793699403999199,
+    "cpu_seconds": 2.2364746949999996
+  },
+  "formal_financial_qualification": "unknown",
+  "formal_main_run": false
+}

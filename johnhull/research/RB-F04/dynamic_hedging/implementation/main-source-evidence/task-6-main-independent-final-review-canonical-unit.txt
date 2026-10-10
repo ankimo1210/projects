@@ -1,0 +1,9 @@
+{
+  "canonical_connected": true,
+  "mutations_rejected": 18,
+  "actual_reserved_seeds": [
+    3858740885,
+    1001519867,
+    310817098
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "schema": "rb-f04-selected-teacher-inputs-source-interface-v1",
+  "status": "implemented focused source tests17 PASS; dedicated full/review pending; no formal finance",
+  "teacher_selection": {
+    "arguments": "model,stages,teachers,drivers,selection_rule",
+    "stage_required_purpose_fields": [
+      "teacher_job_id",
+      "next_teacher_job_id",
+      "grid_teacher_job_id",
+      "teacher_driver_job_id"
+    ],
+    "executed_stage_binding": "same four IDs required in actual stage_plan",
+    "teachers": "control map all principal/next/opposite domain-selection job records",
+    "drivers": "control map actual principal and reserved max-reference driver job records",
+    "legacy": "drivers=None keeps legacy source-unit transport; typed selected adapter always requires full maps"
+  },
+  "teacher_selected_inputs": {
+    "arguments": {
+      "model": "Heston/local",
+      "purpose": "principal/teacher_N/teacher_grid/extra_dates",
+      "selector": {
+        "job_record": "teacher-selection:M"
+      },
+      "selection_arguments": {
+        "job_arguments": "teacher-selection:M"
+      },
+      "teachers": "same exact map as selector arguments, all actual job_record bindings",
+      "drivers": "same exact map as selector arguments, all actual job_record bindings"
+    },
+    "job": {
+      "original_n": null,
+      "original_n_source": {
+        "teacher_selection_job_id": "teacher-selection:M",
+        "model": "M",
+        "purpose": "P"
+      }
+    },
+    "outputs": [
+      "kind",
+      "model",
+      "purpose",
+      "availability",
+      "original_n",
+      "selected_original_n",
+      "grid",
+      "cache",
+      "driver",
+      "selector_job_id",
+      "selector_raw_sha256",
+      "selected_stage_job_id",
+      "selected_teacher_job_id",
+      "selected_teacher_driver_job_id",
+      "selected_teacher_raw_sha256",
+      "selected_teacher_driver_raw_sha256",
+      "parent_unavailable_job_ids",
+      "financial_qualification",
+      "scope"
+    ],
+    "unavailable": "actual selected purpose parent capped/nonexecuted only; cache/driver None; runner selected_inputs_inspection + true actual ancestor cap projection"
+  },
+  "teacher_diagnostic": {
+    "job": {
+      "original_n": null,
+      "original_n_source": {
+        "teacher_selection_job_id": "teacher-selection:M",
+        "model": "M"
+      }
+    },
+    "arguments": {
+      "parameters": "actual input parameters",
+      "surface": "actual field ref",
+      "model": "M",
+      "original_n": {
+        "job": "selected-extra:M",
+        "path": [
+          "original_n"
+        ]
+      },
+      "driver": {
+        "job": "selected-extra:M",
+        "path": [
+          "driver"
+        ]
+      },
+      "selector": {
+        "job_record": "teacher-selection:M"
+      },
+      "selected_inputs": {
+        "job": "selected-extra:M"
+      },
+      "seed": "original M teacher seed",
+      "chunk_paths": "prior original",
+      "cases": "same original24/48 cases",
+      "wall_cap_seconds": "injected prior budget"
+    },
+    "prediction": {
+      "by_original_n": "all string4N original branches path_steps/total_path_steps/expanded_bytes/rate_source",
+      "top": "componentwise exact maximum of branch path/total/expanded; same original prior budget"
+    },
+    "runtime_size": "original_n_binding + selected_prediction_sha256; saved checker recomputes exact branch and actual raw selector/selected_inputs/driver",
+    "cap": "original selected N retained even when numeric adapter parent unexecuted; selector is explicit typed control dependency"
+  },
+  "measurement": {
+    "existing_job_identity_diagnostic": "already N*768, total=N*768*case_count; no unnecessary default0 repair",
+    "full_financial_qualification": "unknown",
+    "formal_pilot_executed": false
+  }
+}

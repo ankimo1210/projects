@@ -1,0 +1,12 @@
+{
+  "clock": {
+    "wall_start": 20967.480585067,
+    "cpu_start": 0.0,
+    "wall_stop": 20970.608704794,
+    "cpu_stop": 3.117224
+  },
+  "wall_seconds": 3.128119726996374,
+  "cpu_seconds": 3.117224,
+  "returncode": 0,
+  "scope": "compiler subprocess and log write; no financial generation"
+}\n
