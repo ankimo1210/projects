@@ -25,7 +25,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 115 priv
 
 **全体：本編P0–P8は306/306節受入済み、研究v1は8テーマ完了・main統合済み。現在は動的モデル横断ヘッジのTask5（接続source/予備測定完了、精度未達の原因測定を完了、prefreeze revisionの限定設計・private source承認済み、正式pilot/fresh・主実験の実行器へ）。その後に多曲線risk/P&L→増分XVA＋IM/資本を進める。** 8/11はテーマ件数であり、残工数の割合ではない。
 
-追加進捗（2026-10-10）：現行v56の元全49日付call cache127,400枠（親込みH55.631秒/L7.667秒）と独立参照693/196枠（H5.468秒/L35.561秒）を生成・保存独立照合済み。教師の原始全経路/元統計を保持する圧縮・派生標本再構成を限定実装し、現在source81/dynamic0。全status付き原N65536/65閾値/16blockの合成保存復元を独立確認（外側10.928秒/peak3.467GB）。genuine原N1024四class計2,128節点の生成・保存を実測（最外側1,401.807秒）、Hcoarse検査完了・他3classは検査工程の実RSS capを保持。全N検算を維持するboundedレポート修復と保存再検算へ進む。全phase容量/速度予算・正式pilot/main・研究9の受入は未完了。詳細は[予算測定](research/RB-F04/dynamic_hedging/implementation/PILOT_BUDGET_MEASUREMENTS.md)。
+追加進捗（2026-10-10）：現行v56の元全49日付call cache127,400枠（親込みH55.631秒/L7.667秒）と独立参照693/196枠（H5.468秒/L35.561秒）を生成・保存独立照合済み。教師の原始全経路/元統計を保持する圧縮・派生標本再構成を限定実装し、現在source81/dynamic0。全status付き原N65536/65閾値/16blockの合成保存復元を独立確認（外側10.928秒/peak3.467GB）。genuine原N1024四class計2,128節点の生成・保存を実測（最外側1,401.807秒）、Hcoarse検査完了・他3classは検査工程の実RSS capを保持。全N検算を維持するboundedレポート修復を限定承認し、保存再検算を実行中。全phase容量/速度予算・正式pilot/main・研究9の受入は未完了。詳細は[予算測定](research/RB-F04/dynamic_hedging/implementation/PILOT_BUDGET_MEASUREMENTS.md)。
 
 | 層 | 状態 | 詳細 |
 |---|---|---|

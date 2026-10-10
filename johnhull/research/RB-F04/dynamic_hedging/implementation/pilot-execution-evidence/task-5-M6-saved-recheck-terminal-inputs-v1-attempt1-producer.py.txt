@@ -1,0 +1,497 @@
+"""Lock terminal M6 bytes and metadata only; never decode financial arrays."""
+
+import hashlib
+import json
+import resource
+import time
+from pathlib import Path
+
+WT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D = WT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+PREFIX = "task-5-M6-saved-recheck-terminal-inputs-v1"
+DESCRIPTION = D / "task-5-M6-saved-recheck-initial-description-v1.json"
+EXPECTED = {"Heston-coarse": 108, "Heston-high": 156, "local-coarse": 520, "local-high": 1344}
+IDENTITY = "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0"
+HASHES = {}
+SIZES = {}
+RECEIPTS = {}
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
+def require(condition, message):
+    if not condition:
+        raise AssertionError(message)
+
+
+def rel(path):
+    require(not Path(path).is_symlink(), "symlink input is not a fixed original byte input")
+    path = Path(path).resolve()
+    require(path.is_relative_to(WT), "input escaped original worktree")
+    return str(path.relative_to(WT))
+
+
+def sha(path):
+    path = Path(path)
+    key = rel(path)
+    if key not in HASHES:
+        before = path.stat()
+        digest = hashlib.sha256()
+        with path.open("rb") as stream:
+            for block in iter(lambda: stream.read(8 * 1024**2), b""):
+                digest.update(block)
+        after = path.stat()
+        require(
+            (before.st_size, before.st_mtime_ns) == (after.st_size, after.st_mtime_ns),
+            "input changed while hashing",
+        )
+        HASHES[key] = digest.hexdigest()
+        SIZES[key] = after.st_size
+    return HASHES[key]
+
+
+def read_json(path):
+    return json.loads(Path(path).read_text())
+
+
+def all_files(directory):
+    directory = Path(directory)
+    require(directory.is_dir(), "missing original input directory")
+    paths = sorted(path for path in directory.rglob("*") if path.is_file())
+    require(paths, "empty original input directory")
+    return paths
+
+
+def physical(directory):
+    directory = Path(directory)
+    key = rel(directory)
+    if key in RECEIPTS:
+        return RECEIPTS[key]
+    receipt = read_json(directory / "receipt.json")
+    require(receipt["schema"] == "rb-f04-array-receipt-v1", "unknown native receipt schema")
+    require((directory / "receipt.json").read_bytes() == canonical(receipt), "noncanonical receipt")
+    require(
+        receipt["metadata_sha256"] == sha(directory / "metadata.json"), "metadata receipt mismatch"
+    )
+    require(
+        receipt["arrays_sha256"] == sha(directory / "arrays.npz"),
+        "physical array byte receipt mismatch",
+    )
+    unsigned = {k: v for k, v in receipt.items() if k != "artifact_sha256"}
+    require(
+        receipt["artifact_sha256"] == hashlib.sha256(canonical(unsigned)).hexdigest(),
+        "artifact receipt origin mismatch",
+    )
+    sha(directory / "receipt.json")
+    RECEIPTS[key] = receipt
+    return receipt
+
+
+def packed_metadata(directory):
+    """Authenticate native root/pack links with metadata, no NPZ members opened."""
+    directory = Path(directory)
+    root = read_json(directory / "metadata.json")
+    physical(directory)
+    metadata = root["metadata"]
+    require(metadata["schema"] == "rb-f04-pilot-array-packs-v2", "unknown packed schema")
+    used = {}
+    for array_id, row in metadata["arrays"].items():
+        stop = 0
+        for part in row["parts"]:
+            require(part["start"] == stop, "noncontiguous original packed range")
+            stop = part["stop"]
+            part_id, value_key = part["id"], part["value_key"]
+            require(Path(part_id).name == part_id, "unsafe packed reference")
+            physical(directory / part_id)
+            wrapper = read_json(directory / part_id / "metadata.json")
+            expected_entry = {"array": array_id, "start": part["start"], "stop": part["stop"]}
+            require(
+                wrapper["metadata"]["entries"][value_key] == expected_entry,
+                "pack entry provenance mismatch",
+            )
+            shape = [part["stop"] - part["start"], *row["shape"][1:]] if row["shape"] else []
+            require(wrapper["arrays"][value_key]["shape"] == shape, "pack original shape changed")
+            require(
+                wrapper["arrays"][value_key]["dtype"] == row["dtype"], "pack original dtype changed"
+            )
+            require(value_key not in used.setdefault(part_id, set()), "reused original pack value")
+            used[part_id].add(value_key)
+        require(
+            stop == (row["shape"][0] if row["shape"] else 1), "original packed coverage missing"
+        )
+    require(
+        set(used) == {path.name for path in directory.iterdir() if path.is_dir()},
+        "extra or missing physical pack",
+    )
+    for part_id, values in used.items():
+        wrapper = read_json(directory / part_id / "metadata.json")
+        require(
+            values == set(wrapper["arrays"]) == set(wrapper["metadata"]["entries"]),
+            "pack values missing or unused",
+        )
+    return metadata
+
+
+def native_node(directory, node, spec, driver_id, recipe_sources):
+    metadata = packed_metadata(directory)
+    descriptor = metadata["teacher_storage"]
+    require(
+        descriptor["schema"] == "rb-f04-native-teacher-storage-v1", "unknown teacher storage schema"
+    )
+    require(
+        descriptor["recipe"] == "primitive_labels-global-driver-date-v1",
+        "unknown teacher storage recipe",
+    )
+    require(
+        descriptor["source_bindings"] == recipe_sources, "original recipe source binding changed"
+    )
+    packs = {
+        path.name: physical(path)["artifact_sha256"]
+        for path in Path(directory).iterdir()
+        if path.is_dir()
+    }
+    root_id = physical(directory)["artifact_sha256"]
+    binding = {
+        "kind": "teacher_recipe_physical_v1",
+        "root_artifact_sha256": root_id,
+        "packs": packs,
+        "artifact_sha256": hashlib.sha256(canonical({"root": root_id, "packs": packs})).hexdigest(),
+        "recipe": descriptor["recipe"],
+        "source_bindings": descriptor["source_bindings"],
+    }
+    require(binding == node["raw_binding"], "original node physical binding changed")
+    tree = metadata["tree"]
+    for key, expected in {
+        "original_n": 1024,
+        "model": spec["model"],
+        "seed": spec["seed"],
+        "date_index": node["date_index"],
+        "global_driver_id": driver_id,
+        "financial_qualification": "unknown",
+    }.items():
+        require(tree[key] == expected, "native node original metadata changed: " + key)
+    require(
+        tree["restart"]["spot"] == node["spot"] and tree["restart"]["state"] == node["state"],
+        "node input coordinates changed",
+    )
+    require(
+        tree["primitives"]["N"] == 1024 and tree["primitives"]["original_path_count"] == 1024,
+        "primitive original N changed",
+    )
+    for sample in descriptor["samples"].values():
+        require(
+            sample == {"shape": [1024, spec["threshold_count"]], "dtype": "<f8"},
+            "original sample descriptor changed",
+        )
+    require(len(descriptor["samples"]) == 11, "original eleven label descriptors missing")
+
+
+def save(path, value):
+    path = Path(path)
+    require(not path.exists(), "immutable terminal output already exists")
+    path.write_bytes(canonical(value))
+
+
+def main():
+    started, cpu_start = time.perf_counter(), time.process_time()
+    initial = read_json(DESCRIPTION)
+    require(
+        initial["generation_source_identity_sha256"] == IDENTITY,
+        "original generation identity changed",
+    )
+    original = Path(initial["original_M6_root"])
+    terminal = read_json(original / "all-costs-and-decision.json")
+    outer_path = D / "task-5-current-full-teacher-root-enclosing-cost-v2.json"
+    outer = read_json(outer_path)
+    require(
+        outer["exit_code"] == 3 and outer["source81_stable"] is True,
+        "M6 original terminal boundary changed",
+    )
+    require(
+        terminal["financial_qualification"] == "unknown", "original financial qualification changed"
+    )
+    require(
+        {row["class"] for row in terminal["classes"]} == set(EXPECTED),
+        "terminal class roster incomplete",
+    )
+    prior = read_json(original / "prior-root-budget.json")
+    require(
+        prior["source_identity_sha256"] == IDENTITY and prior["source_file_count"] == 81,
+        "original prior source identity changed",
+    )
+    require(
+        sha(original / "prior-root-budget.json") == outer["prior_budget_sha256"],
+        "terminal prior origin mismatch",
+    )
+    snapshot_path = WT / initial["generation_source_snapshot_manifest"]
+    snapshot = read_json(snapshot_path)
+    require(snapshot["generation_identity_sha256"] == IDENTITY, "snapshot identity changed")
+    require(
+        hashlib.sha256(canonical(snapshot["generation_identity"])).hexdigest() == IDENTITY,
+        "snapshot identity bytes differ",
+    )
+    require(
+        len(snapshot["files"]) == 81 and snapshot["generation_identity"]["dynamic_imports"] == 0,
+        "old source closure changed",
+    )
+    source_paths = [snapshot_path]
+    for origin, row in snapshot["files"].items():
+        require(
+            row["sha256"] == prior["source_bindings"][origin],
+            "original prior and source snapshot disagree",
+        )
+        path = WT / row["snapshot"]
+        require(sha(path) == row["sha256"], "old generation source snapshot bytes differ")
+        source_paths.append(path)
+    recipe_sources = {
+        "teacher_storage": prior["source_bindings"][
+            "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py"
+        ],
+        "primitive_labels": prior["source_bindings"][
+            "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py"
+        ],
+    }
+    independent_path = D / "task-5-current-full-teacher-independent-m6-v2-manifest.json"
+    independent = read_json(independent_path)
+    decision_path = D / "task-5-current-full-teacher-independent-m6-v2-decision.json"
+    decision = read_json(decision_path)
+    require(
+        decision["all_original_generation_saved"] is True,
+        "independent terminal generation is not saved",
+    )
+    require(
+        decision["source_identity_sha256"] == IDENTITY
+        and decision["financial_qualification"] == "unknown",
+        "independent source or qualification changed",
+    )
+    independent_paths = [independent_path]
+    for name, row in independent["evidence"].items():
+        path = D / name
+        require(
+            sha(path) == row["sha256"] and path.stat().st_size == row["bytes"],
+            "independent evidence changed",
+        )
+        independent_paths.append(path)
+    require(
+        independent["input_bindings"] == prior["input_file_bindings"],
+        "independent prior input roster differs",
+    )
+    for path, expected_sha in prior["input_file_bindings"].items():
+        require(sha(WT / path) == expected_sha, "original input binding changed")
+
+    files = {"shared": {}, "classes": {}}
+    shared = [path for path in original.iterdir() if path.is_file()]
+    shared += all_files(original / "banks")
+    shared += [WT / path for path in prior["input_file_bindings"]]
+    shared += source_paths + independent_paths
+    shared += [
+        outer_path,
+        DESCRIPTION,
+        D / "task-5-M6-saved-recheck-interface-v1.json",
+        D / "task-5-M6-saved-recheck-budget-candidate-v1.json",
+        WT / initial["original_M6_description"],
+        D / "task-5-current-full-teacher-budget-root-fixed-v2.json",
+    ]
+    for path in sorted(set(shared)):
+        files["shared"][rel(path)] = sha(path)
+    history = {
+        "terminal": {
+            "path": rel(original / "all-costs-and-decision.json"),
+            "sha256": sha(original / "all-costs-and-decision.json"),
+        },
+        "root_enclosing": {"path": rel(outer_path), "sha256": sha(outer_path)},
+    }
+    class_results = {}
+    driver_results = {}
+    for model, spec in initial["drivers"].items():
+        directory = WT / spec["artifact"]
+        require(
+            sha(directory / "metadata.json") == spec["metadata_sha256_observed"],
+            "driver metadata changed",
+        )
+        metadata = packed_metadata(directory)
+        tree = metadata["tree"]
+        for key, value in {
+            "original_n": 1024,
+            "processed_n": 1024,
+            "unexecuted_n": 0,
+            "seed": spec["seed"],
+            "global_driver_id": spec["global_driver_id"],
+            "status": "executed",
+            "financial_qualification": "unknown",
+        }.items():
+            require(tree[key] == value, "driver original metadata changed")
+        for chunk in tree["chunks"]:
+            packed_metadata(Path(tree["directory"]) / chunk["path"])
+        receipt_path = directory.parent / "parent-cost-and-decision.json"
+        history["driver:" + model] = {"path": rel(receipt_path), "sha256": sha(receipt_path)}
+        driver_results[model] = {
+            "original_n": 1024,
+            "seed": spec["seed"],
+            "global_driver_id": spec["global_driver_id"],
+            "chunks": len(tree["chunks"]),
+            "normals_decoded": False,
+            "metadata_and_physical_bytes_authenticated": True,
+        }
+    for class_id, count in EXPECTED.items():
+        spec = initial["classes"][class_id]
+        require(
+            spec["original_n"] == 1024 and spec["original_nodes"] == count,
+            "original class count changed",
+        )
+        paths = all_files(original / "classes" / class_id)
+        files["classes"][class_id] = {rel(path): sha(path) for path in paths}
+        grid_path = WT / spec["raw_grid_artifact"]
+        require(
+            sha(grid_path / "metadata.json") == spec["raw_grid_metadata_sha256_observed"],
+            "original grid metadata changed",
+        )
+        grid = packed_metadata(grid_path)["tree"]
+        require(grid["planned_nodes"] == spec["planned_nodes"], "original planned nodes changed")
+        require(
+            grid["nodes"] == spec["native_node_bindings"] and len(grid["nodes"]) == count,
+            "native node roster changed",
+        )
+        for key in ["original_n", "seed", "model", "grid"]:
+            require(grid[key] == spec[key], "grid original input changed: " + key)
+        obligation = packed_metadata(WT / spec["initial_original_obligation_artifact"])["tree"]
+        require(
+            obligation["planned_nodes"] == grid["planned_nodes"],
+            "initial original geometry changed",
+        )
+        require(
+            obligation["original_n"] == 1024 and obligation["source_identity_sha256"] == IDENTITY,
+            "initial original N/source changed",
+        )
+        for node in grid["nodes"]:
+            native_node(
+                node["path"],
+                node,
+                spec,
+                initial["drivers"][spec["model"]]["global_driver_id"],
+                recipe_sources,
+            )
+        receipt_path = WT / spec["original_class_terminal_cost_receipt"]
+        class_cost = read_json(receipt_path)
+        independent_result = next(
+            row
+            for row in read_json(D / "task-5-current-full-teacher-independent-m6-v2-results.json")[
+                "classes"
+            ]
+            if row["class"] == class_id
+        )
+        require(
+            class_cost["status"] == independent_result["class_status"],
+            "original class terminal status changed",
+        )
+        grid_cost = next(row for row in class_cost["phase_receipts"] if row["phase"] == "grid")
+        require(
+            grid_cost["status"] == independent_result["grid_phase_status"],
+            "original cap status changed",
+        )
+        require(
+            grid_cost["cap_evidence"] == independent_result.get("cap_evidence"),
+            "original actual cap evidence changed",
+        )
+        history[class_id] = {"path": rel(receipt_path), "sha256": sha(receipt_path)}
+        class_results[class_id] = {
+            "original_n": 1024,
+            "original_nodes": count,
+            "native_bindings_verified": count,
+            "class_status": class_cost["status"],
+            "grid_phase_status": grid_cost["status"],
+            "actual_cap_evidence": grid_cost["cap_evidence"],
+            "raw_grid_status": grid["status"],
+            "raw_unexecuted_node_count": grid["unexecuted_node_count"],
+            "raw_financial_qualification": grid["financial_qualification"],
+            "old_checker_completed_checkpoint": independent_result["saved_checker"][
+                "completed_checkpoint"
+            ],
+            "all_class_files_including_old_checks_and_failures_locked": True,
+            "original_expenses_readded_to_new_check": False,
+        }
+    # Authenticate every existing physical artifact, including retained old checker payloads.
+    input_paths = set(files["shared"])
+    for values in files["classes"].values():
+        input_paths.update(values)
+    for path in sorted(input_paths):
+        if path.endswith("/receipt.json"):
+            physical((WT / path).parent)
+    require(
+        set(rel(path) for path in all_files(original)).issubset(input_paths),
+        "original M6 tree reference omitted",
+    )
+    for row in history.values():
+        require(
+            row["path"] in input_paths and HASHES[row["path"]] == row["sha256"],
+            "history receipt reference omitted",
+        )
+    require(
+        sum(v["native_bindings_verified"] for v in class_results.values()) == 2128,
+        "not all original native nodes bound",
+    )
+    candidate = read_json(D / "task-5-M6-saved-recheck-budget-candidate-v1.json")
+    require(
+        candidate["root_preapproved"] is False and candidate["new_checker_source_bindings"] is None,
+        "pending approval was changed",
+    )
+    manifest = {
+        "schema": "rb-f04-M6-terminal-saved-recheck-inputs-v1",
+        "original_M6_terminal": True,
+        "generation_source_identity_sha256": IDENTITY,
+        "all_original_n": 1024,
+        "all_original_nodes": 2128,
+        "original_raw_generation_not_reexecuted": True,
+        "files": files,
+        "history_cost_receipts": history,
+        "class_metadata_observations": class_results,
+        "driver_metadata_observations": driver_results,
+        "all_original_M6_files_covered": True,
+        "native_physical_receipts_authenticated": len(RECEIPTS),
+        "unique_input_file_count": len(input_paths),
+        "unique_input_bytes": sum(SIZES[path] for path in input_paths),
+        "independent_M6_evidence_reused": {
+            "path": rel(independent_path),
+            "sha256": sha(independent_path),
+        },
+        "new_checker_source_approval": None,
+        "root_preapproved": False,
+        "financial_qualification": "unknown",
+        "formal_pilot_main_phase_approved": False,
+        "new_financial_arrays_decoded": False,
+        "new_solver_RNG_generation_or_SDE_replay": False,
+        "scope": "terminal_original_saved_M6_metadata_physical_origin_only",
+    }
+    output = D / (PREFIX + "-manifest.json")
+    save(output, manifest)
+    reread = read_json(output)
+    require(reread == manifest, "terminal manifest save/read mismatch")
+    result = {
+        "schema": "rb-f04-M6-terminal-input-manifest-verification-v1",
+        "manifest": {"path": rel(output), "sha256": sha(output)},
+        "all_original_nodes": 2128,
+        "native_physical_receipts_authenticated": len(RECEIPTS),
+        "unique_input_file_count": len(input_paths),
+        "unique_input_bytes": manifest["unique_input_bytes"],
+        "all_required_shared_class_history_references_covered": True,
+        "generation_source_snapshot81_exact": True,
+        "no_current_checker_source_approval_claim": True,
+        "candidate_false_and_new_checker_binding_null": True,
+        "financial_arrays_decoded": False,
+        "NPZ_members_opened": False,
+        "financial_worker_solver_RNG_SDE_replay": False,
+        "full_arrays_numeric_content_validation": "reused_independent_M6_v2_only_not_rerun",
+        "inner_wall_seconds": time.perf_counter() - started,
+        "inner_CPU_seconds": time.process_time() - cpu_start,
+        "kernel_peak_RSS_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+        "old_expenses_are_authenticated_history_not_readded": True,
+        "financial_qualification": "unknown",
+    }
+    save(D / (PREFIX + "-verification.json"), result)
+    print(json.dumps(result, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

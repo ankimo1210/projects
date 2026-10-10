@@ -1,0 +1,121 @@
+--- before/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py
++++ after/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py
+@@ -1144,7 +1144,49 @@
+     }
+ 
+ 
+-def check_teacher_grid_record(record, parameters, surface, *, artifact_context=None):
++def _teacher_check_raw_reference(node, index):
++    """Point at authenticated original raw, without saving a runtime restore root."""
++    import copy
++
++    reference = {
++        "schema": "rb-f04-teacher-check-raw-reference-v1",
++        "node_index": index,
++        "node": {key: node[key] for key in ("date_index", "spot", "state")},
++        "path": node["path"],
++    }
++    if "raw_binding" in node:
++        reference["raw_binding"] = copy.deepcopy(node["raw_binding"])
++    else:
++        reference["raw_sha256"] = node["raw_sha256"]
++    return reference
++
++
++def _bounded_teacher_check(checked, node, index):
++    """Compact only after complete original-N checks; raw retains every label."""
++    result = {key: value for key, value in checked.items() if key != "labels"}
++    reference = _teacher_check_raw_reference(node, index)
++    result["raw_reference"] = reference
++    labels = checked.get("labels")
++    if labels is not None:
++        result["labels_reference"] = {
++            "schema": "rb-f04-teacher-check-labels-reference-v1",
++            "raw_reference": reference,
++            "raw_field": "labels",
++            "fields": sorted(labels),
++            "array_fields": {
++                key: {"shape": list(value.shape), "dtype": value.dtype.str}
++                for key, value in labels.items()
++                if isinstance(value, np.ndarray)
++            },
++            "all_original_N_label_values_compared": True,
++        }
++    result["report_mode"] = "bounded"
++    return result
++
++
++def check_teacher_grid_record(
++    record, parameters, surface, *, artifact_context=None, report_mode="full"
++):
+     from run_pilot import (
+         _check_teacher_node_binding,
+         _validate_teacher_reference,
+@@ -1161,6 +1203,7 @@
+         or record["driver"].get("teacher_reference") == record.get("teacher_reference"),
+         "principal/reference saved teacher driver purpose differs",
+     )
++    _require(report_mode in ("full", "bounded"), "unknown teacher check report mode")
+     axes = teacher_axes(record["grid"], record["model"])
+     runner._same(axes, record["axes"], "original teacher grid axes")
+     expected = []
+@@ -1195,16 +1238,31 @@
+                 "teacher original N/CRN differs",
+             )
+             if row.get("status") == "failed_at_declared_cap":
+-                checks.append(check_cap_partial(row, expected_n=n))
++                checked = check_cap_partial(row, expected_n=n)
++                checks.append(
++                    _bounded_teacher_check(checked, node, index)
++                    if report_mode == "bounded"
++                    else checked
++                )
++                del checked
+                 continue
++            checked = check_teacher_record(
++                row, parameters, surface, artifact_context=artifact_context
++            )
+             checks.append(
+-                check_teacher_record(row, parameters, surface, artifact_context=artifact_context)
+-            )
++                _bounded_teacher_check(checked, node, index)
++                if report_mode == "bounded"
++                else checked
++            )
++            # Do not keep the complete replayed labels alive in the generator.
++            del checked
+             row["surface"] = surface
+             yield row
+ 
+     if record["cache"] is None:
+-        list(rows())
++        for _ in rows():
++            pass
++        _require(len(checks) == len(nodes), "original teacher validation coverage differs")
+         return {
+             "original_n": n,
+             "original_node_count": len(expected),
+@@ -1222,6 +1280,7 @@
+         evaluation_domains=record["evaluation_domains"],
+         saved_cache=record["cache"],
+     )
++    _require(len(checks) == len(nodes), "original teacher validation coverage differs")
+     return {
+         "original_n": n,
+         "original_node_count": len(expected),
+@@ -2705,6 +2764,7 @@
+             context["parameters"],
+             context.get("surface"),
+             artifact_context=context.get("artifact_context"),
++            report_mode="bounded",
+         )
+     if op == "teacher_candidate_gate":
+         arguments = context["resolved_arguments"]
+@@ -2837,6 +2897,7 @@
+             context["parameters"],
+             context.get("surface"),
+             artifact_context=context.get("artifact_context"),
++            report_mode="bounded",
+         )
+     if op == "teacher":
+         return check_teacher_record(

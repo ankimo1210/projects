@@ -1,0 +1,18 @@
+{
+  "changed_existing_functions": [
+    "check_teacher_grid_record",
+    "_raw_job_check"
+  ],
+  "added_helpers": [
+    "_teacher_check_raw_reference",
+    "_bounded_teacher_check"
+  ],
+  "standalone_teacher_AST_unchanged": true,
+  "all_other_existing_function_AST_unchanged": true,
+  "test_sha256": "ce679b219491725e82da021c34326d06ca782fcf76f3d3b1285c7400854fde20",
+  "execution_source_count": 81,
+  "dynamic_imports": [],
+  "original_financial_source_preserved_except_report_checker": true,
+  "report_reference_saves_runtime_context": false,
+  "formal_finance_approved": false
+}

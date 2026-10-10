@@ -1,0 +1,13 @@
+{
+  "actual_closure_equals_saved_json": true,
+  "dynamic_imports": [],
+  "earlier_digest_method": "run_reference.payload_digest",
+  "earlier_payload_digest_sha256": "d4a721c67c53a48bbabd7408c52d9ef5a5dfeb1770eaa2f242acaa625bf1c0db",
+  "execution_source_count": 81,
+  "formal_finance_approved": false,
+  "formal_prior_uses": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "original_author_v1_bytes_preserved": true,
+  "scope": "metadata digest algorithm correction; no source/test/input change",
+  "source_identity_method": "run_reference._digest",
+  "source_identity_sha256": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652"
+}

@@ -1,0 +1,9 @@
+......F.......                                                           [100%]
+=================================== FAILURES ===================================
+___________ test_bounded_rejects_unknown_saved_cache_outside_summary ___________
+deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py:179: in test_bounded_rejects_unknown_saved_cache_outside_summary
+    with pytest.raises(ValueError, match="mismatch"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py::test_bounded_rejects_unknown_saved_cache_outside_summary
+1 failed, 13 passed in 58.01s

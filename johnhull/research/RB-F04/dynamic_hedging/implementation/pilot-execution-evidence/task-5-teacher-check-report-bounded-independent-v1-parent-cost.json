@@ -1,0 +1,8 @@
+{
+  "scope": "bounded independent small saved source-unit/transport enclosing launch/import/all probes",
+  "exit_code": 0,
+  "wall_seconds": 33.411481659000856,
+  "child_CPU_seconds": 33.393128000000004,
+  "child_peak_RSS_bytes": 822591488,
+  "outer_cost_receipt_save": "unknown"
+}

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+    "-q",
+    "--tb=short"
+  ],
+  "returncode": 1,
+  "wall_seconds": 59.17049663499347,
+  "environment": {
+    "PYTHONPATH": "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src:/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src"
+  }
+}

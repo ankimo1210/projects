@@ -1,0 +1,89 @@
+"""Add two authenticated outer M6 provenance inputs; retain immutable v1."""
+
+import hashlib
+import json
+import resource
+import time
+from pathlib import Path
+
+WT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D = WT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+P = "task-5-M6-saved-recheck-terminal-inputs-v2"
+V1 = "task-5-M6-saved-recheck-terminal-inputs-v1"
+V1_SHA = "e56e2b62b7584a48a0e489d679681b078cbcd545a264b85b0e745c80463b5d15"
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def save(path, value):
+    assert not path.exists()
+    path.write_text(json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False))
+
+
+def main():
+    start, cpu = time.perf_counter(), time.process_time()
+    base = D / (V1 + "-manifest.json")
+    assert sha(base) == V1_SHA
+    manifest = json.loads(base.read_text())
+    initial = json.loads((D / "task-5-M6-saved-recheck-initial-description-v1.json").read_text())
+    root = Path(initial["original_M6_root"])
+    prior = json.loads((root / "prior-root-budget.json").read_text())
+    outer = json.loads((D / "task-5-current-full-teacher-root-enclosing-cost-v2.json").read_text())
+    additions = {
+        "original_generator_observer": (
+            D / "task-5-current-full-teacher-measurement-v2.py",
+            prior["probe_source_sha256"],
+        ),
+        "original_root_execution_log": (
+            D / "task-5-current-full-teacher-root-v2.log",
+            outer["root_log_sha256"],
+        ),
+    }
+    authenticated = {}
+    for key, (path, expected) in additions.items():
+        assert path.is_file() and sha(path) == expected
+        name = str(path.relative_to(WT))
+        assert name not in manifest["files"]["shared"]
+        manifest["files"]["shared"][name] = expected
+        manifest["unique_input_bytes"] += path.stat().st_size
+        manifest["unique_input_file_count"] += 1
+        authenticated[key] = {"path": name, "sha256": expected, "bytes": path.stat().st_size}
+    manifest["outer_M6_provenance_inputs"] = authenticated
+    manifest["previous_immutable_input_manifest"] = {
+        "path": str(base.relative_to(WT)),
+        "sha256": V1_SHA,
+    }
+    output = D / (P + "-manifest.json")
+    save(output, manifest)
+    assert json.loads(output.read_text()) == manifest
+    assert manifest["unique_input_file_count"] == 13157
+    assert manifest["unique_input_bytes"] == 5437753447
+    assert manifest["all_original_nodes"] == 2128 and manifest["all_original_n"] == 1024
+    assert manifest["new_checker_source_approval"] is None and manifest["root_preapproved"] is False
+    candidate = D / "task-5-M6-saved-recheck-budget-candidate-v1.json"
+    assert sha(candidate) == "0d7ff1ec54eda65d4ce71bff27112570221f44cc7b2a701848378c9360c7264b"
+    result = {
+        "scope": "terminal_M6_v1_exact_origin_plus_two_outer_provenance_inputs_only",
+        "manifest": {"path": str(output.relative_to(WT)), "sha256": sha(output)},
+        "all_previous_v1_input_SHA_maps_retained": True,
+        "outer_prior_generator_SHA_and_enclosing_root_log_SHA_authenticated": authenticated,
+        "all_original_nodes": 2128,
+        "unique_input_file_count": 13157,
+        "unique_input_bytes": 5437753447,
+        "source_checker_approval_null_prior_candidate_false": True,
+        "new_financial_array_decode_solver_RNG_SDE": False,
+        "old_generation_and_failed_check_costs_readded": False,
+        "financial_qualification": "unknown",
+        "inner_wall_seconds": time.perf_counter() - start,
+        "inner_CPU_seconds": time.process_time() - cpu,
+        "kernel_peak_RSS_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+        "result_receipt_final_save_tail": "unknown",
+    }
+    save(D / (P + "-verification.json"), result)
+    print(json.dumps(result, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,114 @@
+{
+  "scope": "fixed bounded checker source-unit and saved transport only",
+  "fixed_checker_sha256": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b",
+  "new_RNG_generation": false,
+  "M6_or_large_finance_execution": false,
+  "source81_before_stable": true,
+  "financial_qualification": "unknown",
+  "formal_phase_pilot_main_budget_volume_approval": false,
+  "positives": [
+    {
+      "name": "full_default_vs_bounded_all108_allN16_all11labels_stats_cache",
+      "PASS": true,
+      "small_SDE_chunk_calls_each": 324
+    },
+    {
+      "name": "cacheless_all108_compared_sample_cov_block_weakrefs_released",
+      "PASS": true,
+      "weakrefs": 1836
+    },
+    {
+      "name": "full_cached_restored_original_root_actually_absent_Path_context_saved_semantic_comparison",
+      "PASS": true
+    },
+    {
+      "name": "saved_partial_cap_N16_all_unexecuted_unknown_no_SDE_upgrade",
+      "PASS": true
+    },
+    {
+      "name": "legacy_raw_sha_literal_reference_sourceunit_full_comparison",
+      "PASS": true
+    },
+    {
+      "name": "existing_invalid_path_full_N_NaN_unknown_no_SDE_upgrade",
+      "PASS": true
+    },
+    {
+      "name": "two_formal_grid_consumers_explicit_bounded_AST",
+      "PASS": true,
+      "lines": [
+        2762,
+        2895
+      ]
+    }
+  ],
+  "negative_rejections": [
+    {
+      "name": "last_node_self_consistent_f_x_samples",
+      "error": "ValueError",
+      "message": "teacher saved labels.f_x_samples: saved value mismatch"
+    },
+    {
+      "name": "last_node_self_consistent_joint_block_covariance",
+      "error": "ValueError",
+      "message": "teacher saved labels.joint_block_covariance: saved value mismatch"
+    },
+    {
+      "name": "last_node_self_consistent_block_means",
+      "error": "ValueError",
+      "message": "teacher saved labels.block_means: saved value mismatch"
+    },
+    {
+      "name": "last_node_self_consistent_status",
+      "error": "ValueError",
+      "message": "teacher saved labels.status: saved value mismatch"
+    },
+    {
+      "name": "last_missing",
+      "error": "ValueError",
+      "message": "original teacher node denominator changed"
+    },
+    {
+      "name": "last_duplicate",
+      "error": "ValueError",
+      "message": "teacher raw node order changed"
+    },
+    {
+      "name": "cache_unknown_NaN",
+      "error": "ValueError",
+      "message": "saved_cache.f: saved value differs from recomputation"
+    },
+    {
+      "name": "saved_report_fresh_receipt_reference_node_index",
+      "error": "ValueError",
+      "message": "independent saved semantic comparison.raw_checks[107].raw_reference.node_index: saved value mismatch"
+    },
+    {
+      "name": "saved_report_fresh_receipt_reference_dtype",
+      "error": "ValueError",
+      "message": "independent saved semantic comparison.raw_checks[107].labels_reference.array_fields.f_x_samples.dtype: saved value mismatch"
+    },
+    {
+      "name": "saved_report_fresh_receipt_compared_flag",
+      "error": "ValueError",
+      "message": "independent saved semantic comparison.raw_checks[107].labels_reference.all_original_N_label_values_compared: saved value mismatch"
+    },
+    {
+      "name": "invalid_report_mode",
+      "error": "ValueError",
+      "message": "unknown teacher check report mode"
+    }
+  ],
+  "source81_after_stable": true,
+  "canonical_source_identity_sha256": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "original_author_fixture_unchanged": true,
+  "small_saved_SDE_chunk_calls": 4206,
+  "small_saved_SDE_max_chunk_N": 6,
+  "positive_count": 7,
+  "negative_count": 11,
+  "review_cost": {
+    "wall_seconds": 31.430405168001016,
+    "CPU_seconds": 31.420615520000002,
+    "process_peak_RSS_bytes": 789278720
+  }
+}

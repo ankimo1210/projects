@@ -2094,8 +2094,464 @@
       "archive": "task-5-M6-saved-recheck-preparation-manifest-v1.json",
       "bytes": 2523,
       "sha256": "dad995ef9062f35af2adbb10b4ded48cbbc75d3814d450e61de5d3e5ad950fa1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-author-v1-decision.json",
+      "archive": "task-5-teacher-check-report-bounded-author-v1-decision.json",
+      "bytes": 2627,
+      "sha256": "3f36b17159bcdd7cb419e0c2cee0df97037fcedaddf7f161b23b80752034dc4c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-author-v1-report.md",
+      "archive": "task-5-teacher-check-report-bounded-author-v1-report.md",
+      "bytes": 5929,
+      "sha256": "2c7fa08c663f6f10554c05ef6d976246dc1a139464c57a63a3aaa9b0505aa0a7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-author-v1-fixture-manifest.json",
+      "archive": "task-5-teacher-check-report-bounded-author-v1-fixture-manifest.json",
+      "bytes": 109091,
+      "sha256": "250d8113496feb30d56d3ab3e74b3cf75e328014edb4b3f18b22220348c3fbed"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-source-closure-v1.json",
+      "archive": "task-5-teacher-check-report-bounded-source-closure-v1.json",
+      "bytes": 33985,
+      "sha256": "32b727bc85822d267eee825fb2652b1fff4e25ea3f07d43b27c1de804ef1999d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-ast-and-snapshot-v1.json",
+      "archive": "task-5-teacher-check-report-bounded-ast-and-snapshot-v1.json",
+      "bytes": 582,
+      "sha256": "cd36feacf1b3b105b33b230c91ce2a8ec64d8851dd4a42a12553906cff9ed0b9"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-implemented-v1.diff",
+      "archive": "task-5-teacher-check-report-bounded-implemented-v1.diff",
+      "bytes": 4721,
+      "sha256": "044ed9a01b755b74f4db323aa31ce9e8845d03f9163688c489b28226ac8e0e1f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-red-v1.log",
+      "archive": "task-5-teacher-check-report-bounded-red-v1.log.txt",
+      "bytes": 1491,
+      "sha256": "7fc377607368a13e220503918f44eeb9286b76d98c8cf4a3d2d671d205c0011b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-red-v1.json",
+      "archive": "task-5-teacher-check-report-bounded-red-v1.json",
+      "bytes": 344,
+      "sha256": "f64844be578500f9e16b18337d6358228b25b9348c5089cd01bdb425c5657e0d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-red-v2.log",
+      "archive": "task-5-teacher-check-report-bounded-red-v2.log.txt",
+      "bytes": 898,
+      "sha256": "b4cefe1375423e32f6dc9a1d3bbf150a2f996d5a049253f43df9e8a2f96c4ed3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-red-v2.json",
+      "archive": "task-5-teacher-check-report-bounded-red-v2.json",
+      "bytes": 532,
+      "sha256": "af0088a0d38989332a218ad72c31bc5c23a43c6a48f85db9bb44ce08d95b9b1b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-green-attempt-v1.log",
+      "archive": "task-5-teacher-check-report-bounded-green-attempt-v1.log.txt",
+      "bytes": 720,
+      "sha256": "cf358ebece91b6a72c019b922cece770c321efc7e386ad2c7b16bb78eb4e23d7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-green-attempt-v1.json",
+      "archive": "task-5-teacher-check-report-bounded-green-attempt-v1.json",
+      "bytes": 441,
+      "sha256": "59f59560c64f9a68c96c4c0a5b67fd0b914763ed76607bea0380e6232bbc4e7e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-green-v2.log",
+      "archive": "task-5-teacher-check-report-bounded-green-v2.log.txt",
+      "bytes": 1760,
+      "sha256": "a1c30f1f2d07a4a02dab31f645b35ef0ff7e3316a42dddad4375ae1062c08403"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-green-v2.json",
+      "archive": "task-5-teacher-check-report-bounded-green-v2.json",
+      "bytes": 652,
+      "sha256": "6058569d78fa70aaedd5bc6133420553f39ec2e672ac03f51560f51e5bc9a6f2"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-green-v3.log",
+      "archive": "task-5-teacher-check-report-bounded-green-v3.log.txt",
+      "bytes": 100,
+      "sha256": "e2ab956ec055d534cd3299a16005359e5c00a8d0910e2da9ff20e972f848e6d3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-green-v3.json",
+      "archive": "task-5-teacher-check-report-bounded-green-v3.json",
+      "bytes": 652,
+      "sha256": "179fe66b68c577ef84bfaedc63f7249502dccc283e641bd84cd38ac67f34c568"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-affected-collection-v1.log",
+      "archive": "task-5-teacher-check-report-bounded-affected-collection-v1.log.txt",
+      "bytes": 5117,
+      "sha256": "e32ff3bb587f98b86985b4103fc35a6c7fe014ed590857ec2c50f6156663deec"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-affected-green-v1.log",
+      "archive": "task-5-teacher-check-report-bounded-affected-green-v1.log.txt",
+      "bytes": 116,
+      "sha256": "115e4ed4233dacf4d5c2c4a7e3476f787916caf3d519f5e16a63d9bd21387868"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-affected-green-v1.json",
+      "archive": "task-5-teacher-check-report-bounded-affected-green-v1.json",
+      "bytes": 521,
+      "sha256": "689f3321058c3cf4b4d89e63a713284e7e9588a13e4474dbe3fae933acc4116c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-ruff-v1.log",
+      "archive": "task-5-teacher-check-report-bounded-ruff-v1.log.txt",
+      "bytes": 661,
+      "sha256": "409afe0436fd9192917c66f44f71c8b50d95306218ae8aceb28e62d79d68dc09"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-ruff-check-v2.log",
+      "archive": "task-5-teacher-check-report-bounded-ruff-check-v2.log.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-ruff-format-v2.log",
+      "archive": "task-5-teacher-check-report-bounded-ruff-format-v2.log.txt",
+      "bytes": 23,
+      "sha256": "43affe539ba0ae8b202b306a3294d04f3b7fc062316c1c825399076d966c8f2d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-implementation-before-v1/check_pilot.py",
+      "archive": "task-5-teacher-check-report-bounded-implementation-before-v1__check_pilot.py.txt",
+      "bytes": 202863,
+      "sha256": "bfd5b81fd8d356c387a8e313b0c0c8a5b538a26166ad4854572913d4f1608184"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-implementation-before-v1/source-shas.json",
+      "archive": "task-5-teacher-check-report-bounded-implementation-before-v1__source-shas.json",
+      "bytes": 665,
+      "sha256": "724446ac4e05ee48f15c9b28835f10d5349c2b4a01f575921156d3919c101b42"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-source-snapshot-v1/snapshot-manifest.json",
+      "archive": "task-5-teacher-check-report-bounded-source-snapshot-v1__snapshot-manifest.json",
+      "bytes": 13968,
+      "sha256": "d39ac64b6925631a5aa479f8798e9ea323d1395b52d427f2d8d85fa13823a325"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-author-v1-manifest.json",
+      "archive": "task-5-teacher-check-report-bounded-author-v1-manifest.json",
+      "bytes": 5130,
+      "sha256": "6457948c578c3b193a413f0eb94f4e99eae4fd93855386f033b4bc95e94cf482"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-author-v2-decision.json",
+      "archive": "task-5-teacher-check-report-bounded-author-v2-decision.json",
+      "bytes": 2934,
+      "sha256": "ef03066a421219f64c0bc5ada24d2914f2723496441fea4e46dd22b4c3459b61"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-author-v2-report.md",
+      "archive": "task-5-teacher-check-report-bounded-author-v2-report.md",
+      "bytes": 6532,
+      "sha256": "08d25af033a2755d747dd82b3eea76e5a64964e95c145117172f0c11ce87b589"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-digest-correction-v1.json",
+      "archive": "task-5-teacher-check-report-bounded-digest-correction-v1.json",
+      "bytes": 668,
+      "sha256": "f9a63d72bf4d392ac3d57fd5f07a5b19f5e8ec274835f79f17d8a877d89b0b79"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-author-v2-manifest.json",
+      "archive": "task-5-teacher-check-report-bounded-author-v2-manifest.json",
+      "bytes": 6184,
+      "sha256": "92b076cff52b625a628d11415044441ea9592fa7ed9420abcae55b8d1b085ffb"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-probe.log",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-probe.log.txt",
+      "bytes": 174,
+      "sha256": "cab7e7a5e721d4763fef313ebaea809eb9d2826ad119f8534e1f538fee4bda63"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-AST.json",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-AST.json",
+      "bytes": 422,
+      "sha256": "650e6180b45d0e76307406e3dec7f99734c7bb8f22ad21d7831419fded5fd4b3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-probe.py",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-probe.py.txt",
+      "bytes": 13549,
+      "sha256": "949163bc3bd7c51e1146ec80e0e2c4837b31c8a50062fac1b7a01b2d9aa193b4"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-attempt1-parent-cost.json",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-attempt1-parent-cost.json",
+      "bytes": 280,
+      "sha256": "7553e0022b63ef394cc3c8711768579c6c649c6cff6f0ffe28607b4bddc14217"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-parent-cost.json",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-parent-cost.json",
+      "bytes": 281,
+      "sha256": "83211dd121b95a0a7717c5e3e7c5ddc595e73fc7f32f65f5b4ca10e3d781c81b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-attempt1-explanation.json",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-attempt1-explanation.json",
+      "bytes": 385,
+      "sha256": "d18454bde5734500a5d6e431e8a123cd95004ddb633d11a1125401a75a56477b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-attempt1-probe.py",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-attempt1-probe.py.txt",
+      "bytes": 13463,
+      "sha256": "c3bfac3a1484f8cf9e27a5acae4e9fcbb3e53f06411fde4db2c3065eaeacc863"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-results.json",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-results.json",
+      "bytes": 3729,
+      "sha256": "d3851a0036dd711a3d99c8f3279de5520cf22202864c982aa3dcbd7e1eea3b40"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-attempt1-probe.log",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-attempt1-probe.log.txt",
+      "bytes": 718,
+      "sha256": "16a1966ad72d3858d74283584c33689eed464f514a9dc0388a198b817946c637"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-review.md",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-review.md",
+      "bytes": 5022,
+      "sha256": "aee8724a01aaede8ed9eca8b337e564b61830aabc42fd2bdb6519c7618336e52"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-decision.json",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-decision.json",
+      "bytes": 2621,
+      "sha256": "19c383aea80c1ba418129c05c663d9d94bc68bccb812aea74e24efb2a2f01cc6"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-source/check_pilot.py",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-source__check_pilot.py.txt",
+      "bytes": 205226,
+      "sha256": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-source/test_dynamic_hedging_teacher_check_report.py",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-source__test_dynamic_hedging_teacher_check_report.py.txt",
+      "bytes": 18101,
+      "sha256": "ce679b219491725e82da021c34326d06ca782fcf76f3d3b1285c7400854fde20"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-independent-v1-manifest.json",
+      "archive": "task-5-teacher-check-report-bounded-independent-v1-manifest.json",
+      "bytes": 12654,
+      "sha256": "82317bb22f5470a6d4c130d82b1b93bc4e07d029b02aa153deff6bc61cc9ea31"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-administrative-probes.py",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-administrative-probes.py.txt",
+      "bytes": 7849,
+      "sha256": "fa51363b9592e30c02615e113a6293b1607f0a5a9f7325b1f43ad84545b32cc3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-administrative-verification.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-administrative-verification.json",
+      "bytes": 1087,
+      "sha256": "f30d2fedf3498221739e0261f3e620b1b1fbdb28ff6109b2b3b28abace6440c2"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-attempt1-creation-cost.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-attempt1-creation-cost.json",
+      "bytes": 730,
+      "sha256": "04c8d293b2ab883707af628735899e3f4e7ca0fdbba909eeebbdce1c7c7247c2"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-attempt1-producer.log",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-attempt1-producer.log.txt",
+      "bytes": 712,
+      "sha256": "0c8950a4fd0506fd24cae742ee09fc7b889862498026ac2aadcf4e1293857d77"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-attempt1-producer.py",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-attempt1-producer.py.txt",
+      "bytes": 20542,
+      "sha256": "90c4c04e2f9911ab5bfe5970e2315d344cb5e4d5c55203f10e87b4d2ed769084"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-attempt2-creation-cost.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-attempt2-creation-cost.json",
+      "bytes": 721,
+      "sha256": "457e6bafac13de83937a154bc330ceb91f0885ca01317e2de44a179e9483f916"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-attempt2-producer.log",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-attempt2-producer.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-attempt2-producer.py",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-attempt2-producer.py.txt",
+      "bytes": 20543,
+      "sha256": "8f90eec6b0643ff904b75a6a7404f9867064d8232ba57babeeafbb0a4a42eecc"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-creation-cost.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-creation-cost.json",
+      "bytes": 720,
+      "sha256": "79e04dee580bed4024a8741d30fb662693eb9912d6ba6fe74cb94f99271e69b6"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-manifest.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-manifest.json",
+      "bytes": 3067734,
+      "sha256": "e56e2b62b7584a48a0e489d679681b078cbcd545a264b85b0e745c80463b5d15"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-producer.log",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-producer.log.txt",
+      "bytes": 1043,
+      "sha256": "54abd208620032b5d76d7ef4ca177578d64c66536b9dbf8da7fa4d294acc31be"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-producer.py",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-producer.py.txt",
+      "bytes": 20624,
+      "sha256": "7c97ce44a2dcc4f6e79e6316fd5f91f37e079846925fb3569c8e8a91c071911b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-report.md",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-report.md",
+      "bytes": 3871,
+      "sha256": "bf2b79c62a806e1e1bebcdc436cf40f9a6007464d5022639fe3979b53bb304ed"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-validation-0.log",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-validation-0.log.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-validation-1.log",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-validation-1.log.txt",
+      "bytes": 26,
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-validation-2.log",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-validation-2.log.txt",
+      "bytes": 1120,
+      "sha256": "0bce18e57da87111dffe9dab6183f33d8981d83654e080c528832e6c3a39e6c0"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-validation-cost.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-validation-cost.json",
+      "bytes": 2005,
+      "sha256": "847cb031dad2bf4c9de09b56e92daeede1faa51a2941bb128d24f7d26a8668dd"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-verification.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-verification.json",
+      "bytes": 1002,
+      "sha256": "b91de7c0623dd7a9b79b97636c38021c64eb9c7b0155ed614e5ce0c3207fb75a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-evidence-manifest.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-evidence-manifest.json",
+      "bytes": 4209,
+      "sha256": "f295c1c1bc6e31a39b23fe4aef2b34801932d00cf736b21bc641e36c77ba667f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v1-final-fixed-verification.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v1-final-fixed-verification.json",
+      "bytes": 342,
+      "sha256": "690bedd716e97d8598d9828b72a180f2299cd45e284c9351bcef37a0d56f6e17"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-creation-cost.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v2-creation-cost.json",
+      "bytes": 1509,
+      "sha256": "f0e42ea554d185c2a776020213bfb93f560cd02f44fcead865acdd5406ae2369"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-manifest.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v2-manifest.json",
+      "bytes": 3068793,
+      "sha256": "511191b8a3147c03ddebbafd4989e8f51cfd72428e8296338484fd3d15ecfbf8"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-producer.py",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v2-producer.py.txt",
+      "bytes": 3874,
+      "sha256": "e4a490b5fa57d09949135f28d6358bc23c082db616c67b456313e6d25f8a8286"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-report.md",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v2-report.md",
+      "bytes": 1798,
+      "sha256": "36d8d45601f981daff904d3bc5d13971eaba25e52f0b89a3ea8166812ef1b39d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-validation-0.log",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v2-validation-0.log.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-validation-1.log",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v2-validation-1.log.txt",
+      "bytes": 25,
+      "sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-validation-2.log",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v2-validation-2.log.txt",
+      "bytes": 1345,
+      "sha256": "564fa63dff1536f2bf0bdc4342af3e58d450282e7f30ccd4cb95054985e6647d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-verification.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v2-verification.json",
+      "bytes": 1299,
+      "sha256": "07c6bfeb086219de1563508a65aa5dac6fbb7462d9f54b0037e37adbac31959e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-evidence-manifest.json",
+      "archive": "task-5-M6-saved-recheck-terminal-inputs-v2-evidence-manifest.json",
+      "bytes": 2376,
+      "sha256": "dc6dadacdd172988cb3acbc376dd5cc4b98995e95f559ddd7123c882a05a4fc3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-root-static-v1.json",
+      "archive": "task-5-teacher-check-report-bounded-root-static-v1.json",
+      "bytes": 880,
+      "sha256": "23b9c9c6f9a70579d59f1495a5e8f30f1b350161c687dad96fb9ff7dc49c2cad"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-check-report-bounded-root-runtime-closure-v1.json",
+      "archive": "task-5-teacher-check-report-bounded-root-runtime-closure-v1.json",
+      "bytes": 33985,
+      "sha256": "32b727bc85822d267eee825fb2652b1fff4e25ea3f07d43b27c1de804ef1999d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-budget-root-fixed-v1.json",
+      "archive": "task-5-M6-saved-recheck-budget-root-fixed-v1.json",
+      "bytes": 2514019,
+      "sha256": "6e85a12b6ea26c966e390596e797e9a5920a89b993a639a8b7591b8fd92a437b"
     }
   ],
-  "scope": "v54–v56 source/metadata, M0–M6 native component observations including independent original M6 resource review, source81 teacher storage/full-status synthetic I/O and unexecuted saved-recheck/M7 preparation; formal pilot/main/financial qualification remain unapproved",
+  "scope": "v54–v56 and native teacher storage, M0–M6 original resource observations; bounded checker source/transport approval and unexecuted saved-recheck/M7 preparation; formal pilot/main/financial qualification remain unapproved",
   "raw_checkpoint_store_manifest": "task-5-v54-root-checkpoint-cas-manifest-v2.json"
 }

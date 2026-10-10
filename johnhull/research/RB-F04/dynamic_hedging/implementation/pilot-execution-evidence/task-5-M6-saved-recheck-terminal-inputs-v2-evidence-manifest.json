@@ -1,0 +1,54 @@
+{
+  "evidence": {
+    "task-5-M6-saved-recheck-terminal-inputs-v1-evidence-manifest.json": {
+      "bytes": 4209,
+      "sha256": "f295c1c1bc6e31a39b23fe4aef2b34801932d00cf736b21bc641e36c77ba667f"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v1-final-fixed-verification.json": {
+      "bytes": 342,
+      "sha256": "690bedd716e97d8598d9828b72a180f2299cd45e284c9351bcef37a0d56f6e17"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v2-creation-cost.json": {
+      "bytes": 1509,
+      "sha256": "f0e42ea554d185c2a776020213bfb93f560cd02f44fcead865acdd5406ae2369"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v2-manifest.json": {
+      "bytes": 3068793,
+      "sha256": "511191b8a3147c03ddebbafd4989e8f51cfd72428e8296338484fd3d15ecfbf8"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v2-producer.py": {
+      "bytes": 3874,
+      "sha256": "e4a490b5fa57d09949135f28d6358bc23c082db616c67b456313e6d25f8a8286"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v2-report.md": {
+      "bytes": 1798,
+      "sha256": "36d8d45601f981daff904d3bc5d13971eaba25e52f0b89a3ea8166812ef1b39d"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v2-validation-0.log": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v2-validation-1.log": {
+      "bytes": 25,
+      "sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v2-validation-2.log": {
+      "bytes": 1345,
+      "sha256": "564fa63dff1536f2bf0bdc4342af3e58d450282e7f30ccd4cb95054985e6647d"
+    },
+    "task-5-M6-saved-recheck-terminal-inputs-v2-verification.json": {
+      "bytes": 1299,
+      "sha256": "07c6bfeb086219de1563508a65aa5dac6fbb7462d9f54b0037e37adbac31959e"
+    }
+  },
+  "financial_qualification": "unknown",
+  "new_checker_source_approval": null,
+  "new_financial_decode_solver_RNG_SDE": false,
+  "prior_v1_full_input_maps_and_cost_status_bindings_unchanged": true,
+  "root_preapproved": false,
+  "scope": "final_terminal_M6_inputs_v2_two_outer_provenance_closure_only",
+  "terminal_input_manifest": {
+    "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-terminal-inputs-v2-manifest.json",
+    "sha256": "511191b8a3147c03ddebbafd4989e8f51cfd72428e8296338484fd3d15ecfbf8"
+  }
+}

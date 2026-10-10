@@ -1,0 +1,169 @@
+"""Pure administrative boundary checks; no finance imports or NPZ members."""
+
+import ast
+import hashlib
+import json
+import resource
+import runpy
+import tempfile
+import time
+from pathlib import Path
+
+D = Path(
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+)
+WT = D.parents[2]
+PREFIX = "task-5-M6-saved-recheck-terminal-inputs-v1"
+PRODUCER = D / (PREFIX + "-producer.py")
+EXPECTED_PRODUCER_SHA = "7c97ce44a2dcc4f6e79e6316fd5f91f37e079846925fb3569c8e8a91c071911b"
+EXPECTED_MANIFEST_SHA = "e56e2b62b7584a48a0e489d679681b078cbcd545a264b85b0e745c80463b5d15"
+
+
+def byte_sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def main():
+    started, cpu = time.perf_counter(), time.process_time()
+    assert byte_sha(PRODUCER) == EXPECTED_PRODUCER_SHA
+    tree = ast.parse(PRODUCER.read_text())
+    imports = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imports.update(item.name for item in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            imports.add(node.module)
+    assert imports == {"hashlib", "json", "resource", "time", "pathlib"}
+    assert all(
+        not isinstance(node, ast.Call)
+        or not isinstance(node.func, ast.Name)
+        or node.func.id not in {"eval", "exec", "__import__"}
+        for node in ast.walk(tree)
+    )
+    env = runpy.run_path(str(PRODUCER), run_name="M6_pure_administrative_helpers")
+    canonical = env["canonical"]
+    checked = []
+
+    def fixture(root):
+        root.mkdir()
+        (root / "metadata.json").write_bytes(b'{"administrative_fixture":true}')
+        (root / "arrays.npz").write_bytes(b"synthetic opaque bytes; not financial arrays")
+        receipt = {
+            "schema": "rb-f04-array-receipt-v1",
+            "arrays_sha256": byte_sha(root / "arrays.npz"),
+            "metadata_sha256": byte_sha(root / "metadata.json"),
+            "uncompressed_bytes": 0,
+        }
+        receipt["artifact_sha256"] = hashlib.sha256(canonical(receipt)).hexdigest()
+        (root / "receipt.json").write_bytes(canonical(receipt))
+        return receipt
+
+    with tempfile.TemporaryDirectory(prefix="M6-pure-origin-probes-", dir=D) as temporary:
+        base = Path(temporary)
+        positive = base / "positive"
+        expected = fixture(positive)
+        assert env["physical"](positive) == expected
+        checked.append("synthetic_opaque_physical_receipt_positive")
+        for case in [
+            "noncanonical_receipt",
+            "metadata_changed",
+            "opaque_bytes_changed",
+            "artifact_origin_changed",
+            "unknown_schema",
+            "missing_array_input",
+        ]:
+            directory = base / case
+            receipt = fixture(directory)
+            if case == "noncanonical_receipt":
+                (directory / "receipt.json").write_text(json.dumps(receipt, indent=2))
+            elif case == "metadata_changed":
+                (directory / "metadata.json").write_bytes(b"{}")
+            elif case == "opaque_bytes_changed":
+                (directory / "arrays.npz").write_bytes(b"changed opaque bytes")
+            elif case == "artifact_origin_changed":
+                receipt["artifact_sha256"] = "0" * 64
+                (directory / "receipt.json").write_bytes(canonical(receipt))
+            elif case == "unknown_schema":
+                receipt["schema"] = "unsupported"
+                (directory / "receipt.json").write_bytes(canonical(receipt))
+            else:
+                (directory / "arrays.npz").unlink()
+            try:
+                env["physical"](directory)
+            except (AssertionError, FileNotFoundError):
+                checked.append(case + "_rejected")
+            else:
+                raise AssertionError("administrative mismatch accepted: " + case)
+
+    manifest_path = D / (PREFIX + "-manifest.json")
+    assert byte_sha(manifest_path) == EXPECTED_MANIFEST_SHA
+    manifest = json.loads(manifest_path.read_text())
+    initial = json.loads((D / "task-5-M6-saved-recheck-initial-description-v1.json").read_text())
+    maps = manifest["files"]
+    assert set(maps["classes"]) == {"Heston-coarse", "Heston-high", "local-coarse", "local-high"}
+    combined = dict(maps["shared"])
+    for class_id, mapping in maps["classes"].items():
+        assert not set(combined).intersection(mapping)
+        combined.update(mapping)
+        directory = Path(initial["original_M6_root"]) / "classes" / class_id
+        assert {str(p.relative_to(WT)) for p in directory.rglob("*") if p.is_file()} == set(mapping)
+    original_files = {
+        str(p.relative_to(WT)) for p in Path(initial["original_M6_root"]).rglob("*") if p.is_file()
+    }
+    assert original_files.issubset(combined)
+    assert len(original_files) == 13022
+    assert len(combined) == manifest["unique_input_file_count"] == 13155
+    assert (
+        sum((WT / name).stat().st_size for name in combined)
+        == manifest["unique_input_bytes"]
+        == 5437727961
+    )
+    checked.append("all_original_13022_files_exact_class_rosters_in_complete_13155_input_map")
+    independent = json.loads(
+        (D / "task-5-current-full-teacher-independent-m6-v2-manifest.json").read_text()
+    )
+    assert all(combined[p] == h for p, h in independent["input_bindings"].items())
+    assert len(independent["input_bindings"]) == 26
+    assert all(
+        combined[row["path"]] == row["sha256"] for row in manifest["history_cost_receipts"].values()
+    )
+    checked.append("independent_26_input_origins_and_terminal_4class_2driver_history_present")
+    observations = manifest["class_metadata_observations"]
+    assert sum(row["native_bindings_verified"] for row in observations.values()) == 2128
+    assert observations["Heston-coarse"]["class_status"] == "completed_component"
+    assert observations["Heston-coarse"]["old_checker_completed_checkpoint"] is True
+    for class_id in ["Heston-high", "local-coarse", "local-high"]:
+        assert observations[class_id]["class_status"] == "unknown_unclosed_component"
+        assert observations[class_id]["grid_phase_status"] == "failed_at_actual_cap"
+        assert observations[class_id]["actual_cap_evidence"]["observed_bytes"] > 4294967296
+        assert observations[class_id]["old_checker_completed_checkpoint"] is False
+    checked.append("old_three_RSS_caps_and_missing_checkpoints_remain_unknown")
+    candidate = json.loads((D / "task-5-M6-saved-recheck-budget-candidate-v1.json").read_text())
+    assert candidate["root_preapproved"] is False
+    assert candidate["new_checker_source_bindings"] is None
+    assert candidate["new_checker_source_approval_evidence"] is None
+    assert manifest["new_checker_source_approval"] is None
+    assert manifest["financial_qualification"] == "unknown"
+    checked.append("new_checker_approval_null_candidate_false_finance_unknown_preserved")
+    checked.append("producer_only_five_static_stdlib_imports_no_decode_solver_RNG")
+    result = {
+        "scope": "pure_administrative_origin_refusal_and_terminal_manifest_inventory",
+        "cases_passed": len(checked),
+        "cases": checked,
+        "manifest_sha256": EXPECTED_MANIFEST_SHA,
+        "producer_sha256": EXPECTED_PRODUCER_SHA,
+        "financial_NPZ_member_decode_RNG_solver_SDE": False,
+        "synthetic_opaque_fixture_is_not_financial_artifact": True,
+        "wall_seconds": time.perf_counter() - started,
+        "CPU_seconds": time.process_time() - cpu,
+        "kernel_peak_RSS_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+        "financial_qualification": "unknown",
+    }
+    output = D / (PREFIX + "-administrative-verification.json")
+    assert not output.exists()
+    output.write_bytes(canonical(result))
+    print(json.dumps(result, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

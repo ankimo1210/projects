@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py::test_bounded_grid_keeps_full_default_and_all_original_checks",
+    "-q",
+    "--tb=short"
+  ],
+  "returncode": 4,
+  "wall_seconds": 0.9046197900024708,
+  "source_unchanged": true
+}

@@ -1,0 +1,14 @@
+{
+  "child_CPU_seconds": 0.10334499999999999,
+  "child_kernel_peak_RSS_bytes": 41824256,
+  "exit_code": 1,
+  "final_cost_receipt_serialization_and_write": "unknown_tail_not_in_endpoint",
+  "new_financial_RNG_solver_SDE_or_decode": false,
+  "old_generation_and_failed_check_expenses_readded": false,
+  "parent_CPU_seconds": 0.000569113999999999,
+  "parent_enclosing_wall_seconds": 0.10385180299635977,
+  "parent_kernel_peak_RSS_bytes": 16977920,
+  "preliminary_inspection_and_producer_edit_cost": "unknown_not_assumed_zero",
+  "producer_sha256": "90c4c04e2f9911ab5bfe5970e2315d344cb5e4d5c55203f10e87b4d2ed769084",
+  "scope": "terminal_M6_metadata_physicalbyte_manifest_creation_including_launch_hash_validation_save_read_output"
+}
