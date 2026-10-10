@@ -1,0 +1,36 @@
+{
+  "entries": [
+    {
+      "bytes": 16811,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-external-expense-receipt-adapter-v1-decision.json",
+      "ref": "artifact:sha256:36a4f47b9e866c113a96f2bce72f32ac3846d793aad0252fe58b9231fe9a6326"
+    },
+    {
+      "bytes": 4603,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-fixed-manifest-v1.json",
+      "ref": "artifact:sha256:33f688701e75f249ef466939326f26df1cc65dfaa9381762506e9d1743ead3fd"
+    },
+    {
+      "bytes": 24127,
+      "mime": "text/x-python",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-preflight-v1.py",
+      "ref": "artifact:sha256:5c1f88570bef1ce225ad16c50f0c7aa8913d38d667fa8c5e268a502fd9682c28"
+    },
+    {
+      "bytes": 64723,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-results-v1.json",
+      "ref": "artifact:sha256:303a5d84064c3d684b6103073c975459b17ed2a9a0f37ba50511a50d179a6d9d"
+    },
+    {
+      "bytes": 20992,
+      "mime": "text/x-python",
+      "path": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-external-expense-receipt-adapter-v1.py",
+      "ref": "artifact:sha256:3b8604e14ce4efa160da29a601ece07376a5097946849832252d862e1ea7f14e"
+    }
+  ],
+  "kind": "johnhull-evidence-manifest",
+  "schema_version": 1
+}

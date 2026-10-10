@@ -1,0 +1,392 @@
+{
+  "schema": "rb-f04-independent-external-expense-receipt-adapter-source-mechanics-review-v1",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent read-only source and pure receipt-mechanics reviewer",
+  "scope": "D2 candidate only: original receipt provenance, existing expense contracts, shallow snapshot preservation, actual-clock containment and inclusive CPU producer coverage",
+  "approved_source_sha256": "3b8604e14ce4efa160da29a601ece07376a5097946849832252d862e1ea7f14e",
+  "source_bindings": {
+    "status": "PASS",
+    "manifest_entries": [
+      {
+        "name": "task-5-external-expense-receipt-adapter-v1.py",
+        "sha256": "3b8604e14ce4efa160da29a601ece07376a5097946849832252d862e1ea7f14e",
+        "bytes": 20992,
+        "status": "PASS"
+      },
+      {
+        "name": "task-5-external-expense-receipt-adapter-preflight-v1.py",
+        "sha256": "5c1f88570bef1ce225ad16c50f0c7aa8913d38d667fa8c5e268a502fd9682c28",
+        "bytes": 24127,
+        "status": "PASS"
+      },
+      {
+        "name": "task-5-external-expense-receipt-adapter-results-v1.json",
+        "sha256": "303a5d84064c3d684b6103073c975459b17ed2a9a0f37ba50511a50d179a6d9d",
+        "bytes": 64723,
+        "status": "PASS"
+      }
+    ],
+    "fixed_manifest_sha256": "33f688701e75f249ef466939326f26df1cc65dfaa9381762506e9d1743ead3fd",
+    "source82_all_original_files_current": true,
+    "source_canonical_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+    "source_native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "old_fixed_cost_observer_accounting_receipts": {
+      "external-cost-receipt-accounting-author-v1.json": "9c9b0f7c5a9b3254343e1cd19d7514d7dcedcd58aea23838a342a2a03396aa35",
+      "external-cost-receipt-accounting-author-v1.md": "2f3d48401cf01aba4dc1efe312a579baa43b982a5e6b381cf4fae18676618d01",
+      "independent-external-cost-accounting-v1-decision.json": "d4505d267fd65e26e5361ad4245ddd6a9a77378cd5a92e1fdf1d731c1776dd42",
+      "task-5-full-pilot-root-saved-check-enclosing-v2.py": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc",
+      "independent-saved-check-enclosing-clock-v2-decision.json": "2eac9a65f6c313b71773a3d39e28b54b39fbc6f6bd77e01fdfd88d63ff31a6d8",
+      "task-5-full-pilot-root-saved-check-observer-v1.py": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4",
+      "task-5-full-pilot-root-saved-check-resource-candidate-v1.json": "a5face84365a5ee437d55e680da1414075b7ef761894e842f2377aff73a5723e"
+    },
+    "adapter_imports": [
+      "__future__",
+      "copy",
+      "hashlib",
+      "json",
+      "math",
+      "pathlib"
+    ],
+    "author_checks_reference_only": 18,
+    "no_producer_clock_endpoint_generation": true
+  },
+  "checks": [
+    {
+      "name": "normal10_original_binding_shallow_snapshot_no_deepcopy_no_authority",
+      "status": "PASS",
+      "detail": {
+        "synthetic_receipts": 10,
+        "required_ID_order_preserved": true,
+        "whole_raw_digest_calls": 1,
+        "large_reference_identity_preserved": true,
+        "authority": false
+      }
+    },
+    {
+      "name": "missing_prefix_overrun_unknown_kept_no_clock_fabrication",
+      "status": "PASS",
+      "detail": {
+        "unknown_overrun": null,
+        "prefix_original_clock": null,
+        "fabricated_ns_or_zero": false,
+        "all10_missing_or_unclosed": true
+      }
+    },
+    {
+      "name": "exact_receipt_bytes_and_original_raw_binding_tamper_refused",
+      "status": "PASS",
+      "detail": {
+        "original_byte_tamper": "rejected",
+        "original_raw_binding_tamper": "rejected"
+      }
+    },
+    {
+      "name": "copied_parent_execution_alias_cannot_complete_external_ID",
+      "status": "PASS",
+      "detail": {
+        "known_execution_alias_original_clocks": "copied",
+        "external10_completion": "rejected"
+      }
+    },
+    {
+      "name": "missing_only_parent_producer_scope_preserved_unclosed",
+      "status": "PASS",
+      "detail": {
+        "missing_original_producer_proof": "unclosed",
+        "correct_scope_not_globally_forbidden": true
+      }
+    },
+    {
+      "name": "original_failed_expense_and_missing_reason_boundary",
+      "status": "PASS",
+      "detail": {
+        "original_nonzero_reason": "preserved",
+        "failed_missing_reason": "unclosed",
+        "numerical_qualification": "unknown"
+      }
+    },
+    {
+      "name": "valid_native_inclusive_parent_actual_separate_sameprocess_clock_charged_once",
+      "status": "PASS",
+      "detail": {
+        "original_child_clock_retained": true,
+        "separate_clock_inclusive_parent_allowed": true,
+        "wall_charged_seconds": 10,
+        "cpu_charged_seconds": 0.3
+      }
+    },
+    {
+      "name": "required_counterexample_later_external_child_cannot_hide_under_ended_native_parent",
+      "status": "PASS",
+      "detail": {
+        "counterexample_native_parent_stop_ns": 20000000000,
+        "actual_child_start_ns": 21000000000,
+        "bare_protocol_excludes_child": true,
+        "adapter_preserves_child_unclosed": true,
+        "hidden_charge_promoted": false
+      }
+    },
+    {
+      "name": "valid_distinct_process_reaped_scope_not_cross_compared_absolute_CPU",
+      "status": "PASS",
+      "detail": {
+        "incomparable_process_CPU_absolute_endpoint_accepted": 70000000000,
+        "actual_reaped_samples_child_duration_seconds": 0.1,
+        "parent_composite_seconds_charged_once": 0.3
+      }
+    }
+  ],
+  "unique_independent_fixture_boundaries": 9,
+  "unresolved_P1_P2_findings": [],
+  "review_basis": "Nine distinct independent tiny fixture boundaries; author18 checks reference only.",
+  "important_boundary": {
+    "ended_inclusive_parent_cannot_hide_later_external_cost": true,
+    "correct_actual_child_clock_native_inclusion_is_allowed": true,
+    "copied_parent_clock_alias_cannot_close_original_external_ID": true,
+    "same_wall_clock_domain_and_endpoint_containment": "Required for every inclusive ancestor",
+    "same_process_CPU": "Same producer PID/domain and actual endpoint containment",
+    "different_process_CPU": "Actual original producer reaped samples, child PID/scope/duration and composite parent samples; never compare absolute CPU endpoints across processes",
+    "scope_unknown": "Missing actual coverage evidence remains unclosed; original rows and clocks retained",
+    "external10_ID_roster": [
+      "cold_imports",
+      "source_registry",
+      "code_review",
+      "math_review",
+      "pilot_review",
+      "serialization",
+      "saved_check",
+      "CAS_primary",
+      "CAS_mirror",
+      "domain_selection"
+    ],
+    "original_raw_snapshot": "Never rewritten or deeply copied; original source/plan/input/jobs/history retained as read-only references. Whole original payload_digest called once.",
+    "derived_lineage": "Composite lineage separately labelled, never treated as original raw native digest",
+    "future_receipt_binding": "Authenticated physical receipts/proofs are not proof of actual terminal native bytes, root permission or financial qualification."
+  },
+  "preserved_failed_attempts": {
+    "original_probe_run": {
+      "schema": "rb-f04-independent-external-expense-adapter-pure-results-v1",
+      "status": "FAIL",
+      "checks": [
+        {
+          "name": "normal10_original_binding_shallow_snapshot_no_deepcopy_no_authority",
+          "status": "PASS",
+          "detail": {
+            "synthetic_receipts": 10,
+            "required_ID_order_preserved": true,
+            "whole_raw_digest_calls": 1,
+            "large_reference_identity_preserved": true,
+            "authority": false
+          }
+        },
+        {
+          "name": "missing_prefix_overrun_unknown_kept_no_clock_fabrication",
+          "status": "PASS",
+          "detail": {
+            "unknown_overrun": null,
+            "prefix_original_clock": null,
+            "fabricated_ns_or_zero": false,
+            "all10_missing_or_unclosed": true
+          }
+        },
+        {
+          "name": "exact_receipt_bytes_and_original_raw_binding_tamper_refused",
+          "status": "PASS",
+          "detail": {
+            "original_byte_tamper": "rejected",
+            "original_raw_binding_tamper": "rejected"
+          }
+        },
+        {
+          "name": "valid_native_inclusive_parent_actual_separate_sameprocess_clock_charged_once",
+          "status": "FAIL",
+          "trace": "Traceback (most recent call last):\n  File \"<string>\", line 35, in record\n  File \"<string>\", line 120, in sameprocess\nKeyError: 'total_wall_seconds'\n"
+        },
+        {
+          "name": "required_counterexample_later_external_child_cannot_hide_under_ended_native_parent",
+          "status": "FAIL",
+          "trace": "Traceback (most recent call last):\n  File \"<string>\", line 35, in record\n  File \"<string>\", line 128, in latechild\nKeyError: 'total_wall_seconds'\n"
+        },
+        {
+          "name": "copied_parent_execution_alias_cannot_complete_external_ID",
+          "status": "PASS",
+          "detail": {
+            "known_execution_alias_original_clocks": "copied",
+            "external10_completion": "rejected"
+          }
+        },
+        {
+          "name": "missing_only_parent_producer_scope_preserved_unclosed",
+          "status": "PASS",
+          "detail": {
+            "missing_original_producer_proof": "unclosed",
+            "correct_scope_not_globally_forbidden": true
+          }
+        },
+        {
+          "name": "valid_distinct_process_reaped_scope_not_cross_compared_absolute_CPU",
+          "status": "FAIL",
+          "trace": "Traceback (most recent call last):\n  File \"<string>\", line 35, in record\n  File \"<string>\", line 154, in distinctprocess\nKeyError: 'total_cpu_seconds'\n"
+        },
+        {
+          "name": "original_failed_expense_and_missing_reason_boundary",
+          "status": "PASS",
+          "detail": {
+            "original_nonzero_reason": "preserved",
+            "failed_missing_reason": "unclosed",
+            "numerical_qualification": "unknown"
+          }
+        }
+      ],
+      "direct_probe_wall_seconds": 0.061029033,
+      "direct_probe_cpu_seconds": 0.380411073,
+      "full_review_outer_cost_and_receipt_tail_seconds": null,
+      "source82_bytes_before_after_equal": true,
+      "original_snapshot_preserved": true,
+      "large_field_deepcopy_attempts": 0,
+      "actual_native_read_or_finance_Popen_RNG_SDE_solver": 0,
+      "actual_guard_CAS_Git_production_mutations": 0,
+      "contract_AST_hashes": {
+        "_current_expenses": "7e328849a8159d34a12372730a7241bb8b5e799dc1e507fb9e50f40432fe94bb",
+        "_check_actual_expense_clock": "1437491df663601847f2a5fa7a34826d46feae1e28fc8358e01d8a8e55865611",
+        "_digest": "c5b7dbe71dc7c54178d66517147731c7822a42a465dcf06f5cbc2f5151566252",
+        "_encode_tree": "cfa37246331f94a0f0055c52fa14edc22310b073fa7f2c3f4222b4cc457c03ea",
+        "payload_digest": "f09f0230cd4452d14a311c7c61d647ed175068115de4a5cf792093ab4e244500"
+      }
+    },
+    "classification": "Three KeyErrors in independent probe due incorrect validator output keys; not source defects",
+    "repair": "Only those three checks rerun using actual charged_totals.wall_seconds/cpu_seconds",
+    "corrected_three_check_run": {
+      "schema": "rb-f04-independent-external-expense-adapter-pure-results-v1",
+      "status": "PASS",
+      "checks": [
+        {
+          "name": "valid_native_inclusive_parent_actual_separate_sameprocess_clock_charged_once",
+          "status": "PASS",
+          "detail": {
+            "original_child_clock_retained": true,
+            "separate_clock_inclusive_parent_allowed": true,
+            "wall_charged_seconds": 10,
+            "cpu_charged_seconds": 0.3
+          }
+        },
+        {
+          "name": "required_counterexample_later_external_child_cannot_hide_under_ended_native_parent",
+          "status": "PASS",
+          "detail": {
+            "counterexample_native_parent_stop_ns": 20000000000,
+            "actual_child_start_ns": 21000000000,
+            "bare_protocol_excludes_child": true,
+            "adapter_preserves_child_unclosed": true,
+            "hidden_charge_promoted": false
+          }
+        },
+        {
+          "name": "valid_distinct_process_reaped_scope_not_cross_compared_absolute_CPU",
+          "status": "PASS",
+          "detail": {
+            "incomparable_process_CPU_absolute_endpoint_accepted": 70000000000,
+            "actual_reaped_samples_child_duration_seconds": 0.1,
+            "parent_composite_seconds_charged_once": 0.3
+          }
+        }
+      ],
+      "direct_probe_wall_seconds": 0.04939314,
+      "direct_probe_cpu_seconds": 0.22641591,
+      "full_review_outer_cost_and_receipt_tail_seconds": null,
+      "source82_bytes_before_after_equal": true,
+      "original_snapshot_preserved": true,
+      "large_field_deepcopy_attempts": 0,
+      "actual_native_read_or_finance_Popen_RNG_SDE_solver": 0,
+      "actual_guard_CAS_Git_production_mutations": 0,
+      "contract_AST_hashes": {
+        "_current_expenses": "7e328849a8159d34a12372730a7241bb8b5e799dc1e507fb9e50f40432fe94bb",
+        "_check_actual_expense_clock": "1437491df663601847f2a5fa7a34826d46feae1e28fc8358e01d8a8e55865611",
+        "_digest": "c5b7dbe71dc7c54178d66517147731c7822a42a465dcf06f5cbc2f5151566252",
+        "_encode_tree": "cfa37246331f94a0f0055c52fa14edc22310b073fa7f2c3f4222b4cc457c03ea",
+        "payload_digest": "f09f0230cd4452d14a311c7c61d647ed175068115de4a5cf792093ab4e244500"
+      }
+    },
+    "decision_publication_tool_failure": "Initial attempted command included duplicate probe source strings and Windows CreateProcess rejected it with os error206 (file name or extension too long). No process or file created; this compact publication is the retry."
+  },
+  "permission_and_qualification": {
+    "candidate_only": true,
+    "root_preapproved": false,
+    "execute_saved_check": false,
+    "actual_external_rows_injection_approved": false,
+    "actual_producer_receipts_validated": false,
+    "actual_terminal_native_tree_authenticated": false,
+    "all_external_ID_cost_closure_approved": false,
+    "financial_acceptance": false,
+    "numerical_precision_approved": false,
+    "whole_checker_RAM_capacity_approved": false,
+    "formal_phase_main_acceptance": false,
+    "financial_qualification": "unknown"
+  },
+  "execution_limits": {
+    "isolated_tiny_JSON_fixtures_only": true,
+    "production_source_edits": 0,
+    "actual_native_reads": 0,
+    "real_worker_Popen": 0,
+    "finance_RNG_SDE_solver_runs": 0,
+    "actual_guard_mutations": 0,
+    "CAS_Git_operations": 0,
+    "new_persistent_files": "This independent decision only; temporary synthetic receipts removed"
+  },
+  "cost": {
+    "original_probe_wall_seconds": 0.061029033,
+    "original_probe_cpu_seconds": 0.380411073,
+    "corrected_three_probe_wall_seconds": 0.04939314,
+    "corrected_three_probe_cpu_seconds": 0.22641591,
+    "these_are_disjoint_probe_attempts_not_whole_review_cost": true,
+    "full_review_outer_wall_seconds": null,
+    "full_review_outer_cpu_seconds": null,
+    "receipt_write_stdout_tail_seconds": null,
+    "actual_timing_events": null,
+    "external_expense_ID_closed": false
+  },
+  "reproduction": {
+    "method": "Fixed adapter imported with stdlib/numpy-only actual protocol. Unmodified _current_expenses, _check_actual_expense_clock, payload_digest functions extracted by AST. Synthetic child clock fixtures only; no financial imports.",
+    "contract_AST_hashes": {
+      "_current_expenses": "7e328849a8159d34a12372730a7241bb8b5e799dc1e507fb9e50f40432fe94bb",
+      "_check_actual_expense_clock": "1437491df663601847f2a5fa7a34826d46feae1e28fc8358e01d8a8e55865611",
+      "_digest": "c5b7dbe71dc7c54178d66517147731c7822a42a465dcf06f5cbc2f5151566252",
+      "_encode_tree": "cfa37246331f94a0f0055c52fa14edc22310b073fa7f2c3f4222b4cc457c03ea",
+      "payload_digest": "f09f0230cd4452d14a311c7c61d647ed175068115de4a5cf792093ab4e244500"
+    },
+    "fixture_positive_inclusive_wall_ns": {
+      "parent": [
+        10000000000,
+        20000000000
+      ],
+      "child": [
+        11000000000,
+        12000000000
+      ]
+    },
+    "fixture_negative_inclusive_wall_ns": {
+      "parent": [
+        10000000000,
+        20000000000
+      ],
+      "child": [
+        21000000000,
+        22000000000
+      ]
+    },
+    "fixture_distinct_process_CPU_ns": {
+      "parent_composite": [
+        300000000,
+        600000000
+      ],
+      "child": [
+        70000000000,
+        70100000000
+      ],
+      "actual_reaped_cpu_seconds": 0.1
+    },
+    "input_provenance": "Exact executed probe source retained in tool-call history; all failures and result traces retained here."
+  },
+  "review_fixed_at_utc": "2026-10-10T16:59:24.822433+00:00"
+}
