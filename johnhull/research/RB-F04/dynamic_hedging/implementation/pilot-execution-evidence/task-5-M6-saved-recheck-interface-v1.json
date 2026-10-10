@@ -1,0 +1,56 @@
+{
+  "cost_endpoint": "progress/index/RSS included in class clocks; receipt metadata/write/stdout and prior setup in root enclosing receipt",
+  "formal_financial_qualification": "unknown",
+  "future_source_author": "progressive_graph_review",
+  "labels_reference": {
+    "all_original_N_label_values_compared": true,
+    "array_fields": "original shape/dtype descriptors including all11NxK samples",
+    "fields": "all original reconstructed label field names",
+    "raw_field": "labels",
+    "raw_reference": "same authenticated original reference",
+    "schema": "rb-f04-teacher-check-labels-reference-v1"
+  },
+  "portable_raw_reference": {
+    "artifact_context": "MUST NOT BE SERIALIZED; caller context only",
+    "node": "exact original date_index/spot/state input coordinates",
+    "node_index": "original zero-based index",
+    "path": "original node.path string",
+    "raw_binding": "exact existing native physical/literal binding if present",
+    "raw_sha256": "legacy original only when raw_binding absent",
+    "schema": "rb-f04-teacher-check-raw-reference-v1"
+  },
+  "report_contract": {
+    "all_11_original_label_arrays": true,
+    "all_native_bindings": true,
+    "all_node_SDE_flags": true,
+    "all_original_n": 1024,
+    "class_nodes": {
+      "Heston-coarse": 108,
+      "Heston-high": 156,
+      "local-coarse": 520,
+      "local-high": 1344
+    },
+    "full_cache_comparison": true,
+    "report_mode": "bounded",
+    "runtime_artifact_context_saved_in_report": false,
+    "top_success_status": "absent_per_original_full_report"
+  },
+  "saved_input_manifest_required": {
+    "all_original_n": 1024,
+    "all_original_nodes": 2128,
+    "files": {
+      "classes": "each4class -> complete WT-relative input SHA map including nativegrid/initial obligation/all node physical artifacts/old failure-cost receipts",
+      "shared": "WT-relative -> exact origin byte SHA for original field/banks and shared terminal/provenance receipts"
+    },
+    "generation_source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+    "history_cost_receipts": "terminal + each4class + driver:Heston/local references, authenticated in file maps; no expense re-addition",
+    "original_M6_terminal": true,
+    "original_raw_generation_not_reexecuted": true,
+    "schema": "rb-f04-M6-terminal-saved-recheck-inputs-v1"
+  },
+  "schema": "rb-f04-M6-saved-recheck-interface-v1",
+  "source_approval_required": "new_checker_source_bindings/identity/count/independent decision path+SHA must be fixed by root; generation source81 bound separately via immutable old snapshot",
+  "source_patch_not_yet_approved": true,
+  "status_boundary": "do not add success status or alter original raw statuses; success full/bounded original top status is absent; original cache-none cap remains unqualified",
+  "whole_N_SDE_flag": "raw_checks[*].full_saved_driver_sde_replayed is True only after actual all-original-N replay"
+}

@@ -1,0 +1,15 @@
+{
+  "added_functions": [
+    "closing_observation"
+  ],
+  "changed_functions": [
+    "class_decision",
+    "class_parent"
+  ],
+  "runtime_RNG_solver_worker": false,
+  "source81_allbytes_unchanged": true,
+  "source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "unchanged_financial_child_AST": true,
+  "unchanged_original_description_except_output_path": true,
+  "v1_allbytes_unchanged": true
+}

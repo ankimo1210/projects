@@ -1,0 +1,212 @@
+
+import json,hashlib,math,collections,zipfile,time,resource,sys,gc
+from pathlib import Path
+W=Path('/home/kazumasa/worktrees/johnhull-research-roadmap');D=W/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+R=W/'johnhull/research/RB-F04/dynamic_hedging';O=D/'task-5-current-full-teacher-observation-root-m6-v2';P=D/'task-5-current-full-teacher-independent-m6-v2'
+sys.path[:0]=[str(R),str(W/'johnhull/hullkit/src'),str(W/'deep_hedge_price/src')]
+import numpy as np
+import run_pilot as pilot
+import check_pilot as checker
+import _teacher_storage as storage
+import hullkit._dynamic_hedging_conditional as conditional
+def forbidden(*a,**k):raise AssertionError('new RNG/SDE/CF/PDE/solver or saved SDE checker prohibited')
+np.random.default_rng=forbidden;conditional.teacher_primitives=forbidden
+checker.check_teacher_record=forbidden;checker.check_teacher_grid_record=forbidden
+pilot.run_teacher_grid_job=forbidden;pilot.run_teacher_driver_job=forbidden
+T=time.perf_counter();CPU=time.process_time()
+def J(p):return json.loads(p.read_text())
+def canon(v):return json.dumps(v,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
+def sha(p):
+ h=hashlib.sha256()
+ with p.open('rb') as f:
+  for x in iter(lambda:f.read(8*1024**2),b''):h.update(x)
+ return h.hexdigest()
+def eq(a,b):assert a==b,(a,b)
+def approx(a,b):assert np.allclose(a,b,rtol=2e-9,atol=2e-10,equal_nan=True)
+B=J(D/'task-5-current-full-teacher-budget-root-fixed-v2.json');I=J(D/'task-5-current-full-teacher-initial-description-v2.json')
+C=J(O/'all-costs-and-decision.json');EC=J(D/'task-5-current-full-teacher-root-enclosing-cost-v2.json')
+def stable():return {k:[p for p,h in B[k].items() if sha(W/p)!=h] for k in ('source_bindings','input_file_bindings')}
+before=stable();eq(before,{'source_bindings':[],'input_file_bindings':[]})
+eq(len(B['source_bindings']),81);eq(len(B['input_file_bindings']),26)
+eq(sha(D/'task-5-current-full-teacher-budget-root-fixed-v2.json'),EC['prior_budget_sha256'])
+eq(EC['exit_code'],3);eq(EC['source81_stable'],True)
+assert B['root_preapproved'] and not B['formal_finance_approved']
+assert B['runtime_estimate_seconds'] is None and B['physical_compressed_prediction_bytes'] is None
+results={'scope':'original_M6_N1024_saved_resource_only','source_before':before,'classes':[],'drivers':[],
+'financial_qualification':'unknown','formal_pilot_main_phase_approved':False,'new_financial_RNG_solver_execution':False,
+'saved_SDE_checker_reexecuted':False,'huge_saved_checker_fully_decoded':False}
+checked=0
+def physical(p):
+ global checked
+ w=J(p/'metadata.json');rc=J(p/'receipt.json');eq((p/'receipt.json').read_bytes(),canon(rc))
+ eq(rc['metadata_sha256'],sha(p/'metadata.json'));eq(rc['arrays_sha256'],sha(p/'arrays.npz'))
+ eq(rc['artifact_sha256'],hashlib.sha256(canon({k:v for k,v in rc.items() if k!='artifact_sha256'})).hexdigest())
+ exp=pay=0;headers={}
+ with zipfile.ZipFile(p/'arrays.npz') as z:
+  for f in z.infolist():
+   assert f.filename.endswith('.npy')
+   with z.open(f) as s:
+    v=np.lib.format.read_magic(s)
+    shape,fort,dtype=(np.lib.format.read_array_header_1_0(s) if v==(1,0) else np.lib.format.read_array_header_2_0(s));off=s.tell()
+   assert not dtype.hasobject
+   nb=math.prod(shape)*dtype.itemsize;eq(nb+off,f.file_size)
+   name=f.filename[:-4];eq(w['arrays'][name],{'shape':list(shape),'dtype':dtype.str,'nbytes':nb})
+   headers[name]={'shape':list(shape),'dtype':dtype.str}
+   exp+=f.file_size;pay+=nb
+ eq(set(headers),set(w['arrays']));eq(exp,rc['uncompressed_bytes']);assert exp<=256*1024**2
+ checked+=1
+ return w,rc,headers,{'physical_npz_bytes':(p/'arrays.npz').stat().st_size,'payload_bytes':pay,'expanded_NPY_bytes':exp,
+ 'metadata_receipt_bytes':(p/'metadata.json').stat().st_size+(p/'receipt.json').stat().st_size}
+def packed(p):
+ w,rc,hs,total=physical(p);m=w['metadata'];parts={};used=collections.defaultdict(set)
+ for key,d in m.get('arrays',{}).items():
+  stop=0
+  for r in d['parts']:
+   eq(r['start'],stop);stop=r['stop'];pid=r['id'];vk=r['value_key']
+   if pid not in parts:
+    parts[pid]=physical(p/pid)
+    for k,v in parts[pid][3].items():total[k]+=v
+   pm,pr,ph,ps=parts[pid];eq(pm['metadata']['entries'][vk],{'array':key,'start':r['start'],'stop':r['stop']})
+   assert vk not in used[pid];used[pid].add(vk)
+   eq(ph[vk],{'shape':([r['stop']-r['start']]+d['shape'][1:]) if d['shape'] else [],'dtype':d['dtype']})
+  eq(stop,d['shape'][0] if d['shape'] else 1)
+ eq(set(parts),{s.name for s in p.iterdir() if s.is_dir()})
+ for pid,v in parts.items():eq(used[pid],set(v[2]))
+ return m,rc,parts,total
+def arr(p,m,ref):
+ d=m['arrays'][ref['__array__']];vals=[]
+ for r in d['parts']:
+  with np.load(p/r['id']/'arrays.npz',allow_pickle=False) as z:vals.append(z[r['value_key']])
+ x=np.concatenate(vals,axis=0) if d['shape'] else vals[0]
+ eq(list(x.shape),d['shape']);eq(x.dtype.str,d['dtype']);eq(hashlib.sha256(x.tobytes()).hexdigest(),d['sha256'])
+ return x
+def addcounts(c,a):
+ u,n=np.unique(a,return_counts=True)
+ c.update({str(k):int(v) for k,v in zip(u,n)})
+for model in ('Heston','local'):
+ p=O/'banks'/model/'actual-driver';dr,rc=pilot.read_pilot_artifact(p)
+ eq(dr['original_n'],1024);eq(dr['processed_n'],1024);eq(dr['unexecuted_n'],0)
+ eq(len(dr['calendar_times']),769);eq(len(dr['chunks']),4)
+ count=0
+ for raw in pilot.read_teacher_driver_chunks(dr):eq(raw['normal'].shape,(256,768,2));count+=len(raw['normal'])
+ eq(count,1024);eq(dr['seed'],138674072 if model=='Heston' else 1345225788)
+ sizes=collections.Counter()
+ for pth in [p,*[Path(dr['directory'])/v['path'] for v in dr['chunks']]]:
+  m,r,ps,s=packed(pth);sizes.update(s)
+ results['drivers'].append({'model':model,'N':1024,'seed':dr['seed'],'global_driver_id':dr['global_driver_id'],
+ 'shape':[1024,768,2],'normals_authenticated_saved_only':True,'original_normal_bytes':12582912,
+ 'physical_bytes':dict(sizes),'generation_cost_in_coarse_owner_only':True})
+ print('driver authenticated',model,flush=True)
+for row in C['classes']:
+ name=row['class'];spec=I['classes'][name];g=O/'classes'/name/'grid';n=spec['original_nodes'];K=spec['threshold_count']
+ m,rc,pp,fullsize=packed(g/'actual-full-teacher');t=m['tree'];nodes=t['nodes'];eq(len(nodes),n)
+ for k,v in [('original_n',1024),('planned_nodes',spec['planned_nodes']),('unexecuted_node_count',0),('status','executed'),
+ ('financial_qualification','unknown'),('seed',spec['seed']),('teacher_reference',None),('evaluation_domains',[None]*12)]:eq(t[k],v)
+ axes={k:arr(g/'actual-full-teacher',m,v) for k,v in t['axes'].items()}
+ eq(pilot.runner.payload_digest(axes),spec['axes_payload_sha256']);eq(axes['threshold'].shape,(12,K))
+ expected=[]
+ for di in range(12):
+  spots=(axes['t0_spot'] if di==0 else axes['spot']) if spec['model']=='local' else [100.]
+  expected.extend((di,float(sp),float(st)) for sp in spots for st in axes['state'])
+ eq([(z['date_index'],z['spot'],z['state']) for z in nodes],expected)
+ initial,_=pilot.read_pilot_artifact(g/'initial-original-obligation')
+ eq(initial['original_n'],1024);assert np.isnan(initial['f']).all() and np.isnan(initial['f_x']).all()
+ eq(set(np.asarray(initial['node_status']).tolist()),{'unprocessed'});eq(len(initial['node_status']),n)
+ eq(initial['driver_global_id'],t['driver']['global_driver_id']);del initial
+ _,_,_,initialsize=packed(g/'initial-original-obligation')
+ bydate=collections.defaultdict(list)
+ for i,node in enumerate(nodes):bydate[node['date_index']].append(i)
+ sample_ids=sorted({i for vals in bydate.values() for i in (vals[0],vals[-1])});eq(len(sample_ids),24)
+ statuses=collections.Counter();primstatuses=collections.Counter();failure=collections.Counter()
+ totals=collections.Counter();valid=invalid=0;sample_results=[]
+ for i,node in enumerate(nodes):
+  p=Path(node['path']);eq(p,g/'work'/('node'+str(i).zfill(4)))
+  nm,nrc,parts,size=packed(p);nt=nm['tree'];desc=nm['teacher_storage'];pr=nt['primitives'];lab=nt['labels']
+  for k,v in [('kind','teacher'),('original_n',1024),('model',spec['model']),('seed',spec['seed']),
+   ('date_index',node['date_index']),('financial_qualification','unknown'),('global_driver_id',t['driver']['global_driver_id'])]:eq(nt[k],v)
+  eq(pr['spot'],node['spot']);eq(pr['state'],node['state']);eq(pr['N'],1024);eq(pr['original_path_count'],1024)
+  eq(lab['N'],1024);eq(lab['blocks'],16);eq(lab['block_path_count'],64)
+  eq(desc['source_bindings'],storage.source_bindings());eq(desc['recipe'],storage.RECIPE)
+  eq(set(desc['samples']),set(storage.SAMPLE_FIELDS));assert not (set(storage.SAMPLE_FIELDS)&set(lab))
+  for v in desc['samples'].values():eq(v,{'shape':[1024,K],'dtype':'<f8'})
+  origin={'root':nrc['artifact_sha256'],'packs':{k:v[1]['artifact_sha256'] for k,v in sorted(parts.items())}}
+  eq(node['raw_binding'],{'kind':'teacher_recipe_physical_v1','artifact_sha256':hashlib.sha256(canon(origin)).hexdigest(),
+   'root_artifact_sha256':origin['root'],'packs':origin['packs'],'recipe':desc['recipe'],'source_bindings':desc['source_bindings']})
+  eq(arr(p,nm,nt['path_ids']).tolist(),list(range(1024)));eq(arr(p,nm,nt['cluster_ids']).tolist(),(np.arange(1024)//64).tolist())
+  fix=arr(p,nm,pr['fixing_indices']);step=nm['arrays'][pr['local_step_status']['__array__']]
+  eq(step['shape'],[1024,int(fix[-1]) if len(fix) else 0]);eq(step['dtype'],'|u1')
+  for k in storage._FLOAT_PATHS:
+   d=nm['arrays'][pr[k]['__array__']];eq(d['shape'],[1024]);eq(d['dtype'],'<f8')
+  mask=arr(p,nm,pr['path_mask']);valid+=int(mask.sum());invalid+=int((~mask).sum())
+  addcounts(primstatuses,arr(p,nm,pr['primitive_status']));addcounts(failure,arr(p,nm,pr['failure_reasons']))
+  status=arr(p,nm,lab['status']);addcounts(statuses,status);eq(arr(p,nm,lab['status_reasons']).tolist(),status.tolist())
+  totals.update(size)
+  if i in sample_ids:
+   physical_payload=pilot._read_packed_pilot(p,nm,nrc)[0];restored=storage.restore_teacher(physical_payload,desc)
+   L=restored['labels'];pr=restored['primitives'];x=restored['thresholds'][None,:]
+   b,c,mu,sig,z=[pr[k][:,None] for k in ('b','c','mu','sigma','last_z')]
+   approx(np.maximum(b+c*np.exp(mu+sig*z)-x,0),L['raw_samples'])
+   samples=np.stack([L['raw_samples'],L['conditioned_samples'],L['cv_samples']],axis=-1)
+   approx(samples.mean(axis=0),L['component_means']);approx(samples.std(axis=0,ddof=1)/32,L['component_se'])
+   blocks=samples.reshape(16,64,K,3).mean(axis=1);approx(blocks,L['block_means'])
+   flat=blocks.reshape(16,-1);center=flat-flat.mean(axis=0);approx(center.T@center/(15*16),L['block_covariance'])
+   sample_results.append({'node':i,'date_index':node['date_index'],'all11_sample_fields_restored':True,
+   'raw_payoff_mean_SE_16block_price_covariance_independent':True,'full_original_N':1024})
+   del physical_payload,restored,L,pr,samples,blocks
+  if i%128==0:gc.collect()
+ saved={'exists':(g/'actual-saved-check/metadata.json').exists(),'fully_decoded':False}
+ if saved['exists']:
+  cm,cr,cp,cs=packed(g/'actual-saved-check');ct=cm['tree'];checks=ct['raw_checks']
+  eq(ct['original_n'],1024);eq(ct['executed_node_count'],n);eq(ct['original_node_count'],n);eq(len(checks),n)
+  eq(ct['financial_qualification'],'unknown');unverified=collections.Counter()
+  for v in checks:unverified.update(v['unverified']);eq(v['original_n'],1024);eq(v['financial_qualification'],'unknown')
+  saved.update({'physical_bytes':cs,'all_pack_receipts_NPY_headers_authenticated':True,'rawcheck_count':n,
+  'rawcheck_replayed_flag_count':sum(bool(v['full_saved_driver_sde_replayed']) for v in checks),
+  'invalid_path_count_sum':sum(v['invalid_path_count'] for v in checks),
+  'unknown_node_count_sum':sum(v['unknown_node_count'] for v in checks),'unverified':dict(unverified),
+  'source_sequence_implies_checker_return_before_write':True})
+ phase=next(r for r in row['phase_receipts'] if r['phase']=='grid')
+ eq(phase,J(g/'parent-cost-and-decision.json'));progress=J(g/'progress.json');eq(progress,phase['child_progress'])
+ stages={s['stage']:s for s in progress['stages']};assert 'full_teacher_written_and_read' in stages
+ eq(progress['executed_nodes'],n);eq(progress['unexecuted_nodes'],0);eq(progress['raw_status'],'executed')
+ saved['completed_checkpoint']='actual_full_saved_driver_SDE_and_cache_checker_returned' in stages
+ eq(progress['full_teacher_receipt'],rc)
+ approx(row['wall_seconds'],row['stopped']['wall']-row['started']['wall'])
+ assert row['wall_seconds']<=row['wall_limit_seconds'];eq(row['overrun_seconds'],0.0);eq(row['driver_cost_added_again'],False)
+ for v in row['phase_receipts']:
+  approx(v['wall_seconds'],v['stopped']['wall']-v['started']['wall'])
+  assert row['started']['wall']<=v['started']['wall']<=v['stopped']['wall']<=row['stopped']['wall']
+ if name=='Heston-coarse':eq(phase['status'],'completed');eq(phase['exit_code'],0);assert saved['completed_checkpoint']
+ else:
+  eq(phase['status'],'failed_at_actual_cap');eq(phase['exit_code'],-9);assert not saved['completed_checkpoint']
+  eq(phase['cap_evidence']['limit_bytes'],4294967296);assert phase['cap_evidence']['observed_bytes']>4294967296
+  eq(phase['cap_evidence']['observed_bytes'],phase['observed_child_RSS_peak_bytes'])
+ results['classes'].append({'class':name,'N':1024,'thresholds':K,'nodes':n,'dates':12,
+ 'all_original_geometry_physical_bindings_root_pack_receipts_headers':True,'full_status_shapes_dtype_retained':True,
+ 'valid_primitive_paths':valid,'invalid_primitive_paths':invalid,'primitive_status':dict(primstatuses),
+ 'failure_reasons':dict(failure),'label_status':dict(statuses),'original_NaN_unprocessed_retained':True,
+ 'native_node_storage_bytes':dict(totals),'full_teacher_container_bytes':fullsize,'initial_obligation_bytes':initialsize,
+ 'saved_checker':saved,'sampled_statistics':sample_results,'sample_count':24,'class_status':row['status'],
+ 'grid_phase_status':phase['status'],'grid_exit_code':phase['exit_code'],'cap_evidence':phase['cap_evidence'],
+ 'class_wall_seconds':row['wall_seconds'],'class_CPU_seconds':row['parent_cpu_seconds']+row['child_cpu_seconds'],
+ 'phase_peak_RSS_bytes':phase['observed_child_RSS_peak_bytes'],'RSS_unknown_samples':phase['RSS_unknown_sample_count'],
+ 'progress_last_kernel_RSS_bytes':progress.get('process_peak_rss_bytes'),
+ 'after_full_raw_write_read_wall_until_child_stop':phase['stopped']['wall']-stages['full_teacher_written_and_read']['clock']['wall']})
+ print('class verified',name,n,'cap',phase['cap_evidence'],'nativebytes',dict(totals),flush=True)
+ del m,t,nodes;gc.collect()
+approx(C['class_wall_sum_inclusive_seconds'],sum(r['wall_seconds'] for r in C['classes']))
+approx(C['class_cpu_sum_inclusive_seconds'],sum(r['parent_cpu_seconds']+r['child_cpu_seconds'] for r in C['classes']))
+approx(EC['whole_wall_seconds'],EC['whole_wall_stop']-EC['whole_wall_start'])
+assert EC['whole_wall_seconds']>=C['class_wall_sum_inclusive_seconds']
+eq(len(C['unique_shared_driver_parent_receipts']),2);eq([r['driver_generated_in_this_class'] for r in C['classes']],[True,False,True,False])
+eq(C['driver_cost_is_in_owner_class_and_not_added_again'],True)
+results['resource_cost']={'root_outer_wall_seconds':EC['whole_wall_seconds'],
+ 'root_outer_CPU_seconds':EC['CPU_inner_parent_child_tree_seconds'],'class_wall_sum_seconds':C['class_wall_sum_inclusive_seconds'],
+ 'class_CPU_sum_seconds':C['class_cpu_sum_inclusive_seconds'],'outer_wall_overhead_seconds':EC['whole_wall_seconds']-C['class_wall_sum_inclusive_seconds'],
+ 'driver_cost_counted_once':True,'no_inner_outer_doublecount':True,'actual_measurement_exit3_preserved':True,
+ 'external_observer_CPU_and_final_receipt_save':'unknown','formal_rate_volume_forecast':None}
+after=stable();eq(after,before);results['source_after']=after
+results['review_cost']={'wall_seconds':time.perf_counter()-T,'CPU_seconds':time.process_time()-CPU,
+ 'process_kernel_peak_RSS_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,'physical_artifacts_checked':checked}
+Path(str(P)+'-results.json').write_text(json.dumps(results,ensure_ascii=False,indent=2))
+print('PASS',json.dumps(results['review_cost']),flush=True)

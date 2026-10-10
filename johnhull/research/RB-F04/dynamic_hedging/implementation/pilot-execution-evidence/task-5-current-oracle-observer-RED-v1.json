@@ -1,0 +1,231 @@
+{
+  "FAIL": 6,
+  "PASS": 5,
+  "RNG_solver_worker": false,
+  "cpu_seconds": 0.0026320350000000013,
+  "financial_imports_or_execution": false,
+  "formal_financial_qualification": "unknown",
+  "probes": [
+    {
+      "PASS": true,
+      "actual": "completed_component",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "completed_component",
+      "name": "complete",
+      "progress_preserved_in_probe_input": {
+        "original_query_paths": 106496,
+        "raw_receipt": {
+          "binding": "saved fixture"
+        },
+        "stages": [
+          {
+            "stage": "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch"
+          },
+          {
+            "stage": "full_returned_raw_saved_before_checker"
+          },
+          {
+            "stage": "raw_read_driver_mapping_and_all_native_generator_expenses_retained"
+          },
+          {
+            "stage": "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned"
+          },
+          {
+            "stage": "current_source_stable"
+          }
+        ],
+        "status": "completed"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": "failed_at_declared_cap",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "failed_at_declared_cap",
+      "name": "fully_retained_native_cap",
+      "progress_preserved_in_probe_input": {
+        "native_cap_evidence": {
+          "cap_reached": true
+        },
+        "original_query_paths": 106496,
+        "raw_receipt": {
+          "binding": "saved fixture"
+        },
+        "stages": [
+          {
+            "stage": "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch"
+          },
+          {
+            "stage": "full_returned_raw_saved_before_checker"
+          },
+          {
+            "stage": "raw_read_driver_mapping_and_all_native_generator_expenses_retained"
+          },
+          {
+            "stage": "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned"
+          },
+          {
+            "stage": "current_source_stable"
+          }
+        ],
+        "status": "failed_at_declared_cap"
+      }
+    },
+    {
+      "PASS": false,
+      "actual": "failed_at_declared_cap",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "unclosed_declared_cap_evidence_incomplete",
+      "name": "incomplete_native_cap",
+      "progress_preserved_in_probe_input": {
+        "native_cap_evidence": {
+          "cap_reached": true
+        },
+        "stages": [],
+        "status": "failed_at_declared_cap"
+      }
+    },
+    {
+      "PASS": false,
+      "actual": "failed_at_actual_cap",
+      "actual_cap_preserved_in_probe_input": {
+        "limit_seconds": 600,
+        "metric": "enclosing_class_wall",
+        "observed_seconds": 601
+      },
+      "expected": "unclosed_source_or_solver_defect_with_actual_cap",
+      "name": "fault_and_actual_cap_order_unknown",
+      "progress_preserved_in_probe_input": {
+        "error": "saved input mismatch",
+        "status": "unclosed_source_or_solver_defect"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": "failed_at_actual_cap",
+      "actual_cap_preserved_in_probe_input": {
+        "limit_seconds": 600,
+        "metric": "enclosing_class_wall",
+        "observed_seconds": 601
+      },
+      "expected": "failed_at_actual_cap",
+      "name": "actual_kill_without_return",
+      "progress_preserved_in_probe_input": null
+    },
+    {
+      "PASS": true,
+      "actual": "unclosed_missing_child_evidence",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "unclosed_missing_child_evidence",
+      "name": "missing_child",
+      "progress_preserved_in_probe_input": null
+    },
+    {
+      "PASS": false,
+      "actual": "unclosed_source_or_solver_defect",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "unclosed_child_evidence_incomplete",
+      "name": "no_cap_missing_checkpoint",
+      "progress_preserved_in_probe_input": {
+        "original_query_paths": 106496,
+        "raw_receipt": {
+          "binding": "saved fixture"
+        },
+        "stages": [],
+        "status": "completed"
+      }
+    },
+    {
+      "PASS": false,
+      "actual": "completed_component",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "unclosed_declared_cap_evidence_incomplete",
+      "name": "complete_claim_native_cap_present",
+      "progress_preserved_in_probe_input": {
+        "native_cap_evidence": {
+          "cap_reached": true
+        },
+        "original_query_paths": 106496,
+        "raw_receipt": {
+          "binding": "saved fixture"
+        },
+        "stages": [
+          {
+            "stage": "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch"
+          },
+          {
+            "stage": "full_returned_raw_saved_before_checker"
+          },
+          {
+            "stage": "raw_read_driver_mapping_and_all_native_generator_expenses_retained"
+          },
+          {
+            "stage": "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned"
+          },
+          {
+            "stage": "current_source_stable"
+          }
+        ],
+        "status": "completed"
+      }
+    },
+    {
+      "PASS": false,
+      "actual": "failed_at_actual_cap",
+      "actual_cap_preserved_in_probe_input": {
+        "limit_seconds": 600,
+        "metric": "enclosing_class_wall",
+        "observed_seconds": 601
+      },
+      "expected": "failed_at_actual_and_declared_cap",
+      "name": "native_and_actual_caps",
+      "progress_preserved_in_probe_input": {
+        "native_cap_evidence": {
+          "cap_reached": true
+        },
+        "original_query_paths": 106496,
+        "raw_receipt": {
+          "binding": "saved fixture"
+        },
+        "stages": [
+          {
+            "stage": "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch"
+          },
+          {
+            "stage": "full_returned_raw_saved_before_checker"
+          },
+          {
+            "stage": "raw_read_driver_mapping_and_all_native_generator_expenses_retained"
+          },
+          {
+            "stage": "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned"
+          },
+          {
+            "stage": "current_source_stable"
+          }
+        ],
+        "status": "failed_at_declared_cap"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": "unclosed_source_or_solver_defect",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "unclosed_source_or_solver_defect",
+      "name": "native_source_fault",
+      "progress_preserved_in_probe_input": {
+        "error": "saved input mismatch",
+        "status": "unclosed_source_or_solver_defect"
+      }
+    },
+    {
+      "PASS": false,
+      "actual": "closing_observation absent",
+      "expected": "pure postexit observer",
+      "name": "postexit_wall_RSS_observer"
+    }
+  ],
+  "scope": "stdlib AST decision and pure synthetic observer evidence only",
+  "source_sha256": "abd8b96dbdc10cedc03075fea8ab2028c6fa1b24e6c1d434795271930919f397",
+  "wall_seconds": 0.002631381001265254
+}

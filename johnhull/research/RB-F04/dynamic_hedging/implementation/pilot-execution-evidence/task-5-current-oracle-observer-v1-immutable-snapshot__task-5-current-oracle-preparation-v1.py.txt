@@ -1,0 +1,257 @@
+"""D-only deterministic metadata preparation; no financial module/RNG import."""
+from __future__ import annotations
+
+import hashlib
+import json
+from pathlib import Path
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+GRAPH = D / "task-5-full-progressive-pilot-plan-draft-source-unit-v3"
+FIELD = D / "task-5-actual-pilot-input-preparation-v4-current-field"
+PREPARED = D / "task-5-actual-pilot-input-preparation-v4.json"
+OUT = D / "task-5-current-oracle-observation-root-m7-v1"
+CLASSES = ("Heston", "local")
+CONTROLS = {"log_half_width": 1.8, "space_nodes": 2401,
+            "time_steps": 1920, "upper": 250.0}
+
+
+def digest(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"),
+                                    allow_nan=False).encode()).hexdigest()
+
+
+def sha(path):
+    result = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024**2), b""):
+            result.update(block)
+    return result.hexdigest()
+
+
+def literal_identity(value, descriptors):
+    if isinstance(value, dict) and set(value) == {"__array__"}:
+        descriptor = descriptors[value["__array__"]]
+        binding = {key: descriptor[key] for key in ("shape", "dtype", "sha256")}
+        return digest({"tree": {"__array__": "a000000"},
+                       "arrays": {"a000000": binding}})
+    if isinstance(value, dict):
+        value = {k: literal_identity(v, descriptors) for k, v in value.items()}
+    elif isinstance(value, list):
+        value = [literal_identity(v, descriptors) for v in value]
+    return digest({"tree": value, "arrays": {}})
+
+
+def dump(path, value):
+    path.write_text(json.dumps(value, indent=2, sort_keys=True,
+                               allow_nan=False) + chr(10))
+
+
+def main():
+    meta = json.loads((GRAPH / "metadata.json").read_text())["metadata"]
+    graph, descriptors = meta["tree"], meta["arrays"]
+    jobs = {row["id"]: row for row in graph["jobs"]}
+    assert len(jobs) == 3138
+    assert len(graph["case_plan"]) == 121 and len(graph["attempt_plan"]) == 51
+    prep = json.loads(PREPARED.read_text())
+    # Locate the actual saved state roster without synthesizing a replacement.
+    def find_state00(value):
+        if isinstance(value, dict):
+            if value.get("id") == "state00":
+                return value
+            for child in value.values():
+                found = find_state00(child)
+                if found is not None:
+                    return found
+        elif isinstance(value, list):
+            for child in value:
+                found = find_state00(child)
+                if found is not None:
+                    return found
+        return None
+    state = find_state00(prep)
+    assert state is not None
+    fm = json.loads((FIELD / "metadata.json").read_text())["metadata"]
+    ft, fa = fm["tree"], fm["arrays"]
+    assert fa[ft["raw_values"]["__array__"]]["shape"] == [257, 321]
+    assert (ft["order"], ft["frequency_scale"], ft["density_floor"]) == (1024, 512, 1e-10)
+    specs, dependencies, prior_costs = {}, {}, {}
+    source_evidence = WT / "johnhull/research/RB-F04/dynamic_hedging"
+    source_read_snapshot = {str(p.relative_to(WT)): sha(p) for p in (
+        source_evidence / "run_pilot.py", source_evidence / "reference_methods.py",
+        source_evidence / "check_pilot.py")}
+    roots = [GRAPH, FIELD]
+    input_files = [PREPARED, D / "task-5-progressive-pilot-plan-producer-v3.py",
+                   D / "task-5-current-independent-call-table-initial-description-v1.json",
+                   D / "task-5-current-independent-call-table-budget-root-fixed-v2.json"]
+    for class_id in CLASSES:
+        row = jobs[f"oracle:state00:{class_id}:referenceN4096"]
+        args = row["arguments"]
+        model = "heston" if class_id == "Heston" else "local"
+        table_id = f"independent-table:state00:{class_id}"
+        table_row = jobs[table_id]
+        assert row["operation"] == "oracle" and row["original_n"] == 4096
+        assert args["model"] == model and args["n_paths"] == 4096
+        assert args["seed"] == prep["declared_stream_namespaces"]["oracle"][0] == 3631740690
+        assert args["call_table"] == {"job": table_id}
+        assert args["surface"] == {"field_job": "field-current"}
+        assert args["parameters"] == {"input": "parameters"}
+        assert args["steps_per_year"] == 1536 and args["chunk_paths"] == 256
+        assert table_row["arguments"]["controls"] == {}
+        input_state = {k: args[k] for k in ("date", "spot", "quote", "memory_sum", "memory_count")}
+        assert all(input_state[k] == state[k] for k in input_state)
+        assert input_state == {"date": 0.0, "spot": 99.95, "quote": 9.686255823501824,
+                               "memory_sum": 0.0, "memory_count": 0}
+        observed = D / ("task-5-current-independent-call-table-observation-root-"
+                        + ("m4" if model == "heston" else "m5") + "-v3")
+        artifact = observed / "actual-independent-call-table-raw"
+        roots.append(artifact)
+        input_files += [observed / "parent-cost-and-decision.json",
+                        observed / "initial-description.json", observed / "prior-root-budget.json",
+                        observed / "progress.json"]
+        tm = json.loads((artifact / "metadata.json").read_text())["metadata"]
+        tt, ta = tm["tree"], tm["arrays"]
+        assert tt["schema"] == "rb-f04-independent-call-table-v1"
+        assert tt["model"] == model and tt["parameters"] == prep["parameters"]
+        assert tt["controls"] == CONTROLS
+        for axis in ("times", "values", "wing_boundaries", "z_nodes", "support_mask"):
+            marker = ft["support_mask"] if axis == "support_mask" else ft["field"][axis]
+            fd = fa[marker["__array__"]]
+            signature = tt["surface_signature"][axis]
+            assert fd["shape"] == signature["shape"] and fd["sha256"] == signature["sha256"]
+        gs = descriptors[table_row["arguments"]["state_nodes"]["__array__"]]
+        ts = ta[tt["state_nodes"]["__array__"]]
+        assert all(gs[k] == ts[k] for k in ("shape", "dtype", "sha256"))
+        prior = json.loads((observed / "parent-cost-and-decision.json").read_text())
+        prior_costs[class_id] = {
+            "existing_component_receipt": str((observed / "parent-cost-and-decision.json").relative_to(WT)),
+            "wall_seconds": prior["wall_seconds"], "cpu_seconds": prior["cpu_seconds"],
+            "child_peak_rss_bytes": prior["child_peak_rss_bytes"],
+            "included_in_new_M7_clock": False, "not_an_oracle_rate_or_runtime_prediction": True}
+        dependency = {
+            "job_id": table_id, "saved_raw_artifact": str(artifact.relative_to(WT)),
+            "graph_planned_arguments_sha256": literal_identity(table_row["arguments"], descriptors),
+            "graph_original_controls": {}, "measurement_controls": CONTROLS,
+            "controls_delta": "M4/M5 separately budgeted explicit controls replace graph controls={}; axes/state roster/current field unchanged",
+            "reuse_approval_status": "pending_explicit_root_component_dependency_reuse",
+            "native_financial_qualification": tt["financial_qualification"],
+            "prices_shape": ta[tt["prices"]["__array__"]]["shape"],
+            "effective_refinement_kinds": tt["refinement_kinds"],
+            "surface_signature": tt["surface_signature"],
+            "state_nodes_binding": {k: gs[k] for k in ("shape", "dtype", "sha256")},
+        }
+        dependencies[class_id] = dependency
+        query_ids = ["base"] + [f"{axis}{sign}.{width}"
+                               for axis in ("S", "Q") for width in ("1", ".5", "2")
+                               for sign in ("+", "-")]
+        queries = [{"id": "base", "spot": args["spot"], "quote": args["quote"]}]
+        for axis, bump in (("S", args["spot_bump"]), ("Q", args["quote_bump"])):
+            for width in (1.0, .5, 2.0):
+                for sign in (1, -1):
+                    queries.append({"id": query_ids[len(queries)],
+                                    "spot": args["spot"] + sign * bump * width if axis == "S" else args["spot"],
+                                    "quote": args["quote"] + sign * bump * width if axis == "Q" else args["quote"]})
+        measured = dict(args, wall_cap_seconds=600.0)
+        specs[class_id] = {
+            "job_id": row["id"], "operation": "oracle", "model": model,
+            "original_n": 4096, "seed": 3631740690, "date": 0.0,
+            "stream_namespace": "oracle", "stream_purpose": "independent_quote_positions",
+            "not_teacher_principal_or_reference_seed": True, "input_state": input_state,
+            "call_table_dependency": dependency,
+            "query_ids": query_ids, "queries": queries, "original_query_count": 13,
+            "coarse_fine_levels": [768, 1536], "width_multipliers": [1.0, .5, 2.0],
+            "spot_bump": .02, "quote_bump": 1e-4,
+            "planned_typed_arguments": args,
+            "planned_arguments_sha256": literal_identity(args, descriptors),
+            "measurement_typed_arguments": measured,
+            "measurement_typed_arguments_sha256": literal_identity(measured, descriptors),
+            "override_keys": ["wall_cap_seconds"],
+            "runtime_additional_keys": ["deadline_wall"],
+            "override_rationale": "administrative enclosing class cap; original finance/seed/queries unchanged; observer output is separate and work_directory is not a worker kwarg",
+            "planned_prediction": row["prediction"],
+            "actual_full_generation_payoff_transitions": 13 * 4096 * (768 + 1536),
+            "driver_transitions": 4096 * 1536, "declared_conservative_total_path_steps": 26 * 4096 * 1536,
+            "financial_child_count": 26, "child_boundary": "level_query",
+            "driver_chunks": 16, "driver_chunk_paths": 256,
+            "seed_child_mapping": "SeedSequence[parent_seed,7426,chunk_index]",
+            "driver_fine_chunk_bytes": 256 * 1536 * 2 * 8,
+            "driver_native_max_live_chunk_bytes": 256 * 1536 * 2 * 8 * 2,
+            "full_conceptual_fine_normals_bytes": 4096 * 1536 * 2 * 8,
+            "native_driver_normals_saved": False,
+            "native_driver_maps_hashes_and_clocks_retained": True,
+            "generator_expenses_retained_in_native_raw": True,
+            "saved_checker_work": "all 13 original arrays; 2 scheme levels; 3 widths; 16 blocks/covariance; deterministic approximate arithmetic",
+            "saved_checker_SDE_replay": False,
+            "saved_checker_financial_unverified": ["independent_path_generation", "full_common_domain_call_fit"],
+            "payoff_expanded_bytes_lower_bound": 2 * 13 * 4096 * 8,
+            "status_expanded_bytes_lower_bound": 2 * 13 * 4096 * 2,
+            "first_failure_expanded_bytes_lower_bound": 2 * 13 * 4096 * 8,
+            "actual_physical_expanded_bytes_and_compression_pending": True,
+            "wall_limit_seconds": 600.0, "rss_limit_bytes": 4 * 1024**3,
+        }
+        assert specs[class_id]["planned_prediction"]["total_path_steps"] == 163577856
+    bound = {}
+    for root in roots:
+        for path in sorted(root.rglob("*")):
+            if path.is_file():
+                bound[str(path.relative_to(WT))] = sha(path)
+    for path in input_files:
+        bound[str(path.relative_to(WT))] = sha(path)
+    description = {
+        "schema": "rb-f04-current-oracle-initial-description-v1",
+        "scope": "M7_original_state00_N4096_two_independent_oracle_components_only",
+        "graph_counts": {"jobs": 3138, "cases": 121, "attempts": 51},
+        "graph_artifact": str(GRAPH.relative_to(WT)), "field_artifact": str(FIELD.relative_to(WT)),
+        "prepared_input_json": str(PREPARED.relative_to(WT)),
+        "field_shape": [257, 321], "field_order": 1024, "field_frequency_scale": 512,
+        "field_density_floor": 1e-10, "original_selected_state00": state,
+        "all_stream_namespace_bindings": prep["declared_stream_namespaces"],
+        "classes": specs, "dependencies": dependencies, "dependency_prior_costs": prior_costs,
+        "measurement_output_root": str(OUT),
+        "read_source_snapshot_only_not_approval": source_read_snapshot,
+        "financial_worker_or_RNG_executed": False, "source_approval_status": "pending_new_codec_actual_closure",
+        "formal_finance_approved": False}
+    description_path = D / "task-5-current-oracle-initial-description-v1.json"
+    dump(description_path, description)
+    budget = {
+        "schema": "rb-f04-current-oracle-prior-budget-v1", "scope": description["scope"],
+        "root_preapproved": False, "formal_finance_approved": False,
+        "source_approval_status": "pending_new_codec_actual_closure",
+        "source_approval_evidence": None, "source_bindings": None,
+        "source_identity_sha256": None, "source_file_count": None,
+        "dependency_reuse_approval_status": "pending_explicit_root_component_dependency_reuse",
+        "dependency_approval_evidence": None,
+        "allowed_classes": list(CLASSES), "classes": specs,
+        "wall_limit_seconds_per_class": {c: 600.0 for c in CLASSES},
+        "wall_cap_basis": "no measured full state00 oracle rate; 600s per genuine class is an administrative candidate, not a runtime prediction",
+        "rss_limit_bytes": 4 * 1024**3,
+        "rss_metric": "maximum_individual_parent_or_child_process_RSS_not_AS",
+        "probe_source_sha256": sha(D / "task-5-current-oracle-measurement-v1.py"),
+        "initial_description_sha256": sha(description_path),
+        "input_file_bindings": bound, "measurement_output_root": str(OUT),
+        "runtime_estimate_seconds": None, "expanded_bytes_prediction": None,
+        "budget_includes": ["current source checks/imports", "immutable graph/field/full independent table read",
+                            "full initial NaN/status obligation write", "13 quote refits",
+                            "baseline direct independent CF/PDE selected-call refinement",
+                            "reserved independent driver generation for all 16 chunks",
+                            "original 13 queries x 2 levels x all N4096 payoffs",
+                            "complete returned raw before-check write/read",
+                            "saved deterministic all-array checker and saved result write/read",
+                            "all available expenses/unknown/failure/cap evidence and source stability"],
+        "pending_before_execution": ["current codec and actual source closure independent approval",
+                                     "root explicit approval of M4/M5 original-controls={} delta/reuse",
+                                     "separate root fixed budget/source/input binding",
+                                     "MemAvailable/RSS and actual free storage confirmation"],
+        "driver_cost_rule": "native expense already included in dispatch and class parent; driver_map is alias evidence, not a second cost; Heston/local each performs original own generation",
+        "prior_M4_M5_cost_rule": "old genuine CF/PDE costs retained as history; do not add again as new M7 execution",
+        "failure_rule": "actual parent cap, source-declared cap, missing/unknown raw, source/solver fault distinct; never zero-fill unseen finance",
+        "status": "candidate_only_unexecuted",
+    }
+    dump(D / "task-5-current-oracle-budget-candidate-v1.json", budget)
+    print(json.dumps({"classes": list(specs), "input_binding_files": len(bound),
+                      "N": 4096, "queries": 13, "levels": [768, 1536],
+                      "budgetfalse": True, "financial_execution": False}, indent=2))
+
+
+if __name__ == "__main__":
+    main()

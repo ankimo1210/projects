@@ -1,0 +1,63 @@
+{
+  "scope": "isolated administrative parent-decision probes only",
+  "financial_worker_or_RNG": false,
+  "status": "PASS",
+  "source_function_sha256": "b7b837f1bc27f44d3c544b45ce50c23e0d4bf20f181ae47193765b7773d6bdd0",
+  "probes": [
+    {
+      "probe": "driver full evidence",
+      "expected": "completed",
+      "actual": "completed"
+    },
+    {
+      "probe": "grid full evidence",
+      "expected": "completed",
+      "actual": "completed"
+    },
+    {
+      "probe": "driver declared cap",
+      "expected": "failed_at_declared_cap",
+      "actual": "failed_at_declared_cap"
+    },
+    {
+      "probe": "grid declared cap",
+      "expected": "failed_at_declared_cap",
+      "actual": "failed_at_declared_cap"
+    },
+    {
+      "probe": "actual parent cap",
+      "expected": "failed_at_actual_cap",
+      "actual": "failed_at_actual_cap"
+    },
+    {
+      "probe": "zero exit missing progress",
+      "expected": "unclosed_missing_child_evidence",
+      "actual": "unclosed_missing_child_evidence"
+    },
+    {
+      "probe": "zero exit no final stage",
+      "expected": "unclosed_source_or_solver_defect",
+      "actual": "unclosed_source_or_solver_defect"
+    },
+    {
+      "probe": "zero exit incomplete grid",
+      "expected": "unclosed_source_or_solver_defect",
+      "actual": "unclosed_source_or_solver_defect"
+    },
+    {
+      "probe": "cap status without real evidence",
+      "expected": "unclosed_source_or_solver_defect",
+      "actual": "unclosed_source_or_solver_defect"
+    },
+    {
+      "probe": "source fault with cap alias",
+      "expected": "unclosed_source_or_solver_defect",
+      "actual": "unclosed_source_or_solver_defect"
+    },
+    {
+      "probe": "grid no saved checker",
+      "expected": "unclosed_source_or_solver_defect",
+      "actual": "unclosed_source_or_solver_defect"
+    }
+  ]
+}

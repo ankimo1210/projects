@@ -1,0 +1,712 @@
+"""Unexecuted M6 saved-only recheck observer; future bounded source needs approval.
+
+The false candidate forbids imports/execution. Original generated teachers/drivers
+and all failed original check costs remain history. No financial generation occurs.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import hashlib
+import inspect
+import json
+import os
+import resource
+import subprocess
+import sys
+import time
+import traceback
+from datetime import UTC, datetime
+from pathlib import Path
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+R = WT / "johnhull/research/RB-F04/dynamic_hedging"
+DESCRIPTION = D / "task-5-M6-saved-recheck-initial-description-v1.json"
+SCOPE = "M6_saved_original_full_teacher_N1024_four_classes_bounded_check_only"
+CLASSES = ("Heston-coarse", "Heston-high", "local-coarse", "local-high")
+CAPS = {"Heston-coarse": 300.0, "Heston-high": 300.0, "local-coarse": 600.0, "local-high": 900.0}
+COUNTS = {"Heston-coarse": 108, "Heston-high": 156, "local-coarse": 520, "local-high": 1344}
+RSS_CAP = 4 * 1024**3
+SAMPLE_FIELDS = (
+    "raw_samples",
+    "conditioned_samples",
+    "cv_samples",
+    "f_samples",
+    "f_x_samples",
+    "raw_x_samples",
+    "conditioned_x_samples",
+    "unreplaced_cv_samples",
+    "unreplaced_cv_x_samples",
+    "aux_raw_samples",
+    "aux_conditioned_samples",
+)
+REQUIRED_STAGES = {
+    "root_prior_old_origin_new_checker_sources_verified",
+    "all_original_obligations_driver_and_grid_bindings_authenticated",
+    "new_bounded_full_original_N_SDE_labels_cache_checker_returned",
+    "thin_report_written_read_full_coverage_authenticated",
+    "new_checker_source_stable",
+    "child_completed_administrative_check",
+}
+
+
+def sha(path):
+    result = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024**2), b""):
+            result.update(block)
+    return result.hexdigest()
+
+
+def digest(value):
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    ).hexdigest()
+
+
+def clock():
+    return {
+        "wall": time.perf_counter(),
+        "cpu": time.process_time(),
+        "utc": datetime.now(UTC).isoformat(),
+    }
+
+
+def save(path, value):
+    path = Path(path)
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
+    temporary.replace(path)
+
+
+def within_d(path):
+    result = Path(path).resolve()
+    result.relative_to(D)
+    assert result != D
+    return result
+
+
+def function_ast(path, name):
+    node = next(
+        n
+        for n in ast.parse(Path(path).read_text()).body
+        if isinstance(n, ast.FunctionDef) and n.name == name
+    )
+    return hashlib.sha256(ast.dump(node, include_attributes=False).encode()).hexdigest()
+
+
+def validate_budget(path):
+    budget = json.loads(within_d(path).read_text())
+    assert budget["schema"] == "rb-f04-M6-saved-recheck-prior-budget-v1"
+    assert budget["scope"] == SCOPE
+    assert budget["root_preapproved"] is True, "candidate is not prior approval"
+    assert budget["formal_finance_approved"] is False
+    assert budget["new_checker_source_approval_status"] == "approved_fixed_bounded_checker_closure"
+    assert budget["saved_input_manifest_status"] == "approved_terminal_original_M6_all_raw_bindings"
+    assert budget["probe_source_sha256"] == sha(__file__)
+    assert budget["initial_description_sha256"] == sha(DESCRIPTION)
+    assert budget["allowed_classes"] == list(CLASSES)
+    assert budget["wall_limit_seconds_per_class"] == CAPS
+    assert budget["rss_limit_bytes"] == RSS_CAP
+    assert budget["rss_metric"] == "maximum_individual_parent_or_child_process_RSS_not_AS"
+    description = json.loads(DESCRIPTION.read_text())
+    assert budget["classes"] == description["classes"]
+    assert budget["measurement_output_root"] == description["measurement_output_root"]
+    assert (
+        sha(WT / description["generation_source_snapshot_manifest"])
+        == budget["generation_source_snapshot_manifest_sha256"]
+    )
+    old = json.loads((WT / description["generation_source_snapshot_manifest"]).read_text())
+    assert old["generation_identity_sha256"] == budget["generation_source_identity_sha256"]
+    assert digest(old["generation_identity"]) == budget["generation_source_identity_sha256"]
+    assert len(old["files"]) == 81
+    for source, entry in old["files"].items():
+        assert sha(WT / entry["snapshot"]) == entry["sha256"]
+        assert entry["sha256"] == old["generation_identity"]["files"][source]
+    assert isinstance(budget["new_checker_source_bindings"], dict)
+    assert budget["new_checker_source_bindings"]
+    for source, expected in budget["new_checker_source_bindings"].items():
+        assert sha(WT / source) == expected, "new checker source changed"
+    for source, expected in budget["unchanged_generation_math_source_bindings"].items():
+        assert sha(WT / source) == expected, "generation/SDE/labels math changed"
+    old_checker = (
+        WT / old["files"]["johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"]["snapshot"]
+    )
+    assert function_ast(old_checker, "check_teacher_record") == function_ast(
+        R / "check_pilot.py", "check_teacher_record"
+    ), "standalone whole-N SDE/label checker changed"
+    for key in ("new_checker_source_approval_evidence", "saved_input_manifest"):
+        value = budget[key]
+        assert isinstance(value, dict) and set(value) == {"path", "sha256"}
+        assert sha(WT / value["path"]) == value["sha256"]
+    manifest = json.loads((WT / budget["saved_input_manifest"]["path"]).read_text())
+    assert manifest["schema"] == "rb-f04-M6-terminal-saved-recheck-inputs-v1"
+    assert manifest["original_M6_terminal"] is True
+    assert (
+        manifest["generation_source_identity_sha256"] == budget["generation_source_identity_sha256"]
+    )
+    assert manifest["all_original_n"] == 1024 and manifest["all_original_nodes"] == 2128
+    assert set(manifest["files"]["classes"]) == set(CLASSES)
+    assert set(manifest["history_cost_receipts"]) >= {
+        "terminal",
+        *CLASSES,
+        "driver:Heston",
+        "driver:local",
+    }
+    assert manifest["original_raw_generation_not_reexecuted"] is True
+    assert isinstance(budget["new_checker_source_identity_sha256"], str)
+    assert budget["report_contract"] == {
+        "report_mode": "bounded",
+        "top_success_status": "absent_per_original_full_report",
+        "all_original_n": 1024,
+        "class_nodes": COUNTS,
+        "all_11_original_label_arrays": True,
+        "all_node_SDE_flags": True,
+        "all_native_bindings": True,
+        "full_cache_comparison": True,
+        "runtime_artifact_context_saved_in_report": False,
+    }
+    return budget, description, manifest
+
+
+def rss(pid):
+    try:
+        for row in Path(f"/proc/{pid}/status").read_text().splitlines():
+            if row.startswith("VmRSS:"):
+                return int(row.split()[1]) * 1024
+    except (FileNotFoundError, ProcessLookupError):
+        return None
+    return None
+
+
+def report_coverage(report, grid, spec):
+    """Pure metadata boundary; approved checker actually performs numeric work."""
+    n, total, present = spec["original_n"], spec["original_nodes"], len(grid["nodes"])
+    assert report["original_n"] == n and n == 1024
+    assert report["original_node_count"] == total
+    assert report["executed_node_count"] == present
+    assert grid["unexecuted_node_count"] == total - present
+    checks = report["raw_checks"]
+    assert len(checks) == present, "every retained original node needs a report"
+    sde, labels, partial = 0, 0, 0
+    for index, (checked, node) in enumerate(zip(checks, grid["nodes"], strict=True)):
+        assert checked["report_mode"] == "bounded" and "labels" not in checked
+        ref = checked["raw_reference"]
+        assert ref["schema"] == "rb-f04-teacher-check-raw-reference-v1"
+        assert ref["node_index"] == index
+        assert ref["node"] == {k: node[k] for k in ("date_index", "spot", "state")}
+        assert ref["path"] == node["path"] and "artifact_context" not in ref
+        if "raw_binding" in node:
+            assert ref["raw_binding"] == node["raw_binding"] and "raw_sha256" not in ref
+        else:
+            assert ref["raw_sha256"] == node["raw_sha256"] and "raw_binding" not in ref
+        if checked.get("full_saved_driver_sde_replayed") is True:
+            assert checked["original_n"] == n
+            sde += 1
+            label = checked["labels_reference"]
+            assert label["schema"] == "rb-f04-teacher-check-labels-reference-v1"
+            assert label["raw_reference"] == ref and label["raw_field"] == "labels"
+            assert label["all_original_N_label_values_compared"] is True
+            assert set(SAMPLE_FIELDS) <= set(label["fields"])
+            for field in SAMPLE_FIELDS:
+                descriptor = label["array_fields"][field]
+                assert descriptor["shape"] == [n, spec["threshold_count"]]
+                assert descriptor["dtype"] in ("<f8", ">f8", "=f8")
+            labels += 1
+        else:
+            # Original partial caps remain raw; they cannot satisfy full completion.
+            partial += 1
+    cache_present = grid["cache"] is not None
+    assert ("cache" in report) == cache_present
+    full = (
+        grid["status"] == "executed"
+        and present == total
+        and grid["unexecuted_node_count"] == 0
+        and sde == labels == total
+        and partial == 0
+        and cache_present
+        and report.get("status") is None
+    )
+    return {
+        "original_n": n,
+        "original_nodes": total,
+        "retained_nodes": present,
+        "sde_replayed_nodes": sde,
+        "all_label_compared_nodes": labels,
+        "partial_or_nonreplayed_nodes": partial,
+        "unexecuted_original_nodes": grid["unexecuted_node_count"],
+        "cache_comparison_returned": cache_present,
+        "full_original_coverage": full,
+        "financial_qualification": "unknown",
+    }
+
+
+def all_artifact_files_locked(directory, bindings):
+    """Use complete terminal input manifest; no financial array regeneration."""
+    directory = Path(directory).resolve()
+    assert directory.is_relative_to(WT)
+    assert directory.is_dir()
+    files = [p for p in directory.rglob("*") if p.is_file()]
+    assert files, "saved artifact input directory is empty"
+    assert all(str(p.relative_to(WT)) in bindings for p in files), (
+        "physical input manifest is incomplete"
+    )
+
+
+def runtime(budget):
+    sys.path[:0] = [str(R), str(WT / "johnhull/hullkit/src"), str(WT / "deep_hedge_price/src")]
+    import check_pilot as checker
+    import numpy as np
+    import run_pilot as pilot
+    import run_reference as runner
+    from hullkit._heston_local_surface import HestonParameters
+
+    from deep_hedge_price import _dynamic_hedging_replay as replay
+
+    identity = runner.execution_source_identity(WT)
+    assert identity["dynamic_imports"] == []
+    assert identity["files"] == budget["new_checker_source_bindings"]
+    assert len(identity["files"]) == budget["new_checker_source_file_count"]
+    assert runner._digest(identity) == budget["new_checker_source_identity_sha256"]
+    assert "report_mode" in inspect.signature(checker.check_teacher_grid_record).parameters
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("saved-only recheck forbids fresh RNG or solver")
+
+    for name in (
+        "default_rng",
+        "SeedSequence",
+        "RandomState",
+        "normal",
+        "standard_normal",
+        "randn",
+        "rand",
+        "seed",
+    ):
+        setattr(np.random, name, forbidden)
+    return np, checker, pilot, runner, replay, HestonParameters
+
+
+def child(class_id, output, budget_path):
+    started = clock()
+    output = within_d(output)
+    progress = {
+        "scope": SCOPE,
+        "class": class_id,
+        "started": started,
+        "status": "started",
+        "stages": [],
+        "no_new_RNG": True,
+        "no_financial_generation": True,
+        "financial_qualification": "unknown",
+        "formal_pilot_or_main": False,
+    }
+
+    def checkpoint(stage, **facts):
+        progress["stages"].append({"stage": stage, "clock": clock(), **facts})
+        progress["process_peak_rss_bytes"] = (
+            resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        )
+        save(output / "progress.json", progress)
+
+    try:
+        budget, description, manifest = validate_budget(budget_path)
+        spec = description["classes"][class_id]
+        # Complete actual input file list is fixed only after original M6 terminal.
+        bindings = dict(manifest["files"]["shared"])
+        bindings.update(manifest["files"]["classes"][class_id])
+        for name, expected in bindings.items():
+            assert sha(WT / name) == expected, "saved physical input changed"
+        for relative in (
+            description["field_artifact"],
+            spec["raw_grid_artifact"],
+            spec["initial_original_obligation_artifact"],
+        ):
+            all_artifact_files_locked(WT / relative, bindings)
+        bank = (WT / description["drivers"][spec["model"]]["artifact"]).parent
+        all_artifact_files_locked(bank, bindings)
+        for node in spec["native_node_bindings"]:
+            all_artifact_files_locked(node["path"], bindings)
+        checkpoint("root_prior_old_origin_new_checker_sources_verified")
+        np, checker, pilot, runner, replay, parameters_type = runtime(budget)
+        prepared = json.loads((WT / description["prepared_input_json"]).read_text())
+        parameters = parameters_type(**prepared["parameters"])
+        field, field_receipt = pilot.read_pilot_artifact(WT / description["field_artifact"])
+        surface = pilot.materialize_field(field)
+        initial, initial_receipt = pilot.read_pilot_artifact(
+            WT / spec["initial_original_obligation_artifact"]
+        )
+        assert initial["original_n"] == 1024 and initial["seed"] == spec["seed"]
+        assert initial["planned_nodes"] == spec["planned_nodes"]
+        assert np.array_equal(initial["path_ids"], np.arange(1024))
+        assert np.array_equal(initial["cluster_ids"], np.arange(1024) // 64)
+        assert (
+            initial["f"].shape
+            == initial["f_x"].shape
+            == (spec["original_nodes"], spec["threshold_count"])
+        )
+        assert np.isnan(initial["f"]).all() and np.isnan(initial["f_x"]).all()
+        assert np.all(initial["node_status"] == "unprocessed")
+        driver_spec = description["drivers"][spec["model"]]
+        driver, driver_receipt = pilot.read_pilot_artifact(WT / driver_spec["artifact"])
+        assert driver["status"] == "executed" and driver["original_n"] == 1024
+        assert driver["seed"] == spec["seed"]
+        assert driver["global_driver_id"] == driver_spec["global_driver_id"]
+        assert driver["teacher_reference"] is None
+        grid, grid_receipt = pilot.read_pilot_artifact(WT / spec["raw_grid_artifact"])
+        assert grid["original_n"] == 1024 and grid["seed"] == spec["seed"]
+        assert grid["model"] == spec["model"] and grid["grid"] == spec["grid"]
+        assert grid["planned_nodes"] == spec["planned_nodes"]
+        assert grid["nodes"] == spec["native_node_bindings"]
+        assert grid["driver"]["global_driver_id"] == driver["global_driver_id"]
+        assert initial["driver_global_id"] == driver["global_driver_id"]
+        progress.update(
+            original_n=1024,
+            original_nodes=spec["original_nodes"],
+            original_raw_status=grid["status"],
+            original_unexecuted_nodes=grid["unexecuted_node_count"],
+            original_generation_cap_evidence=grid.get("cap_evidence"),
+            raw_grid_receipt=grid_receipt,
+            original_driver_receipt=driver_receipt,
+            old_history_cost_receipts=manifest["history_cost_receipts"],
+            no_old_generation_or_failed_check_cost_added=True,
+        )
+        save(
+            output / "prior-saved-recheck-original-obligations.json",
+            {
+                "class": class_id,
+                "original_n": 1024,
+                "original_nodes": spec["original_nodes"],
+                "planned_nodes": spec["planned_nodes"],
+                "original_initial_obligation_receipt": initial_receipt,
+                "original_grid_receipt": grid_receipt,
+                "original_driver_receipt": driver_receipt,
+                "original_field_receipt": field_receipt,
+                "all_node_bindings": spec["native_node_bindings"],
+                "generation_source_identity_sha256": budget["generation_source_identity_sha256"],
+                "new_checker_source_identity_sha256": budget["new_checker_source_identity_sha256"],
+                "history_cost_receipts_not_added": manifest["history_cost_receipts"],
+                "original_raw_status": grid["status"],
+                "original_generation_cap_evidence": grid.get("cap_evidence"),
+                "original_qualification_unknown": True,
+            },
+        )
+        checkpoint("all_original_obligations_driver_and_grid_bindings_authenticated")
+        del initial, driver
+        checked = checker.check_teacher_grid_record(
+            grid, parameters, surface, report_mode="bounded"
+        )
+        coverage = report_coverage(checked, grid, spec)
+        checkpoint(
+            "new_bounded_full_original_N_SDE_labels_cache_checker_returned", coverage=coverage
+        )
+        report_path = output / "actual-bounded-saved-check"
+        pilot.write_pilot_artifact(report_path, checked)
+        restored, report_receipt = pilot.read_pilot_artifact(report_path)
+        runner._same(
+            {k: v for k, v in restored.items() if k != "cache"},
+            {k: v for k, v in checked.items() if k != "cache"},
+            "thin report immutable write/read",
+        )
+        if grid["cache"] is not None:
+            replay._same_asian_cache(restored["cache"], checked["cache"])
+        assert report_coverage(restored, grid, spec) == coverage
+        progress.update(coverage=coverage, saved_report_receipt=report_receipt)
+        checkpoint("thin_report_written_read_full_coverage_authenticated")
+        for source, expected in budget["new_checker_source_bindings"].items():
+            assert sha(WT / source) == expected, "new checker source changed"
+        checkpoint("new_checker_source_stable")
+        progress["status"] = (
+            "completed"
+            if coverage["full_original_coverage"]
+            else "original_partial_or_capped_retained"
+        )
+        checkpoint("child_completed_administrative_check")
+        return 0 if progress["status"] == "completed" else 3
+    except Exception as error:
+        progress.update(
+            status="unclosed_source_or_solver_defect", error=f"{type(error).__name__}: {error}"
+        )
+        checkpoint("exception_retained")
+        traceback.print_exc()
+        return 1
+
+
+def files(directory):
+    return [
+        {"path": str(p.relative_to(directory)), "bytes": p.stat().st_size}
+        for p in sorted(directory.rglob("*"))
+        if p.is_file()
+    ]
+
+
+def class_decision(class_id, exit_code, actual_cap, progress, observer_errors=()):
+    if observer_errors:
+        return (
+            "unclosed_observer_defect_with_actual_cap"
+            if actual_cap is not None
+            else "unclosed_observer_defect"
+        )
+    if isinstance(progress, dict) and progress.get("status") == "unclosed_source_or_solver_defect":
+        return (
+            "unclosed_source_or_solver_defect_with_actual_cap"
+            if actual_cap is not None
+            else "unclosed_source_or_solver_defect"
+        )
+    if actual_cap is not None:
+        return "failed_at_actual_saved_recheck_cap"
+    if not isinstance(progress, dict):
+        return "unclosed_missing_child_evidence"
+    stages = {s.get("stage") for s in progress.get("stages", []) if isinstance(s, dict)}
+    coverage = progress.get("coverage", {})
+    full = (
+        coverage.get("original_n") == 1024
+        and coverage.get("original_nodes") == COUNTS[class_id]
+        and coverage.get("retained_nodes") == COUNTS[class_id]
+        and coverage.get("sde_replayed_nodes") == COUNTS[class_id]
+        and coverage.get("all_label_compared_nodes") == COUNTS[class_id]
+        and coverage.get("partial_or_nonreplayed_nodes") == 0
+        and coverage.get("unexecuted_original_nodes") == 0
+        and coverage.get("cache_comparison_returned") is True
+        and coverage.get("full_original_coverage") is True
+    )
+    evidence = (
+        REQUIRED_STAGES <= stages
+        and progress.get("saved_report_receipt") is not None
+        and progress.get("raw_grid_receipt") is not None
+        and progress.get("no_new_RNG") is True
+    )
+    if exit_code == 0 and progress.get("status") == "completed" and full and evidence:
+        return "completed_saved_only_component"
+    if progress.get("status") == "original_partial_or_capped_retained" and evidence:
+        return "original_partial_or_capped_retained_unqualified"
+    return "unclosed_child_evidence_incomplete"
+
+
+def closing_observation(start, end, deadline, limit_seconds, prior_cap, cs, ck, ps, pk):
+    observations = (
+        [] if prior_cap is None else [dict(prior_cap, observation_phase="live_parent_monitor")]
+    )
+    metrics = {r["metric"] for r in observations}
+    if end >= deadline and "enclosing_class_wall" not in metrics:
+        observations.append(
+            {
+                "metric": "enclosing_class_wall",
+                "limit_seconds": limit_seconds,
+                "observed_seconds": end - start,
+                "observation_phase": "postexit_progress_index_RSS",
+            }
+        )
+    for name, sampled, kernel in (
+        ("individual_child_RSS", cs, ck),
+        ("individual_parent_RSS", ps, pk),
+    ):
+        available = [x for x in (sampled, kernel) if x is not None]
+        if available and max(available) > RSS_CAP and name not in metrics:
+            observations.append(
+                {
+                    "metric": name,
+                    "limit_bytes": RSS_CAP,
+                    "observed_bytes": max(available),
+                    "sampled_peak_bytes": sampled,
+                    "kernel_peak_bytes": kernel,
+                    "observation_phase": "postexit_progress_index_RSS",
+                }
+            )
+    return (
+        None
+        if not observations
+        else {
+            "metric": "actual_saved_recheck_class_limit_observations",
+            "observations": observations,
+            "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+        }
+    )
+
+
+def class_parent(class_id, output, budget_path):
+    started = clock()
+    deadline = started["wall"] + CAPS[class_id]
+    output.mkdir(parents=True, exist_ok=False)
+    cpu0 = resource.getrusage(resource.RUSAGE_CHILDREN)
+    parent_kernel_before = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+    peak, parent_peak, unknown_rss, parent_unknown_rss, cap = None, None, 0, 0, None
+    command = [
+        sys.executable,
+        str(Path(__file__).resolve()),
+        "--child",
+        "--class",
+        class_id,
+        "--budget",
+        str(budget_path),
+        "--output",
+        str(output),
+    ]
+    with (output / "child.log").open("wb") as log:
+        process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT)
+        while process.poll() is None:
+            child_rss, parent_rss = rss(process.pid), rss(os.getpid())
+            if child_rss is None:
+                unknown_rss += 1
+            else:
+                peak = child_rss if peak is None else max(peak, child_rss)
+            if parent_rss is None:
+                parent_unknown_rss += 1
+            else:
+                parent_peak = parent_rss if parent_peak is None else max(parent_peak, parent_rss)
+            if time.perf_counter() >= deadline:
+                cap = {
+                    "metric": "enclosing_class_wall",
+                    "limit_seconds": CAPS[class_id],
+                    "observed_seconds": time.perf_counter() - started["wall"],
+                }
+            elif child_rss is not None and child_rss > RSS_CAP:
+                cap = {
+                    "metric": "individual_child_RSS",
+                    "limit_bytes": RSS_CAP,
+                    "observed_bytes": child_rss,
+                }
+            elif parent_rss is not None and parent_rss > RSS_CAP:
+                cap = {
+                    "metric": "individual_parent_RSS",
+                    "limit_bytes": RSS_CAP,
+                    "observed_bytes": parent_rss,
+                }
+            if cap:
+                process.kill()
+                break
+            time.sleep(0.05)
+        exit_code = process.wait()
+    # Closing wall/CPU includes the available child progress and output index.
+    # Observer exceptions retain their own type, separate from the financial child.
+    observer_errors = []
+    progress_path = output / "progress.json"
+    try:
+        progress = json.loads(progress_path.read_text()) if progress_path.exists() else None
+    except Exception as error:
+        progress = None
+        observer_errors.append(f"progress_read: {type(error).__name__}: {error}")
+    try:
+        output_index = files(output)
+    except Exception as error:
+        output_index = None
+        observer_errors.append(f"output_index: {type(error).__name__}: {error}")
+    parent_rss = rss(os.getpid())
+    if parent_rss is None:
+        parent_unknown_rss += 1
+    else:
+        parent_peak = parent_rss if parent_peak is None else max(parent_peak, parent_rss)
+    child_kernel_peak = (
+        progress.get("process_peak_rss_bytes") if isinstance(progress, dict) else None
+    )
+    if child_kernel_peak is not None and (
+        not isinstance(child_kernel_peak, (int, float)) or child_kernel_peak < 0
+    ):
+        observer_errors.append("saved child peak RSS is not a nonnegative number")
+        child_kernel_peak = None
+    parent_kernel_peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+    cpu1 = resource.getrusage(resource.RUSAGE_CHILDREN)
+    ended = clock()
+    observed_cap = closing_observation(
+        started["wall"],
+        ended["wall"],
+        deadline,
+        CAPS[class_id],
+        cap,
+        peak,
+        child_kernel_peak,
+        parent_peak,
+        parent_kernel_peak,
+    )
+    available_child = [v for v in (peak, child_kernel_peak) if v is not None]
+    available_parent = [v for v in (parent_peak, parent_kernel_peak) if v is not None]
+    combined_peak = max(available_child + available_parent, default=None)
+    receipt = {
+        "scope": SCOPE,
+        "class": class_id,
+        "started": started,
+        "stopped": ended,
+        "wall_seconds": ended["wall"] - started["wall"],
+        "parent_cpu_seconds": ended["cpu"] - started["cpu"],
+        "child_cpu_seconds": (cpu1.ru_utime + cpu1.ru_stime) - (cpu0.ru_utime + cpu0.ru_stime),
+        "exit_code": exit_code,
+        "observed_child_peak_RSS_bytes": peak,
+        "saved_child_kernel_peak_RSS_bytes": child_kernel_peak,
+        "observed_parent_peak_RSS_bytes": parent_peak,
+        "parent_kernel_peak_RSS_bytes": parent_kernel_peak,
+        "parent_kernel_peak_before_class_RSS_bytes": parent_kernel_before,
+        "parent_kernel_peak_scope": "process lifetime; historical baseline retained, not attributed to new work",
+        "RSS_unknown_sample_count": unknown_rss,
+        "parent_RSS_unknown_sample_count": parent_unknown_rss,
+        "RSS_metric": "sampled_current_RSS_and_saved_kernel_highwater_not_RLIMIT_AS",
+        "actual_cap_evidence": observed_cap,
+        "live_monitor_cap_evidence": cap,
+        "observer_errors": observer_errors,
+        "wall_overrun_seconds": max(0.0, ended["wall"] - deadline),
+        "RSS_overrun_bytes": None if combined_peak is None else max(0, combined_peak - RSS_CAP),
+        "status": class_decision(class_id, exit_code, observed_cap, progress, observer_errors),
+        "original_generation_declared_cap_evidence": None
+        if not isinstance(progress, dict)
+        else progress.get("original_generation_cap_evidence"),
+        "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+        "child_progress": progress,
+        "financial_qualification": "unknown",
+        "raw_obligation_unknown_and_all_available_returned_raw_retained": True,
+        "hard_kill_partial_financial_arrays_unavailable_unless_saved": True,
+        "output_file_index_before_final_receipt": output_index,
+        "measured_endpoint": "after progress/index/RSS read; before receipt construction and immutable receipt write",
+        "unmeasured_tail": "receipt construction/helper metadata, final receipt write/stdout need root enclosing execution receipt",
+    }
+    save(output / "parent-cost-and-decision.json", receipt)
+    return receipt
+
+
+def parent(output, budget_path):
+    budget, description, manifest = validate_budget(budget_path)
+    output = within_d(output)
+    assert str(output) == description["measurement_output_root"]
+    assert not output.exists(), "saved-recheck output must be fresh"
+    output.mkdir()
+    save(output / "prior-root-budget.json", budget)
+    save(output / "initial-description.json", description)
+    rows = [class_parent(k, output / k, budget_path) for k in CLASSES]
+    save(
+        output / "all-new-saved-recheck-costs-and-decision.json",
+        {
+            "scope": SCOPE,
+            "classes": rows,
+            "new_class_wall_sum_seconds": sum(r["wall_seconds"] for r in rows),
+            "new_child_CPU_sum_seconds": sum(r["child_cpu_seconds"] for r in rows),
+            "original_generation_and_failed_check_costs_are_history_not_added": manifest[
+                "history_cost_receipts"
+            ],
+            "new_driver_generation_count": 0,
+            "no_new_RNG": True,
+            "administrative_cap_sum_seconds": sum(CAPS.values()),
+            "runtime_estimate_seconds": None,
+            "financial_qualification": "unknown",
+            "formal_pilot_or_main": False,
+            "unmeasured_tail": "root outer receipt must include prior validation/parent setup/final construction/write/stdout",
+        },
+    )
+    return 0 if all(r["status"] == "completed_saved_only_component" for r in rows) else 3
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--budget", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--child", action="store_true")
+    parser.add_argument("--class", dest="class_id", choices=CLASSES)
+    args = parser.parse_args()
+    if args.child:
+        assert args.class_id is not None
+        return child(args.class_id, args.output, args.budget)
+    assert args.class_id is None
+    return parent(args.output, args.budget)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

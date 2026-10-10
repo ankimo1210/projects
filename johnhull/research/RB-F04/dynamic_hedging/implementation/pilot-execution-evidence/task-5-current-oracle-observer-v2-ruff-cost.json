@@ -1,0 +1,20 @@
+{
+  "financial_RNG_solver_worker": false,
+  "results": [
+    {
+      "child_cpu_seconds": 0.013491999999999999,
+      "exit_code": 0,
+      "operation": "check",
+      "parent_cpu_seconds": 0.0004436300000000004,
+      "wall_seconds": 0.010327676001907093
+    },
+    {
+      "child_cpu_seconds": 0.016408,
+      "exit_code": 0,
+      "operation": "format",
+      "parent_cpu_seconds": 0.0004273050000000028,
+      "wall_seconds": 0.011931288998312084
+    }
+  ],
+  "scope": "D-only Ruff3 and formatcheck3"
+}

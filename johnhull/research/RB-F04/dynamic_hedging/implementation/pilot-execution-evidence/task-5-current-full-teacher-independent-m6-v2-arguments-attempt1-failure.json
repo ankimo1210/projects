@@ -1,0 +1,6 @@
+{
+  "scope": "reviewer saved arguments probe",
+  "error": "canonical JSON SHA assumed; asserted SHA differs from documented runner.payload_digest method",
+  "financial_execution": false,
+  "source_changes": false
+}

@@ -1,0 +1,46 @@
+{
+  "scope": "saved typed input_identity/only prior-authorized measurement overrides",
+  "PASS": true,
+  "checks": [
+    {
+      "class": "Heston-coarse",
+      "planned_measurement_input_identity_independently_recomputed": true,
+      "only_actual_argument_differences": [
+        "work_directory",
+        "wall_cap_seconds"
+      ],
+      "resolved_measurement_SHA_from_saved_progress": "d6df8413ae21241ac6756fa5cef283bd15dec4a3c2c4b3313003fbb578f45be0"
+    },
+    {
+      "class": "Heston-high",
+      "planned_measurement_input_identity_independently_recomputed": true,
+      "only_actual_argument_differences": [
+        "work_directory",
+        "wall_cap_seconds"
+      ],
+      "resolved_measurement_SHA_from_saved_progress": "8182f9b7b91636f4337fce012363bb5e13bc4bf1be79f1568abf858efa543ffb"
+    },
+    {
+      "class": "local-coarse",
+      "planned_measurement_input_identity_independently_recomputed": true,
+      "only_actual_argument_differences": [
+        "work_directory",
+        "wall_cap_seconds"
+      ],
+      "resolved_measurement_SHA_from_saved_progress": "2a3b8f13aa56cf26ac2efcc35e91de1bd5e8acbc2e82395aeb2cb79c383ce56c"
+    },
+    {
+      "class": "local-high",
+      "planned_measurement_input_identity_independently_recomputed": true,
+      "only_actual_argument_differences": [
+        "work_directory",
+        "wall_cap_seconds"
+      ],
+      "resolved_measurement_SHA_from_saved_progress": "23a6720895ca0c551731dc155788dde1c3ca29bb35448807dd944dc0f612482d"
+    }
+  ],
+  "verification_wall_seconds_after_import": 0.000861961001646705,
+  "financial_numerics_solver_executed": false,
+  "attempt1_failure_explanation_correction": "initial failure note mistakenly named runner.payload_digest; the documented and verified typed-argument function is run_pilot.input_identity",
+  "additional_import_CPU_wall_cost": "unknown"
+}

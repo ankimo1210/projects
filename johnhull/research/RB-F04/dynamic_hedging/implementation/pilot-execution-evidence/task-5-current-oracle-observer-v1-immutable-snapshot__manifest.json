@@ -1,0 +1,30 @@
+{
+  "RNG": false,
+  "cpu_seconds": 0.0030715359999999997,
+  "financial_execution": false,
+  "fixed_identity_dynamic_imports": [],
+  "original_v1_files": {
+    "task-5-current-oracle-budget-candidate-v1.json": "8ce5a418378f83dff5b2e020b657c1bec94e250adf254ace12b14f9515670fe1",
+    "task-5-current-oracle-initial-description-v1.json": "462e128fe43cb24c63237675abe1b3e2d6d7e611c14c247261fc2c832a7f22a1",
+    "task-5-current-oracle-measurement-v1.py": "abd8b96dbdc10cedc03075fea8ab2028c6fa1b24e6c1d434795271930919f397",
+    "task-5-current-oracle-preparation-manifest-v1.json": "c8ba11f2be45d8d36420faac4bbcf2ac9bddc6b9e98860d73252731d69ee6a1a",
+    "task-5-current-oracle-preparation-report-v1.md": "851a91541dd1e70f2c5d4d413f4c3c0b156211befb161116705c58c931bf598a",
+    "task-5-current-oracle-preparation-v1.py": "4093c5b67ed86f37b753ee43ad67a8c619b280aad0463eec5c775244af03f176",
+    "task-5-current-oracle-preparation-verification-v1.json": "6acfd7b8ba9c65781fa2482d051a15bf07304b1d0943baaae9b50f1fe9965724",
+    "task-5-current-oracle-preparation-verification-v1.py": "46f20b5131093e20e9b5b39f10a8efd18a6e05598f5330cc4ad090c659ba716a"
+  },
+  "scope": "D-only byte copy and stdlib source SHA check",
+  "snapshot_files": {
+    "task-5-current-oracle-budget-candidate-v1.json": "8ce5a418378f83dff5b2e020b657c1bec94e250adf254ace12b14f9515670fe1",
+    "task-5-current-oracle-initial-description-v1.json": "462e128fe43cb24c63237675abe1b3e2d6d7e611c14c247261fc2c832a7f22a1",
+    "task-5-current-oracle-measurement-v1.py": "abd8b96dbdc10cedc03075fea8ab2028c6fa1b24e6c1d434795271930919f397",
+    "task-5-current-oracle-preparation-manifest-v1.json": "c8ba11f2be45d8d36420faac4bbcf2ac9bddc6b9e98860d73252731d69ee6a1a",
+    "task-5-current-oracle-preparation-report-v1.md": "851a91541dd1e70f2c5d4d413f4c3c0b156211befb161116705c58c931bf598a",
+    "task-5-current-oracle-preparation-v1.py": "4093c5b67ed86f37b753ee43ad67a8c619b280aad0463eec5c775244af03f176",
+    "task-5-current-oracle-preparation-verification-v1.json": "6acfd7b8ba9c65781fa2482d051a15bf07304b1d0943baaae9b50f1fe9965724",
+    "task-5-current-oracle-preparation-verification-v1.py": "46f20b5131093e20e9b5b39f10a8efd18a6e05598f5330cc4ad090c659ba716a"
+  },
+  "source81_actual_match": true,
+  "source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "wall_seconds": 0.0030714420026924927
+}

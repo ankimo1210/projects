@@ -1,0 +1,77 @@
+{
+  "class": "Heston-coarse",
+  "driver_payload_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/banks/Heston/actual-driver",
+  "driver_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "b47a04689ab17e0741ad1f7d5eaaa78e4581948043562883ede82184e7b2d0de",
+    "metadata_sha256": "5c7b12fe1c32d24ad389debeb39b8926149507ce74be5cd5cbdbe7021121202d",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "global_driver_id": "c04df2cfc7e2533749886b1e7935cacf790a312eba3778bad7deccc75856c203",
+  "native_cap_evidence": null,
+  "phase": "driver",
+  "process_peak_rss_bytes": 851648512,
+  "processed_n": 1024,
+  "raw_status": "executed",
+  "scope": "M6_original_full_teacher_N1024_four_classes_component_only",
+  "stages": [
+    {
+      "clock": {
+        "cpu": 0.059811463,
+        "utc": "2026-10-10T04:23:57.383675+00:00",
+        "wall": 30702.166387564
+      },
+      "stage": "prior_budget_inputs_and_current_source_verified"
+    },
+    {
+      "actual_size": {
+        "original_n": 1024,
+        "path_steps": 786432,
+        "total_path_steps": 786432
+      },
+      "clock": {
+        "cpu": 3.914060232,
+        "utc": "2026-10-10T04:24:02.129777+00:00",
+        "wall": 30706.912490883
+      },
+      "measurement_typed_arguments_sha256": "045da05662db207bf51ff3e6f75d50298e70b59b2305dd9431b2133527bb9c88",
+      "planned_arguments_sha256": "b007a20e3c528df4dd3c5d5545867c207cddc55dfb0c54b79ecb43948532495b",
+      "resolved_measurement_arguments_sha256": "045da05662db207bf51ff3e6f75d50298e70b59b2305dd9431b2133527bb9c88",
+      "stage": "original_shared_driver_dispatch_start"
+    },
+    {
+      "clock": {
+        "cpu": 3.964869202,
+        "utc": "2026-10-10T04:24:02.180810+00:00",
+        "wall": 30706.963528303
+      },
+      "stage": "original_shared_driver_dispatch_stop"
+    },
+    {
+      "clock": {
+        "cpu": 3.994232959,
+        "utc": "2026-10-10T04:24:02.210333+00:00",
+        "wall": 30706.993047248
+      },
+      "stage": "shared_driver_written_read_and_authenticated"
+    },
+    {
+      "clock": {
+        "cpu": 3.996060962,
+        "utc": "2026-10-10T04:24:02.212159+00:00",
+        "wall": 30706.994876187
+      },
+      "stage": "current_source_stable"
+    }
+  ],
+  "started": {
+    "cpu": 0.030467788,
+    "utc": "2026-10-10T04:23:57.354333+00:00",
+    "wall": 30702.137045551
+  },
+  "status": "completed",
+  "unexecuted_n": 0
+}

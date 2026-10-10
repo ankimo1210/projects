@@ -1,0 +1,57 @@
+{
+  "scope": "isolated metadata parent completion gates; no source import/numerical finance",
+  "source_probe_sha256": "8a129816fb2b4e5dbefc4fc029f07e37d4cc605fdcf0668bb3d615dac0476673",
+  "prior_budget_sha256": "57314ddcadb722fea8cb54496f2ba586e39a877dbb0e9ba93e383fe1d57b0992",
+  "cases": [
+    {
+      "case": "driver_full",
+      "decision": "completed"
+    },
+    {
+      "case": "grid_full",
+      "decision": "completed"
+    },
+    {
+      "case": "no_progress",
+      "decision": "unclosed_missing_child_evidence"
+    },
+    {
+      "case": "actual_parent_cap",
+      "decision": "failed_at_actual_cap"
+    },
+    {
+      "case": "zero_exit_executed_nodes",
+      "decision": "unclosed_source_or_solver_defect"
+    },
+    {
+      "case": "zero_exit_unexecuted_nodes",
+      "decision": "unclosed_source_or_solver_defect"
+    },
+    {
+      "case": "zero_exit_saved_check_status",
+      "decision": "unclosed_source_or_solver_defect"
+    },
+    {
+      "case": "zero_exit_status",
+      "decision": "unclosed_source_or_solver_defect"
+    },
+    {
+      "case": "zero_exit_raw_status",
+      "decision": "unclosed_source_or_solver_defect"
+    },
+    {
+      "case": "zero_exit_stages",
+      "decision": "unclosed_source_or_solver_defect"
+    }
+  ],
+  "expected_nodes": {
+    "Heston-coarse": 108,
+    "Heston-high": 156,
+    "local-coarse": 520,
+    "local-high": 1344
+  },
+  "RNG": false,
+  "new_SDE": false,
+  "financial_qualified": false,
+  "formal_approved": false
+}

@@ -97,7 +97,7 @@ workload JSONのraw_two_factor_driver_bytes_without_dedupは、fine normalsを�
 
 [全cacheの独立判断](pilot-execution-evidence/task-5-current-whole-call-cache-independent-v3-decision.json)は元127,400枠、[独立表の判断](pilot-execution-evidence/task-5-current-independent-call-table-independent-v3-decision.json)は保存CF1,386積分とPDE28曲線から元693/196価格を再構成してPASS。source80/入力/保存34files不変、capなし、新solver/RNGなし。保存検査の計時はM2/M3が9.388497秒、M4/M5は先行import失敗3.216240秒＋成功3.328490秒を別保存し、未測定の準備/報告費用はunknown。正式全state精度・storage budget・pilot/main・phase受入は未承認。
 
-原始全経路/診断/元統計を保持する教師専用保存形式を限定実装し、原N65536・全65threshold・全768stepstatusの合成I/O測定を完了。全体storage削減率は未確定。次は同じ原driverを使うgenuine N1024の4教師classを生成＋保存SDE再計算まで測り、全job予算を固定する。
+原始全経路/診断/元統計を保持する教師専用保存形式を限定実装し、原N65536・全65threshold・全768stepstatusの合成I/O測定を完了。全体storage削減率は未確定。原N1024四classの生成・保存を実測したが、保存checkerの3classが実RSS capで停止した。下記M6の停止/実費を保持し、検査レポートのbounded化と元rawのsaved再検算後に全job予算を判断する。
 
 ## 教師専用保存と全status付き最大Nの検査（2026-10-10）
 
@@ -110,3 +110,20 @@ workload JSONのraw_two_factor_driver_bytes_without_dedupは、fine normalsを�
 [独立全N検査](pilot-execution-evidence/task-5-teacher-storage-full-status-io-independent-v1-results.json)は全46 NPY headers、physical payload93,602,864 bytes・expanded93,608,752 bytes・全status/shape/dtype、原raw/aux payoff全行、全N平均/SE・16block/joint covarianceを再計算した。独立検査wall5.471255秒・peakRSS3,126,276,096 bytes。原保存10files不変、新RNG/金融workerなし。
 
 これは合成transportの検査であり、genuine教師の圧縮率・計算速度・金融精度を示さない。原全20gridの353,606,441,728 bytes以上のmandatory展開下限、各volumeの容量、main/oracle/復元の同時占有を保ち、genuine N1024四classの実測後に正式保存/実行予算を判断する。正式pilot/freeze/main・両保管庫の新金融semantic・研究受入は未完了。
+
+## 原四教師class（M6）の実測
+
+元N1024・12日付・全108/156/520/1344節点（計2,128）、元seed H138674072/local1345225788、共有driver2本を保持して実行した。4classとも元全節点の生成とfull raw保存まで完了、未生成節点0。行政上限はclass別300/300/600/900秒・個別process RSS4GiBで、所要時間予測ではない。
+
+| 元class | 節点 | 親込みwall秒 | 検査工程の結果 | 実child peak RSS bytes |
+|---|---:|---:|---|---:|
+| Heston coarse | 108 | 72.053259 | 検査・保存読込まで完了 | 1,926,557,696 |
+| Heston high | 156 | 114.619496 | 実RSS cap、金融資格unknown | 4,326,535,168 |
+| local coarse | 520 | 383.121392 | 実RSS cap、金融資格unknown | 4,361,334,784 |
+| local high | 1,344 | 831.816587 | 実RSS cap、金融資格unknown | 4,298,833,920 |
+
+[最外側実費](pilot-execution-evidence/task-5-current-full-teacher-root-enclosing-cost-v2.json)はwall1,401.807424秒・内部parent/child CPU1,406.361056秒。各class合計wall1,401.610735秒と別に保持し、外側と内部を加算しない。driverの生成費用はcoarse ownerに一度だけ含む。全81sourceはbefore/after一致。外側observer自身のCPUと最終receipt書込費用はunknown、元失敗/部分artifactを保持する。
+
+停止原因として、grid checkerが各節点の全label標本とcovariance/blockを検査結果にも複製する構造を確認した。local highの10種類N×65標本だけの論理量は7,156,531,200 bytes、covariance/blockだけでも約2.60GB。これらは実RSS予測とは区別する。元raw・統計・全N/閾値・全saved SDE/label/cache比較を保持し、検査レポートだけを原raw参照＋小要約にするprivate修正を準備中。旧測定をPASSへ書き換えず、新sourceで元生成rawを保存再検算する。新SDE生成/原乱数の再生成は行わない。
+
+本測定の保存geometry・物理bytes・費用/capは[独立レビュー](pilot-execution-evidence/task-5-current-full-teacher-independent-m6-v2-review.md)で限定承認された。全2,128節点のnative NPZは1,516,806,775 B、展開NPYは5,618,426,336 B（full-teacher/cache/driver/checkerは別計上）。全物理4,331 artifactsと96選択節点の原Nラベル/価格統計を確認し、原unknown_underresolved 47,182を保持。これは全節点Greek/SDEの独立再演算や全正式容量の保証ではない。金融精度・全phase容量/rate・正式pilot/main/研究受入は未承認。保存済みの原4classを全N検算する[再検査候補](pilot-execution-evidence/task-5-M6-saved-recheck-preparation-report-v1.md)は純行政30件/Ruff PASS、候補false・新checker承認/全terminal入力の固定待ち。M7の元state00/2model/N4096/13query/768–1536を保持する事前計測候補も準備済みで、純行政18probesとsource/API/guardを確認した。候補は未承認で金融実行なし、原controls={}と保存M4/M5明示controlsの差を別事前予算で結合する必要がある。

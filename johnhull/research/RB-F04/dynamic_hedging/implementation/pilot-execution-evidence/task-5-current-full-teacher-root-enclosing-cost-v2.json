@@ -1,0 +1,17 @@
+{
+  "schema": "rb-f04-current-full-teacher-root-enclosing-cost-v2",
+  "scope": "M6_original_full_teacher_N1024_four_classes_component_only",
+  "whole_wall_start": 30701.956563709,
+  "whole_wall_stop": 32103.76398746,
+  "whole_wall_seconds": 1401.8074237509973,
+  "CPU_inner_parent_child_tree_seconds": 1406.361056,
+  "external_observer_CPU_and_final_receipt_save": "unknown",
+  "exit_code": 3,
+  "source81_stable": true,
+  "prior_budget_sha256": "57314ddcadb722fea8cb54496f2ba586e39a877dbb0e9ba93e383fe1d57b0992",
+  "root_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "includes_all_four_classes_and_driver_two_once": true,
+  "not_added_again_to_internal_class_costs": true,
+  "formal_pilot_main_phase_approved": false,
+  "financial_qualification": "unknown"
+}

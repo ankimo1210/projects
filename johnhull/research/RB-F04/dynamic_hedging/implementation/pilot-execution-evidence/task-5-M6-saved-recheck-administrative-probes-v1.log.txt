@@ -1,0 +1,12 @@
+{
+  "scope": "pure synthetic observer metadata only; not native financial evidence",
+  "source_sha256": "e16a706848f496d10bfba213aec82190b7b2829887ed22aa279f11ece750164d",
+  "PASS": 30,
+  "FAIL": 0,
+  "guard_exit_code": 1,
+  "financial_imports_RNG_solver_worker": false,
+  "original_raw_arrays_driver_normals_read": false,
+  "formal_financial_qualification": "unknown",
+  "wall_seconds": 0.6847228890037513,
+  "cpu_seconds": 0.593071754
+}

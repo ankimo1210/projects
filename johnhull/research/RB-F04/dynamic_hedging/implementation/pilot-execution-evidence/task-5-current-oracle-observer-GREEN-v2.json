@@ -1,0 +1,360 @@
+{
+  "FAIL": 0,
+  "PASS": 18,
+  "RNG_solver_worker": false,
+  "cpu_seconds": 0.004627370999999998,
+  "financial_imports_or_execution": false,
+  "formal_financial_qualification": "unknown",
+  "probes": [
+    {
+      "PASS": true,
+      "actual": "completed_component",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "completed_component",
+      "name": "complete",
+      "progress_preserved_in_probe_input": {
+        "original_query_paths": 106496,
+        "raw_receipt": {
+          "binding": "saved fixture"
+        },
+        "stages": [
+          {
+            "stage": "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch"
+          },
+          {
+            "stage": "full_returned_raw_saved_before_checker"
+          },
+          {
+            "stage": "raw_read_driver_mapping_and_all_native_generator_expenses_retained"
+          },
+          {
+            "stage": "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned"
+          },
+          {
+            "stage": "current_source_stable"
+          }
+        ],
+        "status": "completed"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": "failed_at_declared_cap",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "failed_at_declared_cap",
+      "name": "fully_retained_native_cap",
+      "progress_preserved_in_probe_input": {
+        "native_cap_evidence": {
+          "cap_reached": true
+        },
+        "original_query_paths": 106496,
+        "raw_receipt": {
+          "binding": "saved fixture"
+        },
+        "stages": [
+          {
+            "stage": "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch"
+          },
+          {
+            "stage": "full_returned_raw_saved_before_checker"
+          },
+          {
+            "stage": "raw_read_driver_mapping_and_all_native_generator_expenses_retained"
+          },
+          {
+            "stage": "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned"
+          },
+          {
+            "stage": "current_source_stable"
+          }
+        ],
+        "status": "failed_at_declared_cap"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": "unclosed_declared_cap_evidence_incomplete",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "unclosed_declared_cap_evidence_incomplete",
+      "name": "incomplete_native_cap",
+      "progress_preserved_in_probe_input": {
+        "native_cap_evidence": {
+          "cap_reached": true
+        },
+        "stages": [],
+        "status": "failed_at_declared_cap"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": "unclosed_source_or_solver_defect_with_actual_cap",
+      "actual_cap_preserved_in_probe_input": {
+        "limit_seconds": 600,
+        "metric": "enclosing_class_wall",
+        "observed_seconds": 601
+      },
+      "expected": "unclosed_source_or_solver_defect_with_actual_cap",
+      "name": "fault_and_actual_cap_order_unknown",
+      "progress_preserved_in_probe_input": {
+        "error": "saved input mismatch",
+        "status": "unclosed_source_or_solver_defect"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": "failed_at_actual_cap",
+      "actual_cap_preserved_in_probe_input": {
+        "limit_seconds": 600,
+        "metric": "enclosing_class_wall",
+        "observed_seconds": 601
+      },
+      "expected": "failed_at_actual_cap",
+      "name": "actual_kill_without_return",
+      "progress_preserved_in_probe_input": null
+    },
+    {
+      "PASS": true,
+      "actual": "unclosed_missing_child_evidence",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "unclosed_missing_child_evidence",
+      "name": "missing_child",
+      "progress_preserved_in_probe_input": null
+    },
+    {
+      "PASS": true,
+      "actual": "unclosed_child_evidence_incomplete",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "unclosed_child_evidence_incomplete",
+      "name": "no_cap_missing_checkpoint",
+      "progress_preserved_in_probe_input": {
+        "original_query_paths": 106496,
+        "raw_receipt": {
+          "binding": "saved fixture"
+        },
+        "stages": [],
+        "status": "completed"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": "unclosed_declared_cap_evidence_incomplete",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "unclosed_declared_cap_evidence_incomplete",
+      "name": "complete_claim_native_cap_present",
+      "progress_preserved_in_probe_input": {
+        "native_cap_evidence": {
+          "cap_reached": true
+        },
+        "original_query_paths": 106496,
+        "raw_receipt": {
+          "binding": "saved fixture"
+        },
+        "stages": [
+          {
+            "stage": "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch"
+          },
+          {
+            "stage": "full_returned_raw_saved_before_checker"
+          },
+          {
+            "stage": "raw_read_driver_mapping_and_all_native_generator_expenses_retained"
+          },
+          {
+            "stage": "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned"
+          },
+          {
+            "stage": "current_source_stable"
+          }
+        ],
+        "status": "completed"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": "failed_at_actual_and_declared_cap",
+      "actual_cap_preserved_in_probe_input": {
+        "limit_seconds": 600,
+        "metric": "enclosing_class_wall",
+        "observed_seconds": 601
+      },
+      "expected": "failed_at_actual_and_declared_cap",
+      "name": "native_and_actual_caps",
+      "progress_preserved_in_probe_input": {
+        "native_cap_evidence": {
+          "cap_reached": true
+        },
+        "original_query_paths": 106496,
+        "raw_receipt": {
+          "binding": "saved fixture"
+        },
+        "stages": [
+          {
+            "stage": "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch"
+          },
+          {
+            "stage": "full_returned_raw_saved_before_checker"
+          },
+          {
+            "stage": "raw_read_driver_mapping_and_all_native_generator_expenses_retained"
+          },
+          {
+            "stage": "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned"
+          },
+          {
+            "stage": "current_source_stable"
+          }
+        ],
+        "status": "failed_at_declared_cap"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": "unclosed_source_or_solver_defect",
+      "actual_cap_preserved_in_probe_input": null,
+      "expected": "unclosed_source_or_solver_defect",
+      "name": "native_source_fault",
+      "progress_preserved_in_probe_input": {
+        "error": "saved input mismatch",
+        "status": "unclosed_source_or_solver_defect"
+      }
+    },
+    {
+      "PASS": true,
+      "actual": {
+        "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+        "metric": "actual_class_limit_observations",
+        "observations": [
+          {
+            "limit_seconds": 600.0,
+            "metric": "enclosing_class_wall",
+            "observation_phase": "after_progress_index_and_RSS_read",
+            "observed_seconds": 601.0
+          }
+        ]
+      },
+      "expected_metrics": [
+        "enclosing_class_wall"
+      ],
+      "name": "postexit_wall_overrun"
+    },
+    {
+      "PASS": true,
+      "actual": {
+        "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+        "metric": "actual_class_limit_observations",
+        "observations": [
+          {
+            "kernel_peak_bytes": 4294967303,
+            "limit_bytes": 4294967296,
+            "metric": "individual_child_RSS",
+            "observation_phase": "after_progress_index_and_RSS_read",
+            "observed_bytes": 4294967303,
+            "sampled_peak_bytes": 10
+          }
+        ]
+      },
+      "expected_metrics": [
+        "individual_child_RSS"
+      ],
+      "name": "postexit_child_kernel_RSS"
+    },
+    {
+      "PASS": true,
+      "actual": {
+        "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+        "metric": "actual_class_limit_observations",
+        "observations": [
+          {
+            "kernel_peak_bytes": 4294967305,
+            "limit_bytes": 4294967296,
+            "metric": "individual_parent_RSS",
+            "observation_phase": "after_progress_index_and_RSS_read",
+            "observed_bytes": 4294967305,
+            "sampled_peak_bytes": 30
+          }
+        ]
+      },
+      "expected_metrics": [
+        "individual_parent_RSS"
+      ],
+      "name": "postexit_parent_kernel_RSS"
+    },
+    {
+      "PASS": true,
+      "actual": {
+        "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+        "metric": "actual_class_limit_observations",
+        "observations": [
+          {
+            "limit_seconds": 600,
+            "metric": "enclosing_class_wall",
+            "observation_phase": "live_parent_monitor",
+            "observed_seconds": 601
+          },
+          {
+            "kernel_peak_bytes": 4294967298,
+            "limit_bytes": 4294967296,
+            "metric": "individual_child_RSS",
+            "observation_phase": "after_progress_index_and_RSS_read",
+            "observed_bytes": 4294967298,
+            "sampled_peak_bytes": 4294967297
+          },
+          {
+            "kernel_peak_bytes": 4294967300,
+            "limit_bytes": 4294967296,
+            "metric": "individual_parent_RSS",
+            "observation_phase": "after_progress_index_and_RSS_read",
+            "observed_bytes": 4294967300,
+            "sampled_peak_bytes": 4294967299
+          }
+        ]
+      },
+      "expected_metrics": [
+        "enclosing_class_wall",
+        "individual_child_RSS",
+        "individual_parent_RSS"
+      ],
+      "name": "all_limits_observed"
+    },
+    {
+      "PASS": true,
+      "actual": null,
+      "expected_metrics": [],
+      "name": "nothing_observed_below_cap"
+    },
+    {
+      "PASS": true,
+      "actual": {
+        "cap_exception_order": "unknown_unless_established_by_other_saved_evidence",
+        "metric": "actual_class_limit_observations",
+        "observations": [
+          {
+            "limit_seconds": 600,
+            "metric": "enclosing_class_wall",
+            "observation_phase": "live_parent_monitor",
+            "observed_seconds": 601
+          }
+        ]
+      },
+      "expected_metrics": [
+        "enclosing_class_wall"
+      ],
+      "name": "retain_prior_cap_below_closing"
+    },
+    {
+      "PASS": true,
+      "actual": "unclosed_observer_defect_with_actual_cap",
+      "expected": "unclosed_observer_defect_with_actual_cap",
+      "name": "observer_fault_with_cap"
+    },
+    {
+      "PASS": true,
+      "actual": "unclosed_observer_defect",
+      "expected": "unclosed_observer_defect",
+      "name": "observer_fault_no_cap"
+    }
+  ],
+  "scope": "stdlib AST decision and pure synthetic observer evidence only",
+  "source_sha256": "6c9d5fbae7cc4aec5105f7e9a432d3f75092b6a9b6080b7b7f45780f30628a10",
+  "wall_seconds": 0.004628997001418611
+}

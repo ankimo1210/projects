@@ -1,0 +1,74 @@
+{
+  "class": "Heston-high",
+  "executed_nodes": 156,
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "full_teacher_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "127362b1f743121f04db2aa461fab9e129fbae5a467c294b80f82fc52283422d",
+    "metadata_sha256": "4e02181d70151519ddc77af350dad2e7cc154178d75e4f0cacdeb492ebe61836",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "native_cap_evidence": null,
+  "original_nodes": 156,
+  "phase": "grid",
+  "process_peak_rss_bytes": 869511168,
+  "raw_status": "executed",
+  "scope": "M6_original_full_teacher_N1024_four_classes_component_only",
+  "stages": [
+    {
+      "clock": {
+        "cpu": 0.06381572,
+        "utc": "2026-10-10T04:25:09.442256+00:00",
+        "wall": 30774.224968955
+      },
+      "stage": "prior_budget_inputs_and_current_source_verified"
+    },
+    {
+      "actual_size": {
+        "child_boundary": "original_teacher_node",
+        "financial_child_count": 156,
+        "original_n": 1024,
+        "path_steps": 786432,
+        "total_path_steps": 122683392
+      },
+      "clock": {
+        "cpu": 2.950385222,
+        "utc": "2026-10-10T04:25:12.340618+00:00",
+        "wall": 30777.123332549
+      },
+      "driver_global_id": "c04df2cfc7e2533749886b1e7935cacf790a312eba3778bad7deccc75856c203",
+      "measurement_typed_arguments_sha256": "7290fc3ea11c3e4c89f5719e3b49323845e9db55c601aacfa721eed6f5d66346",
+      "planned_arguments_sha256": "3cdd8ffc20eff7376162161dea03b20af3bf431056bc453b35e4909c60ba1048",
+      "resolved_measurement_arguments_sha256": "8182f9b7b91636f4337fce012363bb5e13bc4bf1be79f1568abf858efa543ffb",
+      "stage": "all_original_teacher_obligations_saved_before_dispatch"
+    },
+    {
+      "clock": {
+        "cpu": 60.415196267,
+        "utc": "2026-10-10T04:26:09.869040+00:00",
+        "wall": 30834.65175675
+      },
+      "executed_nodes": 156,
+      "raw_status": "executed",
+      "stage": "original_full_teacher_dispatch_stop",
+      "unexecuted_nodes": 0
+    },
+    {
+      "clock": {
+        "cpu": 60.668077285,
+        "utc": "2026-10-10T04:26:10.121952+00:00",
+        "wall": 30834.904664814
+      },
+      "stage": "full_teacher_written_and_read"
+    }
+  ],
+  "started": {
+    "cpu": 0.031481836,
+    "utc": "2026-10-10T04:25:09.409925+00:00",
+    "wall": 30774.19263468
+  },
+  "status": "started",
+  "unexecuted_nodes": 0
+}

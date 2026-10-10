@@ -1,0 +1,24 @@
+
+from pathlib import Path
+import json,time,sys
+W=Path('/home/kazumasa/worktrees/johnhull-research-roadmap');D=W/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+sys.path[:0]=[str(W/'johnhull/research/RB-F04/dynamic_hedging'),str(W/'johnhull/hullkit/src'),str(W/'deep_hedge_price/src')]
+import run_pilot as pilot
+I=json.loads((D/'task-5-current-full-teacher-initial-description-v2.json').read_text());O=D/'task-5-current-full-teacher-observation-root-m6-v2'
+start=time.perf_counter();checks=[]
+for name,s in I['classes'].items():
+ q=json.loads((O/'classes'/name/'grid/progress.json').read_text())
+ st=next(v for v in q['stages'] if v['stage']=='all_original_teacher_obligations_saved_before_dispatch')
+ for key in ('planned_arguments_sha256','measurement_typed_arguments_sha256'):assert st[key]==s[key]
+ for objkey,hashkey in [('planned_typed_arguments','planned_arguments_sha256'),('measurement_typed_arguments','measurement_typed_arguments_sha256')]:
+  assert pilot.input_identity(s[objkey])==s[hashkey]
+ a=s['planned_typed_arguments'];b=s['measurement_typed_arguments']
+ diff=[k for k in set(a)|set(b) if a.get(k)!=b.get(k)]
+ assert set(diff)==set(s['override_keys'])=={'work_directory','wall_cap_seconds'}
+ for k in ('model','seed','original_n','grid','teacher_reference','evaluation_domains','stream_namespace','driver','parameters','surface','chunk_paths'):assert a.get(k)==b.get(k)
+ checks.append({'class':name,'planned_measurement_input_identity_independently_recomputed':True,
+  'only_actual_argument_differences':diff,'resolved_measurement_SHA_from_saved_progress':st['resolved_measurement_arguments_sha256']})
+v={'scope':'saved typed input_identity/only prior-authorized measurement overrides','PASS':True,'checks':checks,
+ 'verification_wall_seconds_after_import':time.perf_counter()-start,'financial_numerics_solver_executed':False}
+(D/'task-5-current-full-teacher-independent-m6-v2-arguments.json').write_text(json.dumps(v,indent=2))
+print(json.dumps(v))

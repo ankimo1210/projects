@@ -1,0 +1,857 @@
+{
+  "all_stream_namespace_bindings": {
+    "bootstrap": [
+      467711159
+    ],
+    "fresh": [
+      3204431721,
+      2015086102,
+      4200987281
+    ],
+    "optional_p": [
+      1318225101,
+      726223465,
+      4197217211
+    ],
+    "oracle": [
+      3631740690,
+      3584985287,
+      3528099577
+    ],
+    "pilot": [
+      571576394,
+      897800919,
+      57346572,
+      3530081562,
+      3298253178,
+      114746875
+    ],
+    "premium": [
+      74465188
+    ],
+    "refinement": [
+      3858740885,
+      1001519867,
+      310817098
+    ],
+    "teacher": [
+      138674072,
+      1345225788
+    ],
+    "test": [
+      3648259678,
+      4207029089,
+      2263049566
+    ],
+    "train": [
+      3050892616,
+      4085010191
+    ],
+    "validation": [
+      1680996203,
+      2946539793
+    ]
+  },
+  "classes": {
+    "Heston": {
+      "actual_full_generation_payoff_transitions": 122683392,
+      "actual_physical_expanded_bytes_and_compression_pending": true,
+      "call_table_dependency": {
+        "controls_delta": "M4/M5 separately budgeted explicit controls replace graph controls={}; axes/state roster/current field unchanged",
+        "effective_refinement_kinds": [
+          "base",
+          "cutoff",
+          "quadrature"
+        ],
+        "graph_original_controls": {},
+        "graph_planned_arguments_sha256": "d87b9d486f257bc22ce130954bc573131fd0b4f4b2097f9cff37ef6fef3d27ab",
+        "job_id": "independent-table:state00:Heston",
+        "measurement_controls": {
+          "log_half_width": 1.8,
+          "space_nodes": 2401,
+          "time_steps": 1920,
+          "upper": 250.0
+        },
+        "native_financial_qualification": "unchecked",
+        "prices_shape": [
+          3,
+          1,
+          7,
+          33
+        ],
+        "reuse_approval_status": "pending_explicit_root_component_dependency_reuse",
+        "saved_raw_artifact": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-observation-root-m4-v3/actual-independent-call-table-raw",
+        "state_nodes_binding": {
+          "dtype": "<f8",
+          "sha256": "df1d1f235ad8328c30c8baa67bfd50e900b44f1500327a818f3d3ca4544e1617",
+          "shape": [
+            33
+          ]
+        },
+        "surface_signature": {
+          "class": "hullkit._heston_local_surface.LocalVarianceGrid",
+          "parameters": {
+            "dividend_yield": 0.0,
+            "kappa": 2.0,
+            "rate": 0.03,
+            "rho": -0.7,
+            "spot": 100.0,
+            "theta": 0.04,
+            "v0": 0.04,
+            "xi": 0.3
+          },
+          "support_mask": {
+            "dtype": "bool",
+            "sha256": "93eb311d71063d51854d322c5db7d3e94109be17d0c343721594514aaf91dfa3",
+            "shape": [
+              257,
+              321
+            ]
+          },
+          "times": {
+            "dtype": "float64",
+            "sha256": "5bb2e5392190b0dff820e00a89f2c696f09bfe1f8e182be94cb74b9b4b0cb025",
+            "shape": [
+              257
+            ]
+          },
+          "values": {
+            "dtype": "float64",
+            "sha256": "64094caab3a783b30ca42d12399581cea3eec8289f2538885ecce54e220f4e53",
+            "shape": [
+              257,
+              321
+            ]
+          },
+          "wing_boundaries": {
+            "dtype": "int64",
+            "sha256": "8b15b51652886af21c766875aa0f1082583a2bbdf82268278779ac9fd3cad17b",
+            "shape": [
+              257,
+              2
+            ]
+          },
+          "z_nodes": {
+            "dtype": "float64",
+            "sha256": "86f092229cf541c5def1cc8583663195472933000cfd04aa06a21a49436a3928",
+            "shape": [
+              321
+            ]
+          }
+        }
+      },
+      "child_boundary": "level_query",
+      "coarse_fine_levels": [
+        768,
+        1536
+      ],
+      "date": 0.0,
+      "declared_conservative_total_path_steps": 163577856,
+      "driver_chunk_paths": 256,
+      "driver_chunks": 16,
+      "driver_fine_chunk_bytes": 6291456,
+      "driver_native_max_live_chunk_bytes": 12582912,
+      "driver_transitions": 6291456,
+      "financial_child_count": 26,
+      "first_failure_expanded_bytes_lower_bound": 851968,
+      "full_conceptual_fine_normals_bytes": 100663296,
+      "generator_expenses_retained_in_native_raw": true,
+      "input_state": {
+        "date": 0.0,
+        "memory_count": 0,
+        "memory_sum": 0.0,
+        "quote": 9.686255823501824,
+        "spot": 99.95
+      },
+      "job_id": "oracle:state00:Heston:referenceN4096",
+      "measurement_typed_arguments": {
+        "call_table": {
+          "job": "independent-table:state00:Heston"
+        },
+        "chunk_paths": 256,
+        "date": 0.0,
+        "memory_count": 0,
+        "memory_sum": 0.0,
+        "model": "heston",
+        "n_paths": 4096,
+        "parameters": {
+          "input": "parameters"
+        },
+        "quote": 9.686255823501824,
+        "quote_bump": 0.0001,
+        "seed": 3631740690,
+        "spot": 99.95,
+        "spot_bump": 0.02,
+        "steps_per_year": 1536,
+        "surface": {
+          "field_job": "field-current"
+        },
+        "wall_cap_seconds": 600.0
+      },
+      "measurement_typed_arguments_sha256": "bd0d701599345997cd81c085827b250144351de96d0308e2adefd69bbac7fb31",
+      "model": "heston",
+      "native_driver_maps_hashes_and_clocks_retained": true,
+      "native_driver_normals_saved": false,
+      "not_teacher_principal_or_reference_seed": true,
+      "operation": "oracle",
+      "original_n": 4096,
+      "original_query_count": 13,
+      "override_keys": [
+        "wall_cap_seconds"
+      ],
+      "override_rationale": "administrative enclosing class cap; original finance/seed/queries unchanged; observer output is separate and work_directory is not a worker kwarg",
+      "payoff_expanded_bytes_lower_bound": 851968,
+      "planned_arguments_sha256": "27b59fe0879cfa11db272c9f5197b643af04eb96df9a1956ce390174d075cebe",
+      "planned_prediction": {
+        "child_boundary": "level_query",
+        "expanded_bytes": null,
+        "financial_child_count": 26,
+        "path_steps": 6291456,
+        "total_path_steps": 163577856
+      },
+      "planned_typed_arguments": {
+        "call_table": {
+          "job": "independent-table:state00:Heston"
+        },
+        "chunk_paths": 256,
+        "date": 0.0,
+        "memory_count": 0,
+        "memory_sum": 0.0,
+        "model": "heston",
+        "n_paths": 4096,
+        "parameters": {
+          "input": "parameters"
+        },
+        "quote": 9.686255823501824,
+        "quote_bump": 0.0001,
+        "seed": 3631740690,
+        "spot": 99.95,
+        "spot_bump": 0.02,
+        "steps_per_year": 1536,
+        "surface": {
+          "field_job": "field-current"
+        }
+      },
+      "queries": [
+        {
+          "id": "base",
+          "quote": 9.686255823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "S+.1",
+          "quote": 9.686255823501824,
+          "spot": 99.97
+        },
+        {
+          "id": "S-.1",
+          "quote": 9.686255823501824,
+          "spot": 99.93
+        },
+        {
+          "id": "S+..5",
+          "quote": 9.686255823501824,
+          "spot": 99.96000000000001
+        },
+        {
+          "id": "S-..5",
+          "quote": 9.686255823501824,
+          "spot": 99.94
+        },
+        {
+          "id": "S+.2",
+          "quote": 9.686255823501824,
+          "spot": 99.99000000000001
+        },
+        {
+          "id": "S-.2",
+          "quote": 9.686255823501824,
+          "spot": 99.91
+        },
+        {
+          "id": "Q+.1",
+          "quote": 9.686355823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "Q-.1",
+          "quote": 9.686155823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "Q+..5",
+          "quote": 9.686305823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "Q-..5",
+          "quote": 9.686205823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "Q+.2",
+          "quote": 9.686455823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "Q-.2",
+          "quote": 9.686055823501825,
+          "spot": 99.95
+        }
+      ],
+      "query_ids": [
+        "base",
+        "S+.1",
+        "S-.1",
+        "S+..5",
+        "S-..5",
+        "S+.2",
+        "S-.2",
+        "Q+.1",
+        "Q-.1",
+        "Q+..5",
+        "Q-..5",
+        "Q+.2",
+        "Q-.2"
+      ],
+      "quote_bump": 0.0001,
+      "rss_limit_bytes": 4294967296,
+      "runtime_additional_keys": [
+        "deadline_wall"
+      ],
+      "saved_checker_SDE_replay": false,
+      "saved_checker_financial_unverified": [
+        "independent_path_generation",
+        "full_common_domain_call_fit"
+      ],
+      "saved_checker_work": "all 13 original arrays; 2 scheme levels; 3 widths; 16 blocks/covariance; deterministic approximate arithmetic",
+      "seed": 3631740690,
+      "seed_child_mapping": "SeedSequence[parent_seed,7426,chunk_index]",
+      "spot_bump": 0.02,
+      "status_expanded_bytes_lower_bound": 212992,
+      "stream_namespace": "oracle",
+      "stream_purpose": "independent_quote_positions",
+      "wall_limit_seconds": 600.0,
+      "width_multipliers": [
+        1.0,
+        0.5,
+        2.0
+      ]
+    },
+    "local": {
+      "actual_full_generation_payoff_transitions": 122683392,
+      "actual_physical_expanded_bytes_and_compression_pending": true,
+      "call_table_dependency": {
+        "controls_delta": "M4/M5 separately budgeted explicit controls replace graph controls={}; axes/state roster/current field unchanged",
+        "effective_refinement_kinds": [
+          "base",
+          "space",
+          "time",
+          "domain"
+        ],
+        "graph_original_controls": {},
+        "graph_planned_arguments_sha256": "db72393f8eb1ce6f9fd1da4267789fbf96b591c7b79419a2f24d5f8db7a175c2",
+        "job_id": "independent-table:state00:local",
+        "measurement_controls": {
+          "log_half_width": 1.8,
+          "space_nodes": 2401,
+          "time_steps": 1920,
+          "upper": 250.0
+        },
+        "native_financial_qualification": "unchecked",
+        "prices_shape": [
+          4,
+          1,
+          7,
+          7
+        ],
+        "reuse_approval_status": "pending_explicit_root_component_dependency_reuse",
+        "saved_raw_artifact": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-observation-root-m5-v3/actual-independent-call-table-raw",
+        "state_nodes_binding": {
+          "dtype": "<f8",
+          "sha256": "157f1cfc973e005724ad392c797ffcf17d67ffee6b7b3fb30e16c6b378803d1f",
+          "shape": [
+            7
+          ]
+        },
+        "surface_signature": {
+          "class": "hullkit._heston_local_surface.LocalVarianceGrid",
+          "parameters": {
+            "dividend_yield": 0.0,
+            "kappa": 2.0,
+            "rate": 0.03,
+            "rho": -0.7,
+            "spot": 100.0,
+            "theta": 0.04,
+            "v0": 0.04,
+            "xi": 0.3
+          },
+          "support_mask": {
+            "dtype": "bool",
+            "sha256": "93eb311d71063d51854d322c5db7d3e94109be17d0c343721594514aaf91dfa3",
+            "shape": [
+              257,
+              321
+            ]
+          },
+          "times": {
+            "dtype": "float64",
+            "sha256": "5bb2e5392190b0dff820e00a89f2c696f09bfe1f8e182be94cb74b9b4b0cb025",
+            "shape": [
+              257
+            ]
+          },
+          "values": {
+            "dtype": "float64",
+            "sha256": "64094caab3a783b30ca42d12399581cea3eec8289f2538885ecce54e220f4e53",
+            "shape": [
+              257,
+              321
+            ]
+          },
+          "wing_boundaries": {
+            "dtype": "int64",
+            "sha256": "8b15b51652886af21c766875aa0f1082583a2bbdf82268278779ac9fd3cad17b",
+            "shape": [
+              257,
+              2
+            ]
+          },
+          "z_nodes": {
+            "dtype": "float64",
+            "sha256": "86f092229cf541c5def1cc8583663195472933000cfd04aa06a21a49436a3928",
+            "shape": [
+              321
+            ]
+          }
+        }
+      },
+      "child_boundary": "level_query",
+      "coarse_fine_levels": [
+        768,
+        1536
+      ],
+      "date": 0.0,
+      "declared_conservative_total_path_steps": 163577856,
+      "driver_chunk_paths": 256,
+      "driver_chunks": 16,
+      "driver_fine_chunk_bytes": 6291456,
+      "driver_native_max_live_chunk_bytes": 12582912,
+      "driver_transitions": 6291456,
+      "financial_child_count": 26,
+      "first_failure_expanded_bytes_lower_bound": 851968,
+      "full_conceptual_fine_normals_bytes": 100663296,
+      "generator_expenses_retained_in_native_raw": true,
+      "input_state": {
+        "date": 0.0,
+        "memory_count": 0,
+        "memory_sum": 0.0,
+        "quote": 9.686255823501824,
+        "spot": 99.95
+      },
+      "job_id": "oracle:state00:local:referenceN4096",
+      "measurement_typed_arguments": {
+        "call_table": {
+          "job": "independent-table:state00:local"
+        },
+        "chunk_paths": 256,
+        "date": 0.0,
+        "memory_count": 0,
+        "memory_sum": 0.0,
+        "model": "local",
+        "n_paths": 4096,
+        "parameters": {
+          "input": "parameters"
+        },
+        "quote": 9.686255823501824,
+        "quote_bump": 0.0001,
+        "seed": 3631740690,
+        "spot": 99.95,
+        "spot_bump": 0.02,
+        "steps_per_year": 1536,
+        "surface": {
+          "field_job": "field-current"
+        },
+        "wall_cap_seconds": 600.0
+      },
+      "measurement_typed_arguments_sha256": "d8127fec108d02a5f3450134f6405834087b3335ca2eb4c92d5c6d515c8cfd51",
+      "model": "local",
+      "native_driver_maps_hashes_and_clocks_retained": true,
+      "native_driver_normals_saved": false,
+      "not_teacher_principal_or_reference_seed": true,
+      "operation": "oracle",
+      "original_n": 4096,
+      "original_query_count": 13,
+      "override_keys": [
+        "wall_cap_seconds"
+      ],
+      "override_rationale": "administrative enclosing class cap; original finance/seed/queries unchanged; observer output is separate and work_directory is not a worker kwarg",
+      "payoff_expanded_bytes_lower_bound": 851968,
+      "planned_arguments_sha256": "b7681a994f67ccafd8678a73586f2e9e34beeba574f120e051d31d889a756c2f",
+      "planned_prediction": {
+        "child_boundary": "level_query",
+        "expanded_bytes": null,
+        "financial_child_count": 26,
+        "path_steps": 6291456,
+        "total_path_steps": 163577856
+      },
+      "planned_typed_arguments": {
+        "call_table": {
+          "job": "independent-table:state00:local"
+        },
+        "chunk_paths": 256,
+        "date": 0.0,
+        "memory_count": 0,
+        "memory_sum": 0.0,
+        "model": "local",
+        "n_paths": 4096,
+        "parameters": {
+          "input": "parameters"
+        },
+        "quote": 9.686255823501824,
+        "quote_bump": 0.0001,
+        "seed": 3631740690,
+        "spot": 99.95,
+        "spot_bump": 0.02,
+        "steps_per_year": 1536,
+        "surface": {
+          "field_job": "field-current"
+        }
+      },
+      "queries": [
+        {
+          "id": "base",
+          "quote": 9.686255823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "S+.1",
+          "quote": 9.686255823501824,
+          "spot": 99.97
+        },
+        {
+          "id": "S-.1",
+          "quote": 9.686255823501824,
+          "spot": 99.93
+        },
+        {
+          "id": "S+..5",
+          "quote": 9.686255823501824,
+          "spot": 99.96000000000001
+        },
+        {
+          "id": "S-..5",
+          "quote": 9.686255823501824,
+          "spot": 99.94
+        },
+        {
+          "id": "S+.2",
+          "quote": 9.686255823501824,
+          "spot": 99.99000000000001
+        },
+        {
+          "id": "S-.2",
+          "quote": 9.686255823501824,
+          "spot": 99.91
+        },
+        {
+          "id": "Q+.1",
+          "quote": 9.686355823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "Q-.1",
+          "quote": 9.686155823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "Q+..5",
+          "quote": 9.686305823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "Q-..5",
+          "quote": 9.686205823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "Q+.2",
+          "quote": 9.686455823501824,
+          "spot": 99.95
+        },
+        {
+          "id": "Q-.2",
+          "quote": 9.686055823501825,
+          "spot": 99.95
+        }
+      ],
+      "query_ids": [
+        "base",
+        "S+.1",
+        "S-.1",
+        "S+..5",
+        "S-..5",
+        "S+.2",
+        "S-.2",
+        "Q+.1",
+        "Q-.1",
+        "Q+..5",
+        "Q-..5",
+        "Q+.2",
+        "Q-.2"
+      ],
+      "quote_bump": 0.0001,
+      "rss_limit_bytes": 4294967296,
+      "runtime_additional_keys": [
+        "deadline_wall"
+      ],
+      "saved_checker_SDE_replay": false,
+      "saved_checker_financial_unverified": [
+        "independent_path_generation",
+        "full_common_domain_call_fit"
+      ],
+      "saved_checker_work": "all 13 original arrays; 2 scheme levels; 3 widths; 16 blocks/covariance; deterministic approximate arithmetic",
+      "seed": 3631740690,
+      "seed_child_mapping": "SeedSequence[parent_seed,7426,chunk_index]",
+      "spot_bump": 0.02,
+      "status_expanded_bytes_lower_bound": 212992,
+      "stream_namespace": "oracle",
+      "stream_purpose": "independent_quote_positions",
+      "wall_limit_seconds": 600.0,
+      "width_multipliers": [
+        1.0,
+        0.5,
+        2.0
+      ]
+    }
+  },
+  "dependencies": {
+    "Heston": {
+      "controls_delta": "M4/M5 separately budgeted explicit controls replace graph controls={}; axes/state roster/current field unchanged",
+      "effective_refinement_kinds": [
+        "base",
+        "cutoff",
+        "quadrature"
+      ],
+      "graph_original_controls": {},
+      "graph_planned_arguments_sha256": "d87b9d486f257bc22ce130954bc573131fd0b4f4b2097f9cff37ef6fef3d27ab",
+      "job_id": "independent-table:state00:Heston",
+      "measurement_controls": {
+        "log_half_width": 1.8,
+        "space_nodes": 2401,
+        "time_steps": 1920,
+        "upper": 250.0
+      },
+      "native_financial_qualification": "unchecked",
+      "prices_shape": [
+        3,
+        1,
+        7,
+        33
+      ],
+      "reuse_approval_status": "pending_explicit_root_component_dependency_reuse",
+      "saved_raw_artifact": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-observation-root-m4-v3/actual-independent-call-table-raw",
+      "state_nodes_binding": {
+        "dtype": "<f8",
+        "sha256": "df1d1f235ad8328c30c8baa67bfd50e900b44f1500327a818f3d3ca4544e1617",
+        "shape": [
+          33
+        ]
+      },
+      "surface_signature": {
+        "class": "hullkit._heston_local_surface.LocalVarianceGrid",
+        "parameters": {
+          "dividend_yield": 0.0,
+          "kappa": 2.0,
+          "rate": 0.03,
+          "rho": -0.7,
+          "spot": 100.0,
+          "theta": 0.04,
+          "v0": 0.04,
+          "xi": 0.3
+        },
+        "support_mask": {
+          "dtype": "bool",
+          "sha256": "93eb311d71063d51854d322c5db7d3e94109be17d0c343721594514aaf91dfa3",
+          "shape": [
+            257,
+            321
+          ]
+        },
+        "times": {
+          "dtype": "float64",
+          "sha256": "5bb2e5392190b0dff820e00a89f2c696f09bfe1f8e182be94cb74b9b4b0cb025",
+          "shape": [
+            257
+          ]
+        },
+        "values": {
+          "dtype": "float64",
+          "sha256": "64094caab3a783b30ca42d12399581cea3eec8289f2538885ecce54e220f4e53",
+          "shape": [
+            257,
+            321
+          ]
+        },
+        "wing_boundaries": {
+          "dtype": "int64",
+          "sha256": "8b15b51652886af21c766875aa0f1082583a2bbdf82268278779ac9fd3cad17b",
+          "shape": [
+            257,
+            2
+          ]
+        },
+        "z_nodes": {
+          "dtype": "float64",
+          "sha256": "86f092229cf541c5def1cc8583663195472933000cfd04aa06a21a49436a3928",
+          "shape": [
+            321
+          ]
+        }
+      }
+    },
+    "local": {
+      "controls_delta": "M4/M5 separately budgeted explicit controls replace graph controls={}; axes/state roster/current field unchanged",
+      "effective_refinement_kinds": [
+        "base",
+        "space",
+        "time",
+        "domain"
+      ],
+      "graph_original_controls": {},
+      "graph_planned_arguments_sha256": "db72393f8eb1ce6f9fd1da4267789fbf96b591c7b79419a2f24d5f8db7a175c2",
+      "job_id": "independent-table:state00:local",
+      "measurement_controls": {
+        "log_half_width": 1.8,
+        "space_nodes": 2401,
+        "time_steps": 1920,
+        "upper": 250.0
+      },
+      "native_financial_qualification": "unchecked",
+      "prices_shape": [
+        4,
+        1,
+        7,
+        7
+      ],
+      "reuse_approval_status": "pending_explicit_root_component_dependency_reuse",
+      "saved_raw_artifact": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-observation-root-m5-v3/actual-independent-call-table-raw",
+      "state_nodes_binding": {
+        "dtype": "<f8",
+        "sha256": "157f1cfc973e005724ad392c797ffcf17d67ffee6b7b3fb30e16c6b378803d1f",
+        "shape": [
+          7
+        ]
+      },
+      "surface_signature": {
+        "class": "hullkit._heston_local_surface.LocalVarianceGrid",
+        "parameters": {
+          "dividend_yield": 0.0,
+          "kappa": 2.0,
+          "rate": 0.03,
+          "rho": -0.7,
+          "spot": 100.0,
+          "theta": 0.04,
+          "v0": 0.04,
+          "xi": 0.3
+        },
+        "support_mask": {
+          "dtype": "bool",
+          "sha256": "93eb311d71063d51854d322c5db7d3e94109be17d0c343721594514aaf91dfa3",
+          "shape": [
+            257,
+            321
+          ]
+        },
+        "times": {
+          "dtype": "float64",
+          "sha256": "5bb2e5392190b0dff820e00a89f2c696f09bfe1f8e182be94cb74b9b4b0cb025",
+          "shape": [
+            257
+          ]
+        },
+        "values": {
+          "dtype": "float64",
+          "sha256": "64094caab3a783b30ca42d12399581cea3eec8289f2538885ecce54e220f4e53",
+          "shape": [
+            257,
+            321
+          ]
+        },
+        "wing_boundaries": {
+          "dtype": "int64",
+          "sha256": "8b15b51652886af21c766875aa0f1082583a2bbdf82268278779ac9fd3cad17b",
+          "shape": [
+            257,
+            2
+          ]
+        },
+        "z_nodes": {
+          "dtype": "float64",
+          "sha256": "86f092229cf541c5def1cc8583663195472933000cfd04aa06a21a49436a3928",
+          "shape": [
+            321
+          ]
+        }
+      }
+    }
+  },
+  "dependency_prior_costs": {
+    "Heston": {
+      "child_peak_rss_bytes": 853876736,
+      "cpu_seconds": 5.209234303,
+      "existing_component_receipt": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-observation-root-m4-v3/parent-cost-and-decision.json",
+      "included_in_new_M7_clock": false,
+      "not_an_oracle_rate_or_runtime_prediction": true,
+      "wall_seconds": 5.425978318999114
+    },
+    "local": {
+      "child_peak_rss_bytes": 854016000,
+      "cpu_seconds": 36.236620963,
+      "existing_component_receipt": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-observation-root-m5-v3/parent-cost-and-decision.json",
+      "included_in_new_M7_clock": false,
+      "not_an_oracle_rate_or_runtime_prediction": true,
+      "wall_seconds": 35.52794575000007
+    }
+  },
+  "field_artifact": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-actual-pilot-input-preparation-v4-current-field",
+  "field_density_floor": 1e-10,
+  "field_frequency_scale": 512,
+  "field_order": 1024,
+  "field_shape": [
+    257,
+    321
+  ],
+  "financial_worker_or_RNG_executed": false,
+  "formal_finance_approved": false,
+  "graph_artifact": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-draft-source-unit-v3",
+  "graph_counts": {
+    "attempts": 51,
+    "cases": 121,
+    "jobs": 3138
+  },
+  "measurement_output_root": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-observation-root-m7-v2",
+  "original_selected_state00": {
+    "date": 0.0,
+    "date_index": 0,
+    "diagnostic_heston_variance": 0.02,
+    "historical_fit_qualification": "unknown",
+    "id": "state00",
+    "inferred_local_state": 0.8171800155228437,
+    "memory_count": 0,
+    "memory_sum": 0.0,
+    "original_state_id": 0,
+    "quote": 9.686255823501824,
+    "quote_source": "original saved selected-state market Q; unchanged",
+    "spot": 99.95
+  },
+  "prepared_input_json": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-actual-pilot-input-preparation-v4.json",
+  "read_source_snapshot_only_not_approval": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "bfd5b81fd8d356c387a8e313b0c0c8a5b538a26166ad4854572913d4f1608184",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc"
+  },
+  "schema": "rb-f04-current-oracle-initial-description-v1",
+  "scope": "M7_original_state00_N4096_two_independent_oracle_components_only",
+  "source_approval_status": "pending_new_codec_actual_closure"
+}

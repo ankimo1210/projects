@@ -1,0 +1,46 @@
+{
+  "scope": "D-only M7 original state00 N4096 two oracle preparation",
+  "finance_execution": false,
+  "source_tests_docs_Git_CAS_edited": false,
+  "root_preapproved": false,
+  "source_approval_pending": true,
+  "dependency_controls_delta_reuse_pending": true,
+  "status": "metadata_guard_administrative_probes_AST_ruff_PASS_finance_unexecuted",
+  "files": [
+    {
+      "path": "task-5-current-oracle-budget-candidate-v1.json",
+      "bytes": 27553,
+      "sha256": "8ce5a418378f83dff5b2e020b657c1bec94e250adf254ace12b14f9515670fe1"
+    },
+    {
+      "path": "task-5-current-oracle-initial-description-v1.json",
+      "bytes": 25793,
+      "sha256": "462e128fe43cb24c63237675abe1b3e2d6d7e611c14c247261fc2c832a7f22a1"
+    },
+    {
+      "path": "task-5-current-oracle-measurement-v1.py",
+      "bytes": 21035,
+      "sha256": "abd8b96dbdc10cedc03075fea8ab2028c6fa1b24e6c1d434795271930919f397"
+    },
+    {
+      "path": "task-5-current-oracle-preparation-report-v1.md",
+      "bytes": 8064,
+      "sha256": "851a91541dd1e70f2c5d4d413f4c3c0b156211befb161116705c58c931bf598a"
+    },
+    {
+      "path": "task-5-current-oracle-preparation-v1.py",
+      "bytes": 15689,
+      "sha256": "4093c5b67ed86f37b753ee43ad67a8c619b280aad0463eec5c775244af03f176"
+    },
+    {
+      "path": "task-5-current-oracle-preparation-verification-v1.json",
+      "bytes": 3913,
+      "sha256": "6acfd7b8ba9c65781fa2482d051a15bf07304b1d0943baaae9b50f1fe9965724"
+    },
+    {
+      "path": "task-5-current-oracle-preparation-verification-v1.py",
+      "bytes": 8729,
+      "sha256": "46f20b5131093e20e9b5b39f10a8efd18a6e05598f5330cc4ad090c659ba716a"
+    }
+  ]
+}

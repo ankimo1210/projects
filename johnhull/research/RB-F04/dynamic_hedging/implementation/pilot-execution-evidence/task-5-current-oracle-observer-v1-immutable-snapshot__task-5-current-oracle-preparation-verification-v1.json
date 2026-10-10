@@ -1,0 +1,84 @@
+{
+  "administrative_cap_sum_1200s_is_not_runtime_estimate": true,
+  "administrative_decision_probes": [
+    {
+      "exit_code": 0,
+      "expected": "completed_component",
+      "status": "PASS"
+    },
+    {
+      "exit_code": 3,
+      "expected": "failed_at_declared_cap",
+      "status": "PASS"
+    },
+    {
+      "exit_code": -9,
+      "expected": "failed_at_actual_cap",
+      "status": "PASS"
+    },
+    {
+      "exit_code": 0,
+      "expected": "unclosed_missing_child_evidence",
+      "status": "PASS"
+    },
+    {
+      "exit_code": 0,
+      "expected": "unclosed_source_or_solver_defect",
+      "status": "PASS"
+    },
+    {
+      "exit_code": 0,
+      "expected": "unclosed_source_or_solver_defect",
+      "status": "PASS"
+    },
+    {
+      "exit_code": 3,
+      "expected": "unclosed_source_or_solver_defect",
+      "status": "PASS"
+    },
+    {
+      "exit_code": 1,
+      "expected": "unclosed_source_or_solver_defect",
+      "status": "PASS"
+    }
+  ],
+  "argument_checks": [
+    {
+      "actual_signature_no_work_directory": true,
+      "call_table_controls_delta_explicit_pending": true,
+      "exact_dependency_graph_SHA_checked": true,
+      "job_id": "oracle:state00:Heston:referenceN4096",
+      "measurement_SHA_matches_actual_canonical": true,
+      "original_finance_and_seed_preserved": true,
+      "planned_SHA_matches_actual_canonical": true
+    },
+    {
+      "actual_signature_no_work_directory": true,
+      "call_table_controls_delta_explicit_pending": true,
+      "exact_dependency_graph_SHA_checked": true,
+      "job_id": "oracle:state00:local:referenceN4096",
+      "measurement_SHA_matches_actual_canonical": true,
+      "original_finance_and_seed_preserved": true,
+      "planned_SHA_matches_actual_canonical": true
+    }
+  ],
+  "candidate_rejects_before_financial_import_and_output": true,
+  "classes_original_state00_N4096_queries13_levels768_1536": true,
+  "dependency_reuse_approval_status": "pending_explicit_root_component_dependency_reuse",
+  "financial_module_import": false,
+  "financial_worker_or_RNG": false,
+  "formal_pilot_or_main": false,
+  "guard_exit_code": 1,
+  "guard_stderr": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-measurement-v1.py\", line 398, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-measurement-v1.py\", line 394, in main\n    return parent(args.output, args.budget)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-measurement-v1.py\", line 359, in parent\n    budget, description = validate_budget(budget_path)\n                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-oracle-measurement-v1.py\", line 63, in validate_budget\n    assert budget[\"root_preapproved\"] is True, \"candidate is not prior approval\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: candidate is not prior approval\n",
+  "input_binding_files_checked": 36,
+  "oracle_source_function_AST_sha256": "fd30181b30823efe75f49957b714b6597e739da35c5112447aaa61307991bd40",
+  "original_attempts": 51,
+  "original_cases": 121,
+  "original_graph_jobs": 3138,
+  "root_preapproved": false,
+  "saved_checker_scope": "deterministic arithmetic; no independent SDE replay",
+  "scope": "M7 deterministic metadata/canonical typed argument/administrative guard verification only",
+  "source_approval_status": "pending_new_codec_actual_closure",
+  "source_count_pending_not_guessed": true,
+  "status": "PASS"
+}
