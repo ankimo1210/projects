@@ -1,0 +1,30 @@
+{
+  "entries": [
+    {
+      "bytes": 655,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v8-start.json",
+      "ref": "artifact:sha256:0efe8d5718be8df9f64c60d33ffcdbaa80f9f85ef2f8ba77d64f3ac3e151c04f"
+    },
+    {
+      "bytes": 2020,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v8.json",
+      "ref": "artifact:sha256:2d58c8b5b4a6dfa96992a381c8f55b001fc3598a49a934265672e3cbf375266f"
+    },
+    {
+      "bytes": 3147126,
+      "mime": "application/octet-stream",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-batch-v8.jsonl",
+      "ref": "artifact:sha256:6ac2a9820b51f9dfef9d65c4f6e848b4329539340e3b1c6e86e6e7eff9e3f77c"
+    },
+    {
+      "bytes": 684,
+      "mime": "application/json",
+      "path": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-actual-root-postcheck-v3.json",
+      "ref": "artifact:sha256:0e1b18874b7314b05c47c4a1c3ae68e9da6c71b9bc9ab38581066a3dc998ee03"
+    }
+  ],
+  "kind": "closed_npz_storage_operation_v8_proof_extension_only",
+  "schema_version": 1
+}
