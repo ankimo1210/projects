@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "-q",
+    "--tb=short",
+    "-k",
+    "conditional_cap or plural_actual_caps or uncapped_fixed_n_plan"
+  ],
+  "exit_code": 2,
+  "wall_seconds": 0.6601567379984772,
+  "child_CPU_seconds": 1.969593,
+  "scope": "metadata-only source tests; original checker expected refusal",
+  "financial_pilot_run": false
+}

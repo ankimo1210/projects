@@ -57,3 +57,5 @@ v55の動的import3件が正式source封鎖を妨げることを実検査で確�
 全体物理容量の保証上界を新しい必須条件にしない。元DESIGNのjob/phase work-cost・予定byte/実測又は明示推計と、実容量監視を区別する。[次priorの契約gap](pilot-execution-evidence/task-5-fullmixed-prior-budget-independent-contract-gap-v2-review.md)を確認し、原3,138jobs/121cases/51obligationsの予算configを組み立てる。行政監視停止はpartial未閉鎖として保持し、金融cap受入へ置換しない。
 
 現在の候補接続ではconditional Nのprior cap consumerが未閉鎖。4N分の不変branchと実selector由来・実親を結ぶ確認を残し、先頭branchや固定Nで代用しない。正式lock/金融実行はこの接続と事前予算の確認後に進める。
+
+最大N65536の真正一節点は生成・保存を完了し、旧4GiB停止を保持して全N保存検算を39.414秒/peak3.722GB・新生成0で完了した。元mother1,344節点の完了には読み替えない。conditional cap consumerは追加22/関連既存16件・Ruff/format PASS、独立限定source確認済み。全3,138-job prior候補は未承認。保存検算の3600秒候補をN/格子別の明示推計へ補足した（local high/N65536のcap候補159000秒）。stage gate/selector/最初のactivationの再検算費用も補足中。詳細は[予算測定](PILOT_BUDGET_MEASUREMENTS.md)。

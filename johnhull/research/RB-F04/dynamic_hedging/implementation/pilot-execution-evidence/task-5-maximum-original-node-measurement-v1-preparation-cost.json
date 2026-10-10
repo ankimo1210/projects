@@ -1,0 +1,9 @@
+{
+  "CPU_seconds": 0.6455952540000001,
+  "kernel_peak_RSS_bytes": 211734528,
+  "numerical_array_decode_or_RNG_solver_SDE": false,
+  "report_tail_cost": "unknown",
+  "scope": "pure metadata/source bytes/hash preparation only",
+  "source_docs_tests_Git_CAS_edits": false,
+  "wall_seconds": 0.6562229099945398
+}

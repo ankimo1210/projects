@@ -1,0 +1,311 @@
+"""Pure administrative/metadata probes; no NumPy import, RNG, SDE or worker."""
+
+from __future__ import annotations
+
+import ast
+import copy
+import json
+import resource
+import runpy
+import sys
+import time
+from pathlib import Path
+
+D = Path(__file__).resolve().parent
+PREFIX = "task-5-maximum-original-node-measurement-v1"
+
+
+def main():
+    started, cpu = time.perf_counter(), time.process_time()
+    module = runpy.run_path(str(D / f"{PREFIX}.py"), run_name="pure_administrative_probes")
+    assert not {"numpy", "run_pilot", "check_pilot", "run_reference"} & set(sys.modules)
+    results = []
+    unit_dir = D / f"{PREFIX}-pure-preflight-v3"
+    unit_dir.mkdir(exist_ok=False)
+    candidate_path = D / f"{PREFIX}-budget-candidate.json"
+    candidate = json.loads(candidate_path.read_text())
+
+    def check(name, condition):
+        assert condition, name
+        results.append({"case": name, "result": "PASS", "synthetic": True})
+
+    def rejected(name, action):
+        try:
+            action()
+        except (AssertionError, ValueError, KeyError):
+            results.append({"case": name, "result": "REJECTED", "synthetic": True})
+        else:
+            raise AssertionError("negative probe accepted: " + name)
+
+    rejected("false candidate guard", lambda: module["validate_budget"](candidate_path))
+    rejected(
+        "false candidate parent rejects before output or worker launch",
+        lambda: module["parent"](Path(candidate["measurement_output_root"]), candidate_path),
+    )
+    check("false candidate output absent", not Path(candidate["measurement_output_root"]).exists())
+    # Pure source/metadata guard only. This fixture never calls runtime or a worker.
+    approved_fixture = dict(
+        candidate,
+        root_preapproved=True,
+        status="root_fixed_maximum_original_node_component_approved",
+        source_approval_status="approved_fixed_current_canonical81",
+    )
+    prior = unit_dir / "synthetic-root-true-guard-only.json"
+    module["save"](prior, approved_fixture)
+    actual, description = module["validate_budget"](prior)
+    check("whole source81 and original arguments pure guard positive", actual == approved_fixture)
+    for key, bad in [
+        ("scope", "formal_phase"),
+        ("formal_finance_approved", True),
+        ("wall_limit_seconds_inclusive", 301),
+        ("rss_limit_bytes_individual_parent_child", 8 * 1024**3),
+        ("source_approval_status", None),
+        ("source_identity_sha256", "0" * 64),
+        ("source_closed_file_count", 80),
+        ("probe_source_sha256", "0" * 64),
+        ("initial_description_sha256", "0" * 64),
+    ]:
+        changed = dict(approved_fixture, **{key: bad})
+        path = unit_dir / f"changed-{key}.json"
+        module["save"](path, changed)
+        rejected("prior guard " + key, lambda path=path: module["validate_budget"](path))
+    check(
+        "original mother1344 remains not a one-node grid",
+        description["original_mother_job"]["financial_child_count"] == 1344
+        and description["original_mother_job"]["operation"] == "teacher_grid"
+        and description["node_index"] == 17
+        and description["original_n"] == 65536,
+    )
+    check(
+        "exact declared mother argument binding",
+        module["packed_identity"](description["original_mother_job"]["arguments"], {})
+        == description["mother_arguments_sha256"],
+    )
+    mutated_arguments = copy.deepcopy(description["original_mother_job"]["arguments"])
+    mutated_arguments["original_n"] = 1024
+    check(
+        "reduced N cannot retain original argument SHA",
+        module["packed_identity"](mutated_arguments, {}) != description["mother_arguments_sha256"],
+    )
+    mutated_arguments["original_n"] = 65536
+    mutated_arguments["seed"] += 1
+    check(
+        "changed seed cannot retain original argument SHA",
+        module["packed_identity"](mutated_arguments, {}) != description["mother_arguments_sha256"],
+    )
+    rows = [
+        {"stage": name, "clock": {"wall": 1.0, "cpu": 0.0}} for name in sorted(module["REQUIRED"])
+    ]
+    success = {
+        "status": "completed",
+        "original_n": 65536,
+        "mother_node_count": 1344,
+        "component_node_index": 17,
+        "original_bank_processed_n": 65536,
+        "all_original_N_returned": True,
+        "full_saved_driver_sde_replayed": True,
+        "all11_full_original_N_labels_compared": True,
+        "new_RNG_generator_count": 1,
+        "raw_status": None,
+        "raw_returned": True,
+        "raw_receipt": {"synthetic": True},
+        "check_receipt": {"synthetic": True},
+        "whole_original_mother_job_executed": False,
+        "stages": rows,
+    }
+    decision = module["administrative_decision"]
+    check(
+        "complete synthetic administrative receipt",
+        decision(0, None, success) == "completed_component",
+    )
+    for key, bad in [
+        ("original_n", 1024),
+        ("mother_node_count", 1),
+        ("component_node_index", 0),
+        ("original_bank_processed_n", 1024),
+        ("all_original_N_returned", False),
+        ("full_saved_driver_sde_replayed", False),
+        ("all11_full_original_N_labels_compared", False),
+        ("new_RNG_generator_count", 2),
+        ("raw_status", "executed"),
+        ("raw_receipt", None),
+        ("check_receipt", None),
+        ("whole_original_mother_job_executed", True),
+    ]:
+        check(
+            "incomplete completion " + key,
+            decision(0, None, dict(success, **{key: bad})) == "unclosed_child_evidence_incomplete",
+        )
+    for missing in module["REQUIRED"]:
+        changed = dict(success, stages=[row for row in rows if row["stage"] != missing])
+        check(
+            "missing checkpoint " + missing,
+            decision(0, None, changed) == "unclosed_child_evidence_incomplete",
+        )
+    cap = {"metric": "enclosing_component_wall", "limit_seconds": 300, "observed_seconds": 301}
+    check(
+        "real closing cap retained despite completed raw",
+        decision(0, cap, success) == "failed_at_actual_cap",
+    )
+    failure = dict(
+        success, status="unclosed_source_or_solver_defect", error="synthetic source failure"
+    )
+    check(
+        "source failure is not cap",
+        decision(1, None, failure) == "unclosed_source_or_solver_defect",
+    )
+    check(
+        "source failure and cap both retained without order",
+        decision(1, cap, failure) == "unclosed_source_or_solver_defect_with_actual_cap",
+    )
+    check(
+        "observer error without cap",
+        decision(0, None, success, ["synthetic"]) == "unclosed_observer_defect",
+    )
+    check(
+        "observer error and cap",
+        decision(0, cap, success, ["synthetic"]) == "unclosed_observer_defect_with_actual_cap",
+    )
+    check(
+        "killed child without raw stays unknown", decision(-9, cap, None) == "failed_at_actual_cap"
+    )
+    native = dict(
+        success,
+        status="failed_at_declared_cap",
+        native_cap_owner="node",
+        native_cap_evidence={"metric": "wall_seconds", "limit": 2.0, "consumed": 2.1},
+        stages=[*rows, {"stage": "node_native_cap_closed"}],
+    )
+    check(
+        "authentic complete synthetic native cap",
+        decision(3, None, native) == "failed_at_declared_cap",
+    )
+    check(
+        "actual and native caps both retained",
+        decision(3, cap, native) == "failed_at_actual_and_declared_cap",
+    )
+    native_without_source_checkpoint = dict(
+        native,
+        stages=[
+            row for row in native["stages"] if row["stage"] != "current_source_and_inputs_stable"
+        ],
+    )
+    check(
+        "native cap without source closure remains unclosed",
+        decision(3, None, native_without_source_checkpoint)
+        == "unclosed_declared_cap_evidence_incomplete",
+    )
+    native_bad = dict(native, raw_receipt=None)
+    check(
+        "native cap lacking saved raw not complete",
+        decision(3, None, native_bad) == "unclosed_declared_cap_evidence_incomplete",
+    )
+    check(
+        "kill does not close native cap lacking saved raw",
+        decision(-9, cap, native_bad)
+        == "failed_at_actual_cap_with_incomplete_declared_cap_evidence",
+    )
+    not_reached = dict(
+        native, native_cap_evidence={"metric": "wall_seconds", "limit": 2.0, "consumed": 1.9}
+    )
+    check(
+        "native claimed cap below limit not qualified",
+        decision(3, None, not_reached) == "unclosed_declared_cap_evidence_incomplete",
+    )
+    closing = module["closing_observation"]
+    check(
+        "in-time unknown RSS not converted to zero",
+        closing(1, 2, 301, None, None, None, None, None) is None,
+    )
+    late = closing(1, 302, 301, None, None, None, None, None)
+    check(
+        "postexit observer cost wall included", late["observations"][0]["observed_seconds"] == 301
+    )
+    rss = closing(1, 2, 301, None, 100, 4 * 1024**3 + 1, None, None)
+    check(
+        "kernel highwater overrun observed afterexit",
+        rss["observations"][0]["metric"] == "individual_child_RSS",
+    )
+    both = closing(1, 302, 301, cap, None, 4 * 1024**3 + 1, None, None)
+    check(
+        "live wall cap and later RSS both remain",
+        len(both["observations"]) == 2 and both["cap_exception_order"].startswith("unknown"),
+    )
+    report = {
+        "original_n": 65536,
+        "full_saved_driver_sde_replayed": True,
+        "financial_qualification": "unknown",
+        "report_mode": "bounded",
+        "labels_reference": {
+            "all_original_N_label_values_compared": True,
+            "array_fields": {
+                key: {"shape": [65536, 65], "dtype": "<f8"} for key in module["SAMPLES"]
+            },
+        },
+        "raw_reference": {"node_index": 17, "node": {"date_index": 0, "spot": 100.0, "state": 1.0}},
+    }
+    module["bounded_coverage"](report)
+    check("full11 genuine-shape report descriptor", True)
+    for key in module["SAMPLES"]:
+        changed = copy.deepcopy(report)
+        changed["labels_reference"]["array_fields"][key]["shape"] = [1024, 65]
+        rejected(
+            "all original sample shape " + key,
+            lambda changed=changed: module["bounded_coverage"](changed),
+        )
+    changed = copy.deepcopy(report)
+    changed["full_saved_driver_sde_replayed"] = False
+    rejected("full saved SDE cannot be skipped", lambda: module["bounded_coverage"](changed))
+    source = (D / f"{PREFIX}.py").read_text()
+    tree = ast.parse(source)
+    child = next(
+        row for row in tree.body if isinstance(row, ast.FunctionDef) and row.name == "child"
+    )
+    counted = next(
+        row
+        for row in ast.walk(child)
+        if isinstance(row, ast.FunctionDef) and row.name == "counted_rng"
+    )
+    globals_ = {
+        "rng_calls": [],
+        "SEED": 1345225788,
+        "progress": {},
+        "original_rng": lambda seed: {"synthetic_generator": seed},
+    }
+    exec(
+        compile(ast.Module(body=[counted], type_ignores=[]), "<exact counted_rng AST>", "exec"),
+        globals_,
+    )
+    check(
+        "sole original bank synthetic RNG gate",
+        globals_["counted_rng"](1345225788) == {"synthetic_generator": 1345225788},
+    )
+    rejected("second Generator creation rejected", lambda: globals_["counted_rng"](1345225788))
+    check(
+        "no financial module import",
+        not {"numpy", "run_pilot", "check_pilot", "run_reference"} & set(sys.modules),
+    )
+    result = {
+        "scope": "pure synthetic observer/budget/arg provenance preflight only",
+        "cases": results,
+        "passed": len(results),
+        "financial_RNG_solver_SDE_worker_execution": 0,
+        "formal_finance_approved": False,
+        "root_false_candidate_sha256": module["sha"](candidate_path),
+        "probe_source_sha256": module["sha"](D / f"{PREFIX}.py"),
+        "source_identity_context": candidate["source_identity_sha256"],
+        "wall_seconds": time.perf_counter() - started,
+        "CPU_seconds": time.process_time() - cpu,
+        "kernel_peak_RSS_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+        "final_result_write_cost": "unknown",
+    }
+    path = D / f"{PREFIX}-verification-v3.json"
+    assert not path.exists()
+    module["save"](path, result)
+    print(
+        json.dumps({"PASS": len(results), "finance": 0, "root_preapproved": False}, sort_keys=True)
+    )
+
+
+if __name__ == "__main__":
+    main()

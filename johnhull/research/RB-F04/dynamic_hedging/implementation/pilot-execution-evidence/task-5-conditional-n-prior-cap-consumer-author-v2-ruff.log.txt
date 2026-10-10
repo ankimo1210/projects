@@ -1,0 +1,14 @@
+RUF059 Unpacked variable `template` is never used
+    --> deep_hedge_price/tests/test_dynamic_hedging_pilot.py:3997:5
+     |
+3995 | @pytest.mark.parametrize("first_parent", ["parent-A", "parent-B"])
+3996 | def test_plural_actual_caps_keep_parent_priority_all_bindings_and_inclusive_costs(first_parent):
+3997 |     template, base, row, spec, jobs = _conditional_cap_fixture(
+     |     ^^^^^^^^
+3998 |         parent_order=("parent-A", "parent-B")
+3999 |     )
+     |
+help: Prefix it with an underscore or any other dummy variable pattern
+
+Found 1 error.
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

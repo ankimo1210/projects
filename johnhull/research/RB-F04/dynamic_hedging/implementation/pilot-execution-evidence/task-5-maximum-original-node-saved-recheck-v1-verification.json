@@ -1,0 +1,325 @@
+{
+  "CPU_seconds": 0.5260868510000001,
+  "PASS": 62,
+  "candidate_sha256": "682391d79356350c100295d70bf3f9b4e2fb0446473ae7cd84d4261e1c9f0d40",
+  "cases": [
+    {
+      "case": "false candidate blocks runtime",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "false candidate blocks output and child launch",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "financial output absent",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "whole518receipt1609inputsource81 pure guard positive",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "fixed scope guard new_rng_allowed",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "fixed scope guard new_driver_or_teacher_generation_allowed",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "fixed scope guard saved_full_N_SDE_replay_required",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "fixed scope guard rss_limit_bytes_individual_parent_child",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "fixed scope guard wall_limit_seconds_inclusive",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "fixed scope guard formal_finance_approved",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "fixed scope guard source_approval_status",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "fixed scope guard source_identity_sha256",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "fixed scope guard saved_input_manifest_sha256",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "missing original input cannot close",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "old4GiBcap remains history",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "old failed expense not new saved expense",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "synthetic administrative complete",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects original_n",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects mother_node_count",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects component_node_index",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects original_bank_processed_n",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects full_saved_driver_sde_replayed",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects all11_full_original_N_labels_compared",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects raw_receipt",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects check_receipt",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects new_RNG_generator_count",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects new_driver_generation_count",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects new_teacher_generation_count",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects whole_original_mother_job_executed",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects missing one_original_raw_copy_read_and_origin_authenticated",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects missing original_initial_obligation_and_cap_cost_inputs_authenticated",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects missing full_original_N_SDE_all11_labels_and_full16_stats_compared",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects missing current_source81_and_original_field_verified",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects missing bounded_report_written_read_coverage_verified",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects missing original_full_bank_read_authenticated",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects missing source81_and_all_original_inputs_stable",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "completion rejects missing physical_and_expanded_inventory_saved",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "actual8GiBcap retained",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "missing raw under kill remains unknown",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "source exception never invented as cap",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "source exception and real cap both retained",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "observer exception and cap both retained",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "postexit wall observation included",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "unknown RSS is not zero",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "actual8GiB kernel highwater observed",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "all11 original label descriptors required",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor raw_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor conditioned_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor cv_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor f_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor f_x_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor raw_x_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor conditioned_x_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor unreplaced_cv_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor unreplaced_cv_x_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor aux_raw_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "allN label descriptor aux_conditioned_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "new RNG/teacher/bank sentinel raises",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "forbidden attempt remains observed",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "no bank/teacher generation call in child",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "actual saved checker and bounded helper connected",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "no financial modules loaded",
+      "result": "PASS",
+      "synthetic": true
+    }
+  ],
+  "finance_generation_RNG_SDE_solver_worker": 0,
+  "formal_financial_qualification": "unknown",
+  "kernel_peak_RSS_bytes": 24629248,
+  "original_failure_history_preserved": true,
+  "probe_source_sha256": "06f3c160b248a5e623d1064384c79386bbd2dc75060ffc41ec7c665b4c119fed",
+  "result_write_tail": "unknown",
+  "schema": "maximum-original-node-saved-pure-preflight-v1",
+  "wall_seconds": 0.5330660690015065
+}

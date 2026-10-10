@@ -1,0 +1,37 @@
+{
+  "decision": "limited_consumer_fix_implemented_and_scoped_verified_ready_for_independent_review",
+  "scope": "conditional original-N prior-cap option selection by actual parent and exact static plan except cap",
+  "checker_sha256": "952b8f89c930578db1f6531bd6e73ade947d7cfbef246cc8510d246a54ed6197",
+  "test_sha256": "e183f20b876cee2684b9a78bba7b3e00755210740e0758d3efdfcd46301e8d83",
+  "execution_source_identity_sha256": "dc7631fe73a457cd995d109aa693be9401b266410b9f53aa4e2d51e59f56d39c",
+  "source_file_count": 81,
+  "changed_runtime_file_count": 1,
+  "all_80_other_source_bytes_unchanged": true,
+  "original_4N_ladder_preserved": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "plural_actual_caps_preserved": true,
+  "prior_option_parent_order_preserved": true,
+  "static_prior_decision_and_actual_selector_evidence_split_preserved": true,
+  "existing_parent_cap_and_decision_SHA_validation_preserved": true,
+  "original_expense_scope_and_inclusive_accounting_preserved": true,
+  "standalone_API_public_API_solver_or_math_changed": false,
+  "source_author_unit_evidence": {
+    "RED": "8failed14passed",
+    "GREEN_added": "22passed",
+    "GREEN_affected_existing": "16passed",
+    "ruff": "PASS2files",
+    "format_check": "PASS2files"
+  },
+  "independent_review": "pending; author evidence is not independent approval",
+  "formal_budget_approved": false,
+  "formal_phase_approved": false,
+  "financial_qualification": "unknown",
+  "financial_pilot_or_RNG_SDE_solver_measurement_run": false,
+  "all_three_suites_run": false,
+  "Git_docs_CAS_modified_by_author": false,
+  "retained_failures": "initial source test environment collection failure; original meaningfulRED; Ruff-unused-variable and format-only failures retained"
+}

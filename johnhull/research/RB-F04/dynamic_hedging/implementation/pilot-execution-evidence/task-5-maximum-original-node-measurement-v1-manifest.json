@@ -1,0 +1,96 @@
+{
+  "RNG_solver_SDE_not_run": true,
+  "all_whole3138_financial_qualification_capacity_runtime_approval": "unknown",
+  "candidate_sha256": "d125b663329b3f42ee51885104f70135ae12ac3b0d3451b4f9d7b81699220e4f",
+  "description_sha256": "cc569f75f98197298902aa712d780c9f74b3257a43da921d5cba1b51ed2d8c6a",
+  "files": [
+    {
+      "bytes": 12344,
+      "path": "task-5-maximum-original-node-measurement-v1-administrative-probes.py",
+      "sha256": "7c13e8302e1f33c30a616d789bf30ec2b0c28ac46948f3af410d5879222344f8"
+    },
+    {
+      "bytes": 990,
+      "path": "task-5-maximum-original-node-measurement-v1-bounded-four-static-observation.json",
+      "sha256": "e9e875314995da436d517af6c72db413330e44c0c332641706ce20abcf64fb3b"
+    },
+    {
+      "bytes": 23939,
+      "path": "task-5-maximum-original-node-measurement-v1-budget-candidate.json",
+      "sha256": "d125b663329b3f42ee51885104f70135ae12ac3b0d3451b4f9d7b81699220e4f"
+    },
+    {
+      "bytes": 513,
+      "path": "task-5-maximum-original-node-measurement-v1-final-static-origin-verification.json",
+      "sha256": "9641bdfc2c5bbdfd6fdcdb84a121c4b438a0ba0d8368a3427e35e4ae505eb4bd"
+    },
+    {
+      "bytes": 19,
+      "path": "task-5-maximum-original-node-measurement-v1-final-validation-0.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "bytes": 26,
+      "path": "task-5-maximum-original-node-measurement-v1-final-validation-1.log",
+      "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd"
+    },
+    {
+      "bytes": 36389,
+      "path": "task-5-maximum-original-node-measurement-v1-final-validation-cost.json",
+      "sha256": "d89dc0905e9a10763f81a81bb8e56bcb29c7af92348e5e433147172fb3d6207d"
+    },
+    {
+      "bytes": 207330,
+      "path": "task-5-maximum-original-node-measurement-v1-initial-description.json",
+      "sha256": "cc569f75f98197298902aa712d780c9f74b3257a43da921d5cba1b51ed2d8c6a"
+    },
+    {
+      "bytes": 309,
+      "path": "task-5-maximum-original-node-measurement-v1-preparation-cost.json",
+      "sha256": "be52df9014b1665f7bc30d4c47b2d0fcb741a7fd1fcfa721752ff9dab714f58c"
+    },
+    {
+      "bytes": 4629,
+      "path": "task-5-maximum-original-node-measurement-v1-preparation.md",
+      "sha256": "d8df73617241678eafb557a86f44d5d3e25718b0dbdf6bcaee0f45e23de5bcff"
+    },
+    {
+      "bytes": 12334,
+      "path": "task-5-maximum-original-node-measurement-v1-preparation.py",
+      "sha256": "4f6b1d5950236e1243de0d26f2c24bde240317cab065fd49720c924d77d42769"
+    },
+    {
+      "bytes": 9200,
+      "path": "task-5-maximum-original-node-measurement-v1-verification-v2.json",
+      "sha256": "1cedffe7a1a52120507f5f976074289599aee43d3ec80d17b487142819c7a5c9"
+    },
+    {
+      "bytes": 9329,
+      "path": "task-5-maximum-original-node-measurement-v1-verification-v3.json",
+      "sha256": "03225674c161f622460ad032e341215a23b6fb89e2dfbeb3145fff1b7ea62806"
+    },
+    {
+      "bytes": 9200,
+      "path": "task-5-maximum-original-node-measurement-v1-verification.json",
+      "sha256": "e78e219f3043d40986340983ea8194aa05b70e309b6eb7a5bf33bb94effb7b5a"
+    },
+    {
+      "bytes": 38012,
+      "path": "task-5-maximum-original-node-measurement-v1.py",
+      "sha256": "8afa3de4842a5b2a42231e535247429243f0961f8dc3e93aa690668ba942d157"
+    }
+  ],
+  "finance_execution_count": 0,
+  "fixed": true,
+  "input_file_count": 43,
+  "maxN_genuine_memory_compression_rate_unknown": true,
+  "original_static_capacity_results_sha256": "73dce14a81ec35dbced1fca2d9cac1e79a34d0d33f64e408a3f2ff67624151eb",
+  "probe_source_sha256": "8afa3de4842a5b2a42231e535247429243f0961f8dc3e93aa690668ba942d157",
+  "root_preapproved": false,
+  "schema": "rb-f04-maximum-original-node-preparation-fixed-manifest-v1",
+  "scope": "D-only static capacity and genuine maximum component measurement preparation",
+  "source_file_count": 81,
+  "source_identity": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "source_inputs_unchanged": true,
+  "verification_sha256": "03225674c161f622460ad032e341215a23b6fb89e2dfbeb3145fff1b7ea62806"
+}

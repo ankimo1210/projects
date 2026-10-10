@@ -1,0 +1,1 @@
+{"finance": "unknown", "formal_pilot_or_main": false, "scope": "maximum_original_local_high_N65536_date0_node17_component_only", "status": "failed_at_actual_cap", "wall_seconds": 83.18030131999694}

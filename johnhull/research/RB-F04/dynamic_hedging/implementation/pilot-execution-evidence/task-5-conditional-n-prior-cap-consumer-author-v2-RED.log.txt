@@ -1,0 +1,21 @@
+
+==================================== ERRORS ====================================
+_____________ ERROR collecting tests/test_dynamic_hedging_pilot.py _____________
+ImportError while importing test module '/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_pilot.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_pilot.py:12: in <module>
+    import check_pilot  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:22: in <module>
+    import run_reference as runner
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:30: in <module>
+    from deep_hedge_price._dynamic_hedging_protocol import candidate_protocol
+E   ModuleNotFoundError: No module named 'deep_hedge_price._dynamic_hedging_protocol'
+=========================== short test summary info ============================
+ERROR deep_hedge_price/tests/test_dynamic_hedging_pilot.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.38s

@@ -3090,6 +3090,498 @@
       "archive": "task-5-conditional-n-prior-cap-consumer-minimal-proposal-v1.md",
       "bytes": 4731,
       "sha256": "106023b564e39292b4cb8192261796ab977e1bd6592c458856c87baaaf5e9c6d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-commands-cost.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-commands-cost.json",
+      "bytes": 700,
+      "sha256": "f4b8d74eed0ea517b7325b39e567466ca798617e105d15e3490c6256182405d3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v2-commands-cost.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v2-commands-cost.json",
+      "bytes": 361,
+      "sha256": "6b143b9521c992429600e655bb7beba410817406df1a7342a4269b04ae6fdd78"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v3-commands-cost.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v3-commands-cost.json",
+      "bytes": 1117,
+      "sha256": "d6907be92ad8e28cf5213464743a98d6cf4748cfc94a564906d89e1f2e543617"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v3.log",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v3.log.txt",
+      "bytes": 115,
+      "sha256": "75b47be10524f44711834dddd2f1aa1666809c4e5c8a4b1eb287f73254298dd1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-RED-cost.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-RED-cost.json",
+      "bytes": 456,
+      "sha256": "16ddc508ecf0a9568cd80b8a37b475074f07088c02c8aa8849f6df625c42e7ff"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-RED-v2-cost.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-RED-v2-cost.json",
+      "bytes": 710,
+      "sha256": "d825ed17bb925b6a8f04b6d9ce40a043039cb45741343b513123c6e0d244c86d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-RED-v2.log",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-RED-v2.log.txt",
+      "bytes": 6637,
+      "sha256": "57a354ca6790818ee758f36beb41b5d8c3f74fd732cdaddc0dfb6e92d2d662d6"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-RED.log",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-RED.log.txt",
+      "bytes": 1292,
+      "sha256": "1131839cd86ed4d9a29361c9b119b56c6faa2772359ea2436a51977c64e189b4"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-affected-cost.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-affected-cost.json",
+      "bytes": 1706,
+      "sha256": "40377f78a266b217d5406c88fa12645f34fab782f527ec3ffa6aa1c7621d09b1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-affected.log",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-affected.log.txt",
+      "bytes": 99,
+      "sha256": "4ee2546703a8840a21d5aa9047ac49fa438ff78671427bcc03466ab787f466f8"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-all-test-costs.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-all-test-costs.json",
+      "bytes": 6715,
+      "sha256": "d0258b5097808a58c0011ffaaa7b2421fa19ec4a76a3f73cb51cb13317bb6e4f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-decision.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-decision.json",
+      "bytes": 1738,
+      "sha256": "dc9604678bf9f82569385ccac1f701a7a89a6e533bb930e01b2c148bca8c035b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-final-format-check.log",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-final-format-check.log.txt",
+      "bytes": 26,
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-format-v2.log",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-format-v2.log.txt",
+      "bytes": 123,
+      "sha256": "84522a84e9a2d89a271ce116f457c4281dbf1b967fc9f3d32c867c604dbfc622"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-format-v3.log",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-format-v3.log.txt",
+      "bytes": 42,
+      "sha256": "10869b88a75066aa23546ef1f95fcd4678c3fb92a56ed46ef91688052b67976a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-format.log",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-format.log.txt",
+      "bytes": 42,
+      "sha256": "10869b88a75066aa23546ef1f95fcd4678c3fb92a56ed46ef91688052b67976a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-manifest.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-manifest.json",
+      "bytes": 6389,
+      "sha256": "16872a33fccdb27c99e783db7c8dd82113ab4ca1b34c2ec437118c6529ed5807"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-prepared-tests-added.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-prepared-tests-added.json",
+      "bytes": 713,
+      "sha256": "90c132f45012074f683d33cb2d2e1975e906694414880c75f1466be8f9e4ce24"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-report.md",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-report.md",
+      "bytes": 2634,
+      "sha256": "41ab0980b57e5a424166d60834770b4112440d3caab0d20fc17ee23f7d73a66c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-ruff-v3.log",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-ruff-v3.log.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-ruff.log",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-ruff.log.txt",
+      "bytes": 637,
+      "sha256": "70c026b57ebb8441c6cd678bb87da5da6cb22a80a8c40fe465754bb4f3ad7405"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-source-closure-after.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-source-closure-after.json",
+      "bytes": 33985,
+      "sha256": "b3fdeeb26e5d810fdb29216925e44b59843f9efd6c6c8cf69625c4c1e3ae2211"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-source-closure-before.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-source-closure-before.json",
+      "bytes": 33985,
+      "sha256": "32b727bc85822d267eee825fb2652b1fff4e25ea3f07d43b27c1de804ef1999d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-source-fixed-results.json",
+      "archive": "task-5-conditional-n-prior-cap-consumer-author-v2-source-fixed-results.json",
+      "bytes": 1246,
+      "sha256": "9338f1fe8c47f58c7518b76bad8b72c0fca32d498bdbef26f6f559d6d917b4ed"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-maxN-supplement-v2.json",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-maxN-supplement-v2.json",
+      "bytes": 4388,
+      "sha256": "fd53fc4ad9691c190d32f1d03565fe542df256b936913eabb6c6e1f07f73ff71"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3-cost.json",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3-cost.json",
+      "bytes": 253,
+      "sha256": "b651ced810e568b49939f6fd36b67a791855cb7c45c3ccc80f1d430fd39bda3a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json",
+      "bytes": 45889,
+      "sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.md",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.md",
+      "bytes": 2408,
+      "sha256": "dc0db12208defce53c5338efba05838c551eea6c1c34b4cffdbd885487c79ec6"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.py",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.py.txt",
+      "bytes": 9340,
+      "sha256": "f21b5f2a2c2b079ffea3eead2fe09900f044609b30d2baa90970280dd7d8fb37"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-gap.md",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-v1-gap.md",
+      "bytes": 2423,
+      "sha256": "af767003f6c488b18a9f63ff70c13e1625a7be56714529109f043d2253e79705"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-manifest-final-v3.json",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-v1-manifest-final-v3.json",
+      "bytes": 6117,
+      "sha256": "1ff123434ba81933eced3ff2bcd0f1efbbaaac2edfd25679ae3d4aa0b1f33571"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-preflight.json",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-v1-preflight.json",
+      "bytes": 1226,
+      "sha256": "c77fa70ffd605c0d22de82224e33bfcc1a7c8fce15bd8c6e9834219f0a02e59d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-provenance.json",
+      "archive": "task-5-fullmixed-prior-budget-candidate-author-v1-provenance.json",
+      "bytes": 15256,
+      "sha256": "e9eba49f16704c57bfd6c7b62abf8d4949271af4fa5186b7f1503dd9d7b7676f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-budget-root-fixed-v1.json",
+      "archive": "task-5-maximum-original-node-budget-root-fixed-v1.json",
+      "bytes": 24934,
+      "sha256": "e47003d19fb323b23a0ffb7e625e6c895d370c1b26f57e1ec3ea33d195b3fbfc"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-administrative-probes.py",
+      "archive": "task-5-maximum-original-node-measurement-v1-administrative-probes.py.txt",
+      "bytes": 12344,
+      "sha256": "7c13e8302e1f33c30a616d789bf30ec2b0c28ac46948f3af410d5879222344f8"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-bounded-four-static-observation.json",
+      "archive": "task-5-maximum-original-node-measurement-v1-bounded-four-static-observation.json",
+      "bytes": 990,
+      "sha256": "e9e875314995da436d517af6c72db413330e44c0c332641706ce20abcf64fb3b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-budget-candidate.json",
+      "archive": "task-5-maximum-original-node-measurement-v1-budget-candidate.json",
+      "bytes": 23939,
+      "sha256": "d125b663329b3f42ee51885104f70135ae12ac3b0d3451b4f9d7b81699220e4f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-final-static-origin-verification.json",
+      "archive": "task-5-maximum-original-node-measurement-v1-final-static-origin-verification.json",
+      "bytes": 513,
+      "sha256": "9641bdfc2c5bbdfd6fdcdb84a121c4b438a0ba0d8368a3427e35e4ae505eb4bd"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-final-validation-0.log",
+      "archive": "task-5-maximum-original-node-measurement-v1-final-validation-0.log.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-final-validation-1.log",
+      "archive": "task-5-maximum-original-node-measurement-v1-final-validation-1.log.txt",
+      "bytes": 26,
+      "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-final-validation-cost.json",
+      "archive": "task-5-maximum-original-node-measurement-v1-final-validation-cost.json",
+      "bytes": 36389,
+      "sha256": "d89dc0905e9a10763f81a81bb8e56bcb29c7af92348e5e433147172fb3d6207d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-initial-description.json",
+      "archive": "task-5-maximum-original-node-measurement-v1-initial-description.json",
+      "bytes": 207330,
+      "sha256": "cc569f75f98197298902aa712d780c9f74b3257a43da921d5cba1b51ed2d8c6a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-manifest.json",
+      "archive": "task-5-maximum-original-node-measurement-v1-manifest.json",
+      "bytes": 4096,
+      "sha256": "1869828ede31bc2bef98edcf44a7e2c6d4dbcf2c7f5cb21882f7d1645a92e210"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-preparation-cost.json",
+      "archive": "task-5-maximum-original-node-measurement-v1-preparation-cost.json",
+      "bytes": 309,
+      "sha256": "be52df9014b1665f7bc30d4c47b2d0fcb741a7fd1fcfa721752ff9dab714f58c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-preparation.md",
+      "archive": "task-5-maximum-original-node-measurement-v1-preparation.md",
+      "bytes": 4629,
+      "sha256": "d8df73617241678eafb557a86f44d5d3e25718b0dbdf6bcaee0f45e23de5bcff"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-preparation.py",
+      "archive": "task-5-maximum-original-node-measurement-v1-preparation.py.txt",
+      "bytes": 12334,
+      "sha256": "4f6b1d5950236e1243de0d26f2c24bde240317cab065fd49720c924d77d42769"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-verification-v2.json",
+      "archive": "task-5-maximum-original-node-measurement-v1-verification-v2.json",
+      "bytes": 9200,
+      "sha256": "1cedffe7a1a52120507f5f976074289599aee43d3ec80d17b487142819c7a5c9"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-verification-v3.json",
+      "archive": "task-5-maximum-original-node-measurement-v1-verification-v3.json",
+      "bytes": 9329,
+      "sha256": "03225674c161f622460ad032e341215a23b6fb89e2dfbeb3145fff1b7ea62806"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1-verification.json",
+      "archive": "task-5-maximum-original-node-measurement-v1-verification.json",
+      "bytes": 9200,
+      "sha256": "e78e219f3043d40986340983ea8194aa05b70e309b6eb7a5bf33bb94effb7b5a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-measurement-v1.py",
+      "archive": "task-5-maximum-original-node-measurement-v1.py.txt",
+      "bytes": 38012,
+      "sha256": "8afa3de4842a5b2a42231e535247429243f0961f8dc3e93aa690668ba942d157"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-observation-root-v1/child.log",
+      "archive": "task-5-maximum-original-node-observation-root-v1__child.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-observation-root-v1/initial-description.json",
+      "archive": "task-5-maximum-original-node-observation-root-v1__initial-description.json",
+      "bytes": 207330,
+      "sha256": "cc569f75f98197298902aa712d780c9f74b3257a43da921d5cba1b51ed2d8c6a"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-observation-root-v1/parent-cost-and-decision.json",
+      "archive": "task-5-maximum-original-node-observation-root-v1__parent-cost-and-decision.json",
+      "bytes": 578249,
+      "sha256": "ef3f2c312e46b83fd0053e17a7da6dc7ade95aa194bfe2e63f515c0564a646b3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-observation-root-v1/prior-root-budget.json",
+      "archive": "task-5-maximum-original-node-observation-root-v1__prior-root-budget.json",
+      "bytes": 24934,
+      "sha256": "e47003d19fb323b23a0ffb7e625e6c895d370c1b26f57e1ec3ea33d195b3fbfc"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-observation-root-v1/progress.json",
+      "archive": "task-5-maximum-original-node-observation-root-v1__progress.json",
+      "bytes": 411824,
+      "sha256": "d497e08605da1089e58972c7959b6218f972807afca845ee359aae92fa24aa24"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-root-enclosing-cost-v1.json",
+      "archive": "task-5-maximum-original-node-root-enclosing-cost-v1.json",
+      "bytes": 1408,
+      "sha256": "99056cb326e1cf736ecd805f7137fcf53bf8e37a68b0c0a71549f5d134a8f4db"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-root-v1.log",
+      "archive": "task-5-maximum-original-node-root-v1.log.txt",
+      "bytes": 198,
+      "sha256": "19aaba7e9f99ce5624a52d3957df1efd182b059242625b34e29180a94053af35"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-budget-root-fixed-v1.json",
+      "archive": "task-5-maximum-original-node-saved-budget-root-fixed-v1.json",
+      "bytes": 368552,
+      "sha256": "1a5df9249dcbf315d4c0bbc16ea7cd2b643160483c67cedc36a94b0d2a8f9ead"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-observation-root-v1/child.log",
+      "archive": "task-5-maximum-original-node-saved-observation-root-v1__child.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-observation-root-v1/initial-description.json",
+      "archive": "task-5-maximum-original-node-saved-observation-root-v1__initial-description.json",
+      "bytes": 5027,
+      "sha256": "b2bcbe32064f712735e150b41d6fb52b919c9eb37ce58b09cd29afab81958ef7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-observation-root-v1/parent-cost-and-decision.json",
+      "archive": "task-5-maximum-original-node-saved-observation-root-v1__parent-cost-and-decision.json",
+      "bytes": 118583,
+      "sha256": "876003d1634810ed4cd4f3504df018d9cf62c557a03e60c0ffbbf44b00fbad08"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-observation-root-v1/physical-and-expanded-inventory.json",
+      "archive": "task-5-maximum-original-node-saved-observation-root-v1__physical-and-expanded-inventory.json",
+      "bytes": 271961,
+      "sha256": "2cda84b1bd188b752b636b2115d91769e0c60a7392992ba13e4aba8528466b85"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-observation-root-v1/prior-root-budget.json",
+      "archive": "task-5-maximum-original-node-saved-observation-root-v1__prior-root-budget.json",
+      "bytes": 368552,
+      "sha256": "1a5df9249dcbf315d4c0bbc16ea7cd2b643160483c67cedc36a94b0d2a8f9ead"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-observation-root-v1/progress.json",
+      "archive": "task-5-maximum-original-node-saved-observation-root-v1__progress.json",
+      "bytes": 108451,
+      "sha256": "0e7a55fa07359b20ca104e6eb90166061e4e06fdd874bfdb076a07883e0a9a79"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-administrative-probes.py",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-administrative-probes.py.txt",
+      "bytes": 9761,
+      "sha256": "b5950cd16421d75066a2158333e1b3ca6c14e72a6b088a063dba91d7dbfc4771"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-budget-candidate.json",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-budget-candidate.json",
+      "bytes": 367220,
+      "sha256": "682391d79356350c100295d70bf3f9b4e2fb0446473ae7cd84d4261e1c9f0d40"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-final-origin-verification.json",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-final-origin-verification.json",
+      "bytes": 352,
+      "sha256": "b04c379f514fec55b16d14f44f3b61e6b8db56e9974c9792a45fb27d07f36ec7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-final-validation-0.log",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-final-validation-0.log.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-final-validation-1.log",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-final-validation-1.log.txt",
+      "bytes": 26,
+      "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-final-validation-cost.json",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-final-validation-cost.json",
+      "bytes": 2167,
+      "sha256": "83b2e3288a5adbc60bb0dbfeed31efb71a73cb742e730930c6e523a3a2718835"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-initial-description.json",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-initial-description.json",
+      "bytes": 5027,
+      "sha256": "b2bcbe32064f712735e150b41d6fb52b919c9eb37ce58b09cd29afab81958ef7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-input-manifest.json",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-input-manifest.json",
+      "bytes": 616098,
+      "sha256": "0e943fb89ac0b989fb0bd4432e9d4cfd521c1dfc2f283fdbc5701b500755c1f5"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-manifest.json",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-manifest.json",
+      "bytes": 3554,
+      "sha256": "158a0947825b6ead178f7c5eadf209a8380c4095b5f4c15cce8bdcfb365c89de"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-preparation-cost.json",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-preparation-cost.json",
+      "bytes": 336,
+      "sha256": "6573ebf7774e76eef1697deff85e4325c11085bbd99cc16eefee1aa4956a321e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-preparation.md",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-preparation.md",
+      "bytes": 1779,
+      "sha256": "92283e1fc0f1c536ff38d6874d6a77e5157d9876af9531e59a61fe36f07d1f01"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-preparation.py",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-preparation.py.txt",
+      "bytes": 11171,
+      "sha256": "b8faaaee5477689d21fa454bf8f30368140f2b4c72412ac029ab9f76b301f343"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1-verification.json",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1-verification.json",
+      "bytes": 8265,
+      "sha256": "649786910b84bf2eb02839f1f3b91e0fb4114a405af7787be3c1786c55525407"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-recheck-v1.py",
+      "archive": "task-5-maximum-original-node-saved-recheck-v1.py.txt",
+      "bytes": 28312,
+      "sha256": "06f3c160b248a5e623d1064384c79386bbd2dc75060ffc41ec7c665b4c119fed"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-root-component-review-v1.json",
+      "archive": "task-5-maximum-original-node-saved-root-component-review-v1.json",
+      "bytes": 1223,
+      "sha256": "5a443b96f6a3f64444c9ca19cb9e54aa79e930fb085e88cad69c87b2dd4a5c91"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-root-enclosing-cost-v1.json",
+      "archive": "task-5-maximum-original-node-saved-root-enclosing-cost-v1.json",
+      "bytes": 716,
+      "sha256": "fa81905beb452e63af0e641d0db6296f53116c34e73e28f34ef3953c9c029142"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-maximum-original-node-saved-root-v1.log",
+      "archive": "task-5-maximum-original-node-saved-root-v1.log.txt",
+      "bytes": 203,
+      "sha256": "686a9ba81d0526fbba711faf5015f28cd7c5ed7d155b593cd26e5e356c70b3a8"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-v2-source-decision.json",
+      "archive": "task-5-fullmixed-prior-budget-independent-v2-source-decision.json",
+      "bytes": 1231,
+      "sha256": "b53fda5750838bb7db5dfd45d66b7da7985faeff38e2ef67a73c5c53cc5a6918"
     }
   ],
   "scope": "original M0–M7 resource observations; bounded checker and completed saved original M6/M7 independent arithmetic/provenance reviews; static whole-capacity and original prior-budget contract limits; formal financial budget/pilot/main/phase remain unapproved",

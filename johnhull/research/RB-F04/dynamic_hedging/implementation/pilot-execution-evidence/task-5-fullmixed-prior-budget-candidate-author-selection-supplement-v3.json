@@ -1,0 +1,1000 @@
+{
+  "schema": "rb-f04-fullmixed-author-selection-budget-overlay-v3",
+  "approved": false,
+  "base_candidate": {
+    "path": "task-5-fullmixed-prior-budget-candidate-author-v1-config.json",
+    "sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "source_canonical_identity_at_fixed_assembly": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+    "current_source_binding": "root will bind repaired consumer closure; no current source approval claimed"
+  },
+  "maximum_N_saved_only_supplement": "task-5-fullmixed-prior-budget-candidate-author-maxN-supplement-v2.json",
+  "reviewed_budgets_updates": {
+    "teacher:Heston:N1024:coarse": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 300
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 31.008640309002658,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 1024,
+      "grid": "coarse",
+      "model": "Heston",
+      "source_teacher_raw_job_id": "teacher:Heston:N1024:coarse:raw",
+      "source_original_node_count": 108,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 31.008640309002658,
+        "N1024_linear_ratio": 1.0,
+        "full_class_linear_N_extrapolation_seconds": 31.008640309002658,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 31.008640309002658,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:local:N1024:coarse": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 600
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 186.48641375999432,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 1024,
+      "grid": "coarse",
+      "model": "local",
+      "source_teacher_raw_job_id": "teacher:local:N1024:coarse:raw",
+      "source_original_node_count": 520,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 186.48641375999432,
+        "N1024_linear_ratio": 1.0,
+        "full_class_linear_N_extrapolation_seconds": 186.48641375999432,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 186.48641375999432,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:Heston:N4096:coarse": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 600
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 124.03456123601063,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 4096,
+      "grid": "coarse",
+      "model": "Heston",
+      "source_teacher_raw_job_id": "teacher:Heston:N4096:coarse:raw",
+      "source_original_node_count": 108,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 31.008640309002658,
+        "N1024_linear_ratio": 4.0,
+        "full_class_linear_N_extrapolation_seconds": 124.03456123601063,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 124.03456123601063,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:Heston:N1024:high": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 300
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 50.18734905900055,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 1024,
+      "grid": "high",
+      "model": "Heston",
+      "source_teacher_raw_job_id": "teacher:Heston:N1024:high:raw",
+      "source_original_node_count": 156,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 50.18734905900055,
+        "N1024_linear_ratio": 1.0,
+        "full_class_linear_N_extrapolation_seconds": 50.18734905900055,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 50.18734905900055,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:Heston:N4096:high": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 900
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 200.7493962360022,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 4096,
+      "grid": "high",
+      "model": "Heston",
+      "source_teacher_raw_job_id": "teacher:Heston:N4096:high:raw",
+      "source_original_node_count": 156,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 50.18734905900055,
+        "N1024_linear_ratio": 4.0,
+        "full_class_linear_N_extrapolation_seconds": 200.7493962360022,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 200.7493962360022,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:Heston:N16384:coarse": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 1500
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 496.1382449440425,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 16384,
+      "grid": "coarse",
+      "model": "Heston",
+      "source_teacher_raw_job_id": "teacher:Heston:N16384:coarse:raw",
+      "source_original_node_count": 108,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 31.008640309002658,
+        "N1024_linear_ratio": 16.0,
+        "full_class_linear_N_extrapolation_seconds": 496.1382449440425,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 496.1382449440425,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:Heston:N16384:high": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 2700
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 802.9975849440088,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 16384,
+      "grid": "high",
+      "model": "Heston",
+      "source_teacher_raw_job_id": "teacher:Heston:N16384:high:raw",
+      "source_original_node_count": 156,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 50.18734905900055,
+        "N1024_linear_ratio": 16.0,
+        "full_class_linear_N_extrapolation_seconds": 802.9975849440088,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 802.9975849440088,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:Heston:N65536:coarse": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 6000
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 1984.55297977617,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 65536,
+      "grid": "coarse",
+      "model": "Heston",
+      "source_teacher_raw_job_id": "teacher:Heston:N65536:coarse:raw",
+      "source_original_node_count": 108,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 31.008640309002658,
+        "N1024_linear_ratio": 64.0,
+        "full_class_linear_N_extrapolation_seconds": 1984.55297977617,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 1984.55297977617,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:Heston:N65536:high": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 9900
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 3211.9903397760354,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 65536,
+      "grid": "high",
+      "model": "Heston",
+      "source_teacher_raw_job_id": "teacher:Heston:N65536:high:raw",
+      "source_original_node_count": 156,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 50.18734905900055,
+        "N1024_linear_ratio": 64.0,
+        "full_class_linear_N_extrapolation_seconds": 3211.9903397760354,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 3211.9903397760354,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher-reference:Heston:N65536:coarse": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 6000
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 1984.55297977617,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 65536,
+      "grid": "coarse",
+      "model": "Heston",
+      "source_teacher_raw_job_id": "teacher-reference:Heston:N65536:coarse:raw",
+      "source_original_node_count": 108,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 31.008640309002658,
+        "N1024_linear_ratio": 64.0,
+        "full_class_linear_N_extrapolation_seconds": 1984.55297977617,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 1984.55297977617,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher-reference:Heston:N65536:high": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 9900
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 3211.9903397760354,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 65536,
+      "grid": "high",
+      "model": "Heston",
+      "source_teacher_raw_job_id": "teacher-reference:Heston:N65536:high:raw",
+      "source_original_node_count": 156,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 50.18734905900055,
+        "N1024_linear_ratio": 64.0,
+        "full_class_linear_N_extrapolation_seconds": 3211.9903397760354,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 3211.9903397760354,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:local:N4096:coarse": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 2400
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 745.9456550399773,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 4096,
+      "grid": "coarse",
+      "model": "local",
+      "source_teacher_raw_job_id": "teacher:local:N4096:coarse:raw",
+      "source_original_node_count": 520,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 186.48641375999432,
+        "N1024_linear_ratio": 4.0,
+        "full_class_linear_N_extrapolation_seconds": 745.9456550399773,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 745.9456550399773,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:local:N1024:high": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 2700
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 827.6924734679997,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 1024,
+      "grid": "high",
+      "model": "local",
+      "source_teacher_raw_job_id": "teacher:local:N1024:high:raw",
+      "source_original_node_count": 1344,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 506.1640961910016,
+        "N1024_linear_ratio": 1.0,
+        "full_class_linear_N_extrapolation_seconds": 506.1640961910016,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": 39.413927307999984,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": 827.6924734679997,
+        "maximum_of_applicable_estimates_seconds": 827.6924734679997,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:local:N4096:high": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 10200
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 3310.7698938719986,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 4096,
+      "grid": "high",
+      "model": "local",
+      "source_teacher_raw_job_id": "teacher:local:N4096:high:raw",
+      "source_original_node_count": 1344,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 506.1640961910016,
+        "N1024_linear_ratio": 4.0,
+        "full_class_linear_N_extrapolation_seconds": 2024.6563847640064,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": 39.413927307999984,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": 3310.7698938719986,
+        "maximum_of_applicable_estimates_seconds": 3310.7698938719986,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:local:N16384:coarse": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 9000
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 2983.782620159909,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 16384,
+      "grid": "coarse",
+      "model": "local",
+      "source_teacher_raw_job_id": "teacher:local:N16384:coarse:raw",
+      "source_original_node_count": 520,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 186.48641375999432,
+        "N1024_linear_ratio": 16.0,
+        "full_class_linear_N_extrapolation_seconds": 2983.782620159909,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 2983.782620159909,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:local:N16384:high": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 39900
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 13243.079575487995,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 16384,
+      "grid": "high",
+      "model": "local",
+      "source_teacher_raw_job_id": "teacher:local:N16384:high:raw",
+      "source_original_node_count": 1344,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 506.1640961910016,
+        "N1024_linear_ratio": 16.0,
+        "full_class_linear_N_extrapolation_seconds": 8098.625539056025,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": 39.413927307999984,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": 13243.079575487995,
+        "maximum_of_applicable_estimates_seconds": 13243.079575487995,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:local:N65536:coarse": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 36000
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 11935.130480639637,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 65536,
+      "grid": "coarse",
+      "model": "local",
+      "source_teacher_raw_job_id": "teacher:local:N65536:coarse:raw",
+      "source_original_node_count": 520,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 186.48641375999432,
+        "N1024_linear_ratio": 64.0,
+        "full_class_linear_N_extrapolation_seconds": 11935.130480639637,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 11935.130480639637,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher:local:N65536:high": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 159000
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 52972.31830195198,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 65536,
+      "grid": "high",
+      "model": "local",
+      "source_teacher_raw_job_id": "teacher:local:N65536:high:raw",
+      "source_original_node_count": 1344,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 506.1640961910016,
+        "N1024_linear_ratio": 64.0,
+        "full_class_linear_N_extrapolation_seconds": 32394.5021562241,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": 39.413927307999984,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": 52972.31830195198,
+        "maximum_of_applicable_estimates_seconds": 52972.31830195198,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher-reference:local:N65536:coarse": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 36000
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 11935.130480639637,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 65536,
+      "grid": "coarse",
+      "model": "local",
+      "source_teacher_raw_job_id": "teacher-reference:local:N65536:coarse:raw",
+      "source_original_node_count": 520,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 186.48641375999432,
+        "N1024_linear_ratio": 64.0,
+        "full_class_linear_N_extrapolation_seconds": 11935.130480639637,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": null,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": null,
+        "maximum_of_applicable_estimates_seconds": 11935.130480639637,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    },
+    "teacher-reference:local:N65536:high": {
+      "budget": {
+        "planned_before_attempt": true,
+        "review_sha256": null,
+        "wall_seconds": 159000
+      },
+      "prediction": {
+        "expanded_bytes": 268435456,
+        "path_steps": 0,
+        "rate_source": null
+      },
+      "rate_source_proposal": "independently_reviewed_estimate",
+      "runtime_estimate_seconds": 52972.31830195198,
+      "estimate_only": true,
+      "financial_qualification": "unknown",
+      "original_n": 65536,
+      "grid": "high",
+      "model": "local",
+      "source_teacher_raw_job_id": "teacher-reference:local:N65536:high:raw",
+      "source_original_node_count": 1344,
+      "runtime_estimate_components": {
+        "measured_saved_N1024_full_class_wall_seconds": 506.1640961910016,
+        "N1024_linear_ratio": 64.0,
+        "full_class_linear_N_extrapolation_seconds": 32394.5021562241,
+        "observed_local_high_N65536_saved_node17_enclosing_seconds": 39.413927307999984,
+        "single_local_high_node_repeated_original_node_count_estimate_seconds": 52972.31830195198,
+        "maximum_of_applicable_estimates_seconds": 52972.31830195198,
+        "safety_factor": 3,
+        "rounding_seconds": 300
+      },
+      "scope": "saved full-N SDE/all11label/stat/block/cov checks and thin-report write/read estimate; selected output additional I/O remains unknown",
+      "independent_budget_and_estimate_review": "pending",
+      "full_selected_domain_financial_accuracy": "unknown",
+      "whole_class_RSS_guarantee_bytes": null,
+      "whole_class_physical_output_forecast_bytes": null,
+      "teacher_generation_expense_is_separate": true,
+      "full_node_component_import_driver_read_is_not_added_separately_to_repeated_node_recipe": true,
+      "driver_generation_is_in_its_original_shared_producer_job_only": true
+    }
+  },
+  "parent_cap_template_updates": [
+    {
+      "index": 8,
+      "job_id": "teacher:Heston:N1024:coarse",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 300,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 10,
+      "job_id": "teacher:local:N1024:coarse",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 600,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 12,
+      "job_id": "teacher:Heston:N4096:coarse",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 600,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 14,
+      "job_id": "teacher:Heston:N1024:high",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 300,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 215,
+      "job_id": "teacher:Heston:N4096:high",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 900,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 377,
+      "job_id": "teacher:Heston:N16384:coarse",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 1500,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 556,
+      "job_id": "teacher:Heston:N16384:high",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 2700,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 718,
+      "job_id": "teacher:Heston:N65536:coarse",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 6000,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 897,
+      "job_id": "teacher:Heston:N65536:high",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 9900,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 1059,
+      "job_id": "teacher-reference:Heston:N65536:coarse",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 6000,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 1220,
+      "job_id": "teacher-reference:Heston:N65536:high",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 9900,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 1383,
+      "job_id": "teacher:local:N4096:coarse",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 2400,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 1385,
+      "job_id": "teacher:local:N1024:high",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 2700,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 1582,
+      "job_id": "teacher:local:N4096:high",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 10200,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 1744,
+      "job_id": "teacher:local:N16384:coarse",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 9000,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 1923,
+      "job_id": "teacher:local:N16384:high",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 39900,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 2085,
+      "job_id": "teacher:local:N65536:coarse",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 36000,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 2264,
+      "job_id": "teacher:local:N65536:high",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 159000,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 2426,
+      "job_id": "teacher-reference:local:N65536:coarse",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 36000,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    },
+    {
+      "index": 2587,
+      "job_id": "teacher-reference:local:N65536:high",
+      "old_wall_limit_seconds": 3600,
+      "candidate_wall_limit_seconds": 159000,
+      "new_independent_review_sha256": null,
+      "requires_regenerate_exact_plan_cap_decisions": "all indexed cap options using this original parent"
+    }
+  ],
+  "exactly_original20_selection_jobs": true,
+  "original_N_axes_thresholds_parent_roster_and_work_unchanged": true,
+  "old_v1_3600_limits_retained_as_history": true,
+  "reason": "old fixed3600 administrative proposal does not cover measured full-N extrapolated saved checker scope",
+  "basis": {
+    "N1024_full_saved_checker_by_original_class_seconds": {
+      "Heston-coarse": 31.008640309002658,
+      "Heston-high": 50.18734905900055,
+      "local-coarse": 186.48641375999432,
+      "local-high": 506.1640961910016
+    },
+    "same_local_high_N65536_single_node_saved_only_enclosing_seconds": 39.413927307999984,
+    "baseline_scaling": "linear N only, unreviewed estimate",
+    "local_high_secondary_recipe": "node17 wall repeated original nodes, linear N; includes repeated bank/import overhead, still not guarantee",
+    "cap_recipe": "3 times maximum applicable estimate, round upwards to300s, minimum300s"
+  },
+  "evidence": {
+    "task-5-M6-saved-recheck-observation-root-v1/Heston-coarse/parent-cost-and-decision.json": {
+      "sha256": "e377ee0cca90a2a61a5f9794baf1bd2e633101711c5b5fe927ba6fe73ab1a97b",
+      "bytes": 8993
+    },
+    "task-5-M6-saved-recheck-observation-root-v1/Heston-high/parent-cost-and-decision.json": {
+      "sha256": "fbb8f623c3d6a198ab19cb8822074b091d5e460f8287f7379800d7eb903308ad",
+      "bytes": 8987
+    },
+    "task-5-M6-saved-recheck-observation-root-v1/local-coarse/parent-cost-and-decision.json": {
+      "sha256": "3a217c915d64858c6b6d04d64a135a118b14efffe9d9f1d442f0d29516f87b28",
+      "bytes": 9601
+    },
+    "task-5-M6-saved-recheck-observation-root-v1/local-high/parent-cost-and-decision.json": {
+      "sha256": "044b1c5d64b7f8c3734bca575ab26ae7fb6b0fb6aad714c65540b6faa23b008f",
+      "bytes": 10841
+    },
+    "task-5-maximum-original-node-saved-root-enclosing-cost-v1.json": {
+      "sha256": "fa81905beb452e63af0e641d0db6296f53116c34e73e28f34ef3953c9c029142",
+      "bytes": 716
+    }
+  },
+  "no_new_finance_RNG_solver_SDE_or_generation": true,
+  "financial_budget_phase_main_qualification_or_approval": false,
+  "other_unmeasured_operation_proposals": "v1 administrative cap candidates, runtime unknown staysNone",
+  "cap_decision_recipe_effect": "use updated original parent limit for every indexed option; old plan SHA/decision cannot be reused",
+  "history_cost_rule": "old4GiB failure and old generation retained; inner/enclosing are breakdowns, never added twice",
+  "phase_guard_followup": "root must choose actual administrative phase limit after overlay; v1 twice-sum cap proposal is not forecast",
+  "source_subset_I/O_unknowns": "domain-selected full write/read and full母grid intermediate RSS not all observed by saved-component measurements"
+}

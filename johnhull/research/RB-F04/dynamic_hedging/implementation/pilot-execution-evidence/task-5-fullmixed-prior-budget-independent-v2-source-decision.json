@@ -1,0 +1,22 @@
+{
+  "schema": "rb-f04-independent-bounded-source-cap-consumer-review-v1",
+  "decision": "approved",
+  "approval_scope": "source integrity and branch-compatible immutable cap-option selection only",
+  "checker_sha256": "952b8f89c930578db1f6531bd6e73ade947d7cfbef246cc8510d246a54ed6197",
+  "runtime_closure_sha256": "dc7631fe73a457cd995d109aa693be9401b266410b9f53aa4e2d51e59f56d39c",
+  "closure81_dynamic0": true,
+  "other80runtime_bytes_unchanged": true,
+  "prior4N_parent_option_order_preserved": true,
+  "source_delta": "one next-filter adds cap-excluded complete plan equality; downstream actual cap/status/metric/limit/prior decision digest guards preserved",
+  "review_basis": [
+    "independent metadata/byte/AST audit 28713 pass",
+    "author RED8 failure/14pass; GREEN22; related16; Ruff/format2 (saved logs verified)",
+    "eight 4N/order positives, two multi-parent order/cost positives, ten bad plan/status/cap/decision negatives, one reducedN and one ordinary fixedN regression"
+  ],
+  "budget_decision": "pending replay budget supplement",
+  "financial_qualification": "unknown",
+  "formal_pilot_run": false,
+  "main_or_phase_approval": false,
+  "source_edits_by_reviewer": false,
+  "new_financial_RNG_solver_SDE": 0
+}

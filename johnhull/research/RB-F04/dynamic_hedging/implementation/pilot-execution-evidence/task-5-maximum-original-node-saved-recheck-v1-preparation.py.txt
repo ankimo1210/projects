@@ -1,0 +1,242 @@
+"""Pure byte/receipt/metadata preparation; no numerical arrays are decoded."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import resource
+import time
+import zipfile
+from pathlib import Path
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+PREFIX = "task-5-maximum-original-node-saved-recheck-v1"
+
+
+def digest(value):
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    ).hexdigest()
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for part in iter(lambda: stream.read(1024**2), b""):
+            h.update(part)
+    return h.hexdigest()
+
+
+def save(path, value):
+    assert not path.exists(), path
+    path.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
+
+
+def main():
+    started, cpu = time.perf_counter(), time.process_time()
+    original_prefix = "task-5-maximum-original-node-measurement-v1"
+    original = json.loads((D / (original_prefix + "-initial-description.json")).read_text())
+    original_budget = json.loads(
+        (D / "task-5-maximum-original-node-budget-root-fixed-v1.json").read_text()
+    )
+    old_root = D / "task-5-maximum-original-node-observation-root-v1"
+    failure = json.loads((old_root / "parent-cost-and-decision.json").read_text())
+    progress = json.loads((old_root / "progress.json").read_text())
+    assert failure["status"] == "failed_at_actual_cap"
+    assert failure["RSS_overrun_bytes"] > 0 and failure["exit_code"] == -9
+    assert progress["bank_processed_n"] == 65536
+    assert progress["bank_unexecuted_n"] == 0 and progress["all_original_N_returned"] is True
+    assert progress["raw_status"] is None and progress["raw_returned"] is True
+    assert not {
+        "full_original_N_SDE_and_all11_labels_compared",
+        "completed_component_checkpoint",
+    } & {row["stage"] for row in progress["stages"]}
+    inputs = dict(original_budget["input_file_bindings"])
+    for p in sorted(old_root.rglob("*")):
+        if p.is_file():
+            inputs[str(p.relative_to(WT))] = sha(p)
+    context_names = [
+        "task-5-maximum-original-node-budget-root-fixed-v1.json",
+        "task-5-maximum-original-node-root-enclosing-cost-v1.json",
+        original_prefix + "-initial-description.json",
+        original_prefix + "-manifest.json",
+        original_prefix + "-budget-candidate.json",
+        original_prefix + ".py",
+        "task-5-teacher-check-report-bounded-independent-v1-decision.json",
+    ]
+    for name in context_names:
+        inputs[str((D / name).relative_to(WT))] = sha(D / name)
+    receipts = {}
+    for path in sorted(old_root.rglob("receipt.json")):
+        directory = path.parent
+        r = json.loads(path.read_text())
+        body = {key: value for key, value in r.items() if key != "artifact_sha256"}
+        assert r["artifact_sha256"] == digest(body)
+        assert (
+            path.read_bytes()
+            == json.dumps(r, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+        )
+        assert r["metadata_sha256"] == inputs[str((directory / "metadata.json").relative_to(WT))]
+        assert r["arrays_sha256"] == inputs[str((directory / "arrays.npz").relative_to(WT))]
+        with zipfile.ZipFile(directory / "arrays.npz") as archive:
+            # Central-directory sizes only: no NPY/data read or numerical decoding.
+            expanded = sum(item.file_size for item in archive.infolist())
+        assert expanded == r["uncompressed_bytes"] <= 256 * 1024**2
+        receipts[str(directory.relative_to(WT))] = r
+    raw_path = old_root / "actual-original-node"
+    metadata = json.loads((raw_path / "metadata.json").read_text())["metadata"]
+    recipe = metadata["teacher_storage"]
+    assert recipe["recipe"] == "primitive_labels-global-driver-date-v1"
+    assert len(recipe["samples"]) == 11
+    assert all(row == {"shape": [65536, 65], "dtype": "<f8"} for row in recipe["samples"].values())
+    pack_ids = {ref["id"] for row in metadata["arrays"].values() for ref in row["parts"]}
+    raw_binding = {
+        "kind": "teacher_recipe_physical_v1",
+        "root_artifact_sha256": receipts[str(raw_path.relative_to(WT))]["artifact_sha256"],
+        "packs": {
+            key: receipts[str((raw_path / key).relative_to(WT))]["artifact_sha256"]
+            for key in sorted(pack_ids)
+        },
+        "recipe": recipe["recipe"],
+        "source_bindings": recipe["source_bindings"],
+    }
+    raw_binding["artifact_sha256"] = digest(
+        {"root": raw_binding["root_artifact_sha256"], "packs": raw_binding["packs"]}
+    )
+    assert raw_binding == progress["raw_binding"]
+    driver_meta = json.loads((old_root / "actual-driver/metadata.json").read_text())["metadata"][
+        "tree"
+    ]
+    assert driver_meta["processed_n"] == driver_meta["original_n"] == 65536
+    assert driver_meta["unexecuted_n"] == 0 and len(driver_meta["chunks"]) == 256
+    assert driver_meta["teacher_reference"] is None and driver_meta["seed"] == 1345225788
+    source = original_budget["source_bindings"]
+    for relative, expected in source.items():
+        assert sha(WT / relative) == expected
+    assert len(source) == 81
+    description = {
+        "schema": "rb-f04-maximum-original-node-saved-description-v1",
+        "scope": "saved_original_local_high_N65536_date0_node17_recheck_component_only",
+        "original_n": 65536,
+        "seed": 1345225788,
+        "threshold_count": 65,
+        "blocks": 16,
+        "chunk_paths": 256,
+        "calendar_shape": [769],
+        "bank_chunk_count": 256,
+        "node_index": 17,
+        "node": original["node"],
+        "mother_node_count": 1344,
+        "original_mother_job_id": original["original_mother_job_id"],
+        "original_driver_job_id": original["original_driver_job_id"],
+        "graph_counts": original["graph_counts"],
+        "field_shape": [257, 321],
+        "field_artifact": original["field_artifact"],
+        "prepared_input_json": original["prepared_input_json"],
+        "original_graph_and_axes_arguments_bound_description": original_prefix
+        + "-initial-description.json",
+        "original_mother_arguments_sha256": original["mother_arguments_sha256"],
+        "original_driver_arguments_sha256": original["driver_arguments_sha256"],
+        "original_axes_payload_sha256": original["axes_payload_sha256"],
+        "sample_fields": original["sample_fields"],
+        "original_N1024_normal_prefix": original["original_N1024_normal_prefix"],
+        "raw_path": str(raw_path.relative_to(WT)),
+        "original_raw_binding": raw_binding,
+        "driver_path": str((old_root / "actual-driver").relative_to(WT)),
+        "bank_directory": str((old_root / "bank-work").relative_to(WT)),
+        "initial_obligation_path": str((old_root / "initial-original-obligation").relative_to(WT)),
+        "original_failure_history": {
+            "parent_receipt_path": str(
+                (old_root / "parent-cost-and-decision.json").relative_to(WT)
+            ),
+            "outer_receipt_path": "task-5-maximum-original-node-root-enclosing-cost-v1.json",
+            "status": failure["status"],
+            "actual_cap_evidence": failure["actual_cap_evidence"],
+            "original_generation_and_failed_checker_cost_is_history_not_new_expense": True,
+            "all_original_financial_qualification": "unknown",
+        },
+        "original_initial_obligation_retained_without_rewrite": True,
+        "new_bank_or_teacher_generation": False,
+        "one_full_raw_copy_read_without_regeneration": True,
+        "all_original_N_saved_SDE_replay_required": True,
+        "all11_label_full16_block_covariance_reference_comparisons_required": True,
+        "eight_GiB_fit_unknown": True,
+        "financial_qualification": "unknown",
+        "whole_original_mother_job_executed": False,
+        "measurement_output_root": str(
+            D / "task-5-maximum-original-node-saved-observation-root-v1"
+        ),
+    }
+    save(D / (PREFIX + "-initial-description.json"), description)
+    save(
+        D / (PREFIX + "-input-manifest.json"),
+        {
+            "schema": "maximum-original-node-saved-input-byte-manifest-v1",
+            "physical_byte_SHA_map": inputs,
+            "authenticated_receipts": receipts,
+            "file_count": len(inputs),
+            "receipt_count": len(receipts),
+            "all_original_full_bank_and_node_obligation_caps_costs_retained": True,
+            "financial_array_decode_rng_solver_SDE": False,
+        },
+    )
+    candidate = {
+        "schema": "rb-f04-maximum-original-node-saved-prior-v1",
+        "scope": description["scope"],
+        "root_preapproved": False,
+        "status": "prepared_saved_only_candidate_not_execution_approval",
+        "source_approval_status": None,
+        "new_component_source_approval_evidence": None,
+        "formal_finance_approved": False,
+        "financial_qualification": "unknown",
+        "source_identity_sha256": original_budget["source_identity_sha256"],
+        "source_closed_file_count": 81,
+        "source_bindings": source,
+        "input_file_bindings": inputs,
+        "probe_source_sha256": sha(D / (PREFIX + ".py")),
+        "initial_description_sha256": sha(D / (PREFIX + "-initial-description.json")),
+        "saved_input_manifest_sha256": sha(D / (PREFIX + "-input-manifest.json")),
+        "wall_limit_seconds_inclusive": 300.0,
+        "rss_limit_bytes_individual_parent_child": 8 * 1024**3,
+        "rss_metric": "maximum_individual_parent_or_child_RSS_not_AS",
+        "new_rng_allowed": False,
+        "new_driver_or_teacher_generation_allowed": False,
+        "saved_full_N_SDE_replay_required": True,
+        "eight_GiB_fit_unknown": True,
+        "runtime_estimate_seconds": None,
+        "measurement_output_root": description["measurement_output_root"],
+        "old4GiB_failure_history_is_immutable_not_added_to_new_cost": True,
+        "initial_originalN_unknown_obligation_preserved": True,
+        "original_whole1344_mother_job_is_not_complete": True,
+        "budget_includes_source_input_auth_imports_driver_auth_raw1copy_fullcheck_report_io_inventory_closing_observer": True,
+        "final_receipt_tail_requires_root_outer_receipt": True,
+    }
+    save(D / (PREFIX + "-budget-candidate.json"), candidate)
+    save(
+        D / (PREFIX + "-preparation-cost.json"),
+        {
+            "wall_seconds": time.perf_counter() - started,
+            "CPU_seconds": time.process_time() - cpu,
+            "kernel_peak_RSS_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+            "scope": "pure old full physical bytes/receipts/central ZIP metadata/input source authentication",
+            "financial_array_decode_rng_solver_SDE_generation": False,
+            "final_receipt_write_and_authoring_tail_cost": "unknown",
+        },
+    )
+    print(
+        json.dumps(
+            {
+                "prepared": True,
+                "false_candidate": True,
+                "files": len(inputs),
+                "receipts": len(receipts),
+                "finance": 0,
+            },
+            sort_keys=True,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

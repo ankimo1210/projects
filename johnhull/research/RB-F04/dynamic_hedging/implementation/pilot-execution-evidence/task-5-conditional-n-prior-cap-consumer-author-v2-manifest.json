@@ -1,0 +1,152 @@
+{
+  "scope": "conditional original-N prior-cap option selection by actual parent and exact static plan except cap",
+  "checker_sha256": "952b8f89c930578db1f6531bd6e73ade947d7cfbef246cc8510d246a54ed6197",
+  "test_sha256": "e183f20b876cee2684b9a78bba7b3e00755210740e0758d3efdfcd46301e8d83",
+  "execution_source_identity_sha256": "dc7631fe73a457cd995d109aa693be9401b266410b9f53aa4e2d51e59f56d39c",
+  "runtime_source_file_count": 81,
+  "independent_review": "pending",
+  "formal_phase_approved": false,
+  "files": [
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-commands-cost.json",
+      "sha256": "f4b8d74eed0ea517b7325b39e567466ca798617e105d15e3490c6256182405d3",
+      "bytes": 700
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v2-commands-cost.json",
+      "sha256": "6b143b9521c992429600e655bb7beba410817406df1a7342a4269b04ae6fdd78",
+      "bytes": 361
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v3-commands-cost.json",
+      "sha256": "d6907be92ad8e28cf5213464743a98d6cf4748cfc94a564906d89e1f2e543617",
+      "bytes": 1117
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-GREEN-v3.log",
+      "sha256": "75b47be10524f44711834dddd2f1aa1666809c4e5c8a4b1eb287f73254298dd1",
+      "bytes": 115
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-RED-cost.json",
+      "sha256": "16ddc508ecf0a9568cd80b8a37b475074f07088c02c8aa8849f6df625c42e7ff",
+      "bytes": 456
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-RED-v2-cost.json",
+      "sha256": "d825ed17bb925b6a8f04b6d9ce40a043039cb45741343b513123c6e0d244c86d",
+      "bytes": 710
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-RED-v2.log",
+      "sha256": "57a354ca6790818ee758f36beb41b5d8c3f74fd732cdaddc0dfb6e92d2d662d6",
+      "bytes": 6637
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-RED.log",
+      "sha256": "1131839cd86ed4d9a29361c9b119b56c6faa2772359ea2436a51977c64e189b4",
+      "bytes": 1292
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-affected-cost.json",
+      "sha256": "40377f78a266b217d5406c88fa12645f34fab782f527ec3ffa6aa1c7621d09b1",
+      "bytes": 1706
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-affected.log",
+      "sha256": "4ee2546703a8840a21d5aa9047ac49fa438ff78671427bcc03466ab787f466f8",
+      "bytes": 99
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-all-test-costs.json",
+      "sha256": "d0258b5097808a58c0011ffaaa7b2421fa19ec4a76a3f73cb51cb13317bb6e4f",
+      "bytes": 6715
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-decision.json",
+      "sha256": "dc9604678bf9f82569385ccac1f701a7a89a6e533bb930e01b2c148bca8c035b",
+      "bytes": 1738
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-final-format-check.log",
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938",
+      "bytes": 26
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-format-v2.log",
+      "sha256": "84522a84e9a2d89a271ce116f457c4281dbf1b967fc9f3d32c867c604dbfc622",
+      "bytes": 123
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-format-v3.log",
+      "sha256": "10869b88a75066aa23546ef1f95fcd4678c3fb92a56ed46ef91688052b67976a",
+      "bytes": 42
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-format.log",
+      "sha256": "10869b88a75066aa23546ef1f95fcd4678c3fb92a56ed46ef91688052b67976a",
+      "bytes": 42
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-prepared-tests-added.json",
+      "sha256": "90c132f45012074f683d33cb2d2e1975e906694414880c75f1466be8f9e4ce24",
+      "bytes": 713
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-report.md",
+      "sha256": "41ab0980b57e5a424166d60834770b4112440d3caab0d20fc17ee23f7d73a66c",
+      "bytes": 2634
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-ruff-v3.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-ruff.log",
+      "sha256": "70c026b57ebb8441c6cd678bb87da5da6cb22a80a8c40fe465754bb4f3ad7405",
+      "bytes": 637
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-source-after/deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+      "sha256": "e183f20b876cee2684b9a78bba7b3e00755210740e0758d3efdfcd46301e8d83",
+      "bytes": 166567
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-source-after/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "sha256": "952b8f89c930578db1f6531bd6e73ade947d7cfbef246cc8510d246a54ed6197",
+      "bytes": 205464
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-source-before/deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+      "sha256": "0bb854a66ba5aad9174b036b90ed48683d10018930a560a609d5a2b10589e90b",
+      "bytes": 157038
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-source-before/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "sha256": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b",
+      "bytes": 205226
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-source-closure-after.json",
+      "sha256": "b3fdeeb26e5d810fdb29216925e44b59843f9efd6c6c8cf69625c4c1e3ae2211",
+      "bytes": 33985
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-source-closure-before.json",
+      "sha256": "32b727bc85822d267eee825fb2652b1fff4e25ea3f07d43b27c1de804ef1999d",
+      "bytes": 33985
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-source-fixed-results.json",
+      "sha256": "9338f1fe8c47f58c7518b76bad8b72c0fca32d498bdbef26f6f559d6d917b4ed",
+      "bytes": 1246
+    },
+    {
+      "path": "task-5-conditional-n-prior-cap-consumer-author-v2-source.diff",
+      "sha256": "0dad4205c24cb1befebc713ebcd385e85d9d2ac58ef0bc9f85b6b4e00025a6e1",
+      "bytes": 11020
+    }
+  ],
+  "old_manifests_modified": false
+}

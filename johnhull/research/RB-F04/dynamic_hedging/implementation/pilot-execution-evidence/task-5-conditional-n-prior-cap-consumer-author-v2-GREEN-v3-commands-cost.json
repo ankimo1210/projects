@@ -1,0 +1,42 @@
+[
+  {
+    "name": "format-v3",
+    "argv": [
+      "/home/kazumasa/projects/.venv/bin/ruff",
+      "format",
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.02066416999878129,
+    "child_CPU_seconds": 0.022483999999999997
+  },
+  {
+    "name": "ruff-v3",
+    "argv": [
+      "/home/kazumasa/projects/.venv/bin/ruff",
+      "check",
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.014357660998939537,
+    "child_CPU_seconds": 0.016315000000000003
+  },
+  {
+    "name": "GREEN-v3",
+    "argv": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "-m",
+      "pytest",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+      "-q",
+      "--tb=short",
+      "-k",
+      "conditional_cap or plural_actual_caps or uncapped_fixed_n_plan"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 2.2420755160055705,
+    "child_CPU_seconds": 4.915671000000001
+  }
+]

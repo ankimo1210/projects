@@ -1,0 +1,34 @@
+{
+  "Heston-coarse": {
+    "has_status": false,
+    "metadataSHA": "f634a50b8feab4e85c79c7ce6d69416de7135a42922ba2238314d58e7d8e8d4f",
+    "numeric_arrays_decoded": false,
+    "payload": 7192884,
+    "physical": 9057520,
+    "raw_checks": 108
+  },
+  "Heston-high": {
+    "has_status": false,
+    "metadataSHA": "afcf4344f2d6643b30ed05cdc821962af53a18a8a61fae3c3c673af8e3fffe6c",
+    "numeric_arrays_decoded": false,
+    "payload": 19940996,
+    "physical": 22704743,
+    "raw_checks": 156
+  },
+  "local-coarse": {
+    "has_status": false,
+    "metadataSHA": "6c0adf1c243011bace5997b02a0c8763f54f06aa59de5e1ebe7dd053fa588a03",
+    "numeric_arrays_decoded": false,
+    "payload": 35144092,
+    "physical": 44108269,
+    "raw_checks": 520
+  },
+  "local-high": {
+    "has_status": false,
+    "metadataSHA": "8802c84fa355c792c997d98f923cafb6a5fa705d02ddc732cc71f3b83fd3493f",
+    "numeric_arrays_decoded": false,
+    "payload": 174543348,
+    "physical": 198357752,
+    "raw_checks": 1344
+  }
+}

@@ -1,0 +1,365 @@
+{
+  "CPU_seconds": 0.352708449,
+  "cases": [
+    {
+      "case": "false candidate guard",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "false candidate parent rejects before output or worker launch",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "false candidate output absent",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "whole source81 and original arguments pure guard positive",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "prior guard scope",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "prior guard formal_finance_approved",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "prior guard wall_limit_seconds_inclusive",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "prior guard rss_limit_bytes_individual_parent_child",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "prior guard source_approval_status",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "prior guard source_identity_sha256",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "prior guard source_closed_file_count",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "prior guard probe_source_sha256",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "prior guard initial_description_sha256",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "original mother1344 remains not a one-node grid",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "exact declared mother argument binding",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "reduced N cannot retain original argument SHA",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "changed seed cannot retain original argument SHA",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "complete synthetic administrative receipt",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion original_n",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion mother_node_count",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion component_node_index",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion original_bank_processed_n",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion all_original_N_returned",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion full_saved_driver_sde_replayed",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion all11_full_original_N_labels_compared",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion new_RNG_generator_count",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion raw_status",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion raw_receipt",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion check_receipt",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "incomplete completion whole_original_mother_job_executed",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "missing checkpoint all_original_N_unknown_obligation_written",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "missing checkpoint shared_bank_generation_returned",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "missing checkpoint original_raw_written_read_origin_authenticated",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "missing checkpoint original_node_generation_returned",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "missing checkpoint physical_inventory_and_expanded_counts_saved",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "missing checkpoint shared_bank_written_read_authenticated",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "missing checkpoint current_source_and_inputs_stable",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "missing checkpoint bounded_report_written_read_verified",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "missing checkpoint full_original_N_SDE_and_all11_labels_compared",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "real closing cap retained despite completed raw",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "source failure is not cap",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "source failure and cap both retained without order",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "observer error without cap",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "observer error and cap",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "killed child without raw stays unknown",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "authentic complete synthetic native cap",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "actual and native caps both retained",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "native cap lacking saved raw not complete",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "kill does not close native cap lacking saved raw",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "native claimed cap below limit not qualified",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "in-time unknown RSS not converted to zero",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "postexit observer cost wall included",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "kernel highwater overrun observed afterexit",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "live wall cap and later RSS both remain",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "full11 genuine-shape report descriptor",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape raw_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape conditioned_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape cv_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape f_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape f_x_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape raw_x_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape conditioned_x_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape unreplaced_cv_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape unreplaced_cv_x_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape aux_raw_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "all original sample shape aux_conditioned_samples",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "full saved SDE cannot be skipped",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "sole original bank synthetic RNG gate",
+      "result": "PASS",
+      "synthetic": true
+    },
+    {
+      "case": "second Generator creation rejected",
+      "result": "REJECTED",
+      "synthetic": true
+    },
+    {
+      "case": "no financial module import",
+      "result": "PASS",
+      "synthetic": true
+    }
+  ],
+  "final_result_write_cost": "unknown",
+  "financial_RNG_solver_SDE_worker_execution": 0,
+  "formal_finance_approved": false,
+  "kernel_peak_RSS_bytes": 41390080,
+  "passed": 70,
+  "probe_source_sha256": "81a3ad3434a551746eb28b6afd5b5ceb7353b92efa28c2e6d71e68d7f23bfde1",
+  "root_false_candidate_sha256": "bdecc727b9ddf29ff78292ce87d7e80ca673e96a23c46e3a456de9dc0e6e7455",
+  "scope": "pure synthetic observer/budget/arg provenance preflight only",
+  "source_identity_context": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+  "wall_seconds": 0.3527350850054063
+}

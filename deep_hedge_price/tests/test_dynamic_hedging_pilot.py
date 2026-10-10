@@ -1,5 +1,6 @@
 """Bounded source tests; small genuine paths are not a formal pilot."""
 
+import copy
 import sys
 from pathlib import Path
 
@@ -3845,3 +3846,238 @@ def test_actual_execution_source_closure_has_no_dynamic_imports(monkeypatch):
     }
     assert required <= bound["files"].keys()
     assert bound == identity
+
+
+CONDITIONAL_CAP_LADDER = (1024, 4096, 16384, 65536)
+
+
+def _conditional_cap_plain_plan(plan):
+    return {k: v for k, v in plan.items() if k != "cap"} | {
+        "cap": {k: v for k, v in plan["cap"].items() if k != "budget_review_sha256"}
+    }
+
+
+def _conditional_cap_parent(identifier, index, n):
+    wall, cpu = 2.0 + index, 1.0 + index
+    timing = {"wall_seconds": wall, "cpu_seconds": cpu, "overrun_seconds": 1.0}
+    events = {
+        "wall_start_ns": 100,
+        "wall_stop_ns": 100 + int(wall * 1e9),
+        "cpu_start_ns": 300,
+        "cpu_stop_ns": 300 + int(cpu * 1e9),
+    }
+    return {
+        "id": identifier,
+        "operation": "teacher_grid",
+        "status": "failed_at_declared_cap",
+        "source_sha256": "a" * 64,
+        "input_bindings": {},
+        "raw": {"kind": "teacher_grid", "original_n": n, "financial_qualification": "unknown"},
+        "timing_events": events,
+        "expense": {
+            "id": identifier + ":actual",
+            "scope": "measured-worker",
+            "status": "failed",
+            "reason": "real cap",
+            "parent_id": None,
+            "includes_children": True,
+            "timing": timing,
+        },
+        "cap_evidence": {
+            "metric": "wall_seconds",
+            "limit": 1.0 + index,
+            "consumed": wall,
+            "evidence_sha256": "b" * 64,
+        },
+    }
+
+
+def _conditional_cap_option(template, n, parent):
+    plan = copy.deepcopy(template)
+    plan.update(original_n=n, prior_template_sha256=run_pilot.input_identity(template))
+    plan["cap"] = {
+        "metric": "wall_seconds",
+        "limit": parent["cap_evidence"]["limit"],
+        "planned_before_attempt": True,
+    }
+    decision = {
+        "id": plan["id"],
+        "reviewer": "independent-budget-review",
+        "decision": "approved",
+        "planned_before_attempt": True,
+        "plan_sha256": run_pilot.execution._digest(_conditional_cap_plain_plan(plan)),
+    }
+    plan["cap"]["budget_review_sha256"] = run_pilot.execution._digest(decision)
+    return {"parent_job_id": parent["id"], "plan": plan, "budget_decision": decision}
+
+
+def _conditional_cap_fixture(n=4096, *, parent_order=("parent-A",)):
+    descriptor = next(
+        r
+        for r in run_pilot.execution.execution_candidate()["pilot_cases"]
+        if r["kind"] == "state" and r["identity"]["model"] == "Heston"
+    )
+    selector_id = "teacher-selection:Heston"
+    template = {
+        "id": descriptor["id"],
+        "kind": "state",
+        "identity": descriptor["identity"],
+        "original_n": None,
+        "expense_id": descriptor["id"] + ":alias",
+        "cap": None,
+        "original_n_source": {"teacher_selection_job_id": selector_id, "model": "Heston"},
+    }
+    selector = {
+        "id": selector_id,
+        "operation": "teacher_selection",
+        "status": "executed",
+        "raw": {
+            "kind": "teacher_selection",
+            "model": "Heston",
+            "original_n": n,
+            "grid": "coarse",
+            "financial_qualification": "unknown",
+        },
+    }
+    jobs = {selector_id: selector}
+    for index, identifier in enumerate(parent_order):
+        jobs[identifier] = _conditional_cap_parent(identifier, index, n)
+    base = check_pilot.concrete_original_n_plan(template, jobs)
+    # The existing formal caller separates actual selector evidence before projection.
+    selector_sha = base.pop("selector_raw_sha256")
+    row = {
+        "id": template["id"],
+        "original_n": n,
+        "expense_id": template["expense_id"],
+        "required_job_ids": [parent_order[0]],
+        "cap_parent_job_id": parent_order[0],
+        "cap_evidence": copy.deepcopy(jobs[parent_order[0]]["cap_evidence"]),
+        "financial_qualification": "unknown",
+        "first_failure_date": None,
+        "conditional_selection_binding": {
+            "prior_template_sha256": base["prior_template_sha256"],
+            "selector_raw_sha256": selector_sha,
+            "producer_job_ids": [selector_id],
+        },
+    }
+    row.update(check_pilot._all_cap_bindings([jobs[p] for p in parent_order]))
+    spec = {
+        "required_job_ids": row["required_job_ids"],
+        "cap_options": [
+            _conditional_cap_option(template, value, jobs[p])
+            for p in parent_order
+            for value in CONDITIONAL_CAP_LADDER
+        ],
+    }
+    return template, base, row, spec, jobs
+
+
+@pytest.mark.parametrize("n", CONDITIONAL_CAP_LADDER)
+@pytest.mark.parametrize("reverse_branches", [False, True])
+def test_conditional_cap_selects_actual_original_n_branch(n, reverse_branches):
+    template, base, row, spec, jobs = _conditional_cap_fixture(n)
+    if reverse_branches:
+        spec["cap_options"].reverse()
+    before = copy.deepcopy((template, base, spec, jobs))
+    binding = copy.deepcopy(row["conditional_selection_binding"])
+    plan, alias, decision = check_pilot._prior_execution_projection(row, base, spec, jobs)
+    assert plan["original_n"] == n
+    assert plan["original_n_source"] == template["original_n_source"]
+    assert plan["prior_template_sha256"] == run_pilot.input_identity(template)
+    assert "selector_raw_sha256" not in plan
+    assert row["conditional_selection_binding"] == binding
+    assert decision["plan_sha256"] == run_pilot.execution._digest(_conditional_cap_plain_plan(plan))
+    assert alias["parent_expense_id"] == jobs["parent-A"]["expense"]["id"]
+    assert alias["required_job_ids"] == ["parent-A"]
+    assert (template, base, spec, jobs) == before
+
+
+@pytest.mark.parametrize("first_parent", ["parent-A", "parent-B"])
+def test_plural_actual_caps_keep_parent_priority_all_bindings_and_inclusive_costs(first_parent):
+    _, base, row, spec, jobs = _conditional_cap_fixture(parent_order=("parent-A", "parent-B"))
+    other = "parent-B" if first_parent == "parent-A" else "parent-A"
+    spec["cap_options"] = [
+        option
+        for parent in (first_parent, other)
+        for option in spec["cap_options"]
+        if option["parent_job_id"] == parent
+    ]
+    original_bindings = copy.deepcopy(row["parent_cap_bindings"])
+    plan, alias, _ = check_pilot._prior_execution_projection(row, base, spec, jobs)
+    assert plan["original_n"] == 4096
+    assert row["execution_cap_parent_job_id"] == first_parent
+    assert row["cap_parent_job_ids"] == ["parent-A", "parent-B"]
+    assert row["parent_cap_bindings"] == original_bindings
+    actual = [jobs[parent]["expense"] for parent in ("parent-A", "parent-B")]
+    costs = check_pilot.project_execution_expense_aliases(actual, [alias], jobs=jobs)
+    assert costs["charged_totals"]["wall_seconds"] == pytest.approx(5.0)
+    assert set(costs["charged_ids"]) == {"parent-A:actual", "parent-B:actual"}
+    assert row["financial_qualification"] == "unknown"
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "missing_n",
+        "wrong_template",
+        "wrong_producer",
+        "wrong_expense",
+        "future_selector",
+        "unrelated_parent",
+        "parent_status",
+        "cap_limit",
+        "decision_digest",
+        "decision_plan_sha",
+    ],
+)
+def test_conditional_cap_rejects_missing_changed_or_unapproved_original_branch(mutation):
+    _, base, row, spec, jobs = _conditional_cap_fixture()
+    chosen = next(option for option in spec["cap_options"] if option["plan"]["original_n"] == 4096)
+    if mutation == "missing_n":
+        spec["cap_options"].remove(chosen)
+    elif mutation == "wrong_template":
+        chosen["plan"]["prior_template_sha256"] = "0" * 64
+    elif mutation == "wrong_producer":
+        chosen["plan"]["original_n_source"]["teacher_selection_job_id"] = "unrelated-selector"
+    elif mutation == "wrong_expense":
+        chosen["plan"]["expense_id"] = "unrelated-expense"
+    elif mutation == "future_selector":
+        chosen["plan"]["selector_raw_sha256"] = row["conditional_selection_binding"][
+            "selector_raw_sha256"
+        ]
+    elif mutation == "unrelated_parent":
+        chosen["parent_job_id"] = "unrelated-parent"
+    elif mutation == "parent_status":
+        jobs["parent-A"]["status"] = "executed"
+    elif mutation == "cap_limit":
+        chosen["plan"]["cap"]["limit"] += 1
+    elif mutation == "decision_digest":
+        chosen["budget_decision"]["reviewer"] = "changed-reviewer"
+    else:
+        chosen["budget_decision"]["plan_sha256"] = "0" * 64
+        chosen["plan"]["cap"]["budget_review_sha256"] = run_pilot.execution._digest(
+            chosen["budget_decision"]
+        )
+    with pytest.raises(ValueError, match=r"cap|prior execution"):
+        check_pilot._prior_execution_projection(row, base, spec, jobs)
+
+
+def test_conditional_cap_does_not_accept_reduced_selector_n():
+    template, _, _, _, jobs = _conditional_cap_fixture()
+    jobs["teacher-selection:Heston"]["raw"]["original_n"] = 512
+    with pytest.raises(ValueError, match=r"selector model/N"):
+        check_pilot.concrete_original_n_plan(template, jobs)
+
+
+def test_uncapped_fixed_n_plan_keeps_existing_projection_contract():
+    base = {"id": "fixed-path", "original_n": 1024, "expense_id": "fixed:alias", "cap": None}
+    row = {"id": base["id"], "cap_evidence": None}
+    specification = {"required_job_ids": ["fixed-worker"], "parent_expense_id": "fixed:actual"}
+    plan, alias, decision = check_pilot._prior_execution_projection(row, base, specification, {})
+    assert plan == base
+    assert decision is None
+    assert alias == {
+        "id": "fixed:alias",
+        "parent_expense_id": "fixed:actual",
+        "required_job_ids": ["fixed-worker"],
+    }

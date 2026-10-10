@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "-q",
+    "--tb=short",
+    "-k",
+    "conditional_cap or plural_actual_caps or uncapped_fixed_n_plan"
+  ],
+  "PYTHONPATH": "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src:/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src:/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging",
+  "exit_code": 1,
+  "wall_seconds": 2.613832493996597,
+  "child_CPU_seconds": 4.812854,
+  "scope": "metadata-only source tests; original checker expected refusal",
+  "financial_pilot_run": false
+}

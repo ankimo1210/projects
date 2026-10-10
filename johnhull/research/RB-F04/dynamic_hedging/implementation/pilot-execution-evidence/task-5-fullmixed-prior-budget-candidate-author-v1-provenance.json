@@ -1,0 +1,323 @@
+{
+  "schema": "rb-f04-candidate-author-provenance-v1",
+  "evidence": {
+    "task-5-full-progressive-pilot-plan-draft-source-unit-v3/metadata.json": {
+      "sha256": "8f83db63308ff6fdfae25d6a44f988361660703e1779a7957f80435553bbb4f3",
+      "bytes": 54495772
+    },
+    "task-5-full-progressive-pilot-plan-draft-source-unit-v3/receipt.json": {
+      "sha256": "60477b46c58812b89a84ef0c25ce0f88c6091c76f92fb8d446a5910d5d71117f",
+      "bytes": 312
+    },
+    "task-5-actual-pilot-input-preparation-v4.json": {
+      "sha256": "d80b2666bdc3270784df1ad4eef4aa4283c36dff8c91ff235f7bf0039700691c",
+      "bytes": 43145
+    },
+    "task-5-whole-phase-capacity-static-v1-results.json": {
+      "sha256": "73dce14a81ec35dbced1fca2d9cac1e79a34d0d33f64e408a3f2ff67624151eb",
+      "bytes": 16084
+    },
+    "task-5-formal-plan-preflight-review-budget-policy.json": {
+      "sha256": "882433a68921a673d6f5c0670d62152a7efd583fd6724d5690e2b1c12ded3930",
+      "bytes": 9641
+    },
+    "task-5-current-whole-call-cache-budget-root-fixed-v2.json": {
+      "sha256": "e7f8b53e5ba662d606545bdb6f071637d889f94c7c4d41721b4002eb0950dc23",
+      "bytes": 25151
+    },
+    "task-5-current-independent-call-table-budget-root-fixed-v2.json": {
+      "sha256": "a28dd5334854aea96e72431617c92b61989c3a71d260d34042f3982b7add5b70",
+      "bytes": 20537
+    },
+    "task-5-current-oracle-budget-root-fixed-v2.json": {
+      "sha256": "8035595d58f5c8976029c8fe8787d415d2bf9842aa2e12e0d69dfd9f550a41a7",
+      "bytes": 40409
+    },
+    "task-5-current-full-teacher-root-enclosing-cost-v2.json": {
+      "sha256": "2bd8ead2e8bde5e3f5a539ac18c601192b396deec9af529d098a22d13151d71d",
+      "bytes": 797
+    },
+    "task-5-M6-saved-recheck-root-enclosing-cost-v1.json": {
+      "sha256": "ebc2f3d4f459e768fc45e616d845a4ac8636675cf34a5563f442e6a38fa9c066",
+      "bytes": 1324
+    },
+    "task-5-formal-controls-review-allocation-observation-root-v3/parent-cost-and-decision.json": {
+      "sha256": "75e0939c0e4f22d073e33616a0eabfefd6dd15840b0330326e97115957c38313",
+      "bytes": 10469
+    },
+    "task-5-formal-controls-review-domain37-observation-root-v2/parent-cost-and-decision.json": {
+      "sha256": "08f0cfe2b1b904d121458474c510f4fb1a724121fa95fb6bb319f22d660fe07a",
+      "bytes": 12622
+    },
+    "task-5-current-whole-call-cache-root-m2-enclosing-cost-v3.json": {
+      "sha256": "57c4ca9497de2bcc8ca00a9ca9a61dea24fefa4d5a300d9f928951e9058e74ff",
+      "bytes": 810
+    },
+    "task-5-current-whole-call-cache-root-m3-enclosing-cost-v3.json": {
+      "sha256": "7cfce886c261e1f476afcb37b4e788809e76449288f07217b46862f2beb67f33",
+      "bytes": 819
+    },
+    "task-5-current-independent-call-table-root-m4-enclosing-cost-v3.json": {
+      "sha256": "4e888a94fc67ab3a83ca52bc1ce0e4979b09cbcf24a4e6a3184013c98a2ccf3f",
+      "bytes": 828
+    },
+    "task-5-current-independent-call-table-root-m5-enclosing-cost-v3.json": {
+      "sha256": "4febd077c074568b9b27dd067a1a97c9f01161f93cb08b5ec5dead1a5520e553",
+      "bytes": 838
+    },
+    "task-5-current-oracle-root-enclosing-cost-v2.json": {
+      "sha256": "0a3c251dc581674b6cd834f1b2187b7f27223165b67b89ea52b4dee76489e879",
+      "bytes": 1455
+    },
+    "task-5-current-oracle-observation-root-m7-v2/Heston/parent-cost-and-decision.json": {
+      "sha256": "6aa791cd46c9d4d5a5d8f6777523bb3d9560c12c504cd43445a7838bb4448665",
+      "bytes": 11589
+    },
+    "task-5-current-oracle-observation-root-m7-v2/local/parent-cost-and-decision.json": {
+      "sha256": "e30500687a444cab6687642cb44873bf1a25455d88f05c3a38301f7861e82c6c",
+      "bytes": 11285
+    },
+    "task-5-current-full-teacher-observation-root-m6-v2/banks/Heston/parent-cost-and-decision.json": {
+      "sha256": "ab85d6784801a9a7bef9ba11223b09a1aeeea14f2e66f339131e98b61994a922",
+      "bytes": 6344
+    },
+    "task-5-current-full-teacher-observation-root-m6-v2/banks/local/parent-cost-and-decision.json": {
+      "sha256": "6781261c268d2a533d0e71f6d3e75f920b4ac6ed96ad70d3e752b0af16e40677",
+      "bytes": 6352
+    },
+    "task-5-current-full-teacher-observation-root-m6-v2/classes/Heston-coarse/grid/progress.json": {
+      "sha256": "e776b8c3e307b251dc5e35762d9d821679844a7550935c016159f9ae8fd9df65",
+      "bytes": 3050
+    },
+    "task-5-current-full-teacher-observation-root-m6-v2/classes/Heston-high/grid/progress.json": {
+      "sha256": "16ebb1ad855318d0791eead5655fde63e97d50a84b5dcfcfde8490bddb4b929f",
+      "bytes": 2466
+    },
+    "task-5-current-full-teacher-observation-root-m6-v2/classes/local-coarse/grid/progress.json": {
+      "sha256": "dcfa1542b47277a718ac88ba959d7e1e1f1572508749bb03df9e9f6fb6d2a06f",
+      "bytes": 2468
+    },
+    "task-5-current-full-teacher-observation-root-m6-v2/classes/local-high/grid/progress.json": {
+      "sha256": "94e13f0dac4f866d854e3ceedc6e64196212b9c66ac0510e3c1b74b0e97beb86",
+      "bytes": 2475
+    },
+    "main-empty-independent-negative-parent-cost.json": {
+      "sha256": "7b93b211ef02556526ed795c77c54604828b4bfafe1d40847892a027faa8af11",
+      "bytes": 360
+    },
+    "main-empty-independent-unit-parent-cost.json": {
+      "sha256": "9ea89465c3408955d67b365bd505e1badc12e659e5e2d6b54a6c300f8b064c85",
+      "bytes": 378
+    },
+    "main-empty-independent-unit-v2-parent-cost.json": {
+      "sha256": "f19dfa8a7dcce326ef3ebbf68bfef1f8e9cceed4bc4d1bcf5a0b96f0c2ae8d02",
+      "bytes": 357
+    },
+    "progressive-preflight-independent-parent-cost.json": {
+      "sha256": "99a563d767722115d6397c043524057784b5c3d4907d67d4d7798ce116931dfc",
+      "bytes": 378
+    },
+    "progressive-preflight-selfconsistent-parent-cost.json": {
+      "sha256": "6c2865194f36ea52fd0f3b80dd42c2e5242e8c8aee95a33d8c4284a855435f39",
+      "bytes": 359
+    },
+    "task-5-M6-saved-recheck-independent-v1-parent-cost.json": {
+      "sha256": "470cc4185cb847af330fe4474de62f5a020c7613acaeeb5dfa75a838866f0486",
+      "bytes": 257
+    },
+    "task-5-actual-pilot-input-preparation-v2-parent-cost.json": {
+      "sha256": "9eeefcd1328fce80a2cc903555e54a6ecb667553a74a6de4d522bd2ccacd41ec",
+      "bytes": 614
+    },
+    "task-5-actual-pilot-input-preparation-v3-parent-cost.json": {
+      "sha256": "b8e88e32ec672c4e210ab86957f348843596b76b4c211d99699b56056d563b42",
+      "bytes": 617
+    },
+    "task-5-actual-pilot-input-preparation-v4-parent-cost.json": {
+      "sha256": "64ac0d13cd023c66cb55e3afc6437191602fc2b7df35254ab43f68d9ee9c7c82",
+      "bytes": 614
+    },
+    "task-5-current-full-teacher-independent-m6-v2-attempt1-parent-cost.json": {
+      "sha256": "f8f7d2cb43ef323184256c2f26903bd93439603c57d461a088e24815f4cd0dcc",
+      "bytes": 285
+    },
+    "task-5-current-full-teacher-independent-m6-v2-attempt2-parent-cost.json": {
+      "sha256": "67c81464b1d6f81f5c5f992ba33700adcddeb111a6ae9434999d5fa547a64d6f",
+      "bytes": 276
+    },
+    "task-5-current-full-teacher-independent-m6-v2-parent-cost.json": {
+      "sha256": "8b811655f1911b33c5e0f593f43b2489ed6f549a4d73d568988c567585cb13f5",
+      "bytes": 286
+    },
+    "task-5-current-independent-call-table-independent-v3-original-review-import-failure-parent-cost.json": {
+      "sha256": "382025e28fb0b961b6569face6d16cc0bc8ab530e87d82ad39840d1635ca6e88",
+      "bytes": 193
+    },
+    "task-5-current-independent-call-table-independent-v3-parent-cost.json": {
+      "sha256": "67bf547e0ba365402ea7714e44bc56f0a20ed40c36474bb77a6eaf019736bdcb",
+      "bytes": 195
+    },
+    "task-5-current-oracle-saved-arithmetic-independent-v1-run1-parent-cost.json": {
+      "sha256": "5054237328196d41336240709fd2692149afa76aa9928a575c0322d984b3761d",
+      "bytes": 230
+    },
+    "task-5-current-oracle-saved-arithmetic-independent-v2-run1-parent-cost.json": {
+      "sha256": "2fc9e0948f217f6d0845d56469aae63ec7cab7f5ebb070d7951f4ad60eaf7cab",
+      "bytes": 219
+    },
+    "task-5-current-oracle-saved-arithmetic-independent-v3-run1-parent-cost.json": {
+      "sha256": "5ea2956261addbca0d4a5d0a9e7adcd150b9c8555eb11ca71abcd0e70334aba9",
+      "bytes": 219
+    },
+    "task-5-current-oracle-saved-arithmetic-independent-v4-run1-parent-cost.json": {
+      "sha256": "4a30916a038624da6bd0904efb85c073b4ca801066cd0a8daf1f16362d66fa5f",
+      "bytes": 219
+    },
+    "task-5-current-oracle-saved-arithmetic-independent-v5-run1-parent-cost.json": {
+      "sha256": "df5a8bc996a7e0b739c56c7abaa0f774cd96d12513e0cfb351c808baca2c449f",
+      "bytes": 218
+    },
+    "task-5-current-whole-call-cache-independent-v3-parent-cost.json": {
+      "sha256": "de2f98a7d05df7225f9349e68b955330a3e1d6ea0662f625af073597ad049e38",
+      "bytes": 153
+    },
+    "task-5-current-whole-call-cache-preparation-parent-cost-v1.json": {
+      "sha256": "325ba78e6141a4b48d67386bc965fe0e2b41e4f9bed48fb098d340402463116c",
+      "bytes": 726
+    },
+    "task-5-current-whole-call-cache-preparation-parent-cost-v2.json": {
+      "sha256": "729db593ada0205d35f25e97c65922d872597ebbaa7d4a5c0d4f336ac5752135",
+      "bytes": 668
+    },
+    "task-5-field-input-cas-check-v2-parent-cost.json": {
+      "sha256": "246c0648292cc7267dc336b89823cbd0e0fe1d460ed4bfe507f4d13e671a7d9b",
+      "bytes": 534
+    },
+    "task-5-formal-controls-review-structure-parent-cost.json": {
+      "sha256": "d1ca873dbb9420da9da1b3a8a808108217ecdf84a73087d991bccf08f298120a",
+      "bytes": 367
+    },
+    "task-5-full-progressive-pilot-plan-dry-run-v3-parent-cost.json": {
+      "sha256": "dc2ab09991880021dc37ad1fa7fa332685ced0ba6982ba435fe630cef5827751",
+      "bytes": 193
+    },
+    "task-5-maximum-original-node-root-enclosing-cost-v1.json": {
+      "sha256": "99056cb326e1cf736ecd805f7137fcf53bf8e37a68b0c0a71549f5d134a8f4db",
+      "bytes": 1408
+    },
+    "task-5-progressive-pilot-plan-dry-run-parent-cost.json": {
+      "sha256": "069ca26a9ff2d6c1d481fa5ef8d51576c0ce17c8c0bfeea4b3db294cd8dd25b7",
+      "bytes": 294
+    },
+    "task-5-progressive-pilot-plan-dry-run-v2-parent-cost.json": {
+      "sha256": "1de9f292436e53a7eec9b2200a25663e9cc864adeccb5f69236e0ba13ff4c6c9",
+      "bytes": 294
+    },
+    "task-5-progressive-v1-original-task-5-progressive-pilot-plan-dry-run-parent-cost.json": {
+      "sha256": "069ca26a9ff2d6c1d481fa5ef8d51576c0ce17c8c0bfeea4b3db294cd8dd25b7",
+      "bytes": 294
+    },
+    "task-5-teacher-check-report-bounded-independent-v1-attempt1-parent-cost.json": {
+      "sha256": "7553e0022b63ef394cc3c8711768579c6c649c6cff6f0ffe28607b4bddc14217",
+      "bytes": 280
+    },
+    "task-5-teacher-check-report-bounded-independent-v1-parent-cost.json": {
+      "sha256": "83211dd121b95a0a7717c5e3e7c5ddc595e73fc7f32f65f5b4ca10e3d781c81b",
+      "bytes": 281
+    },
+    "task-5-teacher-storage-full-status-io-independent-v1-parent-cost.json": {
+      "sha256": "ad0cc0821c08eb1bacef5af88074ba79b84088d6a1f76b191b1b47238c63e74e",
+      "bytes": 449
+    },
+    "task-5-teacher-storage-full-status-io-root-enclosing-cost-v1.json": {
+      "sha256": "464212d8054306dc2c903425b56527713a97cf5f243fef96732af78f4a10d0b3",
+      "bytes": 1195
+    },
+    "task-5-teacher-storage-independent-v1-parent-cost.json": {
+      "sha256": "454d64f3df93ede0ff2ef41499726db4d08ee5b7dc13d3df76af3a810a71c5b3",
+      "bytes": 254
+    },
+    "task-5-v54-root-checkpoint-cas-v1-parent-cost.json": {
+      "sha256": "ae4af2af8d37162e1d99ad631e90b498d525d8eab605424033e6f579099e636f",
+      "bytes": 186
+    },
+    "task-5-v54-root-checkpoint-cas-v2-parent-cost.json": {
+      "sha256": "51bffc4f8283de01ca85f94b1bbd70f5bf7d4b2d63cbb272a5be0fa2a21e3622",
+      "bytes": 187
+    },
+    "task-6-main-empty-root-native-recheck-v3-parent-cost.json": {
+      "sha256": "96dc3beda6fde30e25098cf8bafab42b360dcf185dd4b46a4b99256e25e83413",
+      "bytes": 1524
+    },
+    "task-6-main-empty-root-native-recheck-v4-parent-cost.json": {
+      "sha256": "6a656bd2e887ec2229e0f1e2167a5904c3cdf5d298c89092460bfe2d5ab7cc1e",
+      "bytes": 1337
+    },
+    "task-6-main-plan-draft-v2-parent-cost.json": {
+      "sha256": "f8d549e55536c36776eb368f02405a068a3249abc26d08361b19ac648d51d7dd",
+      "bytes": 589
+    },
+    "task-5-formal-pilot-plan-producer.py": {
+      "sha256": "33815db7a624e3c7e1d815e79475cd335f30af4e06f098d9ca054363b9adb3e8",
+      "bytes": 24395
+    }
+  },
+  "teacher_dispatch_rates": {
+    "Heston-coarse": {
+      "original_n": 1024,
+      "nodes": 108,
+      "generation_dispatch_and_native_node_writes_seconds": 32.35858025400012,
+      "outer_final_grid_write_read_seconds": 0.14422429900150746,
+      "enclosing_old_checker_cost_is_not_a_generation_rate": true,
+      "conditional_step_geometry": 44928,
+      "path_step_prediction_original_worst_case_is_preserved": true,
+      "financial_qualification": "unknown",
+      "source_scope": "unchanged mathematical generation plus completed-teacher codec; current checker differs"
+    },
+    "Heston-high": {
+      "original_n": 1024,
+      "nodes": 156,
+      "generation_dispatch_and_native_node_writes_seconds": 57.52842420100205,
+      "outer_final_grid_write_read_seconds": 0.2529080639978929,
+      "enclosing_old_checker_cost_is_not_a_generation_rate": true,
+      "conditional_step_geometry": 64896,
+      "path_step_prediction_original_worst_case_is_preserved": true,
+      "financial_qualification": "unknown",
+      "source_scope": "unchanged mathematical generation plus completed-teacher codec; current checker differs"
+    },
+    "local-coarse": {
+      "original_n": 1024,
+      "nodes": 520,
+      "generation_dispatch_and_native_node_writes_seconds": 191.89089509300175,
+      "outer_final_grid_write_read_seconds": 0.9098694269996486,
+      "enclosing_old_checker_cost_is_not_a_generation_rate": true,
+      "conditional_step_geometry": 209280,
+      "path_step_prediction_original_worst_case_is_preserved": true,
+      "financial_qualification": "unknown",
+      "source_scope": "unchanged mathematical generation plus completed-teacher codec; current checker differs"
+    },
+    "local-high": {
+      "original_n": 1024,
+      "nodes": 1344,
+      "generation_dispatch_and_native_node_writes_seconds": 605.7439547850008,
+      "outer_final_grid_write_read_seconds": 2.44926753099935,
+      "enclosing_old_checker_cost_is_not_a_generation_rate": true,
+      "conditional_step_geometry": 529536,
+      "path_step_prediction_original_worst_case_is_preserved": true,
+      "financial_qualification": "unknown",
+      "source_scope": "unchanged mathematical generation plus completed-teacher codec; current checker differs"
+    }
+  },
+  "M0": "synthetic allocation only, not teacher financial rate/RSS",
+  "M1": "domain37 component only, not full field/quotes job rate",
+  "M2_M3": "full original49date cache only",
+  "M4_M5": "native independent table original state00/explicit controls only",
+  "M6": "all originalN1024 whole generation saved; three old checker RSS caps retained; new saved-only checker not generation",
+  "M7": "all originalN4096/13queries/two levels oracle only; no full-state/allN qualification",
+  "current_assembly_exploratory_failures": [
+    "Initial read_pilot_artifact tuple mistaken for dict; tool output truncated, no source or financial execution",
+    "One inspection SyntaxError before execution, no source or financial execution",
+    "Closure files dictionary mistaken for list index; no source or financial execution"
+  ],
+  "exploratory_tool_CPU_wall_and_final_receipt_tail": "unknown, not zero"
+}
