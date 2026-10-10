@@ -23,9 +23,15 @@ count/signature/topologyだけのroot検査は自己整合の改変10件を通�
 
 ## 最終mixed計画の接続中
 
-[root draftの実検査](progressive-plan-evidence/full-mixed-draft/task-5-full-progressive-pilot-plan-dry-run-v1.json)は3,138jobs・121ケース・51確認項目、実worker signatures/依存順序PASS。36stateと24dateには実選択stageのproducer/Nを結び、元market/fit/QのNは固定する。principal/next/grid/追加日付の8typed adapters、追加日付4件、最終all16比較、tiny4fits、全44cell、3precision候補を接続した。金融worker/RNGは実行していない。新compilerは独立レビュー前であり、段階選択の旧承認には含めない。
+[root draftの実検査](progressive-plan-evidence/full-mixed-draft/task-5-full-progressive-pilot-plan-dry-run-v1.json)は3,138jobs・121ケース・51確認項目、実worker signatures/依存順序PASS。36stateと24dateには実選択stageのproducer/Nを結び、元market/fit/QのNは固定する。principal/next/grid/追加日付の8typed adapters、追加日付4件、最終all16比較、tiny4fits、全44cell、3precision候補を接続した。金融worker/RNGは実行していない。新compilerのmetadata独立検査は下記。金融source・予算・正式lockは旧selection-only承認に含まれない。
 
-選択により元Nが変わる7確認項目（teacher_N/gridの4件、domain、frequency24/48）は、実adapter/selectorから元producerとNを認証する限定metadata bridgeが必要。自由な件数変更や、全候補を列挙して未使用仕事を混ぜる方法は使わない。
+選択により元Nが変わる7確認項目（teacher_N/gridの4件、domain、frequency24/48）は、実adapter/selectorから元producerとNを認証するbridgeを実装。case/date/refinementには実control仕事を含め、selector自身の実wall capでも元N・失敗・子の数値未実行を保持する。[固定v54検査](pilot-execution-evidence/task-5-v54-root-source-verification-v2.json)は131件PASS（57.62秒）・3Python Ruff/format PASS。旧fixture2件に必須kindが無い失敗と、selector引数喪失の原traceを保存した。 [独立control cap検査](pilot-execution-evidence/task-5-pilot-v54-independent-control-cap-v4-results.json)も両modelの実wall cap・元N65536・case/dateの同じparent・子数値未実行・独立job続行・saved resumeを確認（state/date数値checkerはmetadata stub、金融資格unknown）。自由な件数変更や全未使用候補の混入は認めない。
+
+[現行3,138-jobの独立metadata検査](pilot-execution-evidence/task-5-full-mixed-independent-preflight.json)は元121/51・15,281数値依存辺・final44/16・全seed/fee/Q/frequency/precision・actual descendant cap scopeを別実装で照合し、自己整合の改変14件を拒否。旧compiler v2のselector18states/12dates scope欠落はv3で修正済み。金融worker値・v54のA結合・正式lockは承認範囲外。
+
+[固定v54原byte保管庫](pilot-execution-evidence/task-5-v54-root-checkpoint-cas-v2.json)は159 entries / 131,106,011 bytesをC/Fから別々に復元し一致。金融semanticは未実施。成功内側wall6.839343秒/CPU1.237617秒、parent-inclusive wall7秒台。先行v1の境界assert失敗と実測費用も保存、startup/authoringは未測定。
+
+独立native Q検査で、元入力を削除するとSDE照合を回避できることと、元worker入力とraw.parametersが未結合の2境界を[実反例](pilot-execution-evidence/task-5-pilot-v54-independent-native-Q-results.json)として検出。v55で必須入力・locked producer結合を修正し、再レビューする。131件PASSをこの2境界の承認へ広げない。
 
 ## 正式lock前の残り
 

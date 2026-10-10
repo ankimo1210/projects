@@ -1,0 +1,28 @@
+ACTUAL_DISPATCH_EXCEPTION teacher_selected_inputs
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-own-cap-trace-v1.py", line 9, in dispatch
+    try:return original(operation,arguments)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py", line 2876, in _dispatch
+    return run_teacher_selected_inputs_job(**arguments)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py", line 3217, in run_teacher_selected_inputs_job
+    selection_arguments["model"] == model
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-own-cap-trace-v1.py", line 14, in <module>
+    try:t.test_actual_selector_own_cap_preserves_control_n_and_no_numerical_inputs(patch,d/'root-own-cap-trace-v1')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_pilot.py", line 3415, in test_actual_selector_own_cap_preserves_control_n_and_no_numerical_inputs
+    assert jobs["independent"]["status"] == "executed"
+           ~~~~^^^^^^^^^^^^^^^
+KeyError: 'independent'
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-v54-root-own-cap-trace-v1.py", line 14, in <module>
+    try:t.test_actual_selector_own_cap_preserves_control_n_and_no_numerical_inputs(patch,d/'root-own-cap-trace-v1')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_pilot.py", line 3415, in test_actual_selector_own_cap_preserves_control_n_and_no_numerical_inputs
+    assert jobs["independent"]["status"] == "executed"
+           ~~~~^^^^^^^^^^^^^^^
+KeyError: 'independent'

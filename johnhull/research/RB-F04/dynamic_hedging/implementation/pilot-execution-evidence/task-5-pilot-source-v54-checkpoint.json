@@ -1,0 +1,147 @@
+{
+  "schema": "rb-f04-pilot-v54-root-checkpoint-v1",
+  "source": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+      "sha256": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+      "size": 170614
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "sha256": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+      "size": 199509
+    },
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": {
+      "sha256": "6f38821f8782ca6d0df9fb3a8db045d68690f3e613ad260b9813b14f58325164",
+      "size": 148157
+    }
+  },
+  "tests": {
+    "commands": [
+      {
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "-m",
+          "pytest",
+          "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+          "--confcutdir=deep_hedge_price",
+          "-q",
+          "-k",
+          "conditional_selected_case_bindings or A_selection_uses_prior or actual_selector_own_cap"
+        ],
+        "returncode": 0,
+        "wall_seconds": 2.3470018730004085,
+        "child_cpu_seconds": 2.342761
+      },
+      {
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "-m",
+          "pytest",
+          "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+          "--confcutdir=deep_hedge_price",
+          "-q"
+        ],
+        "returncode": 0,
+        "wall_seconds": 58.73439587100074,
+        "child_cpu_seconds": 58.57132
+      },
+      {
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/ruff",
+          "check",
+          "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+          "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+          "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+        ],
+        "returncode": 0,
+        "wall_seconds": 0.015023904001282062,
+        "child_cpu_seconds": 0.017611999999999517
+      },
+      {
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/ruff",
+          "format",
+          "--check",
+          "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+          "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+          "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+        ],
+        "returncode": 0,
+        "wall_seconds": 0.015850365998630878,
+        "child_cpu_seconds": 0.01778100000000249
+      }
+    ],
+    "source_before": {
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "6f38821f8782ca6d0df9fb3a8db045d68690f3e613ad260b9813b14f58325164"
+    },
+    "source_after": {
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "6f38821f8782ca6d0df9fb3a8db045d68690f3e613ad260b9813b14f58325164"
+    },
+    "source_stable": true,
+    "scope": "131 source tests only; no formal pilot/full related suites/financial precision"
+  },
+  "ast_delta": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+      "added": [
+        "_teacher_selection_control_raw"
+      ],
+      "removed": [],
+      "modified": [
+        "_resolve",
+        "_selector_job_n_binding",
+        "run_q_job",
+        "run_teacher_diagnostic_job",
+        "run_teacher_selected_inputs_job"
+      ]
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "added": [
+        "_selected_attempt_input_raw",
+        "_selected_attempt_kind",
+        "_selected_attempt_source_map",
+        "conditional_binding_source_ids"
+      ],
+      "removed": [],
+      "modified": [
+        "_selected_teacher_raw",
+        "check_capped_job_raw",
+        "check_pilot_records",
+        "check_q_record",
+        "concrete_attempt_binding",
+        "concrete_case_binding",
+        "concrete_execution_specification",
+        "concrete_original_n_plan",
+        "derive_execution_domains",
+        "derive_execution_selection"
+      ]
+    },
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": {
+      "added": [
+        "_conditional_attempt_sources_unit",
+        "_native_q_source_unit",
+        "test_actual_selector_own_cap_preserves_control_n_and_no_numerical_inputs",
+        "test_conditional_attempt_source_gaps_raise_and_cannot_become_caps",
+        "test_conditional_case_date_and_refinement_keep_actual_control_work",
+        "test_conditional_refinement_binds_only_actual_selected_purposes_and_fixed_original_work",
+        "test_limited_selected_count_attempts_derive_max_both_models_without_changing_path_n",
+        "test_native_q_saved_replay_refuses_self_consistent_sde_record_change",
+        "test_native_q_scalar_local_contract_saved_empty_cash_and_failures"
+      ],
+      "removed": [],
+      "modified": [
+        "_conditional_diagnostic_source_job",
+        "_selected_teacher_inputs_source_unit",
+        "test_A_selection_uses_prior_rules_and_measured_premium_not_future_result_hash",
+        "test_conditional_selected_case_bindings_and_n_are_recomputed_without_fixed_n_changes"
+      ]
+    }
+  },
+  "independent_review": "pending; requested after source freeze",
+  "formal_pilot_executed": false,
+  "financial_qualification": "unknown",
+  "formal_lock_approved": false,
+  "phase_accepted": false
+}

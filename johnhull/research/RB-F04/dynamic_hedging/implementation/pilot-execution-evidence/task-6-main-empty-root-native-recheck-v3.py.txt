@@ -1,0 +1,159 @@
+from pathlib import Path
+import ast,copy,hashlib,importlib.util,json,time
+from unittest.mock import patch
+import numpy as np
+from scipy.special import ndtr
+import run_main as main
+import check_main as checker
+from hullkit._heston_local_surface import HestonParameters,LocalVarianceGrid
+
+W=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=W/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+U=D/"task-6-main-empty-root-native-recheck-v3"
+U.mkdir(exist_ok=False)
+start={"wall_start":time.perf_counter(),"cpu_start":time.process_time()}
+snapshot=json.loads((D/"task-6-main-empty-claim-snapshot.json").read_text())
+before={}
+for row in snapshot["source_files"]:
+ p=W/row["source"];s=hashlib.sha256(p.read_bytes()).hexdigest()
+ assert s==row["sha256"]==hashlib.sha256((D/row["copy"]).read_bytes()).hexdigest()
+ before[row["source"]]=s
+old=json.loads((D/"task-6-main-canonical-ref-snapshot.json").read_text())
+ast_changes={}
+allowed={
+ "run_main.py":({"run_empty_claim_job","validate_empty_claim_q"},{"_dispatch_refinement","check_execution_status"}),
+ "check_main.py":({"check_empty_claim_job"},{"check_main","check_refinement_binding"}),
+ "test_dynamic_hedging_main.py":({"empty_q_source_unit","test_main_empty_claim_dispatch_saves_original_Q_cash_costs_and_replays",
+ "test_main_empty_claim_refuses_changed_original_Q_scope_before_cash","test_main_empty_claim_failed_original_path_is_preserved_without_zero_fallback",
+ "test_main_empty_claim_completed_overrun_keeps_all_original_raw_and_costs","test_main_empty_claim_worker_measurement_is_required_and_bound"},set())}
+for row in old["source_files"]:
+ previous=D/row["copy"];current=W/row["source"]
+ assert hashlib.sha256(previous.read_bytes()).hexdigest()==row["sha256"]
+ a,b=ast.parse(previous.read_text()),ast.parse(current.read_text())
+ def nodes(tree):return {n.name:ast.dump(n,include_attributes=False) for n in tree.body if isinstance(n,(ast.FunctionDef,ast.ClassDef))}
+ aa,bb=nodes(a),nodes(b)
+ added=set(bb)-set(aa);modified={n for n in aa.keys()&bb.keys() if aa[n]!=bb[n]}
+ assert not (set(aa)-set(bb))
+ assert (added,modified)==allowed[current.name]
+ other=lambda t:[ast.dump(n,include_attributes=False) for n in t.body if not isinstance(n,(ast.FunctionDef,ast.ClassDef))]
+ assert other(a)==other(b),"imports/constants/public scope changed"
+ ast_changes[current.name]={"added":sorted(added),"modified":sorted(modified),"other_AST_nodes":"unchanged"}
+def forbidden(*args,**kwargs):raise AssertionError("formal RNG/CF/PDE/teacher/training is prohibited")
+spec=importlib.util.spec_from_file_location("main_empty_metadata_review",D/"task-6-main-plan-producer-draft.py")
+mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+with patch("numpy.random.default_rng",forbidden):
+ plan,candidate=mod.compile_draft()
+rows={r["id"]:r for r in plan["jobs"]}
+empty=[r for r in plan["refinement_jobs"] if r["arguments"]["operation"]=="empty_claim"]
+expected={(m,s,i) for m in ("Heston","local") for s in range(18) for i in range(3)}
+actual=set()
+for row in empty:
+ name=row["id"].split(":");m=name[3];s=int(name[4][5:]);i=int(name[5][4:])
+ actual.add((m,s,i));assert row["original_n"]==4096
+ args=row["arguments"]["arguments"];q=rows[args["q_record"]["job"]]
+ qa=q["arguments"]["arguments"]
+ assert q["arguments"]["operation"]=="Q" and q["original_n"]==4096
+ assert qa["model"]==m and qa["seed"]==candidate["seeds"]["refinement"][i]
+ assert qa["original_n"]==4096 and qa["state_id"]=={"input":f"original_Q_state:{s}:id"}
+ assert qa["date"]==json.loads((D/"task-5-actual-pilot-input-preparation-v4.json").read_text())["original_states18"][s]["date"]
+ assert qa["spot"]=={"input":f"original_Q_state:{s}:spot"}
+ assert qa["state"]=={"input":f"original_Q_state:{s}:{m}"}
+assert actual==expected and len(empty)==108
+# Independent toy call matrices: arithmetic fixture, no Heston truth or PDE claim.
+p=HestonParameters(100.,.03,0.,.04,2.,.04,.3,-.7)
+class Zeros:
+ def standard_normal(self,shape):return np.zeros(shape)
+def cache(model,times,states):
+ spots=np.geomspace(40.,250.,8)
+ var=states if model=="Heston" else .04*states
+ tau=(1.25-times)[:,None,None];stock=spots[None,:,None]
+ sig=np.sqrt(tau*var[None,None,:])
+ d1=(np.log(stock/100)+(.03+var[None,None,:]/2)*tau)/sig
+ vals=stock*ndtr(d1)-100*np.exp(-.03*tau)*ndtr(d1-sig)
+ return {"model":model.lower(),"dates":times.copy(),"spot_nodes":spots,"state_nodes":states,
+ "values":vals,"rate":.03,"dividend_yield":0.,"strike":100.,"maturity":1.25,
+ "price_error":np.nan,"derivative_error":np.nan,"reference_status":"unmeasured",
+ "support_mask":np.isfinite(vals),"interpolation":"not_a_knot_tensor_cubic",
+ "diagnostics":[{"method":"independent_analytic_toy_source_unit"}]}
+results=[];base_saved=None;base_args=None
+for model in ("Heston","local"):
+ for failed in (False,True):
+  date=.25;times=date+np.array([0,1,2,4,8])/1536
+  states=np.linspace(.00001,.5,8) if model=="Heston" else np.linspace(.25,4.,8)
+  field=None if model=="Heston" else LocalVarianceGrid(np.array([.001,1.25]),np.array([-12.,12.]),np.full((2,2),.04),p)
+  spots=np.full(4096,100.);spots[0]=np.nan if failed else 100.
+  with patch("numpy.random.default_rng",lambda seed:Zeros()):
+   q=main.pilot.run_q_job(p,field,model=model,seed=candidate["seeds"]["refinement"][2],original_n=4096,chunk_paths=256,call_cache=cache(model,times,states),
+     date=date,spot=spots,state=.04 if model=="Heston" else 1.,bin_edges=[90.,100.,110.],state_id=f"independent_source_unit:{model}:{failed}")
+  args={"operation":"empty_claim","arguments":{"q_record":q}}
+  identifier=f"unit:{model}:{failed}"
+  unit_plan={"jobs":[{"id":identifier,"prediction":{"path_steps":0,"chunk_expanded_bytes":128*1024**2,"rate_source":"independent_source_unit_prior"},"budget":{"wall_seconds":30.,"planned_before_attempt":True}}]}
+  with patch("numpy.random.default_rng",forbidden),patch.object(main.pilot,"run_q_job",forbidden):
+   raw,ref=main._execute(U,identifier,"refinement",args,unit_plan,{},False)
+   saved,_=main.read_main_artifact(ref["path"])
+   assert main.check_execution_status(saved)["qualified"]
+   checker.check_refinement_binding(saved,args)
+   checked=checker.check_empty_claim_job(raw)
+   assert raw["original_n"]==4096 and raw["financial_qualification"]=="unknown"
+   for record,column in zip(raw["rows"],(4,3,2),strict=True):
+    # Independent discounted self-financing one-call derivation.
+    gain=q["quoted_calls"][:,column]*np.exp(-.03*(times[column]-date))-q["quoted_calls"][:,0]
+    np.testing.assert_allclose(record["raw"]["discounted_pnl"],gain,atol=1e-12,rtol=1e-12,equal_nan=True)
+    np.testing.assert_allclose(record["raw"]["discounted_gain_pnl"],gain,atol=1e-12,rtol=1e-12,equal_nan=True)
+    assert np.allclose(record["raw"]["costs"][record["raw"]["path_mask"]],0)
+    if failed:
+     assert np.isnan(record["raw"]["discounted_pnl"][0]) and not record["raw"]["path_mask"][0]
+     assert raw["Q"]["failure_reasons"][0]=="original_one_step_SDE_failure"
+   original_sha=hashlib.sha256((Path(ref["path"])/"metadata.json").read_bytes()).hexdigest()
+   resumed,resumed_ref=main._execute(U,identifier,"refinement",args,unit_plan,{},True)
+   checker.check_empty_claim_job(resumed)
+   assert original_sha==hashlib.sha256((Path(ref["path"])/"metadata.json").read_bytes()).hexdigest()
+   assert resumed_ref["serialization_cost"]==ref["serialization_cost"]
+   results.append({"model":model,"failed_path":failed,"original_n":4096,"rows":3,"saved_check":"PASS","hand_cash":"PASS","resume_original_record":"unchanged","financial_qualification":"unknown"})
+   if model=="Heston" and not failed:base_saved=saved;base_args=args
+# Self-consistent worker-clock overrun: standalone cash check allows clocks,
+# enclosing measured worker cannot exceed the actual original parent interval.
+mutation_results=[]
+def reject(name,fun):
+ try:fun()
+ except (ValueError,AssertionError,KeyError) as e:mutation_results.append({"id":name,"refused":True,"reason":str(e)})
+ else:mutation_results.append({"id":name,"refused":False})
+for name,mutate in [
+ ("cash_change",lambda r:r["rows"][0]["raw"]["cash"].__setitem__((0,0),r["rows"][0]["raw"]["cash"][0,0]+.1)),
+ ("cost_change",lambda r:r["rows"][0]["raw"]["costs"].__setitem__((0,0),.1)),
+ ("path_order",lambda r:r.update(path_ids=np.arange(4096)[::-1])),
+ ("original_N_shrink",lambda r:r.update(original_n=2048)),
+ ("missing_expense",lambda r:r.pop("expense")),
+ ("unknown_cpu",lambda r:r["expense"]["timing"].update(cpu_seconds=None)),
+ ("changed_clock",lambda r:r["expense"]["timing_events"].update(wall_stop=r["expense"]["timing_events"]["wall_stop"]+1.)),
+]:
+ r=copy.deepcopy(base_saved["raw"]);mutate(r)
+ reject(name,lambda r=r:checker.check_empty_claim_job(r))
+r=copy.deepcopy(base_saved);r["raw"]["Q"]["state_id"]="changed_original_producer"
+reject("Q_original_binding",lambda:checker.check_refinement_binding(r,base_args))
+r=copy.deepcopy(base_saved)
+r["raw"]["expense"]["timing"]["wall_seconds"]=100.
+r["raw"]["expense"]["timing_events"]["wall_stop"]=r["raw"]["expense"]["timing_events"]["wall_start"]+100.
+checker.check_empty_claim_job(r["raw"])
+reject("selfconsistent_worker_overrun_exceeds_parent",lambda:main.check_execution_status(r))
+with patch("numpy.random.default_rng",forbidden):
+ identifier="independent_completed_overrun";cap_plan={"jobs":[{"id":identifier,"prediction":{"path_steps":0,"chunk_expanded_bytes":128*1024**2,"rate_source":"independent_source_unit_prior"},"budget":{"wall_seconds":1e-12,"planned_before_attempt":True}}]}
+ over,overref=main._execute(U,identifier,"refinement",base_args,cap_plan,{},False)
+ save,_=main.read_main_artifact(overref["path"])
+ assert save["status"]=="failed_at_declared_cap" and save["cap_evidence"]["finished_raw_work_preserved"]
+ assert over["original_n"]==4096 and len(over["rows"])==3 and not main.check_execution_status(save)["qualified"]
+ checker.check_empty_claim_job(over)
+ save["status"]="executed"
+ reject("completed_overrun_relabelled_executed",lambda:main.check_execution_status(save))
+assert all(r["refused"] for r in mutation_results)
+after={f:hashlib.sha256((W/f).read_bytes()).hexdigest() for f in before}
+assert before==after
+clock={**start,"wall_stop":time.perf_counter(),"cpu_stop":time.process_time()}
+out={"scope":"root rerun of independently authored fixed3 probe with repaired pilot dependency; not a new independent approval or formal experiment",
+ "AST_changes":ast_changes,"actual_DAG_empty_count":108,"actual_original_roster":"2models18states3reservedstreamsN4096 checked",
+ "source_unit_results":results,"negative_probes":mutation_results,"source_before":before,"source_after":after,
+ "formal_financial_execution_performed":False,"financial_qualification":"unknown","clock":clock,
+ "wall_seconds":clock["wall_stop"]-clock["wall_start"],"cpu_seconds":clock["cpu_stop"]-clock["cpu_start"],
+ "self_write_expense":{"status":"pending","wall_seconds":None,"cpu_seconds":None}}
+(D/"task-6-main-empty-root-native-recheck-v3-results.json").write_text(json.dumps(out,indent=2)+"\n")
+print(json.dumps(out,indent=2))

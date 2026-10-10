@@ -1,0 +1,78 @@
+{
+  "schema": "rb-f04-v54-independent-native-Q-review-v1",
+  "source_seed_calls": [
+    913,
+    913,
+    913,
+    913
+  ],
+  "bounded_source_unit_only": true,
+  "checks": [
+    {
+      "model": "Heston",
+      "failed": false,
+      "original_n": 32,
+      "path_mask_count": 32,
+      "financial_qualification": "unknown"
+    },
+    {
+      "model": "Heston",
+      "failed": true,
+      "original_n": 32,
+      "path_mask_count": 31,
+      "financial_qualification": "unknown"
+    },
+    {
+      "model": "local",
+      "failed": false,
+      "original_n": 32,
+      "path_mask_count": 32,
+      "financial_qualification": "unknown"
+    },
+    {
+      "model": "local",
+      "failed": true,
+      "original_n": 32,
+      "path_mask_count": 31,
+      "financial_qualification": "unknown"
+    }
+  ],
+  "probes": [
+    {
+      "name": "Heston_wrong_SDE_state_with_inputs",
+      "outcome": "refused",
+      "reason": "Q saved one-step SDE record.variance: saved value mismatch"
+    },
+    {
+      "name": "Heston_remove_parameters_disables_SDE_replay",
+      "outcome": "accepted",
+      "financial_qualification": "unknown"
+    },
+    {
+      "name": "Heston_changed_raw_parameters_accepted_under_original_argument_hash",
+      "outcome": "accepted",
+      "original_parameter_spot": 100.0,
+      "raw_parameter_spot": 101.0
+    },
+    {
+      "name": "local_wrong_SDE_state_with_inputs",
+      "outcome": "refused",
+      "reason": "Q saved one-step SDE record.variance: saved value mismatch"
+    },
+    {
+      "name": "local_remove_parameters_disables_SDE_replay",
+      "outcome": "accepted",
+      "financial_qualification": "unknown"
+    },
+    {
+      "name": "local_changed_raw_parameters_accepted_under_original_argument_hash",
+      "outcome": "accepted",
+      "original_parameter_spot": 100.0,
+      "raw_parameter_spot": 101.0
+    }
+  ],
+  "formal_finance": false,
+  "financial_qualification": "unknown",
+  "saved_rng": false,
+  "scope": "Actual32-path source arithmetic with analytic toy call cache. Original-count financial precision not measured. Saved replay/cash verifies actual normals, failure masks, and unknown; negative source bindings expose missing required inputs."
+}

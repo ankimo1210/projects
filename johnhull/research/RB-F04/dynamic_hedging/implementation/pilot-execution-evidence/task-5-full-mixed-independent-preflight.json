@@ -1,0 +1,189 @@
+{
+  "schema": "rb-f04-full-mixed-independent-metadata-preflight-v1",
+  "fixed_v2_graph": {
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "numeric_dependency_edges": 15281,
+    "final44cells": 44,
+    "final16GreekbandSDE": 16,
+    "conditional36states": 36,
+    "conditional31attempts": 31,
+    "selector_control_coverage_missing": {
+      "Heston": {
+        "cases": [
+          "state00.Heston",
+          "state01.Heston",
+          "state02.Heston",
+          "state03.Heston",
+          "state04.Heston",
+          "state05.Heston",
+          "state06.Heston",
+          "state07.Heston",
+          "state08.Heston",
+          "state09.Heston",
+          "state10.Heston",
+          "state11.Heston",
+          "state12.Heston",
+          "state13.Heston",
+          "state14.Heston",
+          "state15.Heston",
+          "state16.Heston",
+          "state17.Heston"
+        ],
+        "dates": [
+          "teacher:Heston:date0",
+          "teacher:Heston:date1",
+          "teacher:Heston:date10",
+          "teacher:Heston:date11",
+          "teacher:Heston:date2",
+          "teacher:Heston:date3",
+          "teacher:Heston:date4",
+          "teacher:Heston:date5",
+          "teacher:Heston:date6",
+          "teacher:Heston:date7",
+          "teacher:Heston:date8",
+          "teacher:Heston:date9"
+        ]
+      },
+      "local": {
+        "cases": [
+          "state00.local",
+          "state01.local",
+          "state02.local",
+          "state03.local",
+          "state04.local",
+          "state05.local",
+          "state06.local",
+          "state07.local",
+          "state08.local",
+          "state09.local",
+          "state10.local",
+          "state11.local",
+          "state12.local",
+          "state13.local",
+          "state14.local",
+          "state15.local",
+          "state16.local",
+          "state17.local"
+        ],
+        "dates": [
+          "teacher:local:date0",
+          "teacher:local:date1",
+          "teacher:local:date10",
+          "teacher:local:date11",
+          "teacher:local:date2",
+          "teacher:local:date3",
+          "teacher:local:date4",
+          "teacher:local:date5",
+          "teacher:local:date6",
+          "teacher:local:date7",
+          "teacher:local:date8",
+          "teacher:local:date9"
+        ]
+      }
+    },
+    "financial_qualification": "unknown"
+  },
+  "fixed_v3_graph": {
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "numeric_dependency_edges": 15281,
+    "final44cells": 44,
+    "final16GreekbandSDE": 16,
+    "conditional36states": 36,
+    "conditional31attempts": 31,
+    "selector_control_coverage_missing": {
+      "Heston": {
+        "cases": [],
+        "dates": []
+      },
+      "local": {
+        "cases": [],
+        "dates": []
+      }
+    },
+    "financial_qualification": "unknown"
+  },
+  "mutations": [
+    {
+      "name": "final_refinement_N_uses_principal",
+      "outcome": "refused",
+      "reason": "Final refinement uses wrong selected cache"
+    },
+    {
+      "name": "final_refinement_grid_uses_nextN",
+      "outcome": "refused",
+      "reason": "Final refinement uses wrong selected cache"
+    },
+    {
+      "name": "selected_state_wrong_model",
+      "outcome": "refused",
+      "reason": "Selectedcase wrong control model"
+    },
+    {
+      "name": "selected_date_wrong_month",
+      "outcome": "refused",
+      "reason": "Selecteddate original control changed"
+    },
+    {
+      "name": "fixed_market_N_shrunk",
+      "outcome": "refused",
+      "reason": "Original market path/SDE changed"
+    },
+    {
+      "name": "field_original_control_changed",
+      "outcome": "refused",
+      "reason": "Original Dupire field controls changed"
+    },
+    {
+      "name": "Q_exactdate_shift",
+      "outcome": "refused",
+      "reason": "Q exact5 pricing dates changed"
+    },
+    {
+      "name": "empty_Q_parent_substitution",
+      "outcome": "refused",
+      "reason": "Wrong actual numerical dependency final:Q:local:1:()"
+    },
+    {
+      "name": "frequency24_uses48_calendar",
+      "outcome": "refused",
+      "reason": "Frequency CRN market calendar/seed changed"
+    },
+    {
+      "name": "precision_stream_reused",
+      "outcome": "refused",
+      "reason": "Precision actual driver seed changed"
+    },
+    {
+      "name": "lost_original_fitcase",
+      "outcome": "refused",
+      "reason": "Original121 case work missing"
+    },
+    {
+      "name": "position_width_changed",
+      "outcome": "refused",
+      "reason": "Wrong actual numerical dependency final:bump:Heston:['risk_variants', 0]"
+    },
+    {
+      "name": "stage_other_model_refined",
+      "outcome": "refused",
+      "reason": "Actual selector stage binding changed"
+    },
+    {
+      "name": "genuine_cap_scope_unrelated_job",
+      "outcome": "refused",
+      "reason": "Genuine cap numerical descendant/expense scope changed"
+    }
+  ],
+  "refused": 14,
+  "accepted": 0,
+  "new_rng": false,
+  "formal_finance": false,
+  "formal_lock": false,
+  "financial_qualification": "unknown",
+  "wall_seconds": 12.945127303,
+  "scope": "Independent original metadata, actual cache direction, source arguments, paths/streams/fees/Q/frequency/precision, genuine numeric cap descendants. Financial worker values and v54 control-cap A contract pending."
+}

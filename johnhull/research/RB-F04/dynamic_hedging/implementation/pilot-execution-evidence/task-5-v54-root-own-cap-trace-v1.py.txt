@@ -1,0 +1,17 @@
+from pathlib import Path
+import importlib.util,pytest,traceback,json,hashlib
+w=Path('/home/kazumasa/worktrees/johnhull-research-roadmap')
+d=w/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+spec=importlib.util.spec_from_file_location('pilot_tests',w/'deep_hedge_price/tests/test_dynamic_hedging_pilot.py')
+t=importlib.util.module_from_spec(spec);spec.loader.exec_module(t)
+original=t.run_pilot._dispatch
+def dispatch(operation,arguments):
+    try:return original(operation,arguments)
+    except Exception:
+        print('ACTUAL_DISPATCH_EXCEPTION',operation,flush=True);traceback.print_exc();raise
+with pytest.MonkeyPatch.context() as patch:
+    patch.setattr(t.run_pilot,'_dispatch',dispatch)
+    try:t.test_actual_selector_own_cap_preserves_control_n_and_no_numerical_inputs(patch,d/'root-own-cap-trace-v1')
+    except Exception:
+        traceback.print_exc()
+        raise

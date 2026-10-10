@@ -1,0 +1,752 @@
+"""Finance-free original main DAG draft. Unapproved controls prevent locking.
+
+This is scratch, not an execution entry point or a formal artifact. All external
+input records must be materialized from actual fixed pilot/closure/teacher raw.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import inspect
+import json
+import sys
+from collections import Counter
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+RESEARCH = ROOT / "johnhull/research/RB-F04/dynamic_hedging"
+sys.path[:0] = [
+    str(RESEARCH),
+    str(ROOT / "johnhull/hullkit/src"),
+    str(ROOT / "deep_hedge_price/src"),
+]
+import numpy as np  # noqa: E402
+import reference_methods as references  # noqa: E402
+import run_main as main  # noqa: E402
+import run_pilot as pilot  # noqa: E402
+from hullkit._dynamic_hedging_surfaces import build_call_cache  # noqa: E402
+
+GROUPS = ("sde", "teacher_n", "teacher_grid", "frequency", "Q")
+N_MAIN, N_REF, CHUNK_DRAFT = 32768, 4096, 256
+
+
+def input_ref(name):
+    return {"input": name}
+
+
+def job_ref(identifier, *path):
+    return {"job": identifier, "path": list(path)}
+
+
+def job_refs(value):
+    if isinstance(value, dict):
+        if set(value) in ({"job"}, {"job", "path"}):
+            return [value]
+        return [r for v in value.values() for r in job_refs(v)]
+    if isinstance(value, (list, tuple)):
+        return [r for v in value for r in job_refs(v)]
+    return []
+
+
+def input_ids(value):
+    if isinstance(value, dict):
+        if set(value) == {"input"}:
+            return {value["input"]}
+        return set().union(*(input_ids(v) for v in value.values()))
+    if isinstance(value, (list, tuple)):
+        return set().union(*(input_ids(v) for v in value))
+    return set()
+
+
+def compile_draft():
+    candidate = main.protocol.candidate_protocol()
+    roster = main.protocol.study_roster()["primary_cells"]
+    core, refinement, by_id, obligations = [], [], {}, []
+    groups = {group: [] for group in GROUPS}
+
+    def emit(identifier, operation, arguments, n, steps=0, *, category, group=None, binding=None):
+        if identifier in by_id:
+            raise ValueError("original producer dedup requires reuse of the same prior ID")
+        if not 0 <= steps <= 1_000_000_000:
+            raise ValueError("original per-job path-step cap exceeded")
+        row = {
+            "id": identifier,
+            "original_n": n,
+            "arguments": {"operation": operation, "arguments": arguments},
+            "category": category,
+            "prediction": {
+                "path_steps": steps,
+                "chunk_expanded_bytes": None,
+                "rate_source": None,
+                "work_count_scope": "SDE steps known; quote/root/refit/cash/storage separate TODO",
+                "quote_risk_queries": 2 * n * 12 if operation in ("risk", "quote_risk") else None,
+                "TODO": [
+                    "actual largest expanded bytes incl strings/root multiplicity",
+                    "measured source-bound rate",
+                    "inclusive wall and CPU prediction",
+                ],
+            },
+            "budget": {
+                "planned_before_attempt": False,
+                "wall_seconds": None,
+                "approval": "TODO actual prior cap; lock forbidden",
+            },
+        }
+        if operation in ("risk", "quote_risk"):
+            reference = arguments["dataset"]
+            parent = by_id[reference["job"]]["arguments"]["arguments"]
+            frequency = parent.get("frequency", 12)
+            if "frequencies" in parent:
+                frequency = parent["frequencies"][reference["path"][1]]
+            row["prediction"]["quote_risk_queries"] = 2 * n * frequency
+            row["prediction"]["quote_risk_queries_scope"] = (
+                "observable date/path x two valuation models; root multiplicity/refit+16blocks separate"
+            )
+        if operation == "Q":
+            row["prediction"].update(
+                path_steps=4 * n,
+                normal_driver_path_steps=8 * n,
+                actual_call_queries=5 * n,
+                Q_delta_factors=[1, 2, 4, 8],
+            )
+        if operation in ("market", "market_pair"):
+            finest = max(arguments["levels"])
+            row["prediction"]["normal_chunk_expanded_bytes"] = CHUNK_DRAFT * finest * 2 * 8
+        if binding is not None:
+            row["diagnostic_binding"] = binding
+        (core if category == "core" else refinement).append(row)
+        by_id[identifier] = row
+        if group:
+            groups[group].append(identifier)
+            obligations.append({"group": group, "outcome": identifier, "original_n": n})
+        return identifier
+
+    common = {"parameters": input_ref("parameters"), "surface": input_ref("worker_surface")}
+    for model in main.MODELS:
+        for slot, seed in enumerate(candidate["seeds"]["test"]):
+            market = emit(
+                f"market:{model}:seed{slot}",
+                "market",
+                {
+                    **common,
+                    "model": model,
+                    "seed": seed,
+                    "original_n": N_MAIN,
+                    "chunk_paths": CHUNK_DRAFT,
+                    "levels": candidate["sde"]["main_levels"],
+                    "frequency": 12,
+                    "call_cache": input_ref(f"actual_call_cache:{model}"),
+                    "premium": input_ref("frozen_premium"),
+                    "cost_rates": candidate["hedging"]["half_spreads"],
+                    "role": "test",
+                },
+                N_MAIN,
+                N_MAIN * sum(candidate["sde"]["main_levels"]),
+                category="core",
+            )
+            for level in candidate["sde"]["main_levels"]:
+                risk = emit(
+                    f"risk:{model}:seed{slot}:level{level}",
+                    "risk",
+                    {
+                        **common,
+                        "dataset": job_ref(market, "datasets", str(level)),
+                        "caches": input_ref("caches"),
+                        "chunk_paths": CHUNK_DRAFT,
+                        "retain_full_merged": False,
+                    },
+                    N_MAIN,
+                    category="core",
+                )
+                for universe in ("U1", "U2"):
+                    emit(
+                        f"evaluation:{model}:seed{slot}:level{level}:{universe}",
+                        "evaluation_sink",
+                        {
+                            "dataset": job_ref(market, "datasets", str(level)),
+                            "risk": job_ref(risk, "risk"),
+                            "fits": input_ref("closed_fits"),
+                            "validation": input_ref(f"validation:{model}:{universe}"),
+                            "generator": model,
+                            "universe": universe,
+                        },
+                        N_MAIN,
+                        category="core",
+                    )
+
+    markets, risks = {}, {}
+    for model in main.MODELS:
+        for slot, seed in enumerate(candidate["seeds"]["refinement"]):
+            market = emit(
+                f"refinement:producer:market:{model}:seed{slot}",
+                "market_pair",
+                {
+                    **common,
+                    "model": model,
+                    "seed": seed,
+                    "original_n": N_REF,
+                    "chunk_paths": CHUNK_DRAFT,
+                    "levels": [768, 1536],
+                    "frequencies": [12, 12],
+                    "call_cache": input_ref(f"actual_call_cache:{model}"),
+                    "premium": input_ref("frozen_premium"),
+                    "cost_rates": candidate["hedging"]["half_spreads"],
+                },
+                N_REF,
+                N_REF * (768 + 1536),
+                category="shared_producer",
+            )
+            markets[model, slot] = market
+            for name, index, caches in (
+                ("base", 0, "caches"),
+                ("fine", 1, "caches"),
+                ("teacher_n", 0, "teacher_n_refined_caches"),
+                ("teacher_grid", 0, "teacher_grid_refined_caches"),
+            ):
+                risks[model, slot, name] = emit(
+                    f"refinement:producer:risk:{model}:seed{slot}:{name}",
+                    "quote_risk",
+                    {
+                        **common,
+                        "dataset": job_ref(market, "datasets", index),
+                        "caches": input_ref(caches),
+                        "chunk_paths": CHUNK_DRAFT,
+                    },
+                    N_REF,
+                    category="shared_producer",
+                )
+
+    baseline_pairs, nn_pairs = {}, {}
+    for group in ("sde", "teacher_n", "teacher_grid"):
+        index = (0, 1) if group == "sde" else (0, 0)
+        variant = "fine" if group == "sde" else group
+        for model in main.MODELS:
+            for universe in ("U1", "U2"):
+                for slot in range(3):
+                    market = markets[model, slot]
+                    args = {
+                        "base_dataset": job_ref(market, "datasets", index[0]),
+                        "refined_dataset": job_ref(market, "datasets", index[1]),
+                        "base_risk": job_ref(risks[model, slot, "base"], "value"),
+                        "refined_risk": job_ref(risks[model, slot, variant], "value"),
+                        "validation": input_ref(f"validation:{model}:{universe}"),
+                        "fits": input_ref("closed_fits"),
+                        "refinement_kind": group,
+                        "shared_market": job_ref(market),
+                        "dataset_indices": list(index),
+                        "base_risk_source": job_ref(risks[model, slot, "base"]),
+                        "refined_risk_source": job_ref(risks[model, slot, variant]),
+                    }
+                    baseline_pairs[group, model, universe, slot] = emit(
+                        f"refinement:producer:baseline:{group}:{model}:{universe}:seed{slot}",
+                        "cell_pair",
+                        {
+                            **args,
+                            "identity": input_ref(f"selected_baseline_identity:{model}:{universe}"),
+                        },
+                        N_REF,
+                        category="shared_producer",
+                    )
+                    for cell in roster:
+                        if cell["policy"] != "nn" or (cell["generator"], cell["universe"]) != (
+                            model,
+                            universe,
+                        ):
+                            continue
+                        nn_pairs[group, cell["id"], slot] = emit(
+                            f"refinement:producer:nn:{group}:{cell['id']}:seed{slot}",
+                            "cell_pair",
+                            {**args, "identity": cell},
+                            N_REF,
+                            category="shared_producer",
+                        )
+        for cell in roster:
+            if cell["policy"] != "nn":
+                continue
+            comparison = f"{cell['generator']}:{cell['universe']}:level768:{cell['policy_id']}"
+            emit(
+                f"refinement:{group}:{comparison}",
+                "paired_score_cell_refinement",
+                {
+                    "baseline_records": [
+                        job_ref(baseline_pairs[group, cell["generator"], cell["universe"], s])
+                        for s in range(3)
+                    ],
+                    "candidate_records": [
+                        job_ref(nn_pairs[group, cell["id"], s]) for s in range(3)
+                    ],
+                    "original_n": N_REF,
+                    "group": group,
+                    "comparison_id": comparison,
+                },
+                N_REF,
+                category="numerical_outcome",
+                group=group,
+            )
+
+    for frequency in (24, 48):
+        for model in main.MODELS:
+            for slot, seed in enumerate(candidate["seeds"]["refinement"]):
+                market = emit(
+                    f"refinement:producer:frequency_market:{model}:{frequency}:seed{slot}",
+                    "market_pair",
+                    {
+                        **common,
+                        "model": model,
+                        "seed": seed,
+                        "original_n": N_REF,
+                        "chunk_paths": CHUNK_DRAFT,
+                        "call_cache": input_ref(f"actual_call_cache:{model}"),
+                        "premium": input_ref("frozen_premium"),
+                        "cost_rates": candidate["hedging"]["half_spreads"],
+                        "levels": [768, 1536],
+                        "frequencies": [12, frequency],
+                    },
+                    N_REF,
+                    N_REF * (768 + 1536),
+                    category="shared_producer",
+                )
+                current_risks = []
+                for i, caches in ((0, "caches"), (1, f"frequency_exact_caches:{frequency}")):
+                    current_risks.append(
+                        emit(
+                            f"refinement:producer:frequency_risk:{model}:{frequency}:seed{slot}:index{i}",
+                            "quote_risk",
+                            {
+                                **common,
+                                "dataset": job_ref(market, "datasets", i),
+                                "caches": input_ref(caches),
+                                "chunk_paths": CHUNK_DRAFT,
+                            },
+                            N_REF,
+                            category="shared_producer",
+                        )
+                    )
+                for cell in roster:
+                    if cell["generator"] != model or cell["policy"] not in ("greek", "band"):
+                        continue
+                    emit(
+                        f"refinement:frequency:{cell['id']}:{frequency}:seed{slot}",
+                        "cell_pair",
+                        {
+                            "base_dataset": job_ref(market, "datasets", 0),
+                            "refined_dataset": job_ref(market, "datasets", 1),
+                            "base_risk": job_ref(current_risks[0], "value"),
+                            "refined_risk": job_ref(current_risks[1], "value"),
+                            "identity": cell,
+                            "validation": input_ref(f"validation:{model}:{cell['universe']}"),
+                            "fits": input_ref("closed_fits"),
+                            "refinement_kind": "frequency",
+                            "shared_market": job_ref(market),
+                            "dataset_indices": [0, 1],
+                            "base_risk_source": job_ref(current_risks[0]),
+                            "refined_risk_source": job_ref(current_risks[1]),
+                        },
+                        N_REF,
+                        category="frequency_outcome",
+                        group="frequency",
+                        binding={"cell_id": cell["id"], "frequency": frequency, "seed_slot": slot},
+                    )
+
+    dates = [0, 1 / 12, 0.25, 0.5, 0.75, 11 / 12]
+    q_call_caches = {}
+    for model in main.MODELS:
+        for state_index in range(18):
+            date = dates[state_index // 3]
+            key = (model, state_index // 3)
+            if key not in q_call_caches:
+                q_call_caches[key] = emit(
+                    f"refinement:producer:Q_call:{model}:date{state_index // 3}",
+                    "call_cache",
+                    {
+                        **common,
+                        "model": model.lower(),
+                        "dates": [date + k / 1536 for k in (0, 1, 2, 4, 8)],
+                        "spot_nodes": input_ref("original_call_spot_nodes65"),
+                        "state_nodes": input_ref(f"original_call_state_nodes:{model}"),
+                    },
+                    5 * 65 * (33 if model == "Heston" else 7),
+                    category="shared_producer",
+                )
+            cache = q_call_caches[key]
+            for slot, seed in enumerate(candidate["seeds"]["refinement"]):
+                q = emit(
+                    f"refinement:Q:{model}:state{state_index}:seed{slot}",
+                    "Q",
+                    {
+                        **common,
+                        "model": model,
+                        "seed": seed,
+                        "original_n": N_REF,
+                        "chunk_paths": CHUNK_DRAFT,
+                        "call_cache": job_ref(cache, "value"),
+                        "date": date,
+                        "spot": input_ref(f"original_Q_state:{state_index}:spot"),
+                        "state": input_ref(f"original_Q_state:{state_index}:{model}"),
+                        "state_id": input_ref(f"original_Q_state:{state_index}:id"),
+                        "bin_edges": input_ref("pilot_fixed_Q_bin_edges"),
+                    },
+                    N_REF,
+                    N_REF * 8,
+                    category="Q_outcome",
+                    group="Q",
+                )
+                emit(
+                    f"refinement:producer:empty_Q:{model}:state{state_index}:seed{slot}",
+                    "empty_claim",
+                    {
+                        "q_record": job_ref(q),
+                    },
+                    N_REF,
+                    category="empty_claim_obligation",
+                )
+
+    required_inputs = sorted(
+        set().union(*(input_ids(row["arguments"]) for row in core + refinement))
+    )
+    required_inputs += [
+        key
+        for key in (
+            "candidate",
+            "frozen",
+            "source",
+            "pilot",
+            "pilot_plan",
+            "pilot_context",
+            "closure",
+            "closure_inputs",
+            "teacher",
+            "fresh_plan",
+            "selection_receipts",
+            "fresh_original_artifact_identity",
+            "field",
+            "expense_history",
+            "original_states18",
+            "original_teacher_comparison_metadata",
+        )
+        if key not in required_inputs
+    ]
+    plan = {
+        "schema": "rb-f04-main-plan-v1.1",
+        "draft_only": True,
+        "formal_lockable": False,
+        "test_opened": False,
+        "test_n": N_MAIN,
+        "levels": candidate["sde"]["main_levels"],
+        "test_seeds": candidate["seeds"]["test"],
+        "original_cells": roster,
+        "limits": candidate["limits"],
+        "chunk_paths": CHUNK_DRAFT,
+        "refinement_seeds": candidate["seeds"]["refinement"],
+        "independent_refinement_n": N_REF,
+        "independent_sde_levels": [768, 1536],
+        "teacher_n_candidates": candidate["teacher"]["n_candidates"],
+        "teacher_grid_candidates": ["coarse", "high"],
+        "selected_frequencies": [24, 48],
+        "main_cap_scopes": main.main_cap_scopes(),
+        "numerical_envelope_rule": "sum_group_max_absolute_mean_plus_6_IID_SE",
+        "refinement_jobs": refinement,
+        "refinement_groups": groups,
+        "jobs": core + refinement,
+        "history": input_ref("expense_history"),
+        "anchors": {
+            name: None
+            for name in (
+                "pilot",
+                "closure",
+                "closure_inputs",
+                "teacher",
+                "fresh_plan",
+                "parameters",
+                "field",
+                "caches",
+            )
+        },
+        "input_schema": {
+            name: {"required": True, "binding_sha256": None, "status": "TODO actual fixed input"}
+            for name in required_inputs
+        },
+        "original_obligations": obligations,
+        "borrowed_producer_obligations": {
+            "teacher_n_refined_caches": "actual selected original N -> next original prefix or independent reserved same65536; full raw16blocks/axes/domain/source/expense; common call identical",
+            "teacher_grid_refined_caches": "actual distinct original coarse/high axes at same original N; all raw/source/domain/expense; common call identical",
+            "frequency_exact_caches:24": "selected additional exact-date raw; original monthly retained; unsupported dates explicitly unknown; no interpolation/full24 cache automatic",
+            "frequency_exact_caches:48": "selected additional exact-date raw; original monthly retained; unsupported dates explicitly unknown; no interpolation/full48 cache automatic",
+        },
+        "TODO_lock_blockers": [
+            "Actual source/pilot/fresh/private closure/12fits/12validation/4x14baseline and all anchors not fixed",
+            "Every prior budget and source-bound expanded-byte/work/wall prediction unapproved; chunk256 is only draft metadata",
+            "Teacher N/grid/reference/domain aliases require actual immutable pilot receipts and original raw/cost history",
+            "Selected baseline input identities require actual prior selection; None must stay unknown, no numeric fallback",
+            "Original Q18 IDs/spots/inferred states/bin edges require actual original pilot bindings",
+            "Q off-month call_cache price_error is unmeasured; independent CF/PDE/refinement reference raw needs actual measured binding, never set fake finite error",
+            "empty_claim108 main dispatch is connected; original native Q input/SDE binding and independent off-month CF/PDE precision remain unclosed before formal execution",
+            "Frequency existing paired worker records768/1536+12/frequency; scope must label both changes and preserve separate SDE diagnostic",
+            "All complete main/CAS/fresh/storage/plot/checker expenses and final self-write unknown remain unclosed",
+        ],
+    }
+    dependencies = {row["id"]: pilot._dependency_ids(row["arguments"]) for row in plan["jobs"]}
+    child = {identifier: set() for identifier in dependencies}
+    for identifier, parents in dependencies.items():
+        for parent in parents:
+            child[parent].add(identifier)
+
+    def descendants(identifier):
+        found, pending = set(), [identifier]
+        while pending:
+            current = pending.pop()
+            for item in child[current]:
+                if item not in found:
+                    found.add(item)
+                    pending.append(item)
+        return sorted(found)
+
+    plan["refinement_declared_cap_descendants"] = {
+        row["id"]: descendants(row["id"]) for row in refinement
+    }
+    return plan, candidate
+
+
+def dryrun(plan, candidate):
+    workers = {
+        "market": main.run_market_job,
+        "risk": main.run_risk_job,
+        "evaluation_sink": main.study.test_roster,
+        "market_pair": pilot.run_market_pair_job,
+        "quote_risk": pilot.run_quote_risk_job,
+        "cell_pair": pilot.run_cell_pair_job,
+        "paired_score_cell_refinement": main.score_refinement_from_cell_pairs,
+        "call_cache": build_call_cache,
+        "Q": pilot.run_q_job,
+        "empty_claim": main.run_empty_claim_job,
+    }
+    allowed = {
+        "frequency_market",
+        "paired_score_refinement",
+        "paired_score_cell_refinement",
+        "market_pair",
+        "teacher",
+        "teacher_grid",
+        "quote_risk",
+        "policy",
+        "paired_pnl",
+        "cell_pair",
+        "bump_risk",
+        "Q",
+        "oracle",
+        "call_table",
+        "asian_cache",
+        "call_cache",
+        "empty_claim",
+    }
+    ids, unsupported, binding_errors = [], [], []
+    input_placeholder = {key: {"draft_required_input": key} for key in plan["input_schema"]}
+    results = {}
+    for row in plan["jobs"]:
+        dependencies = pilot._dependency_ids(row["arguments"])
+        assert dependencies <= set(ids), (
+            row["id"],
+            "dependency not topological",
+            sorted(dependencies - set(ids)),
+        )
+        spec = row["arguments"]
+        kwargs = spec["arguments"]
+        for reference in job_refs(spec):
+            parent = next(r for r in plan["jobs"] if r["id"] == reference["job"])
+            op, path = parent["arguments"]["operation"], reference.get("path", [])
+            known = not path
+            if op == "market":
+                known |= (
+                    len(path) == 2 and path[0] == "datasets" and path[1] in {"192", "384", "768"}
+                )
+            elif op == "market_pair":
+                known |= len(path) == 2 and path[0] == "datasets" and path[1] in (0, 1)
+            elif op == "quote_risk":
+                known |= path == ["value"]
+            elif op == "risk":
+                known |= path == ["risk"]
+            elif op == "call_cache":
+                known |= path == ["value"]
+            assert known, (row["id"], "unsupported typed raw path", reference)
+        inspect.signature(workers[spec["operation"]]).bind(**kwargs)
+        # Resolve actual canonical refs with unexecuted metadata-only placeholders.
+        for dependency in dependencies:
+            assert dependency in results
+        results[row["id"]] = {"raw": {"draft_raw_not_executed": row["id"]}}
+        ids.append(row["id"])
+        if row["category"] != "core" and spec["operation"] not in allowed:
+            unsupported.append({"id": row["id"], "operation": spec["operation"]})
+    minimum = main.validate_refinement_outcomes(plan, candidate)
+    assert len(set(ids)) == len(ids)
+    assert all(row["original_n"] == N_MAIN for row in plan["jobs"] if row["category"] == "core")
+    assert [
+        row["id"] for row in plan["jobs"] if row["category"] == "core"
+    ] == main.required_main_jobs()
+    assert Counter(
+        row["arguments"]["operation"] for row in plan["jobs"] if row["category"] == "core"
+    ) == {"market": 6, "risk": 18, "evaluation_sink": 36}
+    grouped = [i for group in plan["refinement_groups"].values() for i in group]
+    assert len(grouped) == len(set(grouped))
+    assert not any(
+        row["id"] in grouped for row in plan["jobs"] if row["category"] == "shared_producer"
+    )
+    assert all(
+        row["original_n"] == N_REF
+        for row in plan["refinement_jobs"]
+        if row["category"] != "shared_producer" or row["arguments"]["operation"] != "call_cache"
+    )
+    assert all(
+        row["budget"]["wall_seconds"] is None and not row["budget"]["planned_before_attempt"]
+        for row in plan["jobs"]
+    )
+    comparison_job = next(
+        row
+        for row in plan["refinement_jobs"]
+        if row["arguments"]["operation"] == "paired_score_cell_refinement"
+    )
+    refs = pilot._dependency_ids(comparison_job["arguments"])
+    resolved = pilot._resolve(
+        comparison_job["arguments"],
+        input_placeholder,
+        {key: {"raw": {"actual_id": key}} for key in refs},
+    )
+    assert (
+        len(
+            {
+                r["actual_id"]
+                for r in resolved["arguments"]["baseline_records"]
+                + resolved["arguments"]["candidate_records"]
+            }
+        )
+        == 6
+    )
+    return {
+        "schema": "rb-f04-main-plan-draft-dryrun-v1",
+        "formal_lockable": False,
+        "finance_executed": False,
+        "normal_rng_opened": False,
+        "source_worker_execution": False,
+        "core_job_count": 60,
+        "core_cell_records": 396,
+        "core_original_n": N_MAIN,
+        "refinement_job_count": len(plan["refinement_jobs"]),
+        "outcome_group_counts": {k: len(v) for k, v in plan["refinement_groups"].items()},
+        "operation_counts": dict(Counter(row["arguments"]["operation"] for row in plan["jobs"])),
+        "minimum_roster_prior_guard": minimum,
+        "canonical_resolver_six_distinct_metadata_refs": True,
+        "topological_all_declared_dependencies": True,
+        "all_typed_raw_paths_match_actual_worker_schema": True,
+        "producer_dedup_outcomes_disjoint": True,
+        "original_Q18_states_each_model_all3seeds": True,
+        "worker_signatures": {key: str(inspect.signature(value)) for key, value in workers.items()},
+        "unsupported_actual_main_dispatch": unsupported,
+        "signature_binding_errors": binding_errors,
+        "TODO_lock_blockers": plan["TODO_lock_blockers"],
+    }
+
+
+def main_cli():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-prefix", type=Path, required=True)
+    args = parser.parse_args()
+    source_paths = [
+        RESEARCH / name
+        for name in ("run_main.py", "check_main.py", "run_pilot.py", "check_pilot.py")
+    ]
+    before = {
+        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_paths
+    }
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("finance/RNG execution forbidden in typed DAG draft")
+
+    np.random.default_rng = forbidden
+    references.independent_heston_call = forbidden
+    references.pde_call = forbidden
+    # Preserve actual signatures for dry binding while making worker execution fatal.
+    guarded = []
+    for module, names in (
+        (
+            main,
+            (
+                "run_market_job",
+                "run_risk_job",
+                "score_refinement_from_cell_pairs",
+                "run_empty_claim_job",
+                "_dispatch_refinement",
+            ),
+        ),
+        (
+            pilot,
+            (
+                "run_market_pair_job",
+                "run_quote_risk_job",
+                "run_cell_pair_job",
+                "run_q_job",
+                "run_empty_claim_job",
+                "_dispatch",
+            ),
+        ),
+        (main.study, ("test_roster",)),
+    ):
+        for name in names:
+            original = getattr(module, name)
+
+            def blocked(*args, **kwargs):
+                return forbidden(*args, **kwargs)
+
+            blocked.__signature__ = inspect.signature(original)
+            setattr(module, name, blocked)
+            guarded.append(module.__name__ + "." + name)
+    global build_call_cache
+    original_cache = build_call_cache
+
+    def blocked_cache(*args, **kwargs):
+        return forbidden(*args, **kwargs)
+
+    blocked_cache.__signature__ = inspect.signature(original_cache)
+    build_call_cache = blocked_cache
+    plan, candidate = compile_draft()
+    result = dryrun(plan, candidate)
+    result["blocked_execution_functions"] = [
+        *guarded,
+        "build_call_cache",
+        "np.random.default_rng",
+        "independent_heston_call",
+        "pde_call",
+    ]
+    after = {
+        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_paths
+    }
+    result.update(source_before=before, source_after=after, source_stable=before == after)
+    if before != after:
+        result["TODO_lock_blockers"].append("source changed during dryrun; draft never formal")
+    args.output_prefix.with_suffix(".json").write_text(
+        json.dumps(plan, ensure_ascii=False, indent=2) + "\n"
+    )
+    args.output_prefix.with_name(args.output_prefix.name + "-dryrun.json").write_text(
+        json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+    )
+    print(
+        json.dumps(
+            {
+                key: result[key]
+                for key in (
+                    "formal_lockable",
+                    "finance_executed",
+                    "normal_rng_opened",
+                    "core_job_count",
+                    "core_cell_records",
+                    "refinement_job_count",
+                    "outcome_group_counts",
+                    "source_stable",
+                )
+            },
+            ensure_ascii=False,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main_cli()

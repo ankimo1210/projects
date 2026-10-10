@@ -1,0 +1,97 @@
+{
+  "schema": "rb-f04-main-plan-draft-dryrun-v1",
+  "formal_lockable": false,
+  "finance_executed": false,
+  "normal_rng_opened": false,
+  "source_worker_execution": false,
+  "core_job_count": 60,
+  "core_cell_records": 396,
+  "core_original_n": 32768,
+  "refinement_job_count": 714,
+  "outcome_group_counts": {
+    "sde": 24,
+    "teacher_n": 24,
+    "teacher_grid": 24,
+    "frequency": 96,
+    "Q": 108
+  },
+  "operation_counts": {
+    "market": 6,
+    "risk": 18,
+    "evaluation_sink": 36,
+    "market_pair": 18,
+    "quote_risk": 48,
+    "cell_pair": 348,
+    "paired_score_cell_refinement": 72,
+    "call_cache": 12,
+    "Q": 108,
+    "empty_claim": 108
+  },
+  "minimum_roster_prior_guard": {
+    "numeric_comparisons_per_group": 24,
+    "frequency_original_slots": 96,
+    "Q_model_stream_slots": 6,
+    "full_formal_date_state_scope": "requires_plan_and_raw_gate"
+  },
+  "canonical_resolver_six_distinct_metadata_refs": true,
+  "topological_all_declared_dependencies": true,
+  "all_typed_raw_paths_match_actual_worker_schema": true,
+  "producer_dedup_outcomes_disjoint": true,
+  "original_Q18_states_each_model_all3seeds": true,
+  "worker_signatures": {
+    "market": "(parameters, surface, *, model, seed, original_n, chunk_paths, levels, frequency, call_cache, premium, cost_rates, role='test', wall_cap_seconds=None)",
+    "risk": "(parameters, surface, dataset, caches, *, chunk_paths=256, wall_cap_seconds=None, retain_full_merged=True)",
+    "evaluation_sink": "(dataset, risk, fits, validation, *, generator, universe) -> dict",
+    "market_pair": "(parameters, surface, *, model, seed, original_n, chunk_paths, call_cache, premium, cost_rates, levels=(768, 1536), frequencies=(12, 12), wall_cap_seconds=None)",
+    "quote_risk": "(parameters, surface, dataset, caches, *, chunk_paths=256, wall_cap_seconds=None)",
+    "cell_pair": "(*, base_dataset, refined_dataset, base_risk, refined_risk, identity, validation, fits, refinement_kind, shared_market=None, dataset_indices=(0, 1), base_risk_source=None, refined_risk_source=None, refined_risk_width_index=None)",
+    "paired_score_cell_refinement": "(*, baseline_records, candidate_records, original_n, group, comparison_id)",
+    "call_cache": "(parameters, surface, *, dates, spot_nodes, state_nodes, model)",
+    "Q": "(parameters, surface, *, model, seed, original_n, chunk_paths, call_cache, date, spot, state, bin_edges, state_id=None, wall_cap_seconds=None)",
+    "empty_claim": "(q_record)"
+  },
+  "unsupported_actual_main_dispatch": [],
+  "signature_binding_errors": [],
+  "TODO_lock_blockers": [
+    "Actual source/pilot/fresh/private closure/12fits/12validation/4x14baseline and all anchors not fixed",
+    "Every prior budget and source-bound expanded-byte/work/wall prediction unapproved; chunk256 is only draft metadata",
+    "Teacher N/grid/reference/domain aliases require actual immutable pilot receipts and original raw/cost history",
+    "Selected baseline input identities require actual prior selection; None must stay unknown, no numeric fallback",
+    "Original Q18 IDs/spots/inferred states/bin edges require actual original pilot bindings",
+    "Q off-month call_cache price_error is unmeasured; independent CF/PDE/refinement reference raw needs actual measured binding, never set fake finite error",
+    "empty_claim108 main dispatch is connected; original native Q input/SDE binding and independent off-month CF/PDE precision remain unclosed before formal execution",
+    "Frequency existing paired worker records768/1536+12/frequency; scope must label both changes and preserve separate SDE diagnostic",
+    "All complete main/CAS/fresh/storage/plot/checker expenses and final self-write unknown remain unclosed"
+  ],
+  "blocked_execution_functions": [
+    "run_main.run_market_job",
+    "run_main.run_risk_job",
+    "run_main.score_refinement_from_cell_pairs",
+    "run_main.run_empty_claim_job",
+    "run_main._dispatch_refinement",
+    "run_pilot.run_market_pair_job",
+    "run_pilot.run_quote_risk_job",
+    "run_pilot.run_cell_pair_job",
+    "run_pilot.run_q_job",
+    "run_pilot.run_empty_claim_job",
+    "run_pilot._dispatch",
+    "deep_hedge_price._dynamic_hedging_study.test_roster",
+    "build_call_cache",
+    "np.random.default_rng",
+    "independent_heston_call",
+    "pde_call"
+  ],
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "a988c164ca8f64f5dfc78165fc2f9620c2abc857eac745715f4749908839e230",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "a988c164ca8f64f5dfc78165fc2f9620c2abc857eac745715f4749908839e230",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37"
+  },
+  "source_stable": true
+}

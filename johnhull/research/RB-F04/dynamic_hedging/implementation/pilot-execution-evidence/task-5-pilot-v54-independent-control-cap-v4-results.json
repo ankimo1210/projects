@@ -1,0 +1,61 @@
+{
+  "schema": "rb-f04-v54-independent-actual-control-cap-projection-v1",
+  "checks": [
+    {
+      "model": "Heston",
+      "original_n": 65536,
+      "selector_wall_seconds": 0.009631718,
+      "selector_cap_limit": 1e-12,
+      "state_numerical_status": "executed",
+      "case_cap_parent": "selection:Heston",
+      "date_cap_parent": "selection:Heston",
+      "case_required_job_ids": [
+        "gate:65536:coarse:state00.Heston",
+        "selection:Heston"
+      ],
+      "date_required_job_ids": [
+        "teacher:65536:coarse",
+        "gate:65536:coarse:date0",
+        "selection:Heston"
+      ],
+      "adapter_numerical_status": "unexecuted_dependency_cap",
+      "diagnostic_numerical_status": "unexecuted_dependency_cap",
+      "independent_job_status": "executed",
+      "saved_resume_stable": true,
+      "full_pilot_closed": false,
+      "financial_qualification": "unknown",
+      "unrelated_unclosed_issues": []
+    },
+    {
+      "model": "local",
+      "original_n": 65536,
+      "selector_wall_seconds": 0.009137954,
+      "selector_cap_limit": 1e-12,
+      "state_numerical_status": "executed",
+      "case_cap_parent": "selection:local",
+      "date_cap_parent": "selection:local",
+      "case_required_job_ids": [
+        "gate:65536:coarse:state00.local",
+        "selection:local"
+      ],
+      "date_required_job_ids": [
+        "teacher:65536:coarse",
+        "gate:65536:coarse:date0",
+        "selection:local"
+      ],
+      "adapter_numerical_status": "unexecuted_dependency_cap",
+      "diagnostic_numerical_status": "unexecuted_dependency_cap",
+      "independent_job_status": "executed",
+      "saved_resume_stable": true,
+      "full_pilot_closed": false,
+      "financial_qualification": "unknown",
+      "unrelated_unclosed_issues": []
+    }
+  ],
+  "new_rng": false,
+  "formal_finance": false,
+  "formal_lock": false,
+  "financial_qualification": "unknown",
+  "wall_seconds": 0.384298292,
+  "scope": "Actual selector wall cap and source control/case/date/A required-work projection. Numerical state/date validation stubs are explicitly metadata only; 121/51 whole closure intentionally false."
+}

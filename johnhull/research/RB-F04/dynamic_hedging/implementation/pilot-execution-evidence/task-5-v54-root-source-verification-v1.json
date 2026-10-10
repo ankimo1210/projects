@@ -1,0 +1,54 @@
+{
+  "commands": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+        "--confcutdir=deep_hedge_price",
+        "-q"
+      ],
+      "returncode": 1,
+      "wall_seconds": 59.043516735000594,
+      "child_cpu_seconds": 58.179404
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.008752020003157668,
+      "child_cpu_seconds": 0.011330000000001839
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.007259322999743745,
+      "child_cpu_seconds": 0.009684000000001802
+    }
+  ],
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "00527034b4d242fecd363e38a65fd5eed3fd10a7698b2fe95080f9614c429304"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e4765f4bc7ae1cc0a7020fa3bb1fab1ad4eabec4e89fca511589cd5a799b829",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "3ccda575cdf20e05e5190a727305fd080c41e984fae58d08eaaf681b82473d37",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "00527034b4d242fecd363e38a65fd5eed3fd10a7698b2fe95080f9614c429304"
+  },
+  "source_stable": true,
+  "scope": "130 source tests only; no formal pilot/full related suites/financial precision"
+}
