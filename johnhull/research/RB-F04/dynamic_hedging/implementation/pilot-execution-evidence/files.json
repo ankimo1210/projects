@@ -7536,6 +7536,48 @@
       "archive": "source82-cost-accounting-root-external-cost-accounting-closed-proof-store-receipt-v1.json",
       "bytes": 2721,
       "sha256": "64a38c5a3546bd169ce11668356d9fac61d30e368ac5258751a7b2aab88941ac"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "archive": "source82-saved-clock-v2-task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "bytes": 9006,
+      "sha256": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-preflight-v2.py",
+      "archive": "source82-saved-clock-v2-task-5-full-pilot-root-saved-check-enclosing-preflight-v2.py",
+      "bytes": 9951,
+      "sha256": "a69099a22b94946e5772390c7aa97024d8cca16ed42b93bb3197530e50918b49"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-verification-v2.json",
+      "archive": "source82-saved-clock-v2-task-5-full-pilot-root-saved-check-enclosing-verification-v2.json",
+      "bytes": 10665,
+      "sha256": "8897fa38b03be223ccb0b97af06e07e2b4ae6917b7b718058e3e15b5402bedce"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-fixed-manifest-v2.json",
+      "archive": "source82-saved-clock-v2-task-5-full-pilot-root-saved-check-enclosing-fixed-manifest-v2.json",
+      "bytes": 6019,
+      "sha256": "a4df915bbd7d025da390fcf85e88fc2e1a5f1a331c5334c37c8e9b872f2276e9"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-enclosing-clock-v2-decision.json",
+      "archive": "source82-saved-clock-v2-independent-saved-check-enclosing-clock-v2-decision.json",
+      "bytes": 13016,
+      "sha256": "2eac9a65f6c313b71773a3d39e28b54b39fbc6f6bd77e01fdfd88d63ff31a6d8"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-check-enclosing-clock-closed-proof-store-manifest-v2.json",
+      "archive": "source82-saved-clock-v2-root-saved-check-enclosing-clock-closed-proof-store-manifest-v2.json",
+      "bytes": 1539,
+      "sha256": "68e812d3063a71f7d00e517ce203ef16b4761d54531fb88779b3225bb75f9bed"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-check-enclosing-clock-closed-proof-store-receipt-v2.json",
+      "archive": "source82-saved-clock-v2-root-saved-check-enclosing-clock-closed-proof-store-receipt-v2.json",
+      "bytes": 2872,
+      "sha256": "77ec7c6290092971513c035523a12a447979d78adf241641487f8d83fdf5088f"
     }
   ],
   "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending; corrected81 formal pilot now terminal214 rows with stage gate argument-binding defect; full saved semantic check pending; new82 private storage transport and stage argument comparison source-only approved; single genuineN1024 full-payload storage verified; fresh prior/root and financial saved acceptance still pending; new82 actual prior/metadata/saved structural binding/guard complete; fresh formal pilot launched14:00:06 UTC with original scope; full saved numeric/freeze/main still pending; source82 saved-check preparation: 32 closed files copied exactly, including historical probe/tool and store-format failures; no live native raw/logs; terminal byte helper v1/v2 and original failures: 30 closed archives; excludes live native data",
@@ -7610,5 +7652,7 @@
       "archive": "source82-prior-launch-independent-materialized-prior-v5-tool-enclosing-receipt-v1.json",
       "sha256": "6f2a694bd9d7f4fe6c948350cf9512ebe4db467236e00252ef9538774090d532"
     }
-  ]
+  ],
+  "saved_check_enclosing_clock_v2_store_manifest_ref": "artifact:sha256:68e812d3063a71f7d00e517ce203ef16b4761d54531fb88779b3225bb75f9bed",
+  "saved_check_enclosing_clock_v2_status": "actual clock source/mechanics author5 and independent41 PASS; source82/old v1 unchanged; actual saved check unexecuted, final write tail and whole saved_check plus other9 expenses unclosed; no finance or actual launch approval"
 }
