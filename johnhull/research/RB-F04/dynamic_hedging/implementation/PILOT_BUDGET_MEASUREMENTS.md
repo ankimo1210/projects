@@ -209,7 +209,7 @@ M4/M5の保存表を部品参照として使用し、graph原controls={}と明�
 
 ## 同じphase内の検算結果再利用（2026-10-10）
 
-[固定v2](pilot-execution-evidence/task-5-phase-verified-raw-memo-fixed-v2-results.json)をrootが適用し、[関連既存240tests・Ruff/format](pilot-execution-evidence/task-5-phase-local-reuse-root-regression-v1-results.json) PASS。[独立source判断](pilot-execution-evidence/task-5-phase-local-reuse-independent-decision-v1.json)は18実probeで限定承認。初回は元の全N/SDE・全11label・16blocks・共分散・cacheを検算し、同一producer/operation/引数の次回だけ小さな検算結果を再利用する。hitにも現在のsource・入力・元node/driver全ファイル内容の確認とcopy費用がある。failed/capped/partialは登録せず、元unknownを保持する。fresh/resume/review/保管庫復元は新しい空contextから検算する。
+[固定v2](pilot-execution-evidence/task-5-phase-verified-raw-memo-fixed-v2-results.json)をrootが適用し、[関連既存240tests・Ruff/format](pilot-execution-evidence/task-5-phase-local-reuse-root-regression-v1-results.json) PASS。[独立source判断](pilot-execution-evidence/task-5-phase-local-reuse-independent-decision-v1.json)は18実probeで限定承認。初回は元の全N/SDE・全11label・16blocks・共分散・cacheを検算し、同一producer/operation/計算引数の次回だけ小さな検算結果を再利用する。hitにも現在のsource・入力・元node/driver全ファイル内容の確認とcopy費用がある。failed/capped/partialは登録せず、元unknownを保持する。fresh/resume/review/保管庫復元は新しい空contextから検算する。
 
 真正M6 Heston-coarse、原N1024・108節点・12日付・全33閾値を[実事前180秒/8GiB予算](pilot-execution-evidence/task-5-phase-local-memo-resource-root-approved-v1.json)へ結び、一回のsaved-only部品計測を実行した。
 
@@ -223,6 +223,15 @@ M4/M5の保存表を部品参照として使用し、graph原controls={}と明�
 
 この一例の再利用部分は初回比106.5倍。hitでもPython binary read 49,985,348 B・SHA入力70,677,598 Bを観測した（OS device IOやC/mmapは未計測）。全体速度への一般化はしない。大N/別gridでのhit費用、初回検算、非teacher gate、生成、独立fresh/両復元の費用を含む新全phase予算は次に確認する。旧606.881時間は旧方式の既知部分外挿であり、残時間の確定値ではない。
 
-source81/dynamic0のplain canonical identityは959f879a…（runner._digest）、native job/memo payload identityは0df11d81…（runner.payload_digest）。同じ81 sourcebytesの別符号化であり、旧generation4e8f8b…・旧saved checker408f2b…を置き換えない。独立probeの初期hash算式誤認とNaNセルへの無効な改変probe、author接続時の元失敗・実費用は各manifestに保持する。正式pilot/freeze/main・金融受入は未実施。
+v2のsource81/dynamic0のplain canonical identityは959f879a…（runner._digest）、native job/memo payload identityは0df11d81…（runner.payload_digest）。同じ81 sourcebytesの別符号化であり、旧generation4e8f8b…・旧saved checker408f2b…を置き換えない。独立probeの初期hash算式誤認とNaNセルへの無効な改変probe、author接続時の元失敗・実費用は各manifestに保持する。正式pilot/freeze/main・金融受入は未実施。
 
-[現v2の未承認予算補足v5](pilot-execution-evidence/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v5.json)は、全stageが実行される仮定で初回40 cold/840 hit、110 gate・非teacher 22,550 rowsを数えた。旧部品rateだけの更新小計は初回139.050時間、各full saved/fresh/restore contextの60 cold部分は136.009時間。新wall capの承認や全体ETAではなく、hot guard・非teacher kernel・IO・外部費用等は未観測。full savedの余分20 keysが行政引数wall/work-directory差だけに由来する点を調査し、次の限定修正をDで検証中（現productionはv2、未適用）。元3,138jobs/121cases/51obligations/全4N/全capsを保持する。
+[現v2の未承認予算補足v5](pilot-execution-evidence/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v5.json)は、全stageが実行される仮定で初回40 cold/840 hit、110 gate・非teacher 22,550 rowsを数えた。旧部品rateだけの更新小計は初回139.050時間、各full saved/fresh/restore contextの60 cold部分は136.009時間。新wall capの承認や全体ETAではなく、hot guard・非teacher kernel・IO・外部費用等は未観測。full savedの余分20 keysが行政引数wall/work-directory差だけに由来する点を確認し、限定修正v3を適用した（次段落）。v5はv2時点の未承認候補として原byteを保持する。元3,138jobs/121cases/51obligations/全4N/全capsを保持する。
+
+
+### 計算に無関係な引数差の重複検算（v3）
+
+[固定v3](pilot-execution-evidence/task-5-phase-verified-raw-memo-fixed-v3-manifest.json)はproof keyからトップレベルのwall_cap_seconds/work_directoryだけを除く。全引数SHAと外側のtyped input・cap監査は保持し、producer/operation・seed・driver・金融入力・物理byteが異なる証拠へは転用しない。他80 runtime sourceと元数学は不変。
+
+[独立判断](pilot-execution-evidence/task-5-phase-local-admin-proof-key-independent-decision-v1.json)は元N16/Hcoarse108節点を用いた9境界を確認（保存432節点の全N検算）。別contextと別producer、driver差は全検算、seed/金融入力改変は拒否した。[root適用検証](pilot-execution-evidence/task-5-phase-local-admin-proof-key-root-v2-results.json)は関連phase_memo14tests・2Python Ruff/format PASS。初回root検証scriptのimport誤りは金融実行前に修正し、元scriptと失敗を保存した。
+
+現source81/dynamic0はplain canonical 1cc16cf7… / native payload be858ced…（異なる符号化）。前節の23.671/0.222/23.797秒はv2時点の同一M6ケースの実測として保持し、v3全体のrateやETAへ転用しない。新sourceの全仕事key件数に基づく予算更新は別途確認し、正式pilot/main・金融資格は未承認。

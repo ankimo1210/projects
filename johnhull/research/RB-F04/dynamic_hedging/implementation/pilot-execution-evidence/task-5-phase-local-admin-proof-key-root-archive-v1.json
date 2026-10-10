@@ -1,0 +1,294 @@
+{
+  "scope": "Root immutable v3 scoped source/boundary/test and historical v5 metadata archive; no new financial samples",
+  "previous_files_json_sha256": "c8e4ae3ec51769d3912ede25fa1a3e322a2dcb1893880cd6fa7b616c6d9a2184",
+  "old_entries": 703,
+  "new_entries_bindings": [
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-independent-v5-decision.json",
+      "archive": "task-5-fullmixed-phase-local-reuse-budget-independent-v5-decision.json",
+      "bytes": 8395,
+      "sha256": "978b057d2794a41ed2a568c1384af4bd598afc5ba93765e5dfd44bcf588113f3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-decision-v1.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-decision-v1.json",
+      "bytes": 3320,
+      "sha256": "8a000b4612f1f613451acb4cfeeae8324d911221dd0587e62e1ba967cd3c161b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-delivery-attempt-v1.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-delivery-attempt-v1.json",
+      "bytes": 386,
+      "sha256": "43d4afa5d39806a1b84f91c47e300f4de22a16275d03b757889bce85a8f62e3f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-direct-v1-parent-cost.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-direct-v1-parent-cost.json",
+      "bytes": 1156,
+      "sha256": "791b2f6ca8e89637f08b315a31b35a9d193bb1270cc040dabbe7f476cbf98034"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-direct-v1.log",
+      "archive": "task-5-phase-local-admin-proof-key-independent-direct-v1.log.txt",
+      "bytes": 1282,
+      "sha256": "8903bdef64a00caf0df6043bc17a73a9286ca72774eec30532869a8be80e6453"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-direct-v2-parent-cost.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-direct-v2-parent-cost.json",
+      "bytes": 1170,
+      "sha256": "74fe802b65e73fe31fd92d8fe6cecbfa979dfe72a55566c36cd3901bd0815857"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-direct-v2.log",
+      "archive": "task-5-phase-local-admin-proof-key-independent-direct-v2.log.txt",
+      "bytes": 379,
+      "sha256": "2edb4e791032a3a71e963f2b42283efc395652c5174f57ecf265d841b4d1dd97"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-expense-v1.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-expense-v1.json",
+      "bytes": 3034,
+      "sha256": "6a9784a92a5a0e9758876493f16f66f78d1b9272dc32726c27953ba1f79f2f48"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-fixed-config-v1.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-fixed-config-v1.json",
+      "bytes": 11071,
+      "sha256": "b5f31cfcde47148e09a0f3a543a734a97a74729920231b3eefdbd3d962ce8349"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-fixed-config-v2.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-fixed-config-v2.json",
+      "bytes": 11071,
+      "sha256": "d42714fda51d730838882ca764ab1218a93c46a6f010904064902af828704ba2"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-manifest-v1.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-manifest-v1.json",
+      "bytes": 4934,
+      "sha256": "b97793bbbe4f160e1290ca5c50a24118e16bb0c690d33e989636754e4b87d7e0"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-observation-v1/progress.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-observation-v1__progress.json",
+      "bytes": 294,
+      "sha256": "20afd7afd4987055c2fccb7d92350d4c90540f237e34029b48e58a0549258d44"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-observation-v2/progress.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-observation-v2__progress.json",
+      "bytes": 1928,
+      "sha256": "064b91cbd378349aa00c376d79bd093393959421189d2fd3aa6c1d97cfd7e379"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-observation-v2/results.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-observation-v2__results.json",
+      "bytes": 42859,
+      "sha256": "0893ac1045f1e1c3d5d394040de53013e5802234d41e564fa4bf47e6d518f872"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-preparation-v1.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-preparation-v1.json",
+      "bytes": 1758,
+      "sha256": "c8c3fe48563735821e226ce25c40f9e98410cbe2c78e56c03843b1a4bfffcb94"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-probe-attempt-v1-correction.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-probe-attempt-v1-correction.json",
+      "bytes": 698,
+      "sha256": "fea06ec3c837cc39dd2e4ef0f0db1b63c0b6584c5ddb8c8b699677f91b370650"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-probe-v1.py",
+      "archive": "task-5-phase-local-admin-proof-key-independent-probe-v1.py.txt",
+      "bytes": 11072,
+      "sha256": "96e4c1ed645e0999ff5864e3876a087be363e9c8c3cc35e385aed1740211cefe"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-probe-v2.py",
+      "archive": "task-5-phase-local-admin-proof-key-independent-probe-v2.py.txt",
+      "bytes": 11072,
+      "sha256": "96e4c1ed645e0999ff5864e3876a087be363e9c8c3cc35e385aed1740211cefe"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-probe-v3.py",
+      "archive": "task-5-phase-local-admin-proof-key-independent-probe-v3.py.txt",
+      "bytes": 11366,
+      "sha256": "dc6a531ddf55fef567abe5c0e449fe3f1df659310c2fadea9246045546bca25b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-review-v1.md",
+      "archive": "task-5-phase-local-admin-proof-key-independent-review-v1.md",
+      "bytes": 2724,
+      "sha256": "1e83df8834c032081463a187d0c46e0f60d156a13b6314f68b3888032e05958b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-static-attempt-v1.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-static-attempt-v1.json",
+      "bytes": 486,
+      "sha256": "7c55244ff16563ab0c078c72eb6b1886069c1aa566c2ee3c2b51aefeec7c82db"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-static-attempt-v2.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-static-attempt-v2.json",
+      "bytes": 606,
+      "sha256": "8107b723244074b514770515313ab4c570b2aa8417fd827512a3c0ecdf3dd282"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-static-v3.json",
+      "archive": "task-5-phase-local-admin-proof-key-independent-static-v3.json",
+      "bytes": 11412,
+      "sha256": "ccc253c8cf799a0a540be2bb6497bb225683a0ff4cd642d6e6ddfe203d242ac9"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-apply-v1-import-failure.json",
+      "archive": "task-5-phase-local-admin-proof-key-root-apply-v1-import-failure.json",
+      "bytes": 528,
+      "sha256": "3c7c4a91283ef776d1dfe1bfb4df04dc8ac7383486e51509a6669e9082dfeadb"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-apply-v1.py",
+      "archive": "task-5-phase-local-admin-proof-key-root-apply-v1.py.txt",
+      "bytes": 5434,
+      "sha256": "0e3490b36668dbbed8e66f0a069a480ad34b1d96bb458adebe66767096b08ccb"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-apply-v2.py",
+      "archive": "task-5-phase-local-admin-proof-key-root-apply-v2.py.txt",
+      "bytes": 5682,
+      "sha256": "90de92e1321ab27acbad94a6a7a885e9578b03037ffdc47472388e8ff896e3a6"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-v2-application.json",
+      "archive": "task-5-phase-local-admin-proof-key-root-v2-application.json",
+      "bytes": 1313,
+      "sha256": "3c2310a582e397025c9cf90618b38766d0e2292a988d8da6c37764f872b38405"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-v2-format.log",
+      "archive": "task-5-phase-local-admin-proof-key-root-v2-format.log.txt",
+      "bytes": 26,
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-v2-pytest.log",
+      "archive": "task-5-phase-local-admin-proof-key-root-v2-pytest.log.txt",
+      "bytes": 115,
+      "sha256": "1e1097e892d74db44e7c3fa01bdcdad3d24937278f7ddc87c719402d67d66919"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-v2-results.json",
+      "archive": "task-5-phase-local-admin-proof-key-root-v2-results.json",
+      "bytes": 3203,
+      "sha256": "03c096be39e1908ee3636e8362db61057ed7f8fb9b8c1cd03524f0f5edc8bd5e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-v2-ruff.log",
+      "archive": "task-5-phase-local-admin-proof-key-root-v2-ruff.log.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-v2-source-closure.json",
+      "archive": "task-5-phase-local-admin-proof-key-root-v2-source-closure.json",
+      "bytes": 33985,
+      "sha256": "838fe3543298cdd5d13c44c0da2abaaf3a1575c802438564c3097010c3612226"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-GREEN-v3-cost.json",
+      "archive": "task-5-phase-verified-raw-memo-admin-GREEN-v3-cost.json",
+      "bytes": 169,
+      "sha256": "d8d4402dcf6a3ab96df075c4c2a35a7554d5981040263e9d963c4b1338ad8052"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-GREEN-v3.log",
+      "archive": "task-5-phase-verified-raw-memo-admin-GREEN-v3.log.txt",
+      "bytes": 99,
+      "sha256": "b6b75f72b5a2609b37361007fd57cc57a168c7e5a2409bbc6f62403647d30ac7"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-RED-v3-cost.json",
+      "archive": "task-5-phase-verified-raw-memo-admin-RED-v3-cost.json",
+      "bytes": 188,
+      "sha256": "78869a83f4aab65befbe42c405917ed7e76a5c0d60779d4941057a45f8753294"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-RED-v3.log-carrier.json",
+      "archive": "task-5-phase-verified-raw-memo-admin-RED-v3.log-carrier.json",
+      "bytes": 3716,
+      "sha256": "c8f3d0870ef1c4c251dbfbd3309e12292c2e037ced9893113c51a060dd9958d2"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-Ruff-v3.json",
+      "archive": "task-5-phase-verified-raw-memo-admin-Ruff-v3.json",
+      "bytes": 387,
+      "sha256": "0c9e5c5582b7c877036e4c0bc1e592116a67348647056a6ee66a5628b5197cbf"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-initial-GREEN-v3-cost.json",
+      "archive": "task-5-phase-verified-raw-memo-admin-initial-GREEN-v3-cost.json",
+      "bytes": 170,
+      "sha256": "f47f4fa2645199789465ccd05a2b75d1d3fb1974595506bb96a2c0ec1c66d5b6"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-initial-GREEN-v3.log",
+      "archive": "task-5-phase-verified-raw-memo-admin-initial-GREEN-v3.log.txt",
+      "bytes": 99,
+      "sha256": "57d18a1f1ac97e44ac7dd7df325889f8fe4d13ebfb33262189445894cd589756"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-initial-Ruff-v3.json",
+      "archive": "task-5-phase-verified-raw-memo-admin-initial-Ruff-v3.json",
+      "bytes": 1014,
+      "sha256": "cfd1af135f3f6b3035f14da3e1b190dd538bf0ad79252d87af12c5f717ebe169"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-tests-v3.py",
+      "archive": "task-5-phase-verified-raw-memo-admin-tests-v3.py.txt",
+      "bytes": 1362,
+      "sha256": "fe4c4a1dbb9506a99693977a790d44497bf9168b1f6ebc2996d675f9c65ad272"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-fixed-v3-manifest.json",
+      "archive": "task-5-phase-verified-raw-memo-fixed-v3-manifest.json",
+      "bytes": 3993,
+      "sha256": "436dcd1e9a24540113ab4fa71a41d69d005f055d2b0a58bf4f49f798f1a5c37e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-fixed-v3-report.md",
+      "archive": "task-5-phase-verified-raw-memo-fixed-v3-report.md",
+      "bytes": 1757,
+      "sha256": "3874329acf6d16b80afcb1159350133677a1f06ddb069e84e027e6fea2212e16"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-fixed-v3-results.json",
+      "archive": "task-5-phase-verified-raw-memo-fixed-v3-results.json",
+      "bytes": 4577,
+      "sha256": "18618bf3b4e8853667172deee54f9000d752bcdd84e52c6c573f4fd254fd8f25"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-fixed-v3-source-closure.json",
+      "archive": "task-5-phase-verified-raw-memo-fixed-v3-source-closure.json",
+      "bytes": 33985,
+      "sha256": "3a8014c8768520912f2a77f0345812e9ef5ea12d850ece53116e6b9c28d265f6"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-fixed-v3-static-results.json",
+      "archive": "task-5-phase-verified-raw-memo-fixed-v3-static-results.json",
+      "bytes": 2245,
+      "sha256": "6b8ea90986cb46ed001284357dae25cfc358ef5f769fefc64894528d8ae74a1f"
+    }
+  ],
+  "exact_log_carriers": [
+    {
+      "original_source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-RED-v3.log",
+      "carrier_source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-admin-RED-v3.log-carrier.json",
+      "original_sha256": "a58ab964d54fbb976f6218de5d1e7dda6b7a15e412fdd9963b9ff087d6294022"
+    }
+  ],
+  "production_source_canonical_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "production_source_native_payload_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "formal_phase_approved": false,
+  "financial_qualification": "unknown"
+}

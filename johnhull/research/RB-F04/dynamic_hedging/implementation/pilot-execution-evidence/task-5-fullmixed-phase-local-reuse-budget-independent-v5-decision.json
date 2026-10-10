@@ -1,0 +1,187 @@
+{
+  "schema": "rb-f04-independent-v5-historical-v2-static-forecast-decision-v1",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent author-v5 metadata reviewer; this agent authored historical base candidate-v1, which is disclosed",
+  "candidate_approved": false,
+  "formal_budget_phase_main_execution_or_financial_qualification_approved": false,
+  "financial_qualification": "unknown",
+  "new_SDE_RNG_financial_generation_solver_or_suite_execution": false,
+  "future_v3_admin_key_canonicalization_or_cold_reduction_approved": false,
+  "decision": "verified_historical_v2_structural_forecast_only",
+  "status": "PASS",
+  "checks_passed": 2840,
+  "candidate": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v5.json",
+    "sha256": "30db767e77a4b22ae7dfd8c393f8322afebcdad26542999c3720bd2776a1fc25",
+    "approved": false
+  },
+  "fixed_source": {
+    "canonical": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+    "native_payload": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667",
+    "v2_files": 81,
+    "dynamic": 0,
+    "all_fixed_v2_snapshot_bytes_match": true,
+    "current_production_delta_against_v2": [],
+    "future_source_changes_do_not_invalidate_this_historical_false_candidate": true
+  },
+  "original_graph": {
+    "metadata_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-progressive-pilot-plan-draft-source-unit-v3/metadata.json",
+    "metadata_sha256": "8f83db63308ff6fdfae25d6a44f988361660703e1779a7957f80435553bbb4f3",
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "teachers": 20,
+    "drivers": 10,
+    "4N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "all_job_limits": {
+      "chunk_uncompressed_bytes": 268435456,
+      "job_path_steps": 1000000000
+    },
+    "cap_associations": 266306,
+    "literal_options": 573122
+  },
+  "independently_recomputed": {
+    "initial": {
+      "gate_calculations": 110,
+      "non_teacher_nested_row_checks": 22550,
+      "teacher_invocations": 880,
+      "cold_keys": 40,
+      "activation_guard_calls": 2346,
+      "hot_invocations": 840,
+      "activation_cache_hit_lookups": 2318,
+      "teacher_guard_calls": 920
+    },
+    "fresh": {
+      "teacher_invocations": 808,
+      "cold_keys": 60,
+      "gate_calculations": 96,
+      "non_teacher_nested_row_checks": 19680,
+      "hot_invocations": 748,
+      "teacher_guard_calls": 868
+    },
+    "gate_breakdown": {
+      "native16": 16,
+      "selector2x8": 16,
+      "adapter8x8": 64,
+      "initial_activation14": 14
+    },
+    "main_per_gate_calls": {
+      "stage:Heston:N1024:coarse:gate": 7,
+      "stage:Heston:N1024:high:gate": 7,
+      "stage:Heston:N4096:coarse:gate": 7,
+      "stage:Heston:N4096:high:gate": 7,
+      "stage:Heston:N16384:coarse:gate": 7,
+      "stage:Heston:N16384:high:gate": 7,
+      "stage:Heston:N65536:coarse:gate": 7,
+      "stage:Heston:N65536:high:gate": 6,
+      "stage:local:N1024:coarse:gate": 7,
+      "stage:local:N1024:high:gate": 7,
+      "stage:local:N4096:coarse:gate": 7,
+      "stage:local:N4096:high:gate": 7,
+      "stage:local:N16384:coarse:gate": 7,
+      "stage:local:N16384:high:gate": 7,
+      "stage:local:N65536:coarse:gate": 7,
+      "stage:local:N65536:high:gate": 6
+    },
+    "fresh_per_gate_calls": {
+      "stage:Heston:N1024:coarse:gate": 6,
+      "stage:Heston:N1024:high:gate": 6,
+      "stage:Heston:N4096:coarse:gate": 6,
+      "stage:Heston:N4096:high:gate": 6,
+      "stage:Heston:N16384:coarse:gate": 6,
+      "stage:Heston:N16384:high:gate": 6,
+      "stage:Heston:N65536:coarse:gate": 6,
+      "stage:Heston:N65536:high:gate": 6,
+      "stage:local:N1024:coarse:gate": 6,
+      "stage:local:N1024:high:gate": 6,
+      "stage:local:N4096:coarse:gate": 6,
+      "stage:local:N4096:high:gate": 6,
+      "stage:local:N16384:coarse:gate": 6,
+      "stage:local:N16384:high:gate": 6,
+      "stage:local:N65536:coarse:gate": 6,
+      "stage:local:N65536:high:gate": 6
+    },
+    "legacy_cold20_seconds": 163210.8566128036,
+    "cold40_seconds": 326421.7132256072,
+    "cold60_seconds": 489632.56983841077,
+    "ordinary_known_seconds": 174157.9081904295,
+    "initial_known_partial_seconds": 500579.6214160367,
+    "initial_known_partial_hours": 139.04989483778797,
+    "each_fullfresh_cold_partial_hours": 136.00904717733633
+  },
+  "source_call_contracts": {
+    "check_resolved_job_arguments": {
+      "file": "check_pilot.py",
+      "first_line": 789,
+      "last_line": 958
+    },
+    "_checked_teacher_grid": {
+      "file": "check_pilot.py",
+      "first_line": 2846,
+      "last_line": 2955
+    },
+    "_raw_job_check": {
+      "file": "check_pilot.py",
+      "first_line": 2958,
+      "last_line": 3161
+    },
+    "calculate_teacher_candidate_gate": {
+      "file": "check_pilot.py",
+      "first_line": 4003,
+      "last_line": 4232
+    },
+    "check_pilot_records": {
+      "file": "check_pilot.py",
+      "first_line": 4637,
+      "last_line": 5024
+    },
+    "run_teacher_selected_inputs_job": {
+      "file": "run_pilot.py",
+      "first_line": 3261,
+      "last_line": 3356
+    },
+    "run_teacher_selection_job": {
+      "file": "run_pilot.py",
+      "first_line": 3359,
+      "last_line": 3522
+    },
+    "teacher_activation_decision": {
+      "file": "run_pilot.py",
+      "first_line": 3769,
+      "last_line": 3907
+    }
+  },
+  "scope_cautions": [
+    "Counter trace is the all-original-executed, complete-immutable-cache hypothesis, not a prediction of numerical qualification or actual caps/unused-prefix scheduling.",
+    "V2 direct saved raw20 gets wall_cap_seconds/work_directory in actual args, so fresh has60 cold keys; future v3 canonicalization/cold reduction is not approved by this decision.",
+    "139.05h and136.01h are old-component linear extrapolation sums, not complete runtime, guaranteed upper bounds, or research ETA.",
+    "Native domain finite-box computation, all nonteacher rows, source/physical guards, driver reads, diagnostics, output I/O, independent restores, external10, resume and fallback costs remain unknown rather than zero.",
+    "Only original Heston-coarse N1024 same-input hit is measured;106x is not applied to other N/grid/model/plain-argument keys or wholephase.",
+    "All caps/options/budgets remain unapproved, retained without reductions; this decision provides no authorization to materialize or execute a formal plan."
+  ],
+  "immutable_evidence": {
+    "task-5-fullmixed-prior-budget-candidate-author-v1-config.json": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+    "task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.json": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+    "task-5-fullmixed-prior-budget-candidate-author-manifest-final-v4.json": "13d124213b665e2f9d63deb9f2058ef1002a8d4a7421843fd0ef2a9df2de606c",
+    "task-5-phase-verified-raw-memo-fixed-v2-source-closure.json": "735680b179bde8456897ee0e1c02197a3af6cb27d8bc33db31d3bbb89314d59f",
+    "task-5-phase-local-reuse-independent-decision-v1.json": "c09d557dc348bb7b3b32da7041d0512db5538bc370204c1ff26c59ea6aed02d3",
+    "task-5-phase-local-memo-observation-root-v1/parent-cost-and-decision.json": "23e5b8052da348a0c50155538d15b821b0cfd0de725f7d5b3f6cc584851f1391",
+    "task-5-phase-local-memo-observation-root-v1/progress.json": "fed3af881438b2cf253b4438b8275c391f711c85e5c1dde1235636e0215cdc8a",
+    "task-5-phase-local-memo-resource-root-enclosing-v1.json": "5330bd07f70cae864e52128f7b77efe30d336933fd301ba37e638f42447a8d96",
+    "task-5-phase-local-memo-resource-root-approved-v1.json": "495c645442f171b119963fa4656dd29367b9c472d0f4237b488f992a99bd5e46",
+    "task-5-formal-prior-lock-preparation-v1.py": "a9773d211d2611e98b54135495e002e78147020a9a9b4d95cc0648ab883427f9"
+  },
+  "static_review_cost_before_final_decision_write": {
+    "wall_seconds": 0.4819477659984841,
+    "CPU_seconds": 0.481320976,
+    "peak_RSS_bytes": 250171392,
+    "decision_write_tool_tail_and_earlier_schema_read_cost_seconds": null,
+    "financial_or_solver_execution": false
+  }
+}

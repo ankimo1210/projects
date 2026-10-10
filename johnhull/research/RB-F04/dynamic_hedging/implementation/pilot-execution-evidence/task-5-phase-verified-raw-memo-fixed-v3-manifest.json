@@ -1,0 +1,81 @@
+{
+  "status": "fixed D-only v3 author candidate; not an approval",
+  "source_root": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-source-after-v3",
+  "source_canonical_identity_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "source_native_payload_identity_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "runtime_inventory": "task-5-phase-verified-raw-memo-fixed-v3-source-closure.json",
+  "all81_runtime_source_bytes_verified": true,
+  "files": {
+    "task-5-phase-verified-raw-memo-fixed-v3-results.json": {
+      "sha256": "18618bf3b4e8853667172deee54f9000d752bcdd84e52c6c573f4fd254fd8f25",
+      "bytes": 4577
+    },
+    "task-5-phase-verified-raw-memo-fixed-v3-static-results.json": {
+      "sha256": "6b8ea90986cb46ed001284357dae25cfc358ef5f769fefc64894528d8ae74a1f",
+      "bytes": 2245
+    },
+    "task-5-phase-verified-raw-memo-fixed-v3-source-closure.json": {
+      "sha256": "3a8014c8768520912f2a77f0345812e9ef5ea12d850ece53116e6b9c28d265f6",
+      "bytes": 33985
+    },
+    "task-5-phase-verified-raw-memo-fixed-v3-source.diff": {
+      "sha256": "a0400d458bfa5a8b6c78a710db2e88487e30f85d04f9e2d658cf50633b843f6e",
+      "bytes": 6192
+    },
+    "task-5-phase-verified-raw-memo-fixed-v3-report.md": {
+      "sha256": "3874329acf6d16b80afcb1159350133677a1f06ddb069e84e027e6fea2212e16",
+      "bytes": 1757
+    },
+    "task-5-phase-verified-raw-memo-admin-tests-v3.py": {
+      "sha256": "fe4c4a1dbb9506a99693977a790d44497bf9168b1f6ebc2996d675f9c65ad272",
+      "bytes": 1362
+    },
+    "task-5-phase-verified-raw-memo-admin-RED-v3.log": {
+      "sha256": "a58ab964d54fbb976f6218de5d1e7dda6b7a15e412fdd9963b9ff087d6294022",
+      "bytes": 2472
+    },
+    "task-5-phase-verified-raw-memo-admin-RED-v3-cost.json": {
+      "sha256": "78869a83f4aab65befbe42c405917ed7e76a5c0d60779d4941057a45f8753294",
+      "bytes": 188
+    },
+    "task-5-phase-verified-raw-memo-admin-initial-GREEN-v3.log": {
+      "sha256": "57d18a1f1ac97e44ac7dd7df325889f8fe4d13ebfb33262189445894cd589756",
+      "bytes": 99
+    },
+    "task-5-phase-verified-raw-memo-admin-initial-GREEN-v3-cost.json": {
+      "sha256": "f47f4fa2645199789465ccd05a2b75d1d3fb1974595506bb96a2c0ec1c66d5b6",
+      "bytes": 170
+    },
+    "task-5-phase-verified-raw-memo-admin-initial-Ruff-v3.json": {
+      "sha256": "cfd1af135f3f6b3035f14da3e1b190dd538bf0ad79252d87af12c5f717ebe169",
+      "bytes": 1014
+    },
+    "task-5-phase-verified-raw-memo-admin-GREEN-v3.log": {
+      "sha256": "b6b75f72b5a2609b37361007fd57cc57a168c7e5a2409bbc6f62403647d30ac7",
+      "bytes": 99
+    },
+    "task-5-phase-verified-raw-memo-admin-GREEN-v3-cost.json": {
+      "sha256": "d8d4402dcf6a3ab96df075c4c2a35a7554d5981040263e9d963c4b1338ad8052",
+      "bytes": 169
+    },
+    "task-5-phase-verified-raw-memo-admin-Ruff-v3.json": {
+      "sha256": "0c9e5c5582b7c877036e4c0bc1e592116a67348647056a6ee66a5628b5197cbf",
+      "bytes": 387
+    },
+    "task-5-phase-verified-raw-memo-source-after-v3/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "sha256": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+      "bytes": 215063
+    },
+    "task-5-phase-verified-raw-memo-source-after-v3/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+      "sha256": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635",
+      "bytes": 176341
+    },
+    "task-5-phase-verified-raw-memo-source-after-v3/deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": {
+      "sha256": "f96fc7be2f7f0ec4a937a35922129324f7128902b348c8c48caeb3f5d27d6a06",
+      "bytes": 29947
+    }
+  },
+  "preserved_v2_manifest_sha256": "78a9f5d6f8802b6b6f329eb9c938dee11eb7b3429743ca43886843588f08529d",
+  "preserved_v5_supplement_sha256": "30db767e77a4b22ae7dfd8c393f8322afebcdad26542999c3720bd2776a1fc25",
+  "manifest_metadata_wall_seconds": 0.0038141490003908984
+}

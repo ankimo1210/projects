@@ -1,0 +1,12 @@
+{
+  "cause": "Reviewer required all array_fields to equal11; bounded labels_reference also describes summary/statistical arrays. Full108 raw saved checks succeeded before review assertion.",
+  "correction": "Require all11 distinct sample descriptors; shape first axis==originalN16 for these11; full original numerical comparisons unchanged.",
+  "financial_generation_count": 0,
+  "original_attempt_files": [
+    "task-5-phase-local-admin-proof-key-independent-direct-v1.log",
+    "task-5-phase-local-admin-proof-key-independent-direct-v1-parent-cost.json",
+    "task-5-phase-local-admin-proof-key-independent-observation-v1/progress.json"
+  ],
+  "source_changed": false,
+  "source_defect": false
+}

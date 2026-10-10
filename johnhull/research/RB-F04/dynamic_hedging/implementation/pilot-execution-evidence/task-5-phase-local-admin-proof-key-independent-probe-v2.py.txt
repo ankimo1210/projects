@@ -1,0 +1,199 @@
+"""Limited independent saved-only boundary probe, run only after v3 source is fixed."""
+import argparse
+import copy
+import dataclasses
+import hashlib
+import json
+import resource
+import shutil
+import sys
+import time
+from pathlib import Path
+
+def sha(p):
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+def tree(root):
+    return {str(p.relative_to(root)): sha(p) for p in sorted(root.rglob("*")) if p.is_file()}
+
+def save(p, v):
+    p.write_text(json.dumps(v, indent=2, sort_keys=True, allow_nan=False) + chr(10))
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--fixed-config", type=Path, required=True)
+    cfg = json.loads(parser.parse_args().fixed_config.read_text())
+    assert cfg["fixed_author_snapshot_ready"] is True
+    assert cfg["scope"] == "independent_saved_only_admin_proof_key_boundary"
+    A, out = Path(cfg["source_root"]), Path(cfg["output_directory"])
+    assert not out.exists()
+    sys.path[:0] = [str(A / "johnhull/research/RB-F04/dynamic_hedging"),
+                   str(A / "johnhull/hullkit/src"), str(A / "deep_hedge_price/src")]
+    import numpy as np
+    import check_pilot as checker
+    import run_pilot as pilot
+    import run_reference as runner
+    from hullkit._heston_local_surface import HestonParameters
+    identity = runner.execution_source_identity(A)
+    assert identity["files"] == cfg["fixed_source_files"]
+    assert len(identity["files"]) == 81 and not identity["dynamic_imports"]
+    assert runner._digest(identity) == cfg["fixed_source_canonical_sha256"]
+    assert runner.payload_digest(identity) == cfg["fixed_source_payload_sha256"]
+    source_before = {r: sha(A / r) for r in identity["files"]}
+    fixture = Path(cfg["saved_fixture"])
+    fixture_before = tree(fixture)
+    out.mkdir()
+    copyroot = out / "saved-copy"
+    shutil.copytree(fixture, copyroot)
+    raw, _ = pilot.read_pilot_artifact(copyroot / "unit-grid")
+    parameters = HestonParameters(**json.loads((copyroot / "unit-parameters.json").read_text()))
+    original_root = Path(raw["nodes"][0]["path"]).parent
+    artifact_context = {"original_root": str(original_root), "restored_root": str(copyroot)}
+    job = {"id": "independent-original-Heston-coarse-N16", "operation": "teacher_grid",
+           "status": "executed", "raw": raw}
+    base_args = {"model": raw["model"], "grid": raw["grid"], "seed": raw["seed"],
+                 "original_n": raw["original_n"], "parameters": parameters, "surface": None,
+                 "driver": raw["driver"], "wall_cap_seconds": 300,
+                 "work_directory": "/immutable/original-planned-observation"}
+    def new_memo():
+        return checker._new_teacher_verification_context(
+            source_root=A, source=identity, plan_sha256="independent-original-v3-saved-boundary")
+    memo = new_memo()
+    ctx = {"parameters": parameters, "surface": None, "resolved_arguments": base_args,
+           "artifact_context": artifact_context, "teacher_verification_context": memo}
+    cases, checked_nodes, forbidden_calls = [], [], []
+    start, cpu = time.perf_counter(), time.process_time()
+    def forbidden(*a, **kw):
+        forbidden_calls.append("forbidden_financial_generation")
+        raise AssertionError("RNG/teacher/solver generation forbidden")
+    for name in ("run_teacher_driver_job", "run_teacher_job", "run_teacher_grid_job", "run_oracle_job"):
+        if hasattr(pilot, name):
+            setattr(pilot, name, forbidden)
+    np.random.default_rng = np.random.seed = np.random.standard_normal = forbidden
+    original_check = checker.check_teacher_record
+    def counted(*a, **kw):
+        result = original_check(*a, **kw)
+        checked_nodes.append((a[0]["original_n"], a[0]["date_index"]))
+        return result
+    checker.check_teacher_record = counted
+    def check_report(r):
+        assert r["original_n"] == 16 and len(r["raw_checks"]) == 108
+        assert r["executed_node_count"] == r["original_node_count"] == 108
+        for node in r["raw_checks"]:
+            assert node["full_saved_driver_sde_replayed"] is True
+            assert node["labels_reference"]["all_original_N_label_values_compared"] is True
+            fields = node["labels_reference"]["array_fields"]
+            assert len(fields) == 11
+            assert all(v["shape"][0] == 16 for v in fields.values())
+    def case(name, fn):
+        b, c, n = time.perf_counter(), time.process_time(), len(checked_nodes)
+        try:
+            value = fn()
+        except Exception as e:
+            cases.append({"case": name, "status": "FAIL", "exception": repr(e),
+                          "saved_node_checks_delta": len(checked_nodes)-n,
+                          "wall_seconds": time.perf_counter()-b, "cpu_seconds": time.process_time()-c})
+            save(out / "progress.json", {"cases": cases, "financial_generation_count": len(forbidden_calls)})
+            raise
+        cases.append({"case": name, "status": "PASS", "saved_node_checks_delta": len(checked_nodes)-n,
+                      "wall_seconds": time.perf_counter()-b, "cpu_seconds": time.process_time()-c})
+        save(out / "progress.json", {"cases": cases, "financial_generation_count": len(forbidden_calls)})
+        print(name + " PASS", flush=True)
+        return value
+    def cold():
+        n = len(checked_nodes)
+        result = checker._raw_job_check(job, ctx)
+        assert len(checked_nodes)-n == 108
+        check_report(result)
+        assert memo["events"][-1]["kind"] == "verified"
+        return result
+    original = case("genuine_original_N16_all108_cold", cold)
+    original_event = copy.deepcopy(memo["events"][-1])
+    proof_args = {k: v for k, v in base_args.items() if k not in ("wall_cap_seconds", "work_directory")}
+    assert original_event["proof_arguments_sha256"] == pilot.input_identity(proof_args)
+    assert original_event["resolved_arguments_sha256"] == pilot.input_identity(base_args)
+    def administrative_hit(changed):
+        args = dict(base_args)
+        for key, value in changed.items():
+            if value is None:
+                args.pop(key, None)
+            else:
+                args[key] = value
+        before = len(checked_nodes)
+        result = checker._raw_job_check(job, dict(ctx, resolved_arguments=args))
+        runner._same(original, result, "all original numerical saved report")
+        assert len(checked_nodes) == before
+        e = memo["events"][-1]
+        assert e["kind"] == "reused" and e["sde_replayed_this_call"] is False
+        assert e["verified_event_id"] == original_event["id"]
+        assert e["resolved_arguments_sha256"] == pilot.input_identity(args)
+        assert e["resolved_arguments_sha256"] != original_event["resolved_arguments_sha256"]
+        assert e["binding_sha256"] == original_event["binding_sha256"]
+        assert e["proof_arguments_sha256"] == original_event["proof_arguments_sha256"]
+        assert e["proof_arguments_sha256"] == pilot.input_identity(
+            {k: v for k, v in args.items() if k not in ("wall_cap_seconds", "work_directory")})
+        assert len(memo["entries"]) == 1
+    case("wall_cap_only_hit_full_operational_SHA_diff", lambda: administrative_hit({"wall_cap_seconds": 1200}))
+    case("work_directory_only_hit_full_operational_SHA_diff", lambda: administrative_hit({"work_directory": "/fresh/observer"}))
+    case("both_admin_keys_absent_hit", lambda: administrative_hit({"wall_cap_seconds": None, "work_directory": None}))
+    def rejects(changed_ctx):
+        before, events = len(checked_nodes), len(memo["events"])
+        try:
+            checker._raw_job_check(job, changed_ctx)
+        except ValueError:
+            assert len(checked_nodes) == before and len(memo["events"]) == events
+            return
+        raise AssertionError("invalid input reused/accepted")
+    case("seed_change_rejected_before_reuse", lambda: rejects(dict(ctx, resolved_arguments=dict(base_args, seed=base_args["seed"]+1))))
+    case("financial_parameters_change_rejected", lambda: rejects(dict(ctx, parameters=dataclasses.replace(parameters, rate=parameters.rate+1e-5))))
+    def driver_arg():
+        changed = copy.deepcopy(base_args["driver"])
+        changed["seed"] = changed["seed"] + 1
+        args = dict(base_args, driver=changed)
+        before = len(checked_nodes)
+        r = checker._raw_job_check(job, dict(ctx, resolved_arguments=args))
+        assert len(checked_nodes)-before == 108
+        runner._same(original, r, "helper raw driver full recheck, outer resolved-argument guard is separate")
+        e = memo["events"][-1]
+        assert e["kind"] == "verified" and e["resolved_arguments_sha256"] == pilot.input_identity(args)
+        assert e["proof_arguments_sha256"] != original_event["proof_arguments_sha256"]
+        assert len(memo["entries"]) == 2
+    case("driver_resolved_args_difference_not_reused", driver_arg)
+    def fresh():
+        fresh_memo = new_memo()
+        before = len(checked_nodes)
+        r = checker._raw_job_check(job, dict(ctx, teacher_verification_context=fresh_memo))
+        assert len(checked_nodes)-before == 108 and fresh_memo["events"][-1]["kind"] == "verified"
+        check_report(r)
+        runner._same(original, r, "fresh complete original saved proof")
+    case("fresh_context_all_original108", fresh)
+    def separate():
+        before = len(checked_nodes)
+        other = dict(job, id="separate-original-producer")
+        r = checker._raw_job_check(other, ctx)
+        assert len(checked_nodes)-before == 108
+        assert memo["events"][-1]["kind"] == "verified"
+        assert memo["events"][-1]["producer_id"] == other["id"]
+        check_report(r)
+        runner._same(original, r, "separate producer full proof")
+    case("separate_producer_all108_not_shared", separate)
+    assert all(n == 16 for n, _ in checked_nodes)
+    assert not forbidden_calls
+    assert tree(fixture) == fixture_before
+    assert {r: sha(A/r) for r in identity["files"]} == source_before
+    save(out / "results.json", {
+        "status": "PASS", "cases": cases, "all_original_n": 16,
+        "original_node_count": 108, "saved_node_checks_total": len(checked_nodes),
+        "financial_generation_count": 0, "source_files_unchanged": 81,
+        "original_fixture_unchanged": True, "raw_numerical_comparison": "runner._same tolerance",
+        "driver_args_helper_scope": "key isolation only; old raw saved driver verified again; formal resolved arguments remain external mandatory guards",
+        "financial_qualification": "unknown", "formal_phase_approved": False,
+        "fixed_source_canonical_sha256": runner._digest(identity),
+        "fixed_source_payload_sha256": runner.payload_digest(identity),
+        "inner_wall_seconds": time.perf_counter()-start, "inner_cpu_seconds": time.process_time()-cpu,
+        "peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,
+        "events": memo["events"], "source": identity,
+        "expense_relationship": "independent direct observation only; first proof costs not re-added on hits",
+        "receipt_tail": "unknown"})
+if __name__ == "__main__":
+    main()

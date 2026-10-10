@@ -1,0 +1,6 @@
+{
+  "exit_code": 1,
+  "wall_seconds": 27.540853036000044,
+  "orchestrator_cpu_seconds": 0.0006268639999999978,
+  "scope": "existing saved N16 only; saved SDE replay, new RNG prohibited"
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "command": [
+      "check",
+      "--ignore",
+      "N806"
+    ],
+    "exit_code": 1,
+    "wall_seconds": 0.019562599998607766,
+    "stdout": "N802 Function name `test_phase_memo_admin_normalization_fresh_context_runs_full_original_N` should be lowercase\n   --> /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-source-after-v3/deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py:695:5\n    |\n695 | def test_phase_memo_admin_normalization_fresh_context_runs_full_original_N(saved_grid, monkeypatch):\n    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n696 |     _, parameters, grid = saved_grid\n697 |     no_rng(monkeypatch)\n    |\n\nFound 1 error.\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "format",
+      "--check"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.008635628000774886,
+    "stdout": "3 files already formatted\n",
+    "stderr": ""
+  }
+]

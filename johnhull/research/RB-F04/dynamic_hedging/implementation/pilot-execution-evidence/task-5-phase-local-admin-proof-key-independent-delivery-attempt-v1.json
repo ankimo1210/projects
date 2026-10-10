@@ -1,0 +1,10 @@
+{
+  "cause": "Markdown backticks in a JavaScript String.raw transport; no nested shell/source execution occurred.",
+  "exception": "SyntaxError Unexpected identifier wall_cap_seconds",
+  "financial_generation_count": 0,
+  "preserved": true,
+  "process_wall_seconds": "not started",
+  "source_defect": false,
+  "status": "PRE_EXEC_JAVASCRIPT_PARSE_FAILURE",
+  "tool_wall_seconds": 0.0
+}

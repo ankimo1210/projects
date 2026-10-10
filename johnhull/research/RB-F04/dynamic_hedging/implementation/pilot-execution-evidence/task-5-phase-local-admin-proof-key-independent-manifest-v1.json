@@ -1,0 +1,108 @@
+{
+  "count": 24,
+  "files": {
+    "task-5-phase-local-admin-proof-key-independent-decision-v1.json": {
+      "bytes": 3320,
+      "sha256": "8a000b4612f1f613451acb4cfeeae8324d911221dd0587e62e1ba967cd3c161b"
+    },
+    "task-5-phase-local-admin-proof-key-independent-delivery-attempt-v1.json": {
+      "bytes": 386,
+      "sha256": "43d4afa5d39806a1b84f91c47e300f4de22a16275d03b757889bce85a8f62e3f"
+    },
+    "task-5-phase-local-admin-proof-key-independent-direct-v1-parent-cost.json": {
+      "bytes": 1156,
+      "sha256": "791b2f6ca8e89637f08b315a31b35a9d193bb1270cc040dabbe7f476cbf98034"
+    },
+    "task-5-phase-local-admin-proof-key-independent-direct-v1.log": {
+      "bytes": 1282,
+      "sha256": "8903bdef64a00caf0df6043bc17a73a9286ca72774eec30532869a8be80e6453"
+    },
+    "task-5-phase-local-admin-proof-key-independent-direct-v2-parent-cost.json": {
+      "bytes": 1170,
+      "sha256": "74fe802b65e73fe31fd92d8fe6cecbfa979dfe72a55566c36cd3901bd0815857"
+    },
+    "task-5-phase-local-admin-proof-key-independent-direct-v2.log": {
+      "bytes": 379,
+      "sha256": "2edb4e791032a3a71e963f2b42283efc395652c5174f57ecf265d841b4d1dd97"
+    },
+    "task-5-phase-local-admin-proof-key-independent-expense-v1.json": {
+      "bytes": 3034,
+      "sha256": "6a9784a92a5a0e9758876493f16f66f78d1b9272dc32726c27953ba1f79f2f48"
+    },
+    "task-5-phase-local-admin-proof-key-independent-fixed-config-v1.json": {
+      "bytes": 11071,
+      "sha256": "b5f31cfcde47148e09a0f3a543a734a97a74729920231b3eefdbd3d962ce8349"
+    },
+    "task-5-phase-local-admin-proof-key-independent-fixed-config-v2.json": {
+      "bytes": 11071,
+      "sha256": "d42714fda51d730838882ca764ab1218a93c46a6f010904064902af828704ba2"
+    },
+    "task-5-phase-local-admin-proof-key-independent-incremental-v1.diff": {
+      "bytes": 977,
+      "sha256": "d9c3383b8dfcc74bef79dd364e080a24467629038d89a713088ca68aba5a05cf"
+    },
+    "task-5-phase-local-admin-proof-key-independent-observation-v1/progress.json": {
+      "bytes": 294,
+      "sha256": "20afd7afd4987055c2fccb7d92350d4c90540f237e34029b48e58a0549258d44"
+    },
+    "task-5-phase-local-admin-proof-key-independent-observation-v2/progress.json": {
+      "bytes": 1928,
+      "sha256": "064b91cbd378349aa00c376d79bd093393959421189d2fd3aa6c1d97cfd7e379"
+    },
+    "task-5-phase-local-admin-proof-key-independent-observation-v2/results.json": {
+      "bytes": 42859,
+      "sha256": "0893ac1045f1e1c3d5d394040de53013e5802234d41e564fa4bf47e6d518f872"
+    },
+    "task-5-phase-local-admin-proof-key-independent-preparation-v1.json": {
+      "bytes": 1758,
+      "sha256": "c8c3fe48563735821e226ce25c40f9e98410cbe2c78e56c03843b1a4bfffcb94"
+    },
+    "task-5-phase-local-admin-proof-key-independent-probe-attempt-v1-correction.json": {
+      "bytes": 698,
+      "sha256": "fea06ec3c837cc39dd2e4ef0f0db1b63c0b6584c5ddb8c8b699677f91b370650"
+    },
+    "task-5-phase-local-admin-proof-key-independent-probe-v1.py": {
+      "bytes": 11072,
+      "sha256": "96e4c1ed645e0999ff5864e3876a087be363e9c8c3cc35e385aed1740211cefe"
+    },
+    "task-5-phase-local-admin-proof-key-independent-probe-v2.py": {
+      "bytes": 11072,
+      "sha256": "96e4c1ed645e0999ff5864e3876a087be363e9c8c3cc35e385aed1740211cefe"
+    },
+    "task-5-phase-local-admin-proof-key-independent-probe-v3.py": {
+      "bytes": 11366,
+      "sha256": "dc6a531ddf55fef567abe5c0e449fe3f1df659310c2fadea9246045546bca25b"
+    },
+    "task-5-phase-local-admin-proof-key-independent-review-v1.md": {
+      "bytes": 2724,
+      "sha256": "1e83df8834c032081463a187d0c46e0f60d156a13b6314f68b3888032e05958b"
+    },
+    "task-5-phase-local-admin-proof-key-independent-static-attempt-v1.json": {
+      "bytes": 486,
+      "sha256": "7c55244ff16563ab0c078c72eb6b1886069c1aa566c2ee3c2b51aefeec7c82db"
+    },
+    "task-5-phase-local-admin-proof-key-independent-static-attempt-v2.json": {
+      "bytes": 606,
+      "sha256": "8107b723244074b514770515313ab4c570b2aa8417fd827512a3c0ecdf3dd282"
+    },
+    "task-5-phase-local-admin-proof-key-independent-static-v3.json": {
+      "bytes": 11412,
+      "sha256": "ccc253c8cf799a0a540be2bb6497bb225683a0ff4cd642d6e6ddfe203d242ac9"
+    },
+    "task-5-phase-verified-raw-memo-fixed-v3-manifest.json": {
+      "bytes": 3993,
+      "sha256": "436dcd1e9a24540113ab4fa71a41d69d005f055d2b0a58bf4f49f798f1a5c37e"
+    },
+    "task-5-phase-verified-raw-memo-fixed-v3-source-closure.json": {
+      "bytes": 33985,
+      "sha256": "3a8014c8768520912f2a77f0345812e9ef5ea12d850ece53116e6b9c28d265f6"
+    }
+  },
+  "financial_generation_count": 0,
+  "financial_qualification": "unknown",
+  "formal_phase_approved": false,
+  "original_v2_decision_unchanged": true,
+  "schema": "rb-f04-independent-admin-proof-key-review-manifest-v1",
+  "source_canonical_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "source_native_payload_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532"
+}

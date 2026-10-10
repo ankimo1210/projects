@@ -1,0 +1,12 @@
+{
+  "cause": "AST map inspected top-level defs only; _raw_job_check2 is nested within unchanged formal caller.",
+  "exception": "KeyError: _raw_job_check2",
+  "files_written_before_failure": [],
+  "financial_generation_count": 0,
+  "followup": "v2 examines ast.walk and parent caller AST; no source change",
+  "observed_tool_wall_seconds": 1.1,
+  "process_cpu_seconds": "unknown",
+  "process_wall_seconds": "unknown",
+  "source_defect": false,
+  "status": "FAILED_REVIEW_PREPARATION"
+}

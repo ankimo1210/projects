@@ -1,0 +1,76 @@
+from pathlib import Path
+import ast,hashlib,json,os,resource,subprocess,sys,time
+W=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=W/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+R=W/"johnhull/research/RB-F04/dynamic_hedging"
+PY="/home/kazumasa/projects/.venv/bin/python"
+RUFF="/home/kazumasa/projects/.venv/bin/ruff"
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,ensure_ascii=False,indent=2,allow_nan=False)+"\n")
+def main():
+ begin=time.perf_counter(); cpu=time.process_time()
+ prefix=D/"task-5-phase-local-admin-proof-key-root-v2"
+ target=Path(str(prefix)+"-results.json")
+ if target.exists():raise ValueError("immutable root receipt exists")
+ manifest=D/"task-5-phase-verified-raw-memo-fixed-v3-manifest.json"
+ independent=D/"task-5-phase-local-admin-proof-key-independent-manifest-v1.json"
+ decision=D/"task-5-phase-local-admin-proof-key-independent-decision-v1.json"
+ assert sha(manifest)=="436dcd1e9a24540113ab4fa71a41d69d005f055d2b0a58bf4f49f798f1a5c37e"
+ assert sha(independent)=="b97793bbbe4f160e1290ca5c50a24118e16bb0c690d33e989636754e4b87d7e0"
+ assert sha(decision)=="8a000b4612f1f613451acb4cfeeae8324d911221dd0587e62e1ba967cd3c161b"
+ m=json.loads(manifest.read_text()); im=json.loads(independent.read_text()); dec=json.loads(decision.read_text())
+ assert dec["decision"]=="approve_fixed_v3_administrative_proof_key_normalization_only"
+ assert dec["passed_saved_boundary_probes"]==9 and not dec["formal_phase_approved"]
+ for package in (m,im):
+  for name,entry in package["files"].items():
+   p=D/name
+   assert sha(p)==entry["sha256"] and p.stat().st_size==entry["bytes"],name
+ c=json.loads((D/m["runtime_inventory"]).read_text())
+ assert len(c["files"])==81 and not c["dynamic_imports"]
+ snapshot=Path(m["source_root"])
+ names=["johnhull/research/RB-F04/dynamic_hedging/check_pilot.py","deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"]
+ before=["392b5d6a9b6bb63ad71d39f276ea60a197cfd3988532f8b7232a89c53c764f40","bc52f84e8294887c7555c73b49a9c2bc02661bc1aa3e8dfa25547aa47d4c71d9"]
+ for name in c["files"]:
+  assert sha(snapshot/name)==c["files"][name]
+  if name not in names:assert sha(W/name)==c["files"][name],name
+ baseline=D/"task-5-phase-verified-raw-memo-source-after-v2"
+ for name,h in zip(names,before,strict=True):
+  assert sha(baseline/name)==h,name
+  assert sha(W/name)==sha(snapshot/name),name
+ assert (snapshot/names[1]).read_bytes().startswith((baseline/names[1]).read_bytes())
+ old=ast.parse((baseline/names[0]).read_text()); new=ast.parse((snapshot/names[0]).read_text())
+ oldf={x.name:ast.dump(x,include_attributes=False) for x in ast.walk(old) if isinstance(x,(ast.FunctionDef,ast.AsyncFunctionDef))}
+ newf={x.name:ast.dump(x,include_attributes=False) for x in ast.walk(new) if isinstance(x,(ast.FunctionDef,ast.AsyncFunctionDef))}
+ assert oldf.keys()==newf.keys()
+ assert [n for n in oldf if oldf[n]!=newf[n]]==["_checked_teacher_grid"]
+ result={"scope":"Root apply only one private checker and append four regression tests; source boundary approval, finance unknown","formal_phase_or_main_executed":False,"financial_qualification":"unknown","manifest_sha256":sha(manifest),"independent_decision_sha256":sha(decision),"changed_files":{},"application_recovered_after_root_import_error":True,"original_root_error":"task-5-phase-local-admin-proof-key-root-apply-v1-import-failure.json"}
+ for name,h in zip(names,before,strict=True):
+  (W/name).write_bytes((snapshot/name).read_bytes())
+  result["changed_files"][name]={"before_sha256":h,"after_sha256":sha(W/name)}
+ env=dict(os.environ,PYTHONPATH=":".join([str(R),str(W/"johnhull/hullkit/src"),str(W/"deep_hedge_price/src")]),OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1",PYTHONDONTWRITEBYTECODE="1")
+ sys.path[:0]=[str(R),str(W/"johnhull/hullkit/src"),str(W/"deep_hedge_price/src")]
+ import run_reference as ref
+ from run_reference import payload_digest
+ source=ref.execution_source_identity(W)
+ assert source["files"]==c["files"] and not source["dynamic_imports"]
+ result["source_canonical_identity_sha256"]=ref._digest(source)
+ result["source_native_payload_identity_sha256"]=payload_digest(source)
+ assert result["source_canonical_identity_sha256"]==m["source_canonical_identity_sha256"]
+ assert result["source_native_payload_identity_sha256"]==m["source_native_payload_identity_sha256"]
+ save(Path(str(prefix)+"-source-closure.json"),source)
+ save(Path(str(prefix)+"-application.json"),result)
+ checks=[("pytest",[PY,"-B","-m","pytest","--confcutdir=deep_hedge_price","-q",names[1],"-k","phase_memo"]),("ruff",[RUFF,"check","--ignore","N806",*names]),("format",[RUFF,"format","--check",*names])]
+ result["checks"]=[]
+ for label,argv in checks:
+  t=time.perf_counter();r0=resource.getrusage(resource.RUSAGE_CHILDREN)
+  log=Path(str(prefix)+"-"+label+".log")
+  with log.open("wb") as f:q=subprocess.run(argv,cwd=W,env=env,stdout=f,stderr=subprocess.STDOUT)
+  r1=resource.getrusage(resource.RUSAGE_CHILDREN)
+  row={"check":label,"exit_code":q.returncode,"argv":argv,"wall_seconds":time.perf_counter()-t,"child_cpu_seconds":r1.ru_utime+r1.ru_stime-r0.ru_utime-r0.ru_stime,"log":log.relative_to(D).as_posix(),"log_sha256":sha(log)}
+  result["checks"].append(row);print(json.dumps(row),flush=True);print(log.read_text()[-2000:],flush=True)
+ result["wall_seconds_before_receipt"]=time.perf_counter()-begin
+ result["parent_cpu_seconds_before_receipt"]=time.process_time()-cpu
+ result["status"]="PASS" if all(r["exit_code"]==0 for r in result["checks"]) else "FAIL"
+ save(target,result)
+ return 0 if result["status"]=="PASS" else 1
+if __name__=="__main__":raise SystemExit(main())

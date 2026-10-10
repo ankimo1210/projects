@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-probe-v3.py",
+    "--fixed-config",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-fixed-config-v2.json"
+  ],
+  "child_inclusive_cpu_seconds": 153.55951399999998,
+  "child_peak_RSS_bytes": 763162624,
+  "config_sha256": "d42714fda51d730838882ca764ab1218a93c46a6f010904064902af828704ba2",
+  "end_UTC": "2026-10-10T08:23:57.266700+00:00",
+  "exit_code": 0,
+  "expense_relationship": "this independent process inclusive observation; do not add first proof receipt on memo hit again",
+  "financial_generation_count": 0,
+  "financial_qualification": "unknown",
+  "formal_phase_approved": false,
+  "receipt_tail": "unknown",
+  "script_sha256": "dc6a531ddf55fef567abe5c0e449fe3f1df659310c2fadea9246045546bca25b",
+  "start_UTC": "2026-10-10T08:23:42.466735+00:00",
+  "status": "child_terminal_saved_probe",
+  "wall_seconds": 14.799966041005973
+}
