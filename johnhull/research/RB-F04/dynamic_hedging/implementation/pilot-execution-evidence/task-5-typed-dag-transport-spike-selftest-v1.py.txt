@@ -1,0 +1,175 @@
+"""Small synthetic throwaway-prototype checks; no native artifacts."""
+
+import importlib.util
+import unittest
+from pathlib import Path
+
+import numpy as np
+
+D = Path(__file__).resolve().parent
+TOOL = D / "task-5-typed-dag-transport-spike-v1.py"
+
+
+class SyntheticDagTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.tool = None
+        if TOOL.exists():
+            spec = importlib.util.spec_from_file_location("typed_dag_spike", TOOL)
+            cls.tool = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(cls.tool)
+
+    def setUp(self):
+        self.assertIsNotNone(self.tool, "throwaway typed-DAG prototype absent")
+
+    def test_repeated_objects_decode_as_independent_writable_occurrences(self):
+        row = {
+            "status": "unknown",
+            "fits": [{"id": f"fit-{i}", "claim": None} for i in range(12)],
+            "values": np.arange(16, dtype=np.float64),
+            "mask": np.ones(16, dtype=bool),
+            "covariance": np.arange(16 * 16, dtype=np.float64).reshape(16, 16),
+            "cost": {"wall_seconds": 7.5, "cap": None},
+        }
+        payload = {"left": row, "right": row, "rows": [row, row]}
+        packet = self.tool.encode(payload)
+        decoded = self.tool.decode(packet)
+        self.assertEqual(
+            self.tool.REFERENCE["payload_digest"](payload),
+            self.tool.REFERENCE["payload_digest"](decoded),
+        )
+        self.assertEqual(len(packet["unique_arrays"]), 3)
+        self.assertEqual(packet["logical_counts"]["arrays"], 12)
+        self.assertIsNot(decoded["left"], decoded["right"])
+        self.assertIsNot(decoded["left"]["fits"], decoded["right"]["fits"])
+        for key in ("values", "mask", "covariance"):
+            self.assertFalse(np.shares_memory(decoded["left"][key], decoded["right"][key]))
+            self.assertTrue(decoded["left"][key].flags.writeable)
+        decoded["left"]["values"] += 100
+        decoded["left"]["mask"] &= False
+        decoded["left"]["covariance"][0, 0] = 1234
+        decoded["left"]["fits"][0]["claim"] = 1.0
+        decoded["left"]["cost"]["wall_seconds"] = 0.0
+        decoded["left"]["status"] = "changed"
+        self.assertEqual(decoded["right"]["values"][0], 0.0)
+        self.assertTrue(decoded["right"]["mask"].all())
+        self.assertEqual(decoded["right"]["covariance"][0, 0], 0.0)
+        self.assertIsNone(decoded["right"]["fits"][0]["claim"])
+        self.assertEqual(decoded["right"]["status"], "unknown")
+        self.assertEqual(decoded["right"]["cost"]["wall_seconds"], 7.5)
+        self.assertEqual(len(decoded["right"]["fits"]), 12)
+        self.assertEqual(row["values"][0], 0.0)
+
+    def test_dtype_shape_empty_zero_dim_nan_bits_and_signed_zero(self):
+        values = np.array([0x7FF8000000000042, 0x8000000000000000, 0], dtype=np.uint64).view(
+            np.float64
+        )
+        integers = np.array([1, 2], dtype=np.int32)
+        arrays = [
+            values,
+            values.copy(),
+            np.array(-0.0),
+            np.array([], dtype=np.float32),
+            integers,
+            integers.view(np.uint32),
+            integers.reshape(2, 1),
+            np.array(["x", "\\u4fa1\\u683c"], dtype="U2"),
+            np.arange(6, dtype=">f8").reshape(2, 3)[:, ::2],
+            np.asfortranarray(np.arange(6, dtype=np.float64).reshape(2, 3)),
+        ]
+        packet = self.tool.encode(arrays)
+        decoded = self.tool.decode(packet)
+        self.assertEqual(len(packet["unique_arrays"]), 9)
+        self.assertEqual(
+            self.tool.REFERENCE["payload_digest"](arrays),
+            self.tool.REFERENCE["payload_digest"](decoded),
+        )
+        for before, after in zip(arrays, decoded, strict=True):
+            self.assertEqual(before.shape, after.shape)
+            self.assertEqual(before.dtype, after.dtype)
+            self.assertEqual(before.tobytes(order="C"), after.tobytes(order="C"))
+            self.assertTrue(after.flags.writeable)
+        self.assertFalse(np.shares_memory(decoded[0], decoded[1]))
+
+    def test_scalar_normalization_heston_instances_and_full_status_cost(self):
+        parameters = self.tool.REFERENCE["HestonParameters"](
+            spot=100.0,
+            rate=0.02,
+            dividend_yield=0.01,
+            v0=0.04,
+            kappa=1.5,
+            theta=0.04,
+            xi=0.3,
+            rho=-0.5,
+        )
+        payload = {
+            "scalars": (
+                None,
+                True,
+                1,
+                1.0,
+                -0.0,
+                0.0,
+                np.int64(2),
+                np.nan,
+                np.inf,
+                -np.inf,
+                "\\u672a\\u8a55\\u4fa1",
+            ),
+            "parameters": [parameters, parameters],
+            "original_N": 1024,
+            "all_fit_attempts": [
+                {"id": i, "status": "failed_at_declared_cap", "claim": None} for i in range(12)
+            ],
+            "blocks": list(range(16)),
+            "history_cost": {"failed_wall": 83.231, "failed_cpu": 83.45, "unknown": None},
+            "qualification": "unknown",
+        }
+        decoded = self.tool.decode(self.tool.encode(payload))
+        self.assertEqual(
+            self.tool.REFERENCE["payload_digest"](payload),
+            self.tool.REFERENCE["payload_digest"](decoded),
+        )
+        self.assertIsInstance(decoded["scalars"], list)
+        self.assertIs(type(decoded["scalars"][1]), bool)
+        self.assertIs(type(decoded["scalars"][2]), int)
+        self.assertIs(type(decoded["scalars"][3]), float)
+        self.assertTrue(np.signbit(decoded["scalars"][4]))
+        self.assertFalse(np.signbit(decoded["scalars"][5]))
+        self.assertIsNot(decoded["parameters"][0], decoded["parameters"][1])
+        self.assertEqual(len(decoded["all_fit_attempts"]), 12)
+        self.assertEqual(len(decoded["blocks"]), 16)
+        self.assertEqual(decoded["history_cost"], payload["history_cost"])
+        self.assertEqual(decoded["qualification"], "unknown")
+
+    def test_compressed_metadata_tamper_and_dag_cycle_are_rejected(self):
+        packet = self.tool.encode({"x": [1, 1], "array": np.arange(4)})
+        broken = dict(packet)
+        broken["metadata_z"] = packet["metadata_z"][:-1] + bytes([packet["metadata_z"][-1] ^ 1])
+        with self.assertRaises(ValueError):
+            self.tool.decode(broken)
+        broken = self.tool.rewrite_metadata_for_probe(
+            packet,
+            lambda metadata: metadata["nodes"].__setitem__(
+                metadata["root"], ["list", [metadata["root"]]]
+            ),
+        )
+        with self.assertRaises(ValueError):
+            self.tool.decode(broken)
+
+    def test_original_logical_occurrences_not_omitted_by_interning(self):
+        shared = {"vector": np.arange(8), "status": "unknown"}
+        payload = [shared for _ in range(64)]
+        packet = self.tool.encode(payload)
+        decoded = self.tool.decode(packet)
+        self.assertEqual(len(decoded), 64)
+        self.assertEqual(packet["logical_counts"]["arrays"], 64)
+        self.assertEqual(len(packet["unique_arrays"]), 1)
+        self.assertEqual(len({id(item) for item in decoded}), 64)
+        self.assertEqual(len({id(item["vector"]) for item in decoded}), 64)
+        for value in decoded:
+            self.assertFalse(np.shares_memory(value["vector"], payload[0]["vector"]))
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

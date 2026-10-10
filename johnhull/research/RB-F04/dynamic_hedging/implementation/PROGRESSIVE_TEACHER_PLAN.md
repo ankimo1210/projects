@@ -1,6 +1,6 @@
 # 段階教師選択と最終mixed pilot計画
 
-現在（2026-10-10）：修正版fresh正式pilotは同じsession21286で実行中。元N1024の旧停止gateをsaved executedとして確認し、closed NPZ共有で別inode割当53.24GBを削減した。source81/元N/全case/義務/原失敗・費用は不変。全phase容量・金融精度・freeze/mainは未完了。詳細は[保存量と原byte共有](PILOT_BUDGET_MEASUREMENTS.md#派生結果の保存量と原byte共有2026-10-10)。
+現在（2026-10-10）：修正版fresh正式pilotは同じsession21286で実行中。元N1024の旧停止gateをsaved executedとして確認し、closed NPZ共有で別inode割当143.65GBを削減した。source81/元N/全case/義務/原失敗・費用は不変。全phase容量・金融精度・freeze/mainは未完了。詳細は[保存量と原byte共有](PILOT_BUDGET_MEASUREMENTS.md#派生結果の保存量と原byte共有2026-10-10)。
 
 2026-10-10。初回sourceの元3,138ジョブの資源prior・正確cap recipeを独立承認し、正式metadata lockを生成した。初回正式pilotは69件executed＋70番の日付gateでKeyError Nとなり停止（外側580.029秒、資源capなし）。native cacheのoriginal_Nを読む1行修正と実cache→日付gate→保存checkerの2回帰を追加し、関連246tests・2Python Ruff/format PASS。旧partial・原失敗・費用を保持。修正版sourceへのprior再結合・正式metadata lock・別root起動許可を完了し、fresh正式pilotを2026-10-10 10:22:45 UTCに再開した。完走・saved検算・freeze/main・研究受入は未完了。
 
@@ -66,4 +66,6 @@ v55の動的import3件が正式source封鎖を妨げることを実検査で確�
 
 旧方式の全stage実行時の保存再検算反復を含む既知部分外挿は606.881時間（約25.3日、未知費用別）。数日の見積りは撤回済み。phase内の不変raw検算再利用v2を限定実装・独立確認し、真正原N1024/Hcoarse108節点で初回23.671秒・再利用0.222秒・別context全検算23.797秒を実測した（関連既存240tests/Ruff/format PASS）。現v3は計算に無関係なwall/work-directory引数差だけの重複検算を除き、全引数SHA・外側監査を保持。独立9境界/保存432節点とroot14tests/Ruff/format PASS。v6の全job-key件数を独立確認し、全stage時の初回40cold/840hit・別saved context40cold/768hit。旧rateの既知部分は初回139.050h・別context cold部分90.673hで、全ETAは未知。初回sourceの元3,138ジョブの資源prior・正確cap recipeを独立承認し、正式metadata lockを生成した。初回正式pilotは69件executed＋70番の日付gateでKeyError Nとなり停止（外側580.029秒、資源capなし）。native cacheのoriginal_Nを読む1行修正と実cache→日付gate→保存checkerの2回帰を追加し、関連246tests・2Python Ruff/format PASS。旧partial・原失敗・費用を保持。修正版sourceへのprior再結合・正式metadata lock・別root起動許可を完了し、fresh正式pilotを2026-10-10 10:22:45 UTCに再開した。完走・saved検算・freeze/main・研究受入は未完了。 初回全N検算・原義務・失敗/unknown・独立fresh/restoreを保持し、原v1–v4は未承認の歴史的候補として残す。
 
-保存補助helper v1のrollback I/O失敗P2はD-only v2で原backup保持・effect unknown/tool_exception伝播へ修復済み（12合成tests/Ruff・独立3境界PASS）。金融source81・元実験条件は不変。v2での追加実操作は未実施。
+保存補助helper v1のrollback I/O失敗P2はD-only v2で原backup保持・effect unknown/tool_exception伝播へ修復済み（12合成tests/Ruff・独立3境界PASS）。金融source81・元実験条件は不変。v2で追加2854件・90.403GBを共有し、累計4978件の原記録/最新5248paths/元receipt・metadata・source81を確認した。
+
+保存形式候補の小合成試作は原logical値/digestと各出現のmutation隔離を確認した。次の形式を採るなら、非teacher writer/read分岐＋private helper、新schema/version、圧縮blob pages/descriptor表、全logical出現の独立復元を限定実装・検証する。source identityが変わるため現liveplanはそのままresumeできず、新source/metadata/rootを別に扱う。現在の試作はproduction採用や全phase容量の承認ではない。[根拠と未検証項目](PILOT_BUDGET_MEASUREMENTS.md#保存形式候補の小合成試作2026-10-10)。

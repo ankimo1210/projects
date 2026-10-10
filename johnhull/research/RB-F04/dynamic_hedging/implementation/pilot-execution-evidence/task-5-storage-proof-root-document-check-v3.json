@@ -1,0 +1,17 @@
+{
+  "archive_entries": 1025,
+  "frozen_runtime_source_files": 81,
+  "full_three_suites_run": false,
+  "live_financial_phase_completion": false,
+  "local_file_references": 282,
+  "new_carriers": [],
+  "new_owned_archive_files": 40,
+  "runtime_source_changed": false,
+  "scoped_docs": 4,
+  "status": "PASS",
+  "synthetic_dag_independent_items": 12,
+  "synthetic_dag_independent_tests": 2,
+  "synthetic_dag_root_tests": 5,
+  "unique_targets": 219,
+  "wall_seconds": 0.026840086000447627
+}

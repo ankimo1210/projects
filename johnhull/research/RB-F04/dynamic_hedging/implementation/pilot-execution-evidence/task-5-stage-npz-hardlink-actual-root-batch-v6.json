@@ -1,0 +1,54 @@
+{
+  "catalog_sha256": "642cc79b998fad1349902abaeb97b5b0c738260eb226fb0c14e64878880053fc",
+  "financial_qualification": "unknown",
+  "financial_source_changed": false,
+  "financial_source_files_verified": 81,
+  "helper_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v2.py",
+  "helper_sha256": "010fb31dd02be6e7be937d1c9923ba8f80abeac2bbb03f05725850be430adf58",
+  "helper_version": 2,
+  "limits": {
+    "max_links": 2000,
+    "max_read_bytes": 128849018880,
+    "max_seconds": 60.0
+  },
+  "live_financial_session": 21286,
+  "outer_cpu_seconds": 51.604802635000006,
+  "outer_wall_seconds": 60.018668115000764,
+  "peak_rss_bytes": 49614848,
+  "scope": "closed NPZ exact-byte transport only; no financial source/value/input changes",
+  "skipped_current_same_inode": 1502,
+  "start_utc": "2026-10-10T11:53:22.174778+00:00",
+  "summary": {
+    "actual_file_read_bytes": 119197202794,
+    "actual_file_write_bytes": 0,
+    "already_independent": 0,
+    "already_shared": 0,
+    "certain_released_allocated_bytes": 19965022208,
+    "cpu_seconds": 51.604632465,
+    "detached": 0,
+    "eligible": 0,
+    "financial_qualification": "unknown",
+    "inode_inventory_scope": "only accepted paths from this bounded scan, not the entire native tree",
+    "limit": "max_seconds",
+    "linked": 556,
+    "native_volume_after": {
+      "free": 470579183616,
+      "total": 1081101176832,
+      "used": 555529637888
+    },
+    "native_volume_before": {
+      "free": 450615468032,
+      "total": 1081101176832,
+      "used": 575493353472
+    },
+    "planned_links": 556,
+    "rejected": 0,
+    "scope": "stage_leaf_pack_arrays_only",
+    "selected_unique_inode_allocated_after_bytes": 6480097280,
+    "selected_unique_inode_allocated_before_bytes": 26445119488,
+    "termination": "administrative_limit",
+    "wall_seconds": 60.01253062699834,
+    "windows_vhd_or_host_volume_space_reclamation": "not_measured_or_guaranteed"
+  },
+  "wrapper_version": 6
+}

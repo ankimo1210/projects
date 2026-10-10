@@ -1,0 +1,41 @@
+{
+  "business_large_json_npz_read": 0,
+  "commands": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-selftest-v1.py"
+      ],
+      "log": "task-5-typed-dag-transport-spike-root-verification-0.log",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-v1.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-selftest-v1.py"
+      ],
+      "log": "task-5-typed-dag-transport-spike-root-verification-1.log",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-v1.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-typed-dag-transport-spike-selftest-v1.py"
+      ],
+      "log": "task-5-typed-dag-transport-spike-root-verification-2.log",
+      "returncode": 0
+    }
+  ],
+  "financial_execution": 0,
+  "fixed_files_verified": 13,
+  "full_three_suites_run": false,
+  "production_source_changed": false,
+  "status": "PASS",
+  "synthetic_tests": 5,
+  "wall_seconds": 0.09940727100183722
+}

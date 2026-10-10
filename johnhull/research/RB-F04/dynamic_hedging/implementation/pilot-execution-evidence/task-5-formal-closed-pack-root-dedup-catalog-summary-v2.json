@@ -1,0 +1,19 @@
+{
+  "actual_deduplication": false,
+  "candidate_groups": 1966,
+  "candidate_saving_bytes": 111482601472,
+  "catalog_bytes": 10219896,
+  "catalog_sha256": "642cc79b998fad1349902abaeb97b5b0c738260eb226fb0c14e64878880053fc",
+  "cost": {
+    "cpu_seconds": 1.516927909,
+    "peak_rss_bytes": 36610048,
+    "wall_seconds": 3.2768791359994793
+  },
+  "eligible_npz_files": 24681,
+  "financial_generation": 0,
+  "logical_eligible_npz_bytes": 209688306348,
+  "observed_utc": "2026-10-10T11:46:37.883639+00:00",
+  "schema": "rb-f04-readonly-closed-npz-catalog-v2",
+  "skipped": 0,
+  "source_changes": false
+}
