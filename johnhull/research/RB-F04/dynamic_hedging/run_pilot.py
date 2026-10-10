@@ -20,6 +20,7 @@ if __name__ == "__main__":
         str(_CLI_ROOT / "deep_hedge_price/src"),
     ]
 
+import _teacher_storage as teacher_storage
 import numpy as np
 import run_reference as runner
 from hullkit._dynamic_hedging_conditional import primitive_labels, teacher_primitives
@@ -1330,7 +1331,8 @@ def run_teacher_grid_job(
         )
         path = Path(work_directory) / f"node{i:04d}"
         write_pilot_artifact(path, raw)
-        nodes.append(node | {"path": str(path), "raw_sha256": runner.payload_digest(raw)})
+        binding = _teacher_node_binding(path, raw)
+        nodes.append(node | {"path": str(path), "raw_binding": binding})
         if raw.get("status") in ("failed_at_declared_cap", "unclosed_source_or_solver_defect"):
             break
     defect = (
@@ -1814,6 +1816,7 @@ def write_pilot_artifact(directory, payload):
     establish provenance only, not numerical accuracy.
     """
     directory = Path(directory)
+    payload, storage_descriptor = teacher_storage.prepare_teacher(payload)
     arrays = {}
     tree = runner._encode_tree(payload, arrays)
     descriptors, packs = {}, []
@@ -1851,17 +1854,45 @@ def write_pilot_artifact(directory, payload):
         }
     if pack:
         packs.append((pack, entries))
-    receipt = protocol.write_artifact(
-        directory, metadata={"schema": PACK_SCHEMA, "tree": tree, "arrays": descriptors}, arrays={}
-    )
+    metadata = {"schema": PACK_SCHEMA, "tree": tree, "arrays": descriptors}
+    if storage_descriptor is not None:
+        metadata["teacher_storage"] = storage_descriptor
+    receipt = protocol.write_artifact(directory, metadata=metadata, arrays={})
     for index, (values, entries) in enumerate(packs):
         identifier = f"pack{index:06d}"
         protocol.write_artifact(
             directory / identifier,
             metadata={"schema": PACK_SCHEMA, "part": identifier, "entries": entries},
             arrays=values,
+            compress=storage_descriptor is not None,
         )
     return receipt
+
+
+def _teacher_node_binding(directory, raw):
+    """New recipes bind physical origin; legacy literals keep their raw digest."""
+    metadata, _, _ = protocol.read_artifact(directory)
+    if "teacher_storage" in metadata:
+        teacher_storage.check_returned_origin(raw, metadata["teacher_storage"])
+        return teacher_storage.physical_artifact_binding(directory)
+    return {"kind": "literal_payload_v1", "raw_sha256": runner.payload_digest(raw)}
+
+
+def _check_teacher_node_binding(node, directory, raw):
+    """A declared physical kind never falls back to floating payload hashes."""
+    if "raw_binding" not in node:
+        _require(
+            runner.payload_digest(raw) == node["raw_sha256"],
+            "teacher raw node binding mismatch",
+        )
+        return
+    binding = node["raw_binding"]
+    _require(
+        isinstance(binding, dict)
+        and binding.get("kind") in ("teacher_recipe_physical_v1", "literal_payload_v1"),
+        "unknown teacher node binding kind",
+    )
+    _require(binding == _teacher_node_binding(directory, raw), "teacher raw node binding mismatch")
 
 
 def _read_packed_pilot(directory, metadata, receipt):
@@ -1923,7 +1954,10 @@ def read_pilot_artifact(directory):
     if metadata.get("schema") == CLOSURE_SCHEMA:
         return read_closure_artifact(directory)
     if metadata.get("schema") == PACK_SCHEMA:
-        return _read_packed_pilot(directory, metadata, root_receipt)
+        payload, receipt = _read_packed_pilot(directory, metadata, root_receipt)
+        if "teacher_storage" in metadata:
+            payload = teacher_storage.restore_teacher(payload, metadata["teacher_storage"])
+        return payload, receipt
     _require(metadata["schema"] == PART_SCHEMA, "not a pilot split artifact")
     arrays = {}
     expected_dirs = set()

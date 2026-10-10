@@ -1,0 +1,10 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[local-atom] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:177: in test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all
+    assert "teacher_storage" in metadata, "native completed teacher needs explicit storage recipe"
+E   AssertionError: native completed teacher needs explicit storage recipe
+E   assert 'teacher_storage' in {'arrays': {'a000000': {'dtype': '<i8', 'parts': [{'id': 'pack000000', 'start': 0, 'stop': 32, 'value_key': 'value0000...605337d2427ed', 'path_start': 0, ...}], 'cluster_ids': {'__array__': 'a000000'}, 'date_index': 6, 'driver': None, ...}}
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[local-atom]
+1 failed, 45 deselected in 0.09s

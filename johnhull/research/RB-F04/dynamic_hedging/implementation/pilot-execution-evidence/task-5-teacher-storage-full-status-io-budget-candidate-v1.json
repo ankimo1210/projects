@@ -1,0 +1,24 @@
+{
+  "schema": "rb-f04-teacher-storage-full-status-component-prior-budget-v1",
+  "root_preapproved": false,
+  "formal_finance_approved": false,
+  "scope": "synthetic_full_status_teacher_recipe_artifact_io_only",
+  "original_n": 65536,
+  "threshold_count": 65,
+  "blocks": 16,
+  "local_step_status_shape": [
+    65536,
+    768
+  ],
+  "local_step_status_dtype": "uint8",
+  "failure_reasons_dtype": "U128",
+  "primitive_status_dtype": "U7",
+  "rss_limit_bytes": 4294967296,
+  "wall_limit_seconds": 180.0,
+  "rss_metric": "process_RSS_not_virtual_address_space",
+  "probe_source_sha256": "baed09d155d8d2476329bcf5bd7d6b5cd5bb07fdcdddc506a7cf9dffd590c9db",
+  "prepared_inputs_sha256": "d80b2666bdc3270784df1ad4eef4aa4283c36dff8c91ff235f7bf0039700691c",
+  "source_bindings": "pending completed source review; no execution authorized",
+  "scientific_model_precision_claim": false,
+  "notes": "Original full-shape synthetic values only; genuine M6 compression/rate separate. Full original labels+restored labels kept live to measure combined RSS. Actual status/failure full arrays added; prior M0 omitted these."
+}

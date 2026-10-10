@@ -1,0 +1,8 @@
+{
+  "scope": "static diagnostic review",
+  "status": "reviewer_assertion_failure",
+  "reason": "reviewer required final checkpoint literal directly inside complete expression; source may bind checkpoint booleans earlier. Counterexample not yet established; no financial/source imports/component execution.",
+  "probe_sha256": "e8389a5f49d7246e5dc4469e443a4e0d98c1e03fdd0b1e2de8684700c4d3def1",
+  "measured_failed_exec_wall_seconds": 1.4,
+  "unmeasured_cost": "unknown"
+}

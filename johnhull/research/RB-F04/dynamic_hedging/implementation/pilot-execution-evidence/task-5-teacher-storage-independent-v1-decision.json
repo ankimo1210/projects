@@ -1,0 +1,47 @@
+{
+  "schema": "rb-f04-native-teacher-storage-independent-decision-v1",
+  "decision": "approve_bounded_fixed_codec_transport_source_only",
+  "finance_qualification": "unknown",
+  "formal_approved": false,
+  "source_files": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py": "af5e80674988c1b0b2816c8ad3a2a4873f62817c2a83c995cd7c60574c17cbbf",
+    "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "bfd5b81fd8d356c387a8e313b0c0c8a5b538a26166ad4854572913d4f1608184",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc"
+  },
+  "runtime_closure": {
+    "files": 81,
+    "dynamic_imports": [],
+    "source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0"
+  },
+  "independent_counts": {
+    "PASS": 15,
+    "REJECTED": 60
+  },
+  "new_RNG_calls": 0,
+  "new_financial_workers": 0,
+  "cost": {
+    "exit_code": 0,
+    "wall_seconds": 3.3781538770017505,
+    "child_cpu_seconds": 3.19589,
+    "scope": "independent_saved_small_teacher_transport_only",
+    "numerical_financial_run": false,
+    "RNG": false,
+    "unmeasured_preparation_and_report": "unknown"
+  },
+  "max_independent_process_RSS_bytes": 635486208,
+  "scope": "source and saved native transport only; not full financial qualification",
+  "report": "task-5-teacher-storage-independent-v1-review.md",
+  "results": "task-5-teacher-storage-independent-v1-results.json",
+  "author_suite_counts_not_counted_as_independent": true,
+  "pending": [
+    "genuine whole teacher compression and precision",
+    "whole financial job storage/RSS/time",
+    "formal pilot/main/phase acceptance"
+  ],
+  "source_edits": false,
+  "tests_edits": false,
+  "Git_changes": false,
+  "CAS_changes": false
+}

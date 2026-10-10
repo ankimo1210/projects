@@ -1,0 +1,143 @@
+"""Independent saved-only full status teacher codec observation."""
+from pathlib import Path
+import hashlib,json,sys,time,resource,zipfile,copy
+from contextlib import ExitStack
+from unittest.mock import patch
+WT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=WT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+OBS=D/"task-5-teacher-storage-full-status-io-observation-root-v1"
+R=WT/"johnhull/research/RB-F04/dynamic_hedging"
+start=time.perf_counter();cpu=time.process_time()
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+parent=json.loads((OBS/"parent-cost-and-decision.json").read_text())
+outer=json.loads((D/"task-5-teacher-storage-full-status-io-root-enclosing-cost-v1.json").read_text())
+budget=json.loads((D/"task-5-teacher-storage-full-status-io-budget-root-fixed-v1.json").read_text())
+assert budget==parent["prior_component_budget"] and budget["root_preapproved"] and not budget["formal_finance_approved"]
+assert sha(D/"task-5-teacher-storage-full-status-io-budget-root-fixed-v1.json")==outer["budget_sha256"]
+assert sha(OBS/"parent-cost-and-decision.json")==outer["inner_parent_receipt_sha256"]
+assert sha(D/"task-5-teacher-storage-full-status-io-root-v1.log")==outer["root_log_sha256"]
+assert sha(D/"task-5-teacher-storage-full-status-io-probe-v1.py")==budget["probe_source_sha256"]
+source_before={rel:sha(WT/rel) for rel in budget["root_source_closure"]};assert source_before==budget["root_source_closure"]
+evidence=[p for p in OBS.rglob("*") if p.is_file()]
+before={str(p.relative_to(OBS)):sha(p) for p in evidence}
+pc=parent["whole_child_parent_clock"]
+assert abs(pc["wall_stop"]-pc["wall_start"]-parent["wall_seconds"])<1e-8
+assert outer["wall_start"]<=pc["wall_start"]<pc["wall_stop"]<=outer["wall_stop"]
+assert abs(outer["wall_stop"]-outer["wall_start"]-outer["wall_seconds"])<1e-8
+assert parent["completed_component"] and parent["full_original_returned_payload_restore_finished"] and parent["failure_boundary"] is None
+assert parent["actual_peak_rss_bytes"]<budget["rss_limit_bytes"] and outer["wall_seconds"]<budget["wall_limit_seconds"]
+progress=json.loads((OBS/"progress.json").read_text())
+assert parent["latest_component_checkpoint"]==progress
+assert progress["status"]=="allocation_component_complete"
+stages=progress["stages"]
+assert all(stages[i]["wall_stop"]<=stages[i+1]["wall_stop"] for i in range(len(stages)-1))
+assert stages[-1]["id"]=="artifact_read_and_full_labels_check_complete"
+child=progress["child_interval"];assert pc["wall_start"]<=child["wall_start"]<child["wall_stop"]<=pc["wall_stop"]
+for s in stages:
+ if "wall_start" in s:
+  assert child["wall_start"]<=s["wall_start"]<=s["wall_stop"]<=child["wall_stop"]
+  assert abs(s["wall_stop"]-s["wall_start"]-s["wall_seconds"])<1e-8
+sys.path[:0]=[str(R),str(WT/"johnhull/hullkit/src"),str(WT/"deep_hedge_price/src")]
+import numpy as np
+import run_pilot as pilot
+import run_reference as runner
+import reference_methods
+import _teacher_storage as storage
+from hullkit import _dynamic_hedging_conditional as conditional
+from deep_hedge_price import _dynamic_hedging_protocol as protocol
+calls={"RNG":0,"numerical_financial_workers":0}
+def forbidden(*a,**kw):calls["numerical_financial_workers"]+=1;raise AssertionError("no new financial worker")
+def no_rng(*a,**kw):calls["RNG"]+=1;raise AssertionError("no RNG")
+path=OBS/"full-original-shapes"
+chunks=[]
+with ExitStack() as stack:
+ for module in (pilot,reference_methods):
+  for name in dir(module):
+   if (name.startswith("run_") or name in ("independent_heston_call","calendar_call_snapshots","premium_reference","quote_positions_oracle","independent_call_table")) and callable(getattr(module,name)):stack.enter_context(patch.object(module,name,forbidden))
+ for name in ("teacher_primitives","cir_implicit_step"):
+  if hasattr(conditional,name):stack.enter_context(patch.object(conditional,name,forbidden))
+ for name in ("teacher_primitives","heston_records","local_records"):
+  if hasattr(pilot,name):stack.enter_context(patch.object(pilot,name,forbidden))
+ for name in ("default_rng","normal","standard_normal","random","rand","randn","uniform","seed","RandomState"):stack.enter_context(patch.object(np.random,name,no_rng))
+ for part in [path,*sorted(path.glob("pack*"))]:
+  manifest=json.loads((part/"metadata.json").read_text());receipt=json.loads((part/"receipt.json").read_text())
+  rows=[];expanded=payload=0
+  with zipfile.ZipFile(part/"arrays.npz") as z:
+   assert len(z.infolist())==len(manifest["arrays"])
+   for m in z.infolist():
+    with z.open(m) as f:
+     version=np.lib.format.read_magic(f)
+     shape,order,dtype={(1,0):np.lib.format.read_array_header_1_0,(2,0):np.lib.format.read_array_header_2_0}[version](f);headers=f.tell()
+    nbytes=int(np.prod(shape,dtype=np.int64))*dtype.itemsize
+    key=m.filename.removesuffix(".npy")
+    assert manifest["arrays"][key]=={"shape":list(shape),"dtype":dtype.str,"nbytes":nbytes}
+    assert m.file_size==nbytes+headers
+    rows.append({"name":key,"header_bytes":headers,"payload_bytes":nbytes});expanded+=m.file_size;payload+=nbytes
+    assert m.compress_type==zipfile.ZIP_DEFLATED
+  assert expanded==receipt["uncompressed_bytes"] and expanded<=256*1024**2
+  if part!=path:assert payload<=128*1024**2
+  chunks.append({"id":part.name,"array_payload_bytes":payload,"expanded_bytes_including_NPY_headers":expanded,"NPZ_bytes":(part/"arrays.npz").stat().st_size,"headers":rows})
+ assert {"chunks":chunks}==json.loads((OBS/"independent-chunk-bytes.json").read_text())
+ metadata,rootarrays,receipt=protocol.read_artifact(path)
+ physical,_=pilot._read_packed_pilot(path,metadata,receipt)
+ assert not rootarrays and set(storage.SAMPLE_FIELDS).isdisjoint(physical["labels"])
+ assert physical["original_n"]==65536
+ # Read original native recipe only, no primitive simulation/solver.
+ raw,_=pilot.read_pilot_artifact(path)
+ n,k=65536,65
+ p=raw["primitives"];labels=raw["labels"]
+ assert raw["scope"]=="synthetic_full_status_teacher_recipe_artifact_io_only"
+ assert raw["driver"] is None and raw["chunks"]==[] and raw["financial_qualification"]=="unknown"
+ assert np.array_equal(raw["path_ids"],np.arange(n)) and np.array_equal(raw["cluster_ids"],np.arange(n)//4096)
+ assert p["local_step_status"].shape==(n,768) and p["local_step_status"].dtype==np.uint8 and np.all(p["local_step_status"]==1)
+ assert p["failure_reasons"].shape==(n,) and p["failure_reasons"].dtype==np.dtype("U128") and np.all(p["failure_reasons"]=="")
+ assert p["primitive_status"].shape==(n,) and p["primitive_status"].dtype==np.dtype("U7") and np.all(p["primitive_status"]=="ready")
+ assert p["N"]==p["original_path_count"]==n and np.all(p["path_mask"])
+ x=raw["thresholds"]
+ assert x.shape==(k,) and np.array_equal(x,pilot.teacher_axes("high","local")["threshold"][0])
+ coordinate=np.arange(n,dtype=float)/(n-1)
+ expected_vectors={"b":10+.5*coordinate,"c":.8+.2*coordinate,"mu":np.full(n,-.02),"sigma":.05+.01*coordinate,"last_z":-2+4*coordinate,"last_left_spot":np.full(n,p["spot"]),"last_left_variance":np.full(n,p["control_variance"]),"last_left_coefficient":np.ones(n),"aux_logG_prefix":np.zeros(n)}
+ for key,a in expected_vectors.items():assert p[key].dtype==np.float64 and p[key].shape==(n,) and np.allclose(p[key],a,rtol=2e-9,atol=2e-10)
+ for key in storage.SAMPLE_FIELDS:
+  a=labels[key];assert a.shape==(n,k) and a.dtype==np.float64 and np.isfinite(a).all()
+ assert labels["f_samples"] is labels["cv_samples"]
+ # Independent payoff and derivative threshold arithmetic on all original rows.
+ raw_sum=p["b"]+p["c"]*np.exp(p["mu"]+p["sigma"]*p["last_z"])
+ assert np.allclose(labels["raw_samples"],np.maximum(raw_sum[:,None]-x,0),rtol=2e-9,atol=2e-10)
+ assert np.array_equal(labels["raw_x_samples"],-(raw_sum[:,None]>x).astype(float))
+ aux_sum=12*np.exp(p["aux_logG_prefix"]+p["aux_last_loading"]*p["last_z"])
+ assert np.allclose(labels["aux_raw_samples"],np.maximum(aux_sum[:,None]-x,0),rtol=2e-9,atol=2e-10)
+ # Full original denominator, 16 blocks and all cross-threshold covariances.
+ bm=[];dbm=[]
+ for key in ("raw_samples","conditioned_samples","cv_samples"):
+  bm.append(labels[key].reshape(16,4096,k).mean(axis=1))
+ for key in ("raw_x_samples","conditioned_x_samples","f_x_samples"):
+  dbm.append(labels[key].reshape(16,4096,k).mean(axis=1))
+ block=np.stack(bm,axis=-1);derivative=np.stack(dbm,axis=-1)
+ assert np.allclose(block,physical["labels"]["block_means"],rtol=2e-9,atol=2e-10)
+ assert np.allclose(derivative,physical["labels"]["derivative_block_means"],rtol=2e-9,atol=2e-10)
+ joint=np.concatenate((block.reshape(16,-1),derivative.reshape(16,-1)),axis=1)
+ covariance=np.cov(joint,rowvar=False,ddof=1)/16
+ assert np.allclose(joint,physical["labels"]["joint_block_means"],rtol=2e-9,atol=2e-10)
+ assert np.allclose(covariance,physical["labels"]["joint_block_covariance"],rtol=2e-9,atol=2e-10)
+ for sample,mean,se in (("cv_samples","f","f_se"),("f_x_samples","f_x","f_x_se")):
+  a=labels[sample]
+  assert np.allclose(a.mean(axis=0),physical["labels"][mean],rtol=2e-9,atol=2e-10)
+  assert np.allclose(a.std(axis=0,ddof=1)/np.sqrt(n),physical["labels"][se],rtol=2e-9,atol=2e-10)
+ # Reader preserves every physical summary/status rather than recalculated overwrite.
+ for key,value in physical["labels"].items():
+  actual=labels[key]
+  if isinstance(value,np.ndarray):assert actual.dtype==value.dtype and np.array_equal(actual,value,equal_nan=True) if value.dtype.kind in "fc" else np.array_equal(actual,value)
+  else:assert actual==value
+ binding=pilot._teacher_node_binding(path,raw)
+ pilot._check_teacher_node_binding({"raw_binding":binding},path,raw)
+ assert labels["blocks"]==16 and labels["N"]==n and labels["date_index"]==0
+ assert np.array_equal(p["calendar_times"],np.arange(769,dtype=float)/768)
+ assert np.array_equal(p["fixing_indices"],np.arange(1,13)*64)
+ assert np.array_equal(p["fixing_delays"],np.arange(1,13,dtype=float)/12)
+ assert source_before=={rel:sha(WT/rel) for rel in source_before}
+ assert before=={str(p.relative_to(OBS)):sha(p) for p in evidence}
+ assert not any(calls.values())
+ record={"decision":"approve_saved_synthetic_full_status_native_IO_component_only","qualification":"unknown","formal_approved":False,"scope":raw["scope"],"original_N":n,"thresholds":k,"blocks":16,"all_sample_keys":len(storage.SAMPLE_FIELDS),"full_status_shape":list(p["local_step_status"].shape),"all_finite_sample_cells":11*n*k,"physical_summary_fields_retained":len(physical["labels"]),"all_original_rows_stats_and_joint_covariance":"independent NumPy recomputation passed","full_RNG_financial_execution":calls,"chunks":chunks,"physical_binding":binding,"source81_stable":True,"saved_files_stable":len(before),"original_cost":{"root_outer_wall_seconds":outer["wall_seconds"],"root_outer_CPU_seconds":outer["CPU_child_process_tree_seconds"],"root_inner_wall_seconds":parent["wall_seconds"],"root_inner_child_CPU_seconds":parent["cpu_seconds"],"inner_and_outer_overlap_not_added":True,"root_actual_process_peak_RSS_bytes":parent["actual_peak_rss_bytes"],"cap_wall_seconds":180,"cap_RSS_bytes":4*1024**3,"overrun":False,"outer_tail_seconds":outer["wall_seconds"]-parent["wall_seconds"],"final_observer_own_CPU_and_save":"unknown"},"independent_cost":{"inner_wall_seconds":time.perf_counter()-start,"inner_CPU_seconds":time.process_time()-cpu,"process_peak_RSS_bytes":resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,"final_record_save":"unknown"},"limits":["synthetic local values only, no native model law qualification","single native teacher at date0; not four genuine whole grids","no financial rate or storage capacity extrapolation","no formal pilot/main/phase acceptance"]}
+(D/"task-5-teacher-storage-full-status-io-independent-v1-results.json").write_text(json.dumps(record,indent=2)+"\n")
+print(json.dumps({k:record[k] for k in ("decision","original_N","thresholds","blocks","saved_files_stable","independent_cost","original_cost")},indent=2))

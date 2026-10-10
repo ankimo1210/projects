@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-storage-atom-corrected-baseline-RED-v1.py"
+  ],
+  "exit_code": 1,
+  "wall_seconds": 2.392204765998031,
+  "child_cpu_seconds": 2.3480980000000002,
+  "reason": "initial atom fixture used invalid theta=0; corrected native local zero-field fixture now fails solely for missing storage representation under preserved v56 writer",
+  "baseline_source_edited": false,
+  "finance": "unknown"
+}

@@ -1,0 +1,417 @@
+"""Prepared only: full-N/full-status deterministic teacher recipe I/O probe.
+
+No financial worker, RNG, SDE, CF, PDE, or MC precision is opened.
+Run only with a root-fixed prior component budget; 4 GiB RSS is not RLIMIT_AS.
+The 180 s ceiling is a budget, never a runtime estimate.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import resource
+import subprocess
+import sys
+import time
+import traceback
+import zipfile
+from pathlib import Path
+
+WT = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D = WT / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+PREP = D / "task-5-actual-pilot-input-preparation-v4.json"
+N, THRESHOLDS, BLOCKS = 65536, 65, 16
+RSS_CAP, WALL_CAP = 4 * 1024**3, 180.0
+DISTINCT_LABEL_KEYS = (
+    "raw_samples", "conditioned_samples", "cv_samples", "f_x_samples",
+    "raw_x_samples", "conditioned_x_samples", "unreplaced_cv_samples",
+    "unreplaced_cv_x_samples", "aux_raw_samples", "aux_conditioned_samples",
+)
+SOURCE_PATHS = (
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_conditional.py",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+    "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+)
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def sources():
+    return {rel: sha(WT / rel) for rel in SOURCE_PATHS}
+
+
+def save(path, data):
+    # Own small observer checkpoint only; immutable raw packs are never replaced.
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(data, ensure_ascii=False, indent=2) + chr(10))
+    temporary.replace(path)
+
+
+def rss_from_proc(pid):
+    try:
+        lines = Path(f"/proc/{pid}/status").read_text().splitlines()
+    except (FileNotFoundError, ProcessLookupError):
+        return None
+    for line in lines:
+        if line.startswith("VmRSS:"):
+            return int(line.split()[1]) * 1024
+    return None
+
+
+def validate_budget(path):
+    budget = json.loads(path.read_text())
+    assert budget["schema"] == "rb-f04-teacher-storage-full-status-component-prior-budget-v1"
+    assert budget["root_preapproved"] is True, "root prior component budget required"
+    assert budget["scope"] == "synthetic_full_status_teacher_recipe_artifact_io_only"
+    assert budget["formal_finance_approved"] is False
+    assert budget["original_n"] == N and budget["threshold_count"] == THRESHOLDS
+    assert budget["blocks"] == BLOCKS
+    assert budget["rss_limit_bytes"] == RSS_CAP
+    assert budget["wall_limit_seconds"] == WALL_CAP
+    assert budget["rss_metric"] == "process_RSS_not_virtual_address_space"
+    assert budget["probe_source_sha256"] == sha(__file__)
+    assert budget["prepared_inputs_sha256"] == sha(PREP)
+    assert budget["source_bindings"] == sources()
+    return budget
+
+
+def child(output, budget_path):
+    initial_wall, initial_cpu = time.perf_counter(), time.process_time()
+    progress = {
+        "scope": "synthetic_full_status_teacher_recipe_artifact_io_only",
+        "financial_worker_performed": False, "RNG_performed": False,
+        "formal_plan_locked": False, "financial_qualification": "unknown",
+        "original_n": N, "threshold_count": THRESHOLDS, "blocks": BLOCKS,
+        "status": "started", "stages": [], "source_before": sources(),
+    }
+
+    def checkpoint(stage, start_wall=None, start_cpu=None, **facts):
+        stop_wall, stop_cpu = time.perf_counter(), time.process_time()
+        row = {"id": stage, "wall_stop": stop_wall, "cpu_stop": stop_cpu, **facts}
+        if start_wall is not None:
+            row.update(wall_start=start_wall, cpu_start=start_cpu,
+                       wall_seconds=stop_wall-start_wall, cpu_seconds=stop_cpu-start_cpu)
+        row["process_peak_rss_bytes"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        progress["stages"].append(row)
+        progress["status"] = stage
+        progress["last_clock"] = {"wall": stop_wall, "cpu": stop_cpu}
+        save(output / "progress.json", progress)
+
+    checkpoint("child_started")
+    try:
+        validate_budget(budget_path)
+        sys.path[:0] = [
+            str(WT / "johnhull/hullkit/src"),
+            str(WT / "deep_hedge_price/src"),
+            str(WT / "johnhull/research/RB-F04/dynamic_hedging"),
+        ]
+        from unittest.mock import patch
+
+        import numpy as np
+        import reference_methods
+        import run_pilot as pilot
+        from hullkit import _dynamic_hedging_conditional as conditional
+
+        def forbidden(*args, **kwargs):
+            raise AssertionError("financial worker/RNG is prohibited in allocation probe")
+
+        # Existing artifact I/O and original axes remain callable.
+        for name in dir(pilot):
+            if name.startswith("run_") and callable(getattr(pilot, name)):
+                setattr(pilot, name, forbidden)
+        for name in (
+            "independent_heston_call", "calendar_call_snapshots", "premium_reference",
+            "quote_positions_oracle",
+        ):
+            if hasattr(reference_methods, name):
+                setattr(reference_methods, name, forbidden)
+        for name in ("conditional_primitives", "teacher_primitives", "cir_implicit_step"):
+            if hasattr(conditional, name):
+                setattr(conditional, name, forbidden)
+        random_names = ("default_rng", "normal", "standard_normal", "random",
+                        "rand", "randn", "uniform", "seed")
+        from contextlib import ExitStack
+        with ExitStack() as stack:
+            for name in random_names:
+                stack.enter_context(patch.object(np.random, name, forbidden))
+            prepared = json.loads(PREP.read_text())
+            parameters = prepared["parameters"]
+            # Original high-grid date0, all65 thresholds. No replacement linspace axis.
+            threshold = pilot.teacher_axes("high", "local")["threshold"][0].copy()
+            assert threshold.shape == (THRESHOLDS,)
+            assert threshold[0] == 0.0 and threshold[-1] == 24.0
+            indices = np.arange(N, dtype=np.float64)
+            coordinate = indices / (N-1)
+            # Deterministic varying coefficients exercise the full stochastic-tail shapes.
+            # They are synthetic, never asserted to be original model sample paths.
+            fixing_delays = np.arange(1, 13, dtype=float) / 12
+            primitive = {
+                "spot": parameters["spot"], "state": parameters["v0"],
+                "model": "local",
+                "memory_count": 0, "total_fixings": 12,
+                "fixing_delays": fixing_delays,
+                "calendar_times": np.arange(769, dtype=float) / 768,
+                "fixing_indices": np.arange(1, 13, dtype=int) * 64,
+                "expiry_delay": 1.0, "rate": parameters["rate"],
+                "dividend_yield": parameters["dividend_yield"],
+                "original_path_count": N, "N": N,
+                "shared_driver_id": "deterministic_synthetic_no_random_driver",
+                "shared_driver_scope": "allocation_only_no_model_path_or_precision",
+                "f_units": "normalized_undiscounted",
+                "b": 10.0 + 0.5 * coordinate, "c": 0.8 + 0.2 * coordinate,
+                "mu": np.full(N, -0.02), "sigma": 0.05 + 0.01 * coordinate,
+                "last_z": -2.0 + 4.0 * coordinate,
+                "aux_logG_prefix": np.zeros(N), "aux_last_loading": 0.05,
+                "control_variance": parameters["v0"],
+                "path_mask": np.ones(N, dtype=bool),
+                "last_left_spot": np.full(N, parameters["spot"]),
+                "last_left_variance": np.full(N, parameters["v0"]),
+                "last_left_coefficient": np.ones(N),
+                "primitive_status": np.full(N, "ready", dtype="U7"),
+                "failure_reasons": np.full(N, "", dtype="U128"),
+                "local_step_status": np.ones((N, 768), dtype=np.uint8),
+                "local_step_status_encoding": "uint8_dictionary",
+                "local_step_status_labels": np.array(["", "ready"]),
+                "control_status": "ready",
+                "aux_first_midpoint": 1 / 1536,
+                "analytic_conditional": False, "deterministic_model": False,
+            }
+            checkpoint("synthetic_inputs_prepared", thresholds=threshold.tolist(),
+                       input_array_payload_bytes=sum(v.nbytes for v in primitive.values()
+                                                     if isinstance(v, np.ndarray)))
+            start_wall, start_cpu = time.perf_counter(), time.process_time()
+            checkpoint("native_labels_starting")
+            labels = conditional.primitive_labels(primitive, threshold, blocks=BLOCKS)
+            assert all(labels[key].shape == (N, THRESHOLDS) for key in DISTINCT_LABEL_KEYS)
+            assert len({id(labels[key]) for key in DISTINCT_LABEL_KEYS}) == 10
+            checkpoint("native_labels_complete", start_wall, start_cpu,
+                       distinct_label_payload_bytes=sum(labels[k].nbytes for k in DISTINCT_LABEL_KEYS),
+                       full_label_array_entry_bytes=sum(v.nbytes for v in labels.values()
+                                                        if isinstance(v, np.ndarray)),
+                       financial_accuracy_claim=False)
+            global_id = "deterministic_synthetic_no_random_driver"
+            labels["shared_driver_id"] = global_id
+            labels["date_index"] = 0
+            payload = {
+                "kind": "teacher",
+                "scope": progress["scope"],
+                "driver": None,
+                "model": "local",
+                "seed": 0,
+                "original_n": N,
+                "path_ids": np.arange(N),
+                "cluster_ids": np.arange(N) // (N // 16),
+                "restart": {
+                    "spot": parameters["spot"], "state": parameters["v0"],
+                    "start_index": 0, "calendar_times": np.arange(769) / 768,
+                    "fixing_indices": primitive["fixing_indices"],
+                },
+                "stream_identity": "synthetic_not_a_financial_stream",
+                "global_driver_id": global_id,
+                "driver_mapping": {
+                    "global_steps": 768, "start_step": 0, "stop_step": 768,
+                    "original_n": N, "aggregation_factor": 1,
+                    "slice_sha256": primitive["shared_driver_id"],
+                },
+                "chunks": [],
+                "date_index": 0,
+                "expenses": [],
+                "financial_qualification": "unknown",
+                "primitives": primitive, "thresholds": threshold, "labels": labels,
+            }
+            raw_directory = output / "full-original-shapes"
+            start_wall, start_cpu = time.perf_counter(), time.process_time()
+            checkpoint("artifact_write_starting")
+            pilot.write_pilot_artifact(raw_directory, payload)
+            checkpoint("artifact_write_complete", start_wall, start_cpu)
+
+            # Independent ZIP/NPY header inspection: no solver and no full reload yet.
+            # Metadata counts payload; ZIP sizes count payload plus each NPY header.
+            chunks = []
+            for directory in [raw_directory, *sorted(raw_directory.glob("pack*"))]:
+                meta = json.loads((directory / "metadata.json").read_text())
+                receipt = json.loads((directory / "receipt.json").read_text())
+                data_bytes = sum(a["nbytes"] for a in meta["arrays"].values())
+                headers, expanded = [], 0
+                with zipfile.ZipFile(directory / "arrays.npz") as archive:
+                    assert len(archive.infolist()) == len(meta["arrays"])
+                    for member in archive.infolist():
+                        key = member.filename.removesuffix(".npy")
+                        with archive.open(member) as stream:
+                            version = np.lib.format.read_magic(stream)
+                            if version == (1, 0):
+                                reader = np.lib.format.read_array_header_1_0
+                            elif version == (2, 0):
+                                reader = np.lib.format.read_array_header_2_0
+                            else:
+                                raise ValueError(f"unsupported NPY header version: {version}")
+                            shape, _fortran_order, dtype = reader(stream)
+                            header_bytes = stream.tell()
+                        expected = meta["arrays"][key]
+                        payload_bytes = int(np.prod(shape, dtype=np.int64)) * dtype.itemsize
+                        assert list(shape) == expected["shape"]
+                        assert dtype.str == expected["dtype"]
+                        assert payload_bytes == expected["nbytes"]
+                        assert member.file_size == header_bytes + payload_bytes
+                        expanded += member.file_size
+                        headers.append({"name": key, "header_bytes": header_bytes,
+                                        "payload_bytes": payload_bytes})
+                assert expanded == receipt["uncompressed_bytes"]
+                assert expanded <= 256 * 1024**2
+                if directory != raw_directory:
+                    assert data_bytes <= 128 * 1024**2
+                chunks.append({"id": directory.name, "array_payload_bytes": data_bytes,
+                               "expanded_bytes_including_NPY_headers": expanded,
+                               "NPZ_bytes": (directory / "arrays.npz").stat().st_size,
+                               "headers": headers})
+            assert sum(c["array_payload_bytes"] for c in chunks) > 90_000_000
+            root_metadata = json.loads((raw_directory / "metadata.json").read_text())
+            assert root_metadata["metadata"]["teacher_storage"]["recipe"] == "primitive_labels-global-driver-date-v1"
+            assert set(root_metadata["metadata"]["teacher_storage"]["samples"]) == set((*DISTINCT_LABEL_KEYS, "f_samples"))
+            assert all(c["NPZ_bytes"] < c["expanded_bytes_including_NPY_headers"]
+                       for c in chunks if c["array_payload_bytes"])
+            save(output / "independent-chunk-bytes.json", {"chunks": chunks})
+            checkpoint("independent_chunk_check_complete",
+                       total_saved_expanded_bytes=sum(c["expanded_bytes_including_NPY_headers"] for c in chunks),
+                       maximum_chunk_expanded_bytes=max(c["expanded_bytes_including_NPY_headers"] for c in chunks),
+                       pack_count=len(chunks)-1)
+
+            # Keep original full labels alive during native restore to observe both sets.
+            start_wall, start_cpu = time.perf_counter(), time.process_time()
+            checkpoint("artifact_read_starting")
+            restored, _ = pilot.read_pilot_artifact(raw_directory)
+            for key in (*DISTINCT_LABEL_KEYS, "f_samples"):
+                actual, expected = restored["labels"][key], labels[key]
+                assert actual.shape == expected.shape == (N, THRESHOLDS)
+                assert actual.dtype == expected.dtype
+                # Numeric identity of synthetic data, not financial accuracy.
+                assert np.allclose(actual, expected, rtol=2e-9, atol=2e-10, equal_nan=True)
+            import run_reference as runner
+            runner._same(payload, restored, "synthetic full original teacher")
+            assert restored["primitives"]["local_step_status"].shape == (N, 768)
+            assert restored["primitives"]["local_step_status"].dtype == np.uint8
+            assert restored["primitives"]["failure_reasons"].dtype == np.dtype("U128")
+            assert restored["primitives"]["primitive_status"].dtype == np.dtype("U7")
+            checkpoint("artifact_read_and_full_labels_check_complete", start_wall, start_cpu,
+                       original_n_retained=N, all_10_distinct_labels_restored=True,
+                       alias_entry_f_samples_restored=True, numerical_precision_claim=False)
+            progress["source_after"] = sources()
+            assert progress["source_after"] == progress["source_before"]
+            assert sources() == json.loads(budget_path.read_text())["source_bindings"]
+            progress["status"] = "allocation_component_complete"
+    except BaseException as error:
+        progress["status"] = "allocation_component_source_or_io_failure"
+        progress["error"] = {"type": type(error).__name__, "reason": str(error),
+                             "traceback": traceback.format_exc()}
+        raise
+    finally:
+        progress["child_interval"] = {
+            "wall_start": initial_wall, "wall_stop": time.perf_counter(),
+            "cpu_start": initial_cpu, "cpu_stop": time.process_time(),
+        }
+        progress["process_peak_rss_bytes"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        progress["source_after"] = sources()
+        save(output / "progress.json", progress)
+
+
+def parent(output, budget_path):
+    # Prior root approval binds actual script and source bytes before child launch.
+    budget = validate_budget(budget_path)
+    output = output.resolve()
+    assert output.parent == D.resolve(), "component evidence must be a direct child of D"
+    assert output.name.startswith("task-5-teacher-storage-full-status-io-observation-")
+    output.mkdir(exist_ok=False)
+    before = sources()
+    start_wall = time.perf_counter()
+    start_cpu = resource.getrusage(resource.RUSAGE_CHILDREN)
+    log = (output / "child.log").open("xb")
+    environment = dict(os.environ)
+    environment.update(OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1")
+    process = subprocess.Popen(
+        [sys.executable, str(Path(__file__).resolve()), "--child",
+         "--budget-file", str(budget_path.resolve()), "--output", str(output)],
+        stdout=log, stderr=subprocess.STDOUT, env=environment,
+    )
+    sampled_peak, boundary = 0, None
+    while process.poll() is None:
+        rss = rss_from_proc(process.pid)
+        sampled_peak = max(sampled_peak, rss or 0)
+        elapsed = time.perf_counter() - start_wall
+        if sampled_peak > RSS_CAP:
+            boundary = "actual_process_RSS"
+        elif elapsed > WALL_CAP:
+            boundary = "actual_enclosing_wall"
+        if boundary:
+            process.kill()  # Preserve all already-written immutable chunks/checkpoints.
+            break
+        time.sleep(0.01)
+    code = process.wait()
+    log.close()
+    stop_wall = time.perf_counter()
+    stop_cpu = resource.getrusage(resource.RUSAGE_CHILDREN)
+    progress_path = output / "progress.json"
+    progress = json.loads(progress_path.read_text()) if progress_path.exists() else None
+    kernel_peak = (progress or {}).get("process_peak_rss_bytes", 0)
+    # Kernel child maximum also catches peaks between /proc samples in this fresh process.
+    rusage_peak = stop_cpu.ru_maxrss * 1024
+    actual_peak = max(sampled_peak, kernel_peak, rusage_peak)
+    if boundary is None and actual_peak > RSS_CAP:
+        boundary = "kernel_peak_process_RSS_detected_after_stage"
+    elapsed = stop_wall - start_wall
+    if boundary is None and elapsed > WALL_CAP:
+        boundary = "actual_enclosing_wall_detected_after_completion"
+    after = sources()
+    full_restore_finished = (
+        isinstance(progress, dict)
+        and progress.get("status") == "allocation_component_complete"
+        and any(stage.get("id") == "artifact_read_and_full_labels_check_complete"
+                for stage in progress.get("stages", []))
+    )
+    complete = code == 0 and not boundary and before == after and full_restore_finished
+    record = {
+        "scope": budget["scope"], "financial_worker_performed": False,
+        "RNG_performed": False, "formal_plan_locked": False,
+        "financial_qualification": "unknown", "original_n": N,
+        "threshold_count": THRESHOLDS, "blocks": BLOCKS,
+        "status": "allocation_component_complete" if complete else "unknown_component_failure",
+        "exit_code": code, "completed_component": complete,
+        "failure_boundary": boundary, "actual_peak_rss_bytes": actual_peak,
+        "sampled_peak_rss_bytes": sampled_peak, "kernel_child_peak_rss_bytes": rusage_peak,
+        "rss_sampling_seconds": 0.01,
+        "rss_cap_is_not_RLIMIT_AS": True,
+        "prior_component_budget": budget,
+        "whole_child_parent_clock": {"wall_start": start_wall, "wall_stop": stop_wall,
+                                    "cpu_start": start_cpu.ru_utime + start_cpu.ru_stime,
+                                    "cpu_stop": stop_cpu.ru_utime + stop_cpu.ru_stime},
+        "wall_seconds": elapsed,
+        "cpu_seconds": (stop_cpu.ru_utime + stop_cpu.ru_stime)
+                       - (start_cpu.ru_utime + start_cpu.ru_stime),
+        "overrun_seconds": max(0.0, elapsed-WALL_CAP),
+        "RSS_overrun_bytes": max(0, actual_peak-RSS_CAP),
+        "includes_children": True, "source_before": before, "source_after": after,
+        "full_original_returned_payload_restore_finished": full_restore_finished,
+        "latest_component_checkpoint": progress,
+        "evidence_preserved_after_cap_or_failure": True,
+        "not_a_formal_MC_teacher_or_model_precision_observation": True,
+    }
+    save(output / "parent-cost-and-decision.json", record)
+    print(json.dumps({k: record[k] for k in ("status", "exit_code", "wall_seconds",
+                                           "cpu_seconds", "actual_peak_rss_bytes")}))
+    return 0 if complete else 1
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--budget-file", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--child", action="store_true")
+    args = parser.parse_args()
+    if args.child:
+        child(args.output, args.budget_file)
+    else:
+        raise SystemExit(parent(args.output, args.budget_file))

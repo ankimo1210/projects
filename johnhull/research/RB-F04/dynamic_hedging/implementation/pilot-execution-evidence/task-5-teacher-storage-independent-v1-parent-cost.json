@@ -1,0 +1,9 @@
+{
+  "exit_code": 0,
+  "wall_seconds": 3.3781538770017505,
+  "child_cpu_seconds": 3.19589,
+  "scope": "independent_saved_small_teacher_transport_only",
+  "numerical_financial_run": false,
+  "RNG": false,
+  "unmeasured_preparation_and_report": "unknown"
+}

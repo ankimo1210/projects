@@ -1,0 +1,34 @@
+{
+  "commands": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py"
+      ],
+      "exit_code": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py"
+      ],
+      "exit_code": 0,
+      "stdout": "5 files already formatted\n",
+      "stderr": ""
+    }
+  ],
+  "wall_seconds": 0.01946427000075346
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "rb-f04-teacher-storage-independent-artifact-manifest-v1",
+  "files": {
+    "task-5-teacher-storage-independent-v1-probe.log": "edf8921e7ed86c53f62816c032751f936dc1d0055aa1d6de72dc3da605d4c4fb",
+    "task-5-teacher-storage-independent-v1-probe.py": "86c708efc6c16bfbbf9cba8fda2c808a358c7f2d0dd1f769787cedfa4f5185d3",
+    "task-5-teacher-storage-independent-v1-results.json": "2c965090ad50f715e06d64dfb2583a07745675c191a1fb187353e72ef30a5f7e",
+    "task-5-teacher-storage-independent-v1-parent-cost.json": "454d64f3df93ede0ff2ef41499726db4d08ee5b7dc13d3df76af3a810a71c5b3",
+    "task-5-teacher-storage-independent-v1-decision.json": "52d35429799f24e9da5de7cd31c368c226c9b6acfb04870496e26e04e576d0f2",
+    "task-5-teacher-storage-independent-v1-review.md": "dc94aec8ebbcfbf2a8a2a3a72266b330bfda0882db3de597280e4808dcb29c74",
+    "task-5-teacher-storage-full-status-io-independent-v1-parent-cost.json": "ad0cc0821c08eb1bacef5af88074ba79b84088d6a1f76b191b1b47238c63e74e",
+    "task-5-teacher-storage-full-status-io-independent-v1-decision.json": "d2e78784bfc08fd85c2e93cb248a2483012bf54f10d5433f035f94379ef32c5e",
+    "task-5-teacher-storage-full-status-io-independent-v1-probe.log": "c675e74341817cfbea3b78c36353886ed4897f336db6e00607912241be0f9f5c",
+    "task-5-teacher-storage-full-status-io-independent-v1-review.md": "28dc739cd3f63916e0dba47d0ba746ae1bf3955d18ed6bbb972aa3bfe2d97c79",
+    "task-5-teacher-storage-full-status-io-independent-v1-results.json": "6a882a0ee772ed34f1e89adf78619f39f6bc7c27c0bea7f2bb617987241cc745",
+    "task-5-teacher-storage-full-status-io-independent-v1-probe.py": "0eed5bc3138272e3e3b316b8e99d1fb02a28c14f89bcca1e471b105aa7a5597a"
+  },
+  "fixed_source_files": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py": "af5e80674988c1b0b2816c8ad3a2a4873f62817c2a83c995cd7c60574c17cbbf",
+    "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "bfd5b81fd8d356c387a8e313b0c0c8a5b538a26166ad4854572913d4f1608184",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc"
+  },
+  "source_snapshot": "task-5-teacher-storage-independent-v1-snapshot",
+  "finance_qualification": "unknown",
+  "formal_approved": false,
+  "not_a_signature_based_financial_acceptance": true
+}

@@ -1,0 +1,677 @@
+{
+  "scope": "fixed_saved_teacher_codec_transport_only",
+  "source_edits": false,
+  "RNG_calls": 0,
+  "financial_workers": 0,
+  "cases": [
+    {
+      "case": "old_literal_legacy_binding",
+      "status": "PASS"
+    },
+    {
+      "case": "saved_0_physical_binding",
+      "status": "PASS"
+    },
+    {
+      "case": "saved_0_all_keys_masks_dtypes_samples_stats",
+      "status": "PASS"
+    },
+    {
+      "case": "saved_1_physical_binding",
+      "status": "PASS"
+    },
+    {
+      "case": "saved_1_all_keys_masks_dtypes_samples_stats",
+      "status": "PASS"
+    },
+    {
+      "case": "saved_2_physical_binding",
+      "status": "PASS"
+    },
+    {
+      "case": "saved_2_all_keys_masks_dtypes_samples_stats",
+      "status": "PASS"
+    },
+    {
+      "case": "saved_3_physical_binding",
+      "status": "PASS"
+    },
+    {
+      "case": "saved_3_all_keys_masks_dtypes_samples_stats",
+      "status": "PASS"
+    },
+    {
+      "case": "saved_4_physical_binding",
+      "status": "PASS"
+    },
+    {
+      "case": "saved_4_all_keys_masks_dtypes_samples_stats",
+      "status": "PASS"
+    },
+    {
+      "case": "writer_raw_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.raw_samples: saved value mismatch"
+    },
+    {
+      "case": "writer_conditioned_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.conditioned_samples: saved value mismatch"
+    },
+    {
+      "case": "writer_cv_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.cv_samples: saved value mismatch"
+    },
+    {
+      "case": "writer_f_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.f_samples: saved value mismatch"
+    },
+    {
+      "case": "writer_f_x_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.f_x_samples: saved value mismatch"
+    },
+    {
+      "case": "writer_raw_x_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.raw_x_samples: saved value mismatch"
+    },
+    {
+      "case": "writer_conditioned_x_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.conditioned_x_samples: saved value mismatch"
+    },
+    {
+      "case": "writer_unreplaced_cv_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.unreplaced_cv_samples: saved value mismatch"
+    },
+    {
+      "case": "writer_unreplaced_cv_x_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.unreplaced_cv_x_samples: saved value mismatch"
+    },
+    {
+      "case": "writer_aux_raw_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.aux_raw_samples: saved value mismatch"
+    },
+    {
+      "case": "writer_aux_conditioned_samples",
+      "status": "REJECTED",
+      "reason": "teacher storage writer original labels.aux_conditioned_samples: saved value mismatch"
+    },
+    {
+      "case": "summary_aux_mean",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.aux_mean: saved value mismatch"
+    },
+    {
+      "case": "summary_aux_mean_x",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.aux_mean_x: saved value mismatch"
+    },
+    {
+      "case": "summary_block_covariance",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.block_covariance: saved value mismatch"
+    },
+    {
+      "case": "summary_block_means",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.block_means: saved value mismatch"
+    },
+    {
+      "case": "summary_calendar_times",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.calendar_times: saved value mismatch"
+    },
+    {
+      "case": "summary_component_means",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.component_means: saved value mismatch"
+    },
+    {
+      "case": "summary_component_se",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.component_se: saved value mismatch"
+    },
+    {
+      "case": "summary_derivative_block_covariance",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.derivative_block_covariance: saved value mismatch"
+    },
+    {
+      "case": "summary_derivative_block_means",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.derivative_block_means: saved value mismatch"
+    },
+    {
+      "case": "summary_derivative_component_means",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.derivative_component_means: saved value mismatch"
+    },
+    {
+      "case": "summary_derivative_component_se",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.derivative_component_se: saved value mismatch"
+    },
+    {
+      "case": "summary_f",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.f: saved value mismatch"
+    },
+    {
+      "case": "summary_f_se",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.f_se: saved value mismatch"
+    },
+    {
+      "case": "summary_f_x",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.f_x: saved value mismatch"
+    },
+    {
+      "case": "summary_f_x_block_means",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.f_x_block_means: saved value mismatch"
+    },
+    {
+      "case": "summary_f_x_se",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.f_x_se: saved value mismatch"
+    },
+    {
+      "case": "summary_fixing_delays",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.fixing_delays: saved value mismatch"
+    },
+    {
+      "case": "summary_joint_block_covariance",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.joint_block_covariance: saved value mismatch"
+    },
+    {
+      "case": "summary_joint_block_means",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.joint_block_means: saved value mismatch"
+    },
+    {
+      "case": "summary_status",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.status: saved value mismatch"
+    },
+    {
+      "case": "summary_status_reasons",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.status_reasons: saved value mismatch"
+    },
+    {
+      "case": "summary_thresholds",
+      "status": "REJECTED",
+      "reason": "teacher storage reader original summary.thresholds: saved value mismatch"
+    },
+    {
+      "case": "unknown_recipe",
+      "status": "REJECTED",
+      "reason": "teacher storage: unknown recipe/schema"
+    },
+    {
+      "case": "unknown_schema",
+      "status": "REJECTED",
+      "reason": "teacher storage: unknown recipe/schema"
+    },
+    {
+      "case": "unknown_source",
+      "status": "REJECTED",
+      "reason": "teacher storage: recipe source binding differs"
+    },
+    {
+      "case": "source_extra",
+      "status": "REJECTED",
+      "reason": "teacher storage: recipe source binding differs"
+    },
+    {
+      "case": "missing_sample",
+      "status": "REJECTED",
+      "reason": "teacher storage: sample manifest shape/dtype/coverage differs"
+    },
+    {
+      "case": "extra_sample",
+      "status": "REJECTED",
+      "reason": "teacher storage: sample manifest shape/dtype/coverage differs"
+    },
+    {
+      "case": "sample_shape",
+      "status": "REJECTED",
+      "reason": "teacher storage: sample manifest shape/dtype/coverage differs"
+    },
+    {
+      "case": "sample_dtype",
+      "status": "REJECTED",
+      "reason": "teacher storage: sample manifest shape/dtype/coverage differs"
+    },
+    {
+      "case": "primitive_float32",
+      "status": "REJECTED",
+      "reason": "teacher storage: b primitive shape/dtype differs"
+    },
+    {
+      "case": "primitive_missing",
+      "status": "REJECTED",
+      "reason": "teacher storage: primitive fields missing"
+    },
+    {
+      "case": "original_n",
+      "status": "REJECTED",
+      "reason": "teacher storage: primitive original N differs"
+    },
+    {
+      "case": "path_order",
+      "status": "REJECTED",
+      "reason": "teacher storage: original path order differs"
+    },
+    {
+      "case": "cluster_order",
+      "status": "REJECTED",
+      "reason": "teacher storage: original 16-block cluster order differs"
+    },
+    {
+      "case": "threshold_order",
+      "status": "REJECTED",
+      "reason": "teacher storage: original threshold shape/dtype/order differs"
+    },
+    {
+      "case": "extra_descriptor",
+      "status": "REJECTED",
+      "reason": "teacher storage: recipe descriptor keys differ"
+    },
+    {
+      "case": "labels_extra",
+      "status": "REJECTED",
+      "reason": "teacher storage: reader original summary label keys differ"
+    },
+    {
+      "case": "stepstatus_shape",
+      "status": "REJECTED",
+      "reason": "teacher storage: full original local step status differs"
+    },
+    {
+      "case": "unknown_status_encoding",
+      "status": "REJECTED",
+      "reason": "teacher storage: original step status encoding differs"
+    },
+    {
+      "case": "invalid_step_dictionary",
+      "status": "REJECTED",
+      "reason": "teacher storage: step status dictionary differs"
+    },
+    {
+      "case": "approx_not_full_sample_sha",
+      "status": "PASS"
+    },
+    {
+      "case": "producer_replacement",
+      "status": "REJECTED",
+      "reason": "teacher storage: returned physical origin binding differs"
+    },
+    {
+      "case": "unknown_binding_kind",
+      "status": "REJECTED",
+      "reason": "unknown teacher node binding kind"
+    },
+    {
+      "case": "node_binding_root_artifact_sha256",
+      "status": "REJECTED",
+      "reason": "teacher raw node binding mismatch"
+    },
+    {
+      "case": "node_binding_artifact_sha256",
+      "status": "REJECTED",
+      "reason": "teacher raw node binding mismatch"
+    },
+    {
+      "case": "node_binding_packs",
+      "status": "REJECTED",
+      "reason": "teacher raw node binding mismatch"
+    },
+    {
+      "case": "pack_byte_tamper_metadata.json",
+      "status": "REJECTED",
+      "reason": "artifact byte provenance mismatch"
+    },
+    {
+      "case": "pack_byte_tamper_arrays.npz",
+      "status": "REJECTED",
+      "reason": "artifact byte provenance mismatch"
+    },
+    {
+      "case": "pack_byte_tamper_receipt.json",
+      "status": "REJECTED",
+      "reason": "Expecting ',' delimiter: line 1 column 316 (char 315)"
+    },
+    {
+      "case": "literal_failed_at_declared_cap",
+      "status": "PASS"
+    },
+    {
+      "case": "literal_unclosed_source_or_solver_defect",
+      "status": "PASS"
+    },
+    {
+      "case": "nested_unchanged_literal",
+      "status": "PASS"
+    }
+  ],
+  "formal_approved": false,
+  "financial_qualification": "unknown",
+  "observations": [
+    {
+      "fixture": 0,
+      "model": "Heston",
+      "all_n": 32,
+      "all_thresholds": [
+        -0.25,
+        0.0,
+        3.0,
+        6.0,
+        8.0,
+        30.0
+      ],
+      "label_status": [
+        "not_required_linear_claim",
+        "not_required_linear_claim",
+        "unknown_underresolved",
+        "ready",
+        "unknown_underresolved",
+        "unknown_underresolved"
+      ],
+      "path_mask_false": 0,
+      "full_step_shape": [
+        32,
+        12
+      ],
+      "failure_dtype": "<U128",
+      "summary_keys": 42,
+      "restored_11_keys": 11,
+      "chunks": [
+        {
+          "part": "reencoded0",
+          "payload_bytes": 0,
+          "expanded_bytes": 0,
+          "npz_bytes": 22
+        },
+        {
+          "part": "pack000000",
+          "payload_bytes": 50120,
+          "expanded_bytes": 56008,
+          "npz_bytes": 18396
+        }
+      ]
+    },
+    {
+      "fixture": 1,
+      "model": "local",
+      "all_n": 32,
+      "all_thresholds": [
+        -0.25,
+        0.0,
+        3.0,
+        6.0,
+        8.0,
+        30.0
+      ],
+      "label_status": [
+        "not_required_linear_claim",
+        "not_required_linear_claim",
+        "unknown_underresolved",
+        "ready",
+        "unknown_underresolved",
+        "unknown_underresolved"
+      ],
+      "path_mask_false": 0,
+      "full_step_shape": [
+        32,
+        12
+      ],
+      "failure_dtype": "<U128",
+      "summary_keys": 42,
+      "restored_11_keys": 11,
+      "chunks": [
+        {
+          "part": "reencoded1",
+          "payload_bytes": 0,
+          "expanded_bytes": 0,
+          "npz_bytes": 22
+        },
+        {
+          "part": "pack000000",
+          "payload_bytes": 50120,
+          "expanded_bytes": 56008,
+          "npz_bytes": 17391
+        }
+      ]
+    },
+    {
+      "fixture": 2,
+      "model": "Heston",
+      "all_n": 32,
+      "all_thresholds": [
+        -0.25,
+        0.0,
+        3.0,
+        6.0,
+        8.0,
+        30.0
+      ],
+      "label_status": [
+        "unknown_invalid_primitives",
+        "unknown_invalid_primitives",
+        "unknown_invalid_primitives",
+        "unknown_invalid_primitives",
+        "unknown_invalid_primitives",
+        "unknown_invalid_primitives"
+      ],
+      "path_mask_false": 1,
+      "full_step_shape": [
+        32,
+        12
+      ],
+      "failure_dtype": "<U128",
+      "summary_keys": 42,
+      "restored_11_keys": 11,
+      "chunks": [
+        {
+          "part": "reencoded2",
+          "payload_bytes": 0,
+          "expanded_bytes": 0,
+          "npz_bytes": 22
+        },
+        {
+          "part": "pack000000",
+          "payload_bytes": 50120,
+          "expanded_bytes": 56008,
+          "npz_bytes": 15873
+        }
+      ]
+    },
+    {
+      "fixture": 3,
+      "model": "local",
+      "all_n": 32,
+      "all_thresholds": [
+        -0.25,
+        0.0,
+        3.0,
+        6.0,
+        8.0,
+        30.0
+      ],
+      "label_status": [
+        "not_required_linear_claim",
+        "not_required_linear_claim",
+        "ready",
+        "unknown_atom",
+        "ready",
+        "ready"
+      ],
+      "path_mask_false": 0,
+      "full_step_shape": [
+        32,
+        12
+      ],
+      "failure_dtype": "<U128",
+      "summary_keys": 42,
+      "restored_11_keys": 11,
+      "chunks": [
+        {
+          "part": "reencoded3",
+          "payload_bytes": 0,
+          "expanded_bytes": 0,
+          "npz_bytes": 22
+        },
+        {
+          "part": "pack000000",
+          "payload_bytes": 50120,
+          "expanded_bytes": 56008,
+          "npz_bytes": 10503
+        }
+      ]
+    },
+    {
+      "fixture": 4,
+      "model": "Heston",
+      "all_n": 32,
+      "all_thresholds": [
+        -0.25,
+        0.0,
+        3.0,
+        6.0,
+        8.0,
+        30.0
+      ],
+      "label_status": [
+        "not_required_linear_claim",
+        "not_required_linear_claim",
+        "unknown_underresolved",
+        "unknown_underresolved",
+        "unknown_underresolved",
+        "unknown_underresolved"
+      ],
+      "path_mask_false": 0,
+      "full_step_shape": [
+        32,
+        12
+      ],
+      "failure_dtype": "<U128",
+      "summary_keys": 42,
+      "restored_11_keys": 11,
+      "chunks": [
+        {
+          "part": "reencoded4",
+          "payload_bytes": 0,
+          "expanded_bytes": 0,
+          "npz_bytes": 22
+        },
+        {
+          "part": "pack000000",
+          "payload_bytes": 50120,
+          "expanded_bytes": 56008,
+          "npz_bytes": 11860
+        }
+      ]
+    }
+  ],
+  "closure": {
+    "files": 81,
+    "dynamic_imports": [],
+    "source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0"
+  },
+  "ast_delta": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": {
+      "added": [],
+      "removed": [],
+      "changed": [
+        "write_artifact"
+      ]
+    },
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py": {
+      "added": [
+        "test_actual_physical_pack_byte_tamper_is_rejected",
+        "test_node_physical_origin_cannot_bind_a_different_returned_producer",
+        "test_old_completed_literal_teacher_remains_readable_with_full_keys_and_dtypes",
+        "test_recipe_parts_extra_directory_is_not_an_ignored_sidecar",
+        "test_unknown_node_binding_kind_never_falls_back_to_literal"
+      ],
+      "removed": [],
+      "changed": [
+        "ConstantSourceField",
+        "native_teacher",
+        "test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all"
+      ]
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py": {
+      "added": [
+        "_labels",
+        "_origin",
+        "_require",
+        "_same",
+        "_validate_root",
+        "check_returned_origin",
+        "physical_artifact_binding",
+        "prepare_teacher",
+        "restore_teacher",
+        "source_bindings"
+      ],
+      "removed": [],
+      "changed": []
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+      "added": [],
+      "removed": [],
+      "changed": [
+        "check_teacher_grid_record"
+      ]
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+      "added": [
+        "_check_teacher_node_binding",
+        "_teacher_node_binding"
+      ],
+      "removed": [],
+      "changed": [
+        "read_pilot_artifact",
+        "run_teacher_grid_job",
+        "write_pilot_artifact"
+      ]
+    }
+  },
+  "source_after": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py": "af5e80674988c1b0b2816c8ad3a2a4873f62817c2a83c995cd7c60574c17cbbf",
+    "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "bfd5b81fd8d356c387a8e313b0c0c8a5b538a26166ad4854572913d4f1608184",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc"
+  },
+  "source_before": {
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "15b562f403ba013acb5471e43abeab77f2e58b90fa3d627b4dc8b8ee290cf565",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py": "af5e80674988c1b0b2816c8ad3a2a4873f62817c2a83c995cd7c60574c17cbbf",
+    "johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py": "6a1ea6e53ae46d048badf39974a25df250065c46e0ddb2f86f85661623c58cac",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "bfd5b81fd8d356c387a8e313b0c0c8a5b538a26166ad4854572913d4f1608184",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc"
+  },
+  "fixture_files_stable": 36,
+  "decision": "approve_bounded_fixed_codec_transport_source_only",
+  "counts": {
+    "PASS": 15,
+    "REJECTED": 60
+  },
+  "cost": {
+    "inner_wall_seconds": 2.8707281940005487,
+    "inner_cpu_seconds": 2.715803808,
+    "process_peak_rss_bytes": 635486208,
+    "report_save_cost": "unknown"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "scope": "static_unapproved_io_candidate_preflight_only",
+  "decision": "unapproved_candidate_rejected_checkpoint_gate_present",
+  "probe_sha256": "e8389a5f49d7246e5dc4469e443a4e0d98c1e03fdd0b1e2de8684700c4d3def1",
+  "candidate_sha256": "ead3451a4ba8601ebabf0691bc6eb429b331fe4b6d5f7586a39d32a703fd7c49",
+  "reject_reason": "root prior component budget required",
+  "source_completion_assignments": [
+    "full_restore_finished = isinstance(progress, dict) and progress.get('status') == 'allocation_component_complete' and any((stage.get('id') == 'artifact_read_and_full_labels_check_complete' for stage in progress.get('stages', [])))",
+    "complete = code == 0 and (not boundary) and (before == after) and full_restore_finished"
+  ],
+  "completion_counterexamples": [
+    {
+      "case": "missing_checkpoint",
+      "completed": false
+    },
+    {
+      "case": "missing_stage",
+      "completed": false
+    },
+    {
+      "case": "incomplete_status",
+      "completed": false
+    },
+    {
+      "case": "cap_complete",
+      "completed": false
+    },
+    {
+      "case": "exit_failure",
+      "completed": false
+    },
+    {
+      "case": "source_changed",
+      "completed": false
+    },
+    {
+      "case": "complete_fixture",
+      "completed": true
+    }
+  ],
+  "source_files_imported": 0,
+  "RNG_calls": 0,
+  "financial_workers": 0,
+  "component_executed": false,
+  "wall_seconds": 0.0033509900022181682,
+  "financial_qualification": "unknown",
+  "formal_approved": false,
+  "original_reviewer_assertion_failure_preserved": "task-5-teacher-storage-full-status-io-independent-preflight-v2-attempt-failure.json"
+}

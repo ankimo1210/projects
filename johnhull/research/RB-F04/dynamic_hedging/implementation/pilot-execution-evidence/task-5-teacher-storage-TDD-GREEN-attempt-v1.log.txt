@@ -1,0 +1,17 @@
+...F...................................                                  [100%]
+=================================== FAILURES ===================================
+_ test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[Heston-atom] _
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:122: in test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all
+    raw = native_teacher(model, variant)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py:55: in native_teacher
+    parameters = HestonParameters(100, 0, 0, 0, 2, 0, 0, 0)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<string>:11: in __init__
+    ???
+johnhull/hullkit/src/hullkit/_heston_local_surface.py:36: in __post_init__
+    raise ValueError("require spot,kappa,theta>0 and v0,xi>=0")
+E   ValueError: require spot,kappa,theta>0 and v0,xi>=0
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py::test_native_teacher_physically_omits_only_11_derived_fields_and_rebuilds_all[Heston-atom]
+1 failed, 38 passed in 2.17s

@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_storage.py",
+    "--tb=short"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 2.9411733650013048,
+  "child_cpu_seconds": 2.9176930000000003,
+  "finance": "unknown"
+}
