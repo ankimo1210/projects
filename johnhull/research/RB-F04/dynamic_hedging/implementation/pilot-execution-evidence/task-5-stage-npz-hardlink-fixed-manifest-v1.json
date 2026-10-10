@@ -1,0 +1,79 @@
+{
+  "actual_native_reads_or_writes": 0,
+  "files": [
+    {
+      "bytes": 27284,
+      "path": "task-5-stage-npz-hardlink-v1.py",
+      "sha256": "934f5337c45c6d0e9243477476effdd20155a44cfcf0127401a899f556b2587b"
+    },
+    {
+      "bytes": 10371,
+      "path": "task-5-stage-npz-hardlink-selftest-v1.py",
+      "sha256": "a0c03454cc736119294bc7a2cbeb4babbb61ad5989df69c61668734dc8b43123"
+    },
+    {
+      "bytes": 4275,
+      "path": "task-5-stage-npz-hardlink-report-v1.md",
+      "sha256": "addd028af1bf04797c22d46d608dd72cd1f2bd4de3a8095095a22fcca952f859"
+    },
+    {
+      "bytes": 663,
+      "path": "task-5-stage-npz-hardlink-verification-v1.json",
+      "sha256": "6d04c93a72165db1d50d20d2403cd4f4e215be4b8719b4cba1320435bf2332d5"
+    },
+    {
+      "bytes": 7367,
+      "path": "task-5-stage-npz-hardlink-RED-v1.log",
+      "sha256": "d23c989dde75b12ffcd7d4b3e63d32c12f3966ec49b3c59dc22e90ffd00d80d5"
+    },
+    {
+      "bytes": 159,
+      "path": "task-5-stage-npz-hardlink-RED-cost-v1.json",
+      "sha256": "c6ec8ae379cf91c5c74550d8a622f886114bbbeddf8b6da90b6f5eab385f0b14"
+    },
+    {
+      "bytes": 3774,
+      "path": "task-5-stage-npz-hardlink-GREEN-attempt-v1.log",
+      "sha256": "22f48fcb300004e0ff1b67ad456c74da1d54f225c2fe2c9f87d2e88d5a3ed987"
+    },
+    {
+      "bytes": 150,
+      "path": "task-5-stage-npz-hardlink-GREEN-attempt-cost-v1.json",
+      "sha256": "534f94f56de2ddefdba704e0251460882d4b53de6a782c3ef91ffcbc7b7110ec"
+    },
+    {
+      "bytes": 1703,
+      "path": "task-5-stage-npz-hardlink-GREEN-v2.log",
+      "sha256": "f4ebb4e481fbfb04e65f149494d5dfaf89831bd9a4fefd3a6935e57c0204873b"
+    },
+    {
+      "bytes": 150,
+      "path": "task-5-stage-npz-hardlink-GREEN-cost-v2.json",
+      "sha256": "f66485c0638efd2d34c26557a2b3ff6f7d175c94e84599b1cbb311225dc5be5a"
+    },
+    {
+      "bytes": 1703,
+      "path": "task-5-stage-npz-hardlink-GREEN-final-v1.log",
+      "sha256": "ed26e4c5f001aa49f4ab004341a78886b1900fe15bc989adaa3401d2a4f4e878"
+    },
+    {
+      "bytes": 3361,
+      "path": "task-5-stage-npz-hardlink-ruff-RED-v1.log",
+      "sha256": "abd0ef9fd0aee4b2dd025d430d7188070edaa9caaac2c28b1f5c8e4c90e255f0"
+    },
+    {
+      "bytes": 19,
+      "path": "task-5-stage-npz-hardlink-ruff-GREEN-v1.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "bytes": 424,
+      "path": "task-5-stage-npz-hardlink-ruff-format-results-v1.json",
+      "sha256": "a5df8ca3cb9b1cdebcc40355810277d6670f0ee0d13ef10230b6e4026cc0ab56"
+    }
+  ],
+  "financial_qualification": "unknown",
+  "production_source_edits": 0,
+  "root_real_execution_authorized_by_this_preparation": false,
+  "scope": "D-only immutable preparation, source-free stage leaf byte transport"
+}

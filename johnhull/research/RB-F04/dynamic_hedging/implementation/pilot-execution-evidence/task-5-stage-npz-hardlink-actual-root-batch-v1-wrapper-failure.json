@@ -1,0 +1,18 @@
+{
+  "schema": "rb-f04-root-storage-wrapper-attempt-failure-v1",
+  "session_id": 58804,
+  "exit_code": 1,
+  "original_administrative_stop": "root_d_closed_npz_v1.AdministrativeLimitError: max_read_bytes",
+  "wrapper_failure": "AttributeError: module 'root_d_closed_npz_v1' has no attribute 'AdministrativeLimit'. Did you mean: 'AdministrativeLimitError'?",
+  "explanation": "root wrapper used pre-format exception name; final helper Ruff-renamed it to AdministrativeLimitError. The actual storage journal was closed in finally; existing success entries are preserved. Financial source/process unaffected.",
+  "journal_sha256": "a348966da4f6ba2518e64d559a4d6f7986a03a4f0d6829285ab76b2ae9bf2ce9",
+  "successful_link_entries": 648,
+  "original_journal_unmodified": true,
+  "actual_invocation_limits": {
+    "max_read_bytes": 193273528320,
+    "max_links": 1000,
+    "max_seconds": 120
+  },
+  "whole_phase_accepted": false,
+  "financial_qualification": "unknown"
+}

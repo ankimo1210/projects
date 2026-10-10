@@ -1,0 +1,86 @@
+test_already_shared_inode_skips_and_detach_restores_independence (__main__.SyntheticDedupTests.test_already_shared_inode_skips_and_detach_restores_independence) ... FAIL
+test_different_actual_bytes_even_self_consistent_receipt_not_shared (__main__.SyntheticDedupTests.test_different_actual_bytes_even_self_consistent_receipt_not_shared) ... FAIL
+test_exact_duplicate_link_and_receipt_byte_preservation (__main__.SyntheticDedupTests.test_exact_duplicate_link_and_receipt_byte_preservation) ... FAIL
+test_existing_external_hardlink_allocation_not_overclaimed (__main__.SyntheticDedupTests.test_existing_external_hardlink_allocation_not_overclaimed) ... FAIL
+test_forged_equal_receipt_digest_rejected (__main__.SyntheticDedupTests.test_forged_equal_receipt_digest_rejected) ... FAIL
+test_incomplete_leaf_pack_and_root_teacher_arrays_excluded (__main__.SyntheticDedupTests.test_incomplete_leaf_pack_and_root_teacher_arrays_excluded) ... FAIL
+test_read_limit_and_dry_run_keep_original_inode (__main__.SyntheticDedupTests.test_read_limit_and_dry_run_keep_original_inode) ... FAIL
+test_symlink_and_permissions_mismatch_rejected (__main__.SyntheticDedupTests.test_symlink_and_permissions_mismatch_rejected) ... FAIL
+test_symlink_staging_or_scope_escape_rejected (__main__.SyntheticDedupTests.test_symlink_staging_or_scope_escape_rejected) ... FAIL
+
+======================================================================
+FAIL: test_already_shared_inode_skips_and_detach_restores_independence (__main__.SyntheticDedupTests.test_already_shared_inode_skips_and_detach_restores_independence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 63, in setUp
+    self.assertIsNotNone(self.tool, "D-only hardlink implementation is absent")
+AssertionError: unexpectedly None : D-only hardlink implementation is absent
+
+======================================================================
+FAIL: test_different_actual_bytes_even_self_consistent_receipt_not_shared (__main__.SyntheticDedupTests.test_different_actual_bytes_even_self_consistent_receipt_not_shared)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 63, in setUp
+    self.assertIsNotNone(self.tool, "D-only hardlink implementation is absent")
+AssertionError: unexpectedly None : D-only hardlink implementation is absent
+
+======================================================================
+FAIL: test_exact_duplicate_link_and_receipt_byte_preservation (__main__.SyntheticDedupTests.test_exact_duplicate_link_and_receipt_byte_preservation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 63, in setUp
+    self.assertIsNotNone(self.tool, "D-only hardlink implementation is absent")
+AssertionError: unexpectedly None : D-only hardlink implementation is absent
+
+======================================================================
+FAIL: test_existing_external_hardlink_allocation_not_overclaimed (__main__.SyntheticDedupTests.test_existing_external_hardlink_allocation_not_overclaimed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 63, in setUp
+    self.assertIsNotNone(self.tool, "D-only hardlink implementation is absent")
+AssertionError: unexpectedly None : D-only hardlink implementation is absent
+
+======================================================================
+FAIL: test_forged_equal_receipt_digest_rejected (__main__.SyntheticDedupTests.test_forged_equal_receipt_digest_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 63, in setUp
+    self.assertIsNotNone(self.tool, "D-only hardlink implementation is absent")
+AssertionError: unexpectedly None : D-only hardlink implementation is absent
+
+======================================================================
+FAIL: test_incomplete_leaf_pack_and_root_teacher_arrays_excluded (__main__.SyntheticDedupTests.test_incomplete_leaf_pack_and_root_teacher_arrays_excluded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 63, in setUp
+    self.assertIsNotNone(self.tool, "D-only hardlink implementation is absent")
+AssertionError: unexpectedly None : D-only hardlink implementation is absent
+
+======================================================================
+FAIL: test_read_limit_and_dry_run_keep_original_inode (__main__.SyntheticDedupTests.test_read_limit_and_dry_run_keep_original_inode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 63, in setUp
+    self.assertIsNotNone(self.tool, "D-only hardlink implementation is absent")
+AssertionError: unexpectedly None : D-only hardlink implementation is absent
+
+======================================================================
+FAIL: test_symlink_and_permissions_mismatch_rejected (__main__.SyntheticDedupTests.test_symlink_and_permissions_mismatch_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 63, in setUp
+    self.assertIsNotNone(self.tool, "D-only hardlink implementation is absent")
+AssertionError: unexpectedly None : D-only hardlink implementation is absent
+
+======================================================================
+FAIL: test_symlink_staging_or_scope_escape_rejected (__main__.SyntheticDedupTests.test_symlink_staging_or_scope_escape_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py", line 63, in setUp
+    self.assertIsNotNone(self.tool, "D-only hardlink implementation is absent")
+AssertionError: unexpectedly None : D-only hardlink implementation is absent
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.001s
+
+FAILED (failures=9)

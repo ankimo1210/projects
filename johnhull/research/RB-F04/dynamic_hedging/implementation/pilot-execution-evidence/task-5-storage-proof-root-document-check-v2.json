@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "archive_entries": 985,
+  "scoped_docs": 4,
+  "local_file_references": 274,
+  "unique_targets": 213,
+  "frozen_runtime_source_files": 81,
+  "runtime_source_changed": false,
+  "helper_v2_root_tests": 12,
+  "helper_v2_independent_boundaries": 3,
+  "new_carriers": [
+    "task-5-stage-npz-hardlink-v2-source.diff.carrier.json"
+  ],
+  "full_three_suites_run": false,
+  "wall_seconds": 0.012752406997606158
+}

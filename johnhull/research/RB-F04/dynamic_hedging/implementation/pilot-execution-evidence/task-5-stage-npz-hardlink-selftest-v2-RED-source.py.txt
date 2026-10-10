@@ -1,0 +1,277 @@
+"""D-only synthetic byte transport tests; no financial/native/source imports."""
+
+import hashlib
+import importlib.util
+import io
+import json
+import os
+import struct
+import tempfile
+import unittest
+import zipfile
+from pathlib import Path
+from unittest.mock import patch
+
+D = Path(__file__).resolve().parent
+TOOL = D / "task-5-stage-npz-hardlink-v1.py"
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
+def npz(payload=1.0):
+    header = b"{'descr': '<f8', 'fortran_order': False, 'shape': (1,), }"
+    header += b" " * ((16 - ((10 + len(header) + 1) % 16)) % 16) + b"\n"
+    member = (
+        b"\x93NUMPY\x01\x00" + struct.pack("<H", len(header)) + header + struct.pack("<d", payload)
+    )
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w") as archive:
+        info = zipfile.ZipInfo("x.npy", (2020, 1, 1, 0, 0, 0))
+        info.compress_type = zipfile.ZIP_DEFLATED
+        archive.writestr(info, member)
+    return buffer.getvalue(), len(member)
+
+
+def pack(root, stage, name, payload=1.0, closed=True):
+    directory = root / "jobs" / stage / name
+    directory.mkdir(parents=True)
+    metadata = canonical({"scope": "synthetic_only", "label": name})
+    arrays, expanded = npz(payload)
+    (directory / "metadata.json").write_bytes(metadata)
+    (directory / "arrays.npz").write_bytes(arrays)
+    receipt = {
+        "schema": "rb-f04-array-receipt-v1",
+        "metadata_sha256": hashlib.sha256(metadata).hexdigest(),
+        "arrays_sha256": hashlib.sha256(arrays).hexdigest(),
+        "uncompressed_bytes": expanded,
+    }
+    receipt["artifact_sha256"] = hashlib.sha256(canonical(receipt)).hexdigest()
+    if closed:
+        (directory / "receipt.json").write_bytes(canonical(receipt))
+    return directory / "arrays.npz"
+
+
+class SyntheticDedupTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        if not TOOL.exists():
+            cls.tool = None
+            return
+        spec = importlib.util.spec_from_file_location("d_only_npz_tool", TOOL)
+        cls.tool = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.tool)
+
+    def setUp(self):
+        self.assertIsNotNone(self.tool, "D-only hardlink implementation is absent")
+        self.temporary = tempfile.TemporaryDirectory(prefix="task-5-npz-synthetic-", dir=D)
+        self.addCleanup(self.temporary.cleanup)
+        self.base = Path(self.temporary.name)
+        self.root = self.base / "native"
+        self.root.mkdir()
+        self.staging = self.base / "staging"
+        self.journal = self.base / "journal.jsonl"
+
+    def engine(self, **changes):
+        arguments = dict(
+            root=self.root,
+            staging=self.staging,
+            journal=self.journal,
+            max_read_bytes=64 * 1024 * 1024,
+            max_links=20,
+            max_seconds=30,
+            dry_run=False,
+        )
+        arguments.update(changes)
+        return self.tool.Deduplicator(**arguments)
+
+    def test_exact_duplicate_link_and_receipt_byte_preservation(self):
+        a = pack(self.root, "stage:A", "pack000")
+        b = pack(self.root, "stage:B", "pack001")
+        receipt_a = a.with_name("receipt.json").read_bytes()
+        receipt_b = b.with_name("receipt.json").read_bytes()
+        arrays = a.read_bytes()
+        original_allocated = b.stat().st_blocks * 512
+        result = self.engine().run()
+        self.assertEqual(result["linked"], 1)
+        self.assertEqual(result["certain_released_allocated_bytes"], original_allocated)
+        self.assertEqual(a.stat().st_ino, b.stat().st_ino)
+        self.assertEqual(a.read_bytes(), arrays)
+        self.assertEqual(b.read_bytes(), arrays)
+        self.assertEqual(receipt_a, a.with_name("receipt.json").read_bytes())
+        self.assertEqual(receipt_b, b.with_name("receipt.json").read_bytes())
+        events = [json.loads(line) for line in self.journal.read_text().splitlines()]
+        self.assertLess(
+            [e["event"] for e in events].index("before_link"),
+            [e["event"] for e in events].index("linked"),
+        )
+        self.assertEqual(
+            set(b.parent.iterdir()), {b, b.with_name("metadata.json"), b.with_name("receipt.json")}
+        )
+        self.assertFalse(list(self.staging.iterdir()))
+
+    def test_different_actual_bytes_even_self_consistent_receipt_not_shared(self):
+        a = pack(self.root, "stage:A", "pack000", 1.0)
+        b = pack(self.root, "stage:B", "pack001", 2.0)
+        result = self.engine().run()
+        self.assertEqual(result["linked"], 0)
+        self.assertNotEqual(a.stat().st_ino, b.stat().st_ino)
+
+    def test_forged_equal_receipt_digest_rejected(self):
+        a = pack(self.root, "stage:A", "pack000", 1.0)
+        b = pack(self.root, "stage:B", "pack001", 2.0)
+        receipt = json.loads(b.with_name("receipt.json").read_text())
+        receipt["arrays_sha256"] = hashlib.sha256(a.read_bytes()).hexdigest()
+        receipt["artifact_sha256"] = hashlib.sha256(
+            canonical({k: v for k, v in receipt.items() if k != "artifact_sha256"})
+        ).hexdigest()
+        b.with_name("receipt.json").write_bytes(canonical(receipt))
+        result = self.engine().run()
+        self.assertEqual(result["linked"], 0)
+        self.assertEqual(result["rejected"], 1)
+        self.assertNotEqual(a.stat().st_ino, b.stat().st_ino)
+
+    def test_incomplete_leaf_pack_and_root_teacher_arrays_excluded(self):
+        good = pack(self.root, "stage:A", "pack000")
+        incomplete = pack(self.root, "stage:B", "pack001", closed=False)
+        teacher = pack(self.root, "teacher:A", "pack002")
+        root_pack = self.root / "jobs" / "stage:C"
+        root_pack.mkdir(parents=True)
+        (root_pack / "arrays.npz").write_bytes(good.read_bytes())
+        result = self.engine().run()
+        self.assertEqual(result["eligible"], 1)
+        self.assertEqual(result["rejected"], 1)
+        self.assertEqual(result["linked"], 0)
+        self.assertNotEqual(good.stat().st_ino, incomplete.stat().st_ino)
+        self.assertNotEqual(good.stat().st_ino, teacher.stat().st_ino)
+
+    def test_already_shared_inode_skips_and_detach_restores_independence(self):
+        a = pack(self.root, "stage:A", "pack000")
+        b = pack(self.root, "stage:B", "pack001")
+        original = b.read_bytes()
+        receipt = b.with_name("receipt.json").read_bytes()
+        result = self.engine().run()
+        self.assertEqual(result["linked"], 1)
+        skip = self.engine(journal=self.base / "second.jsonl").run()
+        self.assertEqual(skip["already_shared"], 1)
+        detached = self.engine(journal=self.base / "detach.jsonl").detach(self.journal)
+        self.assertEqual(detached["detached"], 1)
+        self.assertNotEqual(a.stat().st_ino, b.stat().st_ino)
+        self.assertEqual(original, b.read_bytes())
+        self.assertEqual(receipt, b.with_name("receipt.json").read_bytes())
+
+    def test_existing_external_hardlink_allocation_not_overclaimed(self):
+        a = pack(self.root, "stage:A", "pack000")
+        b = pack(self.root, "stage:B", "pack001")
+        os.link(b, self.base / "outside-copy")
+        result = self.engine().run()
+        self.assertEqual(result["linked"], 1)
+        self.assertEqual(result["certain_released_allocated_bytes"], 0)
+        self.assertNotEqual(a.stat().st_ino, (self.base / "outside-copy").stat().st_ino)
+
+    def test_symlink_and_permissions_mismatch_rejected(self):
+        a = pack(self.root, "stage:A", "pack000")
+        b = pack(self.root, "stage:B", "pack001")
+        c = pack(self.root, "stage:C", "pack002")
+        b.chmod(0o600)
+        c.unlink()
+        c.symlink_to(a)
+        result = self.engine().run()
+        self.assertEqual(result["linked"], 0)
+        self.assertEqual(result["rejected"], 2)
+        self.assertNotEqual(a.stat().st_ino, b.stat().st_ino)
+
+    def test_read_limit_and_dry_run_keep_original_inode(self):
+        a = pack(self.root, "stage:A", "pack000")
+        b = pack(self.root, "stage:B", "pack001")
+        before = (a.stat().st_ino, b.stat().st_ino)
+        limited = self.engine(max_read_bytes=1).run()
+        self.assertEqual(limited["termination"], "administrative_limit")
+        self.assertEqual(before, (a.stat().st_ino, b.stat().st_ino))
+        planned = self.engine(journal=self.base / "plan.jsonl", dry_run=True).run()
+        self.assertEqual(planned["planned_links"], 1)
+        self.assertEqual(planned["linked"], 0)
+        self.assertEqual(before, (a.stat().st_ino, b.stat().st_ino))
+
+    def test_postcheck_read_cap_rolls_back_original_inode(self):
+        a = pack(self.root, "stage:A", "pack000")
+        b = pack(self.root, "stage:B", "pack001")
+        before = (a.stat().st_ino, b.stat().st_ino, b.read_bytes())
+        engine = self.engine()
+        real_replace = os.replace
+
+        def replace_then_cap(source, target):
+            real_replace(source, target)
+            if str(source).endswith(".link"):
+                engine.budget.max_read_bytes = engine.budget.read_bytes
+
+        with patch.object(self.tool.os, "replace", replace_then_cap):
+            result = engine.run()
+        self.assertEqual(result["termination"], "administrative_limit")
+        self.assertEqual(result["linked"], 0)
+        self.assertEqual(before, (a.stat().st_ino, b.stat().st_ino, b.read_bytes()))
+        self.assertFalse(list(self.staging.iterdir()))
+        events = [json.loads(line)["event"] for line in self.journal.read_text().splitlines()]
+        self.assertIn("rolled_back", events)
+
+    def test_one_link_limit_preserves_unprocessed_third_pack(self):
+        a = pack(self.root, "stage:A", "pack000")
+        b = pack(self.root, "stage:B", "pack001")
+        c = pack(self.root, "stage:C", "pack002")
+        before = c.stat().st_ino
+        result = self.engine(max_links=1).run()
+        self.assertEqual(result["termination"], "administrative_limit")
+        self.assertEqual(result["linked"], 1)
+        self.assertEqual(a.stat().st_ino, b.stat().st_ino)
+        self.assertEqual(c.stat().st_ino, before)
+
+    def test_rollback_io_failure_retains_original_backup_and_propagates_unknown(self):
+        a = pack(self.root, "stage:A", "pack000")
+        b = pack(self.root, "stage:B", "pack001")
+        old_inode, old_bytes = b.stat().st_ino, b.read_bytes()
+        old_receipt = b.with_name("receipt.json").read_bytes()
+        engine = self.engine()
+        real_replace = os.replace
+
+        def replace_then_fail_rollback(source, target):
+            if str(source).endswith(".original"):
+                raise OSError("synthetic rollback replacement I/O failure")
+            real_replace(source, target)
+            if str(source).endswith(".link"):
+                engine.budget.max_read_bytes = engine.budget.read_bytes
+
+        with patch.object(self.tool.os, "replace", replace_then_fail_rollback):
+            with self.assertRaises(Exception) as captured:
+                engine.run()
+        self.assertIsInstance(captured.exception, self.tool.RollbackFailureError)
+        backups = list(self.staging.glob("*.original"))
+        self.assertEqual(len(backups), 1)
+        self.assertEqual(backups[0].stat().st_ino, old_inode)
+        self.assertEqual(backups[0].read_bytes(), old_bytes)
+        self.assertEqual(b.read_bytes(), old_bytes)
+        self.assertEqual(b.with_name("receipt.json").read_bytes(), old_receipt)
+        self.assertEqual(a.stat().st_ino, b.stat().st_ino)
+        self.assertEqual(engine.summary["termination"], "tool_exception")
+        self.assertEqual(engine.summary["mutation_effect"], "unknown")
+        self.assertEqual(engine.summary["linked"], 0)
+        self.assertEqual(engine.summary["certain_released_allocated_bytes"], 0)
+        events = [json.loads(line) for line in self.journal.read_text().splitlines()]
+        kinds = [event["event"] for event in events]
+        self.assertIn("rollback_failed", kinds)
+        self.assertIn("tool_exception", kinds)
+        self.assertNotIn("rejected", kinds)
+        failure = next(event for event in events if event["event"] == "rollback_failed")
+        self.assertEqual(failure["effect"], "unknown")
+        self.assertEqual(Path(failure["retained_backup"]), backups[0])
+
+    def test_symlink_staging_or_scope_escape_rejected(self):
+        outside = self.base / "other"
+        outside.mkdir()
+        self.staging.symlink_to(outside, target_is_directory=True)
+        with self.assertRaises(ValueError):
+            self.engine().run()
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

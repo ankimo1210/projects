@@ -1,0 +1,42 @@
+{
+  "status": "READ_ONLY_READY",
+  "manifest_ref": "artifact:sha256:2dae5d8d261e3db8adbf27c37ecb6597b098d9be9e94c3d0ac4ebc8e754a8c32",
+  "entries": 326,
+  "unique_blobs_including_manifest": 235,
+  "stores": [
+    {
+      "role": "primary",
+      "root": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects"
+    },
+    {
+      "role": "mirror",
+      "root": "/mnt/f/ProjectArtifacts/projects-backup"
+    }
+  ],
+  "volume_observations": [
+    {
+      "volume": "WSL",
+      "free_bytes": 586527440896,
+      "reserve_bytes": 10737418240,
+      "pending_unique_blob_bytes": 0
+    },
+    {
+      "volume": "primary",
+      "free_bytes": 313799016448,
+      "reserve_bytes": 10737418240,
+      "pending_unique_blob_bytes": 656185210
+    },
+    {
+      "volume": "mirror",
+      "free_bytes": 182768762880,
+      "reserve_bytes": 10737418240,
+      "pending_unique_blob_bytes": 656185210
+    }
+  ],
+  "CAS_writes": 0,
+  "cost": {
+    "wall_seconds": 1.136842310996144,
+    "CPU_seconds": 0.47954610400000003
+  },
+  "financial_qualification": "unknown"
+}

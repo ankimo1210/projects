@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "scope": "immutable prior metadata storage only",
+  "manifest_ref": "artifact:sha256:2dae5d8d261e3db8adbf27c37ecb6597b098d9be9e94c3d0ac4ebc8e754a8c32",
+  "manifest_sha256": "2dae5d8d261e3db8adbf27c37ecb6597b098d9be9e94c3d0ac4ebc8e754a8c32",
+  "entries": 326,
+  "unique_blobs_including_manifest": 235,
+  "stores": {
+    "primary": {
+      "root": "/mnt/c/Users/Kazumasa/ProjectArtifacts/projects",
+      "manifest_ref": "artifact:sha256:2dae5d8d261e3db8adbf27c37ecb6597b098d9be9e94c3d0ac4ebc8e754a8c32",
+      "new_unique_blobs": 49,
+      "verified_existing_blobs": 186,
+      "free_bytes_after": 237164748800
+    },
+    "mirror": {
+      "root": "/mnt/f/ProjectArtifacts/projects-backup",
+      "manifest_ref": "artifact:sha256:2dae5d8d261e3db8adbf27c37ecb6597b098d9be9e94c3d0ac4ebc8e754a8c32",
+      "new_unique_blobs": 49,
+      "verified_existing_blobs": 186,
+      "free_bytes_after": 182106980352
+    }
+  },
+  "volume_observations_before": [
+    {
+      "volume": "WSL",
+      "free_bytes": 547843923968,
+      "reserve_bytes": 10737418240,
+      "pending_unique_blob_bytes": 0
+    },
+    {
+      "volume": "primary",
+      "free_bytes": 243491168256,
+      "reserve_bytes": 10737418240,
+      "pending_unique_blob_bytes": 656185210
+    },
+    {
+      "volume": "mirror",
+      "free_bytes": 182768762880,
+      "reserve_bytes": 10737418240,
+      "pending_unique_blob_bytes": 656185210
+    }
+  ],
+  "original_selected_D_source_bytes_unchanged": true,
+  "deduplicated_per_digest_per_vault": true,
+  "live_financial_artifacts_included": false,
+  "financial_qualification": "unknown",
+  "cost": {
+    "wall_seconds": 42.140215298997646,
+    "CPU_seconds": 7.021175188
+  },
+  "financial_generation_RNG_solver_workers": 0,
+  "storage_publication_backend": "existing evidence_store only; its platform subprocess counts are not asserted"
+}

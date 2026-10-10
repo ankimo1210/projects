@@ -1,0 +1,13 @@
+{
+  "archive_entries": 964,
+  "failures": [],
+  "frozen_runtime_source_files": 81,
+  "full_three_suites_run": false,
+  "local_file_references": 270,
+  "owned_carriers_decoded": 0,
+  "runtime_source_changed": false,
+  "scoped_docs": 4,
+  "status": "PASS",
+  "unique_targets": 210,
+  "wall_seconds": 0.1256613590012421
+}

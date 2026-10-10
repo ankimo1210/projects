@@ -1,0 +1,110 @@
+{
+  "NPZ_hash_scope": "both NPZ full streams before and after each actual utility operation; current postcheck authenticates original receipts+metadata and same inode, no numerical qualification",
+  "RNG_or_solver_calls": 0,
+  "Windows_C_free_reclaimed_claimed": false,
+  "all_current_shared_source_target_inodes_and_original_receipts_metadata": true,
+  "checked_frozen_runtime_source_files": 81,
+  "checks": [
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py"
+      ],
+      "exit_code": 0,
+      "log": "task-5-stage-npz-hardlink-root-verification-v1-0.log",
+      "sha256": "c0b88467272e36cd2403125efd51fae336f0e3f057aa1d542660d45d7ae9e690",
+      "wall_seconds": 0.27157165599783184
+    },
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "--no-cache",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v1.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py"
+      ],
+      "exit_code": 0,
+      "log": "task-5-stage-npz-hardlink-root-verification-v1-1.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "wall_seconds": 0.014497749994916376
+    },
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-v1.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-stage-npz-hardlink-selftest-v1.py"
+      ],
+      "exit_code": 0,
+      "log": "task-5-stage-npz-hardlink-root-verification-v1-2.log",
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938",
+      "wall_seconds": 0.0075517889999900945
+    }
+  ],
+  "cost": {
+    "CPU_seconds": 0.594318061,
+    "max_children_kernel_rss_bytes": 43044864,
+    "self_peak_rss_bytes": 43044864,
+    "wall_seconds": 0.886639087999356
+  },
+  "failures": [],
+  "financial_qualification": "unknown",
+  "full_three_suites_rerun": false,
+  "journals": {
+    "task-5-stage-npz-hardlink-actual-root-batch-v1.jsonl": {
+      "bytes": 1456235,
+      "released_old_single_link_inode_allocated_bytes": 36872978432,
+      "sha256": "a348966da4f6ba2518e64d559a4d6f7986a03a4f0d6829285ab76b2ae9bf2ce9",
+      "successful_links": 648
+    },
+    "task-5-stage-npz-hardlink-actual-root-batch-v2.jsonl": {
+      "bytes": 3318713,
+      "released_old_single_link_inode_allocated_bytes": 16284205056,
+      "sha256": "edcdb15443c9eabbb20ad4be6665d0bf32133f8f56333ad93b06252453c40f41",
+      "successful_links": 1475
+    },
+    "task-5-stage-npz-hardlink-actual-root-trial-v1.jsonl": {
+      "bytes": 3623,
+      "released_old_single_link_inode_allocated_bytes": 86687744,
+      "sha256": "f437b59faec92611a8f1e71a420259e19699acd0df5a11be0395b06a3ce610b4",
+      "successful_links": 1
+    }
+  },
+  "live_financial_monitor_observation": {
+    "child_rss_bytes": 9224204288,
+    "clock": {
+      "cpu": 1.412428267,
+      "utc": "2026-10-10T11:21:23.384451+00:00",
+      "wall": 55748.167165901
+    },
+    "elapsed_seconds": 3517.498986810002,
+    "parent_rss_bytes": 20967424,
+    "volumes": [
+      {
+        "free_bytes": 457245528064,
+        "id": "WSL",
+        "path": "/",
+        "reserve_bytes": 10737418240
+      },
+      {
+        "free_bytes": 116432867328,
+        "id": "C",
+        "path": "/mnt/c",
+        "reserve_bytes": 10737418240
+      },
+      {
+        "free_bytes": 182106980352,
+        "id": "F",
+        "path": "/mnt/f",
+        "reserve_bytes": 10737418240
+      }
+    ]
+  },
+  "released_old_single_link_inode_allocated_bytes": 53243871232,
+  "schema": "rb-f04-root-actual-closed-npz-share-verification-v1",
+  "source_and_mathematical_inputs_changed": false,
+  "status": "PASS",
+  "successful_links": 2124,
+  "whole_phase_capacity_guaranteed": false
+}

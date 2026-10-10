@@ -1,0 +1,206 @@
+{
+  "schema": "rb-f04-live-capacity-independent-diagnosis-v1",
+  "scope": "read-only live filesystem stat, ZIP central directory/NPY headers, and source contracts; no financial execution",
+  "approved": false,
+  "financial_qualification": "unknown",
+  "whole_phase_physical_capacity_guaranteed": false,
+  "phase_accepted": false,
+  "source_canonical_identity": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_native_identity": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "source_identity_basis": "previous fixed independent source review; no live full-source SHA reread in this task",
+  "native_root": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2",
+  "observation_provenance": "values transcribed from completed tool-output observations; live scan not rerun to produce this file",
+  "live_non_atomic": true,
+  "stat_snapshot": {
+    "start_utc": "2026-10-10T10:47:12.732636+00:00",
+    "end_utc": "2026-10-10T10:47:13.299338+00:00",
+    "logical_bytes": 73259539887,
+    "allocated_bytes": 73308450816,
+    "missing_during_stat": 0,
+    "jobs_count": 136,
+    "groups": {
+      "nonstage": {
+        "jobs": 55,
+        "bytes": 870130726,
+        "root_metadata": 61659926,
+        "NPZ": 789279686,
+        "other": 19191114,
+        "files": 396
+      },
+      "stage:Heston:N1024:coarse": {
+        "jobs": 81,
+        "bytes": 71257737612,
+        "root_metadata": 4987115462,
+        "NPZ": 64555445015,
+        "other": 1715177135,
+        "files": 12000
+      }
+    },
+    "jobs_bytes": 72127868338,
+    "nonjobs_native_bytes": 1131671549
+  },
+  "earlier_job_stat": {
+    "at_utc": "2026-10-10T10:43:34.133982+00:00",
+    "width0": {
+      "id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width0",
+      "bytes": 2945758597,
+      "root_metadata_bytes": 566474238,
+      "files": 1353
+    },
+    "width1": {
+      "id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width1",
+      "bytes": 2945758600,
+      "root_metadata_bytes": 566474241,
+      "files": 1353
+    },
+    "bump": {
+      "id": "stage:Heston:N1024:coarse:bump:Heston",
+      "bytes": 1963712929,
+      "root_metadata_bytes": 549503661,
+      "files": 1299
+    }
+  },
+  "header_samples": [
+    {
+      "id": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE",
+      "pack": "pack000000/arrays.npz",
+      "members": 4096,
+      "zip_method": 0,
+      "stored_bytes": 73615376,
+      "expanded_bytes": 73615376,
+      "large_shapes": [
+        {
+          "dtype": "<U96",
+          "shape": [
+            1024,
+            13
+          ],
+          "npy_bytes": 5111936
+        },
+        {
+          "dtype": "<f8",
+          "shape": [
+            1024,
+            12,
+            16,
+            3
+          ],
+          "npy_bytes": 4718720
+        }
+      ]
+    },
+    {
+      "id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width0",
+      "pack": "pack000000/arrays.npz",
+      "members": 4096,
+      "zip_method": 0,
+      "stored_bytes": 86168848,
+      "expanded_bytes": 86168848,
+      "large_shapes": [
+        {
+          "dtype": "<f8",
+          "shape": [
+            256,
+            1536,
+            2
+          ],
+          "npy_bytes": 6291584
+        }
+      ]
+    },
+    {
+      "id": "stage:Heston:N1024:coarse:bump:Heston",
+      "pack": "pack000000/arrays.npz",
+      "members": 4096,
+      "zip_method": 0,
+      "stored_bytes": 49876880,
+      "expanded_bytes": 49876880,
+      "large_shapes": [
+        {
+          "dtype": "<f8",
+          "shape": [
+            1024,
+            12,
+            16,
+            3
+          ],
+          "npy_bytes": 4718720
+        },
+        {
+          "dtype": "<U96",
+          "shape": [
+            1024,
+            12
+          ],
+          "npy_bytes": 4718720
+        }
+      ]
+    }
+  ],
+  "source_findings": {
+    "writer": "run_pilot.write_pilot_artifact prepares only a top-level completed teacher and calls pack protocol with compress=storage_descriptor is not None (line 1867); generic job/nested payload remains literal.",
+    "eligibility": "_teacher_storage.prepare_teacher line 243 requires root kind teacher and absent status.",
+    "array_aliases": "run_reference._encode_tree assigns a fresh array name per occurrence; no identity deduplication. Structural repeats are possible; live binary identity has not been certified.",
+    "retained_payload": "paired retains base/refined dataset/rollout/risk/shared_market; bump retains dataset/caches/base_risk and variants. This task does not authorize removing them.",
+    "timing": "dispatch elapsed is computed before write_pilot_artifact at run_pilot line 4399; enclosing phase monitor includes writer cost.",
+    "checkpoint": "persisted checkpoint jobs remove raw and retain raw_job_payload_sha256 at line 4449; no whole raw-copy amplification is alleged."
+  },
+  "previous_capacity": {
+    "source": "task-5-whole-phase-capacity-static-v1-results.json",
+    "teacher_logical_subset_lower_bytes": 353606441728,
+    "teacher_driver_domain_report_logical_subtotal_bytes": 364185768816,
+    "excluded_remaining_jobs": 3088,
+    "whole_physical_upper_bytes": null,
+    "whole_phase_runtime_seconds": null,
+    "scope_limitation": "Teacher logical subtotal excludes large cell_pair/bump/selected literal copies, header/metadata/history/main/CAS. It is not a compressed-vault capacity guarantee."
+  },
+  "operational_limit_boundary": {
+    "original_graph": {
+      "jobs": 3138,
+      "cases": 121,
+      "obligations": 51,
+      "teacher_grids": 20,
+      "drivers": 10,
+      "original_n_options": [
+        1024,
+        4096,
+        16384,
+        65536
+      ]
+    },
+    "root_reported_child_rss_bytes": null,
+    "root_reported_child_rss_description": "10.54GB from parent live observation; not independently measured here",
+    "process_rss_limit_bytes": 17179869184,
+    "volume_reserve_bytes": 10737418240,
+    "chunk_expanded_limit_bytes": 268435456,
+    "statement": "Per-chunk and per-process/volume administrative guards preserve partial termination; they do not guarantee whole corpus fits or finance/case-cap acceptance.",
+    "all_stages_execution_guaranteed": false
+  },
+  "peer_diagnostic": {
+    "file": "task-5-formal-pilot-storage-amplification-diagnosis-v2.json",
+    "sha256": "11ca0c2730313d548e4dcd12987aa26ec4c275aaa7ad248d656a8de11d480541",
+    "received_only": true,
+    "limitation": "same receipt candidates are peer source diagnosis, not independent binary equality or hardlink approval in this report"
+  },
+  "costs": {
+    "stat_enumeration_clock_seconds": 0.566702,
+    "zip_header_and_all_source_reader_total_seconds": null,
+    "total_review_cpu_seconds": null,
+    "new_financial_execution_seconds": 0,
+    "note": "Only stat-enumeration timestamps were recorded. Total reader/import/report-write costs are unknown; no partial cost promoted to inclusive total.",
+    "reader_errors_retained": "Earlier syntax/PowerShell rg quoting/missing DESIGN-path probes failed as reader commands, not source/financial faults. A final parenthesis rg quoting failure was also retained in tool transcript."
+  },
+  "prohibited_actions_executed": {
+    "financial_generation": 0,
+    "RNG": 0,
+    "SDE_replay": 0,
+    "solver": 0,
+    "worker_or_Popen": 0,
+    "live_full_SHA": 0,
+    "giant_JSON_decode": 0,
+    "source_edit": 0,
+    "stop": 0,
+    "Git": 0,
+    "CAS": 0
+  }
+}

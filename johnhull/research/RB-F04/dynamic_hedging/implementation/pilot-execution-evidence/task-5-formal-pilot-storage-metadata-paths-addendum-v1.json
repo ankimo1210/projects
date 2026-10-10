@@ -1,0 +1,127 @@
+{
+  "actions": {
+    "financial_workers_or_rng_or_solver": 0,
+    "formal_financial_qualification": "unknown",
+    "hardlinks": 0,
+    "original_raw_edits": 0,
+    "process_control": 0,
+    "source_tests_docs_git_cas_edits": 0,
+    "whole_big_json_parse": 0
+  },
+  "checked_alternatives": {
+    "bulk_ndarray_tolist": "The relevant transport converts ndarray to __array__ references, not list of numeric values. Small source .tolist operations build root-offset lengths/roots and labels, then numeric outputs are ndarray; they do not explain the hundreds of MB of descriptors.",
+    "checkpoint": "Final persisted.jobs explicitly excludes raw (run_pilot4445-4453). It retains the locked plan once, references and expense/events, so a per-job549MB root metadata is not repeated checkpoint raw.",
+    "complete_cap_plan_copy": "Per-job common row stores own budget/prediction/input bindings plus plan/source hashes, not the complete plan. Boundary sample budget is small. No full cap-options copy was observed in the bounded sample; no entire tree scan was performed.",
+    "repr": "No generic repr fallback in _encode_tree; unsupported types reject instead."
+  },
+  "compression_unaffected_capacity": {
+    "all_metadata_json_bytes": 12975722276,
+    "all_npz_stat_bytes": 83758416526,
+    "all_receipt_json_bytes": 2525670,
+    "all_root_metadata_bytes": 9520460618,
+    "bump_root_json_bytes": 549503661,
+    "conclusion": "Changing only the existing generic NPZ compression flag leaves root tree/descriptors, every pack entries/dtype/shape metadata and receipts literal. About12.978GB of JSON remains in this observed first-stage prefix alone, even under the impossible best case of zero NPZ bytes. This is a current saved-byte floor, not a whole-phase prediction or completion certificate.",
+    "first_stage_stat_observed_utc": "2026-10-10T10:56:55.795617+00:00",
+    "job_dir_count": 89,
+    "json_bytes_left_if_all_npz_hypothetically_zero": 12978247946,
+    "pack_metadata_json_bytes": 3455261658,
+    "position_root_json_bytes": 566474238,
+    "scope": "Non-atomic stat of all89 current job dirs whose ID starts stage:Heston:N1024:coarse; some may be live. Directory count is not executed/completed count.",
+    "total_stat_bytes": 96736664472
+  },
+  "eta_effect": "Generic NPZ compression may reduce array disk bytes, but cannot by itself solve the metadata duplication or its serialization/decoding work. No measured compression ratio, whole-phase capacity, extra-runtime prediction or new numerical qualification is claimed.",
+  "hardlink_scope_correction": "Receipt candidate equality previously concerned U1 Heston-vs-local valuation pair and position width0-vs-width1. Root actual U1-vs-U2 whole-byte comparison is a different pair and was unequal. No receipt-only deduplication is authorized or performed; current exact bytes and closed immutability would still need separate confirmation.",
+  "main_logical_paths": [
+    {
+      "expansion": "2 models x 12 dates x original1024 paths x 13 original queries =319488 fit records, plus319488 claim records. Fits retain scalar state/root/residual/condition/status/reason/nonfinite sentinels and ndarray roots/extrema/extrema_values/state_bounds. Each small ndarray receives a new descriptor/part/SHA and a tree reference, including empty roots.",
+      "path": "row.raw.chunks[model/date/pathchunk].queries[0..12].fits[path]",
+      "source": "run_pilot.bump_query_chunk2377-2442 / run_bump_risk_job2521-2539"
+    },
+    {
+      "expansion": "Each successful scalar claim retains its own16-block values, covariance and standard_errors arrays, plus numerical values/Greeks/status/error/reason. Repeated scalar dictionaries and nonfinite sentinel objects are literal JSON. All original records are mandatory evidence, but their nested representation has large overhead.",
+      "path": "row.raw.chunks[model/date/pathchunk].queries[0..12].claims[path]",
+      "source": "evaluate_asian638-645; bump_query_chunk2422-2430"
+    },
+    {
+      "expansion": "The full base risk is deep-copied three times. Each copy retains models[m].raw.original_path_chunks (all original fit/asian/call date arrays and diagnostics); value is the selected variant saved again. The encoder has no reference memo, so physically repeated data gets fresh array IDs and the full nested JSON tree again.",
+      "path": "row.raw.base_risk / row.raw.risk_variants[0..2] / row.raw.value",
+      "source": "bump_risk_variants2452-2453 and run_bump_risk_job2559,2569-2570"
+    },
+    {
+      "expansion": "The position raw embeds the complete bump producer record, and also carries extracted risks, upstream quote-risk source and original market/datasets. The complete large producer tree is therefore contained in each width/cell artifact; width labels differing by a few bytes do not remove the inherited metadata.",
+      "path": "position row.raw.refined_risk_source plus base_risk_source/base_risk/refined_risk/shared_market",
+      "source": "run_paired_pnl_job868-889"
+    },
+    {
+      "expansion": "Merged risk retains original raw chunk dictionaries, while chunked_worker retains the original chunks and the merged risk; quote_risk also keeps that merged risk as value. Every descendant that embeds the source carries this duplication.",
+      "path": "quote_risk.value and quote_risk.chunked_worker.risk/chunks[].risk",
+      "source": "run_quote_risk_job722-724; run_main._merged_risks657 and run_risk_job778-787"
+    }
+  ],
+  "metadata_boundary_method": "Canonical writer sorts top-level arrays before schema/tree. Binary seek used 18 x 4096-byte windows with an array-parts descriptor marker, then a 32768-byte boundary window found the exact tree key. Head/tail and five 1024-byte tree samples confirmed the two regions. Descriptor totals exclude about 34 bytes of opening wrapper and include the small schema separator, so they are labelled approximate. Total big-metadata read across the two jobs was 264192 bytes, not the full 1.116GB.",
+  "parent_diagnosis": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-storage-amplification-diagnosis-v2.json",
+    "sha256": "11ca0c2730313d548e4dcd12987aa26ec4c275aaa7ad248d656a8de11d480541"
+  },
+  "representative_splits": [
+    {
+      "array_occurrences_lower_bound": 1766332,
+      "descriptor_bytes_per_array_occurrence_approx": 190.04926537027015,
+      "descriptor_region_bytes_approx": 335690099,
+      "job_id": "stage:Heston:N1024:coarse:bump:Heston",
+      "middle_sample_bytes_read": 5120,
+      "root_metadata_bytes": 549503661,
+      "seek_bytes_read": 114688,
+      "tail_largest_array_id": "a1766331",
+      "tree_and_wrapper_bytes_approx": 213813528,
+      "tree_key_offset_bytes": 335690133
+    },
+    {
+      "array_occurrences_lower_bound": 1837990,
+      "descriptor_bytes_per_array_occurrence_approx": 190.16436106834095,
+      "descriptor_region_bytes_approx": 349520194,
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width0",
+      "middle_sample_bytes_read": 5120,
+      "root_metadata_bytes": 566474238,
+      "seek_bytes_read": 114688,
+      "tail_largest_array_id": "a1837989",
+      "tree_and_wrapper_bytes_approx": 216954010,
+      "tree_key_offset_bytes": 349520228
+    }
+  ],
+  "schema": "rb-f04-read-only-storage-metadata-paths-addendum-v1",
+  "scope": "Source and bounded random-access JSON byte windows only; no whole large JSON read/parse, no financial execution and no modifications to source/original artifacts/processes",
+  "source_evidence": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "relevant_locations": "_encode_tree526-543: every ndarray occurrence gets a new ID; nonfinite scalar sentinel; recurse dict/list; no repr or ndarray.tolist fallback",
+      "sha256": "cc7183df08f8d4b7942929ccc44cbcc5899be5df74128016c7c6521bac2909b9"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "relevant_locations": "bump_query_chunk2377-2442; bump_risk_variants2445-2488; run_bump_risk_job2491-2587; paired832-891; write_pilot_artifact1812-1869; common row4168-4178; final checkpoint4445-4456",
+      "sha256": "8f0df2b35bb04087e7c4a3761d6cf1b8bbb8104e2e5b7516af03ba6c2c8123c4"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_main.py",
+      "relevant_locations": "_merged_risks629-665; run_risk_job696-806",
+      "sha256": "0b8fc24f9c4e7c45883052dd8345fa4d19bae2a72ca83e781a8492229456c771"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_study.py",
+      "relevant_locations": "quote_risk_dataset311-365; market_dataset150-182",
+      "sha256": "ff3a72394f86ad572ee2cc62c27fbeb8f047b397bf8e60cf328092464273fb4e"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+      "relevant_locations": "_batch_results81-97; evaluate_asian638-645; fit_quote_state649-755",
+      "sha256": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe"
+    }
+  ],
+  "this_report_component_cost": {
+    "peak_rss_bytes": 16965632,
+    "scope": "source-binding arithmetic and report write only; prior bounded read tools are separate existing outputs",
+    "wall_seconds_before_write": 0.0005609289946733043
+  },
+  "written_utc": "2026-10-10T10:58:57.767500+00:00"
+}

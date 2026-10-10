@@ -1,0 +1,38 @@
+{
+  "CAS_Git_operations": 0,
+  "actual_native_reads_or_writes": 0,
+  "changed_existing_11_test_methods": [],
+  "changed_existing_helper_methods": [
+    "link"
+  ],
+  "financial_execution": 0,
+  "helper_sha256": "010fb31dd02be6e7be937d1c9923ba8f80abeac2bbb03f05725850be430adf58",
+  "new_exception": "RollbackFailureError(RuntimeError)",
+  "new_regression": "test_rollback_io_failure_retains_original_backup_and_propagates_unknown",
+  "production_source_edits": 0,
+  "ruff_format_results": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "b6c3ec",
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": "",
+        "wall_time_seconds": 0.5145485
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "f0fb1e",
+        "exit_code": 0,
+        "original_token_count": 7,
+        "output": "2 files already formatted\n",
+        "wall_time_seconds": 0.5574596
+      }
+    }
+  ],
+  "selftest_sha256": "5ed1c5566ab5f0652633fda10094ecbfe6901fd5b2bd00a585579b02dd099604",
+  "v1_14_manifest_entries_unchanged": true,
+  "v1_helper_sha256": "934f5337c45c6d0e9243477476effdd20155a44cfcf0127401a899f556b2587b"
+}

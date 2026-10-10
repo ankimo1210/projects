@@ -1,0 +1,58 @@
+{
+  "RNG_or_solver_calls": 0,
+  "catalog_sha256": "d9f697e82aab26ba6d748484fce672c5bd2adf9f12b512808d112fd24c6256b9",
+  "cost": {
+    "CPU_seconds": 75.28132974900001,
+    "peak_rss_bytes": 35225600,
+    "wall_seconds": 90.01765576700564
+  },
+  "cost_wall_overlaps_live_financial_phase_not_additive_to_phase_wall": true,
+  "financial_generation": 0,
+  "financial_qualification": "unknown",
+  "groups_started": 304,
+  "invocation_limits": {
+    "max_links": 2000,
+    "max_read_bytes": 137438953472,
+    "max_seconds": 90
+  },
+  "original_ledger_and_metadata_changed": false,
+  "result": {
+    "actual_file_read_bytes": 94138781989,
+    "actual_file_write_bytes": 0,
+    "already_independent": 0,
+    "already_shared": 0,
+    "certain_released_allocated_bytes": 16284205056,
+    "cpu_seconds": 75.280104686,
+    "detached": 0,
+    "eligible": 0,
+    "financial_qualification": "unknown",
+    "inode_inventory_scope": "only accepted paths from this bounded scan, not the entire native tree",
+    "limit": "max_seconds",
+    "linked": 1475,
+    "native_volume_after": {
+      "free": 466167439360,
+      "total": 1081101176832,
+      "used": 559941382144
+    },
+    "native_volume_before": {
+      "free": 452860579840,
+      "total": 1081101176832,
+      "used": 573248241664
+    },
+    "planned_links": 1475,
+    "rejected": 0,
+    "scope": "stage_leaf_pack_arrays_only",
+    "selected_unique_inode_allocated_after_bytes": 7434543104,
+    "selected_unique_inode_allocated_before_bytes": 23718748160,
+    "termination": "administrative_limit",
+    "wall_seconds": 90.01189599600184,
+    "windows_vhd_or_host_volume_space_reclamation": "not_measured_or_guaranteed"
+  },
+  "runtime_source_changes": 0,
+  "schema": "rb-f04-root-closed-npz-byte-share-bounded-batch-v2",
+  "scope": "existing receipt-declared candidates; exact bytes reverified before each actual link; full phase unqualified",
+  "skipped_same_inode": 649,
+  "status": "bounded_storage_operation_recorded",
+  "tool_sha256": "934f5337c45c6d0e9243477476effdd20155a44cfcf0127401a899f556b2587b",
+  "whole_phase_capacity_guaranteed": false
+}

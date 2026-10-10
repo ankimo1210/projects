@@ -1,0 +1,22 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "8cd928",
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": "",
+      "wall_time_seconds": 0.4955989
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "cbb82b",
+      "exit_code": 0,
+      "original_token_count": 7,
+      "output": "2 files already formatted\n",
+      "wall_time_seconds": 0.5004794
+    }
+  }
+]

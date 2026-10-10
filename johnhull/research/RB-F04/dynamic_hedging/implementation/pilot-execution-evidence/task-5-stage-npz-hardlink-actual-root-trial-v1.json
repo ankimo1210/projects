@@ -1,0 +1,130 @@
+{
+  "RNG_or_solver_calls": 0,
+  "cost": {
+    "CPU_seconds": 0.22214918300000003,
+    "peak_rss_bytes": 27987968,
+    "wall_seconds": 1.598910672000784
+  },
+  "financial_generation": 0,
+  "financial_qualification": "unknown",
+  "original_ledger_and_metadata_changed": false,
+  "result": {
+    "actual_file_read_bytes": 524347950,
+    "actual_file_write_bytes": 0,
+    "already_independent": 0,
+    "already_shared": 0,
+    "certain_released_allocated_bytes": 86687744,
+    "cpu_seconds": 0.221883475,
+    "detached": 0,
+    "eligible": 0,
+    "financial_qualification": "unknown",
+    "inode_inventory_scope": "only accepted paths from this bounded scan, not the entire native tree",
+    "linked": 1,
+    "native_volume_after": {
+      "free": 426515251200,
+      "total": 1081101176832,
+      "used": 599593570304
+    },
+    "native_volume_before": {
+      "free": 426991706112,
+      "total": 1081101176832,
+      "used": 599117115392
+    },
+    "planned_links": 1,
+    "rejected": 0,
+    "scope": "stage_leaf_pack_arrays_only",
+    "selected_unique_inode_allocated_after_bytes": 86687744,
+    "selected_unique_inode_allocated_before_bytes": 173375488,
+    "termination": "completed",
+    "wall_seconds": 1.3172597089942428,
+    "windows_vhd_or_host_volume_space_reclamation": "not_measured_or_guaranteed"
+  },
+  "runtime_source_changes": 0,
+  "schema": "rb-f04-root-closed-npz-byte-share-trial-v1",
+  "scope": "one selected closed leaf NPZ pair; financial qualification unchanged",
+  "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width0/pack000000/arrays.npz",
+  "source_before": {
+    "array_stat": {
+      "allocated_bytes": 86687744,
+      "dev": 2096,
+      "gid": 1000,
+      "ino": 1995157,
+      "mode": 420,
+      "mtime_ns": 1791628875120007799,
+      "nlink": 1,
+      "size": 86684966,
+      "uid": 1000
+    },
+    "arrays_sha256": "eb992b87e32f2e54d5836c81aa2d00ca35e0d6922aa145d2310a689a8e3a5245",
+    "metadata_sha256": "2e105153206d3e12651615163a14e8e855cb60121cee98f6f0ef07cd5f6b60ef",
+    "metadata_stat": {
+      "allocated_bytes": 458752,
+      "dev": 2096,
+      "gid": 1000,
+      "ino": 1995156,
+      "mode": 420,
+      "mtime_ns": 1791628875119868924,
+      "nlink": 1,
+      "size": 456142,
+      "uid": 1000
+    },
+    "path": "jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width0/pack000000/arrays.npz",
+    "receipt_sha256": "f1168b84c0864fc7bcdb583b1d257ebde67dd03115f251de81240a2b20092d1d",
+    "receipt_stat": {
+      "allocated_bytes": 4096,
+      "dev": 2096,
+      "gid": 1000,
+      "ino": 1995158,
+      "mode": 420,
+      "mtime_ns": 1791628875133812913,
+      "nlink": 1,
+      "size": 319,
+      "uid": 1000
+    },
+    "uncompressed_bytes": 86168848
+  },
+  "status": "PASS",
+  "target": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v2/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width1/pack000000/arrays.npz",
+  "target_before": {
+    "array_stat": {
+      "allocated_bytes": 86687744,
+      "dev": 2096,
+      "gid": 1000,
+      "ino": 1996961,
+      "mode": 420,
+      "mtime_ns": 1791628944946041509,
+      "nlink": 1,
+      "size": 86684966,
+      "uid": 1000
+    },
+    "arrays_sha256": "eb992b87e32f2e54d5836c81aa2d00ca35e0d6922aa145d2310a689a8e3a5245",
+    "metadata_sha256": "2e105153206d3e12651615163a14e8e855cb60121cee98f6f0ef07cd5f6b60ef",
+    "metadata_stat": {
+      "allocated_bytes": 458752,
+      "dev": 2096,
+      "gid": 1000,
+      "ino": 1996960,
+      "mode": 420,
+      "mtime_ns": 1791628944945895358,
+      "nlink": 1,
+      "size": 456142,
+      "uid": 1000
+    },
+    "path": "jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width1/pack000000/arrays.npz",
+    "receipt_sha256": "f1168b84c0864fc7bcdb583b1d257ebde67dd03115f251de81240a2b20092d1d",
+    "receipt_stat": {
+      "allocated_bytes": 4096,
+      "dev": 2096,
+      "gid": 1000,
+      "ino": 1996962,
+      "mode": 420,
+      "mtime_ns": 1791628944970960984,
+      "nlink": 1,
+      "size": 319,
+      "uid": 1000
+    },
+    "uncompressed_bytes": 86168848
+  },
+  "tool_sha256": "934f5337c45c6d0e9243477476effdd20155a44cfcf0127401a899f556b2587b",
+  "whole_phase_capacity_guaranteed": false
+}

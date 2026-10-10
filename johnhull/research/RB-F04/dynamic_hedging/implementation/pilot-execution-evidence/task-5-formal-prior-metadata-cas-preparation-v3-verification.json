@@ -1,0 +1,28 @@
+{
+  "Ruff_check": {
+    "exit_code": 0,
+    "output": "All checks passed!"
+  },
+  "Ruff_format_check": {
+    "exit_code": 0,
+    "output": "1 file already formatted"
+  },
+  "actual_CAS_write_restore_financial_RNG_Popen_calls": 0,
+  "cost": {
+    "static_final_check_CPU_seconds": 0.0029249949999999997,
+    "static_final_check_wall_seconds": 0.002925745997345075
+  },
+  "current_materialized_source_snapshot_files": 81,
+  "entries": 326,
+  "financial_qualification": "unknown",
+  "full_source_initial_streamed_SHA_size_check": true,
+  "new_live_native_jobs_raw_observation_tree_entries": 0,
+  "no_financial_array_decode": true,
+  "original_v2_metadata_and_terminal_manifests_preserved": true,
+  "production_Git_docs_edits": 0,
+  "root_store_pending": true,
+  "standard_schema": "johnhull-evidence-manifest/schema_version 1",
+  "status": "PASS D-only finite fixed metadata preparation",
+  "unique_blobs_including_manifest": 235,
+  "wrapper_function_AST_unchanged_from_v2": true
+}
