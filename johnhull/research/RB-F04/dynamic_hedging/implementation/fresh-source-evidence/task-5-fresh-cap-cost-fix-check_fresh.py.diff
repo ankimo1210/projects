@@ -1,0 +1,177 @@
+--- /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-revision-check_fresh.py
++++ /home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/check_fresh.py
+@@ -52,15 +52,29 @@
+     _require(equal, label + " saved value changed")
+ 
+ 
+-def _clock(row, label):
++def _clock(row, label, *, require_cpu=True):
+     clock = row["clock"]
+     start, stop = clock["wall_start"], clock["wall_stop"]
+     _require(np.isfinite([start, stop]).all() and stop >= start, label + " wall clock invalid")
+     elapsed = stop - start
++    _require(
++        np.isfinite(row["wall_seconds"]) and row["wall_seconds"] >= 0,
++        label + " elapsed wall invalid",
++    )
+     _same(elapsed, row["wall_seconds"], label + " elapsed wall")
+-    if "cpu_start" in clock:
+-        _require(clock["cpu_stop"] >= clock["cpu_start"], label + " CPU clock reversed")
+-        _same(clock["cpu_stop"] - clock["cpu_start"], row["cpu_seconds"], label + " elapsed CPU")
++    if require_cpu:
++        _require(
++            {"cpu_start", "cpu_stop"} <= set(clock) and "cpu_seconds" in row,
++            label + " measured CPU clock required",
++        )
++        cpu_start, cpu_stop, cpu_seconds = clock["cpu_start"], clock["cpu_stop"], row["cpu_seconds"]
++        _require(
++            np.isfinite([cpu_start, cpu_stop, cpu_seconds]).all()
++            and cpu_stop >= cpu_start >= 0
++            and cpu_seconds >= 0,
++            label + " actual CPU measurement invalid",
++        )
++        _same(cpu_stop - cpu_start, cpu_seconds, label + " elapsed CPU")
+     deadline = row.get("deadline_wall")
+     if deadline is not None:
+         _require(np.isfinite(deadline), label + " deadline invalid")
+@@ -68,6 +82,27 @@
+     return elapsed
+ 
+ 
++def _clock_equal(actual, expected, label):
++    _require(
++        np.isfinite([actual, expected]).all()
++        and math.isclose(actual, expected, rel_tol=0, abs_tol=1e-8),
++        label + " clock binding changed",
++    )
++
++
++def _interval(child, parent, label, *, require_cpu=True):
++    """Actual cost intervals are nested; wall caps do not supply CPU costs."""
++    _clock(child, label, require_cpu=require_cpu)
++    for kind in ["wall", "cpu"] if require_cpu else ["wall"]:
++        c, p = child["clock"], parent["clock"]
++        _require(
++            p[kind + "_start"] <= c[kind + "_start"] <= c[kind + "_stop"] <= p[kind + "_stop"],
++            label + " actual " + kind + " interval outside parent",
++        )
++    _require(child.get("deadline_wall") is not None, label + " actual enclosing deadline required")
++    _clock_equal(child["deadline_wall"], parent["deadline_wall"], label + " enclosing deadline")
++
++
+ def _cap(row, *, statuses=None, labels=None, planned=None, completed=None):
+     if row is None:
+         return
+@@ -75,11 +110,27 @@
+         row["financial_qualification"] == "unknown",
+         "cap evidence may not claim financial qualification",
+     )
+-    elapsed = _clock(row, "cap")
++    # A deadline receipt has wall clocks only; measured expense receipts also require CPU.
++    _clock(row, "cap", require_cpu=False)
+     cap = row["cap_seconds"]
+     _require(np.isfinite(cap) and cap >= 0, "cap must retain actual nonnegative effective budget")
+-    _same(max(0.0, elapsed - cap), row["overrun_seconds"], "cap actual overrun")
+-    _require(row["cap_reached"] == (elapsed >= cap), "cap reached disagrees with actual clock")
++    _require(
++        "budget_wall_start" in row and row.get("deadline_wall") is not None,
++        "cap actual start/deadline binding required",
++    )
++    _clock_equal(row["budget_wall_start"] + cap, row["deadline_wall"], "cap budget deadline")
++    _require(
++        row["clock"]["wall_start"] >= row["budget_wall_start"], "cap actual start predates budget"
++    )
++    _same(
++        max(0.0, row["clock"]["wall_stop"] - row["deadline_wall"]),
++        row["overrun_seconds"],
++        "cap actual overrun",
++    )
++    _require(
++        row["cap_reached"] == (row["clock"]["wall_stop"] >= row["deadline_wall"]),
++        "cap reached disagrees with actual clock",
++    )
+     if statuses is not None:
+         status = np.asarray(statuses)
+         remaining = np.zeros(status.shape[:-1], dtype=int)
+@@ -96,6 +147,45 @@
+         _same(planned - completed, row["unexecuted_cell_count"], "cap missing original cells")
+         _require(
+             completed == planned or row["cap_reached"], "missing call cells without measured cap"
++        )
++
++
++def _bind_job_cap(raw, job, label):
++    """Bind producer evidence to the pretest remaining job budget, without qualification."""
++    cap = raw.get("cap_evidence")
++    _require(cap is not None, label + " measured cap evidence required")
++    _cap(cap)
++    _clock_equal(cap["cap_seconds"], job["effective_wall_cap_seconds"], label + " effective cap")
++    _clock_equal(cap["budget_wall_start"], job["clock"]["wall_start"], label + " budget start")
++    _interval(cap, job, label + " cap", require_cpu=False)
++    for expense in raw["expenses"]:
++        _interval(expense, job, label + " expense")
++    for driver in raw.get("driver_map", []):
++        _interval(driver, job, label + " driver")
++    if "cost" in raw:
++        _interval(raw["cost"], job, label + " total cost")
++        _clock_equal(
++            cap["clock"]["wall_start"],
++            raw["cost"]["clock"]["wall_start"],
++            label + " measured function start",
++        )
++    refinement = raw.get("call_refinements")
++    if refinement is not None:
++        children = [e for e in raw["expenses"] if e["scope"] == "independent_call_refinement"]
++        _require(len(children) == 1, label + " measured call refinement expense required")
++        child, child_cap = children[0], refinement.get("cap_evidence")
++        _require(child_cap is not None, label + " refinement remaining budget required")
++        _cap(child_cap)
++        _interval(child_cap, child, label + " refinement cap", require_cpu=False)
++        budget_start = child_cap["budget_wall_start"]
++        _require(
++            child["clock"]["wall_start"] <= budget_start <= child_cap["clock"]["wall_start"],
++            label + " refinement remaining budget start outside actual invocation",
++        )
++        _clock_equal(
++            child_cap["cap_seconds"],
++            max(0.0, job["deadline_wall"] - budget_start),
++            label + " refinement remaining budget",
+         )
+ 
+ 
+@@ -969,6 +1059,10 @@
+         "premium failed original paths cannot become finite",
+     )
+     _cap(raw["cap_evidence"], statuses=codes, labels=legend)
++    premium_cap = raw["cap_evidence"]
++    if premium_cap is not None:
++        for expense in raw["expenses"] + raw["driver_map"]:
++            _interval(expense, premium_cap, "premium actual cost", require_cpu=False)
+     drivers = {}
+     stop = 0
+     for i, driver in enumerate(raw["driver_map"]):
+@@ -1249,7 +1343,24 @@
+             _same(start + effective, job["deadline_wall"], "actual effective job deadline")
+             _same(phase_deadline, job["phase_deadline_wall"], "immutable phase deadline")
+             _clock(job, "fresh actual job cost")
++            for kind in ("wall", "cpu"):
++                _require(
++                    payload["cost"]["clock"][kind + "_start"]
++                    <= job["clock"][kind + "_start"]
++                    <= job["clock"][kind + "_stop"]
++                    <= payload["cost"]["clock"][kind + "_stop"],
++                    "fresh actual job interval outside phase",
++                )
+             previous = job["clock"]["wall_stop"]
++        table_job, oracle_job, teacher_job = record["jobs"]
++        table = record["raw"]["call_table"]
++        if table_job["not_required"]:
++            _require(table is None, "exact-input table exemption may not hide measured evidence")
++        else:
++            _require(table is not None, "required call table measurement missing")
++            _bind_job_cap(table, table_job, "call table")
++        _bind_job_cap(record["raw"], oracle_job, "oracle")
++        _bind_job_cap(record["teacher_replay"], teacher_job, "teacher replay")
+         oracle = _oracle(record["raw"], row, parameters, surface)
+         teacher = _teacher(record["teacher_replay"], row, parameters, surface)
+         cases.append(

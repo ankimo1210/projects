@@ -1,0 +1,202 @@
+--- /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-revision-test_dynamic_hedging_fresh.py
++++ /home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_fresh.py
+@@ -1287,3 +1287,199 @@
+     module = fresh if entrypoint == "producer" else saved_checker(monkeypatch)
+     with pytest.raises(ValueError, match="pretest"):
+         module.main()
++
++
++@pytest.fixture(scope="module")
++def cap_cost_fresh_raw():
++    patch = pytest.MonkeyPatch()
++    fresh, kwargs = bound_fresh_fixture(patch)
++    raw = fresh.run_fresh(**kwargs)
++    checker = saved_checker(patch)
++    yield checker, raw, kwargs
++    patch.undo()
++
++
++@pytest.mark.parametrize(
++    "kind",
++    [
++        "oracle_budget",
++        "table_budget",
++        "teacher_budget",
++        "oracle_missing_cap",
++        "raw_start_outside_job",
++        "child_deadline",
++        "child_wall_interval",
++        "child_cpu_interval",
++    ],
++)
++def test_review_i3_caps_bind_fixed_job_and_real_child_intervals(cap_cost_fresh_raw, kind):
++    import copy
++
++    import run_reference
++
++    checker, base, kwargs = cap_cost_fresh_raw
++    bad = copy.deepcopy(base)
++    record = bad["records"][0]
++    if kind == "oracle_budget":
++        record["raw"]["cap_evidence"]["cap_seconds"] = 150.0
++    elif kind == "table_budget":
++        record["raw"]["call_table"]["cap_evidence"]["cap_seconds"] = 150.0
++    elif kind == "teacher_budget":
++        record["teacher_replay"]["cap_evidence"]["cap_seconds"] = 150.0
++    elif kind == "oracle_missing_cap":
++        record["raw"]["cap_evidence"] = None
++    elif kind == "raw_start_outside_job":
++        cap = record["raw"]["cap_evidence"]
++        elapsed = cap["wall_seconds"]
++        cap["clock"]["wall_start"] = record["jobs"][1]["clock"]["wall_start"] - 1.0
++        cap["clock"]["wall_stop"] = cap["clock"]["wall_start"] + elapsed
++    elif kind == "child_deadline":
++        record["raw"]["expenses"][1]["deadline_wall"] += 100.0
++    elif kind == "child_wall_interval":
++        expense = record["raw"]["expenses"][1]
++        start = record["jobs"][1]["clock"]["wall_stop"] + 1.0
++        expense["clock"]["wall_start"] = start
++        expense["clock"]["wall_stop"] = start + expense["wall_seconds"]
++    elif kind == "child_cpu_interval":
++        expense = record["raw"]["expenses"][1]
++        start = record["jobs"][1]["clock"]["cpu_stop"] + 1.0
++        expense["clock"]["cpu_start"] = start
++        expense["clock"]["cpu_stop"] = start + expense["cpu_seconds"]
++    bad["raw_sha256"] = run_reference.payload_digest(
++        {k: v for k, v in bad.items() if k != "raw_sha256"}
++    )
++    with pytest.raises(ValueError):
++        checker.check_fresh(
++            bad, expected_plan=kwargs["plan"], **{k: v for k, v in kwargs.items() if k != "plan"}
++        )
++
++
++@pytest.mark.parametrize(
++    "scope",
++    ["phase", "job", "oracle_driver", "oracle_query", "table", "teacher_chunk", "teacher_total"],
++)
++def test_review_i4_all_actual_costs_require_measured_cpu(cap_cost_fresh_raw, scope):
++    import copy
++
++    import run_reference
++
++    checker, base, kwargs = cap_cost_fresh_raw
++    bad = copy.deepcopy(base)
++    record = bad["records"][0]
++    if scope == "phase":
++        cost = bad["cost"]
++    elif scope == "job":
++        cost = record["jobs"][1]
++    elif scope == "oracle_driver":
++        cost = record["raw"]["driver_map"][0]
++    elif scope == "oracle_query":
++        cost = record["raw"]["expenses"][2]
++    elif scope == "table":
++        cost = record["raw"]["call_table"]["expenses"][0]
++    elif scope == "teacher_chunk":
++        cost = record["teacher_replay"]["expenses"][0]
++    elif scope == "teacher_total":
++        cost = record["teacher_replay"]["cost"]
++    cost["clock"].pop("cpu_start")
++    cost["clock"].pop("cpu_stop")
++    cost["cpu_seconds"] = np.nan
++    if scope == "oracle_driver":
++        driver_expense = next(
++            e for e in record["raw"]["expenses"] if e["scope"] == "independent_oracle_driver"
++        )
++        driver_expense["clock"] = copy.deepcopy(cost["clock"])
++        driver_expense["cpu_seconds"] = np.nan
++    bad["raw_sha256"] = run_reference.payload_digest(
++        {k: v for k, v in bad.items() if k != "raw_sha256"}
++    )
++    with pytest.raises(ValueError):
++        checker.check_fresh(
++            bad, expected_plan=kwargs["plan"], **{k: v for k, v in kwargs.items() if k != "plan"}
++        )
++
++
++@pytest.mark.parametrize(
++    "kind",
++    [
++        "missing_start",
++        "missing_stop",
++        "missing_elapsed",
++        "nan_start",
++        "nan_stop",
++        "nan_elapsed",
++        "negative_start",
++        "negative_elapsed",
++        "reversed",
++    ],
++)
++def test_review_i4_actual_cpu_is_finite_nonnegative_measurement(monkeypatch, kind):
++    checker = saved_checker(monkeypatch)
++    row = {
++        "clock": {"wall_start": 5.0, "wall_stop": 6.0, "cpu_start": 2.0, "cpu_stop": 2.5},
++        "wall_seconds": 1.0,
++        "cpu_seconds": 0.5,
++        "deadline_wall": 7.0,
++        "overrun_seconds": 0.0,
++    }
++    if kind == "missing_start":
++        row["clock"].pop("cpu_start")
++    elif kind == "missing_stop":
++        row["clock"].pop("cpu_stop")
++    elif kind == "missing_elapsed":
++        row.pop("cpu_seconds")
++    elif kind == "nan_start":
++        row["clock"]["cpu_start"] = np.nan
++    elif kind == "nan_stop":
++        row["clock"]["cpu_stop"] = np.nan
++    elif kind == "nan_elapsed":
++        row["cpu_seconds"] = np.nan
++    elif kind == "negative_start":
++        row["clock"]["cpu_start"] = -1.0
++        row["clock"]["cpu_stop"] = 0.0
++        row["cpu_seconds"] = 1.0
++    elif kind == "negative_elapsed":
++        row["cpu_seconds"] = -0.5
++    elif kind == "reversed":
++        row["clock"]["cpu_start"], row["clock"]["cpu_stop"] = 2.5, 2.0
++    with pytest.raises(ValueError, match="CPU"):
++        checker._clock(row, "actual cost")
++
++
++def test_review_wall_only_cap_is_explicitly_separate_from_actual_cpu_cost(monkeypatch):
++    checker = saved_checker(monkeypatch)
++    cap = {
++        "cap_seconds": 1.0,
++        "budget_wall_start": 5.0,
++        "deadline_wall": 6.0,
++        "clock": {"wall_start": 5.1, "wall_stop": 5.5},
++        "wall_seconds": 0.4,
++        "overrun_seconds": 0.0,
++        "cap_reached": False,
++        "financial_qualification": "unknown",
++    }
++    checker._cap(cap)
++    with pytest.raises(ValueError, match="CPU"):
++        checker._clock(cap, "actual cost")
++
++
++def test_review_expired_remaining_budget_still_binds_original_actual_job(monkeypatch):
++    checker = saved_checker(monkeypatch)
++    job = {
++        "effective_wall_cap_seconds": 0.0,
++        "deadline_wall": 6.0,
++        "clock": {"wall_start": 6.0, "wall_stop": 7.0, "cpu_start": 1.0, "cpu_stop": 2.0},
++        "wall_seconds": 1.0,
++        "cpu_seconds": 1.0,
++        "overrun_seconds": 1.0,
++    }
++    cap = {
++        "cap_seconds": 0.0,
++        "budget_wall_start": 6.0,
++        "deadline_wall": 6.0,
++        "clock": {"wall_start": 6.1, "wall_stop": 6.9},
++        "wall_seconds": 0.8,
++        "overrun_seconds": 0.9,
++        "cap_reached": True,
++        "financial_qualification": "unknown",
++    }
++    checker._bind_job_cap({"cap_evidence": cap, "expenses": []}, job, "expired oracle")

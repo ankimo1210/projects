@@ -1,0 +1,67 @@
+import copy,hashlib,importlib.util,json,sys,time
+from dataclasses import asdict
+from pathlib import Path
+from unittest.mock import patch
+import numpy as np,pytest
+ROOT=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D=ROOT/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+sys.path[:0]=[str(ROOT/"deep_hedge_price/src"),str(ROOT/"johnhull/hullkit/src"),str(ROOT/"johnhull/research/RB-F04/dynamic_hedging")]
+import run_reference as runner,run_fresh,check_fresh,reference_methods as ref
+spec=importlib.util.spec_from_file_location("final_review_fresh_helpers",ROOT/"deep_hedge_price/tests/test_dynamic_hedging_fresh.py")
+h=importlib.util.module_from_spec(spec);spec.loader.exec_module(h)
+before=runner.execution_source_identity()["protocol_source"]
+records=[]
+measurements={}
+with pytest.MonkeyPatch.context() as mp:
+    fresh,args=h.bound_fresh_fixture(mp)
+    raw=fresh.run_fresh(**args)
+    directory=D/"task-5-fresh-cap-cost-fix-source-unit"
+    directory.mkdir(exist_ok=False)
+    args_for_disk=dict(args);args_for_disk["parameters"]=asdict(args["parameters"])
+    t=time.perf_counter();cpu=time.process_time()
+    runner.save_bundle(directory/"inputs",args_for_disk);runner.save_bundle(directory/"raw",raw)
+    wall_stop,cpu_stop=time.perf_counter(),time.process_time()
+    save_time=wall_stop-t
+    measurements["save"]={"clock":{"wall_start":t,"wall_stop":wall_stop,"cpu_start":cpu,"cpu_stop":cpu_stop},"wall_seconds":wall_stop-t,"cpu_seconds":cpu_stop-cpu}
+    t=time.perf_counter();cpu=time.process_time()
+    loaded,receipt=runner.load_bundle(directory/"raw")
+    wall_stop,cpu_stop=time.perf_counter(),time.process_time()
+    measurements["load"]={"clock":{"wall_start":t,"wall_stop":wall_stop,"cpu_start":cpu,"cpu_stop":cpu_stop},"wall_seconds":wall_stop-t,"cpu_seconds":cpu_stop-cpu}
+    def forbid(*a,**kw):raise AssertionError("savedfresh must not draw/solve/restart")
+    with patch.object(np.random,"default_rng",side_effect=forbid),patch.object(ref,"independent_heston_call",side_effect=forbid),patch.object(ref,"pde_call",side_effect=forbid),patch.object(ref,"direct_asian_price",side_effect=forbid),patch.object(runner,"teacher_restart",side_effect=forbid):
+        t=time.perf_counter();cpu=time.process_time()
+        checked=check_fresh.check_fresh(loaded,expected_plan=args["plan"],**{k:v for k,v in args.items() if k!="plan"})
+        wall_stop,cpu_stop=time.perf_counter(),time.process_time()
+        check_time=wall_stop-t
+        measurements["saved_check"]={"clock":{"wall_start":t,"wall_stop":wall_stop,"cpu_start":cpu,"cpu_stop":cpu_stop},"wall_seconds":wall_stop-t,"cpu_seconds":cpu_stop-cpu}
+        t=time.perf_counter();cpu=time.process_time()
+        runner.save_bundle(directory/"checked",checked)
+        wall_stop,cpu_stop=time.perf_counter(),time.process_time()
+        measurements["save_checked"]={"clock":{"wall_start":t,"wall_stop":wall_stop,"cpu_start":cpu,"cpu_stop":cpu_stop},"wall_seconds":wall_stop-t,"cpu_seconds":cpu_stop-cpu}
+        records.append({"name":"actual_current_registry_save_load_check","result":"pass","qualification":checked["financial_qualification"],"original_n":checked["cases"][0]["original_n"],"queries":13,"levels":[768,1536],"saved_receipt":receipt,"save_seconds":save_time,"saved_check_seconds":check_time})
+        for name,mutate in [
+          ("oracle_budget_not_equal_frozen_job",lambda x:x["records"][0]["raw"]["cap_evidence"].update(cap_seconds=150.)),
+          ("table_budget_not_equal_frozen_job",lambda x:x["records"][0]["raw"]["call_table"]["cap_evidence"].update(cap_seconds=150.)),
+          ("teacher_budget_not_equal_frozen_job",lambda x:x["records"][0]["teacher_replay"]["cap_evidence"].update(cap_seconds=150.)),
+          ("oracle_cap_evidence_removed",lambda x:x["records"][0]["raw"].update(cap_evidence=None)),
+          ("phase_cpu_measurement_clock_removed",lambda x:(x["cost"]["clock"].pop("cpu_start"),x["cost"]["clock"].pop("cpu_stop"),x["cost"].update(cpu_seconds=float("nan")))),
+        ]:
+          bad=copy.deepcopy(loaded);mutate(bad)
+          bad["raw_sha256"]=runner.payload_digest({k:v for k,v in bad.items() if k!="raw_sha256"})
+          try:
+            result=check_fresh.check_fresh(bad,expected_plan=args["plan"],**{k:v for k,v in args.items() if k!="plan"})
+            row={"name":name,"result":"invalid_saved_semantics_accepted","qualification":result["financial_qualification"]}
+          except Exception as exc:row={"name":name,"result":"rejected","error":type(exc).__name__+": "+str(exc)}
+          records.append(row);print(json.dumps(row),flush=True)
+        parent={"fresh_plan_sha256":loaded["plan_sha256"],"fresh_raw_sha256":loaded["raw_sha256"],"main_artifact_identity":{"sha256":"9"*64,"scope":"unit_only"}}
+        plan_before=runner.payload_digest(args["plan"])
+        parent_checked=check_fresh.check_fresh(loaded,expected_plan=args["plan"],main_parent_receipt=parent,**{k:v for k,v in args.items() if k!="plan"})
+        assert runner.payload_digest(args["plan"])==plan_before and parent_checked["fresh_plan_sha256"]==plan_before
+        records.append({"name":"posttest_parent_does_not_modify_pretest_plan","result":"pass","financial_qualification":parent_checked["financial_qualification"]})
+after=runner.execution_source_identity()["protocol_source"]
+summary={"scope":"synthetic metadata actual small original1024/math only; no formalpilot/main","source_before":before,"source_after":after,"source_stable":before==after,"records":records,"source_unit_directory":str(directory),"measurements":measurements}
+(D/"task-5-fresh-cap-cost-fix-live-probes.json").write_text(json.dumps(summary,indent=2)+"\n")
+print(json.dumps({"source_stable":before==after,"records":records},indent=2),flush=True)
+assert before==after
+assert all(r["result"] == "rejected" for r in records[1:-1])
+(directory/"README.json").write_text(json.dumps({"scope":"synthetic metadata actual source-unit only; not formal pilot/main/premium","financial_qualification":"unknown","actual_original_n":1024,"actual_queries":13,"actual_levels":[768,1536],"measurements":measurements,"raw_sha256":raw["raw_sha256"],"plan_sha256":raw["plan_sha256"],"source":args["source"],"source_stable":before==after},indent=2)+"\n")

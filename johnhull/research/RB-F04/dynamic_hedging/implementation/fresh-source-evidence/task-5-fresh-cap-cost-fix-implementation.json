@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-10",
+  "decision": "ready_for_independent_source_rereview_only",
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40"
+  },
+  "tests": 82,
+  "financial_qualification": "unknown",
+  "formal_experiments_executed": false,
+  "snapshot_sha256": "54e60b323f63776b3e5ff68cd6e99f9a7a2d722523bf255a5a6fbb75374f214e",
+  "report_sha256": "5c264c3bdf47d56e93199cf47a085ac22129acf50380f3f6c975fa824048059b",
+  "source_unit_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit"
+}

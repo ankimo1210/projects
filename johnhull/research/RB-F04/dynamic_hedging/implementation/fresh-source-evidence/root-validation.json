@@ -1,0 +1,53 @@
+{
+  "validation": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_fresh.py"
+      ],
+      "returncode": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_fresh.py"
+      ],
+      "returncode": 0,
+      "stdout": "4 files already formatted\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py",
+        "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py",
+        "deep_hedge_price/tests/test_dynamic_hedging_fresh.py",
+        "johnhull/ROADMAP.md",
+        "johnhull/docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md",
+        "johnhull/research/RB-F04/dynamic_hedging/README.md"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "source_original_archive_links": "PASS",
+  "financial_qualification": "unknown",
+  "tests": "author82/41.29s, independent82/41.85s; not added together",
+  "raw_log_whitespace": "preserved; excluded from source whitespace check"
+}

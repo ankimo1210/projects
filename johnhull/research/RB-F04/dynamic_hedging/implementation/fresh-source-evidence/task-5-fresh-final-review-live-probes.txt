@@ -1,0 +1,60 @@
+{"name": "oracle_budget_not_equal_frozen_job", "result": "invalid_saved_semantics_accepted", "qualification": "unknown"}
+{"name": "table_budget_not_equal_frozen_job", "result": "invalid_saved_semantics_accepted", "qualification": "unknown"}
+{"name": "teacher_budget_not_equal_frozen_job", "result": "invalid_saved_semantics_accepted", "qualification": "unknown"}
+{"name": "oracle_cap_evidence_removed", "result": "invalid_saved_semantics_accepted", "qualification": "unknown"}
+{"name": "phase_cpu_measurement_clock_removed", "result": "invalid_saved_semantics_accepted", "qualification": "unknown"}
+{
+  "source_stable": true,
+  "records": [
+    {
+      "name": "actual_current_registry_save_load_check",
+      "result": "pass",
+      "qualification": "unknown",
+      "original_n": 1024,
+      "queries": 13,
+      "levels": [
+        768,
+        1536
+      ],
+      "saved_receipt": {
+        "arrays_sha256": "82f08f530e74bc26dd32ab0785ea36e3333b0200c9cfab8722d2eb8b315497bc",
+        "artifact_sha256": "148dbbb7d461e20e32acc550a2b78d7ac4a77426e9712a98caf68ae3237fd5f5",
+        "metadata_sha256": "e5daa31fe3e463e37e82cec773afd2e51f6eb1be43afbe82806ff3a1e404055b",
+        "schema": "rb-f04-array-receipt-v1",
+        "uncompressed_bytes": 18532232
+      },
+      "save_seconds": 0.05828167999970901,
+      "saved_check_seconds": 0.5798973580003803
+    },
+    {
+      "name": "oracle_budget_not_equal_frozen_job",
+      "result": "invalid_saved_semantics_accepted",
+      "qualification": "unknown"
+    },
+    {
+      "name": "table_budget_not_equal_frozen_job",
+      "result": "invalid_saved_semantics_accepted",
+      "qualification": "unknown"
+    },
+    {
+      "name": "teacher_budget_not_equal_frozen_job",
+      "result": "invalid_saved_semantics_accepted",
+      "qualification": "unknown"
+    },
+    {
+      "name": "oracle_cap_evidence_removed",
+      "result": "invalid_saved_semantics_accepted",
+      "qualification": "unknown"
+    },
+    {
+      "name": "phase_cpu_measurement_clock_removed",
+      "result": "invalid_saved_semantics_accepted",
+      "qualification": "unknown"
+    },
+    {
+      "name": "posttest_parent_does_not_modify_pretest_plan",
+      "result": "pass",
+      "financial_qualification": "unknown"
+    }
+  ]
+}

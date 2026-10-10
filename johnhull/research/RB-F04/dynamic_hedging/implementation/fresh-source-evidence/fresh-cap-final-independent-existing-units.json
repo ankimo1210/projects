@@ -1,0 +1,110 @@
+[
+  {
+    "unit": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-source-unit",
+    "original_metadata_sha256": {
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-source-unit/inputs/metadata.json": "eb371fe0f3b83ad01b65937b614cf35a3ea0875f75d9925c8d02327e5a5b993f",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-source-unit/raw/metadata.json": "e5daa31fe3e463e37e82cec773afd2e51f6eb1be43afbe82806ff3a1e404055b",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-source-unit/checked/metadata.json": "aa86ed867b5ecc31ef109cf222d9f2ce5e6d44c50fd0aa9f96d55f966360511b"
+    },
+    "after_metadata_sha256": {
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-source-unit/inputs/metadata.json": "eb371fe0f3b83ad01b65937b614cf35a3ea0875f75d9925c8d02327e5a5b993f",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-source-unit/raw/metadata.json": "e5daa31fe3e463e37e82cec773afd2e51f6eb1be43afbe82806ff3a1e404055b",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-final-review-source-unit/checked/metadata.json": "aa86ed867b5ecc31ef109cf222d9f2ce5e6d44c50fd0aa9f96d55f966360511b"
+    },
+    "original_unmodified": true,
+    "source_differences": {
+      "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": {
+        "saved": "f67af225363b4fb76a4564099494beed3144b033b79e8d4e2698d794f3209f65",
+        "current": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194"
+      },
+      "johnhull/research/RB-F04/dynamic_hedging/check_main.py": {
+        "saved": "fee45a1ae27417159555a0af6f03ab50830a5e52ac5c5372b30b6e0cdc324307",
+        "current": "fa7307886cb61a1de1d59fe7ceb31ff594ad1b9d91422447bd2dcdcd0136ac53"
+      },
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+        "saved": "d434958f26cb547055834c70387a720a021bec991ccd4424e57f65691f06b64b",
+        "current": "686fd890a58f1e9043681b1b1bc5fcb9e56aaea1c608ac45107266d40cb04de4"
+      },
+      "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": {
+        "saved": "fea28b7456b472fde587e2aa6cff9a6bf794cd1be8998b4493be494d81875d79",
+        "current": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc"
+      },
+      "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": {
+        "saved": "13f2727b78902406f6da4e987c9de283472610796d9ae38be8ec87805e4426cf",
+        "current": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e"
+      },
+      "johnhull/research/RB-F04/dynamic_hedging/run_main.py": {
+        "saved": "6d0fce646aca81dd26ae0052b28ea74c8c17fe3e7c79490dbe8aee33dae0d9e4",
+        "current": "916dd2cd80007608777d3a7ca4224b5aedf78bf58c38f2bec97e6aa03b36e8c0"
+      },
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+        "saved": "032a15899a4110e5cd90190f2f658c65d5eecc6546a431f68fa8efcd8aa97717",
+        "current": "f036362f9bdb8c00208f89e88f15a285d5e65bca1e28d38687ed21c74258b8f6"
+      },
+      "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": {
+        "saved": "f86f59a142492f31dc7348e65539555d4eeed4d02b226234021078d28751d9e2",
+        "current": "cc7183df08f8d4b7942929ccc44cbcc5899be5df74128016c7c6521bac2909b9"
+      }
+    },
+    "result": {
+      "outcome": "rejected",
+      "error": "ValueError: fresh source bytes differ from the exact bound closure"
+    },
+    "input_receipt": {
+      "arrays_sha256": "53c234ad8b8a25dfe9b1980244f301371c8cba5a931256ebfc5e81ab48b5980c",
+      "artifact_sha256": "65c2462f46f58742f873213152e0f7c2ea0fb8257a84caeb8ad02e97a046af42",
+      "metadata_sha256": "eb371fe0f3b83ad01b65937b614cf35a3ea0875f75d9925c8d02327e5a5b993f",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 4217536
+    },
+    "raw_receipt": {
+      "arrays_sha256": "82f08f530e74bc26dd32ab0785ea36e3333b0200c9cfab8722d2eb8b315497bc",
+      "artifact_sha256": "148dbbb7d461e20e32acc550a2b78d7ac4a77426e9712a98caf68ae3237fd5f5",
+      "metadata_sha256": "e5daa31fe3e463e37e82cec773afd2e51f6eb1be43afbe82806ff3a1e404055b",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 18532232
+    }
+  },
+  {
+    "unit": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit",
+    "original_metadata_sha256": {
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit/inputs/metadata.json": "dbd8b0f87d94714fcbb8bb516524efd7e6abb9f315f2c3335ed5391f2b27e51a",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit/raw/metadata.json": "40156fd99a9e174343aafdf7f9d4e5f1f2bd362dc829ad7dba96a3b5d368dd81",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit/checked/metadata.json": "038f91e44aaf7b98f447917be8e95592cdfa7740284b5db6b23925b16c47ecb8"
+    },
+    "after_metadata_sha256": {
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit/inputs/metadata.json": "dbd8b0f87d94714fcbb8bb516524efd7e6abb9f315f2c3335ed5391f2b27e51a",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit/raw/metadata.json": "40156fd99a9e174343aafdf7f9d4e5f1f2bd362dc829ad7dba96a3b5d368dd81",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fresh-cap-cost-fix-source-unit/checked/metadata.json": "038f91e44aaf7b98f447917be8e95592cdfa7740284b5db6b23925b16c47ecb8"
+    },
+    "original_unmodified": true,
+    "source_differences": {
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": {
+        "saved": "5764e7b7cea2db422b49dab872f40a299c1b4baf8486dad1d012791dead2a490",
+        "current": "686fd890a58f1e9043681b1b1bc5fcb9e56aaea1c608ac45107266d40cb04de4"
+      },
+      "johnhull/research/RB-F04/dynamic_hedging/run_main.py": {
+        "saved": "b4bd5925e4b331b30c394deb723144e147b9c5a048bbddb18cda22f82863268c",
+        "current": "916dd2cd80007608777d3a7ca4224b5aedf78bf58c38f2bec97e6aa03b36e8c0"
+      }
+    },
+    "result": {
+      "outcome": "rejected",
+      "error": "ValueError: fresh source bytes differ from the exact bound closure"
+    },
+    "input_receipt": {
+      "arrays_sha256": "53c234ad8b8a25dfe9b1980244f301371c8cba5a931256ebfc5e81ab48b5980c",
+      "artifact_sha256": "79f33b4aeae625ed2d30a2a6e2f3b65e8334c58556ebdd15fec7874ad42bf66f",
+      "metadata_sha256": "dbd8b0f87d94714fcbb8bb516524efd7e6abb9f315f2c3335ed5391f2b27e51a",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 4217536
+    },
+    "raw_receipt": {
+      "arrays_sha256": "82f08f530e74bc26dd32ab0785ea36e3333b0200c9cfab8722d2eb8b315497bc",
+      "artifact_sha256": "96a3e371e39eed5b13c52d2d02e2063201d58150783e578ec0c0aacaa81350fa",
+      "metadata_sha256": "40156fd99a9e174343aafdf7f9d4e5f1f2bd362dc829ad7dba96a3b5d368dd81",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 18532232
+    }
+  }
+]

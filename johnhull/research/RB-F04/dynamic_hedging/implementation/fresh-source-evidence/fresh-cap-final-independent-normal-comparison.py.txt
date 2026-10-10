@@ -1,0 +1,30 @@
+from pathlib import Path
+import importlib.util,json,numpy as np
+root=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+sdd=root/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+def load(name,path):
+    spec=importlib.util.spec_from_file_location(name,path)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module
+old=load("fresh_original_baseline",sdd/"task-5-fresh-reference-baseline.py")
+new=load("fresh_current_reference",root/"johnhull/research/RB-F04/dynamic_hedging/reference_methods.py")
+class Field:
+    def evaluate(self,t,ss):
+        ss=np.asarray(ss)
+        return {"variance":np.full(ss.shape,.04),"status":np.full(ss.shape,"constant",dtype="U32")}
+p=dict(spot=100.,rate=.03,dividend_yield=0.,v0=.04,kappa=2.,theta=.04,xi=.3,rho=-.7)
+rows=[]
+for model in ["heston","local"]:
+    args=dict(model=model,calendar_times=.75+np.arange(25)/96,
+        fixing_indices=np.array([8,16,24]),spot=90.,state=.04 if model=="heston" else 1.,
+        memory_sum=900.,memory_count=9,seed=11,n_paths=128)
+    surface=None if model=="heston" else Field()
+    before=old.direct_conditional_asian(p,surface,**args)
+    after=new.direct_conditional_asian(p,surface,**args)
+    for key in ["samples","mean","standard_errors","covariance","three_width_greek_means"]:
+        a,b=np.asarray(before[key]),np.asarray(after[key])
+        passed=a.shape==b.shape and np.allclose(a,b,rtol=2e-10,atol=2e-11,equal_nan=True)
+        rows.append(dict(model=model,key=key,allclose=bool(passed),max_absolute_error=float(np.max(np.abs(a-b)))))
+        assert passed,(model,key)
+(sdd/"fresh-cap-final-independent-normal-comparison.json").write_text(json.dumps(rows,indent=2)+"\n")
+print(json.dumps(rows,indent=2))

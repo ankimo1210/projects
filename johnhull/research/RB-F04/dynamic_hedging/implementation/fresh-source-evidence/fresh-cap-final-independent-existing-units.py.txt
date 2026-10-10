@@ -1,0 +1,27 @@
+from pathlib import Path
+import json,sys,hashlib,os
+os.environ.update(OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
+r=Path('/home/kazumasa/worktrees/johnhull-research-roadmap');d=r/'.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging'
+sys.path[:0]=[str(r/'deep_hedge_price/src'),str(r/'johnhull/hullkit/src'),str(r/'johnhull/research/RB-F04/dynamic_hedging')]
+from unittest.mock import patch
+import run_reference as runner,check_fresh,reference_methods as ref,numpy as np
+from hullkit._heston_local_surface import HestonParameters
+out=[]
+for name in ['task-5-fresh-final-review-source-unit','task-5-fresh-cap-cost-fix-source-unit']:
+ unit=d/name
+ paths=[unit/'inputs/metadata.json',unit/'raw/metadata.json',unit/'checked/metadata.json']
+ before={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths if p.exists()}
+ args,in_receipt=runner.load_bundle(unit/'inputs');raw,raw_receipt=runner.load_bundle(unit/'raw')
+ args['parameters']=HestonParameters(**args['parameters'])
+ current=runner.execution_source_identity()['protocol_source']; old=args['source']
+ differences={k:{'saved':old.get(k),'current':current.get(k)} for k in sorted(set(old)|set(current)) if old.get(k)!=current.get(k)}
+ def forbid(*a,**kw):raise AssertionError('saved check cannot draw/solve')
+ with patch.object(np.random,'default_rng',side_effect=forbid),patch.object(ref,'independent_heston_call',side_effect=forbid),patch.object(ref,'pde_call',side_effect=forbid),patch.object(ref,'direct_asian_price',side_effect=forbid),patch.object(runner,'teacher_restart',side_effect=forbid):
+  try:
+   checked=check_fresh.check_fresh(raw,expected_plan=args['plan'],**{k:v for k,v in args.items() if k!='plan'})
+   result={'outcome':'accepted','financial_qualification':checked['financial_qualification']}
+  except Exception as exc: result={'outcome':'rejected','error':type(exc).__name__+': '+str(exc)}
+ after={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths if p.exists()}
+ out.append(dict(unit=str(unit),original_metadata_sha256=before,after_metadata_sha256=after,original_unmodified=before==after,source_differences=differences,result=result,input_receipt=in_receipt,raw_receipt=raw_receipt))
+p=d/'fresh-cap-final-independent-existing-units.json'; assert not p.exists(); p.write_text(json.dumps(out,indent=2)+'\n')
+print(json.dumps([{k:v for k,v in row.items() if k not in ['input_receipt','raw_receipt','original_metadata_sha256','after_metadata_sha256']} for row in out],indent=2))

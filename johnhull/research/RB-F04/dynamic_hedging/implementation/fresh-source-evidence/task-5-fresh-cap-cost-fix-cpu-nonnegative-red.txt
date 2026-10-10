@@ -1,0 +1,34 @@
+......F....                                                              [100%]
+=================================== FAILURES ===================================
+_ test_review_i4_actual_cpu_is_finite_nonnegative_measurement[negative_start] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7bed0991bec0>
+kind = 'negative_start'
+
+    @pytest.mark.parametrize("kind", ["missing_start", "missing_stop", "missing_elapsed",
+                                      "nan_start", "nan_stop", "nan_elapsed",
+                                      "negative_start", "negative_elapsed", "reversed"])
+    def test_review_i4_actual_cpu_is_finite_nonnegative_measurement(monkeypatch, kind):
+        checker = saved_checker(monkeypatch)
+        row = {"clock": {"wall_start": 5., "wall_stop": 6., "cpu_start": 2., "cpu_stop": 2.5},
+               "wall_seconds": 1., "cpu_seconds": .5, "deadline_wall": 7., "overrun_seconds": 0.}
+        if kind == "missing_start": row["clock"].pop("cpu_start")
+        elif kind == "missing_stop": row["clock"].pop("cpu_stop")
+        elif kind == "missing_elapsed": row.pop("cpu_seconds")
+        elif kind == "nan_start": row["clock"]["cpu_start"] = np.nan
+        elif kind == "nan_stop": row["clock"]["cpu_stop"] = np.nan
+        elif kind == "nan_elapsed": row["cpu_seconds"] = np.nan
+        elif kind == "negative_start":
+            row["clock"]["cpu_start"] = -1.
+            row["clock"]["cpu_stop"] = 0.
+            row["cpu_seconds"] = 1.
+        elif kind == "negative_elapsed": row["cpu_seconds"] = -.5
+        elif kind == "reversed":
+            row["clock"]["cpu_start"], row["clock"]["cpu_stop"] = 2.5, 2.
+>       with pytest.raises(ValueError, match="CPU"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_fresh.py:1379: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_fresh.py::test_review_i4_actual_cpu_is_finite_nonnegative_measurement[negative_start]
+1 failed, 10 passed, 71 deselected in 0.22s
