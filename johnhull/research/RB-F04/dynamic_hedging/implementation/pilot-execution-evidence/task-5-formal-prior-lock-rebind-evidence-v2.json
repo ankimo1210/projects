@@ -1,0 +1,147 @@
+{
+  "activation_candidate_count": 2332,
+  "activation_potential_first_job_budget_candidates_digest": "a82f3c33d71a918f51131c8c77917793ceec75850a2181815c867f1a1e243c04",
+  "activation_v4_origin_sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+  "actual_before_after_inventory_binding": "source closure refs + pinned independent decisions and root regression receipts",
+  "all3138_budget_and_cap_recipe_approved": false,
+  "financial_qualification": "unknown",
+  "financial_workers_RNG_SDE_solver_Popen_executed": 0,
+  "formal_phase_approved": false,
+  "original_counts": {
+    "N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "attempts": 51,
+    "cap_parent_associations": 266306,
+    "cases": 121,
+    "drivers": 10,
+    "jobs": 3138,
+    "literal_cap_options": 573122,
+    "teachers": 20
+  },
+  "other79_runtime_bytes_unchanged": true,
+  "preparation_cost": {
+    "CPU_seconds_before_receipt": 0.049808979,
+    "own_final_tail": "unknown",
+    "wall_seconds_before_receipt": 0.05196790100308135
+  },
+  "references": {
+    "task-5-conditional-n-prior-cap-consumer-author-v2-source-closure-after.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-conditional-n-prior-cap-consumer-author-v2-source-closure-after.json",
+      "sha256": "b3fdeeb26e5d810fdb29216925e44b59843f9efd6c6c8cf69625c4c1e3ae2211"
+    },
+    "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json",
+      "sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9"
+    },
+    "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json",
+      "sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb"
+    },
+    "task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-gate-selector-supplement-v4.json",
+      "sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1"
+    },
+    "task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-selection-supplement-v3.json",
+      "sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62"
+    },
+    "task-5-fullmixed-prior-budget-candidate-author-v1-config.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-config.json",
+      "sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d"
+    },
+    "task-5-fullmixed-prior-budget-independent-v2-source-decision.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-v2-source-decision.json",
+      "sha256": "b53fda5750838bb7db5dfd45d66b7da7985faeff38e2ef67a73c5c53cc5a6918"
+    },
+    "task-5-phase-local-admin-proof-key-independent-decision-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-independent-decision-v1.json",
+      "sha256": "8a000b4612f1f613451acb4cfeeae8324d911221dd0587e62e1ba967cd3c161b"
+    },
+    "task-5-phase-local-admin-proof-key-root-v2-format.log": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-v2-format.log",
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938"
+    },
+    "task-5-phase-local-admin-proof-key-root-v2-pytest.log": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-v2-pytest.log",
+      "sha256": "1e1097e892d74db44e7c3fa01bdcdad3d24937278f7ddc87c719402d67d66919"
+    },
+    "task-5-phase-local-admin-proof-key-root-v2-results.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-v2-results.json",
+      "sha256": "03c096be39e1908ee3636e8362db61057ed7f8fb9b8c1cd03524f0f5edc8bd5e"
+    },
+    "task-5-phase-local-admin-proof-key-root-v2-ruff.log": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-admin-proof-key-root-v2-ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "task-5-phase-local-reuse-independent-decision-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-independent-decision-v1.json",
+      "sha256": "c09d557dc348bb7b3b32da7041d0512db5538bc370204c1ff26c59ea6aed02d3"
+    },
+    "task-5-phase-local-reuse-root-regression-v1-format.log": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-root-regression-v1-format.log",
+      "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd"
+    },
+    "task-5-phase-local-reuse-root-regression-v1-pytest.log": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-root-regression-v1-pytest.log",
+      "sha256": "252cc82ad8c22d43f364701df30300ea373445cfac9767222c7623d014f44cd9"
+    },
+    "task-5-phase-local-reuse-root-regression-v1-results.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-root-regression-v1-results.json",
+      "sha256": "4566461b5d0454c14a03425de5def73accb769380858f165a17195dfc1839ef0"
+    },
+    "task-5-phase-local-reuse-root-regression-v1-ruff.log": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-local-reuse-root-regression-v1-ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "task-5-phase-verified-raw-memo-fixed-v2-source-closure.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-fixed-v2-source-closure.json",
+      "sha256": "735680b179bde8456897ee0e1c02197a3af6cb27d8bc33db31d3bbb89314d59f"
+    },
+    "task-5-phase-verified-raw-memo-fixed-v3-source-closure.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-phase-verified-raw-memo-fixed-v3-source-closure.json",
+      "sha256": "3a8014c8768520912f2a77f0345812e9ef5ea12d850ece53116e6b9c28d265f6"
+    }
+  },
+  "schema": "rb-f04-formal-prior-rebind-evidence-v2",
+  "scope": "immutable source-limited approvals and original false budget candidates; no formal/budget approval",
+  "source_chain": [
+    {
+      "canonical_sha256": "408f2bc271a3379fb5aa8a1c96be0839f090cd3b2452bcd8b8a94c4af7bb7652",
+      "files": {
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "a37626ff56e6ae74e08d6841c66ca9ec5712596d491930e623620d35607bce5b",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc"
+      },
+      "label": "old_candidate"
+    },
+    {
+      "canonical_sha256": "dc7631fe73a457cd995d109aa693be9401b266410b9f53aa4e2d51e59f56d39c",
+      "files": {
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "952b8f89c930578db1f6531bd6e73ade947d7cfbef246cc8510d246a54ed6197",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "7c08929f4c17d70d4bff48911c10dec3e3949c690f003b24d74b98db5af4e0dc"
+      },
+      "label": "predicate_dc"
+    },
+    {
+      "canonical_sha256": "959f879a6c01a3d0ed8cb9fb99bfb706025c4636d89522d7fcff14a9b502ab76",
+      "files": {
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "392b5d6a9b6bb63ad71d39f276ea60a197cfd3988532f8b7232a89c53c764f40",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635"
+      },
+      "label": "memo_v2",
+      "native_payload_sha256": "0df11d81c773163dc05aeb06531bce30bba3721ec738f89257f5e05ae7ed7667"
+    },
+    {
+      "canonical_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+      "files": {
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635"
+      },
+      "label": "admin_key_v3",
+      "native_payload_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532"
+    }
+  ]
+}

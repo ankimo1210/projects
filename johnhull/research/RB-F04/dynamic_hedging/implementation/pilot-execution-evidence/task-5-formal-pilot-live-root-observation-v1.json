@@ -1,0 +1,32 @@
+{
+  "schema": "rb-f04-root-live-financial-pilot-progress-observation-v1",
+  "UTC": "2026-10-10T09:23:31.300597+00:00",
+  "exec_session_id": 15463,
+  "ps_live_processes": "    PID    PPID STAT     ELAPSED   RSS COMMAND\n 287116  287115 Ss+        06:51 17408 /home/kazumasa/projects/.venv/bin/python /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-enclosing-observer-v1.py\n 287117  287116 S+         06:51 20324 /home/kazumasa/projects/.venv/bin/python /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v2.py --guard /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v1.json\n 287118  287117 Rs         06:50 3447720 /home/kazumasa/projects/.venv/bin/python /home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py --plan /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialized-root-v2/locked-prior-metadata --inputs /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs --output /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-v1\n",
+  "saved_original_job_artifact_names": [
+    "call-current:Heston",
+    "call-current:local",
+    "field-current",
+    "premium-current",
+    "teacher-driver:Heston:N1024",
+    "teacher-driver:Heston:N4096",
+    "teacher-driver:local:N1024",
+    "teacher:Heston:N1024:coarse",
+    "teacher:Heston:N1024:coarse:raw",
+    "teacher:Heston:N4096:coarse",
+    "teacher:Heston:N4096:coarse:raw",
+    "teacher:local:N1024:coarse",
+    "teacher:local:N1024:coarse:raw"
+  ],
+  "physical_node_directory_counts_only": {
+    "teacher:Heston:N1024:high:raw": 18,
+    "teacher:local:N1024:coarse:raw": 520,
+    "teacher:Heston:N4096:coarse:raw": 108,
+    "teacher:Heston:N1024:coarse:raw": 108
+  },
+  "source_financial_qualification": "unknown",
+  "saved_semantic_check_complete": false,
+  "phase_completion_claimed": false,
+  "count_is_not_work_percent": true,
+  "standalone_count_does_not_certify_financial_precision": true
+}

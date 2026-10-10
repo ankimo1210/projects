@@ -1,0 +1,53 @@
+{
+  "CAS_writes": 0,
+  "RNG_SDE_solver_Popen_calls": 0,
+  "byte_read_only_no_financial_array_decode": true,
+  "closed_trees": {
+    "task-5-formal-pilot-root-enclosing-observation-v1": {
+      "bytes": 2726,
+      "files": 4
+    },
+    "task-5-formal-pilot-root-operational-observation-v1": {
+      "bytes": 350860,
+      "files": 7
+    },
+    "task-5-formal-pilot-root-v1": {
+      "bytes": 2445135276,
+      "files": 6045
+    }
+  },
+  "cost": {
+    "manifest_inventory_hash_CPU_seconds": 2.5092511,
+    "manifest_inventory_hash_wall_seconds": 3.168675813001755
+  },
+  "financial_qualification": "unknown",
+  "old_source_snapshot_81_and_typed_inputs_and_plan": "all inherited original metadata entries byte-preserved; source snapshot remains pre-fix",
+  "original_metadata_root_receipt": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-metadata-cas-root-receipt-v1.json",
+    "sha256": "b1dc2fb84d1bb36f2dfe48664683148de9de9eede34f251c43ce756b97de0d1e"
+  },
+  "original_metadata_shared_manifest_ref": "artifact:sha256:0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc",
+  "prior_source_canonical_identity": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "prior_source_native_payload_identity": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "production_Git_docs_edits": 0,
+  "standard_evidence_manifest": {
+    "entries": 6245,
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-terminal-cas-preparation-v1-manifest.json",
+    "path_bytes": 3168078535,
+    "sha256": "34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35",
+    "shared_manifest_blob_bytes": 2123092,
+    "unique_data_blobs": 4357,
+    "unique_data_bytes": 2474307753
+  },
+  "status": "prepared closed terminal pilot CAS bytes; root store pending",
+  "terminal_state": {
+    "actual_resource_cap": null,
+    "child_exit_code": 0,
+    "executed": 69,
+    "numerical_reuse_authorized": false,
+    "reason": "KeyError: 'N'",
+    "unclosed_source_or_solver_defect": 1,
+    "verification": null,
+    "whole_experiment_complete": false
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "closed_native_trees": [
+    "task-5-formal-pilot-root-v1",
+    "task-5-formal-pilot-root-operational-observation-v1",
+    "task-5-formal-pilot-root-enclosing-observation-v1"
+  ],
+  "files": {
+    "task-5-formal-pilot-terminal-cas-preparation-v1-manifest.json": {
+      "bytes": 2123092,
+      "sha256": "34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35"
+    },
+    "task-5-formal-pilot-terminal-cas-preparation-v1-readonly-preflight.json": {
+      "bytes": 1050,
+      "sha256": "6ec7a6c6311c028505cb5bdf25cafef2b1352232da9cb3365a5b84da00659ad0"
+    },
+    "task-5-formal-pilot-terminal-cas-preparation-v1-report.json": {
+      "bytes": 2258,
+      "sha256": "fe6951920a30da960e1fe82420ff4c45f1b94db2995217583d189b16413e8882"
+    },
+    "task-5-formal-pilot-terminal-cas-preparation-v1-verification.json": {
+      "bytes": 1467,
+      "sha256": "c81ca71b0b0c8dc7d2a1df577d4c2ec7f0a492b8b20640c2c01b06df9aa5f51f"
+    },
+    "task-5-formal-pilot-terminal-cas-preparation-v1.py": {
+      "bytes": 8559,
+      "sha256": "aed7c650347add30616508d7270fe424f620628dea13dba2cae2800849eb7c40"
+    }
+  },
+  "financial_qualification": "unknown",
+  "original_metadata_manifest_ref": "artifact:sha256:0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc",
+  "production_docs_Git_CAS_edits": 0,
+  "root_authorization_for_CAS_write_required": true,
+  "standard_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-terminal-cas-preparation-v1-manifest.json",
+    "ref": "artifact:sha256:34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35",
+    "sha256": "34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35"
+  },
+  "status": "fixed terminal pilot byte CAS preparation; root store pending"
+}

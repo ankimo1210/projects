@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {
+      "case": "v1_source_loader_rejects_actual_v3_limited_schema",
+      "reason": "fixed independent decision is not approved",
+      "status": "expected_rejection"
+    },
+    {
+      "case": "v1_monitor_rejects_current_v3_identity",
+      "reason": "source prior identity is not current fixed closure",
+      "status": "expected_rejection"
+    },
+    {
+      "case": "v1_pending_root_cannot_materialize",
+      "reason": "pending/rejected approval cannot materialize prior metadata",
+      "status": "expected_rejection"
+    },
+    {
+      "case": "v1_false_monitor_no_child",
+      "reason": "root prior approval required; candidate cannot execute",
+      "status": "expected_rejection"
+    }
+  ],
+  "evidence_sha256": "1e83ebae5b76c0560a40cd1ec21faf6e342e722111d725feaa1faadb846f14a1",
+  "output_materialization_created": false,
+  "source_imports_workers_RNG_SDE_solver_Popen": 0,
+  "status": "RED_required_rebind_observed_false_guards_preserved"
+}

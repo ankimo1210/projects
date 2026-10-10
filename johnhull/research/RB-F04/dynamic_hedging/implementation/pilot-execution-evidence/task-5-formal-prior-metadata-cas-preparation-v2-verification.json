@@ -1,0 +1,28 @@
+{
+  "CAS_store_writes": 0,
+  "Ruff_check": {
+    "exit_code": 0,
+    "output": "All checks passed!"
+  },
+  "Ruff_format_check": {
+    "exit_code": 0,
+    "output": "1 file already formatted"
+  },
+  "archive_kind": "existing johnhull-evidence-manifest schema_version 1",
+  "cost": {
+    "CPU_seconds": 0.20328131600000002,
+    "wall_seconds": 0.20329466499970295
+  },
+  "entry_count": 186,
+  "excludes_live_native_directories_logs_and_new_terminal_outputs": true,
+  "financial_RNG_solver_Popen_calls": 0,
+  "financial_qualification": "unknown",
+  "fixed_v1_preserved": true,
+  "root_execution_pending": true,
+  "selected_files_SHA_and_size_rechecked": 186,
+  "shared_manifest_additional_blob": 1,
+  "status": "PASS finite readonly preparation",
+  "unique_data_blobs": 182,
+  "v2_only_changes": "fixed finite manifest path and expected SHA",
+  "v2_wrapper_function_AST_same_as_v1": true
+}

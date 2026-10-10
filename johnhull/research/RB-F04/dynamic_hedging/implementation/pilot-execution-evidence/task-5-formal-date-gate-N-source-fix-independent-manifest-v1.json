@@ -1,0 +1,42 @@
+{
+  "schema": "rb-f04-independent-date-gate-N-source-fix-manifest-v1",
+  "files": {
+    "task-5-formal-date-gate-N-source-fix-independent-decision-v1.json": {
+      "sha256": "a90705642f36eef595b93e9cbb2302aaa54d547d5deb7ad6ca46024deed1fbf0",
+      "bytes": 5294
+    },
+    "task-5-formal-date-gate-N-source-fix-independent-review-v1.md": {
+      "sha256": "c5bf69bab0ef28e92d7c891691be9c79a4f8f4aa851821f1e45f21250410b896",
+      "bytes": 1463
+    },
+    "task-5-formal-date-gate-N-source-fix-independent-results-v1.json": {
+      "sha256": "2e293d628a1955354f86d07de655938e81662933d797914a5c246dae76740f37",
+      "bytes": 4556
+    },
+    "task-5-formal-date-gate-N-independent-current-source-closure-v1.json": {
+      "sha256": "4183b1e707cfb40d01808a45e1fc5042e54ba26d8a2892e3ac3703f76a30f768",
+      "bytes": 33985
+    },
+    "task-5-formal-date-gate-N-source-fix-independent-probe-v1.py": {
+      "sha256": "1fd90cf49681ba00b941b19ec139c128c898fc99e72b64e08725dde780808c23",
+      "bytes": 6892
+    },
+    "task-5-formal-date-gate-N-independent-before-test-v1.py": {
+      "sha256": "f96fc7be2f7f0ec4a937a35922129324f7128902b348c8c48caeb3f5d27d6a06",
+      "bytes": 29947
+    },
+    "task-5-formal-date-gate-N-source-fix-independent-snapshot-v1/deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": {
+      "sha256": "c4fb5df6ff68a744643b0b2fc529254db9362e52f9436e02bdaa34b3e74a6106",
+      "bytes": 32482
+    },
+    "task-5-formal-date-gate-N-source-fix-independent-snapshot-v1/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": {
+      "sha256": "8f0df2b35bb04087e7c4a3761d6cf1b8bbb8104e2e5b7516af03ba6c2c8123c4",
+      "bytes": 176350
+    }
+  },
+  "source_canonical_runner_digest_sha256": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_native_payload_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "old_source/partial_and_unknown_preserved": true,
+  "formal_financial_launch_or_phase_approval": false,
+  "manifest_tail_seconds": null
+}

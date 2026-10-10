@@ -1,0 +1,31 @@
+{
+  "candidate_additions_final": false,
+  "compiled_final_scripts": 2,
+  "finance_workers_RNG_SDE_solver_Popen": 0,
+  "materialized_or_financial_output_created": false,
+  "materializer_sha256": "9a27b3943fc57beac7d0f869901fd7b31c5becae7504f04773ba39ed65ce7830",
+  "monitor_sha256": "1c8e0c375cfff3d347326b63b1f324177e29bb4216810490c9d468cabbb6181c",
+  "original_cap_prediction_budget_validation_AST_unchanged": [
+    "cap_recipe_payload",
+    "normalized_budget_rows",
+    "prediction_work",
+    "numeric_bytes",
+    "validate_budget_rows"
+  ],
+  "original_materializer_v1_sha256": "a9773d211d2611e98b54135495e002e78147020a9a9b4d95cc0648ab883427f9",
+  "original_monitor_launch_loop_cost_status_AST_unchanged": [
+    "run",
+    "main",
+    "choose_stop",
+    "terminal_status",
+    "rss",
+    "volume_sample",
+    "tree_binding"
+  ],
+  "original_monitor_v1_sha256": "6c71f2692d2867fd6b91fe6a631e0f8274119615509f4bad3e5d8fe3f4de08a9",
+  "root_approval_created": false,
+  "script_initial_pre_rate_SHA_preserved": "36c0da6d44a930471330df4d06e4e09dd3bcac2634e260cc28609d73ee3abcc1",
+  "source_inventory_coverage": "old408->dc->959/0df->1cc/be exact actual81 inventories/pinned reports; other79 unchanged",
+  "source_only_approval_not_promoted": true,
+  "status": "PASS_metadata_only_final_v2"
+}

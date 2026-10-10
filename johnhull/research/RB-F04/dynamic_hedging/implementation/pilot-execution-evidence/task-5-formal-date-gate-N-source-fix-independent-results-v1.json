@@ -1,0 +1,113 @@
+{
+  "schema": "rb-f04-independent-date-gate-source-fix-static-review-v1",
+  "checks": 96,
+  "failures": [],
+  "source_delta": [
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+  ],
+  "runner_changed_defs": [
+    "run_date_gate_job"
+  ],
+  "original_runner_byte_delta": "one canonical cache key N -> original_N; all other bytes identical",
+  "test_delta": {
+    "existing_module_AST_unchanged": true,
+    "new_function": "test_native_cache_date_gate_saved_check_preserves_original_n_and_unknown",
+    "cases": [
+      true,
+      false
+    ],
+    "before_sha256": "f96fc7be2f7f0ec4a937a35922129324f7128902b348c8c48caeb3f5d27d6a06",
+    "after_sha256": "c4fb5df6ff68a744643b0b2fc529254db9362e52f9436e02bdaa34b3e74a6106",
+    "coverage": "native source-unit canonical cache -> actual producer -> saved native read -> actual checker; original N/unknown/no_root/16block tolerance and N tamper; finite block branch is conditional, not a financial precision qualification"
+  },
+  "source_canonical_runner_digest_sha256": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_native_payload_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "source_closure": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-independent-current-source-closure-v1.json",
+  "source81_current_stable": true,
+  "actual_RED": {
+    "scope": "native source-unit cache -> actual date gate -> saved checker; failing regression before fix",
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "-m",
+      "pytest",
+      "--confcutdir=deep_hedge_price",
+      "-q",
+      "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+      "-k",
+      "native_cache_date_gate_saved_check"
+    ],
+    "exit_code": 1,
+    "wall_seconds": 5.233498969995708,
+    "child_CPU_seconds": 4.769949,
+    "production_sha256": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635",
+    "formal_financial_execution": false
+  },
+  "actual_GREEN": {
+    "scope": "one-key date gate repair and related native cache/pilot source-unit tests",
+    "records": [
+      {
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/ruff",
+          "format",
+          "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+          "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+        ],
+        "exit_code": 0,
+        "wall_seconds": 0.0203137419957784,
+        "child_CPU_seconds": 0.024885
+      },
+      {
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/ruff",
+          "check",
+          "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+          "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+        ],
+        "exit_code": 0,
+        "wall_seconds": 0.015856776997679844,
+        "child_CPU_seconds": 0.020419999999999997
+      },
+      {
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/ruff",
+          "format",
+          "--check",
+          "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+          "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+        ],
+        "exit_code": 0,
+        "wall_seconds": 0.007666553996386938,
+        "child_CPU_seconds": 0.009908
+      },
+      {
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "-m",
+          "pytest",
+          "--confcutdir=deep_hedge_price",
+          "-q",
+          "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+          "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+        ],
+        "exit_code": 0,
+        "wall_seconds": 136.12426155700086,
+        "child_CPU_seconds": 135.202616
+      }
+    ],
+    "files_sha256": {
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "8f0df2b35bb04087e7c4a3761d6cf1b8bbb8104e2e5b7516af03ba6c2c8123c4",
+      "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py": "c4fb5df6ff68a744643b0b2fc529254db9362e52f9436e02bdaa34b3e74a6106"
+    },
+    "formal_financial_execution": false,
+    "full_phase_or_full_three_suites": false
+  },
+  "financial_RNG_SDE_solver_calls_by_independent_reviewer": 0,
+  "independent_Git_mutations": 0,
+  "independent_Git_readonly_show_commands_this_probe": 1,
+  "cost": {
+    "wall_before_record_seconds": 1.766518003998499,
+    "CPU_before_record_seconds": 1.7608976809999999,
+    "peak_RSS_bytes": 652193792,
+    "record_tail_seconds": null
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "rb-f04-root-actual-prior-approval-binding-receipt-v1",
+  "status": "approved_for_prior_materialization_only",
+  "approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-actual-root-approval-v1.json",
+    "sha256": "221329a46586a93172fdc50a8a46b1046a5646f0056497bf4a911e6baa6fb4d1"
+  },
+  "actual_prior_independent_decision": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+    "sha256": "3cf7446276873a13e45c8c4c2f3562fa8d644302a52eb07c07c73753c98e5b4b"
+  },
+  "all_original_jobs": 3138,
+  "all_original_cap_options": 573122,
+  "current_source_binding": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "finance_calls": 0,
+  "financial_launch_authorized": false,
+  "financial_qualification": "unknown",
+  "cost": {
+    "wall_before_receipt_seconds": 0.523065127999871,
+    "CPU_before_receipt_seconds": 0.520993682,
+    "receipt_tail_seconds": null
+  }
+}

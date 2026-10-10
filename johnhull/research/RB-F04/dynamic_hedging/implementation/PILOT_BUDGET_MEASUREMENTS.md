@@ -1,6 +1,6 @@
 # 正式pilot予算のための測定
 
-2026-10-10。正式金融pilot/mainは未実行。以下は**部品の実測と、歴史的教師計算からの外挿**であり、全phaseの実測時間・精度資格ではない。
+2026-10-10。正式金融pilotは実行中、mainは未実行。以下の先行測定は**部品の実測と、歴史的教師計算からの外挿**であり、全phaseの実測時間・精度資格ではない。現在の実起動は末尾に記録。
 
 ## 実際に測った再較正
 
@@ -246,3 +246,33 @@ v2のsource81/dynamic0のplain canonical identityは959f879a…（runner._digest
 [実root運用prior](pilot-execution-evidence/task-5-formal-pilot-root-operational-resource-prior-v2.json)は行政wall allowance30日・個別process RSS16GiB・WSL/C/F各10GiB reserve・poll1秒を固定した。30日は所要時間の予測ではない。停止はpartial/unclosedとして残し、金融cap PASSや受入へ置換しない。作成時MemAvailable約48.7GB、空きWSL約594.1GB/C約323.2GB/F約185.7GBを確認した。起動前に実容量とsource/inputを再確認する。
 
 全3,138jobの予算と元2332 potential-first activation allowances、元全cap recipeを独立確認する候補・現source対応materializer/monitorを準備中。v6の件数確認は正式全prior承認に代用しない。正式lock/金融pilot/freeze/mainは未実施。
+
+## 正式prior固定と実起動（2026-10-10）
+
+[全3,138資源priorの独立判断v2](pilot-execution-evidence/task-5-fullmixed-prior-budget-independent-final-decision-v2.json)は既存18bindings・元121cases/51obligations・4N・全573,122 cap optionsを限定承認。12行の歴史的実測と3,126行＋16 conditional branchesの明示見積りを区別し、全runtime/物理容量/外部費用のunknownを保持した。元v1不承認はmonitorの実fieldと異なるtokenを使ったレビューprobe誤りとして保存し、実SOURCE_IDENTITY/financial_A_cap_projection_approved/volume_probesの機構で最終47件PASSを確認。source限定承認だけを全budget承認へ転用していない。
+
+[root実prior承認の結合](pilot-execution-evidence/task-5-formal-prior-actual-root-binding-receipt-v1.json)で、各budget.review_sha256へ実独立decision3cf74462…を結合。[元APIによる実metadata生成](pilot-execution-evidence/task-5-formal-prior-lock-materialized-root-v2__materialization-progress.json)は原3,138/121/51/20teachers/10driversと全573,122 literal options、source81/dynamic0の不変を確認。全計画metadata648,421,785 Bを元native writerで保存し、locked artifact69fc5288…を生成した。金融RNG/SDE/solverは0。[実保存計画とguardの限定独立確認](pilot-execution-evidence/task-5-formal-prior-materialized-and-guard-independent-decision-v1.json)はroot承認3,170・実plan577,045・guard32項目PASS。全literal optionsを原parent順・4N・各branch/cap planSHA・実decisionへ照合し、金融資格はunknownを保持した。
+
+[最外側の実費](pilot-execution-evidence/task-5-formal-prior-lock-materialization-root-observation-v1__parent-cost-and-status.json)はwall66.171689秒、child CPU64.630352秒、kernel peak RSS3,884,457,984 B、capなし。内側64.396329秒を重複加算しない。外側receipt尾部費用はunknown。
+
+[別root実起動許可](pilot-execution-evidence/task-5-formal-pilot-root-launch-binding-receipt-v1.json)で、現source・生成済みplan全tree・原typed inputs全tree・実full prior・monitor SHAを結合。起動直前空きはWSL約593.4 GB/C約322.1 GB/F約185.7 GB、MemAvailable約48.4 GB。全物理容量は保証していない。
+
+初回正式pilotを2026-10-10 09:16:40 UTCに起動。実native child PID287118/monitor287117を確認し、同09:26:20 UTCに終了した。root行政30日・各process RSS16GiB・各volume reserve10GiBの元選択で監視し、停止はpartial/unclosedとして保持する。これらはETA/金融A cap/精度受入ではない。[実進捗観察](pilot-execution-evidence/task-5-formal-pilot-live-root-observation-v1.json)では初期field/premium・両call cache・両modelのN1024/coarse rawとdomain artifactを保存し、N4096/Heston coarse生成へ進んだ。jobの保存数・nodeディレクトリ数を精度PASSや工数割合とは扱わない。完走・保存金融結果のsemantic検算・freeze/main・研究9受入は未完了。[実sessionの引継ぎ](pilot-execution-evidence/task-5-formal-pilot-actual-root-exec-handle-v1.json)は起動時点の履歴。session15463/PID287118/287117はterminalで、同じ観察timeoutを理由に再起動しない。EXIT0だけで実結果を完了と数えない。
+
+次は原正式pilotの実結果保存検算、実教師選択とfreeze、原774-job main・独立fresh・両保管庫の数値復元・3図/notebook・最終3suite。後続の多曲線risk/P&Lと増分XVA＋IM/資本も残す。
+
+### 初回pilotのsourcefaultと限定修復
+
+[終端snapshot](pilot-execution-evidence/task-5-formal-pilot-terminal-root-summary-v1.json)は69件executed・1件unclosed_source_or_solver_defect。最初の日付gate stage:Heston:N1024:coarse:date-gate:Heston:0 が KeyError N を保存して停止し、後続3,068 jobsは未実行。raw None・金融qualification unknown・元未閉鎖義務を保持する。資源capによる停止ではない。[最外側費用](pilot-execution-evidence/task-5-formal-pilot-root-enclosing-observation-v1__parent-cost-and-status.json)はwall580.028628秒・child CPU578.566955秒・kernel peak RSS5,610,414,080 B。内側phase555.031004秒はその一部で、重複加算しない。
+
+[独立原因確認](pilot-execution-evidence/task-5-formal-date-gate-N-contract-independent-decision-v1.json)で、native teacher/domain-selected/stateの3cacheがoriginal_N=1024のみを保持し、日付gateだけが存在しないNを読んでいたことを確認。run_date_gate_jobの返却fieldをasian_cache["original_N"]へ1行修正した。cache schema・checker・数学・元N/seed/grid/threshold・公開APIは変更していない。
+
+[修復前の回帰](pilot-execution-evidence/task-5-formal-date-gate-N-root-RED-v1__receipt.json)は2件とも同じKeyError NでFAIL。[修復後](pilot-execution-evidence/task-5-formal-date-gate-N-root-GREEN-v1__receipt.json)は関連2test files全246件PASS（pytest135.06秒、親136.124262秒）、変更2Python Ruff/format PASS。実source-unitのnative cacheを日付gate→writer/read→実saved checkerへ通し、原N16、unknown/no_root、16block SEの許容差、原N改変拒否を確認した。source-unit testは正式金融精度や全3suiteの検査に数えない。
+
+[修正版の独立source判断](pilot-execution-evidence/task-5-formal-date-gate-N-source-fix-independent-decision-v1.json)は96静的項目を確認し、run_pilotの1行以外のruntime80sourceを保持した。[rootの再確認](pilot-execution-evidence/task-5-formal-date-gate-N-root-source-confirmation-v1.json)も81実file bytes・RED/GREEN・独立manifestを照合。新source identityはplain5d059dc9…/native56815c0b…で、初回prior/計画/旧rawの1cc16cf7…/be858ced…を置き換えない。全予算の新source結合・金融精度・main/phaseは限定source判断に含まれない。
+
+[再開契約の読取](pilot-execution-evidence/task-5-date-gate-source-fix-resume-contract-review-v1.md)で、新sourceと旧checkpointは既存--resumeのsource/plan一致条件を満たさず、旧sourceのままでも保存済みfaultで停止することを確認。旧69件の由来を保持して新sourceへ付け替えず、新sourceのprior/monitorを結合してfresh実行する。新continuation APIは作らない。現在の初回prior/lock/launch許可は旧sourceの履歴で、修正版の起動許可に転用しない。
+
+[閉じた事前metadataの両保管庫保存](pilot-execution-evidence/task-5-formal-prior-metadata-cas-root-receipt-v1.json)は183 unique blobs/186 paths、両copy PASS。原648MB plan・旧source81・root承認と独立レビューを保持した。wall67.486184秒・CPU4.690202秒は保存区間の費用。終端金融raw/checkpointはこのmetadata packetに含まれず、別packetで保管する。
+
+残時間は暫定で数週間規模。前節の5.79日/別context cold3.78日は全stageを仮定した既知部品の外挿で、今回580秒や69件から全完了へ比例計算しない。新source pilotの選択段階・保存検算・main/fresh/両復元・未観測費用により更新する。後続の多曲線risk/P&Lと増分XVA＋IM/資本は未実装。

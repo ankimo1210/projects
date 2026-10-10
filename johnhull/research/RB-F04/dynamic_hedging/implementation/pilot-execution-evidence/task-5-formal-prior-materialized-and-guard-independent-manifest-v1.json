@@ -1,0 +1,48 @@
+{
+  "schema": "rb-f04-independent-materialized-prior-resource-review-manifest-v1",
+  "files": {
+    "task-5-formal-prior-root-approval-independent-results-v1.json": {
+      "sha256": "a2fd933ee1abe0bf1e2c444461493dedad82731e40cfe01f51b588f91aa4e231",
+      "bytes": 4207
+    },
+    "task-5-formal-prior-materialized-independent-probe-v1.py": {
+      "sha256": "f8c072d85589bffb92ed1aa4bf977e2d378d02e39dc53de14dd688a3715541a9",
+      "bytes": 11846
+    },
+    "task-5-formal-prior-materialized-independent-probe-v1-failure.json": {
+      "sha256": "d0e611b72df9f62f8e1fa393f412677a33e8f27bf9f4e846021d2d2897f99707",
+      "bytes": 464
+    },
+    "task-5-formal-prior-materialized-independent-probe-v2.py": {
+      "sha256": "adb108ae8a35e371c61cb25854c4855932c38c2abc084a303fb35c227cb8378a",
+      "bytes": 12254
+    },
+    "task-5-formal-prior-materialized-independent-results-v2.json": {
+      "sha256": "a1fb5304ec3b05ac364a35fcefe12ec092e714888e3c36dea96e812bd5534673",
+      "bytes": 2074
+    },
+    "task-5-formal-prior-launch-guard-independent-probe-v1.py": {
+      "sha256": "aab7f67bf7e9449df99232a41f7c356beae67dbb7222360563515a070cf06330",
+      "bytes": 11279
+    },
+    "task-5-formal-prior-launch-guard-independent-results-v1.json": {
+      "sha256": "1e46db13d831ca23cde9e4e5f6a372e88f7ef162d0bfe2d539fbd4b5ca744e3f",
+      "bytes": 1951
+    },
+    "task-5-formal-prior-materialized-and-guard-independent-decision-v1.json": {
+      "sha256": "fd05f712c5e02246fe372663dab0f9c1ab4cef03fd99a191c187d330cd56141d",
+      "bytes": 3644
+    },
+    "task-5-formal-prior-materialized-and-guard-independent-review-v1.md": {
+      "sha256": "96615f9ed3c552f7d7576032d904cd093c0775ccf9ff9d031d5d081ceedcf914",
+      "bytes": 1211
+    }
+  },
+  "scope": "actual prior/guard metadata and saved resource integrity only",
+  "source_canonical_identity": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "source_native_payload_identity": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "financial_qualification": "unknown",
+  "finance_RNG_SDE_solver_Popen_calls": 0,
+  "source_production_Git_CAS_edits": 0,
+  "manifest_tail_cost_seconds": null
+}

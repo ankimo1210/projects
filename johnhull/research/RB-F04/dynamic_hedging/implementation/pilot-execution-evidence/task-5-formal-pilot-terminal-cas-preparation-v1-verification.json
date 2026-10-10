@@ -1,0 +1,35 @@
+{
+  "CAS_writes": 0,
+  "Ruff_check": {
+    "exit_code": 0,
+    "output": "All checks passed!"
+  },
+  "Ruff_format_check": {
+    "exit_code": 0,
+    "output": "1 file already formatted"
+  },
+  "checkpoint0000_metadata_bytes": 649084136,
+  "closed_three_tree_rosters_after_preflight": "exactly unchanged",
+  "cost": {
+    "final_static_verification_CPU_seconds": 0.191989917,
+    "final_static_verification_wall_seconds": 0.19198911899729865
+  },
+  "financial_RNG_SDE_solver_Popen_calls": 0,
+  "financial_qualification": "unknown",
+  "formal_unknown_failure_and_expense_history_unchanged": true,
+  "full_original_source_81_snapshot_typed_inputs_and_plan_included": true,
+  "initial_streamed_SHA_size_check": "all original source files; no financial array decode",
+  "metadata_v2_all_186_entries_inherited": true,
+  "original_metadata_shared_manifest_ref": "artifact:sha256:0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc",
+  "root_store_execution_pending": true,
+  "shared_manifest_additional_blob": 1,
+  "standard_manifest_entries": 6245,
+  "status": "PASS read-only finite closed terminal byte preservation",
+  "store_tool_source": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/scripts/evidence_store.py",
+    "sha256": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3"
+  },
+  "terminal_stdout_stderr_monitor_receipts_preserved": true,
+  "unique_data_blobs": 4357,
+  "whole_experiment_complete": false
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "rb-f04-exact-diff-byte-carrier-archive-adjustment-v1",
+  "replacements": [
+    {
+      "original": {
+        "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v1-to-v2-final.diff",
+        "archive": "task-5-formal-prior-lock-preparation-v1-to-v2-final.diff",
+        "bytes": 18767,
+        "sha256": "b60958ee4b99bf2fb55f5ea56fbda6424455d0d2544b22bf0ddaaf8a87f46dc2"
+      },
+      "carrier": {
+        "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v1-to-v2-final.diff.exact-byte-carrier.json",
+        "archive": "task-5-formal-prior-lock-preparation-v1-to-v2-final.diff.exact-byte-carrier.json",
+        "bytes": 25378,
+        "sha256": "86aa41c6f140a240cd828d2d82bff45791668453a30a60f087d7e89613b712c5"
+      }
+    },
+    {
+      "original": {
+        "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v1-to-v2.diff",
+        "archive": "task-5-formal-prior-lock-preparation-v1-to-v2.diff",
+        "bytes": 18139,
+        "sha256": "9fdf186fafb9fdc2c602910015bbf398509fe17189183ff50c9df714798a33ba"
+      },
+      "carrier": {
+        "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-preparation-v1-to-v2.diff.exact-byte-carrier.json",
+        "archive": "task-5-formal-prior-lock-preparation-v1-to-v2.diff.exact-byte-carrier.json",
+        "bytes": 24536,
+        "sha256": "1f6e1ca0dcfc3ae24649c755b7ba1420d273d299b35f58fe597563fd8e88e855"
+      }
+    },
+    {
+      "original": {
+        "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v1-to-v2-final.diff",
+        "archive": "task-5-full-pilot-root-operational-monitor-v1-to-v2-final.diff",
+        "bytes": 6230,
+        "sha256": "81883ec3180b4ed6997b736eac543aaf4992b2bce655a6402732a1c2e29ee3b0"
+      },
+      "carrier": {
+        "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v1-to-v2-final.diff.exact-byte-carrier.json",
+        "archive": "task-5-full-pilot-root-operational-monitor-v1-to-v2-final.diff.exact-byte-carrier.json",
+        "bytes": 8667,
+        "sha256": "5c952d35a17da95d520564f357c74141d589ddb5930fe3f1810c5ded6e46cbbc"
+      }
+    },
+    {
+      "original": {
+        "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v1-to-v2.diff",
+        "archive": "task-5-full-pilot-root-operational-monitor-v1-to-v2.diff",
+        "bytes": 6230,
+        "sha256": "81883ec3180b4ed6997b736eac543aaf4992b2bce655a6402732a1c2e29ee3b0"
+      },
+      "carrier": {
+        "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-full-pilot-root-operational-monitor-v1-to-v2.diff.exact-byte-carrier.json",
+        "archive": "task-5-full-pilot-root-operational-monitor-v1-to-v2.diff.exact-byte-carrier.json",
+        "bytes": 8661,
+        "sha256": "e0a5fa313ced4c30ad18338bda44d1f23f7ebbc154123430a65efdc37a58f7df"
+      }
+    }
+  ],
+  "original_D_bytes_unchanged": true,
+  "prior_root_attempt": {
+    "status": "failed_before_index_or_archive_replacement",
+    "reason": "loop included historical diff outside this turn's eligible42 archives; original D/diff and archived files unchanged; corrective scope applied before mutation",
+    "wall_CPU_cost": "unmeasured"
+  }
+}

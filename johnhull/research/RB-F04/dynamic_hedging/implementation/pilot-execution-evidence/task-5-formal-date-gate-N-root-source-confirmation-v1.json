@@ -1,0 +1,28 @@
+{
+  "schema": "rb-f04-root-one-key-date-gate-source-confirmation-v1",
+  "scope": "current 81 byte closure and actual red-green evidence only",
+  "independent_source_decision_sha256": "a90705642f36eef595b93e9cbb2302aaa54d547d5deb7ad6ca46024deed1fbf0",
+  "independent_manifest_sha256": "00152e64c4e701d706b27be5f24bb59d4ba0d021a3933e613de2295abcdf5ec5",
+  "source_files_checked": 81,
+  "source_plain_identity": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_native_identity": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "production_changed_files": [
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+  ],
+  "original_partial_status_counts": {
+    "executed": 69,
+    "unclosed_source_or_solver_defect": 1
+  },
+  "source_unit_tests": 246,
+  "regression_RED_KeyError_N_cases": 2,
+  "ruff_format_files": 2,
+  "new_formal_prior_or_financial_launch_authorized": false,
+  "old_partial_financial_qualification": "unknown",
+  "full_phase_or_research_accepted": false,
+  "new_financial_RNG_solver": 0,
+  "cost": {
+    "wall_seconds": 0.002898853999795392,
+    "CPU_seconds": 0.002324138,
+    "own_receipt_tail": null
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "actual_rate_choices_applied": false,
+  "cases": [
+    "raw false assembly unchanged",
+    "explicit estimate metadata allowed, not applied by consumer",
+    "fabricated measured rate rejected"
+  ],
+  "financial_source_import_workers_RNG_SDE_solver_Popen_calls": 0,
+  "materializer_sha256": "9a27b3943fc57beac7d0f869901fd7b31c5becae7504f04773ba39ed65ce7830",
+  "note": "This pure schema probe modifies only in-memory test copies; real independent effective rate patch remains required.",
+  "root_approval_created": false,
+  "status": "PASS"
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "rb-f04-root-formal-financial-launch-binding-receipt-v1",
+  "status": "formal_pilot_launch_authorized_before_attempt",
+  "guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-launch-guard-v1.json",
+    "sha256": "82b7099f583010950714037068c0182277fab9d0f988b954505e955de1c1f39a"
+  },
+  "materialization": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialized-root-v2/manifest.json",
+    "sha256": "5abfe5216f4167cb42660f15f27c574d0b10f0e4ab90fed38a5ad360880bf243"
+  },
+  "budget_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-independent-final-decision-v2.json",
+    "sha256": "3cf7446276873a13e45c8c4c2f3562fa8d644302a52eb07c07c73753c98e5b4b",
+    "status": "approved"
+  },
+  "metadata_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-actual-root-approval-v1.json",
+    "sha256": "221329a46586a93172fdc50a8a46b1046a5646f0056497bf4a911e6baa6fb4d1"
+  },
+  "current_source_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "resource_observation": {
+    "UTC": "2026-10-10T09:15:48.220631+00:00",
+    "volumes": {
+      "WSL": {
+        "free_bytes": 593410080768,
+        "reserve_bytes": 10737418240,
+        "device": 2096
+      },
+      "C": {
+        "free_bytes": 322147381248,
+        "reserve_bytes": 10737418240,
+        "device": 71
+      },
+      "F": {
+        "free_bytes": 185710804992,
+        "reserve_bytes": 10737418240,
+        "device": 72
+      }
+    },
+    "memory_bytes": {
+      "MemTotal": 50512646144,
+      "MemAvailable": 48379838464,
+      "SwapTotal": 17179869184,
+      "SwapFree": 14447443968
+    },
+    "whole_physical_capacity_upper_bytes": null,
+    "capacity_forecast_not_guaranteed": true
+  },
+  "financial_calls_so_far": 0,
+  "financial_qualification": "unknown",
+  "main_or_phase_approval": false,
+  "cost": {
+    "wall_before_receipt_seconds": 1.029343741996854,
+    "CPU_before_receipt_seconds": 1.0231641,
+    "final_receipt_tail_seconds": null
+  }
+}

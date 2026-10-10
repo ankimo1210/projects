@@ -1,0 +1,92 @@
+{
+  "administrative_caps_are_runtime_predictions": false,
+  "case_count": 11,
+  "cases": [
+    {
+      "case": "actual_v3_source_only_decision_original_fields",
+      "status": "PASS"
+    },
+    {
+      "case": "monitor_actual_v3_source_only_schema",
+      "status": "PASS"
+    },
+    {
+      "case": "monitor_current81_physical_bytes",
+      "status": "PASS"
+    },
+    {
+      "case": "source_approval_not_full3138_budget_approval",
+      "reason": "actual full3138 resource prior decision required; v6 counter review is insufficient",
+      "status": "PASS_expected_rejection"
+    },
+    {
+      "case": "monitor_source_approval_not_full_budget",
+      "reason": "v6 static counter/source approval is not whole budget approval",
+      "status": "PASS_expected_rejection"
+    },
+    {
+      "case": "materializer_pending_root_no_output",
+      "reason": "pending/rejected approval cannot materialize prior metadata",
+      "status": "PASS_expected_rejection"
+    },
+    {
+      "case": "monitor_false_root_no_Popen",
+      "reason": "root prior approval required; candidate cannot execute",
+      "status": "PASS_expected_rejection"
+    },
+    {
+      "case": "monitor_full_budget_still_pending",
+      "reason": "all3138/cap recipe independent review required",
+      "status": "PASS_expected_rejection"
+    },
+    {
+      "case": "raw_assembly_is_false_binding_only",
+      "status": "PASS"
+    },
+    {
+      "case": "raw_caprecipe_binding_preserves573122",
+      "status": "PASS"
+    },
+    {
+      "case": "assembly_geometry_tamper_refused",
+      "reason": "actual approval may only bind reviewSHA/explicit rate markers to assembled rows",
+      "status": "PASS_expected_rejection"
+    }
+  ],
+  "compiled_v2_scripts": 2,
+  "cost": {
+    "CPU_seconds_before_receipt": 0.721313371,
+    "own_final_tail": "unknown",
+    "wall_seconds_before_receipt": 0.7447827299984056
+  },
+  "full_effective_budget_approval": "pending independent/root; raw rate markers remain None",
+  "materialized_output_created": false,
+  "original_v1_sha256": {
+    "task-5-formal-prior-lock-preparation-v1.py": "a9773d211d2611e98b54135495e002e78147020a9a9b4d95cc0648ab883427f9",
+    "task-5-full-pilot-root-operational-monitor-v1.py": "6c71f2692d2867fd6b91fe6a631e0f8274119615509f4bad3e5d8fe3f4de08a9"
+  },
+  "raw_candidate_bindings": {
+    "activation_potential_first_job_budget_candidates_digest": "a82f3c33d71a918f51131c8c77917793ceec75850a2181815c867f1a1e243c04",
+    "activation_v4_origin_sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+    "budget_rows_assembly_manifest_sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3",
+    "budget_rows_assembly_sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5",
+    "budget_rows_without_review_SHA_digest": "fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f",
+    "candidate_sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "cap_recipe_digest": "d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d",
+    "literal_cap_options": 573122,
+    "materializer_sha256": "36c0da6d44a930471330df4d06e4e09dd3bcac2634e260cc28609d73ee3abcc1",
+    "raw_assembled_candidate_cap_recipe_digest": "d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d",
+    "raw_assembled_candidate_rows_digest": "fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f",
+    "replay_budget_manifest_sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9",
+    "replay_budget_supplement_sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+    "selection_overlay_sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+    "source_identity_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+    "source_limited_decision_sha256": "8a000b4612f1f613451acb4cfeeae8324d911221dd0587e62e1ba967cd3c161b",
+    "source_native_payload_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+    "source_rebind_evidence_sha256": "1e83ebae5b76c0560a40cd1ec21faf6e342e722111d725feaa1faadb846f14a1"
+  },
+  "root_approval_created": false,
+  "source_import_workers_RNG_SDE_solver_Popen_calls": 0,
+  "source_only_decision_promoted_to_budget_or_phase": false,
+  "status": "PASS_metadata_preparation_only"
+}

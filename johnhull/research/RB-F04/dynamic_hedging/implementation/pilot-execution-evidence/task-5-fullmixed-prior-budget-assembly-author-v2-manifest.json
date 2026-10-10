@@ -1,0 +1,66 @@
+{
+  "status": "fixed false full3138 candidate; independent exact prior approval pending",
+  "schema": "rb-f04-fullmixed-prior-budget-assembly-author-manifest-v2",
+  "files": {
+    "task-5-fullmixed-prior-budget-assembly-author-v1-config.json": {
+      "sha256": "e75a96b4b5dc8e5a3716e4b1e75e581340a6fa60cd315daf1f4844b74349ca5d",
+      "bytes": 14147190
+    },
+    "task-5-fullmixed-prior-budget-assembly-author-v1-builder.py": {
+      "sha256": "4c76f980e688061ae3fbd975fe8ce48b23fa7558f4b2c76b8f619aa9a324a484",
+      "bytes": 15408
+    },
+    "task-5-fullmixed-prior-budget-assembly-author-v1-verification.json": {
+      "sha256": "616ccab99f02d35e630150d5704fec6c2e272aee963808443f37e7124634683f",
+      "bytes": 1422
+    },
+    "task-5-fullmixed-prior-budget-assembly-author-v1-report.md": {
+      "sha256": "648a41d68a2a7ca1f4436d475e17ccf9e8260b61aa3a1bf44397bc81e924659c",
+      "bytes": 945
+    },
+    "task-5-fullmixed-prior-budget-assembly-author-v2-config.json": {
+      "sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5",
+      "bytes": 25529170
+    },
+    "task-5-fullmixed-prior-budget-assembly-author-v2-builder.py": {
+      "sha256": "3564ec0d5789511368723e952c573bd2a953905eb09b82b979fecbb688fcbda0",
+      "bytes": 10827
+    },
+    "task-5-fullmixed-prior-budget-assembly-author-v2-verification.json": {
+      "sha256": "d5c4bfedccb9fb1dbcd7a3c39571e9ea2e6f58eb60f2029934bff3fa4ea7ca0d",
+      "bytes": 1913
+    },
+    "task-5-fullmixed-prior-budget-assembly-author-v2-report.md": {
+      "sha256": "2fdabe40b0f0486247fb4d7bbd270dbd696f9c882842b2ad8e72f01bae497e3a",
+      "bytes": 1044
+    }
+  },
+  "actual_review_row_field": "assembled_all3138_rows",
+  "rows_normalization": "existing normalized_budget_rows from original D prior-lock preparer",
+  "normalized_actual_row_digest": "fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f",
+  "sourcebound_recipe_digest": "d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d",
+  "source_canonical_identity": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "source_native_payload_identity": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "preserved_v6_candidate_sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+  "consumer_interface": {
+    "schema": "rb-f04-fullmixed-prior-budget-assembly-v2",
+    "current_source_fields": [
+      "source_canonical_identity",
+      "source_native_payload_identity",
+      "source"
+    ],
+    "actual_approval_rows": "assembled_all3138_rows",
+    "base_rows": "base_rows and legacy reviewed_budgets; not actual approval rows",
+    "activation_collection_digest": "activation_candidate_selection.candidate_collection_canonical_sha256",
+    "original_v4_file_digest": "activation_candidate_selection.source_file_sha256",
+    "candidate_normalized_row_digest": "prior_assembly.all3138_normalized_budget_rows_sha256",
+    "exact_sourcebound_recipe_digest": "prior_assembly.current_source_cap_recipe_payload_sha256",
+    "operational_separate_scope": "operational_root_prior",
+    "future_review_SHA_must_not_be_filled_by_author": true
+  },
+  "financial_RNG_SDE_solver_source_docs_Git_CAS": 0,
+  "manifest_verification_clock": {
+    "wall_seconds": 0.09344729800068308,
+    "CPU_seconds": 0.09225636400000001
+  }
+}

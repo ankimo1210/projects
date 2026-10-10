@@ -1,0 +1,95 @@
+{
+  "schema": "rb-f04-independent-date-gate-N-source-fix-review-v1",
+  "decision": "approved",
+  "status": "approved_fixed_current_source",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent static source and regression evidence reviewer",
+  "approved_before_new_runtime_attempt": true,
+  "scope": "one canonical Asian cache N key consumer repair only; all other runtime81/source math bytes unchanged; regression evidence for producer/native saved transport/checker originalN and unknown contract",
+  "source_canonical_runner_digest_sha256": "5d059dc9f6bbaafeae7ab4b897d4e0ccf94663fd9d7776a39e12f413d6548f2e",
+  "source_native_payload_sha256": "56815c0b278f82d8a74d0c7d24530d30e5818f0c3ea82d16ce3ca85fc07b2db7",
+  "source_closure": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-independent-current-source-closure-v1.json",
+    "sha256": "4183b1e707cfb40d01808a45e1fc5042e54ba26d8a2892e3ac3703f76a30f768"
+  },
+  "source_files": 81,
+  "dynamic_imports": 0,
+  "source_changed_files": [
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+  ],
+  "source81_current_stable": true,
+  "fixed_run_pilot_sha256": "8f0df2b35bb04087e7c4a3761d6cf1b8bbb8104e2e5b7516af03ba6c2c8123c4",
+  "fixed_check_pilot_sha256": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+  "fixed_test_sha256": "c4fb5df6ff68a744643b0b2fc529254db9362e52f9436e02bdaa34b3e74a6106",
+  "old_source_canonical_identity": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "old_source_native_payload_identity": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "old_snapshot": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-lock-materialized-root-v2/source-snapshot",
+  "existing_tests_and_fixtures_AST_unchanged": true,
+  "additional_regression_cases": 2,
+  "native_cache_N_alias_added": false,
+  "checker_change_required": false,
+  "actual_RED": {
+    "receipt": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-root-RED-v1/receipt.json",
+      "sha256": "338de30c6894c3a48df95900e7b259a1eaac7f5080f5391629564e1213ebede3"
+    },
+    "original_failures": "both parameter cases fail KeyError: N",
+    "independent_pass_claim": false
+  },
+  "actual_GREEN": {
+    "receipt": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-root-GREEN-v1/receipt.json",
+      "sha256": "0cea768a05524f4a3bee6d8c1d4a86ffa7e4a5e8afb3bb8dbdcab355e2daf9a2"
+    },
+    "log": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-root-GREEN-v1/3-stdout.log",
+      "sha256": "f64d3c7394f37dcc0767f4af0eb486a380bbd2a32b38cfded4ac31dcf63fae46"
+    },
+    "root_related_tests_passed": 246,
+    "pytest_inner_seconds": 135.06,
+    "root_enclosing_seconds": 136.12426155700086,
+    "root_child_CPU_seconds": 135.202616,
+    "Ruff_format_and_check": "PASS",
+    "independent_test_rerun": false
+  },
+  "static_checks": 96,
+  "failures": [],
+  "evidence": {
+    "diagnosis": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-contract-independent-decision-v1.json",
+      "sha256": "0ea085adc920e5a8cd59702bd71ae57f8543e2084e52c542973bdf52b8c4b173"
+    },
+    "source_static_results": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-source-fix-independent-results-v1.json",
+      "sha256": "2e293d628a1955354f86d07de655938e81662933d797914a5c246dae76740f37"
+    },
+    "test_baseline": {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-date-gate-N-independent-before-test-v1.py",
+      "sha256": "f96fc7be2f7f0ec4a937a35922129324f7128902b348c8c48caeb3f5d27d6a06"
+    }
+  },
+  "finite_block_precision_and_all_models_accuracy_approved": false,
+  "whole_budget_and_cap_recipe_approved_for_new_source": false,
+  "formal_financial_pilot_launch_authorized_by_reviewer": false,
+  "main_phase_or_research_accepted": false,
+  "financial_qualification": "unknown",
+  "old_partial70_and_original_source_failure_preserved": true,
+  "financial_RNG_SDE_solver_calls_by_independent_reviewer": 0,
+  "production_tests_Git_CAS_mutations_by_independent_reviewer": 0,
+  "read_only_baseline_git_show_commands_total": 2,
+  "cost": {
+    "source_static_probe": {
+      "wall_before_record_seconds": 1.766518003998499,
+      "CPU_before_record_seconds": 1.7608976809999999,
+      "peak_RSS_bytes": 652193792,
+      "record_tail_seconds": null
+    },
+    "finalization": {
+      "wall_before_record_seconds": 0.0027859780020662583,
+      "CPU_before_record_seconds": 0.0027856849999999996,
+      "peak_RSS_bytes": 17002496,
+      "receipt_tail_seconds": null
+    },
+    "root_GREENS_enclosing_includes_pytest_inner_not_added_again": true
+  }
+}

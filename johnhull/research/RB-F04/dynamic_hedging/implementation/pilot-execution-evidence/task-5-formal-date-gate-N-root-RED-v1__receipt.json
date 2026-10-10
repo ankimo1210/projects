@@ -1,0 +1,18 @@
+{
+  "scope": "native source-unit cache -> actual date gate -> saved checker; failing regression before fix",
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "--confcutdir=deep_hedge_price",
+    "-q",
+    "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+    "-k",
+    "native_cache_date_gate_saved_check"
+  ],
+  "exit_code": 1,
+  "wall_seconds": 5.233498969995708,
+  "child_CPU_seconds": 4.769949,
+  "production_sha256": "e7710849f94884deab8e54c31cf82e19c70d71159aa6e776e47ed4671bc4b635",
+  "formal_financial_execution": false
+}

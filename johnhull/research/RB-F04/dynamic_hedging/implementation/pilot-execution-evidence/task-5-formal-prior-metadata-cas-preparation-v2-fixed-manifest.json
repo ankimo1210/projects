@@ -1,0 +1,38 @@
+{
+  "files": {
+    "task-5-formal-prior-metadata-cas-preparation-v2-manifest.json": {
+      "bytes": 62233,
+      "sha256": "0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc"
+    },
+    "task-5-formal-prior-metadata-cas-preparation-v2-readonly-preflight.json": {
+      "bytes": 1047,
+      "sha256": "f934346733d63bb4ed3d57f08fd4af85a3dff714eb812c71d866ebbe9005360e"
+    },
+    "task-5-formal-prior-metadata-cas-preparation-v2-report.json": {
+      "bytes": 5498,
+      "sha256": "7881e59f454ff2b08c91470693edbecafc560a2f4053accbadda33db5a340f34"
+    },
+    "task-5-formal-prior-metadata-cas-preparation-v2-verification.json": {
+      "bytes": 887,
+      "sha256": "c2ffae7fbe60b9d1c585ad2d2cef98834183dae085d04706a694b1c5f59d45d0"
+    },
+    "task-5-formal-prior-metadata-cas-preparation-v2.py": {
+      "bytes": 7465,
+      "sha256": "49156b34e2e8f56447f5d2bd3f977d7d9f2a570e9ebc2a747be6086caf478461"
+    }
+  },
+  "financial_qualification": "unknown",
+  "prior_source_canonical_identity": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "prior_source_native_payload_identity": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "production_Git_CAS_edits": 0,
+  "standard_shared_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-prior-metadata-cas-preparation-v2-manifest.json",
+    "ref": "artifact:sha256:0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc",
+    "sha256": "0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc"
+  },
+  "status": "fixed D-only metadata preparation; root CAS execution pending",
+  "store_tool": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/scripts/evidence_store.py",
+    "sha256": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3"
+  }
+}

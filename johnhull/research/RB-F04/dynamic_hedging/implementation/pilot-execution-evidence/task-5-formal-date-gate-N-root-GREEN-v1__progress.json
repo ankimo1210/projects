@@ -1,0 +1,50 @@
+[
+  {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/ruff",
+      "format",
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.0203137419957784,
+    "child_CPU_seconds": 0.024885
+  },
+  {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/ruff",
+      "check",
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.015856776997679844,
+    "child_CPU_seconds": 0.020419999999999997
+  },
+  {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/ruff",
+      "format",
+      "--check",
+      "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 0.007666553996386938,
+    "child_CPU_seconds": 0.009908
+  },
+  {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "-m",
+      "pytest",
+      "--confcutdir=deep_hedge_price",
+      "-q",
+      "deep_hedge_price/tests/test_dynamic_hedging_teacher_check_report.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot.py"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 136.12426155700086,
+    "child_CPU_seconds": 135.202616
+  }
+]
