@@ -1,0 +1,52 @@
+{
+  "schema": "rb-f04-independent-M6-resource-review-decision-v2",
+  "decision": "approve_bounded_saved_original_M6_resource_observations_with_three_actual_RSS_caps",
+  "source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "source81_input26_at_probe_boundary_stable": true,
+  "all_original_classes_nodes_N_axes_source_typed_arguments_physical_bindings_preserved": true,
+  "all_original_generation_saved": true,
+  "generation_nodes": [
+    108,
+    156,
+    520,
+    1344
+  ],
+  "full_component_completed_classes": [
+    "Heston-coarse"
+  ],
+  "actual_RSS_cap_classes": [
+    "Heston-high",
+    "local-coarse",
+    "local-high"
+  ],
+  "all_four_components_complete": false,
+  "financial_qualification": "unknown",
+  "formal_pilot_main_phase_budget_lock_approved": false,
+  "formal_volume_rate_forecast_approved": false,
+  "new_RNG_SDE_CF_PDE_solver_or_finance_execution": false,
+  "saved_SDE_checker_reexecuted": false,
+  "huge_checker_payloads_fully_decoded": false,
+  "independent_price_statistics_sample_nodes": 96,
+  "all_node_independent_Greek_recalculation": false,
+  "known_probe_cost_success": {
+    "scope": "independent saved-only resource review enclosing launch imports all verification",
+    "exit_code": 0,
+    "wall_seconds": 26.013323974999366,
+    "child_CPU_seconds": 25.918483000000002,
+    "child_kernel_peak_RSS_bytes": 804323328,
+    "outer_final_receipt_save_cost": "unknown"
+  },
+  "known_probe_cost_all_three_attempts": {
+    "wall_seconds": 30.244078081996122,
+    "child_CPU_seconds": 30.126610000000003
+  },
+  "other_argument_probe_import_CPU_wall_and_exploratory_review_cost": "unknown",
+  "original_failure_evidence_preserved": true,
+  "root_native_source_edit_gate_for_this_resource_review": "released",
+  "future_intentional_source_edits_are_separate_from_original_M6_snapshot": true,
+  "artifacts": {
+    "results": "task-5-current-full-teacher-independent-m6-v2-results.json",
+    "arguments": "task-5-current-full-teacher-independent-m6-v2-arguments.json",
+    "review": "task-5-current-full-teacher-independent-m6-v2-review.md"
+  }
+}

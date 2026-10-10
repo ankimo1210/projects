@@ -1,0 +1,19 @@
+{
+  "results": [
+    {
+      "child_CPU_seconds": 0.07308899999999999,
+      "exit_code": 0,
+      "operation": "check",
+      "parent_CPU_seconds": 0.0004886440000000034,
+      "wall_seconds": 0.07036246899951948
+    },
+    {
+      "child_CPU_seconds": 0.023150000000000004,
+      "exit_code": 0,
+      "operation": "format",
+      "parent_CPU_seconds": 0.0004936999999999997,
+      "wall_seconds": 0.019132711000565905
+    }
+  ],
+  "scope": "D-only Ruff/format2; no financial imports"
+}

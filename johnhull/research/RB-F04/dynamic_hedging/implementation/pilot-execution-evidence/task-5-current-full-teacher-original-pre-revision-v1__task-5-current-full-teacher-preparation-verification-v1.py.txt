@@ -1,0 +1,117 @@
+"""Metadata-only argument/digest/guard verification. No financial module import."""
+from __future__ import annotations
+
+import ast
+import hashlib
+import json
+import subprocess
+import sys
+from pathlib import Path
+from types import SimpleNamespace
+
+import numpy as np
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+GRAPH = D / "task-5-full-progressive-pilot-plan-draft-source-unit-v3"
+measurement = D / "task-5-current-full-teacher-measurement-v1.py"
+description = json.loads((D / "task-5-current-full-teacher-initial-description-v1.json").read_text())
+budget_path = D / "task-5-current-full-teacher-budget-candidate-v1.json"
+budget = json.loads(budget_path.read_text())
+
+
+class HestonParameters:
+    pass
+
+
+class LocalVarianceGrid:
+    pass
+
+
+def forbidden(*args, **kwargs):
+    raise AssertionError("RNG is forbidden in metadata verification")
+
+
+np.random.default_rng = forbidden
+reference_path = WT / "johnhull/research/RB-F04/dynamic_hedging/run_reference.py"
+pilot_path = WT / "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+reference_nodes = ast.parse(reference_path.read_text()).body
+pure = [n for n in reference_nodes if isinstance(n, ast.FunctionDef)
+        and n.name in ("_digest", "_encode_tree", "payload_digest")]
+namespace = {"np": np, "json": json, "hashlib": hashlib,
+             "HestonParameters": HestonParameters}
+exec(compile(ast.Module(body=pure, type_ignores=[]), str(reference_path), "exec"), namespace)
+runner = SimpleNamespace(payload_digest=namespace["payload_digest"])
+identity_node = next(n for n in ast.parse(pilot_path.read_text()).body
+                     if isinstance(n, ast.FunctionDef) and n.name == "input_identity")
+ids = {"runner": runner, "LocalVarianceGrid": LocalVarianceGrid}
+exec(compile(ast.Module(body=[identity_node], type_ignores=[]), str(pilot_path), "exec"), ids)
+input_identity = ids["input_identity"]
+meta = json.loads((GRAPH / "metadata.json").read_text())["metadata"]
+jobs = {row["id"]: row for row in meta["tree"]["jobs"]}
+
+
+def decode(value):
+    if isinstance(value, dict) and set(value) == {"__array__"}:
+        descriptor = meta["arrays"][value["__array__"]]
+        parts = []
+        for part in descriptor["parts"]:
+            with np.load(GRAPH / part["id"] / "arrays.npz", allow_pickle=False) as arrays:
+                parts.append(arrays[part["value_key"]].copy())
+        a = np.concatenate(parts, axis=0) if descriptor["shape"] else parts[0]
+        assert list(a.shape) == descriptor["shape"] and a.dtype.str == descriptor["dtype"]
+        assert hashlib.sha256(a.tobytes()).hexdigest() == descriptor["sha256"]
+        return a
+    if isinstance(value, dict):
+        return {k: decode(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [decode(v) for v in value]
+    return value
+
+
+assert budget["root_preapproved"] is False and budget["source_bindings"] is None
+assert budget["source_identity_sha256"] is None and budget["source_file_count"] is None
+rows = []
+for spec in [*description["classes"].values(), *description["drivers"].values()]:
+    original = decode(jobs[spec["job_id"]]["arguments"])
+    measured = decode(spec["measurement_typed_arguments"])
+    assert input_identity(original) == spec["planned_arguments_sha256"]
+    assert input_identity(measured) == spec["measurement_typed_arguments_sha256"]
+    assert set(measured) - set(original) == {"work_directory", "wall_cap_seconds"}
+    for key in original:
+        assert input_identity(original[key]) == input_identity(measured[key])
+    rows.append({"job_id": spec["job_id"], "planned_SHA_matches_actual_canonical": True,
+                 "measurement_SHA_matches_actual_canonical": True,
+                 "only_administrative_cap_and_fresh_output_keys_added": True})
+expected_steps = {"Heston-coarse": 46006272, "Heston-high": 66453504,
+                  "local-coarse": 214302720, "local-high": 542244864}
+for class_id, spec in description["classes"].items():
+    assert len(spec["planned_nodes"]) == spec["original_nodes"]
+    assert spec["actual_generation_conditional_transitions"] == expected_steps[class_id]
+    assert spec["generation_plus_saved_SDE_transitions"] == 2 * expected_steps[class_id]
+assert sum(budget["wall_limit_seconds_per_class"].values()) == 2100
+assert len(description["drivers"]) == 2
+assert not Path(description["measurement_output_root"]).exists()
+guard = subprocess.run(
+    [sys.executable, str(measurement), "--budget", str(budget_path),
+     "--output", description["measurement_output_root"]],
+    capture_output=True, text=True, check=False)
+assert guard.returncode != 0 and "candidate is not prior approval" in guard.stderr
+assert not Path(description["measurement_output_root"]).exists()
+result = {
+    "scope": "M6 preparation metadata, canonical typed args and candidate guard only",
+    "financial_worker_performed": False, "financial_RNG_performed": False,
+    "financial_module_import_performed": False, "formal_pilot_or_main": False,
+    "financial_qualification": "unknown", "original_graph_jobs": 3138,
+    "original_cases": 121, "original_attempts": 51, "four_classes_two_shared_drivers": True,
+    "source_approval_status": budget["source_approval_status"],
+    "root_preapproved": False, "source_count_pending_not_guessed": True,
+    "argument_checks": rows, "class_generation_and_saved_SDE_work_checked": True,
+    "candidate_administrative_cap_sum_seconds": 2100,
+    "cap_sum_is_not_runtime_estimate": True,
+    "candidate_guard_rejects_before_financial_import_and_output": True,
+    "guard_exit_code": guard.returncode, "guard_stderr": guard.stderr,
+}
+(D / "task-5-current-full-teacher-preparation-verification-v1.json").write_text(
+    json.dumps(result, sort_keys=True, indent=2) + chr(10))
+print(json.dumps({k: v for k, v in result.items() if k != "guard_stderr"}, indent=2))

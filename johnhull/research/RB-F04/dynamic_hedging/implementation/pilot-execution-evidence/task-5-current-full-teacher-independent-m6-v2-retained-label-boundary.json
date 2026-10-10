@@ -1,0 +1,50 @@
+{
+  "scope": "read-only source retention analysis; not observed RSS prediction",
+  "source": "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+  "source_sha256": "bfd5b81fd8d356c387a8e313b0c0c8a5b538a26166ad4854572913d4f1608184",
+  "check_grid_definition_lines": [
+    1147,
+    1232
+  ],
+  "check_teacher_definition_lines": [
+    74,
+    190
+  ],
+  "fact": "grid checks accumulates full per-node labels in raw_checks; nested check labels remain literal under current codec",
+  "classes": {
+    "Heston-coarse": {
+      "nodes": 108,
+      "n": 1024,
+      "K": 33,
+      "ten_sample_array_logical_bytes": 291962880,
+      "eleven_literal_sample_key_bytes": 321159168
+    },
+    "Heston-high": {
+      "nodes": 156,
+      "n": 1024,
+      "K": 65,
+      "ten_sample_array_logical_bytes": 830668800,
+      "eleven_literal_sample_key_bytes": 913735680
+    },
+    "local-coarse": {
+      "nodes": 520,
+      "n": 1024,
+      "K": 33,
+      "ten_sample_array_logical_bytes": 1405747200,
+      "eleven_literal_sample_key_bytes": 1546321920
+    },
+    "local-high": {
+      "nodes": 1344,
+      "n": 1024,
+      "K": 65,
+      "ten_sample_array_logical_bytes": 7156531200,
+      "eleven_literal_sample_key_bytes": 7872184320
+    }
+  },
+  "cap_process_RSS_bytes": 4294967296,
+  "not_an_exact_RSS_claim": true,
+  "no_N_or_geometry_reduction": true,
+  "new_SDE_or_RNG": false,
+  "formal_approved": false,
+  "original_execution_and_cap_evidence_pending": true
+}

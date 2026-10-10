@@ -1,0 +1,10 @@
+{
+  "child_CPU_seconds": 2.064635,
+  "child_process_kernel_peak_RSS_bytes": 235159552,
+  "exit_code": 0,
+  "financial_modules_or_RNG_solver_worker": false,
+  "parent_CPU_seconds": 0.00041480500000000073,
+  "scope": "M7 stdlib/metadata canonical arguments, source/input SHA and false-budget guard only",
+  "unmeasured_script_preparation_report": null,
+  "wall_seconds": 0.756450421999034
+}

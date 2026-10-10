@@ -1,0 +1,160 @@
+"""Metadata-only argument/digest/guard verification. No financial module import."""
+from __future__ import annotations
+
+import ast
+import hashlib
+import json
+import subprocess
+import sys
+from pathlib import Path
+from types import SimpleNamespace
+
+import numpy as np
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+GRAPH = D / "task-5-full-progressive-pilot-plan-draft-source-unit-v3"
+measurement = D / "task-5-current-oracle-measurement-v1.py"
+description = json.loads((D / "task-5-current-oracle-initial-description-v1.json").read_text())
+budget_path = D / "task-5-current-oracle-budget-candidate-v1.json"
+budget = json.loads(budget_path.read_text())
+
+
+class HestonParameters:
+    pass
+
+
+class LocalVarianceGrid:
+    pass
+
+
+def forbidden(*args, **kwargs):
+    raise AssertionError("RNG is forbidden in metadata verification")
+
+
+np.random.default_rng = forbidden
+reference_path = WT / "johnhull/research/RB-F04/dynamic_hedging/run_reference.py"
+pilot_path = WT / "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+reference_nodes = ast.parse(reference_path.read_text()).body
+pure = [n for n in reference_nodes if isinstance(n, ast.FunctionDef)
+        and n.name in ("_digest", "_encode_tree", "payload_digest")]
+namespace = {"np": np, "json": json, "hashlib": hashlib,
+             "HestonParameters": HestonParameters}
+exec(compile(ast.Module(body=pure, type_ignores=[]), str(reference_path), "exec"), namespace)
+runner = SimpleNamespace(payload_digest=namespace["payload_digest"])
+identity_node = next(n for n in ast.parse(pilot_path.read_text()).body
+                     if isinstance(n, ast.FunctionDef) and n.name == "input_identity")
+ids = {"runner": runner, "LocalVarianceGrid": LocalVarianceGrid}
+exec(compile(ast.Module(body=[identity_node], type_ignores=[]), str(pilot_path), "exec"), ids)
+input_identity = ids["input_identity"]
+meta = json.loads((GRAPH / "metadata.json").read_text())["metadata"]
+jobs = {row["id"]: row for row in meta["tree"]["jobs"]}
+
+
+def decode(value):
+    if isinstance(value, dict) and set(value) == {"__array__"}:
+        descriptor = meta["arrays"][value["__array__"]]
+        parts = []
+        for part in descriptor["parts"]:
+            with np.load(GRAPH / part["id"] / "arrays.npz", allow_pickle=False) as arrays:
+                parts.append(arrays[part["value_key"]].copy())
+        a = np.concatenate(parts, axis=0) if descriptor["shape"] else parts[0]
+        assert list(a.shape) == descriptor["shape"] and a.dtype.str == descriptor["dtype"]
+        assert hashlib.sha256(a.tobytes()).hexdigest() == descriptor["sha256"]
+        return a
+    if isinstance(value, dict):
+        return {k: decode(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [decode(v) for v in value]
+    return value
+
+
+
+assert budget["root_preapproved"] is False and budget["source_bindings"] is None
+assert budget["source_identity_sha256"] is None and budget["source_file_count"] is None
+assert budget["dependency_reuse_approval_status"] == "pending_explicit_root_component_dependency_reuse"
+rows = []
+research = pilot_path.parent
+oracle_ast = next(n for n in ast.parse((research / "reference_methods.py").read_text()).body
+                  if isinstance(n, ast.FunctionDef) and n.name == "quote_positions_oracle")
+accepted = {arg.arg for arg in oracle_ast.args.args + oracle_ast.args.kwonlyargs}
+assert "work_directory" not in accepted
+assert {"wall_cap_seconds", "deadline_wall", "normals"} <= accepted
+for spec in description["classes"].values():
+    original = decode(jobs[spec["job_id"]]["arguments"])
+    measured = decode(spec["measurement_typed_arguments"])
+    assert input_identity(original) == spec["planned_arguments_sha256"]
+    assert input_identity(measured) == spec["measurement_typed_arguments_sha256"]
+    assert set(measured) - set(original) == {"wall_cap_seconds"}
+    assert set(measured) <= accepted
+    assert "normals" not in measured and "work_directory" not in measured
+    for key in original:
+        assert input_identity(original[key]) == input_identity(measured[key])
+    dependency = spec["call_table_dependency"]
+    dep_args = decode(jobs[dependency["job_id"]]["arguments"])
+    assert input_identity(dep_args) == dependency["graph_planned_arguments_sha256"]
+    assert dep_args["controls"] == {} and dependency["measurement_controls"] != {}
+    assert spec["original_n"] == 4096 and len(spec["queries"]) == 13
+    assert spec["seed"] == 3631740690 and spec["coarse_fine_levels"] == [768, 1536]
+    assert spec["actual_full_generation_payoff_transitions"] == 122683392
+    assert spec["driver_transitions"] == 6291456
+    assert spec["declared_conservative_total_path_steps"] == 163577856
+    assert spec["driver_native_max_live_chunk_bytes"] == 12582912
+    rows.append({"job_id":spec["job_id"],"planned_SHA_matches_actual_canonical":True,
+                 "measurement_SHA_matches_actual_canonical":True,"original_finance_and_seed_preserved":True,
+                 "exact_dependency_graph_SHA_checked":True,"call_table_controls_delta_explicit_pending":True,
+                 "actual_signature_no_work_directory":True})
+# Administrative decision function only: no observer runtime or source imports.
+m_ast = ast.parse(measurement.read_text())
+decision = next(n for n in m_ast.body if isinstance(n, ast.FunctionDef) and n.name == "class_decision")
+dec_ns = {}
+exec(compile(ast.Module(body=[decision],type_ignores=[]),str(measurement),"exec"),dec_ns)
+decide = dec_ns["class_decision"]
+full = {"status":"completed","original_query_paths":106496,"raw_receipt":{"binding":"exists"},
+        "stages":[{"stage":v} for v in (
+            "all_original_oracle_NaNs_statuses_roster_saved_before_dispatch",
+            "full_returned_raw_saved_before_checker",
+            "raw_read_driver_mapping_and_all_native_generator_expenses_retained",
+            "actual_saved_arithmetic_checker_and_immutable_check_write_read_returned",
+            "current_source_stable")]}
+native_cap = {"status":"failed_at_declared_cap","native_cap_evidence":{"cap_reached":True}}
+probes = [(0,None,full,"completed_component"),
+          (3,None,native_cap,"failed_at_declared_cap"),
+          (-9,{"metric":"RSS"},None,"failed_at_actual_cap"),
+          (0,None,None,"unclosed_missing_child_evidence"),
+          (0,None,dict(full,stages=[]),"unclosed_source_or_solver_defect"),
+          (0,None,dict(full,original_query_paths=53248),"unclosed_source_or_solver_defect"),
+          (3,None,dict(native_cap,native_cap_evidence=None),"unclosed_source_or_solver_defect"),
+          (1,None,dict(native_cap,status="unclosed_source_or_solver_defect"),"unclosed_source_or_solver_defect")]
+probe_rows=[]
+for code,cap,progress,expected in probes:
+    assert decide(code,cap,progress)==expected
+    probe_rows.append({"exit_code":code,"expected":expected,"status":"PASS"})
+for relative, expected in budget["input_file_bindings"].items():
+    actual = hashlib.sha256((WT/relative).read_bytes()).hexdigest()
+    assert actual == expected, relative
+assert not Path(description["measurement_output_root"]).exists()
+guard = subprocess.run(
+    [sys.executable,str(measurement),"--budget",str(budget_path),
+     "--output",description["measurement_output_root"]],
+    capture_output=True,text=True,check=False)
+assert guard.returncode != 0 and "candidate is not prior approval" in guard.stderr
+assert not Path(description["measurement_output_root"]).exists()
+result={
+    "scope":"M7 deterministic metadata/canonical typed argument/administrative guard verification only",
+    "status":"PASS", "financial_worker_or_RNG":False,"financial_module_import":False,
+    "formal_pilot_or_main":False,"source_approval_status":budget["source_approval_status"],
+    "root_preapproved":False,"source_count_pending_not_guessed":True,
+    "dependency_reuse_approval_status":budget["dependency_reuse_approval_status"],
+    "input_binding_files_checked":len(budget["input_file_bindings"]),
+    "original_graph_jobs":3138,"original_cases":121,"original_attempts":51,
+    "classes_original_state00_N4096_queries13_levels768_1536":True,
+    "argument_checks":rows,"administrative_decision_probes":probe_rows,
+    "candidate_rejects_before_financial_import_and_output":True,"guard_exit_code":guard.returncode,
+    "guard_stderr":guard.stderr,"oracle_source_function_AST_sha256":hashlib.sha256(ast.dump(oracle_ast).encode()).hexdigest(),
+    "administrative_cap_sum_1200s_is_not_runtime_estimate":True,
+    "saved_checker_scope":"deterministic arithmetic; no independent SDE replay",
+}
+(D/"task-5-current-oracle-preparation-verification-v1.json").write_text(
+    json.dumps(result,indent=2,sort_keys=True)+chr(10))
+print(json.dumps({k:v for k,v in result.items() if k!="guard_stderr"},indent=2))

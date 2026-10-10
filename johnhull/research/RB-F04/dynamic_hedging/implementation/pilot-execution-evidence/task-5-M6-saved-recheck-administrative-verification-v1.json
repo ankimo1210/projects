@@ -1,0 +1,189 @@
+{
+  "FAIL": 0,
+  "PASS": 30,
+  "cpu_seconds": 0.593071754,
+  "financial_imports_RNG_solver_worker": false,
+  "formal_financial_qualification": "unknown",
+  "guard_exit_code": 1,
+  "guard_stderr": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-measurement-v1.py\", line 712, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-measurement-v1.py\", line 708, in main\n    return parent(args.output, args.budget)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-measurement-v1.py\", line 667, in parent\n    budget, description, manifest = validate_budget(budget_path)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-M6-saved-recheck-measurement-v1.py\", line 104, in validate_budget\n    assert budget[\"root_preapproved\"] is True, \"candidate is not prior approval\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: candidate is not prior approval\n",
+  "original_raw_arrays_driver_normals_read": false,
+  "probes": [
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "Heston-coarse_whole_original_coverage"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "Heston-coarse_completed_administrative_only"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "Heston-high_whole_original_coverage"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "Heston-high_completed_administrative_only"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "local-coarse_whole_original_coverage"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "local-coarse_completed_administrative_only"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "local-high_whole_original_coverage"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "local-high_completed_administrative_only"
+    },
+    {
+      "PASS": true,
+      "detail": "metadata violation rejected",
+      "name": "last_node_missing"
+    },
+    {
+      "PASS": true,
+      "detail": "metadata violation rejected",
+      "name": "last_node_duplicate_index"
+    },
+    {
+      "PASS": true,
+      "detail": "metadata violation rejected",
+      "name": "last_physical_origin_replaced"
+    },
+    {
+      "PASS": true,
+      "detail": "metadata violation rejected",
+      "name": "last_label_comparison_flag_missing"
+    },
+    {
+      "PASS": true,
+      "detail": "metadata violation rejected",
+      "name": "last_sample_N_shortened"
+    },
+    {
+      "PASS": true,
+      "detail": "metadata violation rejected",
+      "name": "last_sample_dtype_replaced"
+    },
+    {
+      "PASS": true,
+      "detail": "metadata violation rejected",
+      "name": "last_sample_descriptor_missing"
+    },
+    {
+      "PASS": true,
+      "detail": "metadata violation rejected",
+      "name": "serialized_runtime_context"
+    },
+    {
+      "PASS": true,
+      "detail": "metadata violation rejected",
+      "name": "report_N_changed"
+    },
+    {
+      "PASS": true,
+      "detail": "metadata violation rejected",
+      "name": "cache_comparison_missing"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "last_SDE_flag_false_never_completed"
+    },
+    {
+      "PASS": true,
+      "detail": {
+        "actual": "unclosed_source_or_solver_defect_with_actual_cap",
+        "expected": "unclosed_source_or_solver_defect_with_actual_cap"
+      },
+      "name": "source_fault_plus_actual_cap"
+    },
+    {
+      "PASS": true,
+      "detail": {
+        "actual": "unclosed_observer_defect_with_actual_cap",
+        "expected": "unclosed_observer_defect_with_actual_cap"
+      },
+      "name": "observer_fault_plus_actual_cap"
+    },
+    {
+      "PASS": true,
+      "detail": {
+        "actual": "failed_at_actual_saved_recheck_cap",
+        "expected": "failed_at_actual_saved_recheck_cap"
+      },
+      "name": "kill_before_return"
+    },
+    {
+      "PASS": true,
+      "detail": {
+        "actual": "unclosed_missing_child_evidence",
+        "expected": "unclosed_missing_child_evidence"
+      },
+      "name": "missing_child_without_cap"
+    },
+    {
+      "PASS": true,
+      "detail": {
+        "actual": "unclosed_child_evidence_incomplete",
+        "expected": "unclosed_child_evidence_incomplete"
+      },
+      "name": "missing_final_checkpoint"
+    },
+    {
+      "PASS": true,
+      "detail": {
+        "actual": "unclosed_child_evidence_incomplete",
+        "expected": "unclosed_child_evidence_incomplete"
+      },
+      "name": "missing_RNG_flag"
+    },
+    {
+      "PASS": true,
+      "detail": {
+        "actual": "completed_saved_only_component",
+        "expected": "completed_saved_only_component"
+      },
+      "name": "old_cap_is_not_new_cap"
+    },
+    {
+      "PASS": true,
+      "detail": {
+        "actual": "original_partial_or_capped_retained_unqualified",
+        "expected": "original_partial_or_capped_retained_unqualified"
+      },
+      "name": "partial_original_history"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "postexit_wall_child_and_parent_RSS"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "no_missing_RSS_zero_fill"
+    },
+    {
+      "PASS": true,
+      "detail": null,
+      "name": "false_candidate_guard_before_finance_import"
+    }
+  ],
+  "scope": "pure synthetic observer metadata only; not native financial evidence",
+  "source_sha256": "e16a706848f496d10bfba213aec82190b7b2829887ed22aa279f11ece750164d",
+  "wall_seconds": 0.6847228890037513
+}

@@ -1,0 +1,41 @@
+{
+  "Ruff_format_3": "PASS",
+  "canonical_guard_API": "PASS",
+  "created_utc": "2026-10-10T04:44:46.806864+00:00",
+  "files": {
+    "task-5-current-oracle-budget-candidate-v2.json": "de03ec755e0479684daf9d04a10ab39a94cb3d735895ac5a55ce4a0ae62158f0",
+    "task-5-current-oracle-initial-description-v2.json": "c2ebe4b64b1a978a6921a5e186933482dfda42466b2d9c89cf475c3e8c39df41",
+    "task-5-current-oracle-measurement-v2.py": "6c9d5fbae7cc4aec5105f7e9a432d3f75092b6a9b6080b7b7f45780f30628a10",
+    "task-5-current-oracle-observer-AST-delta-v2.json": "3d7c47f639b5cfd5a1689bbb45e366502c1aa26100a10e72ccee748f0bcd1b87",
+    "task-5-current-oracle-observer-GREEN-v2.json": "ff22501cff4dacb4908f1cfb367e2811bab17c2cca44cf603dc09be2c7b9476b",
+    "task-5-current-oracle-observer-RED-v1.json": "17145586667d54eea160a0a01f567b7bad00d54442cbfaf3608b700517bd1487",
+    "task-5-current-oracle-observer-diff-v1-v2.patch": "8bcc9defea08a7a6f3892d3ca324114537a9a92f1892f006975c99d6f3c12af2",
+    "task-5-current-oracle-observer-probes-v2.py": "2cc951e1e9087d994102eaccfba0b95f9232cab2526166f58077143f6ec3b12b",
+    "task-5-current-oracle-observer-v2-ruff-check.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "task-5-current-oracle-observer-v2-ruff-cost.json": "af541383a550b74ead9074033eae78029b9aa1fdb7d0b3286add753e5e1412bb",
+    "task-5-current-oracle-observer-v2-ruff-format.log": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+    "task-5-current-oracle-preparation-verification-v2-cost.json": "c1c8a273be8111455689428d5d840af63e7985b35033726dd90e6f03a9395e7b",
+    "task-5-current-oracle-preparation-verification-v2.json": "6006984a0d6ae884a0dc13fd806ab6e0fe7a978f9de7d0df117225a78af9ca55",
+    "task-5-current-oracle-preparation-verification-v2.log": "7a7b08b61ec1f9ee3198485c61243090268bcf33ab1de3f418b9e5faca60960f",
+    "task-5-current-oracle-preparation-verification-v2.py": "b71069de2220d8a50bc4f4a59835d38740c85d3f02ed9c46efd69eedca6650cf",
+    "task-5-current-oracle-static-review-v2.md": "dd91b382096d90fb6c0d6dc81521d8010543c398c0537ae92a88bbd3fb8a9581"
+  },
+  "financial_RNG_solver_worker": false,
+  "formal_finance_approved": false,
+  "original_v1_bytes_preserved": true,
+  "other_preparation_costs_unmeasured": null,
+  "probe_results": {
+    "GREEN_v2_FAIL": 0,
+    "GREEN_v2_PASS": 18,
+    "RED_v1_FAIL": 6,
+    "RED_v1_PASS": 5
+  },
+  "report_final_byte_check_cpu_seconds": 0.0028743780000000003,
+  "report_final_byte_check_wall_seconds": 0.0028752430007443763,
+  "root_preapproved": false,
+  "schema": "rb-f04-M7-D-only-static-observer-v2",
+  "snapshot_v1": "task-5-current-oracle-observer-v1-immutable-snapshot",
+  "source81_actual_match": true,
+  "source_docs_Git_CAS_edits": false,
+  "source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0"
+}

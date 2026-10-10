@@ -1,0 +1,1046 @@
+{
+  "scope": "original_M6_N1024_saved_resource_only",
+  "source_before": {
+    "source_bindings": [],
+    "input_file_bindings": []
+  },
+  "classes": [
+    {
+      "class": "Heston-coarse",
+      "N": 1024,
+      "thresholds": 33,
+      "nodes": 108,
+      "dates": 12,
+      "all_original_geometry_physical_bindings_root_pack_receipts_headers": true,
+      "full_status_shapes_dtype_retained": true,
+      "valid_primitive_paths": 110592,
+      "invalid_primitive_paths": 0,
+      "primitive_status": {
+        "ready": 110592
+      },
+      "failure_reasons": {
+        "": 110592
+      },
+      "label_status": {
+        "not_required_linear_claim": 108,
+        "ready": 2152,
+        "unknown_underresolved": 1304
+      },
+      "original_NaN_unprocessed_retained": true,
+      "native_node_storage_bytes": {
+        "physical_npz_bytes": 32862385,
+        "payload_bytes": 178031088,
+        "expanded_NPY_bytes": 178708464,
+        "metadata_receipt_bytes": 2693943
+      },
+      "full_teacher_container_bytes": {
+        "physical_npz_bytes": 7089694,
+        "payload_bytes": 6620004,
+        "expanded_NPY_bytes": 6856676,
+        "metadata_receipt_bytes": 791973
+      },
+      "initial_obligation_bytes": {
+        "physical_npz_bytes": 85732,
+        "payload_bytes": 83656,
+        "expanded_NPY_bytes": 84680,
+        "metadata_receipt_bytes": 9019
+      },
+      "saved_checker": {
+        "exists": true,
+        "fully_decoded": false,
+        "physical_bytes": {
+          "physical_npz_bytes": 388738446,
+          "payload_bytes": 387255252,
+          "expanded_NPY_bytes": 388002644,
+          "metadata_receipt_bytes": 2239816
+        },
+        "all_pack_receipts_NPY_headers_authenticated": true,
+        "rawcheck_count": 108,
+        "rawcheck_replayed_flag_count": 108,
+        "invalid_path_count_sum": 0,
+        "unknown_node_count_sum": 1304,
+        "unverified": {
+          "global_driver_generation": 108,
+          "independent_accuracy": 108
+        },
+        "source_sequence_implies_checker_return_before_write": true,
+        "completed_checkpoint": true
+      },
+      "sampled_statistics": [
+        {
+          "node": 0,
+          "date_index": 0,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 8,
+          "date_index": 0,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 9,
+          "date_index": 1,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 17,
+          "date_index": 1,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 18,
+          "date_index": 2,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 26,
+          "date_index": 2,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 27,
+          "date_index": 3,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 35,
+          "date_index": 3,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 36,
+          "date_index": 4,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 44,
+          "date_index": 4,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 45,
+          "date_index": 5,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 53,
+          "date_index": 5,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 54,
+          "date_index": 6,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 62,
+          "date_index": 6,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 63,
+          "date_index": 7,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 71,
+          "date_index": 7,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 72,
+          "date_index": 8,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 80,
+          "date_index": 8,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 81,
+          "date_index": 9,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 89,
+          "date_index": 9,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 90,
+          "date_index": 10,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 98,
+          "date_index": 10,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 99,
+          "date_index": 11,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 107,
+          "date_index": 11,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        }
+      ],
+      "sample_count": 24,
+      "class_status": "completed_component",
+      "grid_phase_status": "completed",
+      "grid_exit_code": 0,
+      "cap_evidence": null,
+      "class_wall_seconds": 72.05325947500023,
+      "class_CPU_seconds": 71.304524105,
+      "phase_peak_RSS_bytes": 1926557696,
+      "RSS_unknown_samples": 1,
+      "progress_last_kernel_RSS_bytes": 1926406144,
+      "after_full_raw_write_read_wall_until_child_stop": 31.29967338499773
+    },
+    {
+      "class": "Heston-high",
+      "N": 1024,
+      "thresholds": 65,
+      "nodes": 156,
+      "dates": 12,
+      "all_original_geometry_physical_bindings_root_pack_receipts_headers": true,
+      "full_status_shapes_dtype_retained": true,
+      "valid_primitive_paths": 159744,
+      "invalid_primitive_paths": 0,
+      "primitive_status": {
+        "ready": 159744
+      },
+      "failure_reasons": {
+        "": 159744
+      },
+      "label_status": {
+        "not_required_linear_claim": 156,
+        "ready": 5962,
+        "unknown_underresolved": 4022
+      },
+      "original_NaN_unprocessed_retained": true,
+      "native_node_storage_bytes": {
+        "physical_npz_bytes": 137347851,
+        "payload_bytes": 479200176,
+        "expanded_NPY_bytes": 480178608,
+        "metadata_receipt_bytes": 3894768
+      },
+      "full_teacher_container_bytes": {
+        "physical_npz_bytes": 18943406,
+        "payload_bytes": 18266452,
+        "expanded_NPY_bytes": 18607572,
+        "metadata_receipt_bytes": 1140935
+      },
+      "initial_obligation_bytes": {
+        "physical_npz_bytes": 197124,
+        "payload_bytes": 195048,
+        "expanded_NPY_bytes": 196072,
+        "metadata_receipt_bytes": 11141
+      },
+      "saved_checker": {
+        "exists": true,
+        "fully_decoded": false,
+        "physical_bytes": {
+          "physical_npz_bytes": 1242905016,
+          "payload_bytes": 1240763300,
+          "expanded_NPY_bytes": 1241842468,
+          "metadata_receipt_bytes": 3312360
+        },
+        "all_pack_receipts_NPY_headers_authenticated": true,
+        "rawcheck_count": 156,
+        "rawcheck_replayed_flag_count": 156,
+        "invalid_path_count_sum": 0,
+        "unknown_node_count_sum": 4022,
+        "unverified": {
+          "global_driver_generation": 156,
+          "independent_accuracy": 156
+        },
+        "source_sequence_implies_checker_return_before_write": true,
+        "completed_checkpoint": false
+      },
+      "sampled_statistics": [
+        {
+          "node": 0,
+          "date_index": 0,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 12,
+          "date_index": 0,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 13,
+          "date_index": 1,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 25,
+          "date_index": 1,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 26,
+          "date_index": 2,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 38,
+          "date_index": 2,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 39,
+          "date_index": 3,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 51,
+          "date_index": 3,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 52,
+          "date_index": 4,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 64,
+          "date_index": 4,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 65,
+          "date_index": 5,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 77,
+          "date_index": 5,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 78,
+          "date_index": 6,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 90,
+          "date_index": 6,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 91,
+          "date_index": 7,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 103,
+          "date_index": 7,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 104,
+          "date_index": 8,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 116,
+          "date_index": 8,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 117,
+          "date_index": 9,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 129,
+          "date_index": 9,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 130,
+          "date_index": 10,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 142,
+          "date_index": 10,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 143,
+          "date_index": 11,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 155,
+          "date_index": 11,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        }
+      ],
+      "sample_count": 24,
+      "class_status": "unknown_unclosed_component",
+      "grid_phase_status": "failed_at_actual_cap",
+      "grid_exit_code": -9,
+      "cap_evidence": {
+        "limit_bytes": 4294967296,
+        "metric": "individual_child_process_RSS",
+        "observed_bytes": 4326535168
+      },
+      "class_wall_seconds": 114.61949621000167,
+      "class_CPU_seconds": 115.079297315,
+      "phase_peak_RSS_bytes": 4326535168,
+      "RSS_unknown_samples": 0,
+      "progress_last_kernel_RSS_bytes": 869511168,
+      "after_full_raw_write_read_wall_until_child_stop": 53.834202910002205
+    },
+    {
+      "class": "local-coarse",
+      "N": 1024,
+      "thresholds": 33,
+      "nodes": 520,
+      "dates": 12,
+      "all_original_geometry_physical_bindings_root_pack_receipts_headers": true,
+      "full_status_shapes_dtype_retained": true,
+      "valid_primitive_paths": 532480,
+      "invalid_primitive_paths": 0,
+      "primitive_status": {
+        "ready": 532480
+      },
+      "failure_reasons": {
+        "": 532480
+      },
+      "label_status": {
+        "not_required_linear_claim": 520,
+        "ready": 9907,
+        "unknown_underresolved": 6733
+      },
+      "original_NaN_unprocessed_retained": true,
+      "native_node_storage_bytes": {
+        "physical_npz_bytes": 154528323,
+        "payload_bytes": 849936752,
+        "expanded_NPY_bytes": 853198192,
+        "metadata_receipt_bytes": 12968611
+      },
+      "full_teacher_container_bytes": {
+        "physical_npz_bytes": 34537438,
+        "payload_bytes": 32287164,
+        "expanded_NPY_bytes": 33421116,
+        "metadata_receipt_bytes": 3793171
+      },
+      "initial_obligation_bytes": {
+        "physical_npz_bytes": 330224,
+        "payload_bytes": 327640,
+        "expanded_NPY_bytes": 328920,
+        "metadata_receipt_bytes": 31054
+      },
+      "saved_checker": {
+        "exists": true,
+        "fully_decoded": false,
+        "physical_bytes": {
+          "physical_npz_bytes": 1872151420,
+          "payload_bytes": 1865015932,
+          "expanded_NPY_bytes": 1868611580,
+          "metadata_receipt_bytes": 10774244
+        },
+        "all_pack_receipts_NPY_headers_authenticated": true,
+        "rawcheck_count": 520,
+        "rawcheck_replayed_flag_count": 520,
+        "invalid_path_count_sum": 0,
+        "unknown_node_count_sum": 6733,
+        "unverified": {
+          "global_driver_generation": 520,
+          "independent_accuracy": 520
+        },
+        "source_sequence_implies_checker_return_before_write": true,
+        "completed_checkpoint": false
+      },
+      "sampled_statistics": [
+        {
+          "node": 0,
+          "date_index": 0,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 24,
+          "date_index": 0,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 25,
+          "date_index": 1,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 69,
+          "date_index": 1,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 70,
+          "date_index": 2,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 114,
+          "date_index": 2,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 115,
+          "date_index": 3,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 159,
+          "date_index": 3,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 160,
+          "date_index": 4,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 204,
+          "date_index": 4,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 205,
+          "date_index": 5,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 249,
+          "date_index": 5,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 250,
+          "date_index": 6,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 294,
+          "date_index": 6,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 295,
+          "date_index": 7,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 339,
+          "date_index": 7,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 340,
+          "date_index": 8,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 384,
+          "date_index": 8,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 385,
+          "date_index": 9,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 429,
+          "date_index": 9,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 430,
+          "date_index": 10,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 474,
+          "date_index": 10,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 475,
+          "date_index": 11,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 519,
+          "date_index": 11,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        }
+      ],
+      "sample_count": 24,
+      "class_status": "unknown_unclosed_component",
+      "grid_phase_status": "failed_at_actual_cap",
+      "grid_exit_code": -9,
+      "cap_evidence": {
+        "limit_bytes": 4294967296,
+        "metric": "individual_child_process_RSS",
+        "observed_bytes": 4361334784
+      },
+      "class_wall_seconds": 383.1213920000009,
+      "class_CPU_seconds": 384.66387631099997,
+      "phase_peak_RSS_bytes": 4361334784,
+      "RSS_unknown_samples": 0,
+      "progress_last_kernel_RSS_bytes": 879407104,
+      "after_full_raw_write_read_wall_until_child_stop": 183.37830198699885
+    },
+    {
+      "class": "local-high",
+      "N": 1024,
+      "thresholds": 65,
+      "nodes": 1344,
+      "dates": 12,
+      "all_original_geometry_physical_bindings_root_pack_receipts_headers": true,
+      "full_status_shapes_dtype_retained": true,
+      "valid_primitive_paths": 1376256,
+      "invalid_primitive_paths": 0,
+      "primitive_status": {
+        "ready": 1376256
+      },
+      "failure_reasons": {
+        "": 1376256
+      },
+      "label_status": {
+        "not_required_linear_claim": 1344,
+        "ready": 50893,
+        "unknown_underresolved": 35123
+      },
+      "original_NaN_unprocessed_retained": true,
+      "native_node_storage_bytes": {
+        "physical_npz_bytes": 1192068216,
+        "payload_bytes": 4097911504,
+        "expanded_NPY_bytes": 4106341072,
+        "metadata_receipt_bytes": 33556673
+      },
+      "full_teacher_container_bytes": {
+        "physical_npz_bytes": 165704344,
+        "payload_bytes": 159895972,
+        "expanded_NPY_bytes": 162822948,
+        "metadata_receipt_bytes": 9801791
+      },
+      "initial_obligation_bytes": {
+        "physical_npz_bytes": 1509312,
+        "payload_bytes": 1506728,
+        "expanded_NPY_bytes": 1508008,
+        "metadata_receipt_bytes": 75410
+      },
+      "saved_checker": {
+        "exists": false,
+        "fully_decoded": false,
+        "completed_checkpoint": false
+      },
+      "sampled_statistics": [
+        {
+          "node": 0,
+          "date_index": 0,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 34,
+          "date_index": 0,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 35,
+          "date_index": 1,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 153,
+          "date_index": 1,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 154,
+          "date_index": 2,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 272,
+          "date_index": 2,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 273,
+          "date_index": 3,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 391,
+          "date_index": 3,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 392,
+          "date_index": 4,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 510,
+          "date_index": 4,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 511,
+          "date_index": 5,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 629,
+          "date_index": 5,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 630,
+          "date_index": 6,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 748,
+          "date_index": 6,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 749,
+          "date_index": 7,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 867,
+          "date_index": 7,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 868,
+          "date_index": 8,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 986,
+          "date_index": 8,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 987,
+          "date_index": 9,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 1105,
+          "date_index": 9,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 1106,
+          "date_index": 10,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 1224,
+          "date_index": 10,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 1225,
+          "date_index": 11,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        },
+        {
+          "node": 1343,
+          "date_index": 11,
+          "all11_sample_fields_restored": true,
+          "raw_payoff_mean_SE_16block_price_covariance_independent": true,
+          "full_original_N": 1024
+        }
+      ],
+      "sample_count": 24,
+      "class_status": "unknown_unclosed_component",
+      "grid_phase_status": "failed_at_actual_cap",
+      "grid_exit_code": -9,
+      "cap_evidence": {
+        "limit_bytes": 4294967296,
+        "metric": "individual_child_process_RSS",
+        "observed_bytes": 4298833920
+      },
+      "class_wall_seconds": 831.8165871560013,
+      "class_CPU_seconds": 835.1916882120001,
+      "phase_peak_RSS_bytes": 4298833920,
+      "RSS_unknown_samples": 0,
+      "progress_last_kernel_RSS_bytes": 1294528512,
+      "after_full_raw_write_read_wall_until_child_stop": 220.03500746099962
+    }
+  ],
+  "drivers": [
+    {
+      "model": "Heston",
+      "N": 1024,
+      "seed": 138674072,
+      "global_driver_id": "c04df2cfc7e2533749886b1e7935cacf790a312eba3778bad7deccc75856c203",
+      "shape": [
+        1024,
+        768,
+        2
+      ],
+      "normals_authenticated_saved_only": true,
+      "original_normal_bytes": 12582912,
+      "physical_bytes": {
+        "physical_npz_bytes": 12625862,
+        "payload_bytes": 12621832,
+        "expanded_NPY_bytes": 12623752,
+        "metadata_receipt_bytes": 11535
+      },
+      "generation_cost_in_coarse_owner_only": true
+    },
+    {
+      "model": "local",
+      "N": 1024,
+      "seed": 1345225788,
+      "global_driver_id": "b950cb42b98dffd8c7c1a1b9eba0637bbdb9605dc3993d31200917ef3a0b4b9e",
+      "shape": [
+        1024,
+        768,
+        2
+      ],
+      "normals_authenticated_saved_only": true,
+      "original_normal_bytes": 12582912,
+      "physical_bytes": {
+        "physical_npz_bytes": 12625862,
+        "payload_bytes": 12621832,
+        "expanded_NPY_bytes": 12623752,
+        "metadata_receipt_bytes": 11535
+      },
+      "generation_cost_in_coarse_owner_only": true
+    }
+  ],
+  "financial_qualification": "unknown",
+  "formal_pilot_main_phase_approved": false,
+  "new_financial_RNG_solver_execution": false,
+  "saved_SDE_checker_reexecuted": false,
+  "huge_saved_checker_fully_decoded": false,
+  "resource_cost": {
+    "root_outer_wall_seconds": 1401.8074237509973,
+    "root_outer_CPU_seconds": 1406.361056,
+    "class_wall_sum_seconds": 1401.6107348410042,
+    "class_CPU_sum_seconds": 1406.2393859430001,
+    "outer_wall_overhead_seconds": 0.19668890999309951,
+    "driver_cost_counted_once": true,
+    "no_inner_outer_doublecount": true,
+    "actual_measurement_exit3_preserved": true,
+    "external_observer_CPU_and_final_receipt_save": "unknown",
+    "formal_rate_volume_forecast": null
+  },
+  "source_after": {
+    "source_bindings": [],
+    "input_file_bindings": []
+  },
+  "review_cost": {
+    "wall_seconds": 23.918263647999993,
+    "CPU_seconds": 23.82687378,
+    "process_kernel_peak_RSS_bytes": 804323328,
+    "physical_artifacts_checked": 4331
+  }
+}

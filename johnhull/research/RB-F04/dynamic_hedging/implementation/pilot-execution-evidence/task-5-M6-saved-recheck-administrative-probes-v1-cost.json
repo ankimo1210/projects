@@ -1,0 +1,10 @@
+{
+  "child_CPU_seconds": 0.767303,
+  "child_peak_RSS_bytes": 56799232,
+  "exit_code": 0,
+  "financial_modules_RNG_solver_worker": false,
+  "original_raw_arrays_or_driver_normals_read": false,
+  "parent_CPU_seconds": 0.0006966679999999975,
+  "scope": "M6 stdlib AST and synthetic metadata/decision/false-budget guard only",
+  "wall_seconds": 0.7701198930008104
+}

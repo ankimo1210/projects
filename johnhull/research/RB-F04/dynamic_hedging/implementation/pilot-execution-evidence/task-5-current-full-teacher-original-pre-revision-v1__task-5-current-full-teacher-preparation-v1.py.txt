@@ -1,0 +1,239 @@
+"""Metadata-only preparation. No financial solver, worker, RNG or source writes."""
+from __future__ import annotations
+
+import ast
+import hashlib
+import json
+from pathlib import Path
+
+import numpy as np
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+GRAPH = D / "task-5-full-progressive-pilot-plan-draft-source-unit-v3"
+FIELD = D / "task-5-actual-pilot-input-preparation-v4-current-field"
+PREP = D / "task-5-actual-pilot-input-preparation-v4.json"
+OUT = D / "task-5-current-full-teacher-observation-root-m6-v1"
+CLASSES = ("Heston-coarse", "Heston-high", "local-coarse", "local-high")
+CAPS = {"Heston-coarse": 300.0, "Heston-high": 300.0,
+        "local-coarse": 600.0, "local-high": 900.0}
+
+
+def digest(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"),
+                                    allow_nan=False).encode()).hexdigest()
+
+
+def sha(path):
+    result = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024**2), b""):
+            result.update(block)
+    return result.hexdigest()
+
+
+def literal_identity(value, descriptors):
+    # Exact mirror of input_identity for saved literal argument trees, plus
+    # original ndarray shape/dtype/byte bindings from the immutable graph.
+    if isinstance(value, dict) and set(value) == {"__array__"}:
+        descriptor = descriptors[value["__array__"]]
+        binding = {k: descriptor[k] for k in ("shape", "dtype", "sha256")}
+        return digest({"tree": {"__array__": "a000000"},
+                       "arrays": {"a000000": binding}})
+    if isinstance(value, dict):
+        value = {k: literal_identity(v, descriptors) for k, v in value.items()}
+    elif isinstance(value, list):
+        value = [literal_identity(v, descriptors) for v in value]
+    return digest({"tree": value, "arrays": {}})
+
+
+def payload_digest(value):
+    arrays = {}
+    def encode(item):
+        if isinstance(item, np.ndarray):
+            key = f"a{len(arrays):06d}"
+            arrays[key] = item
+            return {"__array__": key}
+        if isinstance(item, np.generic):
+            return encode(item.item())
+        if isinstance(item, dict):
+            return {key: encode(item[key]) for key in sorted(item)}
+        if isinstance(item, (tuple, list)):
+            return [encode(v) for v in item]
+        assert item is None or isinstance(item, (str, int, float, bool))
+        return item
+    tree = encode(value)
+    bindings = {key: {"shape": list(a.shape), "dtype": a.dtype.str,
+                      "sha256": hashlib.sha256(np.ascontiguousarray(a).tobytes()).hexdigest()}
+                for key, a in arrays.items()}
+    return digest({"tree": tree, "arrays": bindings})
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def dump(path, value):
+    path.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + chr(10))
+
+
+# Execute only the isolated deterministic metadata-axis function, not its module
+# imports/financial workers. Its source is a preparation snapshot, not approval.
+pilot_source = WT / "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+parsed = ast.parse(pilot_source.read_text())
+axis_ast = next(node for node in parsed.body
+                if isinstance(node, ast.FunctionDef) and node.name == "teacher_axes")
+isolated = ast.Module(body=[axis_ast], type_ignores=[])
+namespace = {"np": np, "_require": require}
+exec(compile(isolated, str(pilot_source), "exec"), namespace)
+teacher_axes = namespace["teacher_axes"]
+source_axis_snapshot_sha = hashlib.sha256(ast.dump(axis_ast).encode()).hexdigest()
+meta = json.loads((GRAPH / "metadata.json").read_text())["metadata"]
+tree, descriptors = meta["tree"], meta["arrays"]
+jobs = {row["id"]: row for row in tree["jobs"]}
+assert len(jobs) == 3138 and len(tree["case_plan"]) == 121 and len(tree["attempt_plan"]) == 51
+prepared = json.loads(PREP.read_text())
+class_specs, driver_specs = {}, {}
+work_rows = {r["id"]: r for r in json.loads(
+    (D / "task-5-formal-controls-review-existing-path-cap-table.json").read_text())["rows"]}
+for class_id in CLASSES:
+    model, grid = class_id.split("-")
+    identifier = f"teacher:{model}:N1024:{grid}:raw"
+    row = jobs[identifier]
+    args = row["arguments"]
+    driver_id = f"teacher-driver:{model}:N1024"
+    assert args["driver"] == {"job": driver_id}
+    assert row["operation"] == "teacher_grid" and row["original_n"] == 1024
+    assert args["evaluation_domains"] == [None] * 12
+    assert args["seed"] == prepared["declared_stream_namespaces"]["teacher"][
+        0 if model == "Heston" else 1]
+    axes = teacher_axes(grid, model)
+    nodes = []
+    for j in range(12):
+        spots = (axes["t0_spot"] if j == 0 else axes["spot"]) if model == "local" else [100.0]
+        for spot in spots:
+            for state in axes["state"]:
+                nodes.append({"date_index": j, "spot": float(spot), "state": float(state)})
+    work = work_rows[identifier]
+    assert len(nodes) == row["prediction"]["financial_child_count"]
+    measured = dict(args)
+    measured["work_directory"] = str(OUT / "classes" / class_id / "grid" / "work")
+    measured["wall_cap_seconds"] = CAPS[class_id]
+    class_specs[class_id] = {
+        "job_id": identifier, "operation": "teacher_grid", "model": model, "grid": grid,
+        "original_n": 1024, "seed": args["seed"], "stream_namespace": "teacher",
+        "teacher_purpose": "principal", "teacher_reference": None,
+        "driver_job_id": driver_id, "driver_is_required": True,
+        "original_nodes": len(nodes), "dates_count": 12,
+        "state_count": len(axes["state"]), "threshold_count": axes["threshold"].shape[1],
+        "t0_spot_count": len(axes["t0_spot"]) if model == "local" else 1,
+        "later_spot_count": len(axes["spot"]) if model == "local" else 1,
+        "axes_payload_sha256": payload_digest(axes), "planned_nodes": nodes,
+        "planned_typed_arguments": args,
+        "planned_arguments_sha256": literal_identity(args, descriptors),
+        "measurement_typed_arguments": measured,
+        "measurement_typed_arguments_sha256": literal_identity(measured, descriptors),
+        "override_keys": ["wall_cap_seconds", "work_directory"],
+        "override_rationale": "root administrative class cap and fresh D output only; financial geometry/driver unchanged",
+        "planned_prediction": row["prediction"],
+        "original_declared_total_path_steps": work["declared_total_path_steps"],
+        "actual_generation_conditional_transitions": work["actual_whole_conditional_transitions"],
+        "actual_saved_driver_SDE_check_conditional_transitions": work["actual_whole_conditional_transitions"],
+        "generation_plus_saved_SDE_transitions": 2 * work["actual_whole_conditional_transitions"],
+        "write_read_labels_cache_extra_work_unmeasured": True,
+        "wall_limit_seconds": CAPS[class_id], "rss_limit_bytes": 4 * 1024**3,
+    }
+    if model not in driver_specs:
+        driver_row = jobs[driver_id]
+        driver_args = driver_row["arguments"]
+        assert driver_row["driver_model"] == model and driver_args["seed"] == args["seed"]
+        calendar = descriptors[driver_args["calendar_times"]["__array__"]]
+        assert calendar["shape"] == [769] and calendar["dtype"] == "<f8"
+        measured_driver = dict(driver_args)
+        measured_driver["work_directory"] = str(OUT / "banks" / model / "work")
+        measured_driver["wall_cap_seconds"] = CAPS[class_id]
+        driver_specs[model] = {
+            "job_id": driver_id, "model": model, "original_n": 1024,
+            "seed": args["seed"], "stream_namespace": "teacher",
+            "teacher_purpose": "principal", "teacher_reference": None,
+            "global_driver_scope": "original1024 IID path/768 fine step/2 factors; coarse+high and all restarts reuse one saved bank",
+            "owner_class": class_id, "consumers": [f"{model}-coarse", f"{model}-high"],
+            "calendar_descriptor": calendar, "original_path_steps": 1024 * 768,
+            "normal_expanded_bytes": 1024 * 768 * 2 * 8,
+            "planned_typed_arguments": driver_args,
+            "planned_arguments_sha256": literal_identity(driver_args, descriptors),
+            "measurement_typed_arguments": measured_driver,
+            "measurement_typed_arguments_sha256": literal_identity(measured_driver, descriptors),
+            "override_keys": ["wall_cap_seconds", "work_directory"],
+            "override_rationale": "same owner-class administrative enclosing cap and fresh D bank; same original RNG stream",
+            "expense_accounting": "one independent driver parent receipt, already included in owner class; reuse must reference receipt, never add it again",
+        }
+
+cached = {
+    "Heston": D / "task-5-current-whole-call-cache-observation-root-m2-v3/actual-whole-call-cache-raw",
+    "local": D / "task-5-current-whole-call-cache-observation-root-m3-v3/actual-whole-call-cache-raw",
+}
+description = {
+    "schema": "rb-f04-M6-original-full-teacher-description-v1",
+    "scope": "M6_original_full_teacher_N1024_four_classes_component_only",
+    "financial_worker_performed": False, "financial_RNG_performed": False,
+    "financial_qualification": "unknown", "formal_pilot_or_main": False,
+    "prepared_input_json": str(PREP.relative_to(WT)),
+    "graph_artifact": str(GRAPH.relative_to(WT)),
+    "field_artifact": str(FIELD.relative_to(WT)),
+    "existing_raw_call_caches_context": {k: str(v.relative_to(WT)) for k, v in cached.items()},
+    "raw_call_cache_is_teacher_argument_dependency": False,
+    "new_call_cache_CF_or_PDE_execution": False,
+    "graph_counts": {"jobs": 3138, "cases": 121, "attempts": 51},
+    "field_shape": [257, 321],
+    "field_controls": {"order": 1024, "frequency_scale": 512, "density_floor": 1e-10},
+    "teacher_axes_preparation_ast_sha256": source_axis_snapshot_sha,
+    "teacher_axes_snapshot_is_current_source_approval": False,
+    "planned_digest_method": "exact input_identity mirror on original packed argument ndarray descriptors; runtime reasserts with approved source",
+    "measurement_output_root": str(OUT),
+    "classes": class_specs, "drivers": driver_specs,
+    "failure_contract": "all original roster/N/unknown and actual partial/raw/receipts remain; no source exception converted to cap; no zero or finite-subset fallback",
+    "candidate_wall_sum_seconds": sum(CAPS.values()),
+    "wall_cap_is_runtime_estimate": False,
+    "retention_subset_uncompressed_lower_bytes": 5494775552,
+    "retention_lower_excludes_other_raw_duplicate_arrays_headers_cache_and_receipts": True,
+}
+desc_path = D / "task-5-current-full-teacher-initial-description-v1.json"
+dump(desc_path, description)
+files = [PREP, D / "task-5-progressive-pilot-plan-producer-v3.py"]
+for directory in (GRAPH, FIELD, *cached.values()):
+    files.extend(p for p in directory.rglob("*") if p.is_file() and p.suffix in (".json", ".npz"))
+bindings = {str(p.relative_to(WT)): sha(p) for p in sorted(set(files))}
+budget = {
+    "schema": "rb-f04-current-full-teacher-prior-budget-v1", "scope": description["scope"],
+    "status": "candidate_pending_new_codec_current_source_approval_and_root_budget",
+    "root_preapproved": False, "formal_finance_approved": False,
+    "source_approval_status": "pending_new_native_teacher_codec_actual_closure",
+    "source_bindings": None, "source_identity_sha256": None,
+    "source_file_count": None, "source_approval_evidence": None,
+    "old_v56_is_formal_current": False,
+    "allowed_classes": list(CLASSES), "classes": class_specs,
+    "wall_limit_seconds_per_class": CAPS, "rss_limit_bytes": 4 * 1024**3,
+    "rss_metric": "maximum_individual_parent_or_child_process_RSS_not_AS",
+    "probe_source_sha256": sha(D / "task-5-current-full-teacher-measurement-v1.py"),
+    "initial_description_sha256": sha(desc_path),
+    "input_file_bindings": bindings, "measurement_output_root": str(OUT),
+    "budget_per_class": True,
+    "budget_includes": ["owner shared driver typed dispatch+bank write/read",
+                        "original full teacher grid typed dispatch",
+                        "per-node native writer/reader", "full teacher write/read",
+                        "actual saved-driver full SDE and labels/cache checker"],
+    "drivers_counted_once": True,
+    "no_external_storage_deletion_migration_or_new_capacity_authorized": True,
+    "runtime_estimate_seconds": None,
+    "physical_compressed_prediction_bytes": None,
+    "pending_before_execution": ["root approval of current codec/physical node binding and actual source closure",
+                                 "root separate immutable prior administrative budget",
+                                 "current MemAvailable and output volume free check"],
+}
+dump(D / "task-5-current-full-teacher-budget-candidate-v1.json", budget)
+print(json.dumps({"description": str(desc_path), "classes": {
+    k: {"nodes": v["original_nodes"], "generation_and_saved_replay_steps": v["generation_plus_saved_SDE_transitions"]}
+    for k, v in class_specs.items()}, "input_binding_files": len(bindings),
+    "source_approval_status": budget["source_approval_status"], "root_preapproved": False}, indent=2))

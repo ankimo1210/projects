@@ -1,0 +1,93 @@
+{
+  "class": "Heston-coarse",
+  "driver_global_id": "c04df2cfc7e2533749886b1e7935cacf790a312eba3778bad7deccc75856c203",
+  "executed_nodes": 108,
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "full_teacher_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "1f7424628edb2616d7643cd31bf06be50843543af3af070290f7d98b254c379d",
+    "metadata_sha256": "09ceb73b0f8cb7f10b096aadcd9607b8a79283a321cddb869094042a385de53a",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "native_cap_evidence": null,
+  "new_RNG_in_grid_or_check": false,
+  "original_nodes": 108,
+  "phase": "grid",
+  "process_peak_rss_bytes": 1926406144,
+  "raw_status": "executed",
+  "saved_check_status": "returned",
+  "scope": "M6_original_full_teacher_N1024_four_classes_component_only",
+  "stages": [
+    {
+      "clock": {
+        "cpu": 0.060843473,
+        "utc": "2026-10-10T04:24:02.822440+00:00",
+        "wall": 30707.605155014
+      },
+      "stage": "prior_budget_inputs_and_current_source_verified"
+    },
+    {
+      "actual_size": {
+        "child_boundary": "original_teacher_node",
+        "financial_child_count": 108,
+        "original_n": 1024,
+        "path_steps": 786432,
+        "total_path_steps": 84934656
+      },
+      "clock": {
+        "cpu": 2.771627545,
+        "utc": "2026-10-10T04:24:05.546305+00:00",
+        "wall": 30710.329019955
+      },
+      "driver_global_id": "c04df2cfc7e2533749886b1e7935cacf790a312eba3778bad7deccc75856c203",
+      "measurement_typed_arguments_sha256": "68c5cb0b29c83bf2d09eb67f1539d3119c31c463a0d351039b44dcf235e8c897",
+      "planned_arguments_sha256": "27110d7d81b94ee4971cbc8f75843e93f021e85e975f5b57c3f662b40a230bb6",
+      "resolved_measurement_arguments_sha256": "d6df8413ae21241ac6756fa5cef283bd15dec4a3c2c4b3313003fbb578f45be0",
+      "stage": "all_original_teacher_obligations_saved_before_dispatch"
+    },
+    {
+      "clock": {
+        "cpu": 35.104334168,
+        "utc": "2026-10-10T04:24:37.904882+00:00",
+        "wall": 30742.687600209
+      },
+      "executed_nodes": 108,
+      "raw_status": "executed",
+      "stage": "original_full_teacher_dispatch_stop",
+      "unexecuted_nodes": 0
+    },
+    {
+      "clock": {
+        "cpu": 35.248545971,
+        "utc": "2026-10-10T04:24:38.049113+00:00",
+        "wall": 30742.831824508
+      },
+      "stage": "full_teacher_written_and_read"
+    },
+    {
+      "clock": {
+        "cpu": 65.982450655,
+        "utc": "2026-10-10T04:25:08.798231+00:00",
+        "wall": 30773.580944406
+      },
+      "stage": "actual_full_saved_driver_SDE_and_cache_checker_returned"
+    },
+    {
+      "clock": {
+        "cpu": 65.984722509,
+        "utc": "2026-10-10T04:25:08.800501+00:00",
+        "wall": 30773.583217168
+      },
+      "stage": "current_source_stable"
+    }
+  ],
+  "started": {
+    "cpu": 0.029247963,
+    "utc": "2026-10-10T04:24:02.790846+00:00",
+    "wall": 30707.573560101
+  },
+  "status": "completed",
+  "unexecuted_nodes": 0
+}

@@ -1,0 +1,298 @@
+"""Pure M6 administrative coverage/decision probes; no financial imports."""
+
+from __future__ import annotations
+
+import ast
+import copy
+import hashlib
+import json
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+D = Path(__file__).resolve().parent
+SOURCE = D / "task-5-M6-saved-recheck-measurement-v1.py"
+DESCRIPTION = D / "task-5-M6-saved-recheck-initial-description-v1.json"
+CANDIDATE = D / "task-5-M6-saved-recheck-budget-candidate-v1.json"
+start, cpu = time.perf_counter(), time.process_time()
+tree = ast.parse(SOURCE.read_text())
+function_names = {"report_coverage", "class_decision", "closing_observation"}
+constants = {"COUNTS", "CAPS", "SAMPLE_FIELDS", "REQUIRED_STAGES", "RSS_CAP"}
+parts = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in function_names]
+parts += [
+    n
+    for n in tree.body
+    if isinstance(n, ast.Assign)
+    and any(isinstance(x, ast.Name) and x.id in constants for x in n.targets)
+]
+ns = {}
+exec(compile(ast.Module(body=parts, type_ignores=[]), str(SOURCE), "exec"), ns)
+rows = []
+description = json.loads(DESCRIPTION.read_text())
+candidate = json.loads(CANDIDATE.read_text())
+assert candidate["root_preapproved"] is False and candidate["new_checker_source_bindings"] is None
+assert candidate["saved_input_manifest"] is None
+assert candidate["new_checker_source_approval_evidence"] is None
+
+
+def row(name, passed, detail=None):
+    rows.append({"name": name, "PASS": bool(passed), "detail": detail})
+
+
+def expected_rejection(name, callable):
+    try:
+        callable()
+    except (AssertionError, KeyError, ValueError):
+        row(name, True, "metadata violation rejected")
+    else:
+        row(name, False, "unexpected acceptance")
+
+
+fixtures = {}
+for class_id, actual_spec in description["classes"].items():
+    total, k = actual_spec["original_nodes"], actual_spec["threshold_count"]
+    spec = {"original_n": 1024, "original_nodes": total, "threshold_count": k}
+    # Synthetic observer metadata only; never treated as native financial proof.
+    nodes = [
+        {
+            "date_index": i // max(1, total // 12),
+            "spot": 100.0,
+            "state": 1.0,
+            "path": f"/synthetic-observer/node{i}",
+            "raw_binding": {"kind": "teacher_recipe_physical_v1", "origin": str(i)},
+        }
+        for i in range(total)
+    ]
+    checks = []
+    for i, node in enumerate(nodes):
+        ref = {
+            "schema": "rb-f04-teacher-check-raw-reference-v1",
+            "node_index": i,
+            "node": {a: node[a] for a in ("date_index", "spot", "state")},
+            "path": node["path"],
+            "raw_binding": node["raw_binding"],
+        }
+        checks.append(
+            {
+                "report_mode": "bounded",
+                "raw_reference": ref,
+                "original_n": 1024,
+                "full_saved_driver_sde_replayed": True,
+                "labels_reference": {
+                    "schema": "rb-f04-teacher-check-labels-reference-v1",
+                    "raw_reference": ref,
+                    "raw_field": "labels",
+                    "all_original_N_label_values_compared": True,
+                    "fields": list(ns["SAMPLE_FIELDS"]),
+                    "array_fields": {
+                        a: {"shape": [1024, k], "dtype": "<f8"} for a in ns["SAMPLE_FIELDS"]
+                    },
+                },
+            }
+        )
+    grid = {
+        "nodes": nodes,
+        "status": "executed",
+        "cache": {"synthetic": True},
+        "unexecuted_node_count": 0,
+    }
+    report = {
+        "original_n": 1024,
+        "original_node_count": total,
+        "executed_node_count": total,
+        "raw_checks": checks,
+        "cache": {"synthetic": True},
+    }
+    coverage = ns["report_coverage"](report, grid, spec)
+    progress = {
+        "status": "completed",
+        "coverage": coverage,
+        "no_new_RNG": True,
+        "saved_report_receipt": {"source": "synthetic observer only"},
+        "raw_grid_receipt": {"source": "synthetic observer only"},
+        "stages": [{"stage": s} for s in ns["REQUIRED_STAGES"]],
+    }
+    row(f"{class_id}_whole_original_coverage", coverage["full_original_coverage"])
+    row(
+        f"{class_id}_completed_administrative_only",
+        ns["class_decision"](class_id, 0, None, progress) == "completed_saved_only_component",
+    )
+    fixtures[class_id] = (report, grid, spec, progress)
+report, grid, spec, progress = fixtures["local-high"]
+for name, mutate in [
+    ("last_node_missing", lambda r: r["raw_checks"].pop()),
+    (
+        "last_node_duplicate_index",
+        lambda r: r["raw_checks"][-1]["raw_reference"].update(node_index=0),
+    ),
+    (
+        "last_physical_origin_replaced",
+        lambda r: r["raw_checks"][-1]["raw_reference"].update(
+            raw_binding={"kind": "literal_payload_v1"}
+        ),
+    ),
+    (
+        "last_label_comparison_flag_missing",
+        lambda r: r["raw_checks"][-1]["labels_reference"].pop(
+            "all_original_N_label_values_compared"
+        ),
+    ),
+    (
+        "last_sample_N_shortened",
+        lambda r: r["raw_checks"][-1]["labels_reference"]["array_fields"]["cv_samples"].update(
+            shape=[1023, 65]
+        ),
+    ),
+    (
+        "last_sample_dtype_replaced",
+        lambda r: r["raw_checks"][-1]["labels_reference"]["array_fields"]["f_x_samples"].update(
+            dtype="<f4"
+        ),
+    ),
+    (
+        "last_sample_descriptor_missing",
+        lambda r: r["raw_checks"][-1]["labels_reference"]["array_fields"].pop("aux_raw_samples"),
+    ),
+    (
+        "serialized_runtime_context",
+        lambda r: r["raw_checks"][-1]["raw_reference"].update(
+            artifact_context={"runtime": "forbidden"}
+        ),
+    ),
+    ("report_N_changed", lambda r: r.update(original_n=65536)),
+    ("cache_comparison_missing", lambda r: r.pop("cache")),
+]:
+    edited = copy.deepcopy(report)
+    mutate(edited)
+    expected_rejection(name, lambda edited=edited: ns["report_coverage"](edited, grid, spec))
+edited = copy.deepcopy(report)
+edited["raw_checks"][-1]["full_saved_driver_sde_replayed"] = False
+coverage = ns["report_coverage"](edited, grid, spec)
+row(
+    "last_SDE_flag_false_never_completed",
+    not coverage["full_original_coverage"]
+    and ns["class_decision"]("local-high", 0, None, dict(progress, coverage=coverage))
+    != "completed_saved_only_component",
+)
+cap = {"metric": "enclosing_class_wall", "observed_seconds": 901.0, "limit_seconds": 900.0}
+for label, code, actual_cap, p, errors, expected in [
+    (
+        "source_fault_plus_actual_cap",
+        1,
+        cap,
+        {"status": "unclosed_source_or_solver_defect"},
+        (),
+        "unclosed_source_or_solver_defect_with_actual_cap",
+    ),
+    (
+        "observer_fault_plus_actual_cap",
+        0,
+        cap,
+        progress,
+        ("bad JSON",),
+        "unclosed_observer_defect_with_actual_cap",
+    ),
+    ("kill_before_return", -9, cap, None, (), "failed_at_actual_saved_recheck_cap"),
+    ("missing_child_without_cap", 0, None, None, (), "unclosed_missing_child_evidence"),
+    (
+        "missing_final_checkpoint",
+        0,
+        None,
+        dict(
+            progress,
+            stages=[
+                s
+                for s in progress["stages"]
+                if s["stage"] != "child_completed_administrative_check"
+            ],
+        ),
+        (),
+        "unclosed_child_evidence_incomplete",
+    ),
+    (
+        "missing_RNG_flag",
+        0,
+        None,
+        dict(progress, no_new_RNG=False),
+        (),
+        "unclosed_child_evidence_incomplete",
+    ),
+    (
+        "old_cap_is_not_new_cap",
+        0,
+        None,
+        dict(progress, original_generation_cap_evidence=cap),
+        (),
+        "completed_saved_only_component",
+    ),
+    (
+        "partial_original_history",
+        3,
+        None,
+        dict(
+            progress,
+            status="original_partial_or_capped_retained",
+            coverage=dict(
+                progress["coverage"], full_original_coverage=False, unexecuted_original_nodes=1
+            ),
+        ),
+        (),
+        "original_partial_or_capped_retained_unqualified",
+    ),
+]:
+    actual = ns["class_decision"]("local-high", code, actual_cap, p, errors)
+    row(label, actual == expected, {"actual": actual, "expected": expected})
+value = ns["closing_observation"](
+    0, 901, 900, 900, None, 10, ns["RSS_CAP"] + 1, 20, ns["RSS_CAP"] + 2
+)
+row(
+    "postexit_wall_child_and_parent_RSS",
+    [x["metric"] for x in value["observations"]]
+    == ["enclosing_class_wall", "individual_child_RSS", "individual_parent_RSS"],
+)
+row(
+    "no_missing_RSS_zero_fill",
+    ns["closing_observation"](0, 899, 900, 900, None, None, None, None, None) is None,
+)
+assert not Path(description["measurement_output_root"]).exists()
+guard = subprocess.run(
+    [
+        sys.executable,
+        str(SOURCE),
+        "--budget",
+        str(CANDIDATE),
+        "--output",
+        description["measurement_output_root"],
+    ],
+    capture_output=True,
+    text=True,
+    check=False,
+)
+row(
+    "false_candidate_guard_before_finance_import",
+    guard.returncode != 0
+    and "candidate is not prior approval" in guard.stderr
+    and not Path(description["measurement_output_root"]).exists(),
+)
+result = {
+    "scope": "pure synthetic observer metadata only; not native financial evidence",
+    "source_sha256": hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
+    "PASS": sum(x["PASS"] for x in rows),
+    "FAIL": sum(not x["PASS"] for x in rows),
+    "probes": rows,
+    "guard_exit_code": guard.returncode,
+    "guard_stderr": guard.stderr,
+    "financial_imports_RNG_solver_worker": False,
+    "original_raw_arrays_driver_normals_read": False,
+    "formal_financial_qualification": "unknown",
+    "wall_seconds": time.perf_counter() - start,
+    "cpu_seconds": time.process_time() - cpu,
+}
+(D / "task-5-M6-saved-recheck-administrative-verification-v1.json").write_text(
+    json.dumps(result, indent=2, sort_keys=True) + "\n"
+)
+print(
+    json.dumps({k: v for k, v in result.items() if k not in ("probes", "guard_stderr")}, indent=2)
+)
+raise SystemExit(0 if result["FAIL"] == 0 else 1)

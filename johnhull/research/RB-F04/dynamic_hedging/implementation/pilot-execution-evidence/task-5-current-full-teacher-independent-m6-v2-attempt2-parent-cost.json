@@ -1,0 +1,8 @@
+{
+  "scope": "independent saved-only resource review enclosing launch imports all verification",
+  "exit_code": 1,
+  "wall_seconds": 1.9898393909970764,
+  "child_CPU_seconds": 1.986421,
+  "child_kernel_peak_RSS_bytes": 727445504,
+  "outer_final_receipt_save_cost": "unknown"
+}

@@ -1,0 +1,44 @@
+{
+  "original_files": [
+    {
+      "path": "task-5-current-full-teacher-budget-candidate-v1.json",
+      "bytes": 243425,
+      "sha256": "1d21d56b27313a0c185605c26e184229236f79ecd626338c0d3e0e4854fe69fc"
+    },
+    {
+      "path": "task-5-current-full-teacher-preparation-report-v1.md",
+      "bytes": 5743,
+      "sha256": "7818b2c9990c5aa66a15236498fc92c7a5876ca79ee3a20b603632ea4bd77906"
+    },
+    {
+      "path": "task-5-current-full-teacher-preparation-manifest-v1.json",
+      "bytes": 1560,
+      "sha256": "f3b0c4fee3eae00182c4c727c91c4cb5715431033566566672282cd5bd16adf4"
+    },
+    {
+      "path": "task-5-current-full-teacher-measurement-v1.py",
+      "bytes": 21982,
+      "sha256": "e3c3de2f338dacdb37614558d67fc2fe4f478e242e6c3d22bdf69b9855ad172d"
+    },
+    {
+      "path": "task-5-current-full-teacher-preparation-v1.py",
+      "bytes": 13175,
+      "sha256": "1ce209437a1bab5417b99b3e21d738ea47c1ca7486cbd1696eed69b58cd45158"
+    },
+    {
+      "path": "task-5-current-full-teacher-preparation-verification-v1.py",
+      "bytes": 5813,
+      "sha256": "deb19e6add6725710667f704f3f2472d5c3a85b6e24c785aa1cfa992b0321ef0"
+    },
+    {
+      "path": "task-5-current-full-teacher-preparation-verification-v1.json",
+      "bytes": 3497,
+      "sha256": "5b4e06131b6fa1ae008435c491a6141cd1bc88a523267752b9a66993ff7782ea"
+    },
+    {
+      "path": "task-5-current-full-teacher-initial-description-v1.json",
+      "bytes": 242406,
+      "sha256": "5b89a3fe3a54df560add78db7e9582bae4d183c4ad31ed6de6d8c1a75fa87f03"
+    }
+  ]
+}

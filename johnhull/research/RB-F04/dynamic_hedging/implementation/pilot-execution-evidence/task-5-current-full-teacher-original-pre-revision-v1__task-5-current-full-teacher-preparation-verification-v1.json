@@ -1,0 +1,59 @@
+{
+  "argument_checks": [
+    {
+      "job_id": "teacher:Heston:N1024:coarse:raw",
+      "measurement_SHA_matches_actual_canonical": true,
+      "only_administrative_cap_and_fresh_output_keys_added": true,
+      "planned_SHA_matches_actual_canonical": true
+    },
+    {
+      "job_id": "teacher:Heston:N1024:high:raw",
+      "measurement_SHA_matches_actual_canonical": true,
+      "only_administrative_cap_and_fresh_output_keys_added": true,
+      "planned_SHA_matches_actual_canonical": true
+    },
+    {
+      "job_id": "teacher:local:N1024:coarse:raw",
+      "measurement_SHA_matches_actual_canonical": true,
+      "only_administrative_cap_and_fresh_output_keys_added": true,
+      "planned_SHA_matches_actual_canonical": true
+    },
+    {
+      "job_id": "teacher:local:N1024:high:raw",
+      "measurement_SHA_matches_actual_canonical": true,
+      "only_administrative_cap_and_fresh_output_keys_added": true,
+      "planned_SHA_matches_actual_canonical": true
+    },
+    {
+      "job_id": "teacher-driver:Heston:N1024",
+      "measurement_SHA_matches_actual_canonical": true,
+      "only_administrative_cap_and_fresh_output_keys_added": true,
+      "planned_SHA_matches_actual_canonical": true
+    },
+    {
+      "job_id": "teacher-driver:local:N1024",
+      "measurement_SHA_matches_actual_canonical": true,
+      "only_administrative_cap_and_fresh_output_keys_added": true,
+      "planned_SHA_matches_actual_canonical": true
+    }
+  ],
+  "candidate_administrative_cap_sum_seconds": 2100,
+  "candidate_guard_rejects_before_financial_import_and_output": true,
+  "cap_sum_is_not_runtime_estimate": true,
+  "class_generation_and_saved_SDE_work_checked": true,
+  "financial_RNG_performed": false,
+  "financial_module_import_performed": false,
+  "financial_qualification": "unknown",
+  "financial_worker_performed": false,
+  "formal_pilot_or_main": false,
+  "four_classes_two_shared_drivers": true,
+  "guard_exit_code": 1,
+  "guard_stderr": "Traceback (most recent call last):\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-measurement-v1.py\", line 412, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-measurement-v1.py\", line 408, in main\n    return parent(args.output, args.budget)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-measurement-v1.py\", line 334, in parent\n    budget, description = validate_budget(budget_path)\n                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-measurement-v1.py\", line 70, in validate_budget\n    assert budget[\"root_preapproved\"] is True, \"candidate is not prior approval\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: candidate is not prior approval\n",
+  "original_attempts": 51,
+  "original_cases": 121,
+  "original_graph_jobs": 3138,
+  "root_preapproved": false,
+  "scope": "M6 preparation metadata, canonical typed args and candidate guard only",
+  "source_approval_status": "pending_new_native_teacher_codec_actual_closure",
+  "source_count_pending_not_guessed": true
+}

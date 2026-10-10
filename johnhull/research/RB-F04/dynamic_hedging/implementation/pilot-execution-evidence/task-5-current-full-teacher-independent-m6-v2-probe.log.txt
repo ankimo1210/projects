@@ -1,0 +1,7 @@
+driver authenticated Heston
+driver authenticated local
+class verified Heston-coarse 108 cap None nativebytes {'physical_npz_bytes': 32862385, 'payload_bytes': 178031088, 'expanded_NPY_bytes': 178708464, 'metadata_receipt_bytes': 2693943}
+class verified Heston-high 156 cap {'limit_bytes': 4294967296, 'metric': 'individual_child_process_RSS', 'observed_bytes': 4326535168} nativebytes {'physical_npz_bytes': 137347851, 'payload_bytes': 479200176, 'expanded_NPY_bytes': 480178608, 'metadata_receipt_bytes': 3894768}
+class verified local-coarse 520 cap {'limit_bytes': 4294967296, 'metric': 'individual_child_process_RSS', 'observed_bytes': 4361334784} nativebytes {'physical_npz_bytes': 154528323, 'payload_bytes': 849936752, 'expanded_NPY_bytes': 853198192, 'metadata_receipt_bytes': 12968611}
+class verified local-high 1344 cap {'limit_bytes': 4294967296, 'metric': 'individual_child_process_RSS', 'observed_bytes': 4298833920} nativebytes {'physical_npz_bytes': 1192068216, 'payload_bytes': 4097911504, 'expanded_NPY_bytes': 4106341072, 'metadata_receipt_bytes': 33556673}
+PASS {"wall_seconds": 23.918263647999993, "CPU_seconds": 23.82687378, "process_kernel_peak_RSS_bytes": 804323328, "physical_artifacts_checked": 4331}

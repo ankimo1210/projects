@@ -1,0 +1,33 @@
+{
+  "PASS_pure_administrative": 30,
+  "Ruff_format2": "PASS",
+  "created_utc": "2026-10-10T05:03:43.753766+00:00",
+  "files": {
+    "task-5-M6-saved-recheck-administrative-probes-v1-cost.json": "e8a7ac315cd12434e9f928c523e2c0c08e290e3e37037aba62abc4c24e082a39",
+    "task-5-M6-saved-recheck-administrative-probes-v1.log": "f16bc2dead371e18b42564c53762aad41bf3b47eb276045f45717ade11373ce3",
+    "task-5-M6-saved-recheck-administrative-probes-v1.py": "65b059819e4b045f7fdb3e82163d2faf8c3bd419a493dd811246682c36a55b6e",
+    "task-5-M6-saved-recheck-administrative-verification-v1.json": "6fe1f79109708fe3f07ba3b11f0fe0c3a9c9ea38b3b9b83eb8fce976382698e0",
+    "task-5-M6-saved-recheck-budget-candidate-v1.json": "0d7ff1ec54eda65d4ce71bff27112570221f44cc7b2a701848378c9360c7264b",
+    "task-5-M6-saved-recheck-initial-description-v1.json": "fd185c55ccb8a140b7c2e0c57c07903bc15bca0797d38f84b1fdd138ed7215f7",
+    "task-5-M6-saved-recheck-interface-v1.json": "79379a9278a45d451c9601615e99b82aecaec770ed28858029eab521ecfb5779",
+    "task-5-M6-saved-recheck-measurement-v1.py": "e16a706848f496d10bfba213aec82190b7b2829887ed22aa279f11ece750164d",
+    "task-5-M6-saved-recheck-preparation-report-v1.md": "faaa1cd2bb1db263b590565cad40687644ba4e5a1c864bf2ad940a713bca349f",
+    "task-5-M6-saved-recheck-ruff-check-v1.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "task-5-M6-saved-recheck-ruff-cost-v1.json": "f9f225fdcc523cb33b5ebfaec94820b5f80d1277f4f64f71fbb86d8abf42c213",
+    "task-5-M6-saved-recheck-ruff-format-v1.log": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938",
+    "task-5-M6-saved-recheck-static-verification-v1.json": "9585a6db43e407c04f3d0e07250c4cb41e83e3a636329e49779b3bad894032e1"
+  },
+  "financial_RNG_solver_worker": false,
+  "generation_source81_snapshot_manifest_sha256": "6f683e1c0f6e69147b95bf07d1bf26fbe694f26529215c8c9295453377921fe1",
+  "generation_source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "generation_source_snapshot_allbytes_authentication": true,
+  "last_report_checks_cpu_seconds": 0.053673518999999996,
+  "last_report_checks_wall_seconds": 0.05395237699849531,
+  "new_checker_source_approval_status": "pending_new_bounded_checker_approval_and_closure",
+  "new_checker_source_binding": null,
+  "other_unmeasured_costs": null,
+  "root_preapproved": false,
+  "schema": "rb-f04-M6-saved-recheck-preparation-manifest-v1",
+  "source_docs_tests_Git_CAS_edits": false,
+  "terminal_input_manifest": null
+}

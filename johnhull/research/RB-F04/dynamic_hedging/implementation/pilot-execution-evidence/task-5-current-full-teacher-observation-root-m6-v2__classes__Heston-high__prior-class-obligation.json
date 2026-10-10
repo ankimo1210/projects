@@ -1,0 +1,885 @@
+{
+  "actual_generation_conditional_transitions": 66453504,
+  "actual_saved_driver_SDE_check_conditional_transitions": 66453504,
+  "axes_payload_sha256": "79e149174af25e73059a80a1d295ef07776526728f94a7c6fbfb63d211ca906c",
+  "dates_count": 12,
+  "driver_is_required": true,
+  "driver_job_id": "teacher-driver:Heston:N1024",
+  "generation_plus_saved_SDE_transitions": 132907008,
+  "grid": "high",
+  "job_id": "teacher:Heston:N1024:high:raw",
+  "later_spot_count": 1,
+  "measurement_typed_arguments": {
+    "chunk_paths": 256,
+    "driver": {
+      "job": "teacher-driver:Heston:N1024"
+    },
+    "evaluation_domains": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "grid": "high",
+    "model": "Heston",
+    "original_n": 1024,
+    "parameters": {
+      "input": "parameters"
+    },
+    "seed": 138674072,
+    "surface": {
+      "field_job": "field-current"
+    },
+    "wall_cap_seconds": 300.0,
+    "work_directory": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/classes/Heston-high/grid/work"
+  },
+  "measurement_typed_arguments_sha256": "7290fc3ea11c3e4c89f5719e3b49323845e9db55c601aacfa721eed6f5d66346",
+  "model": "Heston",
+  "operation": "teacher_grid",
+  "original_declared_total_path_steps": 122683392,
+  "original_n": 1024,
+  "original_nodes": 156,
+  "override_keys": [
+    "wall_cap_seconds",
+    "work_directory"
+  ],
+  "override_rationale": "root administrative class cap and fresh D output only; financial geometry/driver unchanged",
+  "planned_arguments_sha256": "3cdd8ffc20eff7376162161dea03b20af3bf431056bc453b35e4909c60ba1048",
+  "planned_nodes": [
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 0,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 1,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 2,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 3,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 4,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 5,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 6,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 7,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 8,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 9,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 10,
+      "spot": 100.0,
+      "state": 0.5
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 1e-05
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.0025
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.005
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.0075
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.01
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.02
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.03
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.04
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.06
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.08
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.16
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.32
+    },
+    {
+      "date_index": 11,
+      "spot": 100.0,
+      "state": 0.5
+    }
+  ],
+  "planned_prediction": {
+    "child_boundary": "original_teacher_node",
+    "expanded_bytes": null,
+    "financial_child_count": 156,
+    "path_steps": 786432,
+    "total_path_steps": 122683392
+  },
+  "planned_typed_arguments": {
+    "chunk_paths": 256,
+    "driver": {
+      "job": "teacher-driver:Heston:N1024"
+    },
+    "evaluation_domains": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "grid": "high",
+    "model": "Heston",
+    "original_n": 1024,
+    "parameters": {
+      "input": "parameters"
+    },
+    "seed": 138674072,
+    "surface": {
+      "field_job": "field-current"
+    }
+  },
+  "rss_limit_bytes": 4294967296,
+  "seed": 138674072,
+  "state_count": 13,
+  "stream_namespace": "teacher",
+  "t0_spot_count": 1,
+  "teacher_purpose": "principal",
+  "teacher_reference": null,
+  "threshold_count": 65,
+  "wall_limit_seconds": 300.0,
+  "write_read_labels_cache_extra_work_unmeasured": true
+}

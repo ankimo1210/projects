@@ -1,0 +1,3082 @@
+{
+  "all_original_nodes_and_N_retained": true,
+  "child_cpu_seconds": 70.922153,
+  "class": "Heston-coarse",
+  "driver_cost_added_again": false,
+  "driver_generated_in_this_class": true,
+  "driver_job_id": "teacher-driver:Heston:N1024",
+  "driver_parent_receipt_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/banks/Heston/parent-cost-and-decision.json",
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "original_job_id": "teacher:Heston:N1024:coarse:raw",
+  "overrun_seconds": 0.0,
+  "parent_cpu_seconds": 0.382371105,
+  "phase_receipts": [
+    {
+      "RSS_metric": "sampled_RSS_not_RLIMIT_AS",
+      "RSS_unknown_sample_count": 0,
+      "cap_evidence": null,
+      "child_cpu_seconds": 4.439635,
+      "child_progress": {
+        "class": "Heston-coarse",
+        "driver_payload_path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-observation-root-m6-v2/banks/Heston/actual-driver",
+        "driver_receipt": {
+          "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+          "artifact_sha256": "b47a04689ab17e0741ad1f7d5eaaa78e4581948043562883ede82184e7b2d0de",
+          "metadata_sha256": "5c7b12fe1c32d24ad389debeb39b8926149507ce74be5cd5cbdbe7021121202d",
+          "schema": "rb-f04-array-receipt-v1",
+          "uncompressed_bytes": 0
+        },
+        "financial_qualification": "unknown",
+        "formal_pilot_or_main": false,
+        "global_driver_id": "c04df2cfc7e2533749886b1e7935cacf790a312eba3778bad7deccc75856c203",
+        "native_cap_evidence": null,
+        "phase": "driver",
+        "process_peak_rss_bytes": 851648512,
+        "processed_n": 1024,
+        "raw_status": "executed",
+        "scope": "M6_original_full_teacher_N1024_four_classes_component_only",
+        "stages": [
+          {
+            "clock": {
+              "cpu": 0.059811463,
+              "utc": "2026-10-10T04:23:57.383675+00:00",
+              "wall": 30702.166387564
+            },
+            "stage": "prior_budget_inputs_and_current_source_verified"
+          },
+          {
+            "actual_size": {
+              "original_n": 1024,
+              "path_steps": 786432,
+              "total_path_steps": 786432
+            },
+            "clock": {
+              "cpu": 3.914060232,
+              "utc": "2026-10-10T04:24:02.129777+00:00",
+              "wall": 30706.912490883
+            },
+            "measurement_typed_arguments_sha256": "045da05662db207bf51ff3e6f75d50298e70b59b2305dd9431b2133527bb9c88",
+            "planned_arguments_sha256": "b007a20e3c528df4dd3c5d5545867c207cddc55dfb0c54b79ecb43948532495b",
+            "resolved_measurement_arguments_sha256": "045da05662db207bf51ff3e6f75d50298e70b59b2305dd9431b2133527bb9c88",
+            "stage": "original_shared_driver_dispatch_start"
+          },
+          {
+            "clock": {
+              "cpu": 3.964869202,
+              "utc": "2026-10-10T04:24:02.180810+00:00",
+              "wall": 30706.963528303
+            },
+            "stage": "original_shared_driver_dispatch_stop"
+          },
+          {
+            "clock": {
+              "cpu": 3.994232959,
+              "utc": "2026-10-10T04:24:02.210333+00:00",
+              "wall": 30706.993047248
+            },
+            "stage": "shared_driver_written_read_and_authenticated"
+          },
+          {
+            "clock": {
+              "cpu": 3.996060962,
+              "utc": "2026-10-10T04:24:02.212159+00:00",
+              "wall": 30706.994876187
+            },
+            "stage": "current_source_stable"
+          }
+        ],
+        "started": {
+          "cpu": 0.030467788,
+          "utc": "2026-10-10T04:23:57.354333+00:00",
+          "wall": 30702.137045551
+        },
+        "status": "completed",
+        "unexecuted_n": 0
+      },
+      "class": "Heston-coarse",
+      "exit_code": 0,
+      "financial_qualification": "unknown",
+      "native_declared_cap_evidence": null,
+      "observed_child_RSS_peak_bytes": 852058112,
+      "output_file_index_before_final_receipt": [
+        {
+          "bytes": 22,
+          "path": "actual-driver/arrays.npz"
+        },
+        {
+          "bytes": 2640,
+          "path": "actual-driver/metadata.json"
+        },
+        {
+          "bytes": 23320,
+          "path": "actual-driver/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 472,
+          "path": "actual-driver/pack000000/metadata.json"
+        },
+        {
+          "bytes": 316,
+          "path": "actual-driver/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "actual-driver/receipt.json"
+        },
+        {
+          "bytes": 0,
+          "path": "child.log"
+        },
+        {
+          "bytes": 2651,
+          "path": "progress.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/driver000000/arrays.npz"
+        },
+        {
+          "bytes": 840,
+          "path": "work/driver000000/metadata.json"
+        },
+        {
+          "bytes": 3150608,
+          "path": "work/driver000000/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 477,
+          "path": "work/driver000000/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/driver000000/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/driver000000/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/driver000001/arrays.npz"
+        },
+        {
+          "bytes": 842,
+          "path": "work/driver000001/metadata.json"
+        },
+        {
+          "bytes": 3150608,
+          "path": "work/driver000001/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 477,
+          "path": "work/driver000001/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/driver000001/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/driver000001/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/driver000002/arrays.npz"
+        },
+        {
+          "bytes": 842,
+          "path": "work/driver000002/metadata.json"
+        },
+        {
+          "bytes": 3150608,
+          "path": "work/driver000002/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 477,
+          "path": "work/driver000002/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/driver000002/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/driver000002/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/driver000003/arrays.npz"
+        },
+        {
+          "bytes": 843,
+          "path": "work/driver000003/metadata.json"
+        },
+        {
+          "bytes": 3150608,
+          "path": "work/driver000003/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 477,
+          "path": "work/driver000003/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/driver000003/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/driver000003/receipt.json"
+        }
+      ],
+      "parent_cpu_seconds": 0.026426383999999997,
+      "phase": "driver",
+      "raw_unknown_and_partial_artifacts_retained": true,
+      "scope": "M6_original_full_teacher_N1024_four_classes_component_only",
+      "started": {
+        "cpu": 0.075235251,
+        "utc": "2026-10-10T04:23:57.323657+00:00",
+        "wall": 30702.106375468
+      },
+      "status": "completed",
+      "stopped": {
+        "cpu": 0.101661635,
+        "utc": "2026-10-10T04:24:02.758912+00:00",
+        "wall": 30707.541625743
+      },
+      "wall_seconds": 5.435250275000726
+    },
+    {
+      "RSS_metric": "sampled_RSS_not_RLIMIT_AS",
+      "RSS_unknown_sample_count": 1,
+      "cap_evidence": null,
+      "child_cpu_seconds": 66.482518,
+      "child_progress": {
+        "class": "Heston-coarse",
+        "driver_global_id": "c04df2cfc7e2533749886b1e7935cacf790a312eba3778bad7deccc75856c203",
+        "executed_nodes": 108,
+        "financial_qualification": "unknown",
+        "formal_pilot_or_main": false,
+        "full_teacher_receipt": {
+          "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+          "artifact_sha256": "1f7424628edb2616d7643cd31bf06be50843543af3af070290f7d98b254c379d",
+          "metadata_sha256": "09ceb73b0f8cb7f10b096aadcd9607b8a79283a321cddb869094042a385de53a",
+          "schema": "rb-f04-array-receipt-v1",
+          "uncompressed_bytes": 0
+        },
+        "native_cap_evidence": null,
+        "new_RNG_in_grid_or_check": false,
+        "original_nodes": 108,
+        "phase": "grid",
+        "process_peak_rss_bytes": 1926406144,
+        "raw_status": "executed",
+        "saved_check_status": "returned",
+        "scope": "M6_original_full_teacher_N1024_four_classes_component_only",
+        "stages": [
+          {
+            "clock": {
+              "cpu": 0.060843473,
+              "utc": "2026-10-10T04:24:02.822440+00:00",
+              "wall": 30707.605155014
+            },
+            "stage": "prior_budget_inputs_and_current_source_verified"
+          },
+          {
+            "actual_size": {
+              "child_boundary": "original_teacher_node",
+              "financial_child_count": 108,
+              "original_n": 1024,
+              "path_steps": 786432,
+              "total_path_steps": 84934656
+            },
+            "clock": {
+              "cpu": 2.771627545,
+              "utc": "2026-10-10T04:24:05.546305+00:00",
+              "wall": 30710.329019955
+            },
+            "driver_global_id": "c04df2cfc7e2533749886b1e7935cacf790a312eba3778bad7deccc75856c203",
+            "measurement_typed_arguments_sha256": "68c5cb0b29c83bf2d09eb67f1539d3119c31c463a0d351039b44dcf235e8c897",
+            "planned_arguments_sha256": "27110d7d81b94ee4971cbc8f75843e93f021e85e975f5b57c3f662b40a230bb6",
+            "resolved_measurement_arguments_sha256": "d6df8413ae21241ac6756fa5cef283bd15dec4a3c2c4b3313003fbb578f45be0",
+            "stage": "all_original_teacher_obligations_saved_before_dispatch"
+          },
+          {
+            "clock": {
+              "cpu": 35.104334168,
+              "utc": "2026-10-10T04:24:37.904882+00:00",
+              "wall": 30742.687600209
+            },
+            "executed_nodes": 108,
+            "raw_status": "executed",
+            "stage": "original_full_teacher_dispatch_stop",
+            "unexecuted_nodes": 0
+          },
+          {
+            "clock": {
+              "cpu": 35.248545971,
+              "utc": "2026-10-10T04:24:38.049113+00:00",
+              "wall": 30742.831824508
+            },
+            "stage": "full_teacher_written_and_read"
+          },
+          {
+            "clock": {
+              "cpu": 65.982450655,
+              "utc": "2026-10-10T04:25:08.798231+00:00",
+              "wall": 30773.580944406
+            },
+            "stage": "actual_full_saved_driver_SDE_and_cache_checker_returned"
+          },
+          {
+            "clock": {
+              "cpu": 65.984722509,
+              "utc": "2026-10-10T04:25:08.800501+00:00",
+              "wall": 30773.583217168
+            },
+            "stage": "current_source_stable"
+          }
+        ],
+        "started": {
+          "cpu": 0.029247963,
+          "utc": "2026-10-10T04:24:02.790846+00:00",
+          "wall": 30707.573560101
+        },
+        "status": "completed",
+        "unexecuted_nodes": 0
+      },
+      "class": "Heston-coarse",
+      "exit_code": 0,
+      "financial_qualification": "unknown",
+      "native_declared_cap_evidence": null,
+      "observed_child_RSS_peak_bytes": 1926557696,
+      "output_file_index_before_final_receipt": [
+        {
+          "bytes": 22,
+          "path": "actual-full-teacher/arrays.npz"
+        },
+        {
+          "bytes": 584806,
+          "path": "actual-full-teacher/metadata.json"
+        },
+        {
+          "bytes": 7089672,
+          "path": "actual-full-teacher/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 206537,
+          "path": "actual-full-teacher/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "actual-full-teacher/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "actual-full-teacher/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "actual-saved-check/arrays.npz"
+        },
+        {
+          "bytes": 1574547,
+          "path": "actual-saved-check/metadata.json"
+        },
+        {
+          "bytes": 135003930,
+          "path": "actual-saved-check/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 359605,
+          "path": "actual-saved-check/pack000000/metadata.json"
+        },
+        {
+          "bytes": 320,
+          "path": "actual-saved-check/pack000000/receipt.json"
+        },
+        {
+          "bytes": 134559368,
+          "path": "actual-saved-check/pack000001/arrays.npz"
+        },
+        {
+          "bytes": 161331,
+          "path": "actual-saved-check/pack000001/metadata.json"
+        },
+        {
+          "bytes": 320,
+          "path": "actual-saved-check/pack000001/receipt.json"
+        },
+        {
+          "bytes": 119175126,
+          "path": "actual-saved-check/pack000002/arrays.npz"
+        },
+        {
+          "bytes": 143061,
+          "path": "actual-saved-check/pack000002/metadata.json"
+        },
+        {
+          "bytes": 320,
+          "path": "actual-saved-check/pack000002/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "actual-saved-check/receipt.json"
+        },
+        {
+          "bytes": 0,
+          "path": "child.log"
+        },
+        {
+          "bytes": 22,
+          "path": "initial-original-obligation/arrays.npz"
+        },
+        {
+          "bytes": 7354,
+          "path": "initial-original-obligation/metadata.json"
+        },
+        {
+          "bytes": 85710,
+          "path": "initial-original-obligation/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 1037,
+          "path": "initial-original-obligation/pack000000/metadata.json"
+        },
+        {
+          "bytes": 316,
+          "path": "initial-original-obligation/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "initial-original-obligation/receipt.json"
+        },
+        {
+          "bytes": 3050,
+          "path": "progress.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0000/arrays.npz"
+        },
+        {
+          "bytes": 18619,
+          "path": "work/node0000/metadata.json"
+        },
+        {
+          "bytes": 314625,
+          "path": "work/node0000/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0000/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0000/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0000/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0001/arrays.npz"
+        },
+        {
+          "bytes": 18613,
+          "path": "work/node0001/metadata.json"
+        },
+        {
+          "bytes": 316872,
+          "path": "work/node0001/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0001/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0001/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0001/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0002/arrays.npz"
+        },
+        {
+          "bytes": 18610,
+          "path": "work/node0002/metadata.json"
+        },
+        {
+          "bytes": 328281,
+          "path": "work/node0002/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0002/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0002/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0002/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0003/arrays.npz"
+        },
+        {
+          "bytes": 18618,
+          "path": "work/node0003/metadata.json"
+        },
+        {
+          "bytes": 348697,
+          "path": "work/node0003/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0003/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0003/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0003/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0004/arrays.npz"
+        },
+        {
+          "bytes": 18603,
+          "path": "work/node0004/metadata.json"
+        },
+        {
+          "bytes": 365221,
+          "path": "work/node0004/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0004/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0004/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0004/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0005/arrays.npz"
+        },
+        {
+          "bytes": 18617,
+          "path": "work/node0005/metadata.json"
+        },
+        {
+          "bytes": 393946,
+          "path": "work/node0005/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0005/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0005/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0005/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0006/arrays.npz"
+        },
+        {
+          "bytes": 18617,
+          "path": "work/node0006/metadata.json"
+        },
+        {
+          "bytes": 436973,
+          "path": "work/node0006/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0006/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0006/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0006/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0007/arrays.npz"
+        },
+        {
+          "bytes": 18615,
+          "path": "work/node0007/metadata.json"
+        },
+        {
+          "bytes": 477707,
+          "path": "work/node0007/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0007/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0007/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0007/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0008/arrays.npz"
+        },
+        {
+          "bytes": 18611,
+          "path": "work/node0008/metadata.json"
+        },
+        {
+          "bytes": 493472,
+          "path": "work/node0008/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0008/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0008/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0008/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0009/arrays.npz"
+        },
+        {
+          "bytes": 18658,
+          "path": "work/node0009/metadata.json"
+        },
+        {
+          "bytes": 304148,
+          "path": "work/node0009/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0009/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0009/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0009/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0010/arrays.npz"
+        },
+        {
+          "bytes": 18655,
+          "path": "work/node0010/metadata.json"
+        },
+        {
+          "bytes": 312753,
+          "path": "work/node0010/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0010/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0010/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0010/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0011/arrays.npz"
+        },
+        {
+          "bytes": 18655,
+          "path": "work/node0011/metadata.json"
+        },
+        {
+          "bytes": 328586,
+          "path": "work/node0011/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0011/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0011/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0011/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0012/arrays.npz"
+        },
+        {
+          "bytes": 18651,
+          "path": "work/node0012/metadata.json"
+        },
+        {
+          "bytes": 333384,
+          "path": "work/node0012/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0012/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0012/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0012/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0013/arrays.npz"
+        },
+        {
+          "bytes": 18638,
+          "path": "work/node0013/metadata.json"
+        },
+        {
+          "bytes": 370305,
+          "path": "work/node0013/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0013/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0013/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0013/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0014/arrays.npz"
+        },
+        {
+          "bytes": 18651,
+          "path": "work/node0014/metadata.json"
+        },
+        {
+          "bytes": 386232,
+          "path": "work/node0014/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0014/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0014/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0014/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0015/arrays.npz"
+        },
+        {
+          "bytes": 18651,
+          "path": "work/node0015/metadata.json"
+        },
+        {
+          "bytes": 437028,
+          "path": "work/node0015/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0015/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0015/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0015/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0016/arrays.npz"
+        },
+        {
+          "bytes": 18650,
+          "path": "work/node0016/metadata.json"
+        },
+        {
+          "bytes": 486210,
+          "path": "work/node0016/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0016/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0016/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0016/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0017/arrays.npz"
+        },
+        {
+          "bytes": 18644,
+          "path": "work/node0017/metadata.json"
+        },
+        {
+          "bytes": 499462,
+          "path": "work/node0017/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0017/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0017/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0017/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0018/arrays.npz"
+        },
+        {
+          "bytes": 18662,
+          "path": "work/node0018/metadata.json"
+        },
+        {
+          "bytes": 283680,
+          "path": "work/node0018/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0018/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0018/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0018/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0019/arrays.npz"
+        },
+        {
+          "bytes": 18663,
+          "path": "work/node0019/metadata.json"
+        },
+        {
+          "bytes": 300773,
+          "path": "work/node0019/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0019/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0019/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0019/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0020/arrays.npz"
+        },
+        {
+          "bytes": 18660,
+          "path": "work/node0020/metadata.json"
+        },
+        {
+          "bytes": 303116,
+          "path": "work/node0020/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0020/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0020/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0020/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0021/arrays.npz"
+        },
+        {
+          "bytes": 18652,
+          "path": "work/node0021/metadata.json"
+        },
+        {
+          "bytes": 324259,
+          "path": "work/node0021/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0021/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0021/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0021/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0022/arrays.npz"
+        },
+        {
+          "bytes": 18643,
+          "path": "work/node0022/metadata.json"
+        },
+        {
+          "bytes": 342872,
+          "path": "work/node0022/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0022/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0022/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0022/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0023/arrays.npz"
+        },
+        {
+          "bytes": 18656,
+          "path": "work/node0023/metadata.json"
+        },
+        {
+          "bytes": 367572,
+          "path": "work/node0023/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0023/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0023/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0023/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0024/arrays.npz"
+        },
+        {
+          "bytes": 18646,
+          "path": "work/node0024/metadata.json"
+        },
+        {
+          "bytes": 407465,
+          "path": "work/node0024/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0024/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0024/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0024/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0025/arrays.npz"
+        },
+        {
+          "bytes": 18660,
+          "path": "work/node0025/metadata.json"
+        },
+        {
+          "bytes": 449600,
+          "path": "work/node0025/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0025/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0025/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0025/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0026/arrays.npz"
+        },
+        {
+          "bytes": 18654,
+          "path": "work/node0026/metadata.json"
+        },
+        {
+          "bytes": 489449,
+          "path": "work/node0026/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5681,
+          "path": "work/node0026/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0026/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0026/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0027/arrays.npz"
+        },
+        {
+          "bytes": 18624,
+          "path": "work/node0027/metadata.json"
+        },
+        {
+          "bytes": 276562,
+          "path": "work/node0027/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0027/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0027/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0027/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0028/arrays.npz"
+        },
+        {
+          "bytes": 18626,
+          "path": "work/node0028/metadata.json"
+        },
+        {
+          "bytes": 284146,
+          "path": "work/node0028/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0028/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0028/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0028/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0029/arrays.npz"
+        },
+        {
+          "bytes": 18617,
+          "path": "work/node0029/metadata.json"
+        },
+        {
+          "bytes": 287210,
+          "path": "work/node0029/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0029/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0029/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0029/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0030/arrays.npz"
+        },
+        {
+          "bytes": 18622,
+          "path": "work/node0030/metadata.json"
+        },
+        {
+          "bytes": 311297,
+          "path": "work/node0030/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0030/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0030/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0030/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0031/arrays.npz"
+        },
+        {
+          "bytes": 18604,
+          "path": "work/node0031/metadata.json"
+        },
+        {
+          "bytes": 329197,
+          "path": "work/node0031/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0031/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0031/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0031/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0032/arrays.npz"
+        },
+        {
+          "bytes": 18621,
+          "path": "work/node0032/metadata.json"
+        },
+        {
+          "bytes": 354989,
+          "path": "work/node0032/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0032/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0032/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0032/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0033/arrays.npz"
+        },
+        {
+          "bytes": 18619,
+          "path": "work/node0033/metadata.json"
+        },
+        {
+          "bytes": 393916,
+          "path": "work/node0033/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0033/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0033/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0033/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0034/arrays.npz"
+        },
+        {
+          "bytes": 18618,
+          "path": "work/node0034/metadata.json"
+        },
+        {
+          "bytes": 443422,
+          "path": "work/node0034/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0034/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0034/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0034/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0035/arrays.npz"
+        },
+        {
+          "bytes": 18615,
+          "path": "work/node0035/metadata.json"
+        },
+        {
+          "bytes": 489522,
+          "path": "work/node0035/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0035/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0035/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0035/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0036/arrays.npz"
+        },
+        {
+          "bytes": 18655,
+          "path": "work/node0036/metadata.json"
+        },
+        {
+          "bytes": 254122,
+          "path": "work/node0036/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0036/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0036/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0036/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0037/arrays.npz"
+        },
+        {
+          "bytes": 18655,
+          "path": "work/node0037/metadata.json"
+        },
+        {
+          "bytes": 270828,
+          "path": "work/node0037/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0037/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0037/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0037/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0038/arrays.npz"
+        },
+        {
+          "bytes": 18646,
+          "path": "work/node0038/metadata.json"
+        },
+        {
+          "bytes": 274593,
+          "path": "work/node0038/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0038/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0038/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0038/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0039/arrays.npz"
+        },
+        {
+          "bytes": 18652,
+          "path": "work/node0039/metadata.json"
+        },
+        {
+          "bytes": 287095,
+          "path": "work/node0039/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0039/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0039/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0039/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0040/arrays.npz"
+        },
+        {
+          "bytes": 18632,
+          "path": "work/node0040/metadata.json"
+        },
+        {
+          "bytes": 308621,
+          "path": "work/node0040/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0040/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0040/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0040/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0041/arrays.npz"
+        },
+        {
+          "bytes": 18647,
+          "path": "work/node0041/metadata.json"
+        },
+        {
+          "bytes": 336005,
+          "path": "work/node0041/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0041/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0041/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0041/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0042/arrays.npz"
+        },
+        {
+          "bytes": 18654,
+          "path": "work/node0042/metadata.json"
+        },
+        {
+          "bytes": 363362,
+          "path": "work/node0042/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0042/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0042/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0042/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0043/arrays.npz"
+        },
+        {
+          "bytes": 18650,
+          "path": "work/node0043/metadata.json"
+        },
+        {
+          "bytes": 413770,
+          "path": "work/node0043/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0043/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0043/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0043/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0044/arrays.npz"
+        },
+        {
+          "bytes": 18647,
+          "path": "work/node0044/metadata.json"
+        },
+        {
+          "bytes": 442917,
+          "path": "work/node0044/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0044/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0044/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0044/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0045/arrays.npz"
+        },
+        {
+          "bytes": 18655,
+          "path": "work/node0045/metadata.json"
+        },
+        {
+          "bytes": 240795,
+          "path": "work/node0045/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0045/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0045/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0045/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0046/arrays.npz"
+        },
+        {
+          "bytes": 18657,
+          "path": "work/node0046/metadata.json"
+        },
+        {
+          "bytes": 263266,
+          "path": "work/node0046/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0046/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0046/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0046/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0047/arrays.npz"
+        },
+        {
+          "bytes": 18653,
+          "path": "work/node0047/metadata.json"
+        },
+        {
+          "bytes": 267114,
+          "path": "work/node0047/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0047/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0047/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0047/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0048/arrays.npz"
+        },
+        {
+          "bytes": 18650,
+          "path": "work/node0048/metadata.json"
+        },
+        {
+          "bytes": 275555,
+          "path": "work/node0048/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0048/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0048/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0048/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0049/arrays.npz"
+        },
+        {
+          "bytes": 18636,
+          "path": "work/node0049/metadata.json"
+        },
+        {
+          "bytes": 294744,
+          "path": "work/node0049/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0049/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0049/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0049/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0050/arrays.npz"
+        },
+        {
+          "bytes": 18654,
+          "path": "work/node0050/metadata.json"
+        },
+        {
+          "bytes": 324086,
+          "path": "work/node0050/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0050/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0050/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0050/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0051/arrays.npz"
+        },
+        {
+          "bytes": 18654,
+          "path": "work/node0051/metadata.json"
+        },
+        {
+          "bytes": 364401,
+          "path": "work/node0051/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0051/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0051/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0051/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0052/arrays.npz"
+        },
+        {
+          "bytes": 18651,
+          "path": "work/node0052/metadata.json"
+        },
+        {
+          "bytes": 394780,
+          "path": "work/node0052/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0052/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0052/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0052/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0053/arrays.npz"
+        },
+        {
+          "bytes": 18648,
+          "path": "work/node0053/metadata.json"
+        },
+        {
+          "bytes": 438338,
+          "path": "work/node0053/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0053/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0053/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0053/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0054/arrays.npz"
+        },
+        {
+          "bytes": 18626,
+          "path": "work/node0054/metadata.json"
+        },
+        {
+          "bytes": 216114,
+          "path": "work/node0054/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0054/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0054/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0054/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0055/arrays.npz"
+        },
+        {
+          "bytes": 18625,
+          "path": "work/node0055/metadata.json"
+        },
+        {
+          "bytes": 233593,
+          "path": "work/node0055/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0055/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0055/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0055/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0056/arrays.npz"
+        },
+        {
+          "bytes": 18623,
+          "path": "work/node0056/metadata.json"
+        },
+        {
+          "bytes": 238818,
+          "path": "work/node0056/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0056/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0056/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0056/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0057/arrays.npz"
+        },
+        {
+          "bytes": 18622,
+          "path": "work/node0057/metadata.json"
+        },
+        {
+          "bytes": 261333,
+          "path": "work/node0057/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0057/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0057/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0057/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0058/arrays.npz"
+        },
+        {
+          "bytes": 18606,
+          "path": "work/node0058/metadata.json"
+        },
+        {
+          "bytes": 274603,
+          "path": "work/node0058/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0058/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0058/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0058/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0059/arrays.npz"
+        },
+        {
+          "bytes": 18620,
+          "path": "work/node0059/metadata.json"
+        },
+        {
+          "bytes": 302398,
+          "path": "work/node0059/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0059/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0059/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0059/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0060/arrays.npz"
+        },
+        {
+          "bytes": 18618,
+          "path": "work/node0060/metadata.json"
+        },
+        {
+          "bytes": 332061,
+          "path": "work/node0060/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0060/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0060/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0060/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0061/arrays.npz"
+        },
+        {
+          "bytes": 18624,
+          "path": "work/node0061/metadata.json"
+        },
+        {
+          "bytes": 374743,
+          "path": "work/node0061/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0061/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0061/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0061/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0062/arrays.npz"
+        },
+        {
+          "bytes": 18621,
+          "path": "work/node0062/metadata.json"
+        },
+        {
+          "bytes": 403210,
+          "path": "work/node0062/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0062/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0062/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0062/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0063/arrays.npz"
+        },
+        {
+          "bytes": 18658,
+          "path": "work/node0063/metadata.json"
+        },
+        {
+          "bytes": 206050,
+          "path": "work/node0063/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0063/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0063/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0063/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0064/arrays.npz"
+        },
+        {
+          "bytes": 18658,
+          "path": "work/node0064/metadata.json"
+        },
+        {
+          "bytes": 215180,
+          "path": "work/node0064/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0064/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0064/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0064/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0065/arrays.npz"
+        },
+        {
+          "bytes": 18653,
+          "path": "work/node0065/metadata.json"
+        },
+        {
+          "bytes": 223047,
+          "path": "work/node0065/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0065/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0065/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0065/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0066/arrays.npz"
+        },
+        {
+          "bytes": 18651,
+          "path": "work/node0066/metadata.json"
+        },
+        {
+          "bytes": 246083,
+          "path": "work/node0066/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0066/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0066/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0066/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0067/arrays.npz"
+        },
+        {
+          "bytes": 18634,
+          "path": "work/node0067/metadata.json"
+        },
+        {
+          "bytes": 264488,
+          "path": "work/node0067/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0067/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0067/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0067/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0068/arrays.npz"
+        },
+        {
+          "bytes": 18655,
+          "path": "work/node0068/metadata.json"
+        },
+        {
+          "bytes": 298322,
+          "path": "work/node0068/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0068/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0068/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0068/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0069/arrays.npz"
+        },
+        {
+          "bytes": 18653,
+          "path": "work/node0069/metadata.json"
+        },
+        {
+          "bytes": 334839,
+          "path": "work/node0069/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0069/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0069/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0069/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0070/arrays.npz"
+        },
+        {
+          "bytes": 18652,
+          "path": "work/node0070/metadata.json"
+        },
+        {
+          "bytes": 377029,
+          "path": "work/node0070/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0070/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0070/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0070/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0071/arrays.npz"
+        },
+        {
+          "bytes": 18649,
+          "path": "work/node0071/metadata.json"
+        },
+        {
+          "bytes": 408735,
+          "path": "work/node0071/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0071/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0071/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0071/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0072/arrays.npz"
+        },
+        {
+          "bytes": 18658,
+          "path": "work/node0072/metadata.json"
+        },
+        {
+          "bytes": 183558,
+          "path": "work/node0072/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0072/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0072/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0072/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0073/arrays.npz"
+        },
+        {
+          "bytes": 18657,
+          "path": "work/node0073/metadata.json"
+        },
+        {
+          "bytes": 193598,
+          "path": "work/node0073/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0073/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0073/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0073/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0074/arrays.npz"
+        },
+        {
+          "bytes": 18654,
+          "path": "work/node0074/metadata.json"
+        },
+        {
+          "bytes": 209136,
+          "path": "work/node0074/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0074/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0074/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0074/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0075/arrays.npz"
+        },
+        {
+          "bytes": 18653,
+          "path": "work/node0075/metadata.json"
+        },
+        {
+          "bytes": 217060,
+          "path": "work/node0075/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0075/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0075/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0075/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0076/arrays.npz"
+        },
+        {
+          "bytes": 18638,
+          "path": "work/node0076/metadata.json"
+        },
+        {
+          "bytes": 241384,
+          "path": "work/node0076/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0076/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0076/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0076/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0077/arrays.npz"
+        },
+        {
+          "bytes": 18647,
+          "path": "work/node0077/metadata.json"
+        },
+        {
+          "bytes": 257560,
+          "path": "work/node0077/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0077/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0077/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0077/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0078/arrays.npz"
+        },
+        {
+          "bytes": 18649,
+          "path": "work/node0078/metadata.json"
+        },
+        {
+          "bytes": 302748,
+          "path": "work/node0078/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0078/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0078/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0078/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0079/arrays.npz"
+        },
+        {
+          "bytes": 18657,
+          "path": "work/node0079/metadata.json"
+        },
+        {
+          "bytes": 341150,
+          "path": "work/node0079/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0079/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0079/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0079/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0080/arrays.npz"
+        },
+        {
+          "bytes": 18646,
+          "path": "work/node0080/metadata.json"
+        },
+        {
+          "bytes": 369420,
+          "path": "work/node0080/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0080/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0080/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0080/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0081/arrays.npz"
+        },
+        {
+          "bytes": 18630,
+          "path": "work/node0081/metadata.json"
+        },
+        {
+          "bytes": 177946,
+          "path": "work/node0081/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0081/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0081/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0081/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0082/arrays.npz"
+        },
+        {
+          "bytes": 18632,
+          "path": "work/node0082/metadata.json"
+        },
+        {
+          "bytes": 188867,
+          "path": "work/node0082/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0082/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0082/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0082/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0083/arrays.npz"
+        },
+        {
+          "bytes": 18630,
+          "path": "work/node0083/metadata.json"
+        },
+        {
+          "bytes": 202389,
+          "path": "work/node0083/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0083/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0083/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0083/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0084/arrays.npz"
+        },
+        {
+          "bytes": 18629,
+          "path": "work/node0084/metadata.json"
+        },
+        {
+          "bytes": 219635,
+          "path": "work/node0084/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0084/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0084/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0084/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0085/arrays.npz"
+        },
+        {
+          "bytes": 18609,
+          "path": "work/node0085/metadata.json"
+        },
+        {
+          "bytes": 236308,
+          "path": "work/node0085/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0085/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0085/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0085/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0086/arrays.npz"
+        },
+        {
+          "bytes": 18624,
+          "path": "work/node0086/metadata.json"
+        },
+        {
+          "bytes": 258970,
+          "path": "work/node0086/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0086/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0086/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0086/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0087/arrays.npz"
+        },
+        {
+          "bytes": 18626,
+          "path": "work/node0087/metadata.json"
+        },
+        {
+          "bytes": 294570,
+          "path": "work/node0087/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0087/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0087/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0087/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0088/arrays.npz"
+        },
+        {
+          "bytes": 18624,
+          "path": "work/node0088/metadata.json"
+        },
+        {
+          "bytes": 331905,
+          "path": "work/node0088/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0088/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0088/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0088/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0089/arrays.npz"
+        },
+        {
+          "bytes": 18623,
+          "path": "work/node0089/metadata.json"
+        },
+        {
+          "bytes": 364156,
+          "path": "work/node0089/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0089/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0089/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0089/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0090/arrays.npz"
+        },
+        {
+          "bytes": 18665,
+          "path": "work/node0090/metadata.json"
+        },
+        {
+          "bytes": 158455,
+          "path": "work/node0090/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0090/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0090/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0090/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0091/arrays.npz"
+        },
+        {
+          "bytes": 18663,
+          "path": "work/node0091/metadata.json"
+        },
+        {
+          "bytes": 174189,
+          "path": "work/node0091/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0091/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0091/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0091/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0092/arrays.npz"
+        },
+        {
+          "bytes": 18656,
+          "path": "work/node0092/metadata.json"
+        },
+        {
+          "bytes": 180253,
+          "path": "work/node0092/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0092/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0092/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0092/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0093/arrays.npz"
+        },
+        {
+          "bytes": 18660,
+          "path": "work/node0093/metadata.json"
+        },
+        {
+          "bytes": 196925,
+          "path": "work/node0093/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0093/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0093/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0093/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0094/arrays.npz"
+        },
+        {
+          "bytes": 18646,
+          "path": "work/node0094/metadata.json"
+        },
+        {
+          "bytes": 217899,
+          "path": "work/node0094/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0094/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0094/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0094/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0095/arrays.npz"
+        },
+        {
+          "bytes": 18656,
+          "path": "work/node0095/metadata.json"
+        },
+        {
+          "bytes": 244104,
+          "path": "work/node0095/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0095/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0095/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0095/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0096/arrays.npz"
+        },
+        {
+          "bytes": 18662,
+          "path": "work/node0096/metadata.json"
+        },
+        {
+          "bytes": 276933,
+          "path": "work/node0096/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0096/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0096/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0096/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0097/arrays.npz"
+        },
+        {
+          "bytes": 18658,
+          "path": "work/node0097/metadata.json"
+        },
+        {
+          "bytes": 304836,
+          "path": "work/node0097/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0097/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0097/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0097/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0098/arrays.npz"
+        },
+        {
+          "bytes": 18656,
+          "path": "work/node0098/metadata.json"
+        },
+        {
+          "bytes": 332300,
+          "path": "work/node0098/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5671,
+          "path": "work/node0098/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0098/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0098/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0099/arrays.npz"
+        },
+        {
+          "bytes": 18661,
+          "path": "work/node0099/metadata.json"
+        },
+        {
+          "bytes": 135386,
+          "path": "work/node0099/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5658,
+          "path": "work/node0099/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0099/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0099/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0100/arrays.npz"
+        },
+        {
+          "bytes": 18661,
+          "path": "work/node0100/metadata.json"
+        },
+        {
+          "bytes": 142426,
+          "path": "work/node0100/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5658,
+          "path": "work/node0100/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0100/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0100/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0101/arrays.npz"
+        },
+        {
+          "bytes": 18658,
+          "path": "work/node0101/metadata.json"
+        },
+        {
+          "bytes": 154510,
+          "path": "work/node0101/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5658,
+          "path": "work/node0101/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0101/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0101/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0102/arrays.npz"
+        },
+        {
+          "bytes": 18658,
+          "path": "work/node0102/metadata.json"
+        },
+        {
+          "bytes": 165560,
+          "path": "work/node0102/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5658,
+          "path": "work/node0102/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0102/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0102/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0103/arrays.npz"
+        },
+        {
+          "bytes": 18638,
+          "path": "work/node0103/metadata.json"
+        },
+        {
+          "bytes": 181944,
+          "path": "work/node0103/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5658,
+          "path": "work/node0103/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0103/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0103/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0104/arrays.npz"
+        },
+        {
+          "bytes": 18654,
+          "path": "work/node0104/metadata.json"
+        },
+        {
+          "bytes": 202271,
+          "path": "work/node0104/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5658,
+          "path": "work/node0104/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0104/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0104/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0105/arrays.npz"
+        },
+        {
+          "bytes": 18654,
+          "path": "work/node0105/metadata.json"
+        },
+        {
+          "bytes": 240199,
+          "path": "work/node0105/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5658,
+          "path": "work/node0105/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0105/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0105/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0106/arrays.npz"
+        },
+        {
+          "bytes": 18656,
+          "path": "work/node0106/metadata.json"
+        },
+        {
+          "bytes": 265010,
+          "path": "work/node0106/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5658,
+          "path": "work/node0106/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0106/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0106/receipt.json"
+        },
+        {
+          "bytes": 22,
+          "path": "work/node0107/arrays.npz"
+        },
+        {
+          "bytes": 18652,
+          "path": "work/node0107/metadata.json"
+        },
+        {
+          "bytes": 298462,
+          "path": "work/node0107/pack000000/arrays.npz"
+        },
+        {
+          "bytes": 5658,
+          "path": "work/node0107/pack000000/metadata.json"
+        },
+        {
+          "bytes": 318,
+          "path": "work/node0107/pack000000/receipt.json"
+        },
+        {
+          "bytes": 312,
+          "path": "work/node0107/receipt.json"
+        }
+      ],
+      "parent_cpu_seconds": 0.325288759,
+      "phase": "grid",
+      "raw_unknown_and_partial_artifacts_retained": true,
+      "scope": "M6_original_full_teacher_N1024_four_classes_component_only",
+      "started": {
+        "cpu": 0.104181627,
+        "utc": "2026-10-10T04:24:02.761429+00:00",
+        "wall": 30707.544146948
+      },
+      "status": "completed",
+      "stopped": {
+        "cpu": 0.429470386,
+        "utc": "2026-10-10T04:25:09.348784+00:00",
+        "wall": 30774.131497893
+      },
+      "wall_seconds": 66.58735094499934
+    }
+  ],
+  "scope": "M6_original_full_teacher_N1024_four_classes_component_only",
+  "started": {
+    "cpu": 0.074398537,
+    "utc": "2026-10-10T04:23:57.322828+00:00",
+    "wall": 30702.105536796
+  },
+  "status": "completed_component",
+  "stopped": {
+    "cpu": 0.456769642,
+    "utc": "2026-10-10T04:25:09.376081+00:00",
+    "wall": 30774.158796271
+  },
+  "wall_limit_seconds": 300.0,
+  "wall_seconds": 72.05325947500023
+}

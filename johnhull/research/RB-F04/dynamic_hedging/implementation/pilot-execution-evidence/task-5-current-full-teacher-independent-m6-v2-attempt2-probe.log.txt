@@ -1,0 +1,10 @@
+driver authenticated Heston
+driver authenticated local
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-independent-m6-v2-probe.py", line 106, in <module>
+    eq(pilot.runner.payload_digest(axes),spec['axes_payload_sha256']);eq(len(axes['threshold']),K)
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-full-teacher-independent-m6-v2-probe.py", line 24, in eq
+    def eq(a,b):assert a==b,(a,b)
+                       ^^^^
+AssertionError: (12, 33)

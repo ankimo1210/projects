@@ -1,0 +1,47 @@
+{
+  "scope": "D-only M6 preparation v2; no finance/source/Git/CAS edits",
+  "status": "metadata_and_administrative_probes_PASS_finance_pending",
+  "original_archive": "task-5-current-full-teacher-original-pre-revision-v1",
+  "files": [
+    {
+      "path": "task-5-current-full-teacher-budget-candidate-v2.json",
+      "bytes": 243425,
+      "sha256": "20237ba79c2016c4f388f57814f5f492f15c0b76e2fa56e1c84dae67d5642d09"
+    },
+    {
+      "path": "task-5-current-full-teacher-initial-description-v2.json",
+      "bytes": 242406,
+      "sha256": "624a697e83d735f36ffaaa9a497077306bad4fee2f27ea4fd2c0bb6f2f429610"
+    },
+    {
+      "path": "task-5-current-full-teacher-measurement-v2.py",
+      "bytes": 25486,
+      "sha256": "8a129816fb2b4e5dbefc4fc029f07e37d4cc605fdcf0668bb3d615dac0476673"
+    },
+    {
+      "path": "task-5-current-full-teacher-phase-decision-verification-v2.json",
+      "bytes": 1834,
+      "sha256": "ea60cfc32028ed5cafece100d05675d70553abcb55713a11b9f1b4eda3ded641"
+    },
+    {
+      "path": "task-5-current-full-teacher-preparation-report-v2.md",
+      "bytes": 6896,
+      "sha256": "86b0dcea7e6ec227bb8154864f9bbddc935a76c16cd3e6cbe2f62fb658020b71"
+    },
+    {
+      "path": "task-5-current-full-teacher-preparation-v2.py",
+      "bytes": 13175,
+      "sha256": "5140e5fffc246fc9e6f73b02e5cb066ebb6cd3e1a57b6c189900ba59ef701cf7"
+    },
+    {
+      "path": "task-5-current-full-teacher-preparation-verification-v2.json",
+      "bytes": 3497,
+      "sha256": "edfe50d571206d34dbd69d9ce5a95c2f0b699a3d5d7e4b6995b523fdb5c38eba"
+    },
+    {
+      "path": "task-5-current-full-teacher-preparation-verification-v2.py",
+      "bytes": 5813,
+      "sha256": "1bb93d80d64bb2997fb2c356c80b16d122de438159280be117e70f88bb49bcb6"
+    }
+  ]
+}

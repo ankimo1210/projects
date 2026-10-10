@@ -1,0 +1,19 @@
+{
+  "Ruff_format2": "PASS",
+  "financial_imports_inside_guarded_runtime_only": true,
+  "future_API_and_return_contract_not_yet_executed": true,
+  "future_actual_checker_call_explicit_bounded": true,
+  "generation_source_identity_sha256": "4e8f8b7bad48b9f6bf89b655cd115de835a9a486d89dd6d9ffafcad2b3cb64b0",
+  "new_checker_approval_and_terminal_inputs_remain_pending": true,
+  "no_teacher_driver_generation_or_dispatch_calls": true,
+  "original_driver_count": 2,
+  "original_generation81_snapshot_allbytes_match": true,
+  "original_nodes": [
+    108,
+    156,
+    520,
+    1344
+  ],
+  "scope": "D-only static source/AST authentication, no numeric finance execution",
+  "whole_original_n": 1024
+}
