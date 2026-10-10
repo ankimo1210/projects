@@ -1,0 +1,67 @@
+{
+  "scope": "candidate2 classes static metadata/source/input verification and direct negative approval guard only; no parent/child finance launch",
+  "results": [
+    {
+      "class": "M2",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-measurement-v2.py",
+        "--verify-preparation-only",
+        "--budget-file",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-budget-candidate-v1.json",
+        "--class-id",
+        "M2"
+      ],
+      "exit_code": 0,
+      "output": "{\"scope\": \"static source/input/budget validation only\", \"root_preapproved\": false, \"financial_worker_performed\": false, \"original_slots\": 105105}\n",
+      "clock": {
+        "start": {
+          "wall": 27086.277728805,
+          "cpu": 0.02394602,
+          "utc": "2026-10-10T03:23:41.495014+00:00"
+        },
+        "stop": {
+          "wall": 27086.357247677,
+          "cpu": 0.024214779,
+          "utc": "2026-10-10T03:23:41.574532+00:00"
+        }
+      },
+      "wall_seconds": 0.07951887200033525,
+      "cpu_seconds": 0.079574759
+    },
+    {
+      "class": "M3",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-measurement-v2.py",
+        "--verify-preparation-only",
+        "--budget-file",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-budget-candidate-v1.json",
+        "--class-id",
+        "M3"
+      ],
+      "exit_code": 0,
+      "output": "{\"scope\": \"static source/input/budget validation only\", \"root_preapproved\": false, \"financial_worker_performed\": false, \"original_slots\": 22295}\n",
+      "clock": {
+        "start": {
+          "wall": 27086.357280469,
+          "cpu": 0.024245732,
+          "utc": "2026-10-10T03:23:41.574560+00:00"
+        },
+        "stop": {
+          "wall": 27086.438029548,
+          "cpu": 0.024533937,
+          "utc": "2026-10-10T03:23:41.655313+00:00"
+        }
+      },
+      "wall_seconds": 0.08074907899936079,
+      "cpu_seconds": 0.08081520499999999
+    }
+  ],
+  "candidate_approval_guard_refused": "root prior whole-cache component approval required",
+  "root_preapproved": false,
+  "financial_execution_performed": false,
+  "financial_qualification": "unknown",
+  "script_sha256": "7745a45907d9b746049545e7d2a25bbdfd6f40cfd87ac51000ca8feb016ebb85",
+  "candidate_sha256": "f16cae8c82938614e1884f57b81744bd549374035573607a500d5e9efd8e9971"
+}

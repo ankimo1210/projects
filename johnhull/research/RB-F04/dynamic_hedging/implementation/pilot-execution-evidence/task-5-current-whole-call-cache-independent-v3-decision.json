@@ -1,0 +1,87 @@
+{
+  "additional_agent_or_191suite": false,
+  "budget_origin_sha256": "e7f8b53e5ba662d606545bdb6f071637d889f94c7c4d41721b4002eb0950dc23",
+  "cap": {
+    "RSS_bytes_each": 4294967296,
+    "administrative_component_ceiling_only": true,
+    "all_observations_below_cap": true,
+    "cap_failure_execution_not_tested_in_this_saved_review": true,
+    "sum_process_RSS_or_RLIMIT_AS_not_cap_metric": true,
+    "wall_seconds_each": 300
+  },
+  "costs": {
+    "M2": {
+      "maximum_recorded_individual_process_RSS_bytes": 854126592,
+      "observed_cap": null,
+      "outer_enclosing_cpu_seconds": 56.356544,
+      "outer_enclosing_wall_seconds": 55.6314698089991,
+      "outer_minus_inner_parent_seconds": 0.03054589899693383,
+      "whole_child_wall_seconds": 55.12198557999727,
+      "whole_parent_wall_seconds": 55.600923910002166,
+      "worker_wall_seconds": 46.27723389899984
+    },
+    "M3": {
+      "maximum_recorded_individual_process_RSS_bytes": 854421504,
+      "observed_cap": null,
+      "outer_enclosing_cpu_seconds": 7.735771000000001,
+      "outer_enclosing_wall_seconds": 7.666767392998736,
+      "outer_minus_inner_parent_seconds": 0.03003158299907227,
+      "whole_child_wall_seconds": 7.078935287001514,
+      "whole_parent_wall_seconds": 7.636735809999664,
+      "worker_wall_seconds": 3.4671805090001726
+    }
+  },
+  "created_utc": "2026-10-10T03:35:47.971498+00:00",
+  "decision": "approve_bounded_saved_M2_M3_whole49date_component_observation",
+  "financial_reference_accuracy": "unknown",
+  "formal_finance_budget_plan_pilot_main_phase_acceptance": false,
+  "independent_review_evidence_sha256": {
+    "task-5-current-whole-call-cache-independent-v3-parent-cost.json": "de2f98a7d05df7225f9349e68b955330a3e1d6ea0662f625af073597ad049e38",
+    "task-5-current-whole-call-cache-independent-v3-probe.log": "2e7421fd9d53c76d1fc07ffe2629757b8777a80bda6c59c9fa5b49d2f0caee11",
+    "task-5-current-whole-call-cache-independent-v3-probe.py": "8508faf6eaf76ec21a17790719fa7b95f8729f6c407f28d0a7c201c325b15daf",
+    "task-5-current-whole-call-cache-independent-v3-results.json": "2e7421fd9d53c76d1fc07ffe2629757b8777a80bda6c59c9fa5b49d2f0caee11"
+  },
+  "independent_review_measured_parent_cost": {
+    "child_CPU_seconds": 9.380665,
+    "exit_code": 0,
+    "new_financial_RNG_or_worker": false,
+    "saved_only": true,
+    "wall_seconds": 9.388496794003004
+  },
+  "metadata_or_cost_observation_is_not_financial_qualification": true,
+  "new_financial_worker_or_RNG": false,
+  "original_initial_NaN_unprocessed_retained": true,
+  "original_shapes": {
+    "M2": [
+      49,
+      65,
+      33
+    ],
+    "M3": [
+      49,
+      65,
+      7
+    ],
+    "field": [
+      257,
+      321
+    ]
+  },
+  "original_slots": {
+    "M2": 105105,
+    "M3": 22295
+  },
+  "prior_failed_preparation_and_original_receipts_preserved": true,
+  "probe_source_origin_sha256": "2ca6c134e2cacf0ca76da8bd0142f960f9cf8831c4b0fe6d3813319dbe90aa1b",
+  "reference_price_derivative_error_NaN_retained": true,
+  "returned_missing_slots": 0,
+  "returned_nonfinite_slots": 0,
+  "saved_artifact_files_unchanged": 34,
+  "saved_price_lower_upper_bounds": "PASS_at_1e-10_tolerance",
+  "schema": "rb-f04-current-whole-call-cache-independent-decision-v1",
+  "scope": "Saved values, axes, typed input provenance, unprocessed/NaN retention, source node check, price bounds, receipts and measured interval verification only",
+  "source80_and_inputs_before_after_match": true,
+  "source_all_original_node_check": "PASS",
+  "source_tests_project_docs_Git_changed": false,
+  "unmeasured_reads_preparation_report_cost": "unknown"
+}

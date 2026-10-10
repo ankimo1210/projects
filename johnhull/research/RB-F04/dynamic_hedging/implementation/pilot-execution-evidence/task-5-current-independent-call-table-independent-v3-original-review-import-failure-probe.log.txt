@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-independent-v3-probe.py", line 81, in <module>
+    parameters=methods.HestonParameters(**prepared["parameters"]) if hasattr(methods,"HestonParameters") else pilot.HestonParameters(**prepared["parameters"])
+                                                                                                              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'run_pilot' has no attribute 'HestonParameters'

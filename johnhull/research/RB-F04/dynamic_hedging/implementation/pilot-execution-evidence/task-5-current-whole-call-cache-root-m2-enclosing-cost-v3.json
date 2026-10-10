@@ -1,0 +1,16 @@
+{
+  "budget_sha256": "e7f8b53e5ba662d606545bdb6f071637d889f94c7c4d41721b4002eb0950dc23",
+  "child_parent_peak_rss_bytes": 853803008,
+  "class": "M2",
+  "cpu_seconds": 56.356544,
+  "exit_code": 0,
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "inner_parent_receipt": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-observation-root-m2-v3/parent-cost-and-decision.json",
+  "peak_rss_cumulative_outer_process_metric": true,
+  "scope": "whole-call-cache-parent-subprocess-plus-final-receipt-and-stdout",
+  "source_sha256": "2ca6c134e2cacf0ca76da8bd0142f960f9cf8831c4b0fe6d3813319dbe90aa1b",
+  "wall_seconds": 55.6314698089991,
+  "wall_start": 27384.551691087,
+  "wall_stop": 27440.183160896
+}

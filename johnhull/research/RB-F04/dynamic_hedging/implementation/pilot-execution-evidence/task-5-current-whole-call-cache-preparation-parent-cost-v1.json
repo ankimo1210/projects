@@ -1,0 +1,21 @@
+{
+  "scope": "Actual enclosing saved-only preparation subprocess; imports/dataclass validation/artifact input read/candidate write; no finance worker",
+  "clock": {
+    "start": {
+      "wall": 27001.582966433,
+      "cpu": 0.024528679,
+      "utc": "2026-10-10T03:22:16.800253+00:00"
+    },
+    "stop": {
+      "wall": 27003.944631294,
+      "cpu": 0.025017187,
+      "utc": "2026-10-10T03:22:19.161918+00:00"
+    }
+  },
+  "wall_seconds": 2.361664861000463,
+  "cpu_seconds": 2.3347335080000002,
+  "exit_code": 1,
+  "log_sha256": "12e306cc4a2cbc0bf812163c41d4ebac5a27aff2c8d07e133b371f977fc37a5d",
+  "script_sha256": "a277b9796edece92043b706c7d7c2489d6305fdaea5bbba55c413cac1969a318",
+  "financial_qualification": "unknown"
+}

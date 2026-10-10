@@ -1,0 +1,158 @@
+"""Saved-only independent-table candidate preparation. No finance or RNG."""
+from pathlib import Path
+from datetime import datetime, timezone
+import json
+import hashlib
+import time
+import sys
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+START = {"wall": time.perf_counter(), "cpu": time.process_time(),
+         "utc": datetime.now(timezone.utc).isoformat()}
+sys.path[:0] = [str(WT / "johnhull/research/RB-F04/dynamic_hedging"),
+               str(WT / "johnhull/hullkit/src"), str(WT / "deep_hedge_price/src")]
+import numpy as np
+import run_pilot as pilot
+import run_reference as runner
+import hullkit._dynamic_hedging_surfaces as surfaces
+import hullkit._heston_local_surface as heston
+import reference_methods as references
+
+guard_calls = []
+def forbidden(*args, **kwargs):
+    guard_calls.append("financial_or_RNG_boundary")
+    raise AssertionError("finance solver/RNG forbidden in budget preparation")
+np.random.default_rng = forbidden
+pilot._dispatch = forbidden
+pilot.run_field_job = forbidden
+surfaces.build_call_cache = forbidden
+surfaces._calendar_pde = forbidden
+heston.fourier_surface = forbidden
+heston.LocalVarianceGrid.evaluate = forbidden
+references.independent_call_table = forbidden
+references.independent_heston_call = forbidden
+references.calendar_call_snapshots = forbidden
+references.pde_call = forbidden
+sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+graphdir = D / "task-5-full-progressive-pilot-plan-draft-source-unit-v3"
+fielddir = D / "task-5-actual-pilot-input-preparation-v4-current-field"
+prep = D / "task-5-actual-pilot-input-preparation-v4.json"
+graph, _ = pilot.read_pilot_artifact(graphdir)
+field, _ = pilot.read_pilot_artifact(fielddir)
+prepared = json.loads(prep.read_text())
+parameters = heston.HestonParameters(**prepared["parameters"])
+assert field["status"] == "executed" and field["raw_values"].shape == (257, 321)
+assert field["order"] == 1024 and field["frequency_scale"] == 512 and field["density_floor"] == 1e-10
+identity = runner.execution_source_identity(WT)
+assert len(identity["files"]) == 80 and identity["dynamic_imports"] == []
+controls_source = json.loads((D / "task-5-formal-controls-review-candidate-v2.json").read_text())
+independent_controls = controls_source["independent_call_controls_candidate"]
+assert independent_controls == {"upper": 250.0, "space_nodes": 2401, "time_steps": 1920, "log_half_width": 1.8}
+assert not ({"quadrature_limit", "epsabs", "epsrel"} & set(independent_controls))
+classes = {}
+for class_id, model, states in [("M4", "Heston", 33), ("M5", "local", 7)]:
+    job_id = "independent-table:state00:" + model
+    row = next(j for j in graph["jobs"] if j["id"] == job_id)
+    assert row["operation"] == "call_table"
+    assert set(row["arguments"]) == {"parameters", "surface", "dates", "query_spots", "state_nodes", "model", "controls"}
+    assert row["arguments"]["surface"] == {"field_job": "field-current"}
+    assert row["arguments"]["parameters"] == {"input": "parameters"}
+    assert row["arguments"]["controls"] == {}
+    planned = dict(row["arguments"], controls=independent_controls)
+    args = pilot._resolve(planned, {"parameters": parameters},
+                          {"field-current": {"raw": field, "status": "executed"}})
+    levels = 3 if class_id == "M4" else 4
+    shape = [levels, len(args["dates"]), len(args["query_spots"]), len(args["state_nodes"])]
+    assert shape == [levels, 1, 7, states]
+    controls = controls_source["independent_Heston_effective_levels" if class_id == "M4" else "independent_local_effective_levels"]
+    classes[class_id] = {
+        "job_id": job_id, "operation": "call_table", "model": args["model"],
+        "shape": shape, "original_slots": int(np.prod(shape)),
+        "original_graph_arguments_sha256": pilot.input_identity(row["arguments"]),
+        "planned_arguments_sha256": pilot.input_identity(planned),
+        "resolved_arguments_sha256": pilot.input_identity(args),
+        "parameters": prepared["parameters"],
+        "axes": {key: args[key].tolist() for key in ("dates", "query_spots", "state_nodes")},
+        "axes_origin_sha256": {key: hashlib.sha256(np.ascontiguousarray(args[key]).tobytes()).hexdigest()
+                              for key in ("dates", "query_spots", "state_nodes")},
+        "initial_value": "all_NaN", "initial_slot_status": "unprocessed",
+        "initial_processed_slots": 0,
+        "actual_worker": "run_pilot._dispatch(call_table) -> independent_call_table (native schema; no _saved_operation wrapper)",
+        "effective_controls": controls,
+        "original_n": None, "path_steps": 0, "RNG_streams": [],
+        "native_financial_qualification_after_worker": "unchecked", "financial_qualification": "unknown",
+    }
+description = {
+    "schema": "rb-f04-current-independent-call-table-prior-initial-description-v1",
+    "created_utc": datetime.now(timezone.utc).isoformat(),
+    "scope": "original state00 independent table M4/M5 geometry with prior candidate-v2 controls; no finance",
+    "graph_counts": {"jobs": len(graph["jobs"]), "original_cases": len(graph["case_plan"]),
+                     "original_attempts": len(graph["attempt_plan"])},
+    "graph_artifact": str(graphdir.relative_to(WT)),
+    "field_artifact": str(fielddir.relative_to(WT)),
+    "prepared_input_json": str(prep.relative_to(WT)),
+    "field_shape": [257, 321],
+    "field_controls": {"order": 1024, "frequency_scale": 512, "density_floor": 1e-10},
+    "field_axes": {"times": field["times"].tolist(), "z_nodes": field["z_nodes"].tolist()},
+    "field_source_receipt_scope": "saved currentfield v4; no new field solve, smoothing or repair",
+    "independent_controls": independent_controls,
+    "effective_CF_levels": controls_source["independent_Heston_effective_levels"],
+    "effective_PDE_levels": controls_source["independent_local_effective_levels"],
+    "original_saved_graph_controls": {},
+    "prior_measurement_controls_delta": "replace original empty controls with separately saved candidate-v2 controls; original jobs/axes/N/levels unchanged",
+    "classes": classes, "financial_worker_performed": False, "financial_qualification": "unknown",
+    "failure_contract": "prior allNaN/unprocessed immutable artifact before solver; actual returned NaNs/diagnostics retained; hard cap leaves full unprocessed claim; exceptions are defects, not caps",
+    "numeric_gate_contract": "saved native check_call_table reconstructs price/error nodes from stored quadrature/PDE receipts; no new solver, convergence qualification or formal121/51",
+}
+initial = D / "task-5-current-independent-call-table-initial-description-v1.json"
+assert not initial.exists()
+initial.write_text(json.dumps(description, indent=2, sort_keys=True, allow_nan=False) + "\n")
+input_paths = [prep, D / "task-5-progressive-pilot-plan-producer-v3.py",
+               D / "task-5-formal-pilot-plan-producer.py",
+               D / "task-5-formal-controls-review-candidate-v2.json"]
+for folder in (graphdir, fielddir):
+    input_paths.extend(sorted(p for p in folder.rglob("*") if p.is_file()))
+script = D / "task-5-current-independent-call-table-measurement-v2.py"
+budget = {
+    "schema": "rb-f04-current-independent-call-table-prior-budget-v1",
+    "scope": "current_independent_call_table_M4_Heston_or_M5_local_component_only",
+    "root_preapproved": False, "formal_finance_approved": False,
+    "status": "administrative_candidate_pending_root_prior_approval",
+    "allowed_classes": ["M4", "M5"], "budget_per_class": True,
+    "wall_limits_seconds": {"M4": 120.0, "M5": 300.0}, "rss_limit_bytes": 4 * 1024**3,
+    "rss_metric": "maximum_individual_parent_or_child_process_RSS_not_virtual_address_space",
+    "budget_basis": "Administrative per-class ceiling only; no measured independent state00-table rate",
+    "probe_source_sha256": sha(script), "initial_description_sha256": sha(initial),
+    "source_bindings": identity["files"], "source_identity_sha256": runner._digest(identity),
+    "input_file_bindings": {str(p.relative_to(WT)): sha(p) for p in input_paths},
+    "classes": classes,
+    "root_run_contract": "root copies candidate to separate fixed prior budget with approval/rationale; preserve false candidate; outer root process encloses final parent receipt/stdout tail",
+    "original_failures_retained": True, "new_public_API_or_production_dependency": False,
+    "new_MC_teacher_training_formal_pilot_main": "none",
+    "estimated_runtime_seconds": None, "qualification": "unknown",
+}
+candidate = D / "task-5-current-independent-call-table-budget-candidate-v1.json"
+assert not candidate.exists()
+candidate.write_text(json.dumps(budget, indent=2, sort_keys=True, allow_nan=False) + "\n")
+assert guard_calls == []
+assert description["graph_counts"] == {"jobs": 3138, "original_cases": 121, "original_attempts": 51}
+assert {p: sha(WT / p) for p in identity["files"]} == identity["files"]
+stop = {"wall": time.perf_counter(), "cpu": time.process_time(),
+        "utc": datetime.now(timezone.utc).isoformat()}
+cost = {
+    "scope": "budget/description preparation and immutable saved input decode/dataclass array validation; no solver/RNG/finance or total task/history cost",
+    "clock": {"start": START, "stop": stop},
+    "wall_seconds": stop["wall"] - START["wall"],
+    "cpu_seconds": stop["cpu"] - START["cpu"],
+    "financial_guard_calls": guard_calls, "source_bindings_stable": True,
+    "financial_qualification": "unknown",
+    "outputs": {p.name: sha(p) for p in (script, initial, candidate)},
+}
+(D / "task-5-current-independent-call-table-preparation-cost-v1.json").write_text(json.dumps(cost, indent=2) + "\n")
+print(json.dumps({"classes": {key: {k: value[k] for k in
+                  ("shape", "original_slots", "planned_arguments_sha256", "resolved_arguments_sha256")}
+                  for key, value in classes.items()},
+                  "source_files": len(identity["files"]), "dynamic_imports": identity["dynamic_imports"],
+                  "guard_calls": guard_calls, "wall_seconds": cost["wall_seconds"],
+                  "cpu_seconds": cost["cpu_seconds"], "script_sha256": sha(script)}, indent=2))

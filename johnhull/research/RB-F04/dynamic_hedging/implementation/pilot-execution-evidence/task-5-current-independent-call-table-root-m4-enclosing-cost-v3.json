@@ -1,0 +1,16 @@
+{
+  "budget_sha256": "a28dd5334854aea96e72431617c92b61989c3a71d260d34042f3982b7add5b70",
+  "child_parent_peak_rss_bytes": 853463040,
+  "class": "M4",
+  "cpu_seconds": 5.250679,
+  "exit_code": 0,
+  "financial_qualification": "unknown",
+  "formal_pilot_or_main": false,
+  "inner_parent_receipt": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-observation-root-m4-v3/parent-cost-and-decision.json",
+  "peak_rss_cumulative_outer_process_metric": true,
+  "scope": "whole-independent-call-table-parent-subprocess-plus-final-receipt-and-stdout",
+  "source_sha256": "b314b5a97a826d9d952e690332ca55acf1f0d9d372e088b4bc4293404c9440c6",
+  "wall_seconds": 5.467673218998243,
+  "wall_start": 28285.988798489,
+  "wall_stop": 28291.456471708
+}

@@ -1,0 +1,235 @@
+
+from pathlib import Path
+import os,sys,json,hashlib,time,math,zipfile,resource
+os.environ.update(OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1")
+sys.dont_write_bytecode=True
+D=Path(__file__).resolve().parent;WT=D.parents[2]
+start=time.perf_counter();cpu_start=time.process_time()
+sys.path[:0]=[str(WT/"johnhull/research/RB-F04/dynamic_hedging"),str(WT/"johnhull/hullkit/src"),str(WT/"deep_hedge_price/src")]
+import numpy as np
+import run_pilot as pilot
+import check_pilot as checker
+import run_reference as runner
+import reference_methods as methods
+from scipy.interpolate import CubicSpline
+import scipy.integrate as integrate
+import scipy.linalg as linalg
+calls={"forbidden":0}
+def forbidden(*args,**kwargs):
+    calls["forbidden"]+=1
+    raise AssertionError("new solver/financial worker/RNG forbidden in saved-only independent review")
+pilot._dispatch=forbidden
+for key in ("independent_call_table","independent_heston_call","calendar_call_snapshots","pde_call"):
+    setattr(methods,key,forbidden)
+integrate.quad=forbidden
+linalg.solve_banded=forbidden
+np.random.default_rng=forbidden
+np.random.RandomState=forbidden
+np.random.seed=forbidden
+
+def sha(p):
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+def canonical(x):
+    return json.dumps(x,sort_keys=True,separators=(",",":"),allow_nan=False).encode()
+
+def receipt_check(root):
+    stats=[]
+    for p in [root,*sorted(root.glob("pack*"))]:
+        r=json.loads((p/"receipt.json").read_text())
+        m=json.loads((p/"metadata.json").read_text())
+        identity={k:v for k,v in r.items() if k!="artifact_sha256"}
+        assert (p/"receipt.json").read_bytes()==canonical(r)
+        assert r["artifact_sha256"]==hashlib.sha256(canonical(identity)).hexdigest()
+        assert r["metadata_sha256"]==sha(p/"metadata.json")
+        assert r["arrays_sha256"]==sha(p/"arrays.npz")
+        with zipfile.ZipFile(p/"arrays.npz") as z:
+            expanded=sum(i.file_size for i in z.infolist())
+        assert expanded==r["uncompressed_bytes"] and expanded<=256*1024**2
+        with np.load(p/"arrays.npz",allow_pickle=False) as data:
+            assert set(data.files)==set(m["arrays"])
+            total=0
+            for k,d in m["arrays"].items():
+                a=data[k]
+                assert d=={"shape":list(a.shape),"dtype":a.dtype.str,"nbytes":a.nbytes}
+                total+=a.nbytes
+            assert total<=128*1024**2
+        stats.append({"part":p.name,"expanded_bytes":expanded,"payload_bytes":total})
+    return stats
+
+def artifact_files(p):
+    return {str(f.relative_to(WT)):sha(f) for f in p.rglob("*") if f.is_file()}
+
+budgetpath=D/"task-5-current-independent-call-table-budget-root-fixed-v2.json"
+descpath=D/"task-5-current-independent-call-table-initial-description-v1.json"
+scriptpath=D/"task-5-current-independent-call-table-measurement-v3.py"
+budget=json.loads(budgetpath.read_text());desc=json.loads(descpath.read_text())
+assert budget["root_preapproved"] is True and budget["formal_finance_approved"] is False and budget["qualification"]=="unknown"
+assert budget["classes"]==desc["classes"]
+assert budget["wall_limits_seconds"]=={"M4":120.0,"M5":300.0} and budget["rss_limit_bytes"]==4*1024**3
+assert sha(scriptpath)==budget["probe_source_sha256"] and sha(descpath)==budget["initial_description_sha256"]
+source_before={k:sha(WT/k) for k in budget["source_bindings"]}
+input_before={k:sha(WT/k) for k in budget["input_file_bindings"]}
+assert len(source_before)==80 and source_before==budget["source_bindings"] and input_before==budget["input_file_bindings"]
+graph,gr=pilot.read_pilot_artifact(WT/desc["graph_artifact"])
+field,fr=pilot.read_pilot_artifact(WT/desc["field_artifact"])
+assert len(graph["jobs"])==3138 and len(graph["case_plan"])==121 and len(graph["attempt_plan"])==51
+assert field["raw_values"].shape==(257,321) and np.isfinite(field["raw_values"]).all()
+assert field["order"]==1024 and field["frequency_scale"]==512 and field["density_floor"]==1e-10
+assert np.array_equal(field["times"],desc["field_axes"]["times"]) and np.array_equal(field["z_nodes"],desc["field_axes"]["z_nodes"])
+prepared=json.loads((WT/desc["prepared_input_json"]).read_text())
+parameters=methods.HestonParameters(**prepared["parameters"]) if hasattr(methods,"HestonParameters") else pilot.HestonParameters(**prepared["parameters"])
+assert desc["independent_controls"]=={"upper":250.0,"space_nodes":2401,"time_steps":1920,"log_half_width":1.8}
+assert desc["original_saved_graph_controls"]=={}
+assert not ({"epsabs","epsrel","quadrature_limit"} & set(desc["independent_controls"]))
+result={"schema":"saved-native-independent-call-table-independent-review-v1","qualification":"unknown","production_source":"fixed_v56","source_files":80,"new_solver_RNG_or_financial_worker":0,"models":{}}
+saved_before={}
+for m in [4,5]:
+    c=f"M{m}";p=D/f"task-5-current-independent-call-table-observation-root-m{m}-v3"
+    spec=desc["classes"][c]
+    parent=json.loads((p/"parent-cost-and-decision.json").read_text())
+    progress=json.loads((p/"progress.json").read_text())
+    outer=json.loads((D/f"task-5-current-independent-call-table-root-m{m}-enclosing-cost-v3.json").read_text())
+    assert (p/"prior-root-budget.json").read_bytes()==budgetpath.read_bytes()
+    assert (p/"initial-description.json").read_bytes()==descpath.read_bytes()
+    assert parent["prior_component_budget"]==budget
+    assert parent["source_before"]==parent["source_after"]==source_before and progress["source_after"]==source_before
+    assert parent["input_before"]==parent["input_after"]==input_before
+    assert outer["budget_sha256"]==sha(budgetpath) and outer["source_sha256"]==sha(scriptpath)
+    saved_before.update(artifact_files(p))
+    rawpath=p/"actual-independent-call-table-raw";initpath=p/"initial-unprocessed-raw"
+    receipts={"raw":receipt_check(rawpath),"initial":receipt_check(initpath)}
+    raw,rr=pilot.read_pilot_artifact(rawpath);initial,_=pilot.read_pilot_artifact(initpath)
+    row=next(j for j in graph["jobs"] if j["id"]==spec["job_id"])
+    assert row["operation"]=="call_table" and row["arguments"]["controls"]=={}
+    assert pilot.input_identity(row["arguments"])==spec["original_graph_arguments_sha256"]
+    planned=dict(row["arguments"],controls=desc["independent_controls"])
+    assert pilot.input_identity(planned)==spec["planned_arguments_sha256"]
+    # Only prior controls differ from original graph arguments.
+    assert {k:v for k,v in planned.items() if k!="controls"}=={k:v for k,v in row["arguments"].items() if k!="controls"}
+    resolved=pilot._resolve(planned,{"parameters":parameters},{"field-current":{"raw":field,"status":"executed"}})
+    assert pilot.input_identity(resolved)==pilot.input_identity(pilot.unpack_inputs(initial["arguments"]))==spec["resolved_arguments_sha256"]
+    assert raw["schema"]=="rb-f04-independent-call-table-v1" and raw["model"]==spec["model"]==resolved["model"]
+    assert raw["parameters"]==vars(parameters) and raw["controls"]==desc["independent_controls"]
+    descriptor,signature=methods._field_binding(resolved["surface"])
+    runner._same(descriptor,raw["surface_descriptor"],"whole original field descriptor")
+    assert signature==raw["surface_signature"] and np.asarray(descriptor["values"]).shape==(257,321)
+    assert initial["source_identity_sha256"]==budget["source_identity_sha256"] and initial["graph_receipt"]==gr and initial["field_receipt"]==fr
+    assert initial["prior_description_sha256"]==sha(descpath)
+    shape=tuple(spec["shape"]);prices=np.asarray(raw["prices"]);errors=np.asarray(raw["price_unit_errors"])
+    assert prices.shape==errors.shape==shape and prices.size==math.prod(shape)==spec["original_slots"]==parent["original_slots"]
+    assert initial["prices"].shape==initial["price_unit_errors"].shape==initial["slot_status"].shape==shape
+    assert np.isnan(initial["prices"]).all() and np.isnan(initial["price_unit_errors"]).all() and (initial["slot_status"]=="unprocessed").all()
+    assert initial["processed_slots"]==0 and initial["original_slots"]==prices.size
+    for key in ("dates","query_spots","state_nodes"):
+        assert np.array_equal(raw[key],resolved[key]) and np.allclose(raw[key],spec["axes"][key],rtol=0,atol=1e-14)
+        assert hashlib.sha256(np.asarray(raw[key]).tobytes()).hexdigest()==spec["axes_origin_sha256"][key]
+    assert np.isfinite(prices).all() and progress["finite_slots"]==prices.size and progress["nonfinite_slots"]==0
+    assert raw["financial_qualification"]==progress["native_financial_qualification"]=="unchecked"
+    assert parent["financial_qualification"]==initial["financial_qualification"]=="unknown"
+    assert raw["cap_evidence"] is None and parent["observed_cap"] is None
+    assert progress["raw_receipt"]==rr
+    recovered=np.full_like(prices,np.nan)
+    if m==4:
+        assert len(raw["integration_receipts"])==693 and raw["pde_receipts"]==[] and np.isfinite(errors).all()
+        seen=set();integral_count=0;max_residual=0.0;convergence={}
+        for e in raw["integration_receipts"]:
+            ix=tuple(e[k] for k in ("level","date_index","spot_index","state_index"))
+            assert ix not in seen and all(0<=v<shape[k] for k,v in enumerate(ix));seen.add(ix)
+            lev,date,sp,st=ix; expected=desc["effective_CF_levels"][lev]
+            pair=e["integration_receipts"]
+            assert len(pair)==1 and len(pair[0])==2
+            vals=[];errs=[]
+            for q in pair[0]:
+                integral_count+=1
+                for key in ("upper","quadrature_limit","epsabs","epsrel"):assert q[key]==expected[key]
+                parts=np.asarray(q["subintervals"]);assert parts.shape==(q["subinterval_count"],4) and np.isfinite(parts).all()
+                assert q["subinterval_count"]>0 and q["subinterval_count"]<=q["quadrature_limit"] and q["neval"]>0
+                sortedparts=parts[np.argsort(parts[:,0])]
+                assert np.all(sortedparts[:,1]>sortedparts[:,0]) and np.all(parts[:,3]>=0)
+                assert np.isclose(sortedparts[0,0],0,atol=1e-12) and np.isclose(sortedparts[-1,1],q["upper"],atol=1e-12)
+                assert np.allclose(sortedparts[:-1,1],sortedparts[1:,0],rtol=0,atol=1e-12)
+                assert np.isclose(parts[:,2].sum(),q["value"],rtol=2e-9,atol=2e-10)
+                assert np.isclose(parts[:,3].sum(),q["absolute_error"],rtol=2e-9,atol=2e-10)
+                assert q["status"]=="converged" and q["message"]==""
+                vals.append(q["value"]);errs.append(q["absolute_error"])
+            tau=1.25-raw["dates"][date]
+            prepaid=raw["query_spots"][sp]*math.exp(-parameters.dividend_yield*tau);kpv=100*math.exp(-parameters.rate*tau)
+            v=prepaid*(.5+vals[0]/math.pi)-kpv*(.5+vals[1]/math.pi)
+            err=(prepaid*errs[0]+kpv*errs[1])/math.pi
+            assert np.isclose(v,e["raw_prices"][0],rtol=2e-9,atol=2e-10) and np.isclose(v,e["price"][0],rtol=2e-9,atol=2e-10)
+            assert np.isclose(err,e["price_unit_error"][0],rtol=2e-9,atol=2e-10) and np.isclose(err,errors[ix],rtol=2e-9,atol=2e-10)
+            assert e["status"]=="converged"
+            recovered[ix]=v;max_residual=max(max_residual,abs(v-prices[ix]))
+        assert len(seen)==693 and integral_count==1386
+        details={"raw_cells":len(seen),"quad_integrals":integral_count,"strict_level3_controls":desc["effective_CF_levels"][2],"all_integrals_converged":True,"maximum_stored_price_unit_error":float(errors.max()),"maximum_independent_saved_integral_price_residual":max_residual}
+    else:
+        assert raw["integration_receipts"]==[] and len(raw["pde_receipts"])==28 and np.isnan(errors).all()
+        seen=set();diagnostics=[]
+        for e in raw["pde_receipts"]:
+            lev,st=e["level"],e["state_index"];assert (lev,st) not in seen and 0<=lev<4 and 0<=st<7;seen.add((lev,st))
+            cfg=desc["effective_PDE_levels"][lev];grid=e["grid"]
+            assert e["supported"] is True and e["failure"] is None
+            assert grid["space_nodes"]==cfg["space_nodes"] and grid["time_steps"]==cfg["time_steps"] and grid["log_half_width"]==cfg["log_half_width"]
+            assert grid["coefficient_evaluations"]==cfg["time_steps"]+1 and grid["rannacher_half_steps"]==2 and grid["negative_operator_coefficients"]==0
+            assert np.isclose(grid["backward_time_completed"],1.25,atol=1e-12)
+            assert sum(e["status_counts"].values())==(cfg["space_nodes"]-2)*(cfg["time_steps"]+1)
+            assert np.isclose(grid["min_calendar_time"],1.25/(2*cfg["time_steps"]),rtol=0,atol=1e-12)
+            assert np.isclose(grid["max_calendar_time"],1.25-1.25/(4*cfg["time_steps"]),rtol=0,atol=1e-12)
+            assert np.array_equal(e["dates"],raw["dates"]) and np.array_equal(e["snapshot_dates"],raw["dates"])
+            assert e["spots"].shape==(cfg["space_nodes"],) and np.array_equal(e["spots"],grid["spots"])
+            assert e["values"].shape==(1,cfg["space_nodes"]) and np.isfinite(e["values"]).all()
+            assert np.allclose(np.log(e["spots"]),grid["log_spots"],rtol=0,atol=1e-12)
+            assert np.allclose(e["values"],e["snapshots"][:,0,:],rtol=2e-9,atol=2e-10)
+            assert np.allclose(e["values"],grid["values"],rtol=2e-9,atol=2e-10)
+            assert np.isclose(np.interp(math.log(parameters.spot),grid["log_spots"],grid["values"][0]),e["price"][0],rtol=2e-9,atol=2e-10)
+            assert raw["query_spots"].min()>=e["spots"][0] and raw["query_spots"].max()<=e["spots"][-1]
+            recovered[lev,0,:,st]=CubicSpline(np.log(e["spots"]),e["values"][0],extrapolate=False)(np.log(raw["query_spots"]))
+        assert len(seen)==28
+        details={"PDE_state_level_rows":28,"price_unit_error_original_NaNs_retained":196,"all_rows_supported":True,"PDE_effective_levels":desc["effective_PDE_levels"],"saved_curve_reconstruction_maximum_residual":float(np.max(np.abs(recovered-prices)))}
+    assert np.allclose(recovered,prices,rtol=2e-9,atol=2e-10,equal_nan=True)
+    checked=checker.check_call_table(raw)
+    assert np.allclose(checked,prices,rtol=2e-9,atol=2e-10,equal_nan=True)
+    tau=1.25-raw["dates"][None,:,None,None]
+    upper=raw["query_spots"][None,None,:,None]*np.exp(-parameters.dividend_yield*tau)
+    lower=np.maximum(upper-100*np.exp(-parameters.rate*tau),0)
+    assert not np.any(prices<lower-1e-10) and not np.any(prices>upper+1e-10)
+    wc=progress["worker_clock"];cc=progress["whole_child_clock"];pc=parent["whole_parent_inclusive_clock"]
+    for x in (wc,cc):
+        assert math.isclose(x["wall_seconds"],x["stop"]["wall"]-x["start"]["wall"],abs_tol=1e-12)
+        assert math.isclose(x["cpu_seconds"],x["stop"]["cpu"]-x["start"]["cpu"],abs_tol=1e-12)
+    assert math.isclose(parent["wall_seconds"],pc["stop"]["wall"]-pc["start"]["wall"],abs_tol=1e-12)
+    assert math.isclose(parent["cpu_seconds"],pc["stop"]["cpu"]-pc["start"]["cpu"]+pc["child_cpu_stop"]-pc["child_cpu_start"],abs_tol=1e-12)
+    assert math.isclose(outer["wall_seconds"],outer["wall_stop"]-outer["wall_start"],abs_tol=1e-12)
+    assert outer["wall_start"]<=pc["start"]["wall"]<=cc["start"]["wall"]<=wc["start"]["wall"]<=wc["stop"]["wall"]<=cc["stop"]["wall"]<=pc["stop"]["wall"]<=outer["wall_stop"]
+    sw=[e["clock"]["wall"] for e in progress["stages"]];assert sw==sorted(sw) and sw[1]<wc["start"]["wall"] and sw[3]>wc["stop"]["wall"]
+    expids=set()
+    for expense in raw["expenses"]:
+        assert expense["job_id"] not in expids;expids.add(expense["job_id"])
+        clk=expense["clock"]
+        assert math.isclose(expense["wall_seconds"],clk["wall_stop"]-clk["wall_start"],abs_tol=1e-12)
+        assert math.isclose(expense["cpu_seconds"],clk["cpu_stop"]-clk["cpu_start"],abs_tol=1e-12)
+        assert wc["start"]["wall"]<=clk["wall_start"]<=clk["wall_stop"]<=wc["stop"]["wall"]
+        assert expense["path_steps"]==expense["original_path_count"]==0 and expense["deadline_wall"] is None and expense["overrun_seconds"]==0
+    assert len(expids)==shape[0]
+    assert progress["status"]==parent["status"]=="component_measurement_complete" and parent["exit_code"]==outer["exit_code"]==0
+    assert progress["financial_RNG_draws"]==0 and parent["financial_RNG_performed"] is False
+    assert parent["formal_pilot_or_main"] is False and parent["formal_plan_locked"] is False and parent["reference_accuracy_qualified"] is False
+    assert parent["overrun_seconds"]==parent["RSS_overrun_bytes"]==0
+    peak=max(parent["child_peak_rss_bytes"],parent["parent_peak_rss_bytes"],progress["current_peak_rss_bytes"],outer["child_parent_peak_rss_bytes"])
+    assert peak<4*1024**3 and outer["wall_seconds"]<budget["wall_limits_seconds"][c]
+    result["models"][c]={"shape":list(shape),"original_slots":prices.size,"finite_prices":int(np.isfinite(prices).sum()),"NaN_prices":int(np.isnan(prices).sum()),"original_initial_NaN_prices":int(initial["prices"].size),"original_initial_NaN_errors":int(initial["price_unit_errors"].size),
+       "native_qualification":"unchecked","review_qualification":"unknown","source_check_call_table":"PASS","independent_saved_evidence_formula_check":"PASS","price_bounds":"PASS","details":details,"receipts":receipts,
+       "maximum_absolute_refinement_deltas_from_base":[float(np.max(np.abs(prices[l]-prices[0]))) for l in range(1,shape[0])],
+       "worker_wall_seconds":wc["wall_seconds"],"whole_child_wall_seconds":cc["wall_seconds"],"whole_parent_wall_seconds":parent["wall_seconds"],"outer_enclosing_wall_seconds":outer["wall_seconds"],"outer_enclosing_child_CPU_seconds":outer["cpu_seconds"],"outer_minus_parent_wall_seconds":outer["wall_seconds"]-parent["wall_seconds"],"maximum_recorded_individual_RSS_bytes":peak,"cap":None,"administrative_wall_cap":budget["wall_limits_seconds"][c]}
+assert {k:sha(WT/k) for k in budget["source_bindings"]}==source_before
+assert {k:sha(WT/k) for k in budget["input_file_bindings"]}==input_before
+assert {k:sha(WT/k) for k in saved_before}==saved_before
+result["source80_inputs_and_saved_files_unchanged"]=True;result["saved_files_unchanged"]=len(saved_before)
+result["review_wall_seconds"]=time.perf_counter()-start
+result["review_cpu_seconds"]=time.process_time()-cpu_start
+result["new_solver_RNG_calls"]=calls["forbidden"]
+result["unmeasured_reads_preparation_report_cost"]="unknown"
+out=D/"task-5-current-independent-call-table-independent-v3-results.json"
+out.write_text(json.dumps(result,indent=2,sort_keys=True,allow_nan=False)+"\n")
+print(json.dumps(result,indent=2,sort_keys=True))

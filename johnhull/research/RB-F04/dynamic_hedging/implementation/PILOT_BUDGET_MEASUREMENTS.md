@@ -81,3 +81,20 @@ workload JSONのraw_two_factor_driver_bytes_without_dedupは、fine normalsを�
 [原計測と候補レビュー](pilot-execution-evidence/task-5-formal-controls-review-report.md)は元37quote・8group・field257×321を保持し、同dx0.00075でPDE幅1.8（4801×3840）から2.4（6401×3840）へ広げた。全37値は有限・supported、最大価格誤差0.000104128828、幅による最大差2.23821e-13。rootの親込みwall38.325237秒/CPU38.740571秒・peakRSS755,789,824 bytesで、保存結果を独立に再計算済み。CF/RNGを追加せず、独立コール表の幅2.25・全倍率の精度へ転用しない。
 
 全20teachergridが実行される最大経路のsample保存下限は、現encoderの11 entriesで1,587,356,762,112 bytes（約1.44TiB）。現volumeの空き602,157,051,904 bytes（約560.8GiB）を超え、primitives/driver等は別に加わる。既存1e9 path-step capはfinancial child単位で、全20gridが範囲内。aggregateをglobalcapへ読み替えて候補を除外できない。元N/roster/possible jobsを保ち、全体保存予算・真正capまたはrevisionの判断が正式pilot前に必要。全体storage capは現sourceに未実装で、予算は未承認。
+
+## 現行全コール表と独立参照表の実測（2026-10-10）
+
+固定v56のsource80と現field257×321、元入力を事前予算へ結合してから実native workerを実行し、返却rawを検査より先に保存した。初期全NaN/未処理、原失敗、reference unknownを保持。次の値は生成・保存・native read/check・親起動を含む実測であり、金融精度の認定ではない。
+
+| 部品 | 元の形状・全枠 | 親込みwall秒 | CPU秒 | 個別process peak RSS bytes |
+|---|---|---:|---:|---:|
+| M2 Heston全49日付call cache | 49×65×33 = 105,105 | 55.631470 | 56.356544 | 854,126,592 |
+| M3 local全49日付call cache | 49×65×7 = 22,295 | 7.666767 | 7.735771 | 854,421,504 |
+| M4 Heston独立call table | 3levels×1×7×33 = 693 | 5.467673 | 5.250679 | 853,876,736 |
+| M5 local独立call table | 4levels×1×7×7 = 196 | 35.560856 | 36.269271 | 854,016,000 |
+
+全返却価格は有限。M2/M3のreferenceは未測定のまま、M5のprice-unit error196件は元NaNのまま保存した。Heston第3独立levelのupper500/limit1600/epsabs1e-13/epsrel1e-12、localの原domain幅2.25を保持。M4/M5の元controls={}と、事前に固定したupper250/space2401/time1920/width1.8のcontrols差を3種類の引数bindingで区別した。M1の同dx幅2.4とは別条件である。
+
+[全cacheの独立判断](pilot-execution-evidence/task-5-current-whole-call-cache-independent-v3-decision.json)は元127,400枠、[独立表の判断](pilot-execution-evidence/task-5-current-independent-call-table-independent-v3-decision.json)は保存CF1,386積分とPDE28曲線から元693/196価格を再構成してPASS。source80/入力/保存34files不変、capなし、新solver/RNGなし。保存検査の計時はM2/M3が9.388497秒、M4/M5は先行import失敗3.216240秒＋成功3.328490秒を別保存し、未測定の準備/報告費用はunknown。正式全state精度・storage budget・pilot/main・phase受入は未承認。
+
+原始全経路/診断/元統計を保持する教師専用保存形式の限定実装と、原N65536・全65threshold・全768stepstatusのI/O測定を準備中。全体storage削減率は未確定。次は同じ原driverを使うgenuine N1024の4教師classを生成＋保存SDE再計算まで測り、全job予算を固定する。

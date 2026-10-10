@@ -1,0 +1,1 @@
+Before this final write, functions.exec rejected a JS template containing unescaped Markdown backticks (SyntaxError: Unexpected token {). No command ran and no file was changed in that failed invocation. This was review orchestration failure, not source/solver failure; cost unmeasured.

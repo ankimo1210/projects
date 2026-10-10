@@ -1,0 +1,71 @@
+{
+  "scope": "M2/M3 whole-cache preparation only; immutable prior candidate not approval",
+  "created_utc": "2026-10-10T03:26:43.680682+00:00",
+  "final_script": "task-5-current-whole-call-cache-measurement-v3.py",
+  "final_candidate": "task-5-current-whole-call-cache-budget-candidate-v2.json",
+  "source_files_edited": [],
+  "financial_execution_performed": false,
+  "financial_qualification": "unknown",
+  "files": [
+    {
+      "path": "task-5-current-whole-call-cache-measurement-v3.py",
+      "sha256": "2ca6c134e2cacf0ca76da8bd0142f960f9cf8831c4b0fe6d3813319dbe90aa1b",
+      "bytes": 18437
+    },
+    {
+      "path": "task-5-current-whole-call-cache-budget-candidate-v2.json",
+      "sha256": "91d12c89cdfee655d5225a0f1edf224c8bba8b8e9b685f741eb3ce701b82508f",
+      "bytes": 24674
+    },
+    {
+      "path": "task-5-current-whole-call-cache-initial-description-v1.json",
+      "sha256": "0eb89d38fb089cbca38fff380161c83142651732ad3a0317c71f0ca57858ca02",
+      "bytes": 23425
+    },
+    {
+      "path": "task-5-current-whole-call-cache-preparation-report-v1.md",
+      "sha256": "8ab7a384d74e15b7c56ff27963baac367132be35a3adc8c85f354e36491826fe",
+      "bytes": 5275
+    },
+    {
+      "path": "task-5-current-whole-call-cache-preparation-v2.py",
+      "sha256": "2031fafac19b7744b4767e31769e1de406518a755cce0b2da992a98cf4dcc9d4",
+      "bytes": 8916
+    },
+    {
+      "path": "task-5-current-whole-call-cache-preparation-cost-v2.json",
+      "sha256": "b0b96db4f0d04a7152f9d52103a89e3324820928cbd6210491ea38267b0dde2a",
+      "bytes": 1012
+    },
+    {
+      "path": "task-5-current-whole-call-cache-preparation-parent-cost-v2.json",
+      "sha256": "729db593ada0205d35f25e97c65922d872597ebbaa7d4a5c0d4f336ac5752135",
+      "bytes": 668
+    },
+    {
+      "path": "task-5-current-whole-call-cache-preparation-validation-v3.json",
+      "sha256": "2ea37b6e7cd04fb7180e10c0b502a9ca7da429d65f65733f916f9bb7f6436b55",
+      "bytes": 2833
+    },
+    {
+      "path": "task-5-current-whole-call-cache-preparation-system-python-failure-v1.json",
+      "sha256": "cdc10199f91c80974e06327bf475acbe29f3d5901cd05606d56a988bdacc7d6a",
+      "bytes": 458
+    },
+    {
+      "path": "task-5-current-whole-call-cache-preparation-system-python-failure-v1.log",
+      "sha256": "f5c24237ece9d88536812fc4ddf8ff8613ea574bfa07a3a0eb8d03841075201e",
+      "bytes": 286
+    },
+    {
+      "path": "task-5-current-whole-call-cache-preparation-parent-cost-v1.json",
+      "sha256": "325ba78e6141a4b48d67386bc965fe0e2b41e4f9bed48fb098d340402463116c",
+      "bytes": 726
+    },
+    {
+      "path": "task-5-current-whole-call-cache-preparation-v1.log",
+      "sha256": "12e306cc4a2cbc0bf812163c41d4ebac5a27aff2c8d07e133b371f977fc37a5d",
+      "bytes": 400
+    }
+  ]
+}

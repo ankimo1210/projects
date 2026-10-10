@@ -1,0 +1,142 @@
+{
+  "financial_qualification": "unknown",
+  "formal_plan_pilot_main_budget_acceptance": false,
+  "models": {
+    "M2": {
+      "NaN": 0,
+      "diagnostic_count": 1,
+      "financial_qualification": "unknown",
+      "finite": 105105,
+      "independent_node_check_seconds": 5.871201861002191,
+      "inf": 0,
+      "initial_all_NaN_unprocessed_slots": 105105,
+      "maximum_recorded_individual_process_RSS_bytes": 854126592,
+      "minimum_lower_margin": 1.8610160215486164e-13,
+      "minimum_upper_margin": 49.03725108723637,
+      "missing_returned_slots": 0,
+      "observed_cap": null,
+      "original_slots": 105105,
+      "outer_enclosing_cpu_seconds": 56.356544,
+      "outer_enclosing_wall_seconds": 55.6314698089991,
+      "outer_minus_inner_parent_seconds": 0.03054589899693383,
+      "price_bounds_violations": 0,
+      "raw_receipt": {
+        "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+        "artifact_sha256": "5c558bb2d5dfa14b2d7e006c88178e2e87d91577a200b8d8cf8773d9f01ca039",
+        "metadata_sha256": "176f9b7c934482eba0cfc7b0d06606965e73bb65aee1b134473ef1e1a193f13f",
+        "schema": "rb-f04-array-receipt-v1",
+        "uncompressed_bytes": 0
+      },
+      "receipt_parts": {
+        "actual": [
+          {
+            "expanded_bytes": 0,
+            "part": "actual-whole-call-cache-raw",
+            "payload_bytes": 0
+          },
+          {
+            "expanded_bytes": 1701826,
+            "part": "pack000000",
+            "payload_bytes": 1699906
+          }
+        ],
+        "initial": [
+          {
+            "expanded_bytes": 0,
+            "part": "initial-unprocessed-raw",
+            "payload_bytes": 0
+          },
+          {
+            "expanded_bytes": 8321225,
+            "part": "pack000000",
+            "payload_bytes": 8319945
+          }
+        ]
+      },
+      "reference_status": "unmeasured",
+      "sampled_sum_process_RSS_bytes": 881217536,
+      "shape": [
+        49,
+        65,
+        33
+      ],
+      "source_node_check": "PASS",
+      "whole_child_wall_seconds": 55.12198557999727,
+      "whole_parent_wall_seconds": 55.600923910002166,
+      "worker_wall_seconds": 46.27723389899984
+    },
+    "M3": {
+      "NaN": 0,
+      "diagnostic_count": 7,
+      "financial_qualification": "unknown",
+      "finite": 22295,
+      "independent_node_check_seconds": 1.1821991930009972,
+      "inf": 0,
+      "initial_all_NaN_unprocessed_slots": 22295,
+      "maximum_recorded_individual_process_RSS_bytes": 854421504,
+      "minimum_lower_margin": 7.213116279050051e-26,
+      "minimum_upper_margin": 47.16038744577526,
+      "missing_returned_slots": 0,
+      "observed_cap": null,
+      "original_slots": 22295,
+      "outer_enclosing_cpu_seconds": 7.735771000000001,
+      "outer_enclosing_wall_seconds": 7.666767392998736,
+      "outer_minus_inner_parent_seconds": 0.03003158299907227,
+      "price_bounds_violations": 0,
+      "raw_receipt": {
+        "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+        "artifact_sha256": "c70a01f3e3e454c27d6253c8d9c78857b28b7d47c74432bb74eedc6d1be08760",
+        "metadata_sha256": "27f338dae82b5ad92081d711f8a3c3661f665fa71eac3cd6e3a6d4ec2c30e8b5",
+        "schema": "rb-f04-array-receipt-v1",
+        "uncompressed_bytes": 0
+      },
+      "receipt_parts": {
+        "actual": [
+          {
+            "expanded_bytes": 0,
+            "part": "actual-whole-call-cache-raw",
+            "payload_bytes": 0
+          },
+          {
+            "expanded_bytes": 955648,
+            "part": "pack000000",
+            "payload_bytes": 953856
+          }
+        ],
+        "initial": [
+          {
+            "expanded_bytes": 0,
+            "part": "initial-unprocessed-raw",
+            "payload_bytes": 0
+          },
+          {
+            "expanded_bytes": 2358697,
+            "part": "pack000000",
+            "payload_bytes": 2357417
+          }
+        ]
+      },
+      "reference_status": "unmeasured",
+      "sampled_sum_process_RSS_bytes": 881491968,
+      "shape": [
+        49,
+        65,
+        7
+      ],
+      "source_node_check": "PASS",
+      "whole_child_wall_seconds": 7.078935287001514,
+      "whole_parent_wall_seconds": 7.636735809999664,
+      "worker_wall_seconds": 3.4671805090001726
+    }
+  },
+  "new_financial_worker_or_RNG": 0,
+  "review_cpu_seconds": 8.936237363,
+  "review_peak_RSS_bytes": 857268224,
+  "review_wall_seconds": 8.943399138999666,
+  "saved_artifact_files_unchanged": 34,
+  "schema": "whole-call-cache-saved-independent-review-v1",
+  "scope": "saved provenance, original slots/axes/typed arguments/NaNs, node re-evaluation, price bounds and measured cost only",
+  "source_before_after_stable": true,
+  "source_files": 80,
+  "unmeasured_preparation_report_cost": "unknown"
+}

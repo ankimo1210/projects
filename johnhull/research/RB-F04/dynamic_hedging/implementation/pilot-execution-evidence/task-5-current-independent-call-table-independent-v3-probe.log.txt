@@ -1,0 +1,176 @@
+{
+  "models": {
+    "M4": {
+      "NaN_prices": 0,
+      "administrative_wall_cap": 120.0,
+      "cap": null,
+      "details": {
+        "all_integrals_converged": true,
+        "maximum_independent_saved_integral_price_residual": 0.0,
+        "maximum_stored_price_unit_error": 2.0473957072203973e-10,
+        "quad_integrals": 1386,
+        "raw_cells": 693,
+        "strict_level3_controls": {
+          "epsabs": 1e-13,
+          "epsrel": 1e-12,
+          "kind": "quadrature",
+          "quadrature_limit": 1600,
+          "upper": 500
+        }
+      },
+      "finite_prices": 693,
+      "independent_saved_evidence_formula_check": "PASS",
+      "maximum_absolute_refinement_deltas_from_base": [
+        0.0,
+        4.263256414560601e-14
+      ],
+      "maximum_recorded_individual_RSS_bytes": 853876736,
+      "native_qualification": "unchecked",
+      "original_initial_NaN_errors": 693,
+      "original_initial_NaN_prices": 693,
+      "original_slots": 693,
+      "outer_enclosing_child_CPU_seconds": 5.250679,
+      "outer_enclosing_wall_seconds": 5.467673218998243,
+      "outer_minus_parent_wall_seconds": 0.04169489999912912,
+      "price_bounds": "PASS",
+      "receipts": {
+        "initial": [
+          {
+            "expanded_bytes": 0,
+            "part": "initial-unprocessed-raw",
+            "payload_bytes": 0
+          },
+          {
+            "expanded_bytes": 808065,
+            "part": "pack000000",
+            "payload_bytes": 806913
+          }
+        ],
+        "raw": [
+          {
+            "expanded_bytes": 0,
+            "part": "actual-independent-call-table-raw",
+            "payload_bytes": 0
+          },
+          {
+            "expanded_bytes": 1562681,
+            "part": "pack000000",
+            "payload_bytes": 1117881
+          }
+        ]
+      },
+      "review_qualification": "unknown",
+      "shape": [
+        3,
+        1,
+        7,
+        33
+      ],
+      "source_check_call_table": "PASS",
+      "whole_child_wall_seconds": 4.813418843001273,
+      "whole_parent_wall_seconds": 5.425978318999114,
+      "worker_wall_seconds": 0.7333897190001153
+    },
+    "M5": {
+      "NaN_prices": 0,
+      "administrative_wall_cap": 300.0,
+      "cap": null,
+      "details": {
+        "PDE_effective_levels": [
+          {
+            "kind": "base",
+            "log_half_width": 1.8,
+            "space_nodes": 2401,
+            "time_steps": 1920
+          },
+          {
+            "kind": "space",
+            "log_half_width": 1.8,
+            "space_nodes": 4801,
+            "time_steps": 1920
+          },
+          {
+            "kind": "time",
+            "log_half_width": 1.8,
+            "space_nodes": 2401,
+            "time_steps": 3840
+          },
+          {
+            "kind": "domain",
+            "log_half_width": 2.25,
+            "space_nodes": 2401,
+            "time_steps": 1920
+          }
+        ],
+        "PDE_state_level_rows": 28,
+        "all_rows_supported": true,
+        "price_unit_error_original_NaNs_retained": 196,
+        "saved_curve_reconstruction_maximum_residual": 0.0
+      },
+      "finite_prices": 196,
+      "independent_saved_evidence_formula_check": "PASS",
+      "maximum_absolute_refinement_deltas_from_base": [
+        7.290203661813877e-05,
+        4.2215885187602e-07,
+        5.472002935302811e-05
+      ],
+      "maximum_recorded_individual_RSS_bytes": 854016000,
+      "native_qualification": "unchecked",
+      "original_initial_NaN_errors": 196,
+      "original_initial_NaN_prices": 196,
+      "original_slots": 196,
+      "outer_enclosing_child_CPU_seconds": 36.269270999999996,
+      "outer_enclosing_wall_seconds": 35.56085595900004,
+      "outer_minus_parent_wall_seconds": 0.03291020899996511,
+      "price_bounds": "PASS",
+      "receipts": {
+        "initial": [
+          {
+            "expanded_bytes": 0,
+            "part": "initial-unprocessed-raw",
+            "payload_bytes": 0
+          },
+          {
+            "expanded_bytes": 768097,
+            "part": "pack000000",
+            "payload_bytes": 766945
+          }
+        ],
+        "raw": [
+          {
+            "expanded_bytes": 0,
+            "part": "actual-independent-call-table-raw",
+            "payload_bytes": 0
+          },
+          {
+            "expanded_bytes": 4822017,
+            "part": "pack000000",
+            "payload_bytes": 4788481
+          }
+        ]
+      },
+      "review_qualification": "unknown",
+      "shape": [
+        4,
+        1,
+        7,
+        7
+      ],
+      "source_check_call_table": "PASS",
+      "whole_child_wall_seconds": 34.93504911099808,
+      "whole_parent_wall_seconds": 35.52794575000007,
+      "worker_wall_seconds": 32.17752782000025
+    }
+  },
+  "new_solver_RNG_calls": 0,
+  "new_solver_RNG_or_financial_worker": 0,
+  "production_source": "fixed_v56",
+  "qualification": "unknown",
+  "review_cpu_seconds": 2.67309145,
+  "review_wall_seconds": 2.689997099998436,
+  "saved_files_unchanged": 34,
+  "schema": "saved-native-independent-call-table-independent-review-v1",
+  "source80_inputs_and_saved_files_unchanged": true,
+  "source_files": 80,
+  "unmeasured_reads_preparation_report_cost": "unknown"
+}
