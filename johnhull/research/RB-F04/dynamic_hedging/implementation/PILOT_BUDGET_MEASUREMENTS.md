@@ -235,3 +235,14 @@ v2のsource81/dynamic0のplain canonical identityは959f879a…（runner._digest
 [独立判断](pilot-execution-evidence/task-5-phase-local-admin-proof-key-independent-decision-v1.json)は元N16/Hcoarse108節点を用いた9境界を確認（保存432節点の全N検算）。別contextと別producer、driver差は全検算、seed/金融入力改変は拒否した。[root適用検証](pilot-execution-evidence/task-5-phase-local-admin-proof-key-root-v2-results.json)は関連phase_memo14tests・2Python Ruff/format PASS。初回root検証scriptのimport誤りは金融実行前に修正し、元scriptと失敗を保存した。
 
 現source81/dynamic0はplain canonical 1cc16cf7… / native payload be858ced…（異なる符号化）。前節の23.671/0.222/23.797秒はv2時点の同一M6ケースの実測として保持し、v3全体のrateやETAへ転用しない。新sourceの全仕事key件数に基づく予算更新は別途確認し、正式pilot/main・金融資格は未承認。
+
+
+### 現v3の全仕事キーと正式prior準備（v6）
+
+[未承認v6候補](pilot-execution-evidence/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json)を、[独立697件のmetadata照合](pilot-execution-evidence/task-5-fullmixed-phase-local-reuse-budget-independent-v6-decision.json)で確認した。元3,138jobs/121cases/51obligations/全4N/573,122 cap optionsは不変。全stage実行の仮定では初回110 gate・40 cold/840 hit、別full saved contextは96 gate・40 cold/768 hit。raw20とdomain20は別producerのまま、行政引数差による余分20 coldだけを解消した。
+
+旧部品rateでの初回既知小計139.050h（5.79日）と、別contextのcold部分90.673h（3.78日）は限定外挿。再利用guard・非teacher kernel・IO・外部10費用等が未測定なので、合計ETA・保証上限ではない。v2の一例106倍を全体へ適用していない。
+
+[実root運用prior](pilot-execution-evidence/task-5-formal-pilot-root-operational-resource-prior-v2.json)は行政wall allowance30日・個別process RSS16GiB・WSL/C/F各10GiB reserve・poll1秒を固定した。30日は所要時間の予測ではない。停止はpartial/unclosedとして残し、金融cap PASSや受入へ置換しない。作成時MemAvailable約48.7GB、空きWSL約594.1GB/C約323.2GB/F約185.7GBを確認した。起動前に実容量とsource/inputを再確認する。
+
+全3,138jobの予算と元2332 potential-first activation allowances、元全cap recipeを独立確認する候補・現source対応materializer/monitorを準備中。v6の件数確認は正式全prior承認に代用しない。正式lock/金融pilot/freeze/mainは未実施。

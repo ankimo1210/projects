@@ -1,0 +1,294 @@
+"""Read-only graph/key recount; no numerical artifact decode or financial execution."""
+import ast
+import collections
+import hashlib
+import json
+import time
+from pathlib import Path
+
+W = Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+D = W / ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+PREFIX = "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6"
+start, cpu = time.perf_counter(), time.process_time()
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def load(name):
+    return json.loads((D / name).read_text())
+
+def digest(value):
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    ).hexdigest()
+
+v5_name = "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v5.json"
+v5 = load(v5_name)
+v1 = load("task-5-fullmixed-prior-budget-candidate-author-v1-config.json")
+assert sha(D / v5_name) == "30db767e77a4b22ae7dfd8c393f8322afebcdad26542999c3720bd2776a1fc25"
+closure_name = "task-5-phase-verified-raw-memo-fixed-v3-source-closure.json"
+closure = load(closure_name)
+canonical = digest(closure)
+assert canonical == "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067"
+assert len(closure["files"]) == 81 and not closure["dynamic_imports"]
+assert all(sha(W / name) == value for name, value in closure["files"].items())
+native = "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532"
+fixed = load("task-5-phase-verified-raw-memo-fixed-v3-results.json")
+assert fixed["source_native_payload_identity_sha256"] == native
+decision_name = "task-5-phase-local-admin-proof-key-independent-decision-v1.json"
+decision = load(decision_name)
+assert decision["decision"] == "approve_fixed_v3_administrative_proof_key_normalization_only"
+assert decision["source_canonical_runner_digest_sha256"] == canonical
+
+checker_path = W / "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+module = ast.parse(checker_path.read_text())
+function = next(n for n in module.body if isinstance(n, ast.FunctionDef) and n.name == "_checked_teacher_grid")
+assignment = next(n for n in ast.walk(function) if isinstance(n, ast.Assign) and any(
+    isinstance(t, ast.Name) and t.id == "proof_args_sha" for t in n.targets
+))
+normal_expr = assignment.value.args[0]
+assert isinstance(normal_expr, ast.DictComp)
+allowed = ("wall_cap_seconds", "work_directory")
+assert ast.dump(normal_expr, include_attributes=False) == ast.dump(ast.parse(
+    '{k: v for k, v in args.items() if k not in ("wall_cap_seconds", "work_directory")}',
+    mode="eval"
+).body, include_attributes=False)
+normal_code = compile(ast.Expression(normal_expr), "<fixed-v3-read-only-key>", "eval")
+
+def normalized(args):
+    return eval(normal_code, {"__builtins__": {}}, {"args": args})
+
+assert normalized({"seed": 913, "nested": {"work_directory": "financial"},
+                   "wall_cap_seconds": 1, "work_directory": "admin"}) == {
+    "seed": 913, "nested": {"work_directory": "financial"}
+}
+graph_path = D / "task-5-full-progressive-pilot-plan-draft-source-unit-v3/metadata.json"
+graph = json.loads(graph_path.read_text())["metadata"]["tree"]
+jobs = graph["jobs"]
+jm = {j["id"]: j for j in jobs}
+ops = collections.Counter(j["operation"] for j in jobs)
+assert len(jobs) == 3138 and len(graph["case_plan"]) == 121 and len(graph["attempt_plan"]) == 51
+assert ops["teacher_grid"] == ops["teacher_domain_selection"] == 20 and ops["teacher_driver"] == 10
+assert sha(graph_path) == v5["original_roster"]["graph_metadata_sha256"]
+
+key_details, gates = {}, {}
+def proof_key(producer, operation, args):
+    proof = normalized(args)
+    key = producer + "|" + operation + "|" + digest(proof)
+    if key not in key_details:
+        domain = producer[:-4] if producer.endswith(":raw") else producer
+        legacy = v5["teacher_plain_keys"][producer + "|" + operation + "|plain_prior_args"]
+        key_details[key] = {
+            "producer_job_id": producer, "operation": operation,
+            "symbolic_normalized_template_digest": digest(proof),
+            "actual_future_resolved_proof_sha256": None,
+            "actual_future_operational_sha256": None,
+            "model": legacy["model"], "grid": legacy["grid"],
+            "original_n": legacy["original_n"], "seed": legacy["seed"],
+            "legacy_cold_component_estimate_seconds": legacy["legacy_cold_component_estimate_seconds"],
+            "routes": [], "removed_administrative_difference_only": True,
+        }
+    return key
+
+activations = collections.defaultdict(list)
+for job in jobs:
+    if job.get("activation"):
+        activations[job["activation"]["previous_teacher_gate_job_id"]].append(job["id"])
+    if job["operation"] != "teacher_candidate_gate":
+        continue
+    evidence = job["arguments"]["evidence"]
+    counts = collections.Counter(r["operation"] for r in evidence)
+    assert len(evidence) == 213 and counts["teacher_grid"] == counts["teacher_domain_selection"] == 4
+    teacher = []
+    for row in evidence:
+        if row["operation"] not in ("teacher_grid", "teacher_domain_selection"):
+            continue
+        assert row["arguments"] == jm[row["id"]]["arguments"]
+        key = proof_key(row["id"], row["operation"], row["arguments"])
+        teacher.append(key)
+    gates[job["id"]] = {
+        "teacher_keys": teacher, "evidence_rows": 213, "non_teacher_rows": 205,
+        "original_ordered_evidence_ids_sha256": digest([r["id"] for r in evidence])
+    }
+
+def gate_ids(job):
+    if job["operation"] == "teacher_candidate_gate":
+        return [job["id"]]
+    if job["operation"] == "teacher_selection":
+        return [s["id"] for s in job["arguments"]["stages"]]
+    if job["operation"] == "teacher_selected_inputs":
+        selector = jm[job["arguments"]["selection_arguments"]["job_arguments"]]
+        return [s["id"] for s in selector["arguments"]["stages"]]
+    return []
+
+def trace(saved=False):
+    seen, activation_seen = set(), set()
+    counts, uses, gate_calls = collections.Counter(), collections.Counter(), collections.Counter()
+    first = []
+    def teacher(key, consumer, route):
+        counts["teacher_invocations"] += 1
+        uses[key] += 1
+        if route not in key_details[key]["routes"]:
+            key_details[key]["routes"].append(route)
+        if key not in seen:
+            first.append({"key": key, "consumer": consumer, "route": route})
+        seen.add(key)
+    def visit(gate, consumer, route):
+        counts["gate_calculations"] += 1
+        counts["non_teacher_nested_row_checks"] += gates[gate]["non_teacher_rows"]
+        gate_calls[gate] += 1
+        for key in gates[gate]["teacher_keys"]:
+            teacher(key, consumer, route)
+    for job in jobs:
+        if not saved and job.get("activation"):
+            gate = job["activation"]["previous_teacher_gate_job_id"]
+            counts["activation_guard_calls"] += 1
+            if gate not in activation_seen:
+                activation_seen.add(gate)
+                counts["activation_guard_calls"] += 1
+                visit(gate, job["id"], "first_activation_family")
+            else:
+                counts["activation_cache_hit_lookups"] += 1
+        if saved and job["operation"] in ("teacher_grid", "teacher_domain_selection"):
+            args = dict(job["arguments"])
+            if job["operation"] == "teacher_grid":
+                args["wall_cap_seconds"] = v1["reviewed_budgets"][job["id"]]["budget"]["wall_seconds"]
+                args["work_directory"] = "<original-artifact-container>/work/" + job["id"]
+                assert normalized(args) == normalized(job["arguments"])
+            key = proof_key(job["id"], job["operation"], args)
+            teacher(key, job["id"], "direct_saved_job")
+        for gate in gate_ids(job):
+            visit(gate, job["id"], job["operation"])
+    counts["cold_keys"] = len(seen)
+    counts["hot_invocations"] = counts["teacher_invocations"] - len(seen)
+    counts["teacher_guard_calls"] = 2 * len(seen) + counts["hot_invocations"]
+    return dict(counts), dict(uses), first, dict(gate_calls)
+
+initial, initial_uses, initial_first, initial_gates = trace()
+saved, saved_uses, saved_first, saved_gates = trace(True)
+assert (initial["gate_calculations"], initial["cold_keys"],
+        initial["teacher_invocations"], initial["hot_invocations"]) == (110, 40, 880, 840)
+assert (saved["gate_calculations"], saved["cold_keys"],
+        saved["teacher_invocations"], saved["hot_invocations"]) == (96, 40, 808, 768)
+assert len(key_details) == 40 and len(gates) == 16
+assert set(initial_uses) == set(saved_uses)
+assert len(activations) == 14 and sum(map(len, activations.values())) == 2332
+for key, row in key_details.items():
+    row["initial_invocations"] = initial_uses[key]
+    row["fresh_saved_invocations"] = saved_uses[key]
+cold40 = sum(row["legacy_cold_component_estimate_seconds"] for row in key_details.values())
+assert abs(cold40 - v5["initial_generation_phase"]["cold40_legacy_component_estimate_seconds"]) < 1e-7
+ordinary = v5["known_partial_update"]["ordinary_generation_components_retained_seconds"]
+counts_match = {k: initial[k] == v5["initial_generation_phase"]["counts"][k] for k in initial}
+assert all(counts_match.values())
+assert saved["non_teacher_nested_row_checks"] == 19680
+names = [v5_name, closure_name, decision_name,
+         "task-5-phase-verified-raw-memo-fixed-v3-manifest.json",
+         "task-5-phase-verified-raw-memo-fixed-v3-results.json",
+         "task-5-phase-local-memo-observation-root-v1/parent-cost-and-decision.json"]
+assert all(sha(D / n) == info["sha256"] for n, info in v5["evidence"].items())
+candidate = {
+    "schema": "rb-f04-fullmixed-phase-local-reuse-budget-supplement-v6",
+    "approved": False, "formal_plan_locked": False, "execution_authorized": False,
+    "financial_qualification": "unknown",
+    "inherits_unchanged_v5": {"file": v5_name, "sha256": sha(D / v5_name),
+        "fields": ["original_roster", "ordinary_fallback_and_uncached_paths",
+                   "gate_selector_activation", "genuine_same_input_resource_reference",
+                   "history_external_expenses", "budget_and_prior_delta"]},
+    "source": {"canonical_identity_sha256": canonical, "native_payload_sha256": native,
+        "canonical_formula": "runner._digest", "native_formula": "runner.payload_digest",
+        "runtime_files": 81, "dynamic_imports": 0,
+        "current_bytes_match_fixed_v3": True,
+        "old_generation_and_saved_checker_provenance_retained": True,
+        "source_only_independent_decision": decision_name},
+    "key_contract": {
+        "actual_key": ["producer_id", "operation",
+                      "input_identity(actual args excluding only top-level wall_cap_seconds/work_directory)"],
+        "proof_event": "proof_arguments_sha256",
+        "full_operational_event": "resolved_arguments_sha256",
+        "current_source_AST_normalization_used_for_static_recount": True,
+        "direct_wall_value_source": "original false v1 reviewed_budgets; draft graph has no attached budget",
+        "wall_value_is_excluded_without_fabricating_formal_budget": True,
+        "future_runtime_SHAs_not_fabricated": True,
+        "nested_same_named_fields_and_all_financial_args_preserved": True,
+        "raw_parameters_surface_physical_context_owner_seal": "unchanged from v5",
+        "different_raw_and_domain_producers_share_no_proof": True,
+        "outer_envelope_full_worker_args_cap_audit_retained": True},
+    "original_roster": v5["original_roster"],
+    "static_assumption": "all original jobs fully numerically checked unchanged; unknown financial qualification stays unknown; runtime tamper/partial cannot obtain a static predicted proof",
+    "normalized40keys": key_details,
+    "initial_phase": {"counts": initial,
+        "initial_v5_counts_match": counts_match,
+        "legacy_cold_only_component_seconds": cold40,
+        "known_component_sum_seconds": ordinary + cold40,
+        "known_component_sum_hours": (ordinary + cold40) / 3600,
+        "full_actual_phase_runtime_seconds": None},
+    "fresh_full_saved": {"counts": saved,
+        "v5_cold_keys": v5["fresh_full_saved_check"]["counts"]["cold_keys"],
+        "cold_split": {"teacher_grid": 20, "teacher_domain_selection": 20},
+        "extra20_admin_only_raw_keys_removed": 20,
+        "direct_and_stage_normalized_templates_exactly_equal": True,
+        "legacy_cold_only_component_seconds": cold40,
+        "legacy_cold_only_component_hours": cold40 / 3600,
+        "v5_legacy_cold_only_component_seconds": v5["fresh_full_saved_check"]["cold60_legacy_component_estimate_seconds"],
+        "all3138_direct_jobs96gates205nonteacher_rows_remain": True,
+        "all_actual_costs_seconds": None},
+    "independent_contexts": {
+        label: {"empty_context": True, "each_full_saved_cold_keys": 40,
+                "legacy_cold_only_component_seconds": cold40,
+                "actual_scope_transport_other_cost_seconds": None}
+        for label in ("final_saved", "fresh_independent_review", "CAS_primary_restore",
+                      "CAS_mirror_restore")},
+    "unchanged_non_teacher_work": {
+        "initial_gates": initial["gate_calculations"],
+        "initial_nested_non_teacher_rows": initial["non_teacher_nested_row_checks"],
+        "fresh_gates": saved["gate_calculations"],
+        "fresh_nested_non_teacher_rows": saved["non_teacher_nested_row_checks"],
+        "activation_families": len(activations), "eligible_activation_jobs": 2332,
+        "activation_hits": 2318, "activation_guards": 2346,
+        "raw_driver_risk_geometry_domain_finite_box_read_hash_IO_work": "unchanged; actual runtime unknown",
+        "ordinary_partial_cap_cacheNone_standalone_and4diagnostic_fullchecks": "preserved; can replay outside memo",
+        "resume_count_and_cost_seconds": None},
+    "rates_and_ETA": {
+        "v2_genuine_M6_case_reference": v5["genuine_same_input_resource_reference"],
+        "measured_scope": "same original Heston coarse N1024/108 only; administrative component history, not a wholephase rate",
+        "current_v3_allN_whole_grid_hot_rates_seconds": None,
+        "legacy_cold_extrapolation_is_not_a_bound_guarantee": True,
+        "hot_guards_non_teacher_kernels_IO_domain_worker_external10_CAS_resume_seconds": None,
+        "complete_phase_runtime_seconds": None, "whole_project_ETA_seconds": None,
+        "106x_whole_project_scaling_applied": False},
+    "budget_and_prior_delta": {
+        "job_wall_limit_changes": {}, "parent_cap_limit_changes": {},
+        "all3138_approved_rows_sha256": None, "root_actual_prior_approved": False,
+        "literal573122_4N_options_and_relative_parent_order": "unchanged",
+        "old_caps_history_malformed2_overlapunknown_10external_pending": "unchanged",
+        "preparer_required_rebind": {"source_canonical_identity": canonical,
+            "native_job_source_identity": native, "source_review": decision_name,
+            "replay_supplement": PREFIX + ".json",
+            "actual_all3138_budget_recipe_independent_root_approval": "still absent, not inferred"}},
+    "evidence": {n: {"sha256": sha(D / n), "bytes": (D / n).stat().st_size} for n in names},
+    "author_execution": {"financial_generation_RNG_savedSDE_solver": 0,
+                        "production_tests_docs_Git_CAS_edits": 0},
+    "assembly_cost": {"wall_seconds": time.perf_counter() - start,
+                      "CPU_seconds": time.process_time() - cpu,
+                      "basis": "this metadata-only builder invocation; unrelated command costs not invented"}}
+out = D / (PREFIX + ".json")
+with out.open("x") as stream:
+    json.dump(candidate, stream, indent=2)
+    stream.write("\n")
+summary = D / (PREFIX + ".md")
+summary.write_text(
+    "# v3 proof-key normalization budget supplement (unapproved)\n\n"
+    "Static fixed-source normalization and every original graph route confirm initial40 cold/840hot and fresh40cold/768hot (formerly60cold/748hot). Only raw20 administrative variants merge; raw/domain20+20 producer keys remain distinct. No financial inputs or originalN are removed.\n\n"
+    "Initial110 gates/22550 nonteacher nested rows and fresh96 gates/19680 rows remain, as do14 activation families/2332 jobs, physical/source guards, fallback/partial paths, full independent saved/review/each restore contexts. Each full fresh context starts empty and replays40 cold proofs.\n\n"
+    "Legacy initial known-component subtotal remains " + format((ordinary + cold40)/3600, ".3f")
+    + "h. Per fullfresh legacy cold-only subtotal is " + format(cold40/3600, ".3f")
+    + "h, excluding other kernels, guards, IO, external10 and restores. Neither is a full ETA or guaranteed bound; complete runtime stays null. The v2 genuine same-M6 hot rate is historical and is not applied to allN or the whole project.\n\n"
+    "All3138 jobs/121cases/51 obligations/4N/573122 cap branches/history costs remain unchanged. Caps are not reduced. v1-v5 remain immutable. Current canonical1cc16cf7/nativebe858ced are separate from old generation/checker provenance. No financial/RNG/SDE/solver or production/docs/Git/CAS activity occurred. Root prior and formal approval are still absent.\n"
+)
+assert all(sha(W / name) == value for name, value in closure["files"].items())
+print(json.dumps({"candidate": str(out), "sha256": sha(out), "bytes": out.stat().st_size,
+                  "summary_sha256": sha(summary), "initial": initial, "fresh": saved,
+                  "known_component_hours": (ordinary+cold40)/3600,
+                  "fresh_cold_only_hours": cold40/3600,
+                  "assembly_cost": candidate["assembly_cost"]}, indent=2))

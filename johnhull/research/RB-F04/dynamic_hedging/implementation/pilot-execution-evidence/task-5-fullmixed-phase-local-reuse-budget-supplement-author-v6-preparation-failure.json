@@ -1,0 +1,9 @@
+{
+  "error": "KeyError budget; original graph is a budgetless typed draft",
+  "observed_command_wall_seconds": 0.8775497,
+  "CPU_seconds": null,
+  "financial_work_started": false,
+  "candidate_output_written": false,
+  "corrective_action": "use preserved v1 false budget proposal solely for excluded administrative wall value; no prior approval inferred",
+  "initial_builder": "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-builder-initial.py"
+}
