@@ -1,0 +1,38 @@
+{
+  "schema": "rb-f04-independent-saved-check-observer-review-manifest-v1",
+  "status": "fixed",
+  "files": {
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-probe.py": {
+      "sha256": "6a93b1e9d34603422d3edf859d9a336856e1da67ed752ed05e9ec567fb61d92b",
+      "bytes": 12121
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-probe-failure-v1.json": {
+      "sha256": "ca206099bbf40c74a1a5d254534bfcf3b89e99ab90875512e39749b090ecc7a8",
+      "bytes": 536
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-probe-v2.py": {
+      "sha256": "82092f728873e8c6062264e1deba9472c4c93fd4faed6053ecb3445d8c7f83df",
+      "bytes": 12243
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-results-v1.json": {
+      "sha256": "fcf717a06b47c00fb8cae5960bf94b896d05fa28294af03023102a96d464ab28",
+      "bytes": 6708
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-decision.json": {
+      "sha256": "c4b659998171483f9374ee7bf18b181ff1cf88f710885df005b30c7046f3ee6d",
+      "bytes": 6254
+    },
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-review.md": {
+      "sha256": "ef8dd25bbd452b00aa676425d69d6910392468d249b77942a2ef1d8705021602",
+      "bytes": 1899
+    }
+  },
+  "fixed_author_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-fixed-manifest-v1.json",
+    "sha256": "7070e54eaca88106360f535eaed278fc472599fd29c5f5831d55e41866d591f5"
+  },
+  "financial_qualification": "unknown",
+  "candidate_actual_root_permission": false,
+  "worker_actual_native_reads_and_finance": 0,
+  "review_cost_tail_unknown": true
+}

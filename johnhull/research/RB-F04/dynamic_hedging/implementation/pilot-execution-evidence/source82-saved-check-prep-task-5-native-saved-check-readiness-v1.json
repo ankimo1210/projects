@@ -1,0 +1,114 @@
+{
+  "admin_candidate": {
+    "approval": false,
+    "cap_values_are_ETA": false,
+    "each_WSL_C_F_reserve_bytes": 10737418240,
+    "individual_child_RSS_bytes": 17179869184,
+    "individual_parent_RSS_bytes": 17179869184,
+    "poll_seconds": 1.0,
+    "wall_seconds": 2592000
+  },
+  "api_harness": "from pathlib import Path\nfrom run_pilot import read_pilot_artifact, unpack_inputs, write_pilot_artifact\nfrom check_pilot import check_pilot\nW = Path(\"/home/kazumasa/worktrees/johnhull-storage-codec\")\nD = W / \".superpowers/sdd/2026-10-10-dynamic-storage-codec\"\nplan, _ = read_pilot_artifact(D / \"task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata\")\nencoded, _ = read_pilot_artifact(Path(\"/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs\"))\ninputs = unpack_inputs(encoded)\nresult = check_pilot(D / \"task-5-formal-pilot-root-v3\", expected_plan=plan, source_root=W,\n                    context={\"inputs\": inputs, \"parameters\": inputs[\"parameters\"]})\nwrite_pilot_artifact(D / \"<fresh-saved-check-output>\", result)\nraise SystemExit(0 if result[\"closed\"] else 2)\n",
+  "capacity": {
+    "all_jobs_hydrated_simultaneously": true,
+    "fits_16GiB": null,
+    "full_result_serialization_required": true,
+    "old_component_4_or_8GiB_budget_is_whole_checker_approval": false,
+    "raw_snapshot_retained_in_result": true,
+    "teacher_bounded_report_is_whole_RAM_cap": false,
+    "whole_checker_peak_RSS_bytes": null
+  },
+  "cli_context_caveat": "--context unpack_inputs only; it does not wrap original typed inputs as context.inputs. API harness must provide both inputs and inputs.parameters.",
+  "coverage": {
+    "N4_and_grid_thresholds_33_65_and_blocks16": "validate_locked_plan, original axes and full saved SDE/labels/cache comparisons; no lowered N",
+    "cases121_and_attempts51": "missing IDs tracked against original expected-plan roster",
+    "independent_review_main_or_phase_acceptance": "not established by saved checker",
+    "jobs3138": "all approved expected-plan identities; no separate hardcoded3138 native literal",
+    "locked_original_full_plan_and_candidate": true,
+    "underresolved_unknown_caps_failures": "kept original; structural closed is distinct from financial qualified"
+  },
+  "execute_saved_check": false,
+  "expenses": {
+    "all10_closed_automatically": false,
+    "history_and_native_costs_not_readded": true,
+    "missing_unknown_zero_not_fabricated": true,
+    "new_checker_costs_known": false,
+    "required_external_expense_ids": [
+      "cold_imports",
+      "source_registry",
+      "code_review",
+      "math_review",
+      "pilot_review",
+      "serialization",
+      "saved_check",
+      "CAS_primary",
+      "CAS_mirror",
+      "domain_selection"
+    ]
+  },
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "new_enclosing_receipt_required_for_inclusive_cost": true,
+  "original_counts": {
+    "attempts": 51,
+    "cases": 121,
+    "jobs": 3138
+  },
+  "original_iid_blocks": 16,
+  "original_source_handling": "exact current82 source/plan/typed inputs; old source81 partial bytes remain historical and cannot be relabelled/resumed",
+  "original_teacher_N_candidates": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "original_threshold_counts": [
+    33,
+    65
+  ],
+  "preconditions": [
+    "separate root saved-only operational execution approval",
+    "all three original PIDs terminal before giant decode",
+    "actual monitor and enclosing terminal receipt exact SHA",
+    "finite terminal native physical byte roster and actual latest checkpoint receipt exact SHA",
+    "fresh output and observer receipt directory",
+    "full before/after current82 source, plan, typed inputs and closed native byte stability"
+  ],
+  "prepared_enclosing_command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-v1.py",
+    "--guard",
+    "<root-fixed-saved-check-guard>",
+    "--guard-sha256",
+    "<actual-root-fixed-guard-SHA>"
+  ],
+  "prepared_observer_command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-observer-v1.py",
+    "--guard",
+    "<root-fixed-saved-check-guard>"
+  ],
+  "prepared_resource_candidate": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-resource-candidate-v1.json",
+  "root_preapproved": false,
+  "scope": "read-only current native post-terminal saved numerical readiness; no numerical execution",
+  "source_canonical_identity": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_files": 82,
+  "source_line_refs": {
+    "check_pilot.py": {
+      "CLI_unpack_only": "5081-5084",
+      "external_expenses": "1724-1810",
+      "fresh_verification_context": "4668-4675",
+      "full_hydration": "5039-5065",
+      "required_inputs": 4699,
+      "retained_raw_snapshot": 5028,
+      "source_and_typed_locked_binding": "4971-4978",
+      "structural_vs_financial": "4987-4996",
+      "typed_parameters": "4677-4686"
+    },
+    "run_pilot.py": {
+      "original_candidate_N_roster_budget": "3944-4072",
+      "snapshot_not_automatic_external_expenses": "4434-4453"
+    }
+  },
+  "source_native_payload_identity": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7"
+}

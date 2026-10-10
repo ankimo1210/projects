@@ -1,0 +1,23 @@
+{
+  "CPU_seconds_before_receipt_write": 0.046353993,
+  "UTC": "2026-10-10T14:45:46.890622+00:00",
+  "actual_saved_result_or_RSS_proven": false,
+  "both_stores_bytes_and_real_manifest_loader_PASS": true,
+  "candidate_authority": false,
+  "elapsed_seconds_before_receipt_write": 1.1758773649926297,
+  "entries": 30,
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "financial_worker_calls": 0,
+  "historical_v1_manifest_ref": "artifact:sha256:760bb2e4f3a325b10aa8821b74f43ab8ed6f6c485cbdd2778fbda38b50a04027",
+  "historical_v1_status": "byte_verified_but_wrong_manifest_kind_preserved",
+  "kernel_peak_RSS_bytes": 20459520,
+  "manifest_ref": "artifact:sha256:97e1bc40483f8ae762992efe462600c2252774d9a1e86cecef88870c52af218f",
+  "receipt_tail_unknown": true,
+  "schema": "rb-f04-root-saved-check-preparation-both-stores-validated-v2",
+  "scope": "closed saved-check preparation and original storage-format failure only; no live native data",
+  "source82_bytes_stable": true,
+  "source_bytes": 216785,
+  "unique_blobs": 30,
+  "v1_original_cost_not_readded": true
+}

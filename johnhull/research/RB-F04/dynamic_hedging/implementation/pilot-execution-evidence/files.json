@@ -7134,9 +7134,201 @@
       "archive": "source82-prior-launch-task-5-formal-pilot-root-operational-observation-v3__before-bindings-and-command.json",
       "bytes": 16196,
       "sha256": "4121c0d29bc4ed916bd69d336b51f6300ec611dfd9a02b60cdc0c8b30123dad3"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-native-saved-check-readiness-v1.md",
+      "archive": "source82-saved-check-prep-independent-native-saved-check-readiness-v1.md",
+      "bytes": 4219,
+      "sha256": "29fbe617b87a1d9008a0d99f1c814493a9ad92fa9b204c9a8122691afc8a3e9f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-decision.json",
+      "archive": "source82-saved-check-prep-independent-saved-check-observer-v1-decision.json",
+      "bytes": 6254,
+      "sha256": "c4b659998171483f9374ee7bf18b181ff1cf88f710885df005b30c7046f3ee6d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-manifest.json",
+      "archive": "source82-saved-check-prep-independent-saved-check-observer-v1-manifest.json",
+      "bytes": 2177,
+      "sha256": "37ce2d0b28e9bfa91af125814dd1d8334831e5f9dc2b81414654b3f77c17c99f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-probe-failure-v1.json",
+      "archive": "source82-saved-check-prep-independent-saved-check-observer-v1-probe-failure-v1.json",
+      "bytes": 536,
+      "sha256": "ca206099bbf40c74a1a5d254534bfcf3b89e99ab90875512e39749b090ecc7a8"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-probe-v2.py",
+      "archive": "source82-saved-check-prep-independent-saved-check-observer-v1-probe-v2.py",
+      "bytes": 12243,
+      "sha256": "82092f728873e8c6062264e1deba9472c4c93fd4faed6053ecb3445d8c7f83df"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-probe.py",
+      "archive": "source82-saved-check-prep-independent-saved-check-observer-v1-probe.py",
+      "bytes": 12121,
+      "sha256": "6a93b1e9d34603422d3edf859d9a336856e1da67ed752ed05e9ec567fb61d92b"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-results-v1.json",
+      "archive": "source82-saved-check-prep-independent-saved-check-observer-v1-results-v1.json",
+      "bytes": 6708,
+      "sha256": "fcf717a06b47c00fb8cae5960bf94b896d05fa28294af03023102a96d464ab28"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-check-observer-v1-review.md",
+      "archive": "source82-saved-check-prep-independent-saved-check-observer-v1-review.md",
+      "bytes": 1899,
+      "sha256": "ef8dd25bbd452b00aa676425d69d6910392468d249b77942a2ef1d8705021602"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-v1.py",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-enclosing-v1.py",
+      "bytes": 4802,
+      "sha256": "2116df010e19aa3bbfcacbbd8ba3872eb7927e05f6525c9b0d9abf036976a503"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-fixed-checks-v1.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-fixed-checks-v1.json",
+      "bytes": 515,
+      "sha256": "93c3d54f36f72911032a44e523e7f48d139c10bd78bf144cc963162d8bda94dc"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-fixed-manifest-v1.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-fixed-manifest-v1.json",
+      "bytes": 3315,
+      "sha256": "7070e54eaca88106360f535eaed278fc472599fd29c5f5831d55e41866d591f5"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-fixed-results-v1.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-fixed-results-v1.json",
+      "bytes": 934,
+      "sha256": "b8b1ff715962466371da770bd2c814a1335277a58ede1d5746ac2a813a693f90"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-monitor-diff-v1.patch",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-monitor-diff-v1.patch",
+      "bytes": 19525,
+      "sha256": "e20d3a6c2a538a5a0f8b905713e37b8053fa77a698e6f20446e89f62f6d6fe88"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-observer-v1.py",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-observer-v1.py",
+      "bytes": 53941,
+      "sha256": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-preflight-final-v1-results.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-preflight-final-v1-results.json",
+      "bytes": 1575,
+      "sha256": "c200556f776e25e91d506b34999d1a23c45f0a4b1af6fd5ef01082c0c384fe33"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-preflight-final-v1.log",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-preflight-final-v1.log",
+      "bytes": 1575,
+      "sha256": "bded42e691ce525ec0228f61940bbcedfa4d2b8836442fa2613db9daad254dcd"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-preflight-fixed-v1-results.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-preflight-fixed-v1-results.json",
+      "bytes": 1675,
+      "sha256": "1cb8396f15e64ce43e008773468b30601ba4c68192cd76a3af40c5fd152a3037"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-preflight-fixed-v1.log",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-preflight-fixed-v1.log",
+      "bytes": 1675,
+      "sha256": "12383305cf3b885cec9282ed4e08ec4de9e02318133a3ea66c469f12eed9aae9"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-preflight-v1-results.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-preflight-v1-results.json",
+      "bytes": 1576,
+      "sha256": "b70134e4bc2dc947c6c375174e99dcd08254cef18908391b5bb6d8d753137bfa"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-preflight-v1.log",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-preflight-v1.log",
+      "bytes": 1576,
+      "sha256": "b70134e4bc2dc947c6c375174e99dcd08254cef18908391b5bb6d8d753137bfa"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-preflight-v1.py",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-preflight-v1.py",
+      "bytes": 8800,
+      "sha256": "731d047b4d649838839f48a3a7c5c8360654ca09e5f21f444daa9f6b7a7fb4c1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-preparation-cost-v1.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-preparation-cost-v1.json",
+      "bytes": 301,
+      "sha256": "a04cb8087ddb2465e113f8182d12c516aa713be152ea912d5afd98a8b78b61af"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-resource-candidate-v1.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-resource-candidate-v1.json",
+      "bytes": 50120,
+      "sha256": "a5face84365a5ee437d55e680da1414075b7ef761894e842f2377aff73a5723e"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-tools-final-v1.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-tools-final-v1.json",
+      "bytes": 418,
+      "sha256": "25cf5962762c524d8d8b12842bb0a1ebdb6880e061c5051abbb3581b7c12e03c"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-tools-fixed-v1.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-tools-fixed-v1.json",
+      "bytes": 419,
+      "sha256": "fc8de531a74f0801471cfc764d591cd96d25a7f21807e8cfc0624dc9be53fc07"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-tools-v1.json",
+      "archive": "source82-saved-check-prep-task-5-full-pilot-root-saved-check-tools-v1.json",
+      "bytes": 1766,
+      "sha256": "6ff7a0e42cd34e8bfbf3bcd243871d06eef48a0e7b6225097a00fd62ae106e44"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-native-saved-check-readiness-v1.json",
+      "archive": "source82-saved-check-prep-task-5-native-saved-check-readiness-v1.json",
+      "bytes": 5629,
+      "sha256": "abcad85735640d80d342e4376f73548b3af5d3a4ff744449762e9ee6f1d3b255"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-check-preparation-closed-proof-store-manifest-v1.json",
+      "archive": "source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-manifest-v1.json",
+      "bytes": 7752,
+      "sha256": "760bb2e4f3a325b10aa8821b74f43ab8ed6f6c485cbdd2778fbda38b50a04027"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-check-preparation-closed-proof-store-receipt-v1.json",
+      "archive": "source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-receipt-v1.json",
+      "bytes": 2306,
+      "sha256": "e30aceb1af9c5b1f9bc9aee6cd15dcc77001305881f376557e827f08bdc86fb8"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-check-preparation-closed-proof-store-validation-failure-v1.json",
+      "archive": "source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-validation-failure-v1.json",
+      "bytes": 433,
+      "sha256": "a9cffffe1a9f1b4cbd5ba4d59672c3319e061d8c4f5db74c589ee5eff50b4a50"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-check-preparation-closed-proof-store-manifest-v2.json",
+      "archive": "source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-manifest-v2.json",
+      "bytes": 8627,
+      "sha256": "97e1bc40483f8ae762992efe462600c2252774d9a1e86cecef88870c52af218f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-check-preparation-closed-proof-store-receipt-v2.json",
+      "archive": "source82-saved-check-prep-root-saved-check-preparation-closed-proof-store-receipt-v2.json",
+      "bytes": 1077,
+      "sha256": "2fdc63f03ee07aabd66a1324a0fc3af2789f0d96d6d7c1b166ad490f7df43f58"
     }
   ],
-  "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending; corrected81 formal pilot now terminal214 rows with stage gate argument-binding defect; full saved semantic check pending; new82 private storage transport and stage argument comparison source-only approved; single genuineN1024 full-payload storage verified; fresh prior/root and financial saved acceptance still pending; new82 actual prior/metadata/saved structural binding/guard complete; fresh formal pilot launched14:00:06 UTC with original scope; full saved numeric/freeze/main still pending",
+  "scope": "historical source/resource evidence; old terminal69executed+1fault preserved; corrected81 prior/metadata/launch actual; old stopping dategate saved executed with original N1024; current live derived-storage diagnosis and exact-byte closed NPZ sharing operations; numerical qualification, full pilot/freeze/main/whole research acceptance pending; corrected81 formal pilot now terminal214 rows with stage gate argument-binding defect; full saved semantic check pending; new82 private storage transport and stage argument comparison source-only approved; single genuineN1024 full-payload storage verified; fresh prior/root and financial saved acceptance still pending; new82 actual prior/metadata/saved structural binding/guard complete; fresh formal pilot launched14:00:06 UTC with original scope; full saved numeric/freeze/main still pending; source82 saved-check preparation: 32 closed files copied exactly, including historical probe/tool and store-format failures; no live native raw/logs",
   "raw_checkpoint_store_manifest": "task-5-v54-root-checkpoint-cas-manifest-v2.json",
   "initial_prior_metadata_store_manifest_ref": "artifact:sha256:0c213380f9fb0e97927e6e8d20a574860a88c67e64576bdfa112044225f5a7bc",
   "initial_partial_terminal_store_manifest_ref": "artifact:sha256:34a4075335a52f9e8b68b2afb3ddeeafb691c949621f0bc4109d499aad018d35",
@@ -7165,5 +7357,7 @@
   "private_pilot_storage_stage_source_and_proof_store_status": "verified_both_stores; source/closed proofs only; fresh resource prior and financial launch not approved",
   "current82_actual_prior_metadata_store_manifest_ref": "artifact:sha256:aa5ca5656f4d953e8698c8bdc5f92f10436965568ed1273e8b6ef4c21b919598",
   "current82_actual_guard_saved_binding_store_manifest_ref": "artifact:sha256:716aed49b357087513fff2e12ed498a0179b919542d7f8e5392bb428932f92ec",
-  "current82_formal_pilot_status": "launched 2026-10-10T14:00:06.210472+00:00; last readonly proof confirms all3processes live; qualification unknown; no full completion/acceptance"
+  "current82_formal_pilot_status": "launched 2026-10-10T14:00:06.210472+00:00; last readonly proof confirms all3processes live; qualification unknown; no full completion/acceptance",
+  "saved_check_preparation_store_manifest_ref": "artifact:sha256:97e1bc40483f8ae762992efe462600c2252774d9a1e86cecef88870c52af218f",
+  "saved_check_preparation_status": "12 author pure and 66 independent source/mechanics checks PASS; original candidate remains unapproved/unexecuted; actual native saved result, whole RSS/capacity, precision and main/phase acceptance unknown"
 }

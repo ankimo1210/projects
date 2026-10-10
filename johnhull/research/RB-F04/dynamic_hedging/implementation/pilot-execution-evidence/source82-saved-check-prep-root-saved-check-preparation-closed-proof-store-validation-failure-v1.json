@@ -1,0 +1,10 @@
+{
+  "bytes_stored_but_manifest_format_not_valid": true,
+  "candidate_authority": false,
+  "failed_manifest_ref": "artifact:sha256:760bb2e4f3a325b10aa8821b74f43ab8ed6f6c485cbdd2778fbda38b50a04027",
+  "finance_acceptance": false,
+  "financial_worker_calls": 0,
+  "original_entries_and_blobs_unchanged": true,
+  "reason": "manifest.kind: expected 'johnhull-evidence-manifest'",
+  "schema": "rb-f04-root-proof-store-format-failure-v1"
+}

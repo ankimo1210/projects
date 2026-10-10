@@ -1,0 +1,290 @@
+{
+  "schema": "rb-f04-independent-saved-check-observer-pure-results-v1",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "fixed:observer-v1.py",
+      "PASS": true
+    },
+    {
+      "name": "fixed:enclosing-v1.py",
+      "PASS": true
+    },
+    {
+      "name": "fixed:resource-candidate-v1.json",
+      "PASS": true
+    },
+    {
+      "name": "fixed:fixed-manifest-v1.json",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-enclosing-v1.py",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-fixed-results-v1.json",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-monitor-diff-v1.patch",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-observer-v1.py",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-preflight-fixed-v1-results.json",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-preflight-fixed-v1.log",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-preflight-v1.log",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-preflight-v1.py",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-preparation-cost-v1.json",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-resource-candidate-v1.json",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-tools-fixed-v1.json",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-full-pilot-root-saved-check-tools-v1.json",
+      "PASS": true
+    },
+    {
+      "name": "manifest:task-5-native-saved-check-readiness-v1.json",
+      "PASS": true
+    },
+    {
+      "name": "false_candidate_no_approval",
+      "PASS": true
+    },
+    {
+      "name": "pending_terminal_and_capacity_unknown",
+      "PASS": true
+    },
+    {
+      "name": "pending_guard_early_refusal",
+      "PASS": true
+    },
+    {
+      "name": "outer_pending_refusal",
+      "PASS": true
+    },
+    {
+      "name": "each_original_PID_live:372314",
+      "PASS": true
+    },
+    {
+      "name": "each_original_PID_live:372315",
+      "PASS": true
+    },
+    {
+      "name": "each_original_PID_live:372316",
+      "PASS": true
+    },
+    {
+      "name": "both_terminal_refs_pending_before_heavy",
+      "PASS": true
+    },
+    {
+      "name": "early_native_and_Popen_zero",
+      "PASS": true
+    },
+    {
+      "name": "closed_two_terminal_helpers_allow_fixture",
+      "PASS": true
+    },
+    {
+      "name": "terminal:monitor_unknown_exit",
+      "PASS": true
+    },
+    {
+      "name": "terminal:monitor_bool_exit",
+      "PASS": true
+    },
+    {
+      "name": "terminal:monitor_wrong_actual_child",
+      "PASS": true
+    },
+    {
+      "name": "terminal:monitor_wrong_guard",
+      "PASS": true
+    },
+    {
+      "name": "terminal:outer_unknown_exit",
+      "PASS": true
+    },
+    {
+      "name": "terminal:outer_nonterminal",
+      "PASS": true
+    },
+    {
+      "name": "terminal:outer_wrong_actual_monitor",
+      "PASS": true
+    },
+    {
+      "name": "terminal:outer_wrong_guard",
+      "PASS": true
+    },
+    {
+      "name": "original_source_substitution",
+      "PASS": true
+    },
+    {
+      "name": "synthetic_closed_finite_catalog",
+      "PASS": true
+    },
+    {
+      "name": "older_checkpoint_even_consistent_catalog",
+      "PASS": true
+    },
+    {
+      "name": "missing_catalog_before_hash",
+      "PASS": true
+    },
+    {
+      "name": "wrong_catalog_digest",
+      "PASS": true
+    },
+    {
+      "name": "checkpoint_receipt_tamper",
+      "PASS": true
+    },
+    {
+      "name": "unsafe_catalog_path",
+      "PASS": true
+    },
+    {
+      "name": "extra_closed_file",
+      "PASS": true
+    },
+    {
+      "name": "symbolic_native_catalog",
+      "PASS": true
+    },
+    {
+      "name": "admin_original_limits",
+      "PASS": true
+    },
+    {
+      "name": "wall_stop",
+      "PASS": true
+    },
+    {
+      "name": "individual_child_stop",
+      "PASS": true
+    },
+    {
+      "name": "individual_parent_stop",
+      "PASS": true
+    },
+    {
+      "name": "volume_reserve_stop",
+      "PASS": true
+    },
+    {
+      "name": "RSS_unknown_not_zero_claim",
+      "PASS": true
+    },
+    {
+      "name": "source_fault_unclosed",
+      "PASS": true
+    },
+    {
+      "name": "worker_error_not_resource_cap",
+      "PASS": true
+    },
+    {
+      "name": "unknown_child_terminal_unclosed",
+      "PASS": true
+    },
+    {
+      "name": "real_signal_stop_partial",
+      "PASS": true
+    },
+    {
+      "name": "raced_stop_no_financial_cap",
+      "PASS": true
+    },
+    {
+      "name": "actual_full_API_context",
+      "PASS": true
+    },
+    {
+      "name": "full_result_written_without_subset",
+      "PASS": true
+    },
+    {
+      "name": "heavy_imports_after_loadguard",
+      "PASS": true
+    },
+    {
+      "name": "expense_clock_all_outer_preflight",
+      "PASS": true
+    },
+    {
+      "name": "full_return_unknown_capacity",
+      "PASS": true
+    },
+    {
+      "name": "fixed_after:observer-v1.py",
+      "PASS": true
+    },
+    {
+      "name": "fixed_after:enclosing-v1.py",
+      "PASS": true
+    },
+    {
+      "name": "fixed_after:resource-candidate-v1.json",
+      "PASS": true
+    },
+    {
+      "name": "fixed_after:fixed-manifest-v1.json",
+      "PASS": true
+    },
+    {
+      "name": "no_financial_modules_imported",
+      "PASS": true
+    },
+    {
+      "name": "no_worker_or_heavy_native_spy_calls",
+      "PASS": true
+    }
+  ],
+  "check_count": 66,
+  "fixed": {
+    "observer-v1.py": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4",
+    "enclosing-v1.py": "2116df010e19aa3bbfcacbbd8ba3872eb7927e05f6525c9b0d9abf036976a503",
+    "resource-candidate-v1.json": "a5face84365a5ee437d55e680da1414075b7ef761894e842f2377aff73a5723e",
+    "fixed-manifest-v1.json": "7070e54eaca88106360f535eaed278fc472599fd29c5f5831d55e41866d591f5"
+  },
+  "source_mechanics_scope_only": true,
+  "root_candidate_preapproved": false,
+  "actual_saved_check_worker_launches": 0,
+  "actual_live_native_tree_reads_or_large_decode": 0,
+  "finance_RNG_SDE_solver_CAS_Git_production_edits": 0,
+  "synthetic_fixture_scope": "four tiny JSON files; no nativeNPZ/finance arrays",
+  "financial_qualification": "unknown",
+  "fullcapacity_finance_actuallaunch_main_phase_approved": false,
+  "cost": {
+    "direct_wall_seconds_before_result_write": 0.021118695993209258,
+    "direct_CPU_seconds_before_result_write": 0.021119154,
+    "full_review_and_tail_seconds": null
+  }
+}

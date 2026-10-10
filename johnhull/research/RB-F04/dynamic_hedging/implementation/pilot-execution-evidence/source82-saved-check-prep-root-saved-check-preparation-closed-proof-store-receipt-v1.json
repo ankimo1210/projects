@@ -1,0 +1,38 @@
+{
+  "CPU_seconds_before_receipt_write": 0.11621625199999999,
+  "UTC": "2026-10-10T14:43:37.787649+00:00",
+  "actual_original_processes_at_close": [
+    {
+      "cmdline": "/home/kazumasa/projects/.venv/bin/python /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observer-v3.py ",
+      "live": true,
+      "pid": 372314
+    },
+    {
+      "cmdline": "/home/kazumasa/projects/.venv/bin/python /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5.py --guard /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-launch-guard-v3.json ",
+      "live": true,
+      "pid": 372315
+    },
+    {
+      "cmdline": "/home/kazumasa/projects/.venv/bin/python /home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py --plan /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata --inputs /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs --output /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v3 ",
+      "live": true,
+      "pid": 372316
+    }
+  ],
+  "actual_saved_result_or_RSS_proven": false,
+  "both_stores_bytes_verified": true,
+  "candidate_authority": false,
+  "cost_receipt_tail_unknown": true,
+  "elapsed_seconds_before_receipt_write": 7.239157763004187,
+  "entries": 27,
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "financial_worker_calls": 0,
+  "kernel_peak_RSS_bytes": 21004288,
+  "manifest_ref": "artifact:sha256:760bb2e4f3a325b10aa8821b74f43ab8ed6f6c485cbdd2778fbda38b50a04027",
+  "native_financial_qualification": "unknown",
+  "schema": "rb-f04-root-saved-check-preparation-both-stores-verified-v1",
+  "scope": "closed candidate/readiness/probes/failures only; all live native raw/observations excluded",
+  "source82_bytes_stable": true,
+  "source_bytes": 206294,
+  "unique_blobs": 27
+}

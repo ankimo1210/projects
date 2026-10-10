@@ -1,0 +1,456 @@
+--- immutable_monitor_v5
++++ task-5-full-pilot-root-saved-check-observer-v1.py
+@@ -1,4 +1,4 @@
+-"""Root operational wrapper for the unchanged full pilot CLI; no financial cap projection."""
++"""Prepared saved-only whole-pilot observer; no execution before root closes and approves inputs."""
+ 
+ from __future__ import annotations
+ 
+@@ -18,7 +18,12 @@
+ 
+ D = Path(__file__).resolve().parent
+ WT = D.parents[2]
+-ENTRY = WT / "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
++ENTRY = Path(__file__).resolve()
++ORIGINAL_GUARD_NAME = "task-5-formal-pilot-root-launch-guard-v3.json"
++ORIGINAL_GUARD_SHA = "9e794bd4ec46c72d240a264fdf2dd722297455baf2f3cd0d07243f6d7a0c2842"
++ORIGINAL_NATIVE = D / "task-5-formal-pilot-root-v3"
++ORIGINAL_PIDS = [372314, 372315, 372316]
++BASE_MONITOR_SHA = "a53a73cfc420e2745f8d8d2cb72a6171ab2d166781126b9a96869afb88053981"
+ HISTORICAL_D = Path(
+     "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+ )
+@@ -546,7 +551,7 @@
+     }
+ 
+ 
+-def source_binding(prior):
++def original_source_binding(prior):
+     limited_source_review(prior)
+     identity = prior["source_identity"]
+     require(
+@@ -570,93 +575,276 @@
+     }
+ 
+ 
+-def load_guard(path):
++def terminal_authority(prior):
++    """Reject live/unknown closure before full native hashing or numerical decoding."""
++    require(
++        prior.get("original_process_ids") == ORIGINAL_PIDS,
++        "all three original process identities must remain bound",
++    )
++    require(
++        all(not Path(f"/proc/{pid}").exists() for pid in ORIGINAL_PIDS),
++        "original pilot/enclosing/monitor/child processes must all be terminal",
++    )
++    original = fixed_reference(
++        prior["original_launch_guard"], ORIGINAL_GUARD_NAME, ORIGINAL_GUARD_SHA
++    )
++    require(
++        original.get("root_preapproved") is True
++        and original.get("formal_financial_launch_authorized") is True
++        and original["native_output_path"] == str(ORIGINAL_NATIVE),
++        "actual historical launch authority required, not a new launch permission",
++    )
++    for key in (
++        "source_identity",
++        "source_identity_sha256",
++        "source_native_payload_sha256",
++        "source_limited_decisions",
++        "source_rebind_evidence",
++        "approved_budget_bindings",
++        "full_budget_and_cap_recipe_review",
++        "actual_root_metadata_approval",
++        "prior_metadata_materialization",
++        "plan",
++        "typed_inputs",
++        "original_counts",
++        "original_teacher_N_candidates",
++        "operational_resource_choice",
++    ):
++        require(
++            prior[key] == original[key],
++            "original closed source/plan/input authority differs: " + key,
++        )
++    monitor_ref = prior["original_terminal_monitor_receipt"]
++    outer_ref = prior["original_terminal_enclosing_receipt"]
++    require(
++        absolute(monitor_ref["path"])
++        == D / "task-5-formal-pilot-root-operational-observation-v3/parent-cost-and-status.json",
++        "original terminal monitor receipt path differs",
++    )
++    require(
++        absolute(outer_ref["path"])
++        == D / "task-5-formal-pilot-root-enclosing-observation-v3/parent-cost-and-status.json",
++        "original terminal enclosing receipt path differs",
++    )
++    monitor, outer = fixed_reference(monitor_ref), fixed_reference(outer_ref)
++    require(
++        monitor.get("child_exit_code") is not None
++        and isinstance(monitor.get("child_exit_code"), int)
++        and not isinstance(monitor.get("child_exit_code"), bool)
++        and monitor.get("child_pid") == ORIGINAL_PIDS[2]
++        and monitor.get("prior_sha256") == ORIGINAL_GUARD_SHA
++        and monitor.get("native_output_path") == str(ORIGINAL_NATIVE),
++        "original monitor has no authenticated terminal child",
++    )
++    require(
++        outer.get("schema") == "rb-f04-root-formal-monitor-enclosing-cost-v1"
++        and outer.get("status") == "terminal_requires_native_and_saved_result_inspection"
++        and isinstance(outer.get("monitor_exit_code"), int)
++        and not isinstance(outer.get("monitor_exit_code"), bool)
++        and outer.get("monitor_pid") == ORIGINAL_PIDS[1]
++        and outer.get("guard_sha256") == ORIGINAL_GUARD_SHA,
++        "original enclosing receipt is missing or nonterminal",
++    )
++    return {
++        "original_launch_guard_sha256": ORIGINAL_GUARD_SHA,
++        "original_process_ids": ORIGINAL_PIDS,
++        "monitor": monitor_ref,
++        "enclosing": outer_ref,
++        "monitor_status": monitor["status"],
++        "monitor_exit_code": outer["monitor_exit_code"],
++        "native_child_exit_code": monitor["child_exit_code"],
++        "historical_cost_or_failure_reclassified": False,
++    }
++
++
++def closed_native_binding(prior):
++    """Authenticate an exact finite terminal byte set; no financial arrays are decoded."""
++    spec = prior.get("closed_native")
++    require(
++        isinstance(spec, dict) and spec.get("path") == str(ORIGINAL_NATIVE),
++        "only the original current82 closed native tree may be checked",
++    )
++    expected = spec.get("files")
++    require(
++        isinstance(expected, dict) and bool(expected),
++        "root must bind the terminal native finite file set",
++    )
++    for relative, value in expected.items():
++        name = Path(relative)
++        require(
++            isinstance(relative, str)
++            and not name.is_absolute()
++            and ".." not in name.parts
++            and isinstance(value, str)
++            and len(value) == 64,
++            "unsafe or pending native byte binding",
++        )
++    actual = {}
++    for path in sorted(ORIGINAL_NATIVE.rglob("*")):
++        require(not path.is_symlink(), "native symbolic links cannot bind closed bytes")
++        if path.is_file():
++            actual[str(path.relative_to(ORIGINAL_NATIVE))] = sha(path)
++    require(
++        actual == expected and digest(actual) == spec.get("tree_sha256"),
++        "original native byte set changed or incomplete",
++    )
++    checkpoint = spec.get("latest_checkpoint")
++    require(isinstance(checkpoint, dict), "terminal latest checkpoint receipt required")
++    choices = sorted(ORIGINAL_NATIVE.glob("checkpoint*"))
++    require(
++        bool(choices) and choices[-1].is_dir() and checkpoint.get("path") == str(choices[-1]),
++        "bound checkpoint is absent or is not the original final saved checkpoint",
++    )
++    checked = tree_binding(checkpoint)
++    relative = str(choices[-1].relative_to(ORIGINAL_NATIVE))
++    require(
++        {
++            key[len(relative) + 1 :]: value
++            for key, value in actual.items()
++            if key.startswith(relative + "/")
++        }
++        == checked["files"],
++        "checkpoint receipt/parts are not in the terminal native byte set",
++    )
++    return {
++        "path": str(ORIGINAL_NATIVE),
++        "tree_sha256": digest(actual),
++        "physical_files": len(actual),
++        "latest_checkpoint": checked,
++        "original_roster_may_be_missing_or_unknown": True,
++    }
++
++
++def source_binding(prior):
++    terminal = terminal_authority(prior)
++    binding = original_source_binding(prior)
++    binding["terminal_native_authority"] = terminal
++    binding["closed_native"] = closed_native_binding(prior)
++    return binding
++
++
++def load_guard(path, *, child=False):
+     supplied = absolute(str(path))
+     require(not supplied.is_symlink(), "fixed guard cannot be a symlink")
+     path = supplied.resolve(strict=True)
+-    require(path.parent == D, "new actual guard must be an immediate D2 file")
++    require(path.parent == D, "saved-check guard must be an immediate D2 file")
+     prior_bytes = path.read_bytes()
+     prior = json.loads(prior_bytes)
+-    # Reject unapproved candidates before source/input reads, output mutation or Popen.
++    # These gates precede source/native hashing, financial imports and any child.
+     require(
+         prior.get("root_preapproved") is True,
+-        "root prior approval required; candidate cannot execute",
+-    )
+-    require(
+-        prior.get("formal_financial_launch_authorized") is True,
+-        "separate root financial launch authorization required",
+-    )
+-    require(
+-        prior.get("schema") == SCHEMA and prior.get("prior_role") == "root_fixed_operational_prior",
+-        "root separate fixed prior required",
+-    )
+-    require(
+-        prior.get("source_approval_status") == "approved_fixed_current_source",
+-        "fixed source approval required",
+-    )
+-    require(
+-        prior.get("administrative_guard_only") is True
+-        and prior.get("financial_A_cap_projection_approved") is False,
+-        "administrative stop cannot become financial A cap",
+-    )
++        "root saved-check prior approval required; candidate cannot execute",
++    )
++    require(
++        prior.get("execute_saved_check") is True,
++        "separate root saved-only execution authorization required",
++    )
++    require(
++        prior.get("finance_acceptance") is False
++        and prior.get("formal_financial_launch_authorized") is False,
++        "saved-only execution cannot grant financial launch or acceptance",
++    )
++    require(
++        prior.get("schema") == SCHEMA
++        and prior.get("prior_role") == "root_fixed_operational_prior"
++        and prior.get("planned_before_attempt") is True
++        and prior.get("saved_check_authorized_by") == "root",
++        "root separate pre-attempt saved-check authority required",
++    )
++    terminal_authority(prior)
++    require(
++        prior.get("source_approval_status") == "approved_fixed_current_source"
++        and prior.get("administrative_guard_only") is True
++        and prior.get("financial_A_cap_projection_approved") is False
++        and prior.get("financial_qualification") == "unknown"
++        and prior.get("formal_phase_completion_claimed") is False,
++        "source/administrative/unknown state cannot be promoted to finance",
++    )
++    require(prior["monitor_sha256"] == sha(__file__), "observer source changed after prior")
++    require(
++        prior["phase_wall_limit_seconds"] == 30 * 86400
++        and prior["parent_rss_limit_bytes"] == prior["child_rss_limit_bytes"] == 16 * GiB
++        and prior["poll_seconds"] == 1
++        and prior["RSS_metric"] == "maximum_individual_process_RSS_not_RLIMIT_AS",
++        "original administrative wall/RSS/poll choices differ",
++    )
++    require(
++        prior["original_counts"] == {"jobs": 3138, "cases": 121, "attempts": 51}
++        and prior["original_teacher_N_candidates"] == [1024, 4096, 16384, 65536],
++        "original complete obligations differ",
++    )
++    require(prior["python_executable"] == sys.executable, "approved Python invocation differs")
++    probes = prior["volume_probes"]
++    require(
++        [row["id"] for row in probes] == ["WSL", "C", "F"]
++        and all(row["reserve_bytes"] == 10 * GiB for row in probes)
++        and len({os.stat(absolute(row["path"])).st_dev for row in probes}) == 3,
++        "original three independent volume reserves required",
++    )
++    output, receipts = absolute(prior["native_output_path"]), absolute(prior["receipt_directory"])
++    require(
++        output.parent == D
++        and output.name.startswith("task-5-formal-pilot-saved-check-")
++        and receipts.parent == D
++        and receipts.name.startswith("task-5-formal-pilot-saved-check-")
++        and output != receipts
++        and not output.exists(),
++        "fresh separate saved-check output required",
++    )
++    if child:
++        require(
++            receipts.is_dir() and (receipts / "prior-root-fixed.json").read_bytes() == prior_bytes,
++            "child must use the exact observer-fixed preflight prior",
++        )
++    else:
++        require(not receipts.exists(), "fresh saved-check observer receipts required")
+     limited_source_review(prior)
+     actual_budget_review(prior)
+     metadata_authority(prior, verify_files=False)
+-    require(
+-        prior.get("financial_qualification") == "unknown"
+-        and prior.get("formal_phase_completion_claimed") is False,
+-        "operational prior does not grant financial completion",
+-    )
+-    require(prior["monitor_sha256"] == sha(__file__), "monitor source changed after root prior")
+-    require(positive(prior["phase_wall_limit_seconds"]), "phase wall cap must be fixed positive")
+-    for key in ("child_rss_limit_bytes", "parent_rss_limit_bytes"):
+-        require(
+-            positive(prior[key]) and 16 * GiB <= prior[key] <= 24 * GiB,
+-            "root RSS choice must be16-24GiB",
+-        )
+-    require(
+-        prior["RSS_metric"] == "maximum_individual_process_RSS_not_RLIMIT_AS", "RSS units changed"
+-    )
+-    require(positive(prior["poll_seconds"]), "root polling period must be fixed positive")
+-    require(
+-        prior["original_counts"] == {"jobs": 3138, "cases": 121, "attempts": 51},
+-        "original roster obligation counts changed",
+-    )
+-    require(
+-        prior["original_teacher_N_candidates"] == [1024, 4096, 16384, 65536],
+-        "original N candidates changed",
+-    )
+-    require(prior["python_executable"] == sys.executable, "approved Python invocation differs")
+-    probes = prior["volume_probes"]
+-    require(
+-        [row["id"] for row in probes] == ["WSL", "C", "F"], "all distinct original volumes required"
+-    )
+-    devices = []
+-    for row in probes:
+-        require(row["reserve_bytes"] == 10 * GiB, "per-volume reserve must retain10GiB")
+-        probe = absolute(row["path"])
+-        devices.append(os.stat(probe).st_dev)
+-    require(len(set(devices)) == 3, "volume reserves cannot be combined/aliased")
+-    native = absolute(prior["native_output_path"])
+-    require(
+-        native.parent == D and native.name.startswith("task-5-formal-pilot-"),
+-        "fresh native output must be an immediate new D2 directory",
+-    )
+-    require(
+-        prior.get("launch_authorized_by") == "root" and prior.get("planned_before_attempt") is True,
+-        "root separate pre-attempt financial launch authority required",
+-    )
+-    receipts = absolute(prior["receipt_directory"])
+-    receipts.resolve().relative_to(D)
+-    require(
+-        not receipts.exists() and not native.exists(),
+-        "fresh native output and fresh monitor receipts required",
+-    )
+-    require(
+-        native != receipts and native not in receipts.parents and receipts not in native.parents,
+-        "native data and operational receipts must be separate",
++    spec = prior.get("closed_native")
++    require(
++        isinstance(spec, dict)
++        and bool(spec.get("files"))
++        and isinstance(spec.get("latest_checkpoint"), dict),
++        "root has not bound terminal native/checkpoint bytes",
+     )
+     return prior, path, hashlib.sha256(prior_bytes).hexdigest(), prior_bytes
++
++
++def child(guard_path):
++    """No random generation; full saved SDE/label replay is the native checker."""
++    prior, _, prior_sha, _ = load_guard(guard_path, child=True)
++    # Heavy imports and full hydration occur only after terminal/root authorization.
++    from check_pilot import check_pilot
++    from run_pilot import read_pilot_artifact, unpack_inputs, write_pilot_artifact
++
++    plan, _ = read_pilot_artifact(Path(prior["plan"]["path"]))
++    encoded, _ = read_pilot_artifact(Path(prior["typed_inputs"]["path"]))
++    inputs = unpack_inputs(encoded)
++    result = check_pilot(
++        ORIGINAL_NATIVE,
++        expected_plan=plan,
++        source_root=WT,
++        context={"inputs": inputs, "parameters": inputs["parameters"]},
++    )
++    # Preserve the complete returned snapshot and original unknown/cap/failure values.
++    write_pilot_artifact(Path(prior["native_output_path"]), result)
++    print(
++        json.dumps(
++            {
++                "root_prior_sha256": prior_sha,
++                "closed": result["closed"],
++                "financial_qualification": result["financial_qualification"],
++                "missing_cases": result["missing_cases"],
++                "missing_attempts": result["missing_attempts"],
++                "missing_jobs": result["missing_jobs"],
++                "finance_acceptance": False,
++                "all_original_roster_checked_no_subset": True,
++            },
++            allow_nan=False,
++        )
++    )
++    return 0 if result["closed"] else 2
+ 
+ 
+ def rss(pid):
+@@ -721,7 +909,7 @@
+         return "unclosed_child_exit"
+     if requested_stop is not None:
+         return "administrative_limit_observed_terminal_unclosed"
+-    return "child_terminal_needs_saved_check"
++    return "saved_checker_terminal_needs_result_inspection"
+ 
+ 
+ def run(guard_path):
+@@ -737,12 +925,9 @@
+     command = [
+         prior["python_executable"],
+         str(ENTRY),
+-        "--plan",
+-        prior["plan"]["path"],
+-        "--inputs",
+-        prior["typed_inputs"]["path"],
+-        "--output",
+-        prior["native_output_path"],
++        "--child",
++        "--guard",
++        str(fixed_path),
+     ]
+     python_paths = [
+         str(WT / p)
+@@ -936,7 +1121,7 @@
+     if process is None and requested is not None and not observer_errors and bindings_unchanged:
+         status = "administrative_preflight_partial_unclosed"
+     receipt = {
+-        "scope": "root operational monitor; prior unchanged full pilot CLI single child",
++        "scope": "root saved-only numerical checker observer; original full native snapshot and fresh output",
+         "status": status,
+         "child_exit_code": code,
+         "child_pid": None if process is None else process.pid,
+@@ -990,7 +1175,10 @@
+         "financial_qualification": "unknown",
+         "formal_pilot_completion_claimed": False,
+         "financial_A_cap_projection_approved": False,
+-        "saved_check_required": True,
++        "saved_check_result_inspection_required": True,
++        "finance_acceptance": False,
++        "original_generation_costs_readded": False,
++        "full_job_hydration_and_final_full_result_serialization_in_child_clock": True,
+         "legacy_and_native_expenses": "existing inclusive native phase/jobs/driver/history are breakdowns; do not add them to this outer observation again",
+         "resource_fault_order": "unknown unless signal/live observation and saved native records establish causation; nonzero exit alone is never a resource cap",
+         "partial_raw_policy": "all native saved/checkpoint files retained; unsaved financial arrays remain unavailable; no N/roster change",
+@@ -1008,15 +1196,16 @@
+             }
+         )
+     )
+-    return 0 if status == "child_terminal_needs_saved_check" else 3
++    return 0 if status == "saved_checker_terminal_needs_result_inspection" else 3
+ 
+ 
+ def main(argv=None):
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument("--guard", type=Path, required=True)
++    parser.add_argument("--child", action="store_true", help="root observer child API harness")
+     args = parser.parse_args(argv)
+     try:
+-        return run(args.guard)
++        return child(args.guard) if args.child else run(args.guard)
+     except GuardRejectedError as exc:
+         print(
+             json.dumps(
+@@ -1024,6 +1213,7 @@
+                     "status": "guard_rejected_no_child",
+                     "reason": str(exc),
+                     "financial_execution": False,
++                    "saved_numerical_execution": False,
+                 }
+             ),
+             file=sys.stderr,

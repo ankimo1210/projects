@@ -1,0 +1,26 @@
+{
+  "pure_probes_passed": 12,
+  "Ruff_format_check_exit_codes": [
+    0,
+    0,
+    0
+  ],
+  "compile_files": 3,
+  "financial_execution": 0,
+  "Popen_calls": 0,
+  "giant_array_decode": 0,
+  "actual_source_file_count": 82,
+  "source_bytes_unchanged": true,
+  "source_canonical_identity": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "source_native_identity": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "whole_hydrated_result_RSS_fit_known": false,
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "verification_subprocess_wall_seconds": 0.10978543300007004,
+  "verification_parent_CPU_seconds": 0.009564676999999997,
+  "verification_child_inclusive_CPU_seconds": 0.10658899999999999,
+  "verification_child_kernel_peak_RSS_bytes": 32239616,
+  "verification_expense_is_not_financial_runtime": true
+}

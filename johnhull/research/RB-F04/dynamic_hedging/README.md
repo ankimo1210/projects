@@ -2,7 +2,9 @@
 
 最新：source82の別root正式pilotを2026-10-10 14:00:06 UTCに起動し、親・監視・金融childの生存を確認した。元3,138jobs/121cases/51義務/全4Nを保持。新prior112検査、実保存計画3,906検査＋全573,122 cap設定、monitor16検査、実guard23検査がPASS。計画と起動証跡は両保管庫に保存済み。qualification unknown、完走・saved数値検算・freeze/mainは未完了。 [再開証跡](implementation/PILOT_BUDGET_MEASUREMENTS.md#新sourceへのprior結合metadata生成正式pilot再開2026-10-10)。
 
-修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](implementation/pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
+保存検算の準備：既存APIのinputs/parameters contextを確認し、D2監視候補の作者12件・独立66件がPASS。候補・review等の閉じた30pathsは両保管庫の標準readerで原byteを復元確認済み。全job同時展開のRAM適合はunknownで、元pilotの終了receipt・閉じたcheckpointと全byte集合を結合してから実行guardを固定する。候補は未許可・未実行のまま。 [検算準備](implementation/PILOT_BUDGET_MEASUREMENTS.md#正式pilot後の保存検算の準備2026-10-10)。
+
+旧source81の修正版fresh正式pilotは12:34:56 UTCに終了（外側7,930.370秒、約2時間12分）。214件目のHeston/N1024/coarse stage gateで引数bindingの不一致を検出し、status=unclosed_source_or_solver_defect・qualification unknownのpartialを保存した。行政資源停止はなく、source81/入力/priorは不変。原失敗・費用・元3,138 jobs/121 cases/51義務を保持し、原因修復・再検証・原rawのsaved数値検算・freeze/mainは未完了。 [終了証跡](implementation/pilot-execution-evidence/task-5-formal-pilot-root-terminal-readonly-summary-v1.json).
 
 2026-10-10。**Tasks1–4、Task5統計/protocolとstudy/replay/runner/checkerのprivate source実装・独立レビュー完了（開発branch）。37quotes/18states、tiny全44cells、actual N1024教師を事前測定。Task5全体・正式pilot/freeze/主実験/研究受入・main統合は未完了。** 別execution契約・固定domain・保存再計算・入口の限定source承認を完了。12本の学習・検証sourceと、主実験結果の分割保存接続も限定承認済み。fresh実行器・保存checkerの限定source確認を完了。初回sourceの元3,138ジョブの資源prior・正確cap recipeを独立承認し、正式metadata lockを生成した。初回正式pilotは69件executed＋70番の日付gateでKeyError Nとなり停止（外側580.029秒、資源capなし）。native cacheのoriginal_Nを読む1行修正と実cache→日付gate→保存checkerの2回帰を追加し、関連246tests・2Python Ruff/format PASS。旧partial・原失敗・費用を保持。修正版sourceへのprior再結合・正式metadata lock・別root起動許可を完了し、fresh正式pilotを2026-10-10 10:22:45 UTCに再開した。完走・saved検算・freeze/main・研究受入は未完了。
 

@@ -1,0 +1,19 @@
+{
+  "passed": 11,
+  "Popen_calls": 0,
+  "finance_execution": 0,
+  "giant_decode": 0,
+  "Ruff_format_check_exit_codes": [
+    0,
+    0,
+    0
+  ],
+  "compile_files": 2,
+  "actual_source_file_count": 82,
+  "source_bytes_unchanged": true,
+  "source_canonical_identity": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "whole_checker_RSS_fit_known": false,
+  "elapsed_seconds": 0.10997255999245681,
+  "child_inclusive_CPU_seconds": 0.10636999999999999,
+  "child_kernel_peak_RSS_bytes": 31977472
+}
