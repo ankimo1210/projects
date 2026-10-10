@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-preparation-v1.py", line 39, in <module>
+    parameters = pilot.HestonParameters(**prepared["parameters"])
+                 ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'run_pilot' has no attribute 'HestonParameters'

@@ -1,0 +1,67 @@
+{
+  "scope": "static metadata/source/input verification for2classes and direct negative approval guard only; no parent/child finance launch",
+  "results": [
+    {
+      "class": "M2",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-measurement-v3.py",
+        "--verify-preparation-only",
+        "--budget-file",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-budget-candidate-v2.json",
+        "--class-id",
+        "M2"
+      ],
+      "exit_code": 0,
+      "output": "{\"scope\": \"static source/input/budget validation only\", \"root_preapproved\": false, \"financial_worker_performed\": false, \"original_slots\": 105105}\n",
+      "clock": {
+        "start": {
+          "wall": 27196.452550452,
+          "cpu": 0.024583263,
+          "utc": "2026-10-10T03:25:31.669837+00:00"
+        },
+        "stop": {
+          "wall": 27196.529661536,
+          "cpu": 0.024932953,
+          "utc": "2026-10-10T03:25:31.746946+00:00"
+        }
+      },
+      "wall_seconds": 0.07711108399962541,
+      "cpu_seconds": 0.07720669
+    },
+    {
+      "class": "M3",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-measurement-v3.py",
+        "--verify-preparation-only",
+        "--budget-file",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-whole-call-cache-budget-candidate-v2.json",
+        "--class-id",
+        "M3"
+      ],
+      "exit_code": 0,
+      "output": "{\"scope\": \"static source/input/budget validation only\", \"root_preapproved\": false, \"financial_worker_performed\": false, \"original_slots\": 22295}\n",
+      "clock": {
+        "start": {
+          "wall": 27196.52969191,
+          "cpu": 0.024961534,
+          "utc": "2026-10-10T03:25:31.746972+00:00"
+        },
+        "stop": {
+          "wall": 27196.602674321,
+          "cpu": 0.025285293,
+          "utc": "2026-10-10T03:25:31.819960+00:00"
+        }
+      },
+      "wall_seconds": 0.07298241099852021,
+      "cpu_seconds": 0.073070759
+    }
+  ],
+  "candidate_approval_guard_refused": "root prior whole-cache component approval required",
+  "root_preapproved": false,
+  "financial_execution_performed": false,
+  "financial_qualification": "unknown",
+  "script_sha256": "2ca6c134e2cacf0ca76da8bd0142f960f9cf8831c4b0fe6d3813319dbe90aa1b",
+  "candidate_sha256": "91d12c89cdfee655d5225a0f1edf224c8bba8b8e9b685f741eb3ce701b82508f"
+}

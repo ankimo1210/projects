@@ -1,0 +1,11 @@
+{
+  "scope": "environment selection failure before preparation; not cache solver defect or cap",
+  "exit_code": 1,
+  "observed_tool_wall_seconds": 1.4952711,
+  "clock_endpoints_not_recorded": true,
+  "environment": "system python3",
+  "failure": "ModuleNotFoundError: plotly",
+  "financial_execution_performed": false,
+  "candidate_or_initial_created": false,
+  "resolution": "Use existing /home/kazumasa/projects/.venv/bin/python; no dependency addition"
+}

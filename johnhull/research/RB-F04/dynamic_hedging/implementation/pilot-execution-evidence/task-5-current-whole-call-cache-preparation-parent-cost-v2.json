@@ -1,0 +1,21 @@
+{
+  "scope": "Actual enclosing saved-only preparation subprocess; no finance worker/solver or RNG",
+  "clock": {
+    "start": {
+      "wall": 27038.591090088,
+      "cpu": 0.023391358,
+      "utc": "2026-10-10T03:22:53.808376+00:00"
+    },
+    "stop": {
+      "wall": 27041.436482733,
+      "cpu": 0.023845706,
+      "utc": "2026-10-10T03:22:56.653770+00:00"
+    }
+  },
+  "wall_seconds": 2.8453926449983555,
+  "cpu_seconds": 2.835702348,
+  "exit_code": 0,
+  "log_sha256": "c8cd542ad65ee27a6b604a0d73ab005612636f9eecdf87633a20d9eeba7de17c",
+  "script_sha256": "2031fafac19b7744b4767e31769e1de406518a755cce0b2da992a98cf4dcc9d4",
+  "financial_qualification": "unknown"
+}

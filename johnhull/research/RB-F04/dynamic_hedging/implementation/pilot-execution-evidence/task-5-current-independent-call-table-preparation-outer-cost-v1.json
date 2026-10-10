@@ -1,0 +1,13 @@
+{
+  "schema": "rb-f04-preparation-outer-receipt-v1",
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-preparation-v1.py"
+  ],
+  "wall_seconds": 4.16661974699673,
+  "child_cpu_seconds": 3.957337,
+  "exit_code": 1,
+  "financial_execution": false,
+  "financial_qualification": "unknown",
+  "script_sha256": "4b38d219d870f38ff9421c5518c79b3b58cc04be27f5e94768497900a9fdea6f"
+}

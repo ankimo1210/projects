@@ -1,0 +1,32 @@
+{
+  "classes": {
+    "M4": {
+      "shape": [
+        3,
+        1,
+        7,
+        33
+      ],
+      "original_slots": 693,
+      "planned_arguments_sha256": "a45fc4588c863d3542f1ee1327ae2cc17d48f9db2799d0606d712e1ee076c139",
+      "resolved_arguments_sha256": "7b8110554bdc6cc6392c25baee7e9ad65a2488e7a0bff4347488a198522352b6"
+    },
+    "M5": {
+      "shape": [
+        4,
+        1,
+        7,
+        7
+      ],
+      "original_slots": 196,
+      "planned_arguments_sha256": "318f376173396689f37dd5ab67af58781f4c20988805a632c54d7dbda4d9b8af",
+      "resolved_arguments_sha256": "b1ecda75d026de90a1fd8042fc0d58f033742ea9ff71964110bbd2de58d93d73"
+    }
+  },
+  "source_files": 80,
+  "dynamic_imports": [],
+  "guard_calls": [],
+  "wall_seconds": 3.0004882400025963,
+  "cpu_seconds": 2.996826894,
+  "script_sha256": "f42b435bcfb32ff9932e833dbec95164ac21abb1f9bffe182690a3cd05b3cc81"
+}

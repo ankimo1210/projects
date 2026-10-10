@@ -1,0 +1,194 @@
+
+from pathlib import Path
+import os, sys, json, hashlib, time, zipfile, ast, math, resource
+os.environ.update(OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1")
+sys.dont_write_bytecode=True
+D=Path(__file__).resolve().parent
+WT=D.parents[2]
+start=time.perf_counter()
+cpu_start=time.process_time()
+sys.path[:0]=[str(WT/"johnhull/research/RB-F04/dynamic_hedging"),str(WT/"johnhull/hullkit/src"),str(WT/"deep_hedge_price/src")]
+import numpy as np
+import run_pilot as pilot
+import check_pilot as checker
+import run_reference as runner
+import hullkit._dynamic_hedging_surfaces as surfaces
+
+def forbidden(*args,**kwargs):
+    raise AssertionError("new RNG or financial worker forbidden in independent saved-only review")
+pilot._dispatch=forbidden
+surfaces.build_call_cache=forbidden
+surfaces._calendar_pde=forbidden
+surfaces.fourier_surface=forbidden
+np.random.default_rng=forbidden
+np.random.RandomState=forbidden
+np.random.seed=forbidden
+
+def sha(p):
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def canonical(x):
+    return json.dumps(x,sort_keys=True,separators=(",",":"),allow_nan=False).encode()
+def receipt_check(root):
+    stats=[]
+    for p in [root,*sorted(root.glob("pack*"))]:
+        r=json.loads((p/"receipt.json").read_text())
+        m=json.loads((p/"metadata.json").read_text())
+        identity={k:v for k,v in r.items() if k!="artifact_sha256"}
+        assert (p/"receipt.json").read_bytes()==canonical(r)
+        assert r["artifact_sha256"]==hashlib.sha256(canonical(identity)).hexdigest()
+        assert r["metadata_sha256"]==sha(p/"metadata.json")
+        assert r["arrays_sha256"]==sha(p/"arrays.npz")
+        with zipfile.ZipFile(p/"arrays.npz") as z:
+            expanded=sum(i.file_size for i in z.infolist())
+        assert expanded==r["uncompressed_bytes"] and expanded<=256*1024**2
+        with np.load(p/"arrays.npz",allow_pickle=False) as data:
+            assert set(data.files)==set(m["arrays"])
+            total=0
+            for k,d in m["arrays"].items():
+                a=data[k]
+                assert d=={"shape":list(a.shape),"dtype":a.dtype.str,"nbytes":a.nbytes}
+                total+=a.nbytes
+            assert total<=128*1024**2
+        stats.append({"part":p.name,"expanded_bytes":expanded,"payload_bytes":total})
+    return stats
+def artifact_files(p):
+    return {str(f.relative_to(WT)):sha(f) for f in p.rglob("*") if f.is_file()}
+budget_path=D/"task-5-current-whole-call-cache-budget-root-fixed-v2.json"
+budget=json.loads(budget_path.read_text())
+desc_path=D/"task-5-current-whole-call-cache-initial-description-v1.json"
+desc=json.loads(desc_path.read_text())
+script_path=D/"task-5-current-whole-call-cache-measurement-v3.py"
+assert budget["root_preapproved"] is True and budget["formal_finance_approved"] is False
+assert budget["financial_qualification"]=="unknown" if "financial_qualification" in budget else budget["qualification"]=="unknown"
+assert budget["wall_limit_seconds"]==300 and budget["rss_limit_bytes"]==4*1024**3
+assert budget["probe_source_sha256"]==sha(script_path) and budget["initial_description_sha256"]==sha(desc_path)
+assert budget["classes"]==desc["classes"]
+assert desc["graph_counts"]=={"jobs":3138,"original_cases":121,"original_attempts":51}
+sources_before={p:sha(WT/p) for p in budget["source_bindings"]}
+inputs_before={p:sha(WT/p) for p in budget["input_file_bindings"]}
+assert len(sources_before)==80 and sources_before==budget["source_bindings"]
+assert inputs_before==budget["input_file_bindings"]
+graph,gr=pilot.read_pilot_artifact(WT/desc["graph_artifact"])
+field,fr=pilot.read_pilot_artifact(WT/desc["field_artifact"])
+assert len(graph["jobs"])==3138 and len(graph["case_plan"])==121 and len(graph["attempt_plan"])==51
+assert field["raw_values"].shape==(257,321)
+assert field["order"]==1024 and field["frequency_scale"]==512 and field["density_floor"]==1e-10
+assert np.array_equal(field["times"],np.asarray(desc["field_axes"]["times"]))
+assert np.array_equal(field["z_nodes"],np.asarray(desc["field_axes"]["z_nodes"]))
+prepared=json.loads((WT/desc["prepared_input_json"]).read_text())
+from hullkit._heston_local_surface import HestonParameters
+parameters=HestonParameters(**prepared["parameters"])
+results={"schema":"whole-call-cache-saved-independent-review-v1","scope":"saved provenance, original slots/axes/typed arguments/NaNs, node re-evaluation, price bounds and measured cost only",
+"source_files":80,"source_before_after_stable":False,"financial_qualification":"unknown","new_financial_worker_or_RNG":0,"formal_plan_pilot_main_budget_acceptance":False,"models":{}}
+all_before={}
+for m in (2,3):
+    c=f"M{m}"
+    p=D/f"task-5-current-whole-call-cache-observation-root-m{m}-v3"
+    spec=budget["classes"][c]
+    parent=json.loads((p/"parent-cost-and-decision.json").read_text())
+    progress=json.loads((p/"progress.json").read_text())
+    outer=json.loads((D/f"task-5-current-whole-call-cache-root-m{m}-enclosing-cost-v3.json").read_text())
+    assert (p/"prior-root-budget.json").read_bytes()==budget_path.read_bytes()
+    assert (p/"initial-description.json").read_bytes()==desc_path.read_bytes()
+    assert parent["prior_component_budget"]==budget
+    assert parent["source_before"]==parent["source_after"]==sources_before
+    assert parent["input_before"]==parent["input_after"]==inputs_before
+    assert progress["source_after"]==sources_before
+    assert outer["budget_sha256"]==sha(budget_path) and outer["source_sha256"]==sha(script_path)
+    all_before.update(artifact_files(p))
+    actual_path=p/"actual-whole-call-cache-raw"
+    initial_path=p/"initial-unprocessed-raw"
+    receipts={"actual":receipt_check(actual_path),"initial":receipt_check(initial_path)}
+    raw,rr=pilot.read_pilot_artifact(actual_path)
+    initial,ir=pilot.read_pilot_artifact(initial_path)
+    args=pilot.unpack_inputs(raw["arguments"])
+    initial_args=pilot.unpack_inputs(initial["arguments"])
+    row=next(j for j in graph["jobs"] if j["id"]==spec["job_id"])
+    assert row["operation"]=="call_cache"
+    assert pilot.input_identity(row["arguments"])==spec["planned_arguments_sha256"]
+    resolved=pilot._resolve(row["arguments"],{"parameters":parameters},{"field-current":{"raw":field,"status":"executed"}})
+    assert pilot.input_identity(resolved)==pilot.input_identity(args)==pilot.input_identity(initial_args)==spec["resolved_arguments_sha256"]
+    assert args["parameters"]==parameters and args["model"]==spec["model"]
+    assert args["surface"].parameters==parameters
+    # Numeric equality uses tolerances. SHA here authenticates origin only.
+    for key, fk in [("times","times"),("z_nodes","z_nodes"),("values","values"),("wing_boundaries","wing_boundaries")]:
+        a=np.asarray(getattr(args["surface"],key));b=np.asarray(field["field"][fk])
+        assert a.shape==b.shape and np.allclose(a,b,rtol=2e-9,atol=2e-10,equal_nan=True)
+    assert np.array_equal(args["surface"].support_mask,field["support_mask"])
+    value=raw["value"]; shape=tuple(spec["shape"]); a=value["values"]
+    assert a.shape==shape and a.size==math.prod(shape)==spec["original_slots"]==parent["original_slots"]
+    assert initial["values"].shape==initial["slot_status"].shape==shape
+    assert np.isnan(initial["values"]).all() and (initial["slot_status"]=="unprocessed").all()
+    assert initial["processed_slots"]==0 and initial["original_slots"]==a.size
+    assert initial["source_identity_sha256"]==budget["source_identity_sha256"]
+    assert initial["graph_receipt"]==gr and initial["field_receipt"]==fr
+    assert initial["prior_description_sha256"]==sha(desc_path)
+    for key in ("dates","spot_nodes","state_nodes"):
+        assert np.allclose(args[key],spec["axes"][key],rtol=0,atol=1e-14)
+        assert np.array_equal(value[key],args[key])
+        assert hashlib.sha256(np.asarray(args[key]).tobytes()).hexdigest()==spec["axes_origin_sha256"][key]
+    finite=int(np.isfinite(a).sum()); nan=int(np.isnan(a).sum()); inf=int(np.isinf(a).sum())
+    assert finite==progress["finite_slots"] and nan+inf==progress["nonfinite_slots"]
+    assert finite==a.size and nan==inf==0 and np.array_equal(value["support_mask"],np.isfinite(a))
+    assert raw["financial_qualification"]==initial["financial_qualification"]=="unknown"
+    assert value["reference_status"]=="unmeasured" and np.isnan(value["price_error"]) and np.isnan(value["derivative_error"])
+    assert value["strike"]==100 and value["maturity"]==1.25 and value["rate"]==parameters.rate and value["dividend_yield"]==parameters.dividend_yield
+    tau=1.25-np.asarray(value["dates"])
+    upper=np.asarray(value["spot_nodes"])[None,:,None]*np.exp(-parameters.dividend_yield*tau[:,None,None])
+    lower=np.maximum(upper-100*np.exp(-parameters.rate*tau[:,None,None]),0)
+    lower_violations=int(np.count_nonzero(a<lower-1e-10)); upper_violations=int(np.count_nonzero(a>upper+1e-10))
+    assert lower_violations==upper_violations==0
+    diagonal_count=len(value["diagnostics"])
+    if m==2:
+        assert diagonal_count==1 and value["diagnostics"][0]["method"]=="heston_cf" and value["diagnostics"][0]["order"]==1024
+        assert np.allclose(value["diagnostics"][0]["maturities"],tau,atol=1e-14,rtol=0)
+        assert np.isnan(value["coefficient_min_times"]).all()
+    else:
+        timeline=np.unique(np.r_[np.linspace(0,1.25,961),value["dates"]])[::-1]
+        assert diagonal_count==7 and len(timeline)-1==975
+        for d in value["diagnostics"]:
+            assert d["failure"] is None and d["space_nodes"]==1201 and d["time_steps"]==975 and d["log_half_width"]==1.8
+            assert d["negative_operator_coefficients"]==0
+            assert sum(d["status_counts"].values())==(len(timeline))*1199
+        assert np.allclose(value["coefficient_min_times"],[d["coefficient_min_time"] for d in value["diagnostics"]],rtol=0,atol=1e-14)
+    t0=time.perf_counter()
+    checked=checker.check_wrapped_operation(raw,"call_cache",{})
+    node_seconds=time.perf_counter()-t0
+    assert checked["scope"]==progress["saved_check_scope"]=="saved_call_cache"
+    assert checked["financial_qualification"]=="unknown" and checked["original_n"] is None
+    assert progress["raw_receipt"]==rr
+    assert progress["financial_RNG_draws"]==0 and parent["financial_RNG_performed"] is False
+    assert parent["status"]==progress["status"]=="component_measurement_complete" and parent["exit_code"]==outer["exit_code"]==0
+    assert parent["observed_cap"] is None and parent["overrun_seconds"]==0 and parent["RSS_overrun_bytes"]==0
+    pc=parent["whole_parent_inclusive_clock"]; cc=progress["whole_child_clock"]; wc=progress["worker_clock"]
+    for clockrec in (cc,wc):
+        assert math.isclose(clockrec["wall_seconds"],clockrec["stop"]["wall"]-clockrec["start"]["wall"],abs_tol=1e-12)
+        assert math.isclose(clockrec["cpu_seconds"],clockrec["stop"]["cpu"]-clockrec["start"]["cpu"],abs_tol=1e-12)
+    assert math.isclose(parent["wall_seconds"],pc["stop"]["wall"]-pc["start"]["wall"],abs_tol=1e-12)
+    expected_cpu=pc["stop"]["cpu"]-pc["start"]["cpu"]+pc["child_cpu_stop"]-pc["child_cpu_start"]
+    assert math.isclose(parent["cpu_seconds"],expected_cpu,abs_tol=1e-12)
+    assert math.isclose(outer["wall_seconds"],outer["wall_stop"]-outer["wall_start"],abs_tol=1e-12)
+    assert outer["wall_start"]<=pc["start"]["wall"]<=cc["start"]["wall"]<=wc["start"]["wall"]<=wc["stop"]["wall"]<=cc["stop"]["wall"]<=pc["stop"]["wall"]<=outer["wall_stop"]
+    stagewalls=[r["clock"]["wall"] for r in progress["stages"]]
+    assert stagewalls==sorted(stagewalls)
+    assert stagewalls[1]<wc["start"]["wall"] and stagewalls[3]>wc["stop"]["wall"]
+    peak=max(parent["child_peak_rss_bytes"],parent["parent_peak_rss_bytes"],outer["child_parent_peak_rss_bytes"],progress["current_peak_rss_bytes"])
+    assert outer["wall_seconds"]<300 and peak<4*1024**3
+    assert parent["reference_accuracy_qualified"] is False and parent["formal_plan_locked"] is False
+    assert parent["formal_pilot_or_main"] is False and outer["formal_pilot_or_main"] is False
+    results["models"][c]={"shape":list(shape),"original_slots":a.size,"finite":finite,"NaN":nan,"inf":inf,"initial_all_NaN_unprocessed_slots":int(initial["values"].size),"missing_returned_slots":0,"diagnostic_count":diagonal_count,
+       "source_node_check":"PASS","independent_node_check_seconds":node_seconds,"price_bounds_violations":lower_violations+upper_violations,"minimum_lower_margin":float((a-lower).min()),"minimum_upper_margin":float((upper-a).min()),
+       "raw_receipt":rr,"receipt_parts":receipts,"worker_wall_seconds":wc["wall_seconds"],"whole_child_wall_seconds":cc["wall_seconds"],"whole_parent_wall_seconds":parent["wall_seconds"],"outer_enclosing_wall_seconds":outer["wall_seconds"],"outer_enclosing_cpu_seconds":outer["cpu_seconds"],"outer_minus_inner_parent_seconds":outer["wall_seconds"]-parent["wall_seconds"],
+       "maximum_recorded_individual_process_RSS_bytes":peak,"sampled_sum_process_RSS_bytes":parent["sampled_sum_process_RSS_bytes"],"observed_cap":None,"reference_status":"unmeasured","financial_qualification":"unknown"}
+assert {p:sha(WT/p) for p in budget["source_bindings"]}==sources_before
+assert {p:sha(WT/p) for p in budget["input_file_bindings"]}==inputs_before
+assert {p:sha(WT/p) for p in all_before}==all_before
+results["source_before_after_stable"]=True
+results["saved_artifact_files_unchanged"]=len(all_before)
+results["review_wall_seconds"]=time.perf_counter()-start
+results["review_cpu_seconds"]=time.process_time()-cpu_start
+results["review_peak_RSS_bytes"]=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024
+results["unmeasured_preparation_report_cost"]="unknown"
+out=D/"task-5-current-whole-call-cache-independent-v3-results.json"
+out.write_text(json.dumps(results,indent=2,sort_keys=True,allow_nan=False)+"\n")
+print(json.dumps(results,indent=2,sort_keys=True))

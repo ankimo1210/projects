@@ -1,0 +1,311 @@
+"""Prepare/measure exactly one current whole M2 or M3 call-cache class.
+
+Financial dispatch is reachable only with a separate root-preapproved prior
+component budget. The candidate is not approval. Full original NaN/unprocessed
+slots survive an actual enclosing clock/RSS stop; exceptions never become caps.
+"""
+from __future__ import annotations
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import json
+import os
+from pathlib import Path
+import resource
+import subprocess
+import sys
+import time
+import traceback
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+RESEARCH = WT / "johnhull/research/RB-F04/dynamic_hedging"
+INITIAL = D / "task-5-current-whole-call-cache-initial-description-v1.json"
+WALL_CAP = 300.0
+RSS_CAP = 4 * 1024**3
+SCOPE = "current_whole_call_cache_M2_Heston_or_M3_local_component_only"
+CLASS_IDS = {"M2": "call-current:Heston", "M3": "call-current:local"}
+
+def clock():
+    return {"wall": time.perf_counter(), "cpu": time.process_time(),
+            "utc": datetime.now(timezone.utc).isoformat()}
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+def save(path, value):
+    path = Path(path)
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
+    temporary.replace(path)
+
+def sources(expected):
+    return {relative: sha(WT / relative) for relative in expected}
+
+def inputs(expected):
+    return {relative: sha(WT / relative) for relative in expected}
+
+def validate_budget(path, *, require_approval=True):
+    path = Path(path).resolve(strict=True)
+    assert path.parent == D, "prior budget must be retained in D"
+    budget = json.loads(path.read_text())
+    assert budget["schema"] == "rb-f04-current-whole-call-cache-prior-budget-v1"
+    assert budget["scope"] == SCOPE
+    if require_approval:
+        assert budget["root_preapproved"] is True, "root prior whole-cache component approval required"
+    else:
+        assert budget["root_preapproved"] in (False, True)
+    assert budget["formal_finance_approved"] is False
+    assert budget["allowed_classes"] == ["M2", "M3"]
+    assert budget["budget_per_class"] is True
+    assert budget["wall_limit_seconds"] == WALL_CAP
+    assert budget["rss_limit_bytes"] == RSS_CAP
+    assert budget["rss_metric"] == "maximum_individual_parent_or_child_process_RSS_not_virtual_address_space"
+    assert budget["probe_source_sha256"] == sha(__file__)
+    assert budget["initial_description_sha256"] == sha(INITIAL)
+    assert budget["source_bindings"] == sources(budget["source_bindings"])
+    assert budget["input_file_bindings"] == inputs(budget["input_file_bindings"])
+    description = json.loads(INITIAL.read_text())
+    assert budget["classes"] == description["classes"]
+    assert description["graph_counts"] == {"jobs": 3138, "original_cases": 121, "original_attempts": 51}
+    assert description["field_shape"] == [257, 321]
+    assert description["field_controls"] == {"order": 1024, "frequency_scale": 512, "density_floor": 1e-10}
+    return budget, description
+
+def rss(pid):
+    try:
+        for line in Path(f"/proc/{pid}/status").read_text().splitlines():
+            if line.startswith("VmRSS:"):
+                return int(line.split()[1]) * 1024
+    except (FileNotFoundError, ProcessLookupError):
+        pass
+    return 0
+
+def child(output, budget_path, class_id):
+    started = clock()
+    progress = {"scope": SCOPE, "class": class_id, "job_id": CLASS_IDS[class_id],
+                "started": started, "stages": [], "status": "started",
+                "financial_qualification": "unknown", "formal_pilot_or_main": False,
+                "financial_RNG_draws": 0}
+    def checkpoint(stage):
+        progress["stages"].append({"stage": stage, "clock": clock()})
+        progress["current_peak_rss_bytes"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        save(output / "progress.json", progress)
+    try:
+        budget, description = validate_budget(budget_path)
+        checkpoint("root_prior_budget_source_inputs_verified")
+        sys.path[:0] = [str(RESEARCH), str(WT / "johnhull/hullkit/src"),
+                       str(WT / "deep_hedge_price/src")]
+        import numpy as np
+        import run_pilot as pilot
+        import check_pilot as checker
+        import run_reference as runner
+        from hullkit._heston_local_surface import HestonParameters
+        # Dependency imports have completed. This component never owns an RNG stream.
+        def forbidden(*args, **kwargs):
+            raise AssertionError("financial RNG forbidden in whole call-cache component")
+        np.random.default_rng = forbidden
+        actual_identity = runner.execution_source_identity(WT)
+        assert actual_identity["dynamic_imports"] == []
+        assert actual_identity["files"] == budget["source_bindings"]
+        assert runner._digest(actual_identity) == budget["source_identity_sha256"]
+        graph_directory = WT / description["graph_artifact"]
+        field_directory = WT / description["field_artifact"]
+        graph, graph_receipt = pilot.read_pilot_artifact(graph_directory)
+        field, field_receipt = pilot.read_pilot_artifact(field_directory)
+        prepared = json.loads((WT / description["prepared_input_json"]).read_text())
+        parameters = HestonParameters(**prepared["parameters"])
+        assert field["status"] == "executed" and field["field"] is not None
+        assert field["raw_values"].shape == (257, 321)
+        assert field["order"] == 1024 and field["frequency_scale"] == 512 and field["density_floor"] == 1e-10
+        assert parameters == field["field"]["parameters"]
+        assert len(graph["jobs"]) == 3138 and len(graph["case_plan"]) == 121 and len(graph["attempt_plan"]) == 51
+        row = next(job for job in graph["jobs"] if job["id"] == CLASS_IDS[class_id])
+        assert row["operation"] == "call_cache"
+        spec = description["classes"][class_id]
+        assert pilot.input_identity(row["arguments"]) == spec["planned_arguments_sha256"]
+        arguments = pilot._resolve(row["arguments"], {"parameters": parameters},
+                                   {"field-current": {"raw": field, "status": "executed"}})
+        assert pilot.input_identity(arguments) == spec["resolved_arguments_sha256"]
+        for name in ("dates", "spot_nodes", "state_nodes"):
+            assert np.array_equal(arguments[name], np.asarray(spec["axes"][name]))
+        assert list(field["times"]) == description["field_axes"]["times"]
+        assert list(field["z_nodes"]) == description["field_axes"]["z_nodes"]
+        shape = tuple(spec["shape"])
+        initial_raw = {
+            "kind": "prior_whole_call_cache_unprocessed",
+            "class": class_id, "original_job_id": row["id"],
+            "arguments": pilot.pack_inputs(arguments),
+            "values": np.full(shape, np.nan),
+            "slot_status": np.full(shape, "unprocessed", dtype="<U16"),
+            "processed_slots": 0, "original_slots": spec["original_slots"],
+            "financial_qualification": "unknown",
+            "prior_description_sha256": sha(INITIAL),
+            "graph_receipt": graph_receipt, "field_receipt": field_receipt,
+            "source_identity_sha256": budget["source_identity_sha256"],
+        }
+        pilot.write_pilot_artifact(output / "initial-unprocessed-raw", initial_raw)
+        progress["original_shape"] = list(shape)
+        progress["original_slots"] = spec["original_slots"]
+        checkpoint("all_original_NaN_unprocessed_slots_immutable_before_financial_dispatch")
+        worker_start = clock()
+        checkpoint("actual_whole_call_cache_dispatch_started")
+        # Exact current typed path; no controls, axes, slots or model substitution.
+        raw = pilot._dispatch("call_cache", arguments)
+        worker_stop = clock()
+        progress["worker_clock"] = {"start": worker_start, "stop": worker_stop,
+                                   "wall_seconds": worker_stop["wall"] - worker_start["wall"],
+                                   "cpu_seconds": worker_stop["cpu"] - worker_start["cpu"]}
+        progress["financial_worker_called"] = "run_pilot._dispatch(call_cache)"
+        assert raw["kind"] == "call_cache"
+        assert pilot.input_identity(pilot.unpack_inputs(raw["arguments"])) == spec["resolved_arguments_sha256"]
+        assert tuple(raw["value"]["values"].shape) == shape
+        # Preserve all returned values/NaNs/diagnostics before any saved checker.
+        pilot.write_pilot_artifact(output / "actual-whole-call-cache-raw", raw)
+        progress["returned_slots"] = int(raw["value"]["values"].size)
+        progress["finite_slots"] = int(np.isfinite(raw["value"]["values"]).sum())
+        progress["nonfinite_slots"] = progress["returned_slots"] - progress["finite_slots"]
+        checkpoint("actual_full_returned_raw_immutable")
+        restored, receipt = pilot.read_pilot_artifact(output / "actual-whole-call-cache-raw")
+        assert pilot.input_identity(pilot.unpack_inputs(restored["arguments"])) == spec["resolved_arguments_sha256"]
+        runner._same(raw, restored, "immutable original whole call cache round trip")
+        checked = checker.check_wrapped_operation(restored, "call_cache", {})
+        assert checked["scope"] == "saved_call_cache"
+        assert checked["financial_qualification"] == "unknown"
+        assert restored["value"]["reference_status"] == "unmeasured"
+        assert restored["value"]["values"].shape == shape
+        progress["raw_receipt"] = receipt
+        progress["saved_check_scope"] = checked["scope"]
+        progress["reference_status"] = restored["value"]["reference_status"]
+        progress["source_after"] = sources(budget["source_bindings"])
+        assert progress["source_after"] == budget["source_bindings"]
+        assert inputs(budget["input_file_bindings"]) == budget["input_file_bindings"]
+        progress["status"] = "component_measurement_complete"
+        checkpoint("immutable_read_saved_node_source_check_complete_unknown_finance")
+    except BaseException as error:
+        progress["status"] = "source_or_solver_defect"
+        progress["exception"] = {"type": type(error).__name__, "message": str(error),
+                                 "traceback": traceback.format_exc()}
+        checkpoint("source_or_solver_exception_preserved_not_cap")
+        raise
+    finally:
+        stop = clock()
+        progress["whole_child_clock"] = {"start": started, "stop": stop,
+                                         "wall_seconds": stop["wall"] - started["wall"],
+                                         "cpu_seconds": stop["cpu"] - started["cpu"]}
+        progress["current_peak_rss_bytes"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        save(output / "progress.json", progress)
+
+def parent(output, budget_path, class_id):
+    start = clock()
+    child_before = resource.getrusage(resource.RUSAGE_CHILDREN)
+    budget, description = validate_budget(budget_path)
+    output = Path(output).resolve()
+    assert output.parent == D and output.name.startswith("task-5-current-whole-call-cache-observation-")
+    output.mkdir(exist_ok=False)
+    # An exact immutable prior description is retained even before worker imports.
+    (output / "initial-description.json").write_bytes(INITIAL.read_bytes())
+    (output / "prior-root-budget.json").write_bytes(Path(budget_path).read_bytes())
+    source_before = sources(budget["source_bindings"])
+    input_before = inputs(budget["input_file_bindings"])
+    env = dict(os.environ)
+    env.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
+    log = (output / "child.log").open("xb")
+    process = subprocess.Popen(
+        [sys.executable, str(Path(__file__).resolve()), "--child", "--class-id", class_id,
+         "--budget-file", str(Path(budget_path).resolve()), "--output", str(output)],
+        cwd=str(WT), stdout=log, stderr=subprocess.STDOUT, env=env)
+    max_child, max_parent, max_sum, observed_cap = 0, rss(os.getpid()), 0, None
+    while process.poll() is None:
+        current_child, current_parent = rss(process.pid), rss(os.getpid())
+        max_child, max_parent = max(max_child, current_child), max(max_parent, current_parent)
+        max_sum = max(max_sum, current_child + current_parent)
+        if max(max_child, max_parent) > RSS_CAP:
+            observed_cap = {"metric": "actual_individual_process_RSS", "limit": RSS_CAP,
+                            "observed": max(max_child, max_parent), "clock": clock()}
+        elif time.perf_counter() - start["wall"] > WALL_CAP:
+            observed_cap = {"metric": "actual_parent_inclusive_wall_seconds",
+                            "limit": WALL_CAP, "observed": time.perf_counter() - start["wall"],
+                            "clock": clock()}
+        if observed_cap is not None:
+            process.kill()
+            break
+        time.sleep(0.01)
+    code = process.wait()
+    log.close()
+    # Read result/source checks and retained file costs stay inside parent clock.
+    progress_file = output / "progress.json"
+    progress = json.loads(progress_file.read_text()) if progress_file.exists() else None
+    source_after = sources(budget["source_bindings"])
+    input_after = inputs(budget["input_file_bindings"])
+    child_after = resource.getrusage(resource.RUSAGE_CHILDREN)
+    peak_child = max(max_child, child_after.ru_maxrss * 1024)
+    peak_parent = max(max_parent, resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024)
+    stop = clock()
+    if observed_cap is None and max(peak_child, peak_parent) > RSS_CAP:
+        observed_cap = {"metric": "kernel_actual_process_peak_RSS_after_stage", "limit": RSS_CAP,
+                        "observed": max(peak_child, peak_parent), "clock": stop}
+    if observed_cap is None and stop["wall"] - start["wall"] > WALL_CAP:
+        observed_cap = {"metric": "actual_parent_wall_after_completion", "limit": WALL_CAP,
+                        "observed": stop["wall"] - start["wall"], "clock": stop}
+    source_defect = source_after != source_before or input_after != input_before or (
+        progress is not None and progress.get("status") == "source_or_solver_defect")
+    complete = code == 0 and observed_cap is None and not source_defect and (
+        progress is not None and progress.get("status") == "component_measurement_complete")
+    status = ("component_measurement_complete" if complete else "source_or_solver_defect"
+              if source_defect or (observed_cap is None and code != 0) else
+              "failed_at_actual_declared_wall_or_RSS_cap" if observed_cap is not None else
+              "unknown_missing_component_result")
+    record = {
+        "scope": SCOPE, "class": class_id, "job_id": CLASS_IDS[class_id], "status": status,
+        "exit_code": code, "observed_cap": observed_cap,
+        "source_or_solver_defect_is_not_cap": source_defect,
+        "original_shape": description["classes"][class_id]["shape"],
+        "original_slots": description["classes"][class_id]["original_slots"],
+        "whole_parent_inclusive_clock": {"start": start, "stop": stop,
+            "child_cpu_start": child_before.ru_utime + child_before.ru_stime,
+            "child_cpu_stop": child_after.ru_utime + child_after.ru_stime},
+        "wall_seconds": stop["wall"] - start["wall"],
+        "cpu_seconds": stop["cpu"] - start["cpu"] + child_after.ru_utime + child_after.ru_stime
+            - child_before.ru_utime - child_before.ru_stime,
+        "includes_children": True,
+        "parent_peak_rss_bytes": peak_parent, "child_peak_rss_bytes": peak_child,
+        "sampled_sum_process_RSS_bytes": max_sum,
+        "rss_metric": budget["rss_metric"], "RLIMIT_AS_used": False,
+        "overrun_seconds": max(0.0, stop["wall"] - start["wall"] - WALL_CAP),
+        "RSS_overrun_bytes": max(0, max(peak_child, peak_parent) - RSS_CAP),
+        "source_before": source_before, "source_after": source_after,
+        "input_before": input_before, "input_after": input_after,
+        "prior_component_budget": budget, "child_progress": progress,
+        "original_initial_NaN_unprocessed_slots_preserved": True,
+        "original_returned_failure_NaNs_and_solver_diagnostics_preserved_if_returned": True,
+        "financial_qualification": "unknown", "reference_accuracy_qualified": False,
+        "formal_plan_locked": False, "formal_pilot_or_main": False,
+        "financial_RNG_performed": False,
+        "unmeasured_tail": "writing this final parent receipt and stdout are outside its inner stop; root outer enclosing execution receipt must capture that tail",
+    }
+    save(output / "parent-cost-and-decision.json", record)
+    print(json.dumps({key: record[key] for key in
+                     ("status", "class", "wall_seconds", "cpu_seconds", "child_peak_rss_bytes")}))
+    return 0 if complete else 1
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--budget-file", type=Path, required=True)
+    parser.add_argument("--class-id", choices=tuple(CLASS_IDS), required=True)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--child", action="store_true")
+    parser.add_argument("--verify-preparation-only", action="store_true")
+    args = parser.parse_args()
+    if args.verify_preparation_only:
+        budget, description = validate_budget(args.budget_file, require_approval=False)
+        print(json.dumps({"scope": "static source/input/budget validation only",
+                          "root_preapproved": budget["root_preapproved"],
+                          "financial_worker_performed": False,
+                          "original_slots": description["classes"][args.class_id]["original_slots"]}))
+    else:
+        assert args.output is not None
+        if args.child:
+            child(args.output, args.budget_file, args.class_id)
+        else:
+            raise SystemExit(parent(args.output, args.budget_file, args.class_id))

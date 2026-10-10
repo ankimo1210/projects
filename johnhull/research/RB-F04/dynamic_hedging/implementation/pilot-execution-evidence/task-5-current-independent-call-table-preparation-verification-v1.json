@@ -1,0 +1,63 @@
+{
+  "CF_third_level_strict_preserved": true,
+  "candidate_sha256": "decb97179fcafceaade69c6da5910ee0cbbf0429e3678dcfed5d23f2852e725c",
+  "child_cpu_seconds": 0.21056799999999998,
+  "classes_initial_NaN_unprocessed_preserved": true,
+  "financial_qualification": "unknown",
+  "financial_worker_performed": false,
+  "no_financial_modules_imported_by_probe": true,
+  "original_graph_job_controls_empty_and_separately_prior_controls_declared": true,
+  "parent_cpu_seconds": 0.076169028,
+  "rejection_message": "root prior independent-table component approval required",
+  "root_false_approval_rejected": true,
+  "schema": "rb-f04-independent-call-table-preparation-verification-v1",
+  "source_count": 80,
+  "source_sha256": "b314b5a97a826d9d952e690332ca55acf1f0d9d372e088b4bc4293404c9440c6",
+  "static_commands": [
+    {
+      "class": "M4",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-measurement-v3.py",
+        "--budget-file",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-budget-candidate-v2.json",
+        "--class-id",
+        "M4",
+        "--verify-preparation-only"
+      ],
+      "exit_code": 0,
+      "result": {
+        "financial_worker_performed": false,
+        "original_slots": 693,
+        "root_preapproved": false,
+        "scope": "static source/input/budget validation only"
+      },
+      "stderr": "",
+      "stdout": "{\"scope\": \"static source/input/budget validation only\", \"root_preapproved\": false, \"financial_worker_performed\": false, \"original_slots\": 693}\n",
+      "wall_seconds": 0.1177913190003892
+    },
+    {
+      "class": "M5",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-measurement-v3.py",
+        "--budget-file",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-current-independent-call-table-budget-candidate-v2.json",
+        "--class-id",
+        "M5",
+        "--verify-preparation-only"
+      ],
+      "exit_code": 0,
+      "result": {
+        "financial_worker_performed": false,
+        "original_slots": 196,
+        "root_preapproved": false,
+        "scope": "static source/input/budget validation only"
+      },
+      "stderr": "",
+      "stdout": "{\"scope\": \"static source/input/budget validation only\", \"root_preapproved\": false, \"financial_worker_performed\": false, \"original_slots\": 196}\n",
+      "wall_seconds": 0.09426316499957466
+    }
+  ],
+  "wall_seconds": 0.2871762510003464
+}

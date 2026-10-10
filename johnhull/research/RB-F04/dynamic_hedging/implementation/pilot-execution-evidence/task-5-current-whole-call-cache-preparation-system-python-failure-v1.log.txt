@@ -1,0 +1,4 @@
+Preparation attempted with system python3 instead of the existing workspace venv.
+No finance worker/solver/RNG reached. No initial description or candidate written.
+Import chain: run_pilot -> run_reference -> hullkit.__init__ -> plotly_viz
+ModuleNotFoundError: No module named 'plotly'

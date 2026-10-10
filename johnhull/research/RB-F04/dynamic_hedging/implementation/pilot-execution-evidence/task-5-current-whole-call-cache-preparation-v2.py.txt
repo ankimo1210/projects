@@ -1,0 +1,144 @@
+"""Saved-only whole-cache candidate preparation. No finance or RNG."""
+from pathlib import Path
+from datetime import datetime, timezone
+import json
+import hashlib
+import time
+import sys
+
+D = Path(__file__).resolve().parent
+WT = D.parents[2]
+START = {"wall": time.perf_counter(), "cpu": time.process_time(),
+         "utc": datetime.now(timezone.utc).isoformat()}
+sys.path[:0] = [str(WT / "johnhull/research/RB-F04/dynamic_hedging"),
+               str(WT / "johnhull/hullkit/src"), str(WT / "deep_hedge_price/src")]
+import numpy as np
+import run_pilot as pilot
+import run_reference as runner
+import hullkit._dynamic_hedging_surfaces as surfaces
+import hullkit._heston_local_surface as heston
+
+guard_calls = []
+def forbidden(*args, **kwargs):
+    guard_calls.append("financial_or_RNG_boundary")
+    raise AssertionError("finance solver/RNG forbidden in budget preparation")
+np.random.default_rng = forbidden
+pilot._dispatch = forbidden
+pilot.run_field_job = forbidden
+surfaces.build_call_cache = forbidden
+surfaces._calendar_pde = forbidden
+heston.fourier_surface = forbidden
+heston.LocalVarianceGrid.evaluate = forbidden
+sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+graphdir = D / "task-5-full-progressive-pilot-plan-draft-source-unit-v3"
+fielddir = D / "task-5-actual-pilot-input-preparation-v4-current-field"
+prep = D / "task-5-actual-pilot-input-preparation-v4.json"
+graph, _ = pilot.read_pilot_artifact(graphdir)
+field, _ = pilot.read_pilot_artifact(fielddir)
+prepared = json.loads(prep.read_text())
+parameters = heston.HestonParameters(**prepared["parameters"])
+assert field["status"] == "executed" and field["raw_values"].shape == (257, 321)
+assert field["order"] == 1024 and field["frequency_scale"] == 512 and field["density_floor"] == 1e-10
+identity = runner.execution_source_identity(WT)
+assert len(identity["files"]) == 80 and identity["dynamic_imports"] == []
+classes = {}
+for class_id, model, states in [("M2", "Heston", 33), ("M3", "local", 7)]:
+    job_id = "call-current:" + model
+    row = next(j for j in graph["jobs"] if j["id"] == job_id)
+    assert row["operation"] == "call_cache"
+    assert set(row["arguments"]) == {"parameters", "surface", "dates", "spot_nodes", "state_nodes", "model"}
+    assert row["arguments"]["surface"] == {"field_job": "field-current"}
+    assert row["arguments"]["parameters"] == {"input": "parameters"}
+    args = pilot._resolve(row["arguments"], {"parameters": parameters},
+                          {"field-current": {"raw": field, "status": "executed"}})
+    shape = [len(args["dates"]), len(args["spot_nodes"]), len(args["state_nodes"])]
+    assert shape == [49, 65, states]
+    controls = ({"CF_order": 1024, "CF_cutoff_rule": "512/sqrt(1.25-date)", "CF_density_floor": 1e-10}
+                if class_id == "M2" else
+                {"PDE_space_nodes": 1201, "PDE_base_time_steps": 960,
+                 "PDE_log_half_width": 1.8,
+                 "PDE_calendar_snapshots": "union original49dates and base960 timeline; dates exact endpoints"})
+    classes[class_id] = {
+        "job_id": job_id, "operation": "call_cache", "model": args["model"],
+        "shape": shape, "original_slots": int(np.prod(shape)),
+        "planned_arguments_sha256": pilot.input_identity(row["arguments"]),
+        "resolved_arguments_sha256": pilot.input_identity(args),
+        "parameters": prepared["parameters"],
+        "axes": {key: args[key].tolist() for key in ("dates", "spot_nodes", "state_nodes")},
+        "axes_origin_sha256": {key: hashlib.sha256(np.ascontiguousarray(args[key]).tobytes()).hexdigest()
+                              for key in ("dates", "spot_nodes", "state_nodes")},
+        "initial_value": "all_NaN", "initial_slot_status": "unprocessed",
+        "initial_processed_slots": 0,
+        "actual_worker": "run_pilot._dispatch(call_cache) -> _saved_operation -> build_call_cache",
+        "effective_controls": controls,
+        "original_n": None, "path_steps": 0, "RNG_streams": [],
+        "reference_status_after_worker": "unmeasured", "financial_qualification": "unknown",
+    }
+description = {
+    "schema": "rb-f04-current-whole-call-cache-prior-initial-description-v1",
+    "created_utc": datetime.now(timezone.utc).isoformat(),
+    "scope": "exact original full M2/M3 cache preparation; no live finance",
+    "graph_counts": {"jobs": len(graph["jobs"]), "original_cases": len(graph["case_plan"]),
+                     "original_attempts": len(graph["attempt_plan"])},
+    "graph_artifact": str(graphdir.relative_to(WT)),
+    "field_artifact": str(fielddir.relative_to(WT)),
+    "prepared_input_json": str(prep.relative_to(WT)),
+    "field_shape": [257, 321],
+    "field_controls": {"order": 1024, "frequency_scale": 512, "density_floor": 1e-10},
+    "field_axes": {"times": field["times"].tolist(), "z_nodes": field["z_nodes"].tolist()},
+    "field_source_receipt_scope": "saved currentfield v4; no new field solve, smoothing or repair",
+    "classes": classes, "financial_worker_performed": False, "financial_qualification": "unknown",
+    "failure_contract": "prior allNaN/unprocessed immutable artifact before solver; actual returned NaNs/diagnostics retained; hard cap leaves full unprocessed claim; exceptions are defects, not caps",
+    "numeric_gate_contract": "saved roundtrip and call-node interpolation check only; no independent accuracy, 14quote/two-date rebadging or 121/51 formal acceptance",
+}
+initial = D / "task-5-current-whole-call-cache-initial-description-v1.json"
+assert not initial.exists()
+initial.write_text(json.dumps(description, indent=2, sort_keys=True, allow_nan=False) + "\n")
+input_paths = [prep, D / "task-5-progressive-pilot-plan-producer-v3.py",
+               D / "task-5-formal-pilot-plan-producer.py",
+               D / "task-5-formal-controls-review-candidate-v2.json"]
+for folder in (graphdir, fielddir):
+    input_paths.extend(sorted(p for p in folder.rglob("*") if p.is_file()))
+script = D / "task-5-current-whole-call-cache-measurement-v2.py"
+budget = {
+    "schema": "rb-f04-current-whole-call-cache-prior-budget-v1",
+    "scope": "current_whole_call_cache_M2_Heston_or_M3_local_component_only",
+    "root_preapproved": False, "formal_finance_approved": False,
+    "status": "administrative_candidate_pending_root_prior_approval",
+    "allowed_classes": ["M2", "M3"], "budget_per_class": True,
+    "wall_limit_seconds": 300.0, "rss_limit_bytes": 4 * 1024**3,
+    "rss_metric": "maximum_individual_parent_or_child_process_RSS_not_virtual_address_space",
+    "budget_basis": "Administrative ceiling only; no14quote/two-date extrapolation or measured whole49date rate",
+    "probe_source_sha256": sha(script), "initial_description_sha256": sha(initial),
+    "source_bindings": identity["files"], "source_identity_sha256": runner._digest(identity),
+    "input_file_bindings": {str(p.relative_to(WT)): sha(p) for p in input_paths},
+    "classes": classes,
+    "root_run_contract": "root copies candidate to separate fixed prior budget with approval/rationale; preserve false candidate; outer root process encloses final parent receipt/stdout tail",
+    "original_failures_retained": True, "new_public_API_or_production_dependency": False,
+    "new_MC_teacher_training_formal_pilot_main": "none",
+    "estimated_runtime_seconds": None, "qualification": "unknown",
+}
+candidate = D / "task-5-current-whole-call-cache-budget-candidate-v1.json"
+assert not candidate.exists()
+candidate.write_text(json.dumps(budget, indent=2, sort_keys=True, allow_nan=False) + "\n")
+assert guard_calls == []
+assert description["graph_counts"] == {"jobs": 3138, "original_cases": 121, "original_attempts": 51}
+assert {p: sha(WT / p) for p in identity["files"]} == identity["files"]
+stop = {"wall": time.perf_counter(), "cpu": time.process_time(),
+        "utc": datetime.now(timezone.utc).isoformat()}
+cost = {
+    "scope": "budget/description preparation and immutable saved input decode/dataclass array validation; no solver/RNG/finance or total task/history cost",
+    "clock": {"start": START, "stop": stop},
+    "wall_seconds": stop["wall"] - START["wall"],
+    "cpu_seconds": stop["cpu"] - START["cpu"],
+    "financial_guard_calls": guard_calls, "source_bindings_stable": True,
+    "financial_qualification": "unknown",
+    "outputs": {p.name: sha(p) for p in (script, initial, candidate)},
+}
+(D / "task-5-current-whole-call-cache-preparation-cost-v2.json").write_text(json.dumps(cost, indent=2) + "\n")
+print(json.dumps({"classes": {key: {k: value[k] for k in
+                  ("shape", "original_slots", "planned_arguments_sha256", "resolved_arguments_sha256")}
+                  for key, value in classes.items()},
+                  "source_files": len(identity["files"]), "dynamic_imports": identity["dynamic_imports"],
+                  "guard_calls": guard_calls, "wall_seconds": cost["wall_seconds"],
+                  "cpu_seconds": cost["cpu_seconds"], "script_sha256": sha(script)}, indent=2))

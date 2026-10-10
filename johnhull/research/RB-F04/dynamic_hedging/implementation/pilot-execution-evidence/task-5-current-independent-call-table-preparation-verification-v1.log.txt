@@ -1,0 +1,5 @@
+{"scope": "static source/input/budget validation only", "root_preapproved": false, "financial_worker_performed": false, "original_slots": 693}
+
+{"scope": "static source/input/budget validation only", "root_preapproved": false, "financial_worker_performed": false, "original_slots": 196}
+
+root prior independent-table component approval required

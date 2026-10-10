@@ -1,0 +1,97 @@
+{
+  "allstate_formal_precision_pilot_main_budget_phase_acceptance": false,
+  "budget_origin_SHA256": "a28dd5334854aea96e72431617c92b61989c3a71d260d34042f3982b7add5b70",
+  "controls_delta": "original controls={} -> prior fixed upper250/space2401/time1920/log-half-width1.8; geometry/levels/roster unchanged",
+  "costs": {
+    "M4": {
+      "administrative_wall_cap": 120.0,
+      "maximum_recorded_individual_RSS_bytes": 853876736,
+      "outer_enclosing_child_CPU_seconds": 5.250679,
+      "outer_enclosing_wall_seconds": 5.467673218998243,
+      "outer_minus_parent_wall_seconds": 0.04169489999912912,
+      "whole_child_wall_seconds": 4.813418843001273,
+      "whole_parent_wall_seconds": 5.425978318999114,
+      "worker_wall_seconds": 0.7333897190001153
+    },
+    "M5": {
+      "administrative_wall_cap": 300.0,
+      "maximum_recorded_individual_RSS_bytes": 854016000,
+      "outer_enclosing_child_CPU_seconds": 36.269270999999996,
+      "outer_enclosing_wall_seconds": 35.56085595900004,
+      "outer_minus_parent_wall_seconds": 0.03291020899996511,
+      "whole_child_wall_seconds": 34.93504911099808,
+      "whole_parent_wall_seconds": 35.52794575000007,
+      "worker_wall_seconds": 32.17752782000025
+    }
+  },
+  "created_utc": "2026-10-10T03:54:07.190400+00:00",
+  "decision": "approve_bounded_v56_saved_M4_M5_native_component_observations",
+  "evidence_SHA256": {
+    "task-5-current-independent-call-table-independent-v3-original-review-import-failure-parent-cost.json": "382025e28fb0b961b6569face6d16cc0bc8ab530e87d82ad39840d1635ca6e88",
+    "task-5-current-independent-call-table-independent-v3-original-review-import-failure-probe.log": "279f934fd91d8f4396efd202fae65da9544ed98a116dd72ac925fe51ef1865c4",
+    "task-5-current-independent-call-table-independent-v3-original-review-import-failure-probe.py": "10dd1000390d2e21d360aaf04eeab4d0e3a669ae1f3bf392f6e32df453292be7",
+    "task-5-current-independent-call-table-independent-v3-parent-cost.json": "67bf547e0ba365402ea7714e44bc56f0a20ed40c36474bb77a6eaf019736bdcb",
+    "task-5-current-independent-call-table-independent-v3-probe.log": "bd93c1a040ac7283ebafc973c63765210ec01c45dfc7ce4e56d2504af3b4e933",
+    "task-5-current-independent-call-table-independent-v3-probe.py": "61bde6f00225149e6025205bfdd43c0c783ff7608f18e7e13fcfd4f17a6f6926",
+    "task-5-current-independent-call-table-independent-v3-results.json": "bd93c1a040ac7283ebafc973c63765210ec01c45dfc7ce4e56d2504af3b4e933"
+  },
+  "financial_precision_qualification": "unknown",
+  "independent_review_costs": {
+    "completed_saved_probe": {
+      "child_CPU_seconds": 3.3104839999999998,
+      "exit_code": 0,
+      "new_solver_RNG": false,
+      "scope": "saved values/receipt/formula/cost verification only",
+      "wall_seconds": 3.3284899560021586
+    },
+    "measured_child_subprocess_wall_sum_seconds": 6.544730297002388,
+    "original_import_failure": {
+      "child_CPU_seconds": 2.9478940000000002,
+      "exit_code": 1,
+      "new_solver_RNG": false,
+      "scope": "saved values/receipt/formula/cost verification only",
+      "wall_seconds": 3.21624034100023
+    },
+    "unmeasured_reads_preparation_report": "unknown"
+  },
+  "local_price_unit_errors_196_NaNs_retained": true,
+  "measurement_source_origin_SHA256": "b314b5a97a826d9d952e690332ca55acf1f0d9d372e088b4bc4293404c9440c6",
+  "native_financial_qualification": "unchecked",
+  "new_solver_RNG_source_tests_Git_changes": false,
+  "observed_caps": null,
+  "original_failure_raw_values_receipts_preserved": true,
+  "original_graph_args_prior_controls_resolved_args_bindings": "PASS",
+  "original_initial_prices_and_errors_NaN_unprocessed": "retained full693/196",
+  "original_shapes": {
+    "M4": [
+      3,
+      1,
+      7,
+      33
+    ],
+    "M5": [
+      4,
+      1,
+      7,
+      7
+    ],
+    "field": [
+      257,
+      321
+    ]
+  },
+  "original_slots": {
+    "M4": 693,
+    "M5": 196
+  },
+  "raw_formula_check": {
+    "CF": "693cells/1386integrals PASS saved subdivision coverage/sums/price/error",
+    "PDE": "28state-level rows/196prices PASS saved curve interpolation only"
+  },
+  "returned_prices_all_finite": true,
+  "schema": "rb-f04-native-independent-call-table-bounded-review-v1",
+  "scope": "origin geometry/typed arguments/prior controls/source80, stored quad and PDE curve price reconstruction, NaN retention, receipts and cost intervals only",
+  "source80_inputs_saved34files_stable": true,
+  "strict_CF_level3": "upper500/limit1600/epsabs1e-13/epsrel1e-12 retained in all231 cells",
+  "whole191suite_run": false
+}

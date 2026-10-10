@@ -1,0 +1,25 @@
+{
+  "scope": "budget/description preparation and immutable saved input decode/dataclass array validation; no solver/RNG/finance or total task/history cost",
+  "clock": {
+    "start": {
+      "wall": 28045.961345572,
+      "cpu": 0.02268895,
+      "utc": "2026-10-10T03:39:41.178632+00:00"
+    },
+    "stop": {
+      "wall": 28048.961833812,
+      "cpu": 3.019515844,
+      "utc": "2026-10-10T03:39:44.179120+00:00"
+    }
+  },
+  "wall_seconds": 3.0004882400025963,
+  "cpu_seconds": 2.996826894,
+  "financial_guard_calls": [],
+  "source_bindings_stable": true,
+  "financial_qualification": "unknown",
+  "outputs": {
+    "task-5-current-independent-call-table-measurement-v2.py": "f42b435bcfb32ff9932e833dbec95164ac21abb1f9bffe182690a3cd05b3cc81",
+    "task-5-current-independent-call-table-initial-description-v1.json": "89356240df21d6a74b3393eea2429366f32941e534e8e717b1b20c1ca90a8135",
+    "task-5-current-independent-call-table-budget-candidate-v1.json": "1062e2347fc30698858a93ea74610a102bc6b27c4dc6a56869eaf8cb70ab7086"
+  }
+}

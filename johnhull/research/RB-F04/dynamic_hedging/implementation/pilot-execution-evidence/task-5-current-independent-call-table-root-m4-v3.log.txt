@@ -1,0 +1,1 @@
+{"status": "component_measurement_complete", "class": "M4", "wall_seconds": 5.425978318999114, "cpu_seconds": 5.209234303, "child_peak_rss_bytes": 853876736}
