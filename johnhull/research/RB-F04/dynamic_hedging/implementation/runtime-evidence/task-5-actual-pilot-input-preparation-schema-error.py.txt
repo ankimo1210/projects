@@ -1,0 +1,89 @@
+
+from pathlib import Path
+import json,hashlib,time,dataclasses
+import numpy as np
+from hullkit._heston_local_surface import HestonParameters,LocalVarianceGrid,fourier_surface
+from hullkit._dynamic_hedging_surfaces import build_call_cache,fit_quote_state
+root=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+b=root/"johnhull/research/RB-F04/dynamic_hedging"
+d=root/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+start,cpu=time.perf_counter(),time.process_time()
+budget=300.
+selected_path=b/"pilot/selected-calls/refined/selected-calls.json"
+historical=d/"task-5-teacher-preflight.json"
+field_path=b/"pilot/initial-quotes/reference.npz"
+sources=[root/"johnhull/hullkit/src/hullkit/_heston_local_surface.py",
+         root/"johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py"]
+before={str(x.relative_to(root)):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}
+selected=json.loads(selected_path.read_text());history=json.loads(historical.read_text())
+p=HestonParameters(**selected["parameters"])
+original=[]
+for i,row in enumerate(selected["rows"]):
+ h=[r for r in history["rows"] if r["original_state_id"]==i and r["model"]=="heston"]
+ assert len(h)==1
+ old=h[0]
+ assert row["date"]==old["date"] and row["spot"]==old["spot"]
+ original.append({"id":f"state{i:02d}","original_state_id":i,"date":row["date"],
+   "date_index":round(row["date"]*12),"spot":row["spot"],"quote":row["quote"],
+   "diagnostic_heston_variance":row["heston_state"],
+   "inferred_local_state":row["models"]["local"]["state"],
+   "memory_sum":old["memory_sum"],"memory_count":old["memory_count"],
+   "quote_source":"original saved selected-state market Q; unchanged",
+   "historical_fit_qualification":"unknown"})
+observations=[];measurements=[]
+for date in sorted(set([float(j/12) for j in range(12)]+[1/24,1/48])):
+ if time.perf_counter()-start>=budget:raise RuntimeError("predeclared root input probe budget exceeded")
+ t,c=time.perf_counter(),time.process_time()
+ raw=fourier_surface(np.array([100.]),1.25-date,p,order=2048,max_frequency=1024.)
+ quote=float(raw["prices"][0])
+ observations.append({"id":f"diagnostic-date-{date:.17g}","date":date,"spot":100.,"quote":quote,
+       "memory_count":int(np.floor(date*12+1e-9)),"memory_sum":100.*int(np.floor(date*12+1e-9)),
+       "diagnostic_heston_variance":p.v0,
+       "source":"deterministic original-parameter Heston CF observation; not an independent price oracle",
+       "production_cf_raw":{k:v for k,v in raw.items()}})
+ measurements.append({"operation":"production_cf_diagnostic_observation","date":date,
+   "wall_seconds":time.perf_counter()-t,"cpu_seconds":time.process_time()-c})
+with np.load(field_path,allow_pickle=False) as a:
+ prefix="field257x321.surface."
+ field=LocalVarianceGrid(a[prefix+"times"],a[prefix+"z_nodes"],a[prefix+"local_variance"],p,a[prefix+"wing_boundaries"])
+extra_dates=np.array([1/48,1/24])
+extra={m:[] for m in ("Heston","local")}
+t,c=time.perf_counter(),time.process_time()
+cache=build_call_cache(p,field,dates=extra_dates,spot_nodes=np.geomspace(50,200,65),
+  state_nodes=np.array([.25,.5,.75,1.,1.5,2.,4.]),model="local")
+measurements.append({"operation":"actual_local_additional_dates_call_cache","date_count":2,
+ "wall_seconds":time.perf_counter()-t,"cpu_seconds":time.process_time()-c})
+for j,date in enumerate(extra_dates):
+ observed=next(r for r in observations if r["date"]==date)
+ fitted=fit_quote_state(cache,j,100.,observed["quote"],state_scale=1.)
+ for model in extra:
+  extra[model].append({"id":f"additional-{round(1/date)}:{model}","date":float(date),"spot":100.,
+    "quote":observed["quote"],"memory_count":0,"memory_sum":0.,
+    "state":p.v0 if model=="Heston" else fitted["state"],
+    "thresholds":np.linspace(0.,24.,65),
+    "local_fit_evidence":fitted if model=="local" else None,
+    "field_source":"accepted saved field257x321; actual identity retained, no new-field exactness claim",
+    "financial_qualification":"unknown"})
+diagnostic={m:[[next({k:r[k] for k in ("id","spot","quote","memory_sum","memory_count")}
+                   for r in observations if r["date"]==float(j/12))] for j in range(12)]
+            for m in ("Heston","local")}
+after={str(x.relative_to(root)):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}
+assert before==after
+out={"kind":"actual_pretest_pilot_input_preparation","formal_plan_locked":False,"formal_pilot":False,
+  "financial_qualification":"unknown","predeclared_probe_budget_seconds":budget,
+  "parameters":vars(p),"original_states18":original,"diagnostic_queries24":diagnostic,
+  "additional_teacher_cases":extra,"diagnostic_observations_raw":observations,
+  "declared_stream_namespaces":json.loads((b/"candidate.json").read_text())["seeds"],
+  "stream_receipts_status":"not generated; must bind actual later market job raw, no RNG run here",
+  "measurements":measurements,"source_before":before,"source_after":after,
+  "input_provenance":{str(x.relative_to(root)):{"bytes":x.stat().st_size,"sha256":hashlib.sha256(x.read_bytes()).hexdigest()}
+       for x in (selected_path,historical,field_path)},
+  "outer_wall_seconds":time.perf_counter()-start,"outer_cpu_seconds":time.process_time()-cpu}
+def convert(v):
+ if isinstance(v,np.ndarray):return v.tolist()
+ if isinstance(v,np.generic):return v.item()
+ raise TypeError(type(v))
+(d/"task-5-actual-pilot-input-preparation.json").write_text(json.dumps(out,indent=2,default=convert,allow_nan=False)+"\n")
+print(json.dumps({"original_states":len(original),"diagnostic_dates_per_model":12,
+ "additional_cases":{m:len(a) for m,a in extra.items()},"local_fit_statuses":[r["local_fit_evidence"]["status"] for r in extra["local"]],
+ "source_stable":before==after,"outer_wall_seconds":out["outer_wall_seconds"],"financial_qualification":"unknown"},indent=2))

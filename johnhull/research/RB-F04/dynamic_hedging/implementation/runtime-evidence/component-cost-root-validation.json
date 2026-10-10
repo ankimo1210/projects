@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "original_file_manifest_entries": 26,
+  "both_store_measurement_arithmetic": "PASS",
+  "asian_queries": 6912,
+  "refit_queries": 936,
+  "main_source_unit_n": 256,
+  "formal_main_n": 32768,
+  "risk_reference_hours": 3.8713175571197644,
+  "new_document_targets_exist": true,
+  "authored_documents_whitespace": "PASS",
+  "formal_financial_pilot_main": "not run",
+  "financial_qualification": "unknown",
+  "raw_logs_preserved": true,
+  "original_input_interval_clock": "unavailable; elapsed only",
+  "failed_cas_schema_attempt_cost": "unmeasured; not formal all-costs"
+}

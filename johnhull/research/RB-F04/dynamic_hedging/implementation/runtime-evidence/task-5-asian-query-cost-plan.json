@@ -1,0 +1,42 @@
+{
+  "scope": "scratch computation costs; no formal pilot/main/financial/teacher qualification",
+  "predeclared_wall_cap_seconds": 300.0,
+  "phase_start": 16372.922821365,
+  "deadline_wall": 16672.922821365,
+  "axes": "actual run_pilot.teacher_axes coarse/high;12monthlydates;all nodes;local dedicated5-node t0 sheet",
+  "blocks": "16 deterministic analytic block curves; no IID claim, no original teacher N declared",
+  "analytic_f": "0.45*future_mean-0.01*threshold+0.02*state(H); +0.02*log(ell)+0.01*log(S/100)(L)",
+  "block_formula": "f+linspace(-0.001,0.001,16),duplicated3channels",
+  "memory_fixture": "post-fixing n=round(12t);n0 sum0;otherwise n-1 prior fixings100 plus latest/current S",
+  "selected_queries": "original18 S/Q/saved fitted state; missing state remains NaN",
+  "additional_dates": "3queries each12dates; t0S99.95/100/100.05;later80/100/120;H.02/.04/.08;L.8/1/1.4",
+  "direct_repeats": 16,
+  "direct_domains": [
+    "global",
+    "full_fixed_box"
+  ],
+  "bump": "original bump_query_chunk widths1,.5,2;hS.05,hQ.01;18states per grid/model;all13roots refit",
+  "call_domain": "same root scalar probe:6selecteddates,S65 geom50..200,Hv33 full1e-5..0.5,ell7 full.25..4",
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "b62ad68a70236289ab05279286b1b72cf2622335a897751b524e0af32087f4fc",
+    "johnhull/research/RB-F04/dynamic_hedging/run_fresh.py": "46f3802881cf2c38c7a02e8cd7d8815c6d7e36d96da5732b89df7e5d6e49343e",
+    "johnhull/research/RB-F04/dynamic_hedging/check_fresh.py": "7d43c3e168d6aae96cf8257045f1a982d6237c3f47b5ee441e3d7e879e94c194",
+    "deep_hedge_price/tests/test_dynamic_hedging_fresh.py": "c1600c1ca739cbb38e2cfe8245024c2627c705cc05029f15eb2e835e8d2cff40",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "1641c8172168d9652ba8a16266dcbac8aeb6d68184ea54360b2648d35c264fb4",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe",
+    "johnhull/hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622"
+  },
+  "original_inputs": {
+    "johnhull/research/RB-F04/dynamic_hedging/pilot/selected-calls/refined/selected-calls.json": {
+      "sha256": "9f9fa7fbfd61c5114881479d8707f482c1a007e0ea47ad8e050eb537cdb2012e",
+      "bytes": 23503
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/reference.npz": {
+      "sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+      "bytes": 30535323
+    }
+  },
+  "original_study_N_streams": "not opened or altered",
+  "qualification": "unknown",
+  "extrapolation_is_formal_wall_measurement": false
+}

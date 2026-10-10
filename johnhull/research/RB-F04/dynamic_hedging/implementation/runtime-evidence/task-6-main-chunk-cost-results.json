@@ -1,0 +1,121 @@
+{
+  "scope": "actual source-unit risk code, deterministic observable paths/full high axes/analytic16blocks/tiny affine quote caches",
+  "formal_main": false,
+  "formal_pilot": false,
+  "formal_teachers": false,
+  "financial_qualification": "unknown",
+  "random_stream_opened": false,
+  "actual_source_unit_n": 256,
+  "original_main_n": 32768,
+  "original_risk_jobs": 18,
+  "source_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "d3883f2e2898e676ef15f9f1605ba0a052cbd192cdd361840a0af028f199d0b2",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "8f37881659d94202a1e6b2a0fc03793a4d00963063db3059c625de9653ad74a2",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "5edb1be90bab398233a731d68685390bc1ba1f9b8d7826cba1960455f011db64"
+  },
+  "source_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_main.py": "d3883f2e2898e676ef15f9f1605ba0a052cbd192cdd361840a0af028f199d0b2",
+    "johnhull/research/RB-F04/dynamic_hedging/check_main.py": "8f37881659d94202a1e6b2a0fc03793a4d00963063db3059c625de9653ad74a2",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "5edb1be90bab398233a731d68685390bc1ba1f9b8d7826cba1960455f011db64"
+  },
+  "source_stable": true,
+  "field_input_sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591",
+  "cache_dimensions": {
+    "heston": {
+      "axes": {
+        "dates": [
+          12
+        ],
+        "state": [
+          13
+        ],
+        "threshold": [
+          12,
+          65
+        ]
+      },
+      "f_shape": [
+        12,
+        13,
+        65
+      ],
+      "block_shape": [
+        12,
+        13,
+        65,
+        16,
+        3
+      ],
+      "cache_array_bytes": 8218401,
+      "original_teacher_n": null
+    },
+    "local": {
+      "axes": {
+        "dates": [
+          12
+        ],
+        "state": [
+          7
+        ],
+        "threshold": [
+          12,
+          65
+        ],
+        "spot": [
+          17
+        ],
+        "t0_spot": [
+          5
+        ]
+      },
+      "f_shape": [
+        12,
+        17,
+        7,
+        65
+      ],
+      "block_shape": [
+        12,
+        17,
+        7,
+        65,
+        16,
+        3
+      ],
+      "cache_array_bytes": 74707879,
+      "original_teacher_n": null
+    }
+  },
+  "raw_status": "executed",
+  "processed_n": 256,
+  "saved_checker_integrity": "pass",
+  "largest_actual_packed_risk_chunk": {
+    "array_bytes": 30243088,
+    "payload_string_bytes": 30567,
+    "expanded_bytes": 30273655
+  },
+  "actual_one_job_wrapper_expanded_bytes": {
+    "array_bytes": 61089312,
+    "payload_string_bytes": 63267,
+    "expanded_bytes": 61152579
+  },
+  "hypothetical_original_n_extrapolation": {
+    "chunks_per_risk_job": 128,
+    "one_risk_raw_chunks_expanded_bytes": 3875027840,
+    "all18_risk_raw_chunks_expanded_bytes": 69750501120,
+    "one_risk_wrapper_expanded_bytes": 7827530112,
+    "all18_risk_wrapper_expanded_bytes": 140895542016,
+    "formula": "linear256pathshapeextrapolation; not formal measured disk/RAM/time; actual failed/root multiplicity/status strings can differ"
+  },
+  "risk_worker_wall_seconds": 3.019233777999034,
+  "saved_checker_wall_seconds": 3.029699905000598,
+  "probe_outer_wall_seconds": 18.302637041997514,
+  "unmeasured": [
+    "original financial teachers/cache eligibility",
+    "all396 cash/policies/weights",
+    "formal overall wall",
+    "formal compressed disk",
+    "arbitrary actual raw root multiplicity",
+    "serialization/checker/cap-resume overall expenses"
+  ]
+}

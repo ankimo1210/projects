@@ -1,0 +1,1537 @@
+{
+  "kind": "actual_pretest_pilot_input_preparation",
+  "formal_plan_locked": false,
+  "formal_pilot": false,
+  "financial_qualification": "unknown",
+  "predeclared_probe_budget_seconds": 300.0,
+  "parameters": {
+    "spot": 100.0,
+    "rate": 0.03,
+    "dividend_yield": 0.0,
+    "v0": 0.04,
+    "kappa": 2.0,
+    "theta": 0.04,
+    "xi": 0.3,
+    "rho": -0.7
+  },
+  "original_states18": [
+    {
+      "id": "state00",
+      "original_state_id": 0,
+      "date": 0.0,
+      "date_index": 0,
+      "spot": 99.95,
+      "quote": 9.686255823501824,
+      "diagnostic_heston_variance": 0.02,
+      "inferred_local_state": 0.8171800155228437,
+      "memory_sum": 0.0,
+      "memory_count": 0,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state01",
+      "original_state_id": 1,
+      "date": 0.0,
+      "date_index": 0,
+      "spot": 100.0,
+      "quote": 10.516798237664773,
+      "diagnostic_heston_variance": 0.04,
+      "inferred_local_state": 1.0000277716379595,
+      "memory_sum": 0.0,
+      "memory_count": 0,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state02",
+      "original_state_id": 2,
+      "date": 0.0,
+      "date_index": 0,
+      "spot": 100.05,
+      "quote": 11.963004033155933,
+      "diagnostic_heston_variance": 0.08,
+      "inferred_local_state": 1.367614789736292,
+      "memory_sum": 0.0,
+      "memory_count": 0,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state03",
+      "original_state_id": 3,
+      "date": 0.08333333333333333,
+      "date_index": 1,
+      "spot": 80.0,
+      "quote": 0.7902091085377894,
+      "diagnostic_heston_variance": 0.02,
+      "inferred_local_state": 0.3930161964383429,
+      "memory_sum": 100.0,
+      "memory_count": 1,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state04",
+      "original_state_id": 4,
+      "date": 0.08333333333333333,
+      "date_index": 1,
+      "spot": 100.0,
+      "quote": 10.102927051591251,
+      "diagnostic_heston_variance": 0.04,
+      "inferred_local_state": 1.001197589243624,
+      "memory_sum": 100.0,
+      "memory_count": 1,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state05",
+      "original_state_id": 5,
+      "date": 0.08333333333333333,
+      "date_index": 1,
+      "spot": 120.0,
+      "quote": 26.95672741135637,
+      "diagnostic_heston_variance": 0.08,
+      "inferred_local_state": 2.2180762018537763,
+      "memory_sum": 100.0,
+      "memory_count": 1,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state06",
+      "original_state_id": 6,
+      "date": 0.25,
+      "date_index": 3,
+      "spot": 80.0,
+      "quote": 0.4901428115538735,
+      "diagnostic_heston_variance": 0.02,
+      "inferred_local_state": 0.37700170507364855,
+      "memory_sum": 300.0,
+      "memory_count": 3,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state07",
+      "original_state_id": 7,
+      "date": 0.25,
+      "date_index": 3,
+      "spot": 100.0,
+      "quote": 9.242521073959068,
+      "diagnostic_heston_variance": 0.04,
+      "inferred_local_state": 1.0014065509027514,
+      "memory_sum": 300.0,
+      "memory_count": 3,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state08",
+      "original_state_id": 8,
+      "date": 0.25,
+      "date_index": 3,
+      "spot": 120.0,
+      "quote": 26.135795097422715,
+      "diagnostic_heston_variance": 0.08,
+      "inferred_local_state": 2.2986489916705395,
+      "memory_sum": 300.0,
+      "memory_count": 3,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state09",
+      "original_state_id": 9,
+      "date": 0.5,
+      "date_index": 6,
+      "spot": 80.0,
+      "quote": 0.16795940706832013,
+      "diagnostic_heston_variance": 0.02,
+      "inferred_local_state": 0.34513289485765347,
+      "memory_sum": 600.0,
+      "memory_count": 6,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state10",
+      "original_state_id": 10,
+      "date": 0.5,
+      "date_index": 6,
+      "spot": 100.0,
+      "quote": 7.847973573300706,
+      "diagnostic_heston_variance": 0.04,
+      "inferred_local_state": 1.0001334065043592,
+      "memory_sum": 600.0,
+      "memory_count": 6,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state11",
+      "original_state_id": 11,
+      "date": 0.5,
+      "date_index": 6,
+      "spot": 120.0,
+      "quote": 24.79901346796848,
+      "diagnostic_heston_variance": 0.08,
+      "inferred_local_state": 2.4132450792859963,
+      "memory_sum": 600.0,
+      "memory_count": 6,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state12",
+      "original_state_id": 12,
+      "date": 0.75,
+      "date_index": 9,
+      "spot": 80.0,
+      "quote": 0.023505102229885666,
+      "diagnostic_heston_variance": 0.02,
+      "inferred_local_state": 0.31427879840269995,
+      "memory_sum": 900.0,
+      "memory_count": 9,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state13",
+      "original_state_id": 13,
+      "date": 0.75,
+      "date_index": 9,
+      "spot": 100.0,
+      "quote": 6.264680928938759,
+      "diagnostic_heston_variance": 0.04,
+      "inferred_local_state": 1.0011706100240352,
+      "memory_sum": 900.0,
+      "memory_count": 9,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state14",
+      "original_state_id": 14,
+      "date": 0.75,
+      "date_index": 9,
+      "spot": 120.0,
+      "quote": 23.2776594403188,
+      "diagnostic_heston_variance": 0.08,
+      "inferred_local_state": 2.5571047366692827,
+      "memory_sum": 900.0,
+      "memory_count": 9,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state15",
+      "original_state_id": 15,
+      "date": 0.9166666666666666,
+      "date_index": 11,
+      "spot": 80.0,
+      "quote": 0.0017373254975669161,
+      "diagnostic_heston_variance": 0.02,
+      "inferred_local_state": 0.321048274461999,
+      "memory_sum": 1100.0,
+      "memory_count": 11,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state16",
+      "original_state_id": 16,
+      "date": 0.9166666666666666,
+      "date_index": 11,
+      "spot": 100.0,
+      "quote": 5.025233054519283,
+      "diagnostic_heston_variance": 0.04,
+      "inferred_local_state": 1.0054854952392427,
+      "memory_sum": 1100.0,
+      "memory_count": 11,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    },
+    {
+      "id": "state17",
+      "original_state_id": 17,
+      "date": 0.9166666666666666,
+      "date_index": 11,
+      "spot": 120.0,
+      "quote": 22.121583467349467,
+      "diagnostic_heston_variance": 0.08,
+      "inferred_local_state": 2.684729757208699,
+      "memory_sum": 1100.0,
+      "memory_count": 11,
+      "quote_source": "original saved selected-state market Q; unchanged",
+      "historical_fit_qualification": "unknown"
+    }
+  ],
+  "diagnostic_queries24": {
+    "Heston": [
+      [
+        {
+          "id": "diagnostic-date-0",
+          "spot": 100.0,
+          "quote": 10.516798237665618,
+          "memory_sum": 0.0,
+          "memory_count": 0
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.083333333333333329",
+          "spot": 100.0,
+          "quote": 10.102927051592047,
+          "memory_sum": 100.0,
+          "memory_count": 1
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.16666666666666666",
+          "spot": 100.0,
+          "quote": 9.67856029900372,
+          "memory_sum": 200.0,
+          "memory_count": 2
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.25",
+          "spot": 100.0,
+          "quote": 9.242521073959743,
+          "memory_sum": 300.0,
+          "memory_count": 3
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.33333333333333331",
+          "spot": 100.0,
+          "quote": 8.793364480299793,
+          "memory_sum": 400.0,
+          "memory_count": 4
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.41666666666666669",
+          "spot": 100.0,
+          "quote": 8.32928408596836,
+          "memory_sum": 500.0,
+          "memory_count": 5
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.5",
+          "spot": 100.0,
+          "quote": 7.84797357330126,
+          "memory_sum": 600.0,
+          "memory_count": 6
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.58333333333333337",
+          "spot": 100.0,
+          "quote": 7.346415224669755,
+          "memory_sum": 700.0,
+          "memory_count": 7
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.66666666666666663",
+          "spot": 100.0,
+          "quote": 6.820543313598698,
+          "memory_sum": 800.0,
+          "memory_count": 8
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.75",
+          "spot": 100.0,
+          "quote": 6.2646809289391,
+          "memory_sum": 900.0,
+          "memory_count": 9
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.83333333333333337",
+          "spot": 100.0,
+          "quote": 5.670534537998385,
+          "memory_sum": 1000.0,
+          "memory_count": 10
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.91666666666666663",
+          "spot": 100.0,
+          "quote": 5.02523305451944,
+          "memory_sum": 1100.0,
+          "memory_count": 11
+        }
+      ]
+    ],
+    "local": [
+      [
+        {
+          "id": "diagnostic-date-0",
+          "spot": 100.0,
+          "quote": 10.516798237665618,
+          "memory_sum": 0.0,
+          "memory_count": 0
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.083333333333333329",
+          "spot": 100.0,
+          "quote": 10.102927051592047,
+          "memory_sum": 100.0,
+          "memory_count": 1
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.16666666666666666",
+          "spot": 100.0,
+          "quote": 9.67856029900372,
+          "memory_sum": 200.0,
+          "memory_count": 2
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.25",
+          "spot": 100.0,
+          "quote": 9.242521073959743,
+          "memory_sum": 300.0,
+          "memory_count": 3
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.33333333333333331",
+          "spot": 100.0,
+          "quote": 8.793364480299793,
+          "memory_sum": 400.0,
+          "memory_count": 4
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.41666666666666669",
+          "spot": 100.0,
+          "quote": 8.32928408596836,
+          "memory_sum": 500.0,
+          "memory_count": 5
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.5",
+          "spot": 100.0,
+          "quote": 7.84797357330126,
+          "memory_sum": 600.0,
+          "memory_count": 6
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.58333333333333337",
+          "spot": 100.0,
+          "quote": 7.346415224669755,
+          "memory_sum": 700.0,
+          "memory_count": 7
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.66666666666666663",
+          "spot": 100.0,
+          "quote": 6.820543313598698,
+          "memory_sum": 800.0,
+          "memory_count": 8
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.75",
+          "spot": 100.0,
+          "quote": 6.2646809289391,
+          "memory_sum": 900.0,
+          "memory_count": 9
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.83333333333333337",
+          "spot": 100.0,
+          "quote": 5.670534537998385,
+          "memory_sum": 1000.0,
+          "memory_count": 10
+        }
+      ],
+      [
+        {
+          "id": "diagnostic-date-0.91666666666666663",
+          "spot": 100.0,
+          "quote": 5.02523305451944,
+          "memory_sum": 1100.0,
+          "memory_count": 11
+        }
+      ]
+    ]
+  },
+  "additional_teacher_cases": {
+    "Heston": [
+      {
+        "id": "additional-48:Heston",
+        "date": 0.020833333333333332,
+        "spot": 100.0,
+        "quote": 10.414258156431629,
+        "memory_count": 0,
+        "memory_sum": 0.0,
+        "state": 0.04,
+        "thresholds": [
+          0.0,
+          0.375,
+          0.75,
+          1.125,
+          1.5,
+          1.875,
+          2.25,
+          2.625,
+          3.0,
+          3.375,
+          3.75,
+          4.125,
+          4.5,
+          4.875,
+          5.25,
+          5.625,
+          6.0,
+          6.375,
+          6.75,
+          7.125,
+          7.5,
+          7.875,
+          8.25,
+          8.625,
+          9.0,
+          9.375,
+          9.75,
+          10.125,
+          10.5,
+          10.875,
+          11.25,
+          11.625,
+          12.0,
+          12.375,
+          12.75,
+          13.125,
+          13.5,
+          13.875,
+          14.25,
+          14.625,
+          15.0,
+          15.375,
+          15.75,
+          16.125,
+          16.5,
+          16.875,
+          17.25,
+          17.625,
+          18.0,
+          18.375,
+          18.75,
+          19.125,
+          19.5,
+          19.875,
+          20.25,
+          20.625,
+          21.0,
+          21.375,
+          21.75,
+          22.125,
+          22.5,
+          22.875,
+          23.25,
+          23.625,
+          24.0
+        ],
+        "local_fit_evidence": null,
+        "field_source": "accepted saved field257x321; actual identity retained, no new-field exactness claim",
+        "financial_qualification": "unknown"
+      },
+      {
+        "id": "additional-24:Heston",
+        "date": 0.041666666666666664,
+        "spot": 100.0,
+        "quote": 10.31110957773722,
+        "memory_count": 0,
+        "memory_sum": 0.0,
+        "state": 0.04,
+        "thresholds": [
+          0.0,
+          0.375,
+          0.75,
+          1.125,
+          1.5,
+          1.875,
+          2.25,
+          2.625,
+          3.0,
+          3.375,
+          3.75,
+          4.125,
+          4.5,
+          4.875,
+          5.25,
+          5.625,
+          6.0,
+          6.375,
+          6.75,
+          7.125,
+          7.5,
+          7.875,
+          8.25,
+          8.625,
+          9.0,
+          9.375,
+          9.75,
+          10.125,
+          10.5,
+          10.875,
+          11.25,
+          11.625,
+          12.0,
+          12.375,
+          12.75,
+          13.125,
+          13.5,
+          13.875,
+          14.25,
+          14.625,
+          15.0,
+          15.375,
+          15.75,
+          16.125,
+          16.5,
+          16.875,
+          17.25,
+          17.625,
+          18.0,
+          18.375,
+          18.75,
+          19.125,
+          19.5,
+          19.875,
+          20.25,
+          20.625,
+          21.0,
+          21.375,
+          21.75,
+          22.125,
+          22.5,
+          22.875,
+          23.25,
+          23.625,
+          24.0
+        ],
+        "local_fit_evidence": null,
+        "field_source": "accepted saved field257x321; actual identity retained, no new-field exactness claim",
+        "financial_qualification": "unknown"
+      }
+    ],
+    "local": [
+      {
+        "id": "additional-48:local",
+        "date": 0.020833333333333332,
+        "spot": 100.0,
+        "quote": 10.414258156431629,
+        "memory_count": 0,
+        "memory_sum": 0.0,
+        "state": 1.0004190159004895,
+        "thresholds": [
+          0.0,
+          0.375,
+          0.75,
+          1.125,
+          1.5,
+          1.875,
+          2.25,
+          2.625,
+          3.0,
+          3.375,
+          3.75,
+          4.125,
+          4.5,
+          4.875,
+          5.25,
+          5.625,
+          6.0,
+          6.375,
+          6.75,
+          7.125,
+          7.5,
+          7.875,
+          8.25,
+          8.625,
+          9.0,
+          9.375,
+          9.75,
+          10.125,
+          10.5,
+          10.875,
+          11.25,
+          11.625,
+          12.0,
+          12.375,
+          12.75,
+          13.125,
+          13.5,
+          13.875,
+          14.25,
+          14.625,
+          15.0,
+          15.375,
+          15.75,
+          16.125,
+          16.5,
+          16.875,
+          17.25,
+          17.625,
+          18.0,
+          18.375,
+          18.75,
+          19.125,
+          19.5,
+          19.875,
+          20.25,
+          20.625,
+          21.0,
+          21.375,
+          21.75,
+          22.125,
+          22.5,
+          22.875,
+          23.25,
+          23.625,
+          24.0
+        ],
+        "local_fit_evidence": {
+          "state": 1.0004190159004895,
+          "root": 1.0004190159004895,
+          "residual": 0.0,
+          "Ctheta": 4.156563435987508,
+          "condition": 0.0024058336060554363,
+          "status": "ok",
+          "reason": "",
+          "roots": [
+            1.0004190159004895
+          ],
+          "extrema": [],
+          "extrema_values": [
+            6.306801562960171,
+            18.74234841858216
+          ],
+          "state_bounds": [
+            0.25,
+            4.0
+          ],
+          "CS": 0.5326989933055225,
+          "derivative_error": null,
+          "reference_status": "unmeasured"
+        },
+        "field_source": "accepted saved field257x321; actual identity retained, no new-field exactness claim",
+        "financial_qualification": "unknown"
+      },
+      {
+        "id": "additional-24:local",
+        "date": 0.041666666666666664,
+        "spot": 100.0,
+        "quote": 10.31110957773722,
+        "memory_count": 0,
+        "memory_sum": 0.0,
+        "state": 1.0007396304517604,
+        "thresholds": [
+          0.0,
+          0.375,
+          0.75,
+          1.125,
+          1.5,
+          1.875,
+          2.25,
+          2.625,
+          3.0,
+          3.375,
+          3.75,
+          4.125,
+          4.5,
+          4.875,
+          5.25,
+          5.625,
+          6.0,
+          6.375,
+          6.75,
+          7.125,
+          7.5,
+          7.875,
+          8.25,
+          8.625,
+          9.0,
+          9.375,
+          9.75,
+          10.125,
+          10.5,
+          10.875,
+          11.25,
+          11.625,
+          12.0,
+          12.375,
+          12.75,
+          13.125,
+          13.5,
+          13.875,
+          14.25,
+          14.625,
+          15.0,
+          15.375,
+          15.75,
+          16.125,
+          16.5,
+          16.875,
+          17.25,
+          17.625,
+          18.0,
+          18.375,
+          18.75,
+          19.125,
+          19.5,
+          19.875,
+          20.25,
+          20.625,
+          21.0,
+          21.375,
+          21.75,
+          22.125,
+          22.5,
+          22.875,
+          23.25,
+          23.625,
+          24.0
+        ],
+        "local_fit_evidence": {
+          "state": 1.0007396304517604,
+          "root": 1.0007396304517604,
+          "residual": -1.7763568394002505e-15,
+          "Ctheta": 4.121953260032529,
+          "condition": 0.002426034301980679,
+          "status": "ok",
+          "reason": "",
+          "roots": [
+            1.0007396304517606
+          ],
+          "extrema": [],
+          "extrema_values": [
+            6.2347303818059086,
+            18.566631839919264
+          ],
+          "state_bounds": [
+            0.25,
+            4.0
+          ],
+          "CS": 0.5331166916056962,
+          "derivative_error": null,
+          "reference_status": "unmeasured"
+        },
+        "field_source": "accepted saved field257x321; actual identity retained, no new-field exactness claim",
+        "financial_qualification": "unknown"
+      }
+    ]
+  },
+  "diagnostic_observations_raw": [
+    {
+      "id": "diagnostic-date-0",
+      "date": 0.0,
+      "spot": 100.0,
+      "quote": 10.516798237665618,
+      "memory_count": 0,
+      "memory_sum": 0.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          10.516798237665618
+        ],
+        "ck": [
+          -0.5606689162748622
+        ],
+        "ckk": [
+          0.016617260830324512
+        ],
+        "ct": [
+          4.907548906344577
+        ],
+        "density": [
+          1.72522395526808
+        ],
+        "weighted_density": [
+          0.06697593130059978
+        ],
+        "local_variance": [
+          0.03882158666768135
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.020833333333333332",
+      "date": 0.020833333333333332,
+      "spot": 100.0,
+      "quote": 10.414258156431629,
+      "memory_count": 0,
+      "memory_sum": 0.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          10.414258156431629
+        ],
+        "ck": [
+          -0.5609183643528719
+        ],
+        "ckk": [
+          0.016774067470762613
+        ],
+        "ct": [
+          4.9364120954607404
+        ],
+        "density": [
+          1.7404157089866845
+        ],
+        "weighted_density": [
+          0.06751750305648402
+        ],
+        "local_variance": [
+          0.03879389430229544
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.041666666666666664",
+      "date": 0.041666666666666664,
+      "spot": 100.0,
+      "quote": 10.31110957773722,
+      "memory_count": 0,
+      "memory_sum": 0.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          10.31110957773722
+        ],
+        "ck": [
+          -0.5611624329809223
+        ],
+        "ckk": [
+          0.01693479995459377
+        ],
+        "ct": [
+          4.965969806600384
+        ],
+        "density": [
+          1.755994882058633
+        ],
+        "weighted_density": [
+          0.06807310980168305
+        ],
+        "local_variance": [
+          0.03876612084533972
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.083333333333333329",
+      "date": 0.08333333333333333,
+      "spot": 100.0,
+      "quote": 10.102927051592047,
+      "memory_count": 1,
+      "memory_sum": 100.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          10.102927051592047
+        ],
+        "ck": [
+          -0.5616331330613699
+        ],
+        "ckk": [
+          0.01726872641059758
+        ],
+        "ct": [
+          5.027298394692836
+        ],
+        "density": [
+          1.7883833416683426
+        ],
+        "weighted_density": [
+          0.069229085488409
+        ],
+        "local_variance": [
+          0.038710428505684215
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.16666666666666666",
+      "date": 0.16666666666666666,
+      "spot": 100.0,
+      "quote": 9.67856029900372,
+      "memory_count": 2,
+      "memory_sum": 200.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          9.67856029900372
+        ],
+        "ck": [
+          -0.5624945091311446
+        ],
+        "ckk": [
+          0.01799184926523205
+        ],
+        "ct": [
+          5.1598447359427
+        ],
+        "density": [
+          1.8586190091322186
+        ],
+        "weighted_density": [
+          0.07174133635338614
+        ],
+        "local_variance": [
+          0.03859926967328386
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.25",
+      "date": 0.25,
+      "spot": 100.0,
+      "quote": 9.242521073959743,
+      "memory_count": 3,
+      "memory_sum": 300.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          9.242521073959743
+        ],
+        "ck": [
+          -0.5632259433407514
+        ],
+        "ckk": [
+          0.018801037393563123
+        ],
+        "ct": [
+          5.307968190456762
+        ],
+        "density": [
+          1.9373614225226732
+        ],
+        "weighted_density": [
+          0.07456967414139197
+        ],
+        "local_variance": [
+          0.03849032672710777
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.33333333333333331",
+      "date": 0.3333333333333333,
+      "spot": 100.0,
+      "quote": 8.793364480299793,
+      "memory_count": 4,
+      "memory_sum": 400.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          8.793364480299793
+        ],
+        "ck": [
+          -0.5637925820923928
+        ],
+        "ckk": [
+          0.019715206009161622
+        ],
+        "ct": [
+          5.475376013014273
+        ],
+        "density": [
+          2.026489779486926
+        ],
+        "weighted_density": [
+          0.07779004499952652
+        ],
+        "local_variance": [
+          0.038386596264611654
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.41666666666666669",
+      "date": 0.4166666666666667,
+      "spot": 100.0,
+      "quote": 8.32928408596836,
+      "memory_count": 5,
+      "memory_sum": 500.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          8.32928408596836
+        ],
+        "ck": [
+          -0.5641491905033528
+        ],
+        "ckk": [
+          0.020759792194864533
+        ],
+        "ct": [
+          5.667125159888535
+        ],
+        "density": [
+          2.1285328836339623
+        ],
+        "weighted_density": [
+          0.08150594061147162
+        ],
+        "local_variance": [
+          0.03829207490199525
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.5",
+      "date": 0.5,
+      "spot": 100.0,
+      "quote": 7.84797357330126,
+      "memory_count": 6,
+      "memory_sum": 600.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          7.84797357330126
+        ],
+        "ck": [
+          -0.5642364554264487
+        ],
+        "ckk": [
+          0.021969988274349674
+        ],
+        "ct": [
+          5.890297899599128
+        ],
+        "density": [
+          2.246991610812498
+        ],
+        "weighted_density": [
+          0.08586209607606639
+        ],
+        "local_variance": [
+          0.03821202342852504
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.58333333333333337",
+      "date": 0.5833333333333334,
+      "spot": 100.0,
+      "quote": 7.346415224669755,
+      "memory_count": 7,
+      "memory_sum": 700.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          7.346415224669755
+        ],
+        "ck": [
+          -0.5639756947484869
+        ],
+        "ckk": [
+          0.02339616126784665
+        ],
+        "ct": [
+          6.155126757444405
+        ],
+        "density": [
+          2.3868795076939233
+        ],
+        "weighted_density": [
+          0.09106724574808206
+        ],
+        "local_variance": [
+          0.03815326473520501
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.66666666666666663",
+      "date": 0.6666666666666666,
+      "spot": 100.0,
+      "quote": 6.820543313598698,
+      "memory_count": 8,
+      "memory_sum": 800.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          6.820543313598698
+        ],
+        "ck": [
+          -0.5632611136232619
+        ],
+        "ckk": [
+          0.02511342241007668
+        ],
+        "ct": [
+          6.476964361592494
+        ],
+        "density": [
+          2.555677532558561
+        ],
+        "weighted_density": [
+          0.09743388041003631
+        ],
+        "local_variance": [
+          0.03812448134350209
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.75",
+      "date": 0.75,
+      "spot": 100.0,
+      "quote": 6.2646809289391,
+      "memory_count": 9,
+      "memory_sum": 900.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          6.2646809289391
+        ],
+        "ck": [
+          -0.5619480919760091
+        ],
+        "ckk": [
+          0.027239649478880204
+        ],
+        "ct": [
+          6.879960481381409
+        ],
+        "density": [
+          2.7651324061564058
+        ],
+        "weighted_density": [
+          0.10545230438575026
+        ],
+        "local_variance": [
+          0.0381364393802506
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.83333333333333337",
+      "date": 0.8333333333333334,
+      "spot": 100.0,
+      "quote": 5.670534537998385,
+      "memory_count": 10,
+      "memory_sum": 1000.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          5.670534537998385
+        ],
+        "ck": [
+          -0.5598344783705416
+        ],
+        "ckk": [
+          0.02997236356314159
+        ],
+        "ct": [
+          7.4045290096477085
+        ],
+        "density": [
+          3.0349369485778843
+        ],
+        "weighted_density": [
+          0.1159407506258769
+        ],
+        "local_variance": [
+          0.03820202942937731
+        ],
+        "supported": [
+          true
+        ]
+      }
+    },
+    {
+      "id": "diagnostic-date-0.91666666666666663",
+      "date": 0.9166666666666666,
+      "spot": 100.0,
+      "quote": 5.02523305451944,
+      "memory_count": 11,
+      "memory_sum": 1100.0,
+      "diagnostic_heston_variance": 0.04,
+      "source": "deterministic original-parameter Heston CF observation; not an independent price oracle",
+      "production_cf_raw": {
+        "price": [
+          5.02523305451944
+        ],
+        "ck": [
+          -0.5566276726753888
+        ],
+        "ckk": [
+          0.033673177411872576
+        ],
+        "ct": [
+          8.124371290379653
+        ],
+        "density": [
+          3.4011598471116726
+        ],
+        "weighted_density": [
+          0.13038713915866068
+        ],
+        "local_variance": [
+          0.03833608093115289
+        ],
+        "supported": [
+          true
+        ]
+      }
+    }
+  ],
+  "declared_stream_namespaces": {
+    "bootstrap": [
+      467711159
+    ],
+    "fresh": [
+      3204431721,
+      2015086102,
+      4200987281
+    ],
+    "optional_p": [
+      1318225101,
+      726223465,
+      4197217211
+    ],
+    "oracle": [
+      3631740690,
+      3584985287,
+      3528099577
+    ],
+    "pilot": [
+      571576394,
+      897800919,
+      57346572,
+      3530081562,
+      3298253178,
+      114746875
+    ],
+    "premium": [
+      74465188
+    ],
+    "refinement": [
+      3858740885,
+      1001519867,
+      310817098
+    ],
+    "teacher": [
+      138674072,
+      1345225788
+    ],
+    "test": [
+      3648259678,
+      4207029089,
+      2263049566
+    ],
+    "train": [
+      3050892616,
+      4085010191
+    ],
+    "validation": [
+      1680996203,
+      2946539793
+    ]
+  },
+  "stream_receipts_status": "not generated; must bind actual later market job raw, no RNG run here",
+  "measurements": [
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.0,
+      "wall_seconds": 0.0067045409996353555,
+      "cpu_seconds": 0.006704865000000004
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.020833333333333332,
+      "wall_seconds": 0.0006555079999088775,
+      "cpu_seconds": 0.0006557469999999843
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.041666666666666664,
+      "wall_seconds": 0.0006342330016195774,
+      "cpu_seconds": 0.0006344530000000348
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.08333333333333333,
+      "wall_seconds": 0.000607867998041911,
+      "cpu_seconds": 0.0006079820000000069
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.16666666666666666,
+      "wall_seconds": 0.0006392680006683804,
+      "cpu_seconds": 0.0006394920000000193
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.25,
+      "wall_seconds": 0.0006204339988471474,
+      "cpu_seconds": 0.0006206049999999963
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.3333333333333333,
+      "wall_seconds": 0.0005888060004508588,
+      "cpu_seconds": 0.000588902999999974
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.4166666666666667,
+      "wall_seconds": 0.0005926980011281557,
+      "cpu_seconds": 0.0005928219999999929
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.5,
+      "wall_seconds": 0.00058323799748905,
+      "cpu_seconds": 0.0005833670000000013
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.5833333333333334,
+      "wall_seconds": 0.0006344230023387354,
+      "cpu_seconds": 0.0006346609999999808
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.6666666666666666,
+      "wall_seconds": 0.0006164920014271047,
+      "cpu_seconds": 0.0006166330000000331
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.75,
+      "wall_seconds": 0.0006430690009437967,
+      "cpu_seconds": 0.0006432339999999925
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.8333333333333334,
+      "wall_seconds": 0.000621822000539396,
+      "cpu_seconds": 0.0006219440000000409
+    },
+    {
+      "operation": "production_cf_diagnostic_observation",
+      "date": 0.9166666666666666,
+      "wall_seconds": 0.000655795000056969,
+      "cpu_seconds": 0.0006560040000000433
+    },
+    {
+      "operation": "actual_local_additional_dates_call_cache",
+      "date_count": 2,
+      "wall_seconds": 4.192663876998267,
+      "cpu_seconds": 4.190192466
+    }
+  ],
+  "source_before": {
+    "johnhull/hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe"
+  },
+  "source_after": {
+    "johnhull/hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "d04ab70b83d19545e121338a54dd8daf5e9f5aef8dded3f1c764d4e14b6a83fe"
+  },
+  "input_provenance": {
+    "johnhull/research/RB-F04/dynamic_hedging/pilot/selected-calls/refined/selected-calls.json": {
+      "bytes": 23503,
+      "sha256": "9f9fa7fbfd61c5114881479d8707f482c1a007e0ea47ad8e050eb537cdb2012e"
+    },
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-teacher-preflight.json": {
+      "bytes": 675186,
+      "sha256": "50313a08abe3a4ce5abce65b909d44f7b33e7337a2725951b4294a788abc058d"
+    },
+    "johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes/reference.npz": {
+      "bytes": 30535323,
+      "sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591"
+    }
+  },
+  "outer_wall_seconds": 4.233482090996404,
+  "outer_cpu_seconds": 4.231010367
+}

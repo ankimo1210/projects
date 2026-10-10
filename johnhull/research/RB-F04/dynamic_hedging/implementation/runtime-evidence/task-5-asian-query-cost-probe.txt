@@ -1,0 +1,1225 @@
+{
+  "outer": {
+    "clock": {
+      "wall_start": 16372.922821365,
+      "wall_stop": 16385.63798387,
+      "cpu_start": 0.040318363,
+      "cpu_stop": 12.740372129
+    },
+    "wall_seconds": 12.71516250500099,
+    "cpu_seconds": 12.700053766
+  },
+  "source_stable": true,
+  "owned_stable": true,
+  "cap_reached": false,
+  "measurements": [
+    {
+      "clock": {
+        "wall_start": 16373.971041222,
+        "wall_stop": 16373.971249521,
+        "cpu_start": 1.084713555,
+        "cpu_stop": 1.084919991
+      },
+      "wall_seconds": 0.00020829900131502654,
+      "cpu_seconds": 0.00020643600000003204,
+      "operation": "analytic_cache_build",
+      "grid": "coarse",
+      "model": "heston",
+      "domain": "global",
+      "axis_sizes": {
+        "dates": [
+          12
+        ],
+        "state": [
+          9
+        ],
+        "threshold": [
+          12,
+          33
+        ]
+      },
+      "f_shape": [
+        12,
+        9,
+        33
+      ],
+      "block_shape": [
+        12,
+        9,
+        33,
+        16,
+        3
+      ],
+      "original_N": null
+    },
+    {
+      "operation": "evaluate_asian_only",
+      "grid": "coarse",
+      "model": "heston",
+      "domain": "global",
+      "clock": {
+        "wall_start": 16373.971325792,
+        "wall_stop": 16374.124214074,
+        "cpu_start": 1.084995934,
+        "cpu_stop": 1.237884101
+      },
+      "wall_seconds": 0.15288828200027638,
+      "cpu_seconds": 0.15288816699999996,
+      "actual_query_count": 864,
+      "mean_query_wall_seconds": 0.00017484387963880485,
+      "median_query_wall_seconds": 0.0001650850008445559,
+      "p95_query_wall_seconds": 0.0002153318491764365,
+      "mean_query_cpu_seconds": 0.0001749707719907392,
+      "sum_query_wall_seconds": 0.15106511200792738,
+      "sum_query_cpu_seconds": 0.15117474699999867,
+      "status_counts": {
+        "ok": 848,
+        "unknown": 16
+      },
+      "by_status_reason": {
+        "ok:": {
+          "count": 848,
+          "mean_wall_seconds": 0.00017792976415901922,
+          "median_wall_seconds": 0.0001652094997552922
+        },
+        "unknown:outside_support": {
+          "count": 16,
+          "mean_wall_seconds": 1.1292000067442132e-05,
+          "median_wall_seconds": 1.0948499948426615e-05
+        }
+      },
+      "planned_query_count": 864,
+      "cold_first_query_wall_seconds": 0.0009208400006173179,
+      "qualification": "unknown",
+      "timing_input": "actual selected inputs plus explained fixture;analytic cached f/16blocks",
+      "actual_selected_stats": {
+        "actual_query_count": 288,
+        "mean_query_wall_seconds": 0.00017347966672155558,
+        "median_query_wall_seconds": 0.0001658234996284591,
+        "p95_query_wall_seconds": 0.00024099740048768575,
+        "mean_query_cpu_seconds": 0.00017362079861110943,
+        "sum_query_wall_seconds": 0.04996214401580801,
+        "sum_query_cpu_seconds": 0.05000278999999952,
+        "status_counts": {
+          "ok": 272,
+          "unknown": 16
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 272,
+            "mean_wall_seconds": 0.0001830201177012093,
+            "median_wall_seconds": 0.0001664749997871695
+          },
+          "unknown:outside_support": {
+            "count": 16,
+            "mean_wall_seconds": 1.1292000067442132e-05,
+            "median_wall_seconds": 1.0948499948426615e-05
+          }
+        }
+      },
+      "all12date_fixture_stats": {
+        "actual_query_count": 576,
+        "mean_query_wall_seconds": 0.00017552598609742946,
+        "median_query_wall_seconds": 0.00016454649903607788,
+        "p95_query_wall_seconds": 0.00020675975110862055,
+        "mean_query_cpu_seconds": 0.00017564575868055408,
+        "sum_query_wall_seconds": 0.10110296799211937,
+        "sum_query_cpu_seconds": 0.10117195699999915,
+        "status_counts": {
+          "ok": 576
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 576,
+            "mean_wall_seconds": 0.00017552598609742946,
+            "median_wall_seconds": 0.00016454649903607788
+          }
+        }
+      }
+    },
+    {
+      "clock": {
+        "wall_start": 16374.125200164,
+        "wall_stop": 16374.125903545,
+        "cpu_start": 1.238870685,
+        "cpu_stop": 1.239574057
+      },
+      "wall_seconds": 0.000703380999766523,
+      "cpu_seconds": 0.0007033720000000354,
+      "operation": "analytic_cache_build",
+      "grid": "coarse",
+      "model": "heston",
+      "domain": "full_fixed_box",
+      "axis_sizes": {
+        "dates": [
+          12
+        ],
+        "state": [
+          9
+        ],
+        "threshold": [
+          12,
+          33
+        ]
+      },
+      "f_shape": [
+        12,
+        9,
+        33
+      ],
+      "block_shape": [
+        12,
+        9,
+        33,
+        16,
+        3
+      ],
+      "original_N": null
+    },
+    {
+      "operation": "evaluate_asian_only",
+      "grid": "coarse",
+      "model": "heston",
+      "domain": "full_fixed_box",
+      "clock": {
+        "wall_start": 16374.125983357,
+        "wall_stop": 16374.285078511,
+        "cpu_start": 1.239653558,
+        "cpu_stop": 1.398748556
+      },
+      "wall_seconds": 0.15909515400016971,
+      "cpu_seconds": 0.15909499799999982,
+      "actual_query_count": 864,
+      "mean_query_wall_seconds": 0.0001819496886662785,
+      "median_query_wall_seconds": 0.00017685649982013274,
+      "p95_query_wall_seconds": 0.00021780780061817482,
+      "mean_query_cpu_seconds": 0.00018207275925925958,
+      "sum_query_wall_seconds": 0.15720453100766463,
+      "sum_query_cpu_seconds": 0.15731086400000027,
+      "status_counts": {
+        "ok": 848,
+        "unknown": 16
+      },
+      "by_status_reason": {
+        "ok:": {
+          "count": 848,
+          "mean_wall_seconds": 0.0001851620165158272,
+          "median_wall_seconds": 0.00017697250041237567
+        },
+        "unknown:outside_support": {
+          "count": 16,
+          "mean_wall_seconds": 1.1696312640196993e-05,
+          "median_wall_seconds": 1.1268501111771911e-05
+        }
+      },
+      "planned_query_count": 864,
+      "cold_first_query_wall_seconds": 0.00027538399990589824,
+      "qualification": "unknown",
+      "timing_input": "actual selected inputs plus explained fixture;analytic cached f/16blocks",
+      "actual_selected_stats": {
+        "actual_query_count": 288,
+        "mean_query_wall_seconds": 0.00017656961116093348,
+        "median_query_wall_seconds": 0.00017750750066625187,
+        "p95_query_wall_seconds": 0.00021763965014542908,
+        "mean_query_cpu_seconds": 0.00017668710763888337,
+        "sum_query_wall_seconds": 0.05085204801434884,
+        "sum_query_cpu_seconds": 0.05088588699999841,
+        "status_counts": {
+          "ok": 272,
+          "unknown": 16
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 272,
+            "mean_wall_seconds": 0.00018626804048568266,
+            "median_wall_seconds": 0.0001782335011739633
+          },
+          "unknown:outside_support": {
+            "count": 16,
+            "mean_wall_seconds": 1.1696312640196993e-05,
+            "median_wall_seconds": 1.1268501111771911e-05
+          }
+        }
+      },
+      "all12date_fixture_stats": {
+        "actual_query_count": 576,
+        "mean_query_wall_seconds": 0.00018463972741895103,
+        "median_query_wall_seconds": 0.00017612750070838956,
+        "p95_query_wall_seconds": 0.00021692700011044508,
+        "mean_query_cpu_seconds": 0.00018476558506944768,
+        "sum_query_wall_seconds": 0.10635248299331579,
+        "sum_query_cpu_seconds": 0.10642497700000186,
+        "status_counts": {
+          "ok": 576
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 576,
+            "mean_wall_seconds": 0.00018463972741895103,
+            "median_wall_seconds": 0.00017612750070838956
+          }
+        }
+      }
+    },
+    {
+      "clock": {
+        "wall_start": 16374.293846756,
+        "wall_stop": 16374.29463258,
+        "cpu_start": 1.407507546,
+        "cpu_stop": 1.408292825
+      },
+      "wall_seconds": 0.0007858240005589323,
+      "cpu_seconds": 0.0007852790000000276,
+      "operation": "analytic_cache_build",
+      "grid": "coarse",
+      "model": "local",
+      "domain": "global",
+      "axis_sizes": {
+        "dates": [
+          12
+        ],
+        "state": [
+          5
+        ],
+        "threshold": [
+          12,
+          33
+        ],
+        "spot": [
+          9
+        ],
+        "t0_spot": [
+          5
+        ]
+      },
+      "f_shape": [
+        12,
+        9,
+        5,
+        33
+      ],
+      "block_shape": [
+        12,
+        9,
+        5,
+        33,
+        16,
+        3
+      ],
+      "original_N": null
+    },
+    {
+      "operation": "evaluate_asian_only",
+      "grid": "coarse",
+      "model": "local",
+      "domain": "global",
+      "clock": {
+        "wall_start": 16374.29472282,
+        "wall_stop": 16374.542971817,
+        "cpu_start": 1.408381751,
+        "cpu_stop": 1.656630638
+      },
+      "wall_seconds": 0.2482489970007009,
+      "cpu_seconds": 0.24824888699999992,
+      "actual_query_count": 864,
+      "mean_query_wall_seconds": 0.0002848419872268298,
+      "median_query_wall_seconds": 0.00027360849890101235,
+      "p95_query_wall_seconds": 0.00034261354994669064,
+      "mean_query_cpu_seconds": 0.00028506261574074316,
+      "sum_query_wall_seconds": 0.24610347696398094,
+      "sum_query_cpu_seconds": 0.24629410000000207,
+      "status_counts": {
+        "ok": 864
+      },
+      "by_status_reason": {
+        "ok:": {
+          "count": 864,
+          "mean_wall_seconds": 0.0002848419872268298,
+          "median_wall_seconds": 0.00027360849890101235
+        }
+      },
+      "planned_query_count": 864,
+      "cold_first_query_wall_seconds": 0.0007909639989520656,
+      "qualification": "unknown",
+      "timing_input": "actual selected inputs plus explained fixture;analytic cached f/16blocks",
+      "actual_selected_stats": {
+        "actual_query_count": 288,
+        "mean_query_wall_seconds": 0.00029088512845495035,
+        "median_query_wall_seconds": 0.00027726700045604957,
+        "p95_query_wall_seconds": 0.0003539270502187719,
+        "mean_query_cpu_seconds": 0.0002911512986111122,
+        "sum_query_wall_seconds": 0.0837749169950257,
+        "sum_query_cpu_seconds": 0.08385157400000032,
+        "status_counts": {
+          "ok": 288
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 288,
+            "mean_wall_seconds": 0.00029088512845495035,
+            "median_wall_seconds": 0.00027726700045604957
+          }
+        }
+      },
+      "all12date_fixture_stats": {
+        "actual_query_count": 576,
+        "mean_query_wall_seconds": 0.0002818204166127695,
+        "median_query_wall_seconds": 0.000271875999715121,
+        "p95_query_wall_seconds": 0.00033009949993356713,
+        "mean_query_cpu_seconds": 0.0002820182743055586,
+        "sum_query_wall_seconds": 0.16232855996895523,
+        "sum_query_cpu_seconds": 0.16244252600000175,
+        "status_counts": {
+          "ok": 576
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 576,
+            "mean_wall_seconds": 0.0002818204166127695,
+            "median_wall_seconds": 0.000271875999715121
+          }
+        }
+      }
+    },
+    {
+      "clock": {
+        "wall_start": 16374.543784939,
+        "wall_stop": 16374.546206175,
+        "cpu_start": 1.657444286,
+        "cpu_stop": 1.659865894
+      },
+      "wall_seconds": 0.0024212360003730282,
+      "cpu_seconds": 0.0024216079999999085,
+      "operation": "analytic_cache_build",
+      "grid": "coarse",
+      "model": "local",
+      "domain": "full_fixed_box",
+      "axis_sizes": {
+        "dates": [
+          12
+        ],
+        "state": [
+          5
+        ],
+        "threshold": [
+          12,
+          33
+        ],
+        "spot": [
+          9
+        ],
+        "t0_spot": [
+          5
+        ]
+      },
+      "f_shape": [
+        12,
+        9,
+        5,
+        33
+      ],
+      "block_shape": [
+        12,
+        9,
+        5,
+        33,
+        16,
+        3
+      ],
+      "original_N": null
+    },
+    {
+      "operation": "evaluate_asian_only",
+      "grid": "coarse",
+      "model": "local",
+      "domain": "full_fixed_box",
+      "clock": {
+        "wall_start": 16374.546386508,
+        "wall_stop": 16374.796845572,
+        "cpu_start": 1.660046065,
+        "cpu_stop": 1.91049781
+      },
+      "wall_seconds": 0.250459064000097,
+      "cpu_seconds": 0.2504517450000001,
+      "actual_query_count": 864,
+      "mean_query_wall_seconds": 0.00028753297575408225,
+      "median_query_wall_seconds": 0.0002805989997796132,
+      "p95_query_wall_seconds": 0.000331857399760338,
+      "mean_query_cpu_seconds": 0.00028771363888888666,
+      "sum_query_wall_seconds": 0.2484284910515271,
+      "sum_query_cpu_seconds": 0.24858458399999805,
+      "status_counts": {
+        "ok": 864
+      },
+      "by_status_reason": {
+        "ok:": {
+          "count": 864,
+          "mean_wall_seconds": 0.00028753297575408225,
+          "median_wall_seconds": 0.0002805989997796132
+        }
+      },
+      "planned_query_count": 864,
+      "cold_first_query_wall_seconds": 0.00044208600047568325,
+      "qualification": "unknown",
+      "timing_input": "actual selected inputs plus explained fixture;analytic cached f/16blocks",
+      "actual_selected_stats": {
+        "actual_query_count": 288,
+        "mean_query_wall_seconds": 0.000282976315999248,
+        "median_query_wall_seconds": 0.00027801000032923184,
+        "p95_query_wall_seconds": 0.0003207792492503358,
+        "mean_query_cpu_seconds": 0.00028312456249998983,
+        "sum_query_wall_seconds": 0.08149717900778342,
+        "sum_query_cpu_seconds": 0.08153987399999707,
+        "status_counts": {
+          "ok": 288
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 288,
+            "mean_wall_seconds": 0.000282976315999248,
+            "median_wall_seconds": 0.00027801000032923184
+          }
+        }
+      },
+      "all12date_fixture_stats": {
+        "actual_query_count": 576,
+        "mean_query_wall_seconds": 0.00028981130563149945,
+        "median_query_wall_seconds": 0.00028200250017107464,
+        "p95_query_wall_seconds": 0.0003361702506481379,
+        "mean_query_cpu_seconds": 0.00029000817708333505,
+        "sum_query_wall_seconds": 0.16693131204374367,
+        "sum_query_cpu_seconds": 0.16704471000000098,
+        "status_counts": {
+          "ok": 576
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 576,
+            "mean_wall_seconds": 0.00028981130563149945,
+            "median_wall_seconds": 0.00028200250017107464
+          }
+        }
+      }
+    },
+    {
+      "clock": {
+        "wall_start": 16374.801000966,
+        "wall_stop": 16374.801411656,
+        "cpu_start": 1.914654157,
+        "cpu_stop": 1.915064647
+      },
+      "wall_seconds": 0.0004106900014448911,
+      "cpu_seconds": 0.0004104899999999301,
+      "operation": "analytic_cache_build",
+      "grid": "high",
+      "model": "heston",
+      "domain": "global",
+      "axis_sizes": {
+        "dates": [
+          12
+        ],
+        "state": [
+          13
+        ],
+        "threshold": [
+          12,
+          65
+        ]
+      },
+      "f_shape": [
+        12,
+        13,
+        65
+      ],
+      "block_shape": [
+        12,
+        13,
+        65,
+        16,
+        3
+      ],
+      "original_N": null
+    },
+    {
+      "operation": "evaluate_asian_only",
+      "grid": "high",
+      "model": "heston",
+      "domain": "global",
+      "clock": {
+        "wall_start": 16374.801486595,
+        "wall_stop": 16374.973237383,
+        "cpu_start": 1.915138936,
+        "cpu_stop": 2.08458452
+      },
+      "wall_seconds": 0.17175078799846233,
+      "cpu_seconds": 0.16944558399999998,
+      "actual_query_count": 864,
+      "mean_query_wall_seconds": 0.00019648071297608652,
+      "median_query_wall_seconds": 0.00018429200008540647,
+      "p95_query_wall_seconds": 0.00024072959995464759,
+      "mean_query_cpu_seconds": 0.00019397764583333564,
+      "sum_query_wall_seconds": 0.16975933601133875,
+      "sum_query_cpu_seconds": 0.167596686000002,
+      "status_counts": {
+        "ok": 848,
+        "unknown": 16
+      },
+      "by_status_reason": {
+        "ok:": {
+          "count": 848,
+          "mean_wall_seconds": 0.0001999525365723663,
+          "median_wall_seconds": 0.00018463400010659825
+        },
+        "unknown:outside_support": {
+          "count": 16,
+          "mean_wall_seconds": 1.2474062373257766e-05,
+          "median_wall_seconds": 1.1635499504336622e-05
+        }
+      },
+      "planned_query_count": 864,
+      "cold_first_query_wall_seconds": 0.0006522189996758243,
+      "qualification": "unknown",
+      "timing_input": "actual selected inputs plus explained fixture;analytic cached f/16blocks",
+      "actual_selected_stats": {
+        "actual_query_count": 288,
+        "mean_query_wall_seconds": 0.00019576572570182785,
+        "median_query_wall_seconds": 0.00018372149952483596,
+        "p95_query_wall_seconds": 0.000239963850344793,
+        "mean_query_cpu_seconds": 0.00018790211111110547,
+        "sum_query_wall_seconds": 0.05638052900212642,
+        "sum_query_cpu_seconds": 0.05411580799999838,
+        "status_counts": {
+          "ok": 272,
+          "unknown": 16
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 272,
+            "mean_wall_seconds": 0.00020654758825056728,
+            "median_wall_seconds": 0.00018443600038153818
+          },
+          "unknown:outside_support": {
+            "count": 16,
+            "mean_wall_seconds": 1.2474062373257766e-05,
+            "median_wall_seconds": 1.1635499504336622e-05
+          }
+        }
+      },
+      "all12date_fixture_stats": {
+        "actual_query_count": 576,
+        "mean_query_wall_seconds": 0.00019683820661321584,
+        "median_query_wall_seconds": 0.00018482800078345463,
+        "p95_query_wall_seconds": 0.0002398440005890734,
+        "mean_query_cpu_seconds": 0.00019701541319445072,
+        "sum_query_wall_seconds": 0.11337880700921232,
+        "sum_query_cpu_seconds": 0.11348087800000362,
+        "status_counts": {
+          "ok": 576
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 576,
+            "mean_wall_seconds": 0.00019683820661321584,
+            "median_wall_seconds": 0.00018482800078345463
+          }
+        }
+      }
+    },
+    {
+      "clock": {
+        "wall_start": 16374.974089279,
+        "wall_stop": 16374.975959814,
+        "cpu_start": 2.085436812,
+        "cpu_stop": 2.08730756
+      },
+      "wall_seconds": 0.001870535001216922,
+      "cpu_seconds": 0.0018707479999999777,
+      "operation": "analytic_cache_build",
+      "grid": "high",
+      "model": "heston",
+      "domain": "full_fixed_box",
+      "axis_sizes": {
+        "dates": [
+          12
+        ],
+        "state": [
+          13
+        ],
+        "threshold": [
+          12,
+          65
+        ]
+      },
+      "f_shape": [
+        12,
+        13,
+        65
+      ],
+      "block_shape": [
+        12,
+        13,
+        65,
+        16,
+        3
+      ],
+      "original_N": null
+    },
+    {
+      "operation": "evaluate_asian_only",
+      "grid": "high",
+      "model": "heston",
+      "domain": "full_fixed_box",
+      "clock": {
+        "wall_start": 16374.976045971,
+        "wall_stop": 16375.156279425,
+        "cpu_start": 2.087393289,
+        "cpu_stop": 2.267626573
+      },
+      "wall_seconds": 0.18023345400069957,
+      "cpu_seconds": 0.18023328399999983,
+      "actual_query_count": 864,
+      "mean_query_wall_seconds": 0.00020593855905375407,
+      "median_query_wall_seconds": 0.00019996499941044021,
+      "p95_query_wall_seconds": 0.00025770714919417506,
+      "mean_query_cpu_seconds": 0.00020611824305555613,
+      "sum_query_wall_seconds": 0.17793091502244351,
+      "sum_query_cpu_seconds": 0.1780861620000005,
+      "status_counts": {
+        "ok": 848,
+        "unknown": 16
+      },
+      "by_status_reason": {
+        "ok:": {
+          "count": 848,
+          "mean_wall_seconds": 0.0002095861191264703,
+          "median_wall_seconds": 0.00020019499970658217
+        },
+        "unknown:outside_support": {
+          "count": 16,
+          "mean_wall_seconds": 1.261787519979407e-05,
+          "median_wall_seconds": 1.1754000297514722e-05
+        }
+      },
+      "planned_query_count": 864,
+      "cold_first_query_wall_seconds": 0.00033742000050551724,
+      "qualification": "unknown",
+      "timing_input": "actual selected inputs plus explained fixture;analytic cached f/16blocks",
+      "actual_selected_stats": {
+        "actual_query_count": 288,
+        "mean_query_wall_seconds": 0.000199484187501437,
+        "median_query_wall_seconds": 0.00020011600008729147,
+        "p95_query_wall_seconds": 0.0002557170505497196,
+        "mean_query_cpu_seconds": 0.00019966157986111503,
+        "sum_query_wall_seconds": 0.05745144600041385,
+        "sum_query_cpu_seconds": 0.05750253500000113,
+        "status_counts": {
+          "ok": 272,
+          "unknown": 16
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 272,
+            "mean_wall_seconds": 0.00021047632351918068,
+            "median_wall_seconds": 0.00020086249969608616
+          },
+          "unknown:outside_support": {
+            "count": 16,
+            "mean_wall_seconds": 1.261787519979407e-05,
+            "median_wall_seconds": 1.1754000297514722e-05
+          }
+        }
+      },
+      "all12date_fixture_stats": {
+        "actual_query_count": 576,
+        "mean_query_wall_seconds": 0.0002091657448299126,
+        "median_query_wall_seconds": 0.0001998170000661048,
+        "p95_query_wall_seconds": 0.00025782449938560603,
+        "mean_query_cpu_seconds": 0.00020934657465277666,
+        "sum_query_wall_seconds": 0.12047946902202966,
+        "sum_query_cpu_seconds": 0.12058362699999936,
+        "status_counts": {
+          "ok": 576
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 576,
+            "mean_wall_seconds": 0.0002091657448299126,
+            "median_wall_seconds": 0.0001998170000661048
+          }
+        }
+      }
+    },
+    {
+      "clock": {
+        "wall_start": 16375.202124949,
+        "wall_stop": 16375.217351295,
+        "cpu_start": 2.313474634,
+        "cpu_stop": 2.328702162
+      },
+      "wall_seconds": 0.015226345998598845,
+      "cpu_seconds": 0.015227528000000046,
+      "operation": "analytic_cache_build",
+      "grid": "high",
+      "model": "local",
+      "domain": "global",
+      "axis_sizes": {
+        "dates": [
+          12
+        ],
+        "state": [
+          7
+        ],
+        "threshold": [
+          12,
+          65
+        ],
+        "spot": [
+          17
+        ],
+        "t0_spot": [
+          5
+        ]
+      },
+      "f_shape": [
+        12,
+        17,
+        7,
+        65
+      ],
+      "block_shape": [
+        12,
+        17,
+        7,
+        65,
+        16,
+        3
+      ],
+      "original_N": null
+    },
+    {
+      "operation": "evaluate_asian_only",
+      "grid": "high",
+      "model": "local",
+      "domain": "global",
+      "clock": {
+        "wall_start": 16375.21798993,
+        "wall_stop": 16375.759690933,
+        "cpu_start": 2.329338619,
+        "cpu_stop": 2.871016308
+      },
+      "wall_seconds": 0.5417010029996163,
+      "cpu_seconds": 0.5416776890000001,
+      "actual_query_count": 864,
+      "mean_query_wall_seconds": 0.0006225685763604781,
+      "median_query_wall_seconds": 0.0006199945000844309,
+      "p95_query_wall_seconds": 0.0007784610007547598,
+      "mean_query_cpu_seconds": 0.0006231703402777793,
+      "sum_query_wall_seconds": 0.5378992499754531,
+      "sum_query_cpu_seconds": 0.5384191740000013,
+      "status_counts": {
+        "ok": 864
+      },
+      "by_status_reason": {
+        "ok:": {
+          "count": 864,
+          "mean_wall_seconds": 0.0006225685763604781,
+          "median_wall_seconds": 0.0006199945000844309
+        }
+      },
+      "planned_query_count": 864,
+      "cold_first_query_wall_seconds": 0.0010925429996859748,
+      "qualification": "unknown",
+      "timing_input": "actual selected inputs plus explained fixture;analytic cached f/16blocks",
+      "actual_selected_stats": {
+        "actual_query_count": 288,
+        "mean_query_wall_seconds": 0.0006088750381347078,
+        "median_query_wall_seconds": 0.0006098815001678304,
+        "p95_query_wall_seconds": 0.0007762304006064367,
+        "mean_query_cpu_seconds": 0.0006094800972222382,
+        "sum_query_wall_seconds": 0.17535601098279585,
+        "sum_query_cpu_seconds": 0.1755302680000046,
+        "status_counts": {
+          "ok": 288
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 288,
+            "mean_wall_seconds": 0.0006088750381347078,
+            "median_wall_seconds": 0.0006098815001678304
+          }
+        }
+      },
+      "all12date_fixture_stats": {
+        "actual_query_count": 576,
+        "mean_query_wall_seconds": 0.0006294153454733634,
+        "median_query_wall_seconds": 0.0006227035009942483,
+        "p95_query_wall_seconds": 0.0007791082507537794,
+        "mean_query_cpu_seconds": 0.0006300154618055498,
+        "sum_query_wall_seconds": 0.3625432389926573,
+        "sum_query_cpu_seconds": 0.3628889059999967,
+        "status_counts": {
+          "ok": 576
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 576,
+            "mean_wall_seconds": 0.0006294153454733634,
+            "median_wall_seconds": 0.0006227035009942483
+          }
+        }
+      }
+    },
+    {
+      "clock": {
+        "wall_start": 16375.760617669,
+        "wall_stop": 16375.77545104,
+        "cpu_start": 2.871943508,
+        "cpu_stop": 2.886778447
+      },
+      "wall_seconds": 0.014833370998530881,
+      "cpu_seconds": 0.014834938999999991,
+      "operation": "analytic_cache_build",
+      "grid": "high",
+      "model": "local",
+      "domain": "full_fixed_box",
+      "axis_sizes": {
+        "dates": [
+          12
+        ],
+        "state": [
+          7
+        ],
+        "threshold": [
+          12,
+          65
+        ],
+        "spot": [
+          17
+        ],
+        "t0_spot": [
+          5
+        ]
+      },
+      "f_shape": [
+        12,
+        17,
+        7,
+        65
+      ],
+      "block_shape": [
+        12,
+        17,
+        7,
+        65,
+        16,
+        3
+      ],
+      "original_N": null
+    },
+    {
+      "operation": "evaluate_asian_only",
+      "grid": "high",
+      "model": "local",
+      "domain": "full_fixed_box",
+      "clock": {
+        "wall_start": 16375.775553053,
+        "wall_stop": 16376.39658667,
+        "cpu_start": 2.886878544,
+        "cpu_stop": 3.507907929
+      },
+      "wall_seconds": 0.6210336170006485,
+      "cpu_seconds": 0.6210293849999999,
+      "actual_query_count": 864,
+      "mean_query_wall_seconds": 0.0007144360902960519,
+      "median_query_wall_seconds": 0.0007204664998425869,
+      "p95_query_wall_seconds": 0.00089404690079391,
+      "mean_query_cpu_seconds": 0.0007150616956018578,
+      "sum_query_wall_seconds": 0.6172727820157888,
+      "sum_query_cpu_seconds": 0.6178133050000052,
+      "status_counts": {
+        "ok": 864
+      },
+      "by_status_reason": {
+        "ok:": {
+          "count": 864,
+          "mean_wall_seconds": 0.0007144360902960519,
+          "median_wall_seconds": 0.0007204664998425869
+        }
+      },
+      "planned_query_count": 864,
+      "cold_first_query_wall_seconds": 0.0006833030001871521,
+      "qualification": "unknown",
+      "timing_input": "actual selected inputs plus explained fixture;analytic cached f/16blocks",
+      "actual_selected_stats": {
+        "actual_query_count": 288,
+        "mean_query_wall_seconds": 0.0006962475556204279,
+        "median_query_wall_seconds": 0.0007169109994720202,
+        "p95_query_wall_seconds": 0.0008935414508414396,
+        "mean_query_cpu_seconds": 0.0006968473159722319,
+        "sum_query_wall_seconds": 0.20051929601868324,
+        "sum_query_cpu_seconds": 0.20069202700000277,
+        "status_counts": {
+          "ok": 288
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 288,
+            "mean_wall_seconds": 0.0006962475556204279,
+            "median_wall_seconds": 0.0007169109994720202
+          }
+        }
+      },
+      "all12date_fixture_stats": {
+        "actual_query_count": 576,
+        "mean_query_wall_seconds": 0.0007235303576338639,
+        "median_query_wall_seconds": 0.000722378000318713,
+        "p95_query_wall_seconds": 0.0008952159996624687,
+        "mean_query_cpu_seconds": 0.0007241688854166708,
+        "sum_query_wall_seconds": 0.4167534859971056,
+        "sum_query_cpu_seconds": 0.4171212780000024,
+        "status_counts": {
+          "ok": 576
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 576,
+            "mean_wall_seconds": 0.0007235303576338639,
+            "median_wall_seconds": 0.000722378000318713
+          }
+        }
+      }
+    },
+    {
+      "operation": "actual_call_cache_build",
+      "model": "heston",
+      "clock": {
+        "wall_start": 16376.401901639,
+        "wall_stop": 16381.70259551,
+        "cpu_start": 3.513224061,
+        "cpu_stop": 8.810388964
+      },
+      "wall_seconds": 5.300693871000476,
+      "cpu_seconds": 5.297164903,
+      "spot_count": 65,
+      "state_count": 33,
+      "date_count": 6,
+      "reference_status": "unmeasured",
+      "financial_qualification": "unknown"
+    },
+    {
+      "operation": "actual_call_cache_build",
+      "model": "local",
+      "clock": {
+        "wall_start": 16381.702604928,
+        "wall_stop": 16384.796995986,
+        "cpu_start": 8.810396255,
+        "cpu_stop": 11.903418797
+      },
+      "wall_seconds": 3.094391057999019,
+      "cpu_seconds": 3.093022542,
+      "spot_count": 65,
+      "state_count": 7,
+      "date_count": 6,
+      "reference_status": "unmeasured",
+      "financial_qualification": "unknown"
+    },
+    {
+      "operation": "actual_13_refit_plus_analytic_asian",
+      "grid": "coarse",
+      "model": "heston",
+      "actual_group_count": 18,
+      "actual_query_count": 234,
+      "clock": {
+        "wall_start": 16384.797006898,
+        "wall_stop": 16384.969212133,
+        "cpu_start": 11.903427501,
+        "cpu_stop": 12.075632526
+      },
+      "wall_seconds": 0.17220523500145646,
+      "cpu_seconds": 0.17220502500000023,
+      "sum_actual_group_wall_seconds": 0.10900377099824254,
+      "sum_actual_group_cpu_seconds": 0.1090173870000033,
+      "mean_integrated_query_wall_seconds": 0.0004658280811890707,
+      "median_13query_group_wall_seconds": 0.006150855500891339,
+      "separate_same_query_fit_only": {
+        "actual_query_count": 234,
+        "mean_query_wall_seconds": 0.00026527494022351067,
+        "median_query_wall_seconds": 0.00026237299789499957,
+        "p95_query_wall_seconds": 0.0003081015494899475,
+        "mean_query_cpu_seconds": 0.000265444760683784,
+        "sum_query_wall_seconds": 0.0620743360123015,
+        "sum_query_cpu_seconds": 0.06211407400000546,
+        "status_counts": {
+          "ok": 222,
+          "unknown": 12
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 222,
+            "mean_wall_seconds": 0.00026899774330796627,
+            "median_wall_seconds": 0.00026361349955550395
+          },
+          "unknown:ill_conditioned": {
+            "count": 9,
+            "mean_wall_seconds": 0.0002084678886199577,
+            "median_wall_seconds": 0.00020490799943218008
+          },
+          "unknown:no_root": {
+            "count": 3,
+            "mean_wall_seconds": 0.000160208666784456,
+            "median_wall_seconds": 0.00016101800065371208
+          }
+        }
+      },
+      "note": "phase includes separately repeated fit-only comparison;integrated group times do not",
+      "financial_qualification": "unknown",
+      "extrapolation_is_formal_wall_measurement": false
+    },
+    {
+      "operation": "actual_13_refit_plus_analytic_asian",
+      "grid": "coarse",
+      "model": "local",
+      "actual_group_count": 18,
+      "actual_query_count": 234,
+      "clock": {
+        "wall_start": 16384.969486311,
+        "wall_stop": 16385.166047288,
+        "cpu_start": 12.075906972,
+        "cpu_stop": 12.272467675
+      },
+      "wall_seconds": 0.19656097699771635,
+      "cpu_seconds": 0.1965607029999994,
+      "sum_actual_group_wall_seconds": 0.13645201699910103,
+      "sum_actual_group_cpu_seconds": 0.13647093099999452,
+      "mean_integrated_query_wall_seconds": 0.000583128277773936,
+      "median_13query_group_wall_seconds": 0.007658907499717316,
+      "separate_same_query_fit_only": {
+        "actual_query_count": 234,
+        "mean_query_wall_seconds": 0.00025193172252764844,
+        "median_query_wall_seconds": 0.0002456105012242915,
+        "p95_query_wall_seconds": 0.00028741780188283877,
+        "mean_query_cpu_seconds": 0.00025211559829062887,
+        "sum_query_wall_seconds": 0.05895202307146974,
+        "sum_query_cpu_seconds": 0.058995050000007154,
+        "status_counts": {
+          "ok": 230,
+          "unknown": 4
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 230,
+            "mean_wall_seconds": 0.00025401491332994065,
+            "median_wall_seconds": 0.0002459390016156249
+          },
+          "unknown:no_root": {
+            "count": 4,
+            "mean_wall_seconds": 0.00013214825139584718,
+            "median_wall_seconds": 0.00013086150102026295
+          }
+        }
+      },
+      "note": "phase includes separately repeated fit-only comparison;integrated group times do not",
+      "financial_qualification": "unknown",
+      "extrapolation_is_formal_wall_measurement": false
+    },
+    {
+      "operation": "actual_13_refit_plus_analytic_asian",
+      "grid": "high",
+      "model": "heston",
+      "actual_group_count": 18,
+      "actual_query_count": 234,
+      "clock": {
+        "wall_start": 16385.166279048,
+        "wall_stop": 16385.352172613,
+        "cpu_start": 12.272699638,
+        "cpu_stop": 12.458593018
+      },
+      "wall_seconds": 0.1858935649979685,
+      "cpu_seconds": 0.18589337999999955,
+      "sum_actual_group_wall_seconds": 0.11960120699222898,
+      "sum_actual_group_cpu_seconds": 0.11961906399999478,
+      "mean_integrated_query_wall_seconds": 0.0005111162691975598,
+      "median_13query_group_wall_seconds": 0.00675718250022328,
+      "separate_same_query_fit_only": {
+        "actual_query_count": 234,
+        "mean_query_wall_seconds": 0.00027829694012418773,
+        "median_query_wall_seconds": 0.0002716584986046655,
+        "p95_query_wall_seconds": 0.00033173460160469405,
+        "mean_query_cpu_seconds": 0.0002784959145299296,
+        "sum_query_wall_seconds": 0.06512148398905993,
+        "sum_query_cpu_seconds": 0.06516804400000353,
+        "status_counts": {
+          "ok": 222,
+          "unknown": 12
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 222,
+            "mean_wall_seconds": 0.00028199809452957735,
+            "median_wall_seconds": 0.00027294350002193823
+          },
+          "unknown:ill_conditioned": {
+            "count": 9,
+            "mean_wall_seconds": 0.0002213267778440948,
+            "median_wall_seconds": 0.00022167800125316717
+          },
+          "unknown:no_root": {
+            "count": 3,
+            "mean_wall_seconds": 0.00017532200096563125,
+            "median_wall_seconds": 0.00016873300046427175
+          }
+        }
+      },
+      "note": "phase includes separately repeated fit-only comparison;integrated group times do not",
+      "financial_qualification": "unknown",
+      "extrapolation_is_formal_wall_measurement": false
+    },
+    {
+      "operation": "actual_13_refit_plus_analytic_asian",
+      "grid": "high",
+      "model": "local",
+      "actual_group_count": 18,
+      "actual_query_count": 234,
+      "clock": {
+        "wall_start": 16385.35244428,
+        "wall_stop": 16385.637199904,
+        "cpu_start": 12.458864869,
+        "cpu_stop": 12.739587748
+      },
+      "wall_seconds": 0.28475562399762566,
+      "cpu_seconds": 0.2807228790000007,
+      "sum_actual_group_wall_seconds": 0.22291733300153282,
+      "sum_actual_group_cpu_seconds": 0.2189187300000004,
+      "mean_integrated_query_wall_seconds": 0.0009526381752202257,
+      "median_13query_group_wall_seconds": 0.012845774499510298,
+      "separate_same_query_fit_only": {
+        "actual_query_count": 234,
+        "mean_query_wall_seconds": 0.00025886653424499347,
+        "median_query_wall_seconds": 0.0002506159980839584,
+        "p95_query_wall_seconds": 0.00031110009967960645,
+        "mean_query_cpu_seconds": 0.00025902322222216205,
+        "sum_query_wall_seconds": 0.06057476901332848,
+        "sum_query_cpu_seconds": 0.06061143399998592,
+        "status_counts": {
+          "ok": 230,
+          "unknown": 4
+        },
+        "by_status_reason": {
+          "ok:": {
+            "count": 230,
+            "mean_wall_seconds": 0.0002611423174486212,
+            "median_wall_seconds": 0.00025114599884545896
+          },
+          "unknown:no_root": {
+            "count": 4,
+            "mean_wall_seconds": 0.0001280090000363998,
+            "median_wall_seconds": 0.0001279265015909914
+          }
+        }
+      },
+      "note": "phase includes separately repeated fit-only comparison;integrated group times do not",
+      "financial_qualification": "unknown",
+      "extrapolation_is_formal_wall_measurement": false
+    }
+  ]
+}

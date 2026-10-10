@@ -26,6 +26,113 @@
       "file": "task-5-teacher-preflight.json",
       "bytes": 675186,
       "sha256": "50313a08abe3a4ce5abce65b909d44f7b33e7337a2725951b4294a788abc058d"
+    },
+    {
+      "file": "task-5-asian-query-cost-plan.json",
+      "bytes": 2707,
+      "sha256": "4c7bf520b6aae959543a0734978f3b5d1bf23e062fd190a73871f26b3b042853"
+    },
+    {
+      "file": "task-5-asian-query-cost-probe.py.txt",
+      "bytes": 14225,
+      "sha256": "bfcfceb4efd947b844d2a86201c7b926b0d724af841ac27ecc18560dac861ca7"
+    },
+    {
+      "file": "task-5-asian-query-cost-probe.txt",
+      "bytes": 37757,
+      "sha256": "332cf427029c2707229426e81ea1036d9216f656f70790261099ec8995faf046"
+    },
+    {
+      "file": "task-5-asian-query-cost-summary.json",
+      "bytes": 7884,
+      "sha256": "0481370886caa687c9517657aeab655b900a77f9091ced61ab1a98d2aa7fe43c"
+    },
+    {
+      "file": "task-5-asian-query-cost-summary.md",
+      "bytes": 4419,
+      "sha256": "8dedc79fa7cef364c684501270f6423609422afccb2ac2ebb3588e9cf0c0d4df"
+    },
+    {
+      "file": "task-5-asian-query-cost-snapshot.json",
+      "bytes": 2356,
+      "sha256": "178a8593dc3da135091f6c27c60fdea5bce2a39dd3f6b0627852cb2174ca1f27"
+    },
+    {
+      "file": "task-5-actual-pilot-input-preparation.py.txt",
+      "bytes": 6077,
+      "sha256": "c3c4a8503fa61b31ff8da87430cc20ba6ce44cd6e3089c605fbbe694d76b4739"
+    },
+    {
+      "file": "task-5-actual-pilot-input-preparation.json",
+      "bytes": 38044,
+      "sha256": "745804d59d1c8dc25af6df2f4a1851e7d78ee36fd3dcdf8ace782a2fa6a11ed2"
+    },
+    {
+      "file": "task-5-actual-pilot-input-preparation.txt",
+      "bytes": 283,
+      "sha256": "aa262b3765f5e9466532d6d999dcef4796ac341f7b4c3db5123dd05aa535a607"
+    },
+    {
+      "file": "task-5-actual-pilot-input-preparation-schema-error.py.txt",
+      "bytes": 5774,
+      "sha256": "6dfe2976523b2fcd556d93b5544038d7a13bd983970ce6df4db2cd33cea467c0"
+    },
+    {
+      "file": "task-5-actual-pilot-input-preparation-schema-error.txt",
+      "bytes": 297,
+      "sha256": "6bcb12d8d2f67371e199c1d7078235def536dfcbf4efef8bea0a3ca416b98959"
+    },
+    {
+      "file": "task-5-actual-pilot-input-preparation-encoding-error.json.txt",
+      "bytes": 38046,
+      "sha256": "1756cea7699aeb5d1387adf07f413b5ae5361af9707d9f54b6506fe718dc1f14"
+    },
+    {
+      "file": "task-5-component-cost-manifest.json",
+      "bytes": 540,
+      "sha256": "c95ed9a39682b670d3e8832532f045ac684bc5763d2006c8e4e7f72abbe108d1"
+    },
+    {
+      "file": "task-5-component-cost-cas-check.json",
+      "bytes": 5218,
+      "sha256": "21a9c027bc6ef7f52302f0b16e295d5271ff06e97c46181c7c44bc2cdbddd8f2"
+    },
+    {
+      "file": "task-5-component-cost-cas-check.py.txt",
+      "bytes": 6686,
+      "sha256": "8b51bb1a69e5a81699502cb42246a8fc8f6d8c753f4d96e52696742764c962f0"
+    },
+    {
+      "file": "task-5-component-cost-cas-check.txt",
+      "bytes": 299,
+      "sha256": "519af4307882c2feff942aee702e03b0248b1e4bc3e035d8deffcc64575962b1"
+    },
+    {
+      "file": "task-5-component-cost-cas-schema-error.py.txt",
+      "bytes": 6376,
+      "sha256": "3502e12e6e4262ad28ec090a76d2e1c527b31cb65334c9ef30c61f060967b141"
+    },
+    {
+      "file": "task-5-component-cost-cas-schema-error.txt",
+      "bytes": 843,
+      "sha256": "a52fe05d726ae45fb0687c4d9cea8e012c1e266b93f8bd310e66cffe32aad489"
+    },
+    {
+      "file": "task-6-main-chunk-cost-probe.py.txt",
+      "bytes": 6754,
+      "sha256": "e347d531b645010bf5a573b369593ee22127269b66d7b410502ff2c134e4039e"
+    },
+    {
+      "file": "task-6-main-chunk-cost-probe.log.txt",
+      "bytes": 318,
+      "sha256": "86fb4ebdd911ede49afb450b66ca07cdec321e6bac5aa089abed5d08c530823b"
+    },
+    {
+      "file": "task-6-main-chunk-cost-results.json",
+      "bytes": 3514,
+      "sha256": "810bafaf5d3359cce42a71c3ad4d27c3b153b6b9422d873e994c614189a88c8b"
     }
-  ]
+  ],
+  "cas_manifest": "task-5-component-cost-manifest.json",
+  "cost_scope": "actual component measurements; formal financial pilot/main not executed"
 }
