@@ -4500,6 +4500,54 @@
       "archive": "task-5-phase-local-admin-proof-key-root-archive-v1.json",
       "bytes": 16464,
       "sha256": "dd9757814c836d24e7fc4b5b0bfe8158d41f387a3b66f856f191779b61f72f6f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json",
+      "archive": "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json",
+      "bytes": 1859,
+      "sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json",
+      "archive": "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json",
+      "bytes": 47437,
+      "sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.md",
+      "archive": "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.md",
+      "bytes": 1323,
+      "sha256": "cec688769c15f300d07fe5daadbcdb7c44a6a6a672d0c427d8c038e268ba106f"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-builder.py",
+      "archive": "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-builder.py.txt",
+      "bytes": 17577,
+      "sha256": "61d5360aa3650f3e31fdf44a92afe024cf2d32e4ea04a242993f8d42ef647c77"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-builder-initial.py",
+      "archive": "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-builder-initial.py.txt",
+      "bytes": 17288,
+      "sha256": "11af2bf7110275a6ddc43a09d91c86bd5b1a5707033c558147d74bbcde11d17d"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-preparation-failure.json",
+      "archive": "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-preparation-failure.json",
+      "bytes": 463,
+      "sha256": "6b911c2dbb20fce633652b7c1d84fd4b7f78b666eac31ae48976390431a4f432"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-phase-local-reuse-budget-independent-v6-decision.json",
+      "archive": "task-5-fullmixed-phase-local-reuse-budget-independent-v6-decision.json",
+      "bytes": 6847,
+      "sha256": "6aaa4a3b55227b464edbb6d8846b284759504a5dbbfb62179a44f05eb7d105a1"
+    },
+    {
+      "source": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-formal-pilot-root-operational-resource-prior-v2.json",
+      "archive": "task-5-formal-pilot-root-operational-resource-prior-v2.json",
+      "bytes": 2675,
+      "sha256": "017ef9fe1783cd014d09251b3db33c7d1f2839271dde4a2491fea76338cc1f8d"
     }
   ],
   "scope": "original M0–M7 resource observations; bounded checker and completed saved original M6/M7 independent arithmetic/provenance reviews; static whole-capacity and original prior-budget contract limits; formal financial budget/pilot/main/phase remain unapproved",

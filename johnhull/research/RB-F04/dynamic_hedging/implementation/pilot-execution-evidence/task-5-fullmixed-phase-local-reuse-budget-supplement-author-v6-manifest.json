@@ -1,0 +1,38 @@
+{
+  "status": "immutable v6 false author candidate; independent/root budget review pending",
+  "source_canonical_identity_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "source_native_payload_identity_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "files": {
+    "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json": {
+      "sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+      "bytes": 47437
+    },
+    "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.md": {
+      "sha256": "cec688769c15f300d07fe5daadbcdb7c44a6a6a672d0c427d8c038e268ba106f",
+      "bytes": 1323
+    },
+    "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-builder.py": {
+      "sha256": "61d5360aa3650f3e31fdf44a92afe024cf2d32e4ea04a242993f8d42ef647c77",
+      "bytes": 17577
+    },
+    "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-builder-initial.py": {
+      "sha256": "11af2bf7110275a6ddc43a09d91c86bd5b1a5707033c558147d74bbcde11d17d",
+      "bytes": 17288
+    },
+    "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-preparation-failure.json": {
+      "sha256": "6b911c2dbb20fce633652b7c1d84fd4b7f78b666eac31ae48976390431a4f432",
+      "bytes": 463
+    }
+  },
+  "checks": "fixed v3 source AST normalization applied to all original routes; counts verified; referenced sources/evidence byte matched; no mathematical arrays decoded",
+  "candidate_actual_assembly_cost": {
+    "wall_seconds": 0.27383364999695914,
+    "CPU_seconds": 0.27226217999999996,
+    "basis": "this metadata-only builder invocation; unrelated command costs not invented"
+  },
+  "manifest_verification_cost": {
+    "wall_seconds": 0.003255406001699157,
+    "CPU_seconds": 0.0032543130000000017
+  },
+  "financial_RNG_SDE_solver_execution": 0
+}

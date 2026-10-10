@@ -1,0 +1,161 @@
+{
+  "schema": "rb-f04-independent-fullmixed-v6-key-forecast-review-v1",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent static v6 graph/key reviewer; authored historical base v1, not v6 or v3 source",
+  "decision": "verified_v3_structural_forecast_only",
+  "checks": 697,
+  "failures": [],
+  "candidate": {
+    "file": "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json",
+    "sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+    "approved": false
+  },
+  "candidate_budget_formal_phase_main_execution_and_financial_approval": false,
+  "financial_qualification": "unknown",
+  "source": {
+    "canonical_identity": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+    "native_payload_identity": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+    "files": 81,
+    "dynamic_imports": 0,
+    "current_fixed_bytes_stable": true,
+    "source_only_review_reused": "task-5-phase-local-admin-proof-key-independent-decision-v1.json",
+    "source_review_not_repeated": true
+  },
+  "independent_recount": {
+    "initial": {
+      "gate_calculations": 110,
+      "non_teacher_nested_row_checks": 22550,
+      "teacher_invocations": 880,
+      "cold_keys": 40,
+      "teacher_guard_calls": 920,
+      "activation_guard_calls": 2346,
+      "hot_invocations": 840,
+      "activation_cache_hit_lookups": 2318
+    },
+    "fresh": {
+      "teacher_invocations": 808,
+      "cold_keys": 40,
+      "teacher_guard_calls": 848,
+      "gate_calculations": 96,
+      "non_teacher_nested_row_checks": 19680,
+      "hot_invocations": 768
+    },
+    "source_actual_DictComp_applied": true,
+    "symbolic_normalized_template_keys": 40,
+    "actual_future_proof_and_full_operational_SHA": null,
+    "separate_raw_and_domain_keys": [
+      20,
+      20
+    ],
+    "top_level_only_removed": [
+      "wall_cap_seconds",
+      "work_directory"
+    ],
+    "financial_and_nested_args_retained": true,
+    "twenty_direct_saved_admin_duplicate_keys_removed": 20,
+    "per_stage_initial_calculations": {
+      "stage:Heston:N1024:coarse:gate": 7,
+      "stage:Heston:N1024:high:gate": 7,
+      "stage:Heston:N4096:coarse:gate": 7,
+      "stage:Heston:N4096:high:gate": 7,
+      "stage:Heston:N16384:coarse:gate": 7,
+      "stage:Heston:N16384:high:gate": 7,
+      "stage:Heston:N65536:coarse:gate": 7,
+      "stage:Heston:N65536:high:gate": 6,
+      "stage:local:N1024:coarse:gate": 7,
+      "stage:local:N1024:high:gate": 7,
+      "stage:local:N4096:coarse:gate": 7,
+      "stage:local:N4096:high:gate": 7,
+      "stage:local:N16384:coarse:gate": 7,
+      "stage:local:N16384:high:gate": 7,
+      "stage:local:N65536:coarse:gate": 7,
+      "stage:local:N65536:high:gate": 6
+    },
+    "per_stage_fresh_calculations": {
+      "stage:Heston:N1024:coarse:gate": 6,
+      "stage:Heston:N1024:high:gate": 6,
+      "stage:Heston:N4096:coarse:gate": 6,
+      "stage:Heston:N4096:high:gate": 6,
+      "stage:Heston:N16384:coarse:gate": 6,
+      "stage:Heston:N16384:high:gate": 6,
+      "stage:Heston:N65536:coarse:gate": 6,
+      "stage:Heston:N65536:high:gate": 6,
+      "stage:local:N1024:coarse:gate": 6,
+      "stage:local:N1024:high:gate": 6,
+      "stage:local:N4096:coarse:gate": 6,
+      "stage:local:N4096:high:gate": 6,
+      "stage:local:N16384:coarse:gate": 6,
+      "stage:local:N16384:high:gate": 6,
+      "stage:local:N65536:coarse:gate": 6,
+      "stage:local:N65536:high:gate": 6
+    }
+  },
+  "unchanged_original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "raw_teachers": 20,
+    "domain_teachers": 20,
+    "drivers": 10,
+    "N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "cap_parent_associations": 266306,
+    "literal_four_N_options": 573122,
+    "caps_history_external10_unknowns": "immutable v5 inherited; no root approval, no cost rebilling, no raw or financial provenance rewrite",
+    "v5_sha256": "30db767e77a4b22ae7dfd8c393f8322afebcdad26542999c3720bd2776a1fc25",
+    "v5_review_reused": "task-5-fullmixed-phase-local-reuse-budget-independent-v5-decision.json"
+  },
+  "limited_forecast": {
+    "initial_legacy_known_part_seconds": 500579.6214160367,
+    "fresh_legacy_cold_only_seconds": 326421.7132256072,
+    "fresh_legacy_cold_only_hours": 90.67269811822422,
+    "each_separate_fresh_saved_review_and_restore_cold": 40,
+    "full_phase_runtime_seconds": null,
+    "whole_project_ETA_seconds": null,
+    "new_v3_genuine_rates_measured": false,
+    "old_same_M6_106x_globally_applied": false,
+    "all_unknown_remaining_guards_nonteacher_domain_IO_external10_CAS_resume_seconds": null,
+    "forecast_is_not_guarantee_or_formal_budget": true
+  },
+  "new_execution": {
+    "financial_generation": 0,
+    "RNG": 0,
+    "SDE_solver_replay": 0,
+    "production_source_tests_docs_Git_CAS_edits": 0,
+    "D_artifacts": "this decision only"
+  },
+  "evidence": {
+    "author_manifest_sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9",
+    "original_graph_metadata_sha256": "8f83db63308ff6fdfae25d6a44f988361660703e1779a7957f80435553bbb4f3",
+    "v3_checker_sha256": "901c847942248f2738ea25fb0023812c9f3bff72de7b7c6f28e92e1863c4f06c",
+    "old_base_candidate_sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "old_selection_reference_sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62"
+  },
+  "preserved_review_attempt_failure": {
+    "scope": "metadata probe mistake by reviewer, not source defect",
+    "raw_trace": "Traceback (most recent call last): File <string>, line 114, in <module>; File <string>, line106, in count_routes; KeyError: wall_seconds",
+    "cause": "v1 row budget is nested under budget.wall_seconds; initial probe wrongly read top-level wall_seconds",
+    "exit_code": 1,
+    "tool_wall_seconds": 1.2812941,
+    "CPU_RSS_and_inner_wall": null,
+    "second_raw_trace": "Traceback (most recent call last): File <string>, line95, in <module>; KeyError: initial_phase",
+    "second_cause": "historical v5 field is initial_generation_phase, not v6 initial_phase; reviewer misnamed schema key",
+    "second_exit_code": 1,
+    "second_tool_wall_seconds": 1.1951146,
+    "second_CPU_RSS_and_inner_wall": null,
+    "financial_execution": 0,
+    "source_or_candidate_changes": 0,
+    "correction": "read original budget.wall_seconds; apply actual source normalization only; no candidate or budget adjustment"
+  },
+  "actual_successful_review_cost": {
+    "wall_seconds": 0.271479584996996,
+    "CPU_seconds": 0.27106520700000003,
+    "peak_RSS_bytes": 244228096,
+    "scope": "this metadata read/count/source-byte verification; initial incidental reads and final write cost unknown"
+  },
+  "unknown_review_cost": "earlier scoped reads, failed probe inner CPU/RSS, final decision write and tool tails unmeasured; not zero"
+}

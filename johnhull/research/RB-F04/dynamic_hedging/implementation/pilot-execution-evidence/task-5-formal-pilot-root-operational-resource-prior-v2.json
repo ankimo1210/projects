@@ -1,0 +1,59 @@
+{
+  "schema": "rb-f04-root-operational-resource-selection-v2",
+  "status": "approved_operational_prior",
+  "approved_by": "root",
+  "planned_before_attempt": true,
+  "created_utc": "2026-10-10T08:40:43.354724+00:00",
+  "source_canonical_identity_sha256": "1cc16cf7fe567f7a825fe26d504e5bcf35d87d46a09034a2492017f6b5b6f067",
+  "source_native_payload_identity_sha256": "be858ced6b6b9befa0148a28168a063da735396cb88a7585dea94ea69fa75532",
+  "source_inventory_reference": "task-5-phase-local-admin-proof-key-root-v2-source-closure.json",
+  "source_inventory_sha256": "838fe3543298cdd5d13c44c0da2abaaf3a1575c802438564c3097010c3612226",
+  "wall_limit_seconds": 2592000,
+  "wall_limit_is_runtime_forecast": false,
+  "wall_limit_basis": "Root administrative allowance above the partial initial139h extrapolation with unknown kernels/IO; no guarantee of duration or completion",
+  "RSS_limit_bytes": 17179869184,
+  "parent_RSS_limit_bytes": 17179869184,
+  "child_RSS_limit_bytes": 17179869184,
+  "RSS_metric": "maximum_individual_process_RSS_not_RLIMIT_AS",
+  "RSS_basis": "16GiB per observed individual process; original4GiB saved-check failure retained; current measured MemAvailable and native maxN one-node3.722GiB do not guarantee full-phase fit",
+  "volume_reserve_bytes": {
+    "WSL": 10737418240,
+    "CAS_primary": 10737418240,
+    "CAS_mirror": 10737418240
+  },
+  "poll_seconds": 1.0,
+  "stop_status": "partial_unclosed",
+  "financial_cap_projection": false,
+  "financial_qualification": "unknown",
+  "formal_financial_execution_authorized": false,
+  "authority_scope": "Operational resource choices only; full3138 prior/recipe independent review and exact lock required separately before root financial launch",
+  "source_observed_files": 81,
+  "source_observed_dynamic_imports": 0,
+  "MemAvailable_bytes": 48681488384,
+  "volume_observations": [
+    {
+      "id": "WSL",
+      "path": "/",
+      "free_bytes": 594121613312,
+      "reserve_bytes": 10737418240,
+      "observed_utc": "2026-10-10T08:40:43.354724+00:00"
+    },
+    {
+      "id": "CAS_primary",
+      "path": "/mnt/c",
+      "free_bytes": 323171495936,
+      "reserve_bytes": 10737418240,
+      "observed_utc": "2026-10-10T08:40:43.354724+00:00"
+    },
+    {
+      "id": "CAS_mirror",
+      "path": "/mnt/f",
+      "free_bytes": 185710804992,
+      "reserve_bytes": 10737418240,
+      "observed_utc": "2026-10-10T08:40:43.354724+00:00"
+    }
+  ],
+  "fresh_capacity_check_required_before_actual_launch": true,
+  "monitoring_limit": "Samples may miss between-poll peaks; raw completed files retained; no sourcefault relabeled resourcecap; unsaved work unavailable",
+  "original_N_jobs_cases_caps_changes": false
+}
