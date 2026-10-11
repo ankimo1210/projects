@@ -1,0 +1,57 @@
+{
+  "schema": "rb-f04-root-bounded-page-sharing-plan-observation-v1",
+  "observed_UTC": "2026-10-11T10:01:22.319394+00:00",
+  "root_plan_prior_sha256": "24d0a058d1222ff0afdf78d54dced01dff7f0ac464d60c094c6c741c36a0eacc",
+  "returncode": 2,
+  "result": {
+    "actual_file_read_bytes": 1072849863,
+    "actual_file_write_bytes": 0,
+    "already_independent": 0,
+    "already_shared": 0,
+    "certain_released_allocated_bytes": 0,
+    "cpu_seconds": 0.650016297,
+    "detached": 0,
+    "discovered_leaf_packs": 115,
+    "eligible": 49,
+    "financial_acceptance": false,
+    "financial_qualification": "unknown",
+    "inherited_helper_sha256": "010fb31dd02be6e7be937d1c9923ba8f80abeac2bbb03f05725850be430adf58",
+    "inode_inventory_scope": "only accepted paths from this bounded scan, not the entire native tree",
+    "limit": "max_read_bytes",
+    "linked": 0,
+    "native_volume_after": {
+      "free": 513270923264,
+      "total": 1081101176832,
+      "used": 512837898240
+    },
+    "native_volume_before": {
+      "free": 513284386816,
+      "total": 1081101176832,
+      "used": 512824434688
+    },
+    "planned_links": 13,
+    "rejected": 0,
+    "root_preapproved": false,
+    "scope": "published_source85_stage_arrays_pages_only",
+    "selected_unique_inode_allocated_after_bytes": 642457600,
+    "selected_unique_inode_allocated_before_bytes": 642457600,
+    "status": "candidate_not_authorized",
+    "termination": "administrative_limit",
+    "wall_seconds": 0.7078932900039945,
+    "windows_vhd_or_host_volume_space_reclamation": "not_measured_or_guaranteed"
+  },
+  "stderr": "",
+  "timing_events": {
+    "wall_start_ns": 109551059510670,
+    "wall_stop_ns": 109551809216291,
+    "own_cpu_start_ns": 26305663,
+    "own_cpu_stop_ns": 26693822
+  },
+  "wall_seconds": 0.749705621,
+  "inclusive_cpu_seconds": 0.686862159,
+  "child_kernel_peak_RSS_bytes": 23465984,
+  "final_outer_bookkeeping_expense": null,
+  "all_external10_closed": false,
+  "financial_acceptance": false,
+  "native_mutation_authorized": false
+}

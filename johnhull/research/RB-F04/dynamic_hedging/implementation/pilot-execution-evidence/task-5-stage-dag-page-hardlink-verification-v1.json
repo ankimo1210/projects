@@ -1,0 +1,60 @@
+{
+  "compile": "PASS",
+  "financial_acceptance": false,
+  "financial_execution": false,
+  "inherited_helper_sha256": "010fb31dd02be6e7be937d1c9923ba8f80abeac2bbb03f05725850be430adf58",
+  "limits": [
+    "No current native catalog or savings measurement.",
+    "Windows C/VHD free reclamation is not guaranteed.",
+    "Only immutable published array-page bytes may be shared.",
+    "Root review, operational budget and actual adoption are still required."
+  ],
+  "preflight_wrapper_parent_cpu_seconds": 0.0066916119999999996,
+  "preflight_wrapper_wall_seconds": 0.29995433999283705,
+  "real_native_scan_or_apply": false,
+  "root_preapproved": false,
+  "ruff": [
+    {
+      "argv_tail": [
+        "check",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-candidate-v1.py",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-selftest-v1.py"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "All checks passed!\n"
+    },
+    {
+      "argv_tail": [
+        "format",
+        "--check",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-candidate-v1.py",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-selftest-v1.py"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "2 files already formatted\n"
+    }
+  ],
+  "scope": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:*/arrays-[0-9]{8}/arrays.npz",
+  "source85_changed": [],
+  "source85_dynamic_imports": [],
+  "source85_expected_native": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "source85_expected_plain": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "source85_files_authenticated": 85,
+  "status": "candidate_not_authorized",
+  "tests": {
+    "cpu_seconds": 0.078147634,
+    "errors": 0,
+    "failures": 0,
+    "financial_execution": false,
+    "helper": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-candidate-v1.py",
+    "helper_sha256": "20ebd4089ac2ea6b89a739f6d15b380ad9ccfe31fce7270d63ddcf84f1581698",
+    "log": "test_exact_bytes_share_with_all_receipts_unchanged (__main__.SharingBoundaries.test_exact_bytes_share_with_all_receipts_unchanged) ... ok\ntest_huge_blob_header_rejected_without_array_decode (__main__.SharingBoundaries.test_huge_blob_header_rejected_without_array_decode) ... ok\ntest_inherited_detach_restores_independent_identical_bytes (__main__.SharingBoundaries.test_inherited_detach_restores_independent_identical_bytes) ... ok\ntest_postcheck_cap_rolls_back_without_receipt_changes (__main__.SharingBoundaries.test_postcheck_cap_rolls_back_without_receipt_changes) ... ok\ntest_rollback_io_failure_retains_original_backup_and_propagates (__main__.SharingBoundaries.test_rollback_io_failure_retains_original_backup_and_propagates) ... ok\ntest_root_change_during_replacement_restores_target_inode (__main__.SharingBoundaries.test_root_change_during_replacement_restores_target_inode) ... ok\ntest_root_page_receipt_and_metadata_binding_rejected (__main__.SharingBoundaries.test_root_page_receipt_and_metadata_binding_rejected) ... ok\ntest_scope_excludes_metadata_legacy_teacher_and_hidden_roots (__main__.SharingBoundaries.test_scope_excludes_metadata_legacy_teacher_and_hidden_roots) ... ok\ntest_unpublished_and_incomplete_roots_rejected (__main__.SharingBoundaries.test_unpublished_and_incomplete_roots_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.218s\n\nOK\n",
+    "real_native_read_or_mutation": false,
+    "root_preapproved": false,
+    "status": "candidate_not_authorized",
+    "tests_run": 9,
+    "wall_seconds": 0.21798946500348393
+  }
+}
