@@ -1,8 +1,8 @@
 # 正式pilot予算のための測定
 
-最新：元source82の213 executed＋214番faultと16GiB保存検算停止を保持し、new verifier85で全scopeの保存検算をsession85801で実行中。新source85のfresh producer限定判断、全3,138予算・573,122cap recipeの独立判断とroot metadata-only承認を固定、正式計画生成は421.123秒/peak4.357GB・capなしでPASS、185pathsの両保管庫原byte復元もPASS。独立実metadata照合3,912項目PASS。新monitorのbounded必須・resume禁止は限定確認済み。金融fresh起動は旧saved終端/結果確認後。全数値・RAM/容量・外部10費用・pilot完走/freeze/mainは未完了、qualification unknown。 [新priorと起動準備](#新source85の正式priorとbounded起動準備2026-10-11)。
+最新（2026-10-11）：source85のfresh全3,138 pilotをsession77271で実行中（別出力・bounded・resumeなし）。旧81の引数binding不一致と旧82のvalidation参照は現85で修復済み。旧saved検算はC容量不足により133記録の行政partial終了・最終reportなしとして保持。C reserve回復を実確認して起動し、11:11 UTCにもC51,264,008,192 B・金融child実行中を確認した。正式metadata計画/独立3,912項目と準備の原byte両復元はPASS。全pilot数値・全体RAM/容量・外部10費用・freeze/mainは未完了、qualification unknown。[現在のfresh実行](#source85-fresh全pilotの起動2026-10-11)。
 
-2026-10-11。旧source81は引数binding不一致、source82はvalidation result形状不一致で214件目partial停止。mainは未実行。以下の先行測定は**部品の実測と、歴史的教師計算からの外挿**であり、全phaseの実測時間・精度資格ではない。現在の実起動は末尾に記録。
+2026-10-11。旧source81は引数binding不一致、source82はvalidation result形状不一致で214件目partial停止。両原因の現85への修復を独立静的照合で確認したが、新全pilotの成功は未確認。main実験は未実行。以下の先行測定は**部品の実測と、歴史的教師計算からの外挿**であり、全phaseの実測時間・精度資格ではない。現在の実起動は末尾に記録。
 
 ## 実際に測った再較正
 
@@ -546,6 +546,8 @@ session85801は実terminal（tool exit1／monitor3／数値child−9）。09:14:
 旧savedの実terminalと不完了結果をrootが確認し、C reserve回復後に別実guard（4da4527f…）を固定した。起動直前の空きはC55,102,156,800 B/WSL515,615,420,416 B/F146,762,366,976 Bで各10GiB超、旧worker3pidは不存在。これは容量の一時点観察で、全phaseの保証ではない。
 
 2026-10-11 09:40:18 UTCに既存monitor v6-v2を経由しfresh全3,138 pilotを起動（session77271、親556486/monitor556487/金融child556488）。current85 identity・実guard/monitor・実child cmdlineを照合し、bounded/別出力root-v4/no-resumeと元121cases/51義務/全4N/capsを保持する。[有限な起動確認](pilot-execution-evidence/source85-full-fresh-root-launch-readonly-confirmation-v1.json)。live raw/観測logはGitへコピーしない。旧133記録・行政partial・unknownは不変。
+
+現85の停止原因修復を再照合した。[旧81の引数binding修復](pilot-execution-evidence/storage-codec-root-independent-stage-cap-binding-v1-decision.json)はstage金融入力比較の両側からwall_cap_secondsだけを除き、別の実cap認証を保持する（[現checker](../check_pilot.py#L4016)）。[旧82のvalidation参照修復](pilot-execution-evidence/validation-rollout-fix-independent-applied-validation-rollout-binding-and-pytest-v1.json)はrosterのcell.resultを維持し、validationは保存rollouts[id]をcash検算へ渡す（[現checker](../check_pilot.py#L2085)）。旧terminalと修復判断の原SHAを照合し、旧fault・raw・費用・未実行を保持した。source85の旧保存検算停止は上記2原因の再発ではなくC reserve停止であり、新freshの全数値成功・資源適合は完走後に判定する。
 
 enclosing observerは旧v3の参照先を結合し実wall/自CPU ns端点を記録する最小変更（cdc73013…）。構文検査と独立差分確認でブロッカーなし。元source/prior/金融数学は不変で、費用未閉鎖flags・最終tail unknownを保持する。起動は数値PASS・全費用閉鎖・freeze/main・研究受入を示さない。ETAは数週間規模・1か月超もあり得る低確度の概算を保持し、全pilotの実選択/実費後に更新する。
 
