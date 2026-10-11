@@ -529,7 +529,7 @@ v1は作者28合成がPASSしたが、独立確認で最初のValueError/KeyErro
 
 小さな整数・文字列rowを実writer/readerとReferenceJobs→bounded resolve→DeferredSequence→IndexedRowsへ接続し、作者18件・独立8件がPASS（既存36/15と合算しない）。原rootを移した復元接続とpayload/ID/path/native byte/非参照scalar改変の拒否、終了時の原row/receipt/全source85再認証を確認した。fixtureの認証読取は索引8回不変、geometry12→8回、合計20→16回。3→1はbaseline局所lookupのみで、全stageの速度比を示さない。行政statusのarguments=Noneなので、金融typed arguments・全candidate gate・大jobの速度/RAMは未確認。[限定独立判断](pilot-execution-evidence/stage-cache-single-read-admin-proof-independent-stage-cache-geometry-admin-connection-v2-decision.json)・[実接続の原byte保存台帳](pilot-execution-evidence/stage-cache-single-read-admin-connection-closed-proof-archive-v1.json)を保持。
 
-これはcandidate_function_source_mechanics_onlyの判断で、production適用・新producer/verifier/source/prior・資源/速度・金融/phase/mainを承認していない。source85/既存guard/priorとsession85801は不変。旧savedのterminal・root結果確認の後に採否を判断し、採用時はsourceを別revisionとして必要な新source/priorの承認・結合を経てfresh起動へ進む。旧rawをresume/relabelしない。
+これはcandidate_function_source_mechanics_onlyの判断で、production適用・新producer/verifier/source/prior・資源/速度・金融/phase/mainを承認していない。保存検算への採用は、実行中producer85のterminal確認後、元producer snapshot/全3,138計画/入力/raw/失敗/費用を固定し、verifierだけを別revisionとして行う。独立静的確認で[producer/verifier別認証](../_pilot_saved_provenance.py)と[保存context入口](../check_pilot.py)がこの経路を持つことを確認。実verifier source closure・限定saved-only判断・trusted recipe・監視/resource prior・別root実guardを新たに結合し、開始/終了再認証と数値summary照合を保持する。原producer priorは新verifierの権限へ読み替えず、現在は候補未適用・新起動未許可。
 
 ## source85保存検算のC容量停止（2026-10-11）
 
@@ -555,6 +555,6 @@ enclosing observerは旧v3の参照先を結合し実wall/自CPU ns端点を記�
 
 別root予算を実行前に固定して実読取plan（1GiB/10秒）を実施、49eligible/13planned linksで読取上限に達し、置換0・rejected0。続く1link trial（1GiB/1link/10秒）とbounded操作（4GiB/32links/10秒）は各link上限で行政partial終了、成功1＋32・rejected0。原候補のcandidate/root_preapproved=falseは改変せず、実操作権限は各別root priorに記録する。これは金融A cap・精度・全scope完了の判定ではない。
 
-[全33 targetsの実postcheck](pilot-execution-evidence/task-5-stage-dag-page-hardlink-root-postcheck-v1.json)は現在の共有inodeと全NPZ実SHA/原receipt/metadata/root参照を再照合しPASS。旧別inode割当539,914,240 B（10進約0.540GB）を削減し、計算source85全85filesは不変。Windows Cの回収や全phase容量は未保証。元3,138jobs/121cases/51義務/全4N/caps、既存失敗/unknown、後続の全saved/fresh/両semantic検算は不変。
+[初回33 targetsの実postcheck](pilot-execution-evidence/task-5-stage-dag-page-hardlink-root-postcheck-v1.json)を保持。追加bounded v2は同じ固定helperで8GiB/64links/10秒の別priorを事前固定し、60追加links・rejected0、実読取8,589,764,222 Bで読取上限の行政partial終了。[累計93 targetsの実postcheck](pilot-execution-evidence/task-5-stage-dag-page-hardlink-root-postcheck-v2.json)は全共有inode・実NPZ SHA・原receipt/metadata/root参照とsource85全85files不変を照合しPASS。実読取3,227,943,869 B/1.934896秒で6GiB/10秒以内。旧別inode割当の削減は累計1,611,796,480 B（10進約1.612GB）。Windows Cの回収や全phase容量は未保証。元3,138jobs/121cases/51義務/全4N/caps、既存失敗/unknown、後続の全saved/fresh/両semantic検算は不変。
 
-外側実wallはplan0.749706秒、trial0.299029秒、bounded2.430331秒、postcheck0.459305秒。pilotと重なるため金融phase wallへ加算せず、各元clock/費用を保存する。最終外側bookkeepingはunknown、外部10費用未閉鎖・金融qualification unknownを保持。原source/results/新旧記録を再分類せず、数学や全phaseの速度向上をこの行政実測から主張しない。
+外側実wallはplan0.749706秒、trial0.299029秒、bounded v1 2.430331秒、postcheck v1 0.459305秒、追加bounded v2 5.815835秒、postcheck v2 1.934896秒。pilotと重なるため金融phase wallへ加算せず、各元clock/費用を保存する。最終外側bookkeepingはunknown、外部10費用未閉鎖・金融qualification unknownを保持。原source/results/新旧記録を再分類せず、数学や全phaseの速度向上をこの行政実測から主張しない。
