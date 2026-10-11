@@ -1,0 +1,18 @@
+{
+  "administrative_caps": {
+    "max_read_and_write_bytes_each": 33554432,
+    "max_seconds": 10,
+    "max_source_files": 85
+  },
+  "administrative_preparation_authorized": true,
+  "created_UTC": "2026-10-11T10:40:32.296083+00:00",
+  "destination": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-saved-verifier-readonce-source-candidate-v1",
+  "execute_saved_check": false,
+  "financial_acceptance": false,
+  "financial_qualification": "unknown",
+  "root_preapproved": false,
+  "source_adoption_approved": false,
+  "source_closure": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+  "source_root": "/home/kazumasa/worktrees/johnhull-storage-codec",
+  "status": "candidate_preparation_only"
+}
