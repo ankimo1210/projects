@@ -11,6 +11,7 @@ import copy
 import hashlib
 import sys
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from time import perf_counter_ns, process_time_ns
 
 if __name__ == "__main__":
@@ -20,6 +21,7 @@ if __name__ == "__main__":
         str(_CLI_ROOT / "deep_hedge_price/src"),
     ]
 
+import _pilot_saved_storage as saved_storage
 import numpy as np
 import run_reference as runner
 
@@ -232,7 +234,7 @@ def check_paired_pnl_record(record):
     if record.get("shared_market") is not None:
         shared = record["shared_market"]
         check_market_pair_record(shared)
-        expected = runner.payload_digest(
+        expected = saved_storage.payload_digest(
             {k: shared[k] for k in ("seed", "driver_map", "original_n", "levels", "frequencies")}
         )
         _require(
@@ -750,9 +752,9 @@ def check_job_envelope(row, job, plan):
         row["id"] == job["id"] and row["operation"] == job["operation"],
         "job original operation/ID mismatch",
     )
-    _require(row["plan_sha256"] == runner.payload_digest(plan), "job prior plan mismatch")
+    _require(row["plan_sha256"] == saved_storage.payload_digest(plan), "job prior plan mismatch")
     _require(
-        row["source_sha256"] == runner.payload_digest(plan["source"])
+        row["source_sha256"] == saved_storage.payload_digest(plan["source"])
         and row["input_bindings"] == plan["input_bindings"],
         "job source/input mismatch",
     )
@@ -795,7 +797,13 @@ def check_resolved_job_arguments(row, job, *, inputs, jobs, artifact_directory, 
     """
     from run_pilot import _resolve, input_identity
 
-    arguments = _resolve(job["arguments"], inputs, jobs, planned_jobs=planned_jobs)
+    arguments = _resolve(
+        job["arguments"],
+        inputs,
+        jobs,
+        planned_jobs=planned_jobs,
+        bounded=isinstance(jobs, saved_storage.ReferenceJobs),
+    )
     op = job["operation"]
     if op in (
         "teacher",
@@ -1004,7 +1012,9 @@ def check_dependency_cap_job(
     expected_parents = set()
     for identifier in dependencies:
         prior = jobs[identifier]
-        digest = runner.payload_digest({k: v for k, v in prior.items() if k != "artifact_path"})
+        digest = saved_storage.payload_digest(
+            {k: v for k, v in prior.items() if k != "artifact_path"}
+        )
         _require(
             raw["dependency_payload_sha256"][identifier] == digest,
             "dependency immutable job binding differs",
@@ -1075,7 +1085,8 @@ def check_dependency_cap_job(
         )
         check_job_envelope(parent, planned[identifier], plan)
         _require(
-            runner.payload_digest(binding) == runner.payload_digest(_cap_parent_binding(parent)),
+            saved_storage.payload_digest(binding)
+            == saved_storage.payload_digest(_cap_parent_binding(parent)),
             "actual parent cap binding differs",
         )
         if require_scope:
@@ -2309,7 +2320,7 @@ def check_precision_record(raw):
         "reason": None
         if passed
         else "original48 cells incomplete/unknown or precision gates failed",
-        "evidence_sha256": runner.payload_digest(raw),
+        "evidence_sha256": saved_storage.payload_digest(raw),
         "financial_qualification": "unknown",
     }
 
@@ -2449,7 +2460,7 @@ def project_case(descriptor, checked, raw, plan):
             "fit original validation denominator differs from prior plan",
         )
         result = _projection(descriptor, {}, n)
-        evidence = runner.payload_digest(raw)
+        evidence = saved_storage.payload_digest(raw)
         failure_date = validation.get("first_failure_date")
         result.update(
             evidence_sha256=evidence,
@@ -2492,8 +2503,8 @@ def project_attempt(identifier, job_ids, jobs, checks, candidate, context):
     """Close only the named original semantic obligation and its real prerequisites."""
     _require(job_ids and len(set(job_ids)) == len(job_ids), "required original work IDs missing")
     _require(all(i in jobs and i in checks for i in job_ids), "required actual work unexecuted")
-    selected = [jobs[i] for i in job_ids]
-    values = [checks[i] for i in job_ids]
+    selected = saved_storage.DeferredSequence(len(job_ids), lambda i: jobs[job_ids[i]])
+    values = saved_storage.DeferredSequence(len(job_ids), lambda i: checks[job_ids[i]])
     _require(
         all(
             j["status"] == "executed"
@@ -2507,7 +2518,7 @@ def project_attempt(identifier, job_ids, jobs, checks, candidate, context):
         "declared cap requires explicit cap projection",
     )
     operations = [j["operation"] for j in selected]
-    raw = [j["raw"] for j in selected]
+    raw = saved_storage.DeferredSequence(len(job_ids), lambda i: jobs[job_ids[i]]["raw"])
     gates = candidate["pilot_attempt_gates"][identifier]
     measure = {}
     if identifier.startswith("teacher:"):
@@ -2518,26 +2529,62 @@ def project_attempt(identifier, job_ids, jobs, checks, candidate, context):
             and "date_gate" in operations,
             "teacher group requires full original grid and same-block observable positions",
         )
-        grids = [r for r in raw if r.get("kind") == "teacher_grid"]
-        date_values = [
-            v
-            for j, v in zip(selected, values, strict=True)
-            if j["operation"] == "date_gate"
-            and j["raw"]["model"] == model
-            and j["raw"]["date_index"] == di
-        ]
-        _require(
-            any(r["model"] == model and r["cache"] is not None for r in grids) and date_values,
-            "original teacher date/model incomplete",
-        )
+        has_grid, date_values = False, []
+        for job_id in job_ids:
+            job = jobs[job_id]
+            record = job["raw"]
+            if record.get("kind") == "teacher_grid":
+                has_grid |= record["model"] == model and record["cache"] is not None
+            if (
+                job["operation"] == "date_gate"
+                and record["model"] == model
+                and record["date_index"] == di
+            ):
+                value = checks[job_id]
+                date_values.append({g: value.get("measurements", value).get(g) for g in gates})
+                del value
+            del record, job
+        _require(has_grid and date_values, "original teacher date/model incomplete")
         measure = _max_gates(date_values, gates)
     elif identifier.startswith(("refinement:", "frequency:")):
-        paired = [
-            (j, v)
-            for j, v in zip(selected, values, strict=True)
-            if j["operation"] in ("paired_pnl", "cell_pair")
-        ]
-        market = [r for r in raw if r.get("kind") == "market_pair"]
+        paired, market, grids = [], [], []
+        for job_id in job_ids:
+            job = jobs[job_id]
+            record = job["raw"]
+            if job["operation"] in ("paired_pnl", "cell_pair"):
+                value = checks[job_id]
+                source = record.get("refined_risk_source")
+                paired.append(
+                    (
+                        {
+                            "raw": {
+                                "refinement_kind": record.get("refinement_kind"),
+                                "refined_risk_source": (
+                                    {"kind": source.get("kind")}
+                                    if isinstance(source, dict)
+                                    else None
+                                ),
+                            }
+                        },
+                        {
+                            **{g: value.get("measurements", value).get(g) for g in gates},
+                            "shared_CRN_checked": value.get("shared_CRN_checked"),
+                        },
+                    )
+                )
+                del value, source
+            if record.get("kind") == "market_pair":
+                market.append({"model": record["model"], "frequencies": record.get("frequencies")})
+            if record.get("kind") == "teacher_grid":
+                grids.append(
+                    {
+                        "job_id": job_id,
+                        "original_n": record["original_n"],
+                        "grid": record["grid"],
+                        "has_reference": record.get("teacher_reference") is not None,
+                    }
+                )
+            del record, job
         _require(paired and market, "paired P&L and actual CRN market raw required")
         kind = identifier.split(":")[1] if identifier.startswith("refinement:") else "frequency"
         model = identifier.split(":")[-1] if identifier.startswith("refinement:") else None
@@ -2561,21 +2608,20 @@ def project_attempt(identifier, job_ids, jobs, checks, candidate, context):
                 "extra exact-date teacher diagnostic required; no time interpolation",
             )
         elif kind == "teacher_N":
-            ns = {r["original_n"] for r in raw if r.get("kind") == "teacher_grid"}
-            grids = [r for r in raw if r.get("kind") == "teacher_grid"]
+            ns = {r["original_n"] for r in grids}
             valid_prefix = len(ns) >= 2 and ns <= set(
                 candidate["original_candidate"]["teacher"]["n_candidates"]
             )
             if not valid_prefix and ns == {65536}:
-                principal = next((r for r in grids if r.get("teacher_reference") is None), None)
-                reference = next((r for r in grids if r.get("teacher_reference") is not None), None)
+                principal = next((r for r in grids if not r["has_reference"]), None)
+                reference = next((r for r in grids if r["has_reference"]), None)
                 _require(
                     principal is not None and reference is not None,
                     "original maximum reserved comparison missing",
                 )
                 check_teacher_driver_comparison(
-                    principal,
-                    reference,
+                    jobs[principal["job_id"]]["raw"],
+                    jobs[reference["job_id"]]["raw"],
                     reference_rule="independent_reserved_stream_grid_max",
                     artifact_context=context.get("artifact_context"),
                 )
@@ -2583,7 +2629,7 @@ def project_attempt(identifier, job_ids, jobs, checks, candidate, context):
             _require(valid_prefix, "actual original N prefix refinement missing")
         elif kind == "teacher_grid":
             _require(
-                {r["grid"] for r in raw if r.get("kind") == "teacher_grid"} == {"coarse", "high"},
+                {r["grid"] for r in grids} == {"coarse", "high"},
                 "original coarse/high grid comparison missing",
             )
         elif kind == "position":
@@ -2602,11 +2648,14 @@ def project_attempt(identifier, job_ids, jobs, checks, candidate, context):
         _, kind, model = identifier.split(":")
         expected = "empty_claim" if kind == "empty_claim" else "Q"
         _require(expected in operations, "actual Q/empty-claim raw operation required")
-        qrows = [
-            r["Q"] if r.get("kind") == "empty_claim" else r
-            for j, r in zip(selected, raw, strict=True)
-            if j["operation"] == expected
-        ]
+        qrows = []
+        for job_id in job_ids:
+            job = jobs[job_id]
+            if job["operation"] == expected:
+                q = job["raw"]["Q"] if job["raw"].get("kind") == "empty_claim" else job["raw"]
+                qrows.append({"model": q["model"], "state_id": q.get("state_id")})
+                del q
+            del job
         _require(all(r["model"] == model for r in qrows), "original Q model changed")
         identity = context.get("q_state_plan")
         _require(
@@ -2618,15 +2667,21 @@ def project_attempt(identifier, job_ids, jobs, checks, candidate, context):
             "original Q eighteen-state denominator incomplete",
         )
         extracted = []
-        for j, v in zip(selected, values, strict=True):
-            if j["operation"] != expected:
+        for job_id in job_ids:
+            if jobs[job_id]["operation"] != expected:
                 continue
-            q = v["Q_check"] if expected == "empty_claim" else v
+            value = checks[job_id]
+            q = value["Q_check"] if expected == "empty_claim" else value
             if kind == "state_bins":
                 _require(q["bins"], "original fixed bins missing")
-                extracted.extend(q["bins"])
+                extracted.extend(
+                    {g: row.get("measurements", row).get(g) for g in gates} for row in q["bins"]
+                )
             else:
-                extracted.append(q["whole"])
+                whole = q["whole"]
+                extracted.append({g: whole.get("measurements", whole).get(g) for g in gates})
+                del whole
+            del q, value
         measure = _max_gates(extracted, gates)
     elif identifier == "initial_common_surface":
         _require(
@@ -2645,10 +2700,14 @@ def project_attempt(identifier, job_ids, jobs, checks, candidate, context):
         )
     elif identifier == "tiny_roster":
         _require(all(op == "roster" for op in operations), "actual full tiny roster required")
-        cells = [r for v in values for r in v["value"]["cells"]]
+        cell_ids = []
+        for job_id in job_ids:
+            value = checks[job_id]
+            cell_ids.extend(row["id"] for row in value["value"]["cells"])
+            del value
         required = candidate["original_roster"]["primary_cells"]
         _require(
-            len(cells) == 44 and {r["id"] for r in cells} == {r["id"] for r in required},
+            len(cell_ids) == 44 and set(cell_ids) == {r["id"] for r in required},
             "all44 original tiny cells required",
         )
     elif identifier == "source_closure":
@@ -2684,9 +2743,12 @@ def project_attempt(identifier, job_ids, jobs, checks, candidate, context):
                 "teacher_grid" in operations,
                 "fixed prior domain selection and full original nodes required",
             )
-            saved = [r for r in raw if r.get("kind") == "teacher_grid"]
             _require(
-                all(r["evaluation_domains"] == context["domain_plan"][r["model"]] for r in saved),
+                all(
+                    r["evaluation_domains"] == context["domain_plan"][r["model"]]
+                    for r in raw
+                    if r.get("kind") == "teacher_grid"
+                ),
                 "raw fixed domain differs from prior selection",
             )
     elif identifier == "saved_replay":
@@ -2779,7 +2841,7 @@ def _teacher_source_guard(context):
         _require(
             path.is_relative_to(root) and _file_byte_sha(path) == digest, "memo source changed"
         )
-    return runner.payload_digest(source)
+    return saved_storage.payload_digest(source)
 
 
 def _artifact_byte_guard(directory):
@@ -2817,9 +2879,11 @@ def _teacher_physical_guard(value, artifact_context=None):
                     paths.add((root / chunk["path"]).resolve())
             for child in item.values():
                 visit(child)
-        elif isinstance(item, (list, tuple)):
-            for child in item:
+        elif isinstance(item, (list, tuple, saved_storage.DeferredSequence)):
+            for index in range(len(item)):
+                child = item[index]
                 visit(child)
+                del child
 
     visit(value)
     return {str(p): _artifact_byte_guard(p) for p in sorted(paths)}
@@ -2838,7 +2902,7 @@ def _teacher_verification_guard(value, *, verification_context=None, artifact_co
         "source_sha256": _teacher_source_guard(context),
         "content_sha256": input_identity(value),
         "physical": _teacher_physical_guard(value, artifact_context),
-        "artifact_context_sha256": runner.payload_digest(
+        "artifact_context_sha256": saved_storage.payload_digest(
             None if artifact_context is None else {k: str(v) for k, v in artifact_context.items()}
         ),
     }
@@ -2889,7 +2953,7 @@ def _checked_teacher_grid(job, context):
         artifact_context=context.get("artifact_context"),
     )
     owner = (job["id"], job["operation"])
-    owner_sha = runner.payload_digest(guard)
+    owner_sha = saved_storage.payload_digest(guard)
     previous = memo["owners"].get(owner)
     _require(previous is None or previous == owner_sha, "memo verified producer changed")
     args_sha = input_identity(args)
@@ -3303,7 +3367,7 @@ def project_cap(identifier, gates, job, original_n):
         "reason": "actual prior approved cap reached",
         "cap_evidence": cap,
         "financial_qualification": "unknown",
-        "evidence_sha256": runner.payload_digest(job["raw"]),
+        "evidence_sha256": saved_storage.payload_digest(job["raw"]),
     }
 
 
@@ -3956,14 +4020,18 @@ def check_teacher_stage_risk_sources(parameters, surface, *, stage_plan, rows):
                         input_identity(args["parameters"]) == input_identity(parameters),
                         "stage actual risk parameters changed",
                     )
-                    risk_arguments[ri] = args
-                args = risk_arguments[ri]
+                    risk_arguments[ri] = {
+                        "caches_sha256": input_identity(args["caches"]),
+                        "dataset_sha256": input_identity(args["dataset"]),
+                    }
+                    del args, source_args
+                bound_arguments = risk_arguments[ri]
                 _require(
-                    input_identity(args["caches"]) == input_identity(caches[kind][prefix]),
+                    bound_arguments["caches_sha256"] == input_identity(caches[kind][prefix]),
                     "stage actual risk cache differs from declared producer arrays",
                 )
                 _require(
-                    input_identity(args["dataset"])
+                    bound_arguments["dataset_sha256"]
                     == input_identity(raw[prefix + "_dataset"])
                     == input_identity(actual[prefix + "_dataset"]),
                     "stage actual risk dataset differs from paired original paths",
@@ -4014,7 +4082,14 @@ def check_teacher_stage_risk_sources(parameters, surface, *, stage_plan, rows):
 
 
 def calculate_teacher_candidate_gate(
-    parameters, surface, *, stage_plan, evidence, artifact_context=None, verification_context=None
+    parameters,
+    surface,
+    *,
+    stage_plan,
+    evidence,
+    artifact_context=None,
+    verification_context=None,
+    _check_store=None,
 ):
     """Recompute a whole original teacher candidate from typed saved evidence.
 
@@ -4022,6 +4097,17 @@ def calculate_teacher_candidate_gate(
     original reserved independent stream/grid exception, never invented N262144.
     Failures stay in all18 states/all12 dates/all Greek-band cells.
     """
+    if isinstance(evidence, saved_storage.DeferredSequence) and _check_store is None:
+        with TemporaryDirectory(prefix="rbf04-stage-saved-check-") as temporary:
+            return calculate_teacher_candidate_gate(
+                parameters,
+                surface,
+                stage_plan=stage_plan,
+                evidence=evidence,
+                artifact_context=artifact_context,
+                verification_context=verification_context,
+                _check_store=saved_storage.SavedChecks(temporary),
+            )
     candidate = execution.execution_candidate()
     required_keys = {
         "model",
@@ -4074,7 +4160,11 @@ def calculate_teacher_candidate_gate(
             and {(r["cell_id"], r.get("width_index")) for r in bindings} == expected,
             "original all Greek-band/three-width refinement roster changed",
         )
-    rows = {r["id"]: r for r in evidence}
+    rows = (
+        saved_storage.IndexedRows(evidence)
+        if isinstance(evidence, saved_storage.DeferredSequence)
+        else {r["id"]: r for r in evidence}
+    )
     _require(
         len(rows) == len(evidence) and set(rows) == set(stage_plan["required_job_ids"]),
         "original stage typed evidence scope differs",
@@ -4108,8 +4198,9 @@ def calculate_teacher_candidate_gate(
         "artifact_context": artifact_context,
         "teacher_verification_context": verification_context,
     }
-    checks = {}
-    for identifier, row in rows.items():
+    checks = {} if _check_store is None else _check_store
+    for identifier in rows:
+        row = rows[identifier]
         manifest = {"n_paths": row["raw"].get("original_path_count")}
         checks[identifier] = _raw_job_check(
             {
@@ -4120,6 +4211,7 @@ def calculate_teacher_candidate_gate(
             },
             dict(context, resolved_arguments=row.get("arguments", {})),
         )
+        del row
     teacher = rows[stage_plan["teacher_job_id"]]["raw"]
     higher = rows[stage_plan["next_teacher_job_id"]]["raw"]
     highgrid = rows[stage_plan["grid_teacher_job_id"]]["raw"]
@@ -4238,7 +4330,7 @@ def calculate_teacher_candidate_gate(
         else "original full stage numerical uncertainty/precision gate failed",
         "stage_plan_sha256": run_pilot_identity(stage_plan),
         "raw_evidence_sha256": {
-            identifier: runner.payload_digest(row) for identifier, row in rows.items()
+            identifier: saved_storage.payload_digest(row) for identifier, row in rows.items()
         },
         "financial_qualification": "unknown",
         "scope": "teacher candidate numerical gate only; not formal pilot/main certification",
@@ -4248,7 +4340,7 @@ def calculate_teacher_candidate_gate(
 def _execution_verification(inputs, evidence):
     return {
         "checker": "saved full-original pilot semantic projection",
-        "evidence_sha256": runner.payload_digest(evidence),
+        "evidence_sha256": saved_storage.payload_digest(evidence),
         "inputs": inputs,
     }
 
@@ -4316,7 +4408,7 @@ def _prior_execution_projection(row, base_plan, specification, jobs):
         )
         plan = selected
         row["cap_evidence"] = copy.deepcopy(actual) | {
-            "evidence_sha256": runner.payload_digest(
+            "evidence_sha256": saved_storage.payload_digest(
                 {
                     "actual_parent": parent,
                     "prior_option": option,
@@ -4326,7 +4418,7 @@ def _prior_execution_projection(row, base_plan, specification, jobs):
         }
         alias.update(parent_expense_id=parent["expense"]["id"], required_job_ids=[parent["id"]])
         row["execution_cap_parent_job_id"] = parent["id"]
-        row["prior_cap_option_sha256"] = runner.payload_digest(option)
+        row["prior_cap_option_sha256"] = saved_storage.payload_digest(option)
     else:
         _require(plan.get("cap") is None, "uncapped record needs prior ordinary execution plan")
     row["expense_id"] = plan["expense_id"]
@@ -4573,7 +4665,7 @@ def project_execution_pilot(snapshot, *, expected_plan, context, selection, doma
                     ),
                 },
                 {
-                    "raw_snapshot": runner.payload_digest(snapshot),
+                    "raw_snapshot": saved_storage.payload_digest(snapshot),
                     "raw_check": checked["verification"],
                 },
             )
@@ -4616,7 +4708,7 @@ def project_execution_pilot(snapshot, *, expected_plan, context, selection, doma
             "history_complete": True,
             "unresolved_issues": [],
         },
-        "raw_snapshot_sha256": runner.payload_digest(snapshot),
+        "raw_snapshot_sha256": saved_storage.payload_digest(snapshot),
         "saved_raw_verification": copy.deepcopy(checked["verification"]),
         "verification": _execution_verification(
             common | {"selection": execution._digest(selection)}, checked["verification"]
@@ -4628,7 +4720,7 @@ def project_execution_pilot(snapshot, *, expected_plan, context, selection, doma
         "selection_sha256" not in specifications and "domains_sha256" not in specifications,
         "pretest policy must not require future realized value hashes",
     )
-    pilot["prior_selection_policy_sha256"] = runner.payload_digest(
+    pilot["prior_selection_policy_sha256"] = saved_storage.payload_digest(
         specifications["selection_policy"]
     )
     financial = (
@@ -4647,7 +4739,7 @@ def project_execution_pilot(snapshot, *, expected_plan, context, selection, doma
     }
 
 
-def check_pilot_records(snapshot, *, expected_plan, context=None):
+def check_pilot_records(snapshot, *, expected_plan, context=None, job_store=None, check_store=None):
     """Return raw recomputation and exact outstanding roster, never flag-only ready."""
     _require(snapshot.get("schema") == "rb-f04-pilot-raw-v1", "raw pilot schema mismatch")
     candidate = execution.execution_candidate()
@@ -4658,11 +4750,12 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
 
         validate_locked_plan(expected_plan)
         _require(
-            runner.payload_digest(snapshot["locked_plan"]) == runner.payload_digest(expected_plan),
+            saved_storage.payload_digest(snapshot["locked_plan"])
+            == saved_storage.payload_digest(expected_plan),
             "saved prior plan mismatch",
         )
     _require(snapshot.get("test_opened", False) is False, "main test opened before pilot")
-    jobs = {j["id"]: j for j in snapshot.get("jobs", [])}
+    jobs = {j["id"]: j for j in snapshot.get("jobs", [])} if job_store is None else job_store
     _require(len(jobs) == len(snapshot.get("jobs", [])), "repeated pilot job ID")
     context = dict(context or {})
     source = snapshot.get("source", {})
@@ -4670,7 +4763,7 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
         _new_teacher_verification_context(
             source_root=context.get("source_root", snapshot.get("source_root", ROOT)),
             source=source,
-            plan_sha256=runner.payload_digest(snapshot.get("locked_plan")),
+            plan_sha256=saved_storage.payload_digest(snapshot.get("locked_plan")),
         )
         if source.get("files")
         else None
@@ -4685,99 +4778,109 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
             "checker financial parameters differ from original bound input",
         )
         context["parameters"] = actual_parameters
-    checks, issues = {}, []
+    checks, issues = ({} if check_store is None else check_store), []
     activation_cache = {}
     planned_jobs = {} if expected_plan is None else {j["id"]: j for j in expected_plan["jobs"]}
-    for identifier, job in jobs.items():
-        if expected_plan is not None:
-            _require(identifier in planned_jobs, "unplanned financial job")
-            check_job_envelope(job, planned_jobs[identifier], expected_plan)
-        if expected_plan is not None and job.get("status") in (
-            "executed",
-            "failed_at_declared_cap",
-        ):
-            try:
-                _require("inputs" in context, "actual original pilot input context required")
-                from run_pilot import _dependency_ids, _numeric_dependency_ids
+    for identifier in jobs:
+        try:
+            job = jobs[identifier]
+            if expected_plan is not None:
+                _require(identifier in planned_jobs, "unplanned financial job")
+                check_job_envelope(job, planned_jobs[identifier], expected_plan)
+            if expected_plan is not None and job.get("status") in (
+                "executed",
+                "failed_at_declared_cap",
+            ):
+                try:
+                    _require("inputs" in context, "actual original pilot input context required")
+                    from run_pilot import _dependency_ids, _numeric_dependency_ids
 
-                dependencies = _dependency_ids(planned_jobs[identifier]["arguments"])
-                numeric = _numeric_dependency_ids(planned_jobs[identifier]["arguments"])
-                _require(
-                    all(i in checks for i in dependencies)
-                    and all(jobs[i]["status"] == "executed" for i in numeric),
-                    "unverified original numerical dependency cannot become executed",
-                )
-                context["resolved_arguments"] = check_resolved_job_arguments(
-                    job,
-                    planned_jobs[identifier],
-                    inputs=context["inputs"],
-                    jobs=jobs,
-                    artifact_directory=snapshot.get("artifact_directory"),
-                    planned_jobs=planned_jobs,
-                )
-            except (ValueError, KeyError) as error:
-                issues.append(
-                    {
-                        "id": identifier,
-                        "reason": str(error),
-                        "status": "unclosed_original_dependency_binding",
-                    }
-                )
-                continue
-        if job.get("status") != "executed":
-            try:
-                if job.get("status") == "failed_at_declared_cap":
-                    checks[identifier] = check_capped_job_raw(
-                        job, artifact_context=context.get("artifact_context"), context=context
-                    )
-                elif job.get("status") == "not_required_after_qualified_prefix":
+                    dependencies = _dependency_ids(planned_jobs[identifier]["arguments"])
+                    numeric = _numeric_dependency_ids(planned_jobs[identifier]["arguments"])
                     _require(
-                        expected_plan is not None and "inputs" in context,
-                        "prior actual unused teacher inputs required",
+                        all(i in checks for i in dependencies)
+                        and all(jobs[i]["status"] == "executed" for i in numeric),
+                        "unverified original numerical dependency cannot become executed",
                     )
-                    checks[identifier] = check_unused_teacher_job(
+                    context["resolved_arguments"] = check_resolved_job_arguments(
                         job,
                         planned_jobs[identifier],
                         inputs=context["inputs"],
                         jobs=jobs,
+                        artifact_directory=snapshot.get("artifact_directory"),
                         planned_jobs=planned_jobs,
-                        activation_cache=activation_cache,
-                        artifact_context=context.get("artifact_context"),
-                        verification_context=context.get("teacher_verification_context"),
                     )
-                elif job.get("status") == "unexecuted_dependency_cap":
-                    _require(expected_plan is not None, "prior dependency cap plan required")
-                    checks[identifier] = check_dependency_cap_job(
-                        job,
-                        planned_jobs[identifier],
-                        expected_plan,
-                        jobs,
-                        inputs=context.get("inputs"),
-                        artifact_context=context.get("artifact_context"),
-                    )
-                else:
+                except (ValueError, KeyError) as error:
                     issues.append(
-                        {"id": identifier, "reason": job.get("reason"), "status": job.get("status")}
+                        {
+                            "id": identifier,
+                            "reason": str(error),
+                            "status": "unclosed_original_dependency_binding",
+                        }
                     )
+                    continue
+            if job.get("status") != "executed":
+                try:
+                    if job.get("status") == "failed_at_declared_cap":
+                        checks[identifier] = check_capped_job_raw(
+                            job, artifact_context=context.get("artifact_context"), context=context
+                        )
+                    elif job.get("status") == "not_required_after_qualified_prefix":
+                        _require(
+                            expected_plan is not None and "inputs" in context,
+                            "prior actual unused teacher inputs required",
+                        )
+                        checks[identifier] = check_unused_teacher_job(
+                            job,
+                            planned_jobs[identifier],
+                            inputs=context["inputs"],
+                            jobs=jobs,
+                            planned_jobs=planned_jobs,
+                            activation_cache=activation_cache,
+                            artifact_context=context.get("artifact_context"),
+                            verification_context=context.get("teacher_verification_context"),
+                        )
+                    elif job.get("status") == "unexecuted_dependency_cap":
+                        _require(expected_plan is not None, "prior dependency cap plan required")
+                        checks[identifier] = check_dependency_cap_job(
+                            job,
+                            planned_jobs[identifier],
+                            expected_plan,
+                            jobs,
+                            inputs=context.get("inputs"),
+                            artifact_context=context.get("artifact_context"),
+                        )
+                    else:
+                        issues.append(
+                            {
+                                "id": identifier,
+                                "reason": job.get("reason"),
+                                "status": job.get("status"),
+                            }
+                        )
+                except (ValueError, KeyError) as error:
+                    issues.append(
+                        {
+                            "id": identifier,
+                            "reason": str(error),
+                            "status": "unclosed_cap_semantic_check",
+                        }
+                    )
+                continue
+            try:
+                checks[identifier] = _raw_job_check(job, context)
+                if job["operation"] == "field":
+                    from run_pilot import materialize_field
+
+                    context["surface"] = materialize_field(job["raw"])
             except (ValueError, KeyError) as error:
                 issues.append(
-                    {
-                        "id": identifier,
-                        "reason": str(error),
-                        "status": "unclosed_cap_semantic_check",
-                    }
+                    {"id": identifier, "reason": str(error), "status": "unclosed_semantic_check"}
                 )
-            continue
-        try:
-            checks[identifier] = _raw_job_check(job, context)
-            if job["operation"] == "field":
-                from run_pilot import materialize_field
-
-                context["surface"] = materialize_field(job["raw"])
-        except (ValueError, KeyError) as error:
-            issues.append(
-                {"id": identifier, "reason": str(error), "status": "unclosed_semantic_check"}
-            )
+        finally:
+            context.pop("resolved_arguments", None)
+            if "job" in locals():
+                del job
     bound_cases = snapshot.get("case_bindings", [])
     bound_attempts = snapshot.get("attempt_bindings", [])
     if expected_plan is not None:
@@ -4872,7 +4975,7 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
                     required_job_ids=required,
                     cap_parent_job_id=parent["id"],
                     execution_status=job["status"],
-                    child_evidence_sha256=runner.payload_digest(job["raw"]),
+                    child_evidence_sha256=saved_storage.payload_digest(job["raw"]),
                 )
                 case_results.append(row)
                 continue
@@ -4892,8 +4995,8 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
             row.update(
                 job_id=jid,
                 **({"required_job_ids": required} if control else {}),
-                evidence_sha256=runner.payload_digest(job["raw"]),
-                raw_check_sha256=runner.payload_digest(checks[jid]),
+                evidence_sha256=saved_storage.payload_digest(job["raw"]),
+                raw_check_sha256=saved_storage.payload_digest(checks[jid]),
             )
             case_results.append(row)
         except (ValueError, KeyError, StopIteration) as error:
@@ -4954,8 +5057,12 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
                     identifier, numerical_job_ids, jobs, checks, candidate, computed_context
                 )
                 row["required_job_ids"] = job_ids
-            row["evidence_sha256"] = runner.payload_digest(
-                [jobs[i]["raw"] for i in row["required_job_ids"]]
+            required_ids = tuple(row["required_job_ids"])
+            row["evidence_sha256"] = saved_storage.payload_digest(
+                saved_storage.DeferredSequence(
+                    len(required_ids),
+                    lambda i, ids=required_ids: jobs[ids[i]]["raw"],
+                )
             )
             row["raw_original_n_by_job"] = {
                 i: jobs[i]["raw"].get("original_n") for i in row["required_job_ids"]
@@ -5000,12 +5107,12 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
         receipt = {
             "checker": "saved check_pilot raw semantic boundary",
             "integrity": "pass",
-            "evidence_sha256": runner.payload_digest(snapshot),
+            "evidence_sha256": saved_storage.payload_digest(snapshot),
             "inputs": {
-                "plan_sha256": runner.payload_digest(expected_plan),
-                "source_sha256": runner.payload_digest(snapshot["source"]),
-                "case_results_sha256": runner.payload_digest(case_results),
-                "attempt_results_sha256": runner.payload_digest(attempt_results),
+                "plan_sha256": saved_storage.payload_digest(expected_plan),
+                "source_sha256": saved_storage.payload_digest(snapshot["source"]),
+                "case_results_sha256": saved_storage.payload_digest(case_results),
+                "attempt_results_sha256": saved_storage.payload_digest(attempt_results),
             },
             "scope": "saved arrays/counts/blocks/cash/refinements/costs; original RNG and earlier solves require independent review",
         }
@@ -5037,33 +5144,90 @@ def check_pilot_records(snapshot, *, expected_plan, context=None):
     }
 
 
-def check_pilot(directory, *, expected_plan, source_root=ROOT, context=None):
+def check_pilot(directory, *, expected_plan, source_root=ROOT, context=None, check_directory=None):
     """Load saved checkpoint parts only; no financial solver or RNG regeneration."""
     from run_pilot import bound_artifact_path, read_pilot_artifact
 
     directory = Path(directory)
     candidates = sorted(directory.glob("checkpoint*"))
     _require(bool(candidates), "no saved pilot checkpoint")
-    snapshot, _ = read_pilot_artifact(candidates[-1])
+    snapshot, checkpoint_receipt = read_pilot_artifact(candidates[-1])
     artifact_context = {
         "original_root": snapshot["artifact_directory"],
         "restored_root": str(directory.resolve()),
     }
-    hydrated = []
-    for reference in snapshot["jobs"]:
-        row, _ = read_pilot_artifact(
-            bound_artifact_path(reference["artifact_path"], artifact_context)
-        )
-        _require(
-            runner.payload_digest(row) == reference["raw_job_payload_sha256"],
-            "immutable original job payload differs from checkpoint",
-        )
-        hydrated.append(row)
-    snapshot["jobs"] = hydrated
     context = dict(context or {}, source_root=source_root, artifact_context=artifact_context)
-    result = check_pilot_records(snapshot, expected_plan=expected_plan, context=context)
+    if check_directory is None:
+        hydrated = []
+        for reference in snapshot["jobs"]:
+            row, _ = read_pilot_artifact(
+                bound_artifact_path(reference["artifact_path"], artifact_context)
+            )
+            _require(
+                saved_storage.payload_digest(row) == reference["raw_job_payload_sha256"],
+                "immutable original job payload differs from checkpoint",
+            )
+            hydrated.append(row)
+        snapshot["jobs"] = hydrated
+        result = check_pilot_records(snapshot, expected_plan=expected_plan, context=context)
+    else:
+        checkpoint_reference = {
+            "checkpoint_name": candidates[-1].name,
+            "receipt": checkpoint_receipt,
+            "saved_snapshot": snapshot,
+            "saved_snapshot_sha256": saved_storage.payload_digest(snapshot),
+        }
+        jobs = saved_storage.ReferenceJobs(snapshot["jobs"], artifact_context=artifact_context)
+        snapshot = dict(snapshot, jobs=jobs.sequence())
+        checks = saved_storage.SavedChecks(check_directory)
+        result = check_pilot_records(
+            snapshot,
+            expected_plan=expected_plan,
+            context=context,
+            job_store=jobs,
+            check_store=checks,
+        )
+        result["saved_checkpoint_reference"] = checkpoint_reference
+
     result["source_root"] = str(source_root)
     return result
+
+
+def write_bounded_report(directory, result):
+    """Persist references to all full saved values, without copying whole raw."""
+    checks = result["raw_checks"]
+    _require(isinstance(checks, saved_storage.SavedChecks), "bounded check store required")
+    _require(
+        checks.directory.resolve() == (Path(directory) / "checks").resolve(),
+        "bounded report check store must belong to the declared checks directory",
+    )
+    report = {
+        k: v
+        for k, v in result.items()
+        if k not in ("raw_checks", "raw_snapshot", "saved_checkpoint_reference")
+    }
+    report.update(
+        schema="rb-f04-pilot-saved-check-bounded-v1",
+        raw_checks_reference={
+            "directory": "checks",
+            "references": list(checks.references.values()),
+            "logical_payload_sha256": saved_storage.payload_digest(checks),
+        },
+        raw_snapshot_reference={
+            **result["saved_checkpoint_reference"],
+            "hydrated_logical_payload_sha256": saved_storage.payload_digest(result["raw_snapshot"]),
+        },
+    )
+    from run_pilot import write_pilot_artifact
+
+    return write_pilot_artifact(Path(directory) / "report", report)
+
+
+def read_bounded_report(directory, *, expected_receipt, pilot_directory):
+    """Authenticate all full saved values against a caller's trusted receipt."""
+    from _pilot_saved_report import read_bounded_report as read
+
+    return read(directory, expected_receipt=expected_receipt, pilot_directory=pilot_directory)
 
 
 def main(argv=None):
@@ -5078,11 +5242,24 @@ def main(argv=None):
     parser.add_argument("--plan", required=True, type=Path)
     parser.add_argument("--context", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument(
+        "--bounded",
+        action="store_true",
+        help="Persist full checks by reference; retain the complete original scope.",
+    )
     args = parser.parse_args(argv)
     plan, _ = read_pilot_artifact(args.plan)
     context, _ = read_pilot_artifact(args.context)
-    result = check_pilot(args.pilot, expected_plan=plan, context=unpack_inputs(context))
-    write_pilot_artifact(args.output, result)
+    result = check_pilot(
+        args.pilot,
+        expected_plan=plan,
+        context=unpack_inputs(context),
+        check_directory=args.output / "checks" if args.bounded else None,
+    )
+    if args.bounded:
+        write_bounded_report(args.output, result)
+    else:
+        write_pilot_artifact(args.output, result)
     print(
         {
             key: result[key]

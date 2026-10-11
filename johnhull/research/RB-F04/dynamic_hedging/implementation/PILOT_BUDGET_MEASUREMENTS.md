@@ -452,3 +452,16 @@ ETAは未確定。旧rateの全stage条件付き139.050h＋別context cold90.673
 次は全件逐次検算を限定実装する。既存mainの参照読取は参考になるが、loaderだけではjob辞書・checksのfull値・stage依存evidence・case/attemptのraw list・最終raw_snapshotで再び全量を保持する。pilot専用参照store・検算結果store・依存ビュー・bounded報告を合わせ、全元roster/経路/labels/SDE/cash/unknown/原byteの認証を維持する必要がある。既存payload_digestはMappingを扱わないため、同一logical digestの逐次処理または元checkpointと全row receiptの明示的結合を検証する。単一job/stageの最大RSSは未測定で、修復後16GiB適合は未保証。金融候補/経路数や受入範囲は減らさない。
 
 [closed proof CAS](pilot-execution-evidence/validation-rollout-fix-root-validation-fix-and-saved-failure-closed-proof-store-manifest-v1.json)は修正版2sourceと17proofの計19paths/3,865,595 bytes。両storeの原byteと標準reader復元はPASS。[実保存prefix](pilot-execution-evidence/validation-rollout-fix-root-validation-fix-and-saved-failure-closed-proof-store-receipt-v1.json)はwall 5.169310秒、準備・最終tailはunknown。最初のmanifestは同じ原JSON byteを.jsonと.bytesで異なるMIMEとしたためput前に拒否され、原byteを変えず実JSON MIMEへ修正した。これらのproof保存は金融raw全体のCAS/semantic復元や金融external10完了ではない。全体ETAは引き続き数週間規模、1か月超もあり得る概算で、全pilot完走まで確定しない。
+
+
+### 全件保存検算の参照化（2026-10-11）
+
+元source82の16GiB停止を保持したまま、privateの保存checkerにopt-inの **--bounded** を実装した。_pilot_saved_storage.py は全元jobの順序付き参照を読み、原payload digestを照合する。全数値check値をimmutable artifactへ個別保存し、case/attemptの集計は必要なgate値と小metadataだけを保持する。数値検算・全経路・元roster・unknown/失敗・末尾行は省略せず、比較は従来の許容誤差/SEを保つ。canonical treeは一時fileへ逐次書き、配列の出現番号・byte/shape/dtypeを含む**元形式のlogical digest**を維持する。SHAは保存・由来の照合であり、数値の正しさの代用ではない。
+
+依存の遅延読取は全saved evidence行に限定し、通常の設定・state/date bindingsは元listの比較意味を保つ。qualified-prefixの再検算にも接続し、全node/driverの物理巡回を維持した。stageのrisk引数を全量cacheする代わりに、実producer入力を全照合した後の小さなbinding digestだけを保持する。最大Nのdriver比較は元principal/referenceの実raw二本をロードして行い、tagだけで代用しない。
+
+write_bounded_report は全check refs/aggregate digestと元checkpoint receipt/saved digest・全jobを含むhydrated logical digestを保存する。_pilot_saved_report.py とprivate wrapperの read_bounded_report は**呼出側の信頼済み期待receiptを必須**とし、完全なmanifest/refs・各check receipt/digest・元checkpoint・全jobの順序/ID/digest・復元rootをsaved-onlyで認証する。manifestの連続番号だけを完全性の根拠にせず、末尾fault・NaN・費用None・未閉鎖を保持する。writerの実checks保存先とreportの宣言が違う場合も拒否する。
+
+[rootの検証記録](pilot-execution-evidence/bounded-pilot-saved-check-root-source-and-tests-v1.json)：関連242tests PASS（142.55秒）、その後のreader/wrapper統合39tests PASS（4.54秒、20重複・19新規、重複なし計261）。変更7PythonのRuff/format・diffcheck PASS。独立の読取レビューと8小合成probeで既知3指摘の修復を確認。eagerとの全保存算術一致、unknownを含む全44cells・Q重複行/末尾、欠落/改変/root外拒否、元root不在の復元、次読取前の配列解放を確認した。これらは合成/保存境界の限定検査であり、正式pilot・金融precision・全容量を承認しない。RED・fixtureの二重field-encoding失敗・元RSS停止はD2/既存証跡に保持した。
+
+現在のsource候補は84files/dynamic import0（bd328ceed9da…）。旧source82の固定prior/guardを新sourceへ流用・再標示しない。**単一job/stageの最大RSSと全容量は未確認。金融lifecycleのresults保持と後続 project_execution_pilot は従来のeager経路が残り、全phaseをboundedと呼べない。** 次はこれらの接続とproducer/verifierの由来を区別するprior/実guard結合、元全scopeの監視下saved数値実測、fresh正式pilot・freezeへ進む。外部10/総費用、主396件、fresh/両保管庫semantic復元、図/教材、phase末3suite・独立最終受入/mainは未完了。旧501.742hは既知部分の条件付き外挿で、全体ETAは未確定。
