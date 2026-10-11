@@ -7,6 +7,7 @@ A single decoded job and a numerical comparison can still exceed a RAM cap.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import tempfile
@@ -181,6 +182,53 @@ class ReferenceJobs(Mapping):
         if field is None:
             return DeferredSequence(len(ids), lambda i: self[ids[i]])
         return DeferredSequence(len(ids), lambda i: self[ids[i]][field])
+
+
+class RecordedJobs(ReferenceJobs):
+    """Keep saved runtime rows as original checkpoint references, never raw caches.
+
+    Metadata outside raw is retained exactly, including manifest arrays.
+    This removes cumulative raw retention, not the RAM cost of a single job.
+    Fresh/resumed registration uses the current artifact root as both roots;
+    existing references may be read with a distinct restored root.
+    """
+
+    def __init__(self, references=(), *, artifact_context, reader=None):
+        _require(
+            all("raw" not in r for r in references),
+            "runtime job references must exclude full raw payloads",
+        )
+        super().__init__(
+            copy.deepcopy(references), artifact_context=artifact_context, reader=reader
+        )
+
+    def register(self, row, artifact_path):
+        """Bind one already-written original row without retaining its raw value."""
+        from run_pilot import bound_artifact_path
+
+        identifier = row["id"]
+        _require(identifier not in self.references, "duplicate runtime job reference")
+        path = Path(artifact_path)
+        actual = bound_artifact_path(path, self.artifact_context)
+        _require(actual.is_dir(), "runtime job must already be saved")
+        original = {key: value for key, value in row.items() if key != "artifact_path"}
+        digest = payload_digest(original)
+        reference = copy.deepcopy(
+            {key: value for key, value in row.items() if key not in ("raw", "artifact_path")}
+        )
+        reference.update(
+            artifact_path=str(path),
+            raw_job_payload_sha256=digest,
+        )
+        self.references[identifier] = reference
+        return reference
+
+    def __getitem__(self, key):
+        from run_pilot import bound_artifact_path
+
+        value = super().__getitem__(key)
+        path = bound_artifact_path(self.references[key]["artifact_path"], self.artifact_context)
+        return {**value, "artifact_path": str(path)}
 
 
 def read_check_manifest(directory):

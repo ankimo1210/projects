@@ -1,0 +1,81 @@
+{
+  "schema": "rb-f04-bounded-lifecycle-projection-source-tests-v1",
+  "date": "2026-10-11",
+  "source_and_test_files": {
+    "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_storage.py": "1651b56211645c9bb7ee33edbb8aab4d647a75ccc2a9a41c6051daa97a88fa3a",
+    "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py": "6de1924302fd316b33afbf7c9b4a88493434eee2be87814dd62255e9633dc29a",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "372054ea0d382a62f0fc83d4fda7f5666b2861fa75489206282d75c7db200355",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "34838df65f352fb264be03fc37ab80a5e5176ff4a0c9a89b9b701628aa425b07",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_bounded_lifecycle.py": "14cf5cd488241148cca3a2b62166edec61610db8c2934ca82406f8add3dd8af6",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_bounded_projection.py": "e2f7077c9fe7488490d6dab7f2abf160f3d0094d79e74359c2bcf03f421d7da4",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_job_references.py": "19fd589adbda0a7c94e17298f8b94e63509a578a5f264fa1cf5417afeef7e1c4",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_provenance.py": "8251cab89e9daccc337ed6824fc698d7a9920e1f2afb54373788dea4343120bf"
+  },
+  "source_candidate": {
+    "file_count": 84,
+    "dynamic_imports": [],
+    "payload_sha256": "9a30c04286e7e67b27549c98d9cfc4a5da8261504292a53f0cea1b7ba965991f",
+    "producer_verifier_helper_connected": false,
+    "new_prior_or_guard_bound": false
+  },
+  "focused_tests": {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "-m",
+      "pytest",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_storage.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_report.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_job_references.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_bounded_lifecycle.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_bounded_projection.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_provenance.py",
+      "-q"
+    ],
+    "returncode": 0,
+    "wall_seconds": 160.07280970699503,
+    "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-bounded-lifecycle-projection-provenance-integration-v1.log",
+    "log_sha256": "0ce654d82cf4b243ba41af4eb91effc3a4cf7b8280265a6828e86c0d6d2d8abf",
+    "scope": "targeted source/storage/lifecycle/projection/provenance; not formal financial acceptance",
+    "formal_financial_jobs_executed": 0,
+    "passed": 305,
+    "pytest_reported_seconds": 159.01
+  },
+  "ruff": {
+    "files": 8,
+    "check": "pass",
+    "format_check": "pass"
+  },
+  "independent_lifecycle": {
+    "synthetic_groups": 5,
+    "result": "pass",
+    "report_sha256": "59bf32a444f69758ff7b4f4df0c2dff094e8d3af9be70602cfa5646215072bed",
+    "scope": "read-only synthetic runtime reference integration"
+  },
+  "original_scope": {
+    "planned_jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "teacher_ns": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "financial_raw_or_original_source_changed": false,
+    "unknowns_failures_expenses_preserved": true
+  },
+  "limitations": [
+    "single-job, multi-dependency and retained non-raw metadata RAM are not bounded by these tests",
+    "no formal financial pilot/check/main/fresh/CAS performed",
+    "producer/verifier helper is not connected to the three production checker sites",
+    "actual source/raw/guard/prior binding and full capacity measurement remain incomplete",
+    "full phase-end suites and main acceptance remain incomplete"
+  ],
+  "eta": {
+    "status": "uncertain",
+    "previous_conditional_known_compute_hours": 501.742,
+    "includes_following_two_themes": false,
+    "is_total_or_lower_or_upper_bound": false
+  }
+}

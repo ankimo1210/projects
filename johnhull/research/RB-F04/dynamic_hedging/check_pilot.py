@@ -1659,9 +1659,18 @@ def project_execution_expense_aliases(expenses, aliases, *, jobs):
     rows = copy.deepcopy(list(expenses))
     original = {r["id"]: r for r in rows}
     _require(len(original) == len(rows), "actual current expense IDs repeated")
-    parent_jobs = {
-        j.get("expense", {}).get("id"): j for j in jobs.values() if j.get("expense") is not None
-    }
+    job_metadata, parent_jobs = {}, {}
+    for identifier in jobs:
+        actual_job = jobs[identifier]
+        metadata = {
+            "id": actual_job["id"],
+            "expense": copy.deepcopy(actual_job.get("expense")),
+            "timing_events": copy.deepcopy(actual_job.get("timing_events")),
+        }
+        job_metadata[identifier] = metadata
+        if metadata["expense"] is not None:
+            parent_jobs[metadata["expense"].get("id")] = metadata
+        del actual_job
     for specification in aliases:
         identifier = specification["id"]
         parent_id = specification.get("parent_expense_id")
@@ -1699,7 +1708,7 @@ def project_execution_expense_aliases(expenses, aliases, *, jobs):
             )
             events = parent.get("timing_events")
             for jid in selected:
-                child = jobs[jid]
+                child = job_metadata[jid]
                 _check_actual_expense_clock(child["expense"], child.get("timing_events"))
                 for axis in ("wall", "cpu"):
                     _require(
@@ -4538,20 +4547,35 @@ def derive_execution_domains(specification, jobs, checks):
     return result
 
 
-def project_execution_pilot(snapshot, *, expected_plan, context, selection, domains):
+def project_execution_pilot(
+    snapshot, *, expected_plan, context, selection, domains, job_store=None, check_store=None
+):
     """Recompute saved full raw before producing the private A input envelope.
 
     This is a metadata bridge, not an independent execution review or financial
     certificate. Missing raw obligations, original-N, phase/review/CAS clocks,
     progressive selection, and compatible pretest cap options cannot be filled.
+    Optional stores change retrieval/retention only: every call still performs
+    the complete original numerical checks before projecting any receipt.
     """
     import copy
 
-    checked = check_pilot_records(snapshot, expected_plan=expected_plan, context=context)
+    checked = check_pilot_records(
+        snapshot,
+        expected_plan=expected_plan,
+        context=context,
+        job_store=job_store,
+        check_store=check_store,
+    )
     _require(
         checked["closed"] and checked.get("verification", {}).get("integrity") == "pass",
         "saved original pilot is not closed",
     )
+    # The actual checker binds this complete logical snapshot after all numerical
+    # checks. Reuse that immutable-scope receipt, never externally supplied flags.
+    snapshot_sha256 = checked["verification"].get("evidence_sha256")
+    if snapshot_sha256 is None:
+        snapshot_sha256 = saved_storage.payload_digest(snapshot)
     candidate = execution.execution_candidate()
     source = snapshot["source"]["protocol_source"]
     specifications = expected_plan.get("execution_projection")
@@ -4564,7 +4588,7 @@ def project_execution_pilot(snapshot, *, expected_plan, context, selection, doma
         set(case_specs) == set(case_plans) and set(attempt_specs) == set(attempt_plans),
         "prior execution projection changed original121/51",
     )
-    jobs = {j["id"]: j for j in snapshot["jobs"]}
+    jobs = {j["id"]: j for j in snapshot["jobs"]} if job_store is None else job_store
     _require(
         isinstance(specifications.get("selection_policy"), dict),
         "prior selection producer/rule policy required",
@@ -4665,12 +4689,13 @@ def project_execution_pilot(snapshot, *, expected_plan, context, selection, doma
                     ),
                 },
                 {
-                    "raw_snapshot": saved_storage.payload_digest(snapshot),
+                    "raw_snapshot": snapshot_sha256,
                     "raw_check": checked["verification"],
                 },
             )
     precision = []
-    for job in snapshot["jobs"]:
+    for identifier in jobs:
+        job = jobs[identifier]
         if job["operation"] == "precision":
             value = checked["raw_checks"][job["id"]]
             precision.append(
@@ -4687,6 +4712,8 @@ def project_execution_pilot(snapshot, *, expected_plan, context, selection, doma
                     )
                 }
             )
+            del value
+        del job
     pilot = {
         "schema": "rb-f04-execution-pilot-v1.1",
         "test_opened": False,
@@ -4708,7 +4735,7 @@ def project_execution_pilot(snapshot, *, expected_plan, context, selection, doma
             "history_complete": True,
             "unresolved_issues": [],
         },
-        "raw_snapshot_sha256": saved_storage.payload_digest(snapshot),
+        "raw_snapshot_sha256": snapshot_sha256,
         "saved_raw_verification": copy.deepcopy(checked["verification"]),
         "verification": _execution_verification(
             common | {"selection": execution._digest(selection)}, checked["verification"]
