@@ -1,0 +1,375 @@
+{
+  "schema": "rb-f04-source85-fresh-prior-closed-proof-archive-v1",
+  "created_utc": "2026-10-11T03:57:53.633314+00:00",
+  "paths": [
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v6-decision-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-formal-prior-v6-decision-v1.json",
+      "sha256": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223",
+      "bytes": 26105
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-monitor-v6-source-mechanics-audit-failure-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-monitor-v6-source-mechanics-audit-failure-v1.json",
+      "sha256": "51bbbd73feeb03260db0f1d3e3712fed4f6147b1da5f5c5d9aeebd5de098d994",
+      "bytes": 755
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-monitor-v6-source-mechanics-results-v2.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-monitor-v6-source-mechanics-results-v2.json",
+      "sha256": "e4d1f9f5d9559f155e8c644179ab0b986f74f8949c7b8ac4805b90b4577bd514",
+      "bytes": 7308
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-root-monitor-v6-decision-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-root-monitor-v6-decision-v1.json",
+      "sha256": "5c742140a2080f68134d02d7b82b04571e0a2863eb47791ee9bda0ccdfb50968",
+      "bytes": 10220
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source85-fresh-boundary-audit-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-source85-fresh-boundary-audit-v1.json",
+      "sha256": "50704525cf94d57c187d5e84e350800d172e8f6331a4467ccd92f9ec8a1d6694",
+      "bytes": 7594
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source85-fresh-producer-limited-decision-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-source85-fresh-producer-limited-decision-v1.json",
+      "sha256": "3831886d1d9df4700995ba0fb75d2994cefa0ccd958047c20507e0f1f6609d62",
+      "bytes": 23035
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source82-to85-fresh-production-delta-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-root-source82-to85-fresh-production-delta-v1.json",
+      "sha256": "354a2ee17a9f0f06609e82018d93454a8e9443681c32f0ba92d8d1b27e446148",
+      "bytes": 3408
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source85-closed-proof-initial-large-file-guard-failure-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-root-source85-closed-proof-initial-large-file-guard-failure-v1.json",
+      "sha256": "2dea56fa065d646b7243382fdbb9582250c87a7821b8056988002fc45fafb0a5",
+      "bytes": 4066
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source85-metadata-observer-constant-delta-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-root-source85-metadata-observer-constant-delta-v1.json",
+      "sha256": "a9db7f03bde12e0b79123070d991e7bd7a7197a0df0247c7f3fd523b28c30e82",
+      "bytes": 1639
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v4.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-pilot-root-operational-resource-prior-v4.json",
+      "sha256": "64a82b114f3abfa0b9e1ddcbec85d5a16171014c4cf5c81ae9f853b6d9de6b6e",
+      "bytes": 3656
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-lock-preparation-v6-interface-v1.json",
+      "sha256": "bbcb27717f92bc909a0f0c11613c25d9b29d3eb162b05a9f6c4788f482cc5ffd",
+      "bytes": 6657
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v2.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-lock-preparation-v6-interface-v2.json",
+      "sha256": "a14db52afde8b241db42789cb8cdddebbd61088a2cbe4fb426a0ddb3ffb22f5d",
+      "bytes": 7102
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v3.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-lock-preparation-v6-interface-v3.json",
+      "sha256": "30615482cfd7e762e7c9b95d76a040ed02a5af6192734ff4aca3ba790086ddf9",
+      "bytes": 7051
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-lock-preparation-v6.py.txt",
+      "sha256": "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a",
+      "bytes": 52104
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v6.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-lock-rebind-evidence-v6.json",
+      "sha256": "4a84a0efacc176a347c390c249de317ae11ae22b1981b67149283b2183625bbd",
+      "bytes": 3899
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-metadata-root-observer-v5.py",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-metadata-root-observer-v5.py.txt",
+      "sha256": "b77598e4fa7f8af3f16c4d84b29f2543e2d756170afa4e2dce2219278453b65f",
+      "bytes": 5142
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-actual-root-approval-consumer-preflight-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-v6-actual-root-approval-consumer-preflight-v1.json",
+      "sha256": "ee06165e31e8035fcc006da27105526551dcb40aa23a3bba4d9426389b754899",
+      "bytes": 647
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-ruff-initial-failure.log.txt",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-v6-author-ruff-initial-failure.log.txt",
+      "sha256": "b5bf92bf8687d996979e385e90f86c9f0b652e626821a8f140c878d8703ef780",
+      "bytes": 1824
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-scoped-results-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-v6-author-scoped-results-v1.json",
+      "sha256": "7e2bd04886f891b75c639e323eb43943ce883cfb0b2eea84254acb3712e8bdce",
+      "bytes": 3354
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-green-v1.log.txt",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-v6-author-source-contract-green-v1.log.txt",
+      "sha256": "b909f064c5b4997fcc114ede88b2854558e92a78b00fefe4fb99518354ba35fa",
+      "bytes": 890
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-green-v2.log.txt",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-v6-author-source-contract-green-v2.log.txt",
+      "sha256": "ab3bd4be2fdafc468a034bbb2abe0959f44e3168447c0bf225c52265f1e5852d",
+      "bytes": 1063
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-initial-red.log.txt",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-v6-author-source-contract-initial-red.log.txt",
+      "sha256": "e8dab5055e2ae046a8015923e3b205d414a9c4bdf51a0f3c5c5cb12ea898a735",
+      "bytes": 3392
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-preflight.py",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-v6-author-source-contract-preflight.py.txt",
+      "sha256": "4380fdcbb7ed59ddd4e96588bd010938556ea3e2dec9527a0b036ed50df8bbbc",
+      "bytes": 6031
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author18-binding-summary-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-v6-author18-binding-summary-v1.json",
+      "sha256": "eacd4420771d3ce068cf96a0d81ef54e1f2e44e3ac5e88361d27461655b674ca",
+      "bytes": 3941
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-candidate-authority-labels-red-green-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-prior-v6-candidate-authority-labels-red-green-v1.json",
+      "sha256": "9a8074e7c505f7d442742507af4a20d8e0c33970483d49aa50ac34a6b28de116",
+      "bytes": 1800
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-candidate-v6-v2.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-launch-guard-candidate-v6-v2.json",
+      "sha256": "8544b7b15e5081d16bfa775426b38c28d2ae8cb5e8b19d0be8976612e18a7f9d",
+      "bytes": 46860
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-candidate-v6.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-launch-guard-candidate-v6.json",
+      "sha256": "0741860d5fbf83690fb9e87aaf642e95c61f02973ac170c8e0993c1c094e100d",
+      "bytes": 46562
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-GREEN-2-results.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-GREEN-2-results.json",
+      "sha256": "6add9db5820965916051e4b047f023d578ffed52e826877362826a298fc136b1",
+      "bytes": 693
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-GREEN-2.log",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-GREEN-2.log.txt",
+      "sha256": "78131f2394b5bc7158249619c2dacb37003ffbbd695c89fc5450acd854e93665",
+      "bytes": 1678
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-GREEN-draft-results.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-GREEN-draft-results.json",
+      "sha256": "8ad5a880d5fc98a6fea25e66f4c885149645bdab9b7c15efb64223cce859702d",
+      "bytes": 693
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-GREEN-draft.log",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-GREEN-draft.log.txt",
+      "sha256": "9ffcb8626b1851bb2238ee89b7b71c9f1628c56803c54dbf55c8472e2d302175",
+      "bytes": 1204
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-GREEN-final-results.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-GREEN-final-results.json",
+      "sha256": "ba82e8faba1aeaa176ddf3e545322e7bcfb2d8e28ccb45d583d1d2d98509cc8d",
+      "bytes": 694
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-GREEN-final-v2-results.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-GREEN-final-v2-results.json",
+      "sha256": "7facab1dfd058de031a1bd341594d2d4a1dcb2fd0ef00d6138400f3cd8e32748",
+      "bytes": 694
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-GREEN-final-v2.log",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-GREEN-final-v2.log.txt",
+      "sha256": "afc9115a406739e1b30ef3a3f4d98ca80949b274b2a921d2815e7c4dc980c1aa",
+      "bytes": 1678
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-GREEN-final.log",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-GREEN-final.log.txt",
+      "sha256": "3a228dc0e25a6a432bb8fb74a602accb04084865a1c56d00e5ef91b13f27cbd1",
+      "bytes": 3208
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-RED-results.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-RED-results.json",
+      "sha256": "b86afe07b9b3331649188588aed3d90329227b1966736c95d27e85e80bb2f0b3",
+      "bytes": 693
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-RED.log",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-RED.log.txt",
+      "sha256": "42ac0bc6da5ccf26dfdc875fad7cf4826ea61962cee277b3d8a0b1cfd11c4bd0",
+      "bytes": 4944
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-current-source-byte-check.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-current-source-byte-check.json",
+      "sha256": "b741c3f2cc78db3b09686877dd171385dca1808bc384bdcdcf1be7e6f0be6145",
+      "bytes": 10600
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-final-verification-v2.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-final-verification-v2.json",
+      "sha256": "c78ae9ca1cd59a67178780daa1aa4a0fe6edc7dab58652687f0e42ec2dbe1796",
+      "bytes": 1864
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-final-verification.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-final-verification.json",
+      "sha256": "c78ae9ca1cd59a67178780daa1aa4a0fe6edc7dab58652687f0e42ec2dbe1796",
+      "bytes": 1864
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-fixed-manifest.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-fixed-manifest.json",
+      "sha256": "1bc50ab82998684dd2840811125b909726c182b06262d1314b458e680e9865ce",
+      "bytes": 5541
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-fixed-report.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-fixed-report.json",
+      "sha256": "b4bce26738f4cb935f5610043ddd5ab6a50cd82ecf21f1ca9adda85d8af5b199",
+      "bytes": 5125
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-lint-draft.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-lint-draft.json",
+      "sha256": "17869c097b06d229253159002bd03b43d088a8fea345a17206e222a161701d69",
+      "bytes": 946
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-lint-failure-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-lint-failure-v1.json",
+      "sha256": "b088fbabbe92e874e4401972d5606f65a30668d93049612d362e662e144c6a7b",
+      "bytes": 236
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-preflight.py",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-preflight.py.txt",
+      "sha256": "dfd719ba2e2b2ff70b2685172c6414061a7d3ba51fc3fdcd7fb6ce79e55b0f87",
+      "bytes": 14893
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-source.diff",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-source.diff.txt",
+      "sha256": "e3ef12a487cc93c3a766a788bf5a4d4a144b0f0a53461c045282ccd597f00f9a",
+      "bytes": 14401
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-GREEN-results.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-v2-GREEN-results.json",
+      "sha256": "4e455f27cb622e26fbbbe3919b2fc2ec57475c345abb07f6468db03d2a271a19",
+      "bytes": 693
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-GREEN.log",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-v2-GREEN.log.txt",
+      "sha256": "3f6429c7eac3b0fa63bdd5a850430f49b04971d6ee6134a6f49eacffe6b24757",
+      "bytes": 1678
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-fixed-manifest.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-v2-fixed-manifest.json",
+      "sha256": "32252f4c67c1404cabb2ea5285b77baee8a91effb8972c098bc759d1a84803d8",
+      "bytes": 2720
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-fixed-report.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-v2-fixed-report.json",
+      "sha256": "93ac6a5801969fd6ea1183a6c1823fd5db713282e7b3b0af5505adb0c0a2ae88",
+      "bytes": 2073
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-preflight.py",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-v2-preflight.py.txt",
+      "sha256": "f7a26e9e745b8baf24ff0f2f1b8a2fed803ad8745f77f4fee4a6cef2e82f0a81",
+      "bytes": 14902
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-publication-lookup-failure.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-v2-publication-lookup-failure.json",
+      "sha256": "bd493f7a08d45f5abd610a6d17837912865670bdf085bedc0888a1abe4236dfe",
+      "bytes": 651
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-source.diff",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-v2-source.diff.txt",
+      "sha256": "0e9f245662d3bba0bde9b7912c3aa68108ef255950ed8954203bee24b004f976",
+      "bytes": 867
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-verification.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-v2-verification.json",
+      "sha256": "0cc95abbc58a39941a4753bc010cb7fb0876f71c0676fd39ca13771b7cfd2d07",
+      "bytes": 1406
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2.py",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-v2.py.txt",
+      "sha256": "8700d0c6ea1146665d1e711637fb30969a734bd82f8382c31489f64e5a25b2ce",
+      "bytes": 44635
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6.py",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6.py.txt",
+      "sha256": "140c29e9cad78016a9c7f9da70cf6ac7d622a9c474499afd8b281e35b6358d87",
+      "bytes": 44635
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-source85-fresh-guard-output-bindings-readiness-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-source85-fresh-guard-output-bindings-readiness-v1.json",
+      "sha256": "13066453d6b7a1026aa386d0de4277887375a001aa818d4870b939f07c40f224",
+      "bytes": 7511
+    }
+  ],
+  "count": 57,
+  "bytes": 479525,
+  "large_artifact_only_metadata": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6-v2.json",
+      "sha256": "65668578a04252c986634f3c60781337593f68aec7f858f64900434afce4648f",
+      "bytes": 6336080,
+      "artifact_only": true
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6-v3.json",
+      "sha256": "e6498f9e429a790715bb96bb19a786176ae3cff06081c8c2f16d0d55343fd7d7",
+      "bytes": 6335942,
+      "artifact_only": true
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6.json",
+      "sha256": "5f25b480a6238574f7b48ecf8d939647ca0738ff8179960660614f67ecfdfe0e",
+      "bytes": 6335613,
+      "artifact_only": true
+    }
+  ],
+  "scope": "closed source/prior/monitor author and independent proof; actual metadata/financial results not included",
+  "old_sources_and_original_failures_preserved": true,
+  "source85_runtime_changes": false,
+  "financial_acceptance": false,
+  "formal_financial_launch": false
+}

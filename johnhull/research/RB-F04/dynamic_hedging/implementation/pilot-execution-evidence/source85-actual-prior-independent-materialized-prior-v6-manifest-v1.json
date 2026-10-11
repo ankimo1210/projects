@@ -1,0 +1,71 @@
+{
+  "schema": "rb-f04-independent-actual-materialized-prior-review-manifest-v6",
+  "created_UTC": "2026-10-11T04:09:40.529800+00:00",
+  "scope": "D-only independent saved metadata provenance/authority and original cap structure review; no financial or phase approval",
+  "files": {
+    "independent-materialized-prior-v6-probe-v1.py": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-probe-v1.py",
+      "sha256": "b237d691998deacb24f5301c93c058d724afe517ebec0749237af37a7285ba50",
+      "bytes": 15484
+    },
+    "independent-materialized-prior-v6-administrative-scope-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-administrative-scope-v1.json",
+      "sha256": "d06ced6a08aafd97efe152efea5b1877d7b03f21620e4a6f6b96d19c8b167c76",
+      "bytes": 1877
+    },
+    "independent-materialized-prior-v6-enclosing-v1.py": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-enclosing-v1.py",
+      "sha256": "64d215fb4aa8372df44013b45f691fc1b8d8e60ee41a06c04e8da87f39dc1518",
+      "bytes": 2605
+    },
+    "independent-materialized-prior-v6-tool-v1.log": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-tool-v1.log",
+      "sha256": "289d18f3cc83012cb8cc80e08f1e283894612ce414fc483df8f6dfc09acadcfd",
+      "bytes": 553
+    },
+    "independent-materialized-prior-v6-tool-enclosing-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-tool-enclosing-v1.json",
+      "sha256": "18c85c6ada61296d9c73af5a590f111c1f4f217ad52a30d849cb4465e6a45cb0",
+      "bytes": 2222
+    },
+    "independent-materialized-prior-v6-progress-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-progress-v1.json",
+      "sha256": "d4b1725e6d73561cd1472fc79a1d7b4a409e687bb8da8614d527616eebc890f5",
+      "bytes": 976
+    },
+    "independent-materialized-prior-v6-results-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-results-v1.json",
+      "sha256": "5675e688fe423b9a27ae70ba1d244346920e80a70f70cfd148c2624641c7016b",
+      "bytes": 533761
+    },
+    "independent-materialized-prior-v6-decision-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-decision-v1.json",
+      "sha256": "60f94d482bf56da6a811c8fb6e2656fa09609194d207ff9f2ad11a3d4a0b9a77",
+      "bytes": 6528
+    }
+  },
+  "external_evidence": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v6/manifest.json",
+      "sha256": "b98030a81e1ff140909fd5e68ef1587c8c90a6be828cff17e82ed8cb466f218f"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v6-decision-v1.json",
+      "sha256": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v4.json",
+      "sha256": "6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v4/parent-cost-and-status.json",
+      "sha256": "660719f1c493bcaa5fc408e4681f75618fd05f0cc8aed51dfec0148d6f55f6c4"
+    }
+  ],
+  "source_canonical_identity": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "source_native_payload_identity": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "old_evidence_unchanged": true,
+  "financial_qualification": "unknown",
+  "finance_launch_or_main_phase_approval": false,
+  "full_review_final_admin_tail_cost": null
+}

@@ -1,0 +1,53 @@
+{
+  "18bindings_and_original_budget_geometry_unchanged": true,
+  "Git_CAS": 0,
+  "Ruff_format_compile_2files": "PASS",
+  "actual_launch_authorized": false,
+  "candidate_only": true,
+  "delta": "Only fixed interface name and SHA changed from v1 to final v3; all21 function ASTs unchanged.",
+  "financial_qualification": "unknown",
+  "financial_worker_calls": 0,
+  "fixed_existing11_tests": "PASS",
+  "function_AST_unchanged": [
+    "digest",
+    "sha",
+    "clock",
+    "save",
+    "require",
+    "absolute",
+    "positive",
+    "tree_binding",
+    "reference_path",
+    "fixed_reference",
+    "limited_source_review",
+    "actual_budget_review",
+    "metadata_authority",
+    "source_binding",
+    "load_guard",
+    "rss",
+    "volume_sample",
+    "choose_stop",
+    "terminal_status",
+    "run",
+    "main"
+  ],
+  "interface": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v3.json",
+    "sha256": "30615482cfd7e762e7c9b95d76a040ed02a5af6192734ff4aca3ba790086ddf9"
+  },
+  "monitor_sha256": "8700d0c6ea1146665d1e711637fb30969a734bd82f8382c31489f64e5a25b2ce",
+  "native_financial_decode_hash": 0,
+  "old_v6_manifest20files_unchanged": true,
+  "pending_example_v3": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6-v3.json",
+    "sha256": "e6498f9e429a790715bb96bb19a786176ae3cff06081c8c2f16d0d55343fd7d7"
+  },
+  "publication_lookup_error_preserved": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-publication-lookup-failure.json",
+    "sha256": "bd493f7a08d45f5abd610a6d17837912865670bdf085bedc0888a1abe4236dfe"
+  },
+  "root_preapproved": false,
+  "source85_all_actual_bytes_unchanged": true,
+  "status": "fixed_candidate_mechanics_only",
+  "unbound_actual_fullprior_rootapproval_metadata_receipts_remain_rejected": true
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "rb-f04-root-source85-independent-proof-large-result-guard-stop-v1",
+  "error": "initial archive stopped on len(data)<500000 assertion; large original result remains artifact-only",
+  "large_results": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-results-v1.json",
+      "bytes": 533761
+    }
+  ],
+  "production_financial_results_changed": false
+}

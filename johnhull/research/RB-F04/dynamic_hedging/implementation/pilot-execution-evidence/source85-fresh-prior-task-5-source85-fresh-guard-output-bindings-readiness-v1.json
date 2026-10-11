@@ -1,0 +1,153 @@
+{
+  "available_real_references": {
+    "actual_root_metadata_approval": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v4.json",
+      "sha256": "6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815",
+      "status": "approved_for_prior_materialization_only"
+    },
+    "full_budget_and_cap_recipe_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v6-decision-v1.json",
+      "sha256": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223",
+      "status": "approved"
+    },
+    "materializer": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+      "sha256": "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a"
+    },
+    "materializer_interface": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v3.json",
+      "sha256": "30615482cfd7e762e7c9b95d76a040ed02a5af6192734ff4aca3ba790086ddf9"
+    },
+    "operational_resource_choice": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v4.json",
+      "sha256": "64a82b114f3abfa0b9e1ddcbec85d5a16171014c4cf5c81ae9f853b6d9de6b6e",
+      "status": "approved_operational_prior"
+    },
+    "source_limited_decisions": {
+      "fresh_producer": {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source85-fresh-producer-limited-decision-v1.json",
+        "sha256": "3831886d1d9df4700995ba0fb75d2994cefa0ccd958047c20507e0f1f6609d62",
+        "status": "approved"
+      }
+    },
+    "source_rebind_evidence": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v6.json",
+      "sha256": "4a84a0efacc176a347c390c249de317ae11ae22b1981b67149283b2183625bbd"
+    }
+  },
+  "binding_steps_after_metadata_terminal": [
+    {
+      "field": "prior_metadata_materialization",
+      "from": "materialized-root-v6/manifest.json physical SHA",
+      "must_match": "manifest.actual_approval exact root approval-v4 path/SHA; source identity85; financial_phase_approved false"
+    },
+    {
+      "field": "plan",
+      "from": "manifest.files rows prefixed locked-prior-metadata/, remove prefix; original receipt.json SHA; canonical digest of relative SHA map",
+      "must_match": "root/locked-prior-metadata and progress.locked_prior_receipt; all body/pack/receipt paths unchanged"
+    },
+    {
+      "field": "approved_budget_bindings",
+      "from": "actual root approval.approved_bindings, only after authenticating actual fullprior ref",
+      "must_match": "all18 interface-v3 approved_binding_set; all3138 reviewSHA rows,573122 cap recipe,2332 original choices"
+    },
+    {
+      "field": "source_identity/source_identity_sha256/source_native_payload_sha256",
+      "from": "exact current85 closure and manifest source snapshot",
+      "must_match": "plain b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030 / native a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8"
+    },
+    {
+      "field": "typed_inputs",
+      "from": "unchanged original D1 typed input6 physical files/tree/receipt",
+      "must_match": {
+        "receipt_sha256": "36c0d914168f4cdceca55b570471fbb180a11f96939b02cfdc7e34a16e6d8284",
+        "tree_sha256": "1e298d809691a98e3c55df52101142d5b432b417f5886e69efc9ed1ff811f4c7"
+      }
+    },
+    {
+      "field": "monitor_sha256/execution_mode/resume_requested",
+      "from": "fixed monitor8700 + explicit bounded_original_full_roster / false",
+      "must_match": "command --bounded exactly once, --resume absent"
+    },
+    {
+      "field": "native_output_path/receipt_directory",
+      "from": "fresh separate immediate D2 output and new operational receipts",
+      "must_match": "neither exists, no nested/aliased output; both retained after faults/unknown"
+    }
+  ],
+  "candidate_only": true,
+  "existing_false_candidate": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-candidate-v6-v2.json",
+    "sha256": "8544b7b15e5081d16bfa775426b38c28d2ae8cb5e8b19d0be8976612e18a7f9d"
+  },
+  "financial_launch_authorized": false,
+  "financial_or_phase_acceptance": false,
+  "financial_qualification": "unknown",
+  "metadata_completion_requirements": {
+    "actual_lock_API_validate_and_source_binding": "PASS",
+    "financial_workers_RNG_solver_SDE_calls": 0,
+    "original_counts": {
+      "attempts": 51,
+      "cases": 121,
+      "drivers": 10,
+      "jobs": 3138,
+      "literal_cap_options": 573122,
+      "teachers": 20
+    },
+    "progress": "actual_approved_prior_metadata_materialized",
+    "root_and_prior_reviews": "exact current actual references, not old saved-only authority",
+    "source85_before_after_stable": true,
+    "source_snapshot": "complete85 exact actual byte roster, dynamic0"
+  },
+  "metadata_receipt_binding_pending": {
+    "manifest_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v6/manifest.json",
+    "manifest_sha256": null,
+    "physical_manifest_not_authenticated_here": true,
+    "plan_receipt_sha256": null,
+    "plan_tree_sha256": null
+  },
+  "monitor": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2.py",
+    "sha256": "8700d0c6ea1146665d1e711637fb30969a734bd82f8382c31489f64e5a25b2ce"
+  },
+  "native_guard_existing_API": {
+    "actual_budget_review": "monitor-v6-v2.py:218",
+    "limited_source_review": "monitor-v6-v2.py:160",
+    "load_guard": "monitor-v6-v2.py:550",
+    "metadata_authority": "monitor-v6-v2.py:279",
+    "run": "monitor-v6-v2.py:709",
+    "source_binding": "monitor-v6-v2.py:526"
+  },
+  "operations": {
+    "Git_CAS": 0,
+    "RNG_solver_SDE": 0,
+    "financial_Popen": 0,
+    "native_financial_raw_decode": 0,
+    "production_or_existing_file_edits": 0
+  },
+  "preserved_scope": {
+    "activation_choices": 2332,
+    "admin_limits": "30days/individual16GiB/3volumes each10GiB reserve/poll1s; actual child/task fit unknown",
+    "attempts": 51,
+    "blocks": 16,
+    "cap_options": 573122,
+    "cases": 121,
+    "history_and_external10_unknown": "unchanged; no elapsed-to-ns fabrication or unknown zero",
+    "jobs": 3138,
+    "teacher_N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "thresholds": 65
+  },
+  "root_owned_launch_prerequisites": [
+    "session85801 terminal and saved numerical result inspection must finish; monitor itself does not inspect that session/PID",
+    "closed v6 metadata receipt/tree/source and readonly preflight authenticated by root",
+    "fresh capacity samples are data, not RAM/capacity or financial qualification guarantees",
+    "root separately issues actual financial launch guard; existing rootapproval-v4 is metadata-only"
+  ],
+  "root_preapproved": false,
+  "schema": "rb-f04-source85-fresh-guard-readonly-readiness-v1"
+}

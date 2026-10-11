@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "tests": 8,
+  "failures": 0,
+  "errors": 0,
+  "monitor_sha256": "59638c2d0c049d35ab83aed6e73767206093bf74e49cbc5e1e8e32e5c992d953",
+  "preflight_sha256": "be54683d6130a1b8b1c1982dae3fb9d7d5eb7c4149375bce0cbe24eda05f3c9c",
+  "actual_financial_Popen_calls": 0,
+  "native_financial_decode_hash_calls": 0,
+  "synthetic_argv_Popen_stub_only": true,
+  "actual_root_metadata_or_prior_validated": false,
+  "financial_qualification": "unknown",
+  "actual_financial_launch_authorized": false,
+  "cost": {
+    "outer_wall_seconds": 0.105955041,
+    "process_cpu_seconds": 0.103275328,
+    "kernel_peak_RSS_bytes": 32948224,
+    "own_receipt_write_stdout_tail_seconds": null
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "command": "ruff check monitor-v6.py preflight.py",
+  "exit_code": 1,
+  "finding": "B023 preflight line269: local closure did not bind loop variable original",
+  "financial_operations": 0,
+  "status": "preserved_before_correction"
+}

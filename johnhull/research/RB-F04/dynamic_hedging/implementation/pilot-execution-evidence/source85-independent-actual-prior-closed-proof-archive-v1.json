@@ -1,0 +1,71 @@
+{
+  "schema": "rb-f04-root-source85-independent-actual-prior-closed-proof-archive-v1",
+  "paths": [
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-administrative-scope-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-actual-prior-independent-materialized-prior-v6-administrative-scope-v1.json",
+      "sha256": "d06ced6a08aafd97efe152efea5b1877d7b03f21620e4a6f6b96d19c8b167c76",
+      "bytes": 1877
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-decision-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-actual-prior-independent-materialized-prior-v6-decision-v1.json",
+      "sha256": "60f94d482bf56da6a811c8fb6e2656fa09609194d207ff9f2ad11a3d4a0b9a77",
+      "bytes": 6528
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-enclosing-v1.py",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-actual-prior-independent-materialized-prior-v6-enclosing-v1.py.txt",
+      "sha256": "64d215fb4aa8372df44013b45f691fc1b8d8e60ee41a06c04e8da87f39dc1518",
+      "bytes": 2605
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-manifest-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-actual-prior-independent-materialized-prior-v6-manifest-v1.json",
+      "sha256": "db1cb36fc9dfa0db62d2b3b3018a43570228f40b001188c13de048abbe67c5da",
+      "bytes": 4484
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-probe-v1.py",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-actual-prior-independent-materialized-prior-v6-probe-v1.py.txt",
+      "sha256": "b237d691998deacb24f5301c93c058d724afe517ebec0749237af37a7285ba50",
+      "bytes": 15484
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-progress-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-actual-prior-independent-materialized-prior-v6-progress-v1.json",
+      "sha256": "d4b1725e6d73561cd1472fc79a1d7b4a409e687bb8da8614d527616eebc890f5",
+      "bytes": 976
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-tool-enclosing-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-actual-prior-independent-materialized-prior-v6-tool-enclosing-v1.json",
+      "sha256": "18c85c6ada61296d9c73af5a590f111c1f4f217ad52a30d849cb4465e6a45cb0",
+      "bytes": 2222
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-tool-v1.log",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-actual-prior-independent-materialized-prior-v6-tool-v1.log",
+      "sha256": "289d18f3cc83012cb8cc80e08f1e283894612ce414fc483df8f6dfc09acadcfd",
+      "bytes": 553
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source85-independent-proof-large-result-guard-stop-v1.json",
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-actual-prior-root-source85-independent-proof-large-result-guard-stop-v1.json",
+      "sha256": "00093c49018bb3b887ab916c1bdc8239aaa7c3917793a3b05b4c7df5826e9c5e",
+      "bytes": 471
+    }
+  ],
+  "count": 9,
+  "bytes": 35200,
+  "large_artifact_only_results": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-results-v1.json",
+      "sha256": "5675e688fe423b9a27ae70ba1d244346920e80a70f70cfd148c2624641c7016b",
+      "bytes": 533761
+    }
+  ],
+  "independent_decision_sha256": "60f94d482bf56da6a811c8fb6e2656fa09609194d207ff9f2ad11a3d4a0b9a77",
+  "financial_launch_or_phase_acceptance": false,
+  "prior_actual_metadata_scope_only": true
+}

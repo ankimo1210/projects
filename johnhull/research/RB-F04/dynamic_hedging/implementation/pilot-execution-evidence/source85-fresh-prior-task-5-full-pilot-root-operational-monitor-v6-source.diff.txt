@@ -1,0 +1,279 @@
+--- fixed-monitor-v5
++++ candidate-monitor-v6
+@@ -22,20 +22,18 @@
+ HISTORICAL_D = Path(
+     "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+ )
+-SOURCE_IDENTITY = "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e"
+-SOURCE_NATIVE_IDENTITY = "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7"
+-SOURCE_EVIDENCE_NAME = "task-5-formal-prior-lock-rebind-evidence-v5.json"
+-SOURCE_EVIDENCE_SHA = "d5eab8376c819367defb650f228a0cb844fe4588b77c3f09464f9e18785e9571"
+-CODEC_NAME = "independent-transport-codec-v2-decision.json"
+-CODEC_SHA = "26aa45f5902e816053decce2aec2364c58161c387fdcc5378d27e8255a906262"
+-STAGE_NAME = "independent-stage-cap-binding-v1-decision.json"
+-STAGE_SHA = "f2fd826e399a08e20e848ac00bfbbb1132433be189779716f66a7e61d1868ea2"
+-MATERIALIZER_NAME = "task-5-formal-prior-lock-preparation-v5.py"
+-MATERIALIZER_SHA = "b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a"
+-INTERFACE_NAME = "task-5-formal-prior-lock-preparation-v5-interface-v1.json"
+-INTERFACE_SHA = "943021eca1e38396cf44821f727dd307c2e6d19fbb45fb02dc86e4b56039fc1b"
+-RESOURCE_NAME = "task-5-formal-pilot-root-operational-resource-prior-v3.json"
+-RESOURCE_SHA = "145bdf322aacd4e699e297c2a4e747d1a021c43771e4b162783f9eb35a390881"
++SOURCE_IDENTITY = "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030"
++SOURCE_NATIVE_IDENTITY = "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8"
++SOURCE_EVIDENCE_NAME = "task-5-formal-prior-lock-rebind-evidence-v6.json"
++SOURCE_EVIDENCE_SHA = "4a84a0efacc176a347c390c249de317ae11ae22b1981b67149283b2183625bbd"
++FRESH_NAME = "independent-source85-fresh-producer-limited-decision-v1.json"
++FRESH_SHA = "3831886d1d9df4700995ba0fb75d2994cefa0ccd958047c20507e0f1f6609d62"
++MATERIALIZER_NAME = "task-5-formal-prior-lock-preparation-v6.py"
++MATERIALIZER_SHA = "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a"
++INTERFACE_NAME = "task-5-formal-prior-lock-preparation-v6-interface-v1.json"
++INTERFACE_SHA = "bbcb27717f92bc909a0f0c11613c25d9b29d3eb162b05a9f6c4788f482cc5ffd"
++RESOURCE_NAME = "task-5-formal-pilot-root-operational-resource-prior-v4.json"
++RESOURCE_SHA = "64a82b114f3abfa0b9e1ddcbec85d5a16171014c4cf5c81ae9f853b6d9de6b6e"
+ V6_NAME = "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json"
+ V6_SHA = "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb"
+ V6_MANIFEST_NAME = "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6-manifest.json"
+@@ -162,59 +160,39 @@
+ def limited_source_review(prior):
+     refs = prior.get("source_limited_decisions")
+     require(
+-        isinstance(refs, dict) and set(refs) == {"codec", "stage"},
+-        "both actual limited codec and stage source decisions required",
+-    )
+-    values = {}
+-    for key, name, expected in (("codec", CODEC_NAME, CODEC_SHA), ("stage", STAGE_NAME, STAGE_SHA)):
+-        require(refs[key].get("status") == "approved", "actual source decision required")
+-        value = fixed_reference(refs[key], name, expected)
+-        require(
+-            value.get("decision") == "approved"
+-            and value.get("reviewer") == "pilot_v53_independent_review"
+-            and value.get("financial_qualification") == "unknown",
+-            "actual independent source-only decision required",
+-        )
+-        values[key] = value
+-    codec, stage = values["codec"], values["stage"]
+-    require(
+-        codec.get("schema") == "rb-f04-pilot-transport-independent-review-v2"
+-        and codec.get("role") == "independent limited storage transport reviewer"
++        isinstance(refs, dict) and set(refs) == {"fresh_producer"},
++        "one actual fresh producer source decision required",
++    )
++    ref = refs["fresh_producer"]
++    require(ref.get("status") == "approved", "actual fresh source decision required")
++    value = fixed_reference(ref, FRESH_NAME, FRESH_SHA)
++    require(
++        value.get("schema") == "rb-f04-fresh-producer-source-limited-review-v1"
++        and value.get("decision") == "approved"
++        and value.get("scope") == "fresh_pilot_source_only"
++        and value.get("reviewer") == "progressive_graph_review"
++        and value.get("role") == "independent_fresh_pilot_source_reviewer"
++        and value.get("source_canonical_identity") == SOURCE_IDENTITY
++        and value.get("source_canonical_runner_digest_sha256") == SOURCE_IDENTITY
++        and value.get("source_native_payload_identity") == SOURCE_NATIVE_IDENTITY
++        and value.get("actual_source_file_count") == 85
++        and value.get("dynamic_imports") == []
++        and value.get("financial_qualification") == "unknown"
+         and all(
+-            codec.get(key) is False
++            value.get(key) is False
+             for key in (
+-                "full_capacity_RSS_runtime_or_budget_approved",
+-                "formal_pilot_or_main_approved",
+-                "phase_acceptance_approved",
+-                "resume_with_old_source_identity_approved",
+-            )
+-        ),
+-        "codec review cannot become resource, launch, acceptance or resume approval",
+-    )
+-    require(
+-        stage.get("schema") == "rb-f04-stage-risk-operational-argument-source-fix-independent-v1"
+-        and stage.get("role") == "independent limited source and metadata reviewer"
+-        and stage.get("source_canonical_runner_digest_sha256") == SOURCE_IDENTITY
+-        and stage.get("source_native_payload_digest_sha256") == SOURCE_NATIVE_IDENTITY
+-        and stage.get("actual_source_file_count") == 82
+-        and stage.get("dynamic_imports") == []
+-        and stage.get("actual_closed_source_bytes_match") is True
+-        and stage.get("actual_cap_full_binding_preserved") is True
+-        and stage.get("full_financial_five_args_and_extra_keys_preserved") is True
+-        and all(
+-            stage.get(key) is False
+-            for key in (
++                "financial_acceptance",
++                "capacity_or_RSS_fit_approved",
+                 "resource_budget_prior_rebinding_approved",
+                 "formal_pilot_main_launch_approved",
+                 "phase_or_main_acceptance_approved",
+                 "old_formal_source_resume_approved",
+             )
+         ),
+-        "stage review must bind current82 source without granting resource/launch/resume",
+-    )
+-    evidence = fixed_reference(
+-        prior["source_rebind_evidence"], SOURCE_EVIDENCE_NAME, SOURCE_EVIDENCE_SHA
+-    )
++        "fresh source review cannot become saved-only, resource, launch or acceptance approval",
++    )
++    evidence_ref = prior["source_rebind_evidence"]
++    evidence = fixed_reference(evidence_ref, SOURCE_EVIDENCE_NAME, SOURCE_EVIDENCE_SHA)
+     require(
+         evidence.get("all3138_budget_and_cap_recipe_approved") is False
+         and evidence.get("formal_financial_launch_authorized") is False
+@@ -224,25 +202,17 @@
+     )
+     require(evidence["source_limited_decisions"] == refs, "source decision collection differs")
+     current = fixed_reference(evidence["current_source_reference"])
+-    require(current == prior["source_identity"], "exact current82 source inventory required")
+-    require(
+-        prior["source_native_payload_sha256"] == SOURCE_NATIVE_IDENTITY,
+-        "native source binding differs",
+-    )
+-    files = current["files"]
+-    for relative, key in (
+-        ("johnhull/research/RB-F04/dynamic_hedging/_pilot_transport.py", "helper_sha256"),
+-        ("johnhull/research/RB-F04/dynamic_hedging/run_pilot.py", "run_pilot_sha256"),
+-        ("johnhull/research/RB-F04/dynamic_hedging/run_reference.py", "run_reference_sha256"),
+-        ("johnhull/research/RB-F04/dynamic_hedging/_teacher_storage.py", "teacher_storage_sha256"),
+-    ):
+-        require(files[relative] == codec[key], "codec's exact source bytes differ")
+-    require(
+-        files["johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"]
+-        == stage["fixed_checker_sha256"],
+-        "stage checker source differs",
+-    )
+-    return values
++    reviewed_closure = fixed_reference(value["source_closure"])
++    require(
++        current == reviewed_closure == prior["source_identity"]
++        and value["source_files"] == current["files"]
++        and len(current["files"]) == 85
++        and current["dynamic_imports"] == []
++        and digest(current) == prior["source_identity_sha256"] == SOURCE_IDENTITY
++        and prior["source_native_payload_sha256"] == SOURCE_NATIVE_IDENTITY,
++        "exact current85 source inventory and native binding required",
++    )
++    return {"fresh_producer": value}
+ 
+ 
+ def actual_budget_review(prior):
+@@ -279,20 +249,23 @@
+         and bound["literal_cap_options"] == 573122,
+         "actual full budget/cap bindings differ from root prior",
+     )
+-    interface = fixed_reference(prior["materializer_interface"], INTERFACE_NAME, INTERFACE_SHA)
++    interface = fixed_reference(
++        prior["materializer_interface"],
++        INTERFACE_NAME,
++        INTERFACE_SHA,
++    )
+     require(
+         interface["new_source"]["canonical_runner_digest"] == SOURCE_IDENTITY
+         and interface["new_source"]["native_payload_digest"] == SOURCE_NATIVE_IDENTITY
+-        and interface["new_source"]["files"] == 82,
++        and interface["new_source"]["files"] == 85,
+         "actual materializer interface differs",
+     )
+     require(
+         bound == interface["approved_binding_set"]
+-        and bound["source_limited_decisions_sha256"]
+-        == digest({"codec": CODEC_SHA, "stage": STAGE_SHA})
++        and bound["source_limited_decisions_sha256"] == digest({"fresh_producer": FRESH_SHA})
+         and bound["source_rebind_evidence_sha256"] == SOURCE_EVIDENCE_SHA
+         and bound["materializer_sha256"] == MATERIALIZER_SHA,
+-        "actual budget must bind exact two decisions, current recipe and materializer",
++        "actual budget must bind exact fresh decision, current recipe and materializer",
+     )
+     require(
+         reference_path(prior["materializer"]) == D / MATERIALIZER_NAME
+@@ -306,10 +279,14 @@
+ def metadata_authority(prior, *, verify_files=True):
+     """Authenticate separately approved prior metadata, not financial saved output."""
+     review = actual_budget_review(prior)
+-    interface = fixed_reference(prior["materializer_interface"], INTERFACE_NAME, INTERFACE_SHA)
++    interface = fixed_reference(
++        prior["materializer_interface"],
++        INTERFACE_NAME,
++        INTERFACE_SHA,
++    )
+     require(
+         prior["approved_budget_bindings"] == interface["approved_binding_set"],
+-        "guard must use the exact reviewed v5 bindings",
++        "guard must use the exact reviewed v6 bindings",
+     )
+     approval_ref = prior["actual_root_metadata_approval"]
+     approval = fixed_reference(approval_ref)
+@@ -407,7 +384,7 @@
+         and resource_prior.get("financial_qualification") == "unknown"
+         and resource_prior["source_canonical_identity_sha256"] == SOURCE_IDENTITY
+         and resource_prior["source_native_payload_identity_sha256"] == SOURCE_NATIVE_IDENTITY,
+-        "actual administrative source82 resource choice required, not financial approval",
++        "actual administrative source85 resource choice required, not financial approval",
+     )
+     require(
+         prior["phase_wall_limit_seconds"] == resource_prior["wall_limit_seconds"] == 30 * 86400
+@@ -490,7 +467,7 @@
+     require(
+         progress.get("status") == "actual_approved_prior_metadata_materialized"
+         and progress.get("actual_lock_API_validate_and_source_binding") == "PASS"
+-        and progress.get("source82_before_after_stable") is True
++        and progress.get("source85_before_after_stable") is True
+         and progress.get("financial_workers_RNG_solver_SDE_calls") == 0
+         and progress.get("formal_financial_phase_approved") is False
+         and progress.get("pilot_started") is False
+@@ -513,7 +490,7 @@
+         and progress.get("actual_independent_review_SHA")
+         == prior["full_budget_and_cap_recipe_review"]["sha256"]
+         and progress.get("root_operational_guard_is_financial_cap") is False,
+-        "complete validated current82 metadata required; partial/unknown cannot launch",
++        "complete validated current85 metadata required; partial/unknown cannot launch",
+     )
+     plan_receipt = json.loads((root / "locked-prior-metadata/receipt.json").read_text())
+     require(plan_receipt == progress["locked_prior_receipt"], "actual locked plan receipt changed")
+@@ -527,7 +504,7 @@
+     for relative, expected in prior["source_identity"]["files"].items():
+         require(
+             files["source-snapshot/" + relative]["sha256"] == expected,
+-            "source snapshot is not the current closed82 bytes",
++            "source snapshot is not the current closed85 bytes",
+         )
+     return {
+         "root_approval_sha256": approval_ref["sha256"],
+@@ -550,8 +527,8 @@
+     limited_source_review(prior)
+     identity = prior["source_identity"]
+     require(
+-        isinstance(identity, dict) and len(identity["files"]) == 82,
+-        "current source closure must retain82 files",
++        isinstance(identity, dict) and len(identity["files"]) == 85,
++        "current source closure must retain85 files",
+     )
+     require(not identity["dynamic_imports"], "unresolved dynamic source closure")
+     require(
+@@ -564,7 +541,7 @@
+         require(sha(path) == expected, "current source bytes changed: " + relative)
+     return {
+         "sha256": digest(identity),
+-        "file_count": 82,
++        "file_count": 85,
+         "files": identity["files"],
+         "metadata_authority": metadata_authority(prior),
+     }
+@@ -598,6 +575,11 @@
+         prior.get("administrative_guard_only") is True
+         and prior.get("financial_A_cap_projection_approved") is False,
+         "administrative stop cannot become financial A cap",
++    )
++    require(
++        prior.get("execution_mode") == "bounded_original_full_roster"
++        and prior.get("resume_requested") is False,
++        "explicit bounded original full roster mode required; resume is forbidden",
+     )
+     limited_source_review(prior)
+     actual_budget_review(prior)
+@@ -743,6 +725,7 @@
+         prior["typed_inputs"]["path"],
+         "--output",
+         prior["native_output_path"],
++        "--bounded",
+     ]
+     python_paths = [
+         str(WT / p)

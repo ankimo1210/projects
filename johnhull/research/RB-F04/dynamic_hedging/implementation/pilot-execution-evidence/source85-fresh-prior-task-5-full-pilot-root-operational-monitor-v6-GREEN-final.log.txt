@@ -1,0 +1,32 @@
+test_actual_false_candidate_never_reads_source_or_launches (__main__.MonitorTests.test_actual_false_candidate_never_reads_source_or_launches) ... ok
+test_actual_fresh_source_only_decision_and_evidence_authenticate (__main__.MonitorTests.test_actual_fresh_source_only_decision_and_evidence_authenticate) ... ok
+test_command_has_bounded_and_no_resume (__main__.MonitorTests.test_command_has_bounded_and_no_resume) ... ok
+test_execution_mode_and_resume_are_required_before_authentication (__main__.MonitorTests.test_execution_mode_and_resume_are_required_before_authentication) ... ok
+test_false_authority_refuses_before_source_or_popen (__main__.MonitorTests.test_false_authority_refuses_before_source_or_popen) ... ok
+test_fixed_current85_single_fresh_review_is_source_only (__main__.MonitorTests.test_fixed_current85_single_fresh_review_is_source_only) ... ERROR
+test_original_stop_clock_and_unknown_functions_unchanged (__main__.MonitorTests.test_original_stop_clock_and_unknown_functions_unchanged) ... ok
+test_pending_full_budget_or_source_review_cannot_authorize_budget (__main__.MonitorTests.test_pending_full_budget_or_source_review_cannot_authorize_budget) ... ok
+test_pending_reference_or_tamper_refused (__main__.MonitorTests.test_pending_reference_or_tamper_refused) ... ok
+test_saved_scope_or_changed_source_is_not_fresh_approval (__main__.MonitorTests.test_saved_scope_or_changed_source_is_not_fresh_approval) ... ok
+test_valid_bounded_mode_still_requires_original_guard_checks (__main__.MonitorTests.test_valid_bounded_mode_still_requires_original_guard_checks) ... ok
+
+======================================================================
+ERROR: test_fixed_current85_single_fresh_review_is_source_only (__main__.MonitorTests.test_fixed_current85_single_fresh_review_is_source_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-preflight.py", line 199, in test_fixed_current85_single_fresh_review_is_source_only
+    reviews = self.m.limited_source_review(value)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6.py", line 195, in limited_source_review
+    evidence = fixed_reference(evidence_ref, SOURCE_EVIDENCE_NAME, SOURCE_EVIDENCE_SHA)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6.py", line 148, in fixed_reference
+    require(
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6.py", line 80, in require
+    raise GuardRejectedError(message)
+pure_fresh_monitor_v6.GuardRejectedError: fixed evidence binding changed
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.115s
+
+FAILED (errors=1)

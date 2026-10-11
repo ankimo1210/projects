@@ -1,0 +1,142 @@
+"""Source85 fresh materializer contract checks; no financial imports or workers."""
+
+from __future__ import annotations
+
+import argparse
+import copy
+import importlib.util
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+D = Path(__file__).resolve().parent
+parser = argparse.ArgumentParser()
+parser.add_argument("--materializer", type=Path, required=True)
+args = parser.parse_args()
+spec = importlib.util.spec_from_file_location("fresh_metadata_candidate", args.materializer)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+decision_path = D / "independent-source85-fresh-producer-limited-decision-v1.json"
+refs = {
+    "fresh_producer": {
+        "path": str(decision_path),
+        "sha256": module.file_sha(decision_path),
+        "status": "approved",
+    }
+}
+actual_read = module.read
+
+
+class Contract(unittest.TestCase):
+    def altered_read(self, path, fields):
+        def read(candidate):
+            value = actual_read(candidate)
+            if Path(candidate).resolve() == Path(path).resolve():
+                value.update(copy.deepcopy(fields))
+            return value
+
+        return read
+
+    def test_current_fresh_source_decision_is_consumed(self):
+        values = module._source_decision_values(refs)
+        self.assertEqual(values["fresh_producer"]["actual_source_file_count"], 85)
+        self.assertEqual(values["fresh_producer"]["scope"], "fresh_pilot_source_only")
+
+    def test_wrong_decision_scope_or_authority_is_rejected(self):
+        variants = [
+            {"scope": "saved_original_raw_only"},
+            {"decision": "pending"},
+            {"schema": "saved_source_review"},
+            {"financial_qualification": "accepted"},
+            {"financial_acceptance": True},
+            {"resource_budget_prior_rebinding_approved": True},
+            {"formal_pilot_main_launch_approved": True},
+            {"phase_or_main_acceptance_approved": True},
+            {"old_formal_source_resume_approved": True},
+            {"capacity_or_RSS_fit_approved": True},
+            {"whole_runtime_forecast_approved": True},
+            {"dynamic_imports": ["unreviewed"]},
+            {"actual_source_file_count": 84},
+            {"source_canonical_identity": "0" * 64},
+            {"source_native_payload_identity": "0" * 64},
+            {"source_files": {}},
+        ]
+        for change in variants:
+            with (
+                self.subTest(change=change),
+                patch.object(module, "read", self.altered_read(decision_path, change)),
+            ):
+                with self.assertRaises(ValueError):
+                    module._source_decision_values(refs)
+
+    def test_absent_extra_pending_or_stale_review_reference_is_rejected(self):
+        invalid = [
+            {},
+            refs | {"codec": refs["fresh_producer"]},
+            {"fresh_producer": refs["fresh_producer"] | {"status": "pending"}},
+            {"fresh_producer": refs["fresh_producer"] | {"sha256": "0" * 64}},
+        ]
+        for change in invalid:
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                module._source_decision_values(change)
+
+    def test_rebind_preserves_full_roster_and_original_history(self):
+        evidence, source = module.rebind_source_evidence()
+        self.assertEqual(len(source["files"]), 85)
+        self.assertEqual(evidence["original_teacher_N"], [1024, 4096, 16384, 65536])
+        self.assertEqual(evidence["original_counts"]["jobs"], 3138)
+        self.assertEqual(evidence["original_counts"]["literal_cap_options"], 573122)
+        self.assertIs(evidence["old_partial_resumed_or_relabelled"], False)
+
+    def test_changed_scope_or_history_is_rejected(self):
+        path = D / "task-5-formal-prior-lock-rebind-evidence-v6.json"
+        evidence = actual_read(path)
+        variants = [
+            {"formal_financial_launch_authorized": True},
+            {"all3138_budget_and_cap_recipe_approved": True},
+            {"old_partial_resumed_or_relabelled": True},
+            {"saved_only_authority_used_as_fresh_authority": True},
+            {"original_teacher_N": [1024]},
+            {"original_counts": evidence["original_counts"] | {"literal_cap_options": 573121}},
+        ]
+        for change in variants:
+            with (
+                self.subTest(change=change),
+                patch.object(module, "read", self.altered_read(path, change)),
+            ):
+                with self.assertRaises(ValueError):
+                    module.rebind_source_evidence()
+
+    def test_operational_prior_requires_current_source_and_bounded_single_worker(self):
+        guard = actual_read(D / "task-5-formal-pilot-root-operational-resource-prior-v4.json")
+        module._validate_operational_source(guard)
+        for change in [
+            {"source_canonical_identity_sha256": "0" * 64},
+            {"source_native_payload_identity_sha256": "0" * 64},
+            {"source_observed_files": 82},
+            {"execution_mode_required": "eager"},
+            {"simultaneous_research_numerical_workers": 2},
+            {"saved_verification_must_terminate_and_be_inspected_before_fresh_launch": False},
+        ]:
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                module._validate_operational_source(guard | change)
+
+    def test_pending_or_absent_root_approval_never_materializes(self):
+        with self.assertRaises(ValueError):
+            module.load_actual_approval(None)
+        with tempfile.TemporaryDirectory(dir=D, prefix="v6-pending-approval-test-") as tmp:
+            p = Path(tmp) / "pending.json"
+            module.write_json(
+                p,
+                {
+                    "schema": module.APPROVAL_SCHEMA,
+                    "status": "pending",
+                    "planned_before_attempt": True,
+                },
+            )
+            with self.assertRaises(ValueError):
+                module.load_actual_approval(p)
+
+
+unittest.main(argv=["preflight"], verbosity=2)

@@ -1,0 +1,234 @@
+{
+  "schema": "rb-f04-independent-monitor-v6-source-mechanics-results-v2",
+  "scope": "monitor source/mechanics only; actual future prior/materialized plan/root guard and financial launch not approved",
+  "checks": [
+    {
+      "name": "fixed monitor byte",
+      "status": "PASS"
+    },
+    {
+      "name": "fixed candidate byte",
+      "status": "PASS"
+    },
+    {
+      "name": "fixed author manifest byte",
+      "status": "PASS"
+    },
+    {
+      "name": "all author fixed files byte/size authenticated",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: digest",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: sha",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: clock",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: save",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: require",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: absolute",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: positive",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: tree_binding",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: rss",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: volume_sample",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: choose_stop",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: terminal_status",
+      "status": "PASS"
+    },
+    {
+      "name": "old monitor AST unchanged: main",
+      "status": "PASS"
+    },
+    {
+      "name": "old exact reference guard AST unchanged: reference_path",
+      "status": "PASS"
+    },
+    {
+      "name": "old exact reference guard AST unchanged: fixed_reference",
+      "status": "PASS"
+    },
+    {
+      "name": "command contains exactly1 bounded and no resume",
+      "status": "PASS"
+    },
+    {
+      "name": "whole run lifecycle AST unchanged except bounded argv",
+      "status": "PASS"
+    },
+    {
+      "name": "candidate remains false/no root prior metadata/no launch",
+      "status": "PASS"
+    },
+    {
+      "name": "all original counts/N roster retained",
+      "status": "PASS"
+    },
+    {
+      "name": "actual current fresh source review and evidence authenticate",
+      "status": "PASS"
+    },
+    {
+      "name": "actual fixed reference materializer",
+      "status": "PASS"
+    },
+    {
+      "name": "actual fixed reference materializer_interface",
+      "status": "PASS"
+    },
+    {
+      "name": "actual fixed reference operational_resource_choice",
+      "status": "PASS"
+    },
+    {
+      "name": "corrected interface-v3 is exact required actual reference",
+      "status": "PASS"
+    },
+    {
+      "name": "pending full prior cannot be replaced by fresh source review",
+      "status": "PASS"
+    },
+    {
+      "name": "pending materializer reference cannot authenticate",
+      "status": "PASS"
+    },
+    {
+      "name": "pending closed materialization manifest cannot authenticate",
+      "status": "PASS"
+    },
+    {
+      "name": "pending actual root metadata approval refuses after actual interface",
+      "status": "PASS"
+    },
+    {
+      "name": "actual85 source physical guard fully authenticates before pending metadata",
+      "status": "PASS"
+    },
+    {
+      "name": "actual false candidate refuses before source/output/Popen",
+      "status": "PASS"
+    },
+    {
+      "name": "missing_bounded_mode refuses before authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "legacy_eager_mode refuses before authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "resume_true refuses before authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "missing_explicit_resume_false refuses before authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "pure run argv observes original plan/input/output +one bounded/no resume",
+      "status": "PASS"
+    },
+    {
+      "name": "synthetic stub never creates native financial output",
+      "status": "PASS"
+    },
+    {
+      "name": "author original fixed files unchanged after independent probes",
+      "status": "PASS"
+    }
+  ],
+  "passed": 41,
+  "failed": 0,
+  "actual_refusal_observations": [
+    {
+      "name": "pending full prior cannot be replaced by fresh source review",
+      "reason": "all3138/cap recipe independent review required"
+    },
+    {
+      "name": "pending materializer reference cannot authenticate",
+      "reason": "pending reference SHA cannot authorize execution"
+    },
+    {
+      "name": "pending closed materialization manifest cannot authenticate",
+      "reason": "pending reference SHA cannot authorize execution"
+    },
+    {
+      "name": "pending actual root metadata approval refuses after actual interface",
+      "reason": "pending reference SHA cannot authorize execution"
+    },
+    {
+      "name": "actual false candidate refuses before source/output/Popen",
+      "reason": "root prior approval required; candidate cannot execute"
+    },
+    {
+      "name": "missing_bounded_mode refuses before authentication",
+      "reason": "explicit bounded original full roster mode required; resume is forbidden"
+    },
+    {
+      "name": "legacy_eager_mode refuses before authentication",
+      "reason": "explicit bounded original full roster mode required; resume is forbidden"
+    },
+    {
+      "name": "resume_true refuses before authentication",
+      "reason": "explicit bounded original full roster mode required; resume is forbidden"
+    },
+    {
+      "name": "missing_explicit_resume_false refuses before authentication",
+      "reason": "explicit bounded original full roster mode required; resume is forbidden"
+    }
+  ],
+  "monitor_sha256": "8700d0c6ea1146665d1e711637fb30969a734bd82f8382c31489f64e5a25b2ce",
+  "candidate_sha256": "8544b7b15e5081d16bfa775426b38c28d2ae8cb5e8b19d0be8976612e18a7f9d",
+  "fixed_manifest_sha256": "32252f4c67c1404cabb2ea5285b77baee8a91effb8972c098bc759d1a84803d8",
+  "author_synthetic11_results_reused_separately": true,
+  "actual_financial_Popen_calls": 0,
+  "synthetic_Popen_stub_calls": 1,
+  "actual_financial_raw_decode_hash_RNG_SDE_solver_calls": 0,
+  "full_prior_math_review": false,
+  "production_mutations": 0,
+  "Git_CAS_operations": 0,
+  "root_live_sessions_polled": 0,
+  "financial_qualification": "unknown",
+  "actual_launch_approved": false,
+  "audit_history": {
+    "first_failure": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-monitor-v6-source-mechanics-audit-failure-v1.json",
+    "reason": "Independent probe accessed nonexistent full_prior_metadata. Actual monitor/candidate key is prior_metadata_materialization (monitor line421). Initial failure memo also misnamed an alternative hypothetical key; original memo retained. Current probe uses actual key; no monitor fix required."
+  },
+  "cost": {
+    "current_static_and_tiny_probe_wall_seconds": 0.0315895109961275,
+    "current_process_cpu_seconds": 0.031587902,
+    "kernel_peak_RSS_bytes": 32624640,
+    "earlier_source_reads_first_failed_probe_and_final_receipt_tail_seconds": null,
+    "all_costs_closed": false
+  }
+}

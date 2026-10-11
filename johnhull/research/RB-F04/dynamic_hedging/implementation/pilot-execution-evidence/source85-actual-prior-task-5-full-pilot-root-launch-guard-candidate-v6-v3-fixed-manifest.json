@@ -1,0 +1,57 @@
+{
+  "dependencies": {
+    "actual_root_metadata_approval": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v4.json",
+      "sha256": "6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815",
+      "status": "approved_for_prior_materialization_only"
+    },
+    "closed_metadata_manifest": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v6/manifest.json",
+      "sha256": "b98030a81e1ff140909fd5e68ef1587c8c90a6be828cff17e82ed8cb466f218f",
+      "status": "closed_materialization_metadata_only"
+    },
+    "exact_interface_v3": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v3.json",
+      "sha256": "30615482cfd7e762e7c9b95d76a040ed02a5af6192734ff4aca3ba790086ddf9"
+    },
+    "full_prior_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v6-decision-v1.json",
+      "sha256": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223",
+      "status": "approved"
+    },
+    "operational_resource_choice": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v4.json",
+      "sha256": "64a82b114f3abfa0b9e1ddcbec85d5a16171014c4cf5c81ae9f853b6d9de6b6e",
+      "status": "approved_operational_prior"
+    },
+    "unchanged_monitor": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2.py",
+      "sha256": "8700d0c6ea1146665d1e711637fb30969a734bd82f8382c31489f64e5a25b2ce"
+    },
+    "unchanged_previous_false_candidate": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-candidate-v6-v2.json",
+      "sha256": "8544b7b15e5081d16bfa775426b38c28d2ae8cb5e8b19d0be8976612e18a7f9d"
+    }
+  },
+  "files": {
+    "task-5-full-pilot-root-launch-guard-candidate-v6-v3-results.json": {
+      "bytes": 3024,
+      "sha256": "2620a2616a8008c98f3d56fbb921ec5699aa4be168ba376cb2da96dfa2cb4f3b"
+    },
+    "task-5-full-pilot-root-launch-guard-candidate-v6-v3.json": {
+      "bytes": 50999,
+      "sha256": "c9282c7248610afda6ed979132ce477e4124d4067c2cc6ac638ba2aa9fa0afd5"
+    }
+  },
+  "financial_launch_authorized": false,
+  "financial_qualification": "unknown",
+  "root_preapproved": false,
+  "saved85801_terminal_inspection_prerequisite": "pending",
+  "status": "fixed_false_launch_candidate",
+  "verification": {
+    "all_original_financial_values_grids_limits_source_inputs_history_preserved": true,
+    "changed_plan_receipt_rejected": true,
+    "false_guard_refused_before_source_or_Popen": true,
+    "metadata_authority_verify_files_false_accepted": true
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "schema": "rb-f04-independent-source85-fresh-boundary-audit-v1",
+  "scope": "read-only source-boundary inventory; no new source, resource prior or launch approval",
+  "fixed_at_UTC": "2026-10-11T03:27:32.389982+00:00",
+  "new_source_approved": false,
+  "new_budget_approved": false,
+  "new_guard_approved": false,
+  "financial_acceptance": false,
+  "source85": {
+    "native_payload_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+    "plain_runner_digest_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+    "file_count": 85,
+    "dynamic_imports": [],
+    "closure_receipt": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+      "sha256": "30a1dd351af3814eecfcece69f99f8f60a21665e5d957d039bbde71746ffd0af"
+    },
+    "current_five_relevant_file_sha256": {
+      "run_pilot.py": "34838df65f352fb264be03fc37ab80a5e5176ff4a0c9a89b9b701628aa425b07",
+      "check_pilot.py": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+      "_pilot_saved_storage.py": "1651b56211645c9bb7ee33edbb8aab4d647a75ccc2a9a41c6051daa97a88fa3a",
+      "_pilot_saved_report.py": "b1fa93fca13bfcdd7c9e8b4d9c1a4792aa4ba94f2381173254d2d23f3dfc6cdc",
+      "_pilot_saved_provenance.py": "6de1924302fd316b33afbf7c9b4a88493434eee2be87814dd62255e9633dc29a"
+    },
+    "full_closure_reexecution": false
+  },
+  "reused_evidence": {
+    "saved_verifier_limited_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-verifier-source-limited-review-v1.json",
+      "sha256": "c0080194c43f9db165583616479b751113f89e9f361683cef9ebb9ef53a78529"
+    },
+    "bounded_lifecycle_independent": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-bounded-lifecycle-independent-results-v1.json",
+      "sha256": "59bf32a444f69758ff7b4f4df0c2dff094e8d3af9be70602cfa5646215072bed"
+    },
+    "current_root_regression": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v2.json",
+      "sha256": "1861c0eb390b7e81f99d1dcb7ba0d13fe9aa42c4886df9a5aff636ccc8502b70"
+    },
+    "current_root_regression_log": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v2.log",
+      "sha256": "f820c4d4efe3a5e392ce384839d7006ab06b837aa164279c3e4f1e3bcf97f0db"
+    },
+    "stage_cap_limited_decision": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cap-binding-v1-decision.json",
+      "sha256": "f2fd826e399a08e20e848ac00bfbbb1132433be189779716f66a7e61d1868ea2"
+    },
+    "validation_limited_decision": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-applied-validation-rollout-binding-and-pytest-v1.json",
+      "sha256": "28dc6972b9e371a36f57a33d7d9d3602ff43bad1badb6a63e55815e50b131c2c"
+    }
+  },
+  "read_only_findings": [
+    {
+      "location": "run_pilot.py:3611-3624,4118-4129",
+      "finding": "Fresh/default _locked_bindings requires the complete actual input roster/identities and current transitive source to equal the new locked plan; no saved-producer exception is injected into this path."
+    },
+    {
+      "location": "run_pilot.py:4171-4186,4340-4365,4492-4559; _pilot_saved_storage.py:148-231",
+      "finding": "Explicit bounded=True uses RecordedJobs, releases preceding raw/arguments, saves every executed/fault row and binds the original streaming full logical digest. The full structural plan, original metadata, ID order, unknown and actual inclusive phase/job costs remain; per-job raw is not removed."
+    },
+    {
+      "location": "run_pilot.py:2023-2085,3566-3578,3817-3959; check_pilot.py:4101-4246",
+      "finding": "Bounded resolution delays only saved evidence rows, retains structural lists, and reaches the actual original stage numerical checker. It checks the entire required ID set,12 dates/18 states, original four-N ladder/reference rule, every _raw_job_check and original independent-driver comparison; SavedChecks bounds retention rather than substituting a flag/hash for arithmetic."
+    },
+    {
+      "location": "check_pilot.py:791-824,2042+,4016-4019; existing fixed stage/validation evidence",
+      "finding": "The administrative wall cap is separated only in financial-five argument binding; resolved arguments/envelope still authenticate the exact original prior cap. Validation reads all14 full rollouts[id], roster retains all11 result bodies including unknown; malformed/missing/out-of-tolerance originals refuse through the unchanged complete comparison/cash route."
+    },
+    {
+      "location": "check_pilot.py:4777-4804,4840-4859",
+      "finding": "Saved provenance authentication remains an opt-in old producer/new verifier route. The current independent decision scope saved_original_raw_only cannot authorize source85 as a fresh producer or authorize an oldsource82 resume."
+    }
+  ],
+  "limited_confirmations_not_yet_authorized_here": [
+    {
+      "item": "Source85 as fresh producer",
+      "minimum": "A separate source-only independent disposition must bind the existing fixed85 inventory and reuse the already verified bounded lifecycle/default source-input refusal, stage cap and validation fixes. The present c008 saved-only review does not make that disposition. Existing evidence permits a limited delta confirmation rather than new full suites/financial generation.",
+      "current_evidence": "5 independent synthetic lifecycle groups;4 targeted lifecycle cases;7 stage cases;7 validation cases;root current326PASS and Ruff evidence; no repeated tests in this audit."
+    },
+    {
+      "item": "New immutable resource prior/locked plan",
+      "minimum": "Root and the resource reviewer must bind the original3138jobs/121cases/51obligations/four N/65thresholds/16blocks/seeds/573122cap-options/2332activation/order/budgets/10external unknown to source85 and the new exact recipe/plan without relabelling prior82, original213executed+214fault, failures or None costs. This is separate from source-only approval."
+    },
+    {
+      "item": "Fresh execution wiring",
+      "minimum": "A fresh current-source guard/observer must authenticate that new plan and actual inputs, use the existing run_pilot CLI with explicit --bounded and fresh output directory/no --resume, and then use default current-source saved checks. Old archived-producer saved-only guard/recipe is inappropriate for fresh launch. Exact runtime/source/input/cap/volume/cost authority remains root-owned."
+    }
+  ],
+  "remaining_unknowns": [
+    "No single-job or concurrent stage-array RSS guarantee; RecordedJobs removes cumulative retention only.",
+    "No whole fresh pilot completion time or financial qualification inferred from tiny source tests.",
+    "No full financial saved completion inferred while root session85801 is live."
+  ],
+  "unresolved_P1_P2_source_findings_observed": [],
+  "operations": {
+    "production_edits": 0,
+    "test_reruns": 0,
+    "new_financial_RNG_solver_SDE_jobs": 0,
+    "real_native_raw_reads": 0,
+    "source_closure_reexecution": 0,
+    "Git_CAS": 0,
+    "root_session_polls": 0
+  },
+  "original_history_preserved": true
+}

@@ -1,0 +1,131 @@
+{
+  "AST": {
+    "changed_functions": [
+      "limited_source_review",
+      "actual_budget_review",
+      "metadata_authority",
+      "source_binding",
+      "load_guard",
+      "run"
+    ],
+    "new_functions": [],
+    "run_AST_except_required_bounded_argv_unchanged": true,
+    "unchanged_functions": [
+      "digest",
+      "sha",
+      "clock",
+      "save",
+      "require",
+      "absolute",
+      "positive",
+      "tree_binding",
+      "reference_path",
+      "fixed_reference",
+      "rss",
+      "volume_sample",
+      "choose_stop",
+      "terminal_status",
+      "main"
+    ]
+  },
+  "candidate_only": true,
+  "changes": {
+    "argv_delta": [
+      "--bounded"
+    ],
+    "exact_binding_chain": "fixed source-only decision/evidence + interface/materializer + separately reviewed18bindings + actual root approval + closed metadata receipts",
+    "execution_mode": "bounded_original_full_roster",
+    "materializer": "task-5-formal-prior-lock-preparation-v6.py",
+    "old82_generation_or_saved_only_review_used_as_fresh_authority": false,
+    "resource_prior": "task-5-formal-pilot-root-operational-resource-prior-v4.json",
+    "resume_requested": false,
+    "source85_progress_key": "source85_before_after_stable",
+    "source_decision_collection_digest": "c7b3ebccdd9803b1b99e61998f64a2a2f208feeac24288940f53a6ef3bf7acbb",
+    "source_decision_keys": [
+      "fresh_producer"
+    ]
+  },
+  "created_UTC": "2026-10-11T03:39:21.745163+00:00",
+  "financial_qualification": "unknown",
+  "formal_financial_launch_authorized": false,
+  "guard_candidate": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-candidate-v6.json",
+    "sha256": "0741860d5fbf83690fb9e87aaf642e95c61f02973ac170c8e0993c1c094e100d"
+  },
+  "monitor": {
+    "bytes": 44635,
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6.py",
+    "sha256": "140c29e9cad78016a9c7f9da70cf6ac7d622a9c474499afd8b281e35b6358d87"
+  },
+  "original_fixed_monitor": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v5.py",
+    "sha256": "a53a73cfc420e2745f8d8d2cb72a6171ab2d166781126b9a96869afb88053981"
+  },
+  "original_obligations": {
+    "attempts": 51,
+    "blocks": 16,
+    "cases": 121,
+    "external_unknown_expenses": 10,
+    "jobs": 3138,
+    "literal_cap_options": 573122,
+    "potential_first_activation_jobs": 2332,
+    "teacher_N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "thresholds": 65
+  },
+  "phase_or_main_acceptance": false,
+  "preflight": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-preflight.py",
+    "sha256": "dfd719ba2e2b2ff70b2685172c6414061a7d3ba51fc3fdcd7fb6ce79e55b0f87"
+  },
+  "preserved_failure_history": [
+    {
+      "meaning": "preflight local closure B023; bound default argument correction only",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-lint-failure-v1.json"
+    },
+    {
+      "meaning": "10 pass/1 fixture error after pinning real evidence SHA; synthetic fixture expected SHA setup corrected; monitor unchanged",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-GREEN-final.log"
+    }
+  ],
+  "root_preapproved": false,
+  "schema": "rb-f04-root-monitor-v6-candidate-verification-v1",
+  "source": {
+    "actual85_bytes_match_frozen_root_closure": true,
+    "canonical": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+    "dynamic_imports": [],
+    "files": 85,
+    "native": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8"
+  },
+  "status": "fixed_candidate_source_mechanics_only",
+  "unknown_or_pending": [
+    "Actual new full-budget decision, root metadata approval, closed materialized-v6 receipt and launch authorization remain unbound.",
+    "Single original job/full returned arrays or remaining metadata can still exceed RSS; no whole capacity/runtime guarantee.",
+    "Unknown external10/history costs and all original N/rosters/grids/cap recipe obligations remain.",
+    "Actual fresh launch must wait for saved-check terminal/result and root authorization; no auto-launch."
+  ],
+  "validation": {
+    "Ruff_check_2files": "PASS",
+    "actual_new_prior_or_closed_metadata_validated": false,
+    "compile_without_bytecode_2files": "PASS",
+    "financial_Popen_calls": 0,
+    "fixed_preflight": {
+      "errors": 0,
+      "failures": 0,
+      "status": "PASS",
+      "tests": 11
+    },
+    "format_check_2files": "PASS",
+    "native_financial_decode_hash_calls": 0,
+    "original_baseline_RED": {
+      "failures": 4,
+      "passed": 4,
+      "tests": 8
+    },
+    "synthetic_Popen_argv_stub_only": true
+  }
+}

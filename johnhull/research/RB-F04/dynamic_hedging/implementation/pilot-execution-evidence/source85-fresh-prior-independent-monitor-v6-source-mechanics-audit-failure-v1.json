@@ -1,0 +1,12 @@
+{
+  "status": "audit_probe_failure",
+  "reason": "Independent probe used nonexistent optional candidate['full_prior_metadata']; actual monitor uses materialized_prior_metadata_manifest. This is an independent audit field-name error, not a monitor/source failure.",
+  "exception": "KeyError: 'full_prior_metadata'",
+  "original_tool_command_exit_code": 1,
+  "original_tool_wall_seconds": 0.594557,
+  "probe_process_wall_seconds": null,
+  "original_tool_traceback": "File <string>, line40, KeyError: 'full_prior_metadata'",
+  "failed_financial_launches": 0,
+  "source_or_fixed_candidate_edits": 0,
+  "fix": "Probe should use actual required candidate materialized_prior_metadata_manifest schema and get() only for absence facts; preserve original error."
+}

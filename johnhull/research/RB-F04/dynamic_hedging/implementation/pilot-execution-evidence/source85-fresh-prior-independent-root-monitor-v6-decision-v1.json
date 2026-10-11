@@ -1,0 +1,171 @@
+{
+  "schema": "rb-f04-independent-root-operational-monitor-source-review-v6",
+  "decision": "approved",
+  "status": "approved_fixed_monitor_source_mechanics_only",
+  "reviewer": "progressive_graph_review",
+  "role": "independent limited root monitor source and mechanics reviewer",
+  "scope": "monitor_source_mechanics_only",
+  "monitor": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2.py",
+    "sha256": "8700d0c6ea1146665d1e711637fb30969a734bd82f8382c31489f64e5a25b2ce",
+    "bytes": 44635
+  },
+  "monitor_sha256": "8700d0c6ea1146665d1e711637fb30969a734bd82f8382c31489f64e5a25b2ce",
+  "false_candidate": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-candidate-v6-v2.json",
+    "sha256": "8544b7b15e5081d16bfa775426b38c28d2ae8cb5e8b19d0be8976612e18a7f9d",
+    "bytes": 46860
+  },
+  "author_fixed_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-fixed-manifest.json",
+    "sha256": "32252f4c67c1404cabb2ea5285b77baee8a91effb8972c098bc759d1a84803d8",
+    "bytes": 2720
+  },
+  "author_results_separate": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2-GREEN-results.json",
+    "sha256": "4e455f27cb622e26fbbbe3919b2fc2ec57475c345abb07f6468db03d2a271a19",
+    "bytes": 693
+  },
+  "current_interface": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v3.json",
+    "sha256": "30615482cfd7e762e7c9b95d76a040ed02a5af6192734ff4aca3ba790086ddf9",
+    "bytes": 7051
+  },
+  "current_materializer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+    "sha256": "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a",
+    "bytes": 52104
+  },
+  "current_source_rebind_evidence": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v6.json",
+    "sha256": "4a84a0efacc176a347c390c249de317ae11ae22b1981b67149283b2183625bbd",
+    "bytes": 3899
+  },
+  "fresh_producer_source_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source85-fresh-producer-limited-decision-v1.json",
+    "sha256": "3831886d1d9df4700995ba0fb75d2994cefa0ccd958047c20507e0f1f6609d62",
+    "bytes": 23035
+  },
+  "actual_separate_administrative_prior": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v4.json",
+    "sha256": "64a82b114f3abfa0b9e1ddcbec85d5a16171014c4cf5c81ae9f853b6d9de6b6e",
+    "bytes": 3656
+  },
+  "source_canonical_runner_digest_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "source_native_payload_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "source_count": 85,
+  "dynamic_imports": [],
+  "independent_results": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-monitor-v6-source-mechanics-results-v2.json",
+    "sha256": "e4d1f9f5d9559f155e8c644179ab0b986f74f8949c7b8ac4805b90b4577bd514",
+    "bytes": 7308
+  },
+  "independent_passed": 41,
+  "independent_failed": 0,
+  "additional_static_ref_delta_checks": [
+    "v6-v1 to v6-v2 all21 function ASTs identical",
+    "v6-v1 to v6-v2 entire module AST identical after excluding only interface name/SHA constants",
+    "candidate changes only exact interface/monitorSHA plus preserved-old-candidate provenance key; all authority/budget/count/clock values unchanged",
+    "previous fixed v6 all20 files remain byte-identical",
+    "corrected interface-v3 retains the same exact18 approved binding values",
+    "current85 source physical bytes unchanged at decision boundary"
+  ],
+  "coverage": {
+    "original13_stop_clock_unknown_monitor_function_AST_unchanged": true,
+    "reference_path_and_fixed_reference_AST_unchanged": true,
+    "old_v5_run_AST_unchanged_except_one_bounded_argument": true,
+    "explicit_execution_mode": "bounded_original_full_roster",
+    "resume_requested_required_false": true,
+    "actual_runtime_argv_bounded_count": 1,
+    "actual_runtime_argv_resume_count": 0,
+    "runtime_argv_probe_is_synthetic_Popen_stub_not_financial_execution": true,
+    "actual_source85_fresh_review_evidence_materializer_interface_admin_references_authenticated": true,
+    "actual_source85_physical_byte_guard_authenticated_with_metadata_authority_stubbed_as_pending": true,
+    "original3138_121_51_fourN_counts_preserved": true,
+    "complete573122_cap_recipe_18binding_requirement_preserved_not_reapproved_here": true,
+    "source_and_administrative_prior_are_not_whole_budget_or_launch_approval": true,
+    "unknown_defect_admin_stop_and_inclusive_expense_cost_scope_preserved": true
+  },
+  "refusal_scope": [
+    {
+      "name": "pending full prior cannot be replaced by fresh source review",
+      "reason": "all3138/cap recipe independent review required"
+    },
+    {
+      "name": "pending materializer reference cannot authenticate",
+      "reason": "pending reference SHA cannot authorize execution"
+    },
+    {
+      "name": "pending closed materialization manifest cannot authenticate",
+      "reason": "pending reference SHA cannot authorize execution"
+    },
+    {
+      "name": "pending actual root metadata approval refuses after actual interface",
+      "reason": "pending reference SHA cannot authorize execution"
+    },
+    {
+      "name": "actual false candidate refuses before source/output/Popen",
+      "reason": "root prior approval required; candidate cannot execute"
+    },
+    {
+      "name": "missing_bounded_mode refuses before authentication",
+      "reason": "explicit bounded original full roster mode required; resume is forbidden"
+    },
+    {
+      "name": "legacy_eager_mode refuses before authentication",
+      "reason": "explicit bounded original full roster mode required; resume is forbidden"
+    },
+    {
+      "name": "resume_true refuses before authentication",
+      "reason": "explicit bounded original full roster mode required; resume is forbidden"
+    },
+    {
+      "name": "missing_explicit_resume_false refuses before authentication",
+      "reason": "explicit bounded original full roster mode required; resume is forbidden"
+    }
+  ],
+  "actual_future_full_prior_or_metadata_authority_validated": false,
+  "actual_root_launch_guard_validated": false,
+  "actual_root_financial_launch_authorized_by_reviewer": false,
+  "full_resource_prior_approved_by_this_review": false,
+  "financial_acceptance": false,
+  "phase_or_main_acceptance_approved": false,
+  "whole_capacity_RSS_or_runtime_guaranteed": false,
+  "old_formal_source_resume_or_relabel_approved": false,
+  "financial_qualification": "unknown",
+  "unresolved_findings": [],
+  "limits": [
+    "Approval is limited to the fixed monitor implementation, source/reference rebinding and refusal/administrative mechanics. Candidate still has root_preapproved=false/formal launch=false and missing wholeprior/rootapproval/closed metadata authority.",
+    "Actual new full prior/cap recipe approval, root materialization, locked plan/source/input receipts, actual fresh root launch guard and current capacity must be authenticated separately before financial Popen.",
+    "The full future budget mathematical values/573122 cap options and original raw numerical arrays were not re-read, expanded, decoded or qualified. Original all-N/case/threshold/block/status/cost obligations remain.",
+    "No real source85 financial worker, RNG, SDE, solver or native output was executed. Pure argv probe deliberately substituted guard/source/tree/volume authority and a fake child; it is not a positive actual launch preflight.",
+    "Administrative30day/16GiB/reserves retain prior choices and are not runtime predictions, financial A caps or proof of fit."
+  ],
+  "audit_history": {
+    "independent_initial_failure_preserved": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-monitor-v6-source-mechanics-audit-failure-v1.json",
+      "sha256": "51bbbd73feeb03260db0f1d3e3712fed4f6147b1da5f5c5d9aeebd5de098d994",
+      "bytes": 755
+    },
+    "corrected_boundary": "Initial independent probe requested nonexistent full_prior_metadata; actual monitor key is prior_metadata_materialization. Initial failure memo also misnamed another hypothetical key. Results-v2 records this correction; no monitor/source fix or actual launch was performed.",
+    "original_author_RED_and_intermediate_failures_preserved_by_manifests": true,
+    "legacy_v6_manifest": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-fixed-manifest.json",
+      "sha256": "1bc50ab82998684dd2840811125b909726c182b06262d1314b458e680e9865ce",
+      "bytes": 5541
+    }
+  },
+  "observed_cost": {
+    "current_static_and_tiny_probe_wall_seconds": 0.0315895109961275,
+    "current_process_cpu_seconds": 0.031587902,
+    "kernel_peak_RSS_bytes": 32624640,
+    "earlier_source_reads_first_failed_probe_and_final_receipt_tail_seconds": null,
+    "all_costs_closed": false
+  },
+  "Popen_financial_RNG_SDE_solver_worker_calls": 0,
+  "synthetic_Popen_stub_calls": 1,
+  "production_source_tests_docs_Git_CAS_oldD1_changes": 0,
+  "root_live_session85801_access": 0,
+  "remaining": "Root needs separate exact actual fullprior/materialization/guard/capacity bindings before fresh financial launch; no additional source/mechanics testpack required by this review.",
+  "fixed_at_UTC": "2026-10-11T03:49:15.875776+00:00"
+}

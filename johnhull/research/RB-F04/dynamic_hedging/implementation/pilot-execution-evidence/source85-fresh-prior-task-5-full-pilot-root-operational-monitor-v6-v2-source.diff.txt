@@ -1,0 +1,13 @@
+--- fixed-monitor-v6
++++ candidate-monitor-v6-v2
+@@ -30,8 +30,8 @@
+ FRESH_SHA = "3831886d1d9df4700995ba0fb75d2994cefa0ccd958047c20507e0f1f6609d62"
+ MATERIALIZER_NAME = "task-5-formal-prior-lock-preparation-v6.py"
+ MATERIALIZER_SHA = "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a"
+-INTERFACE_NAME = "task-5-formal-prior-lock-preparation-v6-interface-v1.json"
+-INTERFACE_SHA = "bbcb27717f92bc909a0f0c11613c25d9b29d3eb162b05a9f6c4788f482cc5ffd"
++INTERFACE_NAME = "task-5-formal-prior-lock-preparation-v6-interface-v3.json"
++INTERFACE_SHA = "30615482cfd7e762e7c9b95d76a040ed02a5af6192734ff4aca3ba790086ddf9"
+ RESOURCE_NAME = "task-5-formal-pilot-root-operational-resource-prior-v4.json"
+ RESOURCE_SHA = "64a82b114f3abfa0b9e1ddcbec85d5a16171014c4cf5c81ae9f853b6d9de6b6e"
+ V6_NAME = "task-5-fullmixed-phase-local-reuse-budget-supplement-author-v6.json"

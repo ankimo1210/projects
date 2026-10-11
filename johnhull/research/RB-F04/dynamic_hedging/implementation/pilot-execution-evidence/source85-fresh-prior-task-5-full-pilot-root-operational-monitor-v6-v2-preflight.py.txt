@@ -1,0 +1,347 @@
+"""Tiny synthetic monitor contract checks; no financial child or native reads."""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import contextlib
+import copy
+import importlib.util
+import io
+import json
+import os
+import resource
+import sys
+import tempfile
+import time
+import unittest
+from pathlib import Path
+from unittest.mock import Mock, patch
+
+D = Path(__file__).resolve().parent
+MONITOR = D / "task-5-full-pilot-root-operational-monitor-v6-v2.py"
+OLD = D / "task-5-full-pilot-root-operational-monitor-v5.py"
+FRESH_DECISION = D / "independent-source85-fresh-producer-limited-decision-v1.json"
+CURRENT = D / "root-saved-producer-verifier-current-source-closure-v1.json"
+PLAIN = "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030"
+NATIVE = "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8"
+
+
+def load():
+    spec = importlib.util.spec_from_file_location("pure_fresh_monitor_v6", MONITOR)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def write(path, value):
+    path.write_text(json.dumps(value, sort_keys=True, allow_nan=False))
+    return {"path": str(path), "sha256": load().sha(path)}
+
+
+class MonitorTests(unittest.TestCase):
+    def setUp(self):
+        self.m = load()
+        self.tmp = tempfile.TemporaryDirectory(prefix="pure-monitor-v6-")
+        self.root = Path(self.tmp.name)
+        self.addCleanup(self.tmp.cleanup)
+        self.m.D = self.root
+
+    def guard(self):
+        m = self.m
+        return {
+            "root_preapproved": True,
+            "formal_financial_launch_authorized": True,
+            "schema": m.SCHEMA,
+            "prior_role": "root_fixed_operational_prior",
+            "source_approval_status": "approved_fixed_current_source",
+            "administrative_guard_only": True,
+            "financial_A_cap_projection_approved": False,
+            "financial_qualification": "unknown",
+            "formal_phase_completion_claimed": False,
+            "execution_mode": "bounded_original_full_roster",
+            "resume_requested": False,
+            "monitor_sha256": m.sha(MONITOR),
+            "phase_wall_limit_seconds": 30 * 86400,
+            "parent_rss_limit_bytes": 16 * m.GiB,
+            "child_rss_limit_bytes": 16 * m.GiB,
+            "RSS_metric": "maximum_individual_process_RSS_not_RLIMIT_AS",
+            "poll_seconds": 1,
+            "original_counts": {"jobs": 3138, "cases": 121, "attempts": 51},
+            "original_teacher_N_candidates": [1024, 4096, 16384, 65536],
+            "python_executable": sys.executable,
+            "volume_probes": [
+                {"id": name, "path": str(self.root / name), "reserve_bytes": 10 * m.GiB}
+                for name in ["WSL", "C", "F"]
+            ],
+            "native_output_path": str(self.root / "task-5-formal-pilot-pure-output"),
+            "receipt_directory": str(self.root / "pure-monitor-receipts"),
+            "launch_authorized_by": "root",
+            "planned_before_attempt": True,
+            "plan": {"path": str(self.root / "pure-plan")},
+            "typed_inputs": {"path": str(self.root / "pure-inputs")},
+        }
+
+    def isolated_guard(self, value, expected=None):
+        path = self.root / "private-synthetic-guard.json"
+        write(path, value)
+        calls = []
+        actual_stat = os.stat
+
+        def stat(path, *args, **kwargs):
+            for i, probe in enumerate(value["volume_probes"]):
+                if str(path) == probe["path"]:
+                    return Mock(st_dev=i + 1)
+            return actual_stat(path, *args, **kwargs)
+
+        with contextlib.ExitStack() as stack:
+            for name in ["limited_source_review", "actual_budget_review", "metadata_authority"]:
+                stack.enter_context(
+                    patch.object(self.m, name, side_effect=lambda *a, **k: calls.append(True) or {})
+                )
+            stack.enter_context(patch.object(self.m.os, "stat", stat))
+            stack.enter_context(
+                patch.object(self.m.subprocess, "Popen", side_effect=AssertionError("no child"))
+            )
+            if expected:
+                with self.assertRaisesRegex(self.m.GuardRejectedError, expected):
+                    self.m.load_guard(path)
+            else:
+                self.m.load_guard(path)
+        return calls
+
+    def test_false_authority_refuses_before_source_or_popen(self):
+        for field in ["root_preapproved", "formal_financial_launch_authorized"]:
+            value = self.guard()
+            value[field] = False
+            self.assertEqual(self.isolated_guard(value, "approval|authorization"), [])
+
+    def test_execution_mode_and_resume_are_required_before_authentication(self):
+        for change in [
+            {"execution_mode": None},
+            {"execution_mode": "legacy_eager"},
+            {"resume_requested": True},
+        ]:
+            value = self.guard() | change
+            self.assertEqual(self.isolated_guard(value, "bounded|resume"), [])
+
+    def test_valid_bounded_mode_still_requires_original_guard_checks(self):
+        self.assertEqual(len(self.isolated_guard(self.guard())), 3)
+
+    def test_command_has_bounded_and_no_resume(self):
+        value = self.guard()
+        path = self.root / "private-synthetic-command-guard.json"
+        ref = write(path, value)
+        calls = []
+        fake = Mock(pid=991234, poll=Mock(return_value=0), wait=Mock(return_value=0))
+
+        def capture(command, **kwargs):
+            calls.append(command)
+            return fake
+
+        volumes = [row | {"free_bytes": 100 * self.m.GiB} for row in value["volume_probes"]]
+        with contextlib.ExitStack() as stack:
+            stack.enter_context(
+                patch.object(
+                    self.m,
+                    "load_guard",
+                    return_value=(value, path, ref["sha256"], path.read_bytes()),
+                )
+            )
+            for name in ["source_binding", "tree_binding"]:
+                stack.enter_context(patch.object(self.m, name, return_value={"synthetic": True}))
+            stack.enter_context(patch.object(self.m, "volume_sample", return_value=volumes))
+            stack.enter_context(patch.object(self.m, "rss", return_value=1000))
+            stack.enter_context(patch.object(self.m.subprocess, "Popen", capture))
+            stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
+            self.assertEqual(self.m.run(path), 0)
+        self.assertEqual(len(calls), 1)
+        self.assertIn("--bounded", calls[0])
+        self.assertNotIn("--resume", calls[0])
+        self.assertEqual(calls[0].count("--bounded"), 1)
+        self.assertFalse(Path(value["native_output_path"]).exists())
+
+    def source_fixture(self):
+        # Small closed source metadata only: no native financial artifacts or source import.
+        review_path = self.root / FRESH_DECISION.name
+        review_path.write_bytes(FRESH_DECISION.read_bytes())
+        current_path = self.root / CURRENT.name
+        current_path.write_bytes(CURRENT.read_bytes())
+        current_ref = {"path": str(current_path), "sha256": self.m.sha(current_path)}
+        body = json.loads(review_path.read_text())
+        body["source_closure"] = current_ref
+        review_path.write_text(json.dumps(body, sort_keys=True))
+        self.m.FRESH_SHA = self.m.sha(review_path)
+        ref = {"path": str(review_path), "sha256": self.m.sha(review_path), "status": "approved"}
+        evidence = {
+            "all3138_budget_and_cap_recipe_approved": False,
+            "formal_financial_launch_authorized": False,
+            "old_partial_resumed_or_relabelled": False,
+            "fresh_source_metadata_output_only": True,
+            "source_limited_decisions": {"fresh_producer": ref},
+            "current_source_reference": current_ref,
+        }
+        evidence_ref = write(
+            self.root / "task-5-formal-prior-lock-rebind-evidence-v6.json", evidence
+        )
+        self.m.SOURCE_EVIDENCE_SHA = evidence_ref["sha256"]
+        return {
+            "source_limited_decisions": {"fresh_producer": ref},
+            "source_rebind_evidence": evidence_ref,
+            "source_identity": json.loads(current_path.read_text()),
+            "source_identity_sha256": PLAIN,
+            "source_native_payload_sha256": NATIVE,
+        }
+
+    def test_fixed_current85_single_fresh_review_is_source_only(self):
+        value = self.source_fixture()
+        self.assertEqual(self.m.SOURCE_IDENTITY, PLAIN)
+        self.assertEqual(self.m.SOURCE_NATIVE_IDENTITY, NATIVE)
+        reviews = self.m.limited_source_review(value)
+        self.assertEqual(set(reviews), {"fresh_producer"})
+        self.assertFalse(reviews["fresh_producer"]["formal_pilot_main_launch_approved"])
+
+    def test_saved_scope_or_changed_source_is_not_fresh_approval(self):
+        for key, replacement in [
+            ("scope", "saved_original_raw_only"),
+            ("source_native_payload_identity", "0" * 64),
+            ("formal_pilot_main_launch_approved", True),
+        ]:
+            value = self.source_fixture()
+            path = Path(value["source_limited_decisions"]["fresh_producer"]["path"])
+            body = json.loads(path.read_text())
+            body[key] = replacement
+            path.write_text(json.dumps(body))
+            value["source_limited_decisions"]["fresh_producer"]["sha256"] = self.m.sha(path)
+            self.m.FRESH_SHA = self.m.sha(path)
+            with self.assertRaises(self.m.GuardRejectedError):
+                self.m.limited_source_review(value)
+
+    def test_pending_reference_or_tamper_refused(self):
+        value = self.source_fixture()
+        value["source_rebind_evidence"]["sha256"] = None
+        with self.assertRaisesRegex(self.m.GuardRejectedError, "pending"):
+            self.m.limited_source_review(value)
+        value = self.source_fixture()
+        path = Path(value["source_limited_decisions"]["fresh_producer"]["path"])
+        path.write_bytes(path.read_bytes() + b" ")
+        with self.assertRaisesRegex(self.m.GuardRejectedError, "bytes"):
+            self.m.limited_source_review(value)
+
+    def test_actual_false_candidate_never_reads_source_or_launches(self):
+        module = load()
+        candidate = D / "task-5-full-pilot-root-launch-guard-candidate-v6-v2.json"
+        with (
+            patch.object(
+                module, "limited_source_review", side_effect=AssertionError("source read")
+            ),
+            patch.object(
+                module.subprocess, "Popen", side_effect=AssertionError("financial launch")
+            ),
+        ):
+            with self.assertRaisesRegex(module.GuardRejectedError, "root prior approval"):
+                module.run(candidate)
+
+    def test_actual_fresh_source_only_decision_and_evidence_authenticate(self):
+        module = load()
+        value = json.loads(
+            (D / "task-5-full-pilot-root-launch-guard-candidate-v6-v2.json").read_text()
+        )
+        actual = module.limited_source_review(value)
+        self.assertEqual(set(actual), {"fresh_producer"})
+        self.assertFalse(value["root_preapproved"])
+        self.assertFalse(value["formal_financial_launch_authorized"])
+        self.assertIsNone(value["approved_budget_bindings"])
+
+    def test_pending_full_budget_or_source_review_cannot_authorize_budget(self):
+        value = self.source_fixture()
+        value["budget_supplement"] = {}
+        value["budget_supplement_manifest"] = {}
+        for ref in [
+            {"status": "pending", "path": None, "sha256": None},
+            value["source_limited_decisions"]["fresh_producer"],
+        ]:
+            value["full_budget_and_cap_recipe_review"] = ref
+            original = self.m.fixed_reference
+
+            def closed_only(spec, *args, historical=False, _original=original, **kwargs):
+                if historical:
+                    return {}
+                return _original(spec, *args, **kwargs)
+
+            with patch.object(self.m, "fixed_reference", closed_only):
+                with self.assertRaisesRegex(self.m.GuardRejectedError, "all3138|whole budget"):
+                    self.m.actual_budget_review(value)
+
+    def test_original_stop_clock_and_unknown_functions_unchanged(self):
+        old = {n.name: n for n in ast.parse(OLD.read_text()).body if isinstance(n, ast.FunctionDef)}
+        new = {
+            n.name: n for n in ast.parse(MONITOR.read_text()).body if isinstance(n, ast.FunctionDef)
+        }
+        for name in [
+            "digest",
+            "sha",
+            "clock",
+            "save",
+            "require",
+            "absolute",
+            "positive",
+            "tree_binding",
+            "rss",
+            "volume_sample",
+            "choose_stop",
+            "terminal_status",
+            "main",
+        ]:
+            self.assertEqual(ast.dump(old[name]), ast.dump(new[name]), name)
+        candidate_run = copy.deepcopy(new["run"])
+        command = next(
+            n
+            for n in ast.walk(candidate_run)
+            if isinstance(n, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == "command" for t in n.targets)
+        )
+        command.value.elts = [
+            x
+            for x in command.value.elts
+            if not (isinstance(x, ast.Constant) and x.value == "--bounded")
+        ]
+        self.assertEqual(ast.dump(old["run"]), ast.dump(candidate_run))
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--result", required=True)
+    args = parser.parse_args()
+    start, cpu = time.perf_counter_ns(), time.process_time_ns()
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(MonitorTests)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    value = {
+        "status": "PASS" if result.wasSuccessful() else "FAIL",
+        "tests": result.testsRun,
+        "failures": len(result.failures),
+        "errors": len(result.errors),
+        "monitor_sha256": load().sha(MONITOR),
+        "preflight_sha256": load().sha(__file__),
+        "actual_financial_Popen_calls": 0,
+        "native_financial_decode_hash_calls": 0,
+        "synthetic_argv_Popen_stub_only": True,
+        "actual_root_metadata_or_prior_validated": False,
+        "financial_qualification": "unknown",
+        "actual_financial_launch_authorized": False,
+        "cost": {
+            "outer_wall_seconds": (time.perf_counter_ns() - start) / 1e9,
+            "process_cpu_seconds": (time.process_time_ns() - cpu) / 1e9,
+            "kernel_peak_RSS_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+            "own_receipt_write_stdout_tail_seconds": None,
+        },
+    }
+    out = Path(args.result)
+    with out.open("x") as stream:
+        json.dump(value, stream, indent=2, allow_nan=False)
+        stream.write(chr(10))
+    return 0 if result.wasSuccessful() else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,62 @@
+{
+  "schema": "rb-f04-root-source85-actual-prior-materialization-physical-bindings-v1",
+  "created_utc": "2026-10-11T04:02:34.617379+00:00",
+  "status": "PASS",
+  "scope": "metadata/source/authority bytes and original scope only; financial pilot/acceptance not authorized",
+  "materialized_output": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v6",
+  "manifest_sha256": "b98030a81e1ff140909fd5e68ef1587c8c90a6be828cff17e82ed8cb466f218f",
+  "progress_sha256": "17bf3343af15c26100a046b07d050001915e5e1afc37c980a5b790bcf5b9c242",
+  "physical_manifest_files": 102,
+  "physical_manifest_bytes": 17054161,
+  "all_manifest_original_bytes_verified": true,
+  "source85_current_snapshot_and_closed_identity_equal": true,
+  "original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "teachers": 20,
+    "drivers": 10,
+    "literal_cap_options": 573122
+  },
+  "actual_root_metadata_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v4.json",
+    "sha256": "6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815"
+  },
+  "full_prior_independent_sha256": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223",
+  "external10_pending_unknown_preserved": true,
+  "root_source85_before_after_stable": true,
+  "metadata_outer_terminal": {
+    "schema": "rb-f04-root-metadata-materialization-enclosing-cost-v1",
+    "status": "completed",
+    "argv": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+      "--approval",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v4.json",
+      "--out",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v6"
+    ],
+    "child_pid": 469868,
+    "exit_code": 0,
+    "cap": null,
+    "root_approval_sha256": "6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815",
+    "start_UTC": "2026-10-11T03:54:41.257657+00:00",
+    "end_UTC": "2026-10-11T04:01:42.383389+00:00",
+    "wall_seconds": 421.12338797800476,
+    "parent_CPU_seconds": 0.727224486,
+    "children_CPU_seconds": 417.557362,
+    "sampled_child_peak_individual_process_RSS_bytes": 3480481792,
+    "child_kernel_peak_RSS_bytes": 4356956160,
+    "sampled_parent_peak_RSS_bytes": 34582528,
+    "observations": 420,
+    "scope": "metadata generation including source/input checks, exact cap expansion, artifact writer and manifest; not financial RNG/SDE or any numerical acceptance",
+    "financial_workers": 0,
+    "financial_qualification": "unknown",
+    "own_final_receipt_write_stdout_cost": null
+  },
+  "metadata_verification_wall_seconds_before_final_write": 0.020101422007428482,
+  "financial_pilot_started": false,
+  "financial_acceptance": false,
+  "old_source82_raw_prior_faults_changed": false,
+  "whole_phase_capacity_runtime_RSS_guaranteed": false
+}

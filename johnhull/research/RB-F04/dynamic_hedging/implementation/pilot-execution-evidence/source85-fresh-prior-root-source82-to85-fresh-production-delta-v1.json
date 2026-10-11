@@ -1,0 +1,85 @@
+{
+  "schema": "rb-f04-source82-to85-fresh-source-delta-v1",
+  "created_utc": "2026-10-11T03:31:07.981295+00:00",
+  "old_source_plain_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "old_source_native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "current_source_plain_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "current_source_native_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "old_closure_file": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json",
+  "old_closure_file_sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5",
+  "current_closure_file": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+  "current_closure_file_sha256": "30a1dd351af3814eecfcece69f99f8f60a21665e5d957d039bbde71746ffd0af",
+  "source_files": 85,
+  "dynamic_imports": [],
+  "identity_metadata_delta": {
+    "files": {
+      "added": [
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py",
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_report.py",
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_storage.py"
+      ],
+      "removed": [],
+      "changed": [
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+      ]
+    },
+    "protocol_source": {
+      "added": [
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py",
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_report.py",
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_storage.py"
+      ],
+      "removed": [],
+      "changed": [
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+      ]
+    },
+    "local_import_graph": {
+      "added": [
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py",
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_report.py",
+        "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_storage.py"
+      ],
+      "removed": [],
+      "changed": [
+        "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+        "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py"
+      ]
+    }
+  },
+  "metadata_fields_changed": [
+    "files",
+    "protocol_source",
+    "local_import_graph"
+  ],
+  "before_after_stable": true,
+  "old_partial_resumed_or_relabelled": false,
+  "resource_prior_or_financial_launch_approval": false,
+  "financial_qualification": "unknown",
+  "financial_RNG_SDE_solver_worker_calls": 0,
+  "original_counts": {
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "literal_cap_options": 573122,
+    "potential_first_activation_jobs": 2332,
+    "external_unknown_expenses": 10,
+    "thresholds": 65,
+    "blocks": 16
+  },
+  "original_teacher_N": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "preserved_fields": [
+    "environment",
+    "environment_sha256",
+    "dynamic_imports",
+    "boundary"
+  ],
+  "source_delta_scope": "Current production source bytes and import metadata only; no financial/rate/budget/launch/phase authority"
+}

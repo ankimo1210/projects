@@ -1,0 +1,85 @@
+{
+  "status": "PASS",
+  "unittest_methods": 7,
+  "mutation_subcases": 32,
+  "test_exit": 0,
+  "test_wall_seconds": 0.7230176279990701,
+  "test_log": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-green-v2.log.txt",
+    "sha256": "ab3bd4be2fdafc468a034bbb2abe0959f44e3168447c0bf225c52265f1e5852d"
+  },
+  "materializer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+    "sha256": "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a"
+  },
+  "ruff": [
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "--fix",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-preflight.py"
+      ],
+      "exit_code": 0,
+      "output": "Found 2 errors (2 fixed, 0 remaining).\n"
+    },
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-preflight.py"
+      ],
+      "exit_code": 0,
+      "output": "2 files left unchanged\n"
+    },
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "check",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-preflight.py"
+      ],
+      "exit_code": 0,
+      "output": "All checks passed!\n"
+    },
+    {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-preflight.py"
+      ],
+      "exit_code": 0,
+      "output": "2 files already formatted\n"
+    }
+  ],
+  "unchanged_AST_functions": [
+    "require",
+    "file_sha",
+    "digest",
+    "read",
+    "inside_d",
+    "checked_file",
+    "positive",
+    "load_actual_approval",
+    "_historical_source_evidence",
+    "_previous_rebind_source_evidence",
+    "assembly_review_basis",
+    "validate_assembly_binding",
+    "normalized_budget_rows",
+    "cap_recipe_payload",
+    "import_module",
+    "prediction_work",
+    "numeric_bytes",
+    "validate_budget_rows",
+    "approved_binding_set",
+    "write_json",
+    "cli"
+  ],
+  "unchanged_AST_function_count": 21,
+  "financial_RNG_SDE_solver_worker_calls": 0,
+  "formal_prior_or_financial_launch_approved": false
+}

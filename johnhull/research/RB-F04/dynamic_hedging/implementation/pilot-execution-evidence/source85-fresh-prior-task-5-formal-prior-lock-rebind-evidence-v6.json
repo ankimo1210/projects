@@ -1,0 +1,71 @@
+{
+  "schema": "rb-f04-source85-fresh-prior-rebind-evidence-v1",
+  "created_utc": "2026-10-11T03:33:06.499935+00:00",
+  "financial_qualification": "unknown",
+  "all3138_budget_and_cap_recipe_approved": false,
+  "formal_phase_approved": false,
+  "formal_financial_launch_authorized": false,
+  "old_partial_resumed_or_relabelled": false,
+  "fresh_source_metadata_output_only": true,
+  "source_canonical_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "source_native_payload_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "previous_source_canonical_sha256": "75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e",
+  "previous_source_native_payload_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "original_counts": {
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "literal_cap_options": 573122,
+    "potential_first_activation_jobs": 2332,
+    "external_unknown_expenses": 10,
+    "thresholds": 65,
+    "blocks": 16
+  },
+  "original_teacher_N": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "historical_materializer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py",
+    "sha256": "b505500d6c8c3601fd8e04e22d15a2beac41c9e3bae48bfcc7aee5c39236a83a"
+  },
+  "historical_full_prior_decision": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v5-decision-v1.json",
+    "sha256": "5cb82ff33fcca56bbbda87939cea53bc3caec43149df8cedbda5c5be51376b24"
+  },
+  "historical_root_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v3.json",
+    "sha256": "a3cc7cfc6c39b29465634b7c953506f9c4e987060cf043fd7515b8c818f8e55e"
+  },
+  "previous_source_reference": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/current-production-source-closure-v1.json",
+    "sha256": "248b448a3e18b7706620d57a1b94f60672fcec5017c1c6a28b7f133610e934f5"
+  },
+  "previous_source_rebind_evidence": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v5.json",
+    "sha256": "d5eab8376c819367defb650f228a0cb844fe4588b77c3f09464f9e18785e9571"
+  },
+  "current_source_reference": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+    "sha256": "30a1dd351af3814eecfcece69f99f8f60a21665e5d957d039bbde71746ffd0af"
+  },
+  "root_source_delta": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source82-to85-fresh-production-delta-v1.json",
+    "sha256": "354a2ee17a9f0f06609e82018d93454a8e9443681c32f0ba92d8d1b27e446148"
+  },
+  "source_limited_decisions": {
+    "fresh_producer": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source85-fresh-producer-limited-decision-v1.json",
+      "sha256": "3831886d1d9df4700995ba0fb75d2994cefa0ccd958047c20507e0f1f6609d62",
+      "status": "approved"
+    }
+  },
+  "old_full_prior_can_authenticate_new_source": false,
+  "new_full_prior_review_required": true,
+  "new_root_prior_approval_required": true,
+  "lock_worker_RNG_SDE_solver_Popen_calls": 0,
+  "original_fault_unknown_cost_history": "Original source82 partial213/fault214 and16GiB saved-check stop remain separate immutable evidence; metadata recipe/rates/inputs/historical costs unchanged; no old raw relabel or resume",
+  "saved_only_authority_used_as_fresh_authority": false
+}

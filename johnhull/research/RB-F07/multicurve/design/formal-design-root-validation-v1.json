@@ -1,0 +1,33 @@
+{
+  "schema": "rb-f07-multicurve-formal-design-root-validation-v1",
+  "utc": "2026-10-11T04:21:22.204197+00:00",
+  "status": "PASS",
+  "local_canonical_markdown_links_exist": true,
+  "four_reviewed_candidate_evidence_copies_exact_bytes": true,
+  "decision_scope": "design_contract_only",
+  "critical": 0,
+  "important": 0,
+  "minor": 1,
+  "canonical_deltas": "status/title, canonical links, M1 original12quote/24quote full Hessian shared recalibration cost, canonical Markdown hard breaks represented with blank-line paragraph spacing",
+  "original_scope_preserved": true,
+  "source85_current_files_equal_frozen_closure": true,
+  "source85_file_count": 85,
+  "production_code_public_API_dependencies_changed": false,
+  "financial_RNG_solver_or_pytest_ruff_executed": false,
+  "prior_regression_evidence_reused": "326 scoped regression tests, not rerun for text-only checkpoint",
+  "numerical_resource_launch_phase_main_approval": false,
+  "git_diff_check": "unstaged existing tracked text PASS; staged raw provenance has intentional original whitespace; see split final checks",
+  "initial_staged_diff_check_failure_preserved": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-staged-whitespace-initial-check-v1.json",
+    "sha256": "af966c5d8826ac636d730aac76c2f0e12e7ce4b8383c7e6ef5a8195e19918f72",
+    "exit": 2
+  },
+  "exact_byte_provenance_whitespace_paths": [
+    "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-full-pilot-root-operational-monitor-v6-source.diff.txt",
+    "johnhull/research/RB-F07/multicurve/design/multicurve-formal-plan-candidate-v1.md",
+    "johnhull/research/RB-F07/multicurve/design/multicurve-formal-design-independent-review-v1.md"
+  ],
+  "exact_byte_provenance_check_override": "command-only core.whitespace=-blank-at-eol,-blank-at-eof on these 3 exact copies only; no Git configuration changed",
+  "staged_canonical_and_other_files_diff_check": "PASS standard default whitespace",
+  "staged_exact_byte_provenance_files_diff_check": "PASS command-only intentional whitespace exception on named files"
+}

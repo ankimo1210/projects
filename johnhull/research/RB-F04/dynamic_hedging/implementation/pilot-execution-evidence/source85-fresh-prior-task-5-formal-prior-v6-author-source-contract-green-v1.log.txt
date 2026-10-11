@@ -1,0 +1,11 @@
+test_absent_extra_pending_or_stale_review_reference_is_rejected (__main__.Contract.test_absent_extra_pending_or_stale_review_reference_is_rejected) ... ok
+test_changed_scope_or_history_is_rejected (__main__.Contract.test_changed_scope_or_history_is_rejected) ... ok
+test_current_fresh_source_decision_is_consumed (__main__.Contract.test_current_fresh_source_decision_is_consumed) ... ok
+test_pending_or_absent_root_approval_never_materializes (__main__.Contract.test_pending_or_absent_root_approval_never_materializes) ... ok
+test_rebind_preserves_full_roster_and_original_history (__main__.Contract.test_rebind_preserves_full_roster_and_original_history) ... ok
+test_wrong_decision_scope_or_authority_is_rejected (__main__.Contract.test_wrong_decision_scope_or_authority_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.689s
+
+OK

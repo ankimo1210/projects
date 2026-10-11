@@ -1,0 +1,41 @@
+{
+  "schema": "rb-f07-multicurve-formal-design-root-adoption-v1",
+  "created_utc": "2026-10-11T04:16:30.287870+00:00",
+  "reviewed_candidates_original_bytes": {
+    "multicurve-formal-design-candidate-v1.md": {
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/multicurve-formal-design-candidate-v1.md",
+      "saved": "johnhull/research/RB-F07/multicurve/design/multicurve-formal-design-candidate-v1.md",
+      "sha256": "c4cb01211d607c8dad81798f425f654004a98a655b917d88bccc828e9c9a570f",
+      "bytes": 17086
+    },
+    "multicurve-formal-plan-candidate-v1.md": {
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/multicurve-formal-plan-candidate-v1.md",
+      "saved": "johnhull/research/RB-F07/multicurve/design/multicurve-formal-plan-candidate-v1.md",
+      "sha256": "bf7f6b67d5ad247d21e707b655e9e7b27a1c228c2915705643a48a2881f53b66",
+      "bytes": 23900
+    },
+    "multicurve-formal-design-independent-review-v1.md": {
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/multicurve-formal-design-independent-review-v1.md",
+      "saved": "johnhull/research/RB-F07/multicurve/design/multicurve-formal-design-independent-review-v1.md",
+      "sha256": "ac81addb2294755a937d26eab9f54b285d493d918b59193b037ce0417ca4d9a3",
+      "bytes": 9580
+    },
+    "multicurve-formal-design-independent-decision-v1.json": {
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/multicurve-formal-design-independent-decision-v1.json",
+      "saved": "johnhull/research/RB-F07/multicurve/design/multicurve-formal-design-independent-decision-v1.json",
+      "sha256": "99cbd9553fbb966039d7c64a842cc62133bde3bab74ac75257b723fb69f77fec",
+      "bytes": 5826
+    }
+  },
+  "design_contract_independent_approval": "99cbd9553fbb966039d7c64a842cc62133bde3bab74ac75257b723fb69f77fec",
+  "root_adopted_original_scope": true,
+  "minor_M1_implementation_protocol_counts_explicit": true,
+  "changes_to_candidates_in_canonical_docs": [
+    "status/title and repository links",
+    "explicit original12H and24scaling finite difference revaluation counts; common calibration/product PV costs"
+  ],
+  "original_RESEARCH_and_earlier_reviews_changed": false,
+  "financial_workers_RNG_solver_tests": 0,
+  "implementation_source_resource_prior_launch_phase_approved": false,
+  "source85_runtime_changes": false
+}

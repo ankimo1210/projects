@@ -1,0 +1,39 @@
+test_absent_extra_pending_or_stale_review_reference_is_rejected (__main__.Contract.test_absent_extra_pending_or_stale_review_reference_is_rejected) ... ok
+test_changed_scope_or_history_is_rejected (__main__.Contract.test_changed_scope_or_history_is_rejected) ... ok
+test_current_fresh_source_decision_is_consumed (__main__.Contract.test_current_fresh_source_decision_is_consumed) ... ERROR
+test_pending_or_absent_root_approval_never_materializes (__main__.Contract.test_pending_or_absent_root_approval_never_materializes) ... ok
+test_rebind_preserves_full_roster_and_original_history (__main__.Contract.test_rebind_preserves_full_roster_and_original_history) ... ERROR
+test_wrong_decision_scope_or_authority_is_rejected (__main__.Contract.test_wrong_decision_scope_or_authority_is_rejected) ... ok
+
+======================================================================
+ERROR: test_current_fresh_source_decision_is_consumed (__main__.Contract.test_current_fresh_source_decision_is_consumed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-preflight.py", line 32, in test_current_fresh_source_decision_is_consumed
+    values = module._source_decision_values(refs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py", line 210, in _source_decision_values
+    require(isinstance(refs,dict) and set(refs)=={"codec","stage"},
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py", line 71, in require
+    if not value:raise ValueError(message)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: both actual limited codec and stage source decisions required
+
+======================================================================
+ERROR: test_rebind_preserves_full_roster_and_original_history (__main__.Contract.test_rebind_preserves_full_roster_and_original_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-v6-author-source-contract-preflight.py", line 59, in test_rebind_preserves_full_roster_and_original_history
+    evidence, source = module.rebind_source_evidence()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py", line 334, in rebind_source_evidence
+    require(all(file_sha(WT/key)==value for key,value in current["files"].items()),
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v5.py", line 71, in require
+    if not value:raise ValueError(message)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: actual W2 production source bytes changed since limited source review
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.708s
+
+FAILED (errors=2)
