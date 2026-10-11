@@ -1,0 +1,51 @@
+{
+  "schema": "rb-h09-incremental-xva-formal-design-root-adoption-v1",
+  "utc": "2026-10-11T04:26:45.212531+00:00",
+  "reviewed_candidates_original_bytes": {
+    "incremental-xva-formal-design-candidate-v1.md": {
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/incremental-xva-formal-design-candidate-v1.md",
+      "saved": "johnhull/research/RB-H09/incremental_xva/design/incremental-xva-formal-design-candidate-v1.md",
+      "sha256": "9258819a189bbfefaa1dd82c4edc0895fc0a58c7abe0120bfa9298a261a3a399",
+      "bytes": 24575
+    },
+    "incremental-xva-formal-plan-candidate-v1.md": {
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/incremental-xva-formal-plan-candidate-v1.md",
+      "saved": "johnhull/research/RB-H09/incremental_xva/design/incremental-xva-formal-plan-candidate-v1.md",
+      "sha256": "2ddb3feb4d98ef4cc8fc72194a0ebb072095ea9d6fdf8f65338c8abbbee8e36d",
+      "bytes": 20721
+    },
+    "incremental-xva-formal-design-independent-review-v1.md": {
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/incremental-xva-formal-design-independent-review-v1.md",
+      "saved": "johnhull/research/RB-H09/incremental_xva/design/incremental-xva-formal-design-independent-review-v1.md",
+      "sha256": "6ec2a75d5ae83609fa5f9ce6491e5f013af57aa6e57d45bf1b46cbbfae843c50",
+      "bytes": 11992
+    },
+    "incremental-xva-formal-design-independent-decision-v1.json": {
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/incremental-xva-formal-design-independent-decision-v1.json",
+      "saved": "johnhull/research/RB-H09/incremental_xva/design/incremental-xva-formal-design-independent-decision-v1.json",
+      "sha256": "b7ffa1720a8fa504c60aa2174bbd66c60fad6ebaf420c6c61672809807779eca",
+      "bytes": 8048
+    }
+  },
+  "decision_scope": "design_contract_only",
+  "independent_decision_sha256": "b7ffa1720a8fa504c60aa2174bbd66c60fad6ebaf420c6c61672809807779eca",
+  "canonical_deltas": [
+    "title/status/canonical links and paragraph spacing",
+    "M1 normal multiple legal sets each with one CSA supported; only unimplemented complex coverage unsupported",
+    "Task1/6 positive bundle d and negative duplicate coverage tests"
+  ],
+  "original_scope_preserved": true,
+  "main_cells": 32,
+  "outer_seeds": 3,
+  "main_seed_cells": 96,
+  "sequence": [
+    9,
+    10,
+    11
+  ],
+  "simultaneous_financial_research_workers": 1,
+  "source85_financial_RNG_solver_tests_changes": false,
+  "source_resource_numerical_launch_regulatory_phase_main_approval": false,
+  "capacity_ETA_measured_or_guaranteed": false,
+  "canonical_parent_commit": "3cbba53041fad7ab02f98461f62b104013e3e641"
+}

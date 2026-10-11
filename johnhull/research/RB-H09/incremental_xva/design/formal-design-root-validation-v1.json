@@ -1,0 +1,34 @@
+{
+  "schema": "rb-h09-incremental-xva-formal-design-root-validation-v1",
+  "utc": "2026-10-11T04:28:42.546286+00:00",
+  "status": "PASS",
+  "independent_canonical_readonly_reviewer": "multicurve_design_review",
+  "independent_canonical_verdict": "M1 resolved in documents; original full scope preserved; status/links/M1 only",
+  "canonical_document_sha256": {
+    "DESIGN.md": "0d5dc18c1e8d618f8a60727ac28d7bbce5f25244626c77987ed8556dc1ffd43c",
+    "IMPLEMENTATION_PLAN.md": "0d3c5bb6723b71d333c2c5a12ae3d8b24b9d4b6a2a7dc051ddc9591a6c964664"
+  },
+  "original_four_candidate_review_decision_copies_exact": true,
+  "main_cells": 32,
+  "outer_seeds": 3,
+  "main_seed_cells": 96,
+  "normal_bundle_d_different_set_CSA_supported": true,
+  "unsupported_unimplemented_duplicate_coverage_and_crossset_shared_collateral": true,
+  "Task1_Task6_positive_d_negative_duplicate_coverage_gates": true,
+  "local_canonical_markdown_links_exist": true,
+  "original_source85_85_files_unchanged": true,
+  "source_financial_RNG_solver_or_pytest_ruff_executed": false,
+  "implementation_not_started": true,
+  "decision_scope": "design_contract_only",
+  "numerical_resource_launch_regulatory_phase_main_approval": false,
+  "ETA_capacity_measurements_not_available": true,
+  "saved_verifier_85801_still_live_and_no_fresh_launch_granted": true,
+  "staged_canonical_and_other_paths_whitespace": "PASS standard default (10 paths)",
+  "exact_byte_review_whitespace": "PASS command-only core.whitespace=-blank-at-eof for original review (1 path); no config/byte change",
+  "initial_staged_check_preserved": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-xva-staged-whitespace-initial-check-v1.json",
+    "sha256": "c9fa30c8166d1737bcd9122569b9e4b3657cb86f689ea2517d1b85c83eecd45c",
+    "exit": 2,
+    "reason": "new blank line at EOF in original review"
+  }
+}

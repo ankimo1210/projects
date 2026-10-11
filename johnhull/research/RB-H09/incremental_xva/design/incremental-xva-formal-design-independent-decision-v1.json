@@ -1,0 +1,212 @@
+{
+  "schema": "rb-h09-incremental-xva-formal-design-independent-review-v1",
+  "created_at_utc": "2026-10-11T04:24:29.871721+00:00",
+  "reviewer": "multicurve_design_review",
+  "reviewer_role": "independent_formal_design_contract_reviewer",
+  "decision": "approved",
+  "scope": "design_contract_only",
+  "critical_count": 0,
+  "important_count": 0,
+  "minor_count": 1,
+  "findings": [
+    {
+      "id": "M1",
+      "severity": "Minor",
+      "title": "Define unsupported multiple-CSA coverage without excluding the required client/dealer book",
+      "design_lines": [
+        95,
+        120,
+        122
+      ],
+      "plan_lines": [
+        94,
+        95
+      ],
+      "risk": "A book-wide CSA-count restriction would drop the required bundle d, its dealer capital and 8 main cells times 3 seeds.",
+      "required_before": "Task1 terms and Task6 capital implementation",
+      "fix": "Support multiple legal sets/counterparties each with one CSA. Unsupported covers only unimplemented complex margin coverage within a legal set or collateral shared across sets. Add a positive client/dealer separate-CSA case and a negative duplicate-coverage case.",
+      "primary_clauses": [
+        "CRE52.1",
+        "CRE52.74",
+        "CRE52.75"
+      ],
+      "blocks_design_approval": false
+    }
+  ],
+  "scope_preservation": {
+    "main_bundles": [
+      "a",
+      "b",
+      "c",
+      "d"
+    ],
+    "main_csa_families": 4,
+    "cost_policies": 2,
+    "main_cells": 32,
+    "independent_outer_seeds": 3,
+    "main_seed_cells": 96,
+    "same_set_heterogeneous_maturity_hedge_c": true,
+    "same_hedge_separate_nonnettable_set_validation": true,
+    "fully_margined_dealer_hedge_d": true,
+    "original_before_after_standalone_bundle_outputs": true,
+    "credit_components": [
+      "CVA",
+      "DVA"
+    ],
+    "margin": [
+      "VM",
+      "MPOR",
+      "posted_IM",
+      "received_IM"
+    ],
+    "cost_components": [
+      "FCA",
+      "FBA",
+      "MVA",
+      "KVA",
+      "COLVA"
+    ],
+    "capital": [
+      "SA-CCR linear single-currency IRS subset",
+      "reduced BA-CVA"
+    ],
+    "full_original_irs_capital_scope": true,
+    "non_simm_im": true,
+    "independent_oracles_preserved": true,
+    "saved_fresh_primary_and_mirror_semantic_restore": true,
+    "all_original_failures_unknown_denominators_costs": true,
+    "artifact_only_required_figures": 3,
+    "research_adoption_required": true,
+    "no_new_multicurve_source_api_dependency": true,
+    "sequence": [
+      9,
+      10,
+      11
+    ],
+    "simultaneous_financial_research_workers": 1,
+    "no_scope_reduction_authorized": true
+  },
+  "mathematical_review": {
+    "credit_and_cost_signs_consistent": true,
+    "event_order_and_pending_settled_boundary_explicit": true,
+    "account_specific_stop_times_preserved": true,
+    "first_to_default_and_joint_discount_loss_preserved": true,
+    "posted_im_no_double_subtraction": true,
+    "received_im_not_funding_cash": true,
+    "segregated_posted_im_not_nica": true,
+    "capital_funding_benefit_no_double_count": true,
+    "k_cva_no_extra_eight_percent": true,
+    "conditional_rank_all_roots_tail_and_point_mass_gates": true,
+    "paired_independent_units_required": true,
+    "actual_complete_effect_unverified": true
+  },
+  "regulatory_primary_sources_rechecked": [
+    {
+      "id": "CRE52",
+      "fixed_url": "https://www.bis.org/committees/bcbs/basel-framework/standard/cre/52/inforce/2023-01-01/published/2020-06-05",
+      "clauses": [
+        "52.1-2",
+        "52.17-18",
+        "52.22-23",
+        "52.74-75"
+      ],
+      "scope": "text boundaries only; formula images and source implementation are future gates"
+    },
+    {
+      "id": "MAR50",
+      "fixed_url": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/50/inforce/2023-01-01/published/2020-07-08",
+      "clauses": [
+        "50.14",
+        "50.15",
+        "50.16"
+      ],
+      "scope": "counterparty aggregation, maturity reference and selected scope only"
+    },
+    {
+      "id": "CRE32",
+      "fixed_url": "https://www.bis.org/committees/bcbs/basel-framework/standard/cre/32/inforce/2023-01-01/published/2020-03-27",
+      "clauses": [
+        "32.46",
+        "32.49",
+        "32.51"
+      ],
+      "scope": "effective maturity floor, weighting and eligibility text only"
+    },
+    {
+      "id": "CRE99",
+      "fixed_url": "https://www.bis.org/committees/bcbs/basel-framework/standard/cre/99/inforce/2023-01-01/published/2020-03-27",
+      "clauses": [
+        "99.22",
+        "99.29",
+        "99.31",
+        "99.32"
+      ],
+      "scope": "USD IRS trade-level subset only; not whole mixed-currency swaption EAD reproduction"
+    }
+  ],
+  "sources": {
+    "formal_design": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/incremental-xva-formal-design-candidate-v1.md",
+      "sha256": "9258819a189bbfefaa1dd82c4edc0895fc0a58c7abe0120bfa9298a261a3a399",
+      "bytes": 24575
+    },
+    "formal_plan": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/incremental-xva-formal-plan-candidate-v1.md",
+      "sha256": "2ddb3feb4d98ef4cc8fc72194a0ebb072095ea9d6fdf8f65338c8abbbee8e36d",
+      "bytes": 20721
+    },
+    "research_readme": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-H09/incremental_xva/README.md",
+      "sha256": "8f67cbe834a419d6e848d1fd3d41f58c164c662e01a930a314f57d815c33d6e0",
+      "bytes": 1025
+    },
+    "research": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-H09/incremental_xva/RESEARCH.md",
+      "sha256": "6c1b00fb66dc4b9c93f4393a3a135e24067d71d008cabf0a80bf7d8fb00a193a",
+      "bytes": 26714
+    },
+    "reviewed_research_v2": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-H09/incremental_xva/design/reviewed-research-v2.md",
+      "sha256": "d6dec17ae4d23b8d03130d06aecbc9a577c873809d10bd1aaf83218a28b6d878",
+      "bytes": 26682
+    },
+    "initial_independent_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/docs/superpowers/reviews/2026-10-09-next-research-design-review.md",
+      "sha256": "eb6b5b5ac928e48e4185b82a51e73df861ea4d84a4df0b01e8ea507de511e3ac",
+      "bytes": 6094
+    },
+    "independent_rereview": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/docs/superpowers/reviews/2026-10-09-next-research-design-rereview.md",
+      "sha256": "6a1e4daa866e02594b87cc80b0ef898c58d609d2ce93ca7e60a6f3cf8300d016",
+      "bytes": 2334
+    },
+    "initial_independent_review_metadata": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/docs/superpowers/reviews/2026-10-09-next-research-design-review.json",
+      "sha256": "c26c24003099d426bb095a94a5f586fd16ec729d56662ec2e0429ef62fad63e6",
+      "bytes": 8520
+    },
+    "flat_hw_coordinate_source": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/src/hullkit/_numeraire_choices.py",
+      "sha256": "1dcee8c8dd2457a3a371818acb90b16da13ba762091f26079e0e10c42fb1219a",
+      "bytes": 11622
+    }
+  },
+  "review_report": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/incremental-xva-formal-design-independent-review-v1.md",
+    "sha256": "6ec2a75d5ae83609fa5f9ce6491e5f013af57aa6e57d45bf1b46cbbfae843c50",
+    "bytes": 11992
+  },
+  "candidate_canonical_and_source_files_unchanged": true,
+  "production_or_live_worker_modified": false,
+  "financial_calculation_executed": false,
+  "rng_solver_mc_executed": false,
+  "pytest_ruff_executed": false,
+  "git_or_cas_modified": false,
+  "source_implementation_approved": false,
+  "resource_budget_prior_approved": false,
+  "pilot_main_launch_approved": false,
+  "financial_numerical_acceptance_approved": false,
+  "regulatory_compliance_approved": false,
+  "phase_or_main_acceptance_approved": false,
+  "capacity_or_runtime_guaranteed": false
+}
