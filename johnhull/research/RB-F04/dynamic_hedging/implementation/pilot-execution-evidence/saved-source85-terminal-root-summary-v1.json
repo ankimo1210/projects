@@ -1,0 +1,1057 @@
+{
+  "schema": "rb-f04-source85-saved-terminal-root-readonly-summary-v1",
+  "observed_UTC": "2026-10-11T09:26:16.495857+00:00",
+  "session": 85801,
+  "tool_exit_code": 1,
+  "monitor_exit_code": 3,
+  "financial_child_exit_code": -9,
+  "status": "administrative_partial_unclosed",
+  "stop_reason": {
+    "free_bytes": 10711044096,
+    "id": "C",
+    "metric": "volume_reserve",
+    "observed_clock": {
+      "cpu": 117.76445358,
+      "utc": "2026-10-11T09:14:57.588209+00:00",
+      "wall": 106767.078067548
+    },
+    "path": "/mnt/c",
+    "reserve_bytes": 10737418240
+  },
+  "terminal_receipts": [
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-observation-v3/before-bindings-and-command.json",
+      "archive_path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-source85-terminal-before-v1.json",
+      "sha256": "9c58edf2753ca39b22403b39625d5200a0f03b71b70c6274088b81b257d09e4d",
+      "bytes": 31626
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-observation-v3/after-bindings.json",
+      "archive_path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-source85-terminal-after-v1.json",
+      "sha256": "e5d87da8e38f86eae75b282ac5c5e215176bdde798e2ee27782b2443d328451d",
+      "bytes": 29920
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-observation-v3/parent-cost-and-status.json",
+      "archive_path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-source85-terminal-inner-v1.json",
+      "sha256": "8ca86111b78a153433fb78e74e8050ddd4ded619e1923f720fac89c89bc783b3",
+      "bytes": 4678
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-enclosing-observation-v3/parent-cost-and-status.json",
+      "archive_path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-source85-terminal-enclosing-v1.json",
+      "sha256": "2a5e51fee25d1ddaf9c0567cff425bb39085f05cf2939b3aa763ffbf4959871d",
+      "bytes": 4051
+    },
+    {
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-full-child-observation-v2/full-child-expense.json",
+      "archive_path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-source85-terminal-whole-expense-v1.json",
+      "sha256": "b9b44197819ef3ed91f84c4123c548543c83847e1cf1d1b9a8a7219bf09d1056",
+      "bytes": 17330
+    }
+  ],
+  "before_after_bindings_equal": true,
+  "source_file_count": 85,
+  "current_source_hashes_equal_original_verifier": true,
+  "original_native_unchanged_recorded": true,
+  "original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ]
+  },
+  "original_producer_history": {
+    "executed_jobs": 213,
+    "faulted_job_ordinal": 214,
+    "qualification": "unknown",
+    "unchanged": true
+  },
+  "closed_check_manifest_count": 133,
+  "manifest_metadata": [
+    {
+      "name": "manifest000001.json",
+      "sha256": "f176f64aa32bf3ca64719d0661b59576d2b1980851fc20c5b9a0105cf95091be",
+      "ids": [
+        "field-current"
+      ]
+    },
+    {
+      "name": "manifest000002.json",
+      "sha256": "ce7f08b607801f39079d3fb7e07631e7e8a85629de84bdee9a76f44df240167c",
+      "ids": [
+        "premium-current"
+      ]
+    },
+    {
+      "name": "manifest000003.json",
+      "sha256": "e04a6bdd5f3b7100628edbd0b4ff11753a514e640f5ad5cc7570e418c9a5782a",
+      "ids": [
+        "call-current:Heston"
+      ]
+    },
+    {
+      "name": "manifest000004.json",
+      "sha256": "bea425237341b7e0327955210ceba224c7e3ae0add3bd2afee01d9ca84e5e2c1",
+      "ids": [
+        "call-current:local"
+      ]
+    },
+    {
+      "name": "manifest000005.json",
+      "sha256": "da41091191c5580bb75957ad4396d9e23fbe75113ce458675add06b62aaf1c3d",
+      "ids": [
+        "teacher-driver:Heston:N1024"
+      ]
+    },
+    {
+      "name": "manifest000006.json",
+      "sha256": "0255a9082d5f2285bd522dfc9b2f980ae61b5d13044ea2c510cd01f5329c5623",
+      "ids": [
+        "teacher-driver:local:N1024"
+      ]
+    },
+    {
+      "name": "manifest000007.json",
+      "sha256": "a434918190b8775a892bcd14db2352578165bad922441ace6a540fdaef5abca3",
+      "ids": [
+        "teacher-driver:Heston:N4096"
+      ]
+    },
+    {
+      "name": "manifest000008.json",
+      "sha256": "9fb975f55346e56a96c78728d4f7d5a351279ef56fe32d9ccb4b4369b8018438",
+      "ids": [
+        "teacher:Heston:N1024:coarse:raw"
+      ]
+    },
+    {
+      "name": "manifest000009.json",
+      "sha256": "9efeb10befa1c51149214abd4c97d03c63a704ddee9e42129cac20bf7c807520",
+      "ids": [
+        "teacher:Heston:N1024:coarse"
+      ]
+    },
+    {
+      "name": "manifest000010.json",
+      "sha256": "a7ed0875c2301ca3f50b9e133ca5e8d21e2332f13b6bf72e89db901b6acb5d78",
+      "ids": [
+        "teacher:local:N1024:coarse:raw"
+      ]
+    },
+    {
+      "name": "manifest000011.json",
+      "sha256": "902c8c9f54757b7bb27998f05b0af8315ec371fd4bc88433eca297177001e987",
+      "ids": [
+        "teacher:local:N1024:coarse"
+      ]
+    },
+    {
+      "name": "manifest000012.json",
+      "sha256": "458162f45bc8969bca00055a7588eecaccf0098b5b1d5d3ada3b4f0e459b15a6",
+      "ids": [
+        "teacher:Heston:N4096:coarse:raw"
+      ]
+    },
+    {
+      "name": "manifest000013.json",
+      "sha256": "9e643feca23f3fe68e6d8b916d9682f69e10850c14af8bce729a021064b71943",
+      "ids": [
+        "teacher:Heston:N4096:coarse"
+      ]
+    },
+    {
+      "name": "manifest000014.json",
+      "sha256": "df1bffa1e1195c6394f97a38ddc1bb8e9caed26ee51e3d4b0c0112a4ac32e40a",
+      "ids": [
+        "teacher:Heston:N1024:high:raw"
+      ]
+    },
+    {
+      "name": "manifest000015.json",
+      "sha256": "5cd4212d2cb92e3e441d6f3dd669cd688e7653d399cd17cd02a73b2985b22f59",
+      "ids": [
+        "teacher:Heston:N1024:high"
+      ]
+    },
+    {
+      "name": "manifest000016.json",
+      "sha256": "010a43b6a2a48494ed0a6ac6de590243d5beda5d6f6da75522c95f7be03abb85",
+      "ids": [
+        "independent-table:state00:Heston"
+      ]
+    },
+    {
+      "name": "manifest000017.json",
+      "sha256": "62b3ef7b6b76764f39f491acb5c92e0763b4e462f5cb69e79f2f67a3a59ae57b",
+      "ids": [
+        "oracle:state00:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000018.json",
+      "sha256": "a2996e0758c85cc3ab3f0648ca77ba222395ca5ede114d8b1688c157c3e9555f",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state00:Heston"
+      ]
+    },
+    {
+      "name": "manifest000019.json",
+      "sha256": "559d3346c0d8dff583a16bbeee0aaff9d0458e1c3ab1216dda5aa816474fb234",
+      "ids": [
+        "independent-table:state01:Heston"
+      ]
+    },
+    {
+      "name": "manifest000020.json",
+      "sha256": "981c0b1ead3c401607edbff974dc7b9af510df3db3dbc588eb29d9effcf4040a",
+      "ids": [
+        "oracle:state01:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000021.json",
+      "sha256": "d01ed12779a6a2a9057f76595a3a36bf3199663b63f740fa8aa68d9adc156bc3",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state01:Heston"
+      ]
+    },
+    {
+      "name": "manifest000022.json",
+      "sha256": "be42a3fadf8a05b3a1c2fe13a003bb5c038943dbdb754c97c023670f841f5c06",
+      "ids": [
+        "independent-table:state02:Heston"
+      ]
+    },
+    {
+      "name": "manifest000023.json",
+      "sha256": "63dccd298e191edc59f9f0124917854cbc698b357d6f6eaa10812d9386db397c",
+      "ids": [
+        "oracle:state02:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000024.json",
+      "sha256": "45b8a52daf3d70a5bd768af16c24a0cc0054ca10c3b250179d1e917cfd465d6d",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state02:Heston"
+      ]
+    },
+    {
+      "name": "manifest000025.json",
+      "sha256": "038d6dc0dc94d9f77358c04bb9b8a94e3c601830e5610aff1d31eabbc88249a8",
+      "ids": [
+        "independent-table:state03:Heston"
+      ]
+    },
+    {
+      "name": "manifest000026.json",
+      "sha256": "292869cebd004ac14286ac65cc6f71bf0275006c60fe75a98be2d5cff22be0b4",
+      "ids": [
+        "oracle:state03:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000027.json",
+      "sha256": "0c6433ad44b987bc41884a6b2cc45060e21b7d83fa18e16519b0a4e7d77ac2f8",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state03:Heston"
+      ]
+    },
+    {
+      "name": "manifest000028.json",
+      "sha256": "0bc7da55918ec4154f5bbf7bfb47063c4999b323a675f2d3deb45a3572a886e5",
+      "ids": [
+        "independent-table:state04:Heston"
+      ]
+    },
+    {
+      "name": "manifest000029.json",
+      "sha256": "bbeebb7912dfb9af4ab50c072ac975da4aa9ce7d4c44ca465f8d1d7b5baa0df9",
+      "ids": [
+        "oracle:state04:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000030.json",
+      "sha256": "9c7aab116d4e2e1992d31aaffad88581a5d9b12093e5bfab9b88a612f526256f",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state04:Heston"
+      ]
+    },
+    {
+      "name": "manifest000031.json",
+      "sha256": "63bc82bc8c2642fd2d02007d5a0c6c14edab9e8da3f1c99dbcac35cc38524c52",
+      "ids": [
+        "independent-table:state05:Heston"
+      ]
+    },
+    {
+      "name": "manifest000032.json",
+      "sha256": "1bf330dc3111e6fd4f1f136b7df8ab32a8fd0c4628ff315f77f30e9a8605624c",
+      "ids": [
+        "oracle:state05:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000033.json",
+      "sha256": "310cdf9dcf487f13b7c96347a2b94f9424dc25c58db00184a8bee94282e23a75",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state05:Heston"
+      ]
+    },
+    {
+      "name": "manifest000034.json",
+      "sha256": "5cbd9217c351689a3afd4a47ecea2fbf52111522f46c4e31cb0ca4c6d67ccc29",
+      "ids": [
+        "independent-table:state06:Heston"
+      ]
+    },
+    {
+      "name": "manifest000035.json",
+      "sha256": "5930180f24c5ad9d4c1205f2b005114afc051fb04fec3f03d4337c29ccd0415a",
+      "ids": [
+        "oracle:state06:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000036.json",
+      "sha256": "1c3d81fd1e56cbd30447e3064fece84d5849f5ffd043f5babb92392bdbe290e3",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state06:Heston"
+      ]
+    },
+    {
+      "name": "manifest000037.json",
+      "sha256": "0af739de8db5c34f92ee122828a02d70066127cc1a3b29cc27d4b3816bf53980",
+      "ids": [
+        "independent-table:state07:Heston"
+      ]
+    },
+    {
+      "name": "manifest000038.json",
+      "sha256": "2a8772b56f9e8eba3476d2ef471a4241802515c41cda1df17d76317bce3cb69d",
+      "ids": [
+        "oracle:state07:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000039.json",
+      "sha256": "c750de0569e6aecca0a77a51b09cbb637287eb4c9ed0e62f99a9d8f5e866546c",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state07:Heston"
+      ]
+    },
+    {
+      "name": "manifest000040.json",
+      "sha256": "9ab1098a69d3e61a3c12aadec2607dfe1f426bccd85531a89d9527f40c2a0bf8",
+      "ids": [
+        "independent-table:state08:Heston"
+      ]
+    },
+    {
+      "name": "manifest000041.json",
+      "sha256": "3772f7d784dce2becb1187ea6ec79293870c7c5b8fdf5c7293d78c7d0eaba0b5",
+      "ids": [
+        "oracle:state08:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000042.json",
+      "sha256": "d4fe54f21d54a8cf2e74c9f1efd0dbcbb1133f148de8c2d3a36435d165bab015",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state08:Heston"
+      ]
+    },
+    {
+      "name": "manifest000043.json",
+      "sha256": "6c3333f9864983d3ef426ba92b00deaeb49a8ccac5537282e2dd1f2c8dc3b49a",
+      "ids": [
+        "independent-table:state09:Heston"
+      ]
+    },
+    {
+      "name": "manifest000044.json",
+      "sha256": "5374715bf101847ceee617e9afd977dd592a6e5d8628ec2f3956bd14bc9f35e3",
+      "ids": [
+        "oracle:state09:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000045.json",
+      "sha256": "4c95a861afd4d3844070d3ed2690d5585ea2a0c14bb98d5981e2b001718fa359",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state09:Heston"
+      ]
+    },
+    {
+      "name": "manifest000046.json",
+      "sha256": "c9a758f15ca9789287378c56e6d8e51e753f87269d93da0c926d617196f7fed8",
+      "ids": [
+        "independent-table:state10:Heston"
+      ]
+    },
+    {
+      "name": "manifest000047.json",
+      "sha256": "ffd2d44dca81d9029bdc2c4dbd931e45aa6fd1f43b89a9d94aa3dc5891b4cac7",
+      "ids": [
+        "oracle:state10:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000048.json",
+      "sha256": "d511887e43e9b5b5c08527e4bc58e8ccbc7c95a2f5932c38f3fe5aff36137861",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state10:Heston"
+      ]
+    },
+    {
+      "name": "manifest000049.json",
+      "sha256": "a4f8b95085f04e0235dba7612c29f18162d1d35fb7e8a85341d9310d840e2102",
+      "ids": [
+        "independent-table:state11:Heston"
+      ]
+    },
+    {
+      "name": "manifest000050.json",
+      "sha256": "1fcab7e37ec8e00b3bb42467440bdc028ab7729f2135eefa5bdedbd67b70182b",
+      "ids": [
+        "oracle:state11:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000051.json",
+      "sha256": "4a534cc483095f9c297536d8ddb0889bd736b2c07c9db86b74b44fdc2631e997",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state11:Heston"
+      ]
+    },
+    {
+      "name": "manifest000052.json",
+      "sha256": "559e63f3f96c45a79f6ecb7d3ff54c795507ef46e007bbbcacb35357858a598c",
+      "ids": [
+        "independent-table:state12:Heston"
+      ]
+    },
+    {
+      "name": "manifest000053.json",
+      "sha256": "1909948a970278f7a22365e54e8d2b198253a93a5cbe094d090bccb72013ca73",
+      "ids": [
+        "oracle:state12:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000054.json",
+      "sha256": "67d42a21b7a31644f7580c9238afae45f78908bb7d5e42132db807c72d652e46",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state12:Heston"
+      ]
+    },
+    {
+      "name": "manifest000055.json",
+      "sha256": "da0dc194e4f51fa074b4ec537203ba669277296b1343d0a29c834d9e872bcce6",
+      "ids": [
+        "independent-table:state13:Heston"
+      ]
+    },
+    {
+      "name": "manifest000056.json",
+      "sha256": "ec70ac30c178d72057912455d1bd9a571c91c5dffaa0d52e6a2b5cf94422a7ad",
+      "ids": [
+        "oracle:state13:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000057.json",
+      "sha256": "21478882c14ab61ec70b07e621bae2ce85a5fca4c906bd36ba318dcabbcacdf2",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state13:Heston"
+      ]
+    },
+    {
+      "name": "manifest000058.json",
+      "sha256": "0b3fc059ac42805a99360577c78cee1744d2163803fdd675be01cb277a4b0e52",
+      "ids": [
+        "independent-table:state14:Heston"
+      ]
+    },
+    {
+      "name": "manifest000059.json",
+      "sha256": "6479f5c56b99ee4200e0a654b938cdad7db3c723b959f3095bbf9f5044d50138",
+      "ids": [
+        "oracle:state14:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000060.json",
+      "sha256": "8688e21546e9b0e57b097603f1f2716bc57b58fc539745fd05e0f9cf1bb441c5",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state14:Heston"
+      ]
+    },
+    {
+      "name": "manifest000061.json",
+      "sha256": "ba41daef78345ba19ba09283f4a745c858a087fb5387eb965c0339ef0c1ed696",
+      "ids": [
+        "independent-table:state15:Heston"
+      ]
+    },
+    {
+      "name": "manifest000062.json",
+      "sha256": "a110f46fe4219e6b492993833c5dc4885a3210b019eaaede8bfbb06863d0c481",
+      "ids": [
+        "oracle:state15:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000063.json",
+      "sha256": "caea2ebedf5f6ba0ff2adf0f63823d5a84b01128d6c296e1dd15bcc23db55872",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state15:Heston"
+      ]
+    },
+    {
+      "name": "manifest000064.json",
+      "sha256": "f3967a6da90a9137105ebc36ca455debe29840bb923dfaf034ea01903968a098",
+      "ids": [
+        "independent-table:state16:Heston"
+      ]
+    },
+    {
+      "name": "manifest000065.json",
+      "sha256": "e34967f168ff1df65093180038c8792658cf001472803d48c157a4f566abdb00",
+      "ids": [
+        "oracle:state16:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000066.json",
+      "sha256": "796e755b9319f172e214cb596f2d236ef75487ffefa434254dc34067e947b6b2",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state16:Heston"
+      ]
+    },
+    {
+      "name": "manifest000067.json",
+      "sha256": "4d97593d7d3868d0c7e05e72d630969d1016d413b16f6649e2bef6fed56301e7",
+      "ids": [
+        "independent-table:state17:Heston"
+      ]
+    },
+    {
+      "name": "manifest000068.json",
+      "sha256": "2685005af28d1f8ef7f7be455dae7d54829c6af30895591a86652d9544fe9869",
+      "ids": [
+        "oracle:state17:Heston:referenceN4096"
+      ]
+    },
+    {
+      "name": "manifest000069.json",
+      "sha256": "44084f235d630353265f393ed587c75a993b7b8c959e14a16c83fe5c749644a0",
+      "ids": [
+        "stage:Heston:N1024:coarse:selected-state:state17:Heston"
+      ]
+    },
+    {
+      "name": "manifest000070.json",
+      "sha256": "1e74ce64fc5b2c76d540d055a6af277547bb35bc84d6c0788d006d2548569707",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:0"
+      ]
+    },
+    {
+      "name": "manifest000071.json",
+      "sha256": "b30b1c236a1d3518e511a0604015e093e26a923221f775615a94b955f0f9e8aa",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:1"
+      ]
+    },
+    {
+      "name": "manifest000072.json",
+      "sha256": "622211dccfbe63fa2c9f722d2a679d5f4d91b7faa16f30625fc026a69eb8da9d",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:2"
+      ]
+    },
+    {
+      "name": "manifest000073.json",
+      "sha256": "479fd742a85a6fd624cfd858e1a39b29f24f4e070892d16311f74aa2065dfdb7",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:3"
+      ]
+    },
+    {
+      "name": "manifest000074.json",
+      "sha256": "ee4ade3e101d476747d12aaabb27f245ca084fc75117a2823219ff1c22cbb33a",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:4"
+      ]
+    },
+    {
+      "name": "manifest000075.json",
+      "sha256": "db126131843a70261d02d69b5434424db6b37174bc5dfd1c4114888fc0a29c9d",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:5"
+      ]
+    },
+    {
+      "name": "manifest000076.json",
+      "sha256": "754f219ac6e747472adbc05f1221b15552893d9b1d01078c5b636717cb4ef039",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:6"
+      ]
+    },
+    {
+      "name": "manifest000077.json",
+      "sha256": "130dd0c13c042f371e73daa7ff24809c94d657e176178da99bbc4e5916fc63a0",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:7"
+      ]
+    },
+    {
+      "name": "manifest000078.json",
+      "sha256": "a30c5bcb3e22f84596a323e675e1f0a50491123b9c2efee3a253d8c1112a7745",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:8"
+      ]
+    },
+    {
+      "name": "manifest000079.json",
+      "sha256": "1b4ff93de2b5c95cc76ef3564b0660bcfc2fc10b884f3349f985855ce474e544",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:9"
+      ]
+    },
+    {
+      "name": "manifest000080.json",
+      "sha256": "a7e3c69fa0f836249875694e4a67657da56111c32b036d752bfced4d5c57eb0d",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:10"
+      ]
+    },
+    {
+      "name": "manifest000081.json",
+      "sha256": "9b564a6d98b6e2a98a0b860baaf977c180e977384a3bff36fcb590c70a44528b",
+      "ids": [
+        "stage:Heston:N1024:coarse:date-gate:Heston:11"
+      ]
+    },
+    {
+      "name": "manifest000082.json",
+      "sha256": "fc724205a6872142579644a4d7b389406a45f0a06cfaeea7899019298239178e",
+      "ids": [
+        "market:pilot:Heston:1:N1024"
+      ]
+    },
+    {
+      "name": "manifest000083.json",
+      "sha256": "5ddcd487a7d2ec8e253a655ec1635900ffb04f897554f50937e569b1b873a77a",
+      "ids": [
+        "stage:Heston:N1024:coarse:risk:pilot:1:Heston:1"
+      ]
+    },
+    {
+      "name": "manifest000084.json",
+      "sha256": "360d545bd81f17df1a3b563a1fbcbeeb2cf506fb7e42692522273dbb3697be61",
+      "ids": [
+        "market:pilot:Heston:2:N1024"
+      ]
+    },
+    {
+      "name": "manifest000085.json",
+      "sha256": "60e3265c7e89351b4ed1f28e8882257b1b36b0890225d7c11c13c2ec91c040bf",
+      "ids": [
+        "stage:Heston:N1024:coarse:risk:pilot:2:Heston:0"
+      ]
+    },
+    {
+      "name": "manifest000086.json",
+      "sha256": "92fc7ce2968c5dce1eda11b5eb78943f387729e0d79ee6c03219467ec0060855",
+      "ids": [
+        "stage:Heston:N1024:coarse:risk:pilot:2:Heston:1"
+      ]
+    },
+    {
+      "name": "manifest000087.json",
+      "sha256": "f3990eb0c67240ed47841a5c54ded9d5d8ede6d9b8764c4d2ffa2013e2c6b152",
+      "ids": [
+        "market:pilot:local:1:N1024"
+      ]
+    },
+    {
+      "name": "manifest000088.json",
+      "sha256": "35411d71c3156c63bbb6c1d72063294f62b72eafeba879ffb07ea39db31de2a2",
+      "ids": [
+        "stage:Heston:N1024:coarse:risk:pilot:1:local:1"
+      ]
+    },
+    {
+      "name": "manifest000089.json",
+      "sha256": "e71177af26563e7fa86b6001ee0517c7ffc3bdb83f77b110c5b4a6d542897209",
+      "ids": [
+        "market:pilot:local:2:N1024"
+      ]
+    },
+    {
+      "name": "manifest000090.json",
+      "sha256": "16afba78a1daed7ff863c0f367a80cc12a7514075b9ed1594cb56f18c8c89c66",
+      "ids": [
+        "stage:Heston:N1024:coarse:risk:pilot:2:local:0"
+      ]
+    },
+    {
+      "name": "manifest000091.json",
+      "sha256": "c71cbc1b7a5dc402783cb21da5cb7512c37fdb42b2e8db3d0ba016ca4369b395",
+      "ids": [
+        "stage:Heston:N1024:coarse:risk:pilot:2:local:1"
+      ]
+    },
+    {
+      "name": "manifest000092.json",
+      "sha256": "fa46e306639d07841da49b1c1cf2cccd359cf12fbc6d7a6fdfca74e397563fbe",
+      "ids": [
+        "stage:Heston:N1024:coarse:validation:Heston:U1"
+      ]
+    },
+    {
+      "name": "manifest000093.json",
+      "sha256": "87872a362f5837ca4c53469e7339b85f6a6a357abeed31cd77fc0f890af15a0a",
+      "ids": [
+        "stage:Heston:N1024:coarse:validation:Heston:U2"
+      ]
+    },
+    {
+      "name": "manifest000094.json",
+      "sha256": "3a6c02ca26fe4976b513fef919b46a17cafc712ad42f6feb484c50460000fe40",
+      "ids": [
+        "stage:Heston:N1024:coarse:validation:local:U1"
+      ]
+    },
+    {
+      "name": "manifest000095.json",
+      "sha256": "e5a44d17fff8532ec34110d95024bb0bc5cbf0b2b38f553c8796950c55167d71",
+      "ids": [
+        "stage:Heston:N1024:coarse:validation:local:U2"
+      ]
+    },
+    {
+      "name": "manifest000096.json",
+      "sha256": "66b4fc6b092c3dee55490e66e4ed9b9001a77883606942a4b72fad1ca8a3e05f",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE"
+      ]
+    },
+    {
+      "name": "manifest000097.json",
+      "sha256": "83627bd09e7ea7391b79a05d9916659d84b3f9a91cc2f6acdc577faf2eaf2707",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:local:SDE"
+      ]
+    },
+    {
+      "name": "manifest000098.json",
+      "sha256": "b3709abf5fad97cf860992041df0a1312896ce97b349e8bed6d5b6fecc96fb77",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE"
+      ]
+    },
+    {
+      "name": "manifest000099.json",
+      "sha256": "0cb516bc6cdb5be7e39a4c62b909751156f825261b51d2a5cf63866e5ec7d923",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE"
+      ]
+    },
+    {
+      "name": "manifest000100.json",
+      "sha256": "ca4386d9ffa51cd590951ab0eda73245c1615010ce83df1b298a139b0a84f1d1",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:Heston:SDE"
+      ]
+    },
+    {
+      "name": "manifest000101.json",
+      "sha256": "e34e7ba6c728f0e97e88f95b1a967f5259d045f9347248f1d104c8d1e2a21d82",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:local:SDE"
+      ]
+    },
+    {
+      "name": "manifest000102.json",
+      "sha256": "cd2f0591810b4d0711b7c049ea423f838cf3600deeaf1ab6e61814e1a9b14ab2",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:Heston:SDE"
+      ]
+    },
+    {
+      "name": "manifest000103.json",
+      "sha256": "284c4908daf82f578985aac9f416fc4936077b9fc7e7f86fe12a730e7c5f6301",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:local:SDE"
+      ]
+    },
+    {
+      "name": "manifest000104.json",
+      "sha256": "d8a608fb1d331aca5623bafa1ecbf3f65c4bd17c1f8268484227fd2a90333c78",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:local:U1:greek:Heston:SDE"
+      ]
+    },
+    {
+      "name": "manifest000105.json",
+      "sha256": "608fa7cf18d365275073e4001de1517884c4995ddcb615c03ae9b9d1c96598c3",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:local:U1:greek:local:SDE"
+      ]
+    },
+    {
+      "name": "manifest000106.json",
+      "sha256": "4fe8a76031b9f1c2b8126701adda7b106d2ac4c0e916085578064f0c06874033",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:local:U1:band:Heston:SDE"
+      ]
+    },
+    {
+      "name": "manifest000107.json",
+      "sha256": "12ed98ae7f1451dc954386847e6ec9dbbc80d0a9f68147a7e632cb7a040eb636",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:local:U1:band:local:SDE"
+      ]
+    },
+    {
+      "name": "manifest000108.json",
+      "sha256": "54a86b1fa9f07c40ad389f9e423e14b4d3c79b8b1a4dc416ccb6da932d1a9b8c",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:local:U2:greek:Heston:SDE"
+      ]
+    },
+    {
+      "name": "manifest000109.json",
+      "sha256": "8bf4f0dc6049c31527b428fa0d07f38bb6d794dcf02d7a363bfd65bc7ece2490",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:local:U2:greek:local:SDE"
+      ]
+    },
+    {
+      "name": "manifest000110.json",
+      "sha256": "f9e182453ee1235dbf48e22adc723f04977a9bc8e8ba23a9e34fa0ae4972c93d",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:local:U2:band:Heston:SDE"
+      ]
+    },
+    {
+      "name": "manifest000111.json",
+      "sha256": "5fc61f39bcedac89dcdf52908622e3b602f8c23e57f784ac56823ccc57b9ff20",
+      "ids": [
+        "stage:Heston:N1024:coarse:paired:cell:local:U2:band:local:SDE"
+      ]
+    },
+    {
+      "name": "manifest000112.json",
+      "sha256": "c849f482738c28f1664aa8679862f6d42bf6bca908d06e99493330f2367d7fdf",
+      "ids": [
+        "stage:Heston:N1024:coarse:risk:teacher_N:Heston:1"
+      ]
+    },
+    {
+      "name": "manifest000113.json",
+      "sha256": "d495e048c550a50dc051a6b5e3f95a26bb0bd39df62e9f9af2418c3f798ced28",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:greek:Heston:teacher_N"
+      ]
+    },
+    {
+      "name": "manifest000114.json",
+      "sha256": "5b2092da4018bf8aeb0811f62e7855acc494e267e2c53d52b8a4ff2764378df9",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:greek:local:teacher_N"
+      ]
+    },
+    {
+      "name": "manifest000115.json",
+      "sha256": "01bddb88034a851537fdd8394c794076edb20e9c10995e8fdf19ecb647fb11d0",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:band:Heston:teacher_N"
+      ]
+    },
+    {
+      "name": "manifest000116.json",
+      "sha256": "80cb7f2e2ff19894d502e2e86aa0ee0ad0568615d58285e2e98043be57398203",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:band:local:teacher_N"
+      ]
+    },
+    {
+      "name": "manifest000117.json",
+      "sha256": "35711885101ac1a25c9631a7b48c5addc2e62bb724dae234d9af61c987573106",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:greek:Heston:teacher_N"
+      ]
+    },
+    {
+      "name": "manifest000118.json",
+      "sha256": "7c026d3df301da1f1d32138f55d14629c75787921451e101a45c37f7b5789573",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:greek:local:teacher_N"
+      ]
+    },
+    {
+      "name": "manifest000119.json",
+      "sha256": "eb69cbbc8d8b302bbcdbed3d6a4f5cae7e72cccc9793c38f75d8ee9fe7eb581b",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:band:Heston:teacher_N"
+      ]
+    },
+    {
+      "name": "manifest000120.json",
+      "sha256": "a76fa818371f1f73fdc774290439bffc51f9b82ba170aa232e78df7f6f2dcd52",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:band:local:teacher_N"
+      ]
+    },
+    {
+      "name": "manifest000121.json",
+      "sha256": "9a6b68cfa129ca1272ec1aec67caba2cbb2c6f7304f362eda777021e14c8eb67",
+      "ids": [
+        "stage:Heston:N1024:coarse:risk:teacher_grid:Heston:1"
+      ]
+    },
+    {
+      "name": "manifest000122.json",
+      "sha256": "75ae0190d179edfd9c8ce083bd196f73a0df7d54f25fe4b74d07d81def4428f3",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:greek:Heston:teacher_grid"
+      ]
+    },
+    {
+      "name": "manifest000123.json",
+      "sha256": "9b56f3718df79e018f7ca31da58a8503dc9c97e3d7d8cc3c85fa7e9edffa0016",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:greek:local:teacher_grid"
+      ]
+    },
+    {
+      "name": "manifest000124.json",
+      "sha256": "dd813acca2050cf28e7f43724416d569dce1fb948c51add3c39d1bc3fcc29fdd",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:band:Heston:teacher_grid"
+      ]
+    },
+    {
+      "name": "manifest000125.json",
+      "sha256": "fbcd3bef3aec15220dbb4b01d9aafc632f6b2e78aeab6c023a54528fb164cc74",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:band:local:teacher_grid"
+      ]
+    },
+    {
+      "name": "manifest000126.json",
+      "sha256": "7feea0cd02c0b698c4b7d7f3142583b452acf8a71305b00fe4fbc03fc4b24d1b",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:greek:Heston:teacher_grid"
+      ]
+    },
+    {
+      "name": "manifest000127.json",
+      "sha256": "d9cfebab56dddbe8abfb0f5132c4658a4df1614fb2e182eeeda98fc1d3f60139",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:greek:local:teacher_grid"
+      ]
+    },
+    {
+      "name": "manifest000128.json",
+      "sha256": "5378264753c5305e0047f662fb7c04e04c8fb11f2394563dfa51aa4229acdc35",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:band:Heston:teacher_grid"
+      ]
+    },
+    {
+      "name": "manifest000129.json",
+      "sha256": "475a532d19baab82769a885bf5432028f7980b1be67f8220b59d920b2681ecd2",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:band:local:teacher_grid"
+      ]
+    },
+    {
+      "name": "manifest000130.json",
+      "sha256": "d55e30d6f4f4de1c9d09cce198da3cc016761d0f034ac23f8e7d56293d9aa71f",
+      "ids": [
+        "stage:Heston:N1024:coarse:bump:Heston"
+      ]
+    },
+    {
+      "name": "manifest000131.json",
+      "sha256": "954d5628375a101e0b2ec139041e36ee4821903c34775a9a677e6d9bfbe6ee72",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width0"
+      ]
+    },
+    {
+      "name": "manifest000132.json",
+      "sha256": "383e408b589a988b6838dc751236eeace81f0d719c18ce231f115ccc640caac4",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width1"
+      ]
+    },
+    {
+      "name": "manifest000133.json",
+      "sha256": "7478289d640bd63a017e7456093cb64e02f2a78ba3f7f2ab0a55ddc025134555",
+      "ids": [
+        "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width2"
+      ]
+    }
+  ],
+  "manifest_metadata_scope": "names/ids/outer hashes only; financial payloads not independently rehydrated by this summary",
+  "final_report_exists": false,
+  "full_saved_numerical_verification_complete": false,
+  "financial_qualification": "unknown",
+  "finance_acceptance": false,
+  "whole_child_expense": {
+    "id": "saved_check",
+    "scope": "full fixed enclosing-v2 child lifecycle plus outer measured prefix",
+    "status": "failed",
+    "parent_id": null,
+    "includes_children": true,
+    "timing": {
+      "wall_seconds": 21834.603860218,
+      "cpu_seconds": 21825.133333315,
+      "overrun_seconds": 0.0
+    },
+    "timing_events": {
+      "wall_start_ns": 85096865394622,
+      "wall_stop_ns": 106931469254840,
+      "cpu_start_ns": 44712435,
+      "cpu_stop_ns": 21825178045750
+    },
+    "whole_external_id_closed": true,
+    "final_receipt_construction_write_stdout_tail_seconds": 0.047556027,
+    "reason": "actual enclosing child exit_code=3; prefix_error=None; original bytes unchanged=True"
+  },
+  "outer_bookkeeping_expense": {
+    "id": "saved_check:outer_unmeasured_bookkeeping",
+    "scope": "outer imports before sampling and post-stop provenance/copy/receipt/stdout",
+    "status": "pending",
+    "parent_id": null,
+    "includes_children": false,
+    "timing": {
+      "wall_seconds": null,
+      "cpu_seconds": null,
+      "overrun_seconds": null
+    }
+  },
+  "all_external10_closed": false,
+  "original_generation_expenses_readded": false,
+  "fresh_launch_approved": false,
+  "next_conditions": [
+    "recover C free space above fixed 10GiB reserve",
+    "recheck all volumes/source/prior",
+    "preserve original partial/fault/unknown/costs",
+    "separate full3138 fresh guard and no resume"
+  ],
+  "diagnosis": "C free space fluctuated below reserve; guest free space is separate; source of host consumption not established",
+  "backup_scope": "small administrative original bytes only; not a financial CAS/semantic restore"
+}

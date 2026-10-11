@@ -530,3 +530,13 @@ v1は作者28合成がPASSしたが、独立確認で最初のValueError/KeyErro
 小さな整数・文字列rowを実writer/readerとReferenceJobs→bounded resolve→DeferredSequence→IndexedRowsへ接続し、作者18件・独立8件がPASS（既存36/15と合算しない）。原rootを移した復元接続とpayload/ID/path/native byte/非参照scalar改変の拒否、終了時の原row/receipt/全source85再認証を確認した。fixtureの認証読取は索引8回不変、geometry12→8回、合計20→16回。3→1はbaseline局所lookupのみで、全stageの速度比を示さない。行政statusのarguments=Noneなので、金融typed arguments・全candidate gate・大jobの速度/RAMは未確認。[限定独立判断](pilot-execution-evidence/stage-cache-single-read-admin-proof-independent-stage-cache-geometry-admin-connection-v2-decision.json)・[実接続の原byte保存台帳](pilot-execution-evidence/stage-cache-single-read-admin-connection-closed-proof-archive-v1.json)を保持。
 
 これはcandidate_function_source_mechanics_onlyの判断で、production適用・新producer/verifier/source/prior・資源/速度・金融/phase/mainを承認していない。source85/既存guard/priorとsession85801は不変。旧savedのterminal・root結果確認の後に採否を判断し、採用時はsourceを別revisionとして必要な新source/priorの承認・結合を経てfresh起動へ進む。旧rawをresume/relabelしない。
+
+## source85保存検算のC容量停止（2026-10-11）
+
+session85801は実terminal（tool exit1／monitor3／数値child−9）。09:14:57 UTCにC free10,711,044,096 bytesが固定reserve10,737,418,240 bytesを下回り、監視が停止要求とsignalを記録した。RSS overrunは0で、メモリ上限停止ではない。終了後のC freeは4,763,992,064 bytes、後の限定読取でもreserve未満で変動している。WSL guestの約459GBの空きと、VHDを置くCの空きは別であり、消費元は今回の証拠から断定しない。
+
+[原終了receiptとroot確認](pilot-execution-evidence/saved-source85-terminal-root-summary-v1.json)：before/after source・plan・入力・prior・monitorは一致、現85sourceのSHAも元closureと一致。元213 executed＋214番faultと原raw/unknown/未実行を保持。閉じたcheck manifestは133件、最終reportは不存在。133件を全保存数値検算完了や金融PASSへ昇格しない。
+
+包括費用はwall21,834.603860218秒／CPU21,825.133333315秒、status failed。固定enclosing子のscopeは閉鎖したが、外側bookkeepingはpending、全外部10費用は未閉鎖。内側・enclosing・whole-childの時計を再加算しない。元生成費用も再加算しない。
+
+実終端・不完了結果のroot確認と独立読取確認は済み。次のfreshはC最低10GiBと他volume/source/priorを再確認し、元全3,138/121/51/4Nを持つ別実guardで起動する。旧試行をresume／書換え／PASSへ再標示しない。source85の正式metadata計画と局所改善候補は保持し、今回の終了を新起動許可へ読み替えない。金融raw全体の両semantic復元・費用閉鎖・主実験・教材・phase末受入/mainは未完了。
