@@ -1,0 +1,51 @@
+{
+  "actual_input_keys": [
+    "additional_teacher_cases",
+    "diagnostic_queries24",
+    "original_states18",
+    "parameters",
+    "seed_namespace"
+  ],
+  "actual_source_file_count": 85,
+  "actual_verifier_source_plain_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "actual_verifier_source_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "archived_producer_root": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/source-snapshot",
+  "authenticated_metadata_trees": {
+    "plan": {
+      "files": 12,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v5/locked-prior-metadata",
+      "physical_bytes": 8684752,
+      "tree_sha256": "f220194f2bf9b2f115626de2309d6112a95a0b12b030b6789e80206268f0233e"
+    },
+    "typed_inputs": {
+      "files": 6,
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs",
+      "physical_bytes": 16867,
+      "tree_sha256": "1e298d809691a98e3c55df52101142d5b432b417f5886e69efc9ed1ff811f4c7"
+    }
+  },
+  "candidate_only": true,
+  "dynamic_imports": [],
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "formal_financial_jobs_executed": 0,
+  "limited_verifier_review_required": true,
+  "observed_UTC": "2026-10-11T03:08:54.411476+00:00",
+  "old_guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v2.json",
+    "sha256": "1f764ef8eef3c1b3184b0e319a0f8fd56af140b3ae0097428baba10a525b0c5f"
+  },
+  "old_raw_read_or_relabelled": false,
+  "original_caps_or_scope_changed": false,
+  "producer_files_rehashed": 82,
+  "producer_input_bindings_sha256": "9eb354d71cfc5542c2ddccd46163827cc0f51d3d97a6d57b95b1b1dda53b4cd6",
+  "producer_plan_sha256": "78d80da8a530bcdb64ecedc1e36082ea955b059e90f06e1e11900a5479d3a9b5",
+  "producer_source_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "recipe_candidate": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-binding-candidate-v1.json",
+    "sha256": "77d92d378a37b911cbf571e2d385fb651a769ade840d2d31c1993e59d53de676"
+  },
+  "root_actual_guard_required": true,
+  "schema": "rb-f04-root-saved-source-metadata-preparation-v1",
+  "wall_seconds": 97.30354224299663
+}

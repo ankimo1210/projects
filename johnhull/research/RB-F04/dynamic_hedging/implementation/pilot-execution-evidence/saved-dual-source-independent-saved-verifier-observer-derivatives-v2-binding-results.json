@@ -1,0 +1,230 @@
+{
+  "checks": [
+    {
+      "name": "fixed:task-5-full-pilot-root-saved-check-observer-v2.py",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-full-child-expense-observer-v2.py",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-saved-verifier-observer-derivatives-preflight-v1.py",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-saved-verifier-observer-derivatives-results-v1.json",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-saved-verifier-observer-derivatives-RED-v1.log",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-saved-verifier-observer-derivatives-GREEN-draft-v1.log",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-saved-verifier-observer-derivatives-GREEN-v1.log",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-saved-verifier-observer-derivatives-GREEN-fixed-v1.log",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-saved-verifier-observer-derivatives-ruff-fixed-v1.log",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed:task-5-saved-verifier-observer-derivatives-format-fixed-v1.log",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "original:task-5-full-pilot-root-saved-check-observer-v1.py",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "original:task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "original:task-5-full-child-expense-observer-v1.py",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:clock",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:tree_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:reference_path",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:fixed_reference",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:limited_source_review",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:actual_budget_review",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:metadata_authority",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:terminal_authority",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:closed_native_binding",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:rss",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:volume_sample",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:choose_stop",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:terminal_status",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "unchanged_AST:run",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "enclosing_all_function_AST_unchanged",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "actual_verifier_full_closure",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "actual_verifier_files85_dynamic0",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "actual_native_identity",
+      "status": "PASS",
+      "detail": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8"
+    },
+    {
+      "name": "actual_checker_frozen",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "whole_child_cost_AST_only_lineage_key_added",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "whole_child_guard_retains_every_original_statement",
+      "status": "PASS",
+      "detail": [
+        [
+          "equal",
+          0,
+          19,
+          0,
+          19
+        ],
+        [
+          "insert",
+          19,
+          19,
+          19,
+          25
+        ],
+        [
+          "equal",
+          19,
+          27,
+          25,
+          33
+        ]
+      ]
+    },
+    {
+      "name": "compile:task-5-full-pilot-root-saved-check-observer-v2.py",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "compile:task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "compile:task-5-full-child-expense-observer-v2.py",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "all85_source_bytes_after_probes",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "name": "fixed_scripts_after_probes",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "passed": 40,
+  "failed": 0,
+  "source_plain_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "source_native_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8"
+}

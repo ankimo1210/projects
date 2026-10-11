@@ -73,6 +73,9 @@ def bind_loaded_aliases(root, monkeypatch):
 
 @pytest.fixture
 def sources(tmp_path, monkeypatch):
+    # Import before temporary loaded-path aliases: the helper retains its runner
+    # reference even after monkeypatch restores sys.modules for later tests.
+    assert reader().runner is runner
     producer, verifier = tmp_path / "producer", tmp_path / "verifier"
     make_source(producer, "original")
     make_source(verifier, "corrected")

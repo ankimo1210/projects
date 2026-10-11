@@ -1,0 +1,311 @@
+{
+  "Ruff": {
+    "changed_python_files": 3,
+    "check": "PASS",
+    "diff_check": "PASS",
+    "diff_check_scope": "all changed code/docs/proof except exact original failed pytest trace log; its original trailing whitespace is retained as raw evidence",
+    "format_check": "PASS"
+  },
+  "actual_saved_check": {
+    "finance_acceptance": false,
+    "live_observation_sha256": "480940562af6fb94d0ea5fdabaa6c29793d085be8da96a997974bb704dd04a25",
+    "new_RNG_or_training_generation": false,
+    "observed_child_pid": 459439,
+    "observed_enclosing_root_pid": 458995,
+    "observed_monitor_pid": 458996,
+    "original_native_before_byte_authentication": {
+      "original_native_changed": false,
+      "physical_files": 10233,
+      "tree_sha256": "45d39264995258da93118a12c330af59d3ce0fda528a1c57ba24ed71a70b8fe6"
+    },
+    "original_snapshot_modified": false,
+    "required_followup": "poll same live session; inspect final native checker output and costs before classifying result",
+    "result_qualification": "unknown",
+    "saved_only": true,
+    "start_UTC": "2026-10-11T03:13:47.404036+00:00",
+    "status": "running saved numerical child; full original before-byte authentication completed",
+    "unified_exec_session_id": 85801
+  },
+  "admin_limits": {
+    "WSL_C_F_each_reserve_bytes": 10737418240,
+    "individual_process_RSS_bytes": 17179869184,
+    "poll_seconds": 1,
+    "wall_seconds": 2592000
+  },
+  "archive": {
+    "actual-original-native-before-bindings-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-actual-original-native-before-bindings-v1.json",
+      "bytes": 31626,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-observation-v3/before-bindings-and-command.json",
+      "sha256": "9c58edf2753ca39b22403b39625d5200a0f03b71b70c6274088b81b257d09e4d"
+    },
+    "independent-saved-provenance-fixture-import-fix-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-independent-saved-provenance-fixture-import-fix-v1.json",
+      "bytes": 4728,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-provenance-fixture-import-fix-v1.json",
+      "sha256": "bc9f41ed63a8fa8dbfe4c5c0aaee14cb9d8d3da9879ad3e00864b666dcb389f8"
+    },
+    "independent-saved-provenance-fixture-import-fix-v1.log": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-independent-saved-provenance-fixture-import-fix-v1.log.txt",
+      "bytes": 100,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-provenance-fixture-import-fix-v1.log",
+      "sha256": "20f15e64fe6b4abcec33f6e7f2e4cb6dbc4baf1a70f510256b20fc50d9559d12"
+    },
+    "independent-saved-verifier-observer-derivatives-v1-replay-audit-failure.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-independent-saved-verifier-observer-derivatives-v1-replay-audit-failure.json",
+      "bytes": 560,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-verifier-observer-derivatives-v1-replay-audit-failure.json",
+      "sha256": "2661ce11cb4e425f5c76baa3de7f5a8f2c7049a53908671f03feaac8569d7b27"
+    },
+    "independent-saved-verifier-observer-derivatives-v2-binding-results.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-independent-saved-verifier-observer-derivatives-v2-binding-results.json",
+      "bytes": 5325,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-verifier-observer-derivatives-v2-binding-results.json",
+      "sha256": "e2ecf28f89c9d4ee0e211d34febac87bb2206875a16373415465de86d28f416e"
+    },
+    "independent-saved-verifier-observer-derivatives-v2-replayed-probes.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-independent-saved-verifier-observer-derivatives-v2-replayed-probes.json",
+      "bytes": 3090,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-verifier-observer-derivatives-v2-replayed-probes.json",
+      "sha256": "4e1d38f9ce7054a4988ebd4f685743594355d420522dd75f89a9faec2ba07b94"
+    },
+    "independent-saved-verifier-source-limited-review-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-independent-saved-verifier-source-limited-review-v1.json",
+      "bytes": 5438,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-verifier-source-limited-review-v1.json",
+      "sha256": "c0080194c43f9db165583616479b751113f89e9f361683cef9ebb9ef53a78529"
+    },
+    "independent-source82-to85-actual-saved-only-guards-decision-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-independent-source82-to85-actual-saved-only-guards-decision-v1.json",
+      "bytes": 36186,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source82-to85-actual-saved-only-guards-decision-v1.json",
+      "sha256": "d58471954e907a4534190a372a8c8c938c801eed1610f3df2f5e9dceb2dfe0b7"
+    },
+    "root-saved-producer-verifier-binding-candidate-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-root-saved-producer-verifier-binding-candidate-v1.json",
+      "bytes": 10632,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-binding-candidate-v1.json",
+      "sha256": "77d92d378a37b911cbf571e2d385fb651a769ade840d2d31c1993e59d53de676"
+    },
+    "root-saved-producer-verifier-current-source-closure-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-root-saved-producer-verifier-current-source-closure-v1.json",
+      "bytes": 35893,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+      "sha256": "30a1dd351af3814eecfcece69f99f8f60a21665e5d957d039bbde71746ffd0af"
+    },
+    "root-saved-producer-verifier-integration-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-root-saved-producer-verifier-integration-v1.json",
+      "bytes": 1133,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v1.json",
+      "sha256": "6624d4a314aa509f8676c4bbff53124cc243bbd6e215d8255a774525104810cb"
+    },
+    "root-saved-producer-verifier-integration-v1.log": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-root-saved-producer-verifier-integration-v1.log.txt",
+      "bytes": 21205,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v1.log",
+      "sha256": "837df4aa6e5fc485febacab2d8f4698ca2a03ca43d6cf83e4930b1d3c9e13468"
+    },
+    "root-saved-producer-verifier-integration-v2.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-root-saved-producer-verifier-integration-v2.json",
+      "bytes": 1317,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v2.json",
+      "sha256": "1861c0eb390b7e81f99d1dcb7ba0d13fe9aa42c4886df9a5aff636ccc8502b70"
+    },
+    "root-saved-producer-verifier-integration-v2.log": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-root-saved-producer-verifier-integration-v2.log.txt",
+      "bytes": 432,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v2.log",
+      "sha256": "f820c4d4efe3a5e392ce384839d7006ab06b837aa164279c3e4f1e3bcf97f0db"
+    },
+    "root-saved-producer-verifier-lint-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-root-saved-producer-verifier-lint-v1.json",
+      "bytes": 1545,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-lint-v1.json",
+      "sha256": "6ce62fa5c447f2ff138eb96c9c06fa6d60e36990108ecbd264e9c5bd08b5a031"
+    },
+    "root-saved-producer-verifier-metadata-preparation-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-root-saved-producer-verifier-metadata-preparation-v1.json",
+      "bytes": 2682,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-metadata-preparation-v1.json",
+      "sha256": "527c116ccb1836d6c0d6a689488738a5ef4964cf85b4b9c9f37b5e8bdf10346e"
+    },
+    "task-5-formal-pilot-saved-check-root-launch-guard-v3.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-formal-pilot-saved-check-root-launch-guard-v3.json",
+      "bytes": 1711391,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v3.json",
+      "sha256": "46068359d1656a484086b44fe89165cbe000eb78b04fa6afa6c4829c8093a878"
+    },
+    "task-5-formal-pilot-saved-check-whole-child-root-guard-v2.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-formal-pilot-saved-check-whole-child-root-guard-v2.json",
+      "bytes": 14606,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-whole-child-root-guard-v2.json",
+      "sha256": "ff9becdeaa995b2869fb79d5d77b28cca4f0edaa4271a32d4ce9e9d84084b731"
+    },
+    "task-5-formal-pilot-saved-verifier-actual-root-exec-handle-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-formal-pilot-saved-verifier-actual-root-exec-handle-v1.json",
+      "bytes": 2052,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-verifier-actual-root-exec-handle-v1.json",
+      "sha256": "7f24b7be2d1e35ba20112d0fc007c87ea84634b438c4432ed346042655dcce0a"
+    },
+    "task-5-full-child-expense-observer-v2.py": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-full-child-expense-observer-v2.py.txt",
+      "bytes": 16207,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-child-expense-observer-v2.py",
+      "sha256": "ddfca0be491611175f50c14b52ada80843ad56d2681fcc4cfaade0543f27124a"
+    },
+    "task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py.txt",
+      "bytes": 9006,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py",
+      "sha256": "15c263f2cdc7842504f44a22c4a9030daa4a21c79f46c381a88916baa686433e"
+    },
+    "task-5-full-pilot-root-saved-check-observer-v2.py": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-full-pilot-root-saved-check-observer-v2.py.txt",
+      "bytes": 58048,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-observer-v2.py",
+      "sha256": "74556b15ab3bbbb1dadcd0075d0d7dc761135a0bfcadbe19f86b6ea43446a655"
+    },
+    "task-5-saved-verifier-actual-root-live-observation-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-saved-verifier-actual-root-live-observation-v1.json",
+      "bytes": 2273,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-saved-verifier-actual-root-live-observation-v1.json",
+      "sha256": "480940562af6fb94d0ea5fdabaa6c29793d085be8da96a997974bb704dd04a25"
+    },
+    "task-5-saved-verifier-actual-root-operational-approval-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-saved-verifier-actual-root-operational-approval-v1.json",
+      "bytes": 14350,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-saved-verifier-actual-root-operational-approval-v1.json",
+      "sha256": "a322e906bf6581d988fbef633e4f2766a976e67c0ff038bcea4ff366b32eefbc"
+    },
+    "task-5-saved-verifier-observer-derivatives-GREEN-fixed-v1.log": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-saved-verifier-observer-derivatives-GREEN-fixed-v1.log.txt",
+      "bytes": 2259,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-saved-verifier-observer-derivatives-GREEN-fixed-v1.log",
+      "sha256": "8420fda713a3ed82a328bc9eb8bc6d7c6a7a69820a9c9a5c0d395120463c37d3"
+    },
+    "task-5-saved-verifier-observer-derivatives-RED-v1.log": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-saved-verifier-observer-derivatives-RED-v1.log.txt",
+      "bytes": 4042,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-saved-verifier-observer-derivatives-RED-v1.log",
+      "sha256": "4ef992249030f97fbc2b35fb80578dfc4b8c52768b75ac93987080764cd7d266"
+    },
+    "task-5-saved-verifier-observer-derivatives-fixed-manifest-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-saved-verifier-observer-derivatives-fixed-manifest-v1.json",
+      "bytes": 2551,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-saved-verifier-observer-derivatives-fixed-manifest-v1.json",
+      "sha256": "c7ff572adf554b6fee05fadc2b0c6af570495a08212592ac459e8eca5db83260"
+    },
+    "task-5-saved-verifier-observer-derivatives-preflight-v1.py": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-saved-verifier-observer-derivatives-preflight-v1.py.txt",
+      "bytes": 15509,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-saved-verifier-observer-derivatives-preflight-v1.py",
+      "sha256": "ecad8e9d270ecfc3f06c45440308de30beb28449de7ff2cdc91dc3f980dfb708"
+    },
+    "task-5-saved-verifier-observer-derivatives-results-v1.json": {
+      "archive_path": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/saved-dual-source-task-5-saved-verifier-observer-derivatives-results-v1.json",
+      "bytes": 5598,
+      "original_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-saved-verifier-observer-derivatives-results-v1.json",
+      "sha256": "43a2c5eaa00d037c69e65bab3a3a24d22964ea25dd73ce1efd881dc689fab731"
+    }
+  },
+  "code_status": "checker start/source-row/final reauthentication connected; fresh runner strict source lock unchanged",
+  "date": "2026-10-11",
+  "eta": {
+    "conditional_old_known_compute_hours": 501.742,
+    "following_two_themes_included": false,
+    "rough_calendar_estimate": "weeks; over one month remains possible",
+    "total_or_lower_or_upper_bound": false
+  },
+  "independent": {
+    "actual_guard_binding_checks": 231,
+    "all_pass": true,
+    "financial_acceptance": false,
+    "replayed_author_synthetic_checks": 20,
+    "source_binding_checks": 40
+  },
+  "original_scope": {
+    "activation_choices": 2332,
+    "cap_recipe_options": 573122,
+    "cases": 121,
+    "external_expenses": 10,
+    "failures_costs_missing_and_unknown_preserved": true,
+    "jobs": 3138,
+    "obligations": 51,
+    "original_executed_jobs": 213,
+    "original_fault_job_number": 214,
+    "original_teacher_thresholds": [
+      33,
+      65
+    ],
+    "teacher_blocks": 16,
+    "teacher_ns": [
+      1024,
+      4096,
+      16384,
+      65536
+    ]
+  },
+  "pending": [
+    "full original saved numerical check and actual per-job/whole capacity",
+    "new-source fresh full pilot prior/lock/guard and execution",
+    "freeze and 396 main cells",
+    "fresh independent numerical check and both financial raw semantic restores",
+    "all external10 and total expenses closure",
+    "3 figures/notebook, phase-end suites, final independent acceptance/main",
+    "subsequent multicurve and incremental XVA studies"
+  ],
+  "producer_source": {
+    "archived_source_rehashed": true,
+    "files": 82,
+    "native_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "source_plan_input_ids_preserved": true
+  },
+  "regression": {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "-m",
+      "pytest",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_storage.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_report.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_job_references.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_bounded_lifecycle.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_bounded_projection.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_provenance.py",
+      "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py",
+      "-q"
+    ],
+    "failed_previous_execution_preserved": true,
+    "formal_financial_jobs_executed": 0,
+    "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v2.log",
+    "log_sha256": "f820c4d4efe3a5e392ce384839d7006ab06b837aa164279c3e4f1e3bcf97f0db",
+    "new_tests": 21,
+    "passed": 326,
+    "previous_305_count_not_added_again": true,
+    "pytest_reported_seconds": 154.22,
+    "replaces_failed_test_execution": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v1.json",
+    "returncode": 0,
+    "scope": "saved source/provenance/storage regression, not formal financial acceptance",
+    "wall_seconds": 155.197223716008
+  },
+  "root_metadata_preparation": {
+    "actual_source_recipe_candidate_not_authority": true,
+    "input_files": 6,
+    "input_roster": 5,
+    "original_plan_input_receipts_and_full_bytes_authenticated": true,
+    "plan_files": 12,
+    "wall_seconds": 97.30354224299663
+  },
+  "schema": "rb-f04-saved-producer-verifier-connected-root-evidence-v1",
+  "source_and_test_files": {
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_provenance.py": "d1d398631a1348eaa1918036638b991fddf85708e1b7277ee3f11de2984bf850",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py": "16bc18759cf0b4996dd90050a9946c631348cbda88a2e965bf80599ad03fab55",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b"
+  },
+  "verifier_source": {
+    "dynamic_imports": [],
+    "files": 85,
+    "native_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+    "plain_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "all_external10_closed": false,
+  "child_pid": 459439,
+  "child_proc_status": {
+    "PPid": "458996",
+    "State": "R (running)",
+    "VmHWM": "5100680 kB",
+    "VmRSS": "3002296 kB"
+  },
+  "enclosing_pid": 458995,
+  "finance_acceptance": false,
+  "full_RAM_fit_guarantee": false,
+  "latest_sample": {
+    "child_rss_bytes": 3074351104,
+    "clock": {
+      "cpu": 109.86427325,
+      "utc": "2026-10-11T03:20:07.199973+00:00",
+      "wall": 85476.689828953
+    },
+    "elapsed_seconds": 379.6901496250066,
+    "parent_rss_bytes": 816857088,
+    "volumes": [
+      {
+        "free_bytes": 459571048448,
+        "id": "WSL",
+        "path": "/",
+        "reserve_bytes": 10737418240
+      },
+      {
+        "free_bytes": 124936634368,
+        "id": "C",
+        "path": "/mnt/c",
+        "reserve_bytes": 10737418240
+      },
+      {
+        "free_bytes": 182003695616,
+        "id": "F",
+        "path": "/mnt/f",
+        "reserve_bytes": 10737418240
+      }
+    ]
+  },
+  "monitor_pid": 458996,
+  "numeric_output_directory_exists": true,
+  "observed_UTC": "2026-10-11T03:20:07.224110+00:00",
+  "original_before_binding_receipt": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-observation-v3/before-bindings-and-command.json",
+    "sha256": "9c58edf2753ca39b22403b39625d5200a0f03b71b70c6274088b81b257d09e4d"
+  },
+  "original_native_before_byte_authentication": {
+    "original_native_changed": false,
+    "physical_files": 10233,
+    "tree_sha256": "45d39264995258da93118a12c330af59d3ce0fda528a1c57ba24ed71a70b8fe6"
+  },
+  "qualification": "unknown",
+  "saved_source_provenance": {
+    "producer_input_bindings_sha256": "9eb354d71cfc5542c2ddccd46163827cc0f51d3d97a6d57b95b1b1dda53b4cd6",
+    "producer_plan_sha256": "78d80da8a530bcdb64ecedc1e36082ea955b059e90f06e1e11900a5479d3a9b5",
+    "producer_source_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+    "verifier_source_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8"
+  },
+  "schema": "rb-f04-root-actual-saved-verifier-live-observation-v1",
+  "status": "running_saved_numeric_child",
+  "terminal_report_available": false,
+  "unified_exec_session_id": 85801
+}

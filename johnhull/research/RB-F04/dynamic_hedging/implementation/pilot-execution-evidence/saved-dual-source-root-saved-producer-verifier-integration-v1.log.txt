@@ -1,0 +1,397 @@
+........................................................................ [ 22%]
+........................................................................ [ 44%]
+........................................................................ [ 66%]
+........................................................................ [ 88%]
+.................F.........FF....F..FF                                   [100%]
+=================================== FAILURES ===================================
+________ test_original_source_and_new_verifier_are_authenticated_twice _________
+
+unit = {'bindings': {'axis': 'e4f4f26a38a3b407a420f491d40e13e5bd64fc4ebb034461e5d847074dff397f', 'parameters': '5a5f05c5da91a...ing': ['saved_check', 'proof_cas']}, 'inputs': {'axis': array([0., 1.]), 'parameters': {'synthetic_spot': 100.0}}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7bab4556e3f0>
+
+    def test_original_source_and_new_verifier_are_authenticated_twice(unit, monkeypatch):
+        original_registry = runner.protocol.source_registry
+        producer_calls = []
+        original_raw_check = checker._raw_job_check
+        memo_sources = []
+    
+        def registry(root, names):
+            if Path(root).resolve() == unit["roots"]["producer"]:
+                producer_calls.append(tuple(names))
+            return original_registry(root, names)
+    
+        def raw_check(job, context):
+            memo_sources.append(context["teacher_verification_context"]["source"])
+            return original_raw_check(job, context)
+    
+        monkeypatch.setattr(runner.protocol, "source_registry", registry)
+        monkeypatch.setattr(checker, "_raw_job_check", raw_check)
+>       result = run(unit)
+                 ^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:179: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:157: in run
+    return checker.check_pilot_records(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4847: in check_pilot_records
+    saved_authentication = _saved_source_context(snapshot, expected_plan, context)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4797: in _saved_source_context
+    return authenticate_saved_sources(
+johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py:102: in authenticate_saved_sources
+    verifier_source = runner.execution_source_identity(verifier_root)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/pytest-of-kazumasa/pytest-3969/test_original_source_and_new_v0/verifier')
+
+    def execution_source_identity(root=ROOT) -> dict:
+        """Include all required phase entry points and reject missing local source.
+    
+        The older bounded runner keeps its original source roots. Research execution
+        additionally binds independent references and fresh verification; missing
+        phase implementations cannot be treated as external libraries.
+        """
+        root = Path(root).resolve(strict=True)
+        base = root / "johnhull/research/RB-F04/dynamic_hedging"
+        required = [
+            "reference_methods",
+            "run_fresh",
+            "check_fresh",
+            "run_pilot",
+            "check_pilot",
+            "run_main",
+            "check_main",
+            "run_reference",
+            "check_initial_quotes",
+            "check_selected_calls",
+            "_pilot_transport",
+        ]
+        for name in required:
+            if not (base / f"{name}.py").is_file():
+>               raise ValueError(f"required execution source missing: {name}")
+E               ValueError: required execution source missing: reference_methods
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:225: ValueError
+________ test_injected_internal_auth_is_replaced_by_real_authentication ________
+
+unit = {'bindings': {'axis': 'e4f4f26a38a3b407a420f491d40e13e5bd64fc4ebb034461e5d847074dff397f', 'parameters': '5a5f05c5da91a...ing': ['saved_check', 'proof_cas']}, 'inputs': {'axis': array([0., 1.]), 'parameters': {'synthetic_spot': 100.0}}, ...}
+
+    def test_injected_internal_auth_is_replaced_by_real_authentication(unit):
+        unit["context"]["saved_source_authentication"] = {
+            "producer_source": unit["verifier"],
+            "verifier_source": unit["producer"],
+            "provenance": {"scope": "forged"},
+        }
+>       result = run(unit)
+                 ^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:262: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:157: in run
+    return checker.check_pilot_records(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4847: in check_pilot_records
+    saved_authentication = _saved_source_context(snapshot, expected_plan, context)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4797: in _saved_source_context
+    return authenticate_saved_sources(
+johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py:102: in authenticate_saved_sources
+    verifier_source = runner.execution_source_identity(verifier_root)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/pytest-of-kazumasa/pytest-3969/test_injected_internal_auth_is0/verifier')
+
+    def execution_source_identity(root=ROOT) -> dict:
+        """Include all required phase entry points and reject missing local source.
+    
+        The older bounded runner keeps its original source roots. Research execution
+        additionally binds independent references and fresh verification; missing
+        phase implementations cannot be treated as external libraries.
+        """
+        root = Path(root).resolve(strict=True)
+        base = root / "johnhull/research/RB-F04/dynamic_hedging"
+        required = [
+            "reference_methods",
+            "run_fresh",
+            "check_fresh",
+            "run_pilot",
+            "check_pilot",
+            "run_main",
+            "check_main",
+            "run_reference",
+            "check_initial_quotes",
+            "check_selected_calls",
+            "_pilot_transport",
+        ]
+        for name in required:
+            if not (base / f"{name}.py").is_file():
+>               raise ValueError(f"required execution source missing: {name}")
+E               ValueError: required execution source missing: reference_methods
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:225: ValueError
+__ test_source_raw_relabel_remains_unclosed_and_original_snapshot_is_retained __
+
+unit = {'bindings': {'axis': 'e4f4f26a38a3b407a420f491d40e13e5bd64fc4ebb034461e5d847074dff397f', 'parameters': '5a5f05c5da91a...ing': ['saved_check', 'proof_cas']}, 'inputs': {'axis': array([0., 1.]), 'parameters': {'synthetic_spot': 100.0}}, ...}
+
+    def test_source_raw_relabel_remains_unclosed_and_original_snapshot_is_retained(unit):
+        unit["row"]["raw"] = unit["verifier"]
+>       result = run(unit)
+                 ^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:269: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:157: in run
+    return checker.check_pilot_records(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4847: in check_pilot_records
+    saved_authentication = _saved_source_context(snapshot, expected_plan, context)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4797: in _saved_source_context
+    return authenticate_saved_sources(
+johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py:102: in authenticate_saved_sources
+    verifier_source = runner.execution_source_identity(verifier_root)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/pytest-of-kazumasa/pytest-3969/test_source_raw_relabel_remain0/verifier')
+
+    def execution_source_identity(root=ROOT) -> dict:
+        """Include all required phase entry points and reject missing local source.
+    
+        The older bounded runner keeps its original source roots. Research execution
+        additionally binds independent references and fresh verification; missing
+        phase implementations cannot be treated as external libraries.
+        """
+        root = Path(root).resolve(strict=True)
+        base = root / "johnhull/research/RB-F04/dynamic_hedging"
+        required = [
+            "reference_methods",
+            "run_fresh",
+            "check_fresh",
+            "run_pilot",
+            "check_pilot",
+            "run_main",
+            "check_main",
+            "run_reference",
+            "check_initial_quotes",
+            "check_selected_calls",
+            "_pilot_transport",
+        ]
+        for name in required:
+            if not (base / f"{name}.py").is_file():
+>               raise ValueError(f"required execution source missing: {name}")
+E               ValueError: required execution source missing: reference_methods
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:225: ValueError
+______ test_external_recipe_alias_change_does_not_replace_initial_recipe _______
+
+unit = {'bindings': {'axis': 'e4f4f26a38a3b407a420f491d40e13e5bd64fc4ebb034461e5d847074dff397f', 'parameters': '5a5f05c5da91a...ing': ['saved_check', 'proof_cas']}, 'inputs': {'axis': array([0., 1.]), 'parameters': {'synthetic_spot': 100.0}}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7bab45663a10>
+
+    def test_external_recipe_alias_change_does_not_replace_initial_recipe(unit, monkeypatch):
+        original_raw_check = checker._raw_job_check
+        original_digest = storage.payload_digest(unit["trusted"])
+    
+        def raw_check(job, context):
+            value = original_raw_check(job, context)
+            unit["trusted"]["scope"] = "external alias changed"
+            return value
+    
+        monkeypatch.setattr(checker, "_raw_job_check", raw_check)
+>       result = run(unit)
+                 ^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:315: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:157: in run
+    return checker.check_pilot_records(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4847: in check_pilot_records
+    saved_authentication = _saved_source_context(snapshot, expected_plan, context)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4797: in _saved_source_context
+    return authenticate_saved_sources(
+johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py:102: in authenticate_saved_sources
+    verifier_source = runner.execution_source_identity(verifier_root)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/pytest-of-kazumasa/pytest-3969/test_external_recipe_alias_cha0/verifier')
+
+    def execution_source_identity(root=ROOT) -> dict:
+        """Include all required phase entry points and reject missing local source.
+    
+        The older bounded runner keeps its original source roots. Research execution
+        additionally binds independent references and fresh verification; missing
+        phase implementations cannot be treated as external libraries.
+        """
+        root = Path(root).resolve(strict=True)
+        base = root / "johnhull/research/RB-F04/dynamic_hedging"
+        required = [
+            "reference_methods",
+            "run_fresh",
+            "check_fresh",
+            "run_pilot",
+            "check_pilot",
+            "run_main",
+            "check_main",
+            "run_reference",
+            "check_initial_quotes",
+            "check_selected_calls",
+            "_pilot_transport",
+        ]
+        for name in required:
+            if not (base / f"{name}.py").is_file():
+>               raise ValueError(f"required execution source missing: {name}")
+E               ValueError: required execution source missing: reference_methods
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:225: ValueError
+_____ test_real_fault_tail_unknown_and_original_none_expense_are_retained ______
+
+unit = {'bindings': {'axis': 'e4f4f26a38a3b407a420f491d40e13e5bd64fc4ebb034461e5d847074dff397f', 'parameters': '5a5f05c5da91a...ing': ['saved_check', 'proof_cas']}, 'inputs': {'axis': array([0., 1.]), 'parameters': {'synthetic_spot': 100.0}}, ...}
+
+    def test_real_fault_tail_unknown_and_original_none_expense_are_retained(unit):
+        fault_plan = {
+            "id": "unit-fault-tail",
+            "operation": "validation",
+            "arguments": {},
+            "prediction": {"fixture": "original source fault"},
+            "budget": {"wall_seconds": 4.0},
+            "expense_id": "unit-fault-expense",
+        }
+        unit["plan"]["jobs"].append(fault_plan)
+        fault = copy.deepcopy(unit["row"])
+        fault.update(
+            id=fault_plan["id"],
+            operation=fault_plan["operation"],
+            prediction=fault_plan["prediction"],
+            budget=fault_plan["budget"],
+            status="unclosed_source_or_solver_defect",
+            reason="KeyError: result",
+            raw=None,
+        )
+        fault["expense"].update(id=fault_plan["expense_id"], status="failed", reason=fault["reason"])
+        unit["snapshot"]["jobs"].append(fault)
+        for row in unit["snapshot"]["jobs"]:
+            row["plan_sha256"] = storage.payload_digest(unit["plan"])
+        unit["trusted"]["producer_plan_sha256"] = storage.payload_digest(unit["plan"])
+        original_snapshot_digest = storage.payload_digest(unit["snapshot"])
+>       result = run(unit)
+                 ^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:368: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:157: in run
+    return checker.check_pilot_records(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4847: in check_pilot_records
+    saved_authentication = _saved_source_context(snapshot, expected_plan, context)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4797: in _saved_source_context
+    return authenticate_saved_sources(
+johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py:102: in authenticate_saved_sources
+    verifier_source = runner.execution_source_identity(verifier_root)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/pytest-of-kazumasa/pytest-3969/test_real_fault_tail_unknown_a0/verifier')
+
+    def execution_source_identity(root=ROOT) -> dict:
+        """Include all required phase entry points and reject missing local source.
+    
+        The older bounded runner keeps its original source roots. Research execution
+        additionally binds independent references and fresh verification; missing
+        phase implementations cannot be treated as external libraries.
+        """
+        root = Path(root).resolve(strict=True)
+        base = root / "johnhull/research/RB-F04/dynamic_hedging"
+        required = [
+            "reference_methods",
+            "run_fresh",
+            "check_fresh",
+            "run_pilot",
+            "check_pilot",
+            "run_main",
+            "check_main",
+            "run_reference",
+            "check_initial_quotes",
+            "check_selected_calls",
+            "_pilot_transport",
+        ]
+        for name in required:
+            if not (base / f"{name}.py").is_file():
+>               raise ValueError(f"required execution source missing: {name}")
+E               ValueError: required execution source missing: reference_methods
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:225: ValueError
+__ test_closed_unit_receipt_preserves_producer_and_adds_separate_verifier_ids __
+
+unit = {'bindings': {'axis': 'e4f4f26a38a3b407a420f491d40e13e5bd64fc4ebb034461e5d847074dff397f', 'parameters': '5a5f05c5da91a...ing': ['saved_check', 'proof_cas']}, 'inputs': {'axis': array([0., 1.]), 'parameters': {'synthetic_spot': 100.0}}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7bab4575ec90>
+
+    def test_closed_unit_receipt_preserves_producer_and_adds_separate_verifier_ids(unit, monkeypatch):
+        # An EMPTY artificial roster isolates receipt serialization. It is not the
+        # formal 121/51 scope, and a vacuous unit closure confers no finance approval.
+        monkeypatch.setattr(
+            checker.execution,
+            "execution_candidate",
+            lambda: {"pilot_cases": [], "required_pilot_attempt_ids": []},
+        )
+        monkeypatch.setattr(
+            checker,
+            "check_raw_costs",
+            lambda snapshot, plan: {"closed": True, "charged_totals": {"wall_seconds": 1.0}},
+        )
+>       result = run(unit)
+                 ^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:399: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py:157: in run
+    return checker.check_pilot_records(
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4847: in check_pilot_records
+    saved_authentication = _saved_source_context(snapshot, expected_plan, context)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+johnhull/research/RB-F04/dynamic_hedging/check_pilot.py:4797: in _saved_source_context
+    return authenticate_saved_sources(
+johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py:102: in authenticate_saved_sources
+    verifier_source = runner.execution_source_identity(verifier_root)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/pytest-of-kazumasa/pytest-3969/test_closed_unit_receipt_prese0/verifier')
+
+    def execution_source_identity(root=ROOT) -> dict:
+        """Include all required phase entry points and reject missing local source.
+    
+        The older bounded runner keeps its original source roots. Research execution
+        additionally binds independent references and fresh verification; missing
+        phase implementations cannot be treated as external libraries.
+        """
+        root = Path(root).resolve(strict=True)
+        base = root / "johnhull/research/RB-F04/dynamic_hedging"
+        required = [
+            "reference_methods",
+            "run_fresh",
+            "check_fresh",
+            "run_pilot",
+            "check_pilot",
+            "run_main",
+            "check_main",
+            "run_reference",
+            "check_initial_quotes",
+            "check_selected_calls",
+            "_pilot_transport",
+        ]
+        for name in required:
+            if not (base / f"{name}.py").is_file():
+>               raise ValueError(f"required execution source missing: {name}")
+E               ValueError: required execution source missing: reference_methods
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:225: ValueError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py::test_original_source_and_new_verifier_are_authenticated_twice
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py::test_injected_internal_auth_is_replaced_by_real_authentication
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py::test_source_raw_relabel_remains_unclosed_and_original_snapshot_is_retained
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py::test_external_recipe_alias_change_does_not_replace_initial_recipe
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py::test_real_fault_tail_unknown_and_original_none_expense_are_retained
+FAILED deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py::test_closed_unit_receipt_preserves_producer_and_adds_separate_verifier_ids
+6 failed, 320 passed in 157.09s (0:02:37)

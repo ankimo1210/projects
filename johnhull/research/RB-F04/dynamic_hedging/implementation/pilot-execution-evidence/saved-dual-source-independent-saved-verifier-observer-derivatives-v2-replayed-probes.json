@@ -1,0 +1,122 @@
+{
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-B",
+    "task-5-saved-verifier-observer-derivatives-preflight-v1.py"
+  ],
+  "exit_code": 0,
+  "replayed_author_fixture": {
+    "checks": [
+      {
+        "name": "archived82_not_live_verifier_bytes",
+        "status": "PASS"
+      },
+      {
+        "name": "actual_typed_inputs_and_separate_verifier_authentication",
+        "status": "PASS"
+      },
+      {
+        "name": "review_refusal:decision",
+        "status": "PASS"
+      },
+      {
+        "name": "review_refusal:role",
+        "status": "PASS"
+      },
+      {
+        "name": "review_refusal:scope",
+        "status": "PASS"
+      },
+      {
+        "name": "review_refusal:verifier_source_sha256",
+        "status": "PASS"
+      },
+      {
+        "name": "review_refusal:dynamic_imports",
+        "status": "PASS"
+      },
+      {
+        "name": "review_refusal:unresolved_findings",
+        "status": "PASS"
+      },
+      {
+        "name": "review_refusal:file_count",
+        "status": "PASS"
+      },
+      {
+        "name": "review_refusal:financial_acceptance",
+        "status": "PASS"
+      },
+      {
+        "name": "review_byte_sha_refusal",
+        "status": "PASS"
+      },
+      {
+        "name": "recipe_flags_without_review_refused",
+        "status": "PASS"
+      },
+      {
+        "name": "archived_producer_byte_change_refused",
+        "status": "PASS"
+      },
+      {
+        "name": "bounded_child_context_and_full_missing_roster_preserved",
+        "status": "PASS"
+      },
+      {
+        "name": "false_guard_before_terminal_hash_or_child",
+        "status": "PASS"
+      },
+      {
+        "name": "actual_verifier_count_drift_refused",
+        "status": "PASS"
+      },
+      {
+        "name": "original14_stop_cost_terminal_budget_functions_AST_unchanged",
+        "status": "PASS"
+      },
+      {
+        "name": "enclosing_new_fixed_monitor",
+        "status": "PASS"
+      },
+      {
+        "name": "whole_child_new_fixed_enclosing",
+        "status": "PASS"
+      },
+      {
+        "name": "whole_child_exact_source_sha",
+        "status": "PASS"
+      }
+    ],
+    "passed": 20,
+    "failed": 0,
+    "synthetic_only": true,
+    "financial_execution": false,
+    "actual_native_read": false,
+    "actual_guard_created": false,
+    "finance_acceptance": false
+  },
+  "preceding_stdout_objects": [
+    {
+      "root_prior_sha256": "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+      "closed": false,
+      "financial_qualification": "unknown",
+      "missing_cases": [
+        1
+      ],
+      "missing_attempts": [
+        2
+      ],
+      "missing_jobs": [
+        3
+      ],
+      "finance_acceptance": false,
+      "all_original_roster_checked_no_subset": true
+    }
+  ],
+  "scope": "synthetic source/binding routing only; no actual financial/native artifacts",
+  "wall_seconds": 0.067225911,
+  "parent_cpu_seconds": 0.000363569,
+  "post_receipt_tail_seconds": null,
+  "first_replay_audit_failure_preserved": "independent-saved-verifier-observer-derivatives-v1-replay-audit-failure.json"
+}

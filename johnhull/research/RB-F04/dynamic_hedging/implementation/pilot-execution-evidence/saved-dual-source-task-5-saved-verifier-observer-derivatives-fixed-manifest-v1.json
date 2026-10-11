@@ -1,0 +1,58 @@
+{
+  "schema": "rb-f04-saved-verifier-monitor-derivative-fixed-files-v1",
+  "candidate_only": true,
+  "root_preapproved": false,
+  "execute_saved_check": false,
+  "finance_acceptance": false,
+  "files": {
+    "task-5-full-pilot-root-saved-check-observer-v2.py": {
+      "sha256": "74556b15ab3bbbb1dadcd0075d0d7dc761135a0bfcadbe19f86b6ea43446a655",
+      "bytes": 58048
+    },
+    "task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py": {
+      "sha256": "15c263f2cdc7842504f44a22c4a9030daa4a21c79f46c381a88916baa686433e",
+      "bytes": 9006
+    },
+    "task-5-full-child-expense-observer-v2.py": {
+      "sha256": "ddfca0be491611175f50c14b52ada80843ad56d2681fcc4cfaade0543f27124a",
+      "bytes": 16207
+    },
+    "task-5-saved-verifier-observer-derivatives-preflight-v1.py": {
+      "sha256": "ecad8e9d270ecfc3f06c45440308de30beb28449de7ff2cdc91dc3f980dfb708",
+      "bytes": 15509
+    },
+    "task-5-saved-verifier-observer-derivatives-results-v1.json": {
+      "sha256": "43a2c5eaa00d037c69e65bab3a3a24d22964ea25dd73ce1efd881dc689fab731",
+      "bytes": 5598
+    },
+    "task-5-saved-verifier-observer-derivatives-RED-v1.log": {
+      "sha256": "4ef992249030f97fbc2b35fb80578dfc4b8c52768b75ac93987080764cd7d266",
+      "bytes": 4042
+    },
+    "task-5-saved-verifier-observer-derivatives-GREEN-draft-v1.log": {
+      "sha256": "4330c05cb125371683df85e7d93412473a968b34aecd125c942758973e62bec0",
+      "bytes": 2164
+    },
+    "task-5-saved-verifier-observer-derivatives-GREEN-v1.log": {
+      "sha256": "8420fda713a3ed82a328bc9eb8bc6d7c6a7a69820a9c9a5c0d395120463c37d3",
+      "bytes": 2259
+    },
+    "task-5-saved-verifier-observer-derivatives-GREEN-fixed-v1.log": {
+      "sha256": "8420fda713a3ed82a328bc9eb8bc6d7c6a7a69820a9c9a5c0d395120463c37d3",
+      "bytes": 2259
+    },
+    "task-5-saved-verifier-observer-derivatives-ruff-fixed-v1.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "task-5-saved-verifier-observer-derivatives-format-fixed-v1.log": {
+      "sha256": "177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "bytes": 26
+    }
+  },
+  "original_sources": {
+    "task-5-full-pilot-root-saved-check-observer-v1.py": "9277b8097cf499129f93a8e8d44e41063c0f0279a5865a9b0f5cc68249b4efb4",
+    "task-5-full-pilot-root-saved-check-enclosing-v2.py": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc",
+    "task-5-full-child-expense-observer-v1.py": "809d59d0cb96413cbf16c6446f61757e608124fc6c53c51c2048c5d6c462eb57"
+  }
+}

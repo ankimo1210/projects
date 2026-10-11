@@ -1,0 +1,412 @@
+"""Synthetic-only source/binding probes; no financial artifacts or children."""
+
+import ast
+import contextlib
+import copy
+import hashlib
+import importlib.util
+import json
+import sys
+import tempfile
+import types
+from pathlib import Path
+
+D = Path(__file__).resolve().parent
+
+
+def digest(value):
+    return hashlib.sha256(
+        json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    ).hexdigest()
+
+
+def load(name):
+    path = D / name
+    spec = importlib.util.spec_from_file_location("synthetic_" + path.stem.replace("-", "_"), path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@contextlib.contextmanager
+def modules(**values):
+    before = {key: sys.modules.get(key) for key in values}
+    sys.modules.update(values)
+    try:
+        yield
+    finally:
+        for key, value in before.items():
+            if value is None:
+                sys.modules.pop(key, None)
+            else:
+                sys.modules[key] = value
+
+
+def fixture(root):
+    module = load("task-5-full-pilot-root-saved-check-observer-v2.py")
+    module.D = root
+    module.WT = root / "live"
+    module.WT.mkdir()
+    archive = root / "materialized/source-snapshot"
+    archive.mkdir(parents=True)
+    producer = {
+        "files": {},
+        "dynamic_imports": [],
+        "protocol_source": {"scope": "synthetic original producer"},
+    }
+    for i in range(82):
+        relative = f"source/file{i:03d}.py"
+        path = archive / relative
+        path.parent.mkdir(exist_ok=True)
+        path.write_text(f"value = {i}\n")
+        producer["files"][relative] = module.sha(path)
+    manifest_path = archive.parent / "manifest.json"
+    manifest_path.write_text('{"synthetic":true}')
+    module.SOURCE_IDENTITY = module.digest(producer)
+    module.SOURCE_NATIVE_IDENTITY = digest(producer)
+    module.limited_source_review = lambda _: None
+    module.metadata_authority = lambda _: {"fixture": "metadata authority stub only"}
+    verifier = {
+        "files": {f"verifier/file{i:03d}.py": str(i) for i in range(85)},
+        "dynamic_imports": [],
+    }
+    recipe = {
+        "schema": "rb-f04-saved-producer-verifier-binding-v1",
+        "planned_before_check": True,
+        "root_preapproved": True,
+        "scope": "saved_original_raw_only",
+        "producer_source_sha256": digest(producer),
+        "producer_source_files": producer["files"],
+        "producer_plan_sha256": "a" * 64,
+        "producer_input_bindings_sha256": "b" * 64,
+        "verifier_source_sha256": digest(verifier),
+    }
+    review = {
+        "decision": "approved",
+        "role": "independent_saved_verifier_source_reviewer",
+        "scope": "saved_original_raw_only",
+        "verifier_source_sha256": digest(verifier),
+        "dynamic_imports": [],
+        "unresolved_findings": [],
+        "file_count": 85,
+        "financial_acceptance": False,
+    }
+    review_path = root / "synthetic-review.json"
+    review_path.write_text(json.dumps(review))
+    prior = {
+        "source_identity": producer,
+        "source_identity_sha256": module.SOURCE_IDENTITY,
+        "source_native_payload_sha256": module.SOURCE_NATIVE_IDENTITY,
+        "prior_metadata_materialization": {
+            "path": str(manifest_path),
+            "sha256": module.sha(manifest_path),
+        },
+        "producer_source_root": str(archive),
+        "saved_source_binding": recipe,
+        "verifier_limited_review": {
+            "path": str(review_path),
+            "sha256": module.sha(review_path),
+            "status": "approved",
+            "scope": "saved_original_raw_only",
+        },
+        "plan": {"path": str(root / "original-plan")},
+        "typed_inputs": {"path": str(root / "original-inputs")},
+    }
+    plan = {"source": producer, "input_bindings": {"parameters": "param"}, "jobs": [1, 2]}
+    inputs = {"parameters": {"spot": 100.0}}
+    auth_calls = []
+
+    def authenticate(
+        source, *, producer_root, verifier_root, locked_plan, input_bindings, trusted_binding
+    ):
+        assert source is producer
+        assert Path(producer_root) == archive
+        assert Path(verifier_root) == module.WT
+        assert locked_plan is plan
+        assert input_bindings == {"parameters": digest(inputs["parameters"])}
+        assert trusted_binding is recipe
+        auth_calls.append(True)
+        return {
+            "producer_source": producer,
+            "producer_source_sha256": digest(producer),
+            "verifier_source": verifier,
+            "verifier_source_sha256": digest(verifier),
+            "producer_plan_sha256": recipe["producer_plan_sha256"],
+            "producer_input_bindings_sha256": recipe["producer_input_bindings_sha256"],
+            "provenance": {"scope": "saved_original_raw_only"},
+        }
+
+    runner = types.SimpleNamespace(
+        read_pilot_artifact=lambda path: (
+            plan if path == Path(prior["plan"]["path"]) else inputs,
+            {},
+        ),
+        unpack_inputs=lambda value: value,
+        input_identity=digest,
+    )
+    return module, prior, recipe, review, review_path, archive, auth_calls, runner, authenticate
+
+
+def main():
+    results = []
+
+    def check(name, call):
+        try:
+            call()
+            results.append({"name": name, "status": "PASS"})
+        except Exception as error:
+            results.append({"name": name, "status": "FAIL", "error": repr(error)})
+
+    with tempfile.TemporaryDirectory(prefix="saved-verifier-pure-") as temporary:
+        root = Path(temporary)
+        m, prior, recipe, review, review_path, archive, auth_calls, runner, auth = fixture(root)
+
+        def archived():
+            bound = m.original_source_binding(prior)
+            assert bound["file_count"] == 82
+            assert bound["sha256"] == m.SOURCE_IDENTITY
+            assert not any(m.WT.rglob("*.py"))
+
+        check("archived82_not_live_verifier_bytes", archived)
+
+        def saved_auth():
+            with modules(
+                run_pilot=runner,
+                _pilot_saved_provenance=types.SimpleNamespace(authenticate_saved_sources=auth),
+            ):
+                actual = m.saved_verifier_binding(prior)
+            assert actual["verifier_source_sha256"] == recipe["verifier_source_sha256"]
+            assert actual["producer_source_sha256"] == recipe["producer_source_sha256"]
+            assert "locked_plan" not in actual
+            assert "inputs" not in actual
+            assert auth_calls == [True]
+
+        check("actual_typed_inputs_and_separate_verifier_authentication", saved_auth)
+
+        for field, replacement in [
+            ("decision", "pending"),
+            ("role", "budget_reviewer"),
+            ("scope", "fresh_generation"),
+            ("verifier_source_sha256", "f" * 64),
+            ("dynamic_imports", ["importlib"]),
+            ("unresolved_findings", ["pending"]),
+            ("file_count", 82),
+            ("financial_acceptance", True),
+        ]:
+
+            def reject(field=field, replacement=replacement):
+                changed = dict(review, **{field: replacement})
+                review_path.write_text(json.dumps(changed))
+                given = copy.deepcopy(prior)
+                given["verifier_limited_review"]["sha256"] = m.sha(review_path)
+                try:
+                    m.verifier_limited_source_review(given)
+                except ValueError:
+                    return
+                raise AssertionError("invalid review accepted")
+
+            check("review_refusal:" + field, reject)
+        review_path.write_text(json.dumps(review))
+        prior["verifier_limited_review"]["sha256"] = m.sha(review_path)
+
+        def tampered_review():
+            given = copy.deepcopy(prior)
+            given["verifier_limited_review"]["sha256"] = "0" * 64
+            try:
+                m.verifier_limited_source_review(given)
+            except ValueError:
+                return
+            raise AssertionError("changed source decision bytes accepted")
+
+        check("review_byte_sha_refusal", tampered_review)
+
+        def flags_not_authority():
+            given = copy.deepcopy(prior)
+            given.pop("verifier_limited_review")
+            try:
+                m.verifier_limited_source_review(given)
+            except (KeyError, ValueError):
+                return
+            raise AssertionError("recipe booleans accepted without actual review")
+
+        check("recipe_flags_without_review_refused", flags_not_authority)
+
+        def changed_archive():
+            first = archive / next(iter(prior["source_identity"]["files"]))
+            original = first.read_bytes()
+            first.write_bytes(original + b"# changed\n")
+            try:
+                try:
+                    m.original_source_binding(prior)
+                except ValueError:
+                    return
+                raise AssertionError("changed archived producer accepted")
+            finally:
+                first.write_bytes(original)
+
+        check("archived_producer_byte_change_refused", changed_archive)
+
+        def bounded_child():
+            given = dict(prior, native_output_path=str(root / "fresh-output"))
+            m.load_guard = lambda _path, child=False: (given, root / "guard.json", "g" * 64, b"{}")
+            observed = {}
+            returned = {
+                "closed": False,
+                "financial_qualification": "unknown",
+                "missing_cases": [1],
+                "missing_attempts": [2],
+                "missing_jobs": [3],
+            }
+
+            def checker(directory, *, expected_plan, source_root, context, check_directory):
+                assert directory == m.ORIGINAL_NATIVE
+                assert expected_plan["source"] is prior["source_identity"]
+                assert source_root == m.WT
+                assert context["producer_source_root"] == given["producer_source_root"]
+                assert context["saved_source_binding"] is recipe
+                assert context["inputs"]["parameters"] == {"spot": 100.0}
+                assert context["parameters"] is context["inputs"]["parameters"]
+                assert check_directory == root / "fresh-output/checks"
+                observed["check"] = True
+                return returned
+
+            def write(directory, value):
+                assert directory == root / "fresh-output"
+                assert value is returned
+                observed["write"] = True
+                return {}
+
+            source_runner = types.SimpleNamespace(**vars(runner))
+            source_runner.write_pilot_artifact = lambda *_: (_ for _ in ()).throw(
+                AssertionError("full eager raw report writer reached")
+            )
+            with modules(
+                run_pilot=source_runner,
+                check_pilot=types.SimpleNamespace(check_pilot=checker, write_bounded_report=write),
+            ):
+                assert m.child(root / "guard.json") == 2
+            assert observed == {"check": True, "write": True}
+
+        check("bounded_child_context_and_full_missing_roster_preserved", bounded_child)
+
+        def false_before_heavy_work():
+            isolated = load("task-5-full-pilot-root-saved-check-observer-v2.py")
+            isolated.D = root
+            given = root / "false-guard.json"
+            given.write_text('{"root_preapproved":false,"execute_saved_check":false}')
+
+            def forbidden(_):
+                raise AssertionError("terminal/native hashing or child was reached")
+
+            isolated.terminal_authority = forbidden
+            isolated.source_binding = forbidden
+            try:
+                isolated.run(given)
+            except ValueError as error:
+                assert "root saved-check prior approval required" in str(error)
+                return
+            raise AssertionError("false guard accepted")
+
+        check("false_guard_before_terminal_hash_or_child", false_before_heavy_work)
+
+        def actual_count_refused():
+            def wrong_count(*args, **kwargs):
+                result = auth(*args, **kwargs)
+                result["verifier_source"] = copy.deepcopy(result["verifier_source"])
+                result["verifier_source"]["files"].pop("verifier/file084.py")
+                return result
+
+            with modules(
+                run_pilot=runner,
+                _pilot_saved_provenance=types.SimpleNamespace(
+                    authenticate_saved_sources=wrong_count
+                ),
+            ):
+                try:
+                    m.saved_verifier_binding(prior)
+                except ValueError as error:
+                    assert "actual verifier closure" in str(error)
+                    return
+            raise AssertionError("actual verifier84 admitted by declared85")
+
+        check("actual_verifier_count_drift_refused", actual_count_refused)
+
+        names = [
+            "clock",
+            "tree_binding",
+            "reference_path",
+            "fixed_reference",
+            "limited_source_review",
+            "actual_budget_review",
+            "metadata_authority",
+            "terminal_authority",
+            "closed_native_binding",
+            "rss",
+            "volume_sample",
+            "choose_stop",
+            "terminal_status",
+            "run",
+        ]
+
+        def functions(path):
+            return {
+                node.name: ast.dump(node, include_attributes=False)
+                for node in ast.parse(path.read_text()).body
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            }
+
+        old = functions(D / "task-5-full-pilot-root-saved-check-observer-v1.py")
+        new = functions(D / "task-5-full-pilot-root-saved-check-observer-v2.py")
+        check(
+            "original14_stop_cost_terminal_budget_functions_AST_unchanged",
+            lambda: assert_equal(
+                {name: old[name] for name in names}, {name: new[name] for name in names}
+            ),
+        )
+
+        enclosing = load("task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py")
+        whole = load("task-5-full-child-expense-observer-v2.py")
+        check(
+            "enclosing_new_fixed_monitor",
+            lambda: assert_equal(
+                enclosing.MONITOR.name, "task-5-full-pilot-root-saved-check-observer-v2.py"
+            ),
+        )
+        check(
+            "whole_child_new_fixed_enclosing",
+            lambda: assert_equal(
+                whole.CHILD.name, "task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py"
+            ),
+        )
+        check(
+            "whole_child_exact_source_sha",
+            lambda: assert_equal(
+                whole.CHILD_SHA256,
+                hashlib.sha256(
+                    enclosing.MONITOR.parent.joinpath(
+                        "task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py"
+                    ).read_bytes()
+                ).hexdigest(),
+            ),
+        )
+
+    value = {
+        "checks": results,
+        "passed": sum(row["status"] == "PASS" for row in results),
+        "failed": sum(row["status"] == "FAIL" for row in results),
+        "synthetic_only": True,
+        "financial_execution": False,
+        "actual_native_read": False,
+        "actual_guard_created": False,
+        "finance_acceptance": False,
+    }
+    print(json.dumps(value, indent=2))
+    return 1 if value["failed"] else 0
+
+
+def assert_equal(actual, expected):
+    assert actual == expected, (actual, expected)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
