@@ -1,0 +1,113 @@
+{
+  "schema": "independent-stage-cache-geometry-admin-connection-review-decision-v1",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent administrative source/mechanics reviewer",
+  "scope": "D2 uninstalled candidate geometry connection to real small scalar artifact reader/reference/deferred/index transport only",
+  "candidate_status": "candidate_not_authorized",
+  "author_evidence": {
+    "probe": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v2.py",
+      "sha256": "a333aca99dbea1e2eed4f91514350a90326e3e0fc6b7973ef8085e9cefaf99b8"
+    },
+    "results": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v2-results.json",
+      "sha256": "026f92a28eac2e746448b46b225fd1ad527f90457eb05204240a7233dfab6e76"
+    },
+    "reported_cases": 18,
+    "independent_case_count_added_from_author": 0,
+    "preserved_v1_sha_verified": true
+  },
+  "reused_candidate_scope_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-single-read-v2-decision.json",
+    "sha256": "b52c2a739d82c6d26b3dfd456af4e23f8faef9d47e14c9210bc7722d11b5d884",
+    "new_reexecution": false
+  },
+  "independent_evidence": {
+    "probe": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-admin-connection-v2-probe.py",
+      "sha256": "2aa98f4b4ad167e99276185fb2320637be31b6948aa925d1b3ea186290aa795c"
+    },
+    "results": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-admin-connection-v2-results.json",
+      "sha256": "32fe193b4821fa8321bd047431a0d1226709d0fdb5cca28b0c6149ddf57b5ecc"
+    },
+    "passed": 8,
+    "failures": 0
+  },
+  "validation": {
+    "fixed_author_source_and_result_sha_exact": true,
+    "real_reference_payload_sha_and_ID_authentication_maintained": true,
+    "real_codec_receipt_authentication_maintained": true,
+    "real_resolve_deferred_index_connection_both_models": true,
+    "index_reader_calls_original_and_candidate": 8,
+    "geometry_reader_calls_original": 12,
+    "geometry_reader_calls_candidate": 8,
+    "whole_scoped_chain_original": 20,
+    "whole_scoped_chain_candidate": 16,
+    "baseline_IndexedRows_lookup_original": 3,
+    "baseline_IndexedRows_lookup_candidate": 1,
+    "nonreferenced_valid_scalar_tamper_original_digest_rejected": true,
+    "physical_byte_tamper_rejected": true,
+    "root_escape_rejected_before_reader": true,
+    "original_root_absent_restored_connection": true,
+    "own_original_rows_and_expected_receipts_finally_reauthenticated": true,
+    "source85_candidate_and_author_bytes_finally_unchanged": true,
+    "probe_new_geometry_from_AST_not_applied_to_current_module": true
+  },
+  "source": {
+    "canonical": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+    "dynamic_imports": [],
+    "file_count": 85,
+    "native": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8"
+  },
+  "provenance_and_scope_limits": [
+    "ReferenceJobs authenticates the complete original scalar row; hash checks identify provenance and do not qualify financial values.",
+    "The nonexecuted administrative status makes job_arguments resolve to None under run_pilot.py:2039-2041. Executed typed financial arguments and calculate_teacher_candidate_gate/full numerical stage are not exercised.",
+    "Indexing is a separate all-dependency read pass. Counts 20->16 are fixture-specific authenticated reader calls, not a full-stage timing forecast.",
+    "This probe does not test full teacher arrays, individual teacher RAM, financial accuracy, parameter/grid/N coverage, process budget adequacy, or financial performance.",
+    "The candidate remains absent from production. Application, current verifier/producer identity changes and prior/launch approval remain root-owned after the current live saved verifier terminates.",
+    "Author and earlier synthetic evidence are preserved and not pooled into this fresh independent eight-case result."
+  ],
+  "actual_scope": {
+    "new_small_scalar_fixture_files": 54,
+    "new_small_scalar_fixture_bytes": 19163,
+    "temporary_fixture_removed": true,
+    "financial_kernels_RNG_solver_training": 0,
+    "actual_financial_artifact_reads": 0,
+    "production_edits": 0,
+    "live_process_changes": 0,
+    "guard_or_prior_edits": 0,
+    "pytest_or_benchmark": 0,
+    "Git_or_CAS": 0
+  },
+  "measured_prefix_cost": {
+    "cpu_seconds": 2.531668213,
+    "cpu_start_ns": 29563568,
+    "cpu_stop_ns": 2561231781,
+    "final_receipt_write_stdout_tail_seconds": null,
+    "linux_peak_RSS_bytes": 635310080,
+    "scope": "independent administrative probe imports/source auth/small I/O; not financial benchmark",
+    "wall_seconds": 2.538091131,
+    "wall_start_ns": 91776184178051,
+    "wall_stop_ns": 91778722269182,
+    "whole_expense_closed": false
+  },
+  "unknown": {
+    "whole_review_wall_seconds": null,
+    "whole_review_CPU_seconds": null,
+    "final_decision_write_stdout_tail_seconds": null,
+    "financial_qualification": "unknown"
+  },
+  "approvals": {
+    "administrative_candidate_connection_source_mechanics": true,
+    "production_application": false,
+    "new_source_identity": false,
+    "prior_resource": false,
+    "formal_launch": false,
+    "financial": false,
+    "speed": false,
+    "whole_RAM": false,
+    "main_or_phase": false
+  }
+}

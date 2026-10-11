@@ -1,0 +1,440 @@
+"""D2-only actual artifact/reference administrative probe; no financial calculation."""
+import ast
+import copy
+import hashlib
+import json
+from pathlib import Path
+import resource
+import sys
+import tempfile
+import time
+import traceback
+
+WORKTREE = Path("/home/kazumasa/worktrees/johnhull-storage-codec")
+DIRECTORY = WORKTREE / ".superpowers/sdd/2026-10-10-dynamic-storage-codec"
+RESEARCH = WORKTREE / "johnhull/research/RB-F04/dynamic_hedging"
+NAME = "task-5-stage-cache-geometry-single-read-admin-integration-v2"
+SOURCE = RESEARCH / "check_pilot.py"
+CANDIDATE = DIRECTORY / "task-5-stage-cache-geometry-single-read-candidate-v2-source.py.txt"
+EXPECTED_SOURCE_SHA = "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b"
+EXPECTED_CANDIDATE_SHA = "926060feb164c28714a4e4f6d04aa71da09304bd0f277bbf82d47c143d93d8f5"
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def load_geometry(path):
+    tree = ast.parse(path.read_text())
+    node = next(
+        item for item in tree.body
+        if isinstance(item, ast.FunctionDef) and item.name == "_teacher_stage_cache_geometry"
+    )
+    namespace = {"_require": require}
+    exec(compile(ast.Module(body=[node], type_ignores=[]), str(path), "exec"), namespace)
+    return namespace[node.name]
+
+
+def fixture(model):
+    other = "local" if model == "Heston" else "Heston"
+    ids = {
+        "baseline": "admin-baseline:" + other,
+        "base": "admin-teacher:" + model + ":base",
+        "next": "admin-teacher:" + model + ":next",
+        "grid": "admin-teacher:" + model + ":grid",
+    }
+    plan = {
+        "model": model,
+        "teacher_job_id": ids["base"],
+        "next_teacher_job_id": ids["next"],
+        "grid_teacher_job_id": ids["grid"],
+        "cache_bindings": {},
+    }
+    for kind in ("SDE", "teacher_N", "teacher_grid", "position", "pnl"):
+        plan["cache_bindings"][kind] = {}
+        for side in ("base", "refined"):
+            selected = ids["base"]
+            if side == "refined" and kind == "teacher_N":
+                selected = ids["next"]
+            if side == "refined" and kind == "teacher_grid":
+                selected = ids["grid"]
+            plan["cache_bindings"][kind][side] = {
+                model: {"call_job_id": "admin-call:" + model, "asian_job_id": selected},
+                other: {"call_job_id": "admin-call:" + other, "asian_job_id": ids["baseline"]},
+            }
+    values = {}
+    for name, n in (("baseline", 1024), ("base", 4096), ("next", 16384), ("grid", 4096)):
+        values[ids[name]] = {
+            "id": ids[name], "status": "administrative_fixture",
+            "financial_qualification": "unknown",
+            "raw": {
+                "original_n": n, "grid": "coarse" if name == "baseline" else name,
+                "cache": {"original_N": n}, "probe_scope": "nonfinancial integers and strings only",
+            },
+        }
+    return plan, values, ids
+
+
+def inventory(root):
+    return {
+        str(path.relative_to(root)): {"sha256": sha(path), "bytes": path.stat().st_size}
+        for path in sorted(root.rglob("*")) if path.is_file()
+    }
+
+
+def main(checks):
+    sys.path[:0] = [
+        str(RESEARCH), str(WORKTREE / "johnhull/hullkit/src"),
+        str(WORKTREE / "deep_hedge_price/src"),
+    ]
+    import run_pilot
+    import _pilot_saved_storage as storage
+
+    assert sha(SOURCE) == EXPECTED_SOURCE_SHA
+    assert sha(CANDIDATE) == EXPECTED_CANDIDATE_SHA
+    closure_path = DIRECTORY / "root-saved-producer-verifier-current-source-closure-v1.json"
+    expected_source = json.loads(closure_path.read_text())
+    actual_before = run_pilot.runner.execution_source_identity(WORKTREE)
+    assert actual_before == expected_source
+    assert len(actual_before["files"]) == 85
+    assert actual_before["dynamic_imports"] == []
+    source_plain = run_pilot.runner._digest(actual_before)
+    source_native = storage.payload_digest(actual_before)
+    original, candidate = load_geometry(SOURCE), load_geometry(CANDIDATE)
+    expected_receipts = {}
+    count_by_path = {}
+
+    def authenticated_reader(path):
+        path = Path(path).resolve()
+        count_by_path[str(path)] = count_by_path.get(str(path), 0) + 1
+        value, receipt = run_pilot.read_pilot_artifact(path)
+        assert receipt == expected_receipts[str(path)], "root expected receipt changed"
+        return value, receipt
+
+    with tempfile.TemporaryDirectory(prefix=NAME + "-", dir=DIRECTORY) as scratch:
+        native = Path(scratch) / "native"
+        native.mkdir()
+        original_inventory = {}
+        for model in ("Heston", "local"):
+            plan, values, ids = fixture(model)
+            refs = []
+            paths = {}
+            for index, (identifier, row) in enumerate(values.items()):
+                path = native / (model + "-" + str(index))
+                receipt = run_pilot.write_pilot_artifact(path, row)
+                expected_receipts[str(path.resolve())] = receipt
+                refs.append({
+                    "id": identifier, "artifact_path": str(path),
+                    "raw_job_payload_sha256": storage.payload_digest(row),
+                })
+                paths[identifier] = path
+
+            # ID-mismatch fixture is itself a complete byte-authenticated artifact.
+            wrong = copy.deepcopy(values[ids["baseline"]])
+            wrong["id"] = "admin-wrong-id:" + model
+            wrong_path = native / (model + "-wrong-id")
+            expected_receipts[str(wrong_path.resolve())] = run_pilot.write_pilot_artifact(wrong_path, wrong)
+            wrong_digest = storage.payload_digest(wrong)
+            scalar_changed = copy.deepcopy(values[ids["baseline"]])
+            scalar_changed["raw"]["probe_scope"] = "changed non-geometry scalar"
+            scalar_path = native / (model + "-nonreferenced-scalar")
+            expected_receipts[str(scalar_path.resolve())] = run_pilot.write_pilot_artifact(
+                scalar_path, scalar_changed
+            )
+            saved_inventory = inventory(native)
+
+            def connected(function, case_refs):
+                count_by_path.clear()
+                jobs = storage.ReferenceJobs(
+                    case_refs,
+                    artifact_context={"original_root": str(native), "restored_root": str(native)},
+                    reader=authenticated_reader,
+                )
+                try:
+                    returned = function(plan, jobs)
+                    outcome = {"returned": returned, "exception": None}
+                except ValueError as error:
+                    outcome = {"returned": None, "exception": [type(error).__name__, str(error)]}
+                reads = dict(count_by_path)
+                return outcome, reads
+
+            old_result, old_reads = connected(original, refs)
+            new_result, new_reads = connected(candidate, refs)
+            assert old_result == new_result == {"returned": None, "exception": None}
+            baseline = str(paths[ids["baseline"]].resolve())
+            assert old_reads[baseline] == 3 and new_reads[baseline] == 1
+            for name in ("base", "next", "grid"):
+                path = str(paths[ids[name]].resolve())
+                assert old_reads[path] == new_reads[path] == 1
+            checks.append({
+                "model": model, "case": "actual_write_read_reference_connection",
+                "passed": True, "original_baseline_authenticated_reads": 3,
+                "v2_baseline_authenticated_reads": 1,
+                "following_teacher_authenticated_reads_each": 1,
+                "outcome": new_result, "root_receipts_match": True,
+                "raw_payload_digests_and_ids_authenticated_by_real_ReferenceJobs": True,
+            })
+
+            def stage_chain(function, current_root):
+                count_by_path.clear()
+                jobs = storage.ReferenceJobs(
+                    refs,
+                    artifact_context={
+                        "original_root": str(native), "restored_root": str(current_root)
+                    },
+                    reader=authenticated_reader,
+                )
+                planned = {
+                    identifier: {
+                        "operation": "administrative_fixture",
+                        "arguments": {"scope": "scalar-only", "original_n": row["raw"]["original_n"]},
+                    }
+                    for identifier, row in values.items()
+                }
+                declarations = [
+                    {
+                        "id": identifier, "operation": "administrative_fixture",
+                        "raw": {"job": identifier},
+                        "arguments": {"job_arguments": identifier},
+                    }
+                    for identifier in values
+                ]
+                delayed = run_pilot._resolve(
+                    declarations, {}, jobs, planned_jobs=planned, bounded=True
+                )
+                assert isinstance(delayed, storage.DeferredSequence)
+
+                class ObservedIndex(storage.IndexedRows):
+                    def __init__(self, rows):
+                        self.geometry_lookups = {}
+                        super().__init__(rows)
+
+                    def __getitem__(self, key):
+                        self.geometry_lookups[key] = self.geometry_lookups.get(key, 0) + 1
+                        return super().__getitem__(key)
+
+                indexed = ObservedIndex(delayed)
+                assert len(indexed) == len(delayed) and set(indexed) == set(values)
+                indexing_reads = dict(count_by_path)
+                returned = function(plan, indexed)
+                assert returned is None
+                total_reads = dict(count_by_path)
+                geometry_reads = {
+                    path: total_reads.get(path, 0) - indexing_reads.get(path, 0)
+                    for path in total_reads
+                }
+                def reads_by_id(counts):
+                    return {
+                        identifier: counts.get(
+                            str((current_root / path.relative_to(native)).resolve()), 0
+                        )
+                        for identifier, path in paths.items()
+                    }
+                return {
+                    "returned": returned,
+                    "indexing_authenticated_reader_calls_by_id": reads_by_id(indexing_reads),
+                    "geometry_authenticated_reader_calls_by_id": reads_by_id(geometry_reads),
+                    "whole_chain_authenticated_reader_calls_by_id": reads_by_id(total_reads),
+                    "geometry_IndexedRows_lookups_by_id": dict(indexed.geometry_lookups),
+                    "whole_chain_authenticated_reader_calls_total": sum(total_reads.values()),
+                    "indexing_authenticated_reader_calls_total": sum(indexing_reads.values()),
+                    "geometry_authenticated_reader_calls_total": sum(geometry_reads.values()),
+                }
+
+            old_chain = stage_chain(original, native)
+            new_chain = stage_chain(candidate, native)
+            assert old_chain["returned"] == new_chain["returned"]
+            assert old_chain["geometry_IndexedRows_lookups_by_id"][ids["baseline"]] == 3
+            assert new_chain["geometry_IndexedRows_lookups_by_id"][ids["baseline"]] == 1
+            # Fixture status is intentionally non-financial: job_arguments reads
+            # and authenticates its status, then returns None for this operation.
+            assert old_chain["indexing_authenticated_reader_calls_total"] == 8
+            assert new_chain["indexing_authenticated_reader_calls_total"] == 8
+            assert old_chain["geometry_authenticated_reader_calls_total"] == 12
+            assert new_chain["geometry_authenticated_reader_calls_total"] == 8
+            assert old_chain["whole_chain_authenticated_reader_calls_total"] == 20
+            assert new_chain["whole_chain_authenticated_reader_calls_total"] == 16
+            for name in ("base", "next", "grid"):
+                assert old_chain["geometry_IndexedRows_lookups_by_id"][ids[name]] == 1
+                assert new_chain["geometry_IndexedRows_lookups_by_id"][ids[name]] == 1
+            checks.append({
+                "model": model, "case": "actual_reference_resolve_deferred_index_geometry",
+                "passed": True, "original": old_chain, "v2": new_chain,
+                "geometry_three_to_one_is_local_lookup_scope_only": True,
+                "source_plan_original_roster_order_preserved": list(indexed_id for indexed_id in values),
+            })
+
+            for case in (
+                "payload_hash_mismatch", "ID_mismatch", "path_escape",
+                "native_file_tamper", "nonreferenced_scalar_valid_artifact_changed",
+            ):
+                case_refs = copy.deepcopy(refs)
+                baseline_ref = next(ref for ref in case_refs if ref["id"] == ids["baseline"])
+                restore_path = restore_bytes = None
+                if case == "payload_hash_mismatch":
+                    baseline_ref["raw_job_payload_sha256"] = "0" * 64
+                elif case == "ID_mismatch":
+                    baseline_ref["artifact_path"] = str(wrong_path)
+                    baseline_ref["raw_job_payload_sha256"] = wrong_digest
+                elif case == "path_escape":
+                    baseline_ref["artifact_path"] = str(Path(scratch) / "outside-native")
+                elif case == "nonreferenced_scalar_valid_artifact_changed":
+                    # Receipt and artifact are fully valid. Keep the expected
+                    # ORIGINAL payload digest instead of rebinding to new values.
+                    baseline_ref["artifact_path"] = str(scalar_path)
+                else:
+                    restore_path = paths[ids["baseline"]] / "metadata.json"
+                    restore_bytes = restore_path.read_bytes()
+                    restore_path.write_bytes(restore_bytes + b"\n")
+                try:
+                    old_result, old_reads = connected(original, case_refs)
+                    new_result, new_reads = connected(candidate, case_refs)
+                    assert old_result == new_result and old_result["exception"] is not None
+                    assert old_reads == new_reads
+                    assert sum(new_reads.values()) == (0 if case == "path_escape" else 1)
+                    checks.append({
+                        "model": model, "case": case, "passed": True,
+                        "both_rejected": True, "outcome": new_result,
+                        "reader_calls": sum(new_reads.values()),
+                        "no_teacher_read_after_rejection": True,
+                    })
+                finally:
+                    if restore_path is not None:
+                        restore_path.write_bytes(restore_bytes)
+                assert inventory(native) == saved_inventory
+
+            # Final reauthentication reads every unchanged saved row/receipt again.
+            for identifier, row in values.items():
+                path = paths[identifier]
+                actual, receipt = run_pilot.read_pilot_artifact(path)
+                assert receipt == expected_receipts[str(path.resolve())]
+                assert storage.payload_digest(actual) == storage.payload_digest(row)
+                assert actual == row
+            actual_wrong, wrong_receipt = run_pilot.read_pilot_artifact(wrong_path)
+            assert wrong_receipt == expected_receipts[str(wrong_path.resolve())]
+            assert storage.payload_digest(actual_wrong) == wrong_digest
+            assert actual_wrong == wrong
+            actual_scalar, scalar_receipt = run_pilot.read_pilot_artifact(scalar_path)
+            assert scalar_receipt == expected_receipts[str(scalar_path.resolve())]
+            assert actual_scalar == scalar_changed
+            assert inventory(native) == saved_inventory
+
+            # Move the original root; paths in references remain the old paths.
+            restored = native.with_name("restored-" + model)
+            rebased_receipts = {
+                str((restored / Path(path).relative_to(native)).resolve()): receipt
+                for path, receipt in list(expected_receipts.items())
+                if Path(path).is_relative_to(native)
+            }
+            expected_receipts.update(rebased_receipts)
+            native.rename(restored)
+            try:
+                assert not native.exists()
+                assert inventory(restored) == saved_inventory
+                restored_old = stage_chain(original, restored)
+                restored_new = stage_chain(candidate, restored)
+                assert restored_old == old_chain and restored_new == new_chain
+                assert inventory(restored) == saved_inventory
+                # Direct original rows, receipts and expected payload digests
+                # remain authenticated after path rebasing as well.
+                restored_jobs = storage.ReferenceJobs(
+                    refs,
+                    artifact_context={"original_root": str(native), "restored_root": str(restored)},
+                    reader=authenticated_reader,
+                )
+                for identifier, original_row in values.items():
+                    assert restored_jobs[identifier] == original_row
+                checks.append({
+                    "model": model, "case": "original_root_moved_restored_path_connection",
+                    "passed": True, "original_root_absent": True,
+                    "logical_outcomes_counts_and_expected_receipts_unchanged": True,
+                    "full_original_rows_reauthenticated": len(values),
+                    "physical_byte_inventory_unchanged": True,
+                })
+            finally:
+                restored.rename(native)
+            assert inventory(native) == saved_inventory
+            original_inventory.update(saved_inventory)
+            checks.append({
+                "model": model, "case": "final_saved_bytes_receipts_payload_reauthenticated",
+                "passed": True, "original_rows": len(values), "ID_negative_fixture_rows": 1,
+                "nonreferenced_scalar_negative_fixture_rows": 1,
+                "raw_values_unchanged": True, "native_file_inventory_unchanged": True,
+            })
+        fixture_files = inventory(native)
+
+    actual_after = run_pilot.runner.execution_source_identity(WORKTREE)
+    assert actual_after == actual_before == expected_source
+    assert sha(SOURCE) == EXPECTED_SOURCE_SHA and sha(CANDIDATE) == EXPECTED_CANDIDATE_SHA
+    return {
+        "source_plain_canonical_identity": source_plain,
+        "source_native_payload_identity": source_native,
+        "source85_files_dynamic_before_after": {"file_count": 85, "dynamic_imports": [], "unchanged": True},
+        "expected_source_closure_reference": {"path": str(closure_path), "sha256": sha(closure_path)},
+        "temporary_artifact_files": len(fixture_files),
+        "temporary_artifact_total_bytes": sum(item["bytes"] for item in fixture_files.values()),
+        "temporary_artifacts_removed": True,
+        "preserved_original_admin_probe": {
+            "source": {
+                "path": str(DIRECTORY / "task-5-stage-cache-geometry-single-read-admin-integration-v1.py"),
+                "sha256": sha(DIRECTORY / "task-5-stage-cache-geometry-single-read-admin-integration-v1.py"),
+            },
+            "results": {
+                "path": str(DIRECTORY / "task-5-stage-cache-geometry-single-read-admin-integration-v1-results.json"),
+                "sha256": sha(DIRECTORY / "task-5-stage-cache-geometry-single-read-admin-integration-v1-results.json"),
+            },
+        },
+        "root_receipt_protocol_and_original_payload_authentication_used": True,
+        "production_source_sha256_before_after": EXPECTED_SOURCE_SHA,
+        "candidate_source_sha256_before_after": EXPECTED_CANDIDATE_SHA,
+    }
+
+
+if __name__ == "__main__":
+    wall_start_ns, cpu_start_ns = time.perf_counter_ns(), time.process_time_ns()
+    checks = []
+    result = {
+        "status": "candidate_not_authorized",
+        "probe_scope": "small nonfinancial integer/string rows only; actual codec and ReferenceJobs functional connection",
+        "production_path": str(SOURCE), "candidate_path": str(CANDIDATE),
+        "probe_source_sha256": sha(Path(__file__)),
+        "production_modified": False, "historical_financial_artifacts_read_or_modified": False,
+        "live_process_modified": False, "guard_or_prior_modified": False,
+        "financial_kernel_solver_MC_RNG_training_executions": 0,
+        "pytest_fullsuite_benchmark_Git_CAS_operations": 0,
+        "production_approval": False, "financial_acceptance": False, "source_approval": False,
+        "prior_approval": False, "launch_approval": False, "adoption_approval": False,
+        "performance_improvement_claim": None, "large_job_RAM_or_speed_effect": None,
+        "financial_qualification": "unknown",
+    }
+    try:
+        result.update(main(checks))
+        result["probe_success"] = True
+    except BaseException as error:
+        result["probe_success"] = False
+        result["failure"] = {"type": type(error).__name__, "message": str(error), "traceback": traceback.format_exc()}
+    wall_stop_ns, cpu_stop_ns = time.perf_counter_ns(), time.process_time_ns()
+    result["checks"] = checks
+    result["passed_count"] = sum(check["passed"] for check in checks)
+    result["measured_probe_prefix_cost"] = {
+        "wall_start_ns": wall_start_ns, "wall_stop_ns": wall_stop_ns,
+        "cpu_start_ns": cpu_start_ns, "cpu_stop_ns": cpu_stop_ns,
+        "wall_seconds": (wall_stop_ns - wall_start_ns) / 1e9,
+        "cpu_seconds": (cpu_stop_ns - cpu_start_ns) / 1e9,
+        "peak_RSS_bytes_linux": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+        "scope": "probe process main/import/authentication/small-artifact checks; not financial runtime benchmark",
+        "final_result_write_stdout_tail_seconds": None,
+        "whole_expense_closed": False,
+    }
+    output = DIRECTORY / (NAME + "-results.json")
+    with output.open("x", encoding="utf-8") as stream:
+        json.dump(result, stream, ensure_ascii=False, sort_keys=True, indent=2, allow_nan=False)
+        stream.write("\n")
+    print(json.dumps({"success": result["probe_success"], "passed": result["passed_count"], "result_path": str(output), "result_sha256": sha(output)}, sort_keys=True))
+    if not result["probe_success"]:
+        raise SystemExit(1)

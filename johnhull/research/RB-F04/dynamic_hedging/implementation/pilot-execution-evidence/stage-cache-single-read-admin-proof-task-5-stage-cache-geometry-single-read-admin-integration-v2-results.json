@@ -1,0 +1,425 @@
+{
+  "adoption_approval": false,
+  "candidate_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-candidate-v2-source.py.txt",
+  "candidate_source_sha256_before_after": "926060feb164c28714a4e4f6d04aa71da09304bd0f277bbf82d47c143d93d8f5",
+  "checks": [
+    {
+      "case": "actual_write_read_reference_connection",
+      "following_teacher_authenticated_reads_each": 1,
+      "model": "Heston",
+      "original_baseline_authenticated_reads": 3,
+      "outcome": {
+        "exception": null,
+        "returned": null
+      },
+      "passed": true,
+      "raw_payload_digests_and_ids_authenticated_by_real_ReferenceJobs": true,
+      "root_receipts_match": true,
+      "v2_baseline_authenticated_reads": 1
+    },
+    {
+      "case": "actual_reference_resolve_deferred_index_geometry",
+      "geometry_three_to_one_is_local_lookup_scope_only": true,
+      "model": "Heston",
+      "original": {
+        "geometry_IndexedRows_lookups_by_id": {
+          "admin-baseline:local": 3,
+          "admin-teacher:Heston:base": 1,
+          "admin-teacher:Heston:grid": 1,
+          "admin-teacher:Heston:next": 1
+        },
+        "geometry_authenticated_reader_calls_by_id": {
+          "admin-baseline:local": 6,
+          "admin-teacher:Heston:base": 2,
+          "admin-teacher:Heston:grid": 2,
+          "admin-teacher:Heston:next": 2
+        },
+        "geometry_authenticated_reader_calls_total": 12,
+        "indexing_authenticated_reader_calls_by_id": {
+          "admin-baseline:local": 2,
+          "admin-teacher:Heston:base": 2,
+          "admin-teacher:Heston:grid": 2,
+          "admin-teacher:Heston:next": 2
+        },
+        "indexing_authenticated_reader_calls_total": 8,
+        "returned": null,
+        "whole_chain_authenticated_reader_calls_by_id": {
+          "admin-baseline:local": 8,
+          "admin-teacher:Heston:base": 4,
+          "admin-teacher:Heston:grid": 4,
+          "admin-teacher:Heston:next": 4
+        },
+        "whole_chain_authenticated_reader_calls_total": 20
+      },
+      "passed": true,
+      "source_plan_original_roster_order_preserved": [
+        "admin-baseline:local",
+        "admin-teacher:Heston:base",
+        "admin-teacher:Heston:next",
+        "admin-teacher:Heston:grid"
+      ],
+      "v2": {
+        "geometry_IndexedRows_lookups_by_id": {
+          "admin-baseline:local": 1,
+          "admin-teacher:Heston:base": 1,
+          "admin-teacher:Heston:grid": 1,
+          "admin-teacher:Heston:next": 1
+        },
+        "geometry_authenticated_reader_calls_by_id": {
+          "admin-baseline:local": 2,
+          "admin-teacher:Heston:base": 2,
+          "admin-teacher:Heston:grid": 2,
+          "admin-teacher:Heston:next": 2
+        },
+        "geometry_authenticated_reader_calls_total": 8,
+        "indexing_authenticated_reader_calls_by_id": {
+          "admin-baseline:local": 2,
+          "admin-teacher:Heston:base": 2,
+          "admin-teacher:Heston:grid": 2,
+          "admin-teacher:Heston:next": 2
+        },
+        "indexing_authenticated_reader_calls_total": 8,
+        "returned": null,
+        "whole_chain_authenticated_reader_calls_by_id": {
+          "admin-baseline:local": 4,
+          "admin-teacher:Heston:base": 4,
+          "admin-teacher:Heston:grid": 4,
+          "admin-teacher:Heston:next": 4
+        },
+        "whole_chain_authenticated_reader_calls_total": 16
+      }
+    },
+    {
+      "both_rejected": true,
+      "case": "payload_hash_mismatch",
+      "model": "Heston",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "immutable original job payload differs from checkpoint"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "ID_mismatch",
+      "model": "Heston",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "immutable original job ID mismatch"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "path_escape",
+      "model": "Heston",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "'/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v2-fd_5k7d1/outside-native' is not in the subpath of '/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v2-fd_5k7d1/native'"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 0
+    },
+    {
+      "both_rejected": true,
+      "case": "native_file_tamper",
+      "model": "Heston",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "artifact byte provenance mismatch"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "nonreferenced_scalar_valid_artifact_changed",
+      "model": "Heston",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "immutable original job payload differs from checkpoint"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "case": "original_root_moved_restored_path_connection",
+      "full_original_rows_reauthenticated": 4,
+      "logical_outcomes_counts_and_expected_receipts_unchanged": true,
+      "model": "Heston",
+      "original_root_absent": true,
+      "passed": true,
+      "physical_byte_inventory_unchanged": true
+    },
+    {
+      "ID_negative_fixture_rows": 1,
+      "case": "final_saved_bytes_receipts_payload_reauthenticated",
+      "model": "Heston",
+      "native_file_inventory_unchanged": true,
+      "nonreferenced_scalar_negative_fixture_rows": 1,
+      "original_rows": 4,
+      "passed": true,
+      "raw_values_unchanged": true
+    },
+    {
+      "case": "actual_write_read_reference_connection",
+      "following_teacher_authenticated_reads_each": 1,
+      "model": "local",
+      "original_baseline_authenticated_reads": 3,
+      "outcome": {
+        "exception": null,
+        "returned": null
+      },
+      "passed": true,
+      "raw_payload_digests_and_ids_authenticated_by_real_ReferenceJobs": true,
+      "root_receipts_match": true,
+      "v2_baseline_authenticated_reads": 1
+    },
+    {
+      "case": "actual_reference_resolve_deferred_index_geometry",
+      "geometry_three_to_one_is_local_lookup_scope_only": true,
+      "model": "local",
+      "original": {
+        "geometry_IndexedRows_lookups_by_id": {
+          "admin-baseline:Heston": 3,
+          "admin-teacher:local:base": 1,
+          "admin-teacher:local:grid": 1,
+          "admin-teacher:local:next": 1
+        },
+        "geometry_authenticated_reader_calls_by_id": {
+          "admin-baseline:Heston": 6,
+          "admin-teacher:local:base": 2,
+          "admin-teacher:local:grid": 2,
+          "admin-teacher:local:next": 2
+        },
+        "geometry_authenticated_reader_calls_total": 12,
+        "indexing_authenticated_reader_calls_by_id": {
+          "admin-baseline:Heston": 2,
+          "admin-teacher:local:base": 2,
+          "admin-teacher:local:grid": 2,
+          "admin-teacher:local:next": 2
+        },
+        "indexing_authenticated_reader_calls_total": 8,
+        "returned": null,
+        "whole_chain_authenticated_reader_calls_by_id": {
+          "admin-baseline:Heston": 8,
+          "admin-teacher:local:base": 4,
+          "admin-teacher:local:grid": 4,
+          "admin-teacher:local:next": 4
+        },
+        "whole_chain_authenticated_reader_calls_total": 20
+      },
+      "passed": true,
+      "source_plan_original_roster_order_preserved": [
+        "admin-baseline:Heston",
+        "admin-teacher:local:base",
+        "admin-teacher:local:next",
+        "admin-teacher:local:grid"
+      ],
+      "v2": {
+        "geometry_IndexedRows_lookups_by_id": {
+          "admin-baseline:Heston": 1,
+          "admin-teacher:local:base": 1,
+          "admin-teacher:local:grid": 1,
+          "admin-teacher:local:next": 1
+        },
+        "geometry_authenticated_reader_calls_by_id": {
+          "admin-baseline:Heston": 2,
+          "admin-teacher:local:base": 2,
+          "admin-teacher:local:grid": 2,
+          "admin-teacher:local:next": 2
+        },
+        "geometry_authenticated_reader_calls_total": 8,
+        "indexing_authenticated_reader_calls_by_id": {
+          "admin-baseline:Heston": 2,
+          "admin-teacher:local:base": 2,
+          "admin-teacher:local:grid": 2,
+          "admin-teacher:local:next": 2
+        },
+        "indexing_authenticated_reader_calls_total": 8,
+        "returned": null,
+        "whole_chain_authenticated_reader_calls_by_id": {
+          "admin-baseline:Heston": 4,
+          "admin-teacher:local:base": 4,
+          "admin-teacher:local:grid": 4,
+          "admin-teacher:local:next": 4
+        },
+        "whole_chain_authenticated_reader_calls_total": 16
+      }
+    },
+    {
+      "both_rejected": true,
+      "case": "payload_hash_mismatch",
+      "model": "local",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "immutable original job payload differs from checkpoint"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "ID_mismatch",
+      "model": "local",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "immutable original job ID mismatch"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "path_escape",
+      "model": "local",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "'/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v2-fd_5k7d1/outside-native' is not in the subpath of '/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v2-fd_5k7d1/native'"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 0
+    },
+    {
+      "both_rejected": true,
+      "case": "native_file_tamper",
+      "model": "local",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "artifact byte provenance mismatch"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "nonreferenced_scalar_valid_artifact_changed",
+      "model": "local",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "immutable original job payload differs from checkpoint"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "case": "original_root_moved_restored_path_connection",
+      "full_original_rows_reauthenticated": 4,
+      "logical_outcomes_counts_and_expected_receipts_unchanged": true,
+      "model": "local",
+      "original_root_absent": true,
+      "passed": true,
+      "physical_byte_inventory_unchanged": true
+    },
+    {
+      "ID_negative_fixture_rows": 1,
+      "case": "final_saved_bytes_receipts_payload_reauthenticated",
+      "model": "local",
+      "native_file_inventory_unchanged": true,
+      "nonreferenced_scalar_negative_fixture_rows": 1,
+      "original_rows": 4,
+      "passed": true,
+      "raw_values_unchanged": true
+    }
+  ],
+  "expected_source_closure_reference": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+    "sha256": "30a1dd351af3814eecfcece69f99f8f60a21665e5d957d039bbde71746ffd0af"
+  },
+  "financial_acceptance": false,
+  "financial_kernel_solver_MC_RNG_training_executions": 0,
+  "financial_qualification": "unknown",
+  "guard_or_prior_modified": false,
+  "historical_financial_artifacts_read_or_modified": false,
+  "large_job_RAM_or_speed_effect": null,
+  "launch_approval": false,
+  "live_process_modified": false,
+  "measured_probe_prefix_cost": {
+    "cpu_seconds": 2.57369524,
+    "cpu_start_ns": 28619803,
+    "cpu_stop_ns": 2602315043,
+    "final_result_write_stdout_tail_seconds": null,
+    "peak_RSS_bytes_linux": 636354560,
+    "scope": "probe process main/import/authentication/small-artifact checks; not financial runtime benchmark",
+    "wall_seconds": 2.579912534,
+    "wall_start_ns": 91572168157141,
+    "wall_stop_ns": 91574748069675,
+    "whole_expense_closed": false
+  },
+  "passed_count": 18,
+  "performance_improvement_claim": null,
+  "preserved_original_admin_probe": {
+    "results": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v1-results.json",
+      "sha256": "28f7d6429bd116383aa28d9f008280a0e0370892b1c6e403a1c61c676b92d87f"
+    },
+    "source": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v1.py",
+      "sha256": "c5c68b05d2e805467acdc94109a505b55dd8e403f6b1df9ca85715544e509e36"
+    }
+  },
+  "prior_approval": false,
+  "probe_scope": "small nonfinancial integer/string rows only; actual codec and ReferenceJobs functional connection",
+  "probe_source_sha256": "a333aca99dbea1e2eed4f91514350a90326e3e0fc6b7973ef8085e9cefaf99b8",
+  "probe_success": true,
+  "production_approval": false,
+  "production_modified": false,
+  "production_path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+  "production_source_sha256_before_after": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+  "pytest_fullsuite_benchmark_Git_CAS_operations": 0,
+  "root_receipt_protocol_and_original_payload_authentication_used": true,
+  "source85_files_dynamic_before_after": {
+    "dynamic_imports": [],
+    "file_count": 85,
+    "unchanged": true
+  },
+  "source_approval": false,
+  "source_native_payload_identity": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "source_plain_canonical_identity": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "status": "candidate_not_authorized",
+  "temporary_artifact_files": 72,
+  "temporary_artifact_total_bytes": 25543,
+  "temporary_artifacts_removed": true
+}

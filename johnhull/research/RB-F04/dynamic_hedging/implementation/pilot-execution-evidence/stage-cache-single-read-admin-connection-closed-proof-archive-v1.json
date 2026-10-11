@@ -1,0 +1,72 @@
+{
+  "actual_large_job_speed_RAM_capacity_and_final_cost_tail": "unknown",
+  "author_v2_passed": 18,
+  "bounded_resolve_arguments_none": true,
+  "candidate_not_authorized": true,
+  "checks_not_combined": true,
+  "current_financial_worker": 1,
+  "exact_original_bytes_preserved": true,
+  "files": [
+    {
+      "bytes": 14077,
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v1.py",
+      "saved": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/stage-cache-single-read-admin-proof-task-5-stage-cache-geometry-single-read-admin-integration-v1.py.txt",
+      "sha256": "c5c68b05d2e805467acdc94109a505b55dd8e403f6b1df9ca85715544e509e36"
+    },
+    {
+      "bytes": 7731,
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v1-results.json",
+      "saved": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/stage-cache-single-read-admin-proof-task-5-stage-cache-geometry-single-read-admin-integration-v1-results.json",
+      "sha256": "28f7d6429bd116383aa28d9f008280a0e0370892b1c6e403a1c61c676b92d87f"
+    },
+    {
+      "bytes": 22504,
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v2.py",
+      "saved": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/stage-cache-single-read-admin-proof-task-5-stage-cache-geometry-single-read-admin-integration-v2.py.txt",
+      "sha256": "a333aca99dbea1e2eed4f91514350a90326e3e0fc6b7973ef8085e9cefaf99b8"
+    },
+    {
+      "bytes": 15205,
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v2-results.json",
+      "saved": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/stage-cache-single-read-admin-proof-task-5-stage-cache-geometry-single-read-admin-integration-v2-results.json",
+      "sha256": "026f92a28eac2e746448b46b225fd1ad527f90457eb05204240a7233dfab6e76"
+    },
+    {
+      "bytes": 12130,
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-admin-connection-v2-probe.py",
+      "saved": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/stage-cache-single-read-admin-proof-independent-stage-cache-geometry-admin-connection-v2-probe.py.txt",
+      "sha256": "2aa98f4b4ad167e99276185fb2320637be31b6948aa925d1b3ea186290aa795c"
+    },
+    {
+      "bytes": 6217,
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-admin-connection-v2-results.json",
+      "saved": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/stage-cache-single-read-admin-proof-independent-stage-cache-geometry-admin-connection-v2-results.json",
+      "sha256": "32fe193b4821fa8321bd047431a0d1226709d0fdb5cca28b0c6149ddf57b5ecc"
+    },
+    {
+      "bytes": 5744,
+      "original": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-admin-connection-v2-decision.json",
+      "saved": "johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/stage-cache-single-read-admin-proof-independent-stage-cache-geometry-admin-connection-v2-decision.json",
+      "sha256": "a40ef0ff060a9b9d0a8c98a392fda7379eac9f076f8247556764480b8b8c72e6"
+    }
+  ],
+  "fixture_authenticated_reads": {
+    "geometry_candidate": 8,
+    "geometry_original": 12,
+    "index_candidate": 8,
+    "index_original": 8,
+    "total_candidate": 16,
+    "total_original": 20
+  },
+  "full_financial_stage_gate_verified": false,
+  "independent_v2_passed": 8,
+  "original_provenance_authentication_and_final_reauthentication_preserved": true,
+  "production_source_prior_resource_launch_financial_phase_main_approval": false,
+  "schema": "rb-f04-stage-cache-single-read-admin-connection-closed-proof-archive-v1",
+  "scope": "tiny scalar actual artifact authentication/connection and restore; uninstalled candidate only",
+  "session85801_terminal_and_root_inspection_required_before_application": true,
+  "source85_all_85_original_files_unchanged": true,
+  "source85_native": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "source85_plain": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "utc": "2026-10-11T05:07:35.790898+00:00"
+}
