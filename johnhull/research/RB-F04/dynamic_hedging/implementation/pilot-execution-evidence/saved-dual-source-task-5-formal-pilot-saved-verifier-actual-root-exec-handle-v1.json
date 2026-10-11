@@ -1,0 +1,39 @@
+{
+  "actual_verifier_source_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "all_external10_closed": false,
+  "finance_acceptance": false,
+  "financial_qualification": "unknown",
+  "guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-whole-child-root-guard-v2.json",
+    "sha256": "ff9becdeaa995b2869fb79d5d77b28cca4f0edaa4271a32d4ce9e9d84084b731"
+  },
+  "independent_actual_guard_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source82-to85-actual-saved-only-guards-decision-v1.json",
+    "sha256": "d58471954e907a4534190a372a8c8c938c801eed1610f3df2f5e9dceb2dfe0b7"
+  },
+  "inner_guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-launch-guard-v3.json",
+    "sha256": "46068359d1656a484086b44fe89165cbe000eb78b04fa6afa6c4829c8093a878"
+  },
+  "native_saved_source": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v3",
+  "new_output": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-saved-check-root-v3",
+  "new_random_generation": false,
+  "observed_UTC": "2026-10-11T03:14:26.619645+00:00",
+  "original_generation_source_sha256": "ef14264e5127ca5edbab5b642505fc7505589e351a8d64cba0b9387574cfb9c7",
+  "original_scope": {
+    "attempts": 51,
+    "cases": 121,
+    "jobs": 3138,
+    "teacher_ns": [
+      1024,
+      4096,
+      16384,
+      65536
+    ]
+  },
+  "restart_on_observation_timeout": false,
+  "schema": "rb-f04-actual-saved-verifier-session-handoff-v1",
+  "scope": "saved_original_raw_only",
+  "session_status_at_creation": "exec tool returned live session; must repoll same handle and inspect receipt before classifying terminal",
+  "unified_exec_session_id": 85801
+}

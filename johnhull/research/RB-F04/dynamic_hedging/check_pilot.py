@@ -3164,10 +3164,18 @@ def _raw_job_check(job, context):
     if op == "source":
         from run_pilot import _pilot_source
 
-        actual = _pilot_source(context.get("source_root", ROOT))
+        authentication = context.get("saved_source_authentication")
+        actual = (
+            _pilot_source(context.get("source_root", ROOT))
+            if authentication is None
+            else authentication["producer_source"]
+        )
         runner._same(actual, raw, "actual transitive source bytes")
         _require(not actual.get("dynamic_imports"), "unresolved dynamic source")
-        return {"actual_source": actual, "financial_qualification": "unknown"}
+        result = {"actual_source": actual, "financial_qualification": "unknown"}
+        if authentication is not None:
+            result["current_verifier_source"] = authentication["verifier_source"]
+        return result
     if op == "market_pair":
         return check_market_pair_record(raw)
     if op == "closure":
@@ -4766,6 +4774,51 @@ def project_execution_pilot(
     }
 
 
+def _saved_source_context(snapshot, expected_plan, context):
+    """Reauthenticate a caller's trusted saved-only recipe and actual inputs.
+
+    The calling guard must authenticate the expected recipe before this boundary.
+    Raw rows and caller-injected authentication results cannot establish authority.
+    Fresh execution continues to use the unchanged original locked bindings.
+    """
+    from _pilot_saved_provenance import authenticate_saved_sources
+    from run_pilot import input_identity
+
+    _require(expected_plan is not None, "original locked plan required for saved source binding")
+    _require(
+        "inputs" in context and "producer_source_root" in context,
+        "actual original inputs and archived producer root required",
+    )
+    inputs = context["inputs"]
+    _require(
+        set(inputs) == set(expected_plan.get("input_bindings", {})),
+        "original input roster changed",
+    )
+    return authenticate_saved_sources(
+        snapshot["source"],
+        producer_root=context["producer_source_root"],
+        verifier_root=context.get("source_root", snapshot.get("source_root", ROOT)),
+        locked_plan=expected_plan,
+        input_bindings={key: input_identity(value) for key, value in inputs.items()},
+        trusted_binding=context["saved_source_binding"],
+    )
+
+
+def _saved_source_summary(authentication):
+    """Keep immutable identity strings apart from mutable source/plan objects."""
+    return {
+        key: copy.deepcopy(authentication[key])
+        for key in (
+            "schema",
+            "producer_source_sha256",
+            "verifier_source_sha256",
+            "producer_plan_sha256",
+            "producer_input_bindings_sha256",
+            "provenance",
+        )
+    }
+
+
 def check_pilot_records(snapshot, *, expected_plan, context=None, job_store=None, check_store=None):
     """Return raw recomputation and exact outstanding roster, never flag-only ready."""
     _require(snapshot.get("schema") == "rb-f04-pilot-raw-v1", "raw pilot schema mismatch")
@@ -4785,7 +4838,20 @@ def check_pilot_records(snapshot, *, expected_plan, context=None, job_store=None
     jobs = {j["id"]: j for j in snapshot.get("jobs", [])} if job_store is None else job_store
     _require(len(jobs) == len(snapshot.get("jobs", [])), "repeated pilot job ID")
     context = dict(context or {})
-    source = snapshot.get("source", {})
+    # Internal results never substitute for a freshly authenticated expected recipe.
+    context.pop("saved_source_authentication", None)
+    saved_authentication = None
+    saved_source_provenance = None
+    if "saved_source_binding" in context:
+        context["saved_source_binding"] = copy.deepcopy(context["saved_source_binding"])
+        saved_authentication = _saved_source_context(snapshot, expected_plan, context)
+        saved_source_provenance = _saved_source_summary(saved_authentication)
+        context["saved_source_authentication"] = saved_authentication
+    source = (
+        snapshot.get("source", {})
+        if saved_authentication is None
+        else saved_authentication["verifier_source"]
+    )
     context["teacher_verification_context"] = (
         _new_teacher_verification_context(
             source_root=context.get("source_root", snapshot.get("source_root", ROOT)),
@@ -5106,10 +5172,17 @@ def check_pilot_records(snapshot, *, expected_plan, context=None, job_store=None
     if expected_plan is not None and context is not None and "inputs" in context:
         from run_pilot import _locked_bindings
 
-        actual = _locked_bindings(
-            context["inputs"], expected_plan, context.get("source_root", ROOT)
-        )
-        runner._same(actual, snapshot["source"], "saved pilot actual source")
+        if saved_authentication is None:
+            actual = _locked_bindings(
+                context["inputs"], expected_plan, context.get("source_root", ROOT)
+            )
+            runner._same(actual, snapshot["source"], "saved pilot actual source")
+        else:
+            final_authentication = _saved_source_context(snapshot, expected_plan, context)
+            _require(
+                _saved_source_summary(final_authentication) == saved_source_provenance,
+                "saved producer/verifier provenance changed during check",
+            )
         source_verified = True
     else:
         issues.append(
@@ -5143,6 +5216,14 @@ def check_pilot_records(snapshot, *, expected_plan, context=None, job_store=None
             },
             "scope": "saved arrays/counts/blocks/cash/refinements/costs; original RNG and earlier solves require independent review",
         }
+        if saved_source_provenance is not None:
+            receipt["inputs"].update(
+                producer_source_sha256=saved_source_provenance["producer_source_sha256"],
+                verifier_source_sha256=saved_source_provenance["verifier_source_sha256"],
+                trusted_binding_sha256=saved_source_provenance["provenance"][
+                    "trusted_binding_sha256"
+                ],
+            )
     return {
         "closed": closed,
         "financial_qualification": "qualified" if qualified else "unknown",
@@ -5150,6 +5231,7 @@ def check_pilot_records(snapshot, *, expected_plan, context=None, job_store=None
         "case_results": case_results,
         "attempt_results": attempt_results,
         "raw_checks": checks,
+        "saved_source_provenance": saved_source_provenance,
         "teacher_verification_events": (
             []
             if context["teacher_verification_context"] is None

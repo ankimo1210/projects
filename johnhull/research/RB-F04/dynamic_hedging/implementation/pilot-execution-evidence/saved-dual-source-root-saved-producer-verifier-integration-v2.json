@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_storage.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_report.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_job_references.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_bounded_lifecycle.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_bounded_projection.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_provenance.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py",
+    "-q"
+  ],
+  "returncode": 0,
+  "wall_seconds": 155.197223716008,
+  "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v2.log",
+  "log_sha256": "f820c4d4efe3a5e392ce384839d7006ab06b837aa164279c3e4f1e3bcf97f0db",
+  "scope": "saved source/provenance/storage regression, not formal financial acceptance",
+  "formal_financial_jobs_executed": 0,
+  "replaces_failed_test_execution": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v1.json"
+}

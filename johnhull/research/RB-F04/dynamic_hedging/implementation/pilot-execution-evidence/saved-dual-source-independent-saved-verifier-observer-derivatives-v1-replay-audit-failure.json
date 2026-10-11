@@ -1,0 +1,14 @@
+{
+  "scope": "independent probe-output bookkeeping failure, not a source/financial defect",
+  "attempt": "first replay",
+  "subprocess_exit_code": 0,
+  "receipt_saved": false,
+  "error": "JSONDecodeError: Extra data: line 2 column 1 (char 289)",
+  "cause": "synthetic child prints a JSON object before the final probe JSON; wrapper used json.loads on the combined stream",
+  "wall_seconds": null,
+  "parent_cpu_seconds": null,
+  "original_stdout_bytes_saved": false,
+  "financial_execution": false,
+  "actual_native_read": false,
+  "production_edits": false
+}

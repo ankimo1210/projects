@@ -1,0 +1,93 @@
+{
+  "schema": "rb-f04-independent-saved-verifier-source-limited-review-v1",
+  "decision": "approved",
+  "role": "independent_saved_verifier_source_reviewer",
+  "scope": "saved_original_raw_only",
+  "verifier_source_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "verifier_source_plain_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "dynamic_imports": [],
+  "unresolved_findings": [],
+  "file_count": 85,
+  "financial_acceptance": false,
+  "source_mechanics_only": true,
+  "root_saved_check_execution_authorized_by_this_review": false,
+  "fresh_financial_launch_authorized": false,
+  "formal_budget_approved": false,
+  "financial_phase_completion_claimed": false,
+  "financial_qualification": "unknown",
+  "actual_numerical_qualification_authenticated": false,
+  "verified_checker_sha256": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+  "verifier_current_source_closure": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+    "sha256": "30a1dd351af3814eecfcece69f99f8f60a21665e5d957d039bbde71746ffd0af"
+  },
+  "fixed_author_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-saved-verifier-observer-derivatives-fixed-manifest-v1.json",
+    "sha256": "c7ff572adf554b6fee05fadc2b0c6af570495a08212592ac459e8eca5db83260"
+  },
+  "author_results_read_separately": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-saved-verifier-observer-derivatives-results-v1.json",
+    "sha256": "43a2c5eaa00d037c69e65bab3a3a24d22964ea25dd73ce1efd881dc689fab731"
+  },
+  "reviewed_derivative_sources": {
+    "task-5-full-pilot-root-saved-check-observer-v2.py": {
+      "sha256": "74556b15ab3bbbb1dadcd0075d0d7dc761135a0bfcadbe19f86b6ea43446a655",
+      "bytes": 58048
+    },
+    "task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py": {
+      "sha256": "15c263f2cdc7842504f44a22c4a9030daa4a21c79f46c381a88916baa686433e",
+      "bytes": 9006
+    },
+    "task-5-full-child-expense-observer-v2.py": {
+      "sha256": "ddfca0be491611175f50c14b52ada80843ad56d2681fcc4cfaade0543f27124a",
+      "bytes": 16207
+    }
+  },
+  "independent_binding_checks": {
+    "passed": 40,
+    "failed": 0,
+    "result": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-verifier-observer-derivatives-v2-binding-results.json",
+      "sha256": "e2ecf28f89c9d4ee0e211d34febac87bb2206875a16373415465de86d28f416e"
+    }
+  },
+  "replayed_author_synthetic_probes": {
+    "passed": 20,
+    "failed": 0,
+    "result": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-verifier-observer-derivatives-v2-replayed-probes.json",
+      "sha256": "4e1d38f9ce7054a4988ebd4f685743594355d420522dd75f89a9faec2ba07b94"
+    },
+    "new_independent_numeric_checks": false
+  },
+  "audit_history_preserved": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-verifier-observer-derivatives-v1-replay-audit-failure.json",
+    "sha256": "2661ce11cb4e425f5c76baa3de7f5a8f2c7049a53908671f03feaac8569d7b27"
+  },
+  "contract_findings": [
+    "Original 14 monitor/stop/cost/terminal/budget functions and enclosing function ASTs match their fixed predecessors.",
+    "Whole-child observation cost AST differs only by the saved-verifier lineage result key; original guard statements are all retained.",
+    "Original source82 producer is authenticated from the fixed materialized archive; actual typed input identities and the original plan remain producer-bound.",
+    "Separate fixed independent review and actual normal verifier closure/loaded aliases bind source85; root guard is still required and was not created.",
+    "Child routes all original saved raw through check_pilot with fresh context authentication and bounded checks/report; original fault/missing/unknown are not financial qualification.",
+    "Original 3138 jobs, 121 cases, 51 obligations, four N candidates and original administrative budgets are unchanged.",
+    "Parent/child clocks, inclusive cost and administrative partial/unknown/bookkeeping remain in their original scope."
+  ],
+  "limits": [
+    "No actual original native or typed-input artifact decoded; their real guard/receipt/closure authentication remains a root preflight requirement.",
+    "No actual full saved numerical check, SDE replay, financial model generation, RNG, solver, formal pilot or CAS operation.",
+    "No full RAM/capacity/runtime guarantee and no all-external10 cost closure.",
+    "This source-only decision does not approve a fresh financial source/plan, a resource prior, a root guard or research acceptance."
+  ],
+  "observed_review_cost": {
+    "synthetic_replay_parent_wall_seconds": 0.067225911,
+    "synthetic_replay_parent_cpu_seconds": 0.000363569,
+    "other_review_work_wall_seconds": null,
+    "first_audit_failure_wall_seconds": null,
+    "final_receipt_stdout_tail_seconds": null,
+    "legacy_financial_expenses_changed": false
+  },
+  "financial_solver_RNG_SDE_calls": 0,
+  "production_edits": false,
+  "Git_CAS_operations": 0
+}

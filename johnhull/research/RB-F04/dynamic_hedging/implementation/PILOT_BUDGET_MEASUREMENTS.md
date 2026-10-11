@@ -478,3 +478,17 @@ _pilot_saved_provenance.py は原producerの完全期待roster/保管byte・元p
 [root実検証](pilot-execution-evidence/bounded-pilot-lifecycle-projection-root-source-and-tests-v1.json)：既存と新規7test filesを同時実行して **305 passed（159.01秒）**、変更8Python Ruff/format・diffcheck PASS。新規44件はjob refs9・lifecycle4・projection10・別source認証21で、以前の261件と重複して再加算しない。独立read-only tiny5群でdefault/bounded原raw/束縛一致、構造list、input/source改変拒否、元root削除後の復元resume、sourcefault/tail保持を確認した。source候補は84files/dynamic0/native payload 9a30c042…、helperは接続前の独立契約。RED・fixture修正・元RSS失敗は原記録に保持。
 
 次はcheckerのproducer/verifier 3接続と、新source/元raw/入力/監視/実費を結ぶprior・実guardの確認。その後に元全scopeの監視下saved数値検算とfresh正式pilotを進める。単一job・multi-dependency・非raw manifest配列のRAMと全容量は未保証。正式金融計算は今回0、外部10/総費用、主396件、fresh/両保管庫semantic、図/教材、phase末3suite・独立最終受入/mainは未完了。ETAは数週間規模、1か月超もあり得る概算で、旧条件付き既知部分501.742hを新修正の短い合成検査から縮めない。
+
+### producer/verifier別認証と保存検算再開（2026-10-11）
+
+check_pilot_records の開始、元source行、終了時の3箇所へ別認証を接続した。呼出guardが認証した期待recipeを使い、元producer82のarchive実byte/元plan/実input IDと、通常のloaded-alias検査を含む現verifier85を別々に照合する。呼出側の認証結果注入は破棄し、recipeを独立copy、開始時の由来をimmutable summaryとして保持して終了時に再照合する。teacher memoは新verifierを結び、source行と既存receiptのsource IDは元producerを保持する。fresh runnerのstrict _locked_bindings は変更していない。
+
+[root証跡](pilot-execution-evidence/saved-producer-verifier-connected-root-evidence-v1.json)：新21integration testsを含む8files同時回帰 **326 passed（154.22秒、親155.197秒）**、変更3Python Ruff/format・diffcheck PASS。以前の305と今回326を足さない。最初の同時runは320PASS/6FAILで、provenance fixtureのsys.modules差替え時にhelperがfake runnerを初回import・保持したためだった。tiny probeで再現し、alias差替え前にhelperをimportする3行だけを修復。42件同時実行とroot326件が通った。production認証の緩和はなく、旧FAIL/log・独立probe wrapperの初回parse失敗/unknown費用も原記録に保持する。これらはsource/test機構の確認で、金融precisionやRSS適合ではない。
+
+root実metadata照合（97.304秒）で旧source82全file、plan12files/8,684,752 bytes、typed inputs6files/16,867 bytes、5入力IDと元plan/source/input digestを確認した。現sourceは85files/dynamic0、native a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8、plain b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030。元producerはnative ef14264e… のままで、新sourceへ再標示していない。
+
+監視3派生は元14の停止/terminal/予算/費用関数・enclosing ASTを保持し、旧archive/新verifier認証と4つのchecker context、参照checks/reportへ接続。独立source/binding40項目と作者の小合成20件の独立再実行は別集計でPASS。新saved-only実root guard（inner 46068359… / whole ff9becde…）は独立actual binding231項目・両load_guardがPASS。元guardのsource82/原plan/input/cap/closed-native/checkpoint/4binds・213 executed＋214番faultを保持し、新verifierは追加の別欄へ結合した。新しいformal financial launch/finance acceptanceはfalse、元3,138 jobs/121 cases/51義務・4N・573,122 caps/2,332 activation choicesは不変。
+
+2026-10-11 **03:13:47 UTC**、別出力で元全scopeの保存検算を起動した。unified session **85801**、enclosing PID458995/monitor PID458996のlive preflightを確認。起動時MemAvailable48.393GB、WSL/C/F各free460.073/130.330/182.004GB、元行政30日・個別RSS16GiB・各reserve10GiB・poll1秒を維持。全原native byte照合はobserverのbefore/after時計内で行い、起動前の独立判断では全rawを二重decode/hashしていない。これは新RNG/学習の生成ではなく、原保存数値の検算である。sourceを変更せず同handleを観察し、timeoutだけで再起動しない。起動checkpointでは数値worker未観測。その後、元native全10,233 filesのbefore byte照合完了と数値child PID459439のlive状態を確認した（[実観察](pilot-execution-evidence/saved-dual-source-task-5-saved-verifier-actual-root-live-observation-v1.json)）。結果/最終RSS適合/全容量・総費用はunknown。
+
+完了まで残る順序は、元保存数値結果と実監視費用の確認→新source fresh全pilotのprior/正式lock/実guard→全pilot完走/教師選択/freeze→主396件→fresh独立数値/両金融rawのsemantic復元→全10費用/図3本/notebook→phase末3suite・最終独立受入/main。#10多曲線・#11増分XVAも残る。単一job/multi-dependency/非raw metadata保持のRAMはこの326testsから保証しない。ETAは未確定、旧条件付き既知成分501.742hを短い合成検査や起動だけで縮めない。

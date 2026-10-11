@@ -1,0 +1,81 @@
+{
+  "schema": "rb-f04-test-fixture-import-fix-verification-v1",
+  "status": "pass",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-B",
+    "-m",
+    "pytest",
+    "-q",
+    "--confcutdir=deep_hedge_price",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_provenance.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py"
+  ],
+  "cwd": "/home/kazumasa/worktrees/johnhull-storage-codec",
+  "environment_overrides": {
+    "PYTHONPATH": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging:/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/hullkit/src:/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/src",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "exit_code": 0,
+  "log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-saved-provenance-fixture-import-fix-v1.log",
+  "log_sha256": "20f15e64fe6b4abcec33f6e7f2e4cb6dbc4baf1a70f510256b20fc50d9559d12",
+  "red_evidence": {
+    "root_combined_log": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-integration-v1.log",
+    "sha256": "837df4aa6e5fc485febacab2d8f4698ca2a03ca43d6cf83e4930b1d3c9e13468",
+    "original_outcome": "320 passed, 6 failed",
+    "tiny_reproduction_tool_chunk": "96c321",
+    "observed": {
+      "helper_captured_fake_before_undo": true,
+      "sys_modules_restored_to_real": true,
+      "helper_still_captured_fake_after_undo": true,
+      "integration_runner_patch_applied": true,
+      "helper_runner_patch_not_applied": true,
+      "reproduced_failure": "required execution source missing: reference_methods"
+    },
+    "first_tiny_probe_fixture_failure_tool_chunk": "a44fc6",
+    "first_tiny_probe_reason": "missing next fixture parent directory; preserved tool trace"
+  },
+  "changed_file": "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_provenance.py",
+  "changed_file_sha256": "d1d398631a1348eaa1918036638b991fddf85708e1b7277ee3f11de2984bf850",
+  "changed_lines": "sources fixture imports reader and asserts runner object identity before loaded alias mutation",
+  "integration_file_changed": false,
+  "production_changed": false,
+  "preserved_bytes_before": {
+    "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py": "6de1924302fd316b33afbf7c9b4a88493434eee2be87814dd62255e9633dc29a",
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "34838df65f352fb264be03fc37ab80a5e5176ff4a0c9a89b9b701628aa425b07",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py": "16bc18759cf0b4996dd90050a9946c631348cbda88a2e965bf80599ad03fab55"
+  },
+  "preserved_bytes_after": {
+    "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_provenance.py": "6de1924302fd316b33afbf7c9b4a88493434eee2be87814dd62255e9633dc29a",
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "849bd18ae0cba374ca3ce935592e23c8924c4cde8684fda50d8674fc4b7b63ef",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "34838df65f352fb264be03fc37ab80a5e5176ff4a0c9a89b9b701628aa425b07",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_source_integration.py": "16bc18759cf0b4996dd90050a9946c631348cbda88a2e965bf80599ad03fab55"
+  },
+  "preserved_bytes_stable": true,
+  "cost_scope": "pytest parent monitor and child through subprocess exit; own result-write/tail outside samples remains unknown",
+  "wall_start_ns": 84632216718036,
+  "wall_stop_ns": 84644053596300,
+  "wall_seconds": 11.836878264,
+  "parent_cpu_start_ns": 25605160,
+  "parent_cpu_stop_ns": 25907693,
+  "parent_cpu_seconds": 0.000302533,
+  "children_cpu_user_seconds": 10.590015,
+  "children_cpu_system_seconds": 1.202773,
+  "child_peak_rss_bytes": 785653760,
+  "cost_tail_seconds": null,
+  "validation": {
+    "ruff": "PASS for the two files",
+    "format": "PASS for the two files"
+  },
+  "scope": "test import order isolation only; actual helper/source_registry and original source checks unchanged",
+  "financial_generation": false,
+  "financial_acceptance": false,
+  "capacity_approval": false,
+  "formal_prior_approval": false,
+  "git_or_cas_operation": false
+}

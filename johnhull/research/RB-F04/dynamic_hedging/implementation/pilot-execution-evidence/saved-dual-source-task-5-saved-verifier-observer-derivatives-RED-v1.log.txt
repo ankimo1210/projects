@@ -1,0 +1,99 @@
+{
+  "checks": [
+    {
+      "name": "archived82_not_live_verifier_bytes",
+      "status": "FAIL",
+      "error": "FileNotFoundError(2, 'No such file or directory')"
+    },
+    {
+      "name": "actual_typed_inputs_and_separate_verifier_authentication",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'saved_verifier_binding'\")"
+    },
+    {
+      "name": "review_refusal:decision",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'verifier_limited_source_review'\")"
+    },
+    {
+      "name": "review_refusal:role",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'verifier_limited_source_review'\")"
+    },
+    {
+      "name": "review_refusal:scope",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'verifier_limited_source_review'\")"
+    },
+    {
+      "name": "review_refusal:verifier_source_sha256",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'verifier_limited_source_review'\")"
+    },
+    {
+      "name": "review_refusal:dynamic_imports",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'verifier_limited_source_review'\")"
+    },
+    {
+      "name": "review_refusal:unresolved_findings",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'verifier_limited_source_review'\")"
+    },
+    {
+      "name": "review_refusal:file_count",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'verifier_limited_source_review'\")"
+    },
+    {
+      "name": "review_refusal:financial_acceptance",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'verifier_limited_source_review'\")"
+    },
+    {
+      "name": "review_byte_sha_refusal",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'verifier_limited_source_review'\")"
+    },
+    {
+      "name": "recipe_flags_without_review_refused",
+      "status": "FAIL",
+      "error": "AttributeError(\"module 'synthetic_task_5_full_pilot_root_saved_check_observer_v2' has no attribute 'verifier_limited_source_review'\")"
+    },
+    {
+      "name": "archived_producer_byte_change_refused",
+      "status": "FAIL",
+      "error": "FileNotFoundError(2, 'No such file or directory')"
+    },
+    {
+      "name": "bounded_child_context_and_full_missing_roster_preserved",
+      "status": "FAIL",
+      "error": "TypeError(\"main.<locals>.bounded_child.<locals>.checker() missing 1 required keyword-only argument: 'check_directory'\")"
+    },
+    {
+      "name": "original14_stop_cost_terminal_budget_functions_AST_unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "enclosing_new_fixed_monitor",
+      "status": "FAIL",
+      "error": "AssertionError(('task-5-full-pilot-root-saved-check-observer-v1.py', 'task-5-full-pilot-root-saved-check-observer-v2.py'))"
+    },
+    {
+      "name": "whole_child_new_fixed_enclosing",
+      "status": "FAIL",
+      "error": "AssertionError(('task-5-full-pilot-root-saved-check-enclosing-v2.py', 'task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py'))"
+    },
+    {
+      "name": "whole_child_exact_source_sha",
+      "status": "PASS"
+    }
+  ],
+  "passed": 2,
+  "failed": 16,
+  "synthetic_only": true,
+  "financial_execution": false,
+  "actual_native_read": false,
+  "actual_guard_created": false,
+  "finance_acceptance": false
+}
