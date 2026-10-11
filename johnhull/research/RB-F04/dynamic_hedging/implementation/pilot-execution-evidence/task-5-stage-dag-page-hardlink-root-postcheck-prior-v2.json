@@ -1,0 +1,22 @@
+{
+  "expected_linked_targets": 93,
+  "expected_old_distinct_inode_allocated_bytes_removed": 1611796480,
+  "financial_acceptance": false,
+  "financial_qualification": "unknown",
+  "helper_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-candidate-v1.py",
+  "helper_sha256": "20ebd4089ac2ea6b89a739f6d15b380ad9ccfe31fce7270d63ddcf84f1581698",
+  "journal_paths": [
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-root-trial-v1.jsonl",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-root-bounded-v1.jsonl",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-root-bounded-v2.jsonl"
+  ],
+  "max_read_bytes": 6442450944,
+  "max_seconds": 10,
+  "native_mutation": false,
+  "native_root": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4",
+  "observed_UTC": "2026-10-11T10:22:35.277618+00:00",
+  "root_preapproved": true,
+  "scope": "93 linked targets in three closed journals; source85 files",
+  "source85_closure": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+  "status": "root_preapproved_readonly_postcheck"
+}
