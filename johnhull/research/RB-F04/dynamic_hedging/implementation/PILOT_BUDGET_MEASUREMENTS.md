@@ -520,3 +520,11 @@ materializer-v6 adcb4665…は元helper/実lock/validate/strict source APIを使
 全体は暫定で数週間規模、1か月超もあり得るが確度は低い。旧501.742hは条件付き既知成分小計で全体ETA・下限・上限ではなく、新source85の全pilot、非teacher/IO/外部10費用、修復、主実験/追加fresh、#10/#11実装・受入の未計測を含まない。現在の保存検算件数や30日行政上限から締切を作らず、新source85全pilot完走の実測後に更新する。
 
 旧partialの保存検算では、全available範囲を確認しても、元の未実行・faultを保持するためclosed=False/unknownとなりCLI exit2を返し得る（[check_pilot.py](../check_pilot.py)のmissing/closed判定とCLI）。新pilotの前提を旧全3,138件PASSやexit0へ置換しない。session85801の実terminal・終了費用/理由・信頼済み原receipt/全check refs/source/input/planの結果をrootが確認し、数値不一致・未検査・欠測を分けて保持した後、別fresh実guardを固定する。行政停止・tool失敗は数値PASSへ読み替えず、現在のfalse candidateも起動許可へ昇格していない。
+
+### 保存読取の最小改善候補（2026-10-11、実source未反映）
+
+ReferenceJobsは各accessで原artifactを復号・payload認証する。stage other-model geometryの同一rowを3回読む条件だけを、既存認証を通った1回の局所rawで共有する候補を準備した。global cache、reader/receipt/byte認証、全数値条件、末尾再認証、元N/grid/rosterは変えない。速度と金融whole RAMへの効果は未測定。
+
+v1は作者28合成がPASSしたが、独立確認で最初のValueError/KeyError時にtracebackがrawを保持する8反例が見つかり未承認。v2では取得後の同じ3条件をtry/finallyのdelで囲み、正常/例外の双方で教師read前に局所参照を解放する。作者36合成・独立15確認はPASS（重複する検査数は合算しない）。[v1未承認](pilot-execution-evidence/stage-cache-single-read-proof-independent-stage-cache-geometry-single-read-v1-decision.json)・[v2限定判断](pilot-execution-evidence/stage-cache-single-read-proof-independent-stage-cache-geometry-single-read-v2-decision.json)・[原byte保存台帳](pilot-execution-evidence/stage-cache-single-read-candidate-closed-proof-archive-v1.json)を保持。
+
+これはcandidate_function_source_mechanics_onlyの判断で、production適用・新producer/verifier/source/prior・資源/速度・金融/phase/mainを承認していない。source85/既存guard/priorとsession85801は不変。旧savedのterminal・root結果確認の後に採否を判断し、採用時はsourceを別revisionとして必要な新source/priorの承認・結合を経てfresh起動へ進む。旧rawをresume/relabelしない。

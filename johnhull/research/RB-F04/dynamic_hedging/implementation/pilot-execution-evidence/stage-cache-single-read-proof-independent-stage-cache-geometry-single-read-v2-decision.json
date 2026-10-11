@@ -1,0 +1,72 @@
+{
+  "schema": "rb-f04-independent-single-read-performance-candidate-review-v2",
+  "created_UTC": "2026-10-11T04:45:51.512069+00:00",
+  "decision": "approved",
+  "approval_scope": "candidate_function_source_mechanics_only",
+  "candidate_status": "candidate_not_authorized",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent stdlib candidate source and reference-lifetime reviewer",
+  "fixed_candidate_inputs": {
+    "task-5-stage-cache-geometry-single-read-candidate-v2-source.py.txt": "926060feb164c28714a4e4f6d04aa71da09304bd0f277bbf82d47c143d93d8f5",
+    "task-5-stage-cache-geometry-single-read-candidate-v2.diff.txt": "f7a6e7f18a1cfbb2a09930358ed44b310117936c290093c31c9d088500cfe71f",
+    "task-5-stage-cache-geometry-single-read-candidate-v2-verification.py": "1b8ac0cccf7833d244734b8c682727bfcc11963abacbfd92decdffe269a96a8f",
+    "task-5-stage-cache-geometry-single-read-candidate-v2-verification.json": "e828bc3b01c5a98940e30da17380a8e973c582f09f335a9bcf9cc89aa9dca0e3"
+  },
+  "validation": {
+    "results": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-single-read-v2-results.json",
+      "sha256": "3c14beead58b4a3892a39cf55a4a3249bd7b604378f320fa45f07a70b7b506be",
+      "bytes": 10249
+    },
+    "probe": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-single-read-v2-probe.py",
+      "sha256": "9b8af30cfddacef78df1e61d1800bbf9623c6f754ba9038dd0eae773991a4201",
+      "bytes": 6710
+    },
+    "independent_checks_PASS": 15,
+    "original_traceback_retention_counterexamples_rechecked_and_resolved": 8,
+    "author_36PASS_is_saved_author_result_not_added_to_independent_count": true
+  },
+  "findings": {
+    "unresolved_P1_P2": 0,
+    "v1_P2_status": "resolved in v2 only; v1 not_approved decision and eight counterexamples remain immutable",
+    "repair": "single authenticated acquisition outside try; identical three _require predicates inside try; sole finally del baseline_raw",
+    "result": "With each original ValueError/KeyError traceback retained, v2 releases returned baseline raw immediately like original, while v1 retains tiny8KiB. Normal success releases baseline before later teacher lookups."
+  },
+  "unchanged_boundaries": {
+    "predicate_values_exception_types_messages": true,
+    "other_non_target_module_AST": true,
+    "reader_ReferenceJobs_receipt_byte_source_and_final_authentication_AST": true,
+    "single_read_immutable_original_row_assumption": true,
+    "original_false_unknown_failures_kept": true,
+    "source85_production_before_after": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+    "old_candidate_and_independent_evidence_original_bytes": true
+  },
+  "historical_v1_decision": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-single-read-v1-decision.json",
+    "sha256": "14cffaf673d884b6f7d32a6c238f8f786ca4e9c56bbfa8d2c92dad1de73dc1a0",
+    "bytes": 4366
+  },
+  "historical_v1_results": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-single-read-v1-results.json",
+    "sha256": "d09c5622f9bb06f37b78efe92c8fa6694548ee85103dd1397f0d04fe1cbd7dcc",
+    "bytes": 11045
+  },
+  "cost": {
+    "wall_seconds_before_write": 1.0362540459900629,
+    "CPU_seconds_before_write": 1.036242301,
+    "tail_seconds": null
+  },
+  "financial_RNG_NumPy_solver_artifact_pytest_benchmark_process_Git_CAS_calls": 0,
+  "production_live_session_guard_prior_changes": 0,
+  "root_preapproved": false,
+  "production_application_approved": false,
+  "new_producer_or_verifier_source_approval": false,
+  "new_prior_or_resource_approval": false,
+  "launch_or_phase_or_main_approval": false,
+  "financial_qualification": "unknown",
+  "financial_acceptance": false,
+  "runtime_speed_effect": null,
+  "whole_RAM_or_capacity_guarantee": false,
+  "application_prerequisite": "Only after session85801 terminal, root decision and required actual new source/prior approvals and bindings; live source85 must not change."
+}

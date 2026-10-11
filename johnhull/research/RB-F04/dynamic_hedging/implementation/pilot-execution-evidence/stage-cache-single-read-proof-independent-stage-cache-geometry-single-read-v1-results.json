@@ -1,0 +1,372 @@
+{
+  "schema": "rb-f04-independent-single-read-candidate-review-results-v1",
+  "created_UTC": "2026-10-11T04:41:26.855954+00:00",
+  "candidate_status": "candidate_not_authorized",
+  "functional_checks_PASS": 28,
+  "functional_checks": [
+    {
+      "model": "Heston",
+      "case": "valid",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "original_n",
+      "PASS": true,
+      "old_baseline_reads": 1,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "grid",
+      "PASS": true,
+      "old_baseline_reads": 2,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "cache_original_N",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "declared_call",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "declared_other_asian",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "declared_candidate",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "base_denominator",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "next_denominator",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "grid_denominator",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "missing_baseline",
+      "PASS": true,
+      "old_baseline_reads": 1,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "missing_grid",
+      "PASS": true,
+      "old_baseline_reads": 2,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "missing_teacher",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "valid",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "original_n",
+      "PASS": true,
+      "old_baseline_reads": 1,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "grid",
+      "PASS": true,
+      "old_baseline_reads": 2,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "cache_original_N",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "declared_call",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "declared_other_asian",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "declared_candidate",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "base_denominator",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "next_denominator",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "grid_denominator",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "missing_baseline",
+      "PASS": true,
+      "old_baseline_reads": 1,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "missing_grid",
+      "PASS": true,
+      "old_baseline_reads": 2,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "local",
+      "case": "missing_teacher",
+      "PASS": true,
+      "old_baseline_reads": 3,
+      "new_baseline_reads": 1
+    },
+    {
+      "model": "Heston",
+      "case": "released_before_later_geometry_failure",
+      "PASS": true
+    },
+    {
+      "model": "local",
+      "case": "released_before_later_geometry_failure",
+      "PASS": true
+    }
+  ],
+  "retention_counterexamples": [
+    {
+      "model": "Heston",
+      "case": "original_n",
+      "counterexample_confirmed": true,
+      "original": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 0,
+        "tiny_payload_bytes_retained": 0,
+        "after_clear_frames_alive": 0
+      },
+      "candidate": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 1,
+        "tiny_payload_bytes_retained": 8192,
+        "after_clear_frames_alive": 0
+      }
+    },
+    {
+      "model": "Heston",
+      "case": "grid",
+      "counterexample_confirmed": true,
+      "original": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 0,
+        "tiny_payload_bytes_retained": 0,
+        "after_clear_frames_alive": 0
+      },
+      "candidate": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 1,
+        "tiny_payload_bytes_retained": 8192,
+        "after_clear_frames_alive": 0
+      }
+    },
+    {
+      "model": "Heston",
+      "case": "cache_original_N",
+      "counterexample_confirmed": true,
+      "original": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 0,
+        "tiny_payload_bytes_retained": 0,
+        "after_clear_frames_alive": 0
+      },
+      "candidate": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 1,
+        "tiny_payload_bytes_retained": 8192,
+        "after_clear_frames_alive": 0
+      }
+    },
+    {
+      "model": "Heston",
+      "case": "missing_grid",
+      "counterexample_confirmed": true,
+      "original": {
+        "exception_type": "KeyError",
+        "exception_message": "'grid'",
+        "returned_baseline_alive_with_traceback": 0,
+        "tiny_payload_bytes_retained": 0,
+        "after_clear_frames_alive": 0
+      },
+      "candidate": {
+        "exception_type": "KeyError",
+        "exception_message": "'grid'",
+        "returned_baseline_alive_with_traceback": 1,
+        "tiny_payload_bytes_retained": 8192,
+        "after_clear_frames_alive": 0
+      }
+    },
+    {
+      "model": "local",
+      "case": "original_n",
+      "counterexample_confirmed": true,
+      "original": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 0,
+        "tiny_payload_bytes_retained": 0,
+        "after_clear_frames_alive": 0
+      },
+      "candidate": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 1,
+        "tiny_payload_bytes_retained": 8192,
+        "after_clear_frames_alive": 0
+      }
+    },
+    {
+      "model": "local",
+      "case": "grid",
+      "counterexample_confirmed": true,
+      "original": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 0,
+        "tiny_payload_bytes_retained": 0,
+        "after_clear_frames_alive": 0
+      },
+      "candidate": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 1,
+        "tiny_payload_bytes_retained": 8192,
+        "after_clear_frames_alive": 0
+      }
+    },
+    {
+      "model": "local",
+      "case": "cache_original_N",
+      "counterexample_confirmed": true,
+      "original": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 0,
+        "tiny_payload_bytes_retained": 0,
+        "after_clear_frames_alive": 0
+      },
+      "candidate": {
+        "exception_type": "ValueError",
+        "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+        "returned_baseline_alive_with_traceback": 1,
+        "tiny_payload_bytes_retained": 8192,
+        "after_clear_frames_alive": 0
+      }
+    },
+    {
+      "model": "local",
+      "case": "missing_grid",
+      "counterexample_confirmed": true,
+      "original": {
+        "exception_type": "KeyError",
+        "exception_message": "'grid'",
+        "returned_baseline_alive_with_traceback": 0,
+        "tiny_payload_bytes_retained": 0,
+        "after_clear_frames_alive": 0
+      },
+      "candidate": {
+        "exception_type": "KeyError",
+        "exception_message": "'grid'",
+        "returned_baseline_alive_with_traceback": 1,
+        "tiny_payload_bytes_retained": 8192,
+        "after_clear_frames_alive": 0
+      }
+    }
+  ],
+  "static_scope": "all non-target module AST equal; target still same three scalar predicates; reader/receipt/input/source guard definitions unchanged",
+  "production_before_after_sha256": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+  "fixed_inputs": {
+    "task-5-stage-cache-geometry-single-read-candidate-v1-source.py.txt": "fe71ab4bf6357f319d428c764681ddab0e6ec4a98758689faa2c0f8e678603ff",
+    "task-5-stage-cache-geometry-single-read-candidate-v1.diff.txt": "9a6823034d0d4e56ab79453d4d758cfc172fcc78983d97a9344cb7fff46c00fd",
+    "task-5-stage-cache-geometry-single-read-candidate-v1-verification.py": "fdd005d1884fa6ffb14d41b4316849b196547b5e212e220588496d372ec14ed2",
+    "task-5-stage-cache-geometry-single-read-candidate-v1-verification.json": "293d2d7487c78d763272e05aad62481c206302019573d8527cb254afcf6680cb"
+  },
+  "direct_observation_cost": {
+    "wall_seconds_before_results_write": 0.41248692900990136,
+    "CPU_seconds_before_results_write": 0.412481364,
+    "write_final_tail": null,
+    "real_RAM_or_performance": null
+  },
+  "financial_RNG_solver_NumPy_artifact_benchmark_pytest_calls": 0,
+  "production_live_guard_prior_Git_CAS_changes": 0,
+  "financial_qualification": "unknown",
+  "application_approved": false
+}

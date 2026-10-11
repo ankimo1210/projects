@@ -1,0 +1,473 @@
+{
+  "status": "candidate_not_authorized",
+  "production_path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+  "production_source_sha256_before_after": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+  "current_source85_closure_reference": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+    "sha256": "30a1dd351af3814eecfcece69f99f8f60a21665e5d957d039bbde71746ffd0af"
+  },
+  "source85_unchanged_for_owned_function_file": true,
+  "candidate_source": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-candidate-v1-source.py.txt",
+    "sha256": "fe71ab4bf6357f319d428c764681ddab0e6ec4a98758689faa2c0f8e678603ff"
+  },
+  "diff": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-candidate-v1.diff.txt",
+    "sha256": "9a6823034d0d4e56ab79453d4d758cfc172fcc78983d97a9344cb7fff46c00fd"
+  },
+  "verification_source": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-candidate-v1-verification.py",
+    "sha256": "fdd005d1884fa6ffb14d41b4316849b196547b5e212e220588496d372ec14ed2"
+  },
+  "function_ast_delta_only_binding_and_del": true,
+  "all_other_module_ast_unchanged": true,
+  "checks": [
+    {
+      "model": "Heston",
+      "case": "valid",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": null
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "original_n",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage other-model cache must retain actual1024coarse baseline"
+        ]
+      },
+      "baseline_lookups_original": 1,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "grid",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage other-model cache must retain actual1024coarse baseline"
+        ]
+      },
+      "baseline_lookups_original": 2,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "cache_original_N",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage other-model cache must retain actual1024coarse baseline"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "declared_call",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage original common call cache producer changed"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "declared_other_asian",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage other-model cache changed during candidate refinement"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "declared_candidate",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage candidate cache is not the declared N/grid refinement"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "base_denominator",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage cache original teacher denominator differs"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "next_denominator",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage cache original teacher denominator differs"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "grid_denominator",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage cache original teacher denominator differs"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "missing_baseline",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "KeyError",
+          "'baseline:local'"
+        ]
+      },
+      "baseline_lookups_original": 1,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "missing_grid",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "KeyError",
+          "'grid'"
+        ]
+      },
+      "baseline_lookups_original": 2,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "missing_teacher",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "KeyError",
+          "'teacher:Heston:next'"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "Heston",
+      "case": "immediate_success_path_reference_release",
+      "passed": true,
+      "present_before_del": true,
+      "absent_after_del": true,
+      "returned_baseline_raw_released": true,
+      "before_teacher_reads": true
+    },
+    {
+      "model": "local",
+      "case": "valid",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": null
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "original_n",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage other-model cache must retain actual1024coarse baseline"
+        ]
+      },
+      "baseline_lookups_original": 1,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "grid",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage other-model cache must retain actual1024coarse baseline"
+        ]
+      },
+      "baseline_lookups_original": 2,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "cache_original_N",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage other-model cache must retain actual1024coarse baseline"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "declared_call",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage original common call cache producer changed"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "declared_other_asian",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage other-model cache changed during candidate refinement"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "declared_candidate",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage candidate cache is not the declared N/grid refinement"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "base_denominator",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage cache original teacher denominator differs"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "next_denominator",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage cache original teacher denominator differs"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "grid_denominator",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "ValueError",
+          "stage cache original teacher denominator differs"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "missing_baseline",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "KeyError",
+          "'baseline:Heston'"
+        ]
+      },
+      "baseline_lookups_original": 1,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "missing_grid",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "KeyError",
+          "'grid'"
+        ]
+      },
+      "baseline_lookups_original": 2,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "missing_teacher",
+      "passed": true,
+      "outcome": {
+        "returned": null,
+        "exception": [
+          "KeyError",
+          "'teacher:local:next'"
+        ]
+      },
+      "baseline_lookups_original": 3,
+      "baseline_lookups_candidate": 1,
+      "other_lookups_unchanged": true,
+      "original_inputs_unchanged": true
+    },
+    {
+      "model": "local",
+      "case": "immediate_success_path_reference_release",
+      "passed": true,
+      "present_before_del": true,
+      "absent_after_del": true,
+      "returned_baseline_raw_released": true,
+      "before_teacher_reads": true
+    }
+  ],
+  "passed_count": 28,
+  "failed_count": 0,
+  "verification_scope": "stdlib-only AST-extracted actual function; small synthetic dicts; no protocol or artifact reads",
+  "semantic_boundary": "Immutable rows are authenticated by the existing reader once; local baseline_raw is shared for the same three unchanged predicates and deleted immediately after successful _require. Failure predicates and exception types/messages match.",
+  "retention_limit": "Only the added local reference is released before subsequent reads; original row owners and unchanged final teacher raw remain outside this claim. No absolute RAM bound or timing benefit is established.",
+  "reader_or_provenance_changes": false,
+  "global_cache_added": false,
+  "financial_execution_count": 0,
+  "numpy_rng_count": 0,
+  "actual_artifact_read_count": 0,
+  "benchmark_count": 0,
+  "pytest_count": 0,
+  "production_modified": false,
+  "live_process_modified": false,
+  "git_or_cas_operations": 0,
+  "root_preapproved": false,
+  "financial_acceptance": false,
+  "performance_effect": null,
+  "application_prerequisite": "Session85801 terminal, root decision, and required new source approval; this candidate does not authorize application."
+}
