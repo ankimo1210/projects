@@ -1,0 +1,65 @@
+{
+  "schema": "rb-f04-independent-single-read-performance-candidate-review-v1",
+  "created_UTC": "2026-10-11T04:42:21.728153+00:00",
+  "decision": "not_approved",
+  "candidate_status": "candidate_not_authorized",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent stdlib candidate source and reference-lifetime reviewer",
+  "scope": "D2-fixed single-read geometry candidate only; actual production remains frozen source85. Synthetic scalar values and small dict payloads, no actual artifact or financial inputs.",
+  "fixed_candidate_inputs": {
+    "task-5-stage-cache-geometry-single-read-candidate-v1-source.py.txt": "fe71ab4bf6357f319d428c764681ddab0e6ec4a98758689faa2c0f8e678603ff",
+    "task-5-stage-cache-geometry-single-read-candidate-v1.diff.txt": "9a6823034d0d4e56ab79453d4d758cfc172fcc78983d97a9344cb7fff46c00fd",
+    "task-5-stage-cache-geometry-single-read-candidate-v1-verification.py": "fdd005d1884fa6ffb14d41b4316849b196547b5e212e220588496d372ec14ed2",
+    "task-5-stage-cache-geometry-single-read-candidate-v1-verification.json": "293d2d7487c78d763272e05aad62481c206302019573d8527cb254afcf6680cb"
+  },
+  "validation": {
+    "results": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-single-read-v1-results.json",
+      "sha256": "d09c5622f9bb06f37b78efe92c8fa6694548ee85103dd1397f0d04fe1cbd7dcc",
+      "bytes": 11045
+    },
+    "probe": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-stage-cache-geometry-single-read-v1-probe.py",
+      "sha256": "2480a6647b433019f45cfd76b8d524c7a0a1b2c98606ca7980277aacfa541af2",
+      "bytes": 5886
+    },
+    "functional_checks_PASS": 28,
+    "confirmed_reference_lifetime_counterexamples": 8
+  },
+  "finding": {
+    "priority": "P2",
+    "title": "Release baseline_raw on the first predicate exception",
+    "candidate_function": "_teacher_stage_cache_geometry",
+    "candidate_line": 3903,
+    "candidate_del_line": 3910,
+    "evidence": "Both models, each of original_n/grid/cache_original_N/missing_grid: retained original traceback does not retain the returned baseline raw; candidate retains its tiny8KiB payload until traceback.clear_frames. Later geometry failure after del releases baseline.",
+    "cause": "_require rejection or missing-key error exits before del baseline_raw; the function traceback owns the new local reference.",
+    "minimum_candidate_repair": "Keep one authenticated rows read and the three same predicates; wrap only the baseline predicate evaluation/_require in try/finally with del baseline_raw so rejection and KeyError release the local reference.",
+    "production_relevance_limit": "A retained traceback can extend the full returned raw lifetime. Current check_pilot_records normally stores the error message and clears the caught exception at handler exit, so no persistent accumulation or measured RSS increase is established. Real raw bytes and runtime cost were not read or measured.",
+    "original_function_failure_semantics_unchanged": true
+  },
+  "functional_conclusions": {
+    "three_unchanged_predicates_and_exception_messages": true,
+    "success_baseline_reads_original": 3,
+    "success_baseline_reads_candidate": 1,
+    "other_row_lookups_and_input_values_unchanged": true,
+    "all_non_target_module_AST_unchanged": true,
+    "reader_receipt_source_input_authentication_AST_unchanged": true
+  },
+  "production_checker_SHA_before_after": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+  "cost": {
+    "wall_seconds_before_results_write": 0.41248692900990136,
+    "CPU_seconds_before_results_write": 0.412481364,
+    "write_final_tail": null,
+    "real_RAM_or_performance": null
+  },
+  "financial_RNG_solver_NumPy_artifact_benchmark_pytest_calls": 0,
+  "production_live_session_guard_prior_Git_CAS_changes": 0,
+  "financial_qualification": "unknown",
+  "performance_effect": null,
+  "RAM_or_capacity_guarantee": false,
+  "application_approved": false,
+  "application_boundary": "Only after session85801 terminal, root decision and required new source/prior binding approval. This D2 review does not authorize live application.",
+  "original_author_fixed_28PASS_preserved": true,
+  "unknown_expenses_or_precision_promoted_to_closed": false
+}

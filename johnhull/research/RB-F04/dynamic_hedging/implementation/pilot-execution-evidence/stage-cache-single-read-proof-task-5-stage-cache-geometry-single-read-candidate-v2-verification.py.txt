@@ -1,0 +1,350 @@
+"""D2-only, stdlib synthetic comparison; no production or artifact writes."""
+import ast
+import copy
+import hashlib
+import json
+from pathlib import Path
+import sys
+import weakref
+
+WORKTREE = Path("/home/kazumasa/worktrees/johnhull-storage-codec")
+DIRECTORY = WORKTREE / ".superpowers/sdd/2026-10-10-dynamic-storage-codec"
+PREFIX = "task-5-stage-cache-geometry-single-read-candidate-v2"
+SOURCE = WORKTREE / "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+CANDIDATE = DIRECTORY / (PREFIX + "-source.py.txt")
+EXPECTED_SOURCE_SHA = "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b"
+FUNCTION = "_teacher_stage_cache_geometry"
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def function_and_tree(path):
+    tree = ast.parse(path.read_text())
+    function = next(
+        node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == FUNCTION
+    )
+    namespace = {"_require": require}
+    exec(compile(ast.Module(body=[function], type_ignores=[]), str(path), "exec"), namespace)
+    return namespace[FUNCTION], tree, function
+
+
+class Raw(dict):
+    __slots__ = ("__weakref__",)
+
+
+class Rows:
+    """Each read returns a fresh row; count reads without keeping returned raw."""
+
+    def __init__(self, values):
+        self.values = values
+        self.lookups = {}
+        self.raw_references = {}
+
+    def __getitem__(self, key):
+        self.lookups[key] = self.lookups.get(key, 0) + 1
+        value = copy.deepcopy(self.values[key])
+        if "raw" in value:
+            value["raw"] = Raw(value["raw"])
+            self.raw_references.setdefault(key, []).append(weakref.ref(value["raw"]))
+        return value
+
+
+def fixture(model):
+    other = "local" if model == "Heston" else "Heston"
+    identifiers = {
+        "baseline": "baseline:" + other,
+        "base": "teacher:" + model + ":base",
+        "next": "teacher:" + model + ":next",
+        "grid": "teacher:" + model + ":grid",
+    }
+    plan = {
+        "model": model,
+        "teacher_job_id": identifiers["base"],
+        "next_teacher_job_id": identifiers["next"],
+        "grid_teacher_job_id": identifiers["grid"],
+        "cache_bindings": {},
+    }
+    for kind in ("SDE", "teacher_N", "teacher_grid", "position", "pnl"):
+        sides = {}
+        for side in ("base", "refined"):
+            selected = identifiers["base"]
+            if side == "refined" and kind == "teacher_N":
+                selected = identifiers["next"]
+            if side == "refined" and kind == "teacher_grid":
+                selected = identifiers["grid"]
+            sides[side] = {
+                model: {"call_job_id": "call:" + model, "asian_job_id": selected},
+                other: {"call_job_id": "call:" + other, "asian_job_id": identifiers["baseline"]},
+            }
+        plan["cache_bindings"][kind] = sides
+    values = {
+        identifiers["baseline"]: {
+            "id": identifiers["baseline"],
+            "raw": {"original_n": 1024, "grid": "coarse", "cache": {"original_N": 1024}},
+        }
+    }
+    for name, n in (("base", 4096), ("next", 16384), ("grid", 4096)):
+        values[identifiers[name]] = {
+            "id": identifiers[name],
+            "raw": {"original_n": n, "grid": name, "cache": {"original_N": n}},
+        }
+    return plan, values, identifiers
+
+
+def modify(kind, plan, values, identifiers):
+    other = "local" if plan["model"] == "Heston" else "Heston"
+    baseline = values[identifiers["baseline"]]["raw"]
+    if kind == "original_n":
+        baseline["original_n"] = 4096
+    elif kind == "grid":
+        baseline["grid"] = "high"
+    elif kind == "cache_original_N":
+        baseline["cache"]["original_N"] = 4096
+    elif kind == "declared_call":
+        plan["cache_bindings"]["position"]["refined"][other]["call_job_id"] = "other-call"
+    elif kind == "declared_other_asian":
+        plan["cache_bindings"]["pnl"]["refined"][other]["asian_job_id"] = "other-asian"
+    elif kind == "declared_candidate":
+        plan["cache_bindings"]["teacher_N"]["refined"][plan["model"]]["asian_job_id"] = identifiers["base"]
+    elif kind == "base_denominator":
+        values[identifiers["base"]]["raw"]["cache"]["original_N"] = 1024
+    elif kind == "next_denominator":
+        values[identifiers["next"]]["raw"]["cache"]["original_N"] = 4096
+    elif kind == "grid_denominator":
+        values[identifiers["grid"]]["raw"]["cache"]["original_N"] = 1024
+    elif kind == "missing_baseline":
+        del values[identifiers["baseline"]]
+    elif kind == "missing_grid":
+        del baseline["grid"]
+    elif kind == "missing_teacher":
+        del values[identifiers["next"]]
+    else:
+        raise AssertionError(kind)
+
+
+def outcome(function, plan, rows):
+    try:
+        value = function(plan, rows)
+        return {"returned": value, "exception": None}
+    except (ValueError, KeyError) as error:
+        return {"returned": None, "exception": [type(error).__name__, str(error)]}
+
+
+def main():
+    assert digest(SOURCE) == EXPECTED_SOURCE_SHA
+    original, original_tree, original_ast = function_and_tree(SOURCE)
+    candidate, candidate_tree, candidate_ast = function_and_tree(CANDIDATE)
+    original_tree.body.remove(original_ast)
+    candidate_tree.body.remove(candidate_ast)
+    assert ast.dump(original_tree, include_attributes=False) == ast.dump(candidate_tree, include_attributes=False)
+
+    # Removing just the added binding/deletion and restoring the three accesses
+    # must recover the complete original function AST.
+    normalized = copy.deepcopy(candidate_ast)
+    binding = next(
+        node for node in normalized.body
+        if isinstance(node, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id == "baseline_raw" for target in node.targets
+        )
+    )
+    normalized.body.remove(binding)
+    guarded = next(node for node in normalized.body if isinstance(node, ast.Try))
+    assert not guarded.handlers and not guarded.orelse
+    assert len(guarded.body) == 1 and len(guarded.finalbody) == 1
+    assert isinstance(guarded.finalbody[0], ast.Delete)
+    assert ast.dump(guarded.finalbody[0], include_attributes=False) == ast.dump(
+        ast.parse("del baseline_raw").body[0], include_attributes=False
+    )
+    guarded_index = normalized.body.index(guarded)
+    normalized.body[guarded_index:guarded_index + 1] = guarded.body
+
+    class RestoreReads(ast.NodeTransformer):
+        def visit_Name(self, node):
+            if node.id == "baseline_raw":
+                return copy.deepcopy(binding.value)
+            return node
+
+    normalized = RestoreReads().visit(normalized)
+    assert ast.dump(normalized, include_attributes=False) == ast.dump(original_ast, include_attributes=False)
+
+    v1_names = (
+        "task-5-stage-cache-geometry-single-read-candidate-v1-source.py.txt",
+        "task-5-stage-cache-geometry-single-read-candidate-v1.diff.txt",
+        "task-5-stage-cache-geometry-single-read-candidate-v1-verification.py",
+        "task-5-stage-cache-geometry-single-read-candidate-v1-verification.json",
+        "independent-stage-cache-geometry-single-read-v1-decision.json",
+        "independent-stage-cache-geometry-single-read-v1-results.json",
+        "independent-stage-cache-geometry-single-read-v1-probe.py",
+    )
+    preserved_v1 = {name: digest(DIRECTORY / name) for name in v1_names}
+    v1_decision = json.loads((DIRECTORY / v1_names[4]).read_text())
+    assert v1_decision["decision"] == "not_approved"
+    assert v1_decision["validation"]["confirmed_reference_lifetime_counterexamples"] == 8
+    v1, _, _ = function_and_tree(DIRECTORY / v1_names[0])
+    checks = []
+    mutations = (
+        "original_n", "grid", "cache_original_N", "declared_call",
+        "declared_other_asian", "declared_candidate", "base_denominator",
+        "next_denominator", "grid_denominator", "missing_baseline",
+        "missing_grid", "missing_teacher",
+    )
+    for model in ("Heston", "local"):
+        for mutation in (None, *mutations):
+            plan, values, identifiers = fixture(model)
+            if mutation is not None:
+                modify(mutation, plan, values, identifiers)
+            frozen = copy.deepcopy((plan, values))
+            old_rows, new_rows = Rows(values), Rows(values)
+            old, new = outcome(original, plan, old_rows), outcome(candidate, plan, new_rows)
+            assert old == new, (model, mutation, old, new)
+            assert (plan, values) == frozen, (model, mutation, "input changed")
+            baseline = identifiers["baseline"]
+            old_other = {k: v for k, v in old_rows.lookups.items() if k != baseline}
+            new_other = {k: v for k, v in new_rows.lookups.items() if k != baseline}
+            assert old_other == new_other
+            assert new_rows.lookups[baseline] == 1
+            assert old_rows.lookups[baseline] >= new_rows.lookups[baseline]
+            if mutation is None:
+                assert old["exception"] is None
+                assert old_rows.lookups[baseline] == 3
+            else:
+                assert old["exception"] is not None
+            checks.append({
+                "model": model, "case": mutation or "valid",
+                "passed": True, "outcome": old,
+                "baseline_lookups_original": old_rows.lookups[baseline],
+                "baseline_lookups_candidate": new_rows.lookups[baseline],
+                "other_lookups_unchanged": True, "original_inputs_unchanged": True,
+            })
+
+        # Check actual success-path deletion before subsequent teacher lookups.
+        plan, values, identifiers = fixture(model)
+        rows = Rows(values)
+        guarded_node = next(node for node in candidate_ast.body if isinstance(node, ast.Try))
+        delete_node = guarded_node.finalbody[0]
+        next_statement = candidate_ast.body[candidate_ast.body.index(guarded_node) + 1]
+        observed = {}
+
+        def trace(frame, event, argument):
+            if frame.f_code is candidate.__code__ and event == "line":
+                if frame.f_lineno == delete_node.lineno:
+                    observed["present_before_del"] = "baseline_raw" in frame.f_locals
+                if frame.f_lineno == next_statement.lineno:
+                    observed["absent_after_del"] = "baseline_raw" not in frame.f_locals
+                    observed["returned_baseline_raw_released"] = all(
+                        reference() is None for reference in rows.raw_references[identifiers["baseline"]]
+                    )
+                    observed["before_teacher_reads"] = set(rows.lookups) == {identifiers["baseline"]}
+            return trace
+
+        previous_trace = sys.gettrace()
+        try:
+            sys.settrace(trace)
+            candidate(plan, rows)
+        finally:
+            sys.settrace(previous_trace)
+        assert observed and all(observed.values()), observed
+        checks.append({"model": model, "case": "immediate_success_path_reference_release", "passed": True, **observed})
+
+    # Keep each original exception traceback alive while inspecting raw lifetime.
+    # This reproduces v1's rejection-only regression; no traceback.clear_frames.
+    for model in ("Heston", "local"):
+        for mutation in ("original_n", "grid", "cache_original_N", "missing_grid"):
+            plan, values, identifiers = fixture(model)
+            modify(mutation, plan, values, identifiers)
+            retention = {}
+            exceptions = {}
+
+            def retained_failure(function, rows):
+                try:
+                    function(plan, rows)
+                except (ValueError, KeyError) as error:
+                    return error
+                raise AssertionError("expected baseline failure")
+
+            for label, function in (("original", original), ("v1", v1), ("v2", candidate)):
+                rows = Rows(values)
+                error = retained_failure(function, rows)
+                traceback = error.__traceback__
+                function_frame = None
+                while traceback is not None:
+                    if traceback.tb_frame.f_code is function.__code__:
+                        function_frame = traceback.tb_frame
+                    traceback = traceback.tb_next
+                assert function_frame is not None
+                live = any(
+                    reference() is not None
+                    for reference in rows.raw_references[identifiers["baseline"]]
+                )
+                local_present = "baseline_raw" in function_frame.f_locals
+                assert live == local_present
+                assert set(rows.lookups) == {identifiers["baseline"]}
+                assert "expected" not in function_frame.f_locals
+                retention[label] = {
+                    "raw_retained_while_traceback_alive": live,
+                    "baseline_raw_local_present": local_present,
+                    "before_any_teacher_read": True,
+                    "baseline_lookup_count": rows.lookups[identifiers["baseline"]],
+                }
+                exceptions[label] = [type(error).__name__, str(error)]
+                # No result stores the exception or frame; both remained alive
+                # throughout the assertions above, rather than clearing them.
+                del function_frame, error, rows
+            assert exceptions["original"] == exceptions["v1"] == exceptions["v2"]
+            assert retention["v1"]["raw_retained_while_traceback_alive"] is True
+            assert retention["original"]["raw_retained_while_traceback_alive"] is False
+            assert retention["v2"]["raw_retained_while_traceback_alive"] is False
+            checks.append({
+                "model": model, "case": "retained_traceback_release:" + mutation,
+                "passed": True, "retention": retention, "exception": exceptions["v2"],
+                "original_v1_counterexample_reproduced": True,
+            })
+    assert preserved_v1 == {name: digest(DIRECTORY / name) for name in v1_names}
+
+    assert digest(SOURCE) == EXPECTED_SOURCE_SHA
+    closure_path = DIRECTORY / "root-saved-producer-verifier-current-source-closure-v1.json"
+    closure = json.loads(closure_path.read_text())
+    production_relative = "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+    assert closure["files"][production_relative] == EXPECTED_SOURCE_SHA
+    result = {
+        "status": "candidate_not_authorized",
+        "production_path": str(SOURCE),
+        "production_source_sha256_before_after": EXPECTED_SOURCE_SHA,
+        "current_source85_closure_reference": {"path": str(closure_path), "sha256": digest(closure_path)},
+        "source85_unchanged_for_owned_function_file": True,
+        "candidate_source": {"path": str(CANDIDATE), "sha256": digest(CANDIDATE)},
+        "diff": {"path": str(DIRECTORY / (PREFIX + ".diff.txt")), "sha256": digest(DIRECTORY / (PREFIX + ".diff.txt"))},
+        "verification_source": {"path": str(Path(__file__)), "sha256": digest(Path(__file__))},
+        "function_ast_delta_only_binding_and_try_finally_del": True,
+        "preserved_v1_and_independent_not_approved_evidence": preserved_v1,
+        "original_v1_rejection_lifetime_finding": "8 reproduced; original v1 decision remains not_approved",
+        "all_other_module_ast_unchanged": True,
+        "checks": checks, "passed_count": len(checks), "failed_count": 0,
+        "verification_scope": "stdlib-only AST-extracted actual function; small synthetic dicts; no protocol or artifact reads",
+        "semantic_boundary": "Immutable rows are authenticated by the existing reader once; local baseline_raw is shared for the same three unchanged predicates and deleted in finally immediately after predicate success, ValueError or KeyError. Reader lookup failure remains outside try and retains original behavior. Failure predicates and exception types/messages match.",
+        "retention_limit": "Only the added local reference is released before subsequent reads or while the predicate traceback is retained; original row owners and unchanged final teacher raw remain outside this claim. No absolute RAM bound or timing benefit is established.",
+        "reader_or_provenance_changes": False,
+        "global_cache_added": False,
+        "financial_execution_count": 0, "numpy_rng_count": 0,
+        "actual_artifact_read_count": 0, "benchmark_count": 0, "pytest_count": 0,
+        "production_modified": False, "live_process_modified": False,
+        "git_or_cas_operations": 0, "root_preapproved": False,
+        "financial_acceptance": False, "performance_effect": None,
+        "application_prerequisite": "Session85801 terminal, root decision, and required new source approval; this candidate does not authorize application.",
+    }
+    output = DIRECTORY / (PREFIX + "-verification.json")
+    with output.open("x", encoding="utf-8") as stream:
+        json.dump(result, stream, ensure_ascii=False, indent=2, allow_nan=False)
+        stream.write("\n")
+    print(json.dumps({"status": result["status"], "passed": len(checks), "failed": 0, "result_path": str(output), "result_sha256": digest(output)}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

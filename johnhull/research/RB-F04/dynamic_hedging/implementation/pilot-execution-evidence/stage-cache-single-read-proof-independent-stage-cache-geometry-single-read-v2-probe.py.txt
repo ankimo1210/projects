@@ -1,0 +1,80 @@
+"""Limited independent v2 P2 repair probe: stdlib synthetic only."""
+from pathlib import Path
+from datetime import datetime,timezone
+import ast,copy,gc,hashlib,json,time,traceback
+D=Path('/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec')
+W=D.parents[2]
+P='task-5-stage-cache-geometry-single-read-candidate-v2';O='independent-stage-cache-geometry-single-read-v2'
+wall=time.perf_counter();cpu=time.process_time()
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+expected={
+'-source.py.txt':'926060feb164c28714a4e4f6d04aa71da09304bd0f277bbf82d47c143d93d8f5',
+'.diff.txt':'f7a6e7f18a1cfbb2a09930358ed44b310117936c290093c31c9d088500cfe71f',
+'-verification.py':'1b8ac0cccf7833d244734b8c682727bfcc11963abacbfd92decdffe269a96a8f',
+'-verification.json':'e828bc3b01c5a98940e30da17380a8e973c582f09f335a9bcf9cc89aa9dca0e3'}
+for s,h in expected.items():assert sha(D/(P+s))==h
+author=json.loads((D/(P+'-verification.json')).read_text())
+for n,h in author['preserved_v1_and_independent_not_approved_evidence'].items():assert sha(D/n)==h
+source=W/'johnhull/research/RB-F04/dynamic_hedging/check_pilot.py'
+prod='f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b'
+assert sha(source)==prod
+fixture=D/'task-5-stage-cache-geometry-single-read-candidate-v1-verification.py'
+v={'__name__':'independent_fixture_only','__file__':str(fixture)}
+exec(compile(fixture.read_text(),str(fixture),'exec'),v)
+old,ot,oa=v['function_and_tree'](source)
+v1,t1,a1=v['function_and_tree'](D/'task-5-stage-cache-geometry-single-read-candidate-v1-source.py.txt')
+v2,t2,a2=v['function_and_tree'](D/(P+'-source.py.txt'))
+checks=[]
+def check(name,condition):
+ assert condition,name
+ checks.append({'name':name,'PASS':True})
+ot.body.remove(oa);t1.body.remove(a1);t2.body.remove(a2)
+check('all_non_geometry_AST_same',ast.dump(ot,include_attributes=False)==ast.dump(t1,include_attributes=False)==ast.dump(t2,include_attributes=False))
+normalized=copy.deepcopy(a2)
+binding=next(n for n in normalized.body if isinstance(n,ast.Assign) and any(isinstance(k,ast.Name) and k.id=='baseline_raw' for k in n.targets))
+try_node=next(n for n in normalized.body if isinstance(n,ast.Try))
+check('exact_try_single_require_no_handlers_else',len(try_node.body)==1 and not try_node.handlers and not try_node.orelse and isinstance(try_node.body[0],ast.Expr) and try_node.body[0].value.func.id=='_require')
+check('exact_finally_only_baseline_delete',len(try_node.finalbody)==1 and isinstance(try_node.finalbody[0],ast.Delete) and len(try_node.finalbody[0].targets)==1 and try_node.finalbody[0].targets[0].id=='baseline_raw')
+check('baseline_get_stays_outside_try',normalized.body.index(binding)+1==normalized.body.index(try_node))
+normalized.body.remove(binding);i=normalized.body.index(try_node);normalized.body[i:i+1]=try_node.body
+class RestoreReads(ast.NodeTransformer):
+ def visit_Name(self,node):
+  return copy.deepcopy(binding.value) if node.id=='baseline_raw' else node
+normalized=RestoreReads().visit(normalized)
+check('all_target_AST_original_after_only_acquisition_finally_normalization',ast.dump(normalized,include_attributes=False)==ast.dump(oa,include_attributes=False))
+# Positive path: require release before even the first later teacher lookup.
+for model in ('Heston','local'):
+ plan,values,ids=v['fixture'](model);original_rows=v['Rows'](values)
+ v['outcome'](old,plan,original_rows)
+ class ReleaseRows(v['Rows']):
+  def __getitem__(self,key):
+   if key!=ids['baseline']:
+    assert all(ref() is None for ref in self.raw_references.get(ids['baseline'],[]))
+   return super().__getitem__(key)
+ rows=ReleaseRows(values)
+ check('normal_release_and_same_result:'+model,v['outcome'](v2,plan,rows)=={'returned':None,'exception':None} and rows.lookups[ids['baseline']]==1 and original_rows.lookups[ids['baseline']]==3 and {k:c for k,c in rows.lookups.items() if k!=ids['baseline']}=={k:c for k,c in original_rows.lookups.items() if k!=ids['baseline']})
+cases=[]
+for model in ('Heston','local'):
+ for mutation in ('original_n','grid','cache_original_N','missing_grid'):
+  outcomes={}
+  for label,fn in (('original',old),('v1',v1),('v2',v2)):
+   plan,values,ids=v['fixture'](model)
+   values[ids['baseline']]['raw']['tiny_payload']=bytearray(8192)
+   v['modify'](mutation,plan,values,ids);frozen=copy.deepcopy((plan,values));rows=v['Rows'](values)
+   error_held=None
+   try:fn(plan,rows)
+   except (ValueError,KeyError) as e:error_held=e
+   assert error_held is not None and frozen==(plan,values)
+   gc.collect();refs=rows.raw_references[ids['baseline']]
+   outcome={'exception_type':type(error_held).__name__,'exception_message':str(error_held),'raw_alive_with_traceback':sum(ref() is not None for ref in refs),'tiny_payload_bytes_retained':sum(len(ref()['tiny_payload']) for ref in refs if ref() is not None),'baseline_reads':rows.lookups[ids['baseline']]}
+   traceback.clear_frames(error_held.__traceback__);gc.collect()
+   assert all(ref() is None for ref in refs)
+   outcomes[label]=outcome
+  check('original8failure_repaired:'+model+':'+mutation,outcomes['original']['tiny_payload_bytes_retained']==outcomes['v2']['tiny_payload_bytes_retained']==0 and outcomes['v1']['tiny_payload_bytes_retained']==8192 and len({(o['exception_type'],o['exception_message']) for o in outcomes.values()})==1 and outcomes['v1']['baseline_reads']==outcomes['v2']['baseline_reads']==1)
+  cases.append({'model':model,'mutation':mutation,'original_v1_v2':outcomes,'PASS':True})
+assert sha(source)==prod
+for s,h in expected.items():assert sha(D/(P+s))==h
+for n,h in author['preserved_v1_and_independent_not_approved_evidence'].items():assert sha(D/n)==h
+result={'schema':'rb-f04-independent-single-read-candidate-repair-v2-results','created_UTC':datetime.now(timezone.utc).isoformat(),'status':'source_mechanics_PASS_candidate_not_authorized','checks':checks,'PASS_count':len(checks),'original_retention_counterexamples_resolved':cases,'fixed_inputs':{P+s:h for s,h in expected.items()},'old_v1_and_independent_8_counterexample_bytes_preserved':True,'production_before_after_sha256':prod,'direct_cost':{'wall_seconds_before_write':time.perf_counter()-wall,'CPU_seconds_before_write':time.process_time()-cpu,'tail_seconds':None},'financial_RNG_NumPy_solver_artifact_pytest_benchmark_process_Git_CAS_calls':0,'production_changes':0,'financial_qualification':'unknown','root_preapproved':False,'application_approved':False,'real_speed_RAM_capacity_effect':None}
+p=D/(O+'-results.json');assert not p.exists();p.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({'result':str(p),'sha256':sha(p),'PASS_count':len(checks),'repair_cases':len(cases),'application_approved':False}))

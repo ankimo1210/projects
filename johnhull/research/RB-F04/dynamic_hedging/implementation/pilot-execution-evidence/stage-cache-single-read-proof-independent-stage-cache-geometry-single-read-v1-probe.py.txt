@@ -1,0 +1,77 @@
+"""Independent stdlib-only candidate review; no imports of financial source."""
+from pathlib import Path
+from datetime import datetime,timezone
+import ast,copy,gc,hashlib,json,time,traceback,weakref
+D=Path('/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec')
+P='task-5-stage-cache-geometry-single-read-candidate-v1'
+O='independent-stage-cache-geometry-single-read-v1'
+W=Path('/home/kazumasa/worktrees/johnhull-storage-codec')
+source=W/'johnhull/research/RB-F04/dynamic_hedging/check_pilot.py'
+wall=time.perf_counter();cpu=time.process_time()
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+expected={
+'-source.py.txt':'fe71ab4bf6357f319d428c764681ddab0e6ec4a98758689faa2c0f8e678603ff',
+'.diff.txt':'9a6823034d0d4e56ab79453d4d758cfc172fcc78983d97a9344cb7fff46c00fd',
+'-verification.py':'fdd005d1884fa6ffb14d41b4316849b196547b5e212e220588496d372ec14ed2',
+'-verification.json':'293d2d7487c78d763272e05aad62481c206302019573d8527cb254afcf6680cb'}
+for suffix,h in expected.items():assert sha(D/(P+suffix))==h
+production_sha='f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b'
+assert sha(source)==production_sha
+v={'__name__':'independent_fixture_only','__file__':str(D/(P+'-verification.py'))}
+exec(compile((D/(P+'-verification.py')).read_text(),v['__file__'],'exec'),v)
+old,old_tree,old_ast=v['function_and_tree'](source)
+new,new_tree,new_ast=v['function_and_tree'](D/(P+'-source.py.txt'))
+old_tree.body.remove(old_ast);new_tree.body.remove(new_ast)
+assert ast.dump(old_tree,include_attributes=False)==ast.dump(new_tree,include_attributes=False)
+checks=[]
+for model in ('Heston','local'):
+ for mutation in (None,'original_n','grid','cache_original_N','declared_call','declared_other_asian','declared_candidate','base_denominator','next_denominator','grid_denominator','missing_baseline','missing_grid','missing_teacher'):
+  plan,values,ids=v['fixture'](model)
+  if mutation:v['modify'](mutation,plan,values,ids)
+  frozen=copy.deepcopy((plan,values));r0=v['Rows'](values);r1=v['Rows'](values)
+  o0=v['outcome'](old,plan,r0);o1=v['outcome'](new,plan,r1)
+  assert o0==o1 and frozen==(plan,values)
+  bid=ids['baseline'];assert r1.lookups[bid]==1
+  assert {k:c for k,c in r0.lookups.items() if k!=bid}=={k:c for k,c in r1.lookups.items() if k!=bid}
+  if mutation is None:assert r0.lookups[bid]==3 and o1['exception'] is None
+  else:assert o1['exception'] is not None
+  checks.append({'model':model,'case':mutation or 'valid','PASS':True,'old_baseline_reads':r0.lookups[bid],'new_baseline_reads':r1.lookups[bid]})
+retention=[]
+for model in ('Heston','local'):
+ for mutation in ('original_n','grid','cache_original_N','missing_grid'):
+  outcomes={}
+  for label,fn in (('original',old),('candidate',new)):
+   plan,values,ids=v['fixture'](model)
+   values[ids['baseline']]['raw']['tiny_payload']=bytearray(8192)
+   v['modify'](mutation,plan,values,ids);rows=v['Rows'](values)
+   held=None
+   try:fn(plan,rows)
+   except (ValueError,KeyError) as error:held=error
+   assert held is not None
+   gc.collect()
+   alive=[ref() for ref in rows.raw_references[ids['baseline']] if ref() is not None]
+   held_bytes=sum(len(raw['tiny_payload']) for raw in alive)
+   outcome={'exception_type':type(held).__name__,'exception_message':str(held),'returned_baseline_alive_with_traceback':len(alive),'tiny_payload_bytes_retained':held_bytes}
+   # Release diagnostic copies first; clearing the traceback then releases frames.
+   alive.clear()
+   traceback.clear_frames(held.__traceback__);gc.collect()
+   outcome['after_clear_frames_alive']=sum(ref() is not None for ref in rows.raw_references[ids['baseline']])
+   assert outcome['after_clear_frames_alive']==0
+   outcomes[label]=outcome
+  assert outcomes['original']['tiny_payload_bytes_retained']==0
+  assert outcomes['candidate']['tiny_payload_bytes_retained']==8192
+  assert outcomes['original']['exception_type']==outcomes['candidate']['exception_type']
+  assert outcomes['original']['exception_message']==outcomes['candidate']['exception_message']
+  retention.append({'model':model,'case':mutation,'counterexample_confirmed':True,**outcomes})
+# A later geometry failure is after del; baseline must not survive in its traceback.
+for model in ('Heston','local'):
+ plan,values,ids=v['fixture'](model);v['modify']('declared_call',plan,values,ids);rows=v['Rows'](values)
+ try:new(plan,rows)
+ except ValueError as error:
+  assert not any(ref() is not None for ref in rows.raw_references[ids['baseline']])
+  checks.append({'model':model,'case':'released_before_later_geometry_failure','PASS':True})
+assert sha(source)==production_sha
+for suffix,h in expected.items():assert sha(D/(P+suffix))==h
+r={'schema':'rb-f04-independent-single-read-candidate-review-results-v1','created_UTC':datetime.now(timezone.utc).isoformat(),'candidate_status':'candidate_not_authorized','functional_checks_PASS':len(checks),'functional_checks':checks,'retention_counterexamples':retention,'static_scope':'all non-target module AST equal; target still same three scalar predicates; reader/receipt/input/source guard definitions unchanged','production_before_after_sha256':production_sha,'fixed_inputs':{P+s:h for s,h in expected.items()},'direct_observation_cost':{'wall_seconds_before_results_write':time.perf_counter()-wall,'CPU_seconds_before_results_write':time.process_time()-cpu,'write_final_tail':None,'real_RAM_or_performance':None},'financial_RNG_solver_NumPy_artifact_benchmark_pytest_calls':0,'production_live_guard_prior_Git_CAS_changes':0,'financial_qualification':'unknown','application_approved':False}
+p=D/(O+'-results.json');assert not p.exists();p.write_text(json.dumps(r,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({'results':str(p),'sha256':sha(p),'functional_checks_PASS':len(checks),'exception_retention_counterexamples':len(retention),'candidate_application_approved':False}))

@@ -1,0 +1,21 @@
+--- a/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py
++++ b/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py
+@@ -3900,12 +3900,14 @@
+     original = next(iter(declared.values()))["base"]
+     call_ids = {m: original[m]["call_job_id"] for m in ("Heston", "local")}
+     other_id = original[other]["asian_job_id"]
+-    _require(
+-        rows[other_id]["raw"]["original_n"] == 1024
+-        and rows[other_id]["raw"]["grid"] == "coarse"
+-        and rows[other_id]["raw"]["cache"]["original_N"] == 1024,
++    baseline_raw = rows[other_id]["raw"]
++    _require(
++        baseline_raw["original_n"] == 1024
++        and baseline_raw["grid"] == "coarse"
++        and baseline_raw["cache"]["original_N"] == 1024,
+         "stage other-model cache must retain actual1024coarse baseline",
+     )
++    del baseline_raw
+     expected = {
+         "base": stage_plan["teacher_job_id"],
+         "teacher_N": stage_plan["next_teacher_job_id"],

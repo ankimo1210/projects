@@ -1,0 +1,313 @@
+{
+  "schema": "rb-f04-independent-single-read-candidate-repair-v2-results",
+  "created_UTC": "2026-10-11T04:45:27.337236+00:00",
+  "status": "source_mechanics_PASS_candidate_not_authorized",
+  "checks": [
+    {
+      "name": "all_non_geometry_AST_same",
+      "PASS": true
+    },
+    {
+      "name": "exact_try_single_require_no_handlers_else",
+      "PASS": true
+    },
+    {
+      "name": "exact_finally_only_baseline_delete",
+      "PASS": true
+    },
+    {
+      "name": "baseline_get_stays_outside_try",
+      "PASS": true
+    },
+    {
+      "name": "all_target_AST_original_after_only_acquisition_finally_normalization",
+      "PASS": true
+    },
+    {
+      "name": "normal_release_and_same_result:Heston",
+      "PASS": true
+    },
+    {
+      "name": "normal_release_and_same_result:local",
+      "PASS": true
+    },
+    {
+      "name": "original8failure_repaired:Heston:original_n",
+      "PASS": true
+    },
+    {
+      "name": "original8failure_repaired:Heston:grid",
+      "PASS": true
+    },
+    {
+      "name": "original8failure_repaired:Heston:cache_original_N",
+      "PASS": true
+    },
+    {
+      "name": "original8failure_repaired:Heston:missing_grid",
+      "PASS": true
+    },
+    {
+      "name": "original8failure_repaired:local:original_n",
+      "PASS": true
+    },
+    {
+      "name": "original8failure_repaired:local:grid",
+      "PASS": true
+    },
+    {
+      "name": "original8failure_repaired:local:cache_original_N",
+      "PASS": true
+    },
+    {
+      "name": "original8failure_repaired:local:missing_grid",
+      "PASS": true
+    }
+  ],
+  "PASS_count": 15,
+  "original_retention_counterexamples_resolved": [
+    {
+      "model": "Heston",
+      "mutation": "original_n",
+      "original_v1_v2": {
+        "original": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 1
+        },
+        "v1": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 1,
+          "tiny_payload_bytes_retained": 8192,
+          "baseline_reads": 1
+        },
+        "v2": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 1
+        }
+      },
+      "PASS": true
+    },
+    {
+      "model": "Heston",
+      "mutation": "grid",
+      "original_v1_v2": {
+        "original": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 2
+        },
+        "v1": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 1,
+          "tiny_payload_bytes_retained": 8192,
+          "baseline_reads": 1
+        },
+        "v2": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 1
+        }
+      },
+      "PASS": true
+    },
+    {
+      "model": "Heston",
+      "mutation": "cache_original_N",
+      "original_v1_v2": {
+        "original": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 3
+        },
+        "v1": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 1,
+          "tiny_payload_bytes_retained": 8192,
+          "baseline_reads": 1
+        },
+        "v2": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 1
+        }
+      },
+      "PASS": true
+    },
+    {
+      "model": "Heston",
+      "mutation": "missing_grid",
+      "original_v1_v2": {
+        "original": {
+          "exception_type": "KeyError",
+          "exception_message": "'grid'",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 2
+        },
+        "v1": {
+          "exception_type": "KeyError",
+          "exception_message": "'grid'",
+          "raw_alive_with_traceback": 1,
+          "tiny_payload_bytes_retained": 8192,
+          "baseline_reads": 1
+        },
+        "v2": {
+          "exception_type": "KeyError",
+          "exception_message": "'grid'",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 1
+        }
+      },
+      "PASS": true
+    },
+    {
+      "model": "local",
+      "mutation": "original_n",
+      "original_v1_v2": {
+        "original": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 1
+        },
+        "v1": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 1,
+          "tiny_payload_bytes_retained": 8192,
+          "baseline_reads": 1
+        },
+        "v2": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 1
+        }
+      },
+      "PASS": true
+    },
+    {
+      "model": "local",
+      "mutation": "grid",
+      "original_v1_v2": {
+        "original": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 2
+        },
+        "v1": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 1,
+          "tiny_payload_bytes_retained": 8192,
+          "baseline_reads": 1
+        },
+        "v2": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 1
+        }
+      },
+      "PASS": true
+    },
+    {
+      "model": "local",
+      "mutation": "cache_original_N",
+      "original_v1_v2": {
+        "original": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 3
+        },
+        "v1": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 1,
+          "tiny_payload_bytes_retained": 8192,
+          "baseline_reads": 1
+        },
+        "v2": {
+          "exception_type": "ValueError",
+          "exception_message": "stage other-model cache must retain actual1024coarse baseline",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 1
+        }
+      },
+      "PASS": true
+    },
+    {
+      "model": "local",
+      "mutation": "missing_grid",
+      "original_v1_v2": {
+        "original": {
+          "exception_type": "KeyError",
+          "exception_message": "'grid'",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 2
+        },
+        "v1": {
+          "exception_type": "KeyError",
+          "exception_message": "'grid'",
+          "raw_alive_with_traceback": 1,
+          "tiny_payload_bytes_retained": 8192,
+          "baseline_reads": 1
+        },
+        "v2": {
+          "exception_type": "KeyError",
+          "exception_message": "'grid'",
+          "raw_alive_with_traceback": 0,
+          "tiny_payload_bytes_retained": 0,
+          "baseline_reads": 1
+        }
+      },
+      "PASS": true
+    }
+  ],
+  "fixed_inputs": {
+    "task-5-stage-cache-geometry-single-read-candidate-v2-source.py.txt": "926060feb164c28714a4e4f6d04aa71da09304bd0f277bbf82d47c143d93d8f5",
+    "task-5-stage-cache-geometry-single-read-candidate-v2.diff.txt": "f7a6e7f18a1cfbb2a09930358ed44b310117936c290093c31c9d088500cfe71f",
+    "task-5-stage-cache-geometry-single-read-candidate-v2-verification.py": "1b8ac0cccf7833d244734b8c682727bfcc11963abacbfd92decdffe269a96a8f",
+    "task-5-stage-cache-geometry-single-read-candidate-v2-verification.json": "e828bc3b01c5a98940e30da17380a8e973c582f09f335a9bcf9cc89aa9dca0e3"
+  },
+  "old_v1_and_independent_8_counterexample_bytes_preserved": true,
+  "production_before_after_sha256": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+  "direct_cost": {
+    "wall_seconds_before_write": 1.0362540459900629,
+    "CPU_seconds_before_write": 1.036242301,
+    "tail_seconds": null
+  },
+  "financial_RNG_NumPy_solver_artifact_pytest_benchmark_process_Git_CAS_calls": 0,
+  "production_changes": 0,
+  "financial_qualification": "unknown",
+  "root_preapproved": false,
+  "application_approved": false,
+  "real_speed_RAM_capacity_effect": null
+}
