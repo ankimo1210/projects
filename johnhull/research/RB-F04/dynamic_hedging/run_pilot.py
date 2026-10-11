@@ -4115,11 +4115,13 @@ def validate_locked_plan(plan):
     return candidate
 
 
-def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False):
+def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False, bounded=False):
     """Execute independent jobs after caps; stop on source or solver defects.
 
     Dependent work remains unexecuted with original N and consumed parent bindings.
     No cap, resume or metadata inspection certifies its financial measurements.
+    Bounded mode keeps every saved raw job and reads references on demand;
+    manifest metadata and the memory required by one job are still retained.
     """
     phase_begin_ns, phase_cpu_ns = perf_counter_ns(), process_time_ns()
     locked_plan = copy.deepcopy(locked_plan)
@@ -4133,6 +4135,7 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
     else:
         write_pilot_artifact(directory / "plan", locked_plan)
     previous_phases = []
+    previous_references = {}
     activation_artifact_context = None
     if resume:
         checkpoints = sorted(directory.glob("checkpoint*"))
@@ -4143,6 +4146,12 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
                 "resume previous phase plan differs",
             )
             previous_phases = prior_snapshot.get("execution_phases", [])
+            if bounded:
+                previous_references = {r["id"]: r for r in prior_snapshot["jobs"]}
+                _require(
+                    len(previous_references) == len(prior_snapshot["jobs"]),
+                    "duplicate original resume checkpoint job",
+                )
             activation_artifact_context = {
                 "original_root": prior_snapshot["artifact_directory"],
                 "restored_root": str(directory.resolve()),
@@ -4159,8 +4168,22 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
         else None
     )
     planned_jobs = {j["id"]: j for j in locked_plan["jobs"]}
-    results, events = {}, []
+    if bounded:
+        from _pilot_saved_storage import RecordedJobs, payload_digest
+
+        results = RecordedJobs(
+            artifact_context={
+                "original_root": str(directory.resolve()),
+                "restored_root": str(directory.resolve()),
+            }
+        )
+    else:
+        results = {}
+    events = []
     for job in locked_plan["jobs"]:
+        if bounded:
+            # Release the preceding full job before reading or running another.
+            row = raw = arguments = selection_inspection = None
         path = directory / "jobs" / job["id"]
         if resume and path.exists():
             row, _ = read_pilot_artifact(path)
@@ -4173,8 +4196,17 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
                 and row["source_sha256"] == runner.payload_digest(source),
                 "stale actual resume source/input binding",
             )
-            row["artifact_path"] = str(path)
-            results[job["id"]] = row
+            if bounded:
+                if job["id"] in previous_references:
+                    _require(
+                        payload_digest(row)
+                        == previous_references[job["id"]]["raw_job_payload_sha256"],
+                        "resume original job payload differs",
+                    )
+                results.register(row, path)
+            else:
+                row["artifact_path"] = str(path)
+                results[job["id"]] = row
             if row["status"] == "unclosed_source_or_solver_defect":
                 break
             _require(
@@ -4260,8 +4292,11 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
                 },
             }
             write_pilot_artifact(path, row)
-            row["artifact_path"] = str(path)
-            results[job["id"]] = row
+            if bounded:
+                results.register(row, path)
+            else:
+                row["artifact_path"] = str(path)
+                results[job["id"]] = row
             events.append({"job": job["id"], "status": row["status"], "plan_sha256": plan_digest})
             continue
         dependencies = _dependency_ids(job["arguments"])
@@ -4293,12 +4328,17 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
                 "cpu_stop_ns": cpu_end_ns,
             }
             write_pilot_artifact(path, row)
-            row["artifact_path"] = str(path)
-            results[job["id"]] = row
+            if bounded:
+                results.register(row, path)
+            else:
+                row["artifact_path"] = str(path)
+                results[job["id"]] = row
             events.append({"job": job["id"], "status": row["status"], "plan_sha256": plan_digest})
             continue
         try:
-            arguments = _resolve(job["arguments"], inputs, results, planned_jobs=planned_jobs)
+            arguments = _resolve(
+                job["arguments"], inputs, results, planned_jobs=planned_jobs, bounded=bounded
+            )
             if job["operation"] in (
                 "teacher",
                 "teacher_grid",
@@ -4449,11 +4489,17 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
             write_closure_artifact(path, row)
         else:
             write_pilot_artifact(path, row)
-        row["artifact_path"] = str(path)
-        results[job["id"]] = row
+        if bounded:
+            results.register(row, path)
+        else:
+            row["artifact_path"] = str(path)
+            results[job["id"]] = row
         events.append({"job": job["id"], "status": row["status"], "plan_sha256": plan_digest})
         if row["status"] == "unclosed_source_or_solver_defect":
             break
+    if bounded:
+        # The last executed or failed raw row also stays only in its artifact.
+        row = raw = arguments = selection_inspection = None
     phase_end_ns, phase_cpu_end_ns = perf_counter_ns(), process_time_ns()
     phase = _expense(
         "pilot-execution-phase:" + str(len(previous_phases)),
@@ -4482,7 +4528,7 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
         "artifact_directory": str(directory.resolve()),
         "source": source,
         "input_bindings": locked_plan["input_bindings"],
-        "jobs": list(results.values()),
+        "jobs": results.sequence() if bounded else list(results.values()),
         "events": events,
         "teacher_verification_events": (
             [] if verification_context is None else copy.deepcopy(verification_context["events"])
@@ -4495,15 +4541,19 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False)
         "verification": None,
     }
     persisted = dict(snapshot)
-    persisted["jobs"] = [
-        {k: v for k, v in row.items() if k != "raw"}
-        | {
-            "raw_job_payload_sha256": runner.payload_digest(
-                {k: v for k, v in row.items() if k != "artifact_path"}
-            )
-        }
-        for row in results.values()
-    ]
+    persisted["jobs"] = (
+        list(results.references.values())
+        if bounded
+        else [
+            {k: v for k, v in row.items() if k != "raw"}
+            | {
+                "raw_job_payload_sha256": runner.payload_digest(
+                    {k: v for k, v in row.items() if k != "artifact_path"}
+                )
+            }
+            for row in results.values()
+        ]
+    )
     write_pilot_artifact(
         directory / f"checkpoint{len(list(directory.glob('checkpoint*'))):04d}", persisted
     )
@@ -4520,11 +4570,16 @@ def main(argv=None):
     parser.add_argument("--inputs", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--bounded", action="store_true")
     args = parser.parse_args(argv)
     plan, _ = read_pilot_artifact(args.plan)
     inputs, _ = read_pilot_artifact(args.inputs)
     snapshot = run_pilot(
-        args.output, inputs=unpack_inputs(inputs), locked_plan=plan, resume=args.resume
+        args.output,
+        inputs=unpack_inputs(inputs),
+        locked_plan=plan,
+        resume=args.resume,
+        bounded=args.bounded,
     )
     print(
         {"jobs": len(snapshot["jobs"]), "test_opened": False, "financial_qualification": "unknown"}

@@ -465,3 +465,16 @@ write_bounded_report は全check refs/aggregate digestと元checkpoint receipt/s
 [rootの検証記録](pilot-execution-evidence/bounded-pilot-saved-check-root-source-and-tests-v1.json)：関連242tests PASS（142.55秒）、その後のreader/wrapper統合39tests PASS（4.54秒、20重複・19新規、重複なし計261）。変更7PythonのRuff/format・diffcheck PASS。独立の読取レビューと8小合成probeで既知3指摘の修復を確認。eagerとの全保存算術一致、unknownを含む全44cells・Q重複行/末尾、欠落/改変/root外拒否、元root不在の復元、次読取前の配列解放を確認した。これらは合成/保存境界の限定検査であり、正式pilot・金融precision・全容量を承認しない。RED・fixtureの二重field-encoding失敗・元RSS停止はD2/既存証跡に保持した。
 
 現在のsource候補は84files/dynamic import0（bd328ceed9da…）。旧source82の固定prior/guardを新sourceへ流用・再標示しない。**単一job/stageの最大RSSと全容量は未確認。金融lifecycleのresults保持と後続 project_execution_pilot は従来のeager経路が残り、全phaseをboundedと呼べない。** 次はこれらの接続とproducer/verifierの由来を区別するprior/実guard結合、元全scopeの監視下saved数値実測、fresh正式pilot・freezeへ進む。外部10/総費用、主396件、fresh/両保管庫semantic復元、図/教材、phase末3suite・独立最終受入/mainは未完了。旧501.742hは既知部分の条件付き外挿で、全体ETAは未確定。
+
+
+### 実行器と集計の参照接続（2026-10-11）
+
+金融lifecycleのprivate run_pilot に opt-in の --bounded を接続した。RecordedJobsは既に保存した原rowを完全payload digestで認証するmetadata参照だけを保持する。既存4登録経路・元source/input/planのfresh検査・全cap分類と費用時計を維持し、再開時は前checkpointの元payloadとも比較する。次jobとcheckpoint保存の前にfull raw/引数を解放し、返値は順序付き遅延列、永続checkpointは全元参照とする。通常の既定経路は従来どおり。構造listの比較・source fault末尾・依存cap・unknown/NaN・元費用を保持する。数学的サンプル数や候補は削減しない。
+
+project_execution_pilotはoptional storesを毎回実check_pilot_recordsへ転送してから集計する。外部closed flagや保存済み数値結果だけで検算を飛ばさない。全jobを再保持せず、費用aliasはID/expense/実clock metadataだけを保持する。実checkerが完全snapshotへ発行した当該digestを再利用し、旧/限定fixtureで当該digestがない時だけ1回計算する。全121/51・元history/末尾unknown・改変拒否を維持する。
+
+_pilot_saved_provenance.py は原producerの完全期待roster/保管byte・元plan・actual input bindingsと、通常のsource closure/loaded-alias検査による現verifierを別identityで認証する。trusted recipeは呼出側の実guard/独立判断で事前認証した期待値であり、schema/approval flags自体は権限の根拠ではない。旧Pythonを実行せず、fresh launch/金融資格/cap/費用閉鎖を作らない。**このhelperはcheckerの3箇所へまだ接続していない。** 旧source82 prior/guardを新sourceへ流用する許可ではない。
+
+[root実検証](pilot-execution-evidence/bounded-pilot-lifecycle-projection-root-source-and-tests-v1.json)：既存と新規7test filesを同時実行して **305 passed（159.01秒）**、変更8Python Ruff/format・diffcheck PASS。新規44件はjob refs9・lifecycle4・projection10・別source認証21で、以前の261件と重複して再加算しない。独立read-only tiny5群でdefault/bounded原raw/束縛一致、構造list、input/source改変拒否、元root削除後の復元resume、sourcefault/tail保持を確認した。source候補は84files/dynamic0/native payload 9a30c042…、helperは接続前の独立契約。RED・fixture修正・元RSS失敗は原記録に保持。
+
+次はcheckerのproducer/verifier 3接続と、新source/元raw/入力/監視/実費を結ぶprior・実guardの確認。その後に元全scopeの監視下saved数値検算とfresh正式pilotを進める。単一job・multi-dependency・非raw manifest配列のRAMと全容量は未保証。正式金融計算は今回0、外部10/総費用、主396件、fresh/両保管庫semantic、図/教材、phase末3suite・独立最終受入/mainは未完了。ETAは数週間規模、1か月超もあり得る概算で、旧条件付き既知部分501.742hを新修正の短い合成検査から縮めない。
