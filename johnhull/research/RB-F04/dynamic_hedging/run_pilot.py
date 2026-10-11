@@ -10,6 +10,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import sys
+from collections.abc import Mapping
 from pathlib import Path
 from time import perf_counter, perf_counter_ns, process_time, process_time_ns
 
@@ -20,6 +21,7 @@ if __name__ == "__main__":
         str(_CLI_ROOT / "deep_hedge_price/src"),
     ]
 
+import _pilot_saved_storage as saved_storage
 import _pilot_transport as pilot_transport
 import _teacher_storage as teacher_storage
 import numpy as np
@@ -2018,7 +2020,7 @@ def _read_artifact_parts(path):
     return value
 
 
-def _resolve(value, inputs, results, *, planned_jobs=None):
+def _resolve(value, inputs, results, *, planned_jobs=None, bounded=False):
     if isinstance(value, dict) and set(value) == {"input"}:
         return inputs[value["input"]]
     if isinstance(value, dict) and set(value) in ({"job"}, {"job", "path"}):
@@ -2041,16 +2043,46 @@ def _resolve(value, inputs, results, *, planned_jobs=None):
             # Its authenticated metadata still binds N; it supplies no numerical input.
             _teacher_selection_control_raw(results[identifier])
         return _resolve(
-            planned_jobs[identifier]["arguments"], inputs, results, planned_jobs=planned_jobs
+            planned_jobs[identifier]["arguments"],
+            inputs,
+            results,
+            planned_jobs=planned_jobs,
+            bounded=bounded,
         )
     if isinstance(value, dict) and set(value) == {"field_job"}:
         return materialize_field(results[value["field_job"]]["raw"])
     if isinstance(value, dict):
         return {
-            k: _resolve(v, inputs, results, planned_jobs=planned_jobs) for k, v in value.items()
+            k: _resolve(v, inputs, results, planned_jobs=planned_jobs, bounded=bounded)
+            for k, v in value.items()
         }
     if isinstance(value, list):
-        return [_resolve(v, inputs, results, planned_jobs=planned_jobs) for v in value]
+        # Only full saved evidence rows are delayed. Configuration and binding
+        # lists retain their original list equality and serialization semantics.
+        evidence_rows = bool(value) and all(
+            isinstance(row, dict)
+            and (
+                set(row) == {"job_record"}
+                or (
+                    {"id", "operation", "raw", "arguments"} <= set(row)
+                    and isinstance(row["raw"], dict)
+                    and set(row["raw"]) == {"job"}
+                    and isinstance(row["arguments"], dict)
+                    and set(row["arguments"]) == {"job_arguments"}
+                )
+            )
+            for row in value
+        )
+        if bounded and evidence_rows:
+            return saved_storage.DeferredSequence(
+                len(value),
+                lambda i: _resolve(
+                    value[i], inputs, results, planned_jobs=planned_jobs, bounded=True
+                ),
+            )
+        return [
+            _resolve(v, inputs, results, planned_jobs=planned_jobs, bounded=bounded) for v in value
+        ]
     return value
 
 
@@ -3548,8 +3580,15 @@ def run_teacher_candidate_gate_job(
 
 def input_identity(value):
     """Bind actual field grids and numerical inputs, not a caller's qualification flag."""
-    if isinstance(value, dict):
+    if isinstance(value, Mapping):
         value = {k: input_identity(v) for k, v in value.items()}
+    elif isinstance(value, saved_storage.DeferredSequence):
+        identities = []
+        for index in range(len(value)):
+            item = value[index]
+            identities.append(input_identity(item))
+            del item
+        value = identities
     elif isinstance(value, (list, tuple)):
         value = [input_identity(v) for v in value]
     elif isinstance(value, LocalVarianceGrid):
@@ -3562,7 +3601,7 @@ def input_identity(value):
             "wing_boundaries": value.wing_boundaries,
             "support_mask": value.support_mask,
         }
-    return runner.payload_digest(value)
+    return saved_storage.payload_digest(value)
 
 
 def _pilot_source(source_root):
@@ -3829,7 +3868,11 @@ def teacher_activation_decision(
         "source/solver defect cannot control progressive qualification",
     )
     arguments = _resolve(
-        planned_jobs[identifier]["arguments"], inputs, results, planned_jobs=planned_jobs
+        planned_jobs[identifier]["arguments"],
+        inputs,
+        results,
+        planned_jobs=planned_jobs,
+        bounded=isinstance(results, saved_storage.ReferenceJobs),
     )
     key = (identifier, input_identity(previous["raw"]), input_identity(arguments))
     from check_pilot import _teacher_verification_guard, calculate_teacher_candidate_gate

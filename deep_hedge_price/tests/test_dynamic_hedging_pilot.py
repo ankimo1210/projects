@@ -4172,3 +4172,62 @@ def test_wrapped_validation_rejects_missing_or_corrupted_rollouts(monkeypatch, a
     with pytest.raises(ValueError, match=r"saved (keyset|value) mismatch"):
         check_pilot.check_wrapped_operation(raw, "validation", {})
     assert not replayed
+
+
+@pytest.mark.parametrize("alteration", [None, "last_pair_dataset"])
+def test_delayed_stage_source_bindings_preserve_actual_arithmetic_and_refuse_tamper(
+    tmp_path, monkeypatch, alteration
+):
+    import _pilot_saved_storage as saved_storage
+
+    parameters, field, stage, rows = _stage_risk_binding_source_unit()
+    expected = check_pilot.check_teacher_stage_risk_sources(
+        parameters, field, stage_plan=stage, rows=rows
+    )
+    references = []
+    for identifier, row in rows.items():
+        # Producers already packed their nested raw arguments. The declared
+        # risk arguments additionally have one actual field input at the top.
+        packed = dict(row)
+        if "arguments" in row:
+            packed["arguments"] = dict(row["arguments"])
+            if "surface" in row["arguments"]:
+                packed["arguments"]["surface"] = run_pilot.pack_inputs(row["arguments"]["surface"])
+        if identifier == "pair" and alteration is not None:
+            packed["raw"]["base_dataset"]["prices"] = packed["raw"]["base_dataset"]["prices"].copy()
+            packed["raw"]["base_dataset"]["prices"][-1, -1, 0] += 0.125
+        path = tmp_path / identifier
+        run_pilot.write_pilot_artifact(path, packed)
+        references.append(
+            {
+                "id": identifier,
+                "artifact_path": str(path),
+                "raw_job_payload_sha256": saved_storage.payload_digest(packed),
+            }
+        )
+    jobs = saved_storage.ReferenceJobs(
+        references,
+        artifact_context={"original_root": str(tmp_path), "restored_root": str(tmp_path)},
+    )
+    ids = list(jobs)
+
+    def load(index):
+        value = jobs[ids[index]]
+        if "arguments" in value and "surface" in value["arguments"]:
+            value["arguments"]["surface"] = run_pilot.unpack_inputs(value["arguments"]["surface"])
+        return value
+
+    delayed = saved_storage.DeferredSequence(len(ids), load)
+    indexed = saved_storage.IndexedRows(delayed)
+    monkeypatch.setattr(np.random, "default_rng", lambda *a, **k: pytest.fail("saved RNG"))
+    if alteration is None:
+        actual = check_pilot.check_teacher_stage_risk_sources(
+            parameters, field, stage_plan=stage, rows=indexed
+        )
+        run_pilot.runner._same(actual, expected, "delayed original stage producer bindings")
+        assert actual["financial_qualification"] == "unknown"
+    else:
+        with pytest.raises(ValueError, match="dataset"):
+            check_pilot.check_teacher_stage_risk_sources(
+                parameters, field, stage_plan=stage, rows=indexed
+            )

@@ -1,0 +1,157 @@
+{
+  "boundary": "Storage/provenance hashes preserve original-format identity. Numerical checks retain tolerance/SE. Synthetic tests do not certify financial accuracy or execution capacity.",
+  "current_source": {
+    "binding_status": "candidate only; new formal producer/verifier prior and launch guard unbound",
+    "dynamic_import_count": 0,
+    "file_count": 84,
+    "payload_sha256": "bd328ceed9da43498c63981ca05c3c950468deafb778bb746cfdf1aa1ff4caa1"
+  },
+  "date": "2026-10-11",
+  "independent_review": {
+    "financial_raw_reads": 0,
+    "financial_rng_or_solves": 0,
+    "finding": "known three retention/list/physical-guard findings repaired; no new blocking issue in saved checker scope",
+    "passed_probes": 8,
+    "remaining_boundary": "project_execution_pilot and financial lifecycle remain eager; maximum single-job RSS and whole capacity are unproved",
+    "scope": "source reading and eight isolated synthetic AST/boundary probes"
+  },
+  "original_scope": {
+    "activation_choices": 2332,
+    "blocks": 16,
+    "cap_options": 573122,
+    "cases": 121,
+    "jobs": 3138,
+    "n_candidates": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "obligations": 51,
+    "required_external_expenses": 10,
+    "scope_reduction": false,
+    "threshold_counts": [
+      33,
+      65
+    ]
+  },
+  "preserved_d2_diagnostics": [
+    "root-pilot-bounded-checker-focused-tests-v1.json",
+    "root-pilot-bounded-review-contracts-red-v1.json",
+    "root-pilot-bounded-contract-fixes-v1.json"
+  ],
+  "schema": "rb-f04-bounded-saved-check-source-and-scoped-verification-v1",
+  "scoped_tests": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_storage.py"
+      ],
+      "exit_code": 0,
+      "scope": "scoped synthetic and saved-storage tests; no formal financial pilot",
+      "stderr": "",
+      "stdout": "........................................................................ [ 29%]\n........................................................................ [ 59%]\n........................................................................ [ 89%]\n..........................                                               [100%]\n242 passed in 142.55s (0:02:22)\n",
+      "wall_seconds": 143.5168850170012
+    },
+    {
+      "checks": [
+        {
+          "command": [
+            "/home/kazumasa/projects/.venv/bin/ruff",
+            "format",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_storage.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_report.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_storage.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_report.py"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "2 files reformatted, 5 files left unchanged\n"
+        },
+        {
+          "command": [
+            "/home/kazumasa/projects/.venv/bin/ruff",
+            "check",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_storage.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_report.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_storage.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_report.py"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "All checks passed!\n"
+        },
+        {
+          "command": [
+            "/home/kazumasa/projects/.venv/bin/ruff",
+            "format",
+            "--check",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_storage.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_report.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_storage.py",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_report.py"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "7 files already formatted\n"
+        },
+        {
+          "command": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": ""
+        }
+      ],
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_storage.py",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_report.py"
+      ],
+      "exit_code": 0,
+      "scope": "bounded reader integration and synthetic storage tests; no formal financial execution/capacity/acceptance",
+      "stderr": "",
+      "stdout": ".......................................                                  [100%]\n39 passed in 4.54s\n",
+      "wall_seconds": 5.341888402996119
+    }
+  ],
+  "source_files": {
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot.py": "ae680de379a2049435ff8cda6286bf7481aa61647fe37b80f59147a637477f7f",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_report.py": "6d5d5d9724e023d1a49a1950d537126ee631f44befac443a9134e55d86821e65",
+    "deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_storage.py": "fc78b391d291168b64714a4a0ecaa021147196c37adb24ec232763959b9ce3ac",
+    "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_report.py": "b1fa93fca13bfcdd7c9e8b4d9c1a4792aa4ba94f2381173254d2d23f3dfc6cdc",
+    "johnhull/research/RB-F04/dynamic_hedging/_pilot_saved_storage.py": "cfaa39e7adcf6d624d3e8ad9cc0e7fe7a868426f3801024d3a10340620696cb6",
+    "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py": "d525445878b1da0a3434275058b482ef6a374ee56804dbf6d5a29e9ae635bed2",
+    "johnhull/research/RB-F04/dynamic_hedging/run_pilot.py": "4e3b1bb0a680914005cc9cf5ef99bfed69d1dcf9f8e04ecfe0d87fdbdf499195"
+  },
+  "state": {
+    "external_costs_closed": false,
+    "financial_qualification": "unknown",
+    "formal_pilot_completed": false,
+    "formal_prior_or_launch_approved": false,
+    "main_accepted": false,
+    "phase_end_three_suites_run": false,
+    "saved_financial_replay_completed": false,
+    "whole_rss_capacity_approved": false
+  },
+  "test_count_note": "242 passed, followed by reader/wrapper integration 39 passed (20 overlap plus 19 new); 261 distinct scoped cases, not one full suite."
+}
