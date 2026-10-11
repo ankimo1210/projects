@@ -1,0 +1,215 @@
+"""Limited administrative connection review; no financial calculation or production change."""
+import ast
+import copy
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import resource
+import sys
+import tempfile
+import time
+import traceback
+
+W = Path('/home/kazumasa/worktrees/johnhull-storage-codec')
+D = W / '.superpowers/sdd/2026-10-10-dynamic-storage-codec'
+R = W / 'johnhull/research/RB-F04/dynamic_hedging'
+NAME = 'independent-stage-cache-geometry-admin-connection-v2'
+AUTH = D / 'task-5-stage-cache-geometry-single-read-admin-integration-v2.py'
+AUTH_RESULT = D / 'task-5-stage-cache-geometry-single-read-admin-integration-v2-results.json'
+AUTH_SHA = 'a333aca99dbea1e2eed4f91514350a90326e3e0fc6b7973ef8085e9cefaf99b8'
+RESULT_SHA = '026f92a28eac2e746448b46b225fd1ad527f90457eb05204240a7233dfab6e76'
+SOURCE_SHA = 'f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b'
+CANDIDATE_SHA = '926060feb164c28714a4e4f6d04aa71da09304bd0f277bbf82d47c143d93d8f5'
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+def forbidden(*args, **kwargs):
+    raise AssertionError('financial/RNG execution prohibited in administrative review')
+
+def main(result):
+    assert sha(AUTH) == AUTH_SHA and sha(AUTH_RESULT) == RESULT_SHA
+    spec = importlib.util.spec_from_file_location('author_admin_connection_fixed_v2', AUTH)
+    author = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(author)
+    sys.path[:0] = [str(R), str(W/'johnhull/hullkit/src'), str(W/'deep_hedge_price/src')]
+    import run_pilot as pilot
+    import _pilot_saved_storage as storage
+    import numpy as np
+    # Probe-process-only guards: the live worker and its modules are untouched.
+    np.random.default_rng = forbidden
+    for key in ('run_teacher_job', 'run_teacher_driver_job', 'run_market_pair_job',
+                'run_call_cache_job', 'run_teacher_candidate_gate_job', 'run_teacher_selection_job'):
+        if hasattr(pilot, key):
+            setattr(pilot, key, forbidden)
+    expected_source = json.loads((D/'root-saved-producer-verifier-current-source-closure-v1.json').read_text())
+    before = pilot.runner.execution_source_identity(W)
+    assert before == expected_source and len(before['files']) == 85 and before['dynamic_imports'] == []
+    assert sha(R/'check_pilot.py') == SOURCE_SHA and sha(author.CANDIDATE) == CANDIDATE_SHA
+    original = author.load_geometry(R/'check_pilot.py')
+    candidate = author.load_geometry(author.CANDIDATE)
+    result['source_before'] = {'file_count':85, 'canonical':pilot.runner._digest(before),
+                               'native':storage.payload_digest(before), 'dynamic_imports':[]}
+    calls = {}
+    receipts = {}
+    refs_by_model = {}
+    values_by_model = {}
+    plans = {}
+    paths = {}
+
+    def reader(path):
+        path = Path(path).resolve()
+        calls[str(path)] = calls.get(str(path), 0) + 1
+        payload, receipt = pilot.read_pilot_artifact(path)
+        assert receipt == receipts[str(path)], 'expected original physical receipt differs'
+        return payload, receipt
+
+    def connect(function, model, original_root, current_root, refs):
+        jobs = storage.ReferenceJobs(refs, artifact_context={
+            'original_root':str(original_root), 'restored_root':str(current_root)}, reader=reader)
+        values = values_by_model[model]
+        declarations = [{'id':identifier, 'operation':'administrative_fixture',
+                         'raw':{'job':identifier}, 'arguments':{'job_arguments':identifier}}
+                        for identifier in values]
+        planned = {identifier:{'operation':'administrative_fixture', 'arguments':{'original_n':row['raw']['original_n']}}
+                   for identifier,row in values.items()}
+        delayed = pilot._resolve(declarations, {}, jobs, planned_jobs=planned, bounded=True)
+        assert isinstance(delayed, storage.DeferredSequence)
+        calls.clear()
+        indexed = storage.IndexedRows(delayed)
+        index_count = sum(calls.values())
+        assert list(indexed) == list(values)
+        calls.clear()
+        function(plans[model], indexed)
+        geometry_calls = dict(calls)
+        assert all(indexed[id]['arguments'] is None for id in values)
+        # This final scope observation has its own reads; don't include them in geometry.
+        return {'index_count':index_count, 'geometry_count':sum(geometry_calls.values()),
+                'geometry_calls':geometry_calls, 'arguments_none':True}
+
+    with tempfile.TemporaryDirectory(prefix=NAME+'-', dir=D) as scratch:
+        native = Path(scratch)/'native'
+        native.mkdir()
+        for model in ('Heston','local'):
+            plan, values, ids = author.fixture(model)
+            plans[model] = plan
+            values_by_model[model] = values
+            refs=[]
+            for j,(id,row) in enumerate(values.items()):
+                path=native/(model+str(j))
+                receipts[str(path.resolve())] = pilot.write_pilot_artifact(path, row)
+                paths[(model,id)] = path
+                refs.append({'id':id, 'artifact_path':str(path),
+                             'raw_job_payload_sha256':storage.payload_digest(row)})
+            refs_by_model[model]=refs
+            old=connect(original,model,native,native,refs)
+            new=connect(candidate,model,native,native,refs)
+            baseline=str(paths[(model,ids['baseline'])].resolve())
+            assert old['index_count']==new['index_count']==8
+            assert old['geometry_count']==12 and new['geometry_count']==8
+            assert old['geometry_calls'][baseline]==6 and new['geometry_calls'][baseline]==2
+            result['checks'].append({'case':'actual_reference_resolve_index_geometry_'+model,
+                                     'passed':True,'original':old,'candidate':new,
+                                     'full_financial_gate_verified':False})
+        inventory_before=author.inventory(native)
+        # A valid changed artifact and its own exact receipt still cannot inherit an ORIGINAL ref digest.
+        model='Heston'
+        plan,values,ids=author.fixture(model)
+        changed=copy.deepcopy(values[ids['baseline']])
+        changed['raw']['probe_scope']='independent nonreferenced scalar change'
+        replacement=native/'independent-changed'
+        receipts[str(replacement.resolve())]=pilot.write_pilot_artifact(replacement,changed)
+        altered=copy.deepcopy(refs_by_model[model])
+        altered[0]['artifact_path']=str(replacement)
+        calls.clear()
+        try:
+            connect(candidate,model,native,native,altered)
+        except ValueError as error:
+            assert 'immutable original job payload differs' in str(error)
+            assert sum(calls.values())==1
+        else:
+            raise AssertionError('valid artifact inherited original payload SHA')
+        result['checks'].append({'case':'self_consistent_nonreferenced_scalar_tamper_rejected', 'passed':True})
+        baseline_path=paths[(model,ids['baseline'])]/'metadata.json'
+        original_bytes=baseline_path.read_bytes()
+        try:
+            baseline_path.write_bytes(original_bytes+b'\n')
+            calls.clear()
+            try:
+                connect(candidate,model,native,native,refs_by_model[model])
+            except ValueError as error:
+                assert 'artifact byte provenance mismatch' in str(error)
+                assert sum(calls.values())==1
+            else:
+                raise AssertionError('physical metadata tamper accepted')
+        finally:
+            baseline_path.write_bytes(original_bytes)
+        result['checks'].append({'case':'physical_receipt_tamper_rejected', 'passed':True})
+        escape=copy.deepcopy(refs_by_model[model]); escape[0]['artifact_path']=str(Path(scratch)/'outside')
+        calls.clear()
+        try:
+            connect(candidate,model,native,native,escape)
+        except ValueError:
+            assert sum(calls.values())==0
+        else:
+            raise AssertionError('out-of-root reference accepted')
+        result['checks'].append({'case':'root_escape_rejected_before_reader', 'passed':True})
+        # Verify all ORIGINAL small rows and physical receipts again, excluding the independent replacement.
+        for current_model,refs in refs_by_model.items():
+            jobs=storage.ReferenceJobs(refs,artifact_context={
+                'original_root':str(native),'restored_root':str(native)}, reader=reader)
+            for id,row in values_by_model[current_model].items():
+                assert jobs[id]==row
+        now=author.inventory(native)
+        assert {k:now[k] for k in inventory_before}==inventory_before
+        result['checks'].append({'case':'all_original_small_rows_receipts_and_bytes_reauthenticated',
+                                 'passed':True,'original_rows':8})
+        all_before_move=author.inventory(native)
+        restored=native.with_name('restored')
+        receipts.update({str((restored/Path(p).relative_to(native)).resolve()):r
+                         for p,r in list(receipts.items())})
+        native.rename(restored)
+        assert not native.exists()
+        old=connect(original,'Heston',native,restored,refs_by_model['Heston'])
+        new=connect(candidate,'Heston',native,restored,refs_by_model['Heston'])
+        assert old['index_count']==new['index_count']==8 and old['geometry_count']==12 and new['geometry_count']==8
+        assert author.inventory(restored)==all_before_move
+        result['checks'].append({'case':'restored_original_root_absent_same_authenticated_connection', 'passed':True})
+        result['own_small_fixture']={'files':len(all_before_move),'bytes':sum(v['bytes'] for v in all_before_move.values())}
+    assert not Path(scratch).exists()
+    after=pilot.runner.execution_source_identity(W)
+    assert before==after==expected_source and sha(AUTH)==AUTH_SHA and sha(AUTH_RESULT)==RESULT_SHA
+    assert sha(R/'check_pilot.py')==SOURCE_SHA and sha(author.CANDIDATE)==CANDIDATE_SHA
+    result['checks'].append({'case':'source85_candidate_and_author_receipts_unchanged_at_exit', 'passed':True})
+    result['source_after_equal_before']=True
+    result['temporary_fixture_removed']=True
+
+if __name__=='__main__':
+    ws,cs=time.perf_counter_ns(),time.process_time_ns()
+    result={'schema':'independent-stage-cache-geometry-admin-connection-review-results-v1',
+            'scope':'administrative scalar artifact authentication/connection only', 'checks':[],
+            'author_passes_not_counted_as_independent':True,
+            'production_application_approved':False, 'launch_approved':False, 'prior_approved':False,
+            'financial_acceptance':False, 'speed_or_RAM_approved':False,
+            'financial_qualification':'unknown', 'financial_RNG_solver_training_calls':0,
+            'author_probe_sha256':AUTH_SHA,'author_results_sha256':RESULT_SHA,
+            'probe_sha256':sha(__file__)}
+    try:
+        main(result); result['success']=True
+    except BaseException as error:
+        result['success']=False
+        result['failure']={'type':type(error).__name__,'message':str(error),'traceback':traceback.format_exc()}
+    we,ce=time.perf_counter_ns(),time.process_time_ns()
+    result['passed_count']=sum(x['passed'] for x in result['checks'])
+    result['measured_prefix_cost']={'wall_start_ns':ws,'wall_stop_ns':we,'cpu_start_ns':cs,'cpu_stop_ns':ce,
+        'wall_seconds':(we-ws)/1e9,'cpu_seconds':(ce-cs)/1e9,
+        'linux_peak_RSS_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,
+        'scope':'independent administrative probe imports/source auth/small I/O; not financial benchmark',
+        'final_receipt_write_stdout_tail_seconds':None,'whole_expense_closed':False}
+    output=D/(NAME+'-results.json')
+    with output.open('x') as stream:
+        json.dump(result,stream,ensure_ascii=False,sort_keys=True,indent=2,allow_nan=False);stream.write('\n')
+    print(json.dumps({'success':result['success'],'independent_checks':result['passed_count'],
+                      'results':str(output),'sha256':sha(output)},sort_keys=True))
+    if not result['success']: raise SystemExit(1)

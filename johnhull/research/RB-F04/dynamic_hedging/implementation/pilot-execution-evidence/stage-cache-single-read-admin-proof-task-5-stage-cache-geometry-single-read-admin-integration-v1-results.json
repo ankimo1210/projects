@@ -1,0 +1,221 @@
+{
+  "adoption_approval": false,
+  "candidate_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-candidate-v2-source.py.txt",
+  "candidate_source_sha256_before_after": "926060feb164c28714a4e4f6d04aa71da09304bd0f277bbf82d47c143d93d8f5",
+  "checks": [
+    {
+      "case": "actual_write_read_reference_connection",
+      "following_teacher_authenticated_reads_each": 1,
+      "model": "Heston",
+      "original_baseline_authenticated_reads": 3,
+      "outcome": {
+        "exception": null,
+        "returned": null
+      },
+      "passed": true,
+      "raw_payload_digests_and_ids_authenticated_by_real_ReferenceJobs": true,
+      "root_receipts_match": true,
+      "v2_baseline_authenticated_reads": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "payload_hash_mismatch",
+      "model": "Heston",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "immutable original job payload differs from checkpoint"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "ID_mismatch",
+      "model": "Heston",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "immutable original job ID mismatch"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "path_escape",
+      "model": "Heston",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "'/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v1-ezu__r_1/outside-native' is not in the subpath of '/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v1-ezu__r_1/native'"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 0
+    },
+    {
+      "both_rejected": true,
+      "case": "native_file_tamper",
+      "model": "Heston",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "artifact byte provenance mismatch"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "ID_negative_fixture_rows": 1,
+      "case": "final_saved_bytes_receipts_payload_reauthenticated",
+      "model": "Heston",
+      "native_file_inventory_unchanged": true,
+      "original_rows": 4,
+      "passed": true,
+      "raw_values_unchanged": true
+    },
+    {
+      "case": "actual_write_read_reference_connection",
+      "following_teacher_authenticated_reads_each": 1,
+      "model": "local",
+      "original_baseline_authenticated_reads": 3,
+      "outcome": {
+        "exception": null,
+        "returned": null
+      },
+      "passed": true,
+      "raw_payload_digests_and_ids_authenticated_by_real_ReferenceJobs": true,
+      "root_receipts_match": true,
+      "v2_baseline_authenticated_reads": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "payload_hash_mismatch",
+      "model": "local",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "immutable original job payload differs from checkpoint"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "ID_mismatch",
+      "model": "local",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "immutable original job ID mismatch"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "both_rejected": true,
+      "case": "path_escape",
+      "model": "local",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "'/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v1-ezu__r_1/outside-native' is not in the subpath of '/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-cache-geometry-single-read-admin-integration-v1-ezu__r_1/native'"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 0
+    },
+    {
+      "both_rejected": true,
+      "case": "native_file_tamper",
+      "model": "local",
+      "no_teacher_read_after_rejection": true,
+      "outcome": {
+        "exception": [
+          "ValueError",
+          "artifact byte provenance mismatch"
+        ],
+        "returned": null
+      },
+      "passed": true,
+      "reader_calls": 1
+    },
+    {
+      "ID_negative_fixture_rows": 1,
+      "case": "final_saved_bytes_receipts_payload_reauthenticated",
+      "model": "local",
+      "native_file_inventory_unchanged": true,
+      "original_rows": 4,
+      "passed": true,
+      "raw_values_unchanged": true
+    }
+  ],
+  "expected_source_closure_reference": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+    "sha256": "30a1dd351af3814eecfcece69f99f8f60a21665e5d957d039bbde71746ffd0af"
+  },
+  "financial_acceptance": false,
+  "financial_kernel_solver_MC_RNG_training_executions": 0,
+  "financial_qualification": "unknown",
+  "guard_or_prior_modified": false,
+  "historical_financial_artifacts_read_or_modified": false,
+  "large_job_RAM_or_speed_effect": null,
+  "launch_approval": false,
+  "live_process_modified": false,
+  "measured_probe_prefix_cost": {
+    "cpu_seconds": 2.370695619,
+    "cpu_start_ns": 28119280,
+    "cpu_stop_ns": 2398814899,
+    "final_result_write_stdout_tail_seconds": null,
+    "peak_RSS_bytes_linux": 636264448,
+    "scope": "probe process main/import/authentication/small-artifact checks; not financial runtime benchmark",
+    "wall_seconds": 2.37731557,
+    "wall_start_ns": 91450313588286,
+    "wall_stop_ns": 91452690903856,
+    "whole_expense_closed": false
+  },
+  "passed_count": 12,
+  "performance_improvement_claim": null,
+  "prior_approval": false,
+  "probe_scope": "small nonfinancial integer/string rows only; actual codec and ReferenceJobs functional connection",
+  "probe_source_sha256": "c5c68b05d2e805467acdc94109a505b55dd8e403f6b1df9ca85715544e509e36",
+  "probe_success": true,
+  "production_approval": false,
+  "production_modified": false,
+  "production_path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/check_pilot.py",
+  "production_source_sha256_before_after": "f929e142802bfeed50f7ac4fa61e857c787af1dc3dad4d6ad98a5bbffaa74e4b",
+  "pytest_fullsuite_benchmark_Git_CAS_operations": 0,
+  "root_receipt_protocol_and_original_payload_authentication_used": true,
+  "source85_files_dynamic_before_after": {
+    "dynamic_imports": [],
+    "file_count": 85,
+    "unchanged": true
+  },
+  "source_approval": false,
+  "source_native_payload_identity": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "source_plain_canonical_identity": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "status": "candidate_not_authorized",
+  "temporary_artifact_files": 60,
+  "temporary_artifact_total_bytes": 21290,
+  "temporary_artifacts_removed": true
+}
