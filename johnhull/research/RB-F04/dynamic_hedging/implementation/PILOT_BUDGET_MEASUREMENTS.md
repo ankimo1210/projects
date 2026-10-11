@@ -277,7 +277,7 @@ v2のsource81/dynamic0のplain canonical identityは959f879a…（runner._digest
 
 [閉じた事前metadataの両保管庫保存](pilot-execution-evidence/task-5-formal-prior-metadata-cas-root-receipt-v1.json)は183 unique blobs/186 paths、両copy PASS。原648MB plan・旧source81・root承認と独立レビューを保持した。wall67.486184秒・CPU4.690202秒は保存区間の費用。終端金融raw/checkpointはこのmetadata packetに含まれず、別packetで保管する。
 
-残時間は暫定で数週間規模、1か月以上になる余地があり、上限は未確定。元v6は別空contextとしてfinal_saved / fresh_independent_review / CAS_primary_restore / CAS_mirror_restoreの4つを明示する。全stageと元40 cold keysを各contextで検算する同じ仮定なら、既知部品は初回139.050h＋4×90.673h＝501.742h（約20.9日）。初回139.050hは初回coldを含み、初回の90.673hを再加算しない。これは旧部品rateの条件付き成分小計で、保証下限・上限・全体ETAではない。選択が早く閉じれば短縮する一方、再利用guard・非teacher・IO・外部10費用・main/fresh追加生成・図/review等は未測定。新source pilotの実選択と実費で更新し、今回580秒や69件から全完了へ比例計算しない。後続の多曲線risk/P&Lと増分XVA＋IM/資本は調査案までで、正式設計・実装・実測rateは未完了。
+残時間は暫定で数週間規模、1か月以上になる余地があり、上限は未確定。元v6は別空contextとしてfinal_saved / fresh_independent_review / CAS_primary_restore / CAS_mirror_restoreの4つを明示する。全stageと元40 cold keysを各contextで検算する同じ仮定なら、既知部品は初回139.050h＋4×90.673h＝501.742h（約20.9日）。初回139.050hは初回coldを含み、初回の90.673hを再加算しない。これは旧部品rateの条件付き成分小計で、保証下限・上限・全体ETAではない。選択が早く閉じれば短縮する一方、再利用guard・非teacher・IO・外部10費用・main/fresh追加生成・図/review等は未測定。新source pilotの実選択と実費で更新し、今回580秒や69件から全完了へ比例計算しない。この試算時点の後続2テーマは調査案までだった。2026-10-11の正式設計状態は下記「全研究の残工程とETA更新」を参照。実装・実測rateは未完了。
 
 ### 修正版sourceのprior再結合とfresh再開
 
@@ -510,3 +510,13 @@ materializer-v6 adcb4665…は元helper/実lock/validate/strict source APIを使
 次は旧saved数値結果/監視費用の確認→fresh全pilot完走/選択/freeze→主396件→fresh独立/両金融raw semantic復元→全10費用/図3本/notebook→phase末3suite/独立最終受入/main。#10/#11も残る。旧条件付き501.742hをこのmetadata準備や短い合成検査から縮めず、ETAは全pilot完走実測で更新する。
 
 [独立actual metadata proofの追加保存](pilot-execution-evidence/source85-independent-actual-prior-proof-store-receipt-v1.json)も11paths/573900 bytes、両標準reader原byte復元PASS。533761 bytesの結果本体はartifact-onlyとし、最初のサイズguard停止・部分archiveを保持して完成した。判定は保存metadata/元scopeの構造結合に限定し、金融資格・launch・phase/main・全RAM/容量の承認はfalse。新金融起動は旧saved85801の終端・root結果確認と別実guardを待つ。
+
+### 全研究の残工程とETA更新（2026-10-11）
+
+#10 [多曲線正式設計](../../../RB-F07/multicurve/DESIGN.md)と#11 [増分XVA正式設計](../../../RB-H09/incremental_xva/DESIGN.md)は独立設計レビュー済みで、元scopeを保った実装計画を保存した。両テーマは未実装・未金融実測であり、設計承認を数値/資源/launch/規制適合/研究受入へ転用しない。
+
+残工程は#9の旧saved終端・結果確認→新source85 fresh全3,138 pilot・教師選択/freeze→主396件→独立fresh/C/F各semantic復元→全費用/3図教材/phase末3suite/最終採否・main、次いで#10/#11の実装・独立参照・pilot/main・saved/fresh/両復元・教材/費用・受入。金融同時実行は1本を維持する。
+
+全体は暫定で数週間規模、1か月超もあり得るが確度は低い。旧501.742hは条件付き既知成分小計で全体ETA・下限・上限ではなく、新source85の全pilot、非teacher/IO/外部10費用、修復、主実験/追加fresh、#10/#11実装・受入の未計測を含まない。現在の保存検算件数や30日行政上限から締切を作らず、新source85全pilot完走の実測後に更新する。
+
+旧partialの保存検算では、全available範囲を確認しても、元の未実行・faultを保持するためclosed=False/unknownとなりCLI exit2を返し得る（[check_pilot.py](../check_pilot.py)のmissing/closed判定とCLI）。新pilotの前提を旧全3,138件PASSやexit0へ置換しない。session85801の実terminal・終了費用/理由・信頼済み原receipt/全check refs/source/input/planの結果をrootが確認し、数値不一致・未検査・欠測を分けて保持した後、別fresh実guardを固定する。行政停止・tool失敗は数値PASSへ読み替えず、現在のfalse candidateも起動許可へ昇格していない。
