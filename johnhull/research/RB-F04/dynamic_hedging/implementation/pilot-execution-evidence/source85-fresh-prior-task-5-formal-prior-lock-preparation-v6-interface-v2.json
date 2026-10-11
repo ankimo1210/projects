@@ -1,0 +1,119 @@
+{
+  "schema": "rb-f04-prior-v6-source-rebind-consumer-interface-v1",
+  "materializer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+    "sha256": "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a"
+  },
+  "approval_schema_unchanged": "rb-f04-root-prior-lock-approval-v1",
+  "independent_prior_review_schema_unchanged": "rb-f04-independent-fullmixed-prior-budget-review-v1",
+  "new_source": {
+    "canonical_runner_digest": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+    "native_payload_digest": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+    "files": 85,
+    "dynamic_imports": []
+  },
+  "source_review_collection": {
+    "fresh_producer": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source85-fresh-producer-limited-decision-v1.json",
+      "sha256": "3831886d1d9df4700995ba0fb75d2994cefa0ccd958047c20507e0f1f6609d62",
+      "status": "approved"
+    }
+  },
+  "approved_binding_set": {
+    "candidate_sha256": "c43a9db37ae4972c32b61bf9031891631060896d4ed34d8f83ea63f24046dc5d",
+    "selection_overlay_sha256": "dfbd315168196d4cd112a8715bda56acb30eb535002688b11c2fd9bee3676a62",
+    "replay_budget_supplement_sha256": "b1e3959f468d5611543afbd9adcbda2c7c23c9b974c73e61dc90ca9402b29abb",
+    "replay_budget_manifest_sha256": "a47743d83eaf0fb4c72c960ee4dc5a97a1605b822e788b58ab7ead72045ba6d9",
+    "source_native_payload_sha256": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+    "source_limited_decisions_sha256": "c7b3ebccdd9803b1b99e61998f64a2a2f208feeac24288940f53a6ef3bf7acbb",
+    "source_rebind_evidence_sha256": "4a84a0efacc176a347c390c249de317ae11ae22b1981b67149283b2183625bbd",
+    "budget_rows_assembly_sha256": "257e66227f03cb7aea74d7e25ec840a760aba4fe4dcbf3815546fc7d724e82d5",
+    "budget_rows_assembly_manifest_sha256": "cbcde1a914c8bf7abee05096a71803892da83620d39778255be9cda3d3c5f0b3",
+    "raw_assembled_candidate_rows_digest": "fb42604f95b275137d7b209e0cf1ac4de69a44906b15a135790686afa033614f",
+    "raw_assembled_candidate_cap_recipe_digest": "d5f29fbfd3d2553961cc2c96c667ea7aba705ca0784d52988620df974d037f2d",
+    "activation_v4_origin_sha256": "a1b074038f84fd446e0b959e59d43b416a6203482e432a3af2b67ae0cbe551b1",
+    "activation_potential_first_job_budget_candidates_digest": "a82f3c33d71a918f51131c8c77917793ceec75850a2181815c867f1a1e243c04",
+    "source_identity_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+    "budget_rows_without_review_SHA_digest": "02da310d0bed91d6883171eed44cb22ae872cc6a2888837a5979755d9c68aee5",
+    "cap_recipe_digest": "19279b815f32747d4122371973dbdbd2dfb02a302e0097fb9b172f093ec5f7b0",
+    "materializer_sha256": "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a",
+    "literal_cap_options": 573122
+  },
+  "approved_binding_key_count": 18,
+  "source_collection_digest_rule": "digest({fresh_producer: actual independent fresh producer limited decision file SHA}); canonical stdlib JSON",
+  "effective_budget_rows_digest_rule": "remove only budget.review_sha256 from every one of3138rows; all branch/numeric/None/order values remain",
+  "cap_recipe_digest_rule": "existing v4 cap_recipe_payload unchanged; current canonical source replaces source_identity only",
+  "required_new_actual_authority": [
+    "D2 independent all3138 resource prior decision binding exact18keys, current plain/native source, producer/helper SHA and original573122 recipe",
+    "D2 actual root prior approval with every budget.review_sha256 set to that new actual decision SHA",
+    "Source85 administrative resource prior only; no RAM/ETA/capacity guarantee",
+    "Saved check terminal results inspected; separate actual fresh financial launch guard and approval with --bounded and no --resume"
+  ],
+  "actual_root_approval_fields_to_replace": [
+    "status",
+    "approved_by",
+    "created_UTC",
+    "independent_reviews.prior_budget_and_cap_recipe",
+    "reviewed_budgets[*].budget.review_sha256",
+    "cap_options_authority.status",
+    "cap_options_authority.decision_template",
+    "root_operational_guard_prior"
+  ],
+  "fresh_output_contract": "New direct D2 task-5-formal-prior-lock-materialized-*; old source82/archive/raw/failed costs remain immutable; no old resume or relabel",
+  "actual_API_unchanged": [
+    "validate_budget_rows",
+    "producer.lock_job_graph",
+    "helper.branch_plan",
+    "helper.materialize_options",
+    "pilot.validate_locked_plan",
+    "pilot._locked_bindings"
+  ],
+  "pending_candidate": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6-v2.json",
+    "sha256": "65668578a04252c986634f3c60781337593f68aec7f858f64900434afce4648f",
+    "approved": false
+  },
+  "full_capacity_new_codec_measurement_or_timing_approved": false,
+  "budget_source_limited_reviews_grant_resource_authority": false,
+  "financial_launch_authorized": false,
+  "financial_qualification": "unknown",
+  "financial_imports_lock_RNG_SDE_solver_Popen_calls": 0,
+  "literal_cap_options_expanded": 0,
+  "execution_mode": "bounded_original_full_roster",
+  "resume_authorized": false,
+  "source_rebind_evidence": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v6.json",
+    "sha256": "4a84a0efacc176a347c390c249de317ae11ae22b1981b67149283b2183625bbd"
+  },
+  "root_operational_prior": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v4.json",
+    "sha256": "64a82b114f3abfa0b9e1ddcbec85d5a16171014c4cf5c81ae9f853b6d9de6b6e"
+  },
+  "changed_binding_keys": [
+    "source_native_payload_sha256",
+    "source_limited_decisions_sha256",
+    "source_rebind_evidence_sha256",
+    "source_identity_sha256",
+    "cap_recipe_digest",
+    "materializer_sha256"
+  ],
+  "unchanged_binding_keys": [
+    "candidate_sha256",
+    "selection_overlay_sha256",
+    "replay_budget_supplement_sha256",
+    "replay_budget_manifest_sha256",
+    "budget_rows_assembly_sha256",
+    "budget_rows_assembly_manifest_sha256",
+    "raw_assembled_candidate_rows_digest",
+    "raw_assembled_candidate_cap_recipe_digest",
+    "activation_v4_origin_sha256",
+    "activation_potential_first_job_budget_candidates_digest",
+    "budget_rows_without_review_SHA_digest",
+    "literal_cap_options"
+  ],
+  "supersedes_interface": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v1.json",
+    "sha256": "bbcb27717f92bc909a0f0c11613c25d9b29d3eb162b05a9f6c4788f482cc5ffd",
+    "reason": "Correct pending candidate status marker and top materializer SHA; same static source85, original budget/cap recipe and all18 binding values"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "status": "actual_approved_prior_metadata_materialized",
+  "actual_lock_API_validate_and_source_binding": "PASS",
+  "financial_workers_RNG_solver_SDE_calls": 0,
+  "formal_financial_phase_approved": false,
+  "financial_qualification": "unknown",
+  "pilot_started": false,
+  "source_identity": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "source_native_payload_identity": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "source85_before_after_stable": true,
+  "jobs": 3138,
+  "cases": 121,
+  "attempts": 51,
+  "teachers": 20,
+  "drivers": 10,
+  "literal_cap_options": 573122,
+  "source_snapshot": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v6/source-snapshot",
+  "locked_prior_receipt": {
+    "schema": "rb-f04-array-receipt-v1",
+    "metadata_sha256": "fa3f0623179bf3f4862ab5e744bbf41e84904b4492ea914b892ccd075499af0b",
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "uncompressed_bytes": 0,
+    "artifact_sha256": "22739fcea1dbc65209bfa02429664fd01dc8b5974d96ec5e16a58b2bed883882"
+  },
+  "actual_root_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v4.json",
+    "sha256": "6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815"
+  },
+  "actual_independent_review_SHA": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223",
+  "root_operational_guard_is_financial_cap": false,
+  "cost": {
+    "wall_seconds_before_final_manifest": 419.9563641979912,
+    "CPU_seconds_before_final_manifest": 416.90607501100004,
+    "final_receipt_tail_seconds": null
+  }
+}

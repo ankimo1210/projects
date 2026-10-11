@@ -1,0 +1,131 @@
+{
+  "schema": "rb-f04-independent-actual-materialized-prior-binding-review-v6",
+  "decision": "approved",
+  "reviewer": "pilot_v53_independent_review",
+  "role": "independent saved metadata and source authority binding reviewer",
+  "created_UTC": "2026-10-11T04:09:40.525609+00:00",
+  "scope": "Actual saved W2 v6 metadata/root-prior/source85/typed-input/cap-roster structural binding only. Reuse unchanged prior mathematical budgets; no numerical financial qualification or launch authority.",
+  "source_canonical_identity": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "source_native_payload_identity": "a0b5482e895b50b6e308e4b261f00299d85bd8834042207bbf69184187ce7aa8",
+  "actual_root_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v4.json",
+    "sha256": "6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815"
+  },
+  "actual_independent_prior_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v6-decision-v1.json",
+    "sha256": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223"
+  },
+  "materialized_manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v6/manifest.json",
+    "sha256": "b98030a81e1ff140909fd5e68ef1587c8c90a6be828cff17e82ed8cb466f218f"
+  },
+  "actual_saved_receipt": {
+    "arrays_sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+    "artifact_sha256": "22739fcea1dbc65209bfa02429664fd01dc8b5974d96ec5e16a58b2bed883882",
+    "metadata_sha256": "fa3f0623179bf3f4862ab5e744bbf41e84904b4492ea914b892ccd075499af0b",
+    "schema": "rb-f04-array-receipt-v1",
+    "uncompressed_bytes": 0
+  },
+  "root_all3138_review_SHA_and18bindings": "PASS",
+  "actual_original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "teachers": 20,
+    "driver_producers": 10,
+    "N_candidates": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "thresholds": 65,
+    "blocks": 16,
+    "cap_options": 573122,
+    "explicit_controls": 36,
+    "external_pending_unknown": 10
+  },
+  "actual_reader_validate_and_locked_bindings": "PASS",
+  "all_legal_cap_options_order_and_actual_independent_decision_binding": "PASS",
+  "original_caps_N_work_limits_case_roster_history_and_unknowns_changed": false,
+  "financial_source_math_precision_main_phase_or_launch_approval": false,
+  "old_raw_resume_relabel_or_previous_unknown_to_qualified_approval": false,
+  "financial_qualification": "unknown",
+  "finance_RNG_SDE_solver_or_worker_calls": 0,
+  "new_materialization_lock_options_expansion_rootapproval_CAS_Git_native_edits": 0,
+  "validation": {
+    "result": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-results-v1.json",
+      "sha256": "5675e688fe423b9a27ae70ba1d244346920e80a70f70cfd148c2624641c7016b"
+    },
+    "checks": 3912,
+    "individual_saved_cap_option_bindings": 573122,
+    "standard_plan_read_count": 1,
+    "actual_API_calls": [
+      "read_pilot_artifact(plan)",
+      "validate_locked_plan(plan)",
+      "read_pilot_artifact(original_typed_inputs)",
+      "_locked_bindings(inputs,plan,W2)"
+    ],
+    "actual_cap_expansion_calls": 0
+  },
+  "cost": {
+    "direct_inclusive_saved_metadata_observation": {
+      "wall_seconds_before_result_write": 21.18370404599409,
+      "CPU_seconds_before_result_write": 21.174914719,
+      "kernel_peak_RSS_bytes": 4284796928,
+      "sampled_peak_individual_RSS_bytes": 3636944896,
+      "cap": null,
+      "volume_initial": {
+        "WSL": 459419209728,
+        "CAS_primary": 117271953408,
+        "CAS_mirror": 181958213632
+      },
+      "volume_last": {
+        "WSL": 459275714560,
+        "CAS_primary": 117271629824,
+        "CAS_mirror": 181958213632
+      },
+      "write_and_final_tail_seconds": null,
+      "all_review_cost_seconds": null
+    },
+    "enclosing_receipt": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-tool-enclosing-v1.json",
+      "sha256": "18c85c6ada61296d9c73af5a590f111c1f4f217ad52a30d849cb4465e6a45cb0"
+    },
+    "enclosing_wall_seconds": 23.245783954,
+    "enclosing_child_CPU_seconds": 23.237299,
+    "enclosing_parent_CPU_seconds": 0.000345444,
+    "enclosing_kernel_peak_child_RSS_bytes": 4284796928,
+    "root_metadata_attempt": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialization-root-observation-v4/parent-cost-and-status.json",
+      "sha256": "660719f1c493bcaa5fc408e4681f75618fd05f0cc8aed51dfec0148d6f55f6c4",
+      "wall_seconds": 421.12338797800476,
+      "children_CPU_seconds": 417.557362,
+      "kernel_peak_RSS_bytes": 4356956160,
+      "scope": "independent and root costs are distinct actual attempts, nested phases not summed"
+    },
+    "all_review_cost_unknown": true,
+    "cumulative_phase_checkpoints_not_added": true,
+    "enclosing_own_final_receipt_stdout_tail_seconds": null
+  },
+  "resource_inference_limit": "4,284,796,928B kernel peak applies only to this one saved metadata read/structural validation. It does not establish financial teacher/checker/main RSS, whole phase duration, codec/restore capacity, or a volume upper bound.",
+  "administrative_scope": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-administrative-scope-v1.json",
+    "sha256": "d06ced6a08aafd97efe152efea5b1877d7b03f21620e4a6f6b96d19c8b167c76"
+  },
+  "source85_snapshot_actual_before_after_static_bytes": "PASS",
+  "physical_closed_metadata": {
+    "manifest_files": 102,
+    "manifest_sum_file_bytes": 17054161,
+    "all_original_file_size_and_SHA_verified": true
+  },
+  "original_partial_source82_raw_and_failure_costs": "unchanged; old source82 producer/213 executed/214th fault/old16GiB saved-check failure remain historical unknown; this metadata is source85 fresh-prior only",
+  "original_pending_external_expenses": {
+    "count": 10,
+    "status": "pending",
+    "all_declared_timing_values": null,
+    "cost_closure": false
+  },
+  "new_root_approval_created_by_reviewer": false
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "rb-f04-independent-saved-metadata-administrative-scope-v1",
+  "scope": "read-only actual saved W2 v6 plan/source85/prior binding; no financial/RNG/SDE/solver/worker/rootapproval/lock/CAS/Git",
+  "authority": "parent root NEW_TASK authorizes one metadata reading under1h individual16GiB and threevolume10GiB reserves; this is not a new root approval",
+  "planned_before_attempt": true,
+  "created_UTC": "2026-10-11T04:08:25.371973+00:00",
+  "script_sha256": "b237d691998deacb24f5301c93c058d724afe517ebec0749237af37a7285ba50",
+  "wall_limit_seconds": 3600,
+  "individual_process_RSS_limit_bytes": 17179869184,
+  "RSS_metric": "physical maximum individual RSS, not RLIMIT_AS",
+  "poll_seconds": 0.5,
+  "volumes": [
+    {
+      "id": "WSL",
+      "path": "/",
+      "reserve_bytes": 10737418240
+    },
+    {
+      "id": "CAS_primary",
+      "path": "/mnt/c",
+      "reserve_bytes": 10737418240
+    },
+    {
+      "id": "CAS_mirror",
+      "path": "/mnt/f",
+      "reserve_bytes": 10737418240
+    }
+  ],
+  "stop_status": "partial_unclosed",
+  "financial_cap_projection": false,
+  "whole_returned_RAM_or_capacity_guarantee": false,
+  "financial_qualification": "unknown",
+  "actual_prior_ref": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v6-decision-v1.json",
+    "sha256": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223"
+  },
+  "reuse_basis": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v5-probe-v1.py",
+    "sha256": "8be90bcd630b1bf70002005a148dd7c8754a5f1f45435d3272659397568ed0b1",
+    "delta": "v6 actual bindings/count85/manifest102 only; same one-read actual APIs and actual cap inspection with cached expectations, no all-option expansion"
+  }
+}

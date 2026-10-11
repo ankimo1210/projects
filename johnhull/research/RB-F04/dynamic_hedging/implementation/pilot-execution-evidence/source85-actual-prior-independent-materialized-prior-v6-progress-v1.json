@@ -1,0 +1,29 @@
+{
+  "status": "saved_metadata_binding_completed",
+  "financial_qualification": "unknown",
+  "financial_cap_projection": false,
+  "result": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-results-v1.json",
+  "cap": null,
+  "phases": [
+    {
+      "checkpoint": "manifest_root_review_source_snapshot_and_budget_binding_complete",
+      "wall_seconds": 0.13398571898869704,
+      "CPU_seconds": 0.133657483
+    },
+    {
+      "checkpoint": "actual_read_pilot_artifact_complete",
+      "wall_seconds": 19.37210114399204,
+      "CPU_seconds": 19.370370661
+    },
+    {
+      "checkpoint": "actual_validate_locked_plan_complete",
+      "wall_seconds": 19.749811418994796,
+      "CPU_seconds": 19.747990671
+    },
+    {
+      "checkpoint": "actual_cap_roster_parent_order_and_review_decisions_complete",
+      "wall_seconds": 21.177996008991613,
+      "CPU_seconds": 21.169433979999997
+    }
+  ]
+}

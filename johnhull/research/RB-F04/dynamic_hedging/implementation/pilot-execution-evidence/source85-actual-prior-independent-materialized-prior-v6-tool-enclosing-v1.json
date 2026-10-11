@@ -1,0 +1,49 @@
+{
+  "schema": "rb-f04-independent-actual-metadata-enclosing-cost-v1",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-B",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-probe-v1.py"
+  ],
+  "exit_code": 0,
+  "status": "completed",
+  "start_UTC": "2026-10-11T04:08:29.592565+00:00",
+  "stop_UTC": "2026-10-11T04:08:52.838375+00:00",
+  "actual_monotonic_clock_ns": {
+    "wall_start": 88379082440550,
+    "wall_stop": 88402328224504,
+    "parent_CPU_start": 25944790,
+    "parent_CPU_stop": 26290234
+  },
+  "wall_seconds": 23.245783954,
+  "parent_CPU_seconds": 0.000345444,
+  "child_CPU_seconds": 23.237299,
+  "children_rusage_samples": {
+    "start_user_seconds": 0.0,
+    "start_system_seconds": 0.0,
+    "stop_user_seconds": 21.257604,
+    "stop_system_seconds": 1.979695
+  },
+  "kernel_peak_child_RSS_bytes": 4284796928,
+  "scope": "prior-source/read/hash/one native plan decode/validate/actual cap membership and parent order/input/source before-after/results/log child lifetime; metadata only",
+  "own_final_receipt_write_stdout_tail_cost": null,
+  "financial_RNG_SDE_solver_worker_calls": 0,
+  "financial_qualification": "unknown",
+  "finance_launch_or_main_phase_approval": false,
+  "inclusive_nested_costs_not_added": true,
+  "probe-v1.py": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-probe-v1.py",
+    "sha256": "b237d691998deacb24f5301c93c058d724afe517ebec0749237af37a7285ba50",
+    "bytes": 15484
+  },
+  "administrative-scope-v1.json": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-administrative-scope-v1.json",
+    "sha256": "d06ced6a08aafd97efe152efea5b1877d7b03f21620e4a6f6b96d19c8b167c76",
+    "bytes": 1877
+  },
+  "tool-v1.log": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v6-tool-v1.log",
+    "sha256": "289d18f3cc83012cb8cc80e08f1e283894612ce414fc483df8f6dfc09acadcfd",
+    "bytes": 553
+  }
+}

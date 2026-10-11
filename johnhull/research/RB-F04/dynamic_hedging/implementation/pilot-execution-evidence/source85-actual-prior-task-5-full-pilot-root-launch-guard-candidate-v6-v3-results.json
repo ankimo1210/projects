@@ -1,0 +1,59 @@
+{
+  "Git_CAS": 0,
+  "RNG_SDE_solver": 0,
+  "candidate_only": true,
+  "candidate_sha256": "c9282c7248610afda6ed979132ce477e4124d4067c2cc6ac638ba2aa9fa0afd5",
+  "closed_manifest_file_count": 102,
+  "closed_manifest_sha256": "b98030a81e1ff140909fd5e68ef1587c8c90a6be828cff17e82ed8cb466f218f",
+  "cost": {
+    "kernel_peak_RSS_bytes": 69431296,
+    "own_report_write_stdout_tail_seconds": null,
+    "process_cpu_seconds": 0.130192635,
+    "wall_seconds": 0.130192689
+  },
+  "financial_Popen": 0,
+  "financial_launch_authorized": false,
+  "financial_qualification": "unknown",
+  "full_metadata_payload_or_financial_arrays_decoded": false,
+  "monitor_sha256": "8700d0c6ea1146665d1e711637fb30969a734bd82f8382c31489f64e5a25b2ce",
+  "original_all_counts_N_cap_limits_history_unknown_preserved": true,
+  "plan_physical_file_count": 12,
+  "plan_receipt_sha256": "73c167706c39dc61bf53c6b74a611304a10455a216174e12c91b91f14d49d8e6",
+  "plan_tree_sha256": "bdd855af20b26e7dbd6f7b347147f75b1051d250505b2ff66658fde4e4c80b2f",
+  "results": [
+    {
+      "bound": {
+        "cap_recipe_digest": "19279b815f32747d4122371973dbdbd2dfb02a302e0097fb9b172f093ec5f7b0",
+        "independent_prior_sha256": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223",
+        "interface_sha256": "30615482cfd7e762e7c9b95d76a040ed02a5af6192734ff4aca3ba790086ddf9",
+        "literal_cap_options": 573122,
+        "locked_plan_receipt_sha256": "73c167706c39dc61bf53c6b74a611304a10455a216174e12c91b91f14d49d8e6",
+        "materialized_manifest_sha256": "b98030a81e1ff140909fd5e68ef1587c8c90a6be828cff17e82ed8cb466f218f",
+        "materializer_sha256": "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a",
+        "operational_resource_sha256": "64a82b114f3abfa0b9e1ddcbec85d5a16171014c4cf5c81ae9f853b6d9de6b6e",
+        "root_approval_sha256": "6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815",
+        "source_decisions_sha256": "c7b3ebccdd9803b1b99e61998f64a2a2f208feeac24288940f53a6ef3bf7acbb",
+        "source_evidence_sha256": "4a84a0efacc176a347c390c249de317ae11ae22b1981b67149283b2183625bbd"
+      },
+      "full_page_byte_hash_or_financial_decode_performed": false,
+      "physical_roster_and_size_checked": true,
+      "probe": "closed_current85_metadata_bindings",
+      "status": "PASS",
+      "verify_files": false
+    },
+    {
+      "probe": "wrong_declared_plan_receipt_rejected",
+      "reason": "root locked plan receipt, parts and physical tree differ",
+      "status": "PASS"
+    },
+    {
+      "probe": "false_guard_refused_before_source_or_Popen",
+      "reason": "root prior approval required; candidate cannot execute",
+      "status": "PASS"
+    }
+  ],
+  "root_preapproved": false,
+  "saved85801_terminal_or_result_inspected": false,
+  "status": "PASS",
+  "verification_limits": "metadata_authority(verify_files=False) authenticates exact root/prior/source refs, finite metadata roster/sizes and declared plan tree/receipt; it does not rehash every page or decode plan/raw numerical arrays"
+}

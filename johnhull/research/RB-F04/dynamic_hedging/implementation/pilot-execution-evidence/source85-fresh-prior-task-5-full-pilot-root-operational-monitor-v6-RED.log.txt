@@ -1,0 +1,55 @@
+test_command_has_bounded_and_no_resume (__main__.MonitorTests.test_command_has_bounded_and_no_resume) ... FAIL
+test_execution_mode_and_resume_are_required_before_authentication (__main__.MonitorTests.test_execution_mode_and_resume_are_required_before_authentication) ... FAIL
+test_false_authority_refuses_before_source_or_popen (__main__.MonitorTests.test_false_authority_refuses_before_source_or_popen) ... ok
+test_fixed_current85_single_fresh_review_is_source_only (__main__.MonitorTests.test_fixed_current85_single_fresh_review_is_source_only) ... FAIL
+test_original_stop_clock_and_unknown_functions_unchanged (__main__.MonitorTests.test_original_stop_clock_and_unknown_functions_unchanged) ... ok
+test_pending_reference_or_tamper_refused (__main__.MonitorTests.test_pending_reference_or_tamper_refused) ... FAIL
+test_saved_scope_or_changed_source_is_not_fresh_approval (__main__.MonitorTests.test_saved_scope_or_changed_source_is_not_fresh_approval) ... ok
+test_valid_bounded_mode_still_requires_original_guard_checks (__main__.MonitorTests.test_valid_bounded_mode_still_requires_original_guard_checks) ... ok
+
+======================================================================
+FAIL: test_command_has_bounded_and_no_resume (__main__.MonitorTests.test_command_has_bounded_and_no_resume)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-preflight.py", line 157, in test_command_has_bounded_and_no_resume
+    self.assertIn("--bounded", calls[0])
+AssertionError: '--bounded' not found in ['/home/kazumasa/projects/.venv/bin/python', '/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py', '--plan', '/tmp/pure-monitor-v6-5m8xgx4n/pure-plan', '--inputs', '/tmp/pure-monitor-v6-5m8xgx4n/pure-inputs', '--output', '/tmp/pure-monitor-v6-5m8xgx4n/task-5-formal-pilot-pure-output']
+
+======================================================================
+FAIL: test_execution_mode_and_resume_are_required_before_authentication (__main__.MonitorTests.test_execution_mode_and_resume_are_required_before_authentication)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-preflight.py", line 124, in test_execution_mode_and_resume_are_required_before_authentication
+    self.assertEqual(self.isolated_guard(value, "bounded|resume"), [])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-preflight.py", line 105, in isolated_guard
+    with self.assertRaisesRegex(self.m.GuardRejectedError, expected):
+AssertionError: GuardRejectedError not raised
+
+======================================================================
+FAIL: test_fixed_current85_single_fresh_review_is_source_only (__main__.MonitorTests.test_fixed_current85_single_fresh_review_is_source_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-preflight.py", line 189, in test_fixed_current85_single_fresh_review_is_source_only
+    self.assertEqual(self.m.SOURCE_IDENTITY, PLAIN)
+AssertionError: '75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e' != 'b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030'
+- 75ac0db805e437af50fc101d6f82d1c9df26ff433897726b8800d107e72af29e
++ b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030
+
+
+======================================================================
+FAIL: test_pending_reference_or_tamper_refused (__main__.MonitorTests.test_pending_reference_or_tamper_refused)
+----------------------------------------------------------------------
+pure_fresh_monitor_v6.GuardRejectedError: both actual limited codec and stage source decisions required
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-preflight.py", line 213, in test_pending_reference_or_tamper_refused
+    with self.assertRaisesRegex(self.m.GuardRejectedError, "pending"):
+AssertionError: "pending" does not match "both actual limited codec and stage source decisions required"
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.087s
+
+FAILED (failures=4)

@@ -1,0 +1,12 @@
+{
+  "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v4.json",
+  "sha256": "6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815",
+  "bytes": 6430641,
+  "status": "approved_for_prior_materialization_only",
+  "all3138_actual_new_review_SHA": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223",
+  "actual_static_consumer_checks": "PASS",
+  "formal_financial_launch_authorized": false,
+  "formal_financial_phase_approved": false,
+  "financial_workers_RNG_SDE_solver_calls": 0,
+  "metadata_materialization_started": false
+}

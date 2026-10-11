@@ -1,0 +1,158 @@
+
+"""Saved actual W2 v6 metadata binding review, with no financial workers."""
+from pathlib import Path
+from time import perf_counter,process_time,sleep
+from datetime import datetime,timezone
+import os,sys,json,hashlib,resource,threading,shutil,copy,ast,traceback
+W=Path('/home/kazumasa/worktrees/johnhull-storage-codec')
+D=W/'.superpowers/sdd/2026-10-10-dynamic-storage-codec'
+D1=Path('/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging')
+O=D/'task-5-formal-prior-lock-materialized-root-v6'
+P='independent-materialized-prior-v6'
+start=perf_counter();cpu=process_time();done=threading.Event();checks=[];phases=[]
+budget_path=D/(P+'-administrative-scope-v1.json')
+progress_path=D/(P+'-progress-v1.json')
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open('rb') as f:
+  for block in iter(lambda:f.read(1048576),b''):h.update(block)
+ return h.hexdigest()
+def read(p):return json.loads(Path(p).read_text())
+def write(p,x):Path(p).write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n')
+def digest(x):return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode()).hexdigest()
+def check(name,value):
+ checks.append({'name':name,'PASS':bool(value)})
+ if not value:raise AssertionError(name)
+def step(name):
+ phases.append({'checkpoint':name,'wall_seconds':perf_counter()-start,'CPU_seconds':process_time()-cpu})
+ write(progress_path,{'status':'metadata_read_only_in_progress','phases':phases,'financial_qualification':'unknown','financial_cap_projection':False})
+B=read(budget_path);limit=B['individual_process_RSS_limit_bytes'];peak_sampled=0;volume_initial={};volume_last={};cap=None
+for p in B['volumes']:
+ free=shutil.disk_usage(p['path']).free;volume_initial[p['id']]=free
+ check('prior_volume_reserve:'+p['id'],free>=p['reserve_bytes'])
+def guard():
+ global peak_sampled,cap,volume_last
+ try:
+  while not done.is_set():
+   rss=next(int(line.split()[1])*1024 for line in Path('/proc/self/status').read_text().splitlines() if line.startswith('VmRSS:'))
+   peak_sampled=max(peak_sampled,rss);elapsed=perf_counter()-start
+   volume_last={p['id']:shutil.disk_usage(p['path']).free for p in B['volumes']}
+   cause='individual_RSS' if rss>limit else ('wall_seconds' if elapsed>B['wall_limit_seconds'] else next((p['id']+':reserve' for p in B['volumes'] if volume_last[p['id']]<p['reserve_bytes']),None))
+   if cause:
+    cap={'metric':cause,'wall_seconds':elapsed,'RSS_bytes':rss,'stop_status':'partial_unclosed','financial_cap_projection':False}
+    write(progress_path,{'status':'partial_unclosed','cap':cap,'phases':phases,'financial_qualification':'unknown'})
+    os._exit(3)
+   done.wait(.5)
+ except BaseException as exc:
+  write(progress_path,{'status':'tool_exception','guard_exception':repr(exc),'financial_qualification':'unknown'})
+  os._exit(4)
+t=threading.Thread(target=guard,daemon=True);t.start()
+try:
+ review_path=D/'independent-formal-prior-v6-decision-v1.json'
+ root_path=D/'task-5-formal-prior-actual-root-approval-v4.json'
+ check('actual_new_manifestb980',sha(O/'manifest.json')=='b98030a81e1ff140909fd5e68ef1587c8c90a6be828cff17e82ed8cb466f218f')
+ check('actual_root6f2f',sha(root_path)=='6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815')
+ check('actual_reviewf1b6',sha(review_path)=='f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223')
+ manifest=read(O/'manifest.json');progress=read(O/'materialization-progress.json');review=read(review_path);root=read(root_path)
+ for name,row in manifest['files'].items():
+  p=O/name;check('physical_saved:'+name,p.stat().st_size==row['bytes'] and sha(p)==row['sha256'])
+ check('manifest102_complete',len(manifest['files'])==102)
+ check('actual_root_copy',sha(O/'actual-root-approval-copy.json')==sha(root_path))
+ check('root_operational_copy',sha(O/'root-operational-guard-copy.json')==root['root_operational_guard_prior']['sha256'])
+ check('root_prior_metadata_only',root['status']=='approved_for_prior_materialization_only' and root['approved'] is True and root['planned_before_attempt'] is True and root['formal_financial_launch_authorized'] is False and root['formal_financial_phase_approved'] is False)
+ check('18_real_bindings',root['approved_bindings']==review['approved_bindings'] and len(root['approved_bindings'])==18)
+ root_ref={'path':str(root_path),'sha256':sha(root_path)}
+ check('actual_root_receipt_refs',manifest['actual_approval']==progress['actual_root_approval']==root_ref)
+ check('realreview_reference',root['independent_reviews']['prior_budget_and_cap_recipe']=={'path':str(review_path),'sha256':sha(review_path),'status':'approved'} and progress['actual_independent_review_SHA']==sha(review_path))
+ rows=root['reviewed_budgets']
+ check('all3138_actual_reviewSHA',len(rows)==3138 and all(x['budget']['review_sha256']==sha(review_path) for x in rows.values()))
+ original_rows=read(D1/'task-5-fullmixed-prior-budget-independent-effective-rows-v1.json')
+ for x in original_rows.values():x['budget']['review_sha256']=sha(review_path)
+ check('oldrow_only_actual_reviewSHA_delta',original_rows==rows);del original_rows
+ check('realcap_authority',root['cap_options_authority']['status']=='approved' and root['cap_options_authority']['cap_recipe_digest']==review['approved_bindings']['cap_recipe_digest']=='19279b815f32747d4122371973dbdbd2dfb02a302e0097fb9b172f093ec5f7b0')
+ authority=root['cap_options_authority']['decision_template']
+ check('realcap_review_template',authority['decision']=='approved' and authority['planned_before_attempt'] is True and authority['reviewer']==review['reviewer'] and authority['independent_review_sha256']==sha(review_path) and 'plan_sha256' not in authority)
+ source=read(O/'source-snapshot/source-identity.json')
+ check('85_static_source',len(source['files'])==85 and source['dynamic_imports']==[] and digest(source)==review['source_canonical_identity']==progress['source_identity'])
+ before={name:sha(W/name) for name in source['files']}
+ for name,h in source['files'].items():check('snapshot_current85:'+name,before[name]==h==sha(O/'source-snapshot'/name))
+ step('manifest_root_review_source_snapshot_and_budget_binding_complete')
+ os.environ.update(OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',PYTHONDONTWRITEBYTECODE='1')
+ sys.path[:0]=[str(W/'johnhull/research/RB-F04/dynamic_hedging'),str(W/'johnhull/hullkit/src'),str(W/'deep_hedge_price/src')]
+ import numpy as np
+ import run_pilot as pilot
+ def forbidden(*a,**k):raise AssertionError('financial/RNG/SDE/solver worker prohibited in saved metadata review')
+ for name in ('_dispatch','run_teacher_job','run_teacher_grid','teacher_primitives','run_call_job','run_market_job','run_teacher_driver_job'):
+  if hasattr(pilot,name):setattr(pilot,name,forbidden)
+ np.random.default_rng=forbidden;np.random.seed=forbidden
+ check('actual_source_digests',pilot.runner._digest(source)==review['source_canonical_identity'] and pilot.runner.payload_digest(source)==review['source_native_payload_identity'])
+ config=read(Path(root['bindings']['candidate']['path']))
+ check('original_configfixed',sha(root['bindings']['candidate']['path'])==review['approved_bindings']['candidate_sha256'])
+ external=read(O/'pending-external-expenses.json')
+ check('10pending_external_exact',external==config['external_expense_candidates'] and len(external)==10 and all(x['status']=='pending' and all(y is None for y in x['timing'].values()) for x in external))
+ plan,receipt=pilot.read_pilot_artifact(O/'locked-prior-metadata')
+ check('actual_reader_receipt2273',receipt==progress['locked_prior_receipt']==read(O/'locked-prior-metadata/receipt.json') and receipt['artifact_sha256']=='22739fcea1dbc65209bfa02429664fd01dc8b5974d96ec5e16a58b2bed883882' and receipt['metadata_sha256']=='fa3f0623179bf3f4862ab5e744bbf41e84904b4492ea914b892ccd075499af0b')
+ step('actual_read_pilot_artifact_complete')
+ candidate=pilot.validate_locked_plan(plan)
+ step('actual_validate_locked_plan_complete')
+ inputs,input_receipt=pilot.read_pilot_artifact(Path(config['typed_inputs_artifact']))
+ check('actual_typedreceipt',input_receipt==config['typed_inputs_receipt'])
+ actual_source=pilot._locked_bindings(inputs,plan,W)
+ check('actual_locked_bindings',actual_source==source==plan['source'] and plan['input_bindings']==config['input_bindings'])
+ check('actual_121_51_3138',len(plan['jobs'])==3138 and len(plan['case_plan'])==121 and len(plan['attempt_plan'])==51)
+ check('actual20teacher10driver',sum(j['operation']=='teacher_grid' for j in plan['jobs'])==20 and sum(j['operation']=='teacher_driver' for j in plan['jobs'])==10)
+ for job in plan['jobs']:
+  check('actual_job_budget_prediction:'+job['id'],job['budget']==rows[job['id']]['budget'] and job['prediction']==rows[job['id']]['prediction'])
+ check('actual_original_history_external',plan['history']==config['history'] and plan['required_external_expense_ids']==config['required_external_expense_ids'])
+ controls={x['job_id']:x for x in config['job_argument_updates']['controls_delta']}
+ for job in plan['jobs']:
+  if job['id'] in controls:check('actual36controls:'+job['id'],pilot.input_identity(job['arguments'])==controls[job['id']]['candidate_arguments_sha256'])
+ check('actual_controls36',len(controls)==36)
+ # Use only the already approved helper's branch_plan AST, not its import-time W1 financial imports.
+ helper_path=Path(root['bindings']['candidate_helper']['path'])
+ check('actual_helperfixed',sha(helper_path)==review['approved_candidate_helper_sha256'])
+ tree=ast.parse(helper_path.read_text());node=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='branch_plan')
+ namespace={'copy':copy,'pilot':pilot};exec(compile(ast.Module(body=[node],type_ignores=[]),str(helper_path),'exec'),namespace)
+ branch_plan=namespace['branch_plan']
+ parents=config['parent_cap_templates'];literal=0;group_counts={};n_counts={}
+ for group in ('cases','attempts'):
+  actual_specs={x['id']:x for x in plan['execution_projection'][group]}
+  check('actual_projection_ids:'+group,set(actual_specs)==set(config['original_plan_templates'][group]))
+  group_counts[group]=len(actual_specs)
+  for recipe in config['cap_options_recipe'][group]:
+   identifier=recipe['id'];specification=actual_specs[identifier];options=specification['cap_options']
+   check('actual_cap_roster_count:'+group+':'+identifier,len(options)==len(recipe['parent_indices'])*len(recipe['original_N_branches']))
+   check('actual_phase_alias:'+group+':'+identifier,specification['parent_expense_id']==root['ordinary_inclusive_aliases']['initial_phase_parent_expense_id']=='pilot-execution-phase:0')
+   base_by_n={n:branch_plan(config['original_plan_templates'][group][identifier],n) for n in recipe['original_N_branches']}
+   expected_by_N_limit={};index=0
+   for parent_index in recipe['parent_indices']:
+    parent=parents[parent_index];pid=parent['job_id'];limit_wall=rows[pid]['budget']['wall_seconds']
+    for n in recipe['original_N_branches']:
+     key=(n,limit_wall)
+     if key not in expected_by_N_limit:
+      base=base_by_n[n];cap_fields={'metric':'wall_seconds','limit':limit_wall,'planned_before_attempt':True}
+      decision=authority|{'plan_sha256':pilot.execution._digest(base|{'cap':cap_fields})}
+      cap_plan=base|{'cap':cap_fields|{'budget_review_sha256':pilot.execution._digest(decision)}}
+      expected_by_N_limit[key]=(cap_plan,decision)
+     expected_plan,expected_decision=expected_by_N_limit[key]
+     option=options[index]
+     if not (set(option)=={'parent_job_id','plan','budget_decision'} and option['parent_job_id']==pid and option['plan']==expected_plan and option['budget_decision']==expected_decision):
+      raise AssertionError('actual illegal cap authority/order '+group+':'+identifier+':'+str(index))
+     literal+=1;n_counts[str(n)]=n_counts.get(str(n),0)+1;index+=1
+   check('actual_all_cap_authority_order:'+group+':'+identifier,index==len(options))
+ check('actual_all573122_legal_options',literal==573122 and group_counts=={'cases':121,'attempts':51})
+ step('actual_cap_roster_parent_order_and_review_decisions_complete')
+ after={name:sha(W/name) for name in source['files']}
+ check('source85_before_after_stable',before==after)
+ check('saved_manifest_current_no_change',sha(O/'manifest.json')=='b98030a81e1ff140909fd5e68ef1587c8c90a6be828cff17e82ed8cb466f218f')
+ rootcost=read(D/'task-5-formal-prior-lock-materialization-root-observation-v4/parent-cost-and-status.json')
+ check('actual_root_outer_terminal',rootcost['status']=='completed' and rootcost['exit_code']==0 and rootcost['cap'] is None and rootcost['root_approval_sha256']==sha(root_path) and rootcost['wall_seconds']>=progress['cost']['wall_seconds_before_final_manifest'] and rootcost['financial_workers']==0)
+ done.set();t.join(2)
+ result={'schema':'rb-f04-independent-actual-materialized-prior-binding-v6-results-v1','status':'PASS','checks':checks,'check_count':len(checks),'per_option_structural_bindings_checked':literal,'cap_N_counts':n_counts,'source_canonical_identity':review['source_canonical_identity'],'source_native_payload_identity':review['source_native_payload_identity'],'source85_before_after_stable':True,'actual_root_approval_sha256':sha(root_path),'actual_prior_review_sha256':sha(review_path),'actual_materialized_manifest_sha256':sha(O/'manifest.json'),'actual_saved_receipt':receipt,'actual_API_calls':['read_pilot_artifact(plan)','validate_locked_plan(plan)','read_pilot_artifact(original_typed_inputs)','_locked_bindings(inputs,plan,W2)'],'budget':{'path':str(budget_path),'sha256':sha(budget_path)},'phases':phases,'direct_cost':{'wall_seconds_before_result_write':perf_counter()-start,'CPU_seconds_before_result_write':process_time()-cpu,'kernel_peak_RSS_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,'sampled_peak_individual_RSS_bytes':peak_sampled,'cap':cap,'volume_initial':volume_initial,'volume_last':volume_last,'write_and_final_tail_seconds':None,'all_review_cost_seconds':None},'root_materialization_cost_reference':{'path':str(D/'task-5-formal-prior-lock-materialization-root-observation-v4/parent-cost-and-status.json'),'sha256':sha(D/'task-5-formal-prior-lock-materialization-root-observation-v4/parent-cost-and-status.json'),'wall_seconds':rootcost['wall_seconds'],'children_CPU_seconds':rootcost['children_CPU_seconds'],'kernel_peak_RSS_bytes':rootcost['child_kernel_peak_RSS_bytes'],'scope':'independent and root costs are distinct actual attempts, nested phases not summed'},'financial_qualification':'unknown','financial_RNG_SDE_solver_worker_calls':0,'materialization_lock_new_option_expansion_rootapproval_CAS_Git_calls':0,'finance_launch_or_main_phase_approval':False}
+ write(D/(P+'-results-v1.json'),result)
+ write(progress_path,{'status':'saved_metadata_binding_completed','financial_qualification':'unknown','financial_cap_projection':False,'result':str(D/(P+'-results-v1.json')),'cap':None,'phases':phases})
+ print(json.dumps({'status':'PASS','checks':len(checks),'actual_option_bindings':literal,'direct_cost':result['direct_cost']},ensure_ascii=False))
+except BaseException as exc:
+ done.set();t.join(2)
+ write(D/(P+'-failure-v1.json'),{'status':'tool_or_saved_binding_failure','exception':repr(exc),'traceback':traceback.format_exc(),'checks':checks,'phases':phases,'financial_qualification':'unknown','financial_cap_projection':False,'wall_seconds':perf_counter()-start,'CPU_seconds':process_time()-cpu,'kernel_peak_RSS_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,'cap':cap})
+ raise

@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "checks": {
+    "pending_approved_false": true,
+    "pending_status": true,
+    "current_materializer": true,
+    "current_source_count": true,
+    "current_rebind_evidence": true,
+    "current_administrative_prior": true,
+    "current_source_limited_review": true,
+    "new_prior_stays_pending": true,
+    "new_rebind_review_stays_pending": true,
+    "root_financial_permission_false": true,
+    "old_resume_false": true,
+    "all_3138_rows_retained": true,
+    "all_18_bindings_retained": true
+  },
+  "prior_v2_failure": {
+    "current_source_count": false,
+    "current_rebind_evidence": false,
+    "current_administrative_prior": false,
+    "current_source_limited_review": false,
+    "new_prior_stays_pending": false,
+    "new_rebind_review_stays_pending": false
+  },
+  "original_v2": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6-v2.json",
+    "sha256": "65668578a04252c986634f3c60781337593f68aec7f858f64900434afce4648f"
+  },
+  "corrected_v3": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6-v3.json",
+    "sha256": "e6498f9e429a790715bb96bb19a786176ae3cff06081c8c2f16d0d55343fd7d7"
+  },
+  "interface_v3": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v3.json",
+    "sha256": "30615482cfd7e762e7c9b95d76a040ed02a5af6192734ff4aca3ba790086ddf9"
+  },
+  "same_all_18_bindings": true,
+  "same_all_3138_budget_rows": true,
+  "all_previous_candidates_preserved": true,
+  "financial_RNG_SDE_solver_worker_calls": 0
+}

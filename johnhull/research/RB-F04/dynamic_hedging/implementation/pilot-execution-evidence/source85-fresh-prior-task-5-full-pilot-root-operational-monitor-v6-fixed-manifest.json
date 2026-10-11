@@ -1,0 +1,111 @@
+{
+  "candidate_only": true,
+  "files": {
+    "task-5-full-pilot-root-launch-guard-candidate-v6.json": {
+      "bytes": 46562,
+      "sha256": "0741860d5fbf83690fb9e87aaf642e95c61f02973ac170c8e0993c1c094e100d"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-GREEN-2-results.json": {
+      "bytes": 693,
+      "sha256": "6add9db5820965916051e4b047f023d578ffed52e826877362826a298fc136b1"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-GREEN-2.log": {
+      "bytes": 1678,
+      "sha256": "78131f2394b5bc7158249619c2dacb37003ffbbd695c89fc5450acd854e93665"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-GREEN-draft-results.json": {
+      "bytes": 693,
+      "sha256": "8ad5a880d5fc98a6fea25e66f4c885149645bdab9b7c15efb64223cce859702d"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-GREEN-draft.log": {
+      "bytes": 1204,
+      "sha256": "9ffcb8626b1851bb2238ee89b7b71c9f1628c56803c54dbf55c8472e2d302175"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-GREEN-final-results.json": {
+      "bytes": 694,
+      "sha256": "ba82e8faba1aeaa176ddf3e545322e7bcfb2d8e28ccb45d583d1d2d98509cc8d"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-GREEN-final-v2-results.json": {
+      "bytes": 694,
+      "sha256": "7facab1dfd058de031a1bd341594d2d4a1dcb2fd0ef00d6138400f3cd8e32748"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-GREEN-final-v2.log": {
+      "bytes": 1678,
+      "sha256": "afc9115a406739e1b30ef3a3f4d98ca80949b274b2a921d2815e7c4dc980c1aa"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-GREEN-final.log": {
+      "bytes": 3208,
+      "sha256": "3a228dc0e25a6a432bb8fb74a602accb04084865a1c56d00e5ef91b13f27cbd1"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-RED-results.json": {
+      "bytes": 693,
+      "sha256": "b86afe07b9b3331649188588aed3d90329227b1966736c95d27e85e80bb2f0b3"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-RED.log": {
+      "bytes": 4944,
+      "sha256": "42ac0bc6da5ccf26dfdc875fad7cf4826ea61962cee277b3d8a0b1cfd11c4bd0"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-current-source-byte-check.json": {
+      "bytes": 10600,
+      "sha256": "b741c3f2cc78db3b09686877dd171385dca1808bc384bdcdcf1be7e6f0be6145"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-final-verification-v2.json": {
+      "bytes": 1864,
+      "sha256": "c78ae9ca1cd59a67178780daa1aa4a0fe6edc7dab58652687f0e42ec2dbe1796"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-final-verification.json": {
+      "bytes": 1864,
+      "sha256": "c78ae9ca1cd59a67178780daa1aa4a0fe6edc7dab58652687f0e42ec2dbe1796"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-fixed-report.json": {
+      "bytes": 5125,
+      "sha256": "b4bce26738f4cb935f5610043ddd5ab6a50cd82ecf21f1ca9adda85d8af5b199"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-lint-draft.json": {
+      "bytes": 946,
+      "sha256": "17869c097b06d229253159002bd03b43d088a8fea345a17206e222a161701d69"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-lint-failure-v1.json": {
+      "bytes": 236,
+      "sha256": "b088fbabbe92e874e4401972d5606f65a30668d93049612d362e662e144c6a7b"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-preflight.py": {
+      "bytes": 14893,
+      "sha256": "dfd719ba2e2b2ff70b2685172c6414061a7d3ba51fc3fdcd7fb6ce79e55b0f87"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-source.diff": {
+      "bytes": 14401,
+      "sha256": "e3ef12a487cc93c3a766a788bf5a4d4a144b0f0a53461c045282ccd597f00f9a"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6.py": {
+      "bytes": 44635,
+      "sha256": "140c29e9cad78016a9c7f9da70cf6ac7d622a9c474499afd8b281e35b6358d87"
+    }
+  },
+  "financial_launch_authorized": false,
+  "financial_qualification": "unknown",
+  "fixed_dependencies": {
+    "independent-source85-fresh-producer-limited-decision-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-source85-fresh-producer-limited-decision-v1.json",
+      "sha256": "3831886d1d9df4700995ba0fb75d2994cefa0ccd958047c20507e0f1f6609d62"
+    },
+    "task-5-formal-pilot-root-operational-resource-prior-v4.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v4.json",
+      "sha256": "64a82b114f3abfa0b9e1ddcbec85d5a16171014c4cf5c81ae9f853b6d9de6b6e"
+    },
+    "task-5-formal-prior-lock-preparation-v6-interface-v1.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v1.json",
+      "sha256": "bbcb27717f92bc909a0f0c11613c25d9b29d3eb162b05a9f6c4788f482cc5ffd"
+    },
+    "task-5-formal-prior-lock-preparation-v6.py": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6.py",
+      "sha256": "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a"
+    },
+    "task-5-formal-prior-lock-rebind-evidence-v6.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v6.json",
+      "sha256": "4a84a0efacc176a347c390c249de317ae11ae22b1981b67149283b2183625bbd"
+    }
+  },
+  "root_preapproved": false,
+  "schema": "rb-f04-root-monitor-v6-candidate-fixed-manifest-v1"
+}

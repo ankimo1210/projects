@@ -1,0 +1,31 @@
+{
+  "schema": "rb-f04-root-source85-independent-actual-prior-proof-store-v1",
+  "status": "PASS",
+  "paths": 11,
+  "bytes": 573900,
+  "manifest_path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-independent-actual-prior-proof-store-manifest-v1.json",
+  "manifest_sha256": "cf4832de601ce6b33a1497617543d98b565782a40c50f26a399a2a1317a6a3c6",
+  "both_standard_reader_restore": {
+    "status": "PASS",
+    "primary": {
+      "status": "PASS",
+      "entries": 11,
+      "bytes": 573900
+    },
+    "mirror": {
+      "status": "PASS",
+      "entries": 11,
+      "bytes": 573900
+    }
+  },
+  "scope": "closed independent actual metadata proof only; numerical financial validation or external expense closure is not included",
+  "independent_decision_sha256": "60f94d482bf56da6a811c8fb6e2656fa09609194d207ff9f2ad11a3d4a0b9a77",
+  "source85_changed": false,
+  "financial_workers": 0,
+  "financial_launch_or_phase_approved": false,
+  "cost": {
+    "wall_seconds_before_final_receipt": 3.2595611279975856,
+    "CPU_seconds_before_final_receipt": 0.060120118,
+    "own_receipt_stdout_tail_seconds": null
+  }
+}

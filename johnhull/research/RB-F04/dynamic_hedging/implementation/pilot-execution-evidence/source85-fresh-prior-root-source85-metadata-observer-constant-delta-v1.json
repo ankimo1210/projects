@@ -1,0 +1,34 @@
+{
+  "schema": "rb-f04-root-source85-metadata-observer-constant-delta-v1",
+  "created_utc": "2026-10-11T03:54:29.093114+00:00",
+  "old_observer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-metadata-root-observer-v4.py",
+    "sha256": "ac44f30e0d951aab0b9d4b0740e5f944256749223aca0252a7f1f52ea10e3e6b"
+  },
+  "new_observer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-metadata-root-observer-v5.py",
+    "sha256": "b77598e4fa7f8af3f16c4d84b29f2543e2d756170afa4e2dce2219278453b65f"
+  },
+  "changed_fields_only": [
+    "materializer filename v5 -> v6"
+  ],
+  "normalized_AST_all_functions_unchanged": true,
+  "compile": "PASS",
+  "actual_root_metadata_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v4.json",
+    "sha256": "6f2f271eacbc9e3bf4769a0d705cbc9870f043f9e56fd7f4a0b7a956d9a52815"
+  },
+  "materializer_sha256": "adcb4665eaf11c7483864f5c676e1a0f3d960ed8e1ed5a72d182d599f9b13e2a",
+  "metadata_allowance": {
+    "financial_cap_projection": false,
+    "individual_process_RSS_bytes": 17179869184,
+    "role": "administrative pre-attempt allowance; not a runtime prediction",
+    "stop_status": "partial_unclosed",
+    "volume_reserve_bytes": 10737418240,
+    "wall_seconds": 3600
+  },
+  "financial_launch_authorized": false,
+  "financial_workers_RNG_solver_calls": 0,
+  "old_saved_check_session": 85801,
+  "old_saved_check_changed": false
+}

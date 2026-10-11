@@ -1,6 +1,6 @@
 # 正式pilot予算のための測定
 
-最新：source82の正式pilotは213jobs executed＋214番gateのKeyError: 'result'でpartial終了（約3時間37分）。元sourceの全保存検算は308.541秒で個別16GiB RSS上限を超え、行政partial停止した。原失敗・費用・82source snapshot・元3,138jobs/121cases/51義務/全4Nを保持。validationはsummary行ではなく元rollouts[id]を読む最小修正を適用し、関連220tests/Ruff/format・独立静的12確認はPASS。全件逐次検算が次の作業。金融saved数値結果・新sourceのprior結合・fresh正式pilot完走・freeze/mainは未完了、qualification unknown。 [原停止と修復](#元source82の保存検算停止とvalidation参照修復2026-10-11)。
+最新：元source82の213 executed＋214番faultと16GiB保存検算停止を保持し、new verifier85で全scopeの保存検算をsession85801で実行中。新source85のfresh producer限定判断、全3,138予算・573,122cap recipeの独立判断とroot metadata-only承認を固定、正式計画生成は421.123秒/peak4.357GB・capなしでPASS、185pathsの両保管庫原byte復元もPASS。独立実metadata照合3,912項目PASS。新monitorのbounded必須・resume禁止は限定確認済み。金融fresh起動は旧saved終端/結果確認後。全数値・RAM/容量・外部10費用・pilot完走/freeze/mainは未完了、qualification unknown。 [新priorと起動準備](#新source85の正式priorとbounded起動準備2026-10-11)。
 
 2026-10-11。旧source81は引数binding不一致、source82はvalidation result形状不一致で214件目partial停止。mainは未実行。以下の先行測定は**部品の実測と、歴史的教師計算からの外挿**であり、全phaseの実測時間・精度資格ではない。現在の実起動は末尾に記録。
 
@@ -492,3 +492,21 @@ root実metadata照合（97.304秒）で旧source82全file、plan12files/8,684,75
 2026-10-11 **03:13:47 UTC**、別出力で元全scopeの保存検算を起動した。unified session **85801**、enclosing PID458995/monitor PID458996のlive preflightを確認。起動時MemAvailable48.393GB、WSL/C/F各free460.073/130.330/182.004GB、元行政30日・個別RSS16GiB・各reserve10GiB・poll1秒を維持。全原native byte照合はobserverのbefore/after時計内で行い、起動前の独立判断では全rawを二重decode/hashしていない。これは新RNG/学習の生成ではなく、原保存数値の検算である。sourceを変更せず同handleを観察し、timeoutだけで再起動しない。起動checkpointでは数値worker未観測。その後、元native全10,233 filesのbefore byte照合完了と数値child PID459439のlive状態を確認した（[実観察](pilot-execution-evidence/saved-dual-source-task-5-saved-verifier-actual-root-live-observation-v1.json)）。結果/最終RSS適合/全容量・総費用はunknown。
 
 完了まで残る順序は、元保存数値結果と実監視費用の確認→新source fresh全pilotのprior/正式lock/実guard→全pilot完走/教師選択/freeze→主396件→fresh独立数値/両金融rawのsemantic復元→全10費用/図3本/notebook→phase末3suite・最終独立受入/main。#10多曲線・#11増分XVAも残る。単一job/multi-dependency/非raw metadata保持のRAMはこの326testsから保証しない。ETAは未確定、旧条件付き既知成分501.742hを短い合成検査や起動だけで縮めない。
+
+## 新source85の正式priorとbounded起動準備（2026-10-11）
+
+保存用verifier判断とfresh producer判断を分けた。現source85/dynamic0（plain b9fddfe9… / native a0b5482e…）のfresh source限定decision 3831886d…は旧rawの再標示・resume、金融受入、資源prior、起動、RAM/全容量/ETAを承認しない。元82→85は3helper追加・2入口変更のみで、原82snapshot/partial/fault/費用を保持する。
+
+全priorの独立decision f1b67451…は、元121cases/51義務/3138jobs、全4N、573122cap options/2332activation、歴史46件・既往2parse失敗・外部10費用unknownを照合した。75静的確認と実consumer確認がPASS、金融実行0。18bindings中12は不変、6は新source/判断/evidence/materializer/recipeへの結合だけが変わり、元3138数値行の正規化digest 02da310d…は不変。作者contractの7methods/32mutation、Ruff/formatは保存済み結果を保持し、今回金融suiteは再実行していない。
+
+最初のpending候補にはapproved/source count等の古いラベルが残ったため、元v1/v2を保持して別v3へ修正。13意味検査は旧v2の6FAIL→v3全PASS、数値行/18bindingsは同一。root metadata-only承認6f2f271e…は実fullprior SHAを全3138行へ結び、元候補を金融許可へ昇格していない。
+
+materializer-v6 adcb4665…は元helper/実lock/validate/strict source APIを使い、金融dispatch・教師・RNGを禁止して新しい計画を生成する。observer-v5 b77598e4…は旧v4からmaterializer名のみ変更、逆置換AST・compile・実allowance照合PASS。行政allowanceは3600秒/各process16GiB/各volume10GiB reserveで、所要時間・全容量・金融cap資格の保証ではない。実生成session99170はexit0で終了、outputは別のmaterialized-root-v6。wall421.123秒/child CPU417.557秒、kernel peak4,356,956,160 B、行政capなし。元scopeの実lock/validate/source結合がPASS、source85の前後は不変。rootは実manifest102files/17,054,161 bytes、全source85 current/snapshot、原root承認、10pending/unknownを原byte照合PASS。独立実locked plan照合は3,912項目PASS（decision 60f94d48…）。標準reader1回・validate/_locked_bindingsを実行し、全3138予算/review SHA、36controls、元typed inputs、全573122保存capの親順/N/decisionと元scopeが一致。option再展開・RNG/金融0。独立外側23.246秒/kernel peak4.285GB、capなし、最終receipt尾部unknownを保持する。生成の最終receipt尾部はunknown、金融費用へ加算しない。
+
+新monitor-v6-v2 8700d0c6…は`--bounded`を正確に1個要求し`--resume`を付けない。作者11合成と独立41項目/9拒否境界がPASS、独立decision 5c742140…の範囲はsource/mechanicsだけ。閉じた実manifest b98030a8…、実plan12files/tree bdd855af…/receipt 73c16770…/artifact 22739fce…を別false候補-v6-v3 c9282c72…へ結合した。metadata_authorityの参照受理・改変receipt拒否・false起動拒否の3項目PASS（全pageの再hashはrootのphysical照合で別に確認）。実候補は金融launch/root guard承認false。金融workerは保存検算session85801/child459439の1本を維持し、その終端・結果確認後にrootが別fresh実guardを固定する。
+
+[閉じた準備証跡](pilot-execution-evidence/source85-fresh-prior-closed-proof-archive-v1.json)は57files/479525 bytesの原byteを保存。最初のarchiveは大きいpending候補を検知して停止し、部分コピーを保持して照合後に完了した。大きい候補/実承認/計画はartifact-onlyで保管する。[実metadataと準備proofの両CAS](pilot-execution-evidence/source85-prior-metadata-and-closed-proof-store-receipt-v1.json)は185paths/172unique data blobs/43,174,692 bytes、標準readerのprimary/mirror各185paths原byte復元PASS。候補v1/v2/v3と実root承認もartifact-onlyで保持し、金融raw全体/semantic復元/費用の閉鎖へ投影しない。実CASのwall27.009秒はmetadata管理費用で、最終receipt尾部unknown・外部10金融費用未閉鎖。
+
+次は旧saved数値結果/監視費用の確認→fresh全pilot完走/選択/freeze→主396件→fresh独立/両金融raw semantic復元→全10費用/図3本/notebook→phase末3suite/独立最終受入/main。#10/#11も残る。旧条件付き501.742hをこのmetadata準備や短い合成検査から縮めず、ETAは全pilot完走実測で更新する。
+
+[独立actual metadata proofの追加保存](pilot-execution-evidence/source85-independent-actual-prior-proof-store-receipt-v1.json)も11paths/573900 bytes、両標準reader原byte復元PASS。533761 bytesの結果本体はartifact-onlyとし、最初のサイズguard停止・部分archiveを保持して完成した。判定は保存metadata/元scopeの構造結合に限定し、金融資格・launch・phase/main・全RAM/容量の承認はfalse。新金融起動は旧saved85801の終端・root結果確認と別実guardを待つ。

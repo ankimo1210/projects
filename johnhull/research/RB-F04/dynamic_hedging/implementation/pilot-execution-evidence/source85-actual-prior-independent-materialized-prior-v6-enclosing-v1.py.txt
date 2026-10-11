@@ -1,0 +1,20 @@
+from pathlib import Path
+import json,time,resource,subprocess,datetime,hashlib,os
+D=Path('/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec')
+P='independent-materialized-prior-v6'
+start_UTC=datetime.datetime.now(datetime.timezone.utc).isoformat()
+wall_start=time.perf_counter_ns();parent_start=time.process_time_ns();usage_start=resource.getrusage(resource.RUSAGE_CHILDREN)
+env=os.environ.copy()
+env.update(OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',PYTHONDONTWRITEBYTECODE='1')
+argv=['/home/kazumasa/projects/.venv/bin/python','-B',str(D/(P+'-probe-v1.py'))]
+with (D/(P+'-tool-v1.log')).open('x') as log:
+ completed=subprocess.run(argv,env=env,stdout=log,stderr=subprocess.STDOUT,cwd='/home/kazumasa/worktrees/johnhull-storage-codec')
+wall_stop=time.perf_counter_ns();parent_stop=time.process_time_ns();usage_stop=resource.getrusage(resource.RUSAGE_CHILDREN)
+receipt={'schema':'rb-f04-independent-actual-metadata-enclosing-cost-v1','argv':argv,'exit_code':completed.returncode,'status':'completed' if completed.returncode==0 else 'failed_or_partial','start_UTC':start_UTC,'stop_UTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'actual_monotonic_clock_ns':{'wall_start':wall_start,'wall_stop':wall_stop,'parent_CPU_start':parent_start,'parent_CPU_stop':parent_stop},'wall_seconds':(wall_stop-wall_start)/1e9,'parent_CPU_seconds':(parent_stop-parent_start)/1e9,'child_CPU_seconds':(usage_stop.ru_utime-usage_start.ru_utime)+(usage_stop.ru_stime-usage_start.ru_stime),'children_rusage_samples':{'start_user_seconds':usage_start.ru_utime,'start_system_seconds':usage_start.ru_stime,'stop_user_seconds':usage_stop.ru_utime,'stop_system_seconds':usage_stop.ru_stime},'kernel_peak_child_RSS_bytes':usage_stop.ru_maxrss*1024,'scope':'prior-source/read/hash/one native plan decode/validate/actual cap membership and parent order/input/source before-after/results/log child lifetime; metadata only','own_final_receipt_write_stdout_tail_cost':None,'financial_RNG_SDE_solver_worker_calls':0,'financial_qualification':'unknown','finance_launch_or_main_phase_approval':False,'inclusive_nested_costs_not_added':True}
+for suffix in ('probe-v1.py','administrative-scope-v1.json','tool-v1.log'):
+ p=D/(P+'-'+suffix);receipt[suffix]={'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size}
+out=D/(P+'-tool-enclosing-v1.json')
+assert not out.exists()
+out.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps(receipt,ensure_ascii=False))
+raise SystemExit(completed.returncode)

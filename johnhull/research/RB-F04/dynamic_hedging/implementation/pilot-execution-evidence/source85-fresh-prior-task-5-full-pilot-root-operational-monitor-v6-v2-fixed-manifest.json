@@ -1,0 +1,58 @@
+{
+  "dependencies": {
+    "interface_v3": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v6-interface-v3.json",
+      "sha256": "30615482cfd7e762e7c9b95d76a040ed02a5af6192734ff4aca3ba790086ddf9"
+    },
+    "pending_example_v3": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6-v3.json",
+      "sha256": "e6498f9e429a790715bb96bb19a786176ae3cff06081c8c2f16d0d55343fd7d7"
+    },
+    "unchanged_v6_manifest": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-fixed-manifest.json",
+      "sha256": "1bc50ab82998684dd2840811125b909726c182b06262d1314b458e680e9865ce"
+    }
+  },
+  "files": {
+    "task-5-full-pilot-root-launch-guard-candidate-v6-v2.json": {
+      "bytes": 46860,
+      "sha256": "8544b7b15e5081d16bfa775426b38c28d2ae8cb5e8b19d0be8976612e18a7f9d"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-v2-GREEN-results.json": {
+      "bytes": 693,
+      "sha256": "4e455f27cb622e26fbbbe3919b2fc2ec57475c345abb07f6468db03d2a271a19"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-v2-GREEN.log": {
+      "bytes": 1678,
+      "sha256": "3f6429c7eac3b0fa63bdd5a850430f49b04971d6ee6134a6f49eacffe6b24757"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-v2-fixed-report.json": {
+      "bytes": 2073,
+      "sha256": "93ac6a5801969fd6ea1183a6c1823fd5db713282e7b3b0af5505adb0c0a2ae88"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-v2-preflight.py": {
+      "bytes": 14902,
+      "sha256": "f7a26e9e745b8baf24ff0f2f1b8a2fed803ad8745f77f4fee4a6cef2e82f0a81"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-v2-publication-lookup-failure.json": {
+      "bytes": 651,
+      "sha256": "bd493f7a08d45f5abd610a6d17837912865670bdf085bedc0888a1abe4236dfe"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-v2-source.diff": {
+      "bytes": 867,
+      "sha256": "0e9f245662d3bba0bde9b7912c3aa68108ef255950ed8954203bee24b004f976"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-v2-verification.json": {
+      "bytes": 1406,
+      "sha256": "0cc95abbc58a39941a4753bc010cb7fb0876f71c0676fd39ca13771b7cfd2d07"
+    },
+    "task-5-full-pilot-root-operational-monitor-v6-v2.py": {
+      "bytes": 44635,
+      "sha256": "8700d0c6ea1146665d1e711637fb30969a734bd82f8382c31489f64e5a25b2ce"
+    }
+  },
+  "financial_acceptance": false,
+  "financial_qualification": "unknown",
+  "root_preapproved": false,
+  "status": "fixed_candidate_only"
+}

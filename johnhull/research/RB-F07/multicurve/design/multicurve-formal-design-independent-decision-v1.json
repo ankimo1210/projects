@@ -1,0 +1,149 @@
+{
+  "schema": "rb-f07-multicurve-formal-design-independent-review-v1",
+  "created_at_utc": "2026-10-11T04:15:02.518630+00:00",
+  "reviewer": "multicurve_design_review",
+  "reviewer_role": "independent_formal_design_contract_reviewer",
+  "decision": "approved",
+  "scope": "design_contract_only",
+  "critical_count": 0,
+  "important_count": 0,
+  "minor_count": 1,
+  "findings": [
+    {
+      "id": "M1",
+      "severity": "Minor",
+      "title": "24quote full-H outputs and independent-reference cost",
+      "design_lines": [
+        83,
+        106,
+        139
+      ],
+      "plan_lines": [
+        127,
+        164,
+        166,
+        170
+      ],
+      "required_before": "protocol and resource-prior freeze",
+      "fix": "24quote full H: 576 entries, 276 mixed pairs, 1153 recalibrations per h. Separate common calibration/factorization reuse, product PV counts and directional-only output families.",
+      "blocks_design_approval": false
+    }
+  ],
+  "abstract_anchor_scope": {
+    "permitted_by_original_independent_review": true,
+    "dated_known_reset_zero_j_validation_retained": true,
+    "held_seasoned_products_not_replaced": true,
+    "synthetic_abstract_not_real_market_validation": true,
+    "actual_rank_unverified": true
+  },
+  "scope_preservation": {
+    "groups": [
+      "D",
+      "P3",
+      "P6"
+    ],
+    "nodes_per_group": 4,
+    "main_quotes": 12,
+    "main_hessian_shape": [
+      12,
+      12
+    ],
+    "main_hessian_entries": 144,
+    "mixed_pairs": 66,
+    "all_cross_blocks_preserved": true,
+    "pnl_bridge_components": 4,
+    "original_market_date_product_controls_preserved": true,
+    "wrong_controls": 10,
+    "quote_scaling": [
+      12,
+      24
+    ],
+    "product_scaling": [
+      1,
+      10,
+      100
+    ],
+    "saved_fresh_and_both_store_restore_preserved": true,
+    "artifact_only_required_figures": 3,
+    "all_failures_unknown_denominators_costs_preserved": true,
+    "no_scope_reduction_authorized": true
+  },
+  "sources": {
+    "formal_design": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/multicurve-formal-design-candidate-v1.md",
+      "sha256": "c4cb01211d607c8dad81798f425f654004a98a655b917d88bccc828e9c9a570f",
+      "bytes": 17086
+    },
+    "formal_plan": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/multicurve-formal-plan-candidate-v1.md",
+      "sha256": "bf7f6b67d5ad247d21e707b655e9e7b27a1c228c2915705643a48a2881f53b66",
+      "bytes": 23900
+    },
+    "research_readme": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F07/multicurve/README.md",
+      "sha256": "efc8b0ec8f031ff039938cbbf65748aad78a7bdc39fcc4678329df01a98e6498",
+      "bytes": 1209
+    },
+    "research": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F07/multicurve/RESEARCH.md",
+      "sha256": "e17e6cbd83c34270f480774b824c494abb97e96b89a37f3077f401463c32250a",
+      "bytes": 38598
+    },
+    "reviewed_draft_v2": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F07/multicurve/design/reviewed-research-v2.md",
+      "sha256": "c547b78cca4e21736acd177c0182cb250486004040be3da9817ff90567e5b482",
+      "bytes": 38481
+    },
+    "initial_independent_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/docs/superpowers/reviews/2026-10-09-next-research-design-review.md",
+      "sha256": "eb6b5b5ac928e48e4185b82a51e73df861ea4d84a4df0b01e8ea507de511e3ac",
+      "bytes": 6094
+    },
+    "independent_rereview": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/docs/superpowers/reviews/2026-10-09-next-research-design-rereview.md",
+      "sha256": "6a1e4daa866e02594b87cc80b0ef898c58d609d2ce93ca7e60a6f3cf8300d016",
+      "bytes": 2334
+    },
+    "closed_form_probe_metadata": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F07/multicurve/design/closed_form_probe.json",
+      "sha256": "9bb7bbd523f84ec261222f5fac2807ee63a2bd4cf8452d8bf325183adf0d5854",
+      "bytes": 608
+    }
+  },
+  "primary_sources_rechecked": [
+    {
+      "id": "M3-matrix",
+      "url": "https://strata.opengamma.io/apidocs/com/opengamma/strata/market/curve/JacobianCalibrationMatrix.html",
+      "claim": "dtheta/dq matrix orientation and curve order only"
+    },
+    {
+      "id": "M3-calculator",
+      "url": "https://strata.opengamma.io/apidocs/com/opengamma/strata/pricer/sensitivity/MarketQuoteSensitivityCalculator.html",
+      "claim": "parameter to market-quote sensitivity conversion only"
+    }
+  ],
+  "review_report": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/multicurve-formal-design-independent-review-v1.md",
+    "sha256": "ac81addb2294755a937d26eab9f54b285d493d918b59193b037ce0417ca4d9a3",
+    "bytes": 9580
+  },
+  "candidate_and_canonical_documents_unchanged": true,
+  "review_execution": {
+    "kind": "static document and primary-source review",
+    "initial_authoring_js_parse_failed_before_host_execution": true,
+    "first_metadata_writer_payload_encoding_failed_before_python_source_execution": true,
+    "financial_execution": false,
+    "source_provenance_read_scope": "eight reviewed documents only"
+  },
+  "production_or_live_worker_modified": false,
+  "financial_calculation_executed": false,
+  "rng_solver_mc_executed": false,
+  "pytest_ruff_executed": false,
+  "source_implementation_approved": false,
+  "resource_budget_prior_approved": false,
+  "pilot_main_launch_approved": false,
+  "financial_numerical_acceptance_approved": false,
+  "phase_or_main_acceptance_approved": false,
+  "capacity_or_runtime_guaranteed": false,
+  "git_or_cas_modified": false
+}

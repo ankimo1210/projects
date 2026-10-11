@@ -1,0 +1,67 @@
+{
+  "schema": "rb-f04-source85-closed-proof-archive-initial-large-file-guard-stop-v1",
+  "status": "partial_administrative_archive",
+  "error": "AssertionError: len(data)<500000 for a referenced pending candidate; original failure preserved",
+  "original_production_source_or_financial_changes": false,
+  "partial_existing_archives": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-monitor-v6-source-mechanics-audit-failure-v1.json",
+      "sha256": "51bbbd73feeb03260db0f1d3e3712fed4f6147b1da5f5c5d9aeebd5de098d994",
+      "bytes": 755
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-source85-fresh-producer-limited-decision-v1.json",
+      "sha256": "3831886d1d9df4700995ba0fb75d2994cefa0ccd958047c20507e0f1f6609d62",
+      "bytes": 23035
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-formal-prior-v6-decision-v1.json",
+      "sha256": "f1b67451900d7cfaeb68e0b37d05154b64fff26a0a44320c75666c8b25467223",
+      "bytes": 26105
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-monitor-v6-source-mechanics-results-v2.json",
+      "sha256": "e4d1f9f5d9559f155e8c644179ab0b986f74f8949c7b8ac4805b90b4577bd514",
+      "bytes": 7308
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-root-source85-metadata-observer-constant-delta-v1.json",
+      "sha256": "a9db7f03bde12e0b79123070d991e7bd7a7197a0df0247c7f3fd523b28c30e82",
+      "bytes": 1639
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-source85-fresh-boundary-audit-v1.json",
+      "sha256": "50704525cf94d57c187d5e84e350800d172e8f6331a4467ccd92f9ec8a1d6694",
+      "bytes": 7594
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-task-5-formal-pilot-root-operational-resource-prior-v4.json",
+      "sha256": "64a82b114f3abfa0b9e1ddcbec85d5a16171014c4cf5c81ae9f853b6d9de6b6e",
+      "bytes": 3656
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-root-source82-to85-fresh-production-delta-v1.json",
+      "sha256": "354a2ee17a9f0f06609e82018d93454a8e9443681c32f0ba92d8d1b27e446148",
+      "bytes": 3408
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source85-fresh-prior-independent-root-monitor-v6-decision-v1.json",
+      "sha256": "5c742140a2080f68134d02d7b82b04571e0a2863eb47791ee9bda0ccdfb50968",
+      "bytes": 10220
+    }
+  ],
+  "large_files_to_artifact_store": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6-v3.json",
+      "bytes": 6335942
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6-v2.json",
+      "bytes": 6336080
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6.json",
+      "bytes": 6335613
+    }
+  ]
+}

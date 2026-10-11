@@ -1,0 +1,11 @@
+{
+  "status": "preserved_author_metadata_lookup_error",
+  "failure": "Pending example basename initially guessed incorrectly; assertion before fixed report/manifest publication.",
+  "incorrect_paths": [
+    "task-5-formal-prior-lock-preparation-v6-pending-example-v3.json",
+    "task-5-formal-prior-lock-pending-example-v6-v3.json"
+  ],
+  "correct_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-pending-example-v6-v3.json",
+  "correct_sha256": "e6498f9e429a790715bb96bb19a786176ae3cff06081c8c2f16d0d55343fd7d7",
+  "source_or_financial_operation": false
+}
