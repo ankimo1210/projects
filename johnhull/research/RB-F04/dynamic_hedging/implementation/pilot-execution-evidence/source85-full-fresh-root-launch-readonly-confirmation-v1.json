@@ -1,0 +1,84 @@
+{
+  "schema": "rb-f04-source85-full-fresh-root-launch-observation-v1",
+  "observed_UTC": "2026-10-11T09:41:55.425773+00:00",
+  "status": "running_at_readonly_observation",
+  "tool_session_id": 77271,
+  "root_pid": 556486,
+  "monitor_pid": 556487,
+  "numerical_child_pid": 556488,
+  "enclosing_start_UTC": "2026-10-11T09:40:18.991601+00:00",
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+    "--plan",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v6/locked-prior-metadata",
+    "--inputs",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs",
+    "--output",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4",
+    "--bounded"
+  ],
+  "guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-source85-v1.json",
+    "sha256": "4da4527fff554e6620af4e6259948af8a7401f0d6cc642dad0de285dbb5b62e5",
+    "bytes": 52485
+  },
+  "enclosing_observer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observer-source85-v1.py",
+    "sha256": "cdc73013169a7fdaaf32d7e56f7ebe350c22ccaa741bfcaea174648824ac26a0",
+    "bytes": 3595
+  },
+  "monitor": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2.py",
+    "sha256": "8700d0c6ea1146665d1e711637fb30969a734bd82f8382c31489f64e5a25b2ce",
+    "bytes": 44635
+  },
+  "original_before_bindings": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-observation-v4/before-bindings-and-command.json",
+    "sha256": "19de7634b9ca0cf657b97c53f8546bc7b15bb42d4fefddc870bb9da7406e32ec",
+    "bytes": 16648
+  },
+  "current_source_identity_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "full_original_counts": {
+    "attempts": 51,
+    "cases": 121,
+    "jobs": 3138
+  },
+  "original_teacher_N_candidates": [
+    1024,
+    4096,
+    16384,
+    65536
+  ],
+  "execution_mode": "bounded_original_full_roster",
+  "resume_requested": false,
+  "capacity_observation": [
+    {
+      "id": "WSL",
+      "path": "/",
+      "reserve_bytes": 10737418240,
+      "free_bytes": 515599462400
+    },
+    {
+      "id": "C",
+      "path": "/mnt/c",
+      "reserve_bytes": 10737418240,
+      "free_bytes": 55101890560
+    },
+    {
+      "id": "F",
+      "path": "/mnt/f",
+      "reserve_bytes": 10737418240,
+      "free_bytes": 146762366976
+    }
+  ],
+  "capacity_guarantee_claimed": false,
+  "old_saved_terminal_preserved": "saved-source85-terminal-root-summary-v1.json",
+  "old_133_record_qualification": "unknown",
+  "final_saved_report_present": false,
+  "financial_qualification": "unknown",
+  "formal_phase_completion_claimed": false,
+  "all_expenses_closed": false,
+  "whole_external10_closed": false,
+  "scope": "finite launch observation only; no live numerical raw or live observer logs copied; process existence is not numerical acceptance"
+}

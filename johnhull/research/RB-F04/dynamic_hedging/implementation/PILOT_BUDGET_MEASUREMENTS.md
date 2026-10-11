@@ -540,3 +540,11 @@ session85801は実terminal（tool exit1／monitor3／数値child−9）。09:14:
 包括費用はwall21,834.603860218秒／CPU21,825.133333315秒、status failed。固定enclosing子のscopeは閉鎖したが、外側bookkeepingはpending、全外部10費用は未閉鎖。内側・enclosing・whole-childの時計を再加算しない。元生成費用も再加算しない。
 
 実終端・不完了結果のroot確認と独立読取確認は済み。次のfreshはC最低10GiBと他volume/source/priorを再確認し、元全3,138/121/51/4Nを持つ別実guardで起動する。旧試行をresume／書換え／PASSへ再標示しない。source85の正式metadata計画と局所改善候補は保持し、今回の終了を新起動許可へ読み替えない。金融raw全体の両semantic復元・費用閉鎖・主実験・教材・phase末受入/mainは未完了。
+
+## source85 fresh全pilotの起動（2026-10-11）
+
+旧savedの実terminalと不完了結果をrootが確認し、C reserve回復後に別実guard（4da4527f…）を固定した。起動直前の空きはC55,102,156,800 B/WSL515,615,420,416 B/F146,762,366,976 Bで各10GiB超、旧worker3pidは不存在。これは容量の一時点観察で、全phaseの保証ではない。
+
+2026-10-11 09:40:18 UTCに既存monitor v6-v2を経由しfresh全3,138 pilotを起動（session77271、親556486/monitor556487/金融child556488）。current85 identity・実guard/monitor・実child cmdlineを照合し、bounded/別出力root-v4/no-resumeと元121cases/51義務/全4N/capsを保持する。[有限な起動確認](pilot-execution-evidence/source85-full-fresh-root-launch-readonly-confirmation-v1.json)。live raw/観測logはGitへコピーしない。旧133記録・行政partial・unknownは不変。
+
+enclosing observerは旧v3の参照先を結合し実wall/自CPU ns端点を記録する最小変更（cdc73013…）。構文検査と独立差分確認でブロッカーなし。元source/prior/金融数学は不変で、費用未閉鎖flags・最終tail unknownを保持する。起動は数値PASS・全費用閉鎖・freeze/main・研究受入を示さない。ETAは数週間規模・1か月超もあり得る低確度の概算を保持し、全pilotの実選択/実費後に更新する。
