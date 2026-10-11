@@ -1,0 +1,57 @@
+{
+  "schema": "rb-f04-root-bounded-page-sharing-trial-observation-v1",
+  "observed_UTC": "2026-10-11T10:03:14.571403+00:00",
+  "root_application_prior_sha256": "0ca14fe6ebd7a38512cdc412c3f3c663b2090710de3fd4700cc60f6c6f2af8d3",
+  "returncode": 2,
+  "result": {
+    "actual_file_read_bytes": 285298434,
+    "actual_file_write_bytes": 0,
+    "already_independent": 0,
+    "already_shared": 0,
+    "certain_released_allocated_bytes": 18468864,
+    "cpu_seconds": 0.24759940100000002,
+    "detached": 0,
+    "discovered_leaf_packs": 136,
+    "eligible": 21,
+    "financial_acceptance": false,
+    "financial_qualification": "unknown",
+    "inherited_helper_sha256": "010fb31dd02be6e7be937d1c9923ba8f80abeac2bbb03f05725850be430adf58",
+    "inode_inventory_scope": "only accepted paths from this bounded scan, not the entire native tree",
+    "limit": "max_links",
+    "linked": 1,
+    "native_volume_after": {
+      "free": 512979304448,
+      "total": 1081101176832,
+      "used": 513129517056
+    },
+    "native_volume_before": {
+      "free": 512958758912,
+      "total": 1081101176832,
+      "used": 513150062592
+    },
+    "planned_links": 1,
+    "rejected": 0,
+    "root_preapproved": false,
+    "scope": "published_source85_stage_arrays_pages_only",
+    "selected_unique_inode_allocated_after_bytes": 167317504,
+    "selected_unique_inode_allocated_before_bytes": 185786368,
+    "status": "candidate_not_authorized",
+    "termination": "administrative_limit",
+    "wall_seconds": 0.2612443510006415,
+    "windows_vhd_or_host_volume_space_reclamation": "not_measured_or_guaranteed"
+  },
+  "stderr": "",
+  "timing_events": {
+    "wall_start_ns": 109663762192973,
+    "wall_stop_ns": 109664061221705,
+    "own_cpu_start_ns": 26842030,
+    "own_cpu_stop_ns": 27187455
+  },
+  "wall_seconds": 0.299028732,
+  "inclusive_cpu_seconds": 0.280473425,
+  "child_kernel_peak_RSS_bytes": 23523328,
+  "final_outer_bookkeeping_expense": null,
+  "all_external10_closed": false,
+  "financial_acceptance": false,
+  "candidate_flags_are_not_root_application_authority": true
+}

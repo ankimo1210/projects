@@ -1,0 +1,369 @@
+"""Small source-free page sharing boundaries; no native or financial reads."""
+
+import argparse
+import hashlib
+import io
+import json
+import os
+import struct
+import tempfile
+import time
+import types
+import unittest
+import zipfile
+import zlib
+from pathlib import Path
+from unittest.mock import patch
+
+ROOT = Path(__file__).parent
+HELPER = None
+MODULE = None
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
+def digest(value):
+    return hashlib.sha256(value).hexdigest()
+
+
+def load(path):
+    module = types.ModuleType("synthetic_page_sharing_helper")
+    module.__file__ = str(path)
+    exec(compile(path.read_bytes(), str(path), "exec"), module.__dict__)
+    return module
+
+
+def archive(body=None):
+    output = io.BytesIO()
+    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_STORED) as zipped:
+        if body is not None:
+            header = repr({"descr": "|u1", "fortran_order": False, "shape": (len(body),)})
+            encoded = header.encode()
+            encoded += b" " * ((-10 - len(encoded) - 1) % 64) + b"\n"
+            zipped.writestr(
+                zipfile.ZipInfo("blob.npy"),
+                b"\x93NUMPY\x01\x00" + struct.pack("<H", len(encoded)) + encoded + body,
+            )
+    return output.getvalue()
+
+
+def chunk(path, metadata, body=None):
+    path.mkdir(parents=True)
+    payload = archive(body)
+    manifest = {"schema": "rb-f04-array-chunk-v1", "metadata": metadata, "arrays": {}}
+    if body is not None:
+        manifest["arrays"] = {"blob": {"dtype": "|u1", "shape": [len(body)], "nbytes": len(body)}}
+    metadata_bytes = canonical(manifest)
+    with zipfile.ZipFile(io.BytesIO(payload)) as zipped:
+        expanded = sum(member.file_size for member in zipped.infolist())
+    receipt = {
+        "schema": "rb-f04-array-receipt-v1",
+        "metadata_sha256": digest(metadata_bytes),
+        "arrays_sha256": digest(payload),
+        "uncompressed_bytes": expanded,
+    }
+    receipt["artifact_sha256"] = digest(canonical(receipt))
+    (path / "metadata.json").write_bytes(metadata_bytes)
+    (path / "arrays.npz").write_bytes(payload)
+    (path / "receipt.json").write_bytes(canonical(receipt))
+    return receipt
+
+
+def published(root, job):
+    directory = root / "jobs" / job
+    directory.mkdir(parents=True)
+    name = "arrays-00000000"
+    page = {
+        "schema": "rb-f04-pilot-typed-dag-page-v1",
+        "kind": "arrays",
+        "index": 0,
+        "offset": 0,
+        "expanded_length": 128,
+    }
+    receipt = chunk(directory / name, page, zlib.compress(b"A" * 128))
+    metadata_page = dict(page, kind="metadata", expanded_length=2)
+    other = chunk(directory / "metadata-00000000", metadata_page, zlib.compress(b"{}\n"))
+    metadata = {
+        "schema": "rb-f04-pilot-typed-dag-v1",
+        "page_raw_limit": 64 * 1024**2,
+        "payload_sha256": digest(b"synthetic"),
+        "root_node": 0,
+        "node_count": 1,
+        "array_count": 1,
+        "array_bytes": 128,
+        "metadata_bytes": 2,
+        "pages": [
+            {"path": name, **page, "receipt": receipt},
+            {"path": "metadata-00000000", **metadata_page, "receipt": other},
+        ],
+    }
+    # Move synthetic page dirs aside only while the root chunk is written.
+    sibling = directory.with_name(directory.name + "-root")
+    chunk(sibling, metadata)
+    for item in sibling.iterdir():
+        item.rename(directory / item.name)
+    sibling.rmdir()
+    return directory / name / "arrays.npz"
+
+
+def resign_root(path, mutate):
+    directory = path.parent.parent
+    manifest = json.loads((directory / "metadata.json").read_bytes())
+    mutate(manifest["metadata"])
+    data = canonical(manifest)
+    (directory / "metadata.json").write_bytes(data)
+    receipt = json.loads((directory / "receipt.json").read_bytes())
+    receipt["metadata_sha256"] = digest(data)
+    receipt.pop("artifact_sha256")
+    receipt["artifact_sha256"] = digest(canonical(receipt))
+    (directory / "receipt.json").write_bytes(canonical(receipt))
+
+
+class SharingBoundaries(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.base = Path(self.temp.name)
+        self.root = self.base / "native"
+        self.root.mkdir()
+        cls = (
+            MODULE.PageDeduplicator if hasattr(MODULE, "PageDeduplicator") else MODULE.Deduplicator
+        )
+        self.engine = cls(
+            root=self.root,
+            staging=self.base / "staging",
+            journal=self.base / "events.jsonl",
+            max_read_bytes=16 * 1024**2,
+            max_links=4,
+            max_seconds=30,
+        )
+        self.engine.prepare()
+
+    def tearDown(self):
+        if self.engine.log and not self.engine.log.closed:
+            self.engine.finish()
+        self.temp.cleanup()
+
+    def pair(self):
+        source = published(self.root, "stage:first")
+        target = published(self.root, "stage:second")
+        return source, target
+
+    def test_exact_bytes_share_with_all_receipts_unchanged(self):
+        source, target = self.pair()
+        receipts = {p: p.read_bytes() for p in self.root.rglob("receipt.json")}
+        metadata = {p: p.read_bytes() for p in self.root.rglob("metadata.json")}
+        original = target.read_bytes()
+        first, second = self.engine.load_pack(source), self.engine.load_pack(target)
+        self.engine.link(first, second)
+        self.assertEqual(source.stat().st_ino, target.stat().st_ino)
+        self.assertEqual(target.read_bytes(), original)
+        self.assertEqual({p: p.read_bytes() for p in receipts}, receipts)
+        self.assertEqual({p: p.read_bytes() for p in metadata}, metadata)
+        self.engine.link(self.engine.load_pack(source), self.engine.load_pack(target))
+        self.assertEqual(self.engine.summary["already_shared"], 1)
+        self.assertEqual(self.engine.summary["linked"], 1)
+
+    def test_unpublished_and_incomplete_roots_rejected(self):
+        for which in ("receipt", "other_page"):
+            with self.subTest(which=which):
+                path = published(self.root, "stage:" + which)
+                missing = path.parent.parent / (
+                    "receipt.json" if which == "receipt" else "metadata-00000000/receipt.json"
+                )
+                missing.unlink()
+                with self.assertRaises((ValueError, OSError)):
+                    self.engine.load_pack(path)
+
+    def test_root_page_receipt_and_metadata_binding_rejected(self):
+        for which in ("receipt", "expanded"):
+            with self.subTest(which=which):
+                path = published(self.root, "stage:changed-" + which)
+
+                def change(root, which=which):
+                    page = root["pages"][0]
+                    if which == "receipt":
+                        page["receipt"]["arrays_sha256"] = "0" * 64
+                    else:
+                        page["expanded_length"] += 1
+
+                resign_root(path, change)
+                with self.assertRaises(ValueError):
+                    self.engine.load_pack(path)
+
+    def test_scope_excludes_metadata_legacy_teacher_and_hidden_roots(self):
+        path = published(self.root, "stage:scope")
+        for candidate in (
+            path.parent.parent / "metadata-00000000/arrays.npz",
+            self.root / "jobs/stage:scope/pack000/arrays.npz",
+            self.root / "jobs/teacher:local/arrays-00000000/arrays.npz",
+            self.root / "jobs/.stage:temporary/arrays-00000000/arrays.npz",
+        ):
+            with self.subTest(candidate=str(candidate)):
+                with self.assertRaises(ValueError):
+                    self.engine.array_path(candidate)
+        # A valid scope with an original teacher schema still cannot be shared.
+        resign_root(path, lambda root: root.update(schema="rb-f04-native-teacher-grid-v1"))
+        with self.assertRaises(ValueError):
+            self.engine.load_pack(path)
+
+    def test_root_change_during_replacement_restores_target_inode(self):
+        source, target = self.pair()
+        first, second = self.engine.load_pack(source), self.engine.load_pack(target)
+        old_inode = target.stat().st_ino
+        original_load = self.engine.load_pack
+        calls = 0
+
+        def changed(path):
+            nonlocal calls
+            calls += 1
+            if calls == 3:
+                # A self-consistent root receipt change after atomic array replace.
+                resign_root(target, lambda root: root.update(payload_sha256="f" * 64))
+            return original_load(path)
+
+        with patch.object(self.engine, "load_pack", side_effect=changed):
+            with self.assertRaisesRegex(ValueError, "root"):
+                self.engine.link(first, second)
+        self.assertEqual(target.stat().st_ino, old_inode)
+        self.assertEqual(self.engine.summary["linked"], 0)
+
+    def test_huge_blob_header_rejected_without_array_decode(self):
+        path = published(self.root, "stage:huge-header")
+        output = io.BytesIO()
+        header = repr({"descr": "|u1", "fortran_order": False, "shape": (1073741824,)}).encode()
+        header += b" " * ((-10 - len(header) - 1) % 64) + b"\n"
+        member = b"\x93NUMPY\x01\x00" + struct.pack("<H", len(header)) + header
+        with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_STORED) as zipped:
+            zipped.writestr(zipfile.ZipInfo("blob.npy"), member)
+        payload = output.getvalue()
+        path.write_bytes(payload)
+        manifest = json.loads(path.with_name("metadata.json").read_bytes())
+        manifest["arrays"]["blob"] = {"dtype": "|u1", "shape": [1073741824], "nbytes": 1073741824}
+        metadata_bytes = canonical(manifest)
+        path.with_name("metadata.json").write_bytes(metadata_bytes)
+        receipt = json.loads(path.with_name("receipt.json").read_bytes())
+        receipt.update(
+            arrays_sha256=digest(payload),
+            metadata_sha256=digest(metadata_bytes),
+            uncompressed_bytes=len(member),
+        )
+        receipt.pop("artifact_sha256")
+        receipt["artifact_sha256"] = digest(canonical(receipt))
+        path.with_name("receipt.json").write_bytes(canonical(receipt))
+        resign_root(path, lambda root: root["pages"][0].update(receipt=receipt))
+        with self.assertRaisesRegex(ValueError, "body length/allocation"):
+            self.engine.load_pack(path)
+
+    def test_inherited_detach_restores_independent_identical_bytes(self):
+        source, target = self.pair()
+        first, second = self.engine.load_pack(source), self.engine.load_pack(target)
+        bytes_before = target.read_bytes()
+        self.engine.link(first, second)
+        journal = self.engine.journal_path
+        self.engine.finish([first, second])
+        cls = MODULE.PageDeduplicator
+        other = cls(
+            root=self.root,
+            staging=self.base / "detach-staging",
+            journal=self.base / "detach.jsonl",
+            max_read_bytes=16 * 1024**2,
+            max_links=1,
+            max_seconds=30,
+        )
+        result = other.detach(journal)
+        self.assertEqual(result["detached"], 1)
+        self.assertNotEqual(source.stat().st_ino, target.stat().st_ino)
+        self.assertEqual(target.read_bytes(), bytes_before)
+
+    def test_postcheck_cap_rolls_back_without_receipt_changes(self):
+        source, target = self.pair()
+        original_inode = target.stat().st_ino
+        original = target.read_bytes()
+        first, second = self.engine.load_pack(source), self.engine.load_pack(target)
+        original_load = self.engine.load_pack
+        calls = 0
+        legacy = getattr(MODULE, "LEGACY", MODULE)
+
+        def capped(path):
+            nonlocal calls
+            calls += 1
+            if calls == 3:
+                raise legacy.AdministrativeLimitError("synthetic postcheck limit")
+            return original_load(path)
+
+        with patch.object(self.engine, "load_pack", side_effect=capped):
+            with self.assertRaises(legacy.AdministrativeLimitError):
+                self.engine.link(first, second)
+        self.assertEqual(target.stat().st_ino, original_inode)
+        self.assertEqual(target.read_bytes(), original)
+
+    def test_rollback_io_failure_retains_original_backup_and_propagates(self):
+        source, target = self.pair()
+        first, second = self.engine.load_pack(source), self.engine.load_pack(target)
+        old_inode, old_bytes = target.stat().st_ino, target.read_bytes()
+        original_load, original_replace = self.engine.load_pack, os.replace
+        calls = 0
+        legacy = getattr(MODULE, "LEGACY", MODULE)
+
+        def capped(path):
+            nonlocal calls
+            calls += 1
+            if calls == 3:
+                raise legacy.AdministrativeLimitError("synthetic postcheck limit")
+            return original_load(path)
+
+        def replace(source, destination):
+            if str(source).endswith(".original"):
+                raise OSError("synthetic rollback I/O failure")
+            return original_replace(source, destination)
+
+        with (
+            patch.object(self.engine, "load_pack", side_effect=capped),
+            patch.object(os, "replace", side_effect=replace),
+        ):
+            with self.assertRaises(legacy.RollbackFailureError):
+                self.engine.link(first, second)
+        backup = Path(self.engine.summary["retained_backup"])
+        self.assertEqual(backup.stat().st_ino, old_inode)
+        self.assertEqual(backup.read_bytes(), old_bytes)
+        self.assertEqual(self.engine.summary["mutation_effect"], "unknown")
+        self.assertEqual(self.engine.summary["rejected"], 0)
+
+
+def main():
+    global MODULE
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--helper", type=Path, required=True)
+    parser.add_argument("--result", type=Path, required=True)
+    args = parser.parse_args()
+    MODULE = load(args.helper)
+    wall, cpu = time.perf_counter(), time.process_time()
+    stream = io.StringIO()
+    result = unittest.TextTestRunner(stream=stream, verbosity=2).run(
+        unittest.defaultTestLoader.loadTestsFromTestCase(SharingBoundaries)
+    )
+    data = {
+        "status": "candidate_not_authorized",
+        "helper": str(args.helper),
+        "helper_sha256": digest(args.helper.read_bytes()),
+        "tests_run": result.testsRun,
+        "failures": len(result.failures),
+        "errors": len(result.errors),
+        "log": stream.getvalue(),
+        "wall_seconds": time.perf_counter() - wall,
+        "cpu_seconds": time.process_time() - cpu,
+        "financial_execution": False,
+        "real_native_read_or_mutation": False,
+        "root_preapproved": False,
+    }
+    with args.result.open("x") as handle:
+        json.dump(data, handle, sort_keys=True, indent=2)
+        handle.write("\n")
+    print(stream.getvalue())
+    return 0 if result.wasSuccessful() else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

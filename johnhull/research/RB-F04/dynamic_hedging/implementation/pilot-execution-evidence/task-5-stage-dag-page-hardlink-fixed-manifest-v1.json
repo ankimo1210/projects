@@ -1,0 +1,23 @@
+{
+  "files": {
+    "task-5-stage-dag-page-hardlink-GREEN-formatted-v1.json": {
+      "sha256": "cf9300b759db1e5ba84c893601d2358911916493b7f5572ed34944e6402d5b51",
+      "size": 1958
+    },
+    "task-5-stage-dag-page-hardlink-candidate-v1.py": {
+      "sha256": "20ebd4089ac2ea6b89a739f6d15b380ad9ccfe31fce7270d63ddcf84f1581698",
+      "size": 13905
+    },
+    "task-5-stage-dag-page-hardlink-selftest-v1.py": {
+      "sha256": "e1a31dbbe645c2936b9e20a9ecddcc0357506a2571ef24a123dd7b89d02cb33a",
+      "size": 14909
+    },
+    "task-5-stage-dag-page-hardlink-verification-v1.json": {
+      "sha256": "305046cca534fe085d376f8dcebc6e7e858e38b4bbc8c8ad381f11175929ed7c",
+      "size": 4104
+    }
+  },
+  "financial_acceptance": false,
+  "root_preapproved": false,
+  "status": "candidate_not_authorized"
+}

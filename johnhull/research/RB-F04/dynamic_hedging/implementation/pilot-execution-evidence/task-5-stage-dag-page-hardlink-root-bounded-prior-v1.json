@@ -1,0 +1,34 @@
+{
+  "root_preapproved": true,
+  "planned_before_attempt": true,
+  "mode": "bounded_link_after_one_verified_trial",
+  "native_mutation_authorized": true,
+  "helper_path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-candidate-v1.py",
+  "helper_sha256": "20ebd4089ac2ea6b89a739f6d15b380ad9ccfe31fce7270d63ddcf84f1581698",
+  "fixed_native_root": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4",
+  "scope": "published stage arrays-page NPZ only; original byte/path/receipt and inherited rollback/detach retained",
+  "source85_financial_guard_sha256": "4da4527fff554e6620af4e6259948af8a7401f0d6cc642dad0de285dbb5b62e5",
+  "prior_trial_receipt_sha256": "bfffb1b378f96965a83245d63d8f57ba89639fb64c0d7ed7e7cbc8c260df14c1",
+  "administrative_caps": {
+    "max_read_bytes": 4294967296,
+    "max_links": 32,
+    "max_seconds": 10
+  },
+  "argv": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-candidate-v1.py",
+    "--mode",
+    "link",
+    "--journal",
+    "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-root-bounded-v1.jsonl",
+    "--max-read-bytes",
+    "4294967296",
+    "--max-links",
+    "32",
+    "--max-seconds",
+    "10"
+  ],
+  "financial_execution": false,
+  "financial_acceptance": false,
+  "all_external10_closed": false
+}

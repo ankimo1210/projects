@@ -1,0 +1,14 @@
+{
+  "cpu_seconds": 0.081151569,
+  "errors": 0,
+  "failures": 0,
+  "financial_execution": false,
+  "helper": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-candidate-v1.py",
+  "helper_sha256": "20ebd4089ac2ea6b89a739f6d15b380ad9ccfe31fce7270d63ddcf84f1581698",
+  "log": "test_exact_bytes_share_with_all_receipts_unchanged (__main__.SharingBoundaries.test_exact_bytes_share_with_all_receipts_unchanged) ... ok\ntest_huge_blob_header_rejected_without_array_decode (__main__.SharingBoundaries.test_huge_blob_header_rejected_without_array_decode) ... ok\ntest_inherited_detach_restores_independent_identical_bytes (__main__.SharingBoundaries.test_inherited_detach_restores_independent_identical_bytes) ... ok\ntest_postcheck_cap_rolls_back_without_receipt_changes (__main__.SharingBoundaries.test_postcheck_cap_rolls_back_without_receipt_changes) ... ok\ntest_rollback_io_failure_retains_original_backup_and_propagates (__main__.SharingBoundaries.test_rollback_io_failure_retains_original_backup_and_propagates) ... ok\ntest_root_change_during_replacement_restores_target_inode (__main__.SharingBoundaries.test_root_change_during_replacement_restores_target_inode) ... ok\ntest_root_page_receipt_and_metadata_binding_rejected (__main__.SharingBoundaries.test_root_page_receipt_and_metadata_binding_rejected) ... ok\ntest_scope_excludes_metadata_legacy_teacher_and_hidden_roots (__main__.SharingBoundaries.test_scope_excludes_metadata_legacy_teacher_and_hidden_roots) ... ok\ntest_unpublished_and_incomplete_roots_rejected (__main__.SharingBoundaries.test_unpublished_and_incomplete_roots_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.203s\n\nOK\n",
+  "real_native_read_or_mutation": false,
+  "root_preapproved": false,
+  "status": "candidate_not_authorized",
+  "tests_run": 9,
+  "wall_seconds": 0.20331437500135507
+}

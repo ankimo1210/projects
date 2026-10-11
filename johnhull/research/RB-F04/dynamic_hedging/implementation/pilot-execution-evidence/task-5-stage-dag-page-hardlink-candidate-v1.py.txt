@@ -1,0 +1,300 @@
+"""Candidate only: exact NPZ sharing of published source85 stage array pages.
+
+Root alone may approve/apply. Inherit fixed v2 byte checks, budgets, rollback
+and detach; this file changes only the fixed scope and published-root binding.
+No financial/source imports, array decode, CAS or subprocess.
+"""
+
+import argparse
+import ast
+import hashlib
+import json
+import re
+import struct
+import types
+import zipfile
+from pathlib import Path
+
+D = Path(__file__).parent.absolute()
+NATIVE_ROOT = D / "task-5-formal-pilot-root-v4"
+STAGING = D / "task-5-stage-dag-page-hardlink-staging-v1"
+LEGACY_PATH = (
+    D.parents[2] / "johnhull/research/RB-F04/dynamic_hedging/implementation"
+    "/pilot-execution-evidence/task-5-stage-npz-hardlink-v2.py.txt"
+)
+LEGACY_SHA256 = "010fb31dd02be6e7be937d1c9923ba8f80abeac2bbb03f05725850be430adf58"
+legacy_bytes = LEGACY_PATH.read_bytes()
+if hashlib.sha256(legacy_bytes).hexdigest() != LEGACY_SHA256:
+    raise ValueError("immutable v2 helper source SHA mismatch")
+LEGACY = types.ModuleType("fixed_stage_npz_helper_v2")
+LEGACY.__file__ = str(LEGACY_PATH)
+exec(compile(legacy_bytes, str(LEGACY_PATH), "exec"), LEGACY.__dict__)
+del legacy_bytes
+
+ROOT_SCHEMA = "rb-f04-pilot-typed-dag-v1"
+PAGE_SCHEMA = "rb-f04-pilot-typed-dag-page-v1"
+PAGE_NAME = re.compile(r"arrays-[0-9]{8}\Z")
+MAX_PAGE_RAW = 64 * 1024**2
+
+
+def integer(value, minimum=0):
+    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
+        raise ValueError("invalid page integer")
+    return value
+
+
+class PageDeduplicator(LEGACY.Deduplicator):
+    """Fixed-root CLI; injected temporary roots are solely for synthetic tests."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.summary.update(
+            scope="published_source85_stage_arrays_pages_only",
+            status="candidate_not_authorized",
+            root_preapproved=False,
+            financial_acceptance=False,
+            inherited_helper_sha256=LEGACY_SHA256,
+        )
+
+    def array_path(self, path):
+        path = LEGACY.no_symlinks(path)
+        try:
+            parts = path.relative_to(self.root).parts
+        except ValueError as error:
+            raise ValueError("path outside fixed native scope") from error
+        if not (
+            len(parts) == 4
+            and parts[0] == "jobs"
+            and parts[1].startswith("stage:")
+            and PAGE_NAME.fullmatch(parts[2])
+            and parts[3] == "arrays.npz"
+        ):
+            raise ValueError("not a published stage arrays page")
+        return path
+
+    def _published_root(self, path):
+        directory = path.parent.parent
+        files = {}
+        for name in LEGACY.LEAF_NAMES:
+            sha, stat, content = self.file_hash(directory / name, capture=name != "arrays.npz")
+            files[name] = {"sha256": sha, "stat": stat}
+            if name == "receipt.json":
+                receipt_bytes = content
+            elif name == "metadata.json":
+                metadata_bytes = content
+        receipt = json.loads(receipt_bytes)
+        identity = {k: v for k, v in receipt.items() if k != "artifact_sha256"}
+        if (
+            receipt_bytes != LEGACY.canonical(receipt)
+            or receipt.get("schema") != "rb-f04-array-receipt-v1"
+            or receipt.get("artifact_sha256") != LEGACY.sha(LEGACY.canonical(identity))
+            or receipt.get("metadata_sha256") != files["metadata.json"]["sha256"]
+            or receipt.get("arrays_sha256") != files["arrays.npz"]["sha256"]
+            or receipt.get("uncompressed_bytes") != 0
+        ):
+            raise ValueError("published root receipt mismatch")
+        with (directory / "arrays.npz").open("rb") as handle:
+            with zipfile.ZipFile(LEGACY.BoundedReader(handle, self.budget)) as archive:
+                if archive.infolist():
+                    raise ValueError("root must have an empty NPZ container")
+        manifest = json.loads(metadata_bytes)
+        if (
+            metadata_bytes != LEGACY.canonical(manifest)
+            or manifest.get("schema") != "rb-f04-array-chunk-v1"
+            or manifest.get("arrays") != {}
+            or not isinstance(manifest.get("metadata"), dict)
+            or manifest["metadata"].get("schema") != ROOT_SCHEMA
+        ):
+            raise ValueError("not a published typed DAG root")
+        metadata = manifest["metadata"]
+        limit = integer(metadata.get("page_raw_limit"), 1)
+        if limit > MAX_PAGE_RAW or not isinstance(metadata.get("pages"), list):
+            raise ValueError("invalid root page limit/roster")
+        refs = metadata["pages"]
+        names, by_kind = set(), {"arrays": [], "metadata": []}
+        selected = None
+        for ref in refs:
+            if not isinstance(ref, dict) or set(ref) != {
+                "path",
+                "schema",
+                "kind",
+                "index",
+                "offset",
+                "expanded_length",
+                "receipt",
+            }:
+                raise ValueError("invalid published page reference")
+            kind = ref["kind"]
+            if kind not in by_kind or ref["schema"] != PAGE_SCHEMA:
+                raise ValueError("invalid published page kind")
+            index = integer(ref["index"])
+            if ref["path"] != f"{kind}-{index:08d}" or ref["path"] in names:
+                raise ValueError("unsafe/duplicate page path")
+            names.add(ref["path"])
+            by_kind[kind].append(ref)
+            page = LEGACY.no_symlinks(directory / ref["path"])
+            if not page.is_dir() or {p.name for p in page.iterdir()} != LEGACY.LEAF_NAMES:
+                raise ValueError("incomplete published root page")
+            for name in LEGACY.LEAF_NAMES:
+                LEGACY.no_symlinks(page / name)
+                LEGACY.snapshot(page / name)
+            if ref["path"] == path.parent.name:
+                selected = ref
+        if {p.name for p in directory.iterdir()} != LEGACY.LEAF_NAMES | names:
+            raise ValueError("incomplete/extra published root inventory")
+        for kind, group in by_kind.items():
+            offset = 0
+            for index, ref in enumerate(group):
+                if integer(ref["index"]) != index or integer(ref["offset"]) != offset:
+                    raise ValueError("noncanonical page index/offset")
+                length = integer(ref["expanded_length"], 1)
+                if length > limit:
+                    raise ValueError("page expanded length exceeds limit")
+                offset += length
+            if offset != integer(
+                metadata.get("array_bytes" if kind == "arrays" else "metadata_bytes")
+            ):
+                raise ValueError("root page total mismatch")
+        if not by_kind["metadata"] or selected is None or selected["kind"] != "arrays":
+            raise ValueError("unreferenced/nonarray page")
+        for name, info in files.items():
+            if not LEGACY.stable(info["stat"], LEGACY.snapshot(directory / name)):
+                raise ValueError("published root changed during verification")
+        return {"path": str(directory.relative_to(self.root)), "files": files}, selected, limit
+
+    def _wrapper(self, path, limit, manifest):
+        bound = limit + limit // 1000 + 65536
+        if path.stat().st_size > bound:
+            raise ValueError("oversized compressed page artifact")
+        with path.open("rb") as handle:
+            with zipfile.ZipFile(LEGACY.BoundedReader(handle, self.budget)) as archive:
+                members = archive.infolist()
+                if (
+                    len(members) != 1
+                    or members[0].filename != "blob.npy"
+                    or members[0].compress_type != zipfile.ZIP_STORED
+                    or members[0].file_size > bound
+                ):
+                    raise ValueError("noncanonical page NPY container")
+                member = members[0]
+                with archive.open(member) as stream:
+                    magic = stream.read(8)
+                    if magic not in (
+                        b"\x93NUMPY\x01\x00",
+                        b"\x93NUMPY\x02\x00",
+                        b"\x93NUMPY\x03\x00",
+                    ):
+                        raise ValueError("unsupported page NPY version")
+                    width = 2 if magic[-2] == 1 else 4
+                    raw = stream.read(width)
+                    if len(raw) != width:
+                        raise ValueError("incomplete page NPY header")
+                    size = struct.unpack("<H" if width == 2 else "<I", raw)[0]
+                    if size > bound or size > member.file_size - stream.tell():
+                        raise ValueError("oversized page NPY header")
+                    header = ast.literal_eval(
+                        stream.read(size).decode("utf8" if magic[-2] == 3 else "latin1").strip()
+                    )
+                    if (
+                        not isinstance(header, dict)
+                        or set(header) != {"descr", "shape", "fortran_order"}
+                        or header["descr"] not in ("|u1", "<u1", ">u1", "=u1", "u1")
+                        or header["fortran_order"] is not False
+                        or not isinstance(header["shape"], tuple)
+                        or len(header["shape"]) != 1
+                    ):
+                        raise ValueError("invalid page NPY dtype/shape/order")
+                    count = integer(header["shape"][0])
+                    if count > bound or stream.tell() + count != member.file_size:
+                        raise ValueError("page NPY body length/allocation mismatch")
+        if manifest.get("arrays") != {"blob": {"dtype": "|u1", "shape": [count], "nbytes": count}}:
+            raise ValueError("page blob descriptor mismatch")
+
+    def load_pack(self, path):
+        path = self.array_path(path)
+        root_before, expected, limit = self._published_root(path)
+        record = super().load_pack(path)
+        _, _, receipt_bytes = self.file_hash(path.with_name("receipt.json"), capture=True)
+        _, _, metadata_bytes = self.file_hash(path.with_name("metadata.json"), capture=True)
+        manifest = json.loads(metadata_bytes)
+        expected_metadata = {k: v for k, v in expected.items() if k not in ("path", "receipt")}
+        if (
+            json.loads(receipt_bytes) != expected["receipt"]
+            or metadata_bytes != LEGACY.canonical(manifest)
+            or manifest.get("schema") != "rb-f04-array-chunk-v1"
+            or manifest.get("metadata") != expected_metadata
+        ):
+            raise ValueError("page receipt/metadata differs from published root")
+        self._wrapper(path, limit, manifest)
+        root_after, expected_after, limit_after = self._published_root(path)
+        if root_after != root_before or expected_after != expected or limit_after != limit:
+            raise ValueError("published root changed during page authentication")
+        for name, key in (
+            ("arrays.npz", "array_stat"),
+            ("metadata.json", "metadata_stat"),
+            ("receipt.json", "receipt_stat"),
+        ):
+            if not LEGACY.stable(record[key], LEGACY.snapshot(path.with_name(name))):
+                raise ValueError("page changed during root authentication")
+        return {**record, "published_root": root_before}
+
+    def unchanged(self, original, current, *, array_inode=True):
+        super().unchanged(original, current, array_inode=array_inode)
+        if original["published_root"] != current["published_root"]:
+            raise ValueError("published root provenance changed")
+
+    def candidates(self):
+        jobs = LEGACY.no_symlinks(self.root / "jobs")
+        if not jobs.exists():
+            return []
+        result = []
+        for stage in sorted(jobs.iterdir()):
+            self.budget.check()
+            if not stage.name.startswith("stage:") or not stage.is_dir():
+                continue
+            if stage.is_symlink():
+                self.reject(stage, "symlink stage")
+                continue
+            for page in sorted(stage.iterdir()):
+                self.budget.check()
+                if not PAGE_NAME.fullmatch(page.name):
+                    continue
+                if page.is_symlink():
+                    self.reject(page, "symlink page")
+                elif page.is_dir():
+                    result.append(page / "arrays.npz")
+        return result
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--mode", choices=("plan", "link", "detach"), required=True)
+    parser.add_argument("--journal", type=Path, required=True)
+    parser.add_argument("--detach-journal", type=Path)
+    parser.add_argument("--max-read-bytes", type=int, required=True)
+    parser.add_argument("--max-links", type=int, required=True)
+    parser.add_argument("--max-seconds", type=float, required=True)
+    args = parser.parse_args()
+    if LEGACY.no_symlinks(args.journal).parent != D:
+        parser.error("journal must be a fresh direct D2 file")
+    if args.mode == "detach":
+        if args.detach_journal is None or LEGACY.no_symlinks(args.detach_journal).parent != D:
+            parser.error("detach requires a direct D2 original journal")
+    elif args.detach_journal is not None:
+        parser.error("detach journal only applies to detach mode")
+    engine = PageDeduplicator(
+        root=NATIVE_ROOT,
+        staging=STAGING,
+        journal=args.journal,
+        max_read_bytes=args.max_read_bytes,
+        max_links=args.max_links,
+        max_seconds=args.max_seconds,
+        dry_run=args.mode == "plan",
+    )
+    result = engine.detach(args.detach_journal) if args.mode == "detach" else engine.run()
+    print(json.dumps(result, sort_keys=True, indent=2, allow_nan=False))
+    return 0 if result["termination"] == "completed" else 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

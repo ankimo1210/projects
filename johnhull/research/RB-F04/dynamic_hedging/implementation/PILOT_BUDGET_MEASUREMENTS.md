@@ -548,3 +548,13 @@ session85801は実terminal（tool exit1／monitor3／数値child−9）。09:14:
 2026-10-11 09:40:18 UTCに既存monitor v6-v2を経由しfresh全3,138 pilotを起動（session77271、親556486/monitor556487/金融child556488）。current85 identity・実guard/monitor・実child cmdlineを照合し、bounded/別出力root-v4/no-resumeと元121cases/51義務/全4N/capsを保持する。[有限な起動確認](pilot-execution-evidence/source85-full-fresh-root-launch-readonly-confirmation-v1.json)。live raw/観測logはGitへコピーしない。旧133記録・行政partial・unknownは不変。
 
 enclosing observerは旧v3の参照先を結合し実wall/自CPU ns端点を記録する最小変更（cdc73013…）。構文検査と独立差分確認でブロッカーなし。元source/prior/金融数学は不変で、費用未閉鎖flags・最終tail unknownを保持する。起動は数値PASS・全費用閉鎖・freeze/main・研究受入を示さない。ETAは数週間規模・1か月超もあり得る低確度の概算を保持し、全pilotの実選択/実費後に更新する。
+
+## source85新ページ形式の原byte共有（2026-10-11）
+
+旧D-only helper v2は旧root/pack scopeなので、新root-v4の公開済みstage arrays-8桁ページに限定した[最小派生](pilot-execution-evidence/task-5-stage-dag-page-hardlink-candidate-v1.py.txt)を固定（20ebd408…）。旧v2 SHA010fb31d…を認証ロードしlink/detach/rollbackを継承する。typed-DAGの全ページclose後の原子公開に合わせ、root/page実byte・receipt/全roster/index/offset/展開量と交換前後rootを認証。metadata pages・teacher/legacy packs・root NPZ・未公開/orphanは対象外。作者9合成PASS、rootも同9PASS、Ruff/format PASS。[独立静的確認](pilot-execution-evidence/task-5-stage-dag-page-hardlink-independent-review-v1.md)はブロッカーなしで、独立実数値/scan/apply承認とは区別する。旧scopeへの新要件REDも保持する。
+
+別root予算を実行前に固定して実読取plan（1GiB/10秒）を実施、49eligible/13planned linksで読取上限に達し、置換0・rejected0。続く1link trial（1GiB/1link/10秒）とbounded操作（4GiB/32links/10秒）は各link上限で行政partial終了、成功1＋32・rejected0。原候補のcandidate/root_preapproved=falseは改変せず、実操作権限は各別root priorに記録する。これは金融A cap・精度・全scope完了の判定ではない。
+
+[全33 targetsの実postcheck](pilot-execution-evidence/task-5-stage-dag-page-hardlink-root-postcheck-v1.json)は現在の共有inodeと全NPZ実SHA/原receipt/metadata/root参照を再照合しPASS。旧別inode割当539,914,240 B（10進約0.540GB）を削減し、計算source85全85filesは不変。Windows Cの回収や全phase容量は未保証。元3,138jobs/121cases/51義務/全4N/caps、既存失敗/unknown、後続の全saved/fresh/両semantic検算は不変。
+
+外側実wallはplan0.749706秒、trial0.299029秒、bounded2.430331秒、postcheck0.459305秒。pilotと重なるため金融phase wallへ加算せず、各元clock/費用を保存する。最終外側bookkeepingはunknown、外部10費用未閉鎖・金融qualification unknownを保持。原source/results/新旧記録を再分類せず、数学や全phaseの速度向上をこの行政実測から主張しない。

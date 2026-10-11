@@ -1,0 +1,337 @@
+{
+  "schema": "rb-f04-source85-stage-arrays-page-hardlink-root-postcheck-v1",
+  "status": "PASS",
+  "observed_UTC": "2026-10-11T10:07:16.680320+00:00",
+  "journal_references": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-root-trial-v1.jsonl",
+      "sha256": "3adbe7328b8ee22ed0c14345889bf687752b1ca99c1a33e9beffd7f322e93da6"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-stage-dag-page-hardlink-root-bounded-v1.jsonl",
+      "sha256": "8fcfeb168e631699d2b9165e62dd1c537c133b4202eb9e6dc46ab16255e74259"
+    }
+  ],
+  "linked_targets_checked": 33,
+  "checks": [
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE/arrays-00000000/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE/arrays-00000000/arrays.npz",
+      "actual_NPZ_sha256": "a3f31641df4a9bc58bb47ce0d516ac075d6dacd90a9e8fb6842780a8dac4ea7e",
+      "shared_inode": 193937,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 18468864
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE/arrays-00000001/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE/arrays-00000001/arrays.npz",
+      "actual_NPZ_sha256": "4d88a3a6742398f9fd2b58c91763a62c4edaa77e2287fd91266721b9f8a073b0",
+      "shared_inode": 193941,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 12677120
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE/arrays-00000002/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE/arrays-00000002/arrays.npz",
+      "actual_NPZ_sha256": "a270c98f8b32523dc08c077c372a063cccef5bc6594887e266ad0b814777622c",
+      "shared_inode": 193945,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 21794816
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE/arrays-00000003/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE/arrays-00000003/arrays.npz",
+      "actual_NPZ_sha256": "4f01ec835f5ada37376fd3207b5e96b3ca4f6b455653959abdbad4282ac98915",
+      "shared_inode": 193949,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 23478272
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE/arrays-00000004/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE/arrays-00000004/arrays.npz",
+      "actual_NPZ_sha256": "32cfcc194ef8c9162a2ba95a7781a1cbf4e95a7bb599d876ed96841d05f3e07d",
+      "shared_inode": 193953,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 19144704
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE/arrays-00000005/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE/arrays-00000005/arrays.npz",
+      "actual_NPZ_sha256": "342f7bbcfd4c32503bd864d764183d3cd36fc6056b9d9f9b0b46684bfffc07f3",
+      "shared_inode": 193957,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 12185600
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE/arrays-00000006/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE/arrays-00000006/arrays.npz",
+      "actual_NPZ_sha256": "f72adb1472a6b215f3999dd72d803af6cadfa528078fbb0a9c2a5b3153c0f8cf",
+      "shared_inode": 193961,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 5140480
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000000/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:local:SDE/arrays-00000000/arrays.npz",
+      "actual_NPZ_sha256": "774e26427a8f58171e8f3027b2550f980378b07151649cb79c89060a8224e792",
+      "shared_inode": 193861,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 19501056
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000001/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:local:SDE/arrays-00000001/arrays.npz",
+      "actual_NPZ_sha256": "83f8bd8c3256805e985d0caf1f54b5ec4070396db0b3c8f8e7e4216145982dbf",
+      "shared_inode": 193865,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 16203776
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000002/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:local:SDE/arrays-00000002/arrays.npz",
+      "actual_NPZ_sha256": "ef4177224a9a836d74cc72b0676266dd0dacfa873b247e3680f1f99bc0bb557f",
+      "shared_inode": 193869,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 16961536
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000004/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:local:SDE/arrays-00000004/arrays.npz",
+      "actual_NPZ_sha256": "1bd3ad294664ed7449093ab71f7bc3ebd72164a479d075b0cfb8426d9167eb3a",
+      "shared_inode": 193877,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 9842688
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000005/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:local:SDE/arrays-00000005/arrays.npz",
+      "actual_NPZ_sha256": "586fb071db4fa9252c3d2ee2201fa1729f1693ee76e2d661f2d6927739ddd341",
+      "shared_inode": 193881,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 14618624
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:Heston:SDE/arrays-00000000/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:local:SDE/arrays-00000000/arrays.npz",
+      "actual_NPZ_sha256": "7f9d0b185bf96a08a879b32f423be51ba5b14e89b0b157aae13d94a549286416",
+      "shared_inode": 208343,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 18456576
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:Heston:SDE/arrays-00000001/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:local:SDE/arrays-00000001/arrays.npz",
+      "actual_NPZ_sha256": "2e19e50bc0585cf09a37f6a7c46e17460fd945560950a2c3425b73498ca1a40f",
+      "shared_inode": 208374,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 13443072
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:Heston:SDE/arrays-00000002/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:local:SDE/arrays-00000002/arrays.npz",
+      "actual_NPZ_sha256": "4641048e2a32bf4ca4d72b458a67332ac7e0290ca3e7b928585ca0a6db6c2949",
+      "shared_inode": 208393,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 21319680
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:Heston:SDE/arrays-00000003/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:local:SDE/arrays-00000003/arrays.npz",
+      "actual_NPZ_sha256": "4ed7ff2f51453286e3364c8f9cf19b7970c853a61eafa3958eb4ae005371a4e3",
+      "shared_inode": 208444,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 25456640
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:Heston:SDE/arrays-00000004/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:local:SDE/arrays-00000004/arrays.npz",
+      "actual_NPZ_sha256": "3634a8e1931ce71d6e0e22f46fcefc4f2d907d73335f4bab56be21f7dbfd0f33",
+      "shared_inode": 208479,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 16891904
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:Heston:SDE/arrays-00000005/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:local:SDE/arrays-00000005/arrays.npz",
+      "actual_NPZ_sha256": "1df4977eed3e7b68cc155e2f49d23c4e98bc44be2d681b117852e11487b15a6b",
+      "shared_inode": 208494,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 12668928
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:Heston:SDE/arrays-00000006/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:local:SDE/arrays-00000006/arrays.npz",
+      "actual_NPZ_sha256": "c96cfc4e58251f23c8624e532ae73bc0ba0ff99236634fb9f940bad4386625b5",
+      "shared_inode": 208505,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 4644864
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000000/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:Heston:SDE/arrays-00000000/arrays.npz",
+      "actual_NPZ_sha256": "774e26427a8f58171e8f3027b2550f980378b07151649cb79c89060a8224e792",
+      "shared_inode": 193861,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 19501056
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000001/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:Heston:SDE/arrays-00000001/arrays.npz",
+      "actual_NPZ_sha256": "83f8bd8c3256805e985d0caf1f54b5ec4070396db0b3c8f8e7e4216145982dbf",
+      "shared_inode": 193865,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 16203776
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000002/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:Heston:SDE/arrays-00000002/arrays.npz",
+      "actual_NPZ_sha256": "ef4177224a9a836d74cc72b0676266dd0dacfa873b247e3680f1f99bc0bb557f",
+      "shared_inode": 193869,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 16961536
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000000/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:local:SDE/arrays-00000000/arrays.npz",
+      "actual_NPZ_sha256": "774e26427a8f58171e8f3027b2550f980378b07151649cb79c89060a8224e792",
+      "shared_inode": 193861,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 19501056
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000001/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:local:SDE/arrays-00000001/arrays.npz",
+      "actual_NPZ_sha256": "83f8bd8c3256805e985d0caf1f54b5ec4070396db0b3c8f8e7e4216145982dbf",
+      "shared_inode": 193865,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 16203776
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/arrays-00000002/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:local:SDE/arrays-00000002/arrays.npz",
+      "actual_NPZ_sha256": "ef4177224a9a836d74cc72b0676266dd0dacfa873b247e3680f1f99bc0bb557f",
+      "shared_inode": 193869,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 16961536
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:Heston:SDE/arrays-00000004/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:local:SDE/arrays-00000004/arrays.npz",
+      "actual_NPZ_sha256": "212e22040b676f02a3dfeb6fce4d9954c6c3df8976405dedf4d99a348bfdbe2b",
+      "shared_inode": 194025,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 9781248
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:Heston:SDE/arrays-00000005/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:local:SDE/arrays-00000005/arrays.npz",
+      "actual_NPZ_sha256": "10dd2499988d1f6d52b2f406301137d7c30348e6eee9a76b3bc17af319c5f897",
+      "shared_inode": 194029,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 14692352
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:Heston:SDE/arrays-00000000/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:local:SDE/arrays-00000000/arrays.npz",
+      "actual_NPZ_sha256": "6e0be3043fb7f52b171c9de889a17e77c6c7e94a7c573e6760d6542f9c50113f",
+      "shared_inode": 216350,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 18432000
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:Heston:SDE/arrays-00000001/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:local:SDE/arrays-00000001/arrays.npz",
+      "actual_NPZ_sha256": "7995ffc5e9bf705b5cc74bde56fece29e7a99f0983d91a4742b0cbbd6b781580",
+      "shared_inode": 216355,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 11534336
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:Heston:SDE/arrays-00000002/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:local:SDE/arrays-00000002/arrays.npz",
+      "actual_NPZ_sha256": "df51281b65954c131600ea161dabe3c75186b5893a0b3617400134a4d119b6d9",
+      "shared_inode": 216363,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 22319104
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:Heston:SDE/arrays-00000003/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:local:SDE/arrays-00000003/arrays.npz",
+      "actual_NPZ_sha256": "01f1842c232fa20c08646e0b701bc7ad17843840e43d3f3564e11d9928083e96",
+      "shared_inode": 216371,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 21069824
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:Heston:SDE/arrays-00000004/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:local:SDE/arrays-00000004/arrays.npz",
+      "actual_NPZ_sha256": "0506e1a08eec9cc0c6452ce0a343519b2e296c0ed68a15eaa2eaf2205eeb63e7",
+      "shared_inode": 216376,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 21590016
+    },
+    {
+      "source": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:Heston:SDE/arrays-00000005/arrays.npz",
+      "target": "jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:local:SDE/arrays-00000005/arrays.npz",
+      "actual_NPZ_sha256": "ac06325b8ed69eb25337eeb6b7971a0f7e6a7fde67df7172ce4adcec5d98863e",
+      "shared_inode": 216381,
+      "original_page_receipts_and_metadata": "PASS",
+      "published_root_binding": "PASS",
+      "original_target_allocated_bytes": 12263424
+    }
+  ],
+  "old_distinct_inode_allocated_bytes_removed": 539914240,
+  "measure_scope": "33 bounded targets only; includes exact original page NPZ bytes and receipts/root links; host C capacity and fullphase capacity not guaranteed",
+  "source85_all_files_unchanged": true,
+  "source_files_checked": 85,
+  "financial_source_identity_sha256": "b9fddfe94a078181a454dd449b2bb4161ceaea14e0fc7dc39980d3f3aed9c030",
+  "actual_file_read_bytes": 1081959660,
+  "wall_seconds": 0.459305135,
+  "own_cpu_seconds": 0.459301347,
+  "timing_events": {
+    "wall_start_ns": 109905710862664,
+    "wall_stop_ns": 109906170167799,
+    "own_cpu_start_ns": 24482472,
+    "own_cpu_stop_ns": 483783819
+  },
+  "administrative_caps": {
+    "max_read_bytes": 3221225472,
+    "max_seconds": 10
+  },
+  "final_outer_bookkeeping_expense": null,
+  "financial_acceptance": false,
+  "financial_qualification": "unknown",
+  "all_external10_closed": false
+}
