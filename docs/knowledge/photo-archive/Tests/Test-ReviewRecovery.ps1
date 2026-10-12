@@ -99,6 +99,15 @@ Test-Case 'T30' 'An alternate stream added after planning prevents moving the or
         Assert-Equal 'preserve-edit' (Get-Content -LiteralPath $old -Stream newly-added)
     } finally {Remove-TestArchiveFixture $f}
 }
+Test-Case 'T30' 'A newly readonly source is retained without force-removing it' {
+    $s=New-TestIndependentCleanupScenario;$f=$s.Fixture
+    try {
+        $plan=New-PhotoCleanupPlan $f.Config $s.Receipt @($s.Proof) $f.Adapters
+        $old=Join-Path $f.OldF 'alias.jpg';(Get-Item -LiteralPath $old).IsReadOnly=$true
+        Assert-Throws {Invoke-PhotoCleanup $f.Config $plan $f.Adapters} 'ProtectedSourceStreams'
+        Assert-True (Test-Path -LiteralPath $old)
+    } finally {Remove-TestArchiveFixture $f}
+}
 Test-Case 'T06' 'A newly classified cloud alias cannot promote an unreviewed old alias' {
     $s=New-TestIndependentCleanupScenario;$f=$s.Fixture
     try {

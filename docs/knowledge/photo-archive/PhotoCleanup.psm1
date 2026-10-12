@@ -51,7 +51,7 @@ function New-PhotoCleanupPlan($Config,$Receipt,[object[]]$IndependentProofs=@(),
         elseif($record.association_status -ne 'Complete'){$reason='PendingAssociation'}
         elseif((Get-PhotoField $source 'association_revision' 0) -lt 3){$reason='LegacyAssociationNeedsRevalidation'}
         elseif((Get-PhotoField $source 'association_status' 'PendingAssociation') -ne 'Complete'){$reason='PendingAssociation'}
-        elseif(($source.attributes -band 0x4400) -or @($source.streams).Count){$reason='SpecialSourceProtected'}
+        elseif(($source.attributes -band 0x4401) -or @($source.streams).Count){$reason='SpecialSourceProtected'}
         $matching=@()
         if(-not $reason) {
             foreach($proof in $IndependentProofs){if(Test-PhotoIndependentProof $Config $proof $component.sha256 $path $Adapters){$matching+=$proof}}
@@ -140,7 +140,7 @@ function Invoke-PhotoCleanup($Config,$CleanupPlan,[hashtable]$Adapters=@{}) {
                 Assert-PhotoRelatedSourcesUnchanged $Config $item.source $record[0]
                 Assert-PhotoSourceStreamsProtected $held
                 Write-PhotoJournalLine $journal ([pscustomobject]@{state='DeleteIntent';source=$sourcePath;held=$held;sha256=$item.sha256;cleanup_sha256=$CleanupPlan.cleanup_sha256;utc=[DateTime]::UtcNow.ToString('o')})
-                Remove-Item -LiteralPath $held -Force;$deleted++
+                Remove-Item -LiteralPath $held;$deleted++
                 Write-PhotoJournalLine $journal ([pscustomobject]@{state='DeletedVerifiedCopy';source=$sourcePath;held=$held;sha256=$item.sha256;cleanup_sha256=$CleanupPlan.cleanup_sha256;utc=[DateTime]::UtcNow.ToString('o')})
             }
         }
