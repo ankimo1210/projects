@@ -96,7 +96,7 @@ function Get-PhotoStagePath($Config,$Plan,$Action,[int]$ComponentIndex) {
 }
 function Assert-PhotoSourceStreamsProtected([string]$Path) {
     $item=Get-Item -LiteralPath $Path -Force
-    if($item.PSIsContainer -or ([long]$item.Attributes -band 0x4400)){throw 'ProtectedSourceStreams'}
+    if($item.PSIsContainer -or ([long]$item.Attributes -band 0x4401)){throw 'ProtectedSourceStreams: readonly, link or encrypted source'}
     # exFAT has no named streams. Other filesystems must inspect successfully;
     # never infer the filesystem from its allocation-unit size.
     $native=Get-PhotoNativeVolume $Path
