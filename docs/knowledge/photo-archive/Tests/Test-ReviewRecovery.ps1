@@ -99,6 +99,33 @@ Test-Case 'T30' 'An alternate stream added after planning prevents moving the or
         Assert-Equal 'preserve-edit' (Get-Content -LiteralPath $old -Stream newly-added)
     } finally {Remove-TestArchiveFixture $f}
 }
+Test-Case 'T06' 'A newly classified cloud alias cannot promote an unreviewed old alias' {
+    $s=New-TestIndependentCleanupScenario;$f=$s.Fixture
+    try {
+        foreach($record in $s.Receipt.committed){foreach($component in $record.components){foreach($source in $component.sources | Where-Object source_alias -eq OLD_F){$source.PSObject.Properties.Remove('association_revision');$source.PSObject.Properties.Remove('association_status')}}}
+        $plan=New-PhotoCleanupPlan $f.Config $s.Receipt @($s.Proof) $f.Adapters
+        Assert-Equal 0 $plan.eligible.Count
+        Assert-True ('LegacyAssociationNeedsRevalidation' -in @($plan.retained.reason))
+    } finally {Remove-TestArchiveFixture $f}
+}
+Test-Case 'T06' 'A sidecar arriving after cleanup planning protects its related source' {
+    $s=New-TestIndependentCleanupScenario;$f=$s.Fixture
+    try {
+        $plan=New-PhotoCleanupPlan $f.Config $s.Receipt @($s.Proof) $f.Adapters
+        $null=New-TestFile $f.OldF 'alias.aae' 'new-edit'
+        Assert-Throws {Invoke-PhotoCleanup $f.Config $plan $f.Adapters} 'RelatedSourceChanged'
+        Assert-True (Test-Path -LiteralPath (Join-Path $f.OldF 'alias.jpg'))
+        Remove-Item -LiteralPath (Join-Path $f.OldF 'alias.aae')
+        $null=Invoke-PhotoCleanup $f.Config $plan $f.Adapters
+        $file=@(Get-ChildItem -LiteralPath (Join-Path $f.State 'cleanup') -Filter '*.json' -File)[0]
+        $hold=Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json
+        $hold.moved_at_utc=[DateTime]::UtcNow.AddDays(-8).ToString('o')
+        $hold | ConvertTo-Json | Set-Content -LiteralPath $file.FullName -Encoding UTF8
+        $null=New-TestFile $f.OldF 'alias.aae' 'new-edit-after-retention'
+        Assert-Throws {Invoke-PhotoCleanup $f.Config $plan $f.Adapters} 'RelatedSourceChanged'
+        Assert-True (Test-Path -LiteralPath $hold.held)
+    } finally {Remove-TestArchiveFixture $f}
+}
 Test-Case 'T30' 'An alternate stream added during retention prevents final deletion' {
     $s=New-TestIndependentCleanupScenario;$f=$s.Fixture
     try {

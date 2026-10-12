@@ -341,6 +341,11 @@ function Test-PhotoCachedFile([string]$Path,[string]$Hash,[hashtable]$Cache) {
     if([long]$item.Attributes -band 0x400){return $false}
     return $known.size_bytes -eq $item.Length -and $known.mtime_ticks -eq $item.LastWriteTimeUtc.Ticks -and $known.file_id -ceq [PhotoArchive.FileMetadata]::Identity($Path)
 }
+function Copy-PhotoAssociationSource($File,$Asset) {
+    $value=[ordered]@{};foreach($p in $File.PSObject.Properties){$value[$p.Name]=$p.Value}
+    $value['association_revision']=3;$value['association_status']=$Asset.association_status;$value['association_group']=$Asset.asset_id
+    return [pscustomobject]$value
+}
 function New-PhotoMigrationPlan($Config,[object[]]$FileRecords,[object[]]$Assets,[object[]]$DestinationIndex=@(),[hashtable]$Adapters=@{},[long]$CopyBudgetBytes=[long]::MaxValue,[hashtable]$DestinationStatCache=@{}) {
     $volume=Assert-ArchiveBindings $Config $Adapters
     $actions=[Collections.Generic.List[object]]::new();$dispositions=[Collections.Generic.List[object]]::new();$ids=@{};$existing=@{}
@@ -362,7 +367,7 @@ function New-PhotoMigrationPlan($Config,[object[]]$FileRecords,[object[]]$Assets
             foreach($component in $asset.components) {
                 $relative=$folder+'\'+$component.original_name
                 if((Resolve-PhotoPath $Config.archive_root $relative).Length -gt 240){throw 'UnsupportedDestinationLongPath'}
-                $components += [pscustomobject]@{role=$component.role;sha256=$component.file.sha256;size_bytes=$component.file.size_bytes;destination_relative_path=$relative;sources=@($component.file)}
+                $components += [pscustomobject]@{role=$component.role;sha256=$component.file.sha256;size_bytes=$component.file.size_bytes;destination_relative_path=$relative;sources=@(Copy-PhotoAssociationSource $component.file $asset)}
                 $assetBytes += [long][Math]::Ceiling($component.file.size_bytes/[double]$volume.cluster_bytes)*$volume.cluster_bytes
             }
             $operation='Copy'
@@ -387,7 +392,7 @@ function New-PhotoMigrationPlan($Config,[object[]]$FileRecords,[object[]]$Assets
             foreach($component in $asset.components) {
                 $match=@($action.components | Where-Object {$_.role -eq $component.role -and $_.sha256 -ceq $component.file.sha256})
                 if($match.Count -ne 1){throw 'AssetIdentityCollision'}
-                $match[0].sources += $component.file
+                $match[0].sources += Copy-PhotoAssociationSource $component.file $asset
             }
         }
         foreach($component in $asset.components){$dispositions.Add([pscustomobject]@{source=$component.file;operation=$action.operation;asset_id=$asset.asset_id;reason=$asset.association_status})}
