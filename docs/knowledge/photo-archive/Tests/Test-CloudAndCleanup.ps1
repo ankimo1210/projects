@@ -2,7 +2,7 @@ function Set-TestCloudAdapters($Fixture,[string]$Initial='Available') {
     $state=[pscustomobject]@{status=$Initial;calls=0;acquire_result='Available'}
     $Fixture.Adapters.CloudStatus={param($Path) [pscustomobject]@{status=$state.status;is_placeholder=$true;in_sync=($state.status -ne 'NotInSync');partial=($state.status -eq 'OnlineOnly');locally_available=($state.status -eq 'Available');on_disk_bytes=0L;validated_bytes=0L}}.GetNewClosure()
     $Fixture.Adapters.Hydrate={param($Path,$TimeoutSeconds) $state.calls++;if($state.acquire_result -eq 'Available'){$state.status='Available'};[pscustomobject]@{status=$state.acquire_result;hresult=0;unsettled=$false}}.GetNewClosure()
-    $Fixture.Adapters.Metadata={param($Files,$ToolReceipt) @()}
+    $Fixture.Adapters.Metadata={param($Files,$ToolReceipt) @(Get-TestPhotoMetadata $Files)}
     return $state
 }
 Test-Case 'T19' 'Timeout remains pending and bounded retries never commit a placeholder' {

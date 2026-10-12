@@ -57,7 +57,7 @@ Test-Case 'T04' 'Duplicate bytes preserve both source coordinates' {
         $null=New-TestFile $f.OldC 'a.jpg' 'same'
         $null=New-TestFile $f.OldF 'b.jpg' 'same'
         $rows=@(Get-PhotoInventory -Config $f.Config -Aliases @('OLD_C','OLD_F') -HashMode Fresh -Adapters $f.Adapters)
-        $assets=@(New-PhotoAssets -FileRecords $rows -Metadata @())
+        $assets=@(New-PhotoAssets -FileRecords $rows -Metadata @(Get-TestPhotoMetadata $rows))
         Assert-Equal 2 $assets.Count
         Assert-Equal 1 @($assets.asset_id | Sort-Object -Unique).Count
         Assert-Equal 'a.jpg' $assets[0].components[0].file.relative_path
@@ -85,8 +85,8 @@ Test-Case 'T06' 'AAE and incomplete Live Photo remain protected' {
         $null=New-TestFile $f.OldC 'a.aae' 'edit-version-1'
         $rows=@(Get-PhotoInventory -Config $f.Config -Aliases @('OLD_C') -HashMode Fresh -Adapters $f.Adapters)
         $assets=@(New-PhotoAssets -FileRecords $rows -Metadata @([pscustomobject]@{SourceFile=$img;ContentIdentifier='missing-video'}))
-        Assert-Equal 2 $assets.Count
-        Assert-Equal 2 @($assets | Where-Object association_status -eq PendingAssociation).Count
+        Assert-Equal 1 $assets.Count
+        Assert-Equal 1 @($assets | Where-Object association_status -eq PendingAssociation).Count
         Assert-Equal 2 @($assets.components.file.relative_path).Count
     } finally { Remove-TestArchiveFixture $f }
 }

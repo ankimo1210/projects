@@ -69,7 +69,7 @@ Test-Case 'T04' 'Byte-identical aliases create one action and two recoverable ma
         $null=New-TestFile $f.OldC 'one.jpg' 'same'
         $null=New-TestFile $f.OldF 'two.jpg' 'same'
         $rows=@(Get-PhotoInventory $f.Config @('OLD_C','OLD_F') Fresh $f.Adapters)
-        $plan=New-PhotoMigrationPlan -Config $f.Config -FileRecords $rows -Assets @(New-PhotoAssets $rows @()) -DestinationIndex @() -Adapters $f.Adapters
+        $plan=New-PhotoMigrationPlan -Config $f.Config -FileRecords $rows -Assets @(New-PhotoAssets $rows @(Get-TestPhotoMetadata $rows)) -DestinationIndex @() -Adapters $f.Adapters
         Assert-Equal 1 $plan.actions.Count
         Assert-Equal 2 $plan.source_disposition.Count
         Assert-Equal 2 $plan.actions[0].components[0].sources.Count

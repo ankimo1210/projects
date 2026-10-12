@@ -62,6 +62,9 @@ function New-TestCopyScenario {
     $null=New-TestFile $f.OldC 'original.jpg' 'original-payload'
     $null=New-TestFile $f.OldF 'alias.jpg' 'original-payload'
     $rows=@(Get-PhotoInventory $f.Config @('OLD_C','OLD_F') Fresh $f.Adapters)
-    $plan=New-PhotoMigrationPlan -Config $f.Config -FileRecords $rows -Assets @(New-PhotoAssets $rows @()) -DestinationIndex @() -Adapters $f.Adapters
+    $plan=New-PhotoMigrationPlan -Config $f.Config -FileRecords $rows -Assets @(New-PhotoAssets $rows @(Get-TestPhotoMetadata $rows)) -DestinationIndex @() -Adapters $f.Adapters
     return [pscustomobject]@{Fixture=$f;Plan=$plan}
+}
+function Get-TestPhotoMetadata([object[]]$Rows) {
+    foreach($row in $Rows){[pscustomobject]@{SourceFile=$row.full_path;FileType='fixture-image'}}
 }

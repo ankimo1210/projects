@@ -78,5 +78,10 @@ Test-Case 'T26' 'Launcher switch and rollback preserve the original controls' {
         Assert-Equal $true $undo.Restored
         Assert-Equal 'original-launcher' ([IO.File]::ReadAllText($launcher))
         Assert-Equal '<Task>original</Task>' $task.xml
+        $null=Switch-PhotoArchiveTask -Config $f.Config -ControlReceipt $receipt -Adapters $f.Adapters
+        $archivePath=$f.Config.archive_root
+        $f.Adapters.Volume={param($Path) if(Test-PhotoPathWithin $Path $archivePath){throw 'DriveMissing'};[pscustomobject]@{volume_id='fixture-volume';disk_id='fixture-disk';free_bytes=1099511627776L;cluster_bytes=131072L}}.GetNewClosure()
+        Assert-True (Undo-PhotoArchiveDeployment -Config $f.Config -ControlReceipt $receipt -Adapters $f.Adapters).Restored 'rollback without F'
+        Assert-Equal 'original-launcher' ([IO.File]::ReadAllText($launcher))
     } finally {Remove-TestArchiveFixture $f}
 }

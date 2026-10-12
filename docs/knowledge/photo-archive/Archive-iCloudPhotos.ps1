@@ -2,7 +2,7 @@
 param(
     [Parameter(Mandatory)][string]$ConfigPath,
     [Parameter(Mandatory)][ValidateSet('Inventory','Plan','Apply','Archive','Verify','Restore','CleanupPlan','CleanupApply','ReleaseCloudCache')][string]$Mode,
-    [string]$PlanPath,[string]$ReceiptPath,[string]$RestoreRoot,[string]$CleanupPlanPath,
+    [string]$PlanPath,[string]$ReceiptPath,[string]$RestoreRoot,[string]$CleanupPlanPath,[string]$IndependentProofsPath,
     [string[]]$Aliases=@('OLD_C','OLD_F','ICLOUD'),[switch]$Fresh
 )
 $ErrorActionPreference='Stop'
@@ -22,7 +22,13 @@ try {
     Import-Module (Join-Path $PSScriptRoot 'PhotoCloud.psm1') -DisableNameChecking
     Import-Module (Join-Path $PSScriptRoot 'ICloudPhotoArchive.psm1') -DisableNameChecking
     Import-Module (Join-Path $PSScriptRoot 'PhotoCleanup.psm1') -DisableNameChecking
-    $config=Read-ArchiveConfig $ConfigPath
+    $config=Read-ArchiveConfig $ConfigPath -Recovery:($Mode -eq 'Restore' -and [bool]$IndependentProofsPath)
+    if((Get-PhotoField $config 'release_version') -and $Mode -in @('Apply','Archive','CleanupApply','ReleaseCloudCache')) {
+        if($PSScriptRoot -cne $config.release_code_root){throw 'ConfiguredReleaseRequired'}
+        . (Join-Path $PSScriptRoot 'Install-PhotoArchive.ps1')
+        Assert-PhotoRelease $config
+    }
+    $independentProofs=if($IndependentProofsPath){@(Read-EntryJson $IndependentProofsPath)}else{@()}
     $result=$null;$exitCode=0
     switch($Mode) {
         'Inventory' {
@@ -53,9 +59,9 @@ try {
             $result=Test-PhotoReceipt -Config $config -Receipt (Read-EntryJson $ReceiptPath) -Fresh
             if(-not $result.valid){$exitCode=30}
         }
-        'Restore' {$result=Restore-PhotoSources -Config $config -Receipt (Read-EntryJson $ReceiptPath) -DestinationRoot $RestoreRoot}
+        'Restore' {$result=Restore-PhotoSources -Config $config -Receipt (Read-EntryJson $ReceiptPath) -DestinationRoot $RestoreRoot -IndependentProofs $independentProofs}
         'CleanupPlan' {
-            $result=New-PhotoCleanupPlan -Config $config -Receipt (Read-EntryJson $ReceiptPath) -IndependentProofs @()
+            $result=New-PhotoCleanupPlan -Config $config -Receipt (Read-EntryJson $ReceiptPath) -IndependentProofs $independentProofs
         }
         'CleanupApply' {$result=Invoke-PhotoCleanup -Config $config -CleanupPlan (Read-EntryJson $CleanupPlanPath)}
         'ReleaseCloudCache' {$result=Release-VerifiedCloudCache -Config $config -Receipt (Read-EntryJson $ReceiptPath)}

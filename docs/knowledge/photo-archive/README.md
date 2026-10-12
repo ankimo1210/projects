@@ -34,4 +34,24 @@ Cloud Files APIの引数・構造はMicrosoftの文書とインストール済�
 - [Microsoft: ローカル保持状態](https://learn.microsoft.com/en-us/windows/win32/api/cfapi/ne-cfapi-cf_pin_state)
 - [ExifTool作者のリポジトリ](https://github.com/exiftool/exiftool)
 
-実行に使う入口と引数は実装・検証後にここへ追記する。開発途中のコードを現行日次タスクへ直接設定しない。
+## 実行入口
+
+`Archive-iCloudPhotos.ps1`の全モードに私有の`-ConfigPath`が必要。実機の値は私有設定を参照する。
+
+| モード | 追加引数・動作 |
+|---|---|
+| `Inventory` / `Plan` | `-Aliases`で入力を限定。計画と写真の保存は別操作 |
+| `Apply` | `-PlanPath`。改変されていない計画だけを適用 |
+| `Archive` | 日次のiCloud投影。`-Fresh`で通常キャッシュを使わず検査 |
+| `Verify` | `-ReceiptPath`。保存実体をFresh照合 |
+| `Restore` | `-ReceiptPath -RestoreRoot`。既存の別内容は上書きしない |
+| `Restore`（F障害） | 上記に`-IndependentProofsPath`。別媒体の通常コピー／C保持ファイルを媒体IDとhashで検証して入力に使う |
+| `CleanupPlan` | `-ReceiptPath`、任意の`-IndependentProofsPath`。証明がなければ保持 |
+| `CleanupApply` | `-CleanupPlanPath`。日次受入・7日保持・直前再検証を要求 |
+| `ReleaseCloudCache` | `-ReceiptPath`。日次受入と少数再取得の証明を要求。同期ファイルの通常削除は行わない |
+
+終了コードは0=宣言したsnapshotの検証済み、3=保留あり、10=F未接続、20=容量保留、30=エラー／安全条件不一致。0でも全iCloud原本の完全性を意味しない。日次の保留件数と対象範囲を併せて読む。
+
+配備は`Install-PhotoArchive.ps1`の関数で検証済みリリースを作り、制御ファイルとタスクXMLの退避を照合してから切り替える。F障害時の切戻しは`Read-ArchiveConfig -Recovery`と`Undo-PhotoArchiveDeployment`でC側の退避を検証する。開発途中のコードを現行日次タスクへ直接設定しない。
+
+付随ファイルの関係が不明な画像も保護する。旧関連判定のreceiptは整理前の再判定が必要。代替ストリームは移動前・削除前に再列挙し、取得できなければ保持する。復元用の別名は記録ファイルの名前順に依存せず統合する。

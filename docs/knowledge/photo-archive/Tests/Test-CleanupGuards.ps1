@@ -54,7 +54,7 @@ function New-TestIndependentCleanupScenario {
     $f.Adapters.Volume={param($Path) $isF=(Test-PhotoPathWithin $Path $oldF) -or (Test-PhotoPathWithin $Path $archive);[pscustomobject]@{volume_id=if($isF){'fixture-F'}else{'fixture-C'};disk_id=if($isF){'fixture-disk-F'}else{'fixture-disk-C'};free_bytes=1099511627776L;cluster_bytes=131072L}}.GetNewClosure()
     $null=New-TestFile $f.OldC 'original.jpg' 'original-payload';$null=New-TestFile $f.OldF 'alias.jpg' 'original-payload'
     $rows=@(Get-PhotoInventory $f.Config @('OLD_C','OLD_F') Fresh $f.Adapters)
-    $plan=New-PhotoMigrationPlan -Config $f.Config -FileRecords $rows -Assets @(New-PhotoAssets $rows @()) -DestinationIndex @() -Adapters $f.Adapters
+    $plan=New-PhotoMigrationPlan -Config $f.Config -FileRecords $rows -Assets @(New-PhotoAssets $rows @(Get-TestPhotoMetadata $rows)) -DestinationIndex @() -Adapters $f.Adapters
     $receipt=Invoke-PhotoPlan -Config $f.Config -Plan $plan -Adapters $f.Adapters
     [pscustomobject]@{schema_version=2;archive_id=$f.Config.archive_id;manual_runs=2;scheduled_runs=1;restore_verified=$true} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $f.State 'acceptance.private.json') -Encoding UTF8
     $proof=[pscustomobject]@{kind='file';path=(Join-Path $f.OldC 'original.jpg');sha256=$rows[0].sha256;volume_id='fixture-C';disk_id='fixture-disk-C'}
