@@ -314,7 +314,16 @@ function New-PhotoAssets([object[]]$FileRecords,[object[]]$Metadata=@()) {
 function Convert-PhotoCanonicalValue($Value) {
     if($null -eq $Value){return $null}
     if($Value -is [DateTime] -or $Value -is [DateTimeOffset]){return $Value.ToString('o',[Globalization.CultureInfo]::InvariantCulture)}
-    if($Value -is [string] -or $Value -is [ValueType]){return $Value}
+    if($Value -is [string]) {
+        # JSON readers differ in whether UTC text becomes DateTime, and JSON
+        # writers may omit fractional trailing zeros. Hash the same instant alike.
+        if($Value -match '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,7})?Z$') {
+            $utc=[DateTime]::MinValue
+            if([DateTime]::TryParse($Value,[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::RoundtripKind,[ref]$utc)){return $utc.ToString('o',[Globalization.CultureInfo]::InvariantCulture)}
+        }
+        return $Value
+    }
+    if($Value -is [ValueType]){return $Value}
     if($Value -is [Collections.IDictionary]) {
         $result=[ordered]@{};$keys=[string[]]@($Value.Keys);[Array]::Sort($keys,[StringComparer]::Ordinal)
         foreach($key in $keys){$result[$key]=Convert-PhotoCanonicalValue $Value[$key]};return $result
