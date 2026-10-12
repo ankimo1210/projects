@@ -33,6 +33,28 @@ Test-Case 'T07' 'Capture date preserves local calendar, offset, subseconds and d
         Assert-Equal 'offset_verified' $a.date_confidence
     } finally {Remove-TestArchiveFixture $f}
 }
+$perl=Join-Path $env:ProgramFiles 'Git/usr/bin/perl.exe'
+if(-not(Test-Path -LiteralPath $perl)) {
+    $script:Results.Add([pscustomobject]@{id='T22';name='Native metadata stderr';status='Skipped';error='Windows Git Perl is unavailable'})
+} else {
+Test-Case 'T22' 'Successful native metadata diagnostics on stderr do not block ingestion' {
+    $f=New-TestArchiveFixture
+    try {
+        $null=New-TestFile $f.OldC 'photo.jpg' 'image'
+        $rows=@(Get-PhotoInventory $f.Config @('OLD_C') Fresh $f.Adapters)
+        $native='my $p=$ARGV[-1]; $p=~s!\\!/!g; print STDERR "  100 image files read\n"; print ''[{"SourceFile":"''.$p.''","FileType":"JPEG"}]''; exit 0;'
+        $tool=New-TestFile $f.Root 'fake-exif.pl' $native
+        $hash=Get-PhotoSha256 $tool
+        $manifest=Join-Path $f.State 'tool-manifest.json'
+        Write-PhotoJsonNew $manifest @([pscustomobject]@{relative_path='fake-exif.pl';sha256=$hash})
+        $receipt=[pscustomobject]@{path=$tool;sha256=$hash;driver='perl';driver_path=$perl;driver_sha256=(Get-PhotoSha256 $perl);source_manifest=$manifest;source_manifest_sha256=(Get-PhotoSha256 $manifest)}
+        $metadata=@(Read-PhotoMetadata $rows $receipt)
+        Assert-Equal 1 $metadata.Count
+        Assert-Equal 'JPEG' $metadata[0].FileType
+        Assert-Equal ([IO.Path]::GetFullPath($rows[0].full_path)) ([IO.Path]::GetFullPath($metadata[0].SourceFile))
+    } finally {Remove-TestArchiveFixture $f}
+}
+}
 Test-Case 'T04' 'Receipt aliases survive reverse journal order' {
     $s=New-TestCopyScenario;$f=$s.Fixture
     try {

@@ -205,7 +205,12 @@ function Read-PhotoMetadata([object[]]$Files,$ToolReceipt) {
         $args=$prefix+@('-config',$emptyConfig,'-j','-G1','-charset','filename=UTF8','-DateTimeOriginal','-OffsetTimeOriginal','-SubSecTimeOriginal','-CreateDate','-CreationDate','-ContentIdentifier','-LivePhotoVideoIndex','-FileType','-FileName','-FileSize','--')+$paths
         $err=[IO.Path]::GetTempFileName()
         try {
-            $output=& $command @args 2> $err
+            # Windows PowerShell5.1 emits NativeCommandError for informational
+            # stderr even when the process succeeds. Capture it as diagnostics;
+            # metadata completeness is determined from the returned records.
+            $savedPreference=$ErrorActionPreference
+            try {$ErrorActionPreference='Continue';$output=& $command @args 2> $err}
+            finally {$ErrorActionPreference=$savedPreference}
             if([string]::IsNullOrWhiteSpace(($output -join "`n"))){throw 'MetadataReadFailed'}
             $records=($output -join "`n") | ConvertFrom-Json
             foreach($record in $records) {
