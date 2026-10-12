@@ -273,7 +273,9 @@ function Invoke-PhotoPlan($Config,$Plan,[hashtable]$Adapters=@{},[hashtable]$Kno
             if($prior.ContainsKey($action.asset_id)) {
                 $oldAliases=@($prior[$action.asset_id].components.sources | ForEach-Object {$_.source_alias+'|'+$_.relative_path+'|'+$_.sha256})
                 $newAliases=@($record.components.sources | ForEach-Object {$_.source_alias+'|'+$_.relative_path+'|'+$_.sha256})
-                if(@($newAliases | Where-Object {$_ -notin $oldAliases}).Count -eq 0 -and (Get-PhotoField $prior[$action.asset_id] 'association_revision' 0) -ge 3){$write=$false}
+                $oldSourceInfo=@{};foreach($s in $prior[$action.asset_id].components.sources){$oldSourceInfo[$s.source_alias+'|'+$s.relative_path+'|'+$s.sha256]=$s}
+                $needsAssociationUpdate=@($record.components.sources | Where-Object {$key=$_.source_alias+'|'+$_.relative_path+'|'+$_.sha256;$oldSourceInfo.ContainsKey($key) -and (Get-PhotoField $oldSourceInfo[$key] 'association_revision' 0) -lt (Get-PhotoField $_ 'association_revision' 0)}).Count -gt 0
+                if(@($newAliases | Where-Object {$_ -notin $oldAliases}).Count -eq 0 -and (Get-PhotoField $prior[$action.asset_id] 'association_revision' 0) -ge 3 -and -not $needsAssociationUpdate){$write=$false}
                 else {
                     foreach($component in $record.components) {
                         $old=@($prior[$action.asset_id].components | Where-Object {$_.role -eq $component.role -and $_.sha256 -ceq $component.sha256})

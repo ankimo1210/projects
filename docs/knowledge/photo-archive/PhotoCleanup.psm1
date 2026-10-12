@@ -27,6 +27,18 @@ function Get-PhotoCleanupHash($Plan) {
     foreach($p in $Plan.PSObject.Properties){if($p.Name -ne 'cleanup_sha256'){$value[$p.Name]=$p.Value}}
     return Get-PhotoTextHash ((Convert-PhotoCanonicalValue $value | ConvertTo-Json -Depth 48 -Compress).Replace("`r`n","`n"))
 }
+function Assert-PhotoRelatedSourcesUnchanged($Config,$Source,$Record) {
+    $path=Get-PhotoSourcePath $Config $Source
+    $parent=Split-Path -Parent $path
+    if(-not(Test-Path -LiteralPath $parent -PathType Container)){throw 'RelatedSourceChanged'}
+    $stem=[IO.Path]::GetFileNameWithoutExtension($path)
+    $known=@($Record.components.sources | Where-Object source_alias -eq $Source.source_alias | ForEach-Object {$_.full_path.ToLowerInvariant()})
+    foreach($filter in @(($stem+'.*'),('._'+$stem+'.*'))) {
+        foreach($file in Get-ChildItem -LiteralPath $parent -File -Force -Filter $filter) {
+            if($file.FullName.ToLowerInvariant() -notin $known){throw 'RelatedSourceChanged'}
+        }
+    }
+}
 function New-PhotoCleanupPlan($Config,$Receipt,[object[]]$IndependentProofs=@(),[hashtable]$Adapters=@{}) {
     Assert-ArchiveBindings $Config $Adapters | Out-Null
     if(-not(Test-PhotoReceipt $Config $Receipt -Fresh -Adapters $Adapters).valid){throw 'InvalidReceiptData'}
@@ -37,7 +49,8 @@ function New-PhotoCleanupPlan($Config,$Receipt,[object[]]$IndependentProofs=@(),
         $reason=$blocked
         if($source.source_alias -eq 'ICLOUD'){$reason='CloudCacheOnly'}
         elseif($record.association_status -ne 'Complete'){$reason='PendingAssociation'}
-        elseif((Get-PhotoField $record 'association_revision' 0) -lt 3){$reason='LegacyAssociationNeedsRevalidation'}
+        elseif((Get-PhotoField $source 'association_revision' 0) -lt 3){$reason='LegacyAssociationNeedsRevalidation'}
+        elseif((Get-PhotoField $source 'association_status' 'PendingAssociation') -ne 'Complete'){$reason='PendingAssociation'}
         elseif(($source.attributes -band 0x4400) -or @($source.streams).Count){$reason='SpecialSourceProtected'}
         $matching=@()
         if(-not $reason) {
@@ -86,6 +99,8 @@ function Invoke-PhotoCleanup($Config,$CleanupPlan,[hashtable]$Adapters=@{}) {
         $moved=0;$deleted=0;$waiting=0;$alreadyDeleted=0
         foreach($item in $CleanupPlan.eligible) {
             $sourcePath=Get-PhotoSourcePath $Config $item.source
+            $record=@($CleanupPlan.receipt.committed | Where-Object asset_id -ceq $item.asset_id)
+            if($record.Count -ne 1){throw 'CleanupAssetMissing'}
             if(-not $sourcePath.Equals($item.path,[StringComparison]::OrdinalIgnoreCase)){throw 'CleanupSourceMismatch'}
             $holdRoot=if($item.source_alias -eq 'OLD_F'){Resolve-PhotoPath $Config.archive_root 'retained'}else{$Config.retained_root}
             $held=Resolve-PhotoPath $holdRoot ($CleanupPlan.cleanup_id+'\'+$item.relative_path)
@@ -95,6 +110,7 @@ function Invoke-PhotoCleanup($Config,$CleanupPlan,[hashtable]$Adapters=@{}) {
             $dest=Resolve-PhotoPath $Config.archive_root $item.destination_relative_path
             if((Get-PhotoSha256 $dest) -cne $item.sha256){throw 'ArchiveChanged'}
             if(-not(Test-Path -LiteralPath $holdReceipt)) {
+                Assert-PhotoRelatedSourcesUnchanged $Config $item.source $record[0]
                 Assert-PhotoSourceStreamsProtected $sourcePath
                 Assert-PhotoSourceFresh $Config $item.source $item.sha256 $Adapters | Out-Null
                 $sourceVolume=Get-PhotoBoundVolume $Config $sourcePath $Adapters;$holdVolume=Get-PhotoBoundVolume $Config $held $Adapters
@@ -121,6 +137,7 @@ function Invoke-PhotoCleanup($Config,$CleanupPlan,[hashtable]$Adapters=@{}) {
                 Assert-ArchiveBindings $Config $Adapters | Out-Null
                 if((Get-PhotoSha256 $dest) -cne $item.sha256 -or @($item.proofs | Where-Object {Test-PhotoIndependentProof $Config $_ $item.sha256 $sourcePath $Adapters}).Count -eq 0){throw 'FinalCopyVerificationFailed'}
                 Assert-PhotoNoDirectoryLinks (Split-Path -Parent $held)
+                Assert-PhotoRelatedSourcesUnchanged $Config $item.source $record[0]
                 Assert-PhotoSourceStreamsProtected $held
                 Write-PhotoJournalLine $journal ([pscustomobject]@{state='DeleteIntent';source=$sourcePath;held=$held;sha256=$item.sha256;cleanup_sha256=$CleanupPlan.cleanup_sha256;utc=[DateTime]::UtcNow.ToString('o')})
                 Remove-Item -LiteralPath $held -Force;$deleted++
