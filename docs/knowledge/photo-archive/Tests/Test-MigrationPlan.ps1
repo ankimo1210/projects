@@ -11,6 +11,12 @@
         Assert-Throws { Assert-PlanInputs -MigrationPlan $roundtrip -Config $f.Config -Adapters $f.Adapters } 'PlanChanged'
     } finally { Remove-TestArchiveFixture $f }
 }
+Test-Case 'T09' 'UTC timestamps keep their precision through JSON deserialization' {
+    $value=[pscustomobject]@{stamp='2026-10-12T03:00:00.1234000Z';plan_sha256=$null}
+    $roundtrip=$value | ConvertTo-Json | ConvertFrom-Json
+    Assert-Equal '697ceecab66c2edeaaea1fcd039522ff2c66310b356de62a24a27a1e8d550fcb' (Get-PhotoPlanHash $value)
+    Assert-Equal '697ceecab66c2edeaaea1fcd039522ff2c66310b356de62a24a27a1e8d550fcb' (Get-PhotoPlanHash $roundtrip)
+}
 Test-Case 'T10' 'Physical capacity rounds small files and preserves free reserve' {
     $f=New-TestArchiveFixture
     try {
@@ -43,6 +49,19 @@ Test-Case 'T12' 'Same-size different contents get separate destination paths' {
         Assert-Equal 2 $plan.actions.Count
         Assert-Equal 2 @($plan.actions.components.destination_relative_path | Sort-Object -Unique).Count
     } finally { Remove-TestArchiveFixture $f }
+}
+Test-Case 'T11' 'An explicit capacity-limited wave preserves every excluded source' {
+    $f=New-TestArchiveFixture
+    try {
+        $null=New-TestFile $f.OldC 'one.jpg' 'one'
+        $null=New-TestFile $f.OldC 'two.jpg' 'two'
+        $rows=@(Get-PhotoInventory $f.Config @('OLD_C') Fresh $f.Adapters)
+        $plan=New-PhotoMigrationPlan -Config $f.Config -FileRecords $rows -Assets @(New-PhotoAssets $rows @()) -DestinationIndex @() -Adapters $f.Adapters -CopyBudgetBytes 131072L
+        Assert-Equal 1 $plan.actions.Count
+        Assert-Equal 2 $plan.source_disposition.Count
+        Assert-Equal 1 @($plan.source_disposition | Where-Object reason -eq RetainCapacity).Count
+        Assert-Equal 2 @(Get-ChildItem -LiteralPath $f.OldC -File).Count
+    } finally {Remove-TestArchiveFixture $f}
 }
 Test-Case 'T04' 'Byte-identical aliases create one action and two recoverable mappings' {
     $f=New-TestArchiveFixture

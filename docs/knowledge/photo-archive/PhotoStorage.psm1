@@ -1,6 +1,7 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 Import-Module (Join-Path $PSScriptRoot 'PhotoInventory.psm1') -DisableNameChecking
+Import-Module (Join-Path $PSScriptRoot 'PhotoCloud.psm1') -DisableNameChecking
 
 function Write-PhotoJsonNew([string]$Path,$Value) {
     Assert-PhotoNoDirectoryLinks ([IO.Path]::GetDirectoryName($Path))
@@ -19,6 +20,45 @@ function Write-PhotoJournalLine([string]$Path,$Value) {
         $stream.Write($bytes,0,$bytes.Length);$stream.Flush($true)
     } finally {$stream.Dispose()}
 }
+function New-PhotoCheckpoint {
+    return @{schema_version=2;source_hashes=@{};metadata=@{};destinations=@{};last_full_verified_utc=$null;run_count=0}
+}
+function Read-PhotoCheckpoint($Config) {
+    $root=Resolve-PhotoPath $Config.state_root 'checkpoints'
+    if(-not(Test-Path -LiteralPath $root)){return New-PhotoCheckpoint}
+    $headers=@(Get-ChildItem -LiteralPath $root -File -Filter 'state-*.sha.json' | Sort-Object Name -Descending)
+    if(-not $headers.Count){return New-PhotoCheckpoint}
+    $headerPath=$headers[0].FullName
+    try {
+        $header=Get-Content -LiteralPath $headerPath -Raw -Encoding UTF8 | ConvertFrom-Json
+        if($header.schema_version -ne 2 -or $header.archive_id -cne $Config.archive_id -or $header.file -notmatch '^state-\d{21}-[a-f0-9]{32}\.clixml$'){throw 'InvalidCheckpointHeader'}
+        $path=Resolve-PhotoPath $root $header.file
+        if((Get-PhotoSha256 $path) -cne $header.sha256){throw 'CheckpointHashMismatch'}
+        $state=Import-Clixml -LiteralPath $path
+        if($state.schema_version -ne 2 -or $state.source_hashes -isnot [Collections.IDictionary] -or $state.metadata -isnot [Collections.IDictionary] -or $state.destinations -isnot [Collections.IDictionary]){throw 'CheckpointSchemaMismatch'}
+        return $state
+    } catch {throw ('CheckpointCorrupt: '+$_.Exception.Message)}
+}
+function Save-PhotoCheckpoint($Config,[hashtable]$State) {
+    if($State.schema_version -ne 2){throw 'UnsupportedCheckpoint'}
+    $root=Resolve-PhotoPath $Config.state_root 'checkpoints'
+    $null=New-Item -ItemType Directory -Path $root -Force
+    $name='state-'+[DateTime]::UtcNow.ToString('yyyyMMddHHmmssfffffff')+'-'+[guid]::NewGuid().ToString('N')+'.clixml'
+    $path=Resolve-PhotoPath $root $name
+    if(Test-Path -LiteralPath $path){throw 'CheckpointAlreadyExists'}
+    $State | Export-Clixml -LiteralPath $path -Encoding UTF8 -Depth 48
+    $hash=Get-PhotoSha256 $path
+    Write-PhotoJsonNew (Resolve-PhotoPath $root ($name.Replace('.clixml','.sha.json'))) ([pscustomobject]@{schema_version=2;archive_id=$Config.archive_id;file=$name;sha256=$hash})
+    $headers=@(Get-ChildItem -LiteralPath $root -File -Filter 'state-*.sha.json' | Sort-Object Name -Descending)
+    foreach($old in $headers | Select-Object -Skip 3) {
+        $h=Get-Content -LiteralPath $old.FullName -Raw -Encoding UTF8 | ConvertFrom-Json
+        if($h.schema_version -eq 2 -and $h.archive_id -ceq $Config.archive_id -and $h.file -match '^state-\d{21}-[a-f0-9]{32}\.clixml$') {
+            $payload=Resolve-PhotoPath $root $h.file
+            if((Get-PhotoSha256 $payload) -ceq $h.sha256){Remove-Item -LiteralPath $payload -Force;Remove-Item -LiteralPath (Resolve-PhotoPath $root $old.Name) -Force}
+        }
+    }
+    return $path
+}
 function Initialize-PhotoArchive($Config,[hashtable]$Adapters=@{}) {
     Assert-ArchiveBindings $Config $Adapters | Out-Null
     $marker=Join-Path $Config.archive_root 'archive-marker.json'
@@ -34,8 +74,12 @@ function Get-PhotoStagePath($Config,$Plan,$Action,[int]$ComponentIndex) {
     if($Plan.plan_id -notmatch '^[a-f0-9]{32}$' -or $Action.action_id -notmatch '^[a-f0-9]{32}$' -or $ComponentIndex -lt 0){throw 'InvalidStageIdentity'}
     return Resolve-PhotoPath $Config.archive_root ('staging\'+$Plan.plan_id+'\'+$Action.action_id+'-'+$ComponentIndex+'.part')
 }
-function Assert-PhotoSourceFresh($Config,$Source,[string]$ExpectedHash) {
+function Assert-PhotoSourceFresh($Config,$Source,[string]$ExpectedHash,[hashtable]$Adapters=@{}) {
     $path=Get-PhotoSourcePath $Config $Source
+    if($Source.source_alias -eq 'ICLOUD') {
+        $cloud=Get-CloudFileStatus $Config $Source $Adapters
+        if(-not $cloud.in_sync -or -not $cloud.locally_available){throw 'CloudSourceNotReady'}
+    }
     $before=Get-Item -LiteralPath $path -Force
     if($before.Length -ne $Source.size_bytes -or $before.LastWriteTimeUtc.Ticks -ne $Source.mtime_ticks -or [PhotoArchive.FileMetadata]::Identity($path) -cne $Source.file_id){throw 'SourceChanged'}
     if((Get-PhotoSha256 $path) -cne $ExpectedHash){throw 'SourceChanged'}
@@ -109,7 +153,7 @@ function Get-PhotoReceiptIndex($Config,[hashtable]$Adapters=@{}) {
     }
     return [pscustomobject]@{assets=@($assets.Values);invalid_lines=$invalid}
 }
-function Invoke-PhotoPlan($Config,$Plan,[hashtable]$Adapters=@{}) {
+function Invoke-PhotoPlan($Config,$Plan,[hashtable]$Adapters=@{},[hashtable]$KnownSourceCache=@{},[hashtable]$DestinationStatCache=@{}) {
     Assert-PlanInputs $Plan $Config $Adapters
     $mutex=[Threading.Mutex]::new($false,$Config.mutex_name);$acquired=$false
     try {
@@ -124,10 +168,24 @@ function Invoke-PhotoPlan($Config,$Plan,[hashtable]$Adapters=@{}) {
         $fJournal=Resolve-PhotoPath $Config.archive_root ('receipts\'+$run+'.jsonl')
         foreach($action in $Plan.actions) {
             $volume=Assert-ArchiveBindings $Config $Adapters
+            $knownUnchanged=$prior.ContainsKey($action.asset_id)
+            if($knownUnchanged) {
+                foreach($component in $action.components) {
+                    $path=Resolve-PhotoPath $Config.archive_root $component.destination_relative_path
+                    if(-not(Test-PhotoCachedFile $path $component.sha256 $DestinationStatCache)){$knownUnchanged=$false;break}
+                    foreach($source in $component.sources) {
+                        $key=$source.full_path.ToLowerInvariant()
+                        if(-not $KnownSourceCache.ContainsKey($key)){$knownUnchanged=$false;break}
+                        $known=$KnownSourceCache[$key]
+                        if($known.sha256 -cne $source.sha256 -or $known.file_id -cne $source.file_id -or $known.size_bytes -ne $source.size_bytes -or $known.mtime_ticks -ne $source.mtime_ticks){$knownUnchanged=$false;break}
+                    }
+                }
+            }
+            if($knownUnchanged){$committed.Add($prior[$action.asset_id]);continue}
             $required=0L
             foreach($component in $action.components){$path=Resolve-PhotoPath $Config.archive_root $component.destination_relative_path;if(-not(Test-Path -LiteralPath $path)){$required += [long][Math]::Ceiling($component.size_bytes/[double]$volume.cluster_bytes)*$volume.cluster_bytes}}
             if($volume.free_bytes - $required - 1048576L -lt $Config.reserve_f_bytes){throw 'InsufficientCapacity'}
-            foreach($component in $action.components){foreach($source in $component.sources){Assert-PhotoSourceFresh $Config $source $component.sha256 | Out-Null}}
+            foreach($component in $action.components){foreach($source in $component.sources){Assert-PhotoSourceFresh $Config $source $component.sha256 $Adapters | Out-Null}}
             Write-PhotoJournalLine $journal ([pscustomobject]@{state='Planned';action_id=$action.action_id;asset_id=$action.asset_id;plan_sha256=$Plan.plan_sha256;utc=[DateTime]::UtcNow.ToString('o')})
             $parts=@();$ordinal=0
             foreach($component in $action.components) {

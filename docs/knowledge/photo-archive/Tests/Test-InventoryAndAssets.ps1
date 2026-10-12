@@ -35,6 +35,22 @@ Test-Case 'T03' 'Equal name and size are not equal content' {
         Assert-Equal 2 @($rows.sha256 | Sort-Object -Unique).Count
     } finally { Remove-TestArchiveFixture $f }
 }
+Test-Case 'T14' 'Fresh hashing bypasses a matching but obsolete stat cache' {
+    $f=New-TestArchiveFixture
+    try {
+        $path=New-TestFile $f.OldC 'cache.jpg' 'aaa'
+        $first=@(Get-PhotoInventory $f.Config @('OLD_C') Fresh $f.Adapters)[0]
+        $cache=@{};$cache[$path.ToLowerInvariant()]=$first
+        $time=(Get-Item -LiteralPath $path).LastWriteTimeUtc
+        [IO.File]::WriteAllText($path,'bbb');(Get-Item -LiteralPath $path).LastWriteTimeUtc=$time
+        $cached=@(Get-PhotoInventory -Config $f.Config -Aliases @('OLD_C') -HashMode Cached -Adapters $f.Adapters -HashCache $cache)[0]
+        $fresh=@(Get-PhotoInventory -Config $f.Config -Aliases @('OLD_C') -HashMode Fresh -Adapters $f.Adapters -HashCache $cache)[0]
+        Assert-Equal 'Cached' $cached.hash_mode
+        Assert-Equal $first.sha256 $cached.sha256
+        Assert-Equal 'Fresh' $fresh.hash_mode
+        Assert-True ($fresh.sha256 -cne $first.sha256)
+    } finally {Remove-TestArchiveFixture $f}
+}
 Test-Case 'T04' 'Duplicate bytes preserve both source coordinates' {
     $f=New-TestArchiveFixture
     try {
