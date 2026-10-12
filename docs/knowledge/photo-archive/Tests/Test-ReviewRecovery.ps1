@@ -191,3 +191,16 @@ Test-Case 'T31' 'Cleanup resumes after deletion and after the delete-before-jour
         Assert-Equal 1 (Invoke-PhotoCleanup $f.Config $plan $f.Adapters).AlreadyDeleted
     } finally {Remove-TestArchiveFixture $f}
 }
+Test-Case 'T33' 'Cleanup digest survives equivalent UTC precision in JSON and both engines' {
+    $utc=[DateTime]::Parse('2026-10-12T13:01:51.2362700Z',[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::RoundtripKind)
+    $typed=[pscustomobject]@{archive_id='fixture-date-roundtrip';created_at_utc=$utc;cleanup_sha256=$null}
+    # SHA-256 of the literal schema-2 canonical JSON, calculated independently.
+    $expected='216a6b1022f999b8cd902087916446d8f52c85359a93492b86e8a2d4dd43bb85'
+    Assert-Equal $expected (Get-PhotoCleanupHash $typed) 'existing DateTime digest stays compatible'
+    $text=[pscustomobject]@{archive_id='fixture-date-roundtrip';created_at_utc='2026-10-12T13:01:51.23627Z';cleanup_sha256=$null}
+    Assert-Equal $expected (Get-PhotoCleanupHash $text) 'JSON string retains the same instant without trailing zeros'
+    $decoded='{"archive_id":"fixture-date-roundtrip","created_at_utc":"2026-10-12T13:01:51.23627Z","cleanup_sha256":null}' | ConvertFrom-Json
+    Assert-Equal $expected (Get-PhotoCleanupHash $decoded) 'default parser differs between PowerShell 5.1 and 7'
+    $text.created_at_utc='2026-10-12T13:01:51.236271Z'
+    Assert-True ((Get-PhotoCleanupHash $text) -cne $expected) 'an actual time change still invalidates the digest'
+}
