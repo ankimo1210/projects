@@ -56,3 +56,12 @@ function New-TestFile([string]$Root,[string]$Name,[string]$Content) {
     [IO.File]::WriteAllText($path,$Content,[Text.UTF8Encoding]::new($false))
     return $path
 }
+
+function New-TestCopyScenario {
+    $f=New-TestArchiveFixture
+    $null=New-TestFile $f.OldC 'original.jpg' 'original-payload'
+    $null=New-TestFile $f.OldF 'alias.jpg' 'original-payload'
+    $rows=@(Get-PhotoInventory $f.Config @('OLD_C','OLD_F') Fresh $f.Adapters)
+    $plan=New-PhotoMigrationPlan -Config $f.Config -FileRecords $rows -Assets @(New-PhotoAssets $rows @()) -DestinationIndex @() -Adapters $f.Adapters
+    return [pscustomobject]@{Fixture=$f;Plan=$plan}
+}

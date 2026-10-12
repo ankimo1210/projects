@@ -1,5 +1,6 @@
 ﻿Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$script:BoundVolumeCache=@{}
 
 function Test-PhotoPathWithin([string]$Path,[string]$Root) {
     $p=[IO.Path]::GetFullPath($Path).TrimEnd('\')
@@ -44,6 +45,11 @@ function Resolve-PhotoPath([string]$Root,[string]$Relative,[string]$AllowedCloud
     Assert-PhotoNoDirectoryLinks ([IO.Path]::GetDirectoryName($result)) $AllowedCloudRoot
     return $result
 }
+function Get-PhotoNativeVolume([string]$Path) {
+    Initialize-PhotoFileNative
+    $volume=[PhotoArchive.FileMetadata]::Volume([IO.Path]::GetPathRoot([IO.Path]::GetFullPath($Path)))
+    return [pscustomobject]@{native_id=$volume.NativeId;free_bytes=$volume.FreeBytes;cluster_bytes=$volume.ClusterBytes;file_system=$volume.FileSystem}
+}
 function Get-PhotoVolume([string]$Path) {
     $drive=[IO.Path]::GetPathRoot([IO.Path]::GetFullPath($Path))
     if ($drive -notmatch '^([A-Za-z]):\\$') { throw 'LocalVolumeRequired' }
@@ -51,7 +57,8 @@ function Get-PhotoVolume([string]$Path) {
     $volume=Get-Volume -DriveLetter $letter -ErrorAction Stop
     $disk=Get-Partition -DriveLetter $letter -ErrorAction Stop | Get-Disk -ErrorAction Stop
     if (@($disk).Count -ne 1 -or [string]::IsNullOrWhiteSpace([string]$disk.UniqueId)) { throw 'AmbiguousPhysicalDisk' }
-    return [pscustomobject]@{volume_id=([string]$volume.UniqueId).Trim();disk_id=([string]$disk.UniqueId).Trim();free_bytes=[long]$volume.SizeRemaining;cluster_bytes=[long]$volume.AllocationUnitSize}
+    $native=Get-PhotoNativeVolume $Path
+    return [pscustomobject]@{volume_id=([string]$volume.UniqueId).Trim();disk_id=([string]$disk.UniqueId).Trim();native_id=$native.native_id;free_bytes=$native.free_bytes;cluster_bytes=$native.cluster_bytes;file_system=$native.file_system}
 }
 function Get-PhotoBoundVolume($Config,[string]$Path,[hashtable]$Adapters=@{}) {
     if ($Adapters.ContainsKey('Volume')) {
@@ -61,7 +68,13 @@ function Get-PhotoBoundVolume($Config,[string]$Path,[hashtable]$Adapters=@{}) {
         if ([IO.File]::ReadAllText((Join-Path $Config.fixture_root '.fixture-owner')) -cne $Config.fixture_root) { throw 'TestAdapterForbidden' }
         return & $Adapters.Volume $Path
     }
-    return Get-PhotoVolume $Path
+    $native=Get-PhotoNativeVolume $Path
+    $drive=[IO.Path]::GetPathRoot([IO.Path]::GetFullPath($Path))
+    $key=$Config.archive_id+'|'+$drive+'|'+$native.native_id
+    if(-not $script:BoundVolumeCache.ContainsKey($key)){$script:BoundVolumeCache[$key]=Get-PhotoVolume $Path}
+    $bound=$script:BoundVolumeCache[$key]
+    if($bound.native_id -cne $native.native_id){throw 'NativeMediaChanged'}
+    return [pscustomobject]@{volume_id=$bound.volume_id;disk_id=$bound.disk_id;native_id=$native.native_id;free_bytes=$native.free_bytes;cluster_bytes=$native.cluster_bytes;file_system=$native.file_system}
 }
 function Read-ArchiveConfig([string]$ConfigPath) {
     $config=Get-Content -LiteralPath $ConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -111,7 +124,7 @@ function Get-PhotoTextHash([string]$Text) {
     try { return ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($Text)))).Replace('-','').ToLowerInvariant() }
     finally { $sha.Dispose() }
 }
-function Get-PhotoInventory($Config,[string[]]$Aliases=@('OLD_C','OLD_F','ICLOUD'),[ValidateSet('MetadataOnly','Fresh','Cached')][string]$HashMode='Fresh',[hashtable]$Adapters=@{}) {
+function Get-PhotoInventory($Config,[string[]]$Aliases=@('OLD_C','OLD_F','ICLOUD'),[ValidateSet('MetadataOnly','Fresh','Cached')][string]$HashMode='Fresh',[hashtable]$Adapters=@{},[string[]]$RelativePaths=@(),[hashtable]$HashCache=@{}) {
     Assert-ArchiveBindings $Config $Adapters | Out-Null
     $cloudRoot=Get-PhotoRegisteredCloudRoot $Config
     Initialize-PhotoFileNative
@@ -125,7 +138,8 @@ function Get-PhotoInventory($Config,[string[]]$Aliases=@('OLD_C','OLD_F','ICLOUD
                 $attributes=[long]$item.Attributes
                 if($item.PSIsContainer -and -not($attributes -band 0x400)){$stack.Push($item.FullName);continue}
                 $relative=$item.FullName.Substring($source.path.TrimEnd('\').Length+1)
-                $hash=$null;$errorReason=$null;$streams=@();$tag=$null;$status='Available';$fileId=$null
+                if($RelativePaths.Count -and $relative -notin $RelativePaths){continue}
+                $hash=$null;$errorReason=$null;$streams=@();$tag=$null;$status='Available';$fileId=$null;$usedHashMode='None'
                 if($item.PSIsContainer){$status='RetainDirectoryLink'}
                 elseif($attributes -band 0x400){
                     try {$tag=Get-PhotoReparseTag $item.FullName} catch {$errorReason=$_.Exception.Message}
@@ -144,13 +158,16 @@ function Get-PhotoInventory($Config,[string[]]$Aliases=@('OLD_C','OLD_F','ICLOUD
                     if($status -eq 'Available' -and $HashMode -ne 'MetadataOnly') {
                         try {
                             $fileId=[PhotoArchive.FileMetadata]::Identity($item.FullName)
-                            $hash=Get-PhotoSha256 $item.FullName
+                            $cacheKey=$item.FullName.ToLowerInvariant()
+                            $old=if($HashCache.ContainsKey($cacheKey)){$HashCache[$cacheKey]}else{$null}
+                            if($HashMode -eq 'Cached' -and $old -and $old.file_id -ceq $fileId -and $old.size_bytes -eq $size -and $old.mtime_ticks -eq $mtime -and $old.source_volume_id -ceq $source.volume_id -and $old.source_disk_id -ceq $source.disk_id -and $old.sha256 -match '^[a-f0-9]{64}$') {$hash=$old.sha256;$usedHashMode='Cached'}
+                            else {$hash=Get-PhotoSha256 $item.FullName;$usedHashMode='Fresh'}
                             $after=Get-Item -LiteralPath $item.FullName -Force
                             if($after.Length -ne $size -or $after.LastWriteTimeUtc.Ticks -ne $mtime -or [PhotoArchive.FileMetadata]::Identity($item.FullName) -cne $fileId){$status='PendingSourceChanged';$hash=$null}
                         } catch {$status='ReadError';$errorReason=$_.Exception.Message}
                     }
                 }
-                [pscustomobject]@{source_alias=$source.alias;relative_path=$relative;full_path=$item.FullName;source_volume_id=$source.volume_id;source_disk_id=$source.disk_id;file_id=$fileId;size_bytes=$size;allocated_bytes=([long][Math]::Ceiling($size/[double]$volume.cluster_bytes)*$volume.cluster_bytes);mtime_utc=$item.LastWriteTimeUtc.ToString('o');mtime_ticks=$mtime;attributes=$attributes;reparse_tag=$tag;sha256=$hash;streams=$streams;read_status=$status;error=$errorReason;observed_at_utc=[DateTime]::UtcNow.ToString('o')}
+                [pscustomobject]@{source_alias=$source.alias;relative_path=$relative;full_path=$item.FullName;source_volume_id=$source.volume_id;source_disk_id=$source.disk_id;file_id=$fileId;size_bytes=$size;allocated_bytes=([long][Math]::Ceiling($size/[double]$volume.cluster_bytes)*$volume.cluster_bytes);mtime_utc=$item.LastWriteTimeUtc.ToString('o');mtime_ticks=$mtime;attributes=$attributes;reparse_tag=$tag;sha256=$hash;hash_mode=$usedHashMode;streams=$streams;read_status=$status;error=$errorReason;observed_at_utc=[DateTime]::UtcNow.ToString('o')}
             }
         }
     }
@@ -243,6 +260,7 @@ function New-PhotoAssets([object[]]$FileRecords,[object[]]$Metadata=@()) {
 }
 function Convert-PhotoCanonicalValue($Value) {
     if($null -eq $Value){return $null}
+    if($Value -is [DateTime] -or $Value -is [DateTimeOffset]){return $Value.ToString('o',[Globalization.CultureInfo]::InvariantCulture)}
     if($Value -is [string] -or $Value -is [ValueType]){return $Value}
     if($Value -is [Collections.IDictionary]) {
         $result=[ordered]@{};$keys=[string[]]@($Value.Keys);[Array]::Sort($keys,[StringComparer]::Ordinal)
@@ -266,7 +284,16 @@ function Get-PhotoSourcePath($Config,$FileRecord) {
     if(-not $path.Equals([IO.Path]::GetFullPath($FileRecord.full_path),[StringComparison]::OrdinalIgnoreCase)){throw 'SourcePathMismatch'}
     return $path
 }
-function New-PhotoMigrationPlan($Config,[object[]]$FileRecords,[object[]]$Assets,[object[]]$DestinationIndex=@(),[hashtable]$Adapters=@{}) {
+function Test-PhotoCachedFile([string]$Path,[string]$Hash,[hashtable]$Cache) {
+    $key=$Path.ToLowerInvariant()
+    if(-not $Cache.ContainsKey($key)){return $false}
+    $known=$Cache[$key]
+    if($known.sha256 -cne $Hash -or -not(Test-Path -LiteralPath $Path -PathType Leaf)){return $false}
+    $item=Get-Item -LiteralPath $Path -Force
+    if([long]$item.Attributes -band 0x400){return $false}
+    return $known.size_bytes -eq $item.Length -and $known.mtime_ticks -eq $item.LastWriteTimeUtc.Ticks -and $known.file_id -ceq [PhotoArchive.FileMetadata]::Identity($Path)
+}
+function New-PhotoMigrationPlan($Config,[object[]]$FileRecords,[object[]]$Assets,[object[]]$DestinationIndex=@(),[hashtable]$Adapters=@{},[long]$CopyBudgetBytes=[long]::MaxValue,[hashtable]$DestinationStatCache=@{}) {
     $volume=Assert-ArchiveBindings $Config $Adapters
     $actions=[Collections.Generic.List[object]]::new();$dispositions=[Collections.Generic.List[object]]::new();$ids=@{};$existing=@{}
     foreach($entry in $DestinationIndex){$existing[$entry.asset_id]=$entry}
@@ -298,9 +325,12 @@ function New-PhotoMigrationPlan($Config,[object[]]$FileRecords,[object[]]$Assets
                     if($matches.Count -ne 1){throw 'ExistingAssetMismatch'}
                     $component.destination_relative_path=$matches[0].destination_relative_path
                     $path=Resolve-PhotoPath $Config.archive_root $component.destination_relative_path
-                    if((Get-PhotoSha256 $path) -cne $component.sha256){throw 'ExistingAssetCorrupt'}
+                    if(-not(Test-PhotoCachedFile $path $component.sha256 $DestinationStatCache) -and (Get-PhotoSha256 $path) -cne $component.sha256){throw 'ExistingAssetChanged'}
                 }
                 $operation='Reuse'
+            } elseif($mediaBytes+$assetBytes -gt $CopyBudgetBytes) {
+                foreach($component in $asset.components){$dispositions.Add([pscustomobject]@{source=$component.file;operation='Retain';asset_id=$asset.asset_id;reason='RetainCapacity'})}
+                continue
             } else { $mediaBytes+=$assetBytes;if($assetBytes -gt $largestAsset){$largestAsset=$assetBytes} }
             $action=[pscustomobject]@{action_id=[guid]::NewGuid().ToString('N');asset_id=$asset.asset_id;operation=$operation;association_status=$asset.association_status;capture_date_raw=$asset.capture_date_raw;capture_offset=$asset.capture_offset;date_source=$asset.date_source;components=$components}
             $ids[$asset.asset_id]=$action;$actions.Add($action)

@@ -18,7 +18,7 @@ if (-not $Child) {
 }
 . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
 $code=Split-Path -Parent $PSScriptRoot
-foreach ($name in @('PhotoInventory','PhotoStorage','PhotoCloud','ICloudPhotoArchive','Install-PhotoArchive')) {
+foreach ($name in @('PhotoInventory','PhotoStorage','PhotoCloud','ICloudPhotoArchive','PhotoCleanup','Install-PhotoArchive')) {
     $ext=if($name -eq 'Install-PhotoArchive'){'ps1'}else{'psm1'}
     $file=Join-Path $code "$name.$ext"
     if (Test-Path -LiteralPath $file) {
