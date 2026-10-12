@@ -76,13 +76,25 @@ function Get-PhotoBoundVolume($Config,[string]$Path,[hashtable]$Adapters=@{}) {
     if($bound.native_id -cne $native.native_id){throw 'NativeMediaChanged'}
     return [pscustomobject]@{volume_id=$bound.volume_id;disk_id=$bound.disk_id;native_id=$native.native_id;free_bytes=$native.free_bytes;cluster_bytes=$native.cluster_bytes;file_system=$native.file_system}
 }
-function Read-ArchiveConfig([string]$ConfigPath) {
+function Read-ArchiveConfig([string]$ConfigPath,[switch]$Recovery) {
     $config=Get-Content -LiteralPath $ConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
     if ($config.archive_id -like 'fixture-*') { throw 'FixtureConfigForbidden' }
     if ($config.schema_version -ne 2 -or $config.auto_cleanup -ne $false) { throw 'UnsupportedConfig' }
     if ($config.retention_days -lt 7 -or $config.reserve_c_bytes -lt 34359738368L -or $config.reserve_f_bytes -lt 34359738368L -or $config.hash_workers -lt 1 -or $config.hash_workers -gt 2 -or $config.download_timeout_seconds -gt 600 -or $config.download_timeout_seconds -le 0 -or $config.download_retries -gt 1) { throw 'UnsafeConfig' }
-    Assert-ArchiveBindings $config | Out-Null
+    if($Recovery){Assert-PhotoRecoveryBindings $config | Out-Null}else{Assert-ArchiveBindings $config | Out-Null}
     return $config
+}
+function Assert-PhotoRecoveryBindings($Config,[hashtable]$Adapters=@{}) {
+    $roots=@($Config.source_roots.path)+@($Config.archive_root,$Config.state_root,$Config.retained_root,$Config.release_code_root)+@($Config.protected_roots)
+    foreach($root in $roots){if([string]::IsNullOrWhiteSpace($root) -or $root -notmatch '^[A-Za-z]:\\'){throw 'AbsoluteLocalRootRequired'}}
+    for($i=0;$i -lt $roots.Count;$i++){for($j=$i+1;$j -lt $roots.Count;$j++){if((Test-PhotoPathWithin $roots[$i] $roots[$j]) -or (Test-PhotoPathWithin $roots[$j] $roots[$i])){throw 'OverlappingRoots'}}}
+    $c=@($Config.source_roots | Where-Object alias -eq OLD_C)
+    if($c.Count -ne 1){throw 'InvalidRecoveryBinding'}
+    foreach($path in @($Config.state_root,$Config.retained_root,$Config.release_code_root)) {
+        Assert-PhotoNoDirectoryLinks $path
+        $volume=Get-PhotoBoundVolume $Config $path $Adapters
+        if($volume.volume_id -cne $c[0].volume_id -or $volume.disk_id -cne $c[0].disk_id){throw 'WrongRecoveryVolume'}
+    }
 }
 function Assert-ArchiveBindings($Config,[hashtable]$Adapters=@{}) {
     $cloudRoot=Get-PhotoRegisteredCloudRoot $Config
@@ -152,9 +164,10 @@ function Get-PhotoInventory($Config,[string[]]$Aliases=@('OLD_C','OLD_F','ICLOUD
                     try {
                         $streams=@(Get-Item -LiteralPath $item.FullName -Stream * -ErrorAction Stop | Where-Object {$_.Stream -ne ':$DATA' -and $_.Stream -ne '$DATA'} | Select-Object Stream,Length)
                     } catch {
-                        if($volume.cluster_bytes -eq 4096){$status='RetainStreamInspectionFailed';$errorReason=$_.Exception.Message}
+                        if((Get-PhotoNativeVolume $item.FullName).file_system -ne 'exFAT'){$status='RetainStreamInspectionFailed';$errorReason=$_.Exception.Message}
                     }
                     if($streams.Count){$status='RetainStreams'}
+                    if($attributes -band 0x4000){$status='RetainEncryptedSource'}
                     if($status -eq 'Available' -and $HashMode -ne 'MetadataOnly') {
                         try {
                             $fileId=[PhotoArchive.FileMetadata]::Identity($item.FullName)
@@ -188,7 +201,8 @@ function Read-PhotoMetadata([object[]]$Files,$ToolReceipt) {
     for($start=0;$start -lt $eligible.Count;$start+=100) {
         $end=[Math]::Min($start+99,$eligible.Count-1)
         $paths=@($eligible[$start..$end].full_path)
-        $args=$prefix+@('-j','-G1','-charset','filename=UTF8','-DateTimeOriginal','-OffsetTimeOriginal','-SubSecTimeOriginal','-CreateDate','-CreationDate','-ContentIdentifier','-LivePhotoVideoIndex','-FileType','-FileName','-FileSize','--')+$paths
+        $emptyConfig=if($PSVersionTable.PSVersion.Major -le 5){'""'}else{''}
+        $args=$prefix+@('-config',$emptyConfig,'-j','-G1','-charset','filename=UTF8','-DateTimeOriginal','-OffsetTimeOriginal','-SubSecTimeOriginal','-CreateDate','-CreationDate','-ContentIdentifier','-LivePhotoVideoIndex','-FileType','-FileName','-FileSize','--')+$paths
         $err=[IO.Path]::GetTempFileName()
         try {
             $output=& $command @args 2> $err
@@ -213,14 +227,35 @@ function Read-PhotoMetadata([object[]]$Files,$ToolReceipt) {
 function New-PhotoAssets([object[]]$FileRecords,[object[]]$Metadata=@()) {
     $metaIndex=@{}
     foreach($m in $Metadata){$metaIndex[([IO.Path]::GetFullPath($m.SourceFile)).ToLowerInvariant()]=$m}
-    $groups=@{}
+    # Relations form a graph: content identifiers and same-stem candidates both
+    # bind components. A sidecar must protect its image as well as itself.
+    $candidates=[Collections.Generic.List[object]]::new();$parents=@{};$ids=@{};$stems=@{}
     foreach($file in $FileRecords) {
         $meta=if($metaIndex.ContainsKey($file.full_path.ToLowerInvariant())){$metaIndex[$file.full_path.ToLowerInvariant()]}else{$null}
         $contentId=if($meta){Get-PhotoField $meta 'ContentIdentifier'}else{$null}
         $context=$file.source_alias+'|'+[IO.Path]::GetDirectoryName($file.relative_path)
-        $key=if($contentId){$context+'|live|'+$contentId}else{$context+'|file|'+$file.relative_path}
-        if(-not $groups.ContainsKey($key)){$groups[$key]=[Collections.Generic.List[object]]::new()}
-        $groups[$key].Add([pscustomobject]@{file=$file;metadata=$meta;content_id=$contentId})
+        $number=$candidates.Count;$parents[$number]=$number
+        $name=[IO.Path]::GetFileNameWithoutExtension($file.relative_path)
+        if($name.StartsWith('._')){$name=$name.Substring(2)}
+        # XMP may be named photo.jpg.xmp rather than photo.xmp.
+        if([IO.Path]::GetExtension($file.relative_path) -in @('.xmp','.aae')){$name=[IO.Path]::GetFileNameWithoutExtension($name)}
+        $links=@($context+'|stem|'+$name.ToLowerInvariant())
+        if($contentId){$links+= $context+'|live|'+$contentId}
+        foreach($link in $links) {
+            $map=if($link.Contains('|live|')){$ids}else{$stems}
+            if($map.ContainsKey($link)) {
+                $other=$map[$link];while($parents[$other] -ne $other){$other=$parents[$other]}
+                $current=$number;while($parents[$current] -ne $current){$current=$parents[$current]}
+                $parents[$current]=$other
+            } else {$map[$link]=$number}
+        }
+        $candidates.Add([pscustomobject]@{file=$file;metadata=$meta;content_id=$contentId;context=$context})
+    }
+    $groups=@{}
+    for($number=0;$number -lt $candidates.Count;$number++) {
+        $parent=$number;while($parents[$parent] -ne $parent){$parent=$parents[$parent]}
+        if(-not $groups.ContainsKey($parent)){$groups[$parent]=[Collections.Generic.List[object]]::new()}
+        $groups[$parent].Add($candidates[$number])
     }
     foreach($key in $groups.Keys | Sort-Object) {
         $entries=@($groups[$key]);$components=@()
@@ -229,16 +264,20 @@ function New-PhotoAssets([object[]]$FileRecords,[object[]]$Metadata=@()) {
             $role=if($ext -in @('.mov','.mp4')){'video'}elseif($ext -in @('.aae','.xmp') -or [IO.Path]::GetFileName($e.file.relative_path) -like '._*'){'sidecar'}elseif($ext -eq '.dng'){'raw'}elseif($ext -in @('.jpg','.jpeg','.png','.heic','.avif','.webp')){'image'}else{'unknown'}
             $components += [pscustomobject]@{role=$role;file=$e.file;original_name=[IO.Path]::GetFileName($e.file.relative_path)}
         }
-        $hasId=-not [string]::IsNullOrWhiteSpace([string]$entries[0].content_id)
+        $key=$entries[0].context+'|'+((@($entries.file.relative_path) | Sort-Object) -join '|')
+        $contentIds=@($entries.content_id | Where-Object {$_} | Sort-Object -Unique)
+        $hasId=$contentIds.Count -gt 0
         $complete=(@($components | Where-Object {$_.role -in @('sidecar','raw','unknown') -or $_.file.read_status -ne 'Available' -or -not $_.file.sha256}).Count -eq 0)
-        if($hasId){$complete=$complete -and @($components | Where-Object role -eq image).Count -eq 1 -and @($components | Where-Object role -eq video).Count -eq 1}
+        $complete=$complete -and @($entries | Where-Object {-not $_.metadata -or (Get-PhotoField $_.metadata 'MetadataConflict' $false) -or -not ((Get-PhotoField $_.metadata 'FileType') -or $_.content_id -or (Get-PhotoField $_.metadata 'DateTimeOriginal') -or (Get-PhotoField $_.metadata 'CreationDate'))}).Count -eq 0
+        if($hasId){$complete=$complete -and $contentIds.Count -eq 1 -and @($entries | Where-Object {-not $_.content_id}).Count -eq 0 -and @($components | Where-Object role -eq image).Count -eq 1 -and @($components | Where-Object role -eq video).Count -eq 1}
+        else {$complete=$complete -and $entries.Count -eq 1 -and @($entries | Where-Object {$null -ne (Get-PhotoField $_.metadata 'LivePhotoVideoIndex')}).Count -eq 0}
         if($hasId -and -not $complete -and $entries.Count -gt 1) {
             # Ambiguous relations are stored together with their original context.
             $complete=$false
         }
         $dated=@($entries | Where-Object {[IO.Path]::GetExtension($_.file.relative_path).ToLowerInvariant() -notin @('.mov','.mp4')})
         $dateMeta=if($dated.Count){$dated[0].metadata}else{$entries[0].metadata}
-        $date=$null;$offset=$null;$bucket='_undated';$dateSource='unknown'
+        $date=$null;$offset=$null;$subsec=$null;$utc=$null;$confidence='unknown';$bucket='_undated';$dateSource='unknown'
         if($dateMeta -and -not (Get-PhotoField $dateMeta 'MetadataConflict' $false)) {
             foreach($field in @('DateTimeOriginal','CreationDate')) {
                 $value=[string](Get-PhotoField $dateMeta $field)
@@ -248,6 +287,15 @@ function New-PhotoAssets([object[]]$FileRecords,[object[]]$Metadata=@()) {
                         $date=$value;$bucket=('{0:0000}\{1:00}' -f $parsed.Year,$parsed.Month);$dateSource=$field
                         $offset=Get-PhotoField $dateMeta 'OffsetTimeOriginal'
                         if(-not $offset -and $Matches[7]){$offset=$Matches[7]}
+                        $fraction=[regex]::Match($value,'\.(\d+)')
+                        $subsec=if($fraction.Success){$fraction.Groups[1].Value}else{Get-PhotoField $dateMeta 'SubSecTimeOriginal'}
+                        $confidence='local_time_only'
+                        if($offset -match '^(Z|[+-]\d{2}:\d{2})$') {
+                            $iso=$parsed.ToString('yyyy-MM-ddTHH:mm:ss',[Globalization.CultureInfo]::InvariantCulture)
+                            if($subsec -match '^\d+$'){$iso+='.'+([string]$subsec).Substring(0,[Math]::Min(7,([string]$subsec).Length))}
+                            $zoned=[DateTimeOffset]::MinValue
+                            if([DateTimeOffset]::TryParse($iso+$offset,[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::None,[ref]$zoned)){$utc=$zoned.UtcDateTime.ToString('o');$confidence='offset_verified'}
+                        }
                         break
                     }
                 }
@@ -255,7 +303,7 @@ function New-PhotoAssets([object[]]$FileRecords,[object[]]$Metadata=@()) {
         }
         $identity=[ordered]@{schema_version=2;components=@($components | Sort-Object role,@{Expression={$_.file.sha256}} | ForEach-Object {[ordered]@{role=$_.role;sha256=$_.file.sha256}});association=if($complete){'Complete'}else{'PendingAssociation'};context=if($complete){$null}else{$key}}
         $id=Get-PhotoTextHash ($identity | ConvertTo-Json -Depth 8 -Compress)
-        [pscustomobject]@{asset_id=$id;components=$components;capture_date_raw=$date;capture_offset=$offset;date_source=$dateSource;calendar_bucket=$bucket;association_status=if($complete){'Complete'}else{'PendingAssociation'};version=2;aliases=@($components.file | ForEach-Object {[pscustomobject]@{source_alias=$_.source_alias;relative_path=$_.relative_path}})}
+        [pscustomobject]@{asset_id=$id;components=$components;capture_date_raw=$date;capture_offset=$offset;capture_subsec_raw=$subsec;capture_utc=$utc;date_confidence=$confidence;date_source=$dateSource;calendar_bucket=$bucket;association_status=if($complete){'Complete'}else{'PendingAssociation'};version=2;aliases=@($components.file | ForEach-Object {[pscustomobject]@{source_alias=$_.source_alias;relative_path=$_.relative_path}})}
     }
 }
 function Convert-PhotoCanonicalValue($Value) {
@@ -332,7 +380,7 @@ function New-PhotoMigrationPlan($Config,[object[]]$FileRecords,[object[]]$Assets
                 foreach($component in $asset.components){$dispositions.Add([pscustomobject]@{source=$component.file;operation='Retain';asset_id=$asset.asset_id;reason='RetainCapacity'})}
                 continue
             } else { $mediaBytes+=$assetBytes;if($assetBytes -gt $largestAsset){$largestAsset=$assetBytes} }
-            $action=[pscustomobject]@{action_id=[guid]::NewGuid().ToString('N');asset_id=$asset.asset_id;operation=$operation;association_status=$asset.association_status;capture_date_raw=$asset.capture_date_raw;capture_offset=$asset.capture_offset;date_source=$asset.date_source;components=$components}
+            $action=[pscustomobject]@{action_id=[guid]::NewGuid().ToString('N');asset_id=$asset.asset_id;operation=$operation;association_status=$asset.association_status;capture_date_raw=$asset.capture_date_raw;capture_offset=$asset.capture_offset;capture_subsec_raw=(Get-PhotoField $asset 'capture_subsec_raw');capture_utc=(Get-PhotoField $asset 'capture_utc');date_confidence=(Get-PhotoField $asset 'date_confidence' 'unknown');date_source=$asset.date_source;components=$components}
             $ids[$asset.asset_id]=$action;$actions.Add($action)
         } else {
             $action=$ids[$asset.asset_id]

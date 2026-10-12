@@ -16,6 +16,7 @@ function Invoke-ICloudPhotoArchive($Config,[hashtable]$Adapters=@{},[switch]$For
         if(-not $acquired){return [pscustomobject]@{Status='AlreadyRunning';Scope=$scope;Copied=0;Pending=0;FullLibraryVerified=$false}}
         $state=Read-PhotoCheckpoint $Config
         $index=Get-PhotoReceiptIndex $Config $Adapters
+        if($index.invalid_lines){$index=Repair-PhotoReceiptTails $Config $index $Adapters}
         if($index.invalid_lines){throw 'CorruptReceiptJournal'}
         $fullDue=$ForceFresh -or (-not $state.last_full_verified_utc) -or ([DateTime]::UtcNow-[DateTime]::Parse($state.last_full_verified_utc)).TotalDays -ge $Config.full_hash_interval_days
         if($fullDue) {
@@ -35,7 +36,7 @@ function Invoke-ICloudPhotoArchive($Config,[hashtable]$Adapters=@{},[switch]$For
         if($ready.Count){$rows=@(Get-PhotoInventory -Config $Config -Aliases @('ICLOUD') -HashMode $hashMode -Adapters $Adapters -RelativePaths @($ready.relative_path) -HashCache $state.source_hashes)}
         foreach($row in $pending){$rows+=$row}
         $meta=@();$needMetadata=@()
-        $toolKey=if($Config.exiftool){$Config.exiftool.sha256}else{'fixture-metadata'}
+        $toolKey=if($Config.exiftool){Get-PhotoTextHash (Convert-PhotoCanonicalValue $Config.exiftool | ConvertTo-Json -Depth 16 -Compress)}else{'fixture-metadata'}
         foreach($row in $rows | Where-Object read_status -eq Available) {
             $key=$row.full_path.ToLowerInvariant()
             if($state.metadata.ContainsKey($key) -and $state.metadata[$key].sha256 -ceq $row.sha256 -and $state.metadata[$key].tool_key -ceq $toolKey){$meta+=$state.metadata[$key].value}
@@ -63,8 +64,8 @@ function Invoke-ICloudPhotoArchive($Config,[hashtable]$Adapters=@{},[switch]$For
             $baseline=Get-Content -LiteralPath $backfillBaseline -Raw -Encoding UTF8 | ConvertFrom-Json
             $oldPaths=@{};foreach($b in $baseline){$oldPaths[$b.relative_path.ToLowerInvariant()]=$b}
             $assets=@($assets | Sort-Object @{Expression={
-                $row=$_.components[0].file;$key=$row.relative_path.ToLowerInvariant()
-                if(-not $oldPaths.ContainsKey($key) -or $oldPaths[$key].size_bytes -ne $row.size_bytes -or $oldPaths[$key].mtime_ticks -ne $row.mtime_ticks){0}else{1}
+                $changed=@($_.components | Where-Object {$row=$_.file;$key=$row.relative_path.ToLowerInvariant();-not $oldPaths.ContainsKey($key) -or $oldPaths[$key].size_bytes -ne $row.size_bytes -or $oldPaths[$key].mtime_ticks -ne $row.mtime_ticks}).Count -gt 0
+                if($changed){0}else{1}
             }})
             $media=Get-PhotoBoundVolume $Config $Config.archive_root $Adapters
             $copyBudget=[Math]::Max(0L,$media.free_bytes-[long]$Config.reserve_f_bytes-8589934592L)
@@ -80,12 +81,14 @@ function Invoke-ICloudPhotoArchive($Config,[hashtable]$Adapters=@{},[switch]$For
         }}
         $state.run_count++
         Save-PhotoCheckpoint -Config $Config -State $state | Out-Null
+        Remove-ExpiredPhotoRunLogs $Config | Out-Null
         $after=@(Get-PhotoInventory -Config $Config -Aliases @('ICLOUD') -HashMode MetadataOnly -Adapters $Adapters)
         $beforePaths=@($listed | ForEach-Object relative_path)
         $newAfter=@($after | Where-Object {$_.relative_path -notin $beforePaths}).Count
         $capacityRetained=@($receipt.retained | Where-Object reason -eq RetainCapacity).Count
         $incomplete=@($assets | Where-Object association_status -ne Complete).Count+$newAfter+$capacityRetained
-        return [pscustomobject]@{Status=if($incomplete){'PendingIncomplete'}else{'SnapshotVerified'};Scope=$scope;Listed=$listed.Count;Copied=$receipt.new_files;CommittedAssets=$receipt.committed.Count;Retained=$receipt.retained.Count;RetainCapacity=$capacityRetained;Pending=$incomplete;NewAfterSnapshot=$newAfter;FullLibraryVerified=$false;FullVerificationPerformed=[bool]$fullDue;RunId=$receipt.run_id;FinishedAtUtc=[DateTime]::UtcNow.ToString('o')}
+        $free=Get-PhotoBoundVolume $Config $Config.archive_root $Adapters
+        return [pscustomobject]@{Status=if($incomplete){'PendingIncomplete'}else{'SnapshotVerified'};Scope=$scope;Listed=$listed.Count;Copied=$receipt.new_files;CommittedAssets=$receipt.committed.Count;Retained=$receipt.retained.Count;RetainCapacity=$capacityRetained;Pending=$incomplete;NewAfterSnapshot=$newAfter;FullLibraryVerified=$false;FullVerificationPerformed=[bool]$fullDue;RunId=$receipt.run_id;FreeFBytes=$free.free_bytes;LowSpaceWarning=($free.free_bytes -lt $Config.warn_f_bytes);FinishedAtUtc=[DateTime]::UtcNow.ToString('o')}
     } finally {if($acquired){$mutex.ReleaseMutex()};$mutex.Dispose()}
 }
 Export-ModuleMember -Function Invoke-ICloudPhotoArchive

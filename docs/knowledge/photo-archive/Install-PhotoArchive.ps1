@@ -58,12 +58,12 @@ function Install-PhotoArchiveRelease($Config,[string]$CodeRoot,[hashtable]$Expec
     return [pscustomobject]@{Files=$ExpectedHashes.Count;ReleaseRoot=$Config.release_code_root;Manifest=(Join-Path $Config.release_code_root 'release-manifest.private.json')}
 }
 function Get-PhotoTaskControl($Config,[string]$Name,[hashtable]$Adapters=@{}) {
-    if($Adapters.ContainsKey('TaskRead')){Get-PhotoBoundVolume $Config $Config.archive_root $Adapters | Out-Null;return & $Adapters.TaskRead $Name}
+    if($Adapters.ContainsKey('TaskRead')){Get-PhotoBoundVolume $Config $Config.state_root $Adapters | Out-Null;return & $Adapters.TaskRead $Name}
     $task=Get-ScheduledTask -TaskName $Name
     return [pscustomobject]@{xml=(Export-ScheduledTask -TaskName $Name);state=[string]$task.State;enabled=[bool]$task.Settings.Enabled}
 }
 function Set-PhotoTaskEnabled($Config,[string]$Name,[bool]$Enabled,[hashtable]$Adapters=@{}) {
-    if($Adapters.ContainsKey('TaskEnabled')){Get-PhotoBoundVolume $Config $Config.archive_root $Adapters | Out-Null;& $Adapters.TaskEnabled $Name $Enabled | Out-Null;return}
+    if($Adapters.ContainsKey('TaskEnabled')){Get-PhotoBoundVolume $Config $Config.state_root $Adapters | Out-Null;& $Adapters.TaskEnabled $Name $Enabled | Out-Null;return}
     if($Enabled){Enable-ScheduledTask -TaskName $Name | Out-Null}else{Disable-ScheduledTask -TaskName $Name | Out-Null}
 }
 function Assert-PhotoRelease($Config) {
@@ -73,6 +73,7 @@ function Assert-PhotoRelease($Config) {
     foreach($p in $manifest.files.PSObject.Properties){if((Get-PhotoSha256 (Resolve-PhotoPath $Config.release_code_root $p.Name)) -cne $p.Value.ToLowerInvariant()){throw 'ReleaseMismatch'}}
 }
 function Assert-PhotoControlSnapshot($Config,$ControlReceipt) {
+    if(-not(Test-PhotoPathWithin $Config.task_binding_file $Config.state_root)){throw 'InvalidControlBindingPath'}
     $binding=Get-Content -LiteralPath $Config.task_binding_file -Raw -Encoding UTF8 | ConvertFrom-Json
     if($ControlReceipt.task_name -cne $binding.task_name -or -not(Test-PhotoPathWithin $ControlReceipt.root $Config.state_root)){throw 'WrongControlSnapshot'}
     foreach($copy in $ControlReceipt.copies) {
@@ -117,8 +118,10 @@ function Switch-PhotoArchiveTask($Config,$ControlReceipt,[hashtable]$Adapters=@{
     } finally {if($acquired){$mutex.ReleaseMutex()};$mutex.Dispose();Set-PhotoTaskEnabled $Config $binding.task_name $task.enabled $Adapters}
 }
 function Undo-PhotoArchiveDeployment($Config,$ControlReceipt,[hashtable]$Adapters=@{}) {
-    Assert-ArchiveBindings $Config $Adapters | Out-Null
+    Assert-PhotoRecoveryBindings $Config $Adapters
     $binding=Assert-PhotoControlSnapshot $Config $ControlReceipt
+    $c=@($Config.source_roots | Where-Object alias -eq OLD_C)[0]
+    foreach($copy in $ControlReceipt.copies){$volume=Get-PhotoBoundVolume $Config $copy.source $Adapters;if($volume.volume_id -cne $c.volume_id -or $volume.disk_id -cne $c.disk_id){throw 'WrongControlVolume'}}
     $task=Get-PhotoTaskControl $Config $binding.task_name $Adapters
     if($task.state -eq 'Running'){throw 'TaskRunning'}
     $mutex=[Threading.Mutex]::new($false,$Config.mutex_name);$acquired=$false

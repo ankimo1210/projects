@@ -37,6 +37,7 @@ function New-PhotoCleanupPlan($Config,$Receipt,[object[]]$IndependentProofs=@(),
         $reason=$blocked
         if($source.source_alias -eq 'ICLOUD'){$reason='CloudCacheOnly'}
         elseif($record.association_status -ne 'Complete'){$reason='PendingAssociation'}
+        elseif((Get-PhotoField $record 'association_revision' 0) -lt 3){$reason='LegacyAssociationNeedsRevalidation'}
         elseif(($source.attributes -band 0x4400) -or @($source.streams).Count){$reason='SpecialSourceProtected'}
         $matching=@()
         if(-not $reason) {
@@ -82,7 +83,7 @@ function Invoke-PhotoCleanup($Config,$CleanupPlan,[hashtable]$Adapters=@{}) {
         try{$acquired=$mutex.WaitOne(0)}catch [Threading.AbandonedMutexException]{$acquired=$true}
         if(-not $acquired){throw 'AlreadyRunning'}
         $journal=Resolve-PhotoPath $Config.state_root ('cleanup\'+$CleanupPlan.cleanup_id+'.jsonl')
-        $moved=0;$deleted=0;$waiting=0
+        $moved=0;$deleted=0;$waiting=0;$alreadyDeleted=0
         foreach($item in $CleanupPlan.eligible) {
             $sourcePath=Get-PhotoSourcePath $Config $item.source
             if(-not $sourcePath.Equals($item.path,[StringComparison]::OrdinalIgnoreCase)){throw 'CleanupSourceMismatch'}
@@ -94,6 +95,7 @@ function Invoke-PhotoCleanup($Config,$CleanupPlan,[hashtable]$Adapters=@{}) {
             $dest=Resolve-PhotoPath $Config.archive_root $item.destination_relative_path
             if((Get-PhotoSha256 $dest) -cne $item.sha256){throw 'ArchiveChanged'}
             if(-not(Test-Path -LiteralPath $holdReceipt)) {
+                Assert-PhotoSourceStreamsProtected $sourcePath
                 Assert-PhotoSourceFresh $Config $item.source $item.sha256 $Adapters | Out-Null
                 $sourceVolume=Get-PhotoBoundVolume $Config $sourcePath $Adapters;$holdVolume=Get-PhotoBoundVolume $Config $held $Adapters
                 if($sourceVolume.disk_id -cne $holdVolume.disk_id -or $sourceVolume.volume_id -cne $holdVolume.volume_id){throw 'CrossVolumeRetentionForbidden'}
@@ -107,17 +109,25 @@ function Invoke-PhotoCleanup($Config,$CleanupPlan,[hashtable]$Adapters=@{}) {
                 $hold=Get-Content -LiteralPath $holdReceipt -Raw -Encoding UTF8 | ConvertFrom-Json
                 if($hold.cleanup_sha256 -cne $CleanupPlan.cleanup_sha256 -or $hold.held -cne $held){throw 'RetentionReceiptChanged'}
                 if(-not(Test-Path -LiteralPath $held) -and (Test-Path -LiteralPath $sourcePath)){throw 'RetentionMoveIncomplete'}
+                if(-not(Test-Path -LiteralPath $held)) {
+                    $deletion=@()
+                    if(Test-Path -LiteralPath $journal){foreach($line in Get-Content -LiteralPath $journal){try{$j=$line | ConvertFrom-Json;if($j.state -in @('DeleteIntent','DeletedVerifiedCopy') -and $j.source -ceq $sourcePath -and $j.held -ceq $held -and $j.sha256 -ceq $item.sha256 -and $j.cleanup_sha256 -ceq $CleanupPlan.cleanup_sha256){$deletion+= $j}}catch{}}}
+                    if(-not $deletion.Count -or ([DateTimeOffset]::Parse([string]$deletion[-1].utc)-[DateTimeOffset]::Parse([string]$hold.moved_at_utc)).TotalDays -lt $Config.retention_days){throw 'UnexplainedRetainedCopyMissing'}
+                    $alreadyDeleted++;continue
+                }
+                Assert-PhotoSourceStreamsProtected $held
                 if((Get-PhotoSha256 $held) -cne $item.sha256){throw 'RetainedSourceChanged'}
                 if(([DateTime]::UtcNow-[DateTime]::Parse($hold.moved_at_utc)).TotalDays -lt $Config.retention_days){$waiting++;continue}
                 Assert-ArchiveBindings $Config $Adapters | Out-Null
                 if((Get-PhotoSha256 $dest) -cne $item.sha256 -or @($item.proofs | Where-Object {Test-PhotoIndependentProof $Config $_ $item.sha256 $sourcePath $Adapters}).Count -eq 0){throw 'FinalCopyVerificationFailed'}
                 Assert-PhotoNoDirectoryLinks (Split-Path -Parent $held)
-                if([long](Get-Item -LiteralPath $held -Force).Attributes -band 0x4400){throw 'ProtectedRetainedSource'}
+                Assert-PhotoSourceStreamsProtected $held
+                Write-PhotoJournalLine $journal ([pscustomobject]@{state='DeleteIntent';source=$sourcePath;held=$held;sha256=$item.sha256;cleanup_sha256=$CleanupPlan.cleanup_sha256;utc=[DateTime]::UtcNow.ToString('o')})
                 Remove-Item -LiteralPath $held -Force;$deleted++
-                Write-PhotoJournalLine $journal ([pscustomobject]@{state='DeletedVerifiedCopy';source=$sourcePath;sha256=$item.sha256;utc=[DateTime]::UtcNow.ToString('o')})
+                Write-PhotoJournalLine $journal ([pscustomobject]@{state='DeletedVerifiedCopy';source=$sourcePath;held=$held;sha256=$item.sha256;cleanup_sha256=$CleanupPlan.cleanup_sha256;utc=[DateTime]::UtcNow.ToString('o')})
             }
         }
-        return [pscustomobject]@{MovedToRetention=$moved;Deleted=$deleted;Waiting=$waiting;CleanupId=$CleanupPlan.cleanup_id;EarliestDeletionUtc=[DateTime]::UtcNow.AddDays($Config.retention_days).ToString('o')}
+        return [pscustomobject]@{MovedToRetention=$moved;Deleted=$deleted;Waiting=$waiting;AlreadyDeleted=$alreadyDeleted;CleanupId=$CleanupPlan.cleanup_id;EarliestDeletionUtc=[DateTime]::UtcNow.AddDays($Config.retention_days).ToString('o')}
     } finally {if($acquired){$mutex.ReleaseMutex()};$mutex.Dispose()}
 }
 function Release-VerifiedCloudCache($Config,$Receipt,[hashtable]$Adapters=@{}) {
