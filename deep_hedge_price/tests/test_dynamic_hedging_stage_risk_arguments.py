@@ -158,6 +158,66 @@ def test_actual_dispatch_wall_cap_does_not_change_stage_financial_arguments(monk
     assert raw["value"]["blocks"] == 16
 
 
+class CountingRows(dict):
+    """Deferred-evidence stand-in: every access returns a fresh decoded copy."""
+
+    def __init__(self, rows):
+        super().__init__(rows)
+        self.reads = {}
+
+    def __getitem__(self, key):
+        self.reads[key] = self.reads.get(key, 0) + 1
+        return copy.deepcopy(super().__getitem__(key))
+
+
+def shared_risk_case(monkeypatch):
+    parameters, surface, stage, rows, _, _ = stage_case(monkeypatch)
+    pair = rows.pop("pair")
+    bindings = []
+    for index in range(3):
+        identifier = f"pair{index}"
+        rows[identifier] = copy.deepcopy(pair) | {"id": identifier}
+        bindings.append(
+            {"job_id": identifier, "base_risk_job_id": "risk", "refined_risk_job_id": "risk"}
+        )
+    stage["pnl_bindings"]["pnl"] = bindings
+    return parameters, surface, stage, rows
+
+
+def test_shared_risk_producer_is_read_once_with_the_same_binding(monkeypatch):
+    parameters, surface, stage, rows = shared_risk_case(monkeypatch)
+    counted = CountingRows(rows)
+    checked = checker.check_teacher_stage_risk_sources(
+        parameters, surface, stage_plan=stage, rows=counted
+    )
+    assert checked["bound_pair_count"] == 3
+    assert counted.reads["risk"] == 1  # previously once per pair and side
+    assert counted.reads["asian:Heston"] == counted.reads["asian:local"] == 1
+    assert counted.reads["call:Heston"] == counted.reads["call:local"] == 2
+    assert all(counted.reads[f"pair{index}"] == 1 for index in range(3))
+    plain = checker.check_teacher_stage_risk_sources(
+        parameters, surface, stage_plan=stage, rows=rows
+    )
+    assert pilot.input_identity(checked) == pilot.input_identity(plain)
+
+
+@pytest.mark.parametrize("field", ["refined_risk_source", "refined_risk", "refined_dataset"])
+def test_shared_risk_digest_still_rejects_a_later_substituted_pair(monkeypatch, field):
+    parameters, surface, stage, rows = shared_risk_case(monkeypatch)
+    last = rows["pair2"]["raw"]
+    changed = copy.deepcopy(last[field])
+    if field == "refined_dataset":
+        changed["prices"][-1, -1, -1] += 0.01
+    else:
+        # The structural risk targets are NaN; change its finite block count.
+        (changed["value"] if field == "refined_risk_source" else changed)["blocks"] += 1
+    last[field] = changed
+    with pytest.raises(ValueError, match=r"stage (paired|actual risk)"):
+        checker.check_teacher_stage_risk_sources(
+            parameters, surface, stage_plan=stage, rows=CountingRows(rows)
+        )
+
+
 def test_preexisting_explicit_cap_argument_keeps_full_stage_binding(monkeypatch):
     assert check_stage(stage_case(monkeypatch, explicit_cap=True))["bound_pair_count"] == 1
 

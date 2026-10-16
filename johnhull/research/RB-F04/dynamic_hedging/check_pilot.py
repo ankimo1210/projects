@@ -10,6 +10,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from time import perf_counter_ns, process_time_ns
@@ -42,6 +43,67 @@ def _path_order(record, n):
         np.array_equal(np.asarray(record["path_ids"]), np.arange(n)),
         "original absolute path ordering mismatch",
     )
+
+
+# Marks a key that was absent when one read was reduced to retained digests; the
+# original KeyError is raised at the same use site instead of at read time.
+_ABSENT = object()
+
+
+def _present(value, key):
+    if value is _ABSENT:
+        raise KeyError(key)
+    return value
+
+
+def _progress(message):
+    """One stderr line for long native/saved jobs; never part of any result or receipt."""
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    print(f"{stamp} [rb-f04] {message}", file=sys.stderr, flush=True)
+
+
+def _stage_row_facts(row):
+    """Identity fields that stage date/P&L projections compare after the row checks."""
+    raw = row["raw"]
+    keys = ("model", "date_index", "original_n", "refinement_kind", "refined_risk_width_index")
+    facts = {k: raw[k] for k in keys if k in raw}
+    if "identity" in raw:
+        identity = raw["identity"]
+        facts["identity"] = (
+            {k: identity[k] for k in ("id",) if k in identity}
+            if isinstance(identity, dict)
+            else identity
+        )
+    return {"operation": row["operation"], "raw": facts}
+
+
+def _recompute_memo(verification_context):
+    """Process-local verified-recomputation memo; never serialized or deserialized.
+
+    It lives beside the teacher memo, so fresh/review/restore contexts start empty.
+    """
+    if verification_context is None:
+        return {}
+    return verification_context.setdefault("recompute_memo", {})
+
+
+def _verified_once(memo, kind, record, verify):
+    """Run one deterministic saved-record recomputation once per identical record.
+
+    The key binds the complete record digest (tree, scalars, array bytes, shapes
+    and dtypes), so any changed value misses and recomputes in full. Only the
+    small value returned by verify is retained; failures are never remembered.
+    A record without a saved-format digest is recomputed exactly as before.
+    """
+    if memo is None:
+        return verify()
+    try:
+        key = kind + ":" + saved_storage.payload_digest(record)
+    except ValueError:
+        return verify()
+    if key not in memo:
+        memo[key] = verify()
+    return copy.deepcopy(memo[key])
 
 
 def _moments(samples, original_n):
@@ -213,7 +275,8 @@ def paired_pnl_metrics(base, refined, *, original_n, path_ids=None):
     }
 
 
-def check_paired_pnl_record(record):
+def check_paired_pnl_record(record, *, memo=None):
+    """Check one paired cell; memo shares full recomputation of identical producers."""
     n = record["original_n"]
     _path_order(record, n)
     shared_checked = False
@@ -233,7 +296,7 @@ def check_paired_pnl_record(record):
             )
     if record.get("shared_market") is not None:
         shared = record["shared_market"]
-        check_market_pair_record(shared)
+        _verified_once(memo, "market_pair", shared, lambda: check_market_pair_record(shared))
         expected = saved_storage.payload_digest(
             {k: shared[k] for k in ("seed", "driver_map", "original_n", "levels", "frequencies")}
         )
@@ -257,7 +320,11 @@ def check_paired_pnl_record(record):
         source = record.get(prefix + "_risk_source")
         if source is not None:
             if source.get("kind") == "bump_risk":
-                check_bump_risk_record(source)
+
+                def verify_bump(source=source):
+                    check_bump_risk_record(source)
+
+                _verified_once(memo, "bump_risk", source, verify_bump)
                 index = record.get(prefix + "_risk_width_index")
                 if index is not None:
                     _require(
@@ -270,7 +337,7 @@ def check_paired_pnl_record(record):
                 else:
                     risk = source["value"]
             elif source.get("kind") == "quote_risk":
-                check_wrapped_operation(source, "quote_risk", {})
+                check_wrapped_operation(source, "quote_risk", {"recompute_memo": memo})
                 risk = source["value"]
             else:
                 raise ValueError("unknown original paired risk producer")
@@ -2048,14 +2115,22 @@ def check_wrapped_operation(raw, operation, context):
     args = unpack_inputs(raw["arguments"])
     value = raw["value"]
     _require(raw["kind"] == operation, "saved operation kind changed")
+    # Identical saved records (for example one risk producer embedded in every
+    # paired cell) recompute once per verification context; results stay raw.
+    memo = context.get("recompute_memo")
     if operation == "quote_risk" and raw.get("chunked_worker") is not None:
         from check_main import check_risk_job
 
         source = raw["chunked_worker"]
-        computed = check_risk_job(
-            source, args["parameters"], args["surface"], args["dataset"], args["caches"]
-        )
-        runner._same(computed["risk"], value, "saved bounded original quote risk value")
+
+        def verify_chunked():
+            computed = check_risk_job(
+                source, args["parameters"], args["surface"], args["dataset"], args["caches"]
+            )
+            runner._same(computed["risk"], value, "saved bounded original quote risk value")
+            return computed["processed_n"]
+
+        processed_n = _verified_once(memo, "wrapped:quote_risk:chunked", raw, verify_chunked)
         _require(
             raw["status"] == source["status"]
             and raw["original_n"] == args["dataset"]["original_n"],
@@ -2064,56 +2139,69 @@ def check_wrapped_operation(raw, operation, context):
         return {
             "original_n": raw["original_n"],
             "value": value,
-            "processed_n": computed["processed_n"],
+            "processed_n": processed_n,
             "financial_qualification": "unknown",
             "scope": "saved_quote_risk",
             "chunked": True,
         }
     if operation == "quote_risk":
-        computed = study.quote_risk_dataset(**args)
-        runner._same(
-            _without_timing(computed), _without_timing(value), "saved observable quote risk"
-        )
-    elif operation in ("roster", "validation"):
-        fn = study.test_roster if operation == "roster" else study.select_validation
-        computed = fn(**args)
-        runner._same(
-            _without_timing(computed), _without_timing(value), "saved original policy roster"
-        )
-        rows = value["cells"] if operation == "roster" else value["candidates"]
-        for row in rows:
-            result = row["result"] if operation == "roster" else value["rollouts"][row["id"]]
-            replay.check_cash(args["dataset"], result)
-    elif operation == "call_cache":
-        _require(
-            np.asarray(value["values"]).shape
-            == (len(value["dates"]), len(value["spot_nodes"]), len(value["state_nodes"])),
-            "call original Cartesian values missing",
-        )
-        _require(
-            len(value["spot_nodes"]) >= 4 and len(value["state_nodes"]) >= 4,
-            "original call cubic stencil missing",
-        )
-        for key in ("dates", "spot_nodes", "state_nodes", "model"):
-            runner._same(args[key], value[key], "actual call cache input " + key)
-        for j in range(len(value["dates"])):
-            S, V = np.meshgrid(value["spot_nodes"], value["state_nodes"], indexing="ij")
-            computed = evaluate_call(value, j, S, V)
+
+        def verify():
+            computed = study.quote_risk_dataset(**args)
             runner._same(
-                computed["value"], value["values"][j], "original saved call node evaluation"
+                _without_timing(computed), _without_timing(value), "saved observable quote risk"
             )
+
+    elif operation in ("roster", "validation"):
+
+        def verify():
+            fn = study.test_roster if operation == "roster" else study.select_validation
+            computed = fn(**args)
+            runner._same(
+                _without_timing(computed), _without_timing(value), "saved original policy roster"
+            )
+            rows = value["cells"] if operation == "roster" else value["candidates"]
+            for row in rows:
+                result = row["result"] if operation == "roster" else value["rollouts"][row["id"]]
+                replay.check_cash(args["dataset"], result)
+
+    elif operation == "call_cache":
+
+        def verify():
+            _require(
+                np.asarray(value["values"]).shape
+                == (len(value["dates"]), len(value["spot_nodes"]), len(value["state_nodes"])),
+                "call original Cartesian values missing",
+            )
+            _require(
+                len(value["spot_nodes"]) >= 4 and len(value["state_nodes"]) >= 4,
+                "original call cubic stencil missing",
+            )
+            for key in ("dates", "spot_nodes", "state_nodes", "model"):
+                runner._same(args[key], value[key], "actual call cache input " + key)
+            for j in range(len(value["dates"])):
+                S, V = np.meshgrid(value["spot_nodes"], value["state_nodes"], indexing="ij")
+                computed = evaluate_call(value, j, S, V)
+                runner._same(
+                    computed["value"], value["values"][j], "original saved call node evaluation"
+                )
+
     elif operation == "market":
-        dataset = value
-        generator = args["generator"].lower() if "generator" in args else args["model"].lower()
-        replay.check_market(
-            dataset,
-            fixing_times=np.arange(1, 13) / 12,
-            call_cache=args["call_cache"],
-            generator=generator,
-            latent_state=dataset["market"]["variance"] if generator == "heston" else None,
-        )
+
+        def verify():
+            dataset = value
+            generator = args["generator"].lower() if "generator" in args else args["model"].lower()
+            replay.check_market(
+                dataset,
+                fixing_times=np.arange(1, 13) / 12,
+                call_cache=args["call_cache"],
+                generator=generator,
+                latent_state=dataset["market"]["variance"] if generator == "heston" else None,
+            )
+
     else:
         raise ValueError("standalone fit helper is not a pilot/main closure")
+    _verified_once(memo, "wrapped:" + operation, raw, verify)
     return {
         "original_n": value.get("original_n"),
         "value": value,
@@ -3073,7 +3161,10 @@ def _raw_job_check(job, context):
         runner._same(computed, raw, "whole original teacher candidate gate")
         return computed
     if op == "bump_risk":
-        return check_bump_risk_record(raw)
+        checked = check_bump_risk_record(raw)
+        # This full row recomputation also verifies identical paired-cell sources.
+        _verified_once(context.get("recompute_memo"), "bump_risk", raw, lambda: None)
+        return checked
     if op == "frequency_cache":
         return check_frequency_cache_record(raw)
     if op == "stream_receipts":
@@ -3177,7 +3268,12 @@ def _raw_job_check(job, context):
             result["current_verifier_source"] = authentication["verifier_source"]
         return result
     if op == "market_pair":
-        return check_market_pair_record(raw)
+        return _verified_once(
+            context.get("recompute_memo"),
+            "market_pair",
+            raw,
+            lambda: check_market_pair_record(raw),
+        )
     if op == "closure":
         from deep_hedge_price._dynamic_hedging_closure import check_training_closure
 
@@ -3242,7 +3338,7 @@ def _raw_job_check(job, context):
         checked = replay.check_cash(raw["dataset"], raw["rollout"])
         return {"scope": "saved_cash", "original_n": raw["dataset"]["original_n"], "check": checked}
     if op in ("paired_pnl", "cell_pair"):
-        return check_paired_pnl_record(raw)
+        return check_paired_pnl_record(raw, memo=context.get("recompute_memo"))
     if op == "Q":
         return check_q_record(raw)
     raise ValueError(f"required semantic operation remains unimplemented: {op}")
@@ -3856,6 +3952,36 @@ def _teacher_stage_cache_values(stage_plan, rows):
     values, hashes, identifiers = {}, {}, set()
     from run_pilot import input_identity
 
+    # Each producer is read and hashed at most once; the same arrays recur across
+    # all refinement kinds/sides. Every binding still applies the original checks.
+    calls, asians, digests = {}, {}, {}
+
+    def call_producer(identifier):
+        if identifier not in calls:
+            row = rows[identifier]
+            calls[identifier] = {
+                "typed": row.get("operation") == "call_cache"
+                and row["raw"].get("kind") == "call_cache",
+                "value": row["raw"].get("value", _ABSENT),
+            }
+        return calls[identifier]
+
+    def asian_producer(identifier):
+        if identifier not in asians:
+            row = rows[identifier]
+            asians[identifier] = {
+                "typed": row.get("operation") in ("teacher_grid", "teacher_domain_selection")
+                and row["raw"].get("kind") == "teacher_grid",
+                "cache": row["raw"].get("cache", _ABSENT),
+                "model": row["raw"].get("model", _ABSENT),
+            }
+        return asians[identifier]
+
+    def digest(identifier, value):
+        if identifier not in digests:
+            digests[identifier] = input_identity(value)
+        return digests[identifier]
+
     for kind, sides in declared.items():
         _require(set(sides) == {"base", "refined"}, "stage cache side bindings changed")
         values[kind], hashes[kind] = {}, {}
@@ -3869,27 +3995,21 @@ def _teacher_stage_cache_values(stage_plan, rows):
                 )
                 ci, ai = binding["call_job_id"], binding["asian_job_id"]
                 _require(ci in rows and ai in rows, "stage cache producer evidence missing")
-                call, asian = rows[ci], rows[ai]
+                call, asian = call_producer(ci), asian_producer(ai)
                 _require(
-                    call["operation"] == "call_cache"
-                    and call["raw"].get("kind") == "call_cache"
-                    and asian["operation"] in ("teacher_grid", "teacher_domain_selection")
-                    and asian["raw"].get("kind") == "teacher_grid",
+                    call["typed"] and asian["typed"],
                     "stage cache must use actual original typed producers",
                 )
-                c, a = call["raw"]["value"], asian["raw"]["cache"]
+                c, a = _present(call["value"], "value"), _present(asian["cache"], "cache")
                 _require(
                     c is not None
                     and a is not None
                     and c["model"] == a["model"] == model.lower()
-                    and asian["raw"]["model"] == model,
+                    and _present(asian["model"], "model") == model,
                     "stage cache model or unavailable producer changed",
                 )
                 values[kind][prefix][model.lower()] = {"call": c, "asian": a}
-                hashes[kind][prefix][model] = {
-                    "call": input_identity(c),
-                    "asian": input_identity(a),
-                }
+                hashes[kind][prefix][model] = {"call": digest(ci, c), "asian": digest(ai, a)}
                 identifiers.update((ci, ai))
     return values, hashes, identifiers
 
@@ -3939,7 +4059,17 @@ def check_teacher_stage_risk_sources(parameters, surface, *, stage_plan, rows):
     from run_pilot import input_identity, unpack_inputs
 
     caches, hashes, identifiers = _teacher_stage_cache_values(stage_plan, rows)
+    # The typed producer check above proved every Asian binding is a teacher row,
+    # so only declared call producers are read again here.
+    call_ids = {
+        binding["call_job_id"]
+        for sides in stage_plan["cache_bindings"].values()
+        for models in sides.values()
+        for binding in models.values()
+    }
     for identifier in identifiers:
+        if identifier not in call_ids:
+            continue
         row = rows[identifier]
         if row["operation"] != "call_cache":
             continue
@@ -3957,7 +4087,9 @@ def check_teacher_stage_risk_sources(parameters, surface, *, stage_plan, rows):
             or input_identity(args["surface"]) == input_identity(surface),
             "stage cache local field differs from actual risk field",
         )
-    risk_arguments, validations, fit_hashes = {}, {}, set()
+    # A risk producer is shared by many paired cells. Read and hash it once, then
+    # compare its retained digests with every pair's embedded and resolved copies.
+    risk_producers, cache_digests, validations, fit_hashes = {}, {}, {}, set()
     pairs = 0
     for kind, bindings in stage_plan["pnl_bindings"].items():
         for binding in bindings:
@@ -3992,16 +4124,17 @@ def check_teacher_stage_risk_sources(parameters, surface, *, stage_plan, rows):
             for prefix in ("base", "refined"):
                 ri = binding[prefix + "_risk_job_id"]
                 _require(ri in rows, "stage actual risk producer evidence missing")
-                source = rows[ri]
-                risk = source["raw"]
                 expected_op = (
                     "bump_risk" if kind == "position" and prefix == "refined" else "quote_risk"
                 )
-                _require(
-                    source["operation"] == risk.get("kind") == expected_op,
-                    "stage risk producer has wrong numerical method",
-                )
-                if ri not in risk_arguments:
+                producer = risk_producers.get(ri)
+                if producer is None:
+                    source = rows[ri]
+                    risk = source["raw"]
+                    _require(
+                        source["operation"] == risk.get("kind") == expected_op,
+                        "stage risk producer has wrong numerical method",
+                    )
                     source_args = unpack_inputs(source.get("arguments"))
                     _require(
                         isinstance(source_args, dict),
@@ -4037,24 +4170,48 @@ def check_teacher_stage_risk_sources(parameters, surface, *, stage_plan, rows):
                         input_identity(args["parameters"]) == input_identity(parameters),
                         "stage actual risk parameters changed",
                     )
-                    risk_arguments[ri] = {
+                    producer = {
+                        "method": expected_op,
                         "caches_sha256": input_identity(args["caches"]),
                         "dataset_sha256": input_identity(args["dataset"]),
+                        "risk_sha256": input_identity(risk),
                     }
-                    del args, source_args
-                bound_arguments = risk_arguments[ri]
+                    if expected_op == "bump_risk":
+                        variants = risk.get("risk_variants", _ABSENT)
+                        producer["variants_sha256"] = (
+                            _ABSENT
+                            if variants is _ABSENT
+                            else [input_identity(v) for v in variants]
+                        )
+                        base_risk = risk.get("base_risk", _ABSENT)
+                        producer["base_risk_sha256"] = (
+                            _ABSENT if base_risk is _ABSENT else input_identity(base_risk)
+                        )
+                    else:
+                        value = risk.get("value", _ABSENT)
+                        producer["value_sha256"] = (
+                            _ABSENT if value is _ABSENT else input_identity(value)
+                        )
+                    risk_producers[ri] = producer
+                    del args, source_args, source, risk
                 _require(
-                    bound_arguments["caches_sha256"] == input_identity(caches[kind][prefix]),
+                    producer["method"] == expected_op,
+                    "stage risk producer has wrong numerical method",
+                )
+                if (kind, prefix) not in cache_digests:
+                    cache_digests[kind, prefix] = input_identity(caches[kind][prefix])
+                _require(
+                    producer["caches_sha256"] == cache_digests[kind, prefix],
                     "stage actual risk cache differs from declared producer arrays",
                 )
                 _require(
-                    bound_arguments["dataset_sha256"]
+                    producer["dataset_sha256"]
                     == input_identity(raw[prefix + "_dataset"])
                     == input_identity(actual[prefix + "_dataset"]),
                     "stage actual risk dataset differs from paired original paths",
                 )
                 _require(
-                    input_identity(risk)
+                    producer["risk_sha256"]
                     == input_identity(raw[prefix + "_risk_source"])
                     == input_identity(actual[prefix + "_risk_source"]),
                     "stage paired risk producer substituted",
@@ -4067,15 +4224,16 @@ def check_teacher_stage_risk_sources(parameters, surface, *, stage_plan, rows):
                         and actual.get("refined_risk_width_index") == width,
                         "stage original position width binding changed",
                     )
-                    value = risk["risk_variants"][width]
+                    value_sha256 = _present(producer["variants_sha256"], "risk_variants")[width]
                     _require(
-                        input_identity(risk["base_risk"]) == input_identity(raw["base_risk"]),
+                        _present(producer["base_risk_sha256"], "base_risk")
+                        == input_identity(raw["base_risk"]),
                         "stage refit base risk differs from actual IFT producer",
                     )
                 else:
-                    value = risk["value"]
+                    value_sha256 = _present(producer["value_sha256"], "value")
                 _require(
-                    input_identity(value)
+                    value_sha256
                     == input_identity(raw[prefix + "_risk"])
                     == input_identity(actual[prefix + "_risk"]),
                     "stage paired actual risk value/width substituted",
@@ -4201,6 +4359,8 @@ def calculate_teacher_candidate_gate(
         and stage_plan["oracle_original_n"] == reference_n,
         "original ordered teacher reference rule/N changed",
     )
+    label = f"gate {model}:N{n}:{grid}"
+    _progress(f"{label} binding cache/risk producers")
     cache_risk_binding = check_teacher_stage_risk_sources(
         parameters, surface, stage_plan=stage_plan, rows=rows
     )
@@ -4214,10 +4374,21 @@ def calculate_teacher_candidate_gate(
         "surface": surface,
         "artifact_context": artifact_context,
         "teacher_verification_context": verification_context,
+        "recompute_memo": _recompute_memo(verification_context),
     }
     checks = {} if _check_store is None else _check_store
-    for identifier in rows:
+    # Deferred evidence decodes and authenticates a row on every access. Keep the
+    # row digest and the small identity fields the projections compare from this
+    # single pristine read instead of re-reading every row afterwards.
+    deferred = isinstance(rows, saved_storage.IndexedRows)
+    facts, evidence_digests = {}, {}
+    _progress(f"{label} checking {len(rows)} saved evidence rows")
+    for position, identifier in enumerate(rows, start=1):
+        begin = perf_counter_ns()
         row = rows[identifier]
+        if deferred:
+            evidence_digests[identifier] = saved_storage.payload_digest(row)
+            facts[identifier] = _stage_row_facts(row)
         manifest = {"n_paths": row["raw"].get("original_path_count")}
         checks[identifier] = _raw_job_check(
             {
@@ -4229,6 +4400,11 @@ def calculate_teacher_candidate_gate(
             dict(context, resolved_arguments=row.get("arguments", {})),
         )
         del row
+        _progress(
+            f"{label} checked {position}/{len(rows)} {identifier} "
+            f"({(perf_counter_ns() - begin) / 1e9:.1f}s)"
+        )
+    projection_rows = facts if deferred else rows
     teacher = rows[stage_plan["teacher_job_id"]]["raw"]
     higher = rows[stage_plan["next_teacher_job_id"]]["raw"]
     highgrid = rows[stage_plan["grid_teacher_job_id"]]["raw"]
@@ -4257,7 +4433,7 @@ def calculate_teacher_candidate_gate(
         )
     projected = []
     for binding in dates:
-        row = rows[binding["job_id"]]
+        row = projection_rows[binding["job_id"]]
         _require(
             row["operation"] == "date_gate"
             and row["raw"]["model"] == model
@@ -4301,7 +4477,7 @@ def calculate_teacher_candidate_gate(
     )
     for kind, bindings in stage_plan["pnl_bindings"].items():
         for binding in bindings:
-            row = rows[binding["job_id"]]
+            row = projection_rows[binding["job_id"]]
             _require(
                 row["operation"] in ("cell_pair", "paired_pnl")
                 and row["raw"]["identity"]["id"] == binding["cell_id"]
@@ -4328,6 +4504,7 @@ def calculate_teacher_candidate_gate(
                 )
             )
     passed = all(r["financial_qualification"] == "qualified" for r in projected)
+    _progress(f"{label} {'qualified' if passed else 'unknown'}")
     return {
         "kind": "teacher_candidate_gate",
         "model": model,
@@ -4346,9 +4523,11 @@ def calculate_teacher_candidate_gate(
         if passed
         else "original full stage numerical uncertainty/precision gate failed",
         "stage_plan_sha256": run_pilot_identity(stage_plan),
-        "raw_evidence_sha256": {
-            identifier: saved_storage.payload_digest(row) for identifier, row in rows.items()
-        },
+        "raw_evidence_sha256": (
+            evidence_digests
+            if deferred
+            else {identifier: saved_storage.payload_digest(row) for identifier, row in rows.items()}
+        ),
         "financial_qualification": "unknown",
         "scope": "teacher candidate numerical gate only; not formal pilot/main certification",
     }
@@ -4861,6 +5040,8 @@ def check_pilot_records(snapshot, *, expected_plan, context=None, job_store=None
         if source.get("files")
         else None
     )
+    # Never accept a caller memo: each saved check starts from an empty context.
+    context["recompute_memo"] = _recompute_memo(context["teacher_verification_context"])
     if "inputs" in context and "parameters" in context["inputs"]:
         from run_pilot import input_identity
 
@@ -4874,7 +5055,8 @@ def check_pilot_records(snapshot, *, expected_plan, context=None, job_store=None
     checks, issues = ({} if check_store is None else check_store), []
     activation_cache = {}
     planned_jobs = {} if expected_plan is None else {j["id"]: j for j in expected_plan["jobs"]}
-    for identifier in jobs:
+    for position, identifier in enumerate(jobs, start=1):
+        _progress(f"saved check {position}/{len(jobs)} {identifier}")
         try:
             job = jobs[identifier]
             if expected_plan is not None:
