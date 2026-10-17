@@ -5,8 +5,8 @@ read vintages whose ``release_date`` is strictly before ``T``. The measured cost
 of breaking it: 2026 Q1 stood at +1.8 before the 2026-08-17 release and at +1.9
 after it, because that release revised the quarter it was not reporting on.
 
-Business days come from ``market_rates`` rather than the holiday calendar, which
-is missing the year-end government and bank holidays.
+Business days come from the JGB rows in ``market_rates`` (``curve = 'jgb'``) rather
+than the holiday calendar, which is missing the year-end government and bank holidays.
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ SOURCE_URL = "computed://macrokit/expectations"
 
 def previous_business_day(con: duckdb.DuckDBPyConnection, when: date) -> date | None:
     row = con.execute(
-        "SELECT max(obs_date) FROM market_rates WHERE obs_date < ?", [when]
+        "SELECT max(obs_date) FROM market_rates WHERE curve = 'jgb' AND obs_date < ?", [when]
     ).fetchone()
     return row[0] if row and row[0] is not None else None
 

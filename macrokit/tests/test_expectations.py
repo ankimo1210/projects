@@ -3,7 +3,7 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-from macrokit import expectations
+from macrokit import expectations, store
 
 JST = ZoneInfo("Asia/Tokyo")
 
@@ -67,6 +67,45 @@ def test_prior_vintage_does_not_apply_to_a_first_preliminary(
 def test_previous_business_day_uses_market_rates_not_a_holiday_calendar(con, insert_rates):
     insert_rates(date(2026, 8, 13), date(2026, 8, 14), date(2026, 8, 17))
     assert expectations.previous_business_day(con, date(2026, 8, 17)) == date(2026, 8, 14)
+
+
+def test_previous_business_day_ignores_the_monthly_call_average_dated_on_the_first(con):
+    # The BoJ monthly average is dated on the 1st, which here is Sunday 2026-02-01.
+    # It shares market_rates with the JGB curve but is not a business day.
+    ingested = datetime(2026, 2, 3, 9, 0, tzinfo=JST)
+    store.insert_rates(
+        con,
+        [
+            store.RateObservation(
+                curve="jgb",
+                obs_date=date(2026, 1, 30),
+                tenor_y=10.0,
+                yield_pct=2.0,
+                source="mof_jgb",
+                source_url="u",
+                ingested_at=ingested,
+            ),
+            store.RateObservation(
+                curve="jgb",
+                obs_date=date(2026, 2, 2),
+                tenor_y=10.0,
+                yield_pct=2.1,
+                source="mof_jgb",
+                source_url="u",
+                ingested_at=ingested,
+            ),
+            store.RateObservation(
+                curve="jp_call_on_mavg",
+                obs_date=date(2026, 2, 1),
+                tenor_y=1 / 365,
+                yield_pct=0.5,
+                source="boj_api",
+                source_url="u",
+                ingested_at=ingested,
+            ),
+        ],
+    )
+    assert expectations.previous_business_day(con, date(2026, 2, 2)) == date(2026, 1, 30)
 
 
 def test_random_walk_crosses_the_year_boundary_into_the_prior_q4(
