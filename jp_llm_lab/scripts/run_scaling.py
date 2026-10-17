@@ -46,24 +46,54 @@ def main() -> None:
         n_params = ClassicalGPT(cfg).param_breakdown()["total"]
         model = ClassicalGPT(cfg)
         tcfg = TrainConfig(
-            seed=42, steps=args.steps, batch_size=24, grad_accum=1, context_len=512,
-            lr=6e-4, warmup_frac=0.03, weight_decay=0.1, dtype="bf16",
-            log_interval=50, eval_interval=args.steps, eval_batches=20, ratio_interval=100,
-            checkpoint_fracs=(1.0,), fixed_prompts=[], max_new_tokens=40,
+            seed=42,
+            steps=args.steps,
+            batch_size=24,
+            grad_accum=1,
+            context_len=512,
+            lr=6e-4,
+            warmup_frac=0.03,
+            weight_decay=0.1,
+            dtype="bf16",
+            log_interval=50,
+            eval_interval=args.steps,
+            eval_batches=20,
+            ratio_interval=100,
+            checkpoint_fracs=(1.0,),
+            fixed_prompts=[],
+            max_new_tokens=40,
         )
         run_dir = root / "experiments" / "runs" / f"m4_scaling_{name}_seed42"
-        result = train_lm(model, train_tokens, val_tokens, tcfg, run_dir, tokenizer=tok, device=device,
-                          extra_meta={"scaling_point": name})
-        points.append({
-            "name": name, "n_params": n_params,
-            "val_loss": result.final_eval["loss"], "ppl": result.final_eval["ppl"],
-            "tokens_seen": result.tokens_seen, "wallclock_sec": round(result.wallclock_sec, 1),
-        })
-        print(f"{name:3s} {n_params:>10,} params  val_loss {result.final_eval['loss']:.4f}  "
-              f"ppl {result.final_eval['ppl']:.1f}", flush=True)
+        result = train_lm(
+            model,
+            train_tokens,
+            val_tokens,
+            tcfg,
+            run_dir,
+            tokenizer=tok,
+            device=device,
+            extra_meta={"scaling_point": name},
+        )
+        points.append(
+            {
+                "name": name,
+                "n_params": n_params,
+                "val_loss": result.final_eval["loss"],
+                "ppl": result.final_eval["ppl"],
+                "tokens_seen": result.tokens_seen,
+                "wallclock_sec": round(result.wallclock_sec, 1),
+            }
+        )
+        print(
+            f"{name:3s} {n_params:>10,} params  val_loss {result.final_eval['loss']:.4f}  "
+            f"ppl {result.final_eval['ppl']:.1f}",
+            flush=True,
+        )
 
-    save_json({"points": points, "tokens_budget": args.steps * 24 * 512, "meta": collect_run_metadata()},
-              root / "experiments" / "comparisons" / "scaling.json")
+    save_json(
+        {"points": points, "tokens_budget": args.steps * 24 * 512, "meta": collect_run_metadata()},
+        root / "experiments" / "comparisons" / "scaling.json",
+    )
     print("saved experiments/comparisons/scaling.json")
 
 

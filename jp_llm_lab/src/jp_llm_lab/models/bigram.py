@@ -43,7 +43,9 @@ class CountBigramLM:
         return -self.log_probs[ids[:-1].long(), ids[1:].long()].mean().item()
 
     @torch.no_grad()
-    def generate(self, start_id: int, max_new_tokens: int, generator: torch.Generator | None = None) -> list[int]:
+    def generate(
+        self, start_id: int, max_new_tokens: int, generator: torch.Generator | None = None
+    ) -> list[int]:
         out = [start_id]
         probs = self.log_probs.exp()
         for _ in range(max_new_tokens):

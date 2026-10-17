@@ -67,16 +67,26 @@ def run_lbo_case(
 
     entry_ebitda = _entry_ebitda(assumptions)
     new_debt = entry_ebitda * float(scenario["debt_to_ebitda"])
-    transaction_fees = equity_purchase_price * float(transaction["transaction_fee_pct_equity_value"])
+    transaction_fees = equity_purchase_price * float(
+        transaction["transaction_fee_pct_equity_value"]
+    )
     financing_fees = new_debt * float(transaction["financing_fee_pct_new_debt"])
-    investigation_cost = float(scenario.get("investigation_cost_at_close", transaction["investigation_cost_at_close"]))
+    investigation_cost = float(
+        scenario.get("investigation_cost_at_close", transaction["investigation_cost_at_close"])
+    )
     min_cash = float(defaults["min_cash"])
     excess_cash_availability_pct = float(
         scenario.get("excess_cash_availability_pct", transaction["excess_cash_availability_pct"])
     )
     excess_cash_available = max(0.0, cash_balance - min_cash) * excess_cash_availability_pct
 
-    total_uses = equity_purchase_price + existing_debt + transaction_fees + financing_fees + investigation_cost
+    total_uses = (
+        equity_purchase_price
+        + existing_debt
+        + transaction_fees
+        + financing_fees
+        + investigation_cost
+    )
     sponsor_equity = total_uses - new_debt - excess_cash_available
     total_sources = sponsor_equity + new_debt + excess_cash_available
     post_close_cash = cash_balance - excess_cash_available
@@ -178,15 +188,23 @@ def run_all_cases() -> tuple[pd.DataFrame, pd.DataFrame]:
     return pd.DataFrame(summaries), pd.concat(details, ignore_index=True)
 
 
-def recommendation_from_outputs(outputs: pd.DataFrame, assumptions: dict[str, Any]) -> dict[str, Any]:
+def recommendation_from_outputs(
+    outputs: pd.DataFrame, assumptions: dict[str, Any]
+) -> dict[str, Any]:
     default_premium = float(assumptions["transaction_assumptions"]["default_premium"])
     default_case = outputs[
-        (outputs["scenario"] == "Sponsor") & (outputs["premium"].round(6) == round(default_premium, 6))
+        (outputs["scenario"] == "Sponsor")
+        & (outputs["premium"].round(6) == round(default_premium, 6))
     ].iloc[0]
-    low_premium_case = outputs[(outputs["scenario"] == "Sponsor") & (outputs["premium"].round(6) == 0.20)].iloc[0]
+    low_premium_case = outputs[
+        (outputs["scenario"] == "Sponsor") & (outputs["premium"].round(6) == 0.20)
+    ].iloc[0]
     thresholds = assumptions["return_thresholds"]
     gating_issue = True
-    clears_15 = bool(default_case["irr"] >= thresholds["irr"][0] and default_case["moic"] >= thresholds["moic"][0])
+    clears_15 = bool(
+        default_case["irr"] >= thresholds["irr"][0]
+        and default_case["moic"] >= thresholds["moic"][0]
+    )
 
     if gating_issue:
         recommendation = "Too early; proceed to confirmatory DD only"

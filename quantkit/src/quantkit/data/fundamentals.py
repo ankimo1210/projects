@@ -31,7 +31,9 @@ class SecEdgarConnector:
     BASE = "https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json"
 
     def __init__(self, user_agent: str | None = None, *, timeout: float = 30.0):
-        self.user_agent = user_agent or env("SEC_USER_AGENT") or "quantkit research (set SEC_USER_AGENT)"
+        self.user_agent = (
+            user_agent or env("SEC_USER_AGENT") or "quantkit research (set SEC_USER_AGENT)"
+        )
         self.timeout = timeout
 
     def _cache_path(self, cik: int):

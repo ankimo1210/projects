@@ -25,7 +25,11 @@ def nearest_neighbors(model, token_id: int, k: int = 10) -> list[tuple[int, floa
     E = E / E.norm(dim=1, keepdim=True).clamp(min=1e-12)
     sims = E @ E[token_id]
     top = torch.topk(sims, k + 1)
-    return [(int(i), float(s)) for i, s in zip(top.indices, top.values, strict=True) if int(i) != token_id][:k]
+    return [
+        (int(i), float(s))
+        for i, s in zip(top.indices, top.values, strict=True)
+        if int(i) != token_id
+    ][:k]
 
 
 def pca_2d(model, ids: list[int] | None = None) -> np.ndarray:
@@ -34,7 +38,7 @@ def pca_2d(model, ids: list[int] | None = None) -> np.ndarray:
         E = E[ids]
     X = (E - E.mean(0)).numpy()
     U, S, _Vt = np.linalg.svd(X, full_matrices=False)
-    return (U[:, :2] * S[:2])
+    return U[:, :2] * S[:2]
 
 
 def drift(model_a, model_b) -> torch.Tensor:

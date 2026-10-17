@@ -2,6 +2,7 @@
 
 The pure logic lives in `app.build.build_from_raw` (unit-tested). This wrapper
 just wires the default data/raw -> data/processed paths."""
+
 from __future__ import annotations
 
 import sys

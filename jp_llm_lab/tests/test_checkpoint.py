@@ -62,8 +62,6 @@ def test_optimizer_resume_matches_uninterrupted_run(tmp_path):
     for _ in range(2):
         _step(model2, opt2, x, y)  # resumed continuation
 
-    for (n1, p1), (n2, p2) in zip(
-        model.named_parameters(), model2.named_parameters(), strict=True
-    ):
+    for (n1, p1), (n2, p2) in zip(model.named_parameters(), model2.named_parameters(), strict=True):
         assert n1 == n2
         assert torch.equal(p1, p2), f"{n1} diverged after resume"

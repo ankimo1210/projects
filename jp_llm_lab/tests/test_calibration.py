@@ -15,7 +15,7 @@ def test_perfectly_calibrated_has_low_ece():
     torch.manual_seed(0)
     n = 20000
     conf = torch.rand(n)
-    correct = (torch.rand(n) < conf)  # P(correct)=conf by construction
+    correct = torch.rand(n) < conf  # P(correct)=conf by construction
     ece_w, _ = ece_equal_width(conf, correct, n_bins=15)
     ece_m, _ = ece_equal_mass(conf, correct, n_bins=15)
     assert ece_w < 0.03

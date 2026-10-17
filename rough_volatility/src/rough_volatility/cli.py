@@ -109,9 +109,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             reports = build_reports(config, root, artifacts)
         else:
             reports = {
-                args.locale: build_standalone_report(
-                    config, root, artifacts, locale=args.locale
-                )
+                args.locale: build_standalone_report(config, root, artifacts, locale=args.locale)
             }
         LOGGER.info("reports=%s static_files=%d", list(reports), len(figures))
     LOGGER.info("artifacts=%d", len(artifacts))

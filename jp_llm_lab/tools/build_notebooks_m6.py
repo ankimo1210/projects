@@ -19,7 +19,7 @@ NB_DIR = REPO / "notebooks"
 
 def nb24() -> list:
     return [
-        md(r'''
+        md(r"""
 # 24. Final Report — jp_llm_lab 総括
 
 > **This project is not designed to build a competitive large language model.**
@@ -29,9 +29,9 @@ def nb24() -> list:
 
 本 Notebook は全マイルストーンの実測結果を横断的にまとめる。すべて保存済み成果物から読み込み、
 再学習は不要。
-'''),
+"""),
         code(SETUP),
-        code(r'''
+        code(r"""
 # 3モデルの要約
 runs = {
     "Model S (M1, char)": "experiments/runs/m1_model_s_smoke_seed42",
@@ -51,12 +51,12 @@ for name, rel in runs.items():
         "wallclock_s": round(s["wallclock_sec"], 1),
     })
 pd.DataFrame(rows)
-'''),
-        md(r'''
+"""),
+        md(r"""
 **注意**: Model S は char トークナイザ（vocab 2068, ln V=7.63）、M/L は BPE（vocab 8192, ln V=9.01）。
 **loss と ppl は単位が異なり直接比較できない**。同一トークナイザ内（M vs L）のみ比較可。
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 横断的な主要発見
 findings = {
     "アブレーション": load_json(ROOT / "experiments/comparisons/ablation_chain.json"),
@@ -82,8 +82,8 @@ print(f"    → 次トークン較正は良好だが、生成は事実的に誤�
 mem = findings["暗記"]
 print(f"\n● 暗記: train exact-match {mem['train']['mean_exact_match']:.1f} ≈ "
       f"val {mem['validation']['mean_exact_match']:.1f} → <1epoch の Model L は暗記が弱い")
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 受入基準（spec §29）チェックリスト — すべて成果物で裏付け
 criteria = [
     ("text→logits forward を追跡できる", "NB06, site/architecture"),
@@ -103,8 +103,8 @@ criteria = [
     ("config から再実行できる", "configs/ + scripts/"),
 ]
 pd.DataFrame(criteria, columns=["受入基準 (§29)", "対応する成果物"])
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## 総括
 
 本ラボは、日本語小型 Transformer をゼロから実装し、その内部を段階的に観測可能にした。
@@ -124,7 +124,7 @@ pd.DataFrame(criteria, columns=["受入基準 (§29)", "対応する成果物"])
 BPEとcharの非可比性・attention≠説明・較正≠事実性・torch.compile 不可・near-dup 未除去。
 
 **再現**: `README.md` の Reproduction guide、または `make -C jp_llm_lab <milestone>` を参照。
-'''),
+"""),
     ]
 
 

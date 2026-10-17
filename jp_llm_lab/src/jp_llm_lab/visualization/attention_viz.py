@@ -29,19 +29,27 @@ def attention_heatmap_grid(
     H = min(weights.shape[0], max_heads)
     T = weights.shape[-1]
     labels = [f"{i}:{t}" for i, t in enumerate(tokens[:T])]
-    fig = make_subplots(rows=1, cols=H, subplot_titles=[f"head {h}" for h in range(H)],
-                        horizontal_spacing=0.03)
+    fig = make_subplots(
+        rows=1, cols=H, subplot_titles=[f"head {h}" for h in range(H)], horizontal_spacing=0.03
+    )
     for h in range(H):
         fig.add_trace(
             go.Heatmap(
-                z=weights[h].tolist(), x=labels, y=labels, colorscale="Blues",
-                zmin=0, zmax=1, showscale=(h == H - 1),
+                z=weights[h].tolist(),
+                x=labels,
+                y=labels,
+                colorscale="Blues",
+                zmin=0,
+                zmax=1,
+                showscale=(h == H - 1),
                 hovertemplate="query %{y}<br>key %{x}<br>weight %{z:.3f}<extra></extra>",
             ),
-            row=1, col=h + 1,
+            row=1,
+            col=h + 1,
         )
-    fig.update_layout(height=380, template="plotly_white", title=title,
-                      margin=dict(l=60, r=30, t=80, b=50))
+    fig.update_layout(
+        height=380, template="plotly_white", title=title, margin=dict(l=60, r=30, t=80, b=50)
+    )
     fig.update_yaxes(autorange="reversed")
     fig.update_xaxes(showticklabels=(T <= 24))
     return fig
@@ -57,5 +65,9 @@ def entropy_comparison_figure(
         names = [f"L{layer}H{h}" for layer in range(n_layers) for h in range(n_heads)]
         fig.add_trace(go.Bar(x=names, y=flat, name=label))
     fig.update_layout(barmode="group")
-    return base_layout(fig, "Attention entropy per layer/head (mean over positions)",
-                       "layer/head", "entropy (nats)")
+    return base_layout(
+        fig,
+        "Attention entropy per layer/head (mean over positions)",
+        "layer/head",
+        "entropy (nats)",
+    )

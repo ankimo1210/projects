@@ -141,9 +141,7 @@ def validate_issue_log(path: Path = DEFAULT_ISSUE_LOG) -> list[dict[str, Any]]:
             if not isinstance(issue.get(field), str) or not issue[field].strip():
                 raise ContentReviewError(f"{identifier}: {field} is required")
         if issue.get("severity") not in SEVERITIES:
-            raise ContentReviewError(
-                f"{identifier}: severity must be one of {sorted(SEVERITIES)}"
-            )
+            raise ContentReviewError(f"{identifier}: severity must be one of {sorted(SEVERITIES)}")
         status = issue.get("status")
         if status not in ISSUE_STATUSES:
             raise ContentReviewError(
@@ -151,19 +149,16 @@ def validate_issue_log(path: Path = DEFAULT_ISSUE_LOG) -> list[dict[str, Any]]:
             )
         updated_at = issue.get("updatedAt")
         try:
-            if not isinstance(updated_at, str) or date.fromisoformat(updated_at).isoformat() != updated_at:
+            if (
+                not isinstance(updated_at, str)
+                or date.fromisoformat(updated_at).isoformat() != updated_at
+            ):
                 raise ValueError
         except ValueError as error:
-            raise ContentReviewError(
-                f"{identifier}: updatedAt must use YYYY-MM-DD"
-            ) from error
+            raise ContentReviewError(f"{identifier}: updatedAt must use YYYY-MM-DD") from error
         resolution = issue.get("resolution")
-        if status == "resolved" and (
-            not isinstance(resolution, str) or not resolution.strip()
-        ):
-            raise ContentReviewError(
-                f"{identifier}: resolved issue requires a resolution"
-            )
+        if status == "resolved" and (not isinstance(resolution, str) or not resolution.strip()):
+            raise ContentReviewError(f"{identifier}: resolved issue requires a resolution")
         if status == "open":
             unresolved.append(issue)
     return unresolved
@@ -283,9 +278,7 @@ def check_packet(
     actual = _load_object(output_path, "generated content review packet")
     expected = build_packet(**build_arguments)
     if actual != expected:
-        raise ContentReviewError(
-            f"Content review packet is stale; run {Path(__file__).name}"
-        )
+        raise ContentReviewError(f"Content review packet is stale; run {Path(__file__).name}")
 
 
 def parse_args() -> argparse.Namespace:

@@ -46,7 +46,9 @@ def test_report_contains_the_framework_landmarks(tmp_path):
 
 
 def test_report_honours_the_scenario(tmp_path):
-    doc = build_report(tmp_path / "r.html", cfg=SCENARIOS["conservative_adoption"]).read_text(encoding="utf-8")
+    doc = build_report(tmp_path / "r.html", cfg=SCENARIOS["conservative_adoption"]).read_text(
+        encoding="utf-8"
+    )
     assert "realization_rate=0.15" in doc
 
 

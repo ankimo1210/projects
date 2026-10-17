@@ -98,9 +98,7 @@ def reference_term_ids(path: Path = DEFAULT_REFERENCE_PACK) -> set[str]:
         payload = json.loads(path.read_text(encoding="utf-8"))
         terms = payload["terms"]
     except (OSError, KeyError, json.JSONDecodeError) as error:
-        raise WrittenQuestionPackError(
-            f"Unable to load reference term ids from {path}"
-        ) from error
+        raise WrittenQuestionPackError(f"Unable to load reference term ids from {path}") from error
     if not isinstance(terms, list):
         raise WrittenQuestionPackError("Reference pack terms must be a list")
     identifiers = {
@@ -146,7 +144,9 @@ def validate_review_metadata(question: dict[str, Any], identifier: str) -> None:
         raise WrittenQuestionPackError(f"{identifier}: reviewer must be text or null")
     if reviewed_at is not None:
         if not isinstance(reviewed_at, str):
-            raise WrittenQuestionPackError(f"{identifier}: reviewedAt must be ISO-8601 text or null")
+            raise WrittenQuestionPackError(
+                f"{identifier}: reviewedAt must be ISO-8601 text or null"
+            )
         try:
             parsed = datetime.fromisoformat(reviewed_at.replace("Z", "+00:00"))
         except ValueError as error:
@@ -166,9 +166,7 @@ def validate_review_metadata(question: dict[str, Any], identifier: str) -> None:
     if status == "published" and question.get("reviewedContentHash") != review_target_hash(
         question
     ):
-        raise WrittenQuestionPackError(
-            f"{identifier}: reviewedContentHash is missing or stale"
-        )
+        raise WrittenQuestionPackError(f"{identifier}: reviewedContentHash is missing or stale")
     if status != "published" and reviewed_at is not None:
         raise WrittenQuestionPackError(
             f"{identifier}: reviewedAt is only valid for published questions"
@@ -258,23 +256,19 @@ def validate_source(
             if not isinstance(rubric_id, str) or not rubric_id:
                 raise WrittenQuestionPackError(f"{identifier}: rubric id is required")
             if rubric_id in rubric_ids:
-                raise WrittenQuestionPackError(
-                    f"{identifier}: duplicate rubric id {rubric_id}"
-                )
+                raise WrittenQuestionPackError(f"{identifier}: duplicate rubric id {rubric_id}")
             rubric_ids.add(rubric_id)
             if not isinstance(criterion, str) or not criterion.strip():
-                raise WrittenQuestionPackError(
-                    f"{identifier}: rubric criterion is required"
-                )
+                raise WrittenQuestionPackError(f"{identifier}: rubric criterion is required")
             if not isinstance(item_marks, int) or item_marks <= 0:
-                raise WrittenQuestionPackError(
-                    f"{identifier}: rubric marks must be positive"
-                )
+                raise WrittenQuestionPackError(f"{identifier}: rubric marks must be positive")
             rubric_marks += item_marks
             for field in ("knowledgeTags", "relatedTermIDs"):
                 value = item.get(field, [])
-                if not isinstance(value, list) or not value or not all(
-                    isinstance(entry, str) and entry for entry in value
+                if (
+                    not isinstance(value, list)
+                    or not value
+                    or not all(isinstance(entry, str) and entry for entry in value)
                 ):
                     raise WrittenQuestionPackError(
                         f"{identifier}: {field} must be a non-empty string list"
@@ -336,9 +330,7 @@ def packed_question(question: dict[str, Any]) -> dict[str, Any]:
         "misconceptionTags": question.get("misconceptionTags", []),
         "needsReview": question["reviewStatus"] != "published",
         "reviewReason": (
-            None
-            if question["reviewStatus"] == "published"
-            else question["metadata"]["reviewNotes"]
+            None if question["reviewStatus"] == "published" else question["metadata"]["reviewNotes"]
         ),
         "creationType": "original",
         "creationBasis": "original-rubric",

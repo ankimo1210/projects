@@ -22,9 +22,7 @@ def test_shipped_charts_have_no_violations():
 
 def test_all_eight_m2_charts_registered():
     # 3 new BB defends (UTG/HJ/SB) + the 2 existing = 5 defend charts
-    assert {"BB_vs_UTG", "BB_vs_HJ", "BB_vs_CO", "BB_vs_BTN", "BB_vs_SB"} <= set(
-        FACING_RANGES
-    )
+    assert {"BB_vs_UTG", "BB_vs_HJ", "BB_vs_CO", "BB_vs_BTN", "BB_vs_SB"} <= set(FACING_RANGES)
     # 5 opener-vs-3bet responses
     assert {f"{o}_vs_BB_3bet" for o in CHART_OPENERS} == set(VS_3BET_RANGES)
 
@@ -69,7 +67,7 @@ def test_chart_notations_parse_to_live_ranges(opener, pot_type):
 def test_3bet_pot_bb_range_is_the_3bet_portion():
     w = bb_3bet_weights("BTN")
     assert w["AA"] == 1.0
-    assert w["QQ"] == pytest.approx(0.7)   # QQ 3bets 70 vs BTN
+    assert w["QQ"] == pytest.approx(0.7)  # QQ 3bets 70 vs BTN
     assert w["72o"] == 0.0
 
 

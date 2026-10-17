@@ -1045,7 +1045,7 @@ def build_standalone_report(
     for section in SECTIONS:
         figure_html = fragments.get(section.figure_key or "", "")
         evidence_note = (
-            "<p class=\"evidence-note\">"
+            '<p class="evidence-note">'
             f"{html.escape(t('evidence_note', profile=config.profile, seed=config.seed, fingerprint=config.fingerprint()))}"
             "</p>"
             if figure_html
@@ -1132,12 +1132,12 @@ def build_standalone_report(
         f"{fingerprint_tag}</head>"
         '<body><div class="layout"><nav class="sidebar" aria-label="Report sections">'
         f'<div class="brand">{html.escape(t("brand"))}</div>'
-        f'<h1>{html.escape(t("report_title"))}</h1><ol>{toc}</ol></nav>'
+        f"<h1>{html.escape(t('report_title'))}</h1><ol>{toc}</ol></nav>"
         '<main class="content"><header>'
         f'<div class="badge">{html.escape(t("badge", profile=config.profile.upper()))}</div>'
-        f'<h1>{html.escape(t("report_title"))}</h1>'
-        f'<p>{html.escape(t("report_subtitle", seed=config.seed, fingerprint=config.fingerprint()))}</p>'
-        f'</header>{"".join(sections_html)}'
+        f"<h1>{html.escape(t('report_title'))}</h1>"
+        f"<p>{html.escape(t('report_subtitle', seed=config.seed, fingerprint=config.fingerprint()))}</p>"
+        f"</header>{''.join(sections_html)}"
         f"{_edge_note(t)}"
         f'<div class="footer">{html.escape(t("footer"))}</div>'
         "</main></div></body></html>"

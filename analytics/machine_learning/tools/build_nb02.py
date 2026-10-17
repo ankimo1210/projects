@@ -302,5 +302,9 @@ widgets.interact(draw, scaler_name=widgets.Dropdown(options=["none", "standard",
 if __name__ == "__main__":
     import pathlib
 
-    out = pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "02_data_preprocessing_and_features.ipynb"
+    out = (
+        pathlib.Path(__file__).resolve().parents[1]
+        / "notebooks"
+        / "02_data_preprocessing_and_features.ipynb"
+    )
     build(cells, str(out))

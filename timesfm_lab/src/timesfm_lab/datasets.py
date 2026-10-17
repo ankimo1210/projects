@@ -138,15 +138,22 @@ SPECS: tuple[DatasetSpec, ...] = (
 )
 
 
-
 def _synthetic_specs() -> tuple[DatasetSpec, ...]:
     from .synthetic import ALL_PROCESSES
 
     return tuple(
         DatasetSpec(
-            key=p.key, title=p.title, filename="", loader="synthetic", season=p.season,
-            freq_label="—", context_length=p.context_length, horizon=p.horizon,
-            n_series=p.n_series, n_windows=p.n_windows, note=p.note,
+            key=p.key,
+            title=p.title,
+            filename="",
+            loader="synthetic",
+            season=p.season,
+            freq_label="—",
+            context_length=p.context_length,
+            horizon=p.horizon,
+            n_series=p.n_series,
+            n_windows=p.n_windows,
+            note=p.note,
         )
         for p in ALL_PROCESSES
     )
@@ -156,31 +163,61 @@ def _synthetic_specs() -> tuple[DatasetSpec, ...]:
 # which is after every cutoff the TimesFM 3.0 card names.
 FINANCE_SPECS: tuple[DatasetSpec, ...] = (
     DatasetSpec(
-        key="fin_log_volume", title="金融: 出来高（対数）", filename="finance_ohlcv.parquet",
-        loader="finance", season=5, freq_label="1 営業日", context_length=512, horizon=20,
-        n_series=18, n_windows=6,
+        key="fin_log_volume",
+        title="金融: 出来高（対数）",
+        filename="finance_ohlcv.parquet",
+        loader="finance",
+        season=5,
+        freq_label="1 営業日",
+        context_length=512,
+        horizon=20,
+        n_series=18,
+        n_windows=6,
         note="18銘柄の日次出来高。曜日周期がはっきりあり、金融系では最も予測余地がある。",
     ),
     DatasetSpec(
-        key="fin_range_vol", title="金融: レンジボラ（対数）", filename="finance_ohlcv.parquet",
-        loader="finance", season=5, freq_label="1 営業日", context_length=512, horizon=20,
-        n_series=18, n_windows=6,
+        key="fin_range_vol",
+        title="金融: レンジボラ（対数）",
+        filename="finance_ohlcv.parquet",
+        loader="finance",
+        season=5,
+        freq_label="1 営業日",
+        context_length=512,
+        horizon=20,
+        n_series=18,
+        n_windows=6,
         note="Parkinson の高安レンジ推定量。クラスタリングするので HAR の主戦場。",
     ),
     DatasetSpec(
-        key="fin_log_return", title="金融: 対数収益率", filename="finance_ohlcv.parquet",
-        loader="finance", season=5, freq_label="1 営業日", context_length=512, horizon=20,
-        n_series=18, n_windows=6,
+        key="fin_log_return",
+        title="金融: 対数収益率",
+        filename="finance_ohlcv.parquet",
+        loader="finance",
+        season=5,
+        freq_label="1 営業日",
+        context_length=512,
+        horizon=20,
+        n_series=18,
+        n_windows=6,
         note="対照群。ここで有意に勝つ手法があったら、まず実装を疑うべき系列。",
     ),
 )
 
 TRAFFIC_UK_SPEC = DatasetSpec(
-    key="traffic_uk_2026", title="Traffic UK 2026 (hourly)", filename="traffic_uk_2026.parquet",
-    loader="traffic_uk", season=24, freq_label="1 hour", context_length=1024, horizon=48,
-    n_series=28, n_windows=6,
-    note=("英国高速道路のセンサー計数、2026年1〜6月。Monash traffic_hourly と"
-          "同じ設計（時間足・多数センサー・日次+週次周期）で、確実に学習カットオフ後。"),
+    key="traffic_uk_2026",
+    title="Traffic UK 2026 (hourly)",
+    filename="traffic_uk_2026.parquet",
+    loader="traffic_uk",
+    season=24,
+    freq_label="1 hour",
+    context_length=1024,
+    horizon=48,
+    n_series=28,
+    n_windows=6,
+    note=(
+        "英国高速道路のセンサー計数、2026年1〜6月。Monash traffic_hourly と"
+        "同じ設計（時間足・多数センサー・日次+週次周期）で、確実に学習カットオフ後。"
+    ),
 )
 
 SYNTHETIC_SPECS = _synthetic_specs()
@@ -227,9 +264,7 @@ def load_ett(path: Path) -> list[tuple[str, np.ndarray]]:
 
 def load_series(spec: DatasetSpec) -> list[tuple[str, np.ndarray]]:
     if not spec.path.exists():
-        raise FileNotFoundError(
-            f"{spec.path} is missing. Run scripts/fetch_data.sh first."
-        )
+        raise FileNotFoundError(f"{spec.path} is missing. Run scripts/fetch_data.sh first.")
     if spec.loader == "tsf":
         return parse_tsf(spec.path)
     if spec.loader == "ett":

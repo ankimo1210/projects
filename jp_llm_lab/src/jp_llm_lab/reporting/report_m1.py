@@ -28,7 +28,9 @@ def _fig(fig) -> str:
 
 
 def _kv_table(rows: list[tuple[str, str]]) -> str:
-    body = "".join(f"<tr><th>{html.escape(k)}</th><td>{html.escape(str(v))}</td></tr>" for k, v in rows)
+    body = "".join(
+        f"<tr><th>{html.escape(k)}</th><td>{html.escape(str(v))}</td></tr>" for k, v in rows
+    )
     return f'<table class="kv">{body}</table>'
 
 
@@ -97,22 +99,52 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
     import plotly.graph_objects as go
 
     fig_bigram = go.Figure()
-    fig_bigram.add_trace(go.Scatter(x=[r["step"] for r in brec], y=[r["val_loss"] for r in brec],
-                                    name="neural bigram (val)", line=dict(color=COLORS["neural"])))
-    fig_bigram.add_hline(y=bigram["count"]["val_loss"], line_dash="dash", line_color=COLORS["count"],
-                         annotation_text=f'count model α={bigram["count"]["alpha"]} (val {bigram["count"]["val_loss"]:.3f})')
-    fig_bigram.add_hline(y=bigram["uniform_loss_reference"], line_dash="dot", line_color="#bbb",
-                         annotation_text=f"uniform ln V = {bigram['uniform_loss_reference']:.2f}")
-    base_layout(fig_bigram, "Neural bigram の検証損失は count モデルの閉形式解に収束する",
-                "SGD step", "val loss (nats/token)")
+    fig_bigram.add_trace(
+        go.Scatter(
+            x=[r["step"] for r in brec],
+            y=[r["val_loss"] for r in brec],
+            name="neural bigram (val)",
+            line=dict(color=COLORS["neural"]),
+        )
+    )
+    fig_bigram.add_hline(
+        y=bigram["count"]["val_loss"],
+        line_dash="dash",
+        line_color=COLORS["count"],
+        annotation_text=f"count model α={bigram['count']['alpha']} (val {bigram['count']['val_loss']:.3f})",
+    )
+    fig_bigram.add_hline(
+        y=bigram["uniform_loss_reference"],
+        line_dash="dot",
+        line_color="#bbb",
+        annotation_text=f"uniform ln V = {bigram['uniform_loss_reference']:.2f}",
+    )
+    base_layout(
+        fig_bigram,
+        "Neural bigram の検証損失は count モデルの閉形式解に収束する",
+        "SGD step",
+        "val loss (nats/token)",
+    )
 
     sweep = bigram["alpha_sweep_val_loss"]
-    fig_alpha = go.Figure(go.Scatter(x=[float(a) for a in sweep], y=list(sweep.values()),
-                                     mode="lines+markers", line=dict(color=COLORS["count"])))
-    fig_alpha.add_hline(y=bigram["neural"]["val_loss"], line_dash="dash", line_color=COLORS["neural"],
-                        annotation_text=f"neural bigram {bigram['neural']['val_loss']:.3f}")
+    fig_alpha = go.Figure(
+        go.Scatter(
+            x=[float(a) for a in sweep],
+            y=list(sweep.values()),
+            mode="lines+markers",
+            line=dict(color=COLORS["count"]),
+        )
+    )
+    fig_alpha.add_hline(
+        y=bigram["neural"]["val_loss"],
+        line_dash="dash",
+        line_color=COLORS["neural"],
+        annotation_text=f"neural bigram {bigram['neural']['val_loss']:.3f}",
+    )
     fig_alpha.update_xaxes(type="log")
-    base_layout(fig_alpha, "加算平滑化 α と検証損失（count bigram）", "α (log)", "val loss (nats/token)")
+    base_layout(
+        fig_alpha, "加算平滑化 α と検証損失（count bigram）", "α (log)", "val loss (nats/token)"
+    )
 
     # ---- generations tables
     def gen_table(prompt: str, keys: tuple[str, ...] = ("greedy", "temp07"), fracs=None) -> str:
@@ -123,7 +155,7 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
         body = ""
         for s in rows:
             cells = "".join(
-                f'<td class="gen-text">{html.escape(s[k][len(prompt):][:110])}</td>' for k in keys
+                f'<td class="gen-text">{html.escape(s[k][len(prompt) :][:110])}</td>' for k in keys
             )
             body += f"<tr><th>{s['frac']:.0%} (step {s['step']})</th>{cells}</tr>"
         return (
@@ -146,18 +178,38 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
             "blocks": [
                 {
                     "heading": "実験メタデータ（再現性情報）",
-                    "html": _kv_table([
-                        ("run", "m1_model_s_smoke_seed42"),
-                        ("corpus", f"こころ（夏目漱石・青空文庫パブリックドメイン） {config['n_train_tokens'] + config['n_val_tokens']:,} chars"),
-                        ("tokenizer", f"char_v1 / vocab {V:,}"),
-                        ("model", f"Classical GPT: d=128, 4 layers, 4 heads, ctx 256 / params {config['param_breakdown']['total']:,}"),
-                        ("training", f"{summary['steps']} steps × 64 batch × 256 ctx = {summary['tokens_seen']:,} tokens（約{n_epochs:.0f}エポック相当）"),
-                        ("precision / attention", "BF16 autocast / SDPA（学習）・explicit（分析）"),
-                        ("wallclock", f"{summary['wallclock_sec']:.1f} s on {runmeta['env']['gpu_name']}"),
-                        ("git", f"{(runmeta['git_commit'] or '')[:12]} (dirty={runmeta['git_dirty']}) branch={runmeta['git_branch']}"),
-                        ("seed", config["train_config"]["seed"]),
-                        ("timestamp", runmeta["timestamp_utc"]),
-                    ]),
+                    "html": _kv_table(
+                        [
+                            ("run", "m1_model_s_smoke_seed42"),
+                            (
+                                "corpus",
+                                f"こころ（夏目漱石・青空文庫パブリックドメイン） {config['n_train_tokens'] + config['n_val_tokens']:,} chars",
+                            ),
+                            ("tokenizer", f"char_v1 / vocab {V:,}"),
+                            (
+                                "model",
+                                f"Classical GPT: d=128, 4 layers, 4 heads, ctx 256 / params {config['param_breakdown']['total']:,}",
+                            ),
+                            (
+                                "training",
+                                f"{summary['steps']} steps × 64 batch × 256 ctx = {summary['tokens_seen']:,} tokens（約{n_epochs:.0f}エポック相当）",
+                            ),
+                            (
+                                "precision / attention",
+                                "BF16 autocast / SDPA（学習）・explicit（分析）",
+                            ),
+                            (
+                                "wallclock",
+                                f"{summary['wallclock_sec']:.1f} s on {runmeta['env']['gpu_name']}",
+                            ),
+                            (
+                                "git",
+                                f"{(runmeta['git_commit'] or '')[:12]} (dirty={runmeta['git_dirty']}) branch={runmeta['git_branch']}",
+                            ),
+                            ("seed", config["train_config"]["seed"]),
+                            ("timestamp", runmeta["timestamp_utc"]),
+                        ]
+                    ),
                 },
                 {
                     "figure": _fig(params_viz.param_breakdown_figure(config["param_breakdown"])),
@@ -165,7 +217,7 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
                         "what": "Model S の各コンポーネントのパラメータ数と構成比。",
                         "why": "「モデルのどこに容量があるか」を知ることは、スケーリングやアブレーションの前提になる。",
                         "how": "棒が高いほどパラメータが多い。lm_head は token embedding と weight tying しているため 0（追加パラメータなし）。",
-                        "observation": f"MLP が {config['param_breakdown']['groups']['mlp']/config['param_breakdown']['total']:.0%} で最大、次いで token embedding {config['param_breakdown']['groups']['token_emb']/config['param_breakdown']['total']:.0%}。語彙 {V:,} の文字トークナイザでも埋め込みが約1/4を占める。",
+                        "observation": f"MLP が {config['param_breakdown']['groups']['mlp'] / config['param_breakdown']['total']:.0%} で最大、次いで token embedding {config['param_breakdown']['groups']['token_emb'] / config['param_breakdown']['total']:.0%}。語彙 {V:,} の文字トークナイザでも埋め込みが約1/4を占める。",
                         "interpretation": "隠れ次元128・語彙2068という小型構成では、4×拡大のMLPが支配的。語彙を8Kに増やす（M2のBPE）と埋め込み比率がさらに増すはず。",
                         "caveat": "パラメータ数は計算量（FLOPs）と一致しない。attention の T² 計算はパラメータ0の位置で発生する。",
                         "next": "M2 で BPE 8K 語彙にした際の構成比変化、M3 で Modern 構成（SwiGLU 等）との比較。",
@@ -178,9 +230,9 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
             "title": "Environment",
             "blocks": [
                 {
-                    "html": _kv_table([(k, v) for k, v in env["report"].items()]) +
-                            "<h3>推奨設定（粗い事前推定 — M3で実測校正）</h3>" +
-                            _kv_table([(k, v) for k, v in env["recommendation"].items()]),
+                    "html": _kv_table([(k, v) for k, v in env["report"].items()])
+                    + "<h3>推奨設定（粗い事前推定 — M3で実測校正）</h3>"
+                    + _kv_table([(k, v) for k, v in env["recommendation"].items()]),
                 },
             ],
         },
@@ -197,7 +249,7 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
                     "html": (
                         "<p>例: <code>私はその人を常に先生と呼んでいた。</code> → "
                         f"<code>{tokenizer.encode('私はその人を常に先生と呼んでいた。')}</code></p>"
-                        f"<p class=\"note\">未知文字（例: 学習コーパスに無い字）は <code>&lt;UNK&gt;</code>=id 1 に落ちる。"
+                        f'<p class="note">未知文字（例: 学習コーパスに無い字）は <code>&lt;UNK&gt;</code>=id 1 に落ちる。'
                         f"『走れメロス』を同じトークナイザで符号化すると一部の文字が UNK になる — この被覆率の問題が M2 の BPE の動機。</p>"
                     ),
                 },
@@ -262,20 +314,32 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
             "blocks": [
                 {
                     "heading": "学習前（初期化直後・layer 0）",
-                    "figure": _fig(attention_viz.attention_heatmap_grid(maps_init[0][0], chars, "init / layer 0")),
+                    "figure": _fig(
+                        attention_viz.attention_heatmap_grid(
+                            maps_init[0][0], chars, "init / layer 0"
+                        )
+                    ),
                 },
                 {
                     "heading": "学習後（layer 0）",
-                    "figure": _fig(attention_viz.attention_heatmap_grid(maps_fin[0][0], chars, "trained / layer 0")),
+                    "figure": _fig(
+                        attention_viz.attention_heatmap_grid(
+                            maps_fin[0][0], chars, "trained / layer 0"
+                        )
+                    ),
                 },
                 {
                     "heading": "学習後（最終 layer 3）",
-                    "figure": _fig(attention_viz.attention_heatmap_grid(maps_fin[-1][0], chars, "trained / layer 3")),
+                    "figure": _fig(
+                        attention_viz.attention_heatmap_grid(
+                            maps_fin[-1][0], chars, "trained / layer 3"
+                        )
+                    ),
                     "meta": {
                         "what": "同一文に対する head 別 attention 分布（init vs 学習後）。",
                         "why": "「学習で attention が何を獲得したか」を最も直接的に観察できる断面。",
                         "how": "各行は合計1の確率分布。縦の筋=特定トークンが広く参照されている。対角線近傍=局所参照。",
-                        "observation": f"平均エントロピーは init {e_i:.2f} → 学習後 {e_f:.2f} nats に{ent_dir}（最深層 layer {L-1} が {float(ent_fin[-1].mean()):.2f} で最も選択的）。直前トークンへの質量は {prev_i:.2f} → {prev_f:.2f} と微増にとどまる一方、先頭トークンへの質量はむしろ {bos_i:.2f} → {bos_f:.2f} に減少。学習後のヒートマップでは特定の内容文字（「先」「生」「。」など）への縦筋が目立つ。",
+                        "observation": f"平均エントロピーは init {e_i:.2f} → 学習後 {e_f:.2f} nats に{ent_dir}（最深層 layer {L - 1} が {float(ent_fin[-1].mean()):.2f} で最も選択的）。直前トークンへの質量は {prev_i:.2f} → {prev_f:.2f} と微増にとどまる一方、先頭トークンへの質量はむしろ {bos_i:.2f} → {bos_f:.2f} に減少。学習後のヒートマップでは特定の内容文字（「先」「生」「。」など）への縦筋が目立つ。",
                         "interpretation": "「学習すると直前トークン注視が支配的になる」という事前予想は、この文では部分的にしか成り立たなかった。エントロピー低下は主に特定キー文字への選択的集中で生じており、深い層ほどその傾向が強い。",
                         "caveat": "attention 重みが高い ≠ そのトークンが因果的に重要（重み≠寄与）。1文・1シードの定性観察であり、head の役割の一般化はできない。直前トークン率などの数値もこの1文に対するもの。M2 で多数の文について定量化し、ablation/patching で因果性を検証する。",
                         "next": "M2 §9: attention distance・prev-token率・BOS/句読点率の定量化、head ablation。",
@@ -294,13 +358,15 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
                         "why": "収束の判断と過学習（暗記）の検出は train と val の乖離で行う。",
                         "how": "初期値は一様分布の理論値 ln V に一致するはず。train（青）と val（赤）の開きが暗記の兆候。",
                         "observation": f"init loss {init_val:.2f} ≈ ln V = {ln_v:.2f}（初期化の健全性確認）。最終 train {fin_train:.2f} / val {fin_val:.2f}、ギャップ {abs(gap):.2f} nats。val ppl は {evals[0]['val_eval']['ppl']:.0f} → {evals[-1]['val_eval']['ppl']:.1f}。",
-                        "interpretation": f"146K トークンのコーパスを約{n_epochs:.0f}周しており、ギャップ {abs(gap):.2f} nats は軽度〜中程度の暗記。教材としては「小データ多エポックで何が起きるか」の実例。bigram val {bigram['neural']['val_loss']:.2f} → Transformer val {fin_val:.2f} の改善分（約{bigram['neural']['val_loss']-fin_val:.2f} nats）が『文脈を使う』能力の寄与。",
+                        "interpretation": f"146K トークンのコーパスを約{n_epochs:.0f}周しており、ギャップ {abs(gap):.2f} nats は軽度〜中程度の暗記。教材としては「小データ多エポックで何が起きるか」の実例。bigram val {bigram['neural']['val_loss']:.2f} → Transformer val {fin_val:.2f} の改善分（約{bigram['neural']['val_loss'] - fin_val:.2f} nats）が『文脈を使う』能力の寄与。",
                         "caveat": "単一シード・単一コーパス。val は小説の終盤部分（連続分割）なので文体ドリフトの影響を含む。",
                         "next": "M2 で本物のコーパススナップショット（重複除去つき）と1エポック未満学習に移行し、暗記を分離。",
                     },
                 },
                 {
-                    "figure": _fig(curves.lr_grad_figure(records, config["train_config"]["grad_clip"])),
+                    "figure": _fig(
+                        curves.lr_grad_figure(records, config["train_config"]["grad_clip"])
+                    ),
                     "meta": {
                         "what": "学習率スケジュール（線形ウォームアップ→cosine）と、クリップ前の全体勾配ノルム。",
                         "why": "勾配ノルムの爆発/消失は不安定化の最初のシグナル。クリップ発動率も安定性の指標。",
@@ -353,7 +419,7 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
                         "what": "ウィンドウ平均スループット（tokens/sec）。",
                         "why": "学習時間の見積りと、eval/checkpoint のオーバーヘッド可視化。",
                         "how": "谷は eval・checkpoint・生成サンプリングを含む区間。",
-                        "observation": f"定常区間の中央値 ≈ {tps_median:,.0f} tokens/sec（BF16・SDPA・batch 64×256）。全体では {summary['tokens_seen']:,} tokens / {summary['wallclock_sec']:.1f}s ≈ {summary['tokens_seen']/summary['wallclock_sec']:,.0f} tokens/sec。",
+                        "observation": f"定常区間の中央値 ≈ {tps_median:,.0f} tokens/sec（BF16・SDPA・batch 64×256）。全体では {summary['tokens_seen']:,} tokens / {summary['wallclock_sec']:.1f}s ≈ {summary['tokens_seen'] / summary['wallclock_sec']:,.0f} tokens/sec。",
                         "interpretation": "1.1M パラメータのモデルでは GPU は大部分アイドルで、eval/生成のオーバーヘッド比率が大きい。モデルが大きくなるほどこの比率は下がる。",
                         "caveat": "VRAM 使用量 0.1GB — この計測はモデルサイズのスケーリング予測には使えない（M3 で実測）。",
                         "next": "M3 §14.1: モデルサイズ・batch・compile 別の系統的スループット計測。",
@@ -366,7 +432,10 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
             "title": "Generation（checkpoint 別・固定プロンプト）",
             "intro": "<p>全 checkpoint で同一プロンプト・同一シードのサンプリングを実行してあるため、変化はモデルの変化のみを反映する。</p>",
             "blocks": [
-                {"heading": "「私は」の続き（greedy vs temperature 0.7）", "html": gen_table("私は", fracs=(0.0, 0.05, 0.25, 1.0))},
+                {
+                    "heading": "「私は」の続き（greedy vs temperature 0.7）",
+                    "html": gen_table("私は", fracs=(0.0, 0.05, 0.25, 1.0)),
+                },
                 {
                     "heading": "暗記プローブ:『こころ』冒頭文の続き",
                     "html": (
@@ -405,7 +474,9 @@ def build_m1_report(out_dir: Path | None = None) -> Path:
         },
     ]
 
-    env_j = Environment(loader=FileSystemLoader(Path(__file__).parent / "templates"), autoescape=False)
+    env_j = Environment(
+        loader=FileSystemLoader(Path(__file__).parent / "templates"), autoescape=False
+    )
     html_out = env_j.get_template("m1.html.j2").render(
         title="jp_llm_lab — Milestone 1 Report",
         subtitle=f"Classical GPT (Model S, {config['param_breakdown']['total']:,} params) × 『こころ』 char-level — 全数値は実測値",

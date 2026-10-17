@@ -12,7 +12,10 @@ from jp_llm_lab.models.config import ModelConfig
 from jp_llm_lab.models.transformer import ClassicalGPT
 from jp_llm_lab.utils.seed import set_seed
 
-TEXT = "吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。" * 20
+TEXT = (
+    "吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。"
+    * 20
+)
 
 
 def test_one_batch_overfit():
@@ -47,5 +50,7 @@ def test_one_batch_overfit():
         if final < 0.02 * init_loss * 0.8:  # stop only once safely past the criterion
             break
 
-    assert final < 0.15, f"failed to overfit one batch: final loss {final:.3f} (init {init_loss:.3f})"
+    assert final < 0.15, (
+        f"failed to overfit one batch: final loss {final:.3f} (init {init_loss:.3f})"
+    )
     assert final < 0.02 * init_loss

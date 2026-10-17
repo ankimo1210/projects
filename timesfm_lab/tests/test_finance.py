@@ -13,9 +13,7 @@ from timesfm_lab.finance import (
     load_ohlcv,
 )
 
-needs_data = pytest.mark.skipif(
-    not CACHE.exists(), reason="run scripts/fetch_finance.py first"
-)
+needs_data = pytest.mark.skipif(not CACHE.exists(), reason="run scripts/fetch_finance.py first")
 
 
 def test_parkinson_scales_with_the_log_range():

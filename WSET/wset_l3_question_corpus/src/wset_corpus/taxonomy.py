@@ -35,15 +35,51 @@ TOPICS: list[tuple[str, tuple[str, ...]]] = [
 ]
 
 GEOGRAPHY = [
-    "France", "Italy", "Spain", "Portugal", "Germany", "Austria", "Hungary", "Greece",
-    "United States", "Canada", "Chile", "Argentina", "South Africa", "Australia", "New Zealand",
-    "Bordeaux", "Burgundy", "Champagne", "Loire", "Rhône", "Rioja", "Mosel", "Napa Valley",
-    "Mendoza", "Marlborough", "フランス", "イタリア", "スペイン", "ドイツ", "オーストラリア",
+    "France",
+    "Italy",
+    "Spain",
+    "Portugal",
+    "Germany",
+    "Austria",
+    "Hungary",
+    "Greece",
+    "United States",
+    "Canada",
+    "Chile",
+    "Argentina",
+    "South Africa",
+    "Australia",
+    "New Zealand",
+    "Bordeaux",
+    "Burgundy",
+    "Champagne",
+    "Loire",
+    "Rhône",
+    "Rioja",
+    "Mosel",
+    "Napa Valley",
+    "Mendoza",
+    "Marlborough",
+    "フランス",
+    "イタリア",
+    "スペイン",
+    "ドイツ",
+    "オーストラリア",
 ]
 
 GRAPES = [
-    "Cabernet Sauvignon", "Merlot", "Pinot Noir", "Syrah", "Chardonnay", "Sauvignon Blanc",
-    "Riesling", "Nebbiolo", "Sangiovese", "Tempranillo", "Garnacha", "Chenin Blanc",
+    "Cabernet Sauvignon",
+    "Merlot",
+    "Pinot Noir",
+    "Syrah",
+    "Chardonnay",
+    "Sauvignon Blanc",
+    "Riesling",
+    "Nebbiolo",
+    "Sangiovese",
+    "Tempranillo",
+    "Garnacha",
+    "Chenin Blanc",
 ]
 
 
@@ -102,9 +138,7 @@ def classify(text: str) -> Classification:
     }
 
 
-def validate_labels(
-    record: Classification, taxonomy: dict[str, Any] | None = None
-) -> None:
+def validate_labels(record: Classification, taxonomy: dict[str, Any] | None = None) -> None:
     values = taxonomy or load_taxonomy()
     formats = cast(list[str], values["question_formats"])
     skills = cast(list[str], values["cognitive_skills"])

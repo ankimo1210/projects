@@ -53,7 +53,12 @@ def main() -> None:
     train_tokens = load_tokens("pilot", "bpe8k_v1")[:8_000_000]
     val_tokens = load_tokens("validation", "bpe8k_v1")[:400_000]
 
-    summary = {"chain": [c[0] for c in CHAIN], "seeds": args.seeds, "steps": args.steps, "results": {}}
+    summary = {
+        "chain": [c[0] for c in CHAIN],
+        "seeds": args.seeds,
+        "steps": args.steps,
+        "results": {},
+    }
     for name, switches in CHAIN:
         cfg = ModelConfig(vocab_size=tok.vocab_size, **BASE, **switches)
         n_params = ClassicalGPT(cfg).param_breakdown()["total"]
@@ -61,17 +66,40 @@ def main() -> None:
         for seed in range(42, 42 + args.seeds):
             model = ClassicalGPT(cfg)
             tcfg = TrainConfig(
-                seed=seed, steps=args.steps, batch_size=24, grad_accum=1, context_len=512,
-                lr=6e-4, warmup_frac=0.03, weight_decay=0.1, dtype="bf16",
-                log_interval=25, eval_interval=args.steps, eval_batches=20, ratio_interval=50,
-                checkpoint_fracs=(1.0,), fixed_prompts=PROMPTS if seed == 42 else [], max_new_tokens=60,
+                seed=seed,
+                steps=args.steps,
+                batch_size=24,
+                grad_accum=1,
+                context_len=512,
+                lr=6e-4,
+                warmup_frac=0.03,
+                weight_decay=0.1,
+                dtype="bf16",
+                log_interval=25,
+                eval_interval=args.steps,
+                eval_batches=20,
+                ratio_interval=50,
+                checkpoint_fracs=(1.0,),
+                fixed_prompts=PROMPTS if seed == 42 else [],
+                max_new_tokens=60,
             )
             run_dir = root / "experiments" / "runs" / f"m3_ablation_{name}_seed{seed}"
-            result = train_lm(model, train_tokens, val_tokens, tcfg, run_dir, tokenizer=tok, device=device,
-                              extra_meta={"ablation": name, "switches": switches})
+            result = train_lm(
+                model,
+                train_tokens,
+                val_tokens,
+                tcfg,
+                run_dir,
+                tokenizer=tok,
+                device=device,
+                extra_meta={"ablation": name, "switches": switches},
+            )
             per_seed.append(result.final_eval)
-            print(f"  {name:10s} seed{seed}: val_loss={result.final_eval['loss']:.4f} "
-                  f"ppl={result.final_eval['ppl']:.1f}", flush=True)
+            print(
+                f"  {name:10s} seed{seed}: val_loss={result.final_eval['loss']:.4f} "
+                f"ppl={result.final_eval['ppl']:.1f}",
+                flush=True,
+            )
         losses = [e["loss"] for e in per_seed]
         mean = sum(losses) / len(losses)
         var = sum((x - mean) ** 2 for x in losses) / max(1, len(losses) - 1)
@@ -87,7 +115,10 @@ def main() -> None:
         }
         print(f"{name:10s}: val_loss {mean:.4f} ± {var**0.5:.4f} ({n_params:,} params)", flush=True)
 
-    save_json({**summary, "meta": collect_run_metadata()}, root / "experiments" / "comparisons" / "ablation_chain.json")
+    save_json(
+        {**summary, "meta": collect_run_metadata()},
+        root / "experiments" / "comparisons" / "ablation_chain.json",
+    )
     print("saved experiments/comparisons/ablation_chain.json")
 
 

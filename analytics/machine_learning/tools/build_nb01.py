@@ -294,5 +294,9 @@ $\mathbb{E}[(y-\hat f)^2] = \underbrace{(\text{bias})^2}_{\text{単純さ}} + \u
 if __name__ == "__main__":
     import pathlib
 
-    out = pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "01_machine_learning_overview.ipynb"
+    out = (
+        pathlib.Path(__file__).resolve().parents[1]
+        / "notebooks"
+        / "01_machine_learning_overview.ipynb"
+    )
     build(cells, str(out))

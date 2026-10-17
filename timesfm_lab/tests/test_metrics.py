@@ -44,7 +44,9 @@ def test_rmsse_matches_hand_computation():
     actual = np.array([7.0])
     pred = np.array([9.0])
     expected = np.sqrt(4.0 / (14.0 / 3.0))
-    assert metrics.rmsse(actual, pred, metrics.seasonal_scale_mse(ctx, 1)) == pytest.approx(expected)
+    assert metrics.rmsse(actual, pred, metrics.seasonal_scale_mse(ctx, 1)) == pytest.approx(
+        expected
+    )
 
 
 def test_crps_of_a_point_mass_is_the_absolute_error():

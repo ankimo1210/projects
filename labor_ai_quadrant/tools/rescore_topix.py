@@ -37,23 +37,52 @@ UNIVERSE_COLUMNS = ["code", "name", "sector33", "scale_category"]
 UNIVERSE_SNAPSHOT = "universe_topix.csv"
 #: company_frame が返さない開示の生値。ダンプを読む側の検算用に付け直す。
 PASSTHROUGH_COLUMNS = [
-    "filer_name", "average_salary", "average_age",
-    "employees_consolidated", "revenue_consolidated", "operating_profit_consolidated",
+    "filer_name",
+    "average_salary",
+    "average_age",
+    "employees_consolidated",
+    "revenue_consolidated",
+    "operating_profit_consolidated",
 ]
 OUT_COLUMNS = [
-    "code", "name", "parent_scope", "parent_scope_flag", "filer_name", "sector33", "scale_category", "quadrant",
-    "shortage_score", "ai_score", "ai_exposure_pct", "escape_potential",
+    "code",
+    "name",
+    "parent_scope",
+    "parent_scope_flag",
+    "filer_name",
+    "sector33",
+    "scale_category",
+    "quadrant",
+    "shortage_score",
+    "ai_score",
+    "ai_exposure_pct",
+    "escape_potential",
     # 人手不足の緩和量（すべて従業員数に対する%）
-    "vacancy_rate_pct", "ai_capacity_release_pct", "closable_gap_pct", "gap_coverage_x",
-    "employees", "average_salary", "average_age", "labor_cost", "revenue",
-    "operating_profit", "labor_cost_ratio", "revenue_per_employee",
+    "vacancy_rate_pct",
+    "ai_capacity_release_pct",
+    "closable_gap_pct",
+    "gap_coverage_x",
+    "employees",
+    "average_salary",
+    "average_age",
+    "labor_cost",
+    "revenue",
+    "operating_profit",
+    "labor_cost_ratio",
+    "revenue_per_employee",
     # 売上回復の経路（本線）
-    "contribution_margin", "recovered_revenue", "scenario_profit_gain",
-    "op_margin_uplift_pp", "op_uplift_pct",
+    "contribution_margin",
+    "recovered_revenue",
+    "scenario_profit_gain",
+    "op_margin_uplift_pp",
+    "op_uplift_pct",
     # 人件費削減の経路（比較用・前版のロジック）
-    "cost_cut_savings", "cost_cut_margin_pp",
-    "employees_consolidated", "revenue_consolidated",
-    "operating_profit_consolidated", "parent_employee_share",
+    "cost_cut_savings",
+    "cost_cut_margin_pp",
+    "employees_consolidated",
+    "revenue_consolidated",
+    "operating_profit_consolidated",
+    "parent_employee_share",
 ]
 
 
@@ -76,20 +105,34 @@ def universe_path(seed_from: Path | None = None) -> Path:
     if not path.exists():
         seed = pd.read_csv(seed_from or DATA / "topix_scored.csv", dtype={"code": str})
         seed[UNIVERSE_COLUMNS].to_csv(path, index=False)
-        print(f"seeded {path.name} from {(seed_from or Path('topix_scored.csv')).name} ({len(seed)} rows)")
+        print(
+            f"seeded {path.name} from {(seed_from or Path('topix_scored.csv')).name} ({len(seed)} rows)"
+        )
     return path
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--universe", type=Path, default=None,
-                    help=f"銘柄リスト（既定 _data/{UNIVERSE_SNAPSHOT}、無ければ --compare-to から生成）")
+    ap.add_argument(
+        "--universe",
+        type=Path,
+        default=None,
+        help=f"銘柄リスト（既定 _data/{UNIVERSE_SNAPSHOT}、無ければ --compare-to から生成）",
+    )
     ap.add_argument("--financials", type=Path, default=DATA / "financials_topix.csv")
-    ap.add_argument("--out", type=Path, default=DATA / "topix_scored.csv",
-                    help="企業スコアの出力先。入力とは別ファイルにできる")
+    ap.add_argument(
+        "--out",
+        type=Path,
+        default=DATA / "topix_scored.csv",
+        help="企業スコアの出力先。入力とは別ファイルにできる",
+    )
     ap.add_argument("--out-sectors", type=Path, default=DATA / "topix_sectors.csv")
-    ap.add_argument("--compare-to", type=Path, default=DATA / "topix_scored.csv",
-                    help="象限の移動を比べる相手（既定は前回の出力）")
+    ap.add_argument(
+        "--compare-to",
+        type=Path,
+        default=DATA / "topix_scored.csv",
+        help="象限の移動を比べる相手（既定は前回の出力）",
+    )
     return ap.parse_args(argv)
 
 
@@ -127,12 +170,17 @@ def main(argv: list[str] | None = None) -> None:
     cuts = company_quadrant_cuts(sectors, companies.set_index("code"), cfg)
     print(f"companies: {len(companies)}   sectors: {len(sectors)}")
     if cuts:
-        print(f"象限の境界（33業種の中央値を企業軸へ投影）: 人手不足 {cuts[0]:.2f} / AI {cuts[1]:.2f}")
+        print(
+            f"象限の境界（33業種の中央値を企業軸へ投影）: 人手不足 {cuts[0]:.2f} / AI {cuts[1]:.2f}"
+        )
     print("\n=== 象限サマリー ===")
     print(quadrant_summary(companies.set_index("code")).to_string())
 
-    moved = companies.set_index("code")["quadrant"].rename("new").to_frame().join(
-        previous["quadrant"].rename("old")
+    moved = (
+        companies.set_index("code")["quadrant"]
+        .rename("new")
+        .to_frame()
+        .join(previous["quadrant"].rename("old"))
     )
     changed = moved[moved["new"] != moved["old"]]
     print(f"\n象限が変わった銘柄: {len(changed)} / {len(moved)}")

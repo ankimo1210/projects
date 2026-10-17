@@ -56,7 +56,9 @@ def test_labels_do_not_overlap_each_other(sectors):
     boxes = []
     for name, (_anchor, dx, dy) in placed.items():
         row = sectors.loc[name]
-        boxes.append((name, px(row["shortage_score"]) + dx, py(row["ai_score"]) + dy, len(name) * 6.4))
+        boxes.append(
+            (name, px(row["shortage_score"]) + dx, py(row["ai_score"]) + dy, len(name) * 6.4)
+        )
 
     for i, (n1, x1, y1, h1) in enumerate(boxes):
         for n2, x2, y2, h2 in boxes[i + 1 :]:
@@ -94,7 +96,7 @@ def test_every_colour_is_declared_on_bare_root():
 
 def test_both_theme_scopes_are_present():
     doc = render()
-    assert '@media (prefers-color-scheme: dark)' in doc
+    assert "@media (prefers-color-scheme: dark)" in doc
     assert ':root:not([data-theme="light"])' in doc
     assert ':root[data-theme="dark"]' in doc
 

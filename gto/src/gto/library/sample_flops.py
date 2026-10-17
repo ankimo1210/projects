@@ -40,9 +40,7 @@ def canonical_class_counts() -> dict[tuple[str, ...], int]:
     return dict(counts)
 
 
-def sample_flops(
-    m: int, strategy: str = "diverse", seed: int = 42
-) -> list[tuple[str, float]]:
+def sample_flops(m: int, strategy: str = "diverse", seed: int = 42) -> list[tuple[str, float]]:
     """Return [(flop_str, weight)] with weights normalized over the M."""
     counts = canonical_class_counts()
     total = sum(counts.values())

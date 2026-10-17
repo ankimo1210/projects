@@ -7,7 +7,9 @@ from jp_llm_lab.models.transformer import ClassicalGPT
 
 def _model():
     torch.manual_seed(0)
-    return ClassicalGPT(ModelConfig(vocab_size=50, d_model=32, n_heads=2, n_layers=2, context_len=16))
+    return ClassicalGPT(
+        ModelConfig(vocab_size=50, d_model=32, n_heads=2, n_layers=2, context_len=16)
+    )
 
 
 def test_recorder_covers_observation_points():
@@ -16,7 +18,14 @@ def test_recorder_covers_observation_points():
     with rec:
         model(torch.randint(0, 50, (2, 8)))
     stats = rec.stats()
-    for key in ["tok_emb", "blocks.0.attn", "blocks.0.mlp", "blocks.0.resid", "blocks.1.resid", "ln_f"]:
+    for key in [
+        "tok_emb",
+        "blocks.0.attn",
+        "blocks.0.mlp",
+        "blocks.0.resid",
+        "blocks.1.resid",
+        "ln_f",
+    ]:
         assert key in stats, sorted(stats)
         assert stats[key]["rms"] > 0
         assert stats[key]["finite"]

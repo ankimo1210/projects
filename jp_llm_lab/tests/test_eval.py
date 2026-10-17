@@ -20,7 +20,9 @@ def test_eval_set_size_and_shape():
 def test_run_eval_smoke():
     torch.manual_seed(0)
     tok = CharTokenizer.train(["日本の首都は東京です。私は学校に行く。1, 2, 3, 4, 5。"])
-    model = ClassicalGPT(ModelConfig(vocab_size=tok.vocab_size, d_model=32, n_heads=2, n_layers=1, context_len=64))
+    model = ClassicalGPT(
+        ModelConfig(vocab_size=tok.vocab_size, d_model=32, n_heads=2, n_layers=1, context_len=64)
+    )
     res = run_eval(model, tok, "cpu", max_new_tokens=8)
     assert res["overall"]["n_prompts"] >= 200
     assert "by_category" in res

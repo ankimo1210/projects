@@ -1,5 +1,6 @@
 """FastAPI web layer. Thin glue: load services, keep in-memory session states,
 render Jinja2 templates, persist history to SQLite."""
+
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
@@ -119,16 +120,30 @@ def debug(request: Request, gid: int):
     candidates = []
     for eid, p in ranked:
         e = ENTITY_SERVICE.get_entity(eid)
-        candidates.append({"id": eid, "name": e.name, "posterior": p,
-                           "log_score": state.log_scores[eid], "features": e.features})
+        candidates.append(
+            {
+                "id": eid,
+                "name": e.name,
+                "posterior": p,
+                "log_score": state.log_scores[eid],
+                "features": e.features,
+            }
+        )
     qmap = {q.id: q for q in ENTITY_SERVICE.questions}
-    history = [{"text": qmap[qid].text if qid in qmap else qid, "answer": ans}
-               for qid, ans in state.history]
+    history = [
+        {"text": qmap[qid].text if qid in qmap else qid, "answer": ans}
+        for qid, ans in state.history
+    ]
     nq = GAME_SERVICE.next_question(state)
-    next_split = (split_score(nq, ENTITY_SERVICE.entities, post) if nq else 0.0)
+    next_split = split_score(nq, ENTITY_SERVICE.entities, post) if nq else 0.0
     return templates.TemplateResponse(
         request,
         "debug.html",
-        {"game_id": gid, "candidates": candidates,
-         "history": history, "next_question": nq, "next_split": next_split},
+        {
+            "game_id": gid,
+            "candidates": candidates,
+            "history": history,
+            "next_question": nq,
+            "next_split": next_split,
+        },
     )

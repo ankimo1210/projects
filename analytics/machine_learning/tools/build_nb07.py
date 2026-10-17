@@ -296,5 +296,7 @@ print(f"ROC-AUC  LOF             = {roc_auc_score(ya, lof_score):.3f}")
 if __name__ == "__main__":
     import pathlib
 
-    out = pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "07_unsupervised_learning.ipynb"
+    out = (
+        pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "07_unsupervised_learning.ipynb"
+    )
     build(cells, str(out))

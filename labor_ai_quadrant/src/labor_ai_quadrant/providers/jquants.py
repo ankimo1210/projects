@@ -136,7 +136,9 @@ def _get_json(path: str, api_key: str, params: dict[str, str] | None = None) -> 
     raise AssertionError("unreachable")  # pragma: no cover
 
 
-def _get_rows(path: str, api_key: str, params: dict[str, str] | None = None) -> list[dict[str, Any]]:
+def _get_rows(
+    path: str, api_key: str, params: dict[str, str] | None = None
+) -> list[dict[str, Any]]:
     """Every row of a v2 endpoint, following ``pagination_key`` to the end.
 
     v2 caps a response and hands back a ``pagination_key`` when more remains.
@@ -308,7 +310,9 @@ def fetch_summaries_by_date(
     return df
 
 
-def fetch_summaries(codes: list[str], api_key: str | None = None, progress: bool = True) -> pd.DataFrame:
+def fetch_summaries(
+    codes: list[str], api_key: str | None = None, progress: bool = True
+) -> pd.DataFrame:
     """Latest annual revenue / operating profit per code, from ``/fins/summary``.
 
     These are the figures in the 決算短信, i.e. **consolidated** for any filer

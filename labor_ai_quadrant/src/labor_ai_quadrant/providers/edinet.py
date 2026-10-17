@@ -213,7 +213,9 @@ def _decode_csv(blob: bytes) -> list[dict[str, str]]:
     return rows
 
 
-def _pick(rows: list[dict[str, str]], element_id: str, scope: str = "non_consolidated") -> str | None:
+def _pick(
+    rows: list[dict[str, str]], element_id: str, scope: str = "non_consolidated"
+) -> str | None:
     """Current-period value for an element in the requested scope.
 
     Returns ``None`` rather than falling back to the other scope: silently

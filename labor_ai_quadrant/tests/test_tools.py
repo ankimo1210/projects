@@ -34,7 +34,9 @@ def test_as_of_is_the_last_completed_month():
     assert qp.last_complete_month(pd.Timestamp("2026-01-01")) == pd.Period("2025-12", freq="M")
 
 
-def test_fetch_prices_drops_the_unfinished_month_and_never_touches_the_network(tmp_path, monkeypatch):
+def test_fetch_prices_drops_the_unfinished_month_and_never_touches_the_network(
+    tmp_path, monkeypatch
+):
     """as-of より後の足は落とす。キャッシュが as-of より新しければ取得もしない。"""
     qp = _load("quadrant_performance")
     cache = tmp_path / "prices_monthly.json"
@@ -62,9 +64,7 @@ def test_a_cache_older_than_the_as_of_month_is_refetched(tmp_path, monkeypatch):
     """一度キャッシュに入った銘柄を二度と更新しない、という旧実装のバグの回帰テスト。"""
     qp = _load("quadrant_performance")
     cache = tmp_path / "prices_monthly.json"
-    cache.write_text(
-        json.dumps({"fetched": "2026-06-30", "prices": {"1234": {"2022-11": 100.0}}})
-    )
+    cache.write_text(json.dumps({"fetched": "2026-06-30", "prices": {"1234": {"2022-11": 100.0}}}))
     monkeypatch.setattr(qp, "CACHE", cache)
 
     asked: list[str] = []

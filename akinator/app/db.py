@@ -1,5 +1,6 @@
 """SQLite persistence for game history and corrections (future training data).
 Entities/questions are NOT stored here — they load from JSON."""
+
 from __future__ import annotations
 
 import sqlite3
@@ -49,8 +50,9 @@ def create_game(db_path: Path) -> int:
         return int(cur.lastrowid)
 
 
-def save_answer(db_path: Path, game_id: int, question_id: str, answer: str,
-                asked_order: int) -> None:
+def save_answer(
+    db_path: Path, game_id: int, question_id: str, answer: str, asked_order: int
+) -> None:
     with closing(_connect(db_path)) as conn:
         conn.execute(
             "INSERT INTO game_answers (game_id, question_id, answer, asked_order) "
@@ -60,12 +62,10 @@ def save_answer(db_path: Path, game_id: int, question_id: str, answer: str,
         conn.commit()
 
 
-def finish_game(db_path: Path, game_id: int, guessed_entity_id: str,
-                was_correct: bool) -> None:
+def finish_game(db_path: Path, game_id: int, guessed_entity_id: str, was_correct: bool) -> None:
     with closing(_connect(db_path)) as conn:
         conn.execute(
-            "UPDATE games SET status='finished', guessed_entity_id=?, was_correct=? "
-            "WHERE id=?",
+            "UPDATE games SET status='finished', guessed_entity_id=?, was_correct=? WHERE id=?",
             (guessed_entity_id, 1 if was_correct else 0, game_id),
         )
         conn.commit()

@@ -88,7 +88,9 @@ def do_generation_anatomy(model, tok, device, out):
     prompt = "日本の首都は"
     ids = torch.tensor([tok.encode(prompt)], device=device)
     # per-step anatomy under greedy
-    _, steps = generate(model, ids, SamplingConfig(max_new_tokens=30, greedy=True), record_steps=True)
+    _, steps = generate(
+        model, ids, SamplingConfig(max_new_tokens=30, greedy=True), record_steps=True
+    )
     step_rows = [
         {
             "index": s.index,
@@ -96,9 +98,9 @@ def do_generation_anatomy(model, tok, device, out):
             "chosen_prob": round(s.chosen_prob, 4),
             "entropy": round(s.entropy, 3),
             "top5": [
-                        (tok.id_to_token(i), round(p, 4))
-                        for i, p in zip(s.top_ids[:5], s.top_probs[:5], strict=False)
-                    ],
+                (tok.id_to_token(i), round(p, 4))
+                for i, p in zip(s.top_ids[:5], s.top_probs[:5], strict=False)
+            ],
         }
         for s in steps
     ]
@@ -122,7 +124,10 @@ def do_generation_anatomy(model, tok, device, out):
             seqs.append(gen_ids)
             texts.append(tok.decode(gen_ids))
         sweep[name] = {"metrics": aggregate_metrics(seqs, eos_id=EOS_ID), "sample": texts[0][:120]}
-    save_json({"prompt": prompt, "steps": step_rows, "sampling_sweep": sweep}, out / "generation_anatomy.json")
+    save_json(
+        {"prompt": prompt, "steps": step_rows, "sampling_sweep": sweep},
+        out / "generation_anatomy.json",
+    )
     return sweep
 
 
@@ -155,28 +160,63 @@ def do_sft(model, tok, device, root, out):
     results = {}
     for regime, ao in [("assistant_only", True), ("full_sequence", False)]:
         m = copy.deepcopy(base)
-        res = run_sft(m, examples, tok, assistant_only=ao, steps=400, batch_size=16,
-                      context_len=256, lr=2e-4, device=device, seed=0)
+        res = run_sft(
+            m,
+            examples,
+            tok,
+            assistant_only=ao,
+            steps=400,
+            batch_size=16,
+            context_len=256,
+            lr=2e-4,
+            device=device,
+            seed=0,
+        )
         # sample responses to fixed instructions
         samples = []
-        for instr in ["日本の首都はどこですか？", "犬について一文で説明してください。", "2たす3はいくつですか？"]:
+        for instr in [
+            "日本の首都はどこですか？",
+            "犬について一文で説明してください。",
+            "2たす3はいくつですか？",
+        ]:
             from jp_llm_lab.tokenization.base import ASSISTANT_ID, BOS_ID, USER_ID
 
             prompt = [BOS_ID, USER_ID, *tok.encode(instr), ASSISTANT_ID]
             pid = torch.tensor([prompt], device=device)
-            out_ids, _ = generate(m, pid, SamplingConfig(max_new_tokens=60, temperature=0.7, seed=1, stop_id=EOS_ID))
-            samples.append({"instruction": instr, "response": tok.decode(out_ids[0, len(prompt):].tolist(), skip_special=True)})
+            out_ids, _ = generate(
+                m, pid, SamplingConfig(max_new_tokens=60, temperature=0.7, seed=1, stop_id=EOS_ID)
+            )
+            samples.append(
+                {
+                    "instruction": instr,
+                    "response": tok.decode(out_ids[0, len(prompt) :].tolist(), skip_special=True),
+                }
+            )
         results[regime] = {"final_loss": res.final_loss, "curve": res.curve, "samples": samples}
         m.cpu()
 
     # base (pretrained, no SFT) completions for the same instructions, for contrast
     base_samples = []
-    for instr in ["日本の首都はどこですか？", "犬について一文で説明してください。", "2たす3はいくつですか？"]:
+    for instr in [
+        "日本の首都はどこですか？",
+        "犬について一文で説明してください。",
+        "2たす3はいくつですか？",
+    ]:
         pid = torch.tensor([tok.encode(instr)], device=device)
-        out_ids, _ = generate(base.to(device), pid, SamplingConfig(max_new_tokens=60, temperature=0.7, seed=1))
-        base_samples.append({"instruction": instr, "completion": tok.decode(out_ids[0, pid.shape[1]:].tolist())})
-    save_json({"regimes": results, "base_pretrained_samples": base_samples,
-               "sft_examples": len(examples)}, out / "sft.json")
+        out_ids, _ = generate(
+            base.to(device), pid, SamplingConfig(max_new_tokens=60, temperature=0.7, seed=1)
+        )
+        base_samples.append(
+            {"instruction": instr, "completion": tok.decode(out_ids[0, pid.shape[1] :].tolist())}
+        )
+    save_json(
+        {
+            "regimes": results,
+            "base_pretrained_samples": base_samples,
+            "sft_examples": len(examples),
+        },
+        out / "sft.json",
+    )
     return results
 
 
@@ -193,16 +233,22 @@ def main() -> None:
 
     if "calibration" not in args.skip:
         r = do_calibration(model, tok, device, out)
-        print(f"calibration: T={r['fitted_T']:.3f} rawECE={r['raw']['ece_equal_width']:.4f} "
-              f"scaledNLL={r['temperature_scaled']['nll']:.3f} (rawNLL={r['raw']['nll']:.3f})")
+        print(
+            f"calibration: T={r['fitted_T']:.3f} rawECE={r['raw']['ece_equal_width']:.4f} "
+            f"scaledNLL={r['temperature_scaled']['nll']:.3f} (rawNLL={r['raw']['nll']:.3f})"
+        )
     if "generation" not in args.skip:
         sweep = do_generation_anatomy(model, tok, device, out)
         for name, d in sweep.items():
-            print(f"  {name:9s} rep={d['metrics']['repetition_rate']:.3f} distinct2={d['metrics']['distinct_2']:.3f}")
+            print(
+                f"  {name:9s} rep={d['metrics']['repetition_rate']:.3f} distinct2={d['metrics']['distinct_2']:.3f}"
+            )
     if "memorization" not in args.skip:
         r = do_memorization(model, tok, device, out)
-        print(f"memorization train_exact={r['train'].get('mean_exact_match'):.1f} "
-              f"val_exact={r['validation'].get('mean_exact_match'):.1f}")
+        print(
+            f"memorization train_exact={r['train'].get('mean_exact_match'):.1f} "
+            f"val_exact={r['validation'].get('mean_exact_match'):.1f}"
+        )
     if "sft" not in args.skip:
         r = do_sft(model, tok, device, root, out)
         for regime, d in r.items():

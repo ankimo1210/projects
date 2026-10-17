@@ -61,13 +61,17 @@ def test_param_breakdown_sums_to_total():
 
 
 def test_weight_tying_shares_storage():
-    cfg = ModelConfig(vocab_size=200, d_model=32, n_heads=2, n_layers=1, context_len=8, tie_weights=True)
+    cfg = ModelConfig(
+        vocab_size=200, d_model=32, n_heads=2, n_layers=1, context_len=8, tie_weights=True
+    )
     model = ClassicalGPT(cfg)
     assert model.lm_head.weight is model.tok_emb.weight
     assert "lm_head" not in model.param_breakdown()["groups"]  # deduped
 
     untied = ClassicalGPT(
-        ModelConfig(vocab_size=200, d_model=32, n_heads=2, n_layers=1, context_len=8, tie_weights=False)
+        ModelConfig(
+            vocab_size=200, d_model=32, n_heads=2, n_layers=1, context_len=8, tie_weights=False
+        )
     )
     assert untied.lm_head.weight is not untied.tok_emb.weight
     assert untied.param_breakdown()["groups"]["lm_head"] == 200 * 32

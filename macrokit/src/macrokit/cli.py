@@ -98,8 +98,14 @@ def rates_command(ctx: click.Context) -> None:
     payloads = adapter.fetch_raw()
     for content, url, status in payloads:
         save_snapshot(
-            data_root / "raw", adapter.source, "jgb_curve", content,
-            ingested_at=now, url=url, http_status=status, filename=url.rsplit("/", 1)[-1],
+            data_root / "raw",
+            adapter.source,
+            "jgb_curve",
+            content,
+            ingested_at=now,
+            url=url,
+            http_status=status,
+            filename=url.rsplit("/", 1)[-1],
         )
     rows = adapter.parse(payloads, ingested_at=now)
     inserted = insert_rates(con, rows)
@@ -143,8 +149,14 @@ def gdp_releases_command(ctx: click.Context) -> None:
 
     content, url, status = adapter.fetch_raw()
     save_snapshot(
-        data_root / "raw", adapter.source, GDP_INDICATOR, content,
-        ingested_at=now, url=url, http_status=status, filename="e-stat_sna.xml",
+        data_root / "raw",
+        adapter.source,
+        GDP_INDICATOR,
+        content,
+        ingested_at=now,
+        url=url,
+        http_status=status,
+        filename="e-stat_sna.xml",
     )
     events = adapter.parse(content, indicator=GDP_INDICATOR, source_url=url, ingested_at=now)
     inserted = insert_releases(con, events)
@@ -184,13 +196,22 @@ def gdp_vintages_command(ctx: click.Context) -> None:
                 stem_prefix=source_ref["stem_prefix"],
             )
             save_snapshot(
-                data_root / "raw", adapter.source, GDP_INDICATOR, content,
-                ingested_at=now, url=csv_url, http_status=status,
+                data_root / "raw",
+                adapter.source,
+                GDP_INDICATOR,
+                content,
+                ingested_at=now,
+                url=csv_url,
+                http_status=status,
                 filename=csv_url.rsplit("/", 1)[-1],
             )
             rows = adapter.parse(
-                event, content, indicator=GDP_INDICATOR, column=source_ref["column"],
-                source_url=csv_url, ingested_at=now,
+                event,
+                content,
+                indicator=GDP_INDICATOR,
+                column=source_ref["column"],
+                source_url=csv_url,
+                ingested_at=now,
             )
         except EsriGdpError as exc:
             click.echo(f"  skip {event.period_start} {event.release_kind}: {exc}")

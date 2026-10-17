@@ -67,9 +67,7 @@ def test_curated_service_questions_are_valid_and_bilingual() -> None:
     )
 
 
-def test_complete_translation_cache_produces_bilingual_questions(
-    tmp_path, monkeypatch
-) -> None:
+def test_complete_translation_cache_produces_bilingual_questions(tmp_path, monkeypatch) -> None:
     question = {
         "id": "q_1",
         "prompt": "Which wine?",
@@ -97,9 +95,7 @@ def test_complete_translation_cache_produces_bilingual_questions(
         "status": "machine_translated",
     }
     cache_path.write_text(json.dumps(record, ensure_ascii=False) + "\n", encoding="utf-8")
-    monkeypatch.setattr(
-        "scripts.build_private_app_pack.TRANSLATION_CACHE", cache_path
-    )
+    monkeypatch.setattr("scripts.build_private_app_pack.TRANSLATION_CACHE", cache_path)
 
     translated, complete = apply_complete_translations([question])
 
@@ -108,14 +104,10 @@ def test_complete_translation_cache_produces_bilingual_questions(
     assert translated[0]["translations"]["ja"]["answer"] == "シャンパーニュ"
 
 
-def test_incomplete_translation_cache_does_not_create_mixed_schema(
-    tmp_path, monkeypatch
-) -> None:
+def test_incomplete_translation_cache_does_not_create_mixed_schema(tmp_path, monkeypatch) -> None:
     cache_path = tmp_path / "translations.jsonl"
     cache_path.write_text("", encoding="utf-8")
-    monkeypatch.setattr(
-        "scripts.build_private_app_pack.TRANSLATION_CACHE", cache_path
-    )
+    monkeypatch.setattr("scripts.build_private_app_pack.TRANSLATION_CACHE", cache_path)
     questions = [
         {
             "id": "q_1",

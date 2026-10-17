@@ -20,7 +20,9 @@ def provenance() -> dict:
     try:
         commit = subprocess.run(
             ["git", "rev-parse", "--short", "HEAD"],
-            capture_output=True, text=True, check=True,
+            capture_output=True,
+            text=True,
+            check=True,
         ).stdout.strip()
     except Exception:
         commit = "unknown"
@@ -70,9 +72,15 @@ def main() -> None:
         "n_rows": len(df),
         "specs": [
             {
-                "key": s.key, "title": s.title, "season": s.season, "freq": s.freq_label,
-                "context_length": s.context_length, "horizon": s.horizon,
-                "n_series": s.n_series, "n_windows": s.n_windows, "note": s.note,
+                "key": s.key,
+                "title": s.title,
+                "season": s.season,
+                "freq": s.freq_label,
+                "context_length": s.context_length,
+                "horizon": s.horizon,
+                "n_series": s.n_series,
+                "n_windows": s.n_windows,
+                "note": s.note,
             }
             for s in ALL_SPECS
             if args.datasets is None or s.key in args.datasets
@@ -81,7 +89,12 @@ def main() -> None:
     (RESULTS_DIR / "run_meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
 
     print(f"\nwall {wall:.1f}s, {len(df)} rows -> {RESULTS_DIR}")
-    print(df.groupby("model")[["mase", "smape", "scaled_crps", "coverage_80"]].mean().round(3).to_string())
+    print(
+        df.groupby("model")[["mase", "smape", "scaled_crps", "coverage_80"]]
+        .mean()
+        .round(3)
+        .to_string()
+    )
     fb = df[df.fallback != ""].groupby(["model", "fallback"]).size()
     if len(fb):
         print("\nfallbacks:")

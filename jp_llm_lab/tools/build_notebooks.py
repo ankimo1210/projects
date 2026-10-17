@@ -17,7 +17,7 @@ from nbkit import build_notebook, code, md
 REPO = Path(__file__).resolve().parents[1]
 NB_DIR = REPO / "notebooks"
 
-SETUP = r'''
+SETUP = r"""
 # 共通セットアップ（全ノートブック同一）
 import warnings
 warnings.filterwarnings("ignore")
@@ -38,13 +38,13 @@ ROOT = repo_root()
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"ROOT={ROOT}")
 print(f"device={DEVICE}, torch={torch.__version__}")
-'''
+"""
 
 
 # --------------------------------------------------------------------- NB00
 def nb00() -> list:
     return [
-        md(r'''
+        md(r"""
 # 00. Project Overview — jp_llm_lab
 
 ## このプロジェクトは何か
@@ -58,8 +58,8 @@ def nb00() -> list:
 
 設計原則は **Visualization-first**：主要な処理すべてに
 「数式 → 小さな具体例 → tensor shape 追跡 → 可視化 → 実測 → 解釈 → 注意点」を付けます。
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## 学習の地図（この教材で答えられるようになる問い）
 
 | 問い | どこで扱うか |
@@ -77,8 +77,8 @@ def nb00() -> list:
 
 **Milestone 1（本リリース）では NB00, 01, 03, 04, 05, 06 が完成済み**です。
 NB02（コーパス探索）と NB07 以降は Milestone 2+ で追加されます。
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## End-to-end データフロー（spec §8.1）
 
 ```text
@@ -97,9 +97,9 @@ Raw text 「私はその人を…」
   → Sampling（greedy / temperature / top-k / top-p）
   → 生成テキスト
 ```
-'''),
+"""),
         code(SETUP),
-        code(r'''
+        code(r"""
 # 環境の一言サマリ（詳細は NB01）
 import jp_llm_lab
 from jp_llm_lab.utils.env import collect_env_report
@@ -107,8 +107,8 @@ r = collect_env_report()
 print(f"jp_llm_lab v{jp_llm_lab.__version__}")
 print(f"GPU: {r.gpu_name} ({r.vram_gb} GB, BF16={r.bf16_supported})")
 print(f"CUDA: {r.cuda_version} / SDPA backends: {r.sdpa_backends}")
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## リポジトリの歩き方
 
 ```text
@@ -133,8 +133,8 @@ make -C jp_llm_lab bench        # explicit vs SDPA
 make -C jp_llm_lab notebooks    # 本ノートブック群の再生成・実行
 make -C jp_llm_lab report       # HTMLレポート
 ```
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## 測定の信頼性ポリシー
 
 - **実測と例示を混ぜない**: 全run は `runmeta.json`（git hash・パッケージ版・GPU・時刻）と
@@ -151,14 +151,14 @@ make -C jp_llm_lab report       # HTMLレポート
 3. なぜ Milestone 1 では 30M モデルではなく 1M モデルから始めるのか。
 
 **次へ**: [01_environment_and_gpu](01_environment_and_gpu.ipynb) — ハードウェアを実測し、設定を根拠づける。
-'''),
+"""),
     ]
 
 
 # --------------------------------------------------------------------- NB01
 def nb01() -> list:
     return [
-        md(r'''
+        md(r"""
 # 01. Environment and GPU
 
 ## 学習目標
@@ -170,16 +170,16 @@ def nb01() -> list:
 ## 前提知識
 
 浮動小数点数が「符号・指数・仮数」で表現されること。
-'''),
+"""),
         code(SETUP),
-        code(r'''
+        code(r"""
 from dataclasses import asdict
 from jp_llm_lab.utils.env import collect_env_report, recommend_setup
 
 report = collect_env_report()
 pd.Series(asdict(report)).to_frame("value")
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## 数値形式: なぜ BF16 か
 
 | 形式 | 符号 | 指数 | 仮数 | 表現範囲 | 相対精度 |
@@ -193,12 +193,12 @@ pd.Series(asdict(report)).to_frame("value")
 - 仮数が7bitしかない粗さは、勾配ノイズ（ミニバッチ由来）より小さいオーダーであることが多く、
   学習品質への影響は限定的（これは M3 で fp32 と実測比較する）。
 - メモリ半減・Tensor Core の高速パスが使える。
-'''),
-        code(r'''
+"""),
+        code(r"""
 setup = recommend_setup(report)
 pd.Series(setup.as_dict()).to_frame("recommendation")
-'''),
-        md(r'''
+"""),
+        md(r"""
 ### 推奨ロジック（`recommend_setup` の中身）
 
 1. **dtype**: CUDA + BF16対応 → `bf16`、それ以外は `fp32`
@@ -207,8 +207,8 @@ pd.Series(setup.as_dict()).to_frame("recommendation")
 4. **grad_accum**: `ceil(目標トークン数 ÷ (micro_batch × context_len))` — マシンが違っても**1ステップあたりのトークン数**を揃える
 
 **Caveat**: これは粗い事前推定。実測最適点は M3 §14.1 のハードウェア校正で決める。
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 行列積のマイクロベンチ: fp32 vs bf16（Tensor Coreの効果を体感する）
 def matmul_tflops(dtype, n=4096, reps=10):
     if DEVICE == "cpu":
@@ -238,8 +238,8 @@ fig.update_layout(title="行列積スループット（大きいほど速い）"
                   template="plotly_white", height=360)
 fig.show()
 df
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## 読み方と注意
 
 - **Observation**: 上のセルの実測値がそのまま観察結果（このノートブックは実行のたびに再計測する）。
@@ -256,14 +256,14 @@ df
 3. VRAM が半分のマシンで同じ実験を再現するには、何を変えて何を固定すべきか。
 
 **次へ**: [03_tokenizer_anatomy](03_tokenizer_anatomy.ipynb)（NB02 コーパス探索は M2 で追加）
-'''),
+"""),
     ]
 
 
 # --------------------------------------------------------------------- NB03
 def nb03() -> list:
     return [
-        md(r'''
+        md(r"""
 # 03. Tokenizer Anatomy — Part 1: 文字トークナイザ
 
 ## 学習目標
@@ -281,9 +281,9 @@ $$\operatorname{encode}: \text{str} \to \mathbb{N}^*, \quad \operatorname{decode
 $$\operatorname{decode}(\operatorname{encode}(x)) = x \quad (\forall x: \text{全文字が } \mathcal{V} \text{ 内})$$
 
 特殊トークンは固定ID: `<PAD>`=0, `<UNK>`=1, `<BOS>`=2, `<EOS>`=3, `<USER>`=4, `<ASSISTANT>`=5
-'''),
+"""),
         code(SETUP),
-        code(r'''
+        code(r"""
 from jp_llm_lab.data.sample_corpus import load_sample_corpus
 from jp_llm_lab.tokenization.char_tokenizer import CharTokenizer
 
@@ -293,21 +293,21 @@ print(f"コーパス: {len(corpus):,} 文字")
 print(f"語彙サイズ: {tok.vocab_size:,}（特殊6 + 文字 {tok.vocab_size - 6:,} 種）")
 print(f"特殊トークン: {tok.itos[:6]}")
 print(f"文字部分の先頭20: {tok.itos[6:26]}")
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 手計算例: 1文字ずつ表引きするだけ
 s = "私は猫である。"
 ids = tok.encode(s)
 pd.DataFrame({"char": list(s), "token_id": ids})
-'''),
-        code(r'''
+"""),
+        code(r"""
 # round-trip 恒等式（テストでも保証済み）と、破れる唯一のケース
 assert tok.decode(tok.encode(corpus)) == corpus
 print("decode(encode(corpus)) == corpus ✓")
 
 print("未知文字の例:", tok.encode("𠮷"), "→", tok.decode(tok.encode("𠮷")))  # <UNK>=1
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 頻出文字 top30
 freq = Counter(corpus)
 top = freq.most_common(30)
@@ -316,8 +316,8 @@ fig = go.Figure(go.Bar(x=labels, y=[n for _, n in top], marker_color="#1f77b4"))
 fig.update_layout(title="『こころ』頻出文字 top30", xaxis_title="文字", yaxis_title="出現回数",
                   template="plotly_white", height=380)
 fig.show()
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 文字種構成（ひらがな/カタカナ/漢字/英数字/記号）
 def char_class(ch):
     o = ord(ch)
@@ -341,13 +341,13 @@ fig.update_layout(barmode="group", title="文字種構成: 出現ベース vs �
                   yaxis_title="割合", template="plotly_white", height=380)
 fig.show()
 df
-'''),
-        md(r'''
+"""),
+        md(r"""
 **How to read**: 出現ベース（テキストの何%か）と語彙ベース（異なり文字の何%か）は大きく食い違う。
 ひらがなは**出現**の大半を占めるが種類は~80。漢字は逆に**語彙**の大半を占める。
 これが「文字トークナイザの語彙サイズは漢字の異なり数で決まる」という構造。
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 被覆率（OOV）: 『こころ』で学習した語彙で『走れメロス』を符号化すると？
 merosu = load_sample_corpus("hashire_merosu")
 ids_m = tok.encode(merosu)
@@ -355,8 +355,8 @@ unk_rate = sum(1 for i in ids_m if i == 1) / len(ids_m)
 unk_chars = sorted({c for c in set(merosu) if c not in tok.stoi})
 print(f"『走れメロス』{len(merosu):,} 文字中 UNK率 = {unk_rate:.2%}")
 print(f"未知文字 {len(unk_chars)} 種（例）: {unk_chars[:30]}")
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## Observation / Interpretation / Caveat
 
 - **Observation**: 語彙 ~2,000 のうち漢字が大半。別コーパス（メロス）では未知文字が発生し、
@@ -373,14 +373,14 @@ print(f"未知文字 {len(unk_chars)} 種（例）: {unk_chars[:30]}")
 3. 文字トークナイザで context 256 は「何文字」か。BPE（1トークン≈2-3文字）では何文字相当か。
 
 **次へ**: [04_bigram_language_model](04_bigram_language_model.ipynb)
-'''),
+"""),
     ]
 
 
 # --------------------------------------------------------------------- NB04
 def nb04() -> list:
     return [
-        md(r'''
+        md(r"""
 # 04. Bigram Language Model — 最小の言語モデル
 
 ## 学習目標
@@ -398,8 +398,8 @@ $$P(x_{t+1}=j \mid x_t=i) = p_{ij}, \qquad
 
 $c_{ij}$ は訓練データ中の遷移 $i \to j$ の回数、$\alpha$ は加算平滑化（未観測ペアに残す確率質量）。
 損失は次トークンの負対数尤度（nats/token）。**一様分布なら $\ln V$**。
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## 手計算例
 
 コーパス「あいあいう」（遷移: あ→い, い→あ, あ→い, い→う）、語彙 {あ,い,う}, α=0 の場合:
@@ -412,9 +412,9 @@ $c_{ij}$ は訓練データ中の遷移 $i \to j$ の回数、$\alpha$ は加算
 
 → $P(\text{い}\mid\text{あ}) = 2/2 = 1.0$、$P(\text{あ}\mid\text{い}) = P(\text{う}\mid\text{い}) = 0.5$。
 「う」の行は観測ゼロ → α>0 が無いと定義できない（平滑化の必然性）。
-'''),
+"""),
         code(SETUP),
-        code(r'''
+        code(r"""
 # 実行済み run の成果物を読む（再学習不要）
 BRUN = ROOT / "experiments/runs/m1_bigram_char_seed42"
 assert BRUN.exists(), "先に `make -C jp_llm_lab train-bigram` を実行してください"
@@ -433,8 +433,8 @@ fig.update_layout(title="neural bigram は count モデル（閉形式解）に�
                   template="plotly_white", height=420)
 fig.show()
 print(f"neural val = {summary['neural']['val_loss']:.4f} / count val = {summary['count']['val_loss']:.4f}")
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 遷移確率行列を「見る」: 頻出30文字 × 頻出30文字
 from jp_llm_lab.data.sample_corpus import load_sample_corpus
 from jp_llm_lab.models.bigram import CountBigramLM
@@ -454,12 +454,12 @@ fig.update_layout(title="bigram 遷移確率（行=現在の文字, 列=次の�
                   template="plotly_white", height=560)
 fig.update_yaxes(autorange="reversed")
 fig.show()
-'''),
-        md(r'''
+"""),
+        md(r"""
 **How to read**: 行「し」で「た」が明るい＝「し→た」が高確率、のように読む。
 「。」の行は「⏎（改行）」や「」」が明るいはず — 句点の後の統計が既に captureされている。
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 平滑化 α の感度（summary に保存済みのスイープ）
 sweep = summary["alpha_sweep_val_loss"]
 fig = go.Figure(go.Scatter(x=[float(a) for a in sweep], y=list(sweep.values()),
@@ -470,14 +470,14 @@ fig.update_xaxes(type="log", title="α (log)")
 fig.update_layout(title="加算平滑化 α と検証損失", yaxis_title="val loss (nats/token)",
                   template="plotly_white", height=400)
 fig.show()
-'''),
-        code(r'''
+"""),
+        code(r"""
 # bigram からのサンプリング — 「1文字先の統計」だけでどこまで日本語に見えるか
 g = torch.Generator().manual_seed(0)
 sample_ids = cm.generate(tok.encode("私")[0], 120, g)
 print(tok.decode(sample_ids))
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## Observation / Interpretation / Caveat
 
 - **Observation**: neural bigram の val loss は count モデルとほぼ一致（差 ~0.05 nats は平滑化方式の差）。
@@ -495,14 +495,14 @@ print(tok.decode(sample_ids))
 3. bigram が原理的に表現できない日本語の現象を1つ挙げよ（例: 係り受け）。
 
 **次へ**: [05_attention_from_scratch](05_attention_from_scratch.ipynb) — 文脈を「選んで」参照する仕組み。
-'''),
+"""),
     ]
 
 
 # --------------------------------------------------------------------- NB05
 def nb05() -> list:
     return [
-        md(r'''
+        md(r"""
 # 05. Attention from Scratch
 
 ## 学習目標
@@ -521,9 +521,9 @@ $$\text{scores} = \frac{QK^\top}{\sqrt{d_h}} \in \mathbb{R}^{T\times T},\qquad
 $$A = \operatorname{softmax}_{\text{row}}(\text{scores}),\qquad \text{out} = AV$$
 
 $\sqrt{d_h}$ で割るのは、次元が増えても内積の分散を ~1 に保ち softmax の飽和を防ぐため。
-'''),
+"""),
         code(SETUP),
-        code(r'''
+        code(r"""
 # 手計算例: T=3, d_h=2 の小さな数値で全ステップを表示
 np.set_printoptions(precision=3, suppress=True)
 Q = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
@@ -547,14 +547,14 @@ print("行和:", weights.sum(axis=1))
 out = weights @ V
 print("\nout = A V =")
 print(out)
-'''),
-        md(r'''
+"""),
+        md(r"""
 **読み解き**:
 - 1行目（t=0）は自分しか見えない → 重み `[1, 0, 0]`、出力は $v_0$ そのもの。
 - 2行目（t=1）は $q_1 k_0^\top vs q_1 k_1^\top$ の大小で過去2トークンを按分。
 - $-\infty$ は $e^{-\infty}=0$ となり、**softmax の分母からも消える** — 「見えない」の実装。
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 自作モジュールの explicit パスを、手動再計算で完全一致検証
 from jp_llm_lab.models.attention import CausalSelfAttention
 
@@ -577,8 +577,8 @@ assert torch.allclose(w, t["a.attn_weights"], atol=1e-6)
 assert torch.allclose(y_manual, y, atol=1e-6)
 print("手動再計算 == モジュール出力 ✓")
 print("重み行和（全head×全行）:", w.sum(-1).flatten().tolist())
-'''),
-        code(r'''
+"""),
+        code(r"""
 # causal mask の可視化
 T = 8
 mask = torch.tril(torch.ones(T, T))
@@ -589,8 +589,8 @@ fig.update_layout(title="causal mask（青=参照可 / 灰=遮断） 行=query�
 fig.update_yaxes(autorange="reversed", title="query t")
 fig.update_xaxes(title="key j")
 fig.show()
-'''),
-        code(r'''
+"""),
+        code(r"""
 # explicit と SDPA の出力一致（教育実装は「遅いが同じ計算」であることの確認）
 import torch.nn.functional as F
 torch.manual_seed(1)
@@ -602,8 +602,8 @@ y_sdpa = attn2(x2)
 print("max |explicit - sdpa| =", float((y_explicit - y_sdpa).abs().max()))
 assert torch.allclose(y_explicit, y_sdpa, atol=1e-5)
 print("一致 ✓（同一パラメータ・同一数式・異なるカーネル）")
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 実測ベンチ（scripts/bench_attention.py の保存結果）
 from jp_llm_lab.visualization.params_viz import attn_bench_figure
 bench = load_json(ROOT / "reports/figures/attn_bench.json")
@@ -613,8 +613,8 @@ sdpa_512 = [r for r in bench["results"] if r["T"] == 512 and r["dtype"] == "bflo
 if len(sdpa_512) == 2:
     e, s = (r["median_ms"] for r in sdpa_512)
     print(f"T=512 bf16: explicit {e:.2f}ms vs SDPA {s:.2f}ms → ×{e/s:.1f}")
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 学習済みモデルの attention エントロピー（init vs trained）
 from jp_llm_lab.models.config import ModelConfig
 from jp_llm_lab.models.transformer import ClassicalGPT
@@ -643,8 +643,8 @@ for label, m in [("init", load_model("ckpt_000pct_*.pt")), ("trained", load_mode
           f"  層別: {[round(float(e.mean()), 2) for e in ent[label]]}")
 fig = entropy_comparison_figure(ent, n_layers=4, n_heads=4)
 fig.show()
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## Observation / Interpretation / Caveat
 
 - **Observation**: init では全 head のエントロピーがほぼ同一（≈1.97 nats、一様に近い）。
@@ -664,14 +664,14 @@ fig.show()
 3. SDPA が explicit より速い主因はメモリと計算のどちらか。
 
 **次へ**: [06_transformer_forward_pass](06_transformer_forward_pass.ipynb)
-'''),
+"""),
     ]
 
 
 # --------------------------------------------------------------------- NB06
 def nb06() -> list:
     return [
-        md(r'''
+        md(r"""
 # 06. Transformer Forward Pass — text から logits まで
 
 ## 学習目標
@@ -694,9 +694,9 @@ residual_stream        [B, T, D]
 logits                 [B, T, V]
 probabilities          [B, T, V]
 ```
-'''),
+"""),
         code(SETUP),
-        code(r'''
+        code(r"""
 from jp_llm_lab.models.config import ModelConfig
 from jp_llm_lab.models.transformer import ClassicalGPT
 from jp_llm_lab.training.trainer import load_checkpoint
@@ -711,13 +711,13 @@ model = ClassicalGPT(ModelConfig.from_dict(payload["model_cfg"]))
 load_checkpoint(ckpt, model)
 model.eval()
 print(f"loaded: {ckpt.name} (step {payload['step']}, {payload['tokens_seen']:,} tokens 学習済み)")
-'''),
-        code(r'''
+"""),
+        code(r"""
 from jp_llm_lab.visualization.params_viz import param_breakdown_figure
 fig = param_breakdown_figure(model.param_breakdown())
 fig.show()
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 実文の forward pass を trace（学習と同一のコードパスに dict を通すだけ — 二重実装なし）
 s = "私はその人を常に先生と呼んでいた。"
 ids = torch.tensor([tok.encode(s)])
@@ -725,8 +725,8 @@ trace = model.trace_forward(ids)
 
 rows = [(name, str(tuple(t.shape)), str(t.dtype).replace("torch.", "")) for name, t in trace.items()]
 pd.DataFrame(rows, columns=["tensor", "shape", "dtype"])
-'''),
-        code(r'''
+"""),
+        code(r"""
 # debug mode: shape だけでなく実値の先頭を覗く
 def peek(name, k=4):
     t = trace[name].float()
@@ -737,8 +737,8 @@ for name in ["input_ids", "token_embeddings", "embeddings",
              "block0.attn.q", "block0.attn.scores", "block0.attn.attn_weights",
              "block0.resid_after_mlp", "logits", "probabilities"]:
     peek(name)
-'''),
-        code(r'''
+"""),
+        code(r"""
 # residual stream の RMS 成長と、各 branch の書き込み量 r_l = ‖Δh‖/‖h‖
 from jp_llm_lab.instrumentation.activation_stats import residual_update_ratios
 
@@ -755,8 +755,8 @@ fig2 = go.Figure(go.Bar(x=list(ratios), y=list(ratios.values()), marker_color="#
 fig2.update_layout(title="branch別 residual 書き込み比 r_l = ‖Δh‖/‖h‖（この1文に対して）",
                    yaxis_title="r_l", template="plotly_white", height=380)
 fig2.show()
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 最終位置の logits → 次トークン分布 top10
 probs = trace["probabilities"][0, -1]
 top = torch.topk(probs, 10)
@@ -767,8 +767,8 @@ fig.update_layout(title=f"「{s}」の次トークン分布 top10（エントロ
                   yaxis_title="確率", template="plotly_white", height=380)
 fig.show()
 print(f"原文の続きは「だ」（…呼んでいた。だから…）→ モデルのP(だ) = {float(probs[tok.token_to_id('だ')]):.3f}")
-'''),
-        code(r'''
+"""),
+        code(r"""
 # 生成: greedy vs temperature 0.7（同じモデル・同じprompt）
 from jp_llm_lab.generation.sampler import SamplingConfig, generate
 
@@ -778,8 +778,8 @@ out_s, _ = generate(model, ids0, SamplingConfig(max_new_tokens=80, temperature=0
 print("greedy :", tok.decode(out_g[0].tolist()).replace("\n", "⏎"))
 print()
 print("temp0.7:", tok.decode(out_s[0].tolist()).replace("\n", "⏎"))
-'''),
-        md(r'''
+"""),
+        md(r"""
 ## Observation / Interpretation / Caveat
 
 - **Observation**: shape 表は spec §8.4 の理論形状と完全一致。residual RMS は層とともに単調増加
@@ -800,7 +800,7 @@ print("temp0.7:", tok.decode(out_s[0].tolist()).replace("\n", "⏎"))
 3. residual stream の RMS が層とともに増えるのは、pre-LN のどの性質によるか。
 
 **次へ（M2）**: NB02 コーパス探索、NB07 アーキテクチャ可視化、NB13+ 学習ダイナミクス。
-'''),
+"""),
     ]
 
 

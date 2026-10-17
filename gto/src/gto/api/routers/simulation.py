@@ -39,7 +39,7 @@ class BBHand(BaseModel):
 class PostflopResult(BaseModel):
     strategy: list[ActionFreq]
     exploitability: float
-    backend: str           # "gto-hu" | "gpu-preview"
+    backend: str  # "gto-hu" | "gpu-preview"
     iterations: int
     equilibrium_claim: bool = False
 

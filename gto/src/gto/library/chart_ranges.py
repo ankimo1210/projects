@@ -52,10 +52,7 @@ def opener_call_vs_3bet_weights(opener: str) -> dict[str, float]:
     """Conditional: opened AND called the 3bet (open freq x call freq)."""
     rfi = RFI_BY_POS[opener]
     vs3 = VS_3BET_RANGES[f"{opener}_vs_BB_3bet"]
-    return {
-        h: (rfi[h].get("R", 0) / 100.0) * (vs3[h].get("C", 0) / 100.0)
-        for h in rfi
-    }
+    return {h: (rfi[h].get("R", 0) / 100.0) * (vs3[h].get("C", 0) / 100.0) for h in rfi}
 
 
 def chart_ranges(opener: str, pot_type: str) -> dict:

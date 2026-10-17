@@ -79,9 +79,7 @@ def build_index(cache_dir: Path, sample: int = 25, tol: float = 1e-4) -> dict[st
             b = np.asarray(values, dtype=np.float64)
             n = min(len(a), len(b))
             checked += 1
-            identical += int(
-                np.allclose(a[:n], b[:n], rtol=tol, atol=tol, equal_nan=True)
-            )
+            identical += int(np.allclose(a[:n], b[:n], rtol=tol, atol=tol, equal_nan=True))
         out[key] = Coverage(
             dataset=key,
             gep_name=gep_name,

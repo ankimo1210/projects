@@ -1,6 +1,6 @@
 """CLI: predict survival for one passenger.
 
-    PYTHONPATH=src python -m serve.cli --pclass 1 --sex female --fare 100 --embarked C
+PYTHONPATH=src python -m serve.cli --pclass 1 --sex female --fare 100 --embarked C
 """
 
 from __future__ import annotations

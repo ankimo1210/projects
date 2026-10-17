@@ -15,7 +15,9 @@ def calculate_irr_from_moic(moic: float, hold_years: int | float) -> float:
     return moic ** (1 / hold_years) - 1
 
 
-def calculate_returns(exit_equity_value: float, sponsor_equity: float, hold_years: int | float) -> dict[str, float]:
+def calculate_returns(
+    exit_equity_value: float, sponsor_equity: float, hold_years: int | float
+) -> dict[str, float]:
     moic = calculate_moic(exit_equity_value, sponsor_equity)
     irr = calculate_irr_from_moic(moic, hold_years)
     return {"moic": moic, "irr": irr}

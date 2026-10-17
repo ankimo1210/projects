@@ -40,26 +40,60 @@ N_FOLDS = 5
 KF = KFold(n_splits=N_FOLDS, shuffle=True, random_state=SEED)
 
 CAT_NONE_COLS = [
-    "Alley", "BsmtQual", "BsmtCond", "BsmtExposure", "BsmtFinType1", "BsmtFinType2",
-    "FireplaceQu", "GarageType", "GarageFinish", "GarageQual", "GarageCond",
-    "PoolQC", "Fence", "MiscFeature", "MasVnrType",
+    "Alley",
+    "BsmtQual",
+    "BsmtCond",
+    "BsmtExposure",
+    "BsmtFinType1",
+    "BsmtFinType2",
+    "FireplaceQu",
+    "GarageType",
+    "GarageFinish",
+    "GarageQual",
+    "GarageCond",
+    "PoolQC",
+    "Fence",
+    "MiscFeature",
+    "MasVnrType",
 ]
 NUM_ZERO_COLS = [
-    "GarageArea", "GarageCars", "BsmtFinSF1", "BsmtFinSF2", "BsmtUnfSF",
-    "TotalBsmtSF", "BsmtFullBath", "BsmtHalfBath", "MasVnrArea",
+    "GarageArea",
+    "GarageCars",
+    "BsmtFinSF1",
+    "BsmtFinSF2",
+    "BsmtUnfSF",
+    "TotalBsmtSF",
+    "BsmtFullBath",
+    "BsmtHalfBath",
+    "MasVnrArea",
 ]
 
 QUAL_MAP = {"None": 0, "Po": 1, "Fa": 2, "TA": 3, "Gd": 4, "Ex": 5}
 ORDINAL_MAPS = {
-    "ExterQual": QUAL_MAP, "ExterCond": QUAL_MAP, "BsmtQual": QUAL_MAP,
-    "BsmtCond": QUAL_MAP, "HeatingQC": QUAL_MAP, "KitchenQual": QUAL_MAP,
-    "FireplaceQu": QUAL_MAP, "GarageQual": QUAL_MAP, "GarageCond": QUAL_MAP,
+    "ExterQual": QUAL_MAP,
+    "ExterCond": QUAL_MAP,
+    "BsmtQual": QUAL_MAP,
+    "BsmtCond": QUAL_MAP,
+    "HeatingQC": QUAL_MAP,
+    "KitchenQual": QUAL_MAP,
+    "FireplaceQu": QUAL_MAP,
+    "GarageQual": QUAL_MAP,
+    "GarageCond": QUAL_MAP,
     "PoolQC": QUAL_MAP,
     "BsmtExposure": {"None": 0, "No": 1, "Mn": 2, "Av": 3, "Gd": 4},
     "BsmtFinType1": {"None": 0, "Unf": 1, "LwQ": 2, "Rec": 3, "BLQ": 4, "ALQ": 5, "GLQ": 6},
     "BsmtFinType2": {"None": 0, "Unf": 1, "LwQ": 2, "Rec": 3, "BLQ": 4, "ALQ": 5, "GLQ": 6},
     "GarageFinish": {"None": 0, "Unf": 1, "RFn": 2, "Fin": 3},
-    "Functional": {"Sal": 0, "Sev": 1, "Maj2": 2, "Maj1": 3, "Mod": 4, "Min2": 5, "Min1": 6, "Typ": 7},
+    "Functional": {
+        "Sal": 0,
+        "Sev": 1,
+        "Maj2": 2,
+        "Maj1": 3,
+        "Mod": 4,
+        "Min2": 5,
+        "Min1": 6,
+        "Typ": 7,
+    },
     "CentralAir": {"N": 0, "Y": 1},
     "PavedDrive": {"N": 0, "P": 1, "Y": 2},
     "LandSlope": {"Sev": 0, "Mod": 1, "Gtl": 2},
@@ -95,9 +129,11 @@ def preprocess(train: pd.DataFrame, test: pd.DataFrame) -> tuple[pd.DataFrame, p
         for col in NUM_ZERO_COLS:
             df[col] = df[col].fillna(0)
         df["GarageYrBlt"] = df["GarageYrBlt"].fillna(df["YearBuilt"])
-        df["LotFrontage"] = df["LotFrontage"].fillna(
-            df["Neighborhood"].map(lot_frontage_by_hood)
-        ).fillna(lot_frontage_global)
+        df["LotFrontage"] = (
+            df["LotFrontage"]
+            .fillna(df["Neighborhood"].map(lot_frontage_by_hood))
+            .fillna(lot_frontage_global)
+        )
 
         for col, mapping in ORDINAL_MAPS.items():
             df[col] = df[col].map(mapping).astype("float64")
@@ -111,14 +147,16 @@ def preprocess(train: pd.DataFrame, test: pd.DataFrame) -> tuple[pd.DataFrame, p
 
         df["TotalSF"] = df["TotalBsmtSF"] + df["1stFlrSF"] + df["2ndFlrSF"]
         df["TotalBath"] = (
-            df["FullBath"] + 0.5 * df["HalfBath"]
-            + df["BsmtFullBath"] + 0.5 * df["BsmtHalfBath"]
+            df["FullBath"] + 0.5 * df["HalfBath"] + df["BsmtFullBath"] + 0.5 * df["BsmtHalfBath"]
         )
         df["HouseAge"] = (df["YrSold"] - df["YearBuilt"]).clip(lower=0)
         df["RemodAge"] = (df["YrSold"] - df["YearRemodAdd"]).clip(lower=0)
         df["TotalPorchSF"] = (
-            df["OpenPorchSF"] + df["EnclosedPorch"] + df["3SsnPorch"]
-            + df["ScreenPorch"] + df["WoodDeckSF"]
+            df["OpenPorchSF"]
+            + df["EnclosedPorch"]
+            + df["3SsnPorch"]
+            + df["ScreenPorch"]
+            + df["WoodDeckSF"]
         )
         df["HasPool"] = (df["PoolArea"] > 0).astype(int)
         df["HasGarage"] = (df["GarageArea"] > 0).astype(int)
@@ -155,7 +193,9 @@ def set_categories(train_X: pd.DataFrame, test_X: pd.DataFrame, nominal: list[st
 
 
 def skewed_numeric(X: pd.DataFrame, thresh: float = 0.75) -> list[str]:
-    num = [c for c in X.columns if X[c].dtype != "category" and not str(X[c].dtype).startswith("bool")]
+    num = [
+        c for c in X.columns if X[c].dtype != "category" and not str(X[c].dtype).startswith("bool")
+    ]
     sk = X[num].skew().abs()
     return [c for c in num if sk[c] > thresh and X[c].min() >= 0]
 
@@ -164,60 +204,122 @@ def make_linear_pre(X: pd.DataFrame) -> ColumnTransformer:
     nominal = nominal_columns(X)
     skewed = skewed_numeric(X)
     other = [c for c in X.columns if c not in nominal and c not in skewed]
-    return ColumnTransformer([
-        ("skew", make_pipeline(
-            SimpleImputer(strategy="median"),
-            FunctionTransformer(np.log1p, feature_names_out="one-to-one"),
-            StandardScaler(),
-        ), skewed),
-        ("num", make_pipeline(SimpleImputer(strategy="median"), StandardScaler()), other),
-        ("cat", OneHotEncoder(handle_unknown="ignore", min_frequency=10), nominal),
-    ])
+    return ColumnTransformer(
+        [
+            (
+                "skew",
+                make_pipeline(
+                    SimpleImputer(strategy="median"),
+                    FunctionTransformer(np.log1p, feature_names_out="one-to-one"),
+                    StandardScaler(),
+                ),
+                skewed,
+            ),
+            ("num", make_pipeline(SimpleImputer(strategy="median"), StandardScaler()), other),
+            ("cat", OneHotEncoder(handle_unknown="ignore", min_frequency=10), nominal),
+        ]
+    )
 
 
 # ----- base model factories -----
 
+
 def f_ridge(X, seed=SEED):
-    return Pipeline([("pre", make_linear_pre(X)),
-                     ("m", RidgeCV(alphas=np.logspace(-1, 2, 40)))])
+    return Pipeline([("pre", make_linear_pre(X)), ("m", RidgeCV(alphas=np.logspace(-1, 2, 40)))])
+
 
 def f_lasso(X, seed=SEED):
-    return Pipeline([("pre", make_linear_pre(X)),
-                     ("m", LassoCV(alphas=np.logspace(-4, -1, 40), max_iter=50000,
-                                   tol=1e-3, random_state=seed))])
+    return Pipeline(
+        [
+            ("pre", make_linear_pre(X)),
+            (
+                "m",
+                LassoCV(
+                    alphas=np.logspace(-4, -1, 40), max_iter=50000, tol=1e-3, random_state=seed
+                ),
+            ),
+        ]
+    )
+
 
 def f_enet(X, seed=SEED):
-    return Pipeline([("pre", make_linear_pre(X)),
-                     ("m", ElasticNetCV(l1_ratio=[0.1, 0.5, 0.9], alphas=np.logspace(-4, -1, 30),
-                                        max_iter=50000, tol=1e-3, random_state=seed))])
+    return Pipeline(
+        [
+            ("pre", make_linear_pre(X)),
+            (
+                "m",
+                ElasticNetCV(
+                    l1_ratio=[0.1, 0.5, 0.9],
+                    alphas=np.logspace(-4, -1, 30),
+                    max_iter=50000,
+                    tol=1e-3,
+                    random_state=seed,
+                ),
+            ),
+        ]
+    )
+
 
 def f_krr(X, seed=SEED):
-    return Pipeline([("pre", make_linear_pre(X)),
-                     ("m", KernelRidge(alpha=0.6, kernel="polynomial", degree=2, coef0=2.5))])
+    return Pipeline(
+        [
+            ("pre", make_linear_pre(X)),
+            ("m", KernelRidge(alpha=0.6, kernel="polynomial", degree=2, coef0=2.5)),
+        ]
+    )
+
 
 def f_svr(X, seed=SEED):
-    return Pipeline([("pre", make_linear_pre(X)),
-                     ("m", SVR(C=20.0, epsilon=0.01, gamma="scale"))])
+    return Pipeline([("pre", make_linear_pre(X)), ("m", SVR(C=20.0, epsilon=0.01, gamma="scale"))])
+
 
 def f_hgb(X, seed=SEED):
     return HistGradientBoostingRegressor(
-        learning_rate=0.05, max_iter=800, max_leaf_nodes=31, min_samples_leaf=10,
-        l2_regularization=1.0, categorical_features="from_dtype",
-        early_stopping=False, random_state=seed)
+        learning_rate=0.05,
+        max_iter=800,
+        max_leaf_nodes=31,
+        min_samples_leaf=10,
+        l2_regularization=1.0,
+        categorical_features="from_dtype",
+        early_stopping=False,
+        random_state=seed,
+    )
+
 
 def f_lgb(X, seed=SEED):
     return lgb.LGBMRegressor(
-        n_estimators=1800, learning_rate=0.03, num_leaves=15, max_depth=4,
-        subsample=0.8, subsample_freq=1, colsample_bytree=0.5,
-        reg_lambda=1.0, reg_alpha=0.1, min_child_samples=15,
-        random_state=seed, n_jobs=-1, verbose=-1)
+        n_estimators=1800,
+        learning_rate=0.03,
+        num_leaves=15,
+        max_depth=4,
+        subsample=0.8,
+        subsample_freq=1,
+        colsample_bytree=0.5,
+        reg_lambda=1.0,
+        reg_alpha=0.1,
+        min_child_samples=15,
+        random_state=seed,
+        n_jobs=-1,
+        verbose=-1,
+    )
+
 
 def f_xgb(X, seed=SEED):
     return xgb.XGBRegressor(
-        n_estimators=1800, learning_rate=0.03, max_depth=3,
-        subsample=0.7, colsample_bytree=0.6, reg_lambda=1.0, reg_alpha=0.1,
-        min_child_weight=3, gamma=0.0, enable_categorical=True,
-        tree_method="hist", random_state=seed, n_jobs=-1)
+        n_estimators=1800,
+        learning_rate=0.03,
+        max_depth=3,
+        subsample=0.7,
+        colsample_bytree=0.6,
+        reg_lambda=1.0,
+        reg_alpha=0.1,
+        min_child_weight=3,
+        gamma=0.0,
+        enable_categorical=True,
+        tree_method="hist",
+        random_state=seed,
+        n_jobs=-1,
+    )
 
 
 # Squared terms are monotonic — useless split noise for trees; linear models only.
@@ -257,9 +359,13 @@ def main() -> None:
     X_test_tree = X_test.drop(columns=SQUARE_COLS)
 
     base = {
-        "RidgeCV": f_ridge, "LassoCV": f_lasso, "ElasticNetCV": f_enet,
+        "RidgeCV": f_ridge,
+        "LassoCV": f_lasso,
+        "ElasticNetCV": f_enet,
         "KernelRidge": f_krr,
-        "HistGB": f_hgb, "LightGBM": f_lgb, "XGBoost": f_xgb,
+        "HistGB": f_hgb,
+        "LightGBM": f_lgb,
+        "XGBoost": f_xgb,
     }
     oof_cols, test_cols = {}, {}
     print(f"{'model':<14} CV RMSE(log)")
@@ -289,9 +395,9 @@ def main() -> None:
     stack_oof, stack_test, meta = stack_predict(oof_mat, test_mat)
 
     candidates = {
-        "avg (all)":     (oof_mat.mean(1),                 test_mat.mean(1)),
-        "avg (curated)": (oof_mat[:, cur_idx].mean(1),     test_mat[:, cur_idx].mean(1)),
-        "stack":         (stack_oof,                        stack_test),
+        "avg (all)": (oof_mat.mean(1), test_mat.mean(1)),
+        "avg (curated)": (oof_mat[:, cur_idx].mean(1), test_mat[:, cur_idx].mean(1)),
+        "stack": (stack_oof, stack_test),
     }
     print()
     for name, (oof_p, _) in candidates.items():
@@ -317,10 +423,12 @@ def main() -> None:
     assert (sub["SalePrice"] > 0).all(), "non-positive predictions"
     print(f"\npredictions clipped to [{lo}, {hi}]: {n_clipped} row(s)")
     print(f"submission written: {SUBMISSION_PATH} ({len(sub)} rows)")
-    comp = pd.DataFrame({
-        "train": train_raw["SalePrice"].describe(),
-        "pred": sub["SalePrice"].describe(),
-    }).round(0)
+    comp = pd.DataFrame(
+        {
+            "train": train_raw["SalePrice"].describe(),
+            "pred": sub["SalePrice"].describe(),
+        }
+    ).round(0)
     print(comp.to_string())
 
 

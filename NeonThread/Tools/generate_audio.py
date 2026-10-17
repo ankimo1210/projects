@@ -114,9 +114,7 @@ def write_wav(name, mono=None, stereo=None):
         w.setframerate(SR)
         if mono is not None:
             w.setnchannels(1)
-            data = b"".join(
-                struct.pack("<h", int(max(-1.0, min(1.0, v)) * 32767)) for v in mono
-            )
+            data = b"".join(struct.pack("<h", int(max(-1.0, min(1.0, v)) * 32767)) for v in mono)
         else:
             w.setnchannels(2)
             left, right = stereo
@@ -133,6 +131,7 @@ def write_wav(name, mono=None, stereo=None):
 
 
 # ---------------------------------------------------------------- SFX
+
 
 def gen_button():
     blip = tone(1500, 0.07, lambda p: square(p, 0.4), decay=45, freq_end=1900)
@@ -160,7 +159,7 @@ def gen_coin():
         return 0.5 * sine(p) + 0.5 * square(p, 0.4)
 
     mix = zeros(0.22)
-    add(mix, tone(1318, 0.07, voice, decay=20))       # E6
+    add(mix, tone(1318, 0.07, voice, decay=20))  # E6
     add(mix, tone(1976, 0.14, voice, decay=16), 0.06)  # B6
     write_wav("sfx_coin.wav", mono=normalize(mix, 0.75))
 

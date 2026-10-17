@@ -122,9 +122,7 @@ class WrittenQuestionPackBuilderTests(unittest.TestCase):
 
     def test_rejects_unknown_related_term_id(self) -> None:
         source = copy.deepcopy(self.source)
-        source["questions"][0]["rubricItems"][0]["relatedTermIDs"] = [
-            "term-does-not-exist"
-        ]
+        source["questions"][0]["rubricItems"][0]["relatedTermIDs"] = ["term-does-not-exist"]
         with self.assertRaisesRegex(WrittenQuestionPackError, "unknown relatedTermIDs"):
             validate_source(source)
 

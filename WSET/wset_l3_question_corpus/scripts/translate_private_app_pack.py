@@ -106,9 +106,7 @@ def load_pack(path: Path) -> dict[str, Any]:
 def load_cache(path: Path) -> dict[str, dict[str, Any]]:
     if not path.exists():
         return {}
-    return {
-        str(record["id"]): normalize_cached_record(record) for record in read_jsonl(path)
-    }
+    return {str(record["id"]): normalize_cached_record(record) for record in read_jsonl(path)}
 
 
 def write_cache(path: Path, records: dict[str, dict[str, Any]]) -> None:
@@ -234,10 +232,7 @@ def direct_request(
     marked = (
         protected(texts[0])
         if len(texts) == 1
-        else "\n".join(
-            f"⟦{index:04d}⟧ {protected(value)}"
-            for index, value in enumerate(texts)
-        )
+        else "\n".join(f"⟦{index:04d}⟧ {protected(value)}" for index, value in enumerate(texts))
     )
     message = json.dumps(
         [
@@ -410,12 +405,8 @@ def is_overexpanded(source: str, translated: str) -> bool:
     )
 
 
-def preserves_required_content(
-    source: str, translated: str, target_language: str
-) -> bool:
-    source_numbers = re.findall(
-        r"(?<![A-Za-z])\d+(?:[.,]\d+)*%?(?![A-Za-z])", source
-    )
+def preserves_required_content(source: str, translated: str, target_language: str) -> bool:
+    source_numbers = re.findall(r"(?<![A-Za-z])\d+(?:[.,]\d+)*%?(?![A-Za-z])", source)
     if any(number not in translated for number in source_numbers):
         return False
     if target_language == "ja":
@@ -430,15 +421,11 @@ def preserves_required_content(
 
 
 def preserves_numbers(source: str, translated: str) -> bool:
-    source_numbers = re.findall(
-        r"(?<![A-Za-z])\d+(?:[.,]\d+)*%?(?![A-Za-z])", source
-    )
+    source_numbers = re.findall(r"(?<![A-Za-z])\d+(?:[.,]\d+)*%?(?![A-Za-z])", source)
     return all(number in translated for number in source_numbers)
 
 
-def translation_is_acceptable(
-    source: str, translated: str, target_language: str
-) -> bool:
+def translation_is_acceptable(source: str, translated: str, target_language: str) -> bool:
     return (
         has_target_script(source, translated, target_language)
         and not is_overexpanded(source, translated)
@@ -446,9 +433,7 @@ def translation_is_acceptable(
     )
 
 
-def normalize_for_source(
-    source: str, translated: str, target_language: str
-) -> str:
+def normalize_for_source(source: str, translated: str, target_language: str) -> str:
     if target_language == "ja" and source in ENGLISH_TO_JAPANESE_OVERRIDES:
         return ENGLISH_TO_JAPANESE_OVERRIDES[source]
     return translated
@@ -519,9 +504,10 @@ def direct_translate_items(
         translated_segments[index] = normalize_for_source(
             source, translated_segments[index], target_language
         )
-        if not translation_is_acceptable(
-            source, translated_segments[index], target_language
-        ) and fallback_model:
+        if (
+            not translation_is_acceptable(source, translated_segments[index], target_language)
+            and fallback_model
+        ):
             translated_segments[index] = direct_request(
                 [source],
                 source_language=source_language,
@@ -533,9 +519,7 @@ def direct_translate_items(
             translated_segments[index] = normalize_for_source(
                 source, translated_segments[index], target_language
             )
-        if not translation_is_acceptable(
-            source, translated_segments[index], target_language
-        ):
+        if not translation_is_acceptable(source, translated_segments[index], target_language):
             raise ValueError(
                 "Translation QA failed at segment "
                 f"{index}: source={source[:160]!r}; "
@@ -616,9 +600,7 @@ def validate_batch(
         if not isinstance(translated.get("prompt"), str) or not translated["prompt"].strip():
             raise ValueError(f"Missing translated prompt for {identifier}")
         for optional in ("answer", "explanation"):
-            if source.get(optional) is not None and not isinstance(
-                translated.get(optional), str
-            ):
+            if source.get(optional) is not None and not isinstance(translated.get(optional), str):
                 raise ValueError(f"Missing translated {optional} for {identifier}")
         source_choices = source.get("choices") or []
         translated_choices = translated.get("choices")
@@ -630,11 +612,7 @@ def validate_batch(
             raise ValueError(f"Blank translated choice for {identifier}")
         translated_strings = [
             translated["prompt"],
-            *(
-                [translated["answer"]]
-                if isinstance(translated.get("answer"), str)
-                else []
-            ),
+            *([translated["answer"]] if isinstance(translated.get("answer"), str) else []),
             *(
                 [translated["explanation"]]
                 if isinstance(translated.get("explanation"), str)
@@ -645,16 +623,10 @@ def validate_batch(
         source_strings = [
             source["prompt"],
             *([source["answer"]] if isinstance(source.get("answer"), str) else []),
-            *(
-                [source["explanation"]]
-                if isinstance(source.get("explanation"), str)
-                else []
-            ),
+            *([source["explanation"]] if isinstance(source.get("explanation"), str) else []),
             *source_choices,
         ]
-        for source_text, translated_text in zip(
-            source_strings, translated_strings, strict=True
-        ):
+        for source_text, translated_text in zip(source_strings, translated_strings, strict=True):
             assert isinstance(translated_text, str)
             ascii_words = re.findall(r"[A-Za-z]{2,}", source_text)
             japanese_chars = re.findall(r"[ぁ-んァ-ヶ一-龯]", translated_text)
@@ -669,9 +641,7 @@ def validate_batch(
         validated[identifier] = {
             "prompt": translated["prompt"].strip(),
             "answer": (
-                translated.get("answer", "").strip()
-                if source.get("answer") is not None
-                else None
+                translated.get("answer", "").strip() if source.get("answer") is not None else None
             ),
             "explanation": (
                 translated.get("explanation", "").strip()
@@ -695,9 +665,7 @@ def request_item(question: dict[str, Any]) -> dict[str, Any]:
     return {"id": question["id"], **original_content(question)}
 
 
-def cache_record_is_acceptable(
-    question: dict[str, Any], record: dict[str, Any]
-) -> bool:
+def cache_record_is_acceptable(question: dict[str, Any], record: dict[str, Any]) -> bool:
     source_language = str(question.get("language") or "en")
     target_language = "ja" if source_language == "en" else "en"
     source = original_content(question)
@@ -721,9 +689,7 @@ def cache_record_is_acceptable(
         translated.get("explanation"),
         *translated_choices,
     ]
-    for source_text, translated_text in zip(
-        source_strings, translated_strings, strict=True
-    ):
+    for source_text, translated_text in zip(source_strings, translated_strings, strict=True):
         if source_text is None:
             if translated_text is not None:
                 return False
@@ -755,9 +721,7 @@ def apply_source_overrides_to_record(
             )
     source_choices = source.get("choices") or []
     translated_choices = normalized_target.get("choices")
-    if isinstance(translated_choices, list) and len(translated_choices) == len(
-        source_choices
-    ):
+    if isinstance(translated_choices, list) and len(translated_choices) == len(source_choices):
         normalized_target["choices"] = [
             normalize_for_source(str(source_value), str(translated_value), target_language)
             for source_value, translated_value in zip(
@@ -855,9 +819,7 @@ def translate_pack(
     for question in questions:
         identifier = str(question["id"])
         if identifier in cache:
-            cache[identifier] = apply_source_overrides_to_record(
-                question, cache[identifier]
-            )
+            cache[identifier] = apply_source_overrides_to_record(question, cache[identifier])
     write_cache(cache_path, cache)
     pending: list[dict[str, Any]] = []
     for question in questions:

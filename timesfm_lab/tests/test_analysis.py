@@ -74,8 +74,9 @@ def test_selector_skill_separates_the_oracle_from_what_a_selector_can_reach():
 def test_head_to_head_win_rate_and_pairing():
     rows = []
     for c in range(1, 11):
-        rows += _full_window("s", 100 * c, {b: 2.0 for b in BASELINE_NAMES}
-                             | {MODEL_KEY: 1.0 if c <= 7 else 3.0})
+        rows += _full_window(
+            "s", 100 * c, {b: 2.0 for b in BASELINE_NAMES} | {MODEL_KEY: 1.0 if c <= 7 else 3.0}
+        )
     sel = selector_table(_frame(rows))
     h = head_to_head(sel, ["walkforward"]).iloc[0]
     # The first window of the series is dropped for want of a predecessor, so
@@ -88,10 +89,12 @@ def test_contamination_table_normalises_away_window_difficulty():
     # Two windows of very different absolute difficulty but identical *relative*
     # standing: the normalisation must make them equal.
     rows = []
-    rows += _full_window("s", 100, {b: 10.0 for b in BASELINE_NAMES} | {MODEL_KEY: 5.0},
-                         exposure="in corpus")
-    rows += _full_window("s", 200, {b: 1.0 for b in BASELINE_NAMES} | {MODEL_KEY: 0.5},
-                         exposure="past corpus")
+    rows += _full_window(
+        "s", 100, {b: 10.0 for b in BASELINE_NAMES} | {MODEL_KEY: 5.0}, exposure="in corpus"
+    )
+    rows += _full_window(
+        "s", 200, {b: 1.0 for b in BASELINE_NAMES} | {MODEL_KEY: 0.5}, exposure="past corpus"
+    )
     tab = contamination_table(_frame(rows))
     t = tab[tab.model == MODEL_KEY]
     assert set(np.round(t.rel.to_numpy(), 6)) == {0.5}

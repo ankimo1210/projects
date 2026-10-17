@@ -174,23 +174,21 @@ def _imageset_contents(asset_file: str, dark_file: str | None = None) -> bytes:
         "properties": {"preserves-vector-representation": True},
     }
     if dark_file is not None:
-        payload["images"].append({
-            "filename": dark_file,
-            "idiom": "universal",
-            "appearances": [{"appearance": "luminosity", "value": "dark"}],
-        })
+        payload["images"].append(
+            {
+                "filename": dark_file,
+                "idiom": "universal",
+                "appearances": [{"appearance": "luminosity", "value": "dark"}],
+            }
+        )
     return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
-def review_target_hash(
-    master: dict[str, Any], source_hash_assets: dict[str, str]
-) -> str:
+def review_target_hash(master: dict[str, Any], source_hash_assets: dict[str, str]) -> str:
     """Fingerprint map content and SVGs without mutable review metadata."""
 
     content_master = {key: value for key, value in master.items() if key != "review"}
-    return sha256(
-        canonical_json({"master": content_master, "assets": source_hash_assets})
-    )
+    return sha256(canonical_json({"master": content_master, "assets": source_hash_assets}))
 
 
 def _validate_review_metadata(review: Any, target_hash: str) -> dict[str, Any]:
@@ -202,9 +200,7 @@ def _validate_review_metadata(review: Any, target_hash: str) -> dict[str, Any]:
     notes = _required_string(review.get("notes"), "review.notes")
     scopes = review.get("scopes")
     if not isinstance(scopes, dict) or set(scopes) != set(REVIEW_SCOPES):
-        raise RegionMapPackError(
-            f"review.scopes must contain exactly {list(REVIEW_SCOPES)}"
-        )
+        raise RegionMapPackError(f"review.scopes must contain exactly {list(REVIEW_SCOPES)}")
     if not all(isinstance(scopes[scope], bool) for scope in REVIEW_SCOPES):
         raise RegionMapPackError("review.scopes values must be boolean")
 
@@ -214,32 +210,22 @@ def _validate_review_metadata(review: Any, target_hash: str) -> dict[str, Any]:
     if status == "published":
         reviewer = _required_string(reviewer, "review.reviewer")
         if reviewer in _NON_HUMAN_REVIEWER_PLACEHOLDERS:
-            raise RegionMapPackError(
-                "published map requires an external human reviewer"
-            )
+            raise RegionMapPackError("published map requires an external human reviewer")
         _iso_date(reviewed_at, "review.reviewedAt")
         if reviewed_hash != target_hash:
-            raise RegionMapPackError(
-                "review.reviewedContentHash is missing or stale"
-            )
+            raise RegionMapPackError("review.reviewedContentHash is missing or stale")
         incomplete = [scope for scope in REVIEW_SCOPES if scopes[scope] is not True]
         if incomplete:
-            raise RegionMapPackError(
-                f"published map has incomplete review scopes: {incomplete}"
-            )
+            raise RegionMapPackError(f"published map has incomplete review scopes: {incomplete}")
     else:
-        if reviewer is not None and (
-            not isinstance(reviewer, str) or not reviewer.strip()
-        ):
+        if reviewer is not None and (not isinstance(reviewer, str) or not reviewer.strip()):
             raise RegionMapPackError("review.reviewer must be text or null")
         if reviewed_at is not None:
             _iso_date(reviewed_at, "review.reviewedAt")
         if reviewed_hash is not None and (
             not isinstance(reviewed_hash, str) or len(reviewed_hash) != 64
         ):
-            raise RegionMapPackError(
-                "review.reviewedContentHash must be a SHA-256 hash or null"
-            )
+            raise RegionMapPackError("review.reviewedContentHash must be a SHA-256 hash or null")
     return {
         "status": status,
         "reviewer": reviewer,
@@ -303,9 +289,7 @@ def build_pack(
         for value in (question.get(key) or [])
         if isinstance(value, str) and value.strip()
     }
-    term_ids = {
-        str(term.get("id")) for term in terms if isinstance(term, dict) and term.get("id")
-    }
+    term_ids = {str(term.get("id")) for term in terms if isinstance(term, dict) and term.get("id")}
 
     output_maps: list[dict[str, Any]] = []
     generated_assets: dict[str, dict[str, bytes]] = {}
@@ -333,9 +317,7 @@ def build_pack(
         if not math.isfinite(float(aspect_ratio)) or float(aspect_ratio) <= 0:
             raise RegionMapPackError(f"{map_id}: aspectRatio must be positive")
 
-        source_id_values = _normalized_list(
-            map_document.get("sourceIDs"), f"{map_id}.sourceIDs"
-        )
+        source_id_values = _normalized_list(map_document.get("sourceIDs"), f"{map_id}.sourceIDs")
         unknown_sources = set(source_id_values) - source_ids
         if unknown_sources:
             raise RegionMapPackError(f"{map_id}: unknown source IDs {sorted(unknown_sources)}")
@@ -359,9 +341,15 @@ def build_pack(
         dark_file = map_document.get("assetFileDark")
         if dark_file is not None:
             dark_file = _required_string(dark_file, f"{map_id}.assetFileDark")
-            if (Path(dark_file).name != dark_file or "\\" in dark_file
-                    or not dark_file.endswith(".svg") or dark_file == asset_file):
-                raise RegionMapPackError(f"{map_id}: assetFileDark must be a distinct local SVG filename")
+            if (
+                Path(dark_file).name != dark_file
+                or "\\" in dark_file
+                or not dark_file.endswith(".svg")
+                or dark_file == asset_file
+            ):
+                raise RegionMapPackError(
+                    f"{map_id}: assetFileDark must be a distinct local SVG filename"
+                )
             try:
                 dark_content = (asset_source_dir / dark_file).read_bytes()
             except OSError as error:
@@ -370,11 +358,15 @@ def build_pack(
                 raise RegionMapPackError(f"{map_id}: dark SVG aspectRatio does not match")
             source_hash_assets[dark_file] = sha256(dark_content)
             generated_assets[asset_name][dark_file] = dark_content
-            generated_assets[asset_name]["Contents.json"] = _imageset_contents(asset_file, dark_file)
+            generated_assets[asset_name]["Contents.json"] = _imageset_contents(
+                asset_file, dark_file
+            )
 
         regions = map_document.get("regions")
-        if not isinstance(regions, list) or not regions or not all(
-            isinstance(region, dict) for region in regions
+        if (
+            not isinstance(regions, list)
+            or not regions
+            or not all(isinstance(region, dict) for region in regions)
         ):
             raise RegionMapPackError(f"{map_id}.regions must be a non-empty object list")
         local_region_ids = _unique_identifiers(regions, f"{map_id}.regions")
@@ -430,9 +422,7 @@ def build_pack(
                     )
                 _required_string(fact.get("summary"), f"{label}.summary")
                 _normalized_list(fact.get("keywords"), f"{label}.keywords")
-                fact_source_ids = _normalized_list(
-                    fact.get("sourceIDs"), f"{label}.sourceIDs"
-                )
+                fact_source_ids = _normalized_list(fact.get("sourceIDs"), f"{label}.sourceIDs")
                 unknown_fact_sources = set(fact_source_ids) - source_ids
                 if unknown_fact_sources:
                     raise RegionMapPackError(
@@ -443,9 +433,7 @@ def build_pack(
                 _iso_date(fact.get("effectiveDate"), f"{label}.effectiveDate")
             child_map_id = region.get("childMapID")
             if child_map_id is not None and child_map_id not in map_ids:
-                raise RegionMapPackError(
-                    f"{region_id}: unknown childMapID {child_map_id!r}"
-                )
+                raise RegionMapPackError(f"{region_id}: unknown childMapID {child_map_id!r}")
             polygons = region.get("polygons")
             if not isinstance(polygons, list):
                 raise RegionMapPackError(f"{region_id}.polygons must be a list")
@@ -534,9 +522,7 @@ def check_existing_pack(
     )
     actual = _load_object(output_path, "generated region-map pack")
     if actual != expected:
-        raise RegionMapPackError(
-            f"Generated region-map pack is stale; run {Path(__file__).name}"
-        )
+        raise RegionMapPackError(f"Generated region-map pack is stale; run {Path(__file__).name}")
     expected_root = (
         json.dumps(
             {

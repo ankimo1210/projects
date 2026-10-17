@@ -44,7 +44,9 @@ def head_ablation_effect(model, idx: torch.Tensor, targets: torch.Tensor) -> tor
 
 
 @torch.no_grad()
-def activation_patch_positions(model, idx_clean: torch.Tensor, idx_corrupt: torch.Tensor, layer: int) -> torch.Tensor:
+def activation_patch_positions(
+    model, idx_clean: torch.Tensor, idx_corrupt: torch.Tensor, layer: int
+) -> torch.Tensor:
     """[T] effect of patching each position's residual (after `layer`) from the
     clean run into the corrupt run, measured as recovery of the clean logits at
     the final position.
@@ -68,6 +70,7 @@ def activation_patch_positions(model, idx_clean: torch.Tensor, idx_corrupt: torc
     T = idx_clean.shape[1]
     out = torch.zeros(T)
     for pos in range(T):
+
         def patch(module, inp, output, pos=pos):
             output = output.clone()
             output[:, pos, :] = clean_resid[:, pos, :]

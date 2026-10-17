@@ -40,12 +40,8 @@ class ReferencePackBuilderTests(unittest.TestCase):
     def test_pack_has_expected_counts_and_unique_ids(self) -> None:
         self.assertEqual(self.payload["schemaVersion"], 1)
         self.assertEqual(self.payload["termCount"], EXPECTED_TERM_COUNT)
-        self.assertEqual(
-            self.payload["classificationEntryCount"], EXPECTED_CLASSIFICATION_COUNT
-        )
-        self.assertEqual(
-            len({term["id"] for term in self.payload["terms"]}), EXPECTED_TERM_COUNT
-        )
+        self.assertEqual(self.payload["classificationEntryCount"], EXPECTED_CLASSIFICATION_COUNT)
+        self.assertEqual(len({term["id"] for term in self.payload["terms"]}), EXPECTED_TERM_COUNT)
         self.assertEqual(self.payload["termIDMigrations"], {})
 
     def test_all_normalized_duplicate_candidates_are_pending_human_review(self) -> None:
@@ -114,12 +110,8 @@ class ReferencePackBuilderTests(unittest.TestCase):
         terms_by_id = {term["id"]: term for term in self.payload["terms"]}
         for entry in self.payload["classificationEntries"]:
             self.assertNotEqual(entry["nameJapanese"], entry["nameOriginal"])
-            self.assertEqual(
-                terms_by_id[entry["termID"]]["nameJapanese"], entry["nameJapanese"]
-            )
-            self.assertEqual(
-                terms_by_id[entry["termID"]]["nameEnglish"], entry["nameOriginal"]
-            )
+            self.assertEqual(terms_by_id[entry["termID"]]["nameJapanese"], entry["nameJapanese"])
+            self.assertEqual(terms_by_id[entry["termID"]]["nameEnglish"], entry["nameOriginal"])
 
     def test_structured_question_tags_create_reverse_links(self) -> None:
         self.assertGreater(len(self.terms["ボルドー"]["questionIDs"]), 0)
@@ -134,9 +126,7 @@ class ReferencePackBuilderTests(unittest.TestCase):
             self.assertLessEqual(set(term["questionIDs"]), valid_question_ids)
 
     def test_classification_systems_are_kept_separate(self) -> None:
-        counts = Counter(
-            entry["systemID"] for entry in self.payload["classificationEntries"]
-        )
+        counts = Counter(entry["systemID"] for entry in self.payload["classificationEntries"])
         self.assertEqual(counts["bordeaux_1855_medoc"], 61)
         self.assertEqual(counts["bordeaux_1855_sauternes"], 27)
         self.assertEqual(counts["bordeaux_graves"], 14)
@@ -146,15 +136,15 @@ class ReferencePackBuilderTests(unittest.TestCase):
 
     def test_region_specific_classification_semantics_are_preserved(self) -> None:
         entries = self.payload["classificationEntries"]
-        mouton = next(entry for entry in entries if entry["nameOriginal"] == "Château Mouton Rothschild")
+        mouton = next(
+            entry for entry in entries if entry["nameOriginal"] == "Château Mouton Rothschild"
+        )
         self.assertEqual(mouton["tier"], "第1級")
         montrachet = next(entry for entry in entries if entry["nameOriginal"] == "Montrachet")
         self.assertEqual(montrachet["entryType"], "畑・AOC")
         self.assertIn("Puligny-Montrachet", montrachet["village"])
         champagne_counts = Counter(
-            entry["tier"]
-            for entry in entries
-            if entry["systemID"] == "champagne_cru_2025"
+            entry["tier"] for entry in entries if entry["systemID"] == "champagne_cru_2025"
         )
         self.assertEqual(champagne_counts, {"Grand Cru": 17, "Premier Cru": 42})
 

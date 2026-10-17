@@ -39,9 +39,12 @@ def test_question_fields():
 def test_answer_enum_values():
     assert Answer.YES.value == "yes"
     assert {a.value for a in Answer} == {
-        "yes", "no", "probably_yes", "probably_no", "unknown",
+        "yes",
+        "no",
+        "probably_yes",
+        "probably_no",
+        "unknown",
     }
-
 
 
 def test_entities_roundtrip(tmp_path):

@@ -82,7 +82,9 @@ def test_modern_trace_and_generation():
     trace = model.trace_forward(torch.randint(0, 60, (1, 8)))
     assert "position_embeddings" not in trace
     assert trace["logits"].shape == (1, 8, 60)
-    out, _ = generate(model, torch.randint(0, 60, (1, 4)), SamplingConfig(max_new_tokens=10, greedy=True))
+    out, _ = generate(
+        model, torch.randint(0, 60, (1, 4)), SamplingConfig(max_new_tokens=10, greedy=True)
+    )
     assert out.shape == (1, 14)
 
 

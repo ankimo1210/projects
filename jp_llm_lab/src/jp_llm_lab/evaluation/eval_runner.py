@@ -34,7 +34,9 @@ def run_eval(model, tokenizer, device: str, max_new_tokens: int = 40) -> dict:
             row["top1_token"] = tokenizer.id_to_token(top1)
             row["cloze_correct"] = bool(exp_ids and top1 == exp_ids[0])
         else:
-            out, _ = generate(model, ids, SamplingConfig(max_new_tokens=max_new_tokens, temperature=0.7, seed=0))
+            out, _ = generate(
+                model, ids, SamplingConfig(max_new_tokens=max_new_tokens, temperature=0.7, seed=0)
+            )
             gen = out[0, ids.shape[1] :].tolist()
             row["generation"] = tokenizer.decode(gen)
             row["repetition_rate"] = round(repetition_rate(gen), 4)
@@ -47,8 +49,10 @@ def run_eval(model, tokenizer, device: str, max_new_tokens: int = 40) -> dict:
     # aggregate by category
     cats: dict[str, dict] = {}
     for r in per_prompt:
-        c = cats.setdefault(r["category"], {"n": 0, "cloze_correct": 0, "cloze_n": 0,
-                                            "rep_sum": 0.0, "d2_sum": 0.0, "gen_n": 0})
+        c = cats.setdefault(
+            r["category"],
+            {"n": 0, "cloze_correct": 0, "cloze_n": 0, "rep_sum": 0.0, "d2_sum": 0.0, "gen_n": 0},
+        )
         c["n"] += 1
         if "cloze_correct" in r:
             c["cloze_n"] += 1
@@ -68,6 +72,8 @@ def run_eval(model, tokenizer, device: str, max_new_tokens: int = 40) -> dict:
     total_cloze = [r for r in per_prompt if "cloze_correct" in r]
     overall = {
         "n_prompts": len(per_prompt),
-        "cloze_accuracy": round(sum(r["cloze_correct"] for r in total_cloze) / len(total_cloze), 3) if total_cloze else None,
+        "cloze_accuracy": round(sum(r["cloze_correct"] for r in total_cloze) / len(total_cloze), 3)
+        if total_cloze
+        else None,
     }
     return {"overall": overall, "by_category": summary, "per_prompt": per_prompt}

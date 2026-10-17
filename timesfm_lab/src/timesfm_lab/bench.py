@@ -32,9 +32,7 @@ def score(window: Window, fc: Forecast) -> dict[str, float]:
         "mase": metrics.mase(window.actual, fc.point, s_mae),
         "rmsse": metrics.rmsse(window.actual, fc.point, s_mse),
         "smape": metrics.smape(window.actual, fc.point),
-        "scaled_crps": metrics.scaled_crps(
-            window.actual, fc.quantiles, QUANTILE_LEVELS, s_mae
-        ),
+        "scaled_crps": metrics.scaled_crps(window.actual, fc.quantiles, QUANTILE_LEVELS, s_mae),
         "coverage_80": float(
             ((window.actual >= fc.quantiles[:, 0]) & (window.actual <= fc.quantiles[:, 8])).mean()
         ),
@@ -165,7 +163,7 @@ def run_all(
                     "ms_per_window": 1000.0 * secs / max(n, 1),
                 }
             )
-        print(f"{spec.key:22s} {n:4d} windows  {time.time()-t0:6.1f}s")
+        print(f"{spec.key:22s} {n:4d} windows  {time.time() - t0:6.1f}s")
     step_df, pit_df = diag.frames()
     return pd.concat(frames, ignore_index=True), pd.DataFrame(timing_rows), step_df, pit_df
 
@@ -183,7 +181,12 @@ def paired_win_rate(df: pd.DataFrame, model: str, other: str, metric: str = "mas
     b = df[df.model == other].set_index(["dataset", "series_id", "cutoff"])[metric]
     joined = pd.concat([a.rename("a"), b.rename("b")], axis=1).dropna()
     if joined.empty:
-        return {"n": 0, "win_rate": float("nan"), "p_value": float("nan"), "median_ratio": float("nan")}
+        return {
+            "n": 0,
+            "win_rate": float("nan"),
+            "p_value": float("nan"),
+            "median_ratio": float("nan"),
+        }
     wins = float((joined.a < joined.b).mean())
     try:
         p = float(wilcoxon(joined.a, joined.b).pvalue)

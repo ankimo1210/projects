@@ -91,7 +91,9 @@ def _load_occupations() -> tuple[pd.DataFrame, str]:
     return df, raw["meta"]["vintage"]
 
 
-def _load_mix(occupation_keys: list[str], sector_names: list[str]) -> tuple[pd.DataFrame, pd.Series, str]:
+def _load_mix(
+    occupation_keys: list[str], sector_names: list[str]
+) -> tuple[pd.DataFrame, pd.Series, str]:
     raw = _read_toml(MIX_FILE)
     df = pd.DataFrame(raw["sector"]).set_index("name")
 
@@ -135,12 +137,16 @@ def _load_universe(sector_names: list[str]) -> tuple[pd.DataFrame, str]:
 
     unknown_sectors = sorted(set(df["sector33"]) - set(sector_names))
     if unknown_sectors:
-        raise ValueError(f"{UNIVERSE_FILE.name}: sector33 values not in the 33-sector master {unknown_sectors}")
+        raise ValueError(
+            f"{UNIVERSE_FILE.name}: sector33 values not in the 33-sector master {unknown_sectors}"
+        )
 
     for col in ("labor_intensity", "knowledge_tilt"):
         bad = sorted(set(df[col]) - set(TILT_LEVELS))
         if bad:
-            raise ValueError(f"{UNIVERSE_FILE.name}: {col} must be one of {sorted(TILT_LEVELS)}, got {bad}")
+            raise ValueError(
+                f"{UNIVERSE_FILE.name}: {col} must be one of {sorted(TILT_LEVELS)}, got {bad}"
+            )
 
     return df.set_index("code"), raw["meta"]["vintage"]
 

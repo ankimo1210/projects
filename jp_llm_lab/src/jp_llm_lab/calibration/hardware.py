@@ -47,7 +47,11 @@ def _bench_step(model, x, y, dtype, device, use_compile, n=12, warmup=4) -> dict
     med = times[len(times) // 2]
     peak = torch.cuda.max_memory_allocated() / 2**30 if device == "cuda" else 0.0
     B, T = x.shape
-    return {"median_step_ms": round(med * 1e3, 2), "tokens_per_sec": round(B * T / med), "peak_vram_gb": round(peak, 2)}
+    return {
+        "median_step_ms": round(med * 1e3, 2),
+        "tokens_per_sec": round(B * T / med),
+        "peak_vram_gb": round(peak, 2),
+    }
 
 
 def hardware_calibration(
@@ -71,8 +75,14 @@ def hardware_calibration(
     for c in configs:
         try:
             torch.manual_seed(0)
-            cfg = ModelConfig(vocab_size=vocab_size, d_model=d_model, n_layers=n_layers,
-                              n_heads=n_heads, context_len=max(c["T"], context_len), attn_impl=c["attn"])
+            cfg = ModelConfig(
+                vocab_size=vocab_size,
+                d_model=d_model,
+                n_layers=n_layers,
+                n_heads=n_heads,
+                context_len=max(c["T"], context_len),
+                attn_impl=c["attn"],
+            )
             model = ClassicalGPT(cfg).to(device)
             x = torch.randint(0, vocab_size, (c["B"], c["T"]), device=device)
             y = torch.randint(0, vocab_size, (c["B"], c["T"]), device=device)

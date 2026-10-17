@@ -167,11 +167,14 @@ def test_flop_async_tier_503_in_public_deploy(public_deploy):
         "stack_bb": 41.0,
         "config": {"pot_bb": 18.0, "board": ["Ah", "Kd", "7s"], "pot_type": "3bet"},
     }
-    r = client.post(
-        "/api/solve", json=spec, headers={"Authorization": f"Bearer {make_jwt()}"}
-    )
+    r = client.post("/api/solve", json=spec, headers={"Authorization": f"Bearer {make_jwt()}"})
     assert r.status_code == 503
-    assert client.get("/api/solve/jobs/x", headers={"Authorization": f"Bearer {make_jwt()}"}).status_code == 503
+    assert (
+        client.get(
+            "/api/solve/jobs/x", headers={"Authorization": f"Bearer {make_jwt()}"}
+        ).status_code
+        == 503
+    )
 
 
 def test_solver_flop_preview_503_in_public_deploy(public_deploy):

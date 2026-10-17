@@ -58,7 +58,9 @@ def _json_safe(value: Any) -> Any:
 
 def atomic_write_json(path: Path, payload: Any) -> None:
     data = (
-        json.dumps(_json_safe(payload), ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False)
+        json.dumps(
+            _json_safe(payload), ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False
+        )
         + "\n"
     ).encode()
     atomic_write_bytes(path, data)

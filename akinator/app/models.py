@@ -1,5 +1,6 @@
 """Core data shapes for akinator. Dataclasses + enum only — no logic beyond
 trivial feature access."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

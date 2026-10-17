@@ -73,7 +73,9 @@ def selector_table(
     return pd.DataFrame(rows)
 
 
-def head_to_head(sel: pd.DataFrame, opponents: list[str], metric_name: str = "MASE") -> pd.DataFrame:
+def head_to_head(
+    sel: pd.DataFrame, opponents: list[str], metric_name: str = "MASE"
+) -> pd.DataFrame:
     """TimesFM against each opponent column, paired on the window."""
     from scipy.stats import wilcoxon
 
@@ -127,18 +129,14 @@ def contamination_table(df: pd.DataFrame, metric: str = "mase") -> pd.DataFrame:
     hard.
     """
     w = wide(df, metric)
-    exposure = (
-        df.drop_duplicates(KEY).set_index(KEY)["exposure"].rename("exposure")
-    )
+    exposure = df.drop_duplicates(KEY).set_index(KEY)["exposure"].rename("exposure")
     w = w.set_index(KEY).join(exposure).reset_index()
     med = w[BASELINE_NAMES].median(axis=1)
     rows = []
     for model in [*BASELINE_NAMES, MODEL_KEY]:
         rel = w[model] / med.replace(0.0, np.nan)
         rows.append(
-            pd.DataFrame(
-                {"dataset": w.dataset, "exposure": w.exposure, "model": model, "rel": rel}
-            )
+            pd.DataFrame({"dataset": w.dataset, "exposure": w.exposure, "model": model, "rel": rel})
         )
     return pd.concat(rows, ignore_index=True)
 

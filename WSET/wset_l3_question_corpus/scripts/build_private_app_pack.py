@@ -12,9 +12,7 @@ from wset_corpus.utils import ROOT, read_jsonl, sha256_bytes
 
 DEFAULT_OUTPUT = ROOT / "data" / "exports" / "legacy_question_pack.json"
 CURATED_PATH = ROOT / "data" / "curated" / "service_pairing_questions.json"
-TRANSLATION_CACHE = (
-    ROOT / "data" / "translations_private" / "question_translations.jsonl"
-)
+TRANSLATION_CACHE = ROOT / "data" / "translations_private" / "question_translations.jsonl"
 ALLOWED_STATUSES = {"machine_screened", "human_reviewed"}
 
 TOPIC_TO_OUTCOME = {
@@ -87,9 +85,7 @@ def deduplicated_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def pack_question(row: dict[str, Any]) -> dict[str, Any]:
     topic = str(row.get("topic_primary") or "still_wines")
-    unit, outcome, category = TOPIC_TO_OUTCOME.get(
-        topic, ("unit_1", "u1_lo2", "Still wines")
-    )
+    unit, outcome, category = TOPIC_TO_OUTCOME.get(topic, ("unit_1", "u1_lo2", "Still wines"))
     choices = [str(choice) for choice in row.get("answer_choices") or []]
     correct_index = row.get("correct_answer_index")
     valid_mcq = (
@@ -154,9 +150,7 @@ def apply_complete_translations(
 ) -> tuple[list[dict[str, Any]], bool]:
     if not TRANSLATION_CACHE.exists():
         return questions, False
-    cached = {
-        str(record["id"]): record for record in read_jsonl(TRANSLATION_CACHE)
-    }
+    cached = {str(record["id"]): record for record in read_jsonl(TRANSLATION_CACHE)}
     translated: list[dict[str, Any]] = []
     for question in questions:
         record = cached.get(str(question["id"]))

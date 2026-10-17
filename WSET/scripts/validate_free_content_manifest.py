@@ -29,7 +29,9 @@ def _load(path: Path) -> dict[str, Any]:
 
 def _unique_ids(manifest: dict[str, Any], key: str, expected_count: int) -> list[str]:
     values = manifest.get(key)
-    if not isinstance(values, list) or not all(isinstance(value, str) and value for value in values):
+    if not isinstance(values, list) or not all(
+        isinstance(value, str) and value for value in values
+    ):
         raise FreeContentManifestError(f"{key} must be a non-empty string array")
     if len(values) != expected_count or len(set(values)) != len(values):
         raise FreeContentManifestError(f"{key} must contain {expected_count} unique IDs")

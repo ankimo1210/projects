@@ -101,7 +101,11 @@ def fetch_sample_corpus(
     samples_dir = root / SAMPLES_REL
     samples_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = root / MANIFEST_REL
-    manifest = load_json(manifest_path) if manifest_path.exists() else {"version": "sample_v1", "sources": {}}
+    manifest = (
+        load_json(manifest_path)
+        if manifest_path.exists()
+        else {"version": "sample_v1", "sources": {}}
+    )
 
     for name in names:
         out = samples_dir / f"{name}.txt"
@@ -122,7 +126,9 @@ def fetch_sample_corpus(
             "title": src["title"],
             "author": src["author"],
             "url": url,
-            "license": "Aozora Bunko public domain (author died >70y ago)" if not synthetic else "synthetic (generated in-repo)",
+            "license": "Aozora Bunko public domain (author died >70y ago)"
+            if not synthetic
+            else "synthetic (generated in-repo)",
             "synthetic": synthetic,
             "sha256": sha256_text(text),
             "n_chars": len(text),

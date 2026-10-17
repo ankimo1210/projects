@@ -1,12 +1,18 @@
 # ruff: noqa  -- archived working script, kept as run on 2026-09-12
 """Assemble the five-ETF replication report (claude-report template) from rep_*_chart.json."""
+
 import os
 import json, re
-S = os.environ.get('ETF_PE_WORKDIR', './work/')
-old = open(S + 'smh_report.html').read()
-css = old[old.index('<style>'):old.index('</style>') + 8]
-head = old[:old.index('<style>')].replace('<title>SMH バスケット再現</title>', '<title>ETF バスケット再現</title>')
-css = css.replace('</style>', """
+
+S = os.environ.get("ETF_PE_WORKDIR", "./work/")
+old = open(S + "smh_report.html").read()
+css = old[old.index("<style>") : old.index("</style>") + 8]
+head = old[: old.index("<style>")].replace(
+    "<title>SMH バスケット再現</title>", "<title>ETF バスケット再現</title>"
+)
+css = css.replace(
+    "</style>",
+    """
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px 22px;margin-top:6px}
 .grid .cell{min-width:0}
 .cell .lab{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:0 0 2px}
@@ -19,43 +25,82 @@ css = css.replace('</style>', """
 .cards p{font-size:14px;line-height:1.85;margin:10px 0 0;color:var(--ink-2)}
 .cards p strong{color:var(--ink)}
 td.jp,th.jp{background:var(--surface-3)}
-</style>""")
+</style>""",
+)
 
-ETFS = [('SMH', 'smh', 'VanEck Semiconductor', 'SEC N-PORT · 四半期', 25, 0.35, '$'),
-        ('QQQ', 'qqq', 'Invesco QQQ Trust', 'SEC N-PORT · 四半期', 101, 0.20, '$'),
-        ('XLE', 'xle', 'Energy Select Sector SPDR', 'SEC N-PORT · 四半期', 22, 0.08, '$'),
-        ('1329', '1329_q', 'iShares Core 日経225 ETF', 'iShares JP 保有明細 · 四半期末', 225, 0.0495, '¥'),
-        ('1475', '1475_q', 'iShares Core TOPIX ETF', 'iShares JP 保有明細 · 四半期末', 1682, 0.0495, '¥')]
+ETFS = [
+    ("SMH", "smh", "VanEck Semiconductor", "SEC N-PORT · 四半期", 25, 0.35, "$"),
+    ("QQQ", "qqq", "Invesco QQQ Trust", "SEC N-PORT · 四半期", 101, 0.20, "$"),
+    ("XLE", "xle", "Energy Select Sector SPDR", "SEC N-PORT · 四半期", 22, 0.08, "$"),
+    (
+        "1329",
+        "1329_q",
+        "iShares Core 日経225 ETF",
+        "iShares JP 保有明細 · 四半期末",
+        225,
+        0.0495,
+        "¥",
+    ),
+    (
+        "1475",
+        "1475_q",
+        "iShares Core TOPIX ETF",
+        "iShares JP 保有明細 · 四半期末",
+        1682,
+        0.0495,
+        "¥",
+    ),
+]
 D = {}
 for code, key, name, src, n, fee, cur in ETFS:
-    c = json.load(open(S + f'rep_{key}_chart.json'))
-    D[code] = dict(name=name, src=src, names=n, fee=fee, cur=cur, dates=c['dates'], etf=c['etf_level'], rep=c['rep'], diff=c['diff'], cum=c['cum'],
-                   switches=c['switches'], stats=c['stats'], intervals=c['intervals'], worst=c['worst'])
-M = {k: json.load(open(S + f'rep_{k}_chart.json'))['stats'] for k in ('1329_m', '1475_m')}
-diag = json.load(open(S + 'diag_jp.json'))
+    c = json.load(open(S + f"rep_{key}_chart.json"))
+    D[code] = dict(
+        name=name,
+        src=src,
+        names=n,
+        fee=fee,
+        cur=cur,
+        dates=c["dates"],
+        etf=c["etf_level"],
+        rep=c["rep"],
+        diff=c["diff"],
+        cum=c["cum"],
+        switches=c["switches"],
+        stats=c["stats"],
+        intervals=c["intervals"],
+        worst=c["worst"],
+    )
+M = {k: json.load(open(S + f"rep_{k}_chart.json"))["stats"] for k in ("1329_m", "1475_m")}
+diag = json.load(open(S + "diag_jp.json"))
+
 
 def num(v, d=2, sign=False):
-    s = f'{v:+.{d}f}' if sign else f'{v:.{d}f}'
-    return s.replace('-', '−')
+    s = f"{v:+.{d}f}" if sign else f"{v:.{d}f}"
+    return s.replace("-", "−")
 
-rows = ''
+
+rows = ""
 for code, key, name, src, n, fee, cur in ETFS:
-    s = D[code]['stats']; jp = ' class="jp"' if cur == '¥' else ''
-    rows += f"""      <tr><td{jp}><strong>{code}</strong> <span style="color:var(--ink-3);font-size:12px">{name}</span></td><td class="num{' jp' if jp else ''}">{n}</td><td class="num{' jp' if jp else ''}">{s['corr']:.4f}</td><td class="num{' jp' if jp else ''}">{s['std_bp']:.1f}</td><td class="num{' jp' if jp else ''}">{s['te']:.2f}%</td><td class="num{' jp' if jp else ''}">{s['over20']}</td><td class="num{' jp' if jp else ''}">{num(s['cum_end'], 2, True)}%</td><td class="num{' jp' if jp else ''}">{s['cum_max']:.2f}%</td><td class="num{' jp' if jp else ''}">{s['maxday'][5:]} {num(s['maxbp'] * (1 if D[code]['diff'][D[code]['dates'].index(s['maxday'])] > 0 else -1), 0, True)}bp</td></tr>\n"""
+    s = D[code]["stats"]
+    jp = ' class="jp"' if cur == "¥" else ""
+    rows += f"""      <tr><td{jp}><strong>{code}</strong> <span style="color:var(--ink-3);font-size:12px">{name}</span></td><td class="num{" jp" if jp else ""}">{n}</td><td class="num{" jp" if jp else ""}">{s["corr"]:.4f}</td><td class="num{" jp" if jp else ""}">{s["std_bp"]:.1f}</td><td class="num{" jp" if jp else ""}">{s["te"]:.2f}%</td><td class="num{" jp" if jp else ""}">{s["over20"]}</td><td class="num{" jp" if jp else ""}">{num(s["cum_end"], 2, True)}%</td><td class="num{" jp" if jp else ""}">{s["cum_max"]:.2f}%</td><td class="num{" jp" if jp else ""}">{s["maxday"][5:]} {num(s["maxbp"] * (1 if D[code]["diff"][D[code]["dates"].index(s["maxday"])] > 0 else -1), 0, True)}bp</td></tr>\n"""
 
 # per-quarter sigma table: columns = ETFs, rows = 5 intervals (US bounded by rebalance dates, JP by quarter-ends)
-qlab = ['2025-07 → 09', '2025-09 → 12', '2025-12 → 2026-03', '2026-03 → 06', '2026-06 → 09']
-qrows = ''
+qlab = ["2025-07 → 09", "2025-09 → 12", "2025-12 → 2026-03", "2026-03 → 06", "2026-06 → 09"]
+qrows = ""
 for i, lab in enumerate(qlab):
-    cells = ''
+    cells = ""
     for code, *_ in ETFS:
-        iv = D[code]['intervals'][i]
+        iv = D[code]["intervals"][i]
         cells += f'<td class="num">{iv["std"]:.1f} <span style="color:var(--ink-3)">/ {num(iv["cum"], 2, True)}</span></td>'
-    qrows += f'      <tr><td>{lab}</td>{cells}</tr>\n'
-cells = ''.join(f'<td class="num">{D[c]["stats"]["std_bp"]:.1f} <span style="color:var(--ink-3)">/ {num(D[c]["stats"]["cum_end"], 2, True)}</span></td>' for c, *_ in ETFS)
+    qrows += f"      <tr><td>{lab}</td>{cells}</tr>\n"
+cells = "".join(
+    f'<td class="num">{D[c]["stats"]["std_bp"]:.1f} <span style="color:var(--ink-3)">/ {num(D[c]["stats"]["cum_end"], 2, True)}</span></td>'
+    for c, *_ in ETFS
+)
 qrows += f'      <tr class="hl"><td>全期間</td>{cells}</tr>\n'
 
-s_smh, s_qqq, s_xle, s_1329, s_1475 = (D[c]['stats'] for c in ('SMH', 'QQQ', 'XLE', '1329', '1475'))
+s_smh, s_qqq, s_xle, s_1329, s_1475 = (D[c]["stats"] for c in ("SMH", "QQQ", "XLE", "1329", "1475"))
 body = f"""
 <div class="wrap">
 <header class="mast">
@@ -63,12 +108,12 @@ body = f"""
     <span>SMH · QQQ · XLE · 1329 · 1475</span><span>2025-07-01 → 2026-09-10</span><span>米国 301 / 日本 292 営業日</span><b>portfolio-analyzer</b>
   </div>
   <h1>ETF は中身から再現できるか<span class="sub">四半期に一度の保有開示を固定して、5 本の ETF の日次レベルを組み直す</span></h1>
-  <p class="lede">米国 3 本（SMH・QQQ・XLE）は<strong>日次相関 {s_qqq['corr']:.4f}〜{s_smh['corr']:.4f}、年率トラッキングエラー {s_xle['te']:.2f}〜{s_smh['te']:.2f}%</strong>。日本 2 本（1329・1475）は TE {s_1475['te']:.2f}〜{s_1329['te']:.2f}% と 2 倍緩いが、バスケット自体は日経平均に σ {diag['1329']['idx_std_ex_divdays']}bp で一致しており、<strong>残差は ETF の終値そのものが持つノイズ</strong>。5 本とも 14.5 か月の累積乖離は ±1% に収まる。</p>
+  <p class="lede">米国 3 本（SMH・QQQ・XLE）は<strong>日次相関 {s_qqq["corr"]:.4f}〜{s_smh["corr"]:.4f}、年率トラッキングエラー {s_xle["te"]:.2f}〜{s_smh["te"]:.2f}%</strong>。日本 2 本（1329・1475）は TE {s_1475["te"]:.2f}〜{s_1329["te"]:.2f}% と 2 倍緩いが、バスケット自体は日経平均に σ {diag["1329"]["idx_std_ex_divdays"]}bp で一致しており、<strong>残差は ETF の終値そのものが持つノイズ</strong>。5 本とも 14.5 か月の累積乖離は ±1% に収まる。</p>
   <div class="strip">
-    <div><span class="k">累積乖離が ±1% 以内</span><span class="v a">5<small style="font-size:19px">/5 本</small></span><span class="n">最大は SMH の {num(s_smh['cum_end'], 2, True)}%。うち −0.4pt は信託報酬</span></div>
-    <div><span class="k">米国 3 本の TE</span><span class="v b">{s_xle['te']:.2f}<small style="font-size:19px">〜{s_smh['te']:.2f}%</small></span><span class="n">XLE が最良（22 銘柄・入れ替えなし）、SMH が最悪（半導体の分散度）</span></div>
-    <div><span class="k">日本 2 本の TE</span><span class="v b">{s_1475['te']:.2f}<small style="font-size:19px">〜{s_1329['te']:.2f}%</small></span><span class="n">日次差の自己相関 −0.5 ＝ 翌日に戻る。月次の保有に替えても改善しない</span></div>
-    <div><span class="k">20bp を超えた日</span><span class="v a">{s_xle['over20']}<small style="font-size:19px">〜{s_1329['over20']} 日</small></span><span class="n">XLE {s_xle['over20']} · QQQ {s_qqq['over20']} · SMH {s_smh['over20']} · 1475 {s_1475['over20']} · 1329 {s_1329['over20']}</span></div>
+    <div><span class="k">累積乖離が ±1% 以内</span><span class="v a">5<small style="font-size:19px">/5 本</small></span><span class="n">最大は SMH の {num(s_smh["cum_end"], 2, True)}%。うち −0.4pt は信託報酬</span></div>
+    <div><span class="k">米国 3 本の TE</span><span class="v b">{s_xle["te"]:.2f}<small style="font-size:19px">〜{s_smh["te"]:.2f}%</small></span><span class="n">XLE が最良（22 銘柄・入れ替えなし）、SMH が最悪（半導体の分散度）</span></div>
+    <div><span class="k">日本 2 本の TE</span><span class="v b">{s_1475["te"]:.2f}<small style="font-size:19px">〜{s_1329["te"]:.2f}%</small></span><span class="n">日次差の自己相関 −0.5 ＝ 翌日に戻る。月次の保有に替えても改善しない</span></div>
+    <div><span class="k">20bp を超えた日</span><span class="v a">{s_xle["over20"]}<small style="font-size:19px">〜{s_1329["over20"]} 日</small></span><span class="n">XLE {s_xle["over20"]} · QQQ {s_qqq["over20"]} · SMH {s_smh["over20"]} · 1475 {s_1475["over20"]} · 1329 {s_1329["over20"]}</span></div>
   </div>
 </header>
 
@@ -135,30 +180,30 @@ body = f"""
 
   <h3>日本の残差はバスケットの誤差ではなく、ETF の終値のノイズ</h3>
   <div class="col">
-    <p>同じ 1329 のバスケットを、ETF ではなく<strong>日経平均株価そのもの</strong>と比べると、日次差の σ は {diag['1329']['idx_std_ex_divdays']}bp（配当落ち日を除く）、最大 {diag['1329']['idx_max']}bp、20bp 超は {diag['1329']['idx_over20']} 日。バスケットは指数を事実上完全に再現している。一方、同じ日経平均に連動する野村の 1321 を同じバスケットと比べても σ {diag['1329']['alt_std']}bp で、1329 の {diag['1329']['own_std']}bp と同程度。つまり残差は<em>ETF の終値が NAV からずれる分</em>で、どの保有データを使っても消えない。</p>
-    <p>裏付けとして、iShares Japan は <code>asOfDate</code> を付けると過去の任意日の保有明細を返すので、四半期末ではなく<strong>月末の明細</strong>に替えて同じ計算をした。TE は 1329 が {s_1329['te']:.2f}% → {M['1329_m']['te']:.2f}%、1475 が {s_1475['te']:.2f}% → {M['1475_m']['te']:.2f}% と、小数第 2 位まで動かない。</p>
+    <p>同じ 1329 のバスケットを、ETF ではなく<strong>日経平均株価そのもの</strong>と比べると、日次差の σ は {diag["1329"]["idx_std_ex_divdays"]}bp（配当落ち日を除く）、最大 {diag["1329"]["idx_max"]}bp、20bp 超は {diag["1329"]["idx_over20"]} 日。バスケットは指数を事実上完全に再現している。一方、同じ日経平均に連動する野村の 1321 を同じバスケットと比べても σ {diag["1329"]["alt_std"]}bp で、1329 の {diag["1329"]["own_std"]}bp と同程度。つまり残差は<em>ETF の終値が NAV からずれる分</em>で、どの保有データを使っても消えない。</p>
+    <p>裏付けとして、iShares Japan は <code>asOfDate</code> を付けると過去の任意日の保有明細を返すので、四半期末ではなく<strong>月末の明細</strong>に替えて同じ計算をした。TE は 1329 が {s_1329["te"]:.2f}% → {M["1329_m"]["te"]:.2f}%、1475 が {s_1475["te"]:.2f}% → {M["1475_m"]["te"]:.2f}% と、小数第 2 位まで動かない。</p>
   </div>
 
   <div class="modes">
     <div class="win">
       <p class="t">1329 · 四半期末の明細</p>
       <p class="s">6・9・12・3 月末の 5 枚</p>
-      <dl><dt>日次相関</dt><dd>{s_1329['corr']:.5f}</dd><dt>日次差の σ</dt><dd>{s_1329['std_bp']:.1f}bp</dd><dt>トラッキングエラー</dt><dd>{s_1329['te']:.2f}%/年</dd><dt>累積乖離</dt><dd>{num(s_1329['cum_end'], 2, True)}%</dd></dl>
+      <dl><dt>日次相関</dt><dd>{s_1329["corr"]:.5f}</dd><dt>日次差の σ</dt><dd>{s_1329["std_bp"]:.1f}bp</dd><dt>トラッキングエラー</dt><dd>{s_1329["te"]:.2f}%/年</dd><dt>累積乖離</dt><dd>{num(s_1329["cum_end"], 2, True)}%</dd></dl>
     </div>
     <div>
       <p class="t">1329 · 月末の明細</p>
       <p class="s">2025-06 〜 2026-08 の 15 枚</p>
-      <dl><dt>日次相関</dt><dd>{M['1329_m']['corr']:.5f}</dd><dt>日次差の σ</dt><dd>{M['1329_m']['std_bp']:.1f}bp</dd><dt>トラッキングエラー</dt><dd>{M['1329_m']['te']:.2f}%/年</dd><dt>累積乖離</dt><dd>{num(M['1329_m']['cum_end'], 2, True)}%</dd></dl>
+      <dl><dt>日次相関</dt><dd>{M["1329_m"]["corr"]:.5f}</dd><dt>日次差の σ</dt><dd>{M["1329_m"]["std_bp"]:.1f}bp</dd><dt>トラッキングエラー</dt><dd>{M["1329_m"]["te"]:.2f}%/年</dd><dt>累積乖離</dt><dd>{num(M["1329_m"]["cum_end"], 2, True)}%</dd></dl>
     </div>
     <div class="win">
       <p class="t">1475 · 四半期末の明細</p>
       <p class="s">約 1,680 銘柄 × 5 枚</p>
-      <dl><dt>日次相関</dt><dd>{s_1475['corr']:.5f}</dd><dt>日次差の σ</dt><dd>{s_1475['std_bp']:.1f}bp</dd><dt>トラッキングエラー</dt><dd>{s_1475['te']:.2f}%/年</dd><dt>累積乖離</dt><dd>{num(s_1475['cum_end'], 2, True)}%</dd></dl>
+      <dl><dt>日次相関</dt><dd>{s_1475["corr"]:.5f}</dd><dt>日次差の σ</dt><dd>{s_1475["std_bp"]:.1f}bp</dd><dt>トラッキングエラー</dt><dd>{s_1475["te"]:.2f}%/年</dd><dt>累積乖離</dt><dd>{num(s_1475["cum_end"], 2, True)}%</dd></dl>
     </div>
     <div>
       <p class="t">1475 · 月末の明細</p>
       <p class="s">約 1,680 銘柄 × 15 枚</p>
-      <dl><dt>日次相関</dt><dd>{M['1475_m']['corr']:.5f}</dd><dt>日次差の σ</dt><dd>{M['1475_m']['std_bp']:.1f}bp</dd><dt>トラッキングエラー</dt><dd>{M['1475_m']['te']:.2f}%/年</dd><dt>累積乖離</dt><dd>{num(M['1475_m']['cum_end'], 2, True)}%</dd></dl>
+      <dl><dt>日次相関</dt><dd>{M["1475_m"]["corr"]:.5f}</dd><dt>日次差の σ</dt><dd>{M["1475_m"]["std_bp"]:.1f}bp</dd><dt>トラッキングエラー</dt><dd>{M["1475_m"]["te"]:.2f}%/年</dd><dt>累積乖離</dt><dd>{num(M["1475_m"]["cum_end"], 2, True)}%</dd></dl>
     </div>
   </div>
 </section>
@@ -171,15 +216,15 @@ body = f"""
   <div class="cards">
     <div>
       <p class="t">SMH <small>rebalance week</small></p>
-      <p>20bp を超えた {s_smh['over20']} 日のうち 4 日がリバランス実効日とその直後。最大は 2026-06-22 の −40bp で、MU +6.8%・INTC +5.2%・AVGO −4.5% が同時に動いた日に旧構成と新構成の差がそのまま出た。切り替えを四半期末に置くと TE は 1.14% → 1.32% に悪化する。</p>
+      <p>20bp を超えた {s_smh["over20"]} 日のうち 4 日がリバランス実効日とその直後。最大は 2026-06-22 の −40bp で、MU +6.8%・INTC +5.2%・AVGO −4.5% が同時に動いた日に旧構成と新構成の差がそのまま出た。切り替えを四半期末に置くと TE は 1.14% → 1.32% に悪化する。</p>
     </div>
     <div>
       <p class="t">QQQ <small>mid-quarter change</small></p>
-      <p>101 銘柄でも TE {s_qqq['te']:.2f}%。ただし 2026-03 → 06 の区間だけ ETF が再現を <strong>+0.67%</strong> 上回る。Nasdaq が 4 月 20 日に Sandisk を Atlassian と入れ替え、6 月末まで Sandisk の比率が 1.5% に膨らんだ。四半期末の明細では原理的に追えず、指数の入れ替え告知を読む以外に手がない。</p>
+      <p>101 銘柄でも TE {s_qqq["te"]:.2f}%。ただし 2026-03 → 06 の区間だけ ETF が再現を <strong>+0.67%</strong> 上回る。Nasdaq が 4 月 20 日に Sandisk を Atlassian と入れ替え、6 月末まで Sandisk の比率が 1.5% に膨らんだ。四半期末の明細では原理的に追えず、指数の入れ替え告知を読む以外に手がない。</p>
     </div>
     <div>
       <p class="t">XLE <small>purged tickers</small></p>
-      <p>22 銘柄・入れ替えなしで TE {s_xle['te']:.2f}%、20bp 超は 0 日。落とし穴は買収消滅した Hess（2025-07-18、→ Chevron）と Coterra（2026-05-07、→ Devon）で、Yahoo からは株価履歴ごと消えている。買収側の総収益で代理すると累積 −0.37% → −0.61% と信託報酬側に寄る。</p>
+      <p>22 銘柄・入れ替えなしで TE {s_xle["te"]:.2f}%、20bp 超は 0 日。落とし穴は買収消滅した Hess（2025-07-18、→ Chevron）と Coterra（2026-05-07、→ Devon）で、Yahoo からは株価履歴ごと消えている。買収側の総収益で代理すると累積 −0.37% → −0.61% と信託報酬側に寄る。</p>
     </div>
     <div>
       <p class="t">1329 · 1475 <small>etf price noise</small></p>
@@ -217,7 +262,7 @@ body = f"""
 
 <div id="tip" role="status"></div>
 
-<script id="data" type="application/json">{json.dumps(D, ensure_ascii=False, separators=(',', ':'))}</script>
+<script id="data" type="application/json">{json.dumps(D, ensure_ascii=False, separators=(",", ":"))}</script>
 """
 
 js = r"""<script>
@@ -336,5 +381,5 @@ const niceTicks=(lo,hi,step)=>{const out=[];for(let v=Math.ceil(lo/step)*step;v<
 </script>
 """
 html = head + css + body + js
-open(S + 'smh_report.html', 'w').write(html)
-print('written', len(html), 'bytes')
+open(S + "smh_report.html", "w").write(html)
+print("written", len(html), "bytes")

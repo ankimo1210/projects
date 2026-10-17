@@ -53,8 +53,8 @@ FLOP_DEFAULT_MAX_TABLE_GB = 12.0
 
 class RakeSpec(BaseModel):
     model: Literal["none", "site", "live", "custom"] = "none"
-    pct: float | None = None      # custom only
-    cap_bb: float | None = None   # custom only
+    pct: float | None = None  # custom only
+    cap_bb: float | None = None  # custom only
 
 
 class AbstractionSpec(BaseModel):
@@ -68,8 +68,8 @@ class SolveConfig(BaseModel):
     pot_type: Literal["srp", "3bet", "4bet"] = "srp"
     pot_bb: float = Field(gt=0)
     board: list[str]
-    ranges: dict[str, str | list[float]] = {}     # keys: ip / oop
-    action_tree: dict | None = None               # {bet_sizes_pct, max_raises}
+    ranges: dict[str, str | list[float]] = {}  # keys: ip / oop
+    action_tree: dict | None = None  # {bet_sizes_pct, max_raises}
     abstraction: AbstractionSpec = AbstractionSpec()  # flop solves only
 
 
@@ -108,13 +108,17 @@ CAPABILITIES = {
     },
     "streets": {
         "river": {"board_cards": 5, "cost": "sync", "iterations": ITER_CLAMP["river"]},
-        "turn_river": {"board_cards": 4, "cost": "sync_capped", "iterations": ITER_CLAMP["turn_river"]},
+        "turn_river": {
+            "board_cards": 4,
+            "cost": "sync_capped",
+            "iterations": ITER_CLAMP["turn_river"],
+        },
         "flop": {
             "board_cards": 3,
             "cost": "async",
             "iterations": ITER_CLAMP["flop"],
-            "pot_types": ["srp", "3bet"],   # FlopTreeConfig has no 4bet preset
-            "rake": ["none"],               # FlopSolver has no rake path yet
+            "pot_types": ["srp", "3bet"],  # FlopTreeConfig has no 4bet preset
+            "rake": ["none"],  # FlopSolver has no rake path yet
             "abstraction": {
                 "buckets_river_default": FLOP_DEFAULT_BUCKETS_RIVER,
                 "buckets_turn_default": FLOP_DEFAULT_BUCKETS_TURN,
@@ -140,22 +144,28 @@ def _reject_unsupported(spec: GameSpec) -> None:
         )
         table_checks = [
             (not pos_ok, f"6max positions={spec.config.positions} (need [opener, BB])"),
-            (spec.config.pot_type not in ("srp", "3bet"),
-             f"6max pot_type={spec.config.pot_type} (charts cover srp / 3bet)"),
+            (
+                spec.config.pot_type not in ("srp", "3bet"),
+                f"6max pot_type={spec.config.pot_type} (charts cover srp / 3bet)",
+            ),
         ]
     else:
         table_checks = [
             (spec.table != "hu", f"table={spec.table}"),
-            (sorted(spec.config.positions) not in (["BB", "SB"], ["BB", "BTN"]),
-             f"positions={spec.config.positions}"),
+            (
+                sorted(spec.config.positions) not in (["BB", "SB"], ["BB", "BTN"]),
+                f"positions={spec.config.positions}",
+            ),
         ]
     checks = [
-        (spec.game == "tournament" and spec.rake.model != "none",
-         "tournament solves take no rake"),
+        (spec.game == "tournament" and spec.rake.model != "none", "tournament solves take no rake"),
         (spec.variant != "nlhe", f"variant={spec.variant}"),
         *table_checks,
         (spec.spot != "postflop", f"spot={spec.spot}"),
-        (len(spec.config.board) not in (3, 4, 5), f"board must have 3, 4 or 5 cards, got {len(spec.config.board)}"),
+        (
+            len(spec.config.board) not in (3, 4, 5),
+            f"board must have 3, 4 or 5 cards, got {len(spec.config.board)}",
+        ),
     ]
     for failed, what in checks:
         if failed:
@@ -187,7 +197,9 @@ def _resolve_rake(r: RakeSpec) -> tuple[float, float]:
         # A positive rake needs a positive cap (the binding rejects cap<=0);
         # validate it here too so both layers agree on the boundary.
         if not 0.0 <= r.pct < 0.5 or (r.pct > 0.0 and r.cap_bb <= 0.0) or r.cap_bb < 0.0:
-            raise HTTPException(422, "rake pct must be in [0, 0.5); cap_bb must be > 0 when pct > 0")
+            raise HTTPException(
+                422, "rake pct must be in [0, 0.5); cap_bb must be > 0 when pct > 0"
+            )
         return r.pct, r.cap_bb
     return RAKE_PRESETS[r.model]
 
@@ -236,18 +248,36 @@ async def solve(spec: GameSpec, user: str = Depends(rate_limited_user)):
             raw = await loop.run_in_executor(
                 _executor,
                 lambda: gto_py.solve_hu_river(
-                    spec.config.board, spec.config.pot_bb, spec.stack_bb, iters,
-                    ip, oop, bet_pcts, max_raises, spec.config.pot_type,
-                    pct or None, cap_bb if pct else None,
+                    spec.config.board,
+                    spec.config.pot_bb,
+                    spec.stack_bb,
+                    iters,
+                    ip,
+                    oop,
+                    bet_pcts,
+                    max_raises,
+                    spec.config.pot_type,
+                    pct or None,
+                    cap_bb if pct else None,
                 ),
             )
         else:
             raw = await loop.run_in_executor(
                 _executor,
                 lambda: gto_py.solve_hu_turn_river(
-                    spec.config.board, spec.config.pot_bb, spec.stack_bb, iters,
-                    None, ip, oop, bet_pcts, bet_pcts, max_raises,
-                    spec.config.pot_type, pct or None, cap_bb if pct else None,
+                    spec.config.board,
+                    spec.config.pot_bb,
+                    spec.stack_bb,
+                    iters,
+                    None,
+                    ip,
+                    oop,
+                    bet_pcts,
+                    bet_pcts,
+                    max_raises,
+                    spec.config.pot_type,
+                    pct or None,
+                    cap_bb if pct else None,
                 ),
             )
     except ValueError as e:
@@ -262,7 +292,9 @@ def _submit_flop(spec: GameSpec):
     import gto_py
 
     if spec.rake.model != "none":
-        raise HTTPException(422, "rake is not supported on flop solves yet (FlopSolver has no rake path)")
+        raise HTTPException(
+            422, "rake is not supported on flop solves yet (FlopSolver has no rake path)"
+        )
     if spec.config.pot_type not in ("srp", "3bet"):
         raise HTTPException(422, f"flop pot_type must be srp or 3bet, got {spec.config.pot_type}")
 
@@ -280,8 +312,13 @@ def _submit_flop(spec: GameSpec):
     # as the memory reservation so the manager admits at most what fits.
     try:
         dense_gb = gto_py.flop_dense_table_gb(
-            spec.config.pot_bb, spec.stack_bb, spec.config.pot_type,
-            abs_.buckets_river, abs_.buckets_turn, bet_pcts, max_raises,
+            spec.config.pot_bb,
+            spec.stack_bb,
+            spec.config.pot_type,
+            abs_.buckets_river,
+            abs_.buckets_turn,
+            bet_pcts,
+            max_raises,
         )
     except ValueError as e:
         raise HTTPException(422, str(e)) from e
@@ -310,8 +347,20 @@ def _submit_flop(spec: GameSpec):
         import gto_py as _g
 
         raw = _g.solve_hu_flop(
-            board, pot_bb, stack_bb, iters, None, ip, oop,
-            bet_pcts, max_raises, pot_type, br, bt, max_gb, "sample",
+            board,
+            pot_bb,
+            stack_bb,
+            iters,
+            None,
+            ip,
+            oop,
+            bet_pcts,
+            max_raises,
+            pot_type,
+            br,
+            bt,
+            max_gb,
+            "sample",
         )
         return _envelope(raw, spec, "flop", iters, 0.0, 0.0)
 
@@ -345,10 +394,16 @@ async def job_cancel(job_id: str):
     if job_manager.get(job_id) is None:
         raise HTTPException(404, "unknown or expired job id")
     cancelled = job_manager.cancel(job_id)
-    return {"job_id": job_id, "cancelled": cancelled, "status": job_manager.status(job_id)["status"]}
+    return {
+        "job_id": job_id,
+        "cancelled": cancelled,
+        "status": job_manager.status(job_id)["status"],
+    }
 
 
-def _envelope(raw: dict, spec: GameSpec, street: str, iters: int, pct: float, cap_bb: float) -> dict:
+def _envelope(
+    raw: dict, spec: GameSpec, street: str, iters: int, pct: float, cap_bb: float
+) -> dict:
     """Unified SolveResult (spec section 4.5). Provenance: ev <- game values,
     per-combo ev <- avg-strategy values, equity <- separate range-vs-range
     computation in the solver, exploitability <- general-sum NashConv.
@@ -368,7 +423,9 @@ def _envelope(raw: dict, spec: GameSpec, street: str, iters: int, pct: float, ca
         "ev": {
             "ip": raw["game_value_sb"],
             "oop": raw["game_value_bb"],
-            "per_combo": [{"card_a": c["card_a"], "card_b": c["card_b"], "ev": c["ev"]} for c in raw["combos"]],
+            "per_combo": [
+                {"card_a": c["card_a"], "card_b": c["card_b"], "ev": c["ev"]} for c in raw["combos"]
+            ],
         },
         "equity": {"ip": raw["equity_sb"], "oop": raw["equity_bb"]} if has_equity else None,
         "frequencies": {a["action"]: a["freq"] for a in raw["strategy"]},

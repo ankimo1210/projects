@@ -122,8 +122,7 @@ PRIOR_WORKS: tuple[PriorWork, ...] = (
     PriorWork(
         "cont-das-2022",
         "Cont & Das (2022)",
-        "R. Cont & P. Das (2022): Rough volatility: fact or artefact? (preprint; "
-        "later published).",
+        "R. Cont & P. Das (2022): Rough volatility: fact or artefact? (preprint; later published).",
     ),
     PriorWork(
         "guyon-lekeufack-2023",

@@ -35,7 +35,8 @@ def test_a_revised_second_preliminary_has_no_derivable_menu_url():
 def test_the_reference_series_with_the_same_label_is_not_selected():
     html = (FIXTURES / "esri_gdemenuja.html").read_bytes()
     url = esri_gdp.select_series_url(
-        html, MENU,
+        html,
+        MENU,
         series_label="年率換算の実質季節調整系列(前期比)",
         stem_prefix="nritu",
     )
@@ -99,7 +100,8 @@ def test_the_reference_series_is_not_selected_when_the_label_is_fullwidth():
 def test_a_relative_href_is_resolved_against_the_menu_url():
     html = (FIXTURES / "esri_gdemenuja.html").read_bytes()
     url = esri_gdp.select_series_url(
-        html, MENU,
+        html,
+        MENU,
         series_label="年率換算の実質季節調整系列(前期比)",
         stem_prefix="nritu",
     )

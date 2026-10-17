@@ -33,7 +33,12 @@ class HFBpeTokenizer:
         self._special_ids = set(range(len(SPECIAL_TOKENS)))
 
     @classmethod
-    def train(cls, texts: Iterator[str] | Iterable[str], vocab_size: int = 8192, version: str | None = None) -> HFBpeTokenizer:
+    def train(
+        cls,
+        texts: Iterator[str] | Iterable[str],
+        vocab_size: int = 8192,
+        version: str | None = None,
+    ) -> HFBpeTokenizer:
         tk = Tokenizer(models.BPE(unk_token="<UNK>"))
         tk.pre_tokenizer = pre_tokenizers.Split(Regex(r"[。、\n]"), behavior="merged_with_previous")
         trainer = trainers.BpeTrainer(

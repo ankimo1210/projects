@@ -93,7 +93,13 @@ def run_sft(
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
         if step % max(1, steps // 15) == 0 or step == 1:
-            curve.append({"step": step, "loss": float(loss.detach()), "sec": round(time.perf_counter() - t0, 1)})
+            curve.append(
+                {
+                    "step": step,
+                    "loss": float(loss.detach()),
+                    "sec": round(time.perf_counter() - t0, 1),
+                }
+            )
     return SFTResult(
         regime="assistant_only" if assistant_only else "full_sequence",
         steps=steps,

@@ -26,7 +26,7 @@ def test_assistant_only_masks_prompt_targets():
     # assistant-only: prompt-predicting targets are masked (IGNORE)
     assert (y_ao[0, : n_prompt - 1] == IGNORE).all()
     # response region has real targets in BOTH regimes
-    assert (y_ao[0, n_prompt - 1] != IGNORE)
+    assert y_ao[0, n_prompt - 1] != IGNORE
     # full-sequence: fewer masked targets than assistant-only (only padding masked)
     assert (y_full[0] == IGNORE).sum() < (y_ao[0] == IGNORE).sum()
     # inputs identical regardless of regime
@@ -47,8 +47,12 @@ def test_loss_ignores_masked_positions():
 
     torch.manual_seed(0)
     tok = _tok()
-    model = ClassicalGPT(ModelConfig(vocab_size=tok.vocab_size, d_model=32, n_heads=2, n_layers=1, context_len=32))
-    x, y = build_batch([("首都は", "東京です")], tok, context_len=32, assistant_only=True, device="cpu")
+    model = ClassicalGPT(
+        ModelConfig(vocab_size=tok.vocab_size, d_model=32, n_heads=2, n_layers=1, context_len=32)
+    )
+    x, y = build_batch(
+        [("首都は", "東京です")], tok, context_len=32, assistant_only=True, device="cpu"
+    )
     _, loss1 = model(x, y)
     y2 = y.clone()
     y2[y2 == IGNORE] = 0  # change masked entries to a real id

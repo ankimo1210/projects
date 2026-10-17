@@ -68,9 +68,7 @@ class RegionMapPackBuilderTests(unittest.TestCase):
     def test_comparison_contract_requires_all_axes_and_valid_sources_and_dates(self) -> None:
         mutations = (
             (
-                lambda master: master["maps"][0]["regions"][0]["comparison"].pop(
-                    "lawLabels"
-                ),
+                lambda master: master["maps"][0]["regions"][0]["comparison"].pop("lawLabels"),
                 "must contain exactly",
             ),
             (
@@ -95,9 +93,7 @@ class RegionMapPackBuilderTests(unittest.TestCase):
         for mutate, message in mutations:
             master = self._master()
             mutate(master)
-            with self.subTest(message=message), self.assertRaisesRegex(
-                RegionMapPackError, message
-            ):
+            with self.subTest(message=message), self.assertRaisesRegex(RegionMapPackError, message):
                 self._build_mutated(master)
 
     def test_sources_must_be_https_and_referenced(self) -> None:
@@ -161,8 +157,11 @@ class RegionMapPackBuilderTests(unittest.TestCase):
             self.assertIn("france_dark_test.svg", assets["map_france"])
             contents = json.loads(assets["map_france"]["Contents.json"])
             self.assertIn(
-                {"filename": "france_dark_test.svg", "idiom": "universal",
-                 "appearances": [{"appearance": "luminosity", "value": "dark"}]},
+                {
+                    "filename": "france_dark_test.svg",
+                    "idiom": "universal",
+                    "appearances": [{"appearance": "luminosity", "value": "dark"}],
+                },
                 contents["images"],
             )
             dark_svg.write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"/>')
@@ -203,7 +202,9 @@ class RegionMapPackBuilderTests(unittest.TestCase):
             asset_dir = Path(directory)
             dark_file = self._master()["maps"][0].get("assetFileDark")
             if dark_file:
-                (asset_dir / dark_file).write_bytes((DEFAULT_ASSET_SOURCE_DIR / dark_file).read_bytes())
+                (asset_dir / dark_file).write_bytes(
+                    (DEFAULT_ASSET_SOURCE_DIR / dark_file).read_bytes()
+                )
             source = (DEFAULT_ASSET_SOURCE_DIR / "france.svg").read_bytes()
             (asset_dir / "france.svg").write_bytes(
                 source.replace(b"</svg>", b"<!-- hash test -->\n</svg>")
@@ -233,9 +234,7 @@ class RegionMapPackBuilderTests(unittest.TestCase):
         ):
             master = self._master()
             master["maps"][0]["regions"][0][key] = value
-            with self.subTest(key=key), self.assertRaisesRegex(
-                RegionMapPackError, message
-            ):
+            with self.subTest(key=key), self.assertRaisesRegex(RegionMapPackError, message):
                 self._build_mutated(master)
 
     def test_duplicate_ids_and_normalized_focus_values_are_rejected(self) -> None:

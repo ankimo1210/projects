@@ -29,12 +29,26 @@ CACHE = DATA_DIR / "finance_ohlcv.parquet"
 
 TICKERS: tuple[str, ...] = (
     # US large caps and index ETFs
-    "SPY", "QQQ", "IWM", "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA",
+    "SPY",
+    "QQQ",
+    "IWM",
+    "AAPL",
+    "MSFT",
+    "NVDA",
+    "AMZN",
+    "GOOGL",
+    "META",
+    "TSLA",
     "JPM",  # XOM does not resolve on this yfinance endpoint; left out to keep runs clean
     # Tokyo
-    "7203.T", "6758.T", "8306.T", "9984.T", "6857.T",
+    "7203.T",
+    "6758.T",
+    "8306.T",
+    "9984.T",
+    "6857.T",
     # 24/7
-    "BTC-USD", "ETH-USD",
+    "BTC-USD",
+    "ETH-USD",
 )
 
 FETCH_START = "2018-01-01"

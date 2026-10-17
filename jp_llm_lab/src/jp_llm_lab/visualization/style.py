@@ -29,7 +29,9 @@ GROUP_COLORS = {
 }
 
 
-def base_layout(fig: go.Figure, title: str, xtitle: str, ytitle: str, height: int = 420) -> go.Figure:
+def base_layout(
+    fig: go.Figure, title: str, xtitle: str, ytitle: str, height: int = 420
+) -> go.Figure:
     fig.update_layout(
         title=title,
         xaxis_title=xtitle,

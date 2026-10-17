@@ -45,8 +45,13 @@ def batch_size_calibration(
 
         set_seed(seed)
         model = ClassicalGPT(
-            ModelConfig(vocab_size=vocab_size, d_model=d_model, n_layers=n_layers,
-                        n_heads=n_heads, context_len=context_len)
+            ModelConfig(
+                vocab_size=vocab_size,
+                d_model=d_model,
+                n_layers=n_layers,
+                n_heads=n_heads,
+                context_len=context_len,
+            )
         ).to(device)
         opt = make_optimizer(model, TrainConfig(lr=lr, weight_decay=0.1))
         gen = make_generator(seed + 1)
@@ -61,7 +66,9 @@ def batch_size_calibration(
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             opt.step()
             if step % max(1, n_steps // 10) == 0 or step == n_steps:
-                vloss = estimate_loss(model, val_tokens, 8, micro_batch, context_len, device)["loss"]
+                vloss = estimate_loss(model, val_tokens, 8, micro_batch, context_len, device)[
+                    "loss"
+                ]
                 curve.append(
                     {
                         "step": step,

@@ -47,7 +47,10 @@ def main() -> None:
         print(f"{name}: cloze_accuracy={res['overall']['cloze_accuracy']}")
         model.cpu()
 
-    save_json({"n_prompts": n_prompts, "models": results}, root / "experiments" / "comparisons" / "eval.json")
+    save_json(
+        {"n_prompts": n_prompts, "models": results},
+        root / "experiments" / "comparisons" / "eval.json",
+    )
     print("saved experiments/comparisons/eval.json")
 
 

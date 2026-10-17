@@ -4,6 +4,7 @@ Geometry comes from OpenStreetMap (ODbL); the tunnels there are traced from
 基盤地図情報 2500. The two tracks of a line are separate node chains, so a shortest
 path through the node graph stays on one track unless a crossover is shorter.
 """
+
 from __future__ import annotations
 
 import heapq
@@ -16,7 +17,10 @@ R_EARTH = 6378137.0
 def haversine(a: tuple[float, float], b: tuple[float, float]) -> float:
     """Great-circle distance in metres between (lon, lat) pairs."""
     lon1, lat1, lon2, lat2 = map(math.radians, (a[0], a[1], b[0], b[1]))
-    h = math.sin((lat2 - lat1) / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin((lon2 - lon1) / 2) ** 2
+    h = (
+        math.sin((lat2 - lat1) / 2) ** 2
+        + math.cos(lat1) * math.cos(lat2) * math.sin((lon2 - lon1) / 2) ** 2
+    )
     return 2 * R_EARTH * math.asin(math.sqrt(h))
 
 
@@ -69,7 +73,11 @@ class Graph:
 
 def stop_nodes(stops: list[dict], graph: Graph, name: str) -> list[int]:
     """OSM node ids on this line's ways that carry the station name."""
-    return [e["id"] for e in stops if norm_name(e["tags"].get("name")) == norm_name(name) and e["id"] in graph.xy]
+    return [
+        e["id"]
+        for e in stops
+        if norm_name(e["tags"].get("name")) == norm_name(name) and e["id"] in graph.xy
+    ]
 
 
 def track(graph: Graph, stops: list[dict], names: list[str]) -> list[tuple[float, float]]:
@@ -111,7 +119,9 @@ def project(polyline, pt: tuple[float, float]) -> tuple[int, float]:
     return best_i, best_d
 
 
-def anchor(polyline, stops: list[dict], graph: Graph, name: str) -> tuple[tuple[float, float], float]:
+def anchor(
+    polyline, stops: list[dict], graph: Graph, name: str
+) -> tuple[tuple[float, float], float]:
     """(coord, chainage along polyline) of the station's stop node on this track.
 
     Both tracks carry a stop node; the one on our track projects with ~0 m offset.

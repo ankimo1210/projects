@@ -57,9 +57,7 @@ def _write_spot(stack: float):
         ]
     )
     agg_df = pd.DataFrame([{"spot_id": sid, "action": "Check", "freq": 1.0}])
-    combos_df = pd.DataFrame(
-        columns=["spot_id", "card_a", "card_b", "action", "freq"]
-    )
+    combos_df = pd.DataFrame(columns=["spot_id", "card_a", "card_b", "action", "freq"])
     reports_df = pd.DataFrame(
         [
             {
@@ -155,7 +153,11 @@ def test_run_batch_caches_single_stack(tmp_path, monkeypatch):
         batch.gto_cuda,
         "batch_solve_rust",
         lambda spots_input, iters, max_bets: [
-            {"exploitability": 0.0, "strategy": [{"action": "Check", "freq": 1.0}], "combo_strategies": []}
+            {
+                "exploitability": 0.0,
+                "strategy": [{"action": "Check", "freq": 1.0}],
+                "combo_strategies": [],
+            }
             for _ in spots_input
         ],
         raising=False,

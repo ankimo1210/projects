@@ -28,8 +28,6 @@ def _parse(card: str) -> tuple[int, int]:
     return RANK_ORDER[card[0]], SUITS.index(card[1])
 
 
-
-
 def canonicalize(cards: list[str]) -> tuple[str, ...]:
     """
     Return canonical flop under full suit isomorphism.

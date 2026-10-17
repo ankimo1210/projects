@@ -66,9 +66,7 @@ def create_issue_cashflow(
     long_delinquency_smm = 0.0
     other_cancellation_smm = 0.0
     if include_published_decrements:
-        long_delinquency_smm = _trailing_mean_monthly_rate(
-            observed, "long_delinquency_pct_monthly"
-        )
+        long_delinquency_smm = _trailing_mean_monthly_rate(observed, "long_delinquency_pct_monthly")
         other_cancellation_smm = _trailing_mean_monthly_rate(
             observed, "other_cancellation_pct_monthly"
         )

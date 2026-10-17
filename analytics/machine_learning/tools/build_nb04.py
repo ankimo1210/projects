@@ -263,5 +263,9 @@ print(f"\\n{best} held-out TEST accuracy (touched once): {final.score(X_te, y_te
 if __name__ == "__main__":
     import pathlib
 
-    out = pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "04_model_evaluation_and_validation.ipynb"
+    out = (
+        pathlib.Path(__file__).resolve().parents[1]
+        / "notebooks"
+        / "04_model_evaluation_and_validation.ipynb"
+    )
     build(cells, str(out))

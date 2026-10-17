@@ -61,9 +61,7 @@ class Job:
         now = time.monotonic()
         started = self.started_at
         finished = self.finished_at
-        elapsed = (
-            (finished or now) - started if started is not None else None
-        )
+        elapsed = (finished or now) - started if started is not None else None
         return {
             "id": self.id,
             "kind": self.kind,

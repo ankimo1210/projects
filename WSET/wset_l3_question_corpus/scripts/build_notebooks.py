@@ -56,7 +56,9 @@ def main() -> None:
                 "for field in ['language','source_type','access_type','crawl_policy','copyright_risk']:\n"
                 "    print(field, dict(Counter(row[field] for row in sources)))"
             ),
-            new_markdown_cell("## Data\n\nThe registry stores URL, publisher, access status, crawl policy, rights risk, review date, and notes."),
+            new_markdown_cell(
+                "## Data\n\nThe registry stores URL, publisher, access status, crawl policy, rights risk, review date, and notes."
+            ),
             new_code_cell(
                 "enabled = [row for row in sources if row['enabled']]\n"
                 "[(row['source_id'], row['crawl_policy']) for row in enabled]"
@@ -90,7 +92,9 @@ def main() -> None:
                 "for field in ['source_id','language','question_format','topic_primary']:\n"
                 "    print(field, dict(Counter(row.get(field) for row in rows)))"
             ),
-            new_markdown_cell("## Data\n\nRaw and normalized text stay in ignored local files. This notebook displays only aggregate counts."),
+            new_markdown_cell(
+                "## Data\n\nRaw and normalized text stay in ignored local files. This notebook displays only aggregate counts."
+            ),
             new_code_cell(
                 "print('mark allocation present:', sum(row.get('mark_allocation') is not None for row in rows))\n"
                 "print('low extraction confidence:', sum(row['extraction_confidence'] < .75 for row in rows))"
@@ -132,7 +136,9 @@ def main() -> None:
                 "print('statuses:', dict(Counter(row['human_review_status'] for row in rows)))\n"
                 "print('duplicate member rows:', len(duplicates))"
             ),
-            new_markdown_cell("## Data\n\nChecks cover completeness, uniqueness, enum validity, extraction confidence, review status, and public-safe leakage."),
+            new_markdown_cell(
+                "## Data\n\nChecks cover completeness, uniqueness, enum validity, extraction confidence, review status, and public-safe leakage."
+            ),
             new_code_cell(
                 "required = ['question_id','source_id','source_url','language','normalized_text','extraction_confidence']\n"
                 "print('required-field nulls:', {field: sum(not row.get(field) for row in rows) for field in required})\n"

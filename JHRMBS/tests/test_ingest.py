@@ -73,9 +73,7 @@ def test_oversized_download_fails_without_retry(tmp_path: Path) -> None:
             request=request,
         )
 
-    config = AppConfig(
-        data_root=tmp_path, http=HttpConfig(backoff_seconds=0.0, max_download_mb=1)
-    )
+    config = AppConfig(data_root=tmp_path, http=HttpConfig(backoff_seconds=0.0, max_download_mb=1))
     source = _source()
     with RawDownloader(config, transport=httpx.MockTransport(handler)) as downloader:
         with pytest.raises(DownloadError, match="exceeds"):

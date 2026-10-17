@@ -191,8 +191,12 @@ def test_margin_uplift_is_bounded_by_the_vacancy_rate():
     ref = load_reference()
     code = ref.universe.index[0]
     financials = pd.DataFrame(
-        {"revenue": [1_000.0], "operating_profit": [100.0],
-         "labor_cost": [400.0], "employees": [10.0]},
+        {
+            "revenue": [1_000.0],
+            "operating_profit": [100.0],
+            "labor_cost": [400.0],
+            "employees": [10.0],
+        },
         index=pd.Index([code], name="code"),
     )
     df = company_frame(ref=ref, financials=financials)
@@ -210,7 +214,7 @@ def test_contribution_margin_rejects_values_that_cannot_be_one():
     financials = pd.DataFrame(
         {
             "revenue": [100.0, 1_000.0],
-            "operating_profit": [10.0, -900.0],   # 持株会社 / 人件費を食い潰した赤字
+            "operating_profit": [10.0, -900.0],  # 持株会社 / 人件費を食い潰した赤字
             "labor_cost": [400.0, 100.0],
             "employees": [50.0, 50.0],
         },

@@ -3,6 +3,7 @@ Wikidata via SPARQL, writing one raw JSON list to data/raw/.
 
 Polite usage: explicit User-Agent, sleep between the two queries, LIMIT caps.
 On failure, leaves any existing cache untouched."""
+
 from __future__ import annotations
 
 import argparse
@@ -29,7 +30,8 @@ _SEED_OCCUPATIONS = (
     "wd:Q937857 wd:Q639669 wd:Q1028181 wd:Q170790 wd:Q2526255"
 )
 
-REAL_PEOPLE_QUERY = """
+REAL_PEOPLE_QUERY = (
+    """
 SELECT ?item ?sl ?itemLabel ?itemLabelEn ?desc ?img ?gender ?birth ?death
        (GROUP_CONCAT(DISTINCT ?occ; separator="|") AS ?occs)
        (GROUP_CONCAT(DISTINCT ?cit; separator="|") AS ?cits)
@@ -58,7 +60,9 @@ WHERE {
 }
 GROUP BY ?item ?sl ?itemLabel ?itemLabelEn ?desc ?img ?gender ?birth ?death
 ORDER BY DESC(?sl)
-""" % _SEED_OCCUPATIONS
+"""
+    % _SEED_OCCUPATIONS
+)
 
 FICTIONAL_QUERY = """
 SELECT ?item ?sl ?itemLabel ?itemLabelEn ?desc ?img ?gender
@@ -111,9 +115,9 @@ def _run_query(client: httpx.Client, query: str, *, attempts: int = 5) -> list[d
     for i in range(attempts):
         try:
             resp = client.get(
-                WDQS, params={"query": query, "format": "json"},
-                headers={"User-Agent": USER_AGENT,
-                         "Accept": "application/sparql-results+json"},
+                WDQS,
+                params={"query": query, "format": "json"},
+                headers={"User-Agent": USER_AGENT, "Accept": "application/sparql-results+json"},
                 timeout=120,
             )
             resp.raise_for_status()
@@ -124,8 +128,11 @@ def _run_query(client: httpx.Client, query: str, *, attempts: int = 5) -> list[d
             if retryable and i < attempts - 1:
                 # WDQS rate-limits to ~1 req/min during outages; wait it out.
                 wait = 70 if status == 429 else 30
-                print(f"  WDQS {status or type(e).__name__}; retrying in {wait}s "
-                      f"({i + 1}/{attempts})", flush=True)
+                print(
+                    f"  WDQS {status or type(e).__name__}; retrying in {wait}s "
+                    f"({i + 1}/{attempts})",
+                    flush=True,
+                )
                 time.sleep(wait)
                 last_exc = e
                 continue
@@ -148,47 +155,50 @@ def fetch() -> list[dict]:
     out: list[dict] = []
     with httpx.Client() as client:
         for row in _run_query(client, REAL_PEOPLE_QUERY):
-            out.append({
-                "id": _qid(_v(row, "item")),
-                "name_ja": _v(row, "itemLabel"),
-                "name_en": _v(row, "itemLabelEn"),
-                "aliases": [],
-                "description": _v(row, "desc"),
-                "image_url": _v(row, "img"),
-                "instance_of": ["Q5"],
-                "gender": _qid(_v(row, "gender")) if _v(row, "gender") else None,
-                "occupations": [_qid(u) for u in _split(row, "occs")],
-                "countries": [_qid(u) for u in _split(row, "cits")],
-                "birth_year": _year(_v(row, "birth")),
-                "death_year": _year(_v(row, "death")),
-                "in_anime": False,
-            })
+            out.append(
+                {
+                    "id": _qid(_v(row, "item")),
+                    "name_ja": _v(row, "itemLabel"),
+                    "name_en": _v(row, "itemLabelEn"),
+                    "aliases": [],
+                    "description": _v(row, "desc"),
+                    "image_url": _v(row, "img"),
+                    "instance_of": ["Q5"],
+                    "gender": _qid(_v(row, "gender")) if _v(row, "gender") else None,
+                    "occupations": [_qid(u) for u in _split(row, "occs")],
+                    "countries": [_qid(u) for u in _split(row, "cits")],
+                    "birth_year": _year(_v(row, "birth")),
+                    "death_year": _year(_v(row, "death")),
+                    "in_anime": False,
+                }
+            )
         # Space the second query out — the public endpoint rate-limits to
         # ~1 req/min when it is under load.
         time.sleep(65)
         for row in _run_query(client, FICTIONAL_QUERY):
-            out.append({
-                "id": _qid(_v(row, "item")),
-                "name_ja": _v(row, "itemLabel"),
-                "name_en": _v(row, "itemLabelEn"),
-                "aliases": [],
-                "description": _v(row, "desc"),
-                "image_url": _v(row, "img"),
-                "instance_of": [_qid(u) for u in _split(row, "insts")],
-                "gender": _qid(_v(row, "gender")) if _v(row, "gender") else None,
-                "occupations": [],
-                "countries": [],
-                "birth_year": None,
-                "death_year": None,
-                "in_anime": True,
-            })
+            out.append(
+                {
+                    "id": _qid(_v(row, "item")),
+                    "name_ja": _v(row, "itemLabel"),
+                    "name_en": _v(row, "itemLabelEn"),
+                    "aliases": [],
+                    "description": _v(row, "desc"),
+                    "image_url": _v(row, "img"),
+                    "instance_of": [_qid(u) for u in _split(row, "insts")],
+                    "gender": _qid(_v(row, "gender")) if _v(row, "gender") else None,
+                    "occupations": [],
+                    "countries": [],
+                    "birth_year": None,
+                    "death_year": None,
+                    "in_anime": True,
+                }
+            )
     return out
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--refresh", action="store_true",
-                        help="re-fetch even if cache exists")
+    parser.add_argument("--refresh", action="store_true", help="re-fetch even if cache exists")
     args = parser.parse_args()
     out_path = config.RAW_DIR / "wikidata_entities.json"
     if out_path.exists() and not args.refresh:

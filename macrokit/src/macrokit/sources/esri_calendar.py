@@ -105,8 +105,12 @@ def _release_datetime(class_5: ET.Element) -> datetime:
         return int(text)
 
     return datetime(
-        part("release_year"), part("release_month"), part("release_day"),
-        part("release_hour"), part("release_minute"), tzinfo=JST,
+        part("release_year"),
+        part("release_month"),
+        part("release_day"),
+        part("release_hour"),
+        part("release_minute"),
+        tzinfo=JST,
     )
 
 

@@ -76,7 +76,9 @@ def _config_from_args(args: argparse.Namespace) -> Config:
 
 
 def _show(df: pd.DataFrame, columns: list[str]) -> None:
-    with pd.option_context("display.max_rows", 400, "display.width", 200, "display.unicode.east_asian_width", True):
+    with pd.option_context(
+        "display.max_rows", 400, "display.width", 200, "display.unicode.east_asian_width", True
+    ):
         print(df[columns].round(1).to_string())
 
 
@@ -113,8 +115,12 @@ def cmd_build(args: argparse.Namespace) -> int:
 
         financials = load_financials(args.financials) if args.financials else None
         out = build_static_report(
-            args.out, cfg=cfg, ref=ref, fragment=args.fragment,
-            financials=financials, top_companies=args.top,
+            args.out,
+            cfg=cfg,
+            ref=ref,
+            fragment=args.fragment,
+            financials=financials,
+            top_companies=args.top,
         )
     else:
         from .report import build_report
@@ -154,7 +160,9 @@ def cmd_fetch_financials(args: argparse.Namespace) -> int:
             else fetch_summaries(codes)
         )
     except Exception as exc:
-        print(f"J-Quants の取得に失敗しました（連結の参考列は空になります）: {exc}", file=sys.stderr)
+        print(
+            f"J-Quants の取得に失敗しました（連結の参考列は空になります）: {exc}", file=sys.stderr
+        )
         summaries = pd.DataFrame(index=pd.Index([], name="code"))
 
     merged = edinet.copy()
@@ -237,20 +245,38 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
 
     def add_common(p: argparse.ArgumentParser, *, universe: bool = True) -> None:
-        p.add_argument("--scenario", choices=sorted(SCENARIOS), default="base",
-                       help="感応度シナリオのプリセット (default: base)")
-        p.add_argument("--realization-rate", type=float, default=None,
-                       help="AI曝露のうち実際に労働時間の解放として実現する割合 0-1")
-        p.add_argument("--threshold", choices=("median", "fixed"), default=None,
-                       help="象限境界の決め方 (default: median)")
+        p.add_argument(
+            "--scenario",
+            choices=sorted(SCENARIOS),
+            default="base",
+            help="感応度シナリオのプリセット (default: base)",
+        )
+        p.add_argument(
+            "--realization-rate",
+            type=float,
+            default=None,
+            help="AI曝露のうち実際に労働時間の解放として実現する割合 0-1",
+        )
+        p.add_argument(
+            "--threshold",
+            choices=("median", "fixed"),
+            default=None,
+            help="象限境界の決め方 (default: median)",
+        )
         if universe:
-            p.add_argument("--universe", choices=("curated", "jquants"), default="curated",
-                           help="銘柄ユニバース。jquants は要ネットワーク+認証")
-            p.add_argument("--scale",
-                           choices=("topix100", "topix500", "topix1000", "topix", "all"),
-                           default="topix500",
-                           help="--universe jquants のときの範囲。topix = TOPIX 全構成銘柄、"
-                                "all = 規模区分の無い銘柄も含む上場全銘柄")
+            p.add_argument(
+                "--universe",
+                choices=("curated", "jquants"),
+                default="curated",
+                help="銘柄ユニバース。jquants は要ネットワーク+認証",
+            )
+            p.add_argument(
+                "--scale",
+                choices=("topix100", "topix500", "topix1000", "topix", "all"),
+                default="topix500",
+                help="--universe jquants のときの範囲。topix = TOPIX 全構成銘柄、"
+                "all = 規模区分の無い銘柄も含む上場全銘柄",
+            )
 
     p_sectors = sub.add_parser("sectors", help="33業種のスコア一覧を表示")
     add_common(p_sectors, universe=False)
@@ -265,14 +291,29 @@ def build_parser() -> argparse.ArgumentParser:
     p_build = sub.add_parser("build", help="オフラインHTMLレポートを生成")
     add_common(p_build)
     p_build.add_argument("--out", type=Path, default=DEFAULT_OUT)
-    p_build.add_argument("--format", choices=("static", "interactive"), default="static",
-                         help="static: 自己完結SVG 約30KB（既定） / interactive: Plotly 約5MB")
-    p_build.add_argument("--fragment", action="store_true",
-                         help="--format static で <html>/<head> を出さず本文断片のみ出力（埋め込み用）")
-    p_build.add_argument("--financials", type=Path, default=None,
-                         help="code/revenue/operating_profit/labor_cost/employees を持つ CSV/Parquet/JSON")
-    p_build.add_argument("--top", type=int, default=STATIC_TOP_COMPANIES,
-                         help=f"static レポートの銘柄表に載せる件数 (default: {STATIC_TOP_COMPANIES})")
+    p_build.add_argument(
+        "--format",
+        choices=("static", "interactive"),
+        default="static",
+        help="static: 自己完結SVG 約30KB（既定） / interactive: Plotly 約5MB",
+    )
+    p_build.add_argument(
+        "--fragment",
+        action="store_true",
+        help="--format static で <html>/<head> を出さず本文断片のみ出力（埋め込み用）",
+    )
+    p_build.add_argument(
+        "--financials",
+        type=Path,
+        default=None,
+        help="code/revenue/operating_profit/labor_cost/employees を持つ CSV/Parquet/JSON",
+    )
+    p_build.add_argument(
+        "--top",
+        type=int,
+        default=STATIC_TOP_COMPANIES,
+        help=f"static レポートの銘柄表に載せる件数 (default: {STATIC_TOP_COMPANIES})",
+    )
     p_build.set_defaults(func=cmd_build)
 
     p_fin = sub.add_parser(
@@ -281,14 +322,24 @@ def build_parser() -> argparse.ArgumentParser:
     )
     add_common(p_fin)
     p_fin.add_argument("--out", type=Path, default=Path("_data/financials.csv"))
-    p_fin.add_argument("--lookback-days", type=int, default=400,
-                       help="EDINET の提出日を何日分さかのぼるか（既定400日＝決算期を問わず1周分）")
-    p_fin.add_argument("--benefits-multiplier", type=float, default=DEFAULT_BENEFITS_MULTIPLIER,
-                       help="平均年間給与から会計上の人件費に直す係数（法定福利費＋退職給付。"
-                            "有報の平均年間給与は賞与を含むので賞与は上乗せしない）")
+    p_fin.add_argument(
+        "--lookback-days",
+        type=int,
+        default=400,
+        help="EDINET の提出日を何日分さかのぼるか（既定400日＝決算期を問わず1周分）",
+    )
+    p_fin.add_argument(
+        "--benefits-multiplier",
+        type=float,
+        default=DEFAULT_BENEFITS_MULTIPLIER,
+        help="平均年間給与から会計上の人件費に直す係数（法定福利費＋退職給付。"
+        "有報の平均年間給与は賞与を含むので賞与は上乗せしない）",
+    )
     p_fin.set_defaults(func=cmd_fetch_financials)
 
-    p_verify = sub.add_parser("verify-universe", help="キュレーション済みユニバースを J-Quants で検証")
+    p_verify = sub.add_parser(
+        "verify-universe", help="キュレーション済みユニバースを J-Quants で検証"
+    )
     p_verify.set_defaults(func=cmd_verify_universe)
 
     return parser

@@ -26,7 +26,9 @@ def entry_premium_vs_exit_multiple(
         for multiple in exit_multiples:
             scenario = deepcopy(scenarios[scenario_name])
             scenario["exit_multiple"] = multiple
-            summary, _ = run_lbo_case(scenario_name, premium, assumptions, scenario, market_snapshot)
+            summary, _ = run_lbo_case(
+                scenario_name, premium, assumptions, scenario, market_snapshot
+            )
             rows.append(
                 {
                     "sensitivity": "entry_premium_vs_exit_multiple",
@@ -54,7 +56,9 @@ def debt_to_ebitda_vs_exit_multiple(
             scenario = deepcopy(scenarios[scenario_name])
             scenario["debt_to_ebitda"] = leverage
             scenario["exit_multiple"] = multiple
-            summary, _ = run_lbo_case(scenario_name, premium, assumptions, scenario, market_snapshot)
+            summary, _ = run_lbo_case(
+                scenario_name, premium, assumptions, scenario, market_snapshot
+            )
             rows.append(
                 {
                     "sensitivity": "debt_to_ebitda_vs_exit_multiple",
@@ -80,10 +84,16 @@ def margin_improvement_vs_revenue_growth(
     for margin_delta in margin_deltas:
         for growth_delta in revenue_growth_deltas:
             scenario = deepcopy(scenarios[scenario_name])
-            scenario["ebitda_margin"] = [max(0.01, x + margin_delta) for x in scenario["ebitda_margin"]]
+            scenario["ebitda_margin"] = [
+                max(0.01, x + margin_delta) for x in scenario["ebitda_margin"]
+            ]
             scenario["public_growth"] = [x + growth_delta for x in scenario["public_growth"]]
-            scenario["mobility_dx_growth"] = [x + growth_delta for x in scenario["mobility_dx_growth"]]
-            summary, _ = run_lbo_case(scenario_name, premium, assumptions, scenario, market_snapshot)
+            scenario["mobility_dx_growth"] = [
+                x + growth_delta for x in scenario["mobility_dx_growth"]
+            ]
+            summary, _ = run_lbo_case(
+                scenario_name, premium, assumptions, scenario, market_snapshot
+            )
             rows.append(
                 {
                     "sensitivity": "margin_improvement_vs_revenue_growth",
@@ -100,7 +110,9 @@ def mobility_success_failure(premium: float = 0.30) -> pd.DataFrame:
     assumptions, scenarios, market_snapshot = _base_inputs()
     rows = []
     for scenario_name in ["Downside", "Base", "Upside", "Sponsor"]:
-        summary, _ = run_lbo_case(scenario_name, premium, assumptions, scenarios[scenario_name], market_snapshot)
+        summary, _ = run_lbo_case(
+            scenario_name, premium, assumptions, scenarios[scenario_name], market_snapshot
+        )
         rows.append(
             {
                 "sensitivity": "mobility_success_failure",

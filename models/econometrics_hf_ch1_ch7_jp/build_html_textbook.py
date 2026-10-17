@@ -889,7 +889,7 @@ class MarkdownRenderer:
                 self.headings.append(Heading(level=level, text=text, anchor=anchor))
                 out.append(
                     f'<h{level} id="{html.escape(anchor, quote=True)}">'
-                    f'{self.inline(raw_text)}'
+                    f"{self.inline(raw_text)}"
                     f'<a class="heading-anchor" href="#{html.escape(anchor, quote=True)}" aria-label="この見出しへのリンク">#</a>'
                     f"</h{level}>"
                 )
@@ -987,9 +987,7 @@ def render_markdown_file(source_md: Path, current_subdir: str) -> RenderedMarkdo
 
 def build_toc(rendered: RenderedMarkdown, current_subdir: str) -> str:
     visible = [
-        h
-        for h in rendered.headings
-        if h.level in (2, 3) and not h.text.startswith("PDF page")
+        h for h in rendered.headings if h.level in (2, 3) and not h.text.startswith("PDF page")
     ]
     if not visible:
         return ""
@@ -1002,9 +1000,7 @@ def build_toc(rendered: RenderedMarkdown, current_subdir: str) -> str:
     return (
         '<nav class="toc" aria-label="ページ内目次">'
         '<p class="toc-title">ページ内目次</p>'
-        "<ol>"
-        + "\n".join(items)
-        + "</ol></nav>"
+        "<ol>" + "\n".join(items) + "</ol></nav>"
     )
 
 
@@ -1023,7 +1019,9 @@ def build_sidebar(metadata: dict, active: str, current_subdir: str) -> str:
     chapter_links = []
     for chapter in metadata["chapters"]:
         label = f"第{chapter['no']}章 {chapter['ja']}"
-        chapter_links.append(link(f"chapters/{chapter_filename(chapter)}", label, f"ch{chapter['no']:02d}"))
+        chapter_links.append(
+            link(f"chapters/{chapter_filename(chapter)}", label, f"ch{chapter['no']:02d}")
+        )
 
     utility_links = [
         link("index.html", "ホーム", "index"),
@@ -1159,7 +1157,9 @@ def build_index(metadata: dict) -> str:
   </ol>
 </section>
 """
-    return page_shell(metadata=metadata, title="ホーム", body=body, active="index", current_subdir=".")
+    return page_shell(
+        metadata=metadata, title="ホーム", body=body, active="index", current_subdir="."
+    )
 
 
 def build_pager(metadata: dict, chapter_no: int, current_subdir: str) -> str:
@@ -1169,13 +1169,17 @@ def build_pager(metadata: dict, chapter_no: int, current_subdir: str) -> str:
     if index > 0:
         prev = chapters[index - 1]
         href = rel_href(f"chapters/{chapter_filename(prev)}", current_subdir)
-        links.append(f'<a href="{html.escape(href, quote=True)}">← 第{prev["no"]}章 {html.escape(prev["ja"])}</a>')
+        links.append(
+            f'<a href="{html.escape(href, quote=True)}">← 第{prev["no"]}章 {html.escape(prev["ja"])}</a>'
+        )
     else:
         links.append("<span></span>")
     if index + 1 < len(chapters):
         nxt = chapters[index + 1]
         href = rel_href(f"chapters/{chapter_filename(nxt)}", current_subdir)
-        links.append(f'<a href="{html.escape(href, quote=True)}">第{nxt["no"]}章 {html.escape(nxt["ja"])} →</a>')
+        links.append(
+            f'<a href="{html.escape(href, quote=True)}">第{nxt["no"]}章 {html.escape(nxt["ja"])} →</a>'
+        )
     else:
         href = rel_href("index.html", current_subdir)
         links.append(f'<a href="{html.escape(href, quote=True)}">ホームへ戻る →</a>')
@@ -1214,7 +1218,9 @@ def build_chapter_pages(metadata: dict) -> list[dict]:
     return search_entries
 
 
-def build_markdown_page(metadata: dict, source_name: str, output_name: str, title: str, active: str) -> None:
+def build_markdown_page(
+    metadata: dict, source_name: str, output_name: str, title: str, active: str
+) -> None:
     source = SOURCE_DIR / source_name
     rendered = render_markdown_file(source, ".")
     body = f'<article class="article">{rendered.html}</article>'
@@ -1262,7 +1268,11 @@ def validate_links() -> list[str]:
     for html_file in OUT_DIR.rglob("*.html"):
         content = read_text(html_file)
         for target in attr_re.findall(content):
-            if is_external_target(target) or target.startswith("data:") or target.startswith("javascript:"):
+            if (
+                is_external_target(target)
+                or target.startswith("data:")
+                or target.startswith("javascript:")
+            ):
                 continue
             base, _fragment = split_target(target)
             if not base:
@@ -1288,11 +1298,20 @@ def main() -> None:
     write_text(OUT_DIR / "index.html", build_index(metadata))
     build_markdown_page(metadata, "contents_ja.md", "contents.html", "章一覧と使い方", "contents")
     build_markdown_page(metadata, "README.md", "about.html", "README", "about")
-    build_markdown_page(metadata, "embedded_images.md", "embedded_images.html", "埋め込み図版", "embedded_images")
-    qa_source = "QA_REPORT_ja_checked.md" if (SOURCE_DIR / "QA_REPORT_ja_checked.md").exists() else "QA_REPORT_ja.md"
+    build_markdown_page(
+        metadata, "embedded_images.md", "embedded_images.html", "埋め込み図版", "embedded_images"
+    )
+    qa_source = (
+        "QA_REPORT_ja_checked.md"
+        if (SOURCE_DIR / "QA_REPORT_ja_checked.md").exists()
+        else "QA_REPORT_ja.md"
+    )
     build_markdown_page(metadata, qa_source, "qa.html", "QAレポート", "qa")
     search_entries = build_chapter_pages(metadata)
-    write_text(OUT_DIR / "search_index.json", json.dumps(search_entries, ensure_ascii=False, indent=2) + "\n")
+    write_text(
+        OUT_DIR / "search_index.json",
+        json.dumps(search_entries, ensure_ascii=False, indent=2) + "\n",
+    )
 
     problems = validate_links()
     if problems:

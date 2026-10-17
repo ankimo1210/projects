@@ -18,6 +18,7 @@ from labor_ai_quadrant.providers import edinet, jquants
 
 # --- J-Quants ---------------------------------------------------------------
 
+
 @pytest.mark.parametrize(
     ("raw", "expected"),
     [("72030", "7203"), ("7203", "7203"), ("13010", "1301"), ("130A0", "130A")],
@@ -108,6 +109,7 @@ def test_a_non_429_error_is_not_retried(monkeypatch):
 
 # --- EDINET -----------------------------------------------------------------
 
+
 def _csv_zip(rows: list[dict[str, str]]) -> bytes:
     """Build an EDINET-shaped payload: ZIP of UTF-16, tab-separated CSV."""
     buf = io.StringIO()
@@ -124,10 +126,16 @@ def _csv_zip(rows: list[dict[str, str]]) -> bytes:
 
 
 def test_decode_csv_reads_the_utf16_tab_separated_bundle():
-    blob = _csv_zip([
-        {"要素ID": "jpcrp_cor:NumberOfEmployees", "項目名": "従業員数",
-         "コンテキストID": "CurrentYearInstant_NonConsolidatedMember", "値": "1,234"},
-    ])
+    blob = _csv_zip(
+        [
+            {
+                "要素ID": "jpcrp_cor:NumberOfEmployees",
+                "項目名": "従業員数",
+                "コンテキストID": "CurrentYearInstant_NonConsolidatedMember",
+                "値": "1,234",
+            },
+        ]
+    )
     rows = edinet._decode_csv(blob)
     assert rows[0]["要素ID"] == "jpcrp_cor:NumberOfEmployees"
     assert rows[0]["値"] == "1,234"
@@ -148,10 +156,18 @@ def test_non_consolidated_context_wins():
     拾うとスコープが混ざって人件費が過大に出る。
     """
     rows = [
-        {"要素ID": "jpcrp_cor:NumberOfEmployees", "項目名": "従業員数",
-         "コンテキストID": "CurrentYearInstant", "値": "50000"},
-        {"要素ID": "jpcrp_cor:NumberOfEmployees", "項目名": "従業員数",
-         "コンテキストID": "CurrentYearInstant_NonConsolidatedMember", "値": "8000"},
+        {
+            "要素ID": "jpcrp_cor:NumberOfEmployees",
+            "項目名": "従業員数",
+            "コンテキストID": "CurrentYearInstant",
+            "値": "50000",
+        },
+        {
+            "要素ID": "jpcrp_cor:NumberOfEmployees",
+            "項目名": "従業員数",
+            "コンテキストID": "CurrentYearInstant_NonConsolidatedMember",
+            "値": "8000",
+        },
     ]
     assert edinet._pick(rows, "jpcrp_cor:NumberOfEmployees") == "8000"
 
@@ -163,12 +179,21 @@ def test_prior_years_are_not_mistaken_for_the_current_one():
     四期前 70,710人を掴む。
     """
     rows = [
-        {"要素ID": "jpcrp_cor:NumberOfEmployees",
-         "コンテキストID": "Prior4YearInstant_NonConsolidatedMember", "値": "70710"},
-        {"要素ID": "jpcrp_cor:NumberOfEmployees",
-         "コンテキストID": "Prior1YearInstant_NonConsolidatedMember", "値": "71515"},
-        {"要素ID": "jpcrp_cor:NumberOfEmployees",
-         "コンテキストID": "CurrentYearInstant_NonConsolidatedMember", "値": "73133"},
+        {
+            "要素ID": "jpcrp_cor:NumberOfEmployees",
+            "コンテキストID": "Prior4YearInstant_NonConsolidatedMember",
+            "値": "70710",
+        },
+        {
+            "要素ID": "jpcrp_cor:NumberOfEmployees",
+            "コンテキストID": "Prior1YearInstant_NonConsolidatedMember",
+            "値": "71515",
+        },
+        {
+            "要素ID": "jpcrp_cor:NumberOfEmployees",
+            "コンテキストID": "CurrentYearInstant_NonConsolidatedMember",
+            "値": "73133",
+        },
     ]
     assert edinet._pick(rows, "jpcrp_cor:NumberOfEmployees") == "73133"
 
@@ -176,11 +201,16 @@ def test_prior_years_are_not_mistaken_for_the_current_one():
 def test_segment_breakdowns_are_not_mistaken_for_the_company_total():
     """当期のセグメント別内訳も同じ要素IDで並ぶ。軸メンバー付きは全社値ではない。"""
     rows = [
-        {"要素ID": "jpcrp_cor:NumberOfEmployees",
-         "コンテキストID": "CurrentYearInstant_jpcrp030000-asr_E02144-000AutomotiveReportableSegmentsMember",
-         "値": "343952"},
-        {"要素ID": "jpcrp_cor:NumberOfEmployees",
-         "コンテキストID": "CurrentYearInstant", "値": "390927"},
+        {
+            "要素ID": "jpcrp_cor:NumberOfEmployees",
+            "コンテキストID": "CurrentYearInstant_jpcrp030000-asr_E02144-000AutomotiveReportableSegmentsMember",
+            "値": "343952",
+        },
+        {
+            "要素ID": "jpcrp_cor:NumberOfEmployees",
+            "コンテキストID": "CurrentYearInstant",
+            "値": "390927",
+        },
     ]
     assert edinet._pick(rows, "jpcrp_cor:NumberOfEmployees", "consolidated") == "390927"
 
@@ -188,8 +218,12 @@ def test_segment_breakdowns_are_not_mistaken_for_the_company_total():
 def test_the_other_scope_is_not_silently_substituted():
     """単体が無いときに連結で埋めると、平均年収と従業員数が別会社の話になる。"""
     rows = [
-        {"要素ID": "jppfs_cor:NetSales", "項目名": "売上高",
-         "コンテキストID": "CurrentYearDuration", "値": "900"},
+        {
+            "要素ID": "jppfs_cor:NetSales",
+            "項目名": "売上高",
+            "コンテキストID": "CurrentYearDuration",
+            "値": "900",
+        },
     ]
     assert edinet._pick(rows, "jppfs_cor:NetSales") is None
     assert edinet._pick(rows, "jppfs_cor:NetSales", "consolidated") == "900"
@@ -198,8 +232,11 @@ def test_the_other_scope_is_not_silently_substituted():
 def test_revenue_falls_back_to_operating_revenue_for_holding_companies():
     """持株会社・サービス業は「売上高」ではなく「営業収益」で開示する。"""
     rows = [
-        {"要素ID": "jppfs_cor:OperatingRevenue1",
-         "コンテキストID": "CurrentYearDuration_NonConsolidatedMember", "値": "1,200"},
+        {
+            "要素ID": "jppfs_cor:OperatingRevenue1",
+            "コンテキストID": "CurrentYearDuration_NonConsolidatedMember",
+            "値": "1,200",
+        },
     ]
     facts = edinet.extract_company_facts(rows)
     assert facts["revenue"] == 1200.0
@@ -207,10 +244,16 @@ def test_revenue_falls_back_to_operating_revenue_for_holding_companies():
 
 def test_consolidated_headcount_is_reported_separately():
     rows = [
-        {"要素ID": "jpcrp_cor:NumberOfEmployees",
-         "コンテキストID": "CurrentYearInstant", "値": "344196"},
-        {"要素ID": "jpcrp_cor:NumberOfEmployees",
-         "コンテキストID": "CurrentYearInstant_NonConsolidatedMember", "値": "2606"},
+        {
+            "要素ID": "jpcrp_cor:NumberOfEmployees",
+            "コンテキストID": "CurrentYearInstant",
+            "値": "344196",
+        },
+        {
+            "要素ID": "jpcrp_cor:NumberOfEmployees",
+            "コンテキストID": "CurrentYearInstant_NonConsolidatedMember",
+            "値": "2606",
+        },
     ]
     facts = edinet.extract_company_facts(rows)
     assert facts["employees"] == 2606.0
@@ -261,6 +304,7 @@ def test_missing_api_key_fails_before_any_request(monkeypatch):
 
 # --- labour cost estimator --------------------------------------------------
 
+
 def test_labour_cost_is_headcount_times_salary_times_benefits():
     employees = pd.Series([1000.0, 500.0])
     salary = pd.Series([8_000_000.0, 6_000_000.0])
@@ -299,7 +343,9 @@ def test_a_bad_key_stops_the_sweep_instead_of_returning_an_empty_frame(monkeypat
 
     monkeypatch.setattr(jquants, "_get_rows", _refuse)
     with pytest.raises(jquants.JQuantsError, match="認証または契約の問題"):
-        jquants.fetch_summaries_by_date(lookback_days=400, today=_dt.date(2026, 8, 17), progress=False)
+        jquants.fetch_summaries_by_date(
+            lookback_days=400, today=_dt.date(2026, 8, 17), progress=False
+        )
     assert len(calls) == 1
 
 
@@ -316,7 +362,9 @@ def test_out_of_range_dates_are_skipped_but_a_dry_sweep_still_fails(monkeypatch)
 
     monkeypatch.setattr(jquants, "_get_rows", _out_of_range)
     with pytest.raises(jquants.JQuantsError, match="開示が0件"):
-        jquants.fetch_summaries_by_date(lookback_days=5, today=_dt.date(2026, 8, 17), progress=False)
+        jquants.fetch_summaries_by_date(
+            lookback_days=5, today=_dt.date(2026, 8, 17), progress=False
+        )
 
 
 def test_five_consecutive_unclassified_failures_stop_the_sweep(monkeypatch):
@@ -333,5 +381,7 @@ def test_five_consecutive_unclassified_failures_stop_the_sweep(monkeypatch):
 
     monkeypatch.setattr(jquants, "_get_rows", _broken)
     with pytest.raises(jquants.JQuantsError, match="連続で取得に失敗"):
-        jquants.fetch_summaries_by_date(lookback_days=400, today=_dt.date(2026, 8, 17), progress=False)
+        jquants.fetch_summaries_by_date(
+            lookback_days=400, today=_dt.date(2026, 8, 17), progress=False
+        )
     assert len(seen) == jquants.MAX_CONSECUTIVE_FAILURES

@@ -50,12 +50,16 @@ def lr_range_test(
         _, loss = model(x, y)
         loss_val = float(loss.detach())
         loss.backward()
-        gnorm = float(torch.nn.utils.clip_grad_norm_(model.parameters(), 1e9))  # measure, don't clip
+        gnorm = float(
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 1e9)
+        )  # measure, don't clip
         snap = snapshot_params(model)
         opt.step()
         ratio = update_ratios(snap, model)
         mean_ratio = sum(ratio.values()) / len(ratio)
-        records.append({"step": t, "lr": lr, "loss": loss_val, "grad_norm": gnorm, "update_ratio": mean_ratio})
+        records.append(
+            {"step": t, "lr": lr, "loss": loss_val, "grad_norm": gnorm, "update_ratio": mean_ratio}
+        )
         best_loss = min(best_loss, loss_val)
         if not math.isfinite(loss_val) or loss_val > 4 * best_loss + 5:
             diverged_at = lr

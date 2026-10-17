@@ -34,8 +34,10 @@ CACHE = DATA / "prices_monthly.json"
 #: ChatGPT 公開 = 2022-11-30。その月末を 100 とする。
 BASE = pd.Period("2022-11", freq="M")
 #: 起点の1か月前から取る（起点の月末値が欠けている銘柄を見分けるため）。
-CHART = ("https://query1.finance.yahoo.com/v8/finance/chart/{code}.T"
-         "?period1=1664582400&period2=1893456000&interval=1mo")
+CHART = (
+    "https://query1.finance.yahoo.com/v8/finance/chart/{code}.T"
+    "?period1=1664582400&period2=1893456000&interval=1mo"
+)
 
 
 def last_complete_month(today: pd.Timestamp | None = None) -> pd.Period:
@@ -53,7 +55,9 @@ def last_complete_month(today: pd.Timestamp | None = None) -> pd.Period:
 def _one(code: str) -> tuple[str, dict[str, float] | None]:
     for attempt in range(3):
         try:
-            req = urllib.request.Request(CHART.format(code=code), headers={"User-Agent": "Mozilla/5.0"})
+            req = urllib.request.Request(
+                CHART.format(code=code), headers={"User-Agent": "Mozilla/5.0"}
+            )
             with urllib.request.urlopen(req, timeout=25) as fh:
                 payload = json.load(fh)
             result = payload["chart"]["result"][0]
@@ -145,13 +149,17 @@ def performance(scored: pd.DataFrame, prices: pd.DataFrame) -> tuple[pd.DataFram
     relative = prices[codes].div(prices.loc[BASE, codes], axis=1) * 100.0
     quadrant = scored.loc[codes, "quadrant"]
 
-    index = pd.DataFrame({name: relative[grp.index].mean(axis=1) for name, grp in quadrant.groupby(quadrant)})
+    index = pd.DataFrame(
+        {name: relative[grp.index].mean(axis=1) for name, grp in quadrant.groupby(quadrant)}
+    )
     index["ユニバース全体"] = relative.mean(axis=1)
     index = index.dropna(how="all")
     index.index = index.index.astype(str)
 
     returns = (relative.loc[prices.index.max()] - 100.0).rename("total_return_pct").to_frame()
-    returns = returns.join(scored[["name", "sector33", "quadrant", "escape_potential", "op_margin_uplift_pp"]])
+    returns = returns.join(
+        scored[["name", "sector33", "quadrant", "escape_potential", "op_margin_uplift_pp"]]
+    )
     return index, returns
 
 

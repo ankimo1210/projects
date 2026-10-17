@@ -206,8 +206,7 @@ def _split_disagreement_note(metrics: pd.DataFrame) -> str | None:
     if winners["model"].nunique() <= 1:
         return None
     listed = "、".join(
-        f"{split}: {model}"
-        for split, model in zip(winners["split"], winners["model"], strict=True)
+        f"{split}: {model}" for split, model in zip(winners["split"], winners["model"], strict=True)
     )
     return (
         f"OOS split 間で最良モデルが一致しません（{listed}）。champion は平均順位で"

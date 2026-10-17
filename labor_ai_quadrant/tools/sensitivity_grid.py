@@ -135,8 +135,12 @@ def main() -> None:
     out = pd.DataFrame(rows)
     out.to_csv(DATA / "sensitivity_grid.csv", index=False, float_format="%.1f")
     cuts = company_quadrant_cuts(sectors, companies, Config())
-    print(f"as-of {as_of}月末  価格のある銘柄 {prices.shape[1]}  既定の境界 {cuts[0]:.2f}/{cuts[1]:.2f}")
-    print(out.drop(columns=["AI解放 業種"]).to_string(index=False, float_format=lambda v: f"{v:,.1f}"))
+    print(
+        f"as-of {as_of}月末  価格のある銘柄 {prices.shape[1]}  既定の境界 {cuts[0]:.2f}/{cuts[1]:.2f}"
+    )
+    print(
+        out.drop(columns=["AI解放 業種"]).to_string(index=False, float_format=lambda v: f"{v:,.1f}")
+    )
     print()
     for r in rows:
         print(f"{r['設定']}: {r['AI解放 業種']}")

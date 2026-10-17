@@ -57,8 +57,7 @@ def _check_vs3bet_support(opener: str, chart: dict[str, dict]) -> list[str]:
         continues = freqs.get("4B", 0) + freqs.get("C", 0)
         if continues > 0 and _open_freq(opener, hand) == 0:
             out.append(
-                f"{opener}_vs_BB_3bet: continues {hand} "
-                f"({continues}%) but {opener} never opens it"
+                f"{opener}_vs_BB_3bet: continues {hand} ({continues}%) but {opener} never opens it"
             )
     return out
 
@@ -104,9 +103,7 @@ def validate_all() -> list[str]:
         has_3bet = any(f.get("3B", 0) > 0 for f in chart.values())
         partner = f"{opener}_vs_BB_3bet"
         if has_3bet and partner not in VS_3BET_RANGES:
-            violations.append(
-                f"{scenario} has a 3bet line but no {partner} response chart"
-            )
+            violations.append(f"{scenario} has a 3bet line but no {partner} response chart")
 
     for name, chart in VS_3BET_RANGES.items():
         opener = name.partition("_vs_")[0]

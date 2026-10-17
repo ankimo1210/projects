@@ -21,9 +21,7 @@ from gto.api.main import app
 
 client = TestClient(app)
 
-pytestmark = pytest.mark.skipif(
-    not HAS_BINDING, reason="gto_py.equity not built in this venv"
-)
+pytestmark = pytest.mark.skipif(not HAS_BINDING, reason="gto_py.equity not built in this venv")
 
 
 def test_equity_binding_rejects_hero_villain_overlap():

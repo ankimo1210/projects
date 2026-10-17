@@ -74,8 +74,9 @@ def group_rates(labeled: pd.DataFrame) -> pd.Series:
     return wcb.groupby("Group")["Survived"].mean()
 
 
-def predict(df: pd.DataFrame, rates: pd.Series, p3s_rules: bool,
-            master_class_rule: bool = True) -> np.ndarray:
+def predict(
+    df: pd.DataFrame, rates: pd.Series, p3s_rules: bool, master_class_rule: bool = True
+) -> np.ndarray:
     pred = (df["Sex"] == "female").astype(int).to_numpy().copy()
     rate = df["Group"].map(rates)
     is_female = (df["Sex"] == "female").to_numpy()
@@ -85,8 +86,7 @@ def predict(df: pd.DataFrame, rates: pd.Series, p3s_rules: bool,
     if master_class_rule:
         pred[is_master & df["Pclass"].isin([1, 2]).to_numpy()] = 1
     if p3s_rules:
-        p3f_s = (is_female & (df["Pclass"] == 3).to_numpy()
-                 & (df["Embarked"] == "S").to_numpy())
+        p3f_s = is_female & (df["Pclass"] == 3).to_numpy() & (df["Embarked"] == "S").to_numpy()
         # demographic prior must not override group survival evidence
         p3f_s &= ~(rate > 0).fillna(False).to_numpy()
         pred[p3f_s & (df["TicketSize"] == 1).to_numpy()] = 0  # rule A
@@ -94,8 +94,9 @@ def predict(df: pd.DataFrame, rates: pd.Series, p3s_rules: bool,
     return pred
 
 
-def oof_accuracy(train: pd.DataFrame, y: np.ndarray, p3s_rules: bool,
-                 master_class_rule: bool = True) -> float:
+def oof_accuracy(
+    train: pd.DataFrame, y: np.ndarray, p3s_rules: bool, master_class_rule: bool = True
+) -> float:
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
     oof = np.empty(len(train), dtype=int)
     for tr_idx, va_idx in cv.split(train, y):
@@ -113,9 +114,9 @@ def main() -> None:
     groups = union_find_groups(both)
     both["TicketSize"] = both.groupby("Ticket")["Name"].transform("size")
     train["Group"] = groups.iloc[: len(train)].values
-    test["Group"] = groups.iloc[len(train):].values
+    test["Group"] = groups.iloc[len(train) :].values
     train["TicketSize"] = both["TicketSize"].iloc[: len(train)].values
-    test["TicketSize"] = both["TicketSize"].iloc[len(train):].values
+    test["TicketSize"] = both["TicketSize"].iloc[len(train) :].values
 
     # Also evaluate the old surname-only grouping on identical folds
     train_sn = train.assign(Group=train["Surname"])
@@ -130,8 +131,10 @@ def main() -> None:
         sub = pd.DataFrame({"PassengerId": test["PassengerId"], "Survived": pred})
         out = Path(__file__).resolve().parents[1] / name
         sub.to_csv(out, index=False)
-        print(f"\n{name}: {int((pred != gender_pred).sum())} flips vs gender rule, "
-              f"survival rate {pred.mean():.4f}")
+        print(
+            f"\n{name}: {int((pred != gender_pred).sum())} flips vs gender rule, "
+            f"survival rate {pred.mean():.4f}"
+        )
 
     flips = test.loc[pred != gender_pred, ["Name", "Pclass", "Sex", "Title", "TicketSize"]].copy()
     flips["NewPred"] = pred[pred != gender_pred]
