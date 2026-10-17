@@ -252,7 +252,9 @@ def test_captions_and_evidence_note_localized(tmp_path: Path) -> None:
     assert _plotly_json_text("条件付きHawkes強度") in ja  # figure.hawkes_intensity.title
     assert "Conditional Hawkes intensity" not in ja
     assert _plotly_json_text("フラクショナル・ブラウン運動のパス") in ja  # figure.fbm_paths.title
-    assert _plotly_json_text("フラクショナル・ガウスノイズの増分") in ja  # figure.fgn_increments.title
+    assert (
+        _plotly_json_text("フラクショナル・ガウスノイズの増分") in ja
+    )  # figure.fgn_increments.title
     assert _plotly_json_text("拡大時の局所的なラフネス") in ja  # figure.fbm_zoom.title
 
     # Helper-internal captions (previously hardcoded inside the drawing

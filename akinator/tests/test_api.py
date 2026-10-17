@@ -6,11 +6,15 @@ from fastapi.testclient import TestClient
 def client(tmp_path, monkeypatch, small_pool, small_questions):
     # point the app at a temp DB and the fixture pool before importing
     import app.config as config
+
     monkeypatch.setattr(config, "DB_PATH", tmp_path / "t.db")
     import app.main as main_mod
+
     monkeypatch.setattr(
-        main_mod, "ENTITY_SERVICE",
-        main_mod.EntityService(small_pool, small_questions), raising=False,
+        main_mod,
+        "ENTITY_SERVICE",
+        main_mod.EntityService(small_pool, small_questions),
+        raising=False,
     )
     main_mod.GAME_SERVICE = main_mod.GameService(main_mod.ENTITY_SERVICE)
     main_mod.SESSIONS.clear()
@@ -29,15 +33,16 @@ def test_full_game_flow_to_guess(client):
     r = client.post("/game/new", follow_redirects=False)
     assert r.status_code in (302, 303)
     location = r.headers["location"]
-    game_id = int(location.rstrip("/").split("/")[-1].split("?")[0]) if location[-1].isdigit() else None
+    game_id = (
+        int(location.rstrip("/").split("/")[-1].split("?")[0]) if location[-1].isdigit() else None
+    )
     # walk: fetch question page, answer 'yes' repeatedly until guess
     gid = location.split("/")[2]
     for _ in range(25):
         page = client.get(f"/game/{gid}")
         if "推測" in page.text or page.url.path.endswith("/guess"):
             break
-        r = client.post(f"/game/{gid}/answer", data={"answer": "yes"},
-                        follow_redirects=True)
+        r = client.post(f"/game/{gid}/answer", data={"answer": "yes"}, follow_redirects=True)
         assert r.status_code == 200
     guess = client.get(f"/game/{gid}/guess")
     assert guess.status_code == 200

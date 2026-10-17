@@ -208,5 +208,9 @@ print(f"SVC + scale CV acc = {scaled:.3f}   <- scaling is not optional for SVM")
 if __name__ == "__main__":
     import pathlib
 
-    out = pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "06_svm_and_kernel_methods.ipynb"
+    out = (
+        pathlib.Path(__file__).resolve().parents[1]
+        / "notebooks"
+        / "06_svm_and_kernel_methods.ipynb"
+    )
     build(cells, str(out))

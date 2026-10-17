@@ -245,5 +245,7 @@ plt.colorbar(im, ax=ax, label="misclassification rate"); plt.show()
 if __name__ == "__main__":
     import pathlib
 
-    out = pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "10_practical_ml_pipeline.ipynb"
+    out = (
+        pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "10_practical_ml_pipeline.ipynb"
+    )
     build(cells, str(out))

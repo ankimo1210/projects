@@ -62,7 +62,9 @@ def company_frame(
         sectors[["shortage_composite", "ai_exposure_pct", "shortage_score", "ai_score"]],
         on="sector33",
     )
-    joined = joined.rename(columns={"shortage_score": "sector_shortage_score", "ai_score": "sector_ai_score"})
+    joined = joined.rename(
+        columns={"shortage_score": "sector_shortage_score", "ai_score": "sector_ai_score"}
+    )
 
     # Tilts are applied to the *raw* quantities and the 0-100 rescale is then
     # redone across the company universe. Applying them to the already-rescaled
@@ -76,7 +78,9 @@ def company_frame(
     labor_tilt = _tilt(joined["labor_intensity"])
     knowledge_tilt = _tilt(joined["knowledge_tilt"])
 
-    joined["shortage_composite"] = joined["shortage_composite"] + labor_tilt * cfg.tilt_points * shortage_step
+    joined["shortage_composite"] = (
+        joined["shortage_composite"] + labor_tilt * cfg.tilt_points * shortage_step
+    )
     joined["ai_exposure_pct"] = (
         joined["ai_exposure_pct"] + knowledge_tilt * cfg.tilt_points * ai_step
     ).clip(0, 100)
@@ -91,11 +95,15 @@ def company_frame(
     # 企業の中央値が最大業種のスコア上でちょうど一致し、右上の企業数が strict `>`
     # の同値処理だけで 634社 → 320社 に変わっていた。
     cuts = company_quadrant_cuts(sectors, joined, cfg)
-    joined["quadrant"] = assign_quadrants(joined["shortage_score"], joined["ai_score"], cfg, cuts=cuts)
+    joined["quadrant"] = assign_quadrants(
+        joined["shortage_score"], joined["ai_score"], cfg, cuts=cuts
+    )
 
     # 欠員率は業種の値。AIが空ける労働は企業ごとの（傾き後の）曝露度から出すので、
     # 埋められる欠員も企業ごとに決まる。単位はすべて「従業員数に対する%」。
-    joined["vacancy_rate_pct"] = joined["sector33"].map(ref.shortage["vacancy_rate_pct"]).astype(float)
+    joined["vacancy_rate_pct"] = (
+        joined["sector33"].map(ref.shortage["vacancy_rate_pct"]).astype(float)
+    )
     joined["ai_capacity_release_pct"] = joined["ai_exposure_pct"] * cfg.realization_rate
     joined["closable_gap_pct"] = joined[["ai_capacity_release_pct", "vacancy_rate_pct"]].min(axis=1)
     joined["gap_coverage_x"] = joined["ai_capacity_release_pct"] / joined["vacancy_rate_pct"].where(
@@ -230,14 +238,23 @@ def _pnl_layer(companies: pd.DataFrame, financials: pd.DataFrame, cfg: Config) -
             [
                 PARENT_SCOPE_UNKNOWN
                 if pd.isna(v)
-                else (PARENT_SCOPE_THIN if v < PARENT_SCOPE_FLAG_THRESHOLD else PARENT_SCOPE_CONFIRMED)
+                else (
+                    PARENT_SCOPE_THIN if v < PARENT_SCOPE_FLAG_THRESHOLD else PARENT_SCOPE_CONFIRMED
+                )
                 for v in share_
             ],
             index=out.index,
         )
-        out["parent_scope_flag"] = out["parent_scope"].map(
-            {PARENT_SCOPE_THIN: PARENT_SCOPE_FLAG, PARENT_SCOPE_UNKNOWN: PARENT_SCOPE_UNKNOWN_FLAG}
-        ).fillna("")
+        out["parent_scope_flag"] = (
+            out["parent_scope"]
+            .map(
+                {
+                    PARENT_SCOPE_THIN: PARENT_SCOPE_FLAG,
+                    PARENT_SCOPE_UNKNOWN: PARENT_SCOPE_UNKNOWN_FLAG,
+                }
+            )
+            .fillna("")
+        )
     return out
 
 

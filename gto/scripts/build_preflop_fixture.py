@@ -64,7 +64,9 @@ def quantize_row(freqs: dict[str, float], actions: list[str]) -> list[int]:
     return floors
 
 
-def build_chart(chart_id: str, kind: str, title: str, actions: list[str], table: dict[str, dict]) -> dict:
+def build_chart(
+    chart_id: str, kind: str, title: str, actions: list[str], table: dict[str, dict]
+) -> dict:
     labels = grid_hand_labels()
     missing = [h for h in labels if h not in table]
     if missing:
@@ -82,21 +84,43 @@ def build_chart(chart_id: str, kind: str, title: str, actions: list[str], table:
 def main() -> None:
     charts = []
     for pos in ["UTG", "HJ", "CO", "BTN", "SB"]:
-        charts.append(build_chart(
-            f"rfi:{pos}", "rfi", f"{pos} open", ["R", "F"], RFI_BY_POS[pos],
-        ))
+        charts.append(
+            build_chart(
+                f"rfi:{pos}",
+                "rfi",
+                f"{pos} open",
+                ["R", "F"],
+                RFI_BY_POS[pos],
+            )
+        )
     for scenario in ["BB_vs_UTG", "BB_vs_HJ", "BB_vs_CO", "BB_vs_BTN", "BB_vs_SB"]:
         opp = scenario.partition("_vs_")[2]
-        charts.append(build_chart(
-            f"facing:{scenario}", "facing", f"BB vs {opp} open", ["3B", "C", "F"],
-            FACING_RANGES[scenario],
-        ))
-    for scenario in ["UTG_vs_BB_3bet", "HJ_vs_BB_3bet", "CO_vs_BB_3bet", "BTN_vs_BB_3bet", "SB_vs_BB_3bet"]:
+        charts.append(
+            build_chart(
+                f"facing:{scenario}",
+                "facing",
+                f"BB vs {opp} open",
+                ["3B", "C", "F"],
+                FACING_RANGES[scenario],
+            )
+        )
+    for scenario in [
+        "UTG_vs_BB_3bet",
+        "HJ_vs_BB_3bet",
+        "CO_vs_BB_3bet",
+        "BTN_vs_BB_3bet",
+        "SB_vs_BB_3bet",
+    ]:
         pos = scenario.partition("_vs_")[0]
-        charts.append(build_chart(
-            f"vs3bet:{scenario}", "vs3bet", f"{pos} vs BB 3bet", ["4B", "C", "F"],
-            VS_3BET_RANGES[scenario],
-        ))
+        charts.append(
+            build_chart(
+                f"vs3bet:{scenario}",
+                "vs3bet",
+                f"{pos} vs BB 3bet",
+                ["4B", "C", "F"],
+                VS_3BET_RANGES[scenario],
+            )
+        )
 
     pack = {
         "schema": SCHEMA,

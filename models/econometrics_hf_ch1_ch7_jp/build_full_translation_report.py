@@ -426,8 +426,12 @@ def build_chapter_markdown(model: str, chapter: Chapter, from_chapter_dir: bool 
     lines.append(f"# 第{chapter.no}章: {chapter.ja}（{chapter.en}）")
     lines.append("")
     lines.append(f"- 翻訳モデル: `{model}`")
-    lines.append(f"- 原文抽出テキスト: `../econometrics_hf_ch1_ch7_markdown_ja/raw_text/{chapter.raw_file}`")
-    lines.append("- 注: 数式・表・図はPDF抽出テキストでは崩れている場合があるため、ページ画像を併読してください。")
+    lines.append(
+        f"- 原文抽出テキスト: `../econometrics_hf_ch1_ch7_markdown_ja/raw_text/{chapter.raw_file}`"
+    )
+    lines.append(
+        "- 注: 数式・表・図はPDF抽出テキストでは崩れている場合があるため、ページ画像を併読してください。"
+    )
     lines.append("")
 
     for page in chapter.pages:
@@ -436,20 +440,28 @@ def build_chapter_markdown(model: str, chapter: Chapter, from_chapter_dir: bool 
         lines.append("")
         lines.append(record["translation"].strip())
         lines.append("")
-        lines.append(f"![PDF page {page.pdf_page} render]({image_rel_path(page, from_chapter=from_chapter_dir)})")
+        lines.append(
+            f"![PDF page {page.pdf_page} render]({image_rel_path(page, from_chapter=from_chapter_dir)})"
+        )
         lines.append("")
     return "\n".join(lines).rstrip() + "\n"
 
 
 def build_full_markdown(model: str, metadata: dict, chapters: list[Chapter]) -> str:
     lines: list[str] = []
-    lines.append("# Econometrics of Financial High-Frequency Data 第1〜7章 全文日本語訳フルレポート")
+    lines.append(
+        "# Econometrics of Financial High-Frequency Data 第1〜7章 全文日本語訳フルレポート"
+    )
     lines.append("")
     lines.append(f"- 生成日時: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     lines.append(f"- 翻訳モデル: `{model}`")
-    lines.append(f"- 対象: 第{metadata['coverage']['chapters']}章、PDF pages {metadata['coverage']['pdf_pages']}、書籍 pages {metadata['coverage']['printed_pages']}")
+    lines.append(
+        f"- 対象: 第{metadata['coverage']['chapters']}章、PDF pages {metadata['coverage']['pdf_pages']}、書籍 pages {metadata['coverage']['printed_pages']}"
+    )
     lines.append("- 原文抽出テキストをページ単位で日本語に翻訳したレポートです。")
-    lines.append("- 数式・表・図はPDF抽出テキストでは崩れている可能性があるため、各ページ末尾のレンダー画像を正本として確認してください。")
+    lines.append(
+        "- 数式・表・図はPDF抽出テキストでは崩れている可能性があるため、各ページ末尾のレンダー画像を正本として確認してください。"
+    )
     lines.append("")
     lines.append("## 章一覧")
     lines.append("")
@@ -461,7 +473,9 @@ def build_full_markdown(model: str, metadata: dict, chapters: list[Chapter]) -> 
 
     for chapter in chapters:
         chapter_md = build_chapter_markdown(model, chapter, from_chapter_dir=True)
-        write_text(CHAPTER_DIR / f"ch{chapter.no:02d}_{Path(chapter.file).stem}_full_ja.md", chapter_md)
+        write_text(
+            CHAPTER_DIR / f"ch{chapter.no:02d}_{Path(chapter.file).stem}_full_ja.md", chapter_md
+        )
         chapter_md = build_chapter_markdown(model, chapter, from_chapter_dir=False)
         lines.append(chapter_md)
         lines.append("")
@@ -477,7 +491,11 @@ def markdown_to_html(markdown: str) -> str:
     def inline(text: str) -> str:
         text = html.escape(text)
         text = re.sub(r"`([^`]+)`", r"<code>\1</code>", text)
-        text = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", r'<img class="page-image" src="\2" alt="\1" loading="lazy">', text)
+        text = re.sub(
+            r"!\[([^\]]*)\]\(([^)]+)\)",
+            r'<img class="page-image" src="\2" alt="\1" loading="lazy">',
+            text,
+        )
         text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', text)
         return text
 
@@ -644,13 +662,25 @@ def parse_chapter_filter(values: list[str] | None) -> set[int] | None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--model", default=DEFAULT_MODEL, help=f"Ollama model name, default: {DEFAULT_MODEL}")
-    parser.add_argument("--fast", action="store_true", help=f"Use faster default model: {FAST_MODEL}")
-    parser.add_argument("--chapter", action="append", help="Chapter numbers to translate, e.g. 1 or 1,2 or 3-5")
+    parser.add_argument(
+        "--model", default=DEFAULT_MODEL, help=f"Ollama model name, default: {DEFAULT_MODEL}"
+    )
+    parser.add_argument(
+        "--fast", action="store_true", help=f"Use faster default model: {FAST_MODEL}"
+    )
+    parser.add_argument(
+        "--chapter", action="append", help="Chapter numbers to translate, e.g. 1 or 1,2 or 3-5"
+    )
     parser.add_argument("--limit-pages", type=int, help="Translate only the first N selected pages")
-    parser.add_argument("--force", action="store_true", help="Retranslate pages even when cache exists")
-    parser.add_argument("--timeout", type=int, default=600, help="Per-page Ollama timeout in seconds")
-    parser.add_argument("--report-only", action="store_true", help="Only rebuild Markdown/HTML from existing cache")
+    parser.add_argument(
+        "--force", action="store_true", help="Retranslate pages even when cache exists"
+    )
+    parser.add_argument(
+        "--timeout", type=int, default=600, help="Per-page Ollama timeout in seconds"
+    )
+    parser.add_argument(
+        "--report-only", action="store_true", help="Only rebuild Markdown/HTML from existing cache"
+    )
     args = parser.parse_args()
 
     model = FAST_MODEL if args.fast else args.model
@@ -670,7 +700,10 @@ def main() -> None:
             if path.exists() and not args.force:
                 print(f"[{index}/{total}] cached ch{chapter.no:02d} pdf {page.pdf_page}")
                 continue
-            print(f"[{index}/{total}] translating ch{chapter.no:02d} pdf {page.pdf_page}...", flush=True)
+            print(
+                f"[{index}/{total}] translating ch{chapter.no:02d} pdf {page.pdf_page}...",
+                flush=True,
+            )
             record = translate_page(model, chapter, page, args.timeout, args.force)
             print(
                 f"    done {record['elapsed_seconds']:.1f}s "
@@ -681,7 +714,9 @@ def main() -> None:
     missing = missing_pages(model, chapters)
     if missing:
         print(f"Translation cache is incomplete: {len(missing)} pages missing.")
-        print("Run again without --limit-pages/--chapter, or use --report-only after completing translation.")
+        print(
+            "Run again without --limit-pages/--chapter, or use --report-only after completing translation."
+        )
         if args.report_only:
             raise SystemExit(1)
         return

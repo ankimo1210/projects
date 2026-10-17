@@ -14,7 +14,9 @@ def main() -> None:
 
     peers = pd.DataFrame(peer_cfg["peers"])
     peers["valuation_status"] = "manual_update_required"
-    peers["notes"] = "Peer relevance is curated; current peer multiples should be refreshed before final bid submission."
+    peers["notes"] = (
+        "Peer relevance is curated; current peer multiples should be refreshed before final bid submission."
+    )
     peers.to_csv(processed_dir / "peer_set.csv", index=False)
 
     precedents = pd.DataFrame(peer_cfg["precedent_transactions"])

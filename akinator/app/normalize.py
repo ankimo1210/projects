@@ -3,6 +3,7 @@
 Raw QIDs/years are mapped to question-ready feature values. Missing inputs are
 omitted from `features` entirely (so downstream `has_feature` is False) rather
 than stored as None — except booleans we can determine with confidence."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -27,9 +28,14 @@ _OCCUPATION = {
     "Q2526255": "film_director",
 }
 _COUNTRY = {
-    "Q17": "Japan", "Q183": "Germany", "Q30": "United States",
-    "Q145": "United Kingdom", "Q142": "France", "Q38": "Italy",
-    "Q148": "China", "Q159": "Russia",
+    "Q17": "Japan",
+    "Q183": "Germany",
+    "Q30": "United States",
+    "Q145": "United Kingdom",
+    "Q142": "France",
+    "Q38": "Italy",
+    "Q148": "China",
+    "Q159": "Russia",
 }
 
 

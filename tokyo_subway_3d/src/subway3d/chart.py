@@ -5,6 +5,7 @@ Source: 中央防災会議 大規模水害対策に関する専門調査会 (第
 Each page stacks up to four charts; the frame of each is detected from the raster,
 and the printed axis values come from the LineSpec.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -72,8 +73,9 @@ def chart_at(black: np.ndarray, index: int, axis: dict) -> Chart:
     return Chart(black=black, frame=detect_frames(black)[index], axis=axis)
 
 
-def rail_profile(chart: Chart, label_chainages=(), half_width: int = 20, tol: float = 3.0
-                 ) -> tuple[np.ndarray, np.ndarray]:
+def rail_profile(
+    chart: Chart, label_chainages=(), half_width: int = 20, tol: float = 3.0
+) -> tuple[np.ndarray, np.ndarray]:
     """Return (chainage_m, rail_elevation_TPm).
 
     The rail-surface curve is the lowest black feature inside the frame: the coloured
@@ -103,7 +105,11 @@ def rail_profile(chart: Chart, label_chainages=(), half_width: int = 20, tol: fl
             continue
         a, b = left[0], right[0]
         chord = y[a] + (y[b] - y[a]) * (np.arange(lo, hi + 1) - a) / (b - a)
-        dev = np.nanmax(np.abs(y[lo : hi + 1] - chord)) if not np.all(np.isnan(y[lo : hi + 1])) else 0.0
+        dev = (
+            np.nanmax(np.abs(y[lo : hi + 1] - chord))
+            if not np.all(np.isnan(y[lo : hi + 1]))
+            else 0.0
+        )
         if dev * _px_per_m(chart) ** -1 > tol:
             y[lo : hi + 1] = np.nan
     ok = ~np.isnan(y)

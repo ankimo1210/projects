@@ -20,7 +20,10 @@ _SYNTHETIC = [
     ("水は何度で沸騰しますか？", "水は標準的な気圧のもとで摂氏100度で沸騰します。"),
     ("「ありがとう」を英語で言うと？", "「ありがとう」は英語で Thank you と言います。"),
     ("三角形の内角の和は？", "三角形の内角の和は180度です。"),
-    ("犬について一文で説明してください。", "犬は人間に飼われることの多い、忠実で社会的な動物です。"),
+    (
+        "犬について一文で説明してください。",
+        "犬は人間に飼われることの多い、忠実で社会的な動物です。",
+    ),
 ]
 
 
@@ -53,7 +56,9 @@ def build_sft_dataset(n: int = 1200, max_chars: int = 180, force: bool = False) 
         examples = [list(p) for p in _SYNTHETIC] * 40
 
     payload = {
-        "source": f"kunishou/databricks-dolly-15k-ja (closed-book, len<={max_chars})" if not synthetic else "synthetic (in-repo)",
+        "source": f"kunishou/databricks-dolly-15k-ja (closed-book, len<={max_chars})"
+        if not synthetic
+        else "synthetic (in-repo)",
         "license": "CC-BY-SA-3.0 (dolly-15k-ja)" if not synthetic else "synthetic",
         "synthetic": synthetic,
         "n_examples": len(examples),

@@ -55,11 +55,7 @@ def extract_sources(source_id: str | None = None) -> list[QuestionRecord]:
             document = extract_document(content_path)
             structured = extract_structured_questions(content_path, supplemental_paths)
             url_position = manifest.get("url", "")
-            heuristic_candidates = (
-                []
-                if structured
-                else detect_question_candidates(document.text)
-            )
+            heuristic_candidates = [] if structured else detect_question_candidates(document.text)
             for position, raw_text, confidence in heuristic_candidates:
                 normalized = normalize_text(raw_text)
                 labels = classify(normalized)
@@ -129,9 +125,7 @@ def load_questions() -> list[QuestionRecord]:
 
 def normalize_and_classify() -> list[QuestionRecord]:
     extracted_path = ROOT / "data" / "extracted" / "questions.jsonl"
-    questions = [
-        QuestionRecord.model_validate(row) for row in read_jsonl(extracted_path)
-    ]
+    questions = [QuestionRecord.model_validate(row) for row in read_jsonl(extracted_path)]
     normalized: list[QuestionRecord] = []
     for question in questions:
         text = normalize_text(question.raw_text or question.normalized_text or "")

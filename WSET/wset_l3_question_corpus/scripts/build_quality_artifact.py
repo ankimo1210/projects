@@ -116,42 +116,54 @@ def main() -> None:
                     "description": "手動審査済みソース台帳",
                     "dataset": "summary",
                     "sourceId": "summary-sql",
-                    "metrics": [{"label": "登録ソース", "field": "registered_sources", "format": "number"}],
+                    "metrics": [
+                        {"label": "登録ソース", "field": "registered_sources", "format": "number"}
+                    ],
                 },
                 {
                     "id": "fetched-card",
                     "description": "明示承認され取得に成功した公開ソース",
                     "dataset": "summary",
                     "sourceId": "summary-sql",
-                    "metrics": [{"label": "取得成功", "field": "fetched_sources", "format": "number"}],
+                    "metrics": [
+                        {"label": "取得成功", "field": "fetched_sources", "format": "number"}
+                    ],
                 },
                 {
                     "id": "candidates-card",
                     "description": "人手審査前の質問らしいテキスト範囲",
                     "dataset": "summary",
                     "sourceId": "summary-sql",
-                    "metrics": [{"label": "候補", "field": "candidate_questions", "format": "number"}],
+                    "metrics": [
+                        {"label": "候補", "field": "candidate_questions", "format": "number"}
+                    ],
                 },
                 {
                     "id": "screened-card",
                     "description": "保守的な機械スクリーニング通過数",
                     "dataset": "summary",
                     "sourceId": "summary-sql",
-                    "metrics": [{"label": "機械通過", "field": "machine_screened", "format": "number"}],
+                    "metrics": [
+                        {"label": "機械通過", "field": "machine_screened", "format": "number"}
+                    ],
                 },
                 {
                     "id": "leaks-card",
                     "description": "公開安全版に残った第三者本文フィールド",
                     "dataset": "summary",
                     "sourceId": "summary-sql",
-                    "metrics": [{"label": "本文漏洩", "field": "public_safe_text_leaks", "format": "number"}],
+                    "metrics": [
+                        {"label": "本文漏洩", "field": "public_safe_text_leaks", "format": "number"}
+                    ],
                 },
                 {
                     "id": "patterns-card",
                     "description": "独自に作成した抽象問題パターン",
                     "dataset": "summary",
                     "sourceId": "summary-sql",
-                    "metrics": [{"label": "独自パターン", "field": "original_patterns", "format": "number"}],
+                    "metrics": [
+                        {"label": "独自パターン", "field": "original_patterns", "format": "number"}
+                    ],
                 },
             ],
             "charts": [
@@ -168,10 +180,21 @@ def main() -> None:
                     "sourceId": "source-counts-sql",
                     "encodings": {
                         "x": {"field": "source_label", "type": "nominal", "label": "ソース"},
-                        "y": {"field": "candidate_count", "type": "quantitative", "aggregate": "none", "format": "number", "label": "候補数"},
+                        "y": {
+                            "field": "candidate_count",
+                            "type": "quantitative",
+                            "aggregate": "none",
+                            "format": "number",
+                            "label": "候補数",
+                        },
                         "tooltip": [
                             {"field": "candidate_count", "type": "quantitative", "label": "候補数"},
-                            {"field": "share_of_candidates", "type": "quantitative", "format": "percent", "label": "構成比"},
+                            {
+                                "field": "share_of_candidates",
+                                "type": "quantitative",
+                                "format": "percent",
+                                "label": "構成比",
+                            },
                             {"field": "fetched", "type": "nominal", "label": "取得成功"},
                         ],
                     },
@@ -200,7 +223,12 @@ def main() -> None:
             ],
             "sources": source_specs,
             "blocks": [
-                {"id": "title", "type": "markdown", "body": "# WSET L3コーパス：データ品質監査", "layout": "full"},
+                {
+                    "id": "title",
+                    "type": "markdown",
+                    "body": "# WSET L3コーパス：データ品質監査",
+                    "layout": "full",
+                },
                 {
                     "id": "technical-summary",
                     "type": "markdown",
@@ -208,7 +236,19 @@ def main() -> None:
                     "layout": "full",
                     "body": f"## 技術サマリー\n\n**公開研究データは{total}件まで拡大したが、人手審査前である。** {fetched}ソースの取得に成功し、英語{english}件、日本語{japanese}件、解答付き{answered}件を構造化した。{screened}件が機械スクリーニングを通過、{fact_check}件は要確認、{rejected}件は見出し・断片として除外候補。public-safe出力の本文漏洩は{leaks}件だった。",
                 },
-                {"id": "metrics", "type": "metric-strip", "cardIds": ["sources-card", "fetched-card", "candidates-card", "screened-card", "leaks-card", "patterns-card"], "layout": "full"},
+                {
+                    "id": "metrics",
+                    "type": "metric-strip",
+                    "cardIds": [
+                        "sources-card",
+                        "fetched-card",
+                        "candidates-card",
+                        "screened-card",
+                        "leaks-card",
+                        "patterns-card",
+                    ],
+                    "layout": "full",
+                },
                 {
                     "id": "finding-source-concentration",
                     "type": "markdown",
@@ -216,7 +256,12 @@ def main() -> None:
                     "layout": "full",
                     "body": f"## 候補の{top_share:.0%}は{top_label}に集中\n\n{top_label}由来が{top_count}/{total}件で、コーパスの形式・分野分布を強く支配している。下図は候補数の所在を示すもので、品質や再利用許諾の比較ではない。",
                 },
-                {"id": "source-chart", "type": "chart", "chartId": "source-candidate-chart", "layout": "full"},
+                {
+                    "id": "source-chart",
+                    "type": "chart",
+                    "chartId": "source-candidate-chart",
+                    "layout": "full",
+                },
                 {
                     "id": "scope",
                     "type": "markdown",

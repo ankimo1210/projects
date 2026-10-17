@@ -40,10 +40,10 @@ def tensor_stats(x: torch.Tensor) -> dict[str, float]:
 
 class ActivationRecorder:
     """Usage:
-        rec = ActivationRecorder(model)
-        with rec:                      # hooks attached
-            model(x)
-        rec.stats()                    # {point_name: {rms, mean, ...}}
+    rec = ActivationRecorder(model)
+    with rec:                      # hooks attached
+        model(x)
+    rec.stats()                    # {point_name: {rms, mean, ...}}
     """
 
     def __init__(self, model: nn.Module):

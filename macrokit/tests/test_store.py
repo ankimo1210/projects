@@ -166,16 +166,28 @@ def test_recompute_vintage_seq_numbers_by_release_date_regardless_of_insertion_o
     con = connect(tmp_path / "t.duckdb")
     period = date(1994, 1, 1)
     second = _obs(
-        indicator="jp_real_gdp_qoq_saar", period_start=period, period_end=date(1994, 3, 31),
-        release_date=datetime(1994, 6, 8, tzinfo=UTC), vintage_seq=99, value=2.1,
+        indicator="jp_real_gdp_qoq_saar",
+        period_start=period,
+        period_end=date(1994, 3, 31),
+        release_date=datetime(1994, 6, 8, tzinfo=UTC),
+        vintage_seq=99,
+        value=2.1,
     )
     first = _obs(
-        indicator="jp_real_gdp_qoq_saar", period_start=period, period_end=date(1994, 3, 31),
-        release_date=datetime(1994, 5, 18, tzinfo=UTC), vintage_seq=99, value=1.8,
+        indicator="jp_real_gdp_qoq_saar",
+        period_start=period,
+        period_end=date(1994, 3, 31),
+        release_date=datetime(1994, 5, 18, tzinfo=UTC),
+        vintage_seq=99,
+        value=1.8,
     )
     third = _obs(
-        indicator="jp_real_gdp_qoq_saar", period_start=period, period_end=date(1994, 3, 31),
-        release_date=datetime(2026, 8, 17, tzinfo=UTC), vintage_seq=99, value=1.9,
+        indicator="jp_real_gdp_qoq_saar",
+        period_start=period,
+        period_end=date(1994, 3, 31),
+        release_date=datetime(2026, 8, 17, tzinfo=UTC),
+        vintage_seq=99,
+        value=1.9,
     )
     insert_observations(con, [second, first, third])
 
@@ -196,7 +208,9 @@ def test_recompute_vintage_seq_does_not_touch_other_indicators(tmp_path):
 
     recompute_vintage_seq(con, "jp_real_gdp_qoq_saar")
 
-    stored = con.execute("SELECT vintage_seq FROM observations WHERE indicator = 'us_core_pce'").fetchone()[0]
+    stored = con.execute(
+        "SELECT vintage_seq FROM observations WHERE indicator = 'us_core_pce'"
+    ).fetchone()[0]
     assert stored == 7
 
 
@@ -243,9 +257,7 @@ def test_rejects_a_naive_ingested_at(tmp_path):
 def test_round_trips_a_rate_observation(tmp_path):
     con = connect(tmp_path / "t.duckdb")
     assert insert_rates(con, [_rate()]) == 1
-    got = con.execute(
-        "SELECT curve, obs_date, tenor_y, yield_pct FROM market_rates"
-    ).fetchall()
+    got = con.execute("SELECT curve, obs_date, tenor_y, yield_pct FROM market_rates").fetchall()
     assert got == [("jgb", date(2026, 7, 31), 10.0, 2.801)]
 
 
@@ -285,7 +297,9 @@ def test_inserting_the_same_release_twice_does_not_duplicate(tmp_path):
     assert insert_releases(con, [_release()]) == 1
     # Same (indicator, period_start, release_kind) but a different release_date:
     # INSERT OR IGNORE must drop it silently rather than overwrite the original.
-    assert insert_releases(con, [_release(release_date=datetime(2026, 8, 18, 8, 50, tzinfo=UTC))]) == 0
+    assert (
+        insert_releases(con, [_release(release_date=datetime(2026, 8, 18, 8, 50, tzinfo=UTC))]) == 0
+    )
     got = con.execute("SELECT count(*) FROM releases").fetchone()[0]
     assert got == 1
     stored = con.execute("SELECT release_date FROM releases").fetchone()[0]
@@ -313,7 +327,14 @@ def test_round_trips_an_expectation(tmp_path):
         "SELECT indicator, period_start, release_kind, method, expected, as_of FROM expectations"
     ).fetchall()
     assert got == [
-        ("jp_real_gdp_qoq_saar", date(2026, 4, 1), "1st_prelim", "random_walk", 1.8, date(2026, 8, 14))
+        (
+            "jp_real_gdp_qoq_saar",
+            date(2026, 4, 1),
+            "1st_prelim",
+            "random_walk",
+            1.8,
+            date(2026, 8, 14),
+        )
     ]
 
 

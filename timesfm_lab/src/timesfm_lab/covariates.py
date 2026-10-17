@@ -151,8 +151,13 @@ def run_setting(setting: CovariateSetting, runner, seed: int = 0) -> dict:
 
     rows = []
     for w, a, b in zip(windows, plain, withcov, strict=True):
-        base = {"setting": setting.key, "dataset": spec.key, "series_id": w.series_id,
-                "cutoff": w.cutoff, "n_covariates": int(w.past_covariates.shape[0])}
+        base = {
+            "setting": setting.key,
+            "dataset": spec.key,
+            "series_id": w.series_id,
+            "cutoff": w.cutoff,
+            "n_covariates": int(w.past_covariates.shape[0]),
+        }
         rows.append(base | {"arm": "univariate"} | score(w, a))
         rows.append(base | {"arm": "with_covariates"} | score(w, b))
         if w.oracle_point is not None:

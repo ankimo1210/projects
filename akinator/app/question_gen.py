@@ -4,6 +4,7 @@ For each (feature_key, value) pair, count how many entities match. Keep only
 values that are discriminative — present in a fraction of the pool between
 min_fraction and max_fraction (neither ~all nor ~none). Question text is
 composed from Japanese label templates, NOT hand-written per entity."""
+
 from __future__ import annotations
 
 from collections import defaultdict
@@ -22,16 +23,26 @@ _POSITIVE_ONLY_BOOL = {"in_anime"}
 
 # Japanese templates. {v} is the value label.
 _VALUE_LABELS = {
-    ("gender", "male"): "男性", ("gender", "female"): "女性",
-    ("occupation", "actor"): "俳優", ("occupation", "singer"): "歌手",
-    ("occupation", "physicist"): "物理学者", ("occupation", "politician"): "政治家",
-    ("occupation", "writer"): "作家", ("occupation", "athlete"): "スポーツ選手",
-    ("occupation", "musician"): "音楽家", ("occupation", "painter"): "画家",
-    ("occupation", "mathematician"): "数学者", ("occupation", "film_director"): "映画監督",
-    ("country", "Japan"): "日本", ("country", "United States"): "アメリカ",
-    ("country", "Germany"): "ドイツ", ("country", "United Kingdom"): "イギリス",
-    ("country", "France"): "フランス", ("country", "Italy"): "イタリア",
-    ("country", "China"): "中国", ("country", "Russia"): "ロシア",
+    ("gender", "male"): "男性",
+    ("gender", "female"): "女性",
+    ("occupation", "actor"): "俳優",
+    ("occupation", "singer"): "歌手",
+    ("occupation", "physicist"): "物理学者",
+    ("occupation", "politician"): "政治家",
+    ("occupation", "writer"): "作家",
+    ("occupation", "athlete"): "スポーツ選手",
+    ("occupation", "musician"): "音楽家",
+    ("occupation", "painter"): "画家",
+    ("occupation", "mathematician"): "数学者",
+    ("occupation", "film_director"): "映画監督",
+    ("country", "Japan"): "日本",
+    ("country", "United States"): "アメリカ",
+    ("country", "Germany"): "ドイツ",
+    ("country", "United Kingdom"): "イギリス",
+    ("country", "France"): "フランス",
+    ("country", "Italy"): "イタリア",
+    ("country", "China"): "中国",
+    ("country", "Russia"): "ロシア",
 }
 
 

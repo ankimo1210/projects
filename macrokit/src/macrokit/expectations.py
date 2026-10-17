@@ -42,7 +42,11 @@ def _knowable_before(con: duckdb.DuckDBPyConnection, event: ReleaseEvent):
 
 def _previous_quarter(period_start: date) -> date:
     month = period_start.month - 3
-    return date(period_start.year - 1, month + 12, 1) if month < 1 else date(period_start.year, month, 1)
+    return (
+        date(period_start.year - 1, month + 12, 1)
+        if month < 1
+        else date(period_start.year, month, 1)
+    )
 
 
 def _expectation(event: ReleaseEvent, method: str, value: float, as_of: date) -> Expectation:
@@ -104,7 +108,8 @@ def ar_model(con: duckdb.DuckDBPyConnection, event: ReleaseEvent) -> Expectation
     values = history.to_numpy(dtype=float)
     rows = len(values) - AR_ORDER
     design = np.column_stack(
-        [np.ones(rows)] + [values[AR_ORDER - lag : len(values) - lag] for lag in range(1, AR_ORDER + 1)]
+        [np.ones(rows)]
+        + [values[AR_ORDER - lag : len(values) - lag] for lag in range(1, AR_ORDER + 1)]
     )
     target = values[AR_ORDER:]
     coefficients, *_ = np.linalg.lstsq(design, target, rcond=None)

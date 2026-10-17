@@ -13,9 +13,21 @@ DATA_DIR = Path(__file__).resolve().parents[1] / "house-prices-advanced-regressi
 
 # Columns where NA means "feature absent" per data_description.txt
 NA_MEANS_NONE = [
-    "Alley", "BsmtQual", "BsmtCond", "BsmtExposure", "BsmtFinType1", "BsmtFinType2",
-    "FireplaceQu", "GarageType", "GarageFinish", "GarageQual", "GarageCond",
-    "PoolQC", "Fence", "MiscFeature", "MasVnrType",
+    "Alley",
+    "BsmtQual",
+    "BsmtCond",
+    "BsmtExposure",
+    "BsmtFinType1",
+    "BsmtFinType2",
+    "FireplaceQu",
+    "GarageType",
+    "GarageFinish",
+    "GarageQual",
+    "GarageCond",
+    "PoolQC",
+    "Fence",
+    "MiscFeature",
+    "MasVnrType",
 ]
 
 
@@ -24,7 +36,9 @@ def main() -> None:
     test = pd.read_csv(DATA_DIR / "test.csv")
 
     print(f"train: {train.shape}, test: {test.shape}")
-    print(f"duplicate Ids: train={train['Id'].duplicated().sum()}, test={test['Id'].duplicated().sum()}")
+    print(
+        f"duplicate Ids: train={train['Id'].duplicated().sum()}, test={test['Id'].duplicated().sum()}"
+    )
     print(f"train/test Id overlap: {len(set(train['Id']) & set(test['Id']))}")
 
     print("\n--- SalePrice ---")

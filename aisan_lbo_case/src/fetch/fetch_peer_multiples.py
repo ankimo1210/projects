@@ -144,7 +144,11 @@ def main() -> None:
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(OUTPUT, index=False)
     print(f"wrote {OUTPUT}")
-    print(out[["ticker", "ev_revenue", "ev_ebitda", "forward_pe", "data_status"]].to_string(index=False))
+    print(
+        out[["ticker", "ev_revenue", "ev_ebitda", "forward_pe", "data_status"]].to_string(
+            index=False
+        )
+    )
 
 
 if __name__ == "__main__":

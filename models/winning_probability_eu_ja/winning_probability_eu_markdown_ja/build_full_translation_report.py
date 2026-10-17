@@ -165,7 +165,9 @@ def translate_page(
 
     translated_chunks: list[str] = []
     for chunk_index, chunk in enumerate(chunks, start=1):
-        log(f"[translate] page {page_number:03d} chunk {chunk_index}/{len(chunks)} ({len(chunk)} chars)")
+        log(
+            f"[translate] page {page_number:03d} chunk {chunk_index}/{len(chunks)} ({len(chunk)} chars)"
+        )
         memo_context = f"\n参考の既存日本語メモ:\n{memo}\n" if memo else ""
         prompt = f"""\
 Page {page_number:03d} のOCRテキストを日本語に全文翻訳してください。
@@ -352,11 +354,7 @@ def make_markdown_renderer() -> MarkdownIt:
         token = tokens[idx]
         info = token.info.strip().split(maxsplit=1)[0] if token.info.strip() else ""
         if info == "math":
-            return (
-                '<pre class="math-block"><code>'
-                + escape(token.content)
-                + "</code></pre>\n"
-            )
+            return '<pre class="math-block"><code>' + escape(token.content) + "</code></pre>\n"
         return default_fence(tokens, idx, options, env)
 
     md.renderer.rules["fence"] = fence
@@ -577,8 +575,12 @@ def main() -> None:
     parser.add_argument("--model", default="qwen2.5:7b", help="Ollama model name")
     parser.add_argument("--pages", help="Page list, e.g. 1-3,8,10")
     parser.add_argument("--force", action="store_true", help="Retranslate cached pages")
-    parser.add_argument("--skip-translation", action="store_true", help="Only rebuild reports from cache")
-    parser.add_argument("--max-chars", type=int, default=4200, help="Max OCR chars per translation chunk")
+    parser.add_argument(
+        "--skip-translation", action="store_true", help="Only rebuild reports from cache"
+    )
+    parser.add_argument(
+        "--max-chars", type=int, default=4200, help="Max OCR chars per translation chunk"
+    )
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--num-ctx", type=int, default=12288)

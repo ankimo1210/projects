@@ -25,7 +25,9 @@ from jp_llm_lab.utils.io import repo_root
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--skip-main", action="store_true", help="skip tokenizing the 170M-char main pool")
+    ap.add_argument(
+        "--skip-main", action="store_true", help="skip tokenizing the 170M-char main pool"
+    )
     ap.add_argument("--edu-chars", type=int, default=300_000)
     args = ap.parse_args()
     root = repo_root()
@@ -37,14 +39,16 @@ def main() -> None:
     edu_text = kokoro[: args.edu_chars // 2] + "\n" + wiki
     t0 = time.perf_counter()
     edu = BPETokenizer.train(edu_text, vocab_size=8192)
-    print(f"edu BPE: vocab {edu.vocab_size} ({len(edu.merges)} merges) on {len(edu_text):,} chars "
-          f"in {time.perf_counter()-t0:.1f}s")
+    print(
+        f"edu BPE: vocab {edu.vocab_size} ({len(edu.merges)} merges) on {len(edu_text):,} chars "
+        f"in {time.perf_counter() - t0:.1f}s"
+    )
     edu.save(tok_dir / "bpe_edu_v1.json")
 
     # ---- 2. production HF BPE on pilot
     t0 = time.perf_counter()
     prod = HFBpeTokenizer.train(iter_snapshot_docs("pilot"), vocab_size=8192, version="bpe8k_v1")
-    print(f"prod BPE: vocab {prod.vocab_size} on pilot in {time.perf_counter()-t0:.1f}s")
+    print(f"prod BPE: vocab {prod.vocab_size} on pilot in {time.perf_counter() - t0:.1f}s")
     prod.save(tok_dir / "bpe8k_v1.tokenizer.json")
 
     demo = "私はその人を常に先生と呼んでいた。東京大学で自然言語処理を研究しています。"
@@ -61,7 +65,9 @@ def main() -> None:
         import numpy as np
 
         n = np.load(path, mmap_mode="r").size
-        print(f"tokenized {name:12s} → {n/1e6:7.2f}M tokens  ({time.perf_counter()-t0:.1f}s)  {path.name}")
+        print(
+            f"tokenized {name:12s} → {n / 1e6:7.2f}M tokens  ({time.perf_counter() - t0:.1f}s)  {path.name}"
+        )
 
 
 if __name__ == "__main__":

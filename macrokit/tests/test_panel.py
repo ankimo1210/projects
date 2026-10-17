@@ -19,32 +19,59 @@ def _period_end(period_start: date) -> date:
 
 def _event(period_start, kind, release_date, *, scheduled=False):
     return store.ReleaseEvent(
-        indicator=INDICATOR, period_start=period_start, period_end=_period_end(period_start),
-        release_kind=kind, release_date=release_date, scheduled=scheduled,
-        source="esri_calendar", source_url="u", ingested_at=NOW,
+        indicator=INDICATOR,
+        period_start=period_start,
+        period_end=_period_end(period_start),
+        release_kind=kind,
+        release_date=release_date,
+        scheduled=scheduled,
+        source="esri_calendar",
+        source_url="u",
+        ingested_at=NOW,
     )
 
 
 def _observation(period_start, release_date, value, seq):
     return store.Observation(
-        indicator=INDICATOR, period_start=period_start, period_end=_period_end(period_start),
-        release_date=release_date, vintage_seq=seq, value=value, unit="percent_saar", sa="sa",
-        freq="Q", source="esri_gdp", source_url="u", ingested_at=NOW, vintage_kind="actual",
+        indicator=INDICATOR,
+        period_start=period_start,
+        period_end=_period_end(period_start),
+        release_date=release_date,
+        vintage_seq=seq,
+        value=value,
+        unit="percent_saar",
+        sa="sa",
+        freq="Q",
+        source="esri_gdp",
+        source_url="u",
+        ingested_at=NOW,
+        vintage_kind="actual",
     )
 
 
 def _rate(obs_date, tenor_y, yield_pct):
     return store.RateObservation(
-        curve="jgb", obs_date=obs_date, tenor_y=tenor_y, yield_pct=yield_pct,
-        source="mof_jgb", source_url="u", ingested_at=NOW,
+        curve="jgb",
+        obs_date=obs_date,
+        tenor_y=tenor_y,
+        yield_pct=yield_pct,
+        source="mof_jgb",
+        source_url="u",
+        ingested_at=NOW,
     )
 
 
 def _expectation(period_start, release_kind, method, expected, as_of):
     return store.Expectation(
-        indicator=INDICATOR, period_start=period_start, release_kind=release_kind,
-        method=method, expected=expected, as_of=as_of, source="macrokit",
-        source_url="computed://macrokit/expectations", ingested_at=NOW,
+        indicator=INDICATOR,
+        period_start=period_start,
+        release_kind=release_kind,
+        method=method,
+        expected=expected,
+        as_of=as_of,
+        source="macrokit",
+        source_url="computed://macrokit/expectations",
+        ingested_at=NOW,
     )
 
 
@@ -63,18 +90,24 @@ def _seed_2026_q2(con):
 
     event = _event(date(2026, 4, 1), "1st_prelim", august)
     store.insert_releases(con, [event])
-    store.insert_observations(con, [
-        _observation(date(2026, 1, 1), may, 2.1, 1),
-        _observation(date(2026, 1, 1), june, 1.8, 2),
-        _observation(date(2026, 1, 1), august, 1.9, 1),
-        _observation(date(2026, 4, 1), august, 1.1, 1),
-    ])
-    store.insert_rates(con, [
-        _rate(date(2026, 8, 14), 2.0, 1.657),
-        _rate(date(2026, 8, 14), 10.0, 2.878),
-        _rate(date(2026, 8, 17), 2.0, 1.697),
-        _rate(date(2026, 8, 17), 10.0, 2.930),
-    ])
+    store.insert_observations(
+        con,
+        [
+            _observation(date(2026, 1, 1), may, 2.1, 1),
+            _observation(date(2026, 1, 1), june, 1.8, 2),
+            _observation(date(2026, 1, 1), august, 1.9, 1),
+            _observation(date(2026, 4, 1), august, 1.1, 1),
+        ],
+    )
+    store.insert_rates(
+        con,
+        [
+            _rate(date(2026, 8, 14), 2.0, 1.657),
+            _rate(date(2026, 8, 14), 10.0, 2.878),
+            _rate(date(2026, 8, 17), 2.0, 1.697),
+            _rate(date(2026, 8, 17), 10.0, 2.930),
+        ],
+    )
     store.insert_expectations(con, expectations.compute(con, [event]))
 
 
@@ -99,9 +132,9 @@ def _seed_uniform_surprises(con, count):
         store.insert_releases(con, [event])
         store.insert_observations(con, [_observation(period_start, release_date, float(i), 1)])
         store.insert_rates(con, [_rate(release_date.date(), 10.0, 2.0 + 0.01 * i)])
-        store.insert_expectations(con, [
-            _expectation(period_start, "1st_prelim", "random_walk", 0.0, release_date.date())
-        ])
+        store.insert_expectations(
+            con, [_expectation(period_start, "1st_prelim", "random_walk", 0.0, release_date.date())]
+        )
 
 
 def _seed_future_release(con):
@@ -110,9 +143,9 @@ def _seed_future_release(con):
     event = _event(date(2026, 10, 1), "1st_prelim", release_date, scheduled=True)
     store.insert_releases(con, [event])
     store.insert_observations(con, [_observation(date(2026, 10, 1), release_date, 1.5, 1)])
-    store.insert_expectations(con, [
-        _expectation(date(2026, 10, 1), "1st_prelim", "random_walk", 1.2, date(2027, 2, 12))
-    ])
+    store.insert_expectations(
+        con, [_expectation(date(2026, 10, 1), "1st_prelim", "random_walk", 1.2, date(2027, 2, 12))]
+    )
 
 
 def test_the_panel_pairs_a_release_with_that_days_move(con):

@@ -30,8 +30,12 @@ def build(train_raw, test_raw):
     return y, X, X_test, X_tree, X_test_tree, test["Id"]
 
 
-CURATED = {"ElasticNetCV": T.f_enet, "KernelRidge": T.f_krr,
-           "LightGBM": T.f_lgb, "XGBoost": T.f_xgb}
+CURATED = {
+    "ElasticNetCV": T.f_enet,
+    "KernelRidge": T.f_krr,
+    "LightGBM": T.f_lgb,
+    "XGBoost": T.f_xgb,
+}
 
 
 def curated_predict(train_raw, test_raw):
@@ -65,9 +69,9 @@ def main():
     tr_full = pd.read_csv(T.DATA_DIR / "train.csv")
 
     variants = {
-        "V0 drop>4500 (legacy)":     dict(drop=True,  clip="minmax"),
-        "V1 keep, clip[min,max]":    dict(drop=False, clip="minmax"),
-        "V2 keep, no clip":          dict(drop=False, clip="none"),
+        "V0 drop>4500 (legacy)": dict(drop=True, clip="minmax"),
+        "V1 keep, clip[min,max]": dict(drop=False, clip="minmax"),
+        "V2 keep, no clip": dict(drop=False, clip="none"),
         "V3 keep, clip 0.5-99.5pct": dict(drop=False, clip="pct"),
     }
     best = None
@@ -90,8 +94,13 @@ def main():
     df = df.merge(test_raw[["Id", "SaleCondition"]], on="Id")
     df["ae"] = (np.log1p(df["pred"]) - np.log1p(df["SalePrice"])).abs()
     print(f"\nbest = {label} (TRUE {r:.5f}); mean |log err| by SaleCondition:")
-    print(df.groupby("SaleCondition")["ae"].agg(["mean", "count"]).round(4)
-            .sort_values("mean", ascending=False).to_string())
+    print(
+        df.groupby("SaleCondition")["ae"]
+        .agg(["mean", "count"])
+        .round(4)
+        .sort_values("mean", ascending=False)
+        .to_string()
+    )
 
 
 if __name__ == "__main__":

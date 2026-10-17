@@ -62,20 +62,12 @@ def main() -> None:
 
     assert len(snapshot["pages"]) == 5, "Unexpected captured page count"
     assert len(snapshot["journey"]) == 5, "Unexpected journey step count"
-    assert len(snapshot["regional_rankings"]) == 6, (
-        "Unexpected regional ranking count"
-    )
-    assert len(snapshot["haplogroup_catalog"]) == 23, (
-        "Unexpected haplogroup catalog count"
-    )
+    assert len(snapshot["regional_rankings"]) == 6, "Unexpected regional ranking count"
+    assert len(snapshot["haplogroup_catalog"]) == 23, "Unexpected haplogroup catalog count"
     selected_subgroups = [
-        row["subgroup"]
-        for row in snapshot["subgroup_comparison"]
-        if row["selected"]
+        row["subgroup"] for row in snapshot["subgroup_comparison"] if row["selected"]
     ]
-    assert selected_subgroups == [result["subgroup"]], (
-        "Selected subgroup does not match the result"
-    )
+    assert selected_subgroups == [result["subgroup"]], "Selected subgroup does not match the result"
 
     summary_rows = read_csv(SUMMARY_CSV_PATH)
     assert len(summary_rows) == 1, "Ancestor summary CSV must contain one row"
@@ -83,9 +75,7 @@ def main() -> None:
     assert summary_rows[0]["subgroup"] == result["subgroup"]
     assert len(read_csv(JOURNEY_CSV_PATH)) == len(snapshot["journey"])
     assert len(read_csv(REGIONS_CSV_PATH)) == len(snapshot["regional_rankings"])
-    assert len(read_csv(HAPLOGROUPS_CSV_PATH)) == len(
-        snapshot["haplogroup_catalog"]
-    )
+    assert len(read_csv(HAPLOGROUPS_CSV_PATH)) == len(snapshot["haplogroup_catalog"])
 
     verification = json.loads(VERIFICATION_PATH.read_text(encoding="utf-8"))
     required_checks = (
@@ -100,21 +90,15 @@ def main() -> None:
         assert verification[check], f"Verification failed: {check}"
     assert verification["missing_fields"] == [], "Required fields are missing"
     assert verification["mismatch_count"] == 0, "Verification contains mismatches"
-    assert verification["browser_error_count"] == 0, (
-        "Verification contains browser errors"
-    )
+    assert verification["browser_error_count"] == 0, "Verification contains browser errors"
 
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["result"]["haplogroup"] == result["haplogroup"]
     assert manifest["result"]["subgroup"] == result["subgroup"]
     assert manifest["page_count"] == len(snapshot["pages"])
-    assert manifest["haplogroup_catalog_count"] == len(
-        snapshot["haplogroup_catalog"]
-    )
+    assert manifest["haplogroup_catalog_count"] == len(snapshot["haplogroup_catalog"])
     for filename, expected_hash in manifest["sha256"].items():
-        assert sha256(DATA_DIR / filename) == expected_hash, (
-            f"SHA-256 mismatch: {filename}"
-        )
+        assert sha256(DATA_DIR / filename) == expected_hash, f"SHA-256 mismatch: {filename}"
 
     print(
         "Genequest ancestor snapshot is valid: "

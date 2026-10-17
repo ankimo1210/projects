@@ -134,7 +134,9 @@ def ets(context: np.ndarray, horizon: int, season: int) -> Forecast:
 
     x = np.asarray(context, float)
     seasonal_ok = 1 < season <= _ETS_MAX_SEASON and len(x) >= 3 * season
-    note = "" if seasonal_ok or season <= 1 else f"ETS non-seasonal (m={season} > {_ETS_MAX_SEASON})"
+    note = (
+        "" if seasonal_ok or season <= 1 else f"ETS non-seasonal (m={season} > {_ETS_MAX_SEASON})"
+    )
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
@@ -198,13 +200,12 @@ def fourier_ols(context: np.ndarray, horizon: int, season: int) -> Forecast:
 
 def _har_features(buf: np.ndarray, end: int) -> np.ndarray:
     """[1, last, mean of last 5, mean of last 22] over ``buf[:end]``."""
-    return np.array(
-        [1.0, buf[end - 1], buf[end - 5 : end].mean(), buf[end - 22 : end].mean()]
-    )
+    return np.array([1.0, buf[end - 1], buf[end - 5 : end].mean(), buf[end - 22 : end].mean()])
 
 
-def _har_roll(buf: np.ndarray, start: int, steps: int, beta: np.ndarray,
-              shocks: np.ndarray | None) -> np.ndarray:
+def _har_roll(
+    buf: np.ndarray, start: int, steps: int, beta: np.ndarray, shocks: np.ndarray | None
+) -> np.ndarray:
     """Iterate the HAR recursion forward in a preallocated buffer."""
     out = np.empty(steps)
     for h in range(steps):
@@ -256,8 +257,11 @@ def har(context: np.ndarray, horizon: int, season: int) -> Forecast:
     if not np.isfinite(paths).all():
         # An explosive fitted recursion can blow up under shocks even when the
         # point path is finite; fall back to a flat band rather than emit inf.
-        return Forecast(point, _empirical_fan(point, np.arange(1, horizon + 1), r),
-                        fallback="har fan->empirical (explosive paths)")
+        return Forecast(
+            point,
+            _empirical_fan(point, np.arange(1, horizon + 1), r),
+            fallback="har fan->empirical (explosive paths)",
+        )
     fan = _sort_fan(np.quantile(paths, QUANTILE_LEVELS, axis=0).T)
     return Forecast(point, fan)
 

@@ -14,9 +14,9 @@ def test_random_walk_takes_the_prior_quarter_as_it_stood_before_the_release(
     may = datetime(2026, 5, 18, 8, 50, tzinfo=JST)
     june = datetime(2026, 6, 8, 8, 50, tzinfo=JST)
     august = datetime(2026, 8, 17, 8, 50, tzinfo=JST)
-    insert_obs(date(2026, 1, 1), may, 2.1, 1)       # superseded in June
-    insert_obs(date(2026, 1, 1), june, 1.8, 2)      # the value knowable on 8/14
-    insert_obs(date(2026, 1, 1), august, 1.9, 1)    # revised ON the release day
+    insert_obs(date(2026, 1, 1), may, 2.1, 1)  # superseded in June
+    insert_obs(date(2026, 1, 1), june, 1.8, 2)  # the value knowable on 8/14
+    insert_obs(date(2026, 1, 1), august, 1.9, 1)  # revised ON the release day
     insert_obs(date(2026, 4, 1), august, 1.1, 1)
     insert_rates(date(2026, 8, 14), date(2026, 8, 17))
 
@@ -43,7 +43,7 @@ def test_prior_vintage_anchors_the_second_preliminary_on_the_first(
 ):
     may = datetime(2026, 5, 18, 8, 50, tzinfo=JST)
     june = datetime(2026, 6, 8, 8, 50, tzinfo=JST)
-    insert_obs(date(2026, 1, 1), may, 2.1, 1)   # 1st preliminary
+    insert_obs(date(2026, 1, 1), may, 2.1, 1)  # 1st preliminary
     insert_obs(date(2026, 1, 1), june, 1.8, 2)  # 2nd preliminary revised it down
     insert_rates(date(2026, 6, 5), date(2026, 6, 8))
 

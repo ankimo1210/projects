@@ -113,11 +113,15 @@ def _sample_fixed_prompts(model, tokenizer, cfg: TrainConfig, device, step, frac
         return
     for prompt in cfg.fixed_prompts:
         ids = torch.tensor([tokenizer.encode(prompt)], dtype=torch.long, device=device)
-        greedy_out, _ = generate(model, ids, SamplingConfig(max_new_tokens=cfg.max_new_tokens, greedy=True))
+        greedy_out, _ = generate(
+            model, ids, SamplingConfig(max_new_tokens=cfg.max_new_tokens, greedy=True)
+        )
         # Same seed at every checkpoint → sampled continuations differ only
         # because the MODEL changed, not the random draws.
         sampled_out, _ = generate(
-            model, ids, SamplingConfig(max_new_tokens=cfg.max_new_tokens, temperature=0.7, seed=cfg.seed + 7)
+            model,
+            ids,
+            SamplingConfig(max_new_tokens=cfg.max_new_tokens, temperature=0.7, seed=cfg.seed + 7),
         )
         append_jsonl(
             {
@@ -176,18 +180,38 @@ def train_lm(
     )
     save_json(collect_run_metadata(extra_meta), run_dir / "runmeta.json")
 
-    frac_of = {max(0, min(cfg.steps, round(f * cfg.steps))): f for f in sorted(cfg.checkpoint_fracs)}
+    frac_of = {
+        max(0, min(cfg.steps, round(f * cfg.steps))): f for f in sorted(cfg.checkpoint_fracs)
+    }
     ckpt_steps = set(frac_of)
 
     def run_eval(step: int, tokens_seen: int) -> dict:
         train_eval = estimate_loss(
-            model, train_tokens, cfg.eval_batches, cfg.batch_size, cfg.context_len, device, cfg.eval_seed
+            model,
+            train_tokens,
+            cfg.eval_batches,
+            cfg.batch_size,
+            cfg.context_len,
+            device,
+            cfg.eval_seed,
         )
         val_eval = estimate_loss(
-            model, val_tokens, cfg.eval_batches, cfg.batch_size, cfg.context_len, device, cfg.eval_seed
+            model,
+            val_tokens,
+            cfg.eval_batches,
+            cfg.batch_size,
+            cfg.context_len,
+            device,
+            cfg.eval_seed,
         )
         with recorder:
-            x, _ = sample_batch(val_tokens, min(8, cfg.batch_size), cfg.context_len, make_generator(cfg.eval_seed), device)
+            x, _ = sample_batch(
+                val_tokens,
+                min(8, cfg.batch_size),
+                cfg.context_len,
+                make_generator(cfg.eval_seed),
+                device,
+            )
             with torch.no_grad():
                 model(x)
         bad = find_nonfinite(model)
@@ -210,7 +234,9 @@ def train_lm(
         frac = frac_of[step]
         path = ckpt_dir / f"ckpt_{round(frac * 100):03d}pct_step{step:06d}.pt"
         save_checkpoint(path, model, optimizer, step, tokens_seen, extra={"frac": frac})
-        append_jsonl({"type": "checkpoint", "step": step, "frac": frac, "path": str(path)}, metrics_path)
+        append_jsonl(
+            {"type": "checkpoint", "step": step, "frac": frac, "path": str(path)}, metrics_path
+        )
         _sample_fixed_prompts(model, tokenizer, cfg, device, step, frac, samples_path)
 
     # ---- initialization snapshot: eval + checkpoint + samples BEFORE any update
@@ -265,7 +291,9 @@ def train_lm(
                 "clip_hit": total_norm > cfg.grad_clip,
                 "grad_norms": {g: v["grad_norm"] for g, v in (gstats or {}).items()},
                 "tokens_per_sec": round(tps, 1),
-                "vram_gb": round(torch.cuda.memory_allocated() / 2**30, 3) if device == "cuda" else None,
+                "vram_gb": round(torch.cuda.memory_allocated() / 2**30, 3)
+                if device == "cuda"
+                else None,
             }
             if ratios is not None:
                 rec["update_ratios"] = ratios

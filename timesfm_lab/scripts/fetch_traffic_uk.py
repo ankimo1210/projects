@@ -11,5 +11,5 @@ if __name__ == "__main__":
         lens = sorted(len(v) for _s, v, _t, _m in series)
         imp = sum(int(m.sum()) for _s, _v, _t, m in series)
         pts = sum(len(v) for _s, v, _t, _m in series)
-        print(f"segment length: min {lens[0]} median {lens[len(lens)//2]} max {lens[-1]}")
-        print(f"interpolated points: {imp} / {pts} ({100*imp/pts:.2f}%)")
+        print(f"segment length: min {lens[0]} median {lens[len(lens) // 2]} max {lens[-1]}")
+        print(f"interpolated points: {imp} / {pts} ({100 * imp / pts:.2f}%)")

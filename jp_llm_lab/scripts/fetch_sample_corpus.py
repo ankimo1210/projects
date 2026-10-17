@@ -17,7 +17,9 @@ def main() -> None:
     manifest = fetch_sample_corpus(force=args.force)
     for name, entry in manifest["sources"].items():
         tag = "SYNTHETIC" if entry["synthetic"] else "real"
-        print(f"{name:16s} {tag:9s} {entry['n_chars']:>8,} chars  {entry['title']} / {entry['author']}")
+        print(
+            f"{name:16s} {tag:9s} {entry['n_chars']:>8,} chars  {entry['title']} / {entry['author']}"
+        )
 
 
 if __name__ == "__main__":

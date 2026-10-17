@@ -16,7 +16,9 @@ from __future__ import annotations
 import torch
 
 
-def rope_angles(context_len: int, d_head: int, base: float = 10000.0) -> tuple[torch.Tensor, torch.Tensor]:
+def rope_angles(
+    context_len: int, d_head: int, base: float = 10000.0
+) -> tuple[torch.Tensor, torch.Tensor]:
     """cos/sin tables, each [T, d_head/2]."""
     assert d_head % 2 == 0
     inv_freq = base ** (-torch.arange(0, d_head, 2, dtype=torch.float32) / d_head)

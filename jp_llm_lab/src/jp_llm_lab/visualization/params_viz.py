@@ -16,7 +16,7 @@ def param_breakdown_figure(breakdown: dict) -> go.Figure:
             x=names,
             y=[groups[n] for n in names],
             marker_color=[GROUP_COLORS.get(n, "#333") for n in names],
-            text=[f"{groups[n]/total:.1%}" for n in names],
+            text=[f"{groups[n] / total:.1%}" for n in names],
             textposition="outside",
         )
     )
@@ -34,11 +34,11 @@ def attn_bench_figure(bench: dict) -> go.Figure:
         rows = [r for r in results if r["impl"] == impl]
         fig.add_trace(
             go.Bar(
-                x=[f'{r["dtype"]} T={r["T"]}' for r in rows],
+                x=[f"{r['dtype']} T={r['T']}" for r in rows],
                 y=[r["median_ms"] for r in rows],
                 name=impl,
                 marker_color=COLORS[impl],
-                text=[f'{r["median_ms"]:.1f}ms' for r in rows],
+                text=[f"{r['median_ms']:.1f}ms" for r in rows],
             )
         )
     fig.update_layout(barmode="group")

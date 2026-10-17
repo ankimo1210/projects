@@ -24,9 +24,7 @@ CALIBRATION_MODELS = {"timesfm_3.0", "seasonal_naive"}
 def slim(data: dict) -> dict:
     """Drop the records the page never reads, so the payload stays small."""
     out = dict(data)
-    out["calibration"] = [
-        r for r in data["calibration"] if r["model"] in CALIBRATION_MODELS
-    ]
+    out["calibration"] = [r for r in data["calibration"] if r["model"] in CALIBRATION_MODELS]
     return out
 
 
@@ -52,7 +50,7 @@ def main() -> None:
         encoding="utf-8",
     )
     for p in (artifact, standalone):
-        print(f"{p}  {p.stat().st_size/1024:.0f} KB")
+        print(f"{p}  {p.stat().st_size / 1024:.0f} KB")
 
 
 if __name__ == "__main__":

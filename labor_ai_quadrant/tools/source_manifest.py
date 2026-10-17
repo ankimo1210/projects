@@ -103,7 +103,11 @@ def rows() -> list[tuple[str, int, str, str, str]]:
 
 
 def render(found: list[tuple[str, int, str, str, str]]) -> str:
-    lines = [HEADER, "| ファイル | バイト | SHA-256 | 取得日 | 出典 URL |", "|---|---:|---|---|---|"]
+    lines = [
+        HEADER,
+        "| ファイル | バイト | SHA-256 | 取得日 | 出典 URL |",
+        "|---|---:|---|---|---|",
+    ]
     for name, size, sha, stamp, url in found:
         lines.append(f"| `{name}` | {size:,} | `{sha}` | {stamp} | {url or '—'} |")
     unmapped = [n for n, *_ in found if n not in FILE_TO_SOURCE]

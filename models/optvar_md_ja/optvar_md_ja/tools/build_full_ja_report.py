@@ -235,7 +235,10 @@ def translate_page(
     translated_chunks: list[str] = []
 
     for index, chunk in enumerate(chunks, start=1):
-        print(f"translate page {page:03d} chunk {index}/{len(chunks)} ({len(chunk)} chars)", flush=True)
+        print(
+            f"translate page {page:03d} chunk {index}/{len(chunks)} ({len(chunk)} chars)",
+            flush=True,
+        )
         prompt = build_prompt(page, index, len(chunks), chunk, glossary)
         translated_chunks.append(call_ollama(model, prompt, timeout, retries))
 
@@ -451,10 +454,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--start", type=int, default=1, help="first page to translate")
     parser.add_argument("--end", type=int, default=PAGE_COUNT, help="last page to translate")
     parser.add_argument("--force", action="store_true", help="retranslate existing page files")
-    parser.add_argument("--chunk-limit", type=int, default=5200, help="maximum OCR chars per translation chunk")
+    parser.add_argument(
+        "--chunk-limit", type=int, default=5200, help="maximum OCR chars per translation chunk"
+    )
     parser.add_argument("--timeout", type=int, default=480, help="seconds per Ollama request")
     parser.add_argument("--retries", type=int, default=2, help="Ollama retries per chunk")
-    parser.add_argument("--report-only", action="store_true", help="skip translation and only rebuild report outputs")
+    parser.add_argument(
+        "--report-only",
+        action="store_true",
+        help="skip translation and only rebuild report outputs",
+    )
     return parser.parse_args()
 
 

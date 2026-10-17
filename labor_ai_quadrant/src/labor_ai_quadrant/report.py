@@ -93,20 +93,29 @@ def _quadrant_shapes(x_cut: float, y_cut: float, t: dict) -> list[dict]:
     return [
         {
             "type": "rect",
-            "x0": x_cut, "x1": 107, "y0": y_cut, "y1": 107,
+            "x0": x_cut,
+            "x1": 107,
+            "y0": y_cut,
+            "y1": 107,
             "fillcolor": t["band"],
             "line": {"width": 0},
             "layer": "below",
         },
         {
             "type": "line",
-            "x0": x_cut, "x1": x_cut, "y0": -7, "y1": 107,
+            "x0": x_cut,
+            "x1": x_cut,
+            "y0": -7,
+            "y1": 107,
             "line": {"color": t["axis"], "width": 1, "dash": "dot"},
             "layer": "below",
         },
         {
             "type": "line",
-            "x0": -7, "x1": 107, "y0": y_cut, "y1": y_cut,
+            "x0": -7,
+            "x1": 107,
+            "y0": y_cut,
+            "y1": y_cut,
             "line": {"color": t["axis"], "width": 1, "dash": "dot"},
             "layer": "below",
         },
@@ -122,9 +131,12 @@ def _quadrant_annotations(x_cut: float, y_cut: float, t: dict) -> list[dict]:
     ]
     return [
         {
-            "x": x, "y": y, "text": f"<b>{label}</b>",
+            "x": x,
+            "y": y,
+            "text": f"<b>{label}</b>",
             "showarrow": False,
-            "xanchor": xa, "yanchor": ya,
+            "xanchor": xa,
+            "yanchor": ya,
             "font": {"color": t["muted"], "size": 12},
         }
         for label, x, y, xa, ya in corners
@@ -172,7 +184,9 @@ def _text_positions(df: pd.DataFrame, labelled: set) -> list[str]:
             ax, ay = x + dx, y + dy
             if not (-7 <= ax <= 107 and -7 <= ay <= 107):
                 continue
-            if any(abs(ax - px) < _LABEL_MIN_DX and abs(ay - py) < _LABEL_MIN_DY for px, py in placed):
+            if any(
+                abs(ax - px) < _LABEL_MIN_DX and abs(ay - py) < _LABEL_MIN_DY for px, py in placed
+            ):
                 continue
             chosen[idx] = name
             placed.append((ax, ay))
@@ -198,7 +212,9 @@ def _scatter_figure(
     t = THEME["light"]
     # 罫線は象限の割り当てと同じ境界で引く。企業チャートで df の中央値を取り直すと、
     # 罫線と色分けが食い違う（企業は業種の境界を投影して受け継いでいる)。
-    x_cut, y_cut = cuts if cuts is not None else thresholds(df["shortage_score"], df["ai_score"], cfg)
+    x_cut, y_cut = (
+        cuts if cuts is not None else thresholds(df["shortage_score"], df["ai_score"], cfg)
+    )
 
     # label_top_n <= 0 disables direct labels: on the company chart many names
     # land on identical coordinates, where stacked labels are unreadable and the
@@ -235,7 +251,10 @@ def _scatter_figure(
                 "opacity": 0.9,
                 "line": {"width": 2, "color": t["ring"]},
                 "colorbar": {
-                    "title": {"text": "脱出<br>ポテンシャル", "font": {"size": 11, "color": t["secondary"]}},
+                    "title": {
+                        "text": "脱出<br>ポテンシャル",
+                        "font": {"size": 11, "color": t["secondary"]},
+                    },
                     "tickfont": {"size": 10, "color": t["muted"]},
                     "thickness": 12,
                     "len": 0.6,
@@ -265,8 +284,14 @@ def leave_one_out(ref, cfg: Config) -> pd.DataFrame:
         trimmed = dataclasses.replace(ref, shortage_weights=weights / weights.sum())
         runs[indicator] = sector_frame(cfg, trimmed)["escape_potential"]
     grid = pd.DataFrame(runs)
-    return pd.DataFrame({"base": base, "low": grid.min(axis=1), "high": grid.max(axis=1),
-                         "worst_when_dropping": grid.idxmin(axis=1)})
+    return pd.DataFrame(
+        {
+            "base": base,
+            "low": grid.min(axis=1),
+            "high": grid.max(axis=1),
+            "worst_when_dropping": grid.idxmin(axis=1),
+        }
+    )
 
 
 def _sensitivity_figure(ref, base_cfg: Config) -> go.Figure:
@@ -290,7 +315,10 @@ def _sensitivity_figure(ref, base_cfg: Config) -> go.Figure:
 
     fig.add_trace(
         go.Scatter(
-            x=loo.loc[order, "low"], y=list(order), mode="markers", name="6指標のどれかを外したときの最小",
+            x=loo.loc[order, "low"],
+            y=list(order),
+            mode="markers",
+            name="6指標のどれかを外したときの最小",
             marker={"size": 9, "color": t["accent_alt"], "line": {"width": 2, "color": t["ring"]}},
             customdata=loo.loc[order, "worst_when_dropping"],
             hovertemplate="%{y}<br>最小 %{x:.0f}（%{customdata} を外したとき）<extra></extra>",
@@ -298,21 +326,35 @@ def _sensitivity_figure(ref, base_cfg: Config) -> go.Figure:
     )
     fig.add_trace(
         go.Scatter(
-            x=loo.loc[order, "base"], y=list(order), mode="markers", name="6指標すべて（既定）",
+            x=loo.loc[order, "base"],
+            y=list(order),
+            mode="markers",
+            name="6指標すべて（既定）",
             marker={"size": 12, "color": t["accent"], "line": {"width": 2, "color": t["ring"]}},
             hovertemplate="%{y}<br>既定 %{x:.0f}<extra></extra>",
         )
     )
 
     fig.update_layout(
-        title={"text": "感応度: 人手不足6指標のどれか1本を外しても順位は残るか（脱出ポテンシャル）",
-               "font": {"size": 16, "color": t["text"]}},
+        title={
+            "text": "感応度: 人手不足6指標のどれか1本を外しても順位は残るか（脱出ポテンシャル）",
+            "font": {"size": 16, "color": t["text"]},
+        },
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font={"family": FONT, "color": t["secondary"], "size": 12},
-        xaxis={"title": {"text": "脱出ポテンシャル"}, "gridcolor": t["grid"], "zeroline": False,
-               "linecolor": t["axis"], "tickfont": {"color": t["muted"]}},
-        yaxis={"gridcolor": "rgba(0,0,0,0)", "linecolor": t["axis"], "tickfont": {"color": t["secondary"]}},
+        xaxis={
+            "title": {"text": "脱出ポテンシャル"},
+            "gridcolor": t["grid"],
+            "zeroline": False,
+            "linecolor": t["axis"],
+            "tickfont": {"color": t["muted"]},
+        },
+        yaxis={
+            "gridcolor": "rgba(0,0,0,0)",
+            "linecolor": t["axis"],
+            "tickfont": {"color": t["secondary"]},
+        },
         margin={"l": 150, "r": 30, "t": 60, "b": 50},
         legend={"orientation": "h", "y": -0.12, "x": 0, "font": {"color": t["secondary"]}},
         height=520,
@@ -321,6 +363,7 @@ def _sensitivity_figure(ref, base_cfg: Config) -> go.Figure:
 
 
 # --- HTML assembly -----------------------------------------------------------
+
 
 def _table(df: pd.DataFrame, columns: dict[str, str], caption: str) -> str:
     head = "".join(f"<th>{html.escape(v)}</th>" for v in columns.values())
@@ -466,17 +509,37 @@ def build_report(
 
     fig_sector = _scatter_figure(sectors, "__label__", "東証33業種の4象限マップ", cfg, 13, 12)
     fig_company = _scatter_figure(
-        companies, "name", "個別銘柄の4象限マップ", cfg, 9, 0,
+        companies,
+        "name",
+        "個別銘柄の4象限マップ",
+        cfg,
+        9,
+        0,
         cuts=company_quadrant_cuts(sectors, companies, cfg),
     )
     fig_sens = _sensitivity_figure(ref, cfg)
 
-    div_sector = pio.to_html(fig_sector, full_html=False, include_plotlyjs="inline",
-                             div_id="fig-sector", config={"displayModeBar": False, "responsive": True})
-    div_company = pio.to_html(fig_company, full_html=False, include_plotlyjs=False,
-                              div_id="fig-company", config={"displayModeBar": False, "responsive": True})
-    div_sens = pio.to_html(fig_sens, full_html=False, include_plotlyjs=False,
-                           div_id="fig-sensitivity", config={"displayModeBar": False, "responsive": True})
+    div_sector = pio.to_html(
+        fig_sector,
+        full_html=False,
+        include_plotlyjs="inline",
+        div_id="fig-sector",
+        config={"displayModeBar": False, "responsive": True},
+    )
+    div_company = pio.to_html(
+        fig_company,
+        full_html=False,
+        include_plotlyjs=False,
+        div_id="fig-company",
+        config={"displayModeBar": False, "responsive": True},
+    )
+    div_sens = pio.to_html(
+        fig_sens,
+        full_html=False,
+        include_plotlyjs=False,
+        div_id="fig-sensitivity",
+        config={"displayModeBar": False, "responsive": True},
+    )
 
     quad_cards = "".join(
         f'<div class="quad{" is-key" if q == Q_ESCAPE else ""}"><b>{html.escape(q)}</b>'
@@ -508,7 +571,9 @@ def build_report(
         # 単体が空箱の持株会社では限界利益率が実態より高く出る。
         # ※ = 単体従業員が連結の20%未満、† = 連結従業員が取れず判定不能。
         if "parent_scope_flag" in top_companies.columns:
-            top_companies["name"] = top_companies["name"] + top_companies["parent_scope_flag"].fillna("")
+            top_companies["name"] = top_companies["name"] + top_companies[
+                "parent_scope_flag"
+            ].fillna("")
         # 企業スコアは業種スコア + 3値×3値の補正で決まるので、同じ業種の銘柄は
         # 脱出ポテンシャルが完全に並ぶ。財務があるのにその順で切ると、上位20件は
         # 最上位業種から実質ランダムに選ばれた20社になる。同順位を解くのは P/L 換算。
@@ -528,36 +593,52 @@ def build_report(
         )
     top_companies = top_companies.head(25)
 
-    tables = "".join([
-        _table(
-            quadrant_summary(sectors),
-            {"__index__": "象限", "n": "業種数", "mean_shortage": "平均 人手不足",
-             "mean_ai": "平均 AI代替", "mean_escape": "平均 脱出ポテンシャル"},
-            "業種の象限別サマリー",
-        ),
-        _table(
-            top_sectors,
-            {"__index__": "業種", "shortage_score": "人手不足深刻度", "ai_score": "AI代替可能性",
-             "ai_exposure_pct": "AI曝露度(%)", "escape_potential": "脱出ポテンシャル",
-             "top_ai_occupation": "主な曝露職種"},
-            "右上象限（AI解放）に入った業種 — 脱出ポテンシャル順",
-        ),
-        _table(
-            top_companies,
-            {"name": "銘柄", "sector33": "業種", "shortage_score": "人手不足深刻度",
-             "ai_score": "AI代替可能性", "escape_potential": "脱出ポテンシャル", **pnl_cols},
-            f"右上象限の個別銘柄 上位{len(top_companies)}（ユニバース{len(companies)}銘柄中） — {ranked_by}",
-        ),
-    ])
+    tables = "".join(
+        [
+            _table(
+                quadrant_summary(sectors),
+                {
+                    "__index__": "象限",
+                    "n": "業種数",
+                    "mean_shortage": "平均 人手不足",
+                    "mean_ai": "平均 AI代替",
+                    "mean_escape": "平均 脱出ポテンシャル",
+                },
+                "業種の象限別サマリー",
+            ),
+            _table(
+                top_sectors,
+                {
+                    "__index__": "業種",
+                    "shortage_score": "人手不足深刻度",
+                    "ai_score": "AI代替可能性",
+                    "ai_exposure_pct": "AI曝露度(%)",
+                    "escape_potential": "脱出ポテンシャル",
+                    "top_ai_occupation": "主な曝露職種",
+                },
+                "右上象限（AI解放）に入った業種 — 脱出ポテンシャル順",
+            ),
+            _table(
+                top_companies,
+                {
+                    "name": "銘柄",
+                    "sector33": "業種",
+                    "shortage_score": "人手不足深刻度",
+                    "ai_score": "AI代替可能性",
+                    "escape_potential": "脱出ポテンシャル",
+                    **pnl_cols,
+                },
+                f"右上象限の個別銘柄 上位{len(top_companies)}（ユニバース{len(companies)}銘柄中） — {ranked_by}",
+            ),
+        ]
+    )
 
     x_cut, y_cut = thresholds(sectors["shortage_score"], sectors["ai_score"], cfg)
     vintages = "／".join(f"{k}: {v}" for k, v in ref.vintages.items())
 
     theme_json = _theme_json()
-    js = (
-        _JS_TEMPLATE
-        .replace("__THEME__", theme_json)
-        .replace("__FIG_IDS__", '["fig-sector", "fig-company", "fig-sensitivity"]')
+    js = _JS_TEMPLATE.replace("__THEME__", theme_json).replace(
+        "__FIG_IDS__", '["fig-sector", "fig-company", "fig-sensitivity"]'
     )
 
     doc = f"""<!doctype html>
@@ -572,7 +653,7 @@ def build_report(
 <p class="lede">日本の上場企業を2軸で並べ、<b>右上＝人手不足が深刻で、かつその労働をAIで置き換えられる</b>
 領域を特定する。右上に入る企業だけが、人手不足という供給制約を賃上げ以外の手段で外せる。</p>
 <p class="meta">ユニバース {len(companies)} 銘柄 / 東証33業種 ・
-象限境界: 人手不足 {x_cut:.0f} / AI代替 {y_cut:.0f}（{'中央値分割' if cfg.threshold_method == 'median' else '固定しきい値'}） ・
+象限境界: 人手不足 {x_cut:.0f} / AI代替 {y_cut:.0f}（{"中央値分割" if cfg.threshold_method == "median" else "固定しきい値"}） ・
 realization_rate={cfg.realization_rate} ・
 データ時点 {html.escape(vintages)}</p>
 
@@ -627,9 +708,16 @@ def _theme_json() -> str:
 
     payload = {
         mode: {
-            "text": t["text"], "secondary": t["secondary"], "muted": t["muted"],
-            "grid": t["grid"], "axis": t["axis"], "band": t["band"], "ramp": t["ramp"],
-            "accent": t["accent"], "accent_alt": t["accent_alt"], "ring": t["ring"],
+            "text": t["text"],
+            "secondary": t["secondary"],
+            "muted": t["muted"],
+            "grid": t["grid"],
+            "axis": t["axis"],
+            "band": t["band"],
+            "ramp": t["ramp"],
+            "accent": t["accent"],
+            "accent_alt": t["accent_alt"],
+            "ring": t["ring"],
         }
         for mode, t in THEME.items()
     }

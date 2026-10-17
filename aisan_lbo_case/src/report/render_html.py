@@ -37,7 +37,9 @@ def write_assumptions_log(context: dict) -> None:
         lines.append(f"- Exit multiple: {cfg['exit_multiple']}x")
         lines.append(f"- Debt / EBITDA: {cfg['debt_to_ebitda']}x")
         lines.append(f"- EBITDA margin path: {', '.join(f'{x:.1%}' for x in cfg['ebitda_margin'])}")
-        lines.append(f"- Mobility / DX growth path: {', '.join(f'{x:.1%}' for x in cfg['mobility_dx_growth'])}")
+        lines.append(
+            f"- Mobility / DX growth path: {', '.join(f'{x:.1%}' for x in cfg['mobility_dx_growth'])}"
+        )
         lines.append("")
     lines.extend(
         [

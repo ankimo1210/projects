@@ -31,9 +31,7 @@ def screen_question(question: QuestionRecord) -> tuple[str, str | None]:
         return "rejected", "marketing_or_navigation_text"
     words = text.split()
     latin_tokens = [re.sub(r"[^A-Za-z]", "", word) for word in words]
-    single_letter_rate = (
-        sum(len(token) == 1 for token in latin_tokens) / len(words) if words else 0
-    )
+    single_letter_rate = sum(len(token) == 1 for token in latin_tokens) / len(words) if words else 0
     if single_letter_rate > 0.15:
         return "fact_check_required", "pdf_character_spacing_damage"
     if not QUESTION_PREFIX.search(text):

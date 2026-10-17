@@ -7,14 +7,36 @@ from app.data_loader import load_entities, load_questions
 
 def test_build_from_raw_writes_processed(tmp_path):
     raw = [
-        {"id": "Q1", "name_ja": "俳優A", "name_en": "ActorA", "aliases": [],
-         "description": "d", "image_url": None, "instance_of": ["Q5"],
-         "gender": "Q6581097", "occupations": ["Q33999"], "countries": ["Q17"],
-         "birth_year": 1970, "death_year": None, "in_anime": False},
-        {"id": "Q2", "name_ja": "歌手B", "name_en": "SingerB", "aliases": [],
-         "description": "d", "image_url": None, "instance_of": ["Q5"],
-         "gender": "Q6581072", "occupations": ["Q177220"], "countries": ["Q30"],
-         "birth_year": 1985, "death_year": None, "in_anime": False},
+        {
+            "id": "Q1",
+            "name_ja": "俳優A",
+            "name_en": "ActorA",
+            "aliases": [],
+            "description": "d",
+            "image_url": None,
+            "instance_of": ["Q5"],
+            "gender": "Q6581097",
+            "occupations": ["Q33999"],
+            "countries": ["Q17"],
+            "birth_year": 1970,
+            "death_year": None,
+            "in_anime": False,
+        },
+        {
+            "id": "Q2",
+            "name_ja": "歌手B",
+            "name_en": "SingerB",
+            "aliases": [],
+            "description": "d",
+            "image_url": None,
+            "instance_of": ["Q5"],
+            "gender": "Q6581072",
+            "occupations": ["Q177220"],
+            "countries": ["Q30"],
+            "birth_year": 1985,
+            "death_year": None,
+            "in_anime": False,
+        },
     ]
     raw_path = tmp_path / "raw.json"
     raw_path.write_text(json.dumps(raw), encoding="utf-8")

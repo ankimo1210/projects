@@ -34,13 +34,26 @@ def insert_obs(con):
     """Insert one GDP observation vintage."""
 
     def _insert(period_start, release_date, value, seq):
-        store.insert_observations(con, [store.Observation(
-            indicator="jp_real_gdp_qoq_saar", period_start=period_start,
-            period_end=date(period_start.year, period_start.month + 2, 30),
-            release_date=release_date, vintage_seq=seq, value=value,
-            unit="percent_saar", sa="sa", freq="Q", source="esri_gdp",
-            source_url="u", ingested_at=NOW, vintage_kind="actual",
-        )])
+        store.insert_observations(
+            con,
+            [
+                store.Observation(
+                    indicator="jp_real_gdp_qoq_saar",
+                    period_start=period_start,
+                    period_end=date(period_start.year, period_start.month + 2, 30),
+                    release_date=release_date,
+                    vintage_seq=seq,
+                    value=value,
+                    unit="percent_saar",
+                    sa="sa",
+                    freq="Q",
+                    source="esri_gdp",
+                    source_url="u",
+                    ingested_at=NOW,
+                    vintage_kind="actual",
+                )
+            ],
+        )
 
     return _insert
 
@@ -50,10 +63,21 @@ def insert_rates(con):
     """Insert a 10y rate row for each given date."""
 
     def _insert(*days):
-        store.insert_rates(con, [store.RateObservation(
-            curve="jgb", obs_date=d, tenor_y=10.0, yield_pct=2.9,
-            source="mof_jgb", source_url="u", ingested_at=NOW,
-        ) for d in days])
+        store.insert_rates(
+            con,
+            [
+                store.RateObservation(
+                    curve="jgb",
+                    obs_date=d,
+                    tenor_y=10.0,
+                    yield_pct=2.9,
+                    source="mof_jgb",
+                    source_url="u",
+                    ingested_at=NOW,
+                )
+                for d in days
+            ],
+        )
 
     return _insert
 
@@ -64,10 +88,15 @@ def make_event():
 
     def _make(period_start, kind, release_date):
         return store.ReleaseEvent(
-            indicator="jp_real_gdp_qoq_saar", period_start=period_start,
+            indicator="jp_real_gdp_qoq_saar",
+            period_start=period_start,
             period_end=date(period_start.year, period_start.month + 2, 30),
-            release_kind=kind, release_date=release_date, scheduled=False,
-            source="esri_calendar", source_url="u", ingested_at=NOW,
+            release_kind=kind,
+            release_date=release_date,
+            scheduled=False,
+            source="esri_calendar",
+            source_url="u",
+            ingested_at=NOW,
         )
 
     return _make

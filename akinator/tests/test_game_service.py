@@ -11,8 +11,6 @@ def test_entity_service_lookup(small_pool, small_questions):
     assert len(svc.questions) == 4
 
 
-
-
 def test_initial_scores_zero_and_first_question(small_pool, small_questions):
     svc = GameService(EntityService(small_pool, small_questions))
     state = svc.new_game()
@@ -55,7 +53,7 @@ def test_best_guess_returns_top_entity(small_pool, small_questions):
     svc = GameService(EntityService(small_pool, small_questions))
     state = svc.new_game()
     q = next(q for q in small_questions if q.id == "q_is_fictional_True")
-    svc.record_answer(state, q, Answer.YES)   # favors c, d
+    svc.record_answer(state, q, Answer.YES)  # favors c, d
     guess, posterior = svc.best_guess(state)
     assert guess.id in {"c", "d"}
     assert 0.0 < posterior <= 1.0
@@ -65,9 +63,11 @@ def test_should_guess_threshold(small_pool, small_questions):
     svc = GameService(EntityService(small_pool, small_questions), guess_threshold=0.6)
     state = svc.new_game()
     # answer several questions to concentrate mass on one entity
-    for qid, ans in [("q_is_fictional_True", Answer.NO),
-                     ("q_gender_male", Answer.YES),
-                     ("q_occupation_actor", Answer.YES)]:
+    for qid, ans in [
+        ("q_is_fictional_True", Answer.NO),
+        ("q_gender_male", Answer.YES),
+        ("q_occupation_actor", Answer.YES),
+    ]:
         q = next(q for q in small_questions if q.id == qid)
         svc.record_answer(state, q, ans)
     # 'a' should dominate; either threshold reached or no questions left

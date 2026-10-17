@@ -28,7 +28,14 @@ def test_baseline_signature_still_works():
     r = gto_py.solve_hu_river(BOARD5, 20.0, 90.0, 300)
     assert {"strategy", "exploitability", "br_sb", "br_bb", "combos"} <= set(r)
     # new outputs present
-    assert {"nashconv", "br_gain_sb", "br_gain_bb", "equity_sb", "equity_bb", "game_value_bb"} <= set(r)
+    assert {
+        "nashconv",
+        "br_gain_sb",
+        "br_gain_bb",
+        "equity_sb",
+        "equity_bb",
+        "game_value_bb",
+    } <= set(r)
     assert r["equity_sb"] + r["equity_bb"] == pytest.approx(1.0)
     # unraked: nashconv == br_sb + br_bb exactly
     assert r["nashconv"] == r["br_sb"] + r["br_bb"]
@@ -41,7 +48,7 @@ def test_custom_oop_range_filters_combo_export():
     qq = []
     q_cards = [_card("Q" + s) for s in "cdhs"]
     for i, a in enumerate(q_cards):
-        for b in q_cards[i + 1:]:
+        for b in q_cards[i + 1 :]:
             qq.append(_combo_index(a, b))
     for i in qq:
         w[i] = 1.0
@@ -76,9 +83,7 @@ def test_rake_reduces_total_value():
     total = raked["game_value_sb"] + raked["game_value_bb"]
     assert total < 0.0
     # raked nashconv uses per-player gains, still ~0 at convergence
-    assert raked["nashconv"] == pytest.approx(
-        raked["br_gain_sb"] + raked["br_gain_bb"]
-    )
+    assert raked["nashconv"] == pytest.approx(raked["br_gain_sb"] + raked["br_gain_bb"])
 
 
 def test_bad_rake_rejected():
@@ -94,7 +99,7 @@ def test_turn_river_custom_range_and_rake():
     # OOP holds only 88 (none blocked)
     e_cards = [_card("8" + s) for s in "cdhs"]
     for i, a in enumerate(e_cards):
-        for b in e_cards[i + 1:]:
+        for b in e_cards[i + 1 :]:
             w[_combo_index(a, b)] = 1.0
     r = gto_py.solve_hu_turn_river(
         BOARD4, 20.0, 90.0, 400, 42, None, w, None, None, None, None, 0.05, 3.0
@@ -122,8 +127,14 @@ flop_only = pytest.mark.skipif(not HAS_FLOP, reason="gto_py.solve_hu_flop not bu
 def test_flop_solve_basic_shape_and_invariants():
     # Small 3bet-pot flop with river bucketing keeps the table tiny + fast.
     r = gto_py.solve_hu_flop(
-        BOARD3, 18.0, 41.0, iterations=40, seed=1,
-        pot_type="3bet", buckets_river=16, max_table_gb=12.0,
+        BOARD3,
+        18.0,
+        41.0,
+        iterations=40,
+        seed=1,
+        pot_type="3bet",
+        buckets_river=16,
+        max_table_gb=12.0,
     )
     assert {"strategy", "actions", "exploitability", "nashconv", "combos"} <= set(r)
     assert {"buckets_river", "buckets_turn", "table_bytes_gb", "dense_bytes_gb"} <= set(r)
@@ -140,8 +151,12 @@ def test_flop_solve_basic_shape_and_invariants():
 
 @flop_only
 def test_flop_more_iters_lowers_exploitability():
-    a = gto_py.solve_hu_flop(BOARD3, 18.0, 41.0, iterations=40, seed=1, pot_type="3bet", buckets_river=16)
-    b = gto_py.solve_hu_flop(BOARD3, 18.0, 41.0, iterations=300, seed=1, pot_type="3bet", buckets_river=16)
+    a = gto_py.solve_hu_flop(
+        BOARD3, 18.0, 41.0, iterations=40, seed=1, pot_type="3bet", buckets_river=16
+    )
+    b = gto_py.solve_hu_flop(
+        BOARD3, 18.0, 41.0, iterations=300, seed=1, pot_type="3bet", buckets_river=16
+    )
     assert b["exploitability"] < a["exploitability"]
 
 
@@ -162,8 +177,7 @@ def test_flop_bad_board_and_dup_rejected():
 
 @flop_only
 def test_flop_dense_table_estimator():
-    exact = gto_py.flop_dense_table_gb(5.0, 97.5)               # exact 100bb SRP
+    exact = gto_py.flop_dense_table_gb(5.0, 97.5)  # exact 100bb SRP
     bucketed = gto_py.flop_dense_table_gb(5.0, 97.5, "srp", 128)
-    assert exact > 100.0           # ~105 GB
-    assert bucketed < exact / 5    # bucketing collapses it by >5x
-
+    assert exact > 100.0  # ~105 GB
+    assert bucketed < exact / 5  # bucketing collapses it by >5x

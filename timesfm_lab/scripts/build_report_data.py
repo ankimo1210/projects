@@ -142,27 +142,36 @@ def main() -> None:
         "tier_order": list(TIER_ORDER),
         "specs": {
             s.key: {
-                "title": s.title, "season": s.season, "freq": s.freq_label,
-                "context": s.context_length, "horizon": s.horizon, "note": s.note,
+                "title": s.title,
+                "season": s.season,
+                "freq": s.freq_label,
+                "context": s.context_length,
+                "horizon": s.horizon,
+                "note": s.note,
                 "tier": tier_of(s.key),
-                "n_windows": int(scored[(scored.dataset == s.key) & (scored.model == MODEL_KEY)].shape[0]),
+                "n_windows": int(
+                    scored[(scored.dataset == s.key) & (scored.model == MODEL_KEY)].shape[0]
+                ),
                 "n_series": int(scored[scored.dataset == s.key].series_id.nunique()),
             }
             for s in ALL_SPECS
         },
         "overall": {
-            m: {k: float(scored[scored.model == m][k].mean()) for k in METRICS}
-            for m in ALL_MODELS
+            m: {k: float(scored[scored.model == m][k].mean()) for k in METRICS} for m in ALL_MODELS
         },
         "per_dataset": {m: per_dataset(m) for m in METRICS},
         "gradient": gradient,
         "ceiling": ceiling,
         "oracle_shrink": oracle_shrink,
-        "head_to_head": head_to_head(sel, ["oracle", "walkforward", *BASELINE_NAMES]).to_dict("records"),
+        "head_to_head": head_to_head(sel, ["oracle", "walkforward", *BASELINE_NAMES]).to_dict(
+            "records"
+        ),
         "selector_skill": selector_skill(sel),
         "selector_per_dataset": [
             {
-                "dataset": ds, "n": len(g), "tier": tier_of(ds),
+                "dataset": ds,
+                "n": len(g),
+                "tier": tier_of(ds),
                 "timesfm": float(g[MODEL_KEY].mean()),
                 "walkforward": float(g.walkforward.mean()),
                 "oracle": float(g.oracle.mean()),
@@ -174,17 +183,27 @@ def main() -> None:
         "contamination": {
             "index": {
                 k: {
-                    "gep_name": c.gep_name, "n_series": c.n_series_gep,
-                    "checked": c.checked, "identical": c.identical,
-                    "min_len": min(c.lengths.values()), "max_len": max(c.lengths.values()),
+                    "gep_name": c.gep_name,
+                    "n_series": c.n_series_gep,
+                    "checked": c.checked,
+                    "identical": c.identical,
+                    "min_len": min(c.lengths.values()),
+                    "max_len": max(c.lengths.values()),
                 }
                 for k, c in index.items()
             },
             "tests": [contamination_test(scored, k) for k in index],
             "by_exposure": [
-                {"dataset": ds, "exposure": ex, "model": m,
-                 "n": int(g.rel.notna().sum()), "median_rel": float(g.rel.median())}
-                for (ds, ex, m), g in contamination_table(scored).groupby(["dataset", "exposure", "model"])
+                {
+                    "dataset": ds,
+                    "exposure": ex,
+                    "model": m,
+                    "n": int(g.rel.notna().sum()),
+                    "median_rel": float(g.rel.median()),
+                }
+                for (ds, ex, m), g in contamination_table(scored).groupby(
+                    ["dataset", "exposure", "model"]
+                )
                 if ds in index and m == MODEL_KEY
             ],
         },
@@ -210,10 +229,13 @@ def main() -> None:
             x = sub[[MODEL_KEY, b]].dropna()
             out["finance_h2h"].append(
                 {
-                    "dataset": ds, "opponent": b, "n": len(x),
+                    "dataset": ds,
+                    "opponent": b,
+                    "n": len(x),
                     "win_rate": float((x[MODEL_KEY] < x[b]).mean()),
                     "p_value": float(wilcoxon(x[MODEL_KEY], x[b]).pvalue),
-                    "timesfm": float(x[MODEL_KEY].mean()), "opponent_mean": float(x[b].mean()),
+                    "timesfm": float(x[MODEL_KEY].mean()),
+                    "opponent_mean": float(x[b].mean()),
                 }
             )
 
@@ -228,8 +250,11 @@ def main() -> None:
         n_by = {m["setting"]: m["n_windows"] for m in cmeta["settings"]}
         out["covariates"] = [
             {
-                "setting": c.key, "title": c.title, "note": c.note,
-                "dataset": c.dataset, "n_windows": n_by.get(c.key),
+                "setting": c.key,
+                "title": c.title,
+                "note": c.note,
+                "dataset": c.dataset,
+                "n_windows": n_by.get(c.key),
                 "n_covariates": int(cov[cov.setting == c.key].n_covariates.iloc[0]),
                 "optimum": (
                     float(cov[(cov.setting == c.key) & (cov.arm == ORACLE_KEY)].mase.mean())
@@ -247,8 +272,10 @@ def main() -> None:
     if set(pair) <= set(sel.dataset.unique()):
         out["domain_control"] = [
             {
-                "dataset": ds, "tier": tier_of(ds),
-                "n": len(g), "n_series": int(g.series_id.nunique()),
+                "dataset": ds,
+                "tier": tier_of(ds),
+                "n": len(g),
+                "n_series": int(g.series_id.nunique()),
                 "timesfm": float(g[MODEL_KEY].mean()),
                 "walkforward": float(g.walkforward.mean()),
                 "oracle": float(g.oracle.mean()),
@@ -267,9 +294,19 @@ def main() -> None:
 
     path = RESULTS_DIR / "report_data.json"
     path.write_text(json.dumps(out, indent=1, default=float), encoding="utf-8")
-    print(f"wrote {path} ({path.stat().st_size/1024:.0f} KB)")
-    print(pd.DataFrame(gradient)[["short", "n_windows", "vs_selector", "selector_win_rate"]].round(3).to_string(index=False))
-    print(pd.DataFrame(ceiling)[["dataset", "optimum", "best_baseline", "timesfm", "headroom_pct", "captured_pct"]].round(2).to_string(index=False))
+    print(f"wrote {path} ({path.stat().st_size / 1024:.0f} KB)")
+    print(
+        pd.DataFrame(gradient)[["short", "n_windows", "vs_selector", "selector_win_rate"]]
+        .round(3)
+        .to_string(index=False)
+    )
+    print(
+        pd.DataFrame(ceiling)[
+            ["dataset", "optimum", "best_baseline", "timesfm", "headroom_pct", "captured_pct"]
+        ]
+        .round(2)
+        .to_string(index=False)
+    )
     print(json.dumps(oracle_shrink, indent=1, default=float))
 
 

@@ -210,8 +210,7 @@ def main() -> None:
     if args.finalize:
         payload = build_pack(args.pack)
         print(
-            f"rebuilt schema v{payload['schemaVersion']} with "
-            f"{payload['questionCount']} questions",
+            f"rebuilt schema v{payload['schemaVersion']} with {payload['questionCount']} questions",
             flush=True,
         )
 

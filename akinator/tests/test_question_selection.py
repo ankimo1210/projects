@@ -3,8 +3,7 @@ from app.models import Entity, Question
 
 
 def _e(eid, features):
-    return Entity(id=eid, name=eid, aliases=[], description="", image_url=None,
-                  features=features)
+    return Entity(id=eid, name=eid, aliases=[], description="", image_url=None, features=features)
 
 
 def _make_pool():
@@ -20,7 +19,7 @@ def _make_pool():
 def test_split_score_prefers_even_split():
     pool = _make_pool()
     weights = {e.id: 1.0 for e in pool}
-    q_gender = Question("qg", "?", "gender", "male", "equals")     # 2/2 even
+    q_gender = Question("qg", "?", "gender", "male", "equals")  # 2/2 even
     q_actor = Question("qa", "?", "occupation", "actor", "list_contains")  # 1/3 skewed
     # lower split_score = more balanced = better
     assert split_score(q_gender, pool, weights) < split_score(q_actor, pool, weights)

@@ -315,9 +315,7 @@ _NON_HUMAN_REVIEWER_PLACEHOLDERS = {
 def _review_target_hash(question: Mapping[str, Any]) -> str:
     """Fingerprint only reviewable content, not its mutable review metadata."""
 
-    content = {
-        key: value for key, value in question.items() if key not in _REVIEW_FIELDS
-    }
+    content = {key: value for key, value in question.items() if key not in _REVIEW_FIELDS}
     return _sha256(_canonical_questions([content]))
 
 
@@ -331,9 +329,7 @@ def _validate_published_review(question: Mapping[str, Any], label: str) -> None:
 
     reviewer = _clean_text(question.get("reviewer"))
     if not reviewer or reviewer in _NON_HUMAN_REVIEWER_PLACEHOLDERS:
-        raise QuestionPackError(
-            f"{label}: published question requires an external human reviewer"
-        )
+        raise QuestionPackError(f"{label}: published question requires an external human reviewer")
     reviewed_at = _clean_text(question.get("reviewedAt"))
     try:
         if date.fromisoformat(reviewed_at).isoformat() != reviewed_at:
@@ -428,9 +424,7 @@ def pack_question(row: Mapping[str, str]) -> dict[str, Any]:
     question["reviewedAt"] = _clean_text(row.get("レビュー日")) or None
     question["reviewComment"] = _clean_text(row.get("レビューコメント")) or None
     question["reviewTargetHash"] = _review_target_hash(question)
-    question["reviewedContentHash"] = (
-        _clean_text(row.get("レビュー対象ハッシュ")) or None
-    )
+    question["reviewedContentHash"] = _clean_text(row.get("レビュー対象ハッシュ")) or None
     _validate_published_review(question, _row_label(row))
     return question
 
@@ -537,9 +531,7 @@ def validate_pack(payload: Mapping[str, Any]) -> None:
         raise QuestionPackError(f"Question pack must contain {EXPECTED_QUESTION_COUNT} questions")
     expected_distribution_status = _distribution_status(questions)
     if payload.get("distributionStatus") != expected_distribution_status:
-        raise QuestionPackError(
-            "Question pack distributionStatus does not match its content"
-        )
+        raise QuestionPackError("Question pack distributionStatus does not match its content")
 
     identifiers = [question.get("id") for question in questions]
     if len(identifiers) != len(set(identifiers)):

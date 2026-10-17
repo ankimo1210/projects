@@ -88,8 +88,12 @@ def test_the_oracle_beats_every_baseline_on_its_own_process():
         ws = build_windows(spec)[:30]
         oracle = np.mean([mae(w.actual, w.oracle_point) for w in ws])
         for name, fn in BASELINES.items():
-            got = np.mean([mae(w.actual, fn(w.context, spec.horizon, spec.season).point) for w in ws])
-            assert oracle <= got * 1.02, f"{key}: {name} ({got:.3f}) beat the optimum ({oracle:.3f})"
+            got = np.mean(
+                [mae(w.actual, fn(w.context, spec.horizon, spec.season).point) for w in ws]
+            )
+            assert oracle <= got * 1.02, (
+                f"{key}: {name} ({got:.3f}) beat the optimum ({oracle:.3f})"
+            )
 
 
 def test_generation_is_deterministic_and_processes_do_not_share_a_path():
@@ -119,7 +123,10 @@ def test_synthetic_series_are_identical_across_processes():
     )
     runs = {
         subprocess.run(
-            [sys.executable, "-c", code], capture_output=True, text=True, check=True,
+            [sys.executable, "-c", code],
+            capture_output=True,
+            text=True,
+            check=True,
             env={"PYTHONHASHSEED": str(h), "PATH": "/usr/bin:/bin"},
         ).stdout.strip()
         for h in (0, 1, 2)

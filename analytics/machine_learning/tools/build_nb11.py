@@ -233,5 +233,7 @@ plt.tight_layout(); plt.show()
 if __name__ == "__main__":
     import pathlib
 
-    out = pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "11_capstone_four_lenses.ipynb"
+    out = (
+        pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "11_capstone_four_lenses.ipynb"
+    )
     build(cells, str(out))

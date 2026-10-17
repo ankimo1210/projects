@@ -63,8 +63,14 @@ def diagnose_init(
     for scheme in schemes:
         set_seed(seed)
         model = ClassicalGPT(
-            ModelConfig(vocab_size=vocab_size, d_model=d_model, n_layers=n_layers,
-                        n_heads=n_heads, context_len=context_len, attn_impl="explicit")
+            ModelConfig(
+                vocab_size=vocab_size,
+                d_model=d_model,
+                n_layers=n_layers,
+                n_heads=n_heads,
+                context_len=context_len,
+                attn_impl="explicit",
+            )
         )
         _reinit(model, scheme)
         model.eval()

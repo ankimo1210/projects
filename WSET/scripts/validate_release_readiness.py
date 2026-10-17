@@ -123,9 +123,7 @@ def _privacy_blockers(privacy_policy_path: Path) -> list[str]:
     try:
         policy = privacy_policy_path.read_text(encoding="utf-8")
     except OSError as error:
-        raise ReleaseReadinessError(
-            f"{privacy_policy_path}: 読み込めません: {error}"
-        ) from error
+        raise ReleaseReadinessError(f"{privacy_policy_path}: 読み込めません: {error}") from error
     placeholders = ("公開前ドラフト", "公開前に、運営者名")
     if any(placeholder in policy for placeholder in placeholders):
         return ["プライバシーポリシーが公開前ドラフトのままです"]
@@ -138,9 +136,7 @@ def _online_feature_blockers(xcode_project_path: Path) -> list[str]:
     try:
         project = xcode_project_path.read_text(encoding="utf-8")
     except OSError as error:
-        raise ReleaseReadinessError(
-            f"{xcode_project_path}: 読み込めません: {error}"
-        ) from error
+        raise ReleaseReadinessError(f"{xcode_project_path}: 読み込めません: {error}") from error
 
     blockers: list[str] = []
     if re.search(
@@ -193,9 +189,7 @@ def collect_blockers(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="App Store archive前のコンテンツ・手動確認ゲート"
-    )
+    parser = argparse.ArgumentParser(description="App Store archive前のコンテンツ・手動確認ゲート")
     parser.add_argument("--question-pack", type=Path, default=DEFAULT_QUESTION_PACK)
     parser.add_argument("--written-pack", type=Path, default=DEFAULT_WRITTEN_PACK)
     parser.add_argument("--map-pack", type=Path, default=DEFAULT_MAP_PACK)

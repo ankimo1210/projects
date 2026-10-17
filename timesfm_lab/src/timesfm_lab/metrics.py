@@ -97,9 +97,7 @@ def pinball(actual: np.ndarray, q_pred: np.ndarray, q: float) -> float:
     return float(np.maximum(q * d, (q - 1.0) * d).mean())
 
 
-def crps_from_quantiles(
-    actual: np.ndarray, quantiles: np.ndarray, levels: np.ndarray
-) -> float:
+def crps_from_quantiles(actual: np.ndarray, quantiles: np.ndarray, levels: np.ndarray) -> float:
     """CRPS approximated by the quantile-loss integral over a discrete grid.
 
     ``quantiles`` has shape ``(H, Q)`` and ``levels`` shape ``(Q,)``.  For an
@@ -111,7 +109,9 @@ def crps_from_quantiles(
     qp = np.asarray(quantiles, float)
     lv = np.asarray(levels, float)
     if qp.shape[0] != a.shape[0] or qp.shape[1] != lv.shape[0]:
-        raise ValueError(f"shape mismatch: actual {a.shape}, quantiles {qp.shape}, levels {lv.shape}")
+        raise ValueError(
+            f"shape mismatch: actual {a.shape}, quantiles {qp.shape}, levels {lv.shape}"
+        )
     d = a[:, None] - qp
     loss = np.maximum(lv[None, :] * d, (lv[None, :] - 1.0) * d)
     return float(2.0 * loss.mean())

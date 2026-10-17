@@ -7,7 +7,9 @@ from jp_llm_lab.models.transformer import ClassicalGPT
 
 def _maps():
     torch.manual_seed(0)
-    model = ClassicalGPT(ModelConfig(vocab_size=50, d_model=32, n_heads=4, n_layers=2, context_len=16))
+    model = ClassicalGPT(
+        ModelConfig(vocab_size=50, d_model=32, n_heads=4, n_layers=2, context_len=16)
+    )
     return model, model.attention_maps(torch.randint(0, 50, (2, 12)))
 
 
@@ -49,7 +51,9 @@ def test_summarize_json_friendly():
 
 def test_head_ablation_increases_loss_somewhere():
     torch.manual_seed(1)
-    model = ClassicalGPT(ModelConfig(vocab_size=40, d_model=32, n_heads=4, n_layers=2, context_len=16))
+    model = ClassicalGPT(
+        ModelConfig(vocab_size=40, d_model=32, n_heads=4, n_layers=2, context_len=16)
+    )
     idx = torch.randint(0, 40, (4, 12))
     eff = head_ablation_effect(model, idx, idx)
     assert eff.shape == (2, 4)

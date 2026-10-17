@@ -1,4 +1,5 @@
 """Ground-surface elevation from the GSI DEM web service, with an on-disk cache."""
+
 from __future__ import annotations
 
 import json

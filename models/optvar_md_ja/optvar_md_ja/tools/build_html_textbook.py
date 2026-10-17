@@ -96,7 +96,9 @@ def build_chapters(sections: list[Section]) -> list[Chapter]:
             for candidate in sections
             if candidate.number == section.number or candidate.number.startswith(prefix)
         )
-        last_section_page = max((candidate.page for candidate in sub_sections), default=section.page)
+        last_section_page = max(
+            (candidate.page for candidate in sub_sections), default=section.page
+        )
         chapters.append(
             Chapter(
                 number=section.number,
@@ -226,9 +228,7 @@ def render_markdown_table(lines: list[str], root_prefix: str) -> str:
     body = rows[2:] if len(rows) > 1 and re.fullmatch(r"[-:| ]+", lines[1].strip()) else rows[1:]
     head_html = "".join(f"<th>{inline_html(cell, root_prefix)}</th>" for cell in header)
     body_html = "\n".join(
-        "<tr>"
-        + "".join(f"<td>{inline_html(cell, root_prefix)}</td>" for cell in row)
-        + "</tr>"
+        "<tr>" + "".join(f"<td>{inline_html(cell, root_prefix)}</td>" for cell in row) + "</tr>"
         for row in body
     )
     return (
@@ -269,7 +269,9 @@ def markdown_to_html(markdown: str, root_prefix: str) -> str:
                 index += 1
             if index < len(lines):
                 index += 1
-            parts.append(f'<pre class="code-block"><code>{esc("\\n".join(code_lines))}</code></pre>')
+            parts.append(
+                f'<pre class="code-block"><code>{esc("\\n".join(code_lines))}</code></pre>'
+            )
             continue
 
         heading = re.match(r"^(#{1,4})\s+(.+)$", stripped)
@@ -335,7 +337,9 @@ def render_sidebar(
     for chapter in chapters:
         href = chapter_path(chapter)
         active = " active" if active_path == href else ""
-        label = f"{chapter.number}. {chapter.japanese}" if chapter.number != "0" else chapter.japanese
+        label = (
+            f"{chapter.number}. {chapter.japanese}" if chapter.number != "0" else chapter.japanese
+        )
         chapter_links.append(
             f'<li><a class="{active.strip()}" href="{esc(root_prefix + href)}">{esc(label)}</a></li>'
         )
@@ -743,10 +747,13 @@ def write_readme() -> None:
         if (OUT / "full_report_ja.html").exists()
         else ""
     )
-    content = """# Opt-Var 日本語 HTML テキストブック
+    content = (
+        """# Opt-Var 日本語 HTML テキストブック
 
 `index.html` をブラウザで開くと、生成済みの静的HTMLテキストブックを閲覧できます。
-""" + full_report_note + """
+"""
+        + full_report_note
+        + """
 
 ## 生成元
 
@@ -764,6 +771,7 @@ python3 tools/build_html_textbook.py
 
 本文OCRは原文英語のままです。数式、表、図は各ページ画像を正本として確認してください。
 """
+    )
     write_text(OUT / "README.md", content)
 
 
@@ -780,7 +788,9 @@ def build() -> None:
     for page in range(1, PAGE_COUNT + 1):
         write_text(OUT / page_path(page), render_page_document(page, sections, chapters))
     for chapter in chapters:
-        write_text(OUT / chapter_path(chapter), render_chapter_document(chapter, sections, chapters))
+        write_text(
+            OUT / chapter_path(chapter), render_chapter_document(chapter, sections, chapters)
+        )
 
     for title, markdown_file in [
         ("図版インデックス", "figure_index.md"),

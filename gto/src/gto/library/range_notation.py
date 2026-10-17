@@ -39,9 +39,7 @@ def parse_range_notation(notation: str) -> np.ndarray:
             w = 1.0
         if len(cls) == 2:
             if cls[0] != cls[1]:
-                raise ValueError(
-                    f"{cls!r}: non-pair classes need an s/o suffix (AKs / AKo)"
-                )
+                raise ValueError(f"{cls!r}: non-pair classes need an s/o suffix (AKs / AKo)")
         elif len(cls) == 3:
             if cls[2] not in ("s", "o") or cls[0] == cls[1]:
                 raise ValueError(f"bad hand class {cls!r}")

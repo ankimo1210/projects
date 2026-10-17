@@ -234,9 +234,7 @@ def main() -> int:
         recruited_species = None
         for _ in range(6):
             start_encounter_via_store(page)
-            wild_id = page.evaluate(
-                "() => window.__qw.store.getState().battle.wild.speciesId"
-            )
+            wild_id = page.evaluate("() => window.__qw.store.getState().battle.wild.speciesId")
             outcome = battle_until_over(page, prefer="link")
             close_battle(page)
             if outcome == "recruited":
@@ -263,8 +261,11 @@ def main() -> int:
         book_open = page.get_by_text("Collection Book").count() > 0
         check("collection book opens with C", book_open)
         friend_badges = page.get_by_text("friend", exact=True).count()
-        check("recruited creatures listed as friends", friend_badges >= 2,
-              f"{friend_badges} badges (incl. starter)")
+        check(
+            "recruited creatures listed as friends",
+            friend_badges >= 2,
+            f"{friend_badges} badges (incl. starter)",
+        )
         page.screenshot(path="/tmp/qw_collection.png")
         page.keyboard.press("c")
 
@@ -283,8 +284,11 @@ def main() -> int:
         browser.close()
 
     real_errors = [e for e in console_errors if "favicon" not in e]
-    check("no console errors", len(real_errors) == 0,
-          "; ".join(real_errors[:3]) if real_errors else "")
+    check(
+        "no console errors",
+        len(real_errors) == 0,
+        "; ".join(real_errors[:3]) if real_errors else "",
+    )
 
     failed = [r for r in RESULTS if not r[1]]
     print(f"\n{len(RESULTS) - len(failed)}/{len(RESULTS)} checks passed")

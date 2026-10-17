@@ -65,9 +65,7 @@ class QuestionPackBuilderTests(unittest.TestCase):
         self.assertNotIn("translationModel", question)
 
     def test_v7_is_a_bounded_reaudit_of_v6(self) -> None:
-        previous_input = DEFAULT_INPUT.with_name(
-            "wset_level3_original_questions_1100_v6.xlsx"
-        )
+        previous_input = DEFAULT_INPUT.with_name("wset_level3_original_questions_1100_v6.xlsx")
         previous_rows = read_question_rows(previous_input)
         v7_rows = read_question_rows(
             DEFAULT_INPUT.with_name("wset_level3_original_questions_1100_v7.xlsx")
@@ -105,9 +103,7 @@ class QuestionPackBuilderTests(unittest.TestCase):
             identifier = previous["問題ID"]
             current = current_by_id[identifier]
             changed_fields = {
-                key
-                for key in current
-                if key != "__excel_row__" and current[key] != previous[key]
+                key for key in current if key != "__excel_row__" and current[key] != previous[key]
             }
             with self.subTest(question_id=identifier):
                 self.assertLessEqual(changed_fields, allowed_changed_fields)
@@ -172,10 +168,7 @@ class QuestionPackBuilderTests(unittest.TestCase):
         self.assertTrue(all(question["creationType"] == "オリジナル" for question in questions))
         self.assertTrue(all(question["misconceptionTags"] for question in questions))
         self.assertTrue(
-            all(
-                question["reviewStatus"] == "ai_reviewed_pending_expert"
-                for question in questions
-            )
+            all(question["reviewStatus"] == "ai_reviewed_pending_expert" for question in questions)
         )
         self.assertEqual(self.payload["distributionStatus"], "release")
         self.assertEqual(

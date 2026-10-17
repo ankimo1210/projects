@@ -52,7 +52,9 @@ def _fetch_rows(site: str) -> list[dict]:
     rows: list[dict] = []
     page = 1
     while True:
-        payload = _get(REPORT_URL.format(site=site, start=START, end=END, page=page, size=PAGE_SIZE))
+        payload = _get(
+            REPORT_URL.format(site=site, start=START, end=END, page=page, size=PAGE_SIZE)
+        )
         got = payload.get("Rows") or []
         rows.extend(got)
         total = int(payload["Header"]["row_count"])
@@ -156,7 +158,5 @@ def load_series(
             vals = filled.to_numpy()[sel]
             if not np.isfinite(vals).all():
                 continue
-            out.append(
-                (str(site), vals.astype(float), full.to_numpy()[sel], missing[sel])
-            )
+            out.append((str(site), vals.astype(float), full.to_numpy()[sel], missing[sel]))
     return out

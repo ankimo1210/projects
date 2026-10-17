@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Boot yaAGC with Luminary099, press RSET, expect packet traffic back."""
+
 import socket
 import subprocess
 import sys
@@ -8,10 +9,13 @@ import time
 PORT = 19897
 AGC = ["build/agc/yaAGC", "--core=build/agc/Luminary099.bin", f"--port={PORT}"]
 
+
 def key_packet(code: int) -> bytes:  # DSKY keycode -> ch 015 packet
     ch, d = 0o15, code & 0x7FFF
-    return bytes([ch >> 3, 0x40 | ((ch & 7) << 3) | (d >> 12),
-                  0x80 | ((d >> 6) & 0x3F), 0xC0 | (d & 0x3F)])
+    return bytes(
+        [ch >> 3, 0x40 | ((ch & 7) << 3) | (d >> 12), 0x80 | ((d >> 6) & 0x3F), 0xC0 | (d & 0x3F)]
+    )
+
 
 proc = subprocess.Popen(AGC, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 try:

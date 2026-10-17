@@ -1,4 +1,5 @@
 """Serialize/deserialize entities and questions to/from JSON on disk."""
+
 from __future__ import annotations
 
 import json

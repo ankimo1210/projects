@@ -40,7 +40,9 @@ def load_experiment_data(data_spec: dict) -> tuple[torch.Tensor, torch.Tensor, o
     root = repo_root()
     if data_spec["source"] == "snapshot":
         tok_version = data_spec["tokenizer_version"]
-        tokenizer = HFBpeTokenizer.load(root / "tokenizer" / f"{tok_version}.tokenizer.json", version=tok_version)
+        tokenizer = HFBpeTokenizer.load(
+            root / "tokenizer" / f"{tok_version}.tokenizer.json", version=tok_version
+        )
         train_tokens = load_tokens(data_spec["train_snapshot"], tok_version)
         if "max_train_tokens" in data_spec:
             train_tokens = train_tokens[: data_spec["max_train_tokens"]]

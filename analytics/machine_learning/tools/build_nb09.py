@@ -250,5 +250,9 @@ PDP は現実にあり得ない組み合わせ(例: 部屋数 0 で面積最大)
 if __name__ == "__main__":
     import pathlib
 
-    out = pathlib.Path(__file__).resolve().parents[1] / "notebooks" / "09_model_interpretability.ipynb"
+    out = (
+        pathlib.Path(__file__).resolve().parents[1]
+        / "notebooks"
+        / "09_model_interpretability.ipynb"
+    )
     build(cells, str(out))

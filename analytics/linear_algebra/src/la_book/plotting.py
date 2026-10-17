@@ -461,9 +461,7 @@ def plotly_linear_map_morph(
     mats = [(1 - t) * eye + t * A for t in ts]
     dets = [float(np.linalg.det(M)) for M in mats]
     labels = [f"{t:.2f}  (det={d:+.2f})" for t, d in zip(ts, dets, strict=True)]
-    frames = [
-        go.Frame(data=frame_traces(M), name=lab) for M, lab in zip(mats, labels, strict=True)
-    ]
+    frames = [go.Frame(data=frame_traces(M), name=lab) for M, lab in zip(mats, labels, strict=True)]
     fig = go.Figure(data=frame_traces(mats[0]), frames=frames)
     steps = [
         {
@@ -969,9 +967,7 @@ def plotly_gradient_descent_quadratic(
     if lr is None:
         lr = 1.9 / float(np.linalg.eigvalsh(0.5 * (A + A.T)).max())
     path = gradient_descent_quadratic(A, b, lr=lr, n_iter=n_iter, x0=np.array(x0, dtype=float))
-    x_range, y_range = _square_box(
-        np.vstack([path, np.linalg.solve(A, b)[None, :]]), pad=0.18
-    )
+    x_range, y_range = _square_box(np.vstack([path, np.linalg.solve(A, b)[None, :]]), pad=0.18)
     gx = np.linspace(x_range[0], x_range[1], 70)
     gy = np.linspace(y_range[0], y_range[1], 70)
     XX, YY = np.meshgrid(gx, gy)
@@ -1000,9 +996,7 @@ def plotly_gradient_descent_quadratic(
     )
     # The contour never changes; re-sending it in all 31 frames used to make this
     # single figure ~2.8 MB inside the notebook. traces=[1] updates only the path.
-    frames = [
-        go.Frame(data=[path_trace(k)], traces=[1], name=str(k)) for k in range(len(path))
-    ]
+    frames = [go.Frame(data=[path_trace(k)], traces=[1], name=str(k)) for k in range(len(path))]
     fig = go.Figure(data=[contour, path_trace(0)], frames=frames)
     steps = [
         {
@@ -1099,8 +1093,11 @@ def plotly_two_line_system(A=None, b=None, n_steps: int = 21, span: float = 4.0,
                 )
         return out
 
-    dets = [row1[0] * ((1 - t) * row2_0 + t * row2_par)[1]
-            - row1[1] * ((1 - t) * row2_0 + t * row2_par)[0] for t in ts]
+    dets = [
+        row1[0] * ((1 - t) * row2_0 + t * row2_par)[1]
+        - row1[1] * ((1 - t) * row2_0 + t * row2_par)[0]
+        for t in ts
+    ]
     labels = [f"{t:.2f}  (det={d:+.2f})" for t, d in zip(ts, dets, strict=True)]
     frames = [go.Frame(data=traces(t), name=lab) for t, lab in zip(ts, labels, strict=True)]
     fig = go.Figure(data=traces(0.0), frames=frames)
@@ -1151,13 +1148,28 @@ def plotly_projection_sweep(a=(2.0, 1.0), r: float = 2.2, n_angles: int = 37, ti
                 name="span{a}",
                 hoverinfo="skip",
             ),
-            go.Scatter(x=[0, b[0]], y=[0, b[1]], mode="lines+markers",
-                       line={"color": "#1f77b4", "width": 3}, name="b"),
-            go.Scatter(x=[0, p[0]], y=[0, p[1]], mode="lines+markers",
-                       line={"color": "#d62728", "width": 3}, name="proj"),
-            go.Scatter(x=[b[0], p[0]], y=[b[1], p[1]], mode="lines",
-                       line={"color": "black", "width": 1.5, "dash": "dash"},
-                       name="residual", hoverinfo="skip"),
+            go.Scatter(
+                x=[0, b[0]],
+                y=[0, b[1]],
+                mode="lines+markers",
+                line={"color": "#1f77b4", "width": 3},
+                name="b",
+            ),
+            go.Scatter(
+                x=[0, p[0]],
+                y=[0, p[1]],
+                mode="lines+markers",
+                line={"color": "#d62728", "width": 3},
+                name="proj",
+            ),
+            go.Scatter(
+                x=[b[0], p[0]],
+                y=[b[1], p[1]],
+                mode="lines",
+                line={"color": "black", "width": 1.5, "dash": "dash"},
+                name="residual",
+                hoverinfo="skip",
+            ),
         ]
 
     dots = [float(a @ (r * np.array([np.cos(th), np.sin(th)]))) for th in thetas]
@@ -1204,10 +1216,20 @@ def plotly_poly_fit_degree(x, y, degrees=range(1, 13), title=None):
         coeffs = np.polyfit(x, y, d)
         rmse = float(np.sqrt(np.mean((np.polyval(coeffs, x) - y) ** 2)))
         return rmse, [
-            go.Scatter(x=list(x), y=list(y), mode="markers",
-                       marker={"color": "#1f77b4", "size": 8}, name="data"),
-            go.Scatter(x=list(xs), y=list(np.polyval(coeffs, xs)), mode="lines",
-                       line={"color": "#d62728", "width": 2}, name=f"degree {d} fit"),
+            go.Scatter(
+                x=list(x),
+                y=list(y),
+                mode="markers",
+                marker={"color": "#1f77b4", "size": 8},
+                name="data",
+            ),
+            go.Scatter(
+                x=list(xs),
+                y=list(np.polyval(coeffs, xs)),
+                mode="lines",
+                line={"color": "#d62728", "width": 2},
+                name=f"degree {d} fit",
+            ),
         ]
 
     info = [traces(d) for d in degrees]
@@ -1256,11 +1278,21 @@ def plotly_complex_orbit(A, x0=(1.0, 0.0), n_steps: int = 24, title=None):
 
     def traces(k):
         return [
-            go.Scatter(x=_f(pts[: k + 1, 0]), y=_f(pts[: k + 1, 1]),
-                       mode="lines+markers", line={"color": "#1f77b4", "width": 1.5},
-                       marker={"size": 5}, name="orbit"),
-            go.Scatter(x=_f([pts[k, 0]]), y=_f([pts[k, 1]]), mode="markers",
-                       marker={"color": "#d62728", "size": 12}, name=f"x_{k}"),
+            go.Scatter(
+                x=_f(pts[: k + 1, 0]),
+                y=_f(pts[: k + 1, 1]),
+                mode="lines+markers",
+                line={"color": "#1f77b4", "width": 1.5},
+                marker={"size": 5},
+                name="orbit",
+            ),
+            go.Scatter(
+                x=_f([pts[k, 0]]),
+                y=_f([pts[k, 1]]),
+                mode="markers",
+                marker={"color": "#d62728", "size": 12},
+                name=f"x_{k}",
+            ),
         ]
 
     frames = [go.Frame(data=traces(k), name=str(k)) for k in range(len(pts))]
@@ -1318,7 +1350,9 @@ def plotly_kron_blocks(A, B, title=None):
 
     cells = [(i, j) for i in range(p) for j in range(q)]
     labels = [f"a[{i},{j}] = {A[i, j]:+.1f}" for i, j in cells]
-    frames = [go.Frame(data=rect(i, j), name=lab) for (i, j), lab in zip(cells, labels, strict=True)]
+    frames = [
+        go.Frame(data=rect(i, j), name=lab) for (i, j), lab in zip(cells, labels, strict=True)
+    ]
     fig = go.Figure(data=rect(*cells[0]), frames=frames)
     steps = [
         {
@@ -1388,7 +1422,10 @@ def plotly_rank_collapse_3d(cloud, matrices, labels, title=None):
             ys += [-u[1], u[1], None]
             zs += [-u[2], u[2], None]
         return go.Scatter3d(
-            x=xs, y=ys, z=zs, mode="lines",
+            x=xs,
+            y=ys,
+            z=zs,
+            mode="lines",
             line={"color": "#d62728", "width": 6},
             name=f"Im(A) の軸 ({r} 本)",
         )
@@ -1396,7 +1433,9 @@ def plotly_rank_collapse_3d(cloud, matrices, labels, title=None):
     def traces(M, im):
         return [
             go.Scatter3d(
-                x=_f(im[:, 0], 3), y=_f(im[:, 1], 3), z=_f(im[:, 2], 3),
+                x=_f(im[:, 0], 3),
+                y=_f(im[:, 1], 3),
+                z=_f(im[:, 2], 3),
                 mode="markers",
                 marker={"size": 2.5, "color": "#1f77b4", "opacity": 0.55},
                 name="変換後の点群",
@@ -1456,39 +1495,68 @@ def plotly_least_squares_3d(A=None, b=None, n_steps: int = 25, title=None):
 
     static = [
         go.Surface(
-            x=_f(plane[..., 0], 3), y=_f(plane[..., 1], 3), z=_f(plane[..., 2], 3),
-            showscale=False, opacity=0.32, colorscale=[[0, "#9ecae1"], [1, "#9ecae1"]],
-            name="col(A)", hoverinfo="skip",
+            x=_f(plane[..., 0], 3),
+            y=_f(plane[..., 1], 3),
+            z=_f(plane[..., 2], 3),
+            showscale=False,
+            opacity=0.32,
+            colorscale=[[0, "#9ecae1"], [1, "#9ecae1"]],
+            name="col(A)",
+            hoverinfo="skip",
         ),
         go.Scatter3d(
-            x=[0, b[0]], y=[0, b[1]], z=[0, b[2]], mode="lines+markers",
-            line={"color": "#1f77b4", "width": 6}, marker={"size": 4}, name="b",
+            x=[0, b[0]],
+            y=[0, b[1]],
+            z=[0, b[2]],
+            mode="lines+markers",
+            line={"color": "#1f77b4", "width": 6},
+            marker={"size": 4},
+            name="b",
         ),
         go.Scatter3d(
-            x=[0, p[0]], y=[0, p[1]], z=[0, p[2]], mode="lines+markers",
-            line={"color": "#d62728", "width": 6}, marker={"size": 4},
+            x=[0, p[0]],
+            y=[0, p[1]],
+            z=[0, p[2]],
+            mode="lines+markers",
+            line={"color": "#d62728", "width": 6},
+            marker={"size": 4},
             name="p = 正射影（最小点）",
         ),
         go.Scatter3d(
-            x=[b[0], p[0]], y=[b[1], p[1]], z=[b[2], p[2]], mode="lines",
+            x=[b[0], p[0]],
+            y=[b[1], p[1]],
+            z=[b[2], p[2]],
+            mode="lines",
             line={"color": "#d62728", "width": 3, "dash": "dash"},
-            name="残差 r = b - p", hoverinfo="skip",
+            name="残差 r = b - p",
+            hoverinfo="skip",
         ),
     ]
 
     def moving(q):
         return [
             go.Scatter3d(
-                x=[q[0]], y=[q[1]], z=[q[2]], mode="markers",
-                marker={"size": 7, "color": "#2ca02c"}, name="平面上の候補点 q",
+                x=[q[0]],
+                y=[q[1]],
+                z=[q[2]],
+                mode="markers",
+                marker={"size": 7, "color": "#2ca02c"},
+                name="平面上の候補点 q",
             ),
             go.Scatter3d(
-                x=[b[0], q[0]], y=[b[1], q[1]], z=[b[2], q[2]], mode="lines",
-                line={"color": "#2ca02c", "width": 4}, name="‖b - q‖", hoverinfo="skip",
+                x=[b[0], q[0]],
+                y=[b[1], q[1]],
+                z=[b[2], q[2]],
+                mode="lines",
+                line={"color": "#2ca02c", "width": 4},
+                name="‖b - q‖",
+                hoverinfo="skip",
             ),
         ]
 
-    labels = [f"t={t:+.2f}  (‖b-q‖={np.linalg.norm(b - q):.3f})" for t, q in zip(ts, pts, strict=True)]
+    labels = [
+        f"t={t:+.2f}  (‖b-q‖={np.linalg.norm(b - q):.3f})" for t, q in zip(ts, pts, strict=True)
+    ]
     n_static = len(static)
     frames = [
         go.Frame(data=moving(q), traces=[n_static, n_static + 1], name=lab)
@@ -1623,11 +1691,22 @@ def plotly_graph(
         fig.update_layout(
             annotations=[
                 {
-                    "x": pos[j, 0], "y": pos[j, 1], "ax": pos[i, 0], "ay": pos[i, 1],
-                    "xref": "x", "yref": "y", "axref": "x", "ayref": "y",
-                    "showarrow": True, "arrowhead": 3, "arrowsize": 1.1,
-                    "arrowwidth": 1.2, "arrowcolor": "rgba(120,120,120,0.85)",
-                    "standoff": 14, "startstandoff": 12, "text": "",
+                    "x": pos[j, 0],
+                    "y": pos[j, 1],
+                    "ax": pos[i, 0],
+                    "ay": pos[i, 1],
+                    "xref": "x",
+                    "yref": "y",
+                    "axref": "x",
+                    "ayref": "y",
+                    "showarrow": True,
+                    "arrowhead": 3,
+                    "arrowsize": 1.1,
+                    "arrowwidth": 1.2,
+                    "arrowcolor": "rgba(120,120,120,0.85)",
+                    "standoff": 14,
+                    "startstandoff": 12,
+                    "text": "",
                 }
                 for i, j in edges
             ]
@@ -1759,36 +1838,51 @@ def plotly_char_poly(A, lam_range=None, n_steps: int = 41, title=None):
     lim = 1.2 * float(max(np.abs(im).max() for im in images) or 1.0)
 
     fig = make_subplots(
-        rows=1, cols=2,
+        rows=1,
+        cols=2,
         subplot_titles=("det(A - λI)", "単位正方形の像（面積 = |det|）"),
         horizontal_spacing=0.12,
     )
     fig.add_trace(
-        go.Scatter(x=_f(curve_x), y=_f(curve_y), mode="lines",
-                   line={"color": "#1f77b4", "width": 2}, name="det(A - λI)"),
-        row=1, col=1,
+        go.Scatter(
+            x=_f(curve_x),
+            y=_f(curve_y),
+            mode="lines",
+            line={"color": "#1f77b4", "width": 2},
+            name="det(A - λI)",
+        ),
+        row=1,
+        col=1,
     )
     fig.add_hline(y=0, line={"color": "#999999", "width": 1}, row=1, col=1)
     for lam in real_eig:
-        fig.add_vline(x=float(lam), line={"color": "#2ca02c", "width": 1, "dash": "dot"},
-                      row=1, col=1)
+        fig.add_vline(
+            x=float(lam), line={"color": "#2ca02c", "width": 1, "dash": "dot"}, row=1, col=1
+        )
 
     def moving(lam, im):
         return [
-            go.Scatter(x=[float(lam)], y=[float(np.linalg.det(A - lam * np.eye(2)))],
-                       mode="markers", marker={"color": "#d62728", "size": 12},
-                       name="いまの λ"),
-            go.Scatter(x=_f(im[0]), y=_f(im[1]), fill="toself",
-                       fillcolor="rgba(214,39,40,0.25)",
-                       line={"color": "#d62728", "width": 2}, name="像"),
+            go.Scatter(
+                x=[float(lam)],
+                y=[float(np.linalg.det(A - lam * np.eye(2)))],
+                mode="markers",
+                marker={"color": "#d62728", "size": 12},
+                name="いまの λ",
+            ),
+            go.Scatter(
+                x=_f(im[0]),
+                y=_f(im[1]),
+                fill="toself",
+                fillcolor="rgba(214,39,40,0.25)",
+                line={"color": "#d62728", "width": 2},
+                name="像",
+            ),
         ]
 
     first = moving(lams[0], images[0])
     fig.add_trace(first[0], row=1, col=1)
     fig.add_trace(first[1], row=1, col=2)
-    labels = [
-        f"λ={lam:+.2f}  (det={np.linalg.det(A - lam * np.eye(2)):+.3f})" for lam in lams
-    ]
+    labels = [f"λ={lam:+.2f}  (det={np.linalg.det(A - lam * np.eye(2)):+.3f})" for lam in lams]
     frames = [
         # Traces 1 and 2 move; the curve (0) and the eigen-lines stay put.
         go.Frame(data=moving(lam, im), traces=[1, 2], name=lab)
@@ -1835,7 +1929,8 @@ def plotly_svd_rank_explorer(img, ks=None, title=None):
     floor = max(float(share[share > 0].min()), float(share.max()) * 1e-6)
 
     fig = make_subplots(
-        rows=1, cols=2,
+        rows=1,
+        cols=2,
         subplot_titles=("ランク k 近似の見た目", "特異値のエネルギー比（対数）"),
         horizontal_spacing=0.1,
         column_widths=[0.45, 0.55],
@@ -1843,11 +1938,18 @@ def plotly_svd_rank_explorer(img, ks=None, title=None):
 
     def moving(k):
         return [
-            go.Heatmap(z=_f(svd_lowrank(img, k)[::-1], 3), colorscale="gray",
-                       showscale=False, hoverinfo="skip"),
-            go.Bar(x=[int(i) for i in idx], y=list(share),
-                   marker={"color": ["#d62728" if i < k else "#c7c7c7" for i in range(r)]},
-                   name="エネルギー比"),
+            go.Heatmap(
+                z=_f(svd_lowrank(img, k)[::-1], 3),
+                colorscale="gray",
+                showscale=False,
+                hoverinfo="skip",
+            ),
+            go.Bar(
+                x=[int(i) for i in idx],
+                y=list(share),
+                marker={"color": ["#d62728" if i < k else "#c7c7c7" for i in range(r)]},
+                name="エネルギー比",
+            ),
         ]
 
     first = moving(ks[0])
@@ -1857,8 +1959,7 @@ def plotly_svd_rank_explorer(img, ks=None, title=None):
         f"k={k}  (説明 {cum[k - 1]:.1%} / 記憶 {compression_ratio(img.shape, k):.0%})" for k in ks
     ]
     fig.frames = [
-        go.Frame(data=moving(k), traces=[0, 1], name=lab)
-        for k, lab in zip(ks, labels, strict=True)
+        go.Frame(data=moving(k), traces=[0, 1], name=lab) for k, lab in zip(ks, labels, strict=True)
     ]
     fig.update_layout(
         sliders=[{"steps": _slider_steps(labels), "currentvalue": {"prefix": "ランク "}}],
@@ -1871,6 +1972,11 @@ def plotly_svd_rank_explorer(img, ks=None, title=None):
     fig.update_xaxes(visible=False, row=1, col=1)
     fig.update_yaxes(visible=False, scaleanchor="x", row=1, col=1)
     fig.update_xaxes(title_text="特異値の番号", row=1, col=2)
-    fig.update_yaxes(type="log", range=[float(np.log10(floor * 0.5)), float(np.log10(1.5))],
-                     title_text="エネルギー比", row=1, col=2)
+    fig.update_yaxes(
+        type="log",
+        range=[float(np.log10(floor * 0.5)), float(np.log10(1.5))],
+        title_text="エネルギー比",
+        row=1,
+        col=2,
+    )
     return fig

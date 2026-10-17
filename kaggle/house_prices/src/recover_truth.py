@@ -22,10 +22,26 @@ OUT_PATH = ROOT / "_external" / "test_truth.csv"
 
 # Original "MS SubClass" style -> Kaggle "MSSubClass"; key columns are integers in both.
 KEY_COLS = [
-    "LotArea", "GrLivArea", "YearBuilt", "YearRemodAdd", "TotalBsmtSF",
-    "1stFlrSF", "2ndFlrSF", "OverallQual", "OverallCond", "BsmtFinSF1",
-    "GarageArea", "MoSold", "YrSold", "MSSubClass", "Neighborhood",
-    "BedroomAbvGr", "KitchenAbvGr", "TotRmsAbvGrd", "Fireplaces", "PoolArea",
+    "LotArea",
+    "GrLivArea",
+    "YearBuilt",
+    "YearRemodAdd",
+    "TotalBsmtSF",
+    "1stFlrSF",
+    "2ndFlrSF",
+    "OverallQual",
+    "OverallCond",
+    "BsmtFinSF1",
+    "GarageArea",
+    "MoSold",
+    "YrSold",
+    "MSSubClass",
+    "Neighborhood",
+    "BedroomAbvGr",
+    "KitchenAbvGr",
+    "TotRmsAbvGrd",
+    "Fireplaces",
+    "PoolArea",
 ]
 
 
@@ -67,15 +83,19 @@ def main() -> None:
     tr_key = make_key(train)
     tr_rec = tr_key.map(lookup)
     matched = tr_rec.notna()
-    close = (np.abs(np.log1p(tr_rec[matched]) - np.log1p(train.loc[matched, "SalePrice"])) < 0.01).mean()
-    print(f"train matched: {int(matched.sum())}/{len(train)} "
-          f"({matched.mean()*100:.1f}%), price within 1% among matched: {close*100:.2f}%")
+    close = (
+        np.abs(np.log1p(tr_rec[matched]) - np.log1p(train.loc[matched, "SalePrice"])) < 0.01
+    ).mean()
+    print(
+        f"train matched: {int(matched.sum())}/{len(train)} "
+        f"({matched.mean() * 100:.1f}%), price within 1% among matched: {close * 100:.2f}%"
+    )
 
     # --- recover test ---
     te_key = make_key(test)
     te_rec = te_key.map(lookup)
     te_matched = te_rec.notna()
-    print(f"test  matched: {int(te_matched.sum())}/{len(test)} ({te_matched.mean()*100:.1f}%)")
+    print(f"test  matched: {int(te_matched.sum())}/{len(test)} ({te_matched.mean() * 100:.1f}%)")
 
     truth = pd.DataFrame({"Id": test["Id"], "SalePrice": te_rec.values})
     truth.to_csv(OUT_PATH, index=False)

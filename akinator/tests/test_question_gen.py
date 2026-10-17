@@ -4,14 +4,38 @@ from app.question_gen import generate_questions
 
 def _pool():
     return [
-        Entity("a", "A", [], "", None, {"is_fictional": False, "gender": "male",
-                                        "occupation": ["actor"], "birth_century": 20}),
-        Entity("b", "B", [], "", None, {"is_fictional": False, "gender": "female",
-                                        "occupation": ["singer"], "birth_century": 20}),
-        Entity("c", "C", [], "", None, {"is_fictional": True, "gender": "male",
-                                        "occupation": ["actor"], "in_anime": True}),
-        Entity("d", "D", [], "", None, {"is_fictional": True, "gender": "female",
-                                        "in_anime": True}),
+        Entity(
+            "a",
+            "A",
+            [],
+            "",
+            None,
+            {"is_fictional": False, "gender": "male", "occupation": ["actor"], "birth_century": 20},
+        ),
+        Entity(
+            "b",
+            "B",
+            [],
+            "",
+            None,
+            {
+                "is_fictional": False,
+                "gender": "female",
+                "occupation": ["singer"],
+                "birth_century": 20,
+            },
+        ),
+        Entity(
+            "c",
+            "C",
+            [],
+            "",
+            None,
+            {"is_fictional": True, "gender": "male", "occupation": ["actor"], "in_anime": True},
+        ),
+        Entity(
+            "d", "D", [], "", None, {"is_fictional": True, "gender": "female", "in_anime": True}
+        ),
     ]
 
 

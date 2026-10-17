@@ -15,7 +15,15 @@ def test_health_and_predict():
     # A 1st-class woman: high survival probability in the synthetic model.
     r = client.post(
         "/predict",
-        json={"pclass": 1, "sex": "female", "age": 30, "sibsp": 0, "parch": 0, "fare": 100, "embarked": "C"},
+        json={
+            "pclass": 1,
+            "sex": "female",
+            "age": 30,
+            "sibsp": 0,
+            "parch": 0,
+            "fare": 100,
+            "embarked": "C",
+        },
     )
     assert r.status_code == 200
     body = r.json()

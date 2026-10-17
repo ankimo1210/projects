@@ -57,7 +57,11 @@ def main() -> None:
         run_dir,
         tokenizer=tokenizer,
         device=device,
-        extra_meta={"run_name": run_name, "corpus": raw["data"]["corpus"], "tokenizer": tokenizer.version},
+        extra_meta={
+            "run_name": run_name,
+            "corpus": raw["data"]["corpus"],
+            "tokenizer": tokenizer.version,
+        },
     )
     print(
         f"done: steps={result.steps} tokens={result.tokens_seen:,} "

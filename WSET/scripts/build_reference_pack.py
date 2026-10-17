@@ -19,9 +19,7 @@ from zipfile import BadZipFile, ZipFile
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT = PROJECT_ROOT / "ReferenceSources" / "wset_reference_master.xlsx"
-DEFAULT_TERM_ID_REVIEW = (
-    PROJECT_ROOT / "ReferenceSources" / "glossary_term_id_review.json"
-)
+DEFAULT_TERM_ID_REVIEW = PROJECT_ROOT / "ReferenceSources" / "glossary_term_id_review.json"
 DEFAULT_QUESTION_PACK = PROJECT_ROOT / "WSET" / "QuestionData" / "question_pack.json"
 DEFAULT_OUTPUT = PROJECT_ROOT / "WSET" / "ReferenceData" / "reference_pack.json"
 SCHEMA_VERSION = 1
@@ -39,16 +37,45 @@ JAPANESE_CHARACTER_RE = re.compile(r"[ぁ-んァ-ヶ一-龠々]")
 
 SHEETS = {
     "用語": {
-        "term_id", "日本語", "English", "Français", "読み", "種別", "概要", "詳細", "国",
-        "産地", "ラベル", "関連用語IDs", "source_id", "確認日", "公開",
+        "term_id",
+        "日本語",
+        "English",
+        "Français",
+        "読み",
+        "種別",
+        "概要",
+        "詳細",
+        "国",
+        "産地",
+        "ラベル",
+        "関連用語IDs",
+        "source_id",
+        "確認日",
+        "公開",
     },
     "別名": {"alias_id", "term_id", "表記", "言語", "別名種別"},
     "格付け制度": {
-        "system_id", "地域", "日本語名", "English", "Français", "概要", "基準日", "source_id",
+        "system_id",
+        "地域",
+        "日本語名",
+        "English",
+        "Français",
+        "概要",
+        "基準日",
+        "source_id",
     },
     "格付け項目": {
-        "entry_id", "system_id", "日本語名", "原語名", "階級", "村・アペラシオン",
-        "サブリージョン", "対象種別", "term_id", "注記", "source_id",
+        "entry_id",
+        "system_id",
+        "日本語名",
+        "原語名",
+        "階級",
+        "村・アペラシオン",
+        "サブリージョン",
+        "対象種別",
+        "term_id",
+        "注記",
+        "source_id",
     },
     "情報源": {"source_id", "名称", "URL", "基準日", "確認日"},
 }
@@ -77,8 +104,10 @@ def column_index(reference: str) -> int:
 
 
 def resolve_member(base_member: str, target: str) -> str:
-    member = target.lstrip("/") if target.startswith("/") else posixpath.join(
-        posixpath.dirname(base_member), target
+    member = (
+        target.lstrip("/")
+        if target.startswith("/")
+        else posixpath.join(posixpath.dirname(base_member), target)
     )
     member = posixpath.normpath(member)
     if member == ".." or member.startswith("../"):
@@ -101,8 +130,10 @@ def cell_text(cell: ElementTree.Element, strings: list[str]) -> str:
     cell_type = cell.attrib.get("t")
     if cell_type == "inlineStr":
         inline = cell.find(tag(MAIN_NS, "is"))
-        return "" if inline is None else "".join(
-            node.text or "" for node in inline.iter(tag(MAIN_NS, "t"))
+        return (
+            ""
+            if inline is None
+            else "".join(node.text or "" for node in inline.iter(tag(MAIN_NS, "t")))
         )
     value = cell.find(tag(MAIN_NS, "v"))
     raw = value.text if value is not None and value.text is not None else ""
@@ -181,9 +212,7 @@ def read_sheet_rows(
 def required(row: dict[str, str], column: str, sheet: str) -> str:
     value = clean(row.get(column))
     if not value:
-        raise ReferencePackError(
-            f"{sheet} row {row.get('__excel_row__', '?')}: {column} is blank"
-        )
+        raise ReferencePackError(f"{sheet} row {row.get('__excel_row__', '?')}: {column} is blank")
     return value
 
 
@@ -193,11 +222,15 @@ def split_semicolon(value: str) -> list[str]:
 
 def normalize(value: str) -> str:
     normalized = unicodedata.normalize("NFKC", value).casefold()
-    return "".join(
-        character
-        for character in unicodedata.normalize("NFKD", normalized)
-        if not unicodedata.combining(character)
-    ).replace("・", "").replace(" ", "")
+    return (
+        "".join(
+            character
+            for character in unicodedata.normalize("NFKD", normalized)
+            if not unicodedata.combining(character)
+        )
+        .replace("・", "")
+        .replace(" ", "")
+    )
 
 
 def sha256(content: bytes) -> str:
@@ -323,9 +356,7 @@ def load_term_id_migrations(
             continue
 
         if canonical_id not in pair:
-            raise ReferencePackError(
-                f"{candidate_id}: canonicalTermID must be one of termIDs"
-            )
+            raise ReferencePackError(f"{candidate_id}: canonicalTermID must be one of termIDs")
         retired_id = pair[0] if pair[1] == canonical_id else pair[1]
         migrations[retired_id] = canonical_id
 
@@ -341,9 +372,7 @@ def load_term_id_migrations(
     return dict(sorted(migrations.items()))
 
 
-def question_ids_for_term(
-    term: dict[str, Any], questions: list[dict[str, Any]]
-) -> list[str]:
+def question_ids_for_term(term: dict[str, Any], questions: list[dict[str, Any]]) -> list[str]:
     names = [term["nameJapanese"], *term["aliases"]]
     normalized_names = [normalize(name) for name in names if len(normalize(name)) >= 2]
     result: list[str] = []
@@ -381,8 +410,7 @@ def build_pack(
     generated_at: str | None = None,
 ) -> dict[str, Any]:
     rows = {
-        sheet: read_sheet_rows(workbook_path, sheet, columns)
-        for sheet, columns in SHEETS.items()
+        sheet: read_sheet_rows(workbook_path, sheet, columns) for sheet, columns in SHEETS.items()
     }
     if len(rows["用語"]) != EXPECTED_TERM_COUNT:
         raise ReferencePackError(f"Expected {EXPECTED_TERM_COUNT} terms")
@@ -409,9 +437,7 @@ def build_pack(
             raise ReferencePackError("用語: 公開 must be Y or N")
         publication_by_id[identifier] = publication
         term_rows_by_id[identifier] = row
-    inactive_ids = {
-        identifier for identifier, value in publication_by_id.items() if value == "N"
-    }
+    inactive_ids = {identifier for identifier, value in publication_by_id.items() if value == "N"}
     if inactive_ids != set(term_id_migrations):
         raise ReferencePackError(
             "Every unpublished term must be an approved retired ID, and vice versa"
@@ -502,16 +528,18 @@ def build_pack(
         source_id = required(row, "source_id", "格付け制度")
         if source_id not in source_ids:
             raise ReferencePackError(f"格付け制度: unknown source_id {source_id}")
-        systems.append({
-            "id": required(row, "system_id", "格付け制度"),
-            "region": required(row, "地域", "格付け制度"),
-            "nameJapanese": required(row, "日本語名", "格付け制度"),
-            "nameEnglish": clean(row["English"]) or None,
-            "nameFrench": clean(row["Français"]) or None,
-            "summary": required(row, "概要", "格付け制度"),
-            "effectiveDate": required(row, "基準日", "格付け制度"),
-            "sourceID": source_id,
-        })
+        systems.append(
+            {
+                "id": required(row, "system_id", "格付け制度"),
+                "region": required(row, "地域", "格付け制度"),
+                "nameJapanese": required(row, "日本語名", "格付け制度"),
+                "nameEnglish": clean(row["English"]) or None,
+                "nameFrench": clean(row["Français"]) or None,
+                "summary": required(row, "概要", "格付け制度"),
+                "effectiveDate": required(row, "基準日", "格付け制度"),
+                "sourceID": source_id,
+            }
+        )
 
     entries: list[dict[str, Any]] = []
     for row in rows["格付け項目"]:
@@ -530,19 +558,21 @@ def build_pack(
             raise ReferencePackError(
                 f"格付け項目 row {row['__excel_row__']}: 日本語名 must be a Japanese rendering"
             )
-        entries.append({
-            "id": required(row, "entry_id", "格付け項目"),
-            "systemID": system_id,
-            "nameJapanese": name_japanese,
-            "nameOriginal": name_original,
-            "tier": required(row, "階級", "格付け項目"),
-            "village": required(row, "村・アペラシオン", "格付け項目"),
-            "subregion": required(row, "サブリージョン", "格付け項目"),
-            "entryType": required(row, "対象種別", "格付け項目"),
-            "termID": identifier,
-            "notes": clean(row["注記"]) or None,
-            "sourceID": source_id,
-        })
+        entries.append(
+            {
+                "id": required(row, "entry_id", "格付け項目"),
+                "systemID": system_id,
+                "nameJapanese": name_japanese,
+                "nameOriginal": name_original,
+                "tier": required(row, "階級", "格付け項目"),
+                "village": required(row, "村・アペラシオン", "格付け項目"),
+                "subregion": required(row, "サブリージョン", "格付け項目"),
+                "entryType": required(row, "対象種別", "格付け項目"),
+                "termID": identifier,
+                "notes": clean(row["注記"]) or None,
+                "sourceID": source_id,
+            }
+        )
 
     terms_by_id = {term["id"]: term for term in terms}
     for entry in entries:
@@ -551,9 +581,7 @@ def build_pack(
             term["nameJapanese"] != entry["nameJapanese"]
             or term["nameEnglish"] != entry["nameOriginal"]
         ):
-            raise ReferencePackError(
-                f"{entry['id']}: classification and glossary names must match"
-            )
+            raise ReferencePackError(f"{entry['id']}: classification and glossary names must match")
 
     sources = [
         {
@@ -634,7 +662,9 @@ def validate_pack(payload: dict[str, Any]) -> None:
 
 def write_pack(payload: dict[str, Any], output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    output_path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
 
 
 def check_existing_pack(
@@ -653,9 +683,18 @@ def check_existing_pack(
         generated_at="ignored-for-check",
     )
     for key in (
-        "schemaVersion", "sourceHash", "questionPackSourceHash", "termCount",
-        "classificationEntryCount", "source", "termIDReviewSource", "terms",
-        "classificationSystems", "classificationEntries", "sources", "termIDMigrations",
+        "schemaVersion",
+        "sourceHash",
+        "questionPackSourceHash",
+        "termCount",
+        "classificationEntryCount",
+        "source",
+        "termIDReviewSource",
+        "terms",
+        "classificationSystems",
+        "classificationEntries",
+        "sources",
+        "termIDMigrations",
     ):
         if existing.get(key) != expected.get(key):
             raise ReferencePackError(f"Generated reference pack is stale: {key}")

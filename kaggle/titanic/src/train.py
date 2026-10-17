@@ -24,11 +24,24 @@ OUT_PATH = Path(__file__).resolve().parents[1] / "submission.csv"
 SEED = 42
 
 TITLE_MAP = {
-    "Mr": "Mr", "Mrs": "Mrs", "Miss": "Miss", "Master": "Master",
-    "Ms": "Miss", "Mlle": "Miss", "Mme": "Mrs",
-    "Dr": "Rare", "Rev": "Rare", "Col": "Rare", "Major": "Rare",
-    "Capt": "Rare", "Sir": "Rare", "Lady": "Rare", "Don": "Rare",
-    "Dona": "Rare", "Countess": "Rare", "Jonkheer": "Rare",
+    "Mr": "Mr",
+    "Mrs": "Mrs",
+    "Miss": "Miss",
+    "Master": "Master",
+    "Ms": "Miss",
+    "Mlle": "Miss",
+    "Mme": "Mrs",
+    "Dr": "Rare",
+    "Rev": "Rare",
+    "Col": "Rare",
+    "Major": "Rare",
+    "Capt": "Rare",
+    "Sir": "Rare",
+    "Lady": "Rare",
+    "Don": "Rare",
+    "Dona": "Rare",
+    "Countess": "Rare",
+    "Jonkheer": "Rare",
 }
 
 NUM_COLS = ["Age", "Fare", "SibSp", "Parch", "FamilySize", "TicketGroup"]
@@ -59,10 +72,12 @@ def make_pipeline(model) -> Pipeline:
     num_steps = [("impute", SimpleImputer(strategy="median"))]
     if scale:
         num_steps.append(("scale", StandardScaler()))
-    pre = ColumnTransformer([
-        ("num", Pipeline(num_steps), NUM_COLS),
-        ("cat", OneHotEncoder(handle_unknown="ignore"), CAT_COLS),
-    ])
+    pre = ColumnTransformer(
+        [
+            ("num", Pipeline(num_steps), NUM_COLS),
+            ("cat", OneHotEncoder(handle_unknown="ignore"), CAT_COLS),
+        ]
+    )
     return Pipeline([("pre", pre), ("model", model)])
 
 
@@ -85,8 +100,11 @@ def main() -> None:
             n_estimators=500, min_samples_leaf=3, random_state=SEED, n_jobs=-1
         ),
         "hist_gradient_boosting": HistGradientBoostingClassifier(
-            max_depth=4, learning_rate=0.06, max_iter=400,
-            l2_regularization=1.0, random_state=SEED,
+            max_depth=4,
+            learning_rate=0.06,
+            max_iter=400,
+            l2_regularization=1.0,
+            random_state=SEED,
         ),
     }
 

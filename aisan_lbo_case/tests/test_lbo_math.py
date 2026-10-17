@@ -17,5 +17,7 @@ def test_lbo_model_bridges_reconcile():
         validate_exit_equity(row)
     assert (details["ending_debt"] >= -1e-9).all()
     for _, row in summaries.iterrows():
-        detail = details[(details["scenario"] == row["scenario"]) & (details["premium"] == row["premium"])]
+        detail = details[
+            (details["scenario"] == row["scenario"]) & (details["premium"] == row["premium"])
+        ]
         assert (detail["ending_cash"] >= row["min_cash"] - 1e-9).all()

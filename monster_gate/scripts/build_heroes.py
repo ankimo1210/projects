@@ -71,7 +71,16 @@ def boots(p, ps: Pose, color=LEATHER) -> None:
         lead = -40 if ps.step else (-26 if ps.swing else -14)
         back = 30 if ps.step else 18
         p.part(rr(238 + back, y - 92, 288 + back, y, 20), darker(color, 0.78))
-        p.part(rr(212 + lead, y - 92 - (10 if ps.step else 0), 262 + lead, y - (10 if ps.step else 0), 20), color)
+        p.part(
+            rr(
+                212 + lead,
+                y - 92 - (10 if ps.step else 0),
+                262 + lead,
+                y - (10 if ps.step else 0),
+                20,
+            ),
+            color,
+        )
         return
     if ps.step:
         # one leg planted forward (down the screen), the other lifted behind:
@@ -129,13 +138,29 @@ def sword(p, x0: int, y0: int, horizontal: bool, flip: bool = False) -> None:
     if horizontal:
         d = -1 if flip else 1
         tip = x0 + d * 150
-        p.part(poly((x0 + d * 26, y0 - 17), (tip, y0 - 9), (tip, y0 + 9), (x0 + d * 26, y0 + 17)), STEEL)
-        p.flat(poly((x0 + d * 26, y0 - 17), (tip, y0 - 9), (tip, y0 - 2), (x0 + d * 26, y0 - 6)), lighter(STEEL, 22))
-        p.part(rr(x0 + d * 14, y0 - 34, x0 + d * 26, y0 + 34, 5) if d > 0 else rr(x0 + d * 26, y0 - 34, x0 + d * 14, y0 + 34, 5), GOLD)
+        p.part(
+            poly((x0 + d * 26, y0 - 17), (tip, y0 - 9), (tip, y0 + 9), (x0 + d * 26, y0 + 17)),
+            STEEL,
+        )
+        p.flat(
+            poly((x0 + d * 26, y0 - 17), (tip, y0 - 9), (tip, y0 - 2), (x0 + d * 26, y0 - 6)),
+            lighter(STEEL, 22),
+        )
+        p.part(
+            rr(x0 + d * 14, y0 - 34, x0 + d * 26, y0 + 34, 5)
+            if d > 0
+            else rr(x0 + d * 26, y0 - 34, x0 + d * 14, y0 + 34, 5),
+            GOLD,
+        )
         p.part(rr(x0 - 12, y0 - 11, x0 + 12, y0 + 11, 6), LEATHER)
         return
-    p.part(poly((x0 - 17, y0 - 26), (x0 + 17, y0 - 26), (x0 + 9, y0 - 176), (x0 - 9, y0 - 176)), STEEL)
-    p.flat(poly((x0 - 17, y0 - 26), (x0 - 6, y0 - 26), (x0 - 4, y0 - 172), (x0 - 9, y0 - 172)), lighter(STEEL, 22))
+    p.part(
+        poly((x0 - 17, y0 - 26), (x0 + 17, y0 - 26), (x0 + 9, y0 - 176), (x0 - 9, y0 - 176)), STEEL
+    )
+    p.flat(
+        poly((x0 - 17, y0 - 26), (x0 - 6, y0 - 26), (x0 - 4, y0 - 172), (x0 - 9, y0 - 172)),
+        lighter(STEEL, 22),
+    )
     p.part(rr(x0 - 34, y0 - 26, x0 + 34, y0 - 14, 5), GOLD)  # crossguard
     p.part(rr(x0 - 11, y0 - 14, x0 + 11, y0 + 26, 6), LEATHER)  # grip
 
@@ -155,10 +180,14 @@ def dagger(p, x0: int, y0: int, horizontal: bool, flip: bool = False) -> None:
     if horizontal:
         d = -1 if flip else 1
         tip = x0 + d * 108
-        p.part(poly((x0 + d * 18, y0 - 14), (tip, y0 - 6), (tip, y0 + 6), (x0 + d * 18, y0 + 14)), BONE)
+        p.part(
+            poly((x0 + d * 18, y0 - 14), (tip, y0 - 6), (tip, y0 + 6), (x0 + d * 18, y0 + 14)), BONE
+        )
         p.part(rr(x0 - 11, y0 - 10, x0 + 11, y0 + 10, 5), GOLD)
         return
-    p.part(poly((x0 - 14, y0 - 20), (x0 + 14, y0 - 20), (x0 + 7, y0 - 128), (x0 - 7, y0 - 128)), BONE)
+    p.part(
+        poly((x0 - 14, y0 - 20), (x0 + 14, y0 - 20), (x0 + 7, y0 - 128), (x0 - 7, y0 - 128)), BONE
+    )
     p.part(rr(x0 - 24, y0 - 22, x0 + 24, y0 - 10, 5), GOLD)
     p.part(rr(x0 - 10, y0 - 10, x0 + 10, y0 + 22, 5), BLACK)
 
@@ -177,7 +206,10 @@ def weapon_arm(p, ps: Pose, sleeve, blade) -> None:
     side = 1 if ps.facing == "f" else -1
     hx = 256 + side * 100
     if ps.swing:
-        p.part(rr(min(hx, hx + side * 60) - 26, 288 + y, max(hx, hx + side * 60) + 26, 332 + y, 22), sleeve)
+        p.part(
+            rr(min(hx, hx + side * 60) - 26, 288 + y, max(hx, hx + side * 60) + 26, 332 + y, 22),
+            sleeve,
+        )
         blade(hx + side * 60, 310 + y, True, side < 0)
     else:
         p.part(rr(hx - 26, 264 + y, hx + 26, 348 + y, 22), sleeve)
@@ -215,10 +247,31 @@ def warrior(p, ps: Pose) -> None:
     if ps.facing == "b":
         p.flat(rr(cx - 84, cy - 26, cx + 84, cy - 8, 6), darker(STEEL, 0.82))  # helm seam
     elif ps.facing == "s":
-        p.part(poly((cx - 96, cy - 14), (cx + 86, cy - 14), (cx + 76, cy - 70), (cx - 6, cy - 106), (cx - 88, cy - 62)), STEEL)
+        p.part(
+            poly(
+                (cx - 96, cy - 14),
+                (cx + 86, cy - 14),
+                (cx + 76, cy - 70),
+                (cx - 6, cy - 106),
+                (cx - 88, cy - 62),
+            ),
+            STEEL,
+        )
     else:
-        p.part(poly((cx - 92, cy - 18), (cx + 92, cy - 18), (cx + 82, cy - 72), (cx, cy - 108), (cx - 82, cy - 72)), STEEL)
-    p.part(poly((cx - 12, cy - 100), (cx + 14, cy - 100), (cx + 26, cy - 168), (cx - 24, cy - 156)), RED)  # plume
+        p.part(
+            poly(
+                (cx - 92, cy - 18),
+                (cx + 92, cy - 18),
+                (cx + 82, cy - 72),
+                (cx, cy - 108),
+                (cx - 82, cy - 72),
+            ),
+            STEEL,
+        )
+    p.part(
+        poly((cx - 12, cy - 100), (cx + 14, cy - 100), (cx + 26, cy - 168), (cx - 24, cy - 156)),
+        RED,
+    )  # plume
     p.part(rr(cx - 96, cy + 78, cx + 96, cy + 104, 12), STEEL)  # gorget
 
 
@@ -232,7 +285,9 @@ def mage(p, ps: Pose) -> None:
     if ps.facing != "b":
         p.part(ell(cx - 66, cy + 40, cx + 66, cy + 112), BONE)  # beard
     p.part(poly((cx - 104, cy - 30), (cx + 104, cy - 30), (cx - 10, cy - 190)), PURPLE)  # hat
-    p.flat(poly((cx - 104, cy - 30), (cx + 104, cy - 30), (cx + 96, cy - 56), (cx - 96, cy - 56)), GOLD)
+    p.flat(
+        poly((cx - 104, cy - 30), (cx + 104, cy - 30), (cx + 96, cy - 56), (cx - 96, cy - 56)), GOLD
+    )
 
 
 def gambler(p, ps: Pose) -> None:

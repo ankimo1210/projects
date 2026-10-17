@@ -71,9 +71,7 @@ def main() -> None:
             f"Record {record.get('id')} is missing fields: {sorted(missing_fields)}"
         )
         assert str(record["illness"]).strip(), f"Record {record['id']} has no illness"
-        assert str(record["full_text"]).strip(), (
-            f"Record {record['id']} has no detail text"
-        )
+        assert str(record["full_text"]).strip(), f"Record {record['id']} has no detail text"
         status = record["genotype_capture_status"]
         assert status in ALLOWED_GENOTYPE_STATUSES, (
             f"Record {record['id']} has invalid genotype status: {status}"
@@ -88,23 +86,18 @@ def main() -> None:
             assert markers, f"Verified record {record['id']} has no markers"
             for marker in markers:
                 assert marker["snp"], f"Record {record['id']} marker has no SNP"
-                assert marker["genotype"], (
-                    f"Record {record['id']} marker has no genotype"
-                )
+                assert marker["genotype"], f"Record {record['id']} marker has no genotype"
                 assert marker["effect"] is not None, (
                     f"Record {record['id']} marker has no matched effect"
                 )
                 options = {
-                    option["genotype"]: option["effect"]
-                    for option in marker["genotype_options"]
+                    option["genotype"]: option["effect"] for option in marker["genotype_options"]
                 }
                 assert options.get(marker["genotype"]) == marker["effect"], (
                     f"Record {record['id']} genotype/effect does not match its table"
                 )
         elif status == "not_applicable_pgs":
-            assert record["has_pgs"], (
-                f"Record {record['id']} is marked PGS but has_pgs is false"
-            )
+            assert record["has_pgs"], f"Record {record['id']} is marked PGS but has_pgs is false"
             assert not markers, f"PGS record {record['id']} unexpectedly has markers"
         elif status == "no_result":
             assert all(record["genotype_source_comparisons"].values()), (
@@ -121,18 +114,16 @@ def main() -> None:
     records_by_id = {str(record["id"]): record for record in records}
     for row in csv_rows:
         record = records_by_id[row["id"]]
-        captured_markers = [
-            marker for marker in record["markers"] if marker["genotype"]
-        ]
+        captured_markers = [marker for marker in record["markers"] if marker["genotype"]]
         assert row["genotype_capture_status"] == record["genotype_capture_status"], (
             f"CSV genotype status differs for record {row['id']}"
         )
         assert int(row["genotype_count"]) == len(captured_markers), (
             f"CSV genotype count differs for record {row['id']}"
         )
-        assert row["genotypes"] == "|".join(
-            marker["genotype"] for marker in captured_markers
-        ), f"CSV genotypes differ for record {row['id']}"
+        assert row["genotypes"] == "|".join(marker["genotype"] for marker in captured_markers), (
+            f"CSV genotypes differ for record {row['id']}"
+        )
         assert row["snps"] == "|".join(
             marker["snp"] for marker in record["markers"] if marker["snp"]
         ), f"CSV SNPs differ for record {row['id']}"
@@ -140,15 +131,9 @@ def main() -> None:
     with GENOTYPE_CSV_PATH.open(encoding="utf-8-sig", newline="") as file:
         genotype_rows = list(csv.DictReader(file))
     expected_marker_count = sum(len(record["markers"]) for record in records)
-    assert len(genotype_rows) == expected_marker_count, (
-        "Genotype CSV and JSON marker counts differ"
-    )
-    marker_keys = [
-        (row["illness_id"], row["marker_index"]) for row in genotype_rows
-    ]
-    assert len(marker_keys) == len(set(marker_keys)), (
-        "Genotype CSV marker keys are not unique"
-    )
+    assert len(genotype_rows) == expected_marker_count, "Genotype CSV and JSON marker counts differ"
+    marker_keys = [(row["illness_id"], row["marker_index"]) for row in genotype_rows]
+    assert len(marker_keys) == len(set(marker_keys)), "Genotype CSV marker keys are not unique"
     expected_markers = {
         (str(record["id"]), str(marker["marker_index"])): (
             record,
@@ -158,9 +143,7 @@ def main() -> None:
         for marker in record["markers"]
     }
     for row in genotype_rows:
-        record, marker = expected_markers[
-            (row["illness_id"], row["marker_index"])
-        ]
+        record, marker = expected_markers[(row["illness_id"], row["marker_index"])]
         expected_values = {
             "illness": record["illness"],
             "capture_status": record["genotype_capture_status"],
@@ -171,17 +154,12 @@ def main() -> None:
         }
         for field, expected_value in expected_values.items():
             assert row[field] == expected_value, (
-                f"Genotype CSV {field} differs for "
-                f"{row['illness_id']} marker {row['marker_index']}"
+                f"Genotype CSV {field} differs for {row['illness_id']} marker {row['marker_index']}"
             )
 
-    verification = json.loads(
-        GENOTYPE_VERIFICATION_PATH.read_text(encoding="utf-8")
-    )
+    verification = json.loads(GENOTYPE_VERIFICATION_PATH.read_text(encoding="utf-8"))
     status_counts = {
-        status: sum(
-            record["genotype_capture_status"] == status for record in records
-        )
+        status: sum(record["genotype_capture_status"] == status for record in records)
         for status in ALLOWED_GENOTYPE_STATUSES
     }
     assert verification["record_count"] == len(records), (
@@ -190,12 +168,8 @@ def main() -> None:
     assert verification["status_counts"] == status_counts, (
         "Genotype verification status counts differ"
     )
-    assert verification["mismatch_count"] == 0, (
-        "Genotype verification contains mismatches"
-    )
-    assert verification["browser_error_count"] == 0, (
-        "Genotype verification contains browser errors"
-    )
+    assert verification["mismatch_count"] == 0, "Genotype verification contains mismatches"
+    assert verification["browser_error_count"] == 0, "Genotype verification contains browser errors"
 
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["record_count"] == len(records), "Manifest count differs"
@@ -203,9 +177,7 @@ def main() -> None:
     expected_hashes = manifest["sha256"]
     for filename, expected_hash in expected_hashes.items():
         path = DATA_DIR / filename
-        assert sha256(path) == expected_hash, (
-            f"SHA-256 mismatch: {filename}"
-        )
+        assert sha256(path) == expected_hash, f"SHA-256 mismatch: {filename}"
 
     print(
         "Genequest snapshot is valid: "

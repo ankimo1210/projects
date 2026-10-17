@@ -23,10 +23,7 @@ def build_debt_schedule(
         taxable_income = max(0.0, float(row["ebit"]) - cash_interest)
         cash_taxes = taxable_income * cash_tax_rate
         fcf_before_interest = (
-            float(row["ebitda"])
-            - cash_taxes
-            - float(row["capex"])
-            - float(row["change_nwc"])
+            float(row["ebitda"]) - cash_taxes - float(row["capex"]) - float(row["change_nwc"])
         )
         fcf_after_interest = fcf_before_interest - cash_interest
 

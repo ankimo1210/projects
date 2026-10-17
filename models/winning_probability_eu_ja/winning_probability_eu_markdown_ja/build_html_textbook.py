@@ -26,11 +26,7 @@ def make_markdown_renderer() -> MarkdownIt:
         token = tokens[idx]
         info = token.info.strip().split(maxsplit=1)[0] if token.info.strip() else ""
         if info == "math":
-            return (
-                '<pre class="math-block"><code>'
-                + escape(token.content)
-                + "</code></pre>\n"
-            )
+            return '<pre class="math-block"><code>' + escape(token.content) + "</code></pre>\n"
         return default_fence(tokens, idx, options, env)
 
     md.renderer.rules["fence"] = fence
@@ -130,9 +126,7 @@ def page_card(page: Page) -> str:
 
 
 def page_nav(pages: list[Page]) -> str:
-    links = "\n".join(
-        f'<a href="#page-{page.number:03d}">{page.number:03d}</a>' for page in pages
-    )
+    links = "\n".join(f'<a href="#page-{page.number:03d}">{page.number:03d}</a>' for page in pages)
     return f'<div class="page-links">{links}</div>'
 
 
@@ -142,7 +136,7 @@ def source_link(path: str) -> str:
 
 def markdown_chapter(section_id: str, label: str, path: str, lead: str = "") -> str:
     markdown = read_text(ROOT / path)
-    lead_html = f"<p class=\"chapter-lead\">{escape(lead)}</p>" if lead else ""
+    lead_html = f'<p class="chapter-lead">{escape(lead)}</p>' if lead else ""
     return f"""
 <section class="chapter searchable" id="{escape(section_id)}">
   <div class="chapter-toolbar">

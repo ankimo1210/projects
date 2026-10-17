@@ -44,7 +44,9 @@ def pick(ramp: Ramp, t: float) -> tuple[int, int, int]:
 
 
 class Theme:
-    def __init__(self, ramp: Ramp, grout: tuple[int, int, int] | None = None, ice: Ramp | None = None) -> None:
+    def __init__(
+        self, ramp: Ramp, grout: tuple[int, int, int] | None = None, ice: Ramp | None = None
+    ) -> None:
         self.ramp = ramp
         # what shows between the stones; a colour here reads as something seeping up
         self.grout = grout
@@ -53,19 +55,45 @@ class Theme:
 
 THEMES: dict[str, Theme] = {
     # ゆかい: 古典的な石の地下城（灰×茶）
-    "yukai": Theme([(0.0, (34, 30, 26)), (0.4, (104, 92, 74)), (0.72, (156, 140, 114)), (1.0, (206, 192, 162))]),
+    "yukai": Theme(
+        [(0.0, (34, 30, 26)), (0.4, (104, 92, 74)), (0.72, (156, 140, 114)), (1.0, (206, 192, 162))]
+    ),
     # LIGHT: 白い大聖堂（白×金）
-    "light": Theme([(0.0, (62, 55, 48)), (0.42, (172, 162, 146)), (0.74, (232, 226, 210)), (1.0, (255, 226, 158))]),
+    "light": Theme(
+        [
+            (0.0, (62, 55, 48)),
+            (0.42, (172, 162, 146)),
+            (0.74, (232, 226, 210)),
+            (1.0, (255, 226, 158)),
+        ]
+    ),
     # VAGUE: 苔むした霧の遺跡（緑×灰）
-    "vague": Theme([(0.0, (22, 30, 25)), (0.4, (66, 84, 62)), (0.72, (118, 138, 110)), (1.0, (184, 196, 172))]),
+    "vague": Theme(
+        [(0.0, (22, 30, 25)), (0.4, (66, 84, 62)), (0.72, (118, 138, 110)), (1.0, (184, 196, 172))]
+    ),
     # COLD: 氷の洞窟（青×白）
     "cold": Theme(
-        [(0.0, (14, 24, 44)), (0.42, (62, 96, 142)), (0.76, (134, 176, 214)), (1.0, (232, 248, 255))],
-        ice=[(0.0, (12, 52, 82)), (0.45, (46, 148, 190)), (0.78, (126, 216, 240)), (1.0, (238, 254, 255))],
+        [
+            (0.0, (14, 24, 44)),
+            (0.42, (62, 96, 142)),
+            (0.76, (134, 176, 214)),
+            (1.0, (232, 248, 255)),
+        ],
+        ice=[
+            (0.0, (12, 52, 82)),
+            (0.45, (46, 148, 190)),
+            (0.78, (126, 216, 240)),
+            (1.0, (238, 254, 255)),
+        ],
     ),
     # CRUEL: 腐食した工房（紫×黄緑）— 黄緑は目地から滲む酸として出す
     "cruel": Theme(
-        [(0.0, (26, 15, 36)), (0.42, (80, 48, 104)), (0.72, (136, 92, 156)), (1.0, (196, 164, 206))],
+        [
+            (0.0, (26, 15, 36)),
+            (0.42, (80, 48, 104)),
+            (0.72, (136, 92, 156)),
+            (1.0, (196, 164, 206)),
+        ],
         grout=(126, 176, 52),
     ),
     # TIGHT: 竜の巣（黒×赤）— 赤は割れ目から覗く溶岩
@@ -85,7 +113,9 @@ def canvas() -> tuple[Image.Image, ImageDraw.ImageDraw]:
     return im, ImageDraw.Draw(im)
 
 
-def bevel(d: ImageDraw.ImageDraw, box: tuple[int, int, int, int], ramp: Ramp, mid: float, lip: int) -> None:
+def bevel(
+    d: ImageDraw.ImageDraw, box: tuple[int, int, int, int], ramp: Ramp, mid: float, lip: int
+) -> None:
     """A slab: flat face, lit top-left edge, shaded bottom-right edge."""
     x0, y0, x1, y1 = box
     d.rectangle(box, fill=pick(ramp, mid))
@@ -109,12 +139,20 @@ def floor_tile(th: Theme, accent: bool) -> Image.Image:
     if accent:
         crack = mix(pick(th.ramp, 0.5), th.grout, 0.8) if th.grout else pick(th.ramp, 0.34)
         d.line(
-            [(N * 0.30, N * 0.20), (N * 0.40, N * 0.34), (N * 0.33, N * 0.48), (N * 0.44, N * 0.62)],
+            [
+                (N * 0.30, N * 0.20),
+                (N * 0.40, N * 0.34),
+                (N * 0.33, N * 0.48),
+                (N * 0.44, N * 0.62),
+            ],
             fill=crack,
             width=round(N * 0.014),
         )
         for px_, py_, r in [(0.68, 0.30, 0.03), (0.74, 0.66, 0.024), (0.28, 0.74, 0.026)]:
-            d.ellipse((N * (px_ - r), N * (py_ - r), N * (px_ + r), N * (py_ + r)), fill=pick(th.ramp, 0.5))
+            d.ellipse(
+                (N * (px_ - r), N * (py_ - r), N * (px_ + r), N * (py_ + r)),
+                fill=pick(th.ramp, 0.5),
+            )
     return im
 
 
@@ -132,7 +170,13 @@ def wall_tile(th: Theme) -> Image.Image:
         offset = (N / 4) if r % 2 else 0
         x = -N / 4 + offset
         while x < N:
-            bevel(d, (round(x) + m, y0, round(x + N / 2) - m, y1), th.ramp, 0.23 + (r % 2) * 0.04, round(N * 0.012))
+            bevel(
+                d,
+                (round(x) + m, y0, round(x + N / 2) - m, y1),
+                th.ramp,
+                0.23 + (r % 2) * 0.04,
+                round(N * 0.012),
+            )
             x += N / 2
     d.rectangle((0, 0, N, round(N * 0.05)), fill=pick(th.ramp, 0.44))
     d.rectangle((0, N - round(N * 0.07), N, N), fill=pick(th.ramp, 0.02))
@@ -143,9 +187,19 @@ def ice_tile(th: Theme) -> Image.Image:
     ramp = th.ice or th.ramp
     im, d = canvas()
     d.rectangle((0, 0, N, N), fill=pick(ramp, 0.3))
-    bevel(d, (round(N * 0.03), round(N * 0.03), round(N * 0.97), round(N * 0.97)), ramp, 0.72, round(N * 0.02))
+    bevel(
+        d,
+        (round(N * 0.03), round(N * 0.03), round(N * 0.97), round(N * 0.97)),
+        ramp,
+        0.72,
+        round(N * 0.02),
+    )
     for x0, y0, w in [(0.16, 0.62, 0.09), (0.46, 0.3, 0.06)]:
-        d.line([(N * x0, N * y0), (N * (x0 + 0.34), N * (y0 - 0.34))], fill=pick(ramp, 1.0), width=round(N * w * 0.5))
+        d.line(
+            [(N * x0, N * y0), (N * (x0 + 0.34), N * (y0 - 0.34))],
+            fill=pick(ramp, 1.0),
+            width=round(N * w * 0.5),
+        )
     return im
 
 
@@ -155,7 +209,10 @@ def stairs_tile(th: Theme) -> Image.Image:
     for i in range(4):
         t = i / 4
         inset_ = N * (0.1 + t * 0.16)
-        d.rectangle((inset_, N * (0.14 + t * 0.19), N - inset_, N * (0.32 + t * 0.19)), fill=pick(th.ramp, 0.62 - t * 0.16))
+        d.rectangle(
+            (inset_, N * (0.14 + t * 0.19), N - inset_, N * (0.32 + t * 0.19)),
+            fill=pick(th.ramp, 0.62 - t * 0.16),
+        )
     d.rectangle((N * 0.26, N * 0.86, N * 0.74, N * 0.96), fill=(6, 8, 16))
     return im
 
@@ -224,7 +281,10 @@ def build_theme(name: str, th: Theme) -> dict:
         tiles["tile.ice"] = ice_tile(th)
     # ゆかいは既定セット（接頭辞なし）。他の城だけ id に城名を付ける
     prefix = "" if name == "yukai" else f"{name}."
-    out = {f"{prefix}{id_}": export(im, f"{name}/{id_.removeprefix('tile.')}.png") for id_, im in tiles.items()}
+    out = {
+        f"{prefix}{id_}": export(im, f"{name}/{id_.removeprefix('tile.')}.png")
+        for id_, im in tiles.items()
+    }
     out[f"thumb.{name}"] = export_thumb(thumbnail(tiles), f"{name}/thumb.png")
     return out
 

@@ -1,4 +1,5 @@
 """Filesystem paths for akinator data and DB. Single source of truth."""
+
 from __future__ import annotations
 
 from pathlib import Path

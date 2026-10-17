@@ -35,7 +35,7 @@ def main() -> None:
             f"identical {cov.identical}/{cov.checked} verified={cov.verified}"
         )
         lens = sorted(cov.lengths.values())
-        print(f"   corpus lengths: min {lens[0]} median {lens[len(lens)//2]} max {lens[-1]}")
+        print(f"   corpus lengths: min {lens[0]} median {lens[len(lens) // 2]} max {lens[-1]}")
 
 
 if __name__ == "__main__":

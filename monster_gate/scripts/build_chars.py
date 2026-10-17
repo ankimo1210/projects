@@ -59,12 +59,6 @@ def eyes(p, cx, cy, r=15, gap=44, pupil=EYE):
         p.flat(ell(cx + dx - r + 3, cy - r + 4, cx + dx + r - 6, cy + r - 2), pupil)
 
 
-
-
-
-
-
-
 def slime(p, body, big=False, angry=False):
     t = -26 if big else 0
     p.part(ell(96, 210 + t, 416, 442), body)  # blob

@@ -76,9 +76,7 @@ def extract_document(path: Path) -> ExtractedDocument:
     return extract_html(content)
 
 
-def _quiz_rows_to_questions(
-    rows: list[dict[str, object]], method: str
-) -> list[StructuredQuestion]:
+def _quiz_rows_to_questions(rows: list[dict[str, object]], method: str) -> list[StructuredQuestion]:
     questions: list[StructuredQuestion] = []
     for position, row in enumerate(rows):
         raw_text = str(row.get("question") or row.get("front") or "").strip()
@@ -97,9 +95,7 @@ def _quiz_rows_to_questions(
         if not raw_text or not isinstance(choices_value, list):
             continue
         choices = tuple(str(choice).strip() for choice in choices_value)
-        answer_index = row.get(
-            "answer", row.get("correct_index", row.get("correctAnswer"))
-        )
+        answer_index = row.get("answer", row.get("correct_index", row.get("correctAnswer")))
         correct_choice: str | None = None
         if isinstance(answer_index, int) and 0 <= answer_index < len(choices):
             correct_choice = str(choices[answer_index])

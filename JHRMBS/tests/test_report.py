@@ -53,9 +53,7 @@ def test_generate_issue_report_renders_sensitivity_and_reversal_warning(
         return original(*args, **kwargs)
 
     monkeypatch.setattr(report_module, "forecast_issue", _counting)
-    monkeypatch.setattr(
-        "jhrmbs.cashflow_service.forecast_issue", _counting
-    )
+    monkeypatch.setattr("jhrmbs.cashflow_service.forecast_issue", _counting)
     path = generate_issue_report(pipeline_config, "JHF-001")
     html_text = path.read_text(encoding="utf-8")
     assert "感応度" in html_text

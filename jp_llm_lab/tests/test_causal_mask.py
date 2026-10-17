@@ -13,7 +13,9 @@ from jp_llm_lab.models.transformer import ClassicalGPT
 @pytest.mark.parametrize("impl", ["explicit", "sdpa"])
 def test_no_future_leakage(impl):
     torch.manual_seed(0)
-    cfg = ModelConfig(vocab_size=50, d_model=32, n_heads=2, n_layers=2, context_len=16, attn_impl=impl)
+    cfg = ModelConfig(
+        vocab_size=50, d_model=32, n_heads=2, n_layers=2, context_len=16, attn_impl=impl
+    )
     model = ClassicalGPT(cfg).eval()
 
     idx1 = torch.randint(0, 50, (2, 16))

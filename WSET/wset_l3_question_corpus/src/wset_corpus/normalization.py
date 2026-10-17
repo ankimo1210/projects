@@ -26,9 +26,7 @@ def normalize_text(text: str) -> str:
     return re.sub(r"\s*\n\s*", "\n", normalized).strip()
 
 
-def question_id(
-    source_id: str, normalized_text: str, position: int, source_url: str = ""
-) -> str:
+def question_id(source_id: str, normalized_text: str, position: int, source_url: str = "") -> str:
     return stable_id(source_id, source_url, normalized_text, position, prefix="q_")
 
 

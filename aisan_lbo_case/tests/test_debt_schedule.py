@@ -5,8 +5,24 @@ from src.model.debt_schedule import build_debt_schedule
 def test_debt_schedule_no_negative_debt_and_cash_floor():
     projection = pd.DataFrame(
         [
-            {"scenario": "Test", "year": 1, "fiscal_year": "FY1", "ebitda": 100.0, "ebit": 80.0, "capex": 20.0, "change_nwc": 5.0},
-            {"scenario": "Test", "year": 2, "fiscal_year": "FY2", "ebitda": 120.0, "ebit": 95.0, "capex": 20.0, "change_nwc": 5.0},
+            {
+                "scenario": "Test",
+                "year": 1,
+                "fiscal_year": "FY1",
+                "ebitda": 100.0,
+                "ebit": 80.0,
+                "capex": 20.0,
+                "change_nwc": 5.0,
+            },
+            {
+                "scenario": "Test",
+                "year": 2,
+                "fiscal_year": "FY2",
+                "ebitda": 120.0,
+                "ebit": 95.0,
+                "capex": 20.0,
+                "change_nwc": 5.0,
+            },
         ]
     )
     schedule = build_debt_schedule(

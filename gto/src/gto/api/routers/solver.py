@@ -39,7 +39,7 @@ class SolveResponse(BaseModel):
     strategy: list[ActionFreq]
     exploitability: float
     iterations: int
-    backend: str           # "gto-hu" | "gpu-preview"
+    backend: str  # "gto-hu" | "gpu-preview"
     equilibrium_claim: bool
 
 
@@ -101,9 +101,7 @@ async def solve(req: SolveRequest):
 
         results = await loop.run_in_executor(
             _executor,
-            lambda: gto_cuda.batch_solve_rust(
-                [spot], min(req.iterations, 1000), req.max_bets
-            ),
+            lambda: gto_cuda.batch_solve_rust([spot], min(req.iterations, 1000), req.max_bets),
         )
         result = results[0]
     except Exception as e:

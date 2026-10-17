@@ -96,9 +96,7 @@ def _place_labels(sectors: pd.DataFrame) -> dict[str, tuple[str, float, float]]:
     # Two obstacle classes with different clearances: text needs a full line of
     # vertical room from other text, but only needs to clear a marker's radius.
     label_boxes: list[tuple[float, float, float]] = []
-    point_boxes = [
-        (px(r["shortage_score"]), py(r["ai_score"]), 8.0) for _, r in sectors.iterrows()
-    ]
+    point_boxes = [(px(r["shortage_score"]), py(r["ai_score"]), 8.0) for _, r in sectors.iterrows()]
     chosen: dict[str, tuple[str, float, float]] = {}
 
     def penalty(anchor: str, ax: float, ay: float, half: float) -> float:
@@ -112,9 +110,7 @@ def _place_labels(sectors: pd.DataFrame) -> dict[str, tuple[str, float, float]]:
         score += 10.0 * sum(
             abs(ay - y) < 15 and abs(ax - x) < half + hw for x, y, hw in label_boxes
         )
-        score += 4.0 * sum(
-            abs(ay - y) < 9 and abs(ax - x) < half + hw for x, y, hw in point_boxes
-        )
+        score += 4.0 * sum(abs(ay - y) < 9 and abs(ax - x) < half + hw for x, y, hw in point_boxes)
         return score
 
     for name in sectors.sort_values("escape_potential", ascending=False).index:
@@ -199,7 +195,7 @@ def _quadrant_card(sectors: pd.DataFrame, name: str, blurb: str, key: bool = Fal
     )
     return (
         f'<article class="cell cell--{Q_CLASS[name]}{" is-key" if key else ""}">'
-        f'<header><h3>{html.escape(name)}</h3>'
+        f"<header><h3>{html.escape(name)}</h3>"
         f'<span class="count">{len(members)}業種</span></header>'
         f'<p>{blurb}</p><ul class="chips">{chips}</ul></article>'
     )
@@ -228,8 +224,10 @@ def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[
     if with_pnl:
         rows = rows[rankable(rows)]
         scope = rows.get("parent_scope", pd.Series(PARENT_SCOPE_CONFIRMED, index=rows.index))
-        counts = {k: int((scope == k).sum()) for k in
-                  (PARENT_SCOPE_CONFIRMED, PARENT_SCOPE_UNKNOWN, PARENT_SCOPE_THIN)}
+        counts = {
+            k: int((scope == k).sum())
+            for k in (PARENT_SCOPE_CONFIRMED, PARENT_SCOPE_UNKNOWN, PARENT_SCOPE_THIN)
+        }
         rows = rows[scope == PARENT_SCOPE_CONFIRMED]
         rows = rows.sort_values("op_margin_uplift_pp", ascending=False, na_position="last")
         caption = (
@@ -246,14 +244,18 @@ def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[
     rows = rows.head(n)
     shown = len(rows)
 
-    head = ('<th>コード</th><th>銘柄</th><th>業種</th><th class="num">人手不足</th>'
-            '<th class="num">AI代替</th><th class="num">脱出</th>')
+    head = (
+        '<th>コード</th><th>銘柄</th><th>業種</th><th class="num">人手不足</th>'
+        '<th class="num">AI代替</th><th class="num">脱出</th>'
+    )
     if with_pnl:
-        head += ('<th class="num">欠員率</th><th class="num">限界利益率</th>'
-                 '<th class="num">利益率押上げ(pp)</th>'
-                 '<th class="num">営業利益押上げ余地%</th>'
-                 '<th class="num">回復売上(億)</th><th class="num">営業利益(億)</th>'
-                 '<th class="num">単体/連結</th>')
+        head += (
+            '<th class="num">欠員率</th><th class="num">限界利益率</th>'
+            '<th class="num">利益率押上げ(pp)</th>'
+            '<th class="num">営業利益押上げ余地%</th>'
+            '<th class="num">回復売上(億)</th><th class="num">営業利益(億)</th>'
+            '<th class="num">単体/連結</th>'
+        )
 
     body = []
     for code, r in rows.iterrows():
@@ -275,7 +277,7 @@ def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[
                 f'<td class="num">{_num(r.recovered_revenue / 1e8, "{:,.0f}")}</td>'
                 f'<td class="num">{_num(r.operating_profit / 1e8, "{:,.0f}")}</td>'
                 f'<td class="num">'
-                f'{_num(getattr(r, "parent_employee_share", float("nan")) * 100, "{:.0f}%")}</td>'
+                f"{_num(getattr(r, 'parent_employee_share', float('nan')) * 100, '{:.0f}%')}</td>"
             )
         body.append(f"<tr>{cells}</tr>")
     return head, "".join(body), caption, shown
@@ -450,12 +452,27 @@ def render(
     companies = company_frame(cfg, ref, financials)
     x_cut, y_cut = thresholds(sectors["shortage_score"], sectors["ai_score"], cfg)
 
-    cells = "".join([
-        _quadrant_card(sectors, "AI増益", "人手不足ではないが、労働のAI代替余地は大きい。成長ではなくマージンの話。"),
-        _quadrant_card(sectors, "AI解放", "人手不足が深刻で、かつその労働をAIで置き換えられる。制約解除の期待値が最大。", key=True),
-        _quadrant_card(sectors, "低感応", "どちらも低い。この枠組みでは論点にならない。"),
-        _quadrant_card(sectors, "人手依存", "人手不足は深刻だがAIでは解けない。賃上げ・自動化設備・価格転嫁・M&Aの世界。"),
-    ])
+    cells = "".join(
+        [
+            _quadrant_card(
+                sectors,
+                "AI増益",
+                "人手不足ではないが、労働のAI代替余地は大きい。成長ではなくマージンの話。",
+            ),
+            _quadrant_card(
+                sectors,
+                "AI解放",
+                "人手不足が深刻で、かつその労働をAIで置き換えられる。制約解除の期待値が最大。",
+                key=True,
+            ),
+            _quadrant_card(sectors, "低感応", "どちらも低い。この枠組みでは論点にならない。"),
+            _quadrant_card(
+                sectors,
+                "人手依存",
+                "人手不足は深刻だがAIでは解けない。賃上げ・自動化設備・価格転嫁・M&Aの世界。",
+            ),
+        ]
+    )
 
     with_pnl = financials is not None and "op_uplift_pct" in companies.columns
     top_n = min(top_companies, int((companies["quadrant"] == "AI解放").sum()))

@@ -257,44 +257,84 @@ class IntermittentDemand(Process):
 
 PROCESSES: tuple[Process, ...] = (
     PureSeasonal(
-        key="syn_seasonal", title="合成: 純粋な周期", season=24,
+        key="syn_seasonal",
+        title="合成: 純粋な周期",
+        season=24,
         note="正弦2倍音 + 白色ノイズ。周期が完全に安定した理想形。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     TrendSeasonal(
-        key="syn_trend_seasonal", title="合成: 周期 + トレンド", season=24,
+        key="syn_trend_seasonal",
+        title="合成: 周期 + トレンド",
+        season=24,
         note="上と同じ周期に線形トレンド。外挿できるかを見る。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     AR1(
-        key="syn_ar1", title="合成: AR(1) φ=0.85", season=1,
+        key="syn_ar1",
+        title="合成: AR(1) φ=0.85",
+        season=1,
         note="平均回帰。最適予測は幾何的に平均へ戻る。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     RandomWalk(
-        key="syn_random_walk", title="合成: ランダムウォーク", season=1,
+        key="syn_random_walk",
+        title="合成: ランダムウォーク",
+        season=1,
         note="最適予測は直前値そのもの。過剰に構造を読むと負ける。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     RegimeSwitch(
-        key="syn_regime", title="合成: 水準ジャンプ", season=1,
+        key="syn_regime",
+        title="合成: 水準ジャンプ",
+        season=1,
         note="1%の確率で水準が跳ぶ。最適予測は現水準の維持。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     LogisticMap(
-        key="syn_chaos", title="合成: ロジスティック写像 r=3.9", season=1,
+        key="syn_chaos",
+        title="合成: ロジスティック写像 r=3.9",
+        season=1,
         note="決定論的カオス。ノイズゼロなので理論限界は誤差0。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     SeasonalHeteroskedastic(
-        key="syn_heteroskedastic", title="合成: 周期的な分散", season=24,
+        key="syn_heteroskedastic",
+        title="合成: 周期的な分散",
+        season=24,
         note="平均も分散も周期的に動く。分位点ヘッドを直接試す。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     IntermittentDemand(
-        key="syn_intermittent", title="合成: 間欠需要", season=24,
+        key="syn_intermittent",
+        title="合成: 間欠需要",
+        season=24,
         note="発生確率が周期的なスパースな計数。ゼロが多い。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
 )
 
@@ -400,9 +440,10 @@ class AmplitudeModulated(Process):
     level: float = 10.0
 
     def _mean(self, t, phi0, psi0):
-        a = self.amp_base + self.amp_swing * (
-            1 + np.sin(2 * np.pi * t / self.slow_period + psi0)
-        ) / 2
+        a = (
+            self.amp_base
+            + self.amp_swing * (1 + np.sin(2 * np.pi * t / self.slow_period + psi0)) / 2
+        )
         return self.level + a * np.sin(2 * np.pi * t / self.season + phi0)
 
     def generate(self, rng, n):
@@ -514,29 +555,54 @@ class NonlinearDriver(Process):
 
 HARD_PROCESSES: tuple[Process, ...] = (
     ThresholdAR(
-        key="syn_threshold_ar", title="合成: 閾値AR（係数が切替）", season=1,
+        key="syn_threshold_ar",
+        title="合成: 閾値AR（係数が切替）",
+        season=1,
         note="平均の上下で持続性が 0.95 と 0.30 に切り替わる。線形ARは両側で外す。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     PhaseDrift(
-        key="syn_phase_drift", title="合成: 周期が徐々にずれる", season=24,
+        key="syn_phase_drift",
+        title="合成: 周期が徐々にずれる",
+        season=24,
         note="周期が 24 から約 30 へゆっくり伸びる。固定周期の基底は位相を外していく。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     AmplitudeModulated(
-        key="syn_amplitude_mod", title="合成: 振幅変調", season=24,
+        key="syn_amplitude_mod",
+        title="合成: 振幅変調",
+        season=24,
         note="日次周期の振幅自体が周期 240 で動く。日次高調波の基底には無い周波数。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     LongMemory(
-        key="syn_long_memory", title="合成: 長期記憶 d=0.4", season=1,
+        key="syn_long_memory",
+        title="合成: 長期記憶 d=0.4",
+        season=1,
         note="分数階和分。自己相関が双曲的に減衰し、整数階差分でも幾何減衰でも表せない。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
     NonlinearDriver(
-        key="syn_nonlinear_driver", title="合成: 未観測ドライバへの飽和応答", season=1,
+        key="syn_nonlinear_driver",
+        title="合成: 未観測ドライバへの飽和応答",
+        season=1,
         note="遅い潜在AR(1)にロジスティック応答、12ステップ遅れ。共変量実験の対象でもある。",
-        context_length=512, horizon=48, n_series=30, n_windows=4,
+        context_length=512,
+        horizon=48,
+        n_series=30,
+        n_windows=4,
     ),
 )
 

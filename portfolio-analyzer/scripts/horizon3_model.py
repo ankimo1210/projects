@@ -155,15 +155,22 @@ class Model:
 
     def usd_share(self, weights: dict[str, float]) -> float:
         total = sum(weights.values())
-        return sum(
-            v for k, v in weights.items()
-            if (self.sleeves.get(k) or {}).get("currency") == "USD"
-        ) / total
+        return (
+            sum(
+                v
+                for k, v in weights.items()
+                if (self.sleeves.get(k) or {}).get("currency") == "USD"
+            )
+            / total
+        )
 
     def basket_pe(self, name: str) -> dict[str, float]:
         """Equal-money baskets aggregate by harmonic mean, not arithmetic."""
         pes = [c["pe"] for c in self.cfg["reference_sleeves"][name]["constituents"].values()]
-        gr = [c["revenue_growth"] for c in self.cfg["reference_sleeves"][name]["constituents"].values()]
+        gr = [
+            c["revenue_growth"]
+            for c in self.cfg["reference_sleeves"][name]["constituents"].values()
+        ]
         return {
             "arithmetic_pe": sum(pes) / len(pes),
             "harmonic_pe": len(pes) / sum(1 / p for p in pes),
@@ -184,6 +191,7 @@ class Model:
         gross = v * (1 + alt_r) ** self.years
         gain = gross - v
         net = gross - gain * self.tax if gain > 0 else gross + (-gain) * self.tax
+
         def gap(pe: float) -> float:
             return v * (1 + self.sleeve_return(name, q, pe1=pe)) ** self.years - net
 
@@ -228,15 +236,18 @@ def main() -> None:
                 q: out["portfolio_returns"][mode][p][q] - out["portfolio_returns"][mode]["現状"][q]
                 for q in quads
             }
-            for p in plans if p != "現状"
+            for p in plans
+            if p != "現状"
         }
         for mode in ("buy_and_hold", "rebalanced")
     }
 
     # 3. Composition and currency exposure.
     out["composition"] = {
-        p: {k: v / sum(weights[p].values()) for k, v in sorted(
-            weights[p].items(), key=lambda kv: -kv[1])}
+        p: {
+            k: v / sum(weights[p].values())
+            for k, v in sorted(weights[p].items(), key=lambda kv: -kv[1])
+        }
         for p in plans
     }
     out["usd_share"] = {p: m.usd_share(weights[p]) for p in plans}
@@ -244,10 +255,17 @@ def main() -> None:
     # 4. Break-even multiples.
     out["breakeven_pe"] = {
         name: {
-            f"hurdle_{int(h * 100)}pct": {q: m.breakeven_pe(name, i, h) for i, q in enumerate(quads)}
+            f"hurdle_{int(h * 100)}pct": {
+                q: m.breakeven_pe(name, i, h) for i, q in enumerate(quads)
+            }
             for h in (0.0, 0.10)
         }
-        for name in ("6857 アドバンテスト", "TER テラダイン", "SMH 半導体ETF", "需要側4社バスケット")
+        for name in (
+            "6857 アドバンテスト",
+            "TER テラダイン",
+            "SMH 半導体ETF",
+            "需要側4社バスケット",
+        )
     }
 
     # 5. Where the current portfolio would overtake plan E, if anywhere.
@@ -255,16 +273,19 @@ def main() -> None:
     for mode in ("buy_and_hold", "rebalanced"):
         row: dict[str, Any] = {}
         for i, q in enumerate(quads):
+
             def gap(pe: float, i: int = i, mode: str = mode) -> float:
                 over = ("6857 アドバンテスト", pe)
-                return (m.portfolio_return(weights["現状"], i, mode=mode, pe1_override=over)
-                        - m.portfolio_return(weights["E"], i, mode=mode, pe1_override=over))
+                return m.portfolio_return(
+                    weights["現状"], i, mode=mode, pe1_override=over
+                ) - m.portfolio_return(weights["E"], i, mode=mode, pe1_override=over)
 
             pe = solve(gap, 1.0, 100_000.0)
             row[q] = {
                 "crossover_pe": pe,
-                "sleeve_return_at_crossover":
-                    m.sleeve_return("6857 アドバンテスト", i, pe1=pe) if pe else None,
+                "sleeve_return_at_crossover": m.sleeve_return("6857 アドバンテスト", i, pe1=pe)
+                if pe
+                else None,
                 "within_charted_range": bool(pe is not None and pe <= 73.2),
             }
         out["current_vs_E_crossover"][mode] = row
@@ -276,10 +297,12 @@ def main() -> None:
             {
                 "pe1": pe,
                 "sleeve_return": m.sleeve_return("6857 アドバンテスト", 0, pe1=pe),
-                "現状": m.portfolio_return(weights["現状"], 0, mode=mode,
-                                         pe1_override=("6857 アドバンテスト", pe)),
-                "E": m.portfolio_return(weights["E"], 0, mode=mode,
-                                        pe1_override=("6857 アドバンテスト", pe)),
+                "現状": m.portfolio_return(
+                    weights["現状"], 0, mode=mode, pe1_override=("6857 アドバンテスト", pe)
+                ),
+                "E": m.portfolio_return(
+                    weights["E"], 0, mode=mode, pe1_override=("6857 アドバンテスト", pe)
+                ),
             }
             for pe in grid
         ]
@@ -310,8 +333,10 @@ def main() -> None:
     }
     out["fx_improvement_E_vs_current"] = {
         f"{int(s * 100):+d}%": {
-            q: (m.portfolio_return(weights["E"], i, fx_shock=s)
-                - m.portfolio_return(weights["現状"], i, fx_shock=s))
+            q: (
+                m.portfolio_return(weights["E"], i, fx_shock=s)
+                - m.portfolio_return(weights["現状"], i, fx_shock=s)
+            )
             for i, q in enumerate(quads)
         }
         for s in cfg["scenarios"]["fx_shocks"]
@@ -319,9 +344,11 @@ def main() -> None:
     # The yen move at which plan E stops improving each quadrant.
     out["fx_breakeven"] = {}
     for i, q in enumerate(quads):
+
         def gap(shock: float, i: int = i) -> float:
-            return (m.portfolio_return(weights["E"], i, fx_shock=shock)
-                    - m.portfolio_return(weights["現状"], i, fx_shock=shock))
+            return m.portfolio_return(weights["E"], i, fx_shock=shock) - m.portfolio_return(
+                weights["現状"], i, fx_shock=shock
+            )
 
         out["fx_breakeven"][q] = solve(gap, -0.95, 5.0)
 
@@ -360,8 +387,10 @@ def main() -> None:
     print(f"{'象限':10}{'基準終端PER':>12}{'逆転PER':>10}{'保有(基準)':>12}{'乗換(税引後)':>14}")
     for q in quads:
         n = out["nisa"][q]
-        print(f"{q:10}{n['base_pe1']:>12.0f}{n['crossover_pe']:>10.2f}"
-              f"{n['hold_at_base_pe_jpy'] / 1e4:>11,.0f}万{n['alternative_after_tax_jpy'] / 1e4:>13,.0f}万")
+        print(
+            f"{q:10}{n['base_pe1']:>12.0f}{n['crossover_pe']:>10.2f}"
+            f"{n['hold_at_base_pe_jpy'] / 1e4:>11,.0f}万{n['alternative_after_tax_jpy'] / 1e4:>13,.0f}万"
+        )
 
     print("\n=== 為替感応度：案E − 現状 の改善幅 ===")
     print(f"{'USD/JPY':22}" + "".join(f"{q:>11}" for q in quads))
@@ -371,7 +400,10 @@ def main() -> None:
     print("\n  改善が消える円高水準:")
     for q in quads:
         b = out["fx_breakeven"][q]
-        print(f"    {q:10} " + (f"USD/JPY {b * 100:+.1f}%" if b is not None else "検証範囲では消えない"))
+        print(
+            f"    {q:10} "
+            + (f"USD/JPY {b * 100:+.1f}%" if b is not None else "検証範囲では消えない")
+        )
 
     print("\n=== 直接USD資産の比率 ===")
     for p in plans:
@@ -379,8 +411,10 @@ def main() -> None:
 
     print("\n=== バスケット集約PER ===")
     for n, b in out["baskets"].items():
-        print(f"  {n}: 算術 {b['arithmetic_pe']:.2f} / 調和 {b['harmonic_pe']:.2f} "
-              f"（売上成長 {b['revenue_growth_min'] * 100:.1f}〜{b['revenue_growth_max'] * 100:.1f}%）")
+        print(
+            f"  {n}: 算術 {b['arithmetic_pe']:.2f} / 調和 {b['harmonic_pe']:.2f} "
+            f"（売上成長 {b['revenue_growth_min'] * 100:.1f}〜{b['revenue_growth_max'] * 100:.1f}%）"
+        )
 
     print(f"\n書き出し: {RESULTS}")
 

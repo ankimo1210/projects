@@ -13,7 +13,14 @@ def build_chart_data(
     scenario_projection: dict[str, list[dict[str, object]]] = {}
     for scenario, df in default_projection.groupby("scenario"):
         scenario_projection[scenario] = df[
-            ["fiscal_year", "revenue", "ebitda", "ebitda_margin", "public_revenue", "mobility_dx_revenue"]
+            [
+                "fiscal_year",
+                "revenue",
+                "ebitda",
+                "ebitda_margin",
+                "public_revenue",
+                "mobility_dx_revenue",
+            ]
         ].to_dict("records")
 
     returns_by_premium = model_outputs[
@@ -26,7 +33,9 @@ def build_chart_data(
     pivot = heatmap.pivot(index="premium_label", columns="exit_label", values="irr").sort_index()
 
     return {
-        "historical": historical[["fiscal_year", "revenue", "ebitda_estimated", "ebit_margin"]].to_dict("records"),
+        "historical": historical[
+            ["fiscal_year", "revenue", "ebitda_estimated", "ebit_margin"]
+        ].to_dict("records"),
         "scenario_projection": scenario_projection,
         "returns_by_premium": returns_by_premium,
         "heatmap": {

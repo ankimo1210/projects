@@ -5,6 +5,7 @@ entities that would answer yes vs no. Missing-feature entities count as a half
 to each side so they don't dominate selection. Lower score = more balanced =
 better. Designed so the metric can later be swapped for entropy/info-gain
 without touching callers."""
+
 from __future__ import annotations
 
 from app.inference.scoring import MatchResult, expected_match

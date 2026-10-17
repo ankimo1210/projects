@@ -9,8 +9,7 @@ from app.models import Answer, Entity, Question
 
 
 def _entity(features):
-    return Entity(id="Q", name="n", aliases=[], description="", image_url=None,
-                  features=features)
+    return Entity(id="Q", name="n", aliases=[], description="", image_url=None, features=features)
 
 
 def test_equals_match_and_mismatch():
@@ -35,8 +34,6 @@ def test_numeric_equals():
     q = Question("q", "?", "birth_century", 20, "numeric")
     assert expected_match(_entity({"birth_century": 20}), q) == MatchResult.MATCH
     assert expected_match(_entity({"birth_century": 19}), q) == MatchResult.MISMATCH
-
-
 
 
 def test_yes_raises_match_lowers_mismatch():
@@ -74,8 +71,6 @@ def test_probably_yes_is_weaker_than_yes():
     strong = update_log_score(0.0, male, q, Answer.YES)
     weak = update_log_score(0.0, male, q, Answer.PROBABLY_YES)
     assert 0.0 < weak < strong
-
-
 
 
 def test_posteriors_sum_to_one_and_rank():

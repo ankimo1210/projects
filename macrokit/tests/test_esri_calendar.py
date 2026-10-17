@@ -69,7 +69,9 @@ def test_the_live_feed_still_has_the_counts_the_spec_measured():
     adapter = esri_calendar.EsriCalendarAdapter()
     content, url, _ = adapter.fetch_raw()
     events = adapter.parse(
-        content, indicator="jp_real_gdp_qoq_saar", source_url=url,
+        content,
+        indicator="jp_real_gdp_qoq_saar",
+        source_url=url,
         ingested_at=datetime.now(UTC),
     )
     kinds = Counter(e.release_kind for e in events)

@@ -45,21 +45,30 @@ def loss_curves_figure(records: list[dict]) -> go.Figure:
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
-            x=[r["step"] for r in trains], y=[r["loss"] for r in trains],
-            name="train (per-step minibatch)", mode="lines",
-            line=dict(color=COLORS["train"], width=1), opacity=0.45,
+            x=[r["step"] for r in trains],
+            y=[r["loss"] for r in trains],
+            name="train (per-step minibatch)",
+            mode="lines",
+            line=dict(color=COLORS["train"], width=1),
+            opacity=0.45,
         )
     )
     fig.add_trace(
         go.Scatter(
-            x=[r["step"] for r in evals], y=[r["train_eval"]["loss"] for r in evals],
-            name="train (fixed eval batches)", mode="lines+markers", line=dict(color=COLORS["train"]),
+            x=[r["step"] for r in evals],
+            y=[r["train_eval"]["loss"] for r in evals],
+            name="train (fixed eval batches)",
+            mode="lines+markers",
+            line=dict(color=COLORS["train"]),
         )
     )
     fig.add_trace(
         go.Scatter(
-            x=[r["step"] for r in evals], y=[r["val_eval"]["loss"] for r in evals],
-            name="validation", mode="lines+markers", line=dict(color=COLORS["val"]),
+            x=[r["step"] for r in evals],
+            y=[r["val_eval"]["loss"] for r in evals],
+            name="validation",
+            mode="lines+markers",
+            line=dict(color=COLORS["val"]),
         )
     )
     buttons = []
@@ -70,24 +79,62 @@ def loss_curves_figure(records: list[dict]) -> go.Figure:
             [field_of(r, field) for r in evals],
         ]
         buttons.append(
-            dict(label=key, method="update", args=[{"x": xs}, {"xaxis": {"title": {"text": label}}}])
+            dict(
+                label=key, method="update", args=[{"x": xs}, {"xaxis": {"title": {"text": label}}}]
+            )
         )
     fig.update_layout(
         updatemenus=[dict(type="buttons", direction="right", x=0.0, y=1.18, buttons=buttons)]
     )
-    return base_layout(fig, "Loss curves (train vs validation)", "optimizer step", "cross-entropy loss (nats/token)")
+    return base_layout(
+        fig,
+        "Loss curves (train vs validation)",
+        "optimizer step",
+        "cross-entropy loss (nats/token)",
+    )
 
 
 def lr_grad_figure(records: list[dict], grad_clip: float) -> go.Figure:
     trains, _ = _split(records)
     steps = [r["step"] for r in trains]
-    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, subplot_titles=("learning rate", "gradient norm (pre-clip)"))
-    fig.add_trace(go.Scatter(x=steps, y=[r["lr"] for r in trains], name="lr", line=dict(color=COLORS["accent"])), row=1, col=1)
-    fig.add_trace(go.Scatter(x=steps, y=[r["grad_norm"] for r in trains], name="‖g‖₂", line=dict(color=COLORS["train"])), row=2, col=1)
-    fig.add_hline(y=grad_clip, line_dash="dash", line_color=COLORS["reference"], row=2, col=1,
-                  annotation_text=f"clip threshold {grad_clip}")
-    fig.update_layout(height=520, template="plotly_white", title="LR schedule and gradient norm",
-                      margin=dict(l=60, r=30, t=60, b=50), showlegend=False)
+    fig = make_subplots(
+        rows=2,
+        cols=1,
+        shared_xaxes=True,
+        subplot_titles=("learning rate", "gradient norm (pre-clip)"),
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=steps, y=[r["lr"] for r in trains], name="lr", line=dict(color=COLORS["accent"])
+        ),
+        row=1,
+        col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=steps,
+            y=[r["grad_norm"] for r in trains],
+            name="‖g‖₂",
+            line=dict(color=COLORS["train"]),
+        ),
+        row=2,
+        col=1,
+    )
+    fig.add_hline(
+        y=grad_clip,
+        line_dash="dash",
+        line_color=COLORS["reference"],
+        row=2,
+        col=1,
+        annotation_text=f"clip threshold {grad_clip}",
+    )
+    fig.update_layout(
+        height=520,
+        template="plotly_white",
+        title="LR schedule and gradient norm",
+        margin=dict(l=60, r=30, t=60, b=50),
+        showlegend=False,
+    )
     fig.update_xaxes(title_text="optimizer step", row=2, col=1)
     return fig
 
@@ -102,13 +149,21 @@ def update_ratio_figure(records: list[dict]) -> go.Figure:
             go.Scatter(
                 x=[r["step"] for r in with_ratio],
                 y=[r["update_ratios"].get(g) for r in with_ratio],
-                name=g, mode="lines+markers", line=dict(color=GROUP_COLORS.get(g)),
+                name=g,
+                mode="lines+markers",
+                line=dict(color=GROUP_COLORS.get(g)),
             )
         )
-    fig.add_hline(y=1e-3, line_dash="dot", line_color=COLORS["reference"],
-                  annotation_text="~1e-3 (healthy AdamW rule of thumb)")
+    fig.add_hline(
+        y=1e-3,
+        line_dash="dot",
+        line_color=COLORS["reference"],
+        annotation_text="~1e-3 (healthy AdamW rule of thumb)",
+    )
     fig.update_yaxes(type="log")
-    return base_layout(fig, "Update-to-weight ratio ‖ΔW‖/‖W‖ per parameter group", "optimizer step", "ratio (log)")
+    return base_layout(
+        fig, "Update-to-weight ratio ‖ΔW‖/‖W‖ per parameter group", "optimizer step", "ratio (log)"
+    )
 
 
 def grad_norm_by_group_figure(records: list[dict]) -> go.Figure:
@@ -119,8 +174,11 @@ def grad_norm_by_group_figure(records: list[dict]) -> go.Figure:
     for g in groups:
         fig.add_trace(
             go.Scatter(
-                x=[r["step"] for r in trains], y=[r["grad_norms"].get(g) for r in trains],
-                name=g, mode="lines", line=dict(color=GROUP_COLORS.get(g)),
+                x=[r["step"] for r in trains],
+                y=[r["grad_norms"].get(g) for r in trains],
+                name=g,
+                mode="lines",
+                line=dict(color=GROUP_COLORS.get(g)),
             )
         )
     fig.update_yaxes(type="log")
@@ -130,22 +188,42 @@ def grad_norm_by_group_figure(records: list[dict]) -> go.Figure:
 def activation_rms_heatmap(records: list[dict]) -> go.Figure:
     """Residual-stream RMS: checkpoint (x) × observation point (y)."""
     _, evals = _split(records)
-    points = [p for p in evals[0]["activation_stats"] if p.endswith(".resid") or p in ("tok_emb", "ln_f")]
+    points = [
+        p for p in evals[0]["activation_stats"] if p.endswith(".resid") or p in ("tok_emb", "ln_f")
+    ]
     z = [[e["activation_stats"][p]["rms"] for e in evals] for p in points]
     fig = go.Figure(
         go.Heatmap(
-            z=z, x=[e["step"] for e in evals], y=points,
-            colorscale="Viridis", colorbar_title="RMS",
+            z=z,
+            x=[e["step"] for e in evals],
+            y=points,
+            colorscale="Viridis",
+            colorbar_title="RMS",
             hovertemplate="step %{x}<br>%{y}<br>RMS %{z:.3f}<extra></extra>",
         )
     )
-    return base_layout(fig, "Residual-stream RMS across training (eval batches)", "optimizer step", "observation point", height=380)
+    return base_layout(
+        fig,
+        "Residual-stream RMS across training (eval batches)",
+        "optimizer step",
+        "observation point",
+        height=380,
+    )
 
 
 def tokens_per_sec_figure(records: list[dict]) -> go.Figure:
     trains, _ = _split(records)
     fig = go.Figure(
-        go.Scatter(x=[r["step"] for r in trains], y=[r["tokens_per_sec"] for r in trains],
-                   mode="lines", line=dict(color=COLORS["sdpa"]))
+        go.Scatter(
+            x=[r["step"] for r in trains],
+            y=[r["tokens_per_sec"] for r in trains],
+            mode="lines",
+            line=dict(color=COLORS["sdpa"]),
+        )
     )
-    return base_layout(fig, "Throughput (window-averaged; dips = eval/checkpoint steps)", "optimizer step", "tokens/sec")
+    return base_layout(
+        fig,
+        "Throughput (window-averaged; dips = eval/checkpoint steps)",
+        "optimizer step",
+        "tokens/sec",
+    )

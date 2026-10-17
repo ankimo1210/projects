@@ -78,8 +78,9 @@ def test_plotly_poly_fit_degree_rmse_decreases():
 
 def test_plotly_complex_orbit_frames():
     theta = 0.4
-    A = 1.05 * np.array([[np.cos(theta), -np.sin(theta)],
-                         [np.sin(theta), np.cos(theta)]])  # spiral out
+    A = 1.05 * np.array(
+        [[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]]
+    )  # spiral out
     fig = viz.plotly_complex_orbit(A, n_steps=20)
     assert len(fig.frames) == 21  # x0 .. x20
     # The orbit grows (|x_k| increasing) for an expanding spiral.
@@ -181,8 +182,10 @@ def test_plotly_gradient_descent_quadratic_actually_zigzags():
     # A mild bowl with a small step gives a smooth monotone curve instead.
     fig = viz.plotly_gradient_descent_quadratic(n_iter=30)
     path = np.column_stack(
-        [np.asarray(fig.frames[-1].data[0].x, dtype=float),
-         np.asarray(fig.frames[-1].data[0].y, dtype=float)]
+        [
+            np.asarray(fig.frames[-1].data[0].x, dtype=float),
+            np.asarray(fig.frames[-1].data[0].y, dtype=float),
+        ]
     )
     steps = np.diff(path, axis=0)
     flips = int(np.sum(np.sign(steps[1:, 0]) != np.sign(steps[:-1, 0])))
@@ -210,8 +213,10 @@ def test_plotly_complex_orbit_frames_the_orbit_not_the_origin():
     P = np.array([[0.9, 0.2], [0.1, 0.8]])
     fig = viz.plotly_complex_orbit(P, x0=(100.0, 0.0), n_steps=20)
     pts = np.column_stack(
-        [np.asarray(fig.frames[-1].data[0].x, dtype=float),
-         np.asarray(fig.frames[-1].data[0].y, dtype=float)]
+        [
+            np.asarray(fig.frames[-1].data[0].x, dtype=float),
+            np.asarray(fig.frames[-1].data[0].y, dtype=float),
+        ]
     )
     (x_lo, x_hi), (y_lo, y_hi) = fig.layout.xaxis.range, fig.layout.yaxis.range
     assert x_lo <= pts[:, 0].min() and pts[:, 0].max() <= x_hi

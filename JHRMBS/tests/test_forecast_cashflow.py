@@ -27,9 +27,7 @@ def test_forecast_walks_scheduled_path_with_champion_model(
 def test_model_cashflow_summary_has_finite_risk_measures(
     pipeline_config: AppConfig,
 ) -> None:
-    frame, summary = create_issue_cashflow(
-        pipeline_config, "JHF-001", scenario="model", save=False
-    )
+    frame, summary = create_issue_cashflow(pipeline_config, "JHF-001", scenario="model", save=False)
     assert not frame.empty
     assert float(summary["wal_years"]) > 0.0
     assert np.isfinite(float(summary["dirty_price_per_100"]))
@@ -40,9 +38,9 @@ def test_fixed_psj_forecast_falls_back_when_latest_wala_is_missing(
 ) -> None:
     paths = DataPaths(pipeline_config.data_root)
     panel = read_table(paths.processed / "issue_month_panel.parquet")
-    last_observed = panel[
-        (panel["issue_id"] == "JHF-001") & panel["actual_factor"].notna()
-    ]["payment_month"].max()
+    last_observed = panel[(panel["issue_id"] == "JHF-001") & panel["actual_factor"].notna()][
+        "payment_month"
+    ].max()
     mask = (panel["issue_id"] == "JHF-001") & (panel["payment_month"] == last_observed)
     panel.loc[mask, "wala_months"] = None
     write_table(panel, paths.processed / "issue_month_panel.parquet")
@@ -59,9 +57,7 @@ def test_forecast_flags_issue_outside_training_population(
         forecast_issue(pipeline_config, "JHF-S-01", save=True)
     assert any("training population" in message for message in caplog.messages)
     paths = DataPaths(pipeline_config.data_root)
-    metadata = read_json(
-        paths.predictions / "JHF-S-01" / "20260101T000000Z_rate.json"
-    )
+    metadata = read_json(paths.predictions / "JHF-S-01" / "20260101T000000Z_rate.json")
     assert metadata["series_type"] == "s"
     assert metadata["outside_training_population"] is True
 
@@ -70,15 +66,11 @@ def test_forecast_rate_feature_shift_moves_frozen_rate_feature(
     pipeline_config: AppConfig,
 ) -> None:
     base = forecast_issue(pipeline_config, "JHF-001", save=False)
-    shifted = forecast_issue(
-        pipeline_config, "JHF-001", save=False, rate_feature_shift_pct=0.5
-    )
+    shifted = forecast_issue(pipeline_config, "JHF-001", save=False, rate_feature_shift_pct=0.5)
     assert shifted["rate_feature_pct"].iloc[0] == pytest.approx(
         base["rate_feature_pct"].iloc[0] + 0.5
     )
-    assert not np.allclose(
-        shifted["predicted_smm"].to_numpy(), base["predicted_smm"].to_numpy()
-    )
+    assert not np.allclose(shifted["predicted_smm"].to_numpy(), base["predicted_smm"].to_numpy())
 
 
 def test_cashflow_can_include_published_decrements(

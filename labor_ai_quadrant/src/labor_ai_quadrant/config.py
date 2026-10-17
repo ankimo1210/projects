@@ -76,7 +76,9 @@ class Config:
         if self.tilt_points < 0:
             raise ValueError(f"tilt_points must be >= 0, got {self.tilt_points}")
         if self.threshold_method not in ("median", "fixed"):
-            raise ValueError(f"threshold_method must be 'median' or 'fixed', got {self.threshold_method!r}")
+            raise ValueError(
+                f"threshold_method must be 'median' or 'fixed', got {self.threshold_method!r}"
+            )
         for name in ("labor_output_elasticity", "demand_capture_rate", "pass_through_retained"):
             value = getattr(self, name)
             if not 0.0 <= value <= 1.0:

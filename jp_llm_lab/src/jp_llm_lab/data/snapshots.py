@@ -175,7 +175,7 @@ def build_fineweb2ja_snapshots(
         if n_kept % progress_every == 0:
             print(
                 f"[snapshots] streamed={n_stream:,} kept={n_kept:,} "
-                f"train={train.total_chars/1e6:.0f}M chars "
+                f"train={train.total_chars / 1e6:.0f}M chars "
                 f"(dup={n_dup:,} filtered={n_filtered:,})",
                 flush=True,
             )
@@ -220,7 +220,9 @@ def build_fineweb2ja_snapshots(
                 "char_limit": target,
             }
     save_json(manifest, root / MANIFEST_REL)
-    print(f"[snapshots] done: train {train.total_chars/1e6:.1f}M chars, {len(train.files)} shards")
+    print(
+        f"[snapshots] done: train {train.total_chars / 1e6:.1f}M chars, {len(train.files)} shards"
+    )
     return manifest
 
 
@@ -254,7 +256,9 @@ def build_wikipedia_snapshot(root: Path | None = None, chars: int = 17_000_000) 
         "n_chars": writer.total_chars,
     }
     save_json(manifest, root / MANIFEST_REL)
-    print(f"[snapshots] wiki_pilot: {writer.total_chars/1e6:.1f}M chars, {writer.total_docs:,} docs")
+    print(
+        f"[snapshots] wiki_pilot: {writer.total_chars / 1e6:.1f}M chars, {writer.total_docs:,} docs"
+    )
     return manifest
 
 

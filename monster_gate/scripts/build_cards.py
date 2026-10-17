@@ -49,7 +49,16 @@ FLAME = (250, 140, 40)
 
 
 def flame(p, cx, cy, w, h, color=FLAME):
-    p.part(poly((cx, cy - h), (cx + w, cy + h // 3), (cx + w // 2, cy + h), (cx - w // 2, cy + h), (cx - w, cy + h // 3)), color)
+    p.part(
+        poly(
+            (cx, cy - h),
+            (cx + w, cy + h // 3),
+            (cx + w // 2, cy + h),
+            (cx - w // 2, cy + h),
+            (cx - w, cy + h // 3),
+        ),
+        color,
+    )
     p.flat(poly((cx, cy - h // 3), (cx + w // 3, cy + h // 2), (cx - w // 3, cy + h // 2)), GOLD)
 
 
@@ -75,19 +84,47 @@ def swirl(p, cx, cy, r, color=PURPLE):
         t = i / steps * turns * 2 * math.pi
         rad = r * (i / steps)
         outer.append((cx + math.cos(t) * (rad + width / 2), cy + math.sin(t) * (rad + width / 2)))
-        inner.append((cx + math.cos(t) * max(0.0, rad - width / 2), cy + math.sin(t) * max(0.0, rad - width / 2)))
+        inner.append(
+            (
+                cx + math.cos(t) * max(0.0, rad - width / 2),
+                cy + math.sin(t) * max(0.0, rad - width / 2),
+            )
+        )
     p.part(poly(*outer, *inner[::-1]), color)
 
 
 def zed(p, x, y, s, color=WHITE):
     """A block letter Z, for the sleep icon."""
     t = s * 0.3
-    p.part(poly((x, y), (x + s, y), (x + s, y + t), (x + t, y + s - t), (x + s, y + s - t), (x + s, y + s), (x, y + s), (x, y + s - t), (x + s - t, y + t), (x, y + t)), color)
+    p.part(
+        poly(
+            (x, y),
+            (x + s, y),
+            (x + s, y + t),
+            (x + t, y + s - t),
+            (x + s, y + s - t),
+            (x + s, y + s),
+            (x, y + s),
+            (x, y + s - t),
+            (x + s - t, y + t),
+            (x, y + t),
+        ),
+        color,
+    )
 
 
 def blade(p, tip_y, hilt_y, w, color=STEEL):
     cx = 128
-    p.part(poly((cx, tip_y), (cx + w, tip_y + 34), (cx + w, hilt_y), (cx - w, hilt_y), (cx - w, tip_y + 34)), color)
+    p.part(
+        poly(
+            (cx, tip_y),
+            (cx + w, tip_y + 34),
+            (cx + w, hilt_y),
+            (cx - w, hilt_y),
+            (cx - w, tip_y + 34),
+        ),
+        color,
+    )
     p.part(rr(cx - 52, hilt_y, cx + 52, hilt_y + 20, 9), GOLD)  # guard
     p.part(rr(cx - 13, hilt_y + 18, cx + 13, hilt_y + 66, 11), LEATHER)  # grip
     p.part(ell(cx - 20, hilt_y + 58, cx + 20, hilt_y + 96), GOLD)  # pommel
@@ -96,13 +133,20 @@ def blade(p, tip_y, hilt_y, w, color=STEEL):
 # ---- the icons -------------------------------------------------------------
 def potion(p):
     p.part(rr(96, 44, 160, 76, 10), STEEL)  # cork
-    p.part(poly((104, 74), (152, 74), (196, 150), (196, 208), (60, 208), (60, 150)), (214, 232, 240))  # glass
+    p.part(
+        poly((104, 74), (152, 74), (196, 150), (196, 208), (60, 208), (60, 150)), (214, 232, 240)
+    )  # glass
     p.flat(poly((70, 150), (186, 150), (186, 200), (70, 200)), GREEN)  # liquid
     p.flat(ell(84, 96, 108, 140), WHITE)  # highlight
 
 
 def regen(p):
-    p.part(poly((128, 210), (36, 118), (36, 84), (72, 52), (128, 84), (184, 52), (220, 84), (220, 118)), (86, 200, 110))
+    p.part(
+        poly(
+            (128, 210), (36, 118), (36, 84), (72, 52), (128, 84), (184, 52), (220, 84), (220, 118)
+        ),
+        (86, 200, 110),
+    )
     for x, y, r in ((60, 70, 12), (200, 74, 10), (128, 34, 9)):
         p.flat(ell(x - r, y - r, x + r, y + r), WHITE)
 
@@ -177,8 +221,12 @@ def cardmap(p):
 
 def warp(p):
     """A flat oval portal — reads as a hole in space, unlike the panic spiral."""
-    for i, (r, col) in enumerate(((110, (36, 58, 140)), (84, BLUE), (56, (120, 190, 255)), (26, WHITE))):
-        p.part(ell(128 - r, 128 - r * 0.7, 128 + r, 128 + r * 0.7), col, rim=(i == 0), shade=(i == 0))
+    for i, (r, col) in enumerate(
+        ((110, (36, 58, 140)), (84, BLUE), (56, (120, 190, 255)), (26, WHITE))
+    ):
+        p.part(
+            ell(128 - r, 128 - r * 0.7, 128 + r, 128 + r * 0.7), col, rim=(i == 0), shade=(i == 0)
+        )
 
 
 def escape(p):
@@ -189,7 +237,9 @@ def escape(p):
 
 
 def haste(p):
-    p.part(poly((70, 196), (70, 96), (128, 96), (156, 140), (206, 158), (206, 196)), LEATHER)  # boot
+    p.part(
+        poly((70, 196), (70, 96), (128, 96), (156, 140), (206, 158), (206, 196)), LEATHER
+    )  # boot
     p.flat(rr(70, 176, 206, 196, 8), darker(LEATHER, 0.7))
     p.part(poly((66, 92), (10, 40), (36, 106), (0, 96)), WHITE)  # wing
     p.part(poly((132, 84), (100, 22), (166, 62), (172, 30)), WHITE)
@@ -210,12 +260,19 @@ def power_shield(p):
 
 
 def power_up(p):
-    p.part(poly((128, 18), (222, 122), (172, 122), (172, 214), (84, 214), (84, 122), (34, 122)), (255, 176, 60))
-    p.flat(poly((128, 60), (176, 112), (152, 112), (152, 190), (104, 190), (104, 112), (80, 112)), GOLD)
+    p.part(
+        poly((128, 18), (222, 122), (172, 122), (172, 214), (84, 214), (84, 122), (34, 122)),
+        (255, 176, 60),
+    )
+    p.flat(
+        poly((128, 60), (176, 112), (152, 112), (152, 190), (104, 190), (104, 112), (80, 112)), GOLD
+    )
 
 
 def pocket(p):
-    p.part(poly((60, 96), (196, 96), (222, 196), (196, 226), (60, 226), (34, 196)), LEATHER)  # pouch
+    p.part(
+        poly((60, 96), (196, 96), (222, 196), (196, 226), (60, 226), (34, 196)), LEATHER
+    )  # pouch
     p.part(rr(74, 74, 182, 104, 14), (168, 122, 76))  # neck
     p.flat(rr(50, 150, 206, 168, 8), darker(LEATHER, 0.66))  # cord
     p.part(rr(116, 34, 140, 92, 11), GOLD)  # a "+2" of coins peeking out
@@ -295,9 +352,13 @@ def main() -> None:
             drawn[key] = f"cards/{key}.png"
             entries[f"card.{card}"] = export(p.finish(), OUT, drawn[key], ANCHOR, SCALE)
         else:
-            entries[f"card.{card}"] = dict(entries[f"card.{next(c for c, b in ICONS.items() if b.__name__ == key)}"])
+            entries[f"card.{card}"] = dict(
+                entries[f"card.{next(c for c, b in ICONS.items() if b.__name__ == key)}"]
+            )
     total = merge_manifest(OUT, entries)
-    print(f"drew {len(set(b.__name__ for b in ICONS.values()))} icons for {len(ICONS)} cards; manifest now has {total} sprites")
+    print(
+        f"drew {len(set(b.__name__ for b in ICONS.values()))} icons for {len(ICONS)} cards; manifest now has {total} sprites"
+    )
 
 
 if __name__ == "__main__":

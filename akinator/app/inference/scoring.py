@@ -4,6 +4,7 @@
 applies a Bayesian-style log-likelihood update keyed on the user's answer,
 with missing attributes treated as neutral + a soft penalty (so sparse Wikidata
 entities are not eliminated)."""
+
 from __future__ import annotations
 
 import math
@@ -31,9 +32,9 @@ def expected_match(entity: Entity, question: Question) -> MatchResult:
 
 
 # Log-likelihood magnitudes. Tunable in one place.
-STRONG = math.log(0.9 / 0.1)          # decisive evidence
-WEAK_MISSING = math.log(0.6 / 0.4)    # soft penalty for missing attribute
-_PROBABLY_SCALE = 0.5                  # "probably_*" is half as confident
+STRONG = math.log(0.9 / 0.1)  # decisive evidence
+WEAK_MISSING = math.log(0.6 / 0.4)  # soft penalty for missing attribute
+_PROBABLY_SCALE = 0.5  # "probably_*" is half as confident
 
 
 def _signed_delta(result: MatchResult, asked_positive: bool) -> float:
@@ -45,9 +46,7 @@ def _signed_delta(result: MatchResult, asked_positive: bool) -> float:
     return STRONG if agrees else -STRONG
 
 
-def update_log_score(
-    log_score: float, entity: Entity, question: Question, answer: Answer
-) -> float:
+def update_log_score(log_score: float, entity: Entity, question: Question, answer: Answer) -> float:
     if answer is Answer.UNKNOWN:
         return log_score
     result = expected_match(entity, question)

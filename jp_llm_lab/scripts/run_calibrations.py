@@ -37,15 +37,33 @@ def main() -> None:
         res = hardware_calibration(VOCAB, device)
         save_json({"results": res, "meta": meta}, OUT / "hardware.json")
         for r in res:
-            print(" ", {k: r.get(k) for k in ["dtype", "attn", "compile", "B", "T", "tokens_per_sec", "peak_vram_gb"]})
+            print(
+                " ",
+                {
+                    k: r.get(k)
+                    for k in [
+                        "dtype",
+                        "attn",
+                        "compile",
+                        "B",
+                        "T",
+                        "tokens_per_sec",
+                        "peak_vram_gb",
+                    ]
+                },
+            )
 
     if args.which in ("all", "lr"):
         print("LR range test…", flush=True)
-        model = ClassicalGPT(ModelConfig(vocab_size=VOCAB, d_model=256, n_layers=6, n_heads=8, context_len=256))
+        model = ClassicalGPT(
+            ModelConfig(vocab_size=VOCAB, d_model=256, n_layers=6, n_heads=8, context_len=256)
+        )
         res = lr_range_test(model, train_tokens, device=device, n_steps=90)
         save_json({**res, "meta": meta}, OUT / "lr_range.json")
-        print(f"  suggested_lr={res['suggested_lr']:.2e} steepest={res['steepest_descent_lr']:.2e} "
-              f"diverged_at={res['diverged_at_lr']}")
+        print(
+            f"  suggested_lr={res['suggested_lr']:.2e} steepest={res['steepest_descent_lr']:.2e} "
+            f"diverged_at={res['diverged_at_lr']}"
+        )
 
     if args.which in ("all", "init"):
         print("init diagnostics…", flush=True)
@@ -53,20 +71,27 @@ def main() -> None:
         res = diagnose_init(VOCAB, schemes, train_tokens, seed=0)
         save_json({"results": res, "meta": meta}, OUT / "init.json")
         for s, v in res.items():
-            print(f"  {s:22s} init_loss={v['init_loss']:.3f} logit_std={v['logit_std']:.3f} "
-                  f"grad_norm={v['grad_norm_total']:.2f}")
+            print(
+                f"  {s:22s} init_loss={v['init_loss']:.3f} logit_std={v['logit_std']:.3f} "
+                f"grad_norm={v['grad_norm_total']:.2f}"
+            )
 
     if args.which in ("all", "batch"):
         print("batch-size calibration…", flush=True)
         res = batch_size_calibration(
-            VOCAB, train_tokens, val_tokens,
+            VOCAB,
+            train_tokens,
+            val_tokens,
             effective_token_targets=[8192, 16384, 32768, 65536],
-            total_tokens=2_000_000, device=device,
+            total_tokens=2_000_000,
+            device=device,
         )
         save_json({"results": res, "meta": meta}, OUT / "batch_size.json")
         for r in res:
-            print(f"  eff_tokens={r['effective_tokens']:>6} steps={r['n_steps']:>4} "
-                  f"final_val={r['final_val_loss']:.3f} wallclock={r['wallclock_sec']:.1f}s")
+            print(
+                f"  eff_tokens={r['effective_tokens']:>6} steps={r['n_steps']:>4} "
+                f"final_val={r['final_val_loss']:.3f} wallclock={r['wallclock_sec']:.1f}s"
+            )
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 """Holds the loaded entity/question collections and id lookups. Constructed once
 from JSON at app startup (see main.py) or directly in tests."""
+
 from __future__ import annotations
 
 from app.config import ENTITIES_PATH, QUESTIONS_PATH

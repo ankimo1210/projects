@@ -67,7 +67,9 @@ def fetch_url(source_id: str, url: str) -> dict[str, str]:
     except Exception as exc:
         row["error"] = repr(exc)
         placeholder = path.with_suffix(path.suffix + ".fetch_error.txt")
-        placeholder.write_text(f"Fetch failed for {url}\n{row['retrieved_at']}\n{exc!r}\n", encoding="utf-8")
+        placeholder.write_text(
+            f"Fetch failed for {url}\n{row['retrieved_at']}\n{exc!r}\n", encoding="utf-8"
+        )
         row["local_path"] = str(placeholder.relative_to(PROJECT_ROOT))
     return row
 
@@ -80,7 +82,10 @@ def extract_ir_links(html_path: Path) -> pd.DataFrame:
     for a in soup.find_all("a", href=True):
         text = " ".join(a.get_text(" ", strip=True).split())
         href = a["href"]
-        if any(token in text for token in ["決算", "調査", "中期", "自動運転", "点群", "WingEarth", "ANIST"]):
+        if any(
+            token in text
+            for token in ["決算", "調査", "中期", "自動運転", "点群", "WingEarth", "ANIST"]
+        ):
             rows.append({"text": text, "href": href})
     return pd.DataFrame(rows).drop_duplicates()
 
@@ -104,7 +109,9 @@ def main() -> None:
             links.insert(0, "source_id", row["source_id"])
             link_frames.append(links)
     if link_frames:
-        pd.concat(link_frames, ignore_index=True).to_csv(INTERIM_DIR / "company_ir_links.csv", index=False)
+        pd.concat(link_frames, ignore_index=True).to_csv(
+            INTERIM_DIR / "company_ir_links.csv", index=False
+        )
 
     extra = [
         {

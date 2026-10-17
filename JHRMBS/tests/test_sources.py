@@ -101,14 +101,17 @@ def _mlit_workbook(tmp_path: Path, *, yoy_offset: float) -> Path:
             stamp = pd.Timestamp(year, month, 1)
             totals[stamp] = total
             previous = totals.get(pd.Timestamp(year - 1, month, 1))
-            yoy = (
-                (total / previous - 1.0) * 100.0 + yoy_offset
-                if previous is not None
-                else None
-            )
+            yoy = (total / previous - 1.0) * 100.0 + yoy_offset if previous is not None else None
             rows.append(
-                [f"R{era_year}年{month}月", total, yoy] + [None] * 2 + [1.0]
-                + [None] * 3 + [2.0] + [None] + [3.0] + [None] + [4.0]
+                [f"R{era_year}年{month}月", total, yoy]
+                + [None] * 2
+                + [1.0]
+                + [None] * 3
+                + [2.0]
+                + [None]
+                + [3.0]
+                + [None]
+                + [4.0]
             )
     path = tmp_path / "mlit.xlsx"
     with pd.ExcelWriter(path, engine="openpyxl") as writer:

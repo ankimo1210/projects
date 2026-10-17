@@ -199,9 +199,7 @@ def validate_panel(
     return report
 
 
-def validate_features(
-    features: pd.DataFrame, *, fail_on_invalid: bool = True
-) -> dict[str, Any]:
+def validate_features(features: pd.DataFrame, *, fail_on_invalid: bool = True) -> dict[str, Any]:
     target_source = (
         features["target_smm"]
         if "target_smm" in features
@@ -226,9 +224,7 @@ def validate_features(
     }
     if fail_on_invalid and report["status"] == "fail":
         failed = [
-            name
-            for name in ("invalid_target_rows", "duplicate_rows")
-            if int(str(report[name])) > 0
+            name for name in ("invalid_target_rows", "duplicate_rows") if int(str(report[name])) > 0
         ]
         raise DataQualityError(f"critical feature checks failed: {', '.join(failed)}")
     return report

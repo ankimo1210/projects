@@ -217,8 +217,14 @@ class EsriGdpAdapter:
         return data.content, data_url, data.status_code
 
     def parse(
-        self, event, content: bytes, *, indicator: str, column: str,
-        source_url: str, ingested_at: datetime,
+        self,
+        event,
+        content: bytes,
+        *,
+        indicator: str,
+        column: str,
+        source_url: str,
+        ingested_at: datetime,
     ) -> list[Observation]:
         series = parse_nritu_csv(content, column=column)
         return [

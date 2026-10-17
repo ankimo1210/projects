@@ -7,7 +7,9 @@ from jp_llm_lab.models.transformer import ClassicalGPT
 
 
 def _model():
-    return ClassicalGPT(ModelConfig(vocab_size=30, d_model=32, n_heads=2, n_layers=1, context_len=8))
+    return ClassicalGPT(
+        ModelConfig(vocab_size=30, d_model=32, n_heads=2, n_layers=1, context_len=8)
+    )
 
 
 def test_clean_model_reports_nothing():

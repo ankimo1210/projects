@@ -80,6 +80,7 @@ def test_plotly_ssm_impulse_decay():
 
 def test_plotly_function_approx_rmse_drops():
     from nn_textbook import plotting as P
+
     fig = P.plotly_function_approx(n_units_list=(1, 4, 32))
     assert len(fig.frames) == 3
     labels = [s["label"] for s in fig.layout.sliders[0].steps]
@@ -90,8 +91,9 @@ def test_plotly_function_approx_rmse_drops():
 def test_plotly_softmax_temperature_peaky_vs_flat():
     import numpy as np
     from nn_textbook import plotting as P
+
     fig = P.plotly_softmax_temperature(["a", "b", "c"], [4.0, 1.0, 0.0], temperatures=(0.25, 4.0))
     assert len(fig.frames) == 2
-    low = np.asarray(fig.frames[0].data[0].y, dtype=float)   # T=0.25 peaky
+    low = np.asarray(fig.frames[0].data[0].y, dtype=float)  # T=0.25 peaky
     high = np.asarray(fig.frames[1].data[0].y, dtype=float)  # T=4 flat
     assert low.max() > high.max()  # low temperature is peakier

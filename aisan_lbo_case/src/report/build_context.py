@@ -86,7 +86,9 @@ def build_context() -> dict[str, Any]:
     summary_json = _load_json(OUTPUT_DIR / "model_summary.json")
 
     default_premium = float(assumptions["transaction_assumptions"]["default_premium"])
-    default_outputs = model_outputs[model_outputs["premium"].round(6) == round(default_premium, 6)].copy()
+    default_outputs = model_outputs[
+        model_outputs["premium"].round(6) == round(default_premium, 6)
+    ].copy()
     sponsor_default = default_outputs[default_outputs["scenario"] == "Sponsor"].iloc[0].to_dict()
     downside_default = default_outputs[default_outputs["scenario"] == "Downside"].iloc[0].to_dict()
     base_default = default_outputs[default_outputs["scenario"] == "Base"].iloc[0].to_dict()
@@ -99,30 +101,129 @@ def build_context() -> dict[str, Any]:
     latest_hist = historical.iloc[-1].to_dict()
 
     risk_matrix = [
-        {"risk": "Subsidiary investigation / accounting restatement", "rating": "Red", "mitigant": "No final bid until report, audit sign-off and remediation plan are reviewed."},
-        {"risk": "Debt capacity", "rating": "Amber", "mitigant": "Model uses only 0.5x-1.15x EBITDA; returns cannot rely on leverage."},
-        {"risk": "Mobility / DX revenue quality", "rating": "Amber", "mitigant": "Confirm backlog, subsidies, recurring revenue and true segment margin."},
-        {"risk": "Public-sector lumpiness", "rating": "Amber", "mitigant": "Underwrite normalized revenue and working-capital seasonality."},
-        {"risk": "Core public surveying software niche", "rating": "Green", "mitigant": "Long operating history and domain-specific installed base support strategic relevance."},
-        {"risk": "Net-cash balance sheet", "rating": "Green", "mitigant": "Useful only if excess cash can be accessed without damaging operations or stakeholder support."},
+        {
+            "risk": "Subsidiary investigation / accounting restatement",
+            "rating": "Red",
+            "mitigant": "No final bid until report, audit sign-off and remediation plan are reviewed.",
+        },
+        {
+            "risk": "Debt capacity",
+            "rating": "Amber",
+            "mitigant": "Model uses only 0.5x-1.15x EBITDA; returns cannot rely on leverage.",
+        },
+        {
+            "risk": "Mobility / DX revenue quality",
+            "rating": "Amber",
+            "mitigant": "Confirm backlog, subsidies, recurring revenue and true segment margin.",
+        },
+        {
+            "risk": "Public-sector lumpiness",
+            "rating": "Amber",
+            "mitigant": "Underwrite normalized revenue and working-capital seasonality.",
+        },
+        {
+            "risk": "Core public surveying software niche",
+            "rating": "Green",
+            "mitigant": "Long operating history and domain-specific installed base support strategic relevance.",
+        },
+        {
+            "risk": "Net-cash balance sheet",
+            "rating": "Green",
+            "mitigant": "Useful only if excess cash can be accessed without damaging operations or stakeholder support.",
+        },
     ]
 
     dd_items = [
-        {"rank": 1, "item": "Accounting and investigation issue", "severity": "Critical", "why": "Gating item for financial reliability, audit timing and bid certainty."},
-        {"rank": 2, "item": "Revenue quality and recurring revenue ratio", "severity": "Critical", "why": "Determines whether software-like valuation and financing assumptions are defensible."},
-        {"rank": 3, "item": "Segment-level margins and true profitability", "severity": "High", "why": "Public and Mobility / DX economics appear materially different and require normalized cost allocation."},
-        {"rank": 4, "item": "Customer concentration and public-sector dependency", "severity": "High", "why": "Public-sector and local-government projects may be lumpy and budget-dependent."},
-        {"rank": 5, "item": "Mobility / DX backlog and pipeline quality", "severity": "High", "why": "Downside case is driven mainly by Mobility / DX underperformance."},
-        {"rank": 6, "item": "R&D capitalization / expense treatment", "severity": "High", "why": "Could affect EBITDA quality and comparability."},
-        {"rank": 7, "item": "Working-capital seasonality", "severity": "Medium", "why": "Historical FCF includes a negative FY2024 and rebound in FY2025."},
-        {"rank": 8, "item": "Cash and excess cash availability", "severity": "High", "why": "Returns are sensitive to whether surplus cash can be used in the transaction."},
-        {"rank": 9, "item": "Debt capacity and lender appetite", "severity": "High", "why": "Small EBITDA base constrains acquisition financing."},
-        {"rank": 10, "item": "Management willingness and shareholder approval path", "severity": "High", "why": "Founder, strategic holders and treasury share mechanics affect TOB feasibility."},
-        {"rank": 11, "item": "Major shareholder intentions", "severity": "High", "why": "Top holders include founder/individual and strategic corporate holders."},
-        {"rank": 12, "item": "TOB mechanics and squeeze-out feasibility", "severity": "High", "why": "Low liquidity and required premium can dilute sponsor returns."},
-        {"rank": 13, "item": "Key person dependency", "severity": "Medium", "why": "Domain software and public-sector relationships may rely on specific engineers and sales leaders."},
-        {"rank": 14, "item": "IP ownership and software licensing", "severity": "Medium", "why": "Confirm ownership of Wingneo, WingEarth, ANIST and related modules."},
-        {"rank": 15, "item": "Competitive position", "severity": "Medium", "why": "Assess larger GIS, CAD, mapping and autonomous mobility platforms."},
+        {
+            "rank": 1,
+            "item": "Accounting and investigation issue",
+            "severity": "Critical",
+            "why": "Gating item for financial reliability, audit timing and bid certainty.",
+        },
+        {
+            "rank": 2,
+            "item": "Revenue quality and recurring revenue ratio",
+            "severity": "Critical",
+            "why": "Determines whether software-like valuation and financing assumptions are defensible.",
+        },
+        {
+            "rank": 3,
+            "item": "Segment-level margins and true profitability",
+            "severity": "High",
+            "why": "Public and Mobility / DX economics appear materially different and require normalized cost allocation.",
+        },
+        {
+            "rank": 4,
+            "item": "Customer concentration and public-sector dependency",
+            "severity": "High",
+            "why": "Public-sector and local-government projects may be lumpy and budget-dependent.",
+        },
+        {
+            "rank": 5,
+            "item": "Mobility / DX backlog and pipeline quality",
+            "severity": "High",
+            "why": "Downside case is driven mainly by Mobility / DX underperformance.",
+        },
+        {
+            "rank": 6,
+            "item": "R&D capitalization / expense treatment",
+            "severity": "High",
+            "why": "Could affect EBITDA quality and comparability.",
+        },
+        {
+            "rank": 7,
+            "item": "Working-capital seasonality",
+            "severity": "Medium",
+            "why": "Historical FCF includes a negative FY2024 and rebound in FY2025.",
+        },
+        {
+            "rank": 8,
+            "item": "Cash and excess cash availability",
+            "severity": "High",
+            "why": "Returns are sensitive to whether surplus cash can be used in the transaction.",
+        },
+        {
+            "rank": 9,
+            "item": "Debt capacity and lender appetite",
+            "severity": "High",
+            "why": "Small EBITDA base constrains acquisition financing.",
+        },
+        {
+            "rank": 10,
+            "item": "Management willingness and shareholder approval path",
+            "severity": "High",
+            "why": "Founder, strategic holders and treasury share mechanics affect TOB feasibility.",
+        },
+        {
+            "rank": 11,
+            "item": "Major shareholder intentions",
+            "severity": "High",
+            "why": "Top holders include founder/individual and strategic corporate holders.",
+        },
+        {
+            "rank": 12,
+            "item": "TOB mechanics and squeeze-out feasibility",
+            "severity": "High",
+            "why": "Low liquidity and required premium can dilute sponsor returns.",
+        },
+        {
+            "rank": 13,
+            "item": "Key person dependency",
+            "severity": "Medium",
+            "why": "Domain software and public-sector relationships may rely on specific engineers and sales leaders.",
+        },
+        {
+            "rank": 14,
+            "item": "IP ownership and software licensing",
+            "severity": "Medium",
+            "why": "Confirm ownership of Wingneo, WingEarth, ANIST and related modules.",
+        },
+        {
+            "rank": 15,
+            "item": "Competitive position",
+            "severity": "Medium",
+            "why": "Assess larger GIS, CAD, mapping and autonomous mobility platforms.",
+        },
     ]
 
     value_up_plan = [
@@ -134,12 +235,36 @@ def build_context() -> dict[str, Any]:
     ]
 
     company_fact_cards = [
-        {"label": "Latest close", "value": f"JPY {float(market['close_price_jpy']):,.0f}", "note": f"as of {market['as_of']}"},
-        {"label": "Market cap", "value": fmt_jpy_bn(float(market["market_cap_jpy_mn"])), "note": "gross shares basis"},
-        {"label": "FY2025A revenue", "value": fmt_jpy_bn(float(latest_hist["revenue"])), "note": "sourced from IRBANK summary"},
-        {"label": "FY2025A est. EBITDA", "value": fmt_jpy_mn(float(latest_hist["ebitda_estimated"])), "note": "EBIT + estimated D&A"},
-        {"label": "Latest cash / debt", "value": f"{fmt_jpy_mn(float(latest_bs['cash']))} / {fmt_jpy_mn(float(latest_bs['debt']))}", "note": latest_bs["as_of"]},
-        {"label": "Sponsor case IRR", "value": fmt_pct(float(sponsor_default["irr"])), "note": "30% premium, 5-year hold"},
+        {
+            "label": "Latest close",
+            "value": f"JPY {float(market['close_price_jpy']):,.0f}",
+            "note": f"as of {market['as_of']}",
+        },
+        {
+            "label": "Market cap",
+            "value": fmt_jpy_bn(float(market["market_cap_jpy_mn"])),
+            "note": "gross shares basis",
+        },
+        {
+            "label": "FY2025A revenue",
+            "value": fmt_jpy_bn(float(latest_hist["revenue"])),
+            "note": "sourced from IRBANK summary",
+        },
+        {
+            "label": "FY2025A est. EBITDA",
+            "value": fmt_jpy_mn(float(latest_hist["ebitda_estimated"])),
+            "note": "EBIT + estimated D&A",
+        },
+        {
+            "label": "Latest cash / debt",
+            "value": f"{fmt_jpy_mn(float(latest_bs['cash']))} / {fmt_jpy_mn(float(latest_bs['debt']))}",
+            "note": latest_bs["as_of"],
+        },
+        {
+            "label": "Sponsor case IRR",
+            "value": fmt_pct(float(sponsor_default["irr"])),
+            "note": "30% premium, 5-year hold",
+        },
     ]
 
     source_lookup = {

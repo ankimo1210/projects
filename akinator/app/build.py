@@ -3,6 +3,7 @@
 Lives in the package (not scripts/) so it is importable via the installed
 `app` package regardless of pytest import mode. `scripts/build_questions.py` is
 a thin CLI wrapper around `build_from_raw`."""
+
 from __future__ import annotations
 
 import json

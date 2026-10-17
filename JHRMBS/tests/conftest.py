@@ -40,9 +40,7 @@ def _issue_panel(issue_id: str, series_type: str) -> pd.DataFrame:
                 "wac_pct": 3.0 - 0.002 * index if observed else None,
                 "wam_years": 35.0 - index / 12.0 if observed else None,
                 "wala_months": float(index) if observed else None,
-                "voluntary_cpr_pct": (
-                    6.0 + np.sin(index / 6.0) if observed else None
-                ),
+                "voluntary_cpr_pct": (6.0 + np.sin(index / 6.0) if observed else None),
                 "rescheduled_factor": None,
                 "long_delinquency_pct_monthly": 0.01 if observed else None,
                 "other_cancellation_pct_monthly": 0.02 if observed else None,

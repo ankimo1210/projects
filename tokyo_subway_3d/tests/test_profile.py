@@ -1,4 +1,5 @@
 """Acceptance checks for the nine-line core-Tokyo 3D profile."""
+
 from __future__ import annotations
 
 import json
@@ -16,10 +17,18 @@ MODEL = ROOT / "data/out/model.json"
 KEYS = list(LINES)
 
 # Stations whose marker is red/blue on the chart and therefore not detected as black.
-UNDETECTED = {("marunouchi", "大手町"), ("tozai", "茅場町"), ("yurakucho", "飯田橋"), ("hanzomon", "大手町"),
-              ("oedo", "青山一丁目"), ("oedo", "新御徒町")}
+UNDETECTED = {
+    ("marunouchi", "大手町"),
+    ("tozai", "茅場町"),
+    ("yurakucho", "飯田橋"),
+    ("hanzomon", "大手町"),
+    ("oedo", "青山一丁目"),
+    ("oedo", "新御徒町"),
+}
 
-pytestmark = pytest.mark.skipif(not (ROOT / PAGES[3]).exists(), reason="raw chart pages not rendered")
+pytestmark = pytest.mark.skipif(
+    not (ROOT / PAGES[3]).exists(), reason="raw chart pages not rendered"
+)
 
 
 @pytest.fixture(scope="module")
@@ -92,7 +101,10 @@ def test_station_anchors_are_monotonic_and_on_track(model, key):
     a = [s["alignment_m"] for s in ln["stations"]]
     assert a == sorted(a) and len(set(a)) == len(a)
     for s in ln["stations"]:
-        assert min(alignment.haversine((p["lon"], p["lat"]), tuple(s["coord"])) for p in ln["track"]) < 20, s["name"]
+        assert (
+            min(alignment.haversine((p["lon"], p["lat"]), tuple(s["coord"])) for p in ln["track"])
+            < 20
+        ), s["name"]
 
 
 @pytest.mark.parametrize("key", KEYS)
@@ -105,9 +117,14 @@ def test_every_station_is_below_ground(model, key):
 def test_track_is_continuous_and_dense(model, key):
     track = line(model, key)["track"]
     assert len(track) > 100
-    steps = [alignment.haversine((a["lon"], a["lat"]), (b["lon"], b["lat"])) for a, b in pairwise(track)]
+    steps = [
+        alignment.haversine((a["lon"], a["lat"]), (b["lon"], b["lat"])) for a, b in pairwise(track)
+    ]
     assert max(steps) < 40.0
-    grades = [abs(a["rail_tp_m"] - b["rail_tp_m"]) / s for (a, b), s in zip(pairwise(track), steps, strict=True)]
+    grades = [
+        abs(a["rail_tp_m"] - b["rail_tp_m"]) / s
+        for (a, b), s in zip(pairwise(track), steps, strict=True)
+    ]
     assert max(grades) < 0.2  # chart V under 御徒町 reaches 0.19 after rubber-sheeting
 
 
@@ -123,14 +140,19 @@ def test_kokkaigijidomae_depth_matches_published_value(model):
     the published figure's ground reference point is not stated, on terrain that
     varies by several metres within 100 m of the station.
     """
-    depth = next(s["depth_m"] for s in line(model, "chiyoda")["stations"] if s["name"] == "国会議事堂前")
+    depth = next(
+        s["depth_m"] for s in line(model, "chiyoda")["stations"] if s["name"] == "国会議事堂前"
+    )
     assert depth == pytest.approx(37.9, abs=4.0)
 
 
 def test_otemachi_stack_order(model):
     """丸ノ内線 is the shallowest and 半蔵門線 the deepest of the five lines under 大手町."""
-    rail = {ln["key"]: next(s["rail_tp_m"] for s in ln["stations"] if s["name"] == "大手町")
-            for ln in model["lines"] if any(s["name"] == "大手町" for s in ln["stations"])}
+    rail = {
+        ln["key"]: next(s["rail_tp_m"] for s in ln["stations"] if s["name"] == "大手町")
+        for ln in model["lines"]
+        if any(s["name"] == "大手町" for s in ln["stations"])
+    }
     assert set(rail) == {"marunouchi", "tozai", "chiyoda", "hanzomon", "mita"}
     assert max(rail, key=rail.get) == "marunouchi"
     assert min(rail, key=rail.get) == "hanzomon"

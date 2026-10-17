@@ -79,12 +79,8 @@ def test_gdp_vintages_skips_a_release_whose_parse_fails_and_still_ingests_the_ne
     made this test fail with a raw EsriGdpError traceback (see the fix report).
     """
     db = store.connect(tmp_path / "macrokit.duckdb")
-    first = make_event(
-        date(2010, 1, 1), "2nd_prelim", datetime(2010, 5, 20, 8, 50, tzinfo=JST)
-    )
-    second = make_event(
-        date(2010, 4, 1), "2nd_prelim", datetime(2010, 8, 16, 8, 50, tzinfo=JST)
-    )
+    first = make_event(date(2010, 1, 1), "2nd_prelim", datetime(2010, 5, 20, 8, 50, tzinfo=JST))
+    second = make_event(date(2010, 4, 1), "2nd_prelim", datetime(2010, 8, 16, 8, 50, tzinfo=JST))
     store.insert_releases(db, [first, second])
     db.close()
 
@@ -99,10 +95,18 @@ def test_gdp_vintages_skips_a_release_whose_parse_fails_and_still_ingests_the_ne
             raise EsriGdpError("stub: unexpected column layout")
         return [
             store.Observation(
-                indicator=indicator, period_start=event.period_start,
-                period_end=event.period_end, release_date=event.release_date,
-                vintage_seq=2, value=1.0, unit="percent_saar", sa="sa", freq="Q",
-                source="esri_gdp", source_url=source_url, ingested_at=ingested_at,
+                indicator=indicator,
+                period_start=event.period_start,
+                period_end=event.period_end,
+                release_date=event.release_date,
+                vintage_seq=2,
+                value=1.0,
+                unit="percent_saar",
+                sa="sa",
+                freq="Q",
+                source="esri_gdp",
+                source_url=source_url,
+                ingested_at=ingested_at,
                 vintage_kind="actual",
             )
         ]

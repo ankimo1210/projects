@@ -49,7 +49,9 @@ class CausalSelfAttention(nn.Module):
         self.resid_dropout = nn.Dropout(dropout)
         # Cached boolean lower-triangular mask [1,1,Tmax,Tmax]; True = allowed.
         mask = torch.tril(torch.ones(context_len, context_len, dtype=torch.bool))
-        self.register_buffer("causal_mask", mask.view(1, 1, context_len, context_len), persistent=False)
+        self.register_buffer(
+            "causal_mask", mask.view(1, 1, context_len, context_len), persistent=False
+        )
         if self.use_rope:
             from .rope import rope_angles
 
@@ -61,7 +63,9 @@ class CausalSelfAttention(nn.Module):
         assert impl in ("explicit", "sdpa")
         self.attn_impl = impl
 
-    def forward(self, x: torch.Tensor, trace: dict | None = None, prefix: str = "attn") -> torch.Tensor:
+    def forward(
+        self, x: torch.Tensor, trace: dict | None = None, prefix: str = "attn"
+    ) -> torch.Tensor:
         B, T, D = x.shape
         assert T <= self.causal_mask.shape[-1], "sequence longer than context_len"
 
@@ -87,7 +91,13 @@ class CausalSelfAttention(nn.Module):
             # (3) softmax over keys → each row is a probability distribution.
             weights = F.softmax(scores, dim=-1)
             if trace is not None:
-                for name, val in [("q", q), ("k", k), ("v", v), ("scores", scores), ("attn_weights", weights)]:
+                for name, val in [
+                    ("q", q),
+                    ("k", k),
+                    ("v", v),
+                    ("scores", scores),
+                    ("attn_weights", weights),
+                ]:
                     trace[f"{prefix}.{name}"] = val.detach()
             # (4) attention-weighted average of values.
             att = F.dropout(weights, p=self.dropout, training=self.training)

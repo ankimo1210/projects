@@ -86,7 +86,12 @@ class Painter:
             return
         if rim:
             pad = self.rim * SS + 2
-            box = (max(0, bb[0] - pad), max(0, bb[1] - pad), min(mask.width, bb[2] + pad), min(mask.height, bb[3] + pad))
+            box = (
+                max(0, bb[0] - pad),
+                max(0, bb[1] - pad),
+                min(mask.width, bb[2] + pad),
+                min(mask.height, bb[3] + pad),
+            )
             sub = mask.crop(box)
             grown = sub.filter(ImageFilter.MaxFilter(self.rim * SS * 2 + 1))
             ring = Image.new("L", mask.size, 0)
@@ -97,7 +102,9 @@ class Painter:
             lit = Image.new("L", mask.size, 0)
             lit.paste(mask, (self.light[0] * SS, self.light[1] * SS))
             # everything in the shape that the shifted copy does not cover
-            shadow = Image.composite(mask, Image.new("L", mask.size, 0), Image.eval(lit, lambda v: 255 - v))
+            shadow = Image.composite(
+                mask, Image.new("L", mask.size, 0), Image.eval(lit, lambda v: 255 - v)
+            )
             self.im.paste((*darker(fill), 255), (0, 0), shadow)
 
     def flat(self, shape, fill):

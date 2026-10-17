@@ -25,8 +25,15 @@ import torch.nn.functional as F
 
 
 @torch.no_grad()
-def collect_logits(model, tokens: torch.Tensor, n_batches: int, batch_size: int,
-                   context_len: int, device: str, seed: int = 999) -> dict:
+def collect_logits(
+    model,
+    tokens: torch.Tensor,
+    n_batches: int,
+    batch_size: int,
+    context_len: int,
+    device: str,
+    seed: int = 999,
+) -> dict:
     """Gather (top-1 confidence, correct, true-token NLL) over sampled batches,
     plus a subsample of full logit rows for temperature fitting."""
     from ..data.batches import sample_batch
@@ -70,7 +77,9 @@ def _bin_stats(conf: torch.Tensor, correct: torch.Tensor, edges: torch.Tensor) -
             continue
         bins.append(
             {
-                "lo": float(lo), "hi": float(hi), "n": n,
+                "lo": float(lo),
+                "hi": float(hi),
+                "n": n,
                 "avg_conf": float(conf[mask].mean()),
                 "acc": float(correct[mask].float().mean()),
             }
@@ -78,7 +87,9 @@ def _bin_stats(conf: torch.Tensor, correct: torch.Tensor, edges: torch.Tensor) -
     return bins
 
 
-def ece_equal_width(conf: torch.Tensor, correct: torch.Tensor, n_bins: int = 15) -> tuple[float, list]:
+def ece_equal_width(
+    conf: torch.Tensor, correct: torch.Tensor, n_bins: int = 15
+) -> tuple[float, list]:
     edges = torch.linspace(0, 1, n_bins + 1)
     bins = _bin_stats(conf, correct, edges)
     total = len(conf)
@@ -86,7 +97,9 @@ def ece_equal_width(conf: torch.Tensor, correct: torch.Tensor, n_bins: int = 15)
     return ece, bins
 
 
-def ece_equal_mass(conf: torch.Tensor, correct: torch.Tensor, n_bins: int = 15) -> tuple[float, list]:
+def ece_equal_mass(
+    conf: torch.Tensor, correct: torch.Tensor, n_bins: int = 15
+) -> tuple[float, list]:
     order = torch.argsort(conf)
     conf_s, corr_s = conf[order], correct[order]
     total = len(conf)
@@ -126,12 +139,16 @@ def fit_temperature(logits: torch.Tensor, targets: torch.Tensor, max_iter: int =
 def metrics_at_temperature(logits: torch.Tensor, targets: torch.Tensor, T: float) -> dict:
     probs = F.softmax(logits / T, dim=-1)
     top_p, top_i = probs.max(dim=-1)
-    correct = (top_i == targets)
+    correct = top_i == targets
     nll = float(F.cross_entropy(logits / T, targets))
     ece, _ = ece_equal_mass(top_p, correct)
     ent = float((-(probs * probs.clamp(min=1e-12).log()).sum(-1)).mean())
     return {
-        "T": T, "nll": nll, "ppl": math.exp(nll),
-        "ece_equal_mass": ece, "accuracy": float(correct.float().mean()), "entropy": ent,
+        "T": T,
+        "nll": nll,
+        "ppl": math.exp(nll),
+        "ece_equal_mass": ece,
+        "accuracy": float(correct.float().mean()),
+        "entropy": ent,
         "brier": brier_top1(top_p, correct),
     }

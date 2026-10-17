@@ -43,7 +43,9 @@ def segment_text(text: str) -> list[str]:
 class BPETokenizer:
     version = "bpe_edu_v1"
 
-    def __init__(self, itos: list[str], merges: list[tuple[str, str]], history: list[dict] | None = None):
+    def __init__(
+        self, itos: list[str], merges: list[tuple[str, str]], history: list[dict] | None = None
+    ):
         assert itos[: len(SPECIAL_TOKENS)] == SPECIAL_TOKENS
         self.itos = list(itos)
         self.stoi = {s: i for i, s in enumerate(self.itos)}

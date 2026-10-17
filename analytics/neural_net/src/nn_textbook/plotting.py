@@ -220,7 +220,9 @@ def plotly_image_slider(images, labels, title: str | None = None, slider_name: s
     """
     import plotly.graph_objects as go
 
-    frames_z = [_f(np.asarray(im, dtype=float)[::-1], 3) for im in images]  # flip so row 0 is on top
+    frames_z = [
+        _f(np.asarray(im, dtype=float)[::-1], 3) for im in images
+    ]  # flip so row 0 is on top
     fig = go.Figure(
         data=[go.Heatmap(z=frames_z[0], colorscale="gray", showscale=False)],
         frames=[
@@ -258,7 +260,9 @@ def plotly_attention_slider(tokens, scores, temperatures, title: str | None = No
     from .metrics import softmax_np
 
     scores = np.asarray(scores, dtype=float)
-    mats = [softmax_np(scores / t, axis=1) for t in temperatures]  # not rounded: rows must stay normalised
+    mats = [
+        softmax_np(scores / t, axis=1) for t in temperatures
+    ]  # not rounded: rows must stay normalised
     axis = {"tickvals": list(range(len(tokens))), "ticktext": list(tokens)}
     fig = go.Figure(
         data=[go.Heatmap(z=mats[0], colorscale="Viridis", zmin=0, zmax=1)],
@@ -338,8 +342,14 @@ def plotly_decision_boundary(
 
     def surface(z):
         return go.Heatmap(
-            x=_f(xs), y=_f(ys), z=_f(z, 3),
-            colorscale="RdBu", zmin=0, zmax=1, opacity=0.85, showscale=False,
+            x=_f(xs),
+            y=_f(ys),
+            z=_f(z, 3),
+            colorscale="RdBu",
+            zmin=0,
+            zmax=1,
+            opacity=0.85,
+            showscale=False,
         )
 
     def points():
@@ -646,8 +656,11 @@ def plotly_ssm_impulse(
 
     def traces(a):
         y = linear_ssm_scan(x, np.array([a]), np.array([1.0]), np.array([1.0]))
-        return [go.Scatter(x=[int(v) for v in t], y=_f(y, 5), mode="lines+markers",
-                           name="impulse response")]
+        return [
+            go.Scatter(
+                x=[int(v) for v in t], y=_f(y, 5), mode="lines+markers", name="impulse response"
+            )
+        ]
 
     frames = [go.Frame(data=traces(a), name=f"{a:g}") for a in decays]
     fig = go.Figure(data=traces(decays[0]), frames=frames)
@@ -695,32 +708,47 @@ def plotly_function_approx(n_units_list=(1, 2, 4, 8, 16, 32, 64), seed: int = 0,
         return phi @ coef
 
     fits = [(n, fit(n)) for n in n_units_list]
-    labels = [
-        f"{n} units (RMSE={np.sqrt(np.mean((yh - target) ** 2)):.3f})" for n, yh in fits
-    ]
+    labels = [f"{n} units (RMSE={np.sqrt(np.mean((yh - target) ** 2)):.3f})" for n, yh in fits]
 
     def target_trace():
-        return go.Scatter(x=_f(x), y=_f(target), mode="lines",
-                          line={"color": "gray", "width": 2}, name="target f(x)")
+        return go.Scatter(
+            x=_f(x),
+            y=_f(target),
+            mode="lines",
+            line={"color": "gray", "width": 2},
+            name="target f(x)",
+        )
 
     def fit_trace(yhat):
-        return go.Scatter(x=_f(x), y=_f(yhat), mode="lines",
-                          line={"color": "#d62728", "width": 2}, name="ReLU net fit")
+        return go.Scatter(
+            x=_f(x),
+            y=_f(yhat),
+            mode="lines",
+            line={"color": "#d62728", "width": 2},
+            name="ReLU net fit",
+        )
 
     # The target never changes with the unit count; only the fit does.
-    frames = [go.Frame(data=[fit_trace(yh)], traces=[1], name=lab)
-              for (_, yh), lab in zip(fits, labels, strict=True)]
+    frames = [
+        go.Frame(data=[fit_trace(yh)], traces=[1], name=lab)
+        for (_, yh), lab in zip(fits, labels, strict=True)
+    ]
     fig = go.Figure(data=[target_trace(), fit_trace(fits[0][1])], frames=frames)
     steps = [
-        {"args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
-         "label": lab, "method": "animate"}
+        {
+            "args": [[lab], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": lab,
+            "method": "animate",
+        }
         for lab in labels
     ]
     fig.update_layout(
         sliders=[{"steps": steps, "currentvalue": {"prefix": ""}}],
-        width=720, height=440,
+        width=720,
+        height=440,
         title=title or "ReLU ユニット数を増やすと任意関数に近づく（万能近似）",
-        xaxis={"title": "x"}, yaxis={"title": "y"},
+        xaxis={"title": "x"},
+        yaxis={"title": "y"},
         margin={"l": 60, "r": 20, "t": 50, "b": 40},
     )
     return fig
@@ -742,18 +770,25 @@ def plotly_softmax_temperature(tokens, logits, temperatures=(0.25, 0.5, 1.0, 2.0
     def traces(p):
         return [go.Bar(x=list(tokens), y=list(p), marker={"color": "#1f77b4"})]
 
-    frames = [go.Frame(data=traces(p), name=f"{t:g}") for p, t in zip(dists, temperatures, strict=True)]
+    frames = [
+        go.Frame(data=traces(p), name=f"{t:g}") for p, t in zip(dists, temperatures, strict=True)
+    ]
     fig = go.Figure(data=traces(dists[2 if len(dists) > 2 else 0]), frames=frames)
     steps = [
-        {"args": [[f"{t:g}"], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
-         "label": f"{t:g}", "method": "animate"}
+        {
+            "args": [[f"{t:g}"], {"frame": {"duration": 0, "redraw": True}, "mode": "immediate"}],
+            "label": f"{t:g}",
+            "method": "animate",
+        }
         for t in temperatures
     ]
     fig.update_layout(
         sliders=[{"steps": steps, "currentvalue": {"prefix": "temperature = "}}],
-        width=640, height=420,
+        width=640,
+        height=420,
         title=title or "サンプリング温度で次トークン分布が尖る／平らになる",
-        xaxis={"title": "token"}, yaxis={"title": "probability", "range": [0, 1]},
+        xaxis={"title": "token"},
+        yaxis={"title": "probability", "range": [0, 1]},
         margin={"l": 60, "r": 20, "t": 50, "b": 50},
     )
     return fig

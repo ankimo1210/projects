@@ -66,8 +66,8 @@ def test_small_job_skips_ahead_of_unfittable_large_job():
 
     a = jm.submit("flop", est_gb=12.0, fn=lambda: gate.wait(timeout=2.0))
     assert _wait_until(lambda: jm.get(a).status == JobStatus.RUNNING)
-    b = jm.submit("flop", est_gb=12.0, fn=lambda: "b")   # 12+12 > 20 -> queues
-    c = jm.submit("river", est_gb=5.0, fn=lambda: "c")    # 12+5 <= 20 -> runs
+    b = jm.submit("flop", est_gb=12.0, fn=lambda: "b")  # 12+12 > 20 -> queues
+    c = jm.submit("river", est_gb=5.0, fn=lambda: "c")  # 12+5 <= 20 -> runs
 
     assert _wait_until(lambda: jm.result(c)[0] == JobStatus.DONE)
     assert jm.get(b).status == JobStatus.QUEUED  # still waiting on A

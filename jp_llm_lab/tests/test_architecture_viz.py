@@ -2,6 +2,7 @@
 
 Spec: docs/superpowers/specs/2026-07-12-architecture-diagram-design.md
 """
+
 from __future__ import annotations
 
 import json

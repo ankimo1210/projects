@@ -3,6 +3,7 @@
 GameState is plain data (serializable to/from the request/DB). GameService is
 stateless beyond the EntityService it wraps; all mutation lives on the passed-in
 state."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -21,8 +22,9 @@ class GameState:
 
 
 class GameService:
-    def __init__(self, entities: EntityService, guess_threshold: float = 0.85,
-                 max_questions: int = 20) -> None:
+    def __init__(
+        self, entities: EntityService, guess_threshold: float = 0.85, max_questions: int = 20
+    ) -> None:
         self.entities = entities
         self.guess_threshold = guess_threshold
         self.max_questions = max_questions
@@ -43,9 +45,7 @@ class GameService:
 
     def record_answer(self, state: GameState, question: Question, answer: Answer) -> None:
         for e in self.entities.entities:
-            state.log_scores[e.id] = update_log_score(
-                state.log_scores[e.id], e, question, answer
-            )
+            state.log_scores[e.id] = update_log_score(state.log_scores[e.id], e, question, answer)
         state.asked_ids.add(question.id)
         state.history.append((question.id, answer.value))
 
