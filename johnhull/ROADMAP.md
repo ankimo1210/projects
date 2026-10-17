@@ -21,7 +21,9 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 110 private modules as of 2026-10-09, including two validated RB-F04 private modules integrated into main. P3–P7 logic, accepted BGM/business models, and completed RB-F07/RB-F05 studies are retained. The catalogue is `MODEL_INDEX.md`; earlier development branches are retained.
 
-## 現在地（2026-10-09、全306節の統合完了・次の研究計画）
+## 現在地（2026-10-17、プロジェクト完了・RB-F04本研究のみ保留）
+
+**プロジェクトの状態（2026-10-17、ユーザー確認）：完了。** Hull 11e全37章・306節、Beyond Hull（vol13–28）、研究RB-F07・RB-F05（3本）・RB-F08・RB-F06・RB-F04 v1が完了しmain統合済み。RB-F04動的ヘッジは軽量版（問い1）のみ完了し、本研究（問い2・3、2商品ヘッジ、NN）はユーザー判断で保留。`make test`全通過・release gate PASS。`research_profiles.json` の候補や多曲線リスク・増分XVAは未承認の候補で、完了条件に含めない。
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
