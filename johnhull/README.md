@@ -43,6 +43,11 @@ validation, the strict tracked-file gate, the portal pages, the Jupyter Book
 pages, and the release branches they landed through are recorded in
 `VALIDATION.md`.
 
+Volumes 18–25 keep their Japanese introductions, formulas, figure explanations,
+and exercises in each volume's `teaching_notes.json`. Edit that source and run the
+volume's `build_*_notebook.py`, then `make hull-book`; editing the generated HTML
+or notebook alone does not preserve explanations on the next rebuild.
+
 Run release checks from the workspace root:
 
 ```bash

@@ -23,6 +23,11 @@ sphinx:
       - _static
     html_js_files:
       - require.min.js
+    # Package the existing math renderer and its SVG font data for offline use.
+    mathjax_path: mathjax-3.2.2-tex-svg-full.js
+    mathjax3_config:
+      options:
+        enableMenu: false
 
 html:
   use_issues_button: false
