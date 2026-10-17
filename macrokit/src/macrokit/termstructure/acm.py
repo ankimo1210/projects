@@ -1,7 +1,7 @@
 """Adrian, Crump and Moench (2013) term structure by linear regression (design §4.1).
 
 Log prices ln P^(n) = A_n + B_n' X_t with monthly periods and the one-month rate
-r_t = y^(1)/1200. Validated against the NY Fed series on US data (gate G2; the
+r_t = y^(1)/1200. Gate G2 validates it against the NY Fed series on US data (the
 2026-10-17 prototype reproduced it with correlation 0.99985).
 """
 
@@ -31,7 +31,7 @@ def pricing_recursion(
     delta1: np.ndarray,
     n_max: int,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """ACM eq. (11) with (mu, phi) the pricing drift: risk-neutral uses mu - lambda0, phi - lambda1."""
+    """ACM eq. (11) with (mu, phi) the pricing drift: the Q measure uses mu - lambda0, phi - lambda1."""
     k = len(mu)
     a = np.zeros(n_max + 1)
     b = np.zeros((n_max + 1, k))

@@ -91,7 +91,8 @@ AFFINE_TRUE = AffineParams(
     mu=np.zeros(3),
     phi=_PHI,
     chol=np.diag([0.25, 0.15, 0.10]) / 1200.0,
-    lambda0=-np.array([0.5 * (1 - 0.995), 0.0, 0.0]) / 1200.0,
+    # lambda0 shifts the Q mean of factor 1 by +0.5 pp (annual)
+    lambda0=-np.array([0.5 * (1 - _PHI_Q[0, 0]), 0.0, 0.0]) / 1200.0,
     lambda1=_PHI - _PHI_Q,
     delta0=2.0 / 1200.0,
     delta1=np.ones(3),
