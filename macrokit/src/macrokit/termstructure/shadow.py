@@ -178,7 +178,9 @@ def loglik(
 
 
 def filtered_states(theta: np.ndarray, forwards: np.ndarray, r_lower: float) -> np.ndarray:
-    _, states = loglik(theta, forwards, r_lower, return_states=True)
+    value, states = loglik(theta, forwards, r_lower, return_states=True)
+    if value[0] == -PENALTY:
+        raise ValueError("parameters are penalised; no filtered states")
     return states[0]
 
 
@@ -218,6 +220,8 @@ def expected_short_average(
 
 def expected_gaussian_average(theta: np.ndarray, states: np.ndarray, horizon: int) -> np.ndarray:
     """The same average without the bound (for gate G3 ①)."""
+    if np.ndim(theta) == 2 and np.shape(theta)[0] > 1:
+        raise ValueError("expected_gaussian_average takes one parameter vector")
     p = unpack(theta)
     return expected_average(p.mu[0], p.rho[0], p.delta0[0], np.ones(3), states, horizon)
 
