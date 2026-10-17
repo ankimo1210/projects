@@ -25,6 +25,7 @@
 | `claude/skills/repo-survey/` | `~/.claude/skills/repo-survey/` | 自作スキル：リポジトリ概観 |
 | `claude/skills/hull-derivatives/` | `~/.claude/skills/hull-derivatives/` | 自作スキル：デリバティブ参照（自分で書いた要約ノート） |
 | `codex/config.toml` | `~/.codex/config.toml` | モデル・reasoning effort・trust level・MCP |
+| `codex/rules/default.rules` | `~/.codex/rules/default.rules` | コマンド承認ポリシー（Starlark `prefix_rule`）。一回限りの承認は溜めずに整理する |
 | `codex/gitignore` | `~/.codex/.gitignore` | 同上 |
 | `macos/` | `~/.claude/`・`~/.codex/`・`~/.config/karabiner/` | **Mac 固有**の設定一式（[`macos/README.md`](macos/README.md)） |
 | `compaction-and-context.md` | — | Claude Code の `/compact` と コンテキスト管理の調査ノート（マシン非依存） |
@@ -71,6 +72,7 @@ WSL 側からも Windows 側からも同じ内容が見えるようにするた�
 - `~/.claude/history.jsonl`、`~/.codex/history.jsonl` — 入力履歴
 - `~/.claude/projects/` — 会話トランスクリプトと auto memory
 - `~/.codex/logs_2.sqlite` — 実行ログ（70MB超）
+- `~/.claude/skills/synced/` — claude.ai から同期される組み込みスキル。自作ではなく再取得可能
 - `~/.claude/plugins/` — マーケットプレースのクローン。再取得可能で、
   どれを有効にしているかは `claude/settings.json` の `enabledPlugins` と
   `extraKnownMarketplaces` に記録されている
@@ -96,6 +98,8 @@ cp claude/project-settings.local.json ~/projects/.claude/settings.local.json
 mkdir -p ~/.codex
 cp codex/config.toml             ~/.codex/config.toml
 cp codex/gitignore               ~/.codex/.gitignore
+mkdir -p ~/.codex/rules
+cp codex/rules/default.rules     ~/.codex/rules/default.rules
 
 # 共通のグローバル指示（WSL + Windows 併用の場合）
 cp AGENTS.md /mnt/c/Users/Kazumasa/.codex/AGENTS.md
@@ -125,6 +129,8 @@ ln -sf ../.codex/AGENTS.md                    ~/.claude/CLAUDE.md
 # 差分の確認（コピーする前に）
 diff -u ~/projects/agentic-setup/claude/settings.json ~/.claude/settings.json
 diff -u ~/projects/agentic-setup/codex/config.toml    ~/.codex/config.toml
+diff -u ~/projects/agentic-setup/codex/rules/default.rules ~/.codex/rules/default.rules
+diff -ru -x synced ~/projects/agentic-setup/claude/skills ~/.claude/skills
 diff -u ~/projects/agentic-setup/AGENTS.md            ~/.claude/CLAUDE.md
 diff -u ~/projects/agentic-setup/claude/project-settings.local.json \
         ~/projects/.claude/settings.local.json

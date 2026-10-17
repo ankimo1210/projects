@@ -62,7 +62,7 @@
 | genequest | 検査結果のローカル保存・検証 | [README](genequest/README.md) | 個人利用 | 独立 | CSV / JSON / Markdown / Python |
 | line_backup | バックアップをオフラインで解析する CLI | [README](line_backup/README.md) | ローカル専用 | 独立 | Python |
 | agent-profiler | エージェント実行の観測・保存・分析 | [README](agent-profiler/README.md) | TUI / CLI | Codex CLI / Claude Code | Python / Textual |
-| agentic-setup | エージェント・端末設定の復元用バックアップ | [README](agentic-setup/README.md) | 稼働設定と差分あり・同期待ち | 共有知識は docs/knowledge | Markdown / Shell / JSON / TOML |
+| agentic-setup | エージェント・端末設定の復元用バックアップ | [README](agentic-setup/README.md) | 稼働設定と同期済み（2026-10-17） | 共有知識は docs/knowledge | Markdown / Shell / JSON / TOML |
 | quant-agent-benchmark | 定量研究・開発エージェントの評価 | [README](quant-agent-benchmark/README.md) | ベンチ・評価結果を保存 | agent-profiler（関連テーマ） | Python |
 
 ### 学習ラボ・単発の成果（10件）
@@ -125,7 +125,7 @@ projects/
 ├── Makefile                 # ワークスペース横断の lint / test / install / clean
 ├── .pre-commit-config.yaml  # 共通フック (ruff, large file check, ...)
 ├── AGENTS.md                # AI エージェント向けワークスペース規約（正）
-├── CLAUDE.md                # Claude Code 向け: AGENTS.md へのポインタ + 補足
+├── CLAUDE.md                # Claude Code 向けアダプタ（`@AGENTS.md` の取り込みのみ）
 └── .github/copilot-instructions.md
 ```
 
@@ -156,7 +156,7 @@ make tree      # ヘビーディレクトリを除外したツリー表示
   - workspace メンバー（正は root `pyproject.toml` の `[tool.uv.workspace]`）: `agent-profiler`, `JHRMBS`, `gto`, `market-research`, `nbody-gpu`, `line_backup`, `akinator`, `health`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `rates_volatility_model`, `jp_llm_lab`, `labor_ai_quadrant`, `macrokit`, `timesfm_lab`, `market_nn`, `portfolio-analyzer`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
   - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` / `WSET` / `My Tianjin` は Xcode (Swift)、`ts-rosetta` / `b737-ops-sim` / `monster_gate` は pnpm、`pokemon` は npm、`eagle` は Rust (cargo) + npm、`notebooks` / `models` / `kaggle` は env 管理なし、`shortest_path` / `interactive-email-demo` は依存なし（前者は `PYTHONPATH=shortest_path/src` で実行）
   - `WSET/wset_l3_question_corpus` は**ワークスペース外の独立 uv プロジェクト**（自前の `pyproject.toml` / `uv.lock`）。root の `uv sync --all-packages` では依存が入らないので、そのディレクトリで個別に sync する（詳細は同 README）
-- AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
+- AI コラボ前提（Claude Code / Codex / Copilot）。エージェント向け規約の正本は各階層の `AGENTS.md`（`CLAUDE.md` は取り込むだけ。階層構成は `AGENTS.md` の「Agent instruction files」）
 
 ## セットアップ
 

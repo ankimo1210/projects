@@ -7,19 +7,16 @@ Canonical agent guide for this workspace. `CLAUDE.md` and
 
 A personal multi-project workspace: each top-level directory is an
 independent project, managed together in one git repository. Docs are
-Japanese-first; code, identifiers, and commit messages are English.
+Japanese-first; code, identifiers, and commit messages are English. The
+project index is in the root [`README.md`](README.md).
 
-Follow the target project's applicable `AGENTS.md` / `CLAUDE.md`. Consult
-its `README.md` for project context as needed; the project index is in the
-root [`README.md`](README.md). When a project has both files, `AGENTS.md` is
-the canonical text and `CLAUDE.md` only imports it (`@AGENTS.md`); never
-copy the guide into `CLAUDE.md`, or the two drift apart.
+## Workspace policy
 
-## Workspace Policy
-
-- **Scope your work to one project.** Do not grep or scan the whole
-  repository; search within the project directory you are working on.
-- **Paths:** The repository lives at `/home/kazumasa/projects` in Ubuntu WSL.
+- **Respond to the user in Japanese** unless asked otherwise.
+- **Scope your work to one project.** Follow its `AGENTS.md` and consult its
+  `README.md` as needed. Do not grep or scan the whole repository; search
+  within the project directory you are working on.
+- **Paths:** the repository lives at `/home/kazumasa/projects` in Ubuntu WSL.
   Run Git and build commands in WSL with Linux paths. For Windows-side file
   links or operations, use `//wsl.localhost/Ubuntu/home/kazumasa/projects/...`
   (or the corresponding UNC path for a worktree), and verify the target exists.
@@ -29,11 +26,31 @@ copy the guide into `CLAUDE.md`, or the two drift apart.
   (`models/*/`, `reports/`, `**/dist/`, `**/build/`), lock files, and
   heavy binaries. `.agentignore` is the machine-readable version of this
   list.
-- **Respond to the user in Japanese** unless asked otherwise.
 - **Secrets:** only `.env.example` files are tracked. Never commit real
   keys; real `.env` files are gitignored and stay local.
 - Preserve user changes; make the smallest coherent change; ask before
   adding production dependencies or making broad refactors.
+
+## Agent instruction files
+
+| Layer | Canonical file | Notes |
+|---|---|---|
+| Global (all repos) | `~/.codex/AGENTS.md` | `~/.claude/CLAUDE.md` symlinks to it; backed up in `agentic-setup/` |
+| Workspace | `AGENTS.md` (this file) | |
+| Project | `<project>/AGENTS.md` | Project-specific rules only |
+
+- `AGENTS.md` is the canonical text at every level. Claude Code reads only
+  `CLAUDE.md`, so each directory with an `AGENTS.md` also has a `CLAUDE.md`
+  adapter that imports it with `@AGENTS.md`. Never copy the guide into
+  `CLAUDE.md`, or the two drift apart.
+- `.github/copilot-instructions.md` links to `AGENTS.md` with a normal
+  Markdown link; Copilot does not expand `@` imports.
+- Do not repeat global or workspace rules in a project guide; write only what
+  differs or is specific to that project.
+- Personal skills live in `~/.claude/skills/`; settings, Codex rules, and
+  skills are backed up in `agentic-setup/`. That directory is a backup, not
+  the live configuration: change the live file first, then sync the copy as
+  its README describes.
 
 ## Python: single uv workspace
 
@@ -47,58 +64,49 @@ make lint / make test / make fmt    # cross-workspace checks
 ```
 
 Run `uv` from the repo root — running it inside a member directory can
-create a stray venv. Non-Python projects: `EitanQuest` / `NeonThread` /
-`WSET` / `My Tianjin` (Xcode), `ts-rosetta` / `b737-ops-sim` (pnpm),
-`pokemon` (npm), `eagle` (cargo + npm), `csharp_calc` / `CsharpApp`
-(.NET), `cpp_algo_lab` (make + CUDA).
+create a stray venv. Non-Python projects and their toolchains are listed in
+the root `README.md`.
 
-The root `conftest.py` imports same-named packages explicitly so that a
-full-workspace `pytest` run does not break them via namespace packages
-(pytest 9 behavior); keep it when touching test config.
+- Every member declares what it imports, including indirect imports and the
+  dev tooling its own CI invokes; the shared `.venv` hides omissions that
+  `uv sync --package <member>` exposes. See
+  `docs/decisions/0002-workspace-green-and-declared-dependencies.md`.
+- A historical green run does not establish the cause of a current failure.
+  Compare with a relevant baseline before attributing failures to a change.
 
-A historical green run does not establish the cause of a current failure.
-Compare with a relevant baseline before attributing failures to this change.
-Every member declares what it imports, including
-indirect (`health` declares `scipy` for `pandas.corr(method="spearman")`) and
-dev tooling its own CI invokes; the shared `.venv` hides omissions that
-`uv sync --package <member>` exposes. See
-`docs/decisions/0002-workspace-green-and-declared-dependencies.md`.
+### What `make test` covers
 
-**That green is not full coverage.** `make test` runs only the `testpaths`
-list in the root `pyproject.toml` (34 directories as of 2026-09-28).
-`deep_hedge_price/tests` (206) joined on 2026-09-28 together with its root
-`conftest.py` import. Python suites outside the uv workspace (WSET, the WSET
-corpus, aisan_lbo_case, interactive-email-demo, komorebi-3d, tokyo_subway_3d)
-run with `make test-extra`, each through the runner its README documents. Do not read
-"workspace green" as "every project verified"; run the suite you actually
-touched. `analytics/fourier/tests` (47) was in this list until 2026-08-16 and
-needed only the `testpaths` line, because its import name `fourier_book`
-differs from its directory; `deep_hedge_price` has dir name == package name
-and so needs a matching `import` in the root `conftest.py` as well —
-`testpaths` alone makes it fail with
-`ModuleNotFoundError: No module named 'deep_hedge_price.config'`.
-`analytics/report` and `johnhull/report` are not workspace members; their test
-conftests prepend their own directory to `sys.path`, so their top-level package
-names must stay distinct (`analytics_portal` vs `report_builder`) or one suite
-silently imports the other's package in a full run.
+`make test` runs only the `testpaths` list in the root `pyproject.toml`, plus
+`sde-check` (typecheck + lint + build + node tests for
+`analytics/differential_equation/sde-book`, skipped with a notice when `npm`
+is not on PATH). Python suites outside the uv workspace (WSET, the WSET
+corpus, aisan_lbo_case, interactive-email-demo, komorebi-3d,
+tokyo_subway_3d) run with `make test-extra`. "Workspace green" does not mean
+every project was verified; run the suite you actually touched.
 
-`make test` also runs `sde-check` (typecheck + lint + build + 12 node tests
-for `analytics/differential_equation/sde-book`), skipping it with a printed
-notice when `npm` is not on PATH.
+Traps when adding a suite:
 
-`WSET/wset_l3_question_corpus` is a standalone uv project, not a member —
-`uv sync --all-packages` does not install its `rapidfuzz`, so collecting it
-from the root errors. Sync it in its own directory.
+- A member whose directory name equals its package name (e.g.
+  `deep_hedge_price`) needs a matching `import` in the root `conftest.py` as
+  well as a `testpaths` line; otherwise pytest 9 namespace packages make it
+  fail with `ModuleNotFoundError: No module named '<pkg>.config'`. Keep that
+  conftest when touching test config.
+- `analytics/report` and `johnhull/report` are not workspace members; their
+  test conftests prepend their own directory to `sys.path`, so their package
+  names must stay distinct (`analytics_portal` vs `report_builder`) or one
+  suite silently imports the other's package in a full run.
+- `WSET/wset_l3_question_corpus` is a standalone uv project, not a member;
+  `uv sync --all-packages` does not install its `rapidfuzz`. Sync it in its
+  own directory.
 
-## Toolchains actually installed (WSL2, verified 2026-08-16)
+## Toolchains installed in WSL (verified 2026-10-17)
 
-`cargo` / `rustc`, `node` / `npm`, `nvcc` / `g++` / `make` are present.
+`uv`, `cargo` / `rustc`, `node` / `npm`, `nvcc` / `g++` / `make` are present.
 **`dotnet` and `swift` / `xcodebuild` are not**, so `csharp_calc`,
 `CsharpApp`, `EitanQuest`, `NeonThread`, `WSET`, and `My Tianjin` cannot be
-built or tested here at all — say so rather than reporting them as checked.
-`pnpm` is not on PATH either and `corepack` resolves to a Windows shim that
-bash cannot exec; use `npx --yes pnpm@11.1.0 <cmd>` for `ts-rosetta` and
-`b737-ops-sim`.
+built or tested here — say so rather than reporting them as checked.
+`pnpm` is not on PATH and `corepack` resolves to a Windows shim that bash
+cannot exec; use `npx --yes pnpm@11.1.0 <cmd>` for the pnpm projects.
 
 ## Docs & knowledge layers
 
@@ -115,11 +123,11 @@ See `docs/decisions/0001-workspace-docs-and-knowledge-layers.md` and
 | `_docs/` | Ephemeral worklogs/handoffs — not curated, do not rely on |
 | git log | The what/when history |
 
-Keep requested knowledge captures in this repository: use the relevant
-project docs for project-specific material and `docs/knowledge/` for shared
-material. Keep notes concise, dated where facts can change, and free of
-secrets or employer/client-confidential content. The former `~/wiki` is a
-legacy archive; do not write new notes there.
+Keep requested knowledge captures in this repository: project docs for
+project-specific material, `docs/knowledge/` for shared material. Keep notes
+concise, dated where facts can change, and free of secrets or
+employer/client-confidential content. The former `~/wiki` is a legacy
+archive; do not write new notes there.
 
 Write an ADR only when a future reader cannot reconstruct the "why"
 from the diff or log.

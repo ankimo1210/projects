@@ -1,7 +1,6 @@
 # health — Agent guide
 
 Google Health APIの本人データを原本保存し、Next.jsで閲覧するローカル専用ポータル。
-応答・ドキュメントは日本語、code/identifier/commitは英語。
 
 - `source_catalog.json`が公開型・取得method・scope・検証根拠の正本。
   API形状は`docs/google-health-source-contracts.md`を参照。
