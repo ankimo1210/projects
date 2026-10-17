@@ -2,9 +2,11 @@
 _data/
 _logs/
 _archive/
+_docs/
 tmp/
-test_app/
 macrokit/data/
+models/*/
+reports/
 
 # Scratch is intentionally excluded unless explicitly requested
 _scratch/
@@ -14,6 +16,12 @@ _scratch/
 **/data/processed/
 **/data/*.migrated/
 **/*.migrated/
+
+# Lock files
+uv.lock
+**/package-lock.json
+**/pnpm-lock.yaml
+**/Cargo.lock
 
 # Binary / large files
 **/*.duckdb

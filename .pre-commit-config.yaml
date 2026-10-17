@@ -19,9 +19,17 @@ repos:
         exclude: '^papers/'
       - id: detect-private-key
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.0
+  # Use the workspace's own ruff (root uv.lock) so the hook, `make lint`, and
+  # `make fmt` cannot drift to different ruff versions.
+  - repo: local
     hooks:
       - id: ruff
-        args: [--fix]
+        name: ruff
+        entry: uv run --no-sync ruff check --fix --force-exclude
+        language: system
+        types_or: [python, pyi, jupyter]
       - id: ruff-format
+        name: ruff-format
+        entry: uv run --no-sync ruff format --force-exclude
+        language: system
+        types_or: [python, pyi, jupyter]

@@ -23,6 +23,7 @@ help:
 	@echo "  make report   - build the offline analytics portal (analytics/report/site/)"
 	@echo "  make books    - build the analytics Jupyter Books"
 	@echo "  make sde-check - typecheck, lint, build, and test the interactive SDE book"
+	@echo "  make health-web-check - typecheck, lint, test, and build health/web (npm ci once)"
 	@echo "  make hull-report - build the offline johnhull portal (johnhull/report/site/)"
 	@echo "  make hull-book   - build the johnhull Jupyter Book (johnhull/book/_build/)"
 	@echo "  make hull-artifacts-check - rebuild vol 19-28 in /tmp and compare references"
