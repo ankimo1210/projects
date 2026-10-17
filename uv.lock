@@ -2796,10 +2796,13 @@ dependencies = [
     { name = "duckdb" },
     { name = "httpx" },
     { name = "numpy" },
+    { name = "openpyxl" },
     { name = "pandas" },
     { name = "pydantic" },
     { name = "pyyaml" },
+    { name = "scipy" },
     { name = "tenacity" },
+    { name = "xlrd" },
 ]
 
 [package.dev-dependencies]
@@ -2815,10 +2818,13 @@ requires-dist = [
     { name = "duckdb", specifier = ">=1.0" },
     { name = "httpx", specifier = ">=0.27" },
     { name = "numpy", specifier = ">=1.26" },
+    { name = "openpyxl", specifier = ">=3.1" },
     { name = "pandas", specifier = ">=2.2" },
     { name = "pydantic", specifier = ">=2.7" },
     { name = "pyyaml", specifier = ">=6" },
+    { name = "scipy", specifier = ">=1.13" },
     { name = "tenacity", specifier = ">=8.3" },
+    { name = "xlrd", specifier = ">=2.0" },
 ]
 
 [package.metadata.requires-dev]

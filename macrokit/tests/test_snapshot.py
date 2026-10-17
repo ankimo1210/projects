@@ -2,7 +2,7 @@ import hashlib
 import json
 from datetime import UTC, datetime
 
-from macrokit.snapshot import last_sha, manifest_path, save_snapshot
+from macrokit.snapshot import last_sha, latest_payload, manifest_path, save_snapshot
 
 
 def _save(root, content, *, day, indicator="jp_cpi_core"):
@@ -102,3 +102,20 @@ def test_last_sha_survives_a_truncated_final_manifest_line(tmp_path):
     with manifest_path(tmp_path).open("a", encoding="utf-8") as handle:
         handle.write('{"ingested_at": "2026-08-18T09:00:00+00:00", "sour')
     assert last_sha(tmp_path, "estat", "jp_cpi_core") == saved.sha256
+
+
+def test_latest_payload_is_the_last_stored_file_even_after_unchanged_fetches(tmp_path):
+    root = tmp_path / "raw"
+    when = datetime(2026, 10, 17, 9, 0, tzinfo=UTC)
+    save_snapshot(root, "us_term", "gsw", b"one", ingested_at=when, url="u", http_status=200)
+    second = save_snapshot(
+        root, "us_term", "gsw", b"two", ingested_at=when, url="u", http_status=200
+    )
+    unchanged = save_snapshot(
+        root, "us_term", "gsw", b"two", ingested_at=when, url="u", http_status=200
+    )
+
+    assert unchanged.path is None
+    assert latest_payload(root, "us_term", "gsw") == second.path
+    assert latest_payload(root, "us_term", "acm") is None
+    assert latest_payload(tmp_path / "missing", "us_term", "gsw") is None
