@@ -1,0 +1,195 @@
+{
+  "config_sha256": "06bd237dbf16717dd5c6154306a0d2160600cecc62f825ba50d1924c2e112460",
+  "code_commit": "ad8721fe4ec4679f33944828dcaf26fb9829fd26",
+  "t0": "2024-07-31",
+  "t1": "2026-06-30",
+  "delta_yield_pct": 1.6639729116265525,
+  "models_used": [
+    "acm",
+    "acm_bc",
+    "dns"
+  ],
+  "models_excluded_after_estimation": [],
+  "main": {
+    "acm": {
+      "share": 0.10869147686696415,
+      "interval": [
+        -0.15504842370698513,
+        0.3536717240724723
+      ],
+      "contains_half": false,
+      "delta_expected_pct": 0.1808596732313124,
+      "passed_gates": true,
+      "estimation_failed": false
+    },
+    "acm_bc": {
+      "share": 0.1628361538021307,
+      "interval": [
+        -0.43362584026471057,
+        0.503245064015957
+      ],
+      "contains_half": true,
+      "delta_expected_pct": 0.27095494896020056,
+      "passed_gates": true,
+      "estimation_failed": false
+    },
+    "shadow": {
+      "share": 0.6555208400522097,
+      "interval": [
+        -0.03848795858751885,
+        1.7133711242888152
+      ],
+      "contains_half": true,
+      "delta_expected_pct": 1.090768920853559,
+      "passed_gates": false,
+      "estimation_failed": false
+    },
+    "dns": {
+      "share": 0.06550406072542049,
+      "interval": [
+        -0.19931198601893918,
+        0.29580674905127335
+      ],
+      "contains_half": false,
+      "delta_expected_pct": 0.10899698264864044,
+      "passed_gates": true,
+      "estimation_failed": false
+    }
+  },
+  "verdict": "term_premium_dominant",
+  "brackets": {
+    "constant_premium": 1.0,
+    "random_walk": 0.5375959779695055
+  },
+  "shadow_starts": [
+    {
+      "negloglik": -16.507366712563744,
+      "share": 0.6555208400522097
+    },
+    {
+      "negloglik": 28.217423038145945,
+      "share": 0.8643728724632967
+    },
+    {
+      "negloglik": 293.72167741201076,
+      "share": 0.3341579341115604
+    },
+    {
+      "negloglik": 348.09849400510564,
+      "share": -0.1770215418225388
+    },
+    {
+      "negloglik": 621.984476239408,
+      "share": -0.011562814454424752
+    },
+    {
+      "negloglik": 1593.7697486226032,
+      "share": 1.246862565182115
+    },
+    {
+      "negloglik": 1595.3186823116393,
+      "share": 0.6778716537328023
+    },
+    {
+      "negloglik": 1804.9640495390797,
+      "share": 0.004548285319029024
+    },
+    {
+      "negloglik": 1846.1158128392212,
+      "share": 0.4614488823793729
+    },
+    {
+      "negloglik": 2586.613479085457,
+      "share": 1.2028047987023294
+    },
+    {
+      "negloglik": 2618.11077774508,
+      "share": 0.08058829026783433
+    },
+    {
+      "negloglik": 2829.916930667,
+      "share": 0.6825195021771919
+    },
+    {
+      "negloglik": 3433.617508152349,
+      "share": 1.019227583516993
+    },
+    {
+      "negloglik": 3658.540250934698,
+      "share": -0.7268170825850262
+    },
+    {
+      "negloglik": 6504.628723047869,
+      "share": 0.9836282836982218
+    },
+    {
+      "negloglik": 9763.056901963831,
+      "share": 1.0087011812603524
+    },
+    {
+      "negloglik": 25437.226692407807,
+      "share": -2.53540635433279e-15
+    },
+    {
+      "negloglik": 44315.35155354836,
+      "share": -0.3282827706601415
+    },
+    {
+      "negloglik": 1000000000000.0,
+      "share": null
+    },
+    {
+      "negloglik": 1000000000000.0,
+      "share": null
+    }
+  ],
+  "shadow_draws": {
+    "rejected": 259,
+    "floored_eigenvalues": 6
+  },
+  "acm_bc_shrink": 1.0,
+  "supplementary": {
+    "maturity_60": {
+      "acm": 0.2372737575882394,
+      "acm_bc": 0.29820587645883134,
+      "shadow": 0.8602919429203392,
+      "dns": 0.22164679199415555
+    },
+    "t0_alt": {
+      "t0": "2024-08-30",
+      "shares": {
+        "acm": 0.04885415944306872,
+        "acm_bc": 0.06965654247788051,
+        "shadow": 0.6339081615439033,
+        "dns": 0.04844125911517179
+      }
+    },
+    "window_2004-01-01": {
+      "acm": 0.3505810002656469,
+      "acm_bc": 0.35058100026564726,
+      "shadow": 0.008298966197958346,
+      "dns": 0.3324720953038227
+    },
+    "window_2009-01-01": {
+      "acm": 1.2452669336527014,
+      "acm_bc": 1.2452669336527014,
+      "shadow": 0.2679991003345934,
+      "dns": 1.4195408267583574
+    },
+    "t1_latest": {
+      "t1": "2026-10-15",
+      "shares": {
+        "acm": 0.3308175891339186,
+        "acm_bc": 0.4936699853370754,
+        "shadow": 0.7768846892702371,
+        "dns": 0.29824192297284857
+      }
+    },
+    "acm_k3": -0.006400852816826943,
+    "long_acm": {
+      "maturity_120": 0.21999330389490915,
+      "maturity_240": 0.15182286753164503,
+      "maturity_360": 0.13643653012278778
+    }
+  }
+}
