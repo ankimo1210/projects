@@ -158,7 +158,10 @@ def loglik(
                 jac_cov = (ndtr(z)[..., None] * b) @ cov  # H P, (B, M, 3)
                 innov = jac_cov @ np.swapaxes(ndtr(z)[..., None] * b, 1, 2) + meas
                 sign, logdet = np.linalg.slogdet(innov)
-                solved = np.linalg.solve(innov, np.concatenate([resid[..., None], jac_cov], axis=2))
+                # A singular innovation matrix (omega ~ 0) penalises only its own member:
+                # np.linalg.solve on the batch would raise for all members.
+                safe = np.where((sign > 0)[:, None, None], innov, np.eye(n_obs))
+                solved = np.linalg.solve(safe, np.concatenate([resid[..., None], jac_cov], axis=2))
                 x = x + np.einsum("bmk,bm->bk", jac_cov, solved[..., 0])
                 cov = cov - np.swapaxes(jac_cov, 1, 2) @ solved[..., 1:]
                 cov = 0.5 * (cov + np.swapaxes(cov, 1, 2))
