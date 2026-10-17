@@ -1,3 +1,4 @@
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -278,6 +279,13 @@ def test_a_penalised_optimum_is_not_finite_or_at_least_half_the_penalty(run_japa
         assert not run_japan._unpenalised(value)
 
 
+def test_start_order_puts_none_and_non_finite_values_last(run_japan):
+    rows = [{"negloglik": v} for v in (np.nan, 3.0, None, 1.0, np.inf, 2.0)]
+    ordered = [row["negloglik"] for row in sorted(rows, key=run_japan._start_order)]
+    assert ordered[:3] == [1.0, 2.0, 3.0]
+    assert all(v is None or not np.isfinite(v) for v in ordered[3:])
+
+
 def test_write_results_replaces_the_file_whole_and_keeps_the_old_one_on_a_failure(
     run_japan, monkeypatch, tmp_path
 ):
@@ -343,10 +351,12 @@ def _setup_japan(run_japan, monkeypatch, tmp_path, gates=None, *, connect=None):
     cfg["intervals"] |= {"n_boot": 20, "n_draws": 5}
     cfg["shadow"]["maxiter"] = 2
     cfg["code_commit"] = "abc123"
+    gates_text = json.dumps(_gates() if gates is None else gates)
     cfg["gates_commit"] = GATES_COMMIT
+    cfg["gates_sha256"] = hashlib.sha256(gates_text.encode()).hexdigest()
     cfg["sha256"] = run_japan.config_hash(cfg)
     (tmp_path / "config.json").write_text(json.dumps(cfg))
-    (tmp_path / "gates.json").write_text(json.dumps(_gates() if gates is None else gates))
+    (tmp_path / "gates.json").write_text(gates_text)
     monkeypatch.setattr(run_japan, "HERE", tmp_path)
     monkeypatch.setattr(run_japan, "CONFIG", tmp_path / "config.json")
     monkeypatch.setattr(run_japan, "GATES", tmp_path / "gates.json")
@@ -431,11 +441,11 @@ def test_a_failed_shadow_fit_excludes_only_that_model_and_main_results_are_writt
 def test_a_shadow_fit_with_no_accepted_draws_gives_a_point_estimate_and_no_interval(
     run_japan, monkeypatch, tmp_path, capsys
 ):
-    # the third start is a penalised optimum: its filtered states must not be requested;
-    # the second has a finite value but unusable parameters: its error is recorded
+    # a penalised or NaN optimum must not have its filtered states requested (the NaN one is
+    # listed first and must sort last); a finite value with unusable parameters records an error
     bad = np.full(shadow.N_PARAMS, np.nan)
-    starts = np.vstack([synthetic.SHADOW_TRUE, bad, bad])
-    fit = _shadow_fit(10.0, [10.0, 11.0, shadow.PENALTY], starts)
+    starts = np.vstack([bad, synthetic.SHADOW_TRUE, bad, bad])
+    fit = _shadow_fit(10.0, [np.nan, 10.0, 11.0, shadow.PENALTY], starts)
     draws = (np.empty((0, 480)), 5, 0)
     results, _ = _run_japan_on_synthetic(run_japan, monkeypatch, tmp_path, capsys, fit, draws)
 
@@ -446,7 +456,9 @@ def test_a_shadow_fit_with_no_accepted_draws_gives_a_point_estimate_and_no_inter
     assert isinstance(point["share"], float)
     assert point["interval"] is None
     assert point["contains_half"] is None
-    first, unusable, penalised = results["shadow_starts"]
+    *rows, not_finite = results["shadow_starts"]
+    first, unusable, penalised = rows
+    assert not_finite == {"negloglik": None, "share": None}  # NaN sorts last
     assert [first["negloglik"], unusable["negloglik"], penalised["negloglik"]] == [
         10.0,
         11.0,
@@ -498,6 +510,37 @@ def test_main_refuses_gates_that_changed_after_the_freeze_before_it_touches_any_
     with pytest.raises(SystemExit, match=r"gates\.json changed after the freeze"):
         run_japan.main()
     assert not (tmp_path / "results.json").exists()
+
+
+@pytest.mark.parametrize(
+    "edit", ["passed_models", "whitespace"], ids=["edited_passed_models", "reformatted"]
+)
+def test_main_refuses_gates_whose_bytes_changed_after_the_freeze(
+    run_japan, monkeypatch, tmp_path, edit
+):
+    _setup_japan(run_japan, monkeypatch, tmp_path, connect=_no_data)
+    config = json.loads((tmp_path / "config.json").read_text())
+    gates_file = tmp_path / "gates.json"
+    if edit == "passed_models":
+        gates = _gates(passed=("acm", "acm_bc", "shadow"))
+        gates_file.write_text(json.dumps(gates))
+    else:
+        gates_file.write_text(gates_file.read_text() + "\n")
+    # the commit still matches: only the content differs from what was frozen
+    assert json.loads(gates_file.read_text())["code_commit"] == config["gates_commit"]
+    with pytest.raises(SystemExit, match=r"gates\.json changed after the freeze"):
+        run_japan.main()
+    assert not (tmp_path / "results.json").exists()
+
+
+def test_main_refuses_a_config_frozen_without_the_gate_hash(run_japan, monkeypatch, tmp_path):
+    _setup_japan(run_japan, monkeypatch, tmp_path, connect=_no_data)
+    cfg = json.loads((tmp_path / "config.json").read_text())
+    cfg["gates_sha256"] = None
+    cfg["sha256"] = run_japan.config_hash(cfg)
+    (tmp_path / "config.json").write_text(json.dumps(cfg))
+    with pytest.raises(SystemExit, match=r"gates\.json changed after the freeze"):
+        run_japan.main()
 
 
 @pytest.mark.parametrize("controls_ok", [False, _MISSING, "yes", 1, None])
@@ -586,7 +629,12 @@ def test_freeze_records_the_commits_and_a_valid_hash_and_refuses_a_dirty_tree(
     config = json.loads((here / "config.json").read_text())
     assert config["code_commit"] == head
     assert config["gates_commit"] == config["code_commit"]
+    gates_bytes = (here / "gates.json").read_bytes()
+    assert config["gates_sha256"] == hashlib.sha256(gates_bytes).hexdigest()
     run_japan.check_hash(config)
+    config["gates_sha256"] = "0" * 64  # the frozen hash covers the gate results
+    with pytest.raises(ValueError, match="sha256"):
+        run_japan.check_hash(config)
 
 
 @pytest.mark.parametrize("controls_ok", [False, _MISSING, "yes", 1, None])
