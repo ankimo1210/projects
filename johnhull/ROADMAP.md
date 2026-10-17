@@ -44,7 +44,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 110 priv
 
 `done`・`accepted`・PASSは宣言した計算・再現性・integrationの範囲を示し、市場性能の承認ではない。
 教材改善（2026-10-10）：vol18–25全8巻の説明拡充を完了。各巻の導入・用語と数式・計算手順・33図の読み方・練習問題を `teaching_notes.json` に保存し、NotebookとBookへ反映した。説明を実装・reference配列と照合し、vol18–28の全11Notebook再実行検査、関連16 tests、ruff/format、release gateをPASS。Bookを全ページ再生成し、8巻の数式と33図・横はみ出しなしをブラウザ確認した。数式表示の既存MathJaxをローカル同梱し、重複読込を防止、本編2ページでも数式表示を確認。全体buildの従来診断154件（WARNING153・ERROR1）は旧設定との比較で完全一致し、追加8巻の診断は0件。計算・reference成果物、研究ロードマップと本編受入件数は変更していない。
-既知の不具合（2026-10-17）：上記のMathJax同梱で `book/_config.yml` と `book/_static` のJSが変わり、受入記録が固定したハッシュと一致しなくなった。`make test` で9件失敗する（`test_section_ledger.py::test_real_inventory_and_accepted_sections_are_complete` と、chooser・cliquet・compound・factor_risk・martingale・multifactor・numeraire・risk_premium の `test_d1_rejects_each_missing_required_hash[artifact_sha256]`）。同梱前のコミット 51a20022 では全件通過。直すには受入済み全節のD1記録を取り直すか、受入記録のハッシュ対象をどう扱うかの設計判断が要る。未着手。
+共有ランタイムの一括検査（2026-10-17、ユーザー承認）：MathJax同梱で `book/_config.yml`・`book/_ext/book_runtime.py`・`book/_static` が変わり、全節の受入記録が固定したハッシュと一致しなくなっていた（`make test` で9件失敗）。Book設定・拡張・静的アセット・portal CSSを全節共通の「共有ランタイム」とし、節ごとの記録では比較せず `docs/validation/shared-runtime.json` で一括検査する方式へ変更した（[証跡方針](docs/EVIDENCE_POLICY.md)）。過去の記録ファイルは書き換えていない。検査：Book全ページ再ビルド成功・警告154件（10-10と同数）、全31ページで数式2,832個がローカルのMathJax 3.2.2で描画・エラー/外部通信0、release gate PASS、台帳検査PASS。各節の画面の再撮影はしていない。受入件数（全306節）は不変。
 §33.2のstrike/date/MC規約、§36.4の会計/ESO条件不足による原典未再現値は保持する。
 fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画像・両保管庫復元を統合時に再実施したとは主張しない。
 

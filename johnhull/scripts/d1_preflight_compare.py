@@ -334,28 +334,23 @@ def driver_provenance(records_root: Path) -> dict:
 
 
 def _source_hashes(records_root: Path, spec: dict, fingerprint: dict) -> dict:
-    """Section inputs whose change makes the record stale (ledger freshness)."""
+    """Section inputs whose change makes the record stale (ledger freshness).
+
+    The Book/portal runtime shared by all sections (``shared_runtime``) is not
+    pinned here; it is validated once against its own manifest.
+    """
     components = fingerprint.get("components") or {}
     # The notebook is checked by its section slice in the fingerprint. Hashing
     # the whole notebook would stale this section when another section changes.
     names = set(spec["tests"]) | {
         "scripts/evidence_dependencies.json",
         "scripts/evidence_fingerprint.py",
-        "book/_config.yml",
-        "book/_toc.yml",
     }
-    source_suffixes = {
-        "book/_ext": {".py"},
-        "book/_static": {".js", ".css"},
-        "report/assets": {".css", ".js"},
-        "report/report_builder": {".py"},
+    names |= {
+        path.relative_to(records_root).as_posix()
+        for path in (records_root / "report/report_builder").rglob("*")
+        if path.is_file() and path.suffix == ".py" and "__pycache__" not in path.parts
     }
-    for directory, suffixes in source_suffixes.items():
-        names |= {
-            path.relative_to(records_root).as_posix()
-            for path in (records_root / directory).rglob("*")
-            if path.is_file() and path.suffix in suffixes and "__pycache__" not in path.parts
-        }
     for name in ("python_sources", "data_files", "verifier"):
         names |= set((components.get(name) or {}).keys())
     return {name: _sha256_file(records_root / name) for name in sorted(names)}

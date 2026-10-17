@@ -98,9 +98,13 @@ def test_d1_rejects_each_missing_required_hash(category) -> None:
     integrated = json.loads(gate.OUT.read_text(encoding="utf-8"))
     name = integrated["regression"]["d1"]["26.5"]["record"]
     record = json.loads((gate.PROJECT / name).read_text(encoding="utf-8"))
-    # Every hash emitted by the D1 producer is required, independently of the
-    # reduced inventory an incomplete record might claim for itself.
-    for source in record[category]:
+    # Every hash the current D1 producer requires must be present, independently
+    # of the reduced inventory an incomplete record might claim for itself.
+    # Shared Book/portal runtime hashes in older records are historical
+    # (validated once by shared_runtime) and are not required per section.
+    required = gate.required_d1_hashes("26.5")[category]
+    assert required and required <= set(record[category])
+    for source in sorted(required):
         changed = deepcopy(record)
         del changed[category][source]
         with pytest.raises(ValueError, match=f"missing {category}"):
