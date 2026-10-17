@@ -18,6 +18,10 @@ LAMBDA = 0.0609  # per month, Diebold and Li (2006)
 
 
 def ns_loadings(months: np.ndarray, lam: float = LAMBDA) -> np.ndarray:
+    """Nelson-Siegel loadings (level, slope, curvature) for maturities in months (> 0).
+
+    lam is per month.
+    """
     m = np.asarray(months, dtype=float)
     x = lam * m
     slope = -np.expm1(-x) / x
