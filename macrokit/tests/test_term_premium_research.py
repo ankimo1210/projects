@@ -7,6 +7,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from macrokit.termstructure import acm, shadow, synthetic
+from macrokit.termstructure.curve import ZeroPanel, month_ends
+
 RESEARCH = Path(__file__).resolve().parents[1] / "research/2026-10-jgb-term-premium"
 
 
@@ -207,3 +210,227 @@ def test_main_keeps_the_report_but_exits_2_when_a_control_does_not_fail(
     assert report["controls_ok"] is False
     assert report["controls_not_failing"] == ["g3.zero_bound"]
     assert "CONTROLS NOT FAILING: ['g3.zero_bound']" in capsys.readouterr().out
+
+
+@pytest.fixture(scope="module")
+def run_japan():
+    return _load("run_japan")
+
+
+def test_canonical_ignores_the_hash_field(run_japan):
+    config = {"b": 1, "a": [1, 2], "sha256": "x"}
+    assert run_japan.canonical(config) == b'{"a":[1,2],"b":1}'
+
+
+def test_check_hash_accepts_a_frozen_config_and_rejects_an_edit(run_japan):
+    config = json.loads((RESEARCH / "config.json").read_text())
+    config["sha256"] = run_japan.config_hash(config)
+    run_japan.check_hash(config)
+    config["verdict_band"] = [0.3, 0.7]
+    with pytest.raises(ValueError, match="sha256"):
+        run_japan.check_hash(config)
+
+
+def test_interval_or_none_is_none_for_no_draws_and_a_percentile_band_otherwise(run_japan):
+    assert run_japan._interval_or_none(np.empty((0, 5)), 0.90) is None
+    assert run_japan._interval_or_none([], 0.90) is None
+    samples = np.arange(1, 101)
+    expected = np.percentile(samples, [5, 95])
+    assert run_japan._interval_or_none(samples, 0.90) == pytest.approx(list(expected))
+    assert run_japan._interval_or_none(samples, 0.90) == pytest.approx([5.95, 95.05])
+
+
+def test_attempt_returns_the_value_or_the_error_text(run_japan):
+    assert run_japan._attempt(lambda: 5) == 5
+    assert run_japan._attempt(lambda: 1 / 0) == {"error": "ZeroDivisionError: division by zero"}
+
+
+def test_to_json_makes_numpy_values_serialisable(run_japan):
+    nested = {
+        "a": {"b": np.bool_(True), "c": np.float64(1.5), "d": np.arange(3), "e": (np.int64(2),)},
+        "f": [np.array([[1.0, 2.0]]), {"g": np.float64("nan")}],
+        np.int64(7): None,
+    }
+    plain = run_japan._to_json(nested)
+    assert json.loads(json.dumps(plain))["a"] == {"b": True, "c": 1.5, "d": [0, 1, 2], "e": [2]}
+    assert plain["f"][0] == [[1.0, 2.0]]
+    assert 7 in plain
+
+
+def test_shares_gives_the_share_or_none_for_a_failed_model(run_japan):
+    class Stub:
+        def share(self, t0, t1):
+            return t1 - t0
+
+    assert run_japan._shares({"acm": Stub(), "shadow": None}, 1, 4, ["acm", "shadow"]) == {
+        "acm": 3,
+        "shadow": None,
+    }
+
+
+def _japan_panel():
+    syn = synthetic.simulate_affine(
+        synthetic.AFFINE_TRUE, 480, np.random.default_rng(5), max_months=360
+    )
+    return ZeroPanel(month_ends(480, 1987), syn.panel.months, syn.panel.yields)
+
+
+def _run_japan_on_synthetic(run_japan, monkeypatch, tmp_path, capsys, fit, draws=None):
+    """main() on a synthetic Japanese-like panel with a tiny configuration."""
+    panel = _japan_panel()
+    cfg = json.loads((RESEARCH / "config.json").read_text())
+    cfg["bias_correction"]["n_boot"] = 20
+    cfg["intervals"] |= {"n_boot": 20, "n_draws": 5}
+    cfg["shadow"]["maxiter"] = 2
+    cfg["code_commit"] = "abc123"
+    cfg["sha256"] = run_japan.config_hash(cfg)
+    (tmp_path / "config.json").write_text(json.dumps(cfg))
+    (tmp_path / "gates.json").write_text(json.dumps({"passed_models": cfg["models"]}))
+    monkeypatch.setattr(run_japan, "HERE", tmp_path)
+    monkeypatch.setattr(run_japan, "CONFIG", tmp_path / "config.json")
+    monkeypatch.setattr(run_japan, "GATES", tmp_path / "gates.json")
+    monkeypatch.setattr(run_japan, "_code_unchanged", lambda *args, **kwargs: True)
+    monkeypatch.setattr(run_japan, "_git", lambda *args: "")
+    monkeypatch.setattr(run_japan, "connect", lambda path: None)
+    monkeypatch.setattr(run_japan, "fit_month_ends", lambda con, start, end: [])
+    monkeypatch.setattr(run_japan, "zero_panel", lambda fits: panel)
+    monkeypatch.setattr(shadow, "fit_shadow", lambda *args, **kwargs: fit)
+    if draws is not None:
+        monkeypatch.setattr(shadow, "draw_expected", lambda *args, **kwargs: draws)
+    seen = {"results_on_disk_at_each_fit": []}
+    real_fit_acm = acm.fit_acm
+
+    def fit_acm(panel, k=5, **kwargs):
+        seen["results_on_disk_at_each_fit"].append((tmp_path / "results.json").exists())
+        if k == 3:
+            seen["on_disk"] = json.loads((tmp_path / "results.json").read_text())
+            seen["printed"] = capsys.readouterr().out
+            raise ZeroDivisionError("boom")
+        return real_fit_acm(panel, k=k, **kwargs)
+
+    monkeypatch.setattr(acm, "fit_acm", fit_acm)
+    monkeypatch.setattr(
+        sys, "argv", ["run_japan.py", "--data-root", str(tmp_path), "--processes", "1"]
+    )
+    run_japan.main()
+    return json.loads((tmp_path / "results.json").read_text()), seen
+
+
+def _shadow_fit(negloglik, start_negloglik, start_theta):
+    theta = synthetic.SHADOW_TRUE
+    return shadow.ShadowFit(theta, negloglik, start_theta, np.array(start_negloglik), -0.10)
+
+
+def test_a_failed_shadow_fit_excludes_only_that_model_and_main_results_are_written_first(
+    run_japan, monkeypatch, tmp_path, capsys
+):
+    starts = np.tile(synthetic.SHADOW_TRUE, (2, 1))
+    fit = _shadow_fit(shadow.PENALTY, [shadow.PENALTY, 2e12], starts)
+    results, seen = _run_japan_on_synthetic(run_japan, monkeypatch, tmp_path, capsys, fit)
+
+    assert results["models_used"] == ["acm", "acm_bc", "dns"]
+    assert results["models_excluded_after_estimation"] == ["shadow"]
+    assert results["verdict"] != "undetermined"
+    failed = results["main"]["shadow"]
+    assert failed == {
+        "share": None,
+        "interval": None,
+        "contains_half": None,
+        "delta_expected_pct": None,
+        "passed_gates": True,
+        "estimation_failed": True,
+    }
+    for name in ("acm", "acm_bc", "dns"):
+        assert results["main"][name]["estimation_failed"] is False
+        assert len(results["main"][name]["interval"]) == 2
+    assert [row["share"] for row in results["shadow_starts"]] == [None, None]
+    assert results["shadow_draws"] is None
+    # the supplementary block is computed after the main block is on disk and on screen
+    on_disk = seen["results_on_disk_at_each_fit"]
+    assert on_disk[0] is False
+    assert all(on_disk[1:])
+    assert len(on_disk) > 3
+    assert "supplementary" not in seen["on_disk"]
+    assert seen["on_disk"]["main"] == results["main"]
+    assert seen["printed"].startswith("MAIN RESULTS\n")
+    supp = results["supplementary"]
+    assert supp["acm_k3"] == {"error": "ZeroDivisionError: boom"}
+    assert supp["maturity_60"]["shadow"] is None
+    assert supp["maturity_60"]["dns"] is not None
+    assert supp["t1_latest"]["shares"]["shadow"] is None
+    assert supp["window_2004-01-01"]["shadow"] is None
+    assert set(supp["long_acm"]) == {"maturity_120", "maturity_240", "maturity_360"}
+
+
+def test_a_shadow_fit_with_no_accepted_draws_gives_a_point_estimate_and_no_interval(
+    run_japan, monkeypatch, tmp_path, capsys
+):
+    # the second start is a penalised optimum: its filtered states must not be requested
+    starts = np.vstack([synthetic.SHADOW_TRUE, np.full(shadow.N_PARAMS, np.nan)])
+    fit = _shadow_fit(10.0, [10.0, shadow.PENALTY], starts)
+    draws = (np.empty((0, 480)), 5, 0)
+    results, _ = _run_japan_on_synthetic(run_japan, monkeypatch, tmp_path, capsys, fit, draws)
+
+    assert results["models_used"] == ["acm", "acm_bc", "shadow", "dns"]
+    assert results["models_excluded_after_estimation"] == []
+    point = results["main"]["shadow"]
+    assert point["estimation_failed"] is False
+    assert isinstance(point["share"], float)
+    assert point["interval"] is None
+    assert point["contains_half"] is None
+    assert [row["negloglik"] for row in results["shadow_starts"]] == [10.0, shadow.PENALTY]
+    assert isinstance(results["shadow_starts"][0]["share"], float)
+    assert results["shadow_starts"][1]["share"] is None
+    assert results["shadow_draws"] == {"rejected": 5, "floored_eigenvalues": 0}
+
+
+def _research_repo(tmp_path):
+    """A repository with the layout of the real one: src and the study directory under macrokit."""
+    here = tmp_path / "macrokit/research/study"
+    here.mkdir(parents=True)
+    (tmp_path / "macrokit/src").mkdir()
+    (tmp_path / "macrokit/src/module.py").write_text("a = 1\n")
+    (here / "run_japan.py").write_text("b = 1\n")
+    (here / "config.json").write_text((RESEARCH / "config.json").read_text())
+    _git(tmp_path, "init", "-q")
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-q", "-m", "init")
+    return here
+
+
+def test_dirty_sees_tracked_changes_from_the_study_directory_and_ignores_untracked_files(
+    run_japan, tmp_path, monkeypatch
+):
+    here = _research_repo(tmp_path)
+    monkeypatch.setattr(run_japan, "HERE", here)
+    (here / "gates.json").write_text("{}\n")  # untracked
+    assert run_japan._dirty("macrokit") == ""
+    (tmp_path / "macrokit/src/module.py").write_text("a = 2\n")
+    assert "macrokit/src/module.py" in run_japan._dirty("macrokit")
+    assert "macrokit/src/module.py" in run_japan._dirty("macrokit/src", "macrokit/research/study")
+    assert run_japan._dirty("macrokit/research/study/run_japan.py") == ""
+
+
+def test_freeze_records_the_commits_and_a_valid_hash_and_refuses_a_dirty_tree(
+    run_japan, tmp_path, monkeypatch
+):
+    here = _research_repo(tmp_path)
+    gates_commit = _git(tmp_path, "rev-parse", "HEAD")
+    (here / "gates.json").write_text(json.dumps({"code_commit": gates_commit}))  # untracked
+    monkeypatch.setattr(run_japan, "HERE", here)
+    monkeypatch.setattr(run_japan, "CONFIG", here / "config.json")
+    monkeypatch.setattr(run_japan, "GATES", here / "gates.json")
+    (tmp_path / "macrokit/src/module.py").write_text("a = 2\n")
+    with pytest.raises(SystemExit, match="commit everything under macrokit"):
+        run_japan.freeze()
+    _git(tmp_path, "commit", "-q", "-a", "-m", "change the code after the gates")
+    with pytest.raises(SystemExit, match="changed after the gates"):
+        run_japan.freeze()
+    (here / "gates.json").write_text(
+        json.dumps({"code_commit": _git(tmp_path, "rev-parse", "HEAD")})
+    )
+    run_japan.freeze()
+    config = json.loads((here / "config.json").read_text())
+    assert config["code_commit"] == _git(tmp_path, "rev-parse", "HEAD")
+    assert config["gates_commit"] == config["code_commit"]
+    run_japan.check_hash(config)

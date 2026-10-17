@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "spec": "docs/superpowers/specs/2026-10-17-jgb-term-premium-design.md",
+  "t0_month": "2024-07",
+  "t1_month": "2026-06",
+  "estimation_start": "1986-08-01",
+  "estimation_end": "2026-06-30",
+  "maturity_months": 120,
+  "supplementary_maturities": [60],
+  "verdict_band": [0.35, 0.65],
+  "models": ["acm", "acm_bc", "shadow", "dns"],
+  "acm": {"k": 5, "factor_months": "3..120 step 3", "return_months": [6, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120]},
+  "bias_correction": {"n_boot": 1000},
+  "shadow": {"r_lower_pct": -0.10, "forward_months": [3, 6, 12, 24, 60, 84, 120], "starts": 20, "maxiter": 500},
+  "dns": {"lambda": 0.0609},
+  "intervals": {"level": 0.90, "n_boot": 1000, "n_draws": 500},
+  "supplementary": {"windows": ["2004-01-01", "2009-01-01"], "acm_k3": true, "long_acm_start": "1999-09-01", "t0_alt_month": "2024-08"},
+  "seeds": {"acm": 20261017, "acm_bc": 20261018, "dns": 20261019, "shadow": 20261020},
+  "code_commit": null,
+  "gates_commit": null,
+  "sha256": null
+}
