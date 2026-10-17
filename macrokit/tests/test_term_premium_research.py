@@ -257,6 +257,53 @@ def test_to_json_makes_numpy_values_serialisable(run_japan):
     assert 7 in plain
 
 
+def test_to_json_maps_non_finite_floats_to_none_so_the_file_is_standard_json(run_japan):
+    values = {
+        "a": float("nan"),
+        "b": np.float64("inf"),
+        "c": np.float32("nan"),
+        "d": np.array([1.0, -np.inf, np.nan]),
+        "e": (float("-inf"), 2.5),
+    }
+    plain = run_japan._to_json(values)
+    assert plain == {"a": None, "b": None, "c": None, "d": [1.0, None, None], "e": [None, 2.5]}
+    json.dumps(plain, allow_nan=False)
+
+
+def test_a_penalised_optimum_is_not_finite_or_at_least_half_the_penalty(run_japan):
+    penalty = shadow.PENALTY
+    assert run_japan._unpenalised(12345.6)
+    assert run_japan._unpenalised(0.4 * penalty)
+    for value in (penalty, 2 * penalty, 0.5 * penalty, np.nan, np.inf, -np.inf):
+        assert not run_japan._unpenalised(value)
+
+
+def test_write_results_replaces_the_file_whole_and_keeps_the_old_one_on_a_failure(
+    run_japan, monkeypatch, tmp_path
+):
+    monkeypatch.setattr(run_japan, "HERE", tmp_path)
+    run_japan._write_results({"a": np.float64(1.5), "b": float("nan")})
+    assert json.loads((tmp_path / "results.json").read_text()) == {"a": 1.5, "b": None}
+    assert not (tmp_path / "results.json.tmp").exists()
+    with pytest.raises(TypeError):
+        run_japan._write_results({"a": object()})
+    assert json.loads((tmp_path / "results.json").read_text()) == {"a": 1.5, "b": None}
+    assert not (tmp_path / "results.json.tmp").exists()
+
+
+def test_check_constants_accepts_the_real_config_and_names_a_changed_field(run_japan):
+    config = json.loads((RESEARCH / "config.json").read_text())
+    run_japan._check_constants(config)
+    config["verdict_band"] = [0.3, 0.7]
+    with pytest.raises(SystemExit, match="verdict_band"):
+        run_japan._check_constants(config)
+    config = json.loads((RESEARCH / "config.json").read_text())
+    config["shadow"]["forward_months"] = [3, 6, 12, 24, 60, 84, 119]
+    config["acm"]["return_months"] = [6, 12]
+    with pytest.raises(SystemExit, match=r"acm\.return_months, shadow\.forward_months"):
+        run_japan._check_constants(config)
+
+
 def test_shares_gives_the_share_or_none_for_a_failed_model(run_japan):
     class Stub:
         def share(self, t0, t1):
@@ -275,25 +322,46 @@ def _japan_panel():
     return ZeroPanel(month_ends(480, 1987), syn.panel.months, syn.panel.yields)
 
 
-def _run_japan_on_synthetic(run_japan, monkeypatch, tmp_path, capsys, fit, draws=None):
-    """main() on a synthetic Japanese-like panel with a tiny configuration."""
+_MISSING = object()
+GATES_COMMIT = "gates123"
+
+
+def _gates(
+    controls_ok=True, *, code_commit=GATES_COMMIT, passed=("acm", "acm_bc", "shadow", "dns")
+):
+    gates = {"code_commit": code_commit, "passed_models": list(passed)}
+    if controls_ok is not _MISSING:
+        gates["controls_ok"] = controls_ok
+    return gates
+
+
+def _setup_japan(run_japan, monkeypatch, tmp_path, gates=None, *, connect=None):
+    """A frozen tiny configuration in tmp_path, a synthetic Japanese-like panel, no real data."""
     panel = _japan_panel()
     cfg = json.loads((RESEARCH / "config.json").read_text())
     cfg["bias_correction"]["n_boot"] = 20
     cfg["intervals"] |= {"n_boot": 20, "n_draws": 5}
     cfg["shadow"]["maxiter"] = 2
     cfg["code_commit"] = "abc123"
+    cfg["gates_commit"] = GATES_COMMIT
     cfg["sha256"] = run_japan.config_hash(cfg)
     (tmp_path / "config.json").write_text(json.dumps(cfg))
-    (tmp_path / "gates.json").write_text(json.dumps({"passed_models": cfg["models"]}))
+    (tmp_path / "gates.json").write_text(json.dumps(_gates() if gates is None else gates))
     monkeypatch.setattr(run_japan, "HERE", tmp_path)
     monkeypatch.setattr(run_japan, "CONFIG", tmp_path / "config.json")
     monkeypatch.setattr(run_japan, "GATES", tmp_path / "gates.json")
     monkeypatch.setattr(run_japan, "_code_unchanged", lambda *args, **kwargs: True)
     monkeypatch.setattr(run_japan, "_git", lambda *args: "")
-    monkeypatch.setattr(run_japan, "connect", lambda path: None)
+    monkeypatch.setattr(run_japan, "connect", connect or (lambda path: None))
     monkeypatch.setattr(run_japan, "fit_month_ends", lambda con, start, end: [])
     monkeypatch.setattr(run_japan, "zero_panel", lambda fits: panel)
+    argv = ["run_japan.py", "--data-root", str(tmp_path), "--processes", "1"]
+    monkeypatch.setattr(sys, "argv", argv)
+
+
+def _run_japan_on_synthetic(run_japan, monkeypatch, tmp_path, capsys, fit, draws=None, gates=None):
+    """main() on a synthetic Japanese-like panel with a tiny configuration."""
+    _setup_japan(run_japan, monkeypatch, tmp_path, gates)
     monkeypatch.setattr(shadow, "fit_shadow", lambda *args, **kwargs: fit)
     if draws is not None:
         monkeypatch.setattr(shadow, "draw_expected", lambda *args, **kwargs: draws)
@@ -309,10 +377,8 @@ def _run_japan_on_synthetic(run_japan, monkeypatch, tmp_path, capsys, fit, draws
         return real_fit_acm(panel, k=k, **kwargs)
 
     monkeypatch.setattr(acm, "fit_acm", fit_acm)
-    monkeypatch.setattr(
-        sys, "argv", ["run_japan.py", "--data-root", str(tmp_path), "--processes", "1"]
-    )
     run_japan.main()
+    assert not (tmp_path / "results.json.tmp").exists()
     return json.loads((tmp_path / "results.json").read_text()), seen
 
 
@@ -365,9 +431,11 @@ def test_a_failed_shadow_fit_excludes_only_that_model_and_main_results_are_writt
 def test_a_shadow_fit_with_no_accepted_draws_gives_a_point_estimate_and_no_interval(
     run_japan, monkeypatch, tmp_path, capsys
 ):
-    # the second start is a penalised optimum: its filtered states must not be requested
-    starts = np.vstack([synthetic.SHADOW_TRUE, np.full(shadow.N_PARAMS, np.nan)])
-    fit = _shadow_fit(10.0, [10.0, shadow.PENALTY], starts)
+    # the third start is a penalised optimum: its filtered states must not be requested;
+    # the second has a finite value but unusable parameters: its error is recorded
+    bad = np.full(shadow.N_PARAMS, np.nan)
+    starts = np.vstack([synthetic.SHADOW_TRUE, bad, bad])
+    fit = _shadow_fit(10.0, [10.0, 11.0, shadow.PENALTY], starts)
     draws = (np.empty((0, 480)), 5, 0)
     results, _ = _run_japan_on_synthetic(run_japan, monkeypatch, tmp_path, capsys, fit, draws)
 
@@ -378,10 +446,89 @@ def test_a_shadow_fit_with_no_accepted_draws_gives_a_point_estimate_and_no_inter
     assert isinstance(point["share"], float)
     assert point["interval"] is None
     assert point["contains_half"] is None
-    assert [row["negloglik"] for row in results["shadow_starts"]] == [10.0, shadow.PENALTY]
-    assert isinstance(results["shadow_starts"][0]["share"], float)
-    assert results["shadow_starts"][1]["share"] is None
+    first, unusable, penalised = results["shadow_starts"]
+    assert [first["negloglik"], unusable["negloglik"], penalised["negloglik"]] == [
+        10.0,
+        11.0,
+        shadow.PENALTY,
+    ]
+    assert isinstance(first["share"], float)
+    assert "error" not in first
+    assert unusable["share"] is None
+    assert unusable["error"].startswith("ValueError: parameters are penalised")
+    assert penalised == {"negloglik": shadow.PENALTY, "share": None}
     assert results["shadow_draws"] == {"rejected": 5, "floored_eigenvalues": 0}
+
+
+def test_a_model_that_failed_a_gate_is_still_estimated_but_leaves_the_verdict(
+    run_japan, monkeypatch, tmp_path, capsys
+):
+    fit = _shadow_fit(10.0, [10.0], np.tile(synthetic.SHADOW_TRUE, (1, 1)))
+    gates = _gates(passed=("acm", "acm_bc", "shadow"))
+    draws = (np.empty((0, 480)), 5, 0)
+    results, _ = _run_japan_on_synthetic(
+        run_japan, monkeypatch, tmp_path, capsys, fit, draws, gates
+    )
+
+    assert results["models_used"] == ["acm", "acm_bc", "shadow"]
+    assert results["models_excluded_after_estimation"] == []
+    assert results["main"]["dns"]["passed_gates"] is False
+    assert results["main"]["dns"]["estimation_failed"] is False
+    assert isinstance(results["main"]["dns"]["share"], float)
+    assert all(results["main"][m]["passed_gates"] for m in ("acm", "acm_bc", "shadow"))
+    assert results["verdict"] != "undetermined"
+
+
+def _no_data(path):
+    raise AssertionError("the data must not be opened")
+
+
+def test_main_refuses_to_run_twice_before_it_touches_any_data(run_japan, monkeypatch, tmp_path):
+    _setup_japan(run_japan, monkeypatch, tmp_path, connect=_no_data)
+    (tmp_path / "results.json").write_text('{"first": true}\n')
+    with pytest.raises(SystemExit, match=r"results\.json exists"):
+        run_japan.main()
+    assert json.loads((tmp_path / "results.json").read_text()) == {"first": True}
+
+
+def test_main_refuses_gates_that_changed_after_the_freeze_before_it_touches_any_data(
+    run_japan, monkeypatch, tmp_path
+):
+    _setup_japan(run_japan, monkeypatch, tmp_path, _gates(code_commit="other"), connect=_no_data)
+    with pytest.raises(SystemExit, match=r"gates\.json changed after the freeze"):
+        run_japan.main()
+    assert not (tmp_path / "results.json").exists()
+
+
+@pytest.mark.parametrize("controls_ok", [False, _MISSING, "yes", 1, None])
+def test_main_refuses_gates_whose_controls_did_not_all_fail(
+    run_japan, monkeypatch, tmp_path, controls_ok
+):
+    _setup_japan(run_japan, monkeypatch, tmp_path, _gates(controls_ok), connect=_no_data)
+    with pytest.raises(SystemExit, match="controls_ok is not true"):
+        run_japan.main()
+    assert not (tmp_path / "results.json").exists()
+
+
+def test_main_refuses_a_config_that_differs_from_the_code_constants(
+    run_japan, monkeypatch, tmp_path
+):
+    _setup_japan(run_japan, monkeypatch, tmp_path, connect=_no_data)
+    cfg = json.loads((tmp_path / "config.json").read_text())
+    cfg["verdict_band"] = [0.3, 0.7]
+    cfg["sha256"] = run_japan.config_hash(cfg)  # a consistent but different freeze
+    (tmp_path / "config.json").write_text(json.dumps(cfg))
+    with pytest.raises(SystemExit, match="verdict_band"):
+        run_japan.main()
+
+
+def test_main_requires_a_data_root_for_the_run(run_japan, monkeypatch, tmp_path, capsys):
+    _setup_japan(run_japan, monkeypatch, tmp_path, connect=_no_data)
+    monkeypatch.setattr(sys, "argv", ["run_japan.py"])
+    with pytest.raises(SystemExit) as stop:
+        run_japan.main()
+    assert stop.value.code == 2
+    assert "--data-root is required for the run" in capsys.readouterr().err
 
 
 def _research_repo(tmp_path):
@@ -411,26 +558,76 @@ def test_dirty_sees_tracked_changes_from_the_study_directory_and_ignores_untrack
     assert run_japan._dirty("macrokit/research/study/run_japan.py") == ""
 
 
-def test_freeze_records_the_commits_and_a_valid_hash_and_refuses_a_dirty_tree(
-    run_japan, tmp_path, monkeypatch
-):
+def _freeze_setup(run_japan, monkeypatch, tmp_path, gates=None):
+    """The research repository with gates.json (untracked, as the gate run leaves it)."""
     here = _research_repo(tmp_path)
-    gates_commit = _git(tmp_path, "rev-parse", "HEAD")
-    (here / "gates.json").write_text(json.dumps({"code_commit": gates_commit}))  # untracked
+    head = _git(tmp_path, "rev-parse", "HEAD")
+    gates = {"code_commit": head, "controls_ok": True} if gates is None else gates
+    (here / "gates.json").write_text(json.dumps(gates))
     monkeypatch.setattr(run_japan, "HERE", here)
     monkeypatch.setattr(run_japan, "CONFIG", here / "config.json")
     monkeypatch.setattr(run_japan, "GATES", here / "gates.json")
+    return here, head
+
+
+def test_freeze_records_the_commits_and_a_valid_hash_and_refuses_a_dirty_tree(
+    run_japan, tmp_path, monkeypatch
+):
+    here, _ = _freeze_setup(run_japan, monkeypatch, tmp_path)
     (tmp_path / "macrokit/src/module.py").write_text("a = 2\n")
     with pytest.raises(SystemExit, match="commit everything under macrokit"):
         run_japan.freeze()
     _git(tmp_path, "commit", "-q", "-a", "-m", "change the code after the gates")
     with pytest.raises(SystemExit, match="changed after the gates"):
         run_japan.freeze()
-    (here / "gates.json").write_text(
-        json.dumps({"code_commit": _git(tmp_path, "rev-parse", "HEAD")})
-    )
+    head = _git(tmp_path, "rev-parse", "HEAD")
+    (here / "gates.json").write_text(json.dumps({"code_commit": head, "controls_ok": True}))
     run_japan.freeze()
     config = json.loads((here / "config.json").read_text())
-    assert config["code_commit"] == _git(tmp_path, "rev-parse", "HEAD")
+    assert config["code_commit"] == head
     assert config["gates_commit"] == config["code_commit"]
     run_japan.check_hash(config)
+
+
+@pytest.mark.parametrize("controls_ok", [False, _MISSING, "yes", 1, None])
+def test_freeze_refuses_gates_whose_controls_did_not_all_fail(
+    run_japan, tmp_path, monkeypatch, controls_ok
+):
+    here, head = _freeze_setup(run_japan, monkeypatch, tmp_path)
+    gates = {"code_commit": head}
+    if controls_ok is not _MISSING:
+        gates["controls_ok"] = controls_ok
+    (here / "gates.json").write_text(json.dumps(gates))
+    with pytest.raises(SystemExit, match="controls_ok is not true"):
+        run_japan.freeze()
+    assert json.loads((here / "config.json").read_text())["sha256"] is None
+
+
+def test_freeze_refuses_a_configuration_that_is_already_frozen(run_japan, tmp_path, monkeypatch):
+    here, _ = _freeze_setup(run_japan, monkeypatch, tmp_path)
+    config = json.loads((here / "config.json").read_text())
+    config["sha256"] = run_japan.config_hash(config)
+    (here / "config.json").write_text(json.dumps(config))
+    _git(tmp_path, "commit", "-q", "-a", "-m", "freeze")
+    with pytest.raises(SystemExit, match="already frozen; a new configuration is a new study"):
+        run_japan.freeze()
+    assert json.loads((here / "config.json").read_text()) == config
+
+
+def test_freeze_refuses_once_results_exist(run_japan, tmp_path, monkeypatch):
+    here, _ = _freeze_setup(run_japan, monkeypatch, tmp_path)
+    (here / "results.json").write_text("{}\n")  # untracked
+    with pytest.raises(SystemExit, match="already frozen"):
+        run_japan.freeze()
+    assert json.loads((here / "config.json").read_text())["sha256"] is None
+
+
+def test_freeze_refuses_a_config_that_main_would_refuse(run_japan, tmp_path, monkeypatch):
+    here, _ = _freeze_setup(run_japan, monkeypatch, tmp_path)
+    config = json.loads((here / "config.json").read_text())
+    config["verdict_band"] = [0.3, 0.7]
+    (here / "config.json").write_text(json.dumps(config))
+    _git(tmp_path, "commit", "-q", "-a", "-m", "edit the band")
+    with pytest.raises(SystemExit, match="verdict_band"):
+        run_japan.freeze()
+    assert json.loads((here / "config.json").read_text())["sha256"] is None
