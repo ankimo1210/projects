@@ -1,12 +1,10 @@
-# gto — Claude Code Guide
+# gto — Agent guide
 
 ## Purpose
 
 GTO (Game Theory Optimal) Texas Hold'em analysis app. Combines a Rust CFR
 solver (CPU + GPU/NVRTC), a FastAPI backend, a Next.js frontend, and a
 Parquet-backed solution library. Personal project, eventually commercial.
-
-Respond to the user in Japanese by default; code and identifiers in English.
 
 ## Architecture
 
