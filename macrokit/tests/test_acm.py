@@ -79,6 +79,20 @@ def test_kilian_moves_an_ar1_estimate_toward_the_truth():
     assert abs(np.mean(corrected) - 0.98) < 0.5 * abs(np.mean(raw) - 0.98)
 
 
+def test_kilian_keeps_the_sample_mean_on_the_stationary_branch():
+    rng = np.random.default_rng(21)
+    true_phi = np.array([[0.93, 0.15], [0.0, 0.85]])  # asymmetric: no transpose can hide
+    x = np.zeros((180, 2))
+    for t in range(1, 180):
+        x[t] = np.array([0.2, 0.1]) + true_phi @ x[t - 1] + rng.normal(size=2)
+    fit = var.fit_var1(x)
+    out = acm.kilian_correct(x, fit, 200, rng)
+    assert out.shrink > 0.0
+    assert not np.allclose(out.phi, fit.phi)
+    np.testing.assert_allclose(out.mu, (np.eye(2) - out.phi) @ x.mean(axis=0))
+    assert not np.allclose(out.mu, fit.mu)
+
+
 def test_shrink_stops_at_the_first_stationary_step():
     phi, shrink = acm.shrink_to_stationary(np.array([[0.99]]), np.array([[-0.045]]))
     assert shrink == pytest.approx(0.22)
