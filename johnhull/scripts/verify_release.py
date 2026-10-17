@@ -15,8 +15,10 @@ from pathlib import Path
 import numpy as np
 
 try:
+    from . import shared_runtime
     from .frontier_acceptance import evaluate_acceptance
 except ImportError:  # direct script execution
+    import shared_runtime
     from frontier_acceptance import evaluate_acceptance
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -538,6 +540,11 @@ def verify(*, require_tracked: bool = False) -> list[Finding]:
         release_files.append(asset)
         if not asset.is_file() or _sha256(asset) != digest:
             findings.append(Finding("book", f"vendored asset digest mismatch: {relative}"))
+    # The Book/portal runtime shared by every section is checked once here
+    # instead of being pinned in each section's acceptance record.
+    release_files.append(PROJECT / shared_runtime.MANIFEST)
+    for problem in shared_runtime.check(PROJECT):
+        findings.append(Finding("book", problem))
 
     ignore_probes = (
         "deep_hedge_price/artifacts/checkpoints/release-probe.pt",

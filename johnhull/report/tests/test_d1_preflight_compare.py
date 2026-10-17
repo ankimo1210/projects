@@ -200,6 +200,7 @@ def test_overlay_replacement_must_name_an_existing_file(project, tmp_path):
 
 
 def test_source_hashes_pin_section_inputs_but_not_the_driver(tmp_path):
+    from johnhull.scripts import shared_runtime
     from johnhull.scripts.d1_preflight_compare import (
         DRIVER_FILES,
         _source_hashes,
@@ -244,13 +245,11 @@ def test_source_hashes_pin_section_inputs_but_not_the_driver(tmp_path):
         "hullkit/tests/test_lv.py",
         "scripts/evidence_dependencies.json",
         "scripts/evidence_fingerprint.py",
-        "book/_config.yml",
-        "book/_toc.yml",
-        "book/_ext/book_runtime.py",
-        "book/_static/require.min.js",
-        "report/assets/style.css",
         "report/report_builder/render.py",
     }
+    # The shared Book/portal runtime is validated once by shared_runtime, so a
+    # Book-wide change does not stale every accepted section.
+    assert not {name for name in hashes if shared_runtime.is_runtime(name)}
     assert set(driver_provenance(root)) == set(DRIVER_FILES)
 
 

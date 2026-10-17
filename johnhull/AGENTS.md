@@ -61,6 +61,9 @@ acceptance は `johnhull/scripts/frontier_acceptance.py` がコミット済み�
   ないと日本語ラベルが豆腐になり、stderr の警告に実行した checkout の絶対パスが残る
   （`test_frontier_notebook_freshness.py` と `test_core_notebook_gate.py` が検出する）。
 - build スクリプトは決定的 cell-id 方式。`build_*_notebook.py` は ruff exclude 対象。
+- **Book 全体の設定・拡張・静的アセット（共有ランタイム）を変えたら**、全節の再撮影ではなく
+  `docs/EVIDENCE_POLICY.md`「共有ランタイムの一括検査」の3検査を行い、`scripts/shared_runtime.py --write` で
+  `docs/validation/shared-runtime.json` を更新する。更新しないと release check と `test_shared_runtime.py` が落ちる。
 - 巻を追加するときは `release_manifest.json` に notebook / portal 図 / semantic tests /
   references を登録し、`make hull-release-check` を通す。
 

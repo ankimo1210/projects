@@ -18,11 +18,12 @@ from datetime import date
 from pathlib import Path, PurePosixPath
 
 try:
-    from . import d1_preflight_compare, evidence_fingerprint, evidence_record
+    from . import d1_preflight_compare, evidence_fingerprint, evidence_record, shared_runtime
 except ImportError:  # executed as a script from johnhull/scripts
     import d1_preflight_compare
     import evidence_fingerprint
     import evidence_record
+    import shared_runtime
 
 STATUSES = (
     "unreviewed",
@@ -216,6 +217,17 @@ def _validate_record_mapping(project: Path, mapping: object, label: str, errors:
         _check_hashed_file(project, path_value, hash_value, f"{label}[{path_value!r}]", errors)
 
 
+def _section_sources(mapping: object) -> object:
+    """Drop shared-runtime hashes, which ``shared_runtime`` validates once.
+
+    Older records pinned the Book config, extension, and static assets for
+    every section; those entries are historical and not compared any more.
+    """
+    if not isinstance(mapping, dict):
+        return mapping
+    return {name: digest for name, digest in mapping.items() if not shared_runtime.is_runtime(name)}
+
+
 def _validate_record_hashes(
     project: Path,
     record_path: Path,
@@ -240,7 +252,10 @@ def _validate_record_hashes(
     source_hashes = record.get("source_sha256")
     if source_hashes is not None:
         _validate_record_mapping(
-            project, source_hashes, f"{evidence_label}.record.source_sha256", errors
+            project,
+            _section_sources(source_hashes),
+            f"{evidence_label}.record.source_sha256",
+            errors,
         )
     if check_artifacts:
         artifact_hashes = record.get("artifact_sha256")
@@ -266,7 +281,10 @@ def _validate_schema_2_record(
 ) -> None:
     """Schema-2 (D1) records: same freshness checks plus store-backed images."""
     _validate_record_mapping(
-        project, record.get("source_sha256"), f"{evidence_label}.record.source_sha256", errors
+        project,
+        _section_sources(record.get("source_sha256")),
+        f"{evidence_label}.record.source_sha256",
+        errors,
     )
     if check_artifacts:
         config_path = (record.get("environment") or {}).get("fingerprint_config")
@@ -300,7 +318,7 @@ def _validate_schema_2_record(
                     except (OSError, KeyError, TypeError, ValueError) as exc:
                         errors.append(f"{evidence_label}.record.source_sha256: {exc}")
                     else:
-                        if expected_sources != record.get("source_sha256"):
+                        if expected_sources != _section_sources(record.get("source_sha256")):
                             errors.append(
                                 f"{evidence_label}.record.source_sha256: source inventory differs from current declared inputs"
                             )
