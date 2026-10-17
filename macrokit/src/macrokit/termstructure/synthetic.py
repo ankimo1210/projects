@@ -11,6 +11,7 @@ import numpy as np
 
 from .acm import AcmFit, pricing_recursion
 from .curve import ZeroPanel, month_ends
+from .dns import ns_loadings
 from .var import expected_average
 
 
@@ -101,3 +102,34 @@ AFFINE_TRUE = AffineParams(
 
 def affine_dgp(n_months: int, rng: np.random.Generator) -> SyntheticCurve:
     return simulate_affine(AFFINE_TRUE, n_months, rng)
+
+
+DNS_MEAN = np.array([4.0, -2.0, 0.0])
+DNS_PHI = np.diag([0.99, 0.95, 0.90])
+DNS_SHOCK = np.array([0.25, 0.30, 0.50])
+
+
+def dns_dgp(
+    n_months: int,
+    rng: np.random.Generator,
+    *,
+    max_months: int = 120,
+    noise_pct: float = 0.02,
+    burn_in: int = 500,
+    horizon: int = 120,
+) -> SyntheticCurve:
+    mu = (np.eye(3) - DNS_PHI) @ DNS_MEAN
+    f = DNS_MEAN.copy()
+    path = np.empty((n_months, 3))
+    shocks = rng.standard_normal((burn_in + n_months, 3)) * DNS_SHOCK
+    for t in range(burn_in + n_months):
+        f = mu + DNS_PHI @ f + shocks[t]
+        if t >= burn_in:
+            path[t - burn_in] = f
+    months = np.arange(1, max_months + 1)
+    yields = path @ ns_loadings(months).T + noise_pct * rng.standard_normal((n_months, max_months))
+    short_loading = ns_loadings(np.array([1.0]))[0]
+    expected = expected_average(mu, DNS_PHI, 0.0, short_loading, path, horizon)
+    return SyntheticCurve(
+        ZeroPanel(month_ends(n_months), months, yields), expected, path @ short_loading
+    )
