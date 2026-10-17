@@ -85,12 +85,19 @@ def test_shrink_stops_at_the_first_stationary_step():
     assert phi[0, 0] < 1.0
 
 
+def test_shrink_returns_the_estimate_when_no_step_is_stationary():
+    phi, shrink = acm.shrink_to_stationary(np.array([[1.01]]), np.array([[-0.01]]))
+    assert shrink == 0.0
+    assert phi[0, 0] == 1.01
+
+
 def test_kilian_leaves_a_non_stationary_estimate_alone():
     x = np.cumsum(np.ones((50, 1)), axis=0)
     fit = var.Var1(mu=np.array([1.0]), phi=np.array([[1.01]]), resid=np.zeros((49, 1)))
     out = acm.kilian_correct(x, fit, 10, np.random.default_rng(0))
     assert out.shrink == 0.0
     np.testing.assert_array_equal(out.phi, fit.phi)
+    np.testing.assert_array_equal(out.mu, fit.mu)
 
 
 def test_bootstrap_expected_is_centred_on_the_point_estimate():
@@ -98,4 +105,21 @@ def test_bootstrap_expected_is_centred_on_the_point_estimate():
     fit = acm.fit_acm(syn.panel, k=3)
     draws = acm.bootstrap_expected(fit, 120, 200, np.random.default_rng(13))
     assert draws.shape == (200, 400)
-    assert abs(np.median(draws[:, -1]) - fit.expected(120)[-1]) < 0.5
+    # Pins this fixed draw. Baseline gap 0.030 and std 0.33; no residuals std 4e-16; x3 std 0.97.
+    last = draws[:, -1]
+    point = fit.expected(120)[-1]
+    assert abs(np.median(last) - point) < 0.1
+    assert 0.1 < last.std() < 0.6
+    assert np.quantile(last, 0.05) < point < np.quantile(last, 0.95)
+
+
+def test_bias_corrected_bootstrap_draws_from_the_corrected_dgp():
+    syn = synthetic.affine_dgp(400, np.random.default_rng(12))
+    fit = acm.fit_acm(syn.panel, k=3)
+    corrected = acm.bootstrap_expected(fit, 120, 20, np.random.default_rng(14), correction_boot=20)
+    plain = acm.bootstrap_expected(fit, 120, 20, np.random.default_rng(14))
+    assert corrected.shape == (20, 400)
+    assert np.isfinite(corrected).all()
+    assert not np.allclose(corrected, plain)
+    kc = acm.kilian_correct(fit.factors, fit.var, 20, np.random.default_rng(15))
+    assert abs(np.median(corrected[:, -1]) - fit.expected(120, kc.mu, kc.phi)[-1]) < 0.5
