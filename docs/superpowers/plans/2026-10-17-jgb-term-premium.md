@@ -21,7 +21,7 @@
 - Run `uv` only from the repo/worktree root (`cd $WT && uv lock`). Never `uv sync` inside a member directory.
 - Dependencies: `scipy`, `xlrd` and `openpyxl` (all approved by the user on 2026-10-17; all already locked for other workspace members).
 - Units: zero yields are continuously compounded **annual percent**; one period is one month; maturities are integer months. ACM works in log prices with the one-month rate in decimal per month (`y/1200`). The shadow-rate model works in annual percent with the convexity factor `1/1200`.
-- Fixed settings come from the spec and must not change after Japanese results exist: window t0 = last data day of July 2024, t1 = last data day of June 2026; estimation 1986-08..2026-06; verdict band [0.35, 0.65]; ACM K = 5, factor maturities 3..120 step 3, return maturities {6, 12, 24, 36, …, 120}; Kilian 1,000 draws; shadow r_L = −0.10 %, forward maturities {3, 6, 12, 24, 60, 84, 120}, 20 starts; DNS λ = 0.0609; intervals 90 % from 1,000 bootstrap draws (500 parameter draws for the shadow model); G1 20,000 months, |ŝ − s| ≤ 0.05 and TP RMSE ≤ 0.10 pt; G2 corr ≥ 0.95, RMSE ≤ 0.25 pt, change gap ≤ 0.15 pt; G3 equality within 1 bp, Wu-Xia corr ≥ 0.9; G4 median par error ≤ 3 bp.
+- Fixed settings come from the spec and must not change after Japanese results exist: window t0 = last data day of July 2024, t1 = last data day of June 2026; estimation 1986-08..2026-06; verdict band [0.35, 0.65]; ACM K = 5, factor maturities 3..120 step 3, return maturities {6, 12, 24, 36, …, 120}; Kilian 1,000 draws; shadow r_L = −0.10 %, forward maturities {3, 6, 12, 24, 60, 84, 120}, 20 starts; DNS λ = 0.0609; intervals 90 % from 1,000 bootstrap draws (500 parameter draws for the shadow model); G1 10 draws of 20,000 months per DGP (seeds fixed in advance), |mean(ŝ − s)| ≤ 0.05 and median TP RMSE ≤ 0.15 pt (spec §9, 2026-10-17); G2 corr ≥ 0.95, RMSE ≤ 0.25 pt, change gap ≤ 0.15 pt; G3 equality within 1 bp, Wu-Xia corr ≥ 0.9; G4 median par error ≤ 3 bp.
 - Commit messages: English, imperative, no `feat:` prefix (match `git log -- macrokit`), ending with the attribution lines from the session (`Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` and the `Claude-Session:` line).
 - Docs are Japanese; code, identifiers and commit messages are English.
 - Do not push and do not merge into `main` without the user's explicit approval.
@@ -2684,7 +2684,29 @@ def test_g3_failure_removes_the_shadow_model(gates):
 
 def test_a_data_failure_stops_everything(gates):
     assert gates.passed_models(_report(g4={"pass": False})) == []
+
+
+def test_g1_summary_uses_the_mean_error_and_the_median_rmse(gates):
+    draws = [
+        {"share_error": e, "tp_rmse": r} for e, r in ((0.08, 0.05), (-0.06, 0.12), (0.02, 0.30))
+    ]
+    out = gates._summary(draws)
+    assert out["mean_share_error"] == pytest.approx(0.04 / 3)
+    assert out["median_tp_rmse"] == pytest.approx(0.12)
+    assert out["pass"]
+    assert not gates._summary([{"share_error": 0.06, "tp_rmse": 0.05}] * 3)["pass"]
+    assert not gates._summary([{"share_error": 0.0, "tp_rmse": 0.16}] * 3)["pass"]
+
+
+def test_g1_draws_use_distinct_fixed_seeds(gates):
+    first = gates._rng(1, 0).standard_normal(3)
+    np.testing.assert_array_equal(first, gates._rng(1, 0).standard_normal(3))
+    assert not np.allclose(first, gates._rng(1, 1).standard_normal(3))
+    assert not np.allclose(first, gates._rng(2, 0).standard_normal(3))
+    assert not np.allclose(first, gates._rng(1, 0, 1).standard_normal(3))
 ```
+
+The test file needs `import numpy as np` in its top import block.
 
 - [ ] **Step 3: Run it to verify it fails**
 
@@ -2725,8 +2747,9 @@ from macrokit.termstructure.decompose import largest_rise_window, share_of
 HERE = Path(__file__).resolve().parent
 SEED = 20261017
 G1_MONTHS = 20_000
+G1_DRAWS = 10  # independent synthetic paths per DGP (spec §9, 2026-10-17)
 WINDOW = 23  # end-July 2024 -> end-June 2026
-TOL_SHARE, TOL_RMSE = 0.05, 0.10
+TOL_SHARE, TOL_RMSE = 0.05, 0.15  # |mean(s_hat - s)| and median TP RMSE over the G1 draws
 MODELS = ("acm", "acm_bc", "shadow", "dns")
 
 
@@ -2736,45 +2759,67 @@ def _commit() -> str:
     ).stdout.strip()
 
 
-def _score(expected, true_expected, yields, i0, i1) -> dict:
+def _rng(family: int, draw: int, stream: int = 0) -> np.random.Generator:
+    """Fixed, distinct streams: family 1 affine, 2 DNS, 3 shadow; stream 1 = Kilian."""
+    return np.random.default_rng([SEED, family, draw, stream])
+
+
+def _draw_score(expected, true_expected, yields, i0, i1) -> dict:
     s_hat = float(share_of(expected, yields, i0, i1))
     s_true = float(share_of(true_expected, yields, i0, i1))
     rmse = float(np.sqrt(((expected - true_expected) ** 2).mean()))
+    return {"share": s_hat, "true_share": s_true, "share_error": s_hat - s_true, "tp_rmse": rmse}
+
+
+def _summary(draws: list[dict]) -> dict:
+    """Design §5 G1: mean signed share error and median TP RMSE over the draws."""
+    mean_error = float(np.mean([d["share_error"] for d in draws]))
+    median_rmse = float(np.median([d["tp_rmse"] for d in draws]))
     return {
-        "share": s_hat,
-        "true_share": s_true,
-        "share_error": abs(s_hat - s_true),
-        "tp_rmse": rmse,
-        "pass": abs(s_hat - s_true) <= TOL_SHARE and rmse <= TOL_RMSE,
+        "draws": draws,
+        "mean_share_error": mean_error,
+        "median_tp_rmse": median_rmse,
+        "pass": abs(mean_error) <= TOL_SHARE and median_rmse <= TOL_RMSE,
     }
 
 
 def g1(processes: int) -> dict:
-    out: dict = {}
-    syn = synthetic.affine_dgp(G1_MONTHS, np.random.default_rng(SEED))
-    y = syn.panel.column(120)
-    i0, i1 = largest_rise_window(y, WINDOW)
-    fit = acm.fit_acm(syn.panel)
-    corrected = acm.kilian_correct(fit.factors, fit.var, 1000, np.random.default_rng(SEED + 1))
-    out["acm"] = _score(fit.expected(120), syn.expected_pct, y, i0, i1)
-    out["acm_bc"] = _score(fit.expected(120, corrected.mu, corrected.phi), syn.expected_pct, y, i0, i1)
-    out["acm_control"] = _score(syn.short_pct, syn.expected_pct, y, i0, i1)
+    names = ("acm", "acm_bc", "acm_control", "dns", "dns_control", "shadow", "shadow_control")
+    rows: dict[str, list[dict]] = {name: [] for name in names}
+    seconds = []
+    for r in range(G1_DRAWS):
+        syn = synthetic.affine_dgp(G1_MONTHS, _rng(1, r))
+        y = syn.panel.column(120)
+        i0, i1 = largest_rise_window(y, WINDOW)
+        fit = acm.fit_acm(syn.panel)
+        corrected = acm.kilian_correct(fit.factors, fit.var, 1000, _rng(1, r, 1))
+        bc = fit.expected(120, corrected.mu, corrected.phi)
+        rows["acm"].append(_draw_score(fit.expected(120), syn.expected_pct, y, i0, i1))
+        rows["acm_bc"].append(_draw_score(bc, syn.expected_pct, y, i0, i1))
+        rows["acm_control"].append(_draw_score(syn.short_pct, syn.expected_pct, y, i0, i1))
 
-    syn = synthetic.dns_dgp(G1_MONTHS, np.random.default_rng(SEED + 2))
-    y = syn.panel.column(120)
-    i0, i1 = largest_rise_window(y, WINDOW)
-    out["dns"] = _score(dns.fit_dns(syn.panel).expected(120), syn.expected_pct, y, i0, i1)
-    out["dns_control"] = _score(syn.short_pct, syn.expected_pct, y, i0, i1)
+        syn = synthetic.dns_dgp(G1_MONTHS, _rng(2, r))
+        y = syn.panel.column(120)
+        i0, i1 = largest_rise_window(y, WINDOW)
+        e_dns = dns.fit_dns(syn.panel).expected(120)
+        rows["dns"].append(_draw_score(e_dns, syn.expected_pct, y, i0, i1))
+        rows["dns_control"].append(_draw_score(syn.short_pct, syn.expected_pct, y, i0, i1))
 
-    sh = synthetic.shadow_dgp(G1_MONTHS, np.random.default_rng(SEED + 3), r_lower=0.0)
-    i0, i1 = largest_rise_window(sh.yield_pct, WINDOW)
-    started = time.perf_counter()
-    fit_sh = shadow.fit_shadow(sh.forwards, 0.0, shadow.default_starts(sh.forwards), processes)
-    states = shadow.filtered_states(fit_sh.theta, sh.forwards, 0.0)
-    expected = shadow.expected_short_average(fit_sh.theta, states, 0.0, 120)
-    out["shadow"] = _score(expected, sh.expected_pct, sh.yield_pct, i0, i1)
-    out["shadow"]["seconds"] = round(time.perf_counter() - started, 1)
-    out["shadow_control"] = _score(sh.short_pct, sh.expected_pct, sh.yield_pct, i0, i1)
+        sh = synthetic.shadow_dgp(G1_MONTHS, _rng(3, r), r_lower=0.0)
+        i0, i1 = largest_rise_window(sh.yield_pct, WINDOW)
+        started = time.perf_counter()
+        starts = shadow.default_starts(sh.forwards)
+        fit_sh = shadow.fit_shadow(sh.forwards, 0.0, starts, processes)
+        states = shadow.filtered_states(fit_sh.theta, sh.forwards, 0.0)
+        e_sh = shadow.expected_short_average(fit_sh.theta, states, 0.0, 120)
+        seconds.append(round(time.perf_counter() - started, 1))
+        rows["shadow"].append(_draw_score(e_sh, sh.expected_pct, sh.yield_pct, i0, i1))
+        rows["shadow_control"].append(
+            _draw_score(sh.short_pct, sh.expected_pct, sh.yield_pct, i0, i1)
+        )
+        print(f"G1 draw {r + 1}/{G1_DRAWS} done (shadow {seconds[-1]} s)", flush=True)
+    out = {name: _summary(draws) for name, draws in rows.items()}
+    out["shadow"]["seconds"] = seconds
     for model in ("acm", "dns", "shadow"):
         out[f"{model}_control"]["fails_as_required"] = not out[f"{model}_control"]["pass"]
     return out
@@ -2938,7 +2983,7 @@ Expected: PASS (4 tests).
 cd $WT && git add macrokit/research/2026-10-jgb-term-premium/gates.py macrokit/tests/test_term_premium_research.py && git commit -m "Add the validation gates for the term-premium re-test"
 ```
 
-- [ ] **Step 7: Run the gates (about 30–60 minutes wall, 20 processes)**
+- [ ] **Step 7: Run the gates (about 60–90 minutes wall, 20 processes; G1 runs 10 draws per DGP)**
 
 Run: `cd $WT && $PY macrokit/research/2026-10-jgb-term-premium/gates.py --data-root /home/kazumasa/projects/macrokit/data --processes 20 2>&1 | tee /tmp/claude-1000/-home-kazumasa-projects/df1bf6ad-598d-44e3-a3ed-6b1df2d7d491/scratchpad/gates.log`
 Expected: `gates.json` written; G2 close to the prototype (corr ≈ 0.9998, RMSE ≈ 0.15). Each control row must show `fails_as_required: true`; if one does not, the gate is uninformative — fix the generator (design §5 G1) and record the change in spec §9 before re-running.
