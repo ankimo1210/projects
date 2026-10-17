@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ja" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="複利、分散投資、オプション。身近な例と動かせる図で学ぶ、金融工学の入門サイト。">
+
+<title>Folio｜金融工学のはじめかた</title>
+<style>
+/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+
+html{scroll-behavior:smooth}body{margin:0;padding:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.8}*{box-sizing:border-box}button,input{font:inherit}button,a,input{touch-action:manipulation}button{cursor:pointer}a{text-decoration:none}button:disabled{cursor:default}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:4px}.skip{position:fixed;top:-100px;left:20px;z-index:100;background:var(--surface);padding:12px}.skip:focus{top:12px}
+.sidebar{position:fixed;inset:0 auto 0 0;width:235px;border-right:1px solid var(--rule);padding:33px 25px;background:var(--surface-3);display:flex;flex-direction:column;z-index:10}.brand{font-family:var(--serif);font-size:39px;letter-spacing:-2px;color:var(--ink);line-height:1}.brand span{color:var(--accent)}.brand-sub{font-size:11px;color:var(--ink-2);margin-top:13px;letter-spacing:.06em}.nav-label{margin:56px 0 15px;font-family:var(--mono);font-size:10px;letter-spacing:.13em;color:var(--ink-3)}nav{display:grid;gap:7px}nav a{padding:11px 13px;border-radius:7px;color:var(--ink-2);font-size:13px;display:flex;align-items:center;gap:12px}nav a:hover{background:var(--surface-2)}nav a[aria-current="page"]{background:var(--accent-wash);color:var(--accent);font-weight:700}.nav-icon{font-family:var(--mono);font-size:12px;min-width:21px}.sidebar-bottom{margin-top:auto;padding-top:35px}.progress-head{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-2);margin-bottom:9px}.progress-track{height:4px;background:var(--rule);border-radius:4px;overflow:hidden}.progress-fill{height:100%;background:var(--accent);transition:width .25s}.reset{padding:0;margin-top:10px;font-size:10px;color:var(--ink-3);background:none;border:0;text-decoration:underline}.side-note{font-size:11px;color:var(--ink-3);line-height:1.8;margin:28px 0 0}.main{margin-left:235px;max-width:1550px;padding:0 55px 50px}.topbar{display:flex;align-items:center;justify-content:space-between;padding:25px 0;border-bottom:1px solid var(--rule);font-size:11px;color:var(--ink-2)}.topbar-right{display:flex;align-items:center;gap:18px}.tag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:4px 9px;border:1px solid var(--rule-2);border-radius:4px}.theme{border:0;background:none;color:var(--ink-2);padding:5px;font-size:12px}.hero{padding:64px 0 45px;display:grid;grid-template-columns:1.15fr 1fr;gap:45px;align-items:center}.eyebrow{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.13em;margin-bottom:18px;display:flex;align-items:center;gap:9px}.eyebrow:before{content:'';width:20px;height:1px;background:var(--accent)}h1{font-family:var(--serif);font-size:clamp(32px,3.7vw,52px);line-height:1.45;font-weight:700;letter-spacing:.01em;margin:0 0 20px;text-wrap:balance}h1 em{color:var(--accent);font-style:normal;background:none;padding:0}p{margin:12px 0}.intro{font-size:14px;line-height:2;color:var(--ink-2);max-width:420px}.actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:26px}.primary{display:inline-flex;justify-content:center;align-items:center;gap:22px;border:1px solid var(--accent);background:var(--accent);color:var(--ground);padding:11px 21px;border-radius:6px;font-size:12px;font-weight:700}.primary:hover{filter:brightness(.95)}.text-link{font-size:12px;color:var(--ink-2);text-decoration:underline;text-underline-offset:5px}.hero-art{border:1px solid var(--rule);border-radius:12px;background:var(--surface);padding:22px 24px;position:relative}.art-title{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-2)}.art-value{font-family:var(--mono);font-size:28px;line-height:1.3;margin:20px 0 3px;letter-spacing:-1px}.art-caption{font-size:11px;color:var(--ink-3)}.art-footer{border-top:1px solid var(--rule);padding-top:13px;display:flex;align-items:center;gap:9px;font-size:11px;color:var(--ink-2)}.dot{width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0}.chart-svg{width:100%;height:auto;display:block}.chart-svg text{font-family:var(--mono);font-size:11px;fill:var(--ink-2)}.path-a{stroke:var(--series-1);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.path-b{stroke:var(--series-2);fill:none;stroke-width:2;stroke-dasharray:5 5}.grid-line{stroke:var(--grid);stroke-width:1}.rule-line{stroke:var(--rule-2);stroke-width:1}.point{fill:var(--series-1);stroke:var(--surface);stroke-width:3}.point-b{fill:var(--series-2)}.legend{font-family:var(--sans);font-size:11px;display:flex;flex-wrap:wrap;gap:14px;margin:10px 0}.legend span{display:flex;align-items:center;gap:6px}.legend i{width:14px;height:2px;background:var(--series-1)}.legend i.blue{background:var(--series-2)}.course{padding:25px 0 0}.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:23px}.section-head h2{font-size:21px;line-height:1.5;margin:0;font-family:var(--serif)}.section-head small{font-size:11px;color:var(--ink-3)}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.lesson-card{border:1px solid var(--rule);border-radius:10px;background:var(--surface);padding:23px 22px;color:var(--ink);display:flex;flex-direction:column;transition:border-color .2s,transform .2s}.lesson-card:hover{border-color:var(--accent);transform:translateY(-3px)}.card-top{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--ink-3)}.card-num{font-family:var(--mono);font-size:12px;color:var(--accent)}.card-graphic{height:67px;margin-top:17px;width:100%;max-width:170px}.lesson-card h3{margin:20px 0 7px;font-size:16px}.lesson-card p{font-size:12px;line-height:1.8;color:var(--ink-2);margin:0 0 20px}.card-bottom{font-size:11px;border-top:1px solid var(--rule);padding-top:14px;display:flex;justify-content:space-between;margin-top:auto}.learn-note{margin-top:33px;padding:25px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:1fr 2fr;gap:25px}.learn-note h3{font-size:14px;margin:0}.learn-note p{color:var(--ink-2);font-size:12px;line-height:1.9;margin:0}.page-header{padding:43px 0 28px}.page-header h1{font-size:36px;margin-bottom:12px}.page-header p{max-width:680px;color:var(--ink-2);font-size:14px}.back{font-size:11px;color:var(--ink-2);margin-bottom:22px;display:inline-block}.lesson-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,1fr);gap:22px;align-items:start}.lab{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:25px}.lab h2{font-family:var(--sans);font-size:15px;line-height:1.5;margin:0 0 8px}.caption{font-size:11px;line-height:1.9;color:var(--ink-2)}.controls{display:grid;gap:19px;margin-top:26px;padding-top:20px;border-top:1px solid var(--rule)}.control-head{display:flex;justify-content:space-between;gap:12px;font-size:12px;margin-bottom:9px}.control-head output{font-family:var(--mono);color:var(--accent);font-size:13px}input[type=range]{display:block;width:100%;accent-color:var(--accent);height:22px;cursor:pointer}.range-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink-3)}.metric{background:var(--accent-wash);padding:15px 18px;border-radius:7px;margin:20px 0;font-size:12px;color:var(--ink-2)}.metric strong{font-family:var(--mono);font-size:25px;color:var(--accent);display:block;margin:3px 0}.explain{border-top:1px solid var(--rule);padding-top:17px;margin-top:18px;color:var(--ink-2);font-size:12px}.guide{padding:10px 6px}.guide h2{font-size:16px;font-family:var(--serif);margin:0 0 12px;line-height:1.7}.guide p{font-size:13px;color:var(--ink-2);line-height:2}.keypoint{border-left:2px solid var(--accent);padding-left:15px;margin:25px 0}.keypoint b{font-size:12px;color:var(--accent)}.formula{margin-top:23px;font-size:12px;color:var(--ink-2);border:1px solid var(--rule);border-radius:7px;padding:13px 17px}.formula summary{cursor:pointer}.formula .equation{font-family:var(--mono);font-size:15px;margin:17px 0 9px;color:var(--ink);overflow-wrap:anywhere}.quiz{padding:27px;margin-top:26px;border:1px solid var(--rule);border-radius:12px;background:var(--surface)}.quiz-label{font-size:10px;color:var(--accent);font-family:var(--mono);letter-spacing:.1em}.quiz h2{font-size:15px;font-family:var(--sans);margin:9px 0 18px;line-height:1.8}.answers{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.answer{border:1px solid var(--rule-2);border-radius:6px;background:var(--surface);color:var(--ink);padding:13px;text-align:left;font-size:12px}.answer:hover,.answer[aria-pressed=true]{border-color:var(--accent);background:var(--accent-wash)}.feedback{font-size:12px;margin-top:15px;line-height:1.9;color:var(--ink-2)}.feedback:empty{display:none}.next{display:flex;justify-content:space-between;gap:14px;align-items:center;margin:27px 0 5px;font-size:12px;color:var(--ink-2)}.segmented{display:flex;border:1px solid var(--rule);border-radius:7px;overflow:hidden;margin:16px 0 22px}.segmented button{flex:1;padding:10px 8px;background:var(--surface);border:0;font-size:12px;color:var(--ink-2)}.segmented button[aria-pressed=true]{color:var(--accent);background:var(--accent-wash);font-weight:700}.figwrap{margin:17px 0 0;padding:0;border:0;background:none}.figwrap figcaption{margin-top:8px;padding:0;border:0;font-size:11px;color:var(--ink-2)}.glossary-search{width:100%;padding:13px 17px;background:var(--surface);border:1px solid var(--rule-2);border-radius:7px;color:var(--ink);margin:0 0 25px}.terms{display:grid;grid-template-columns:1fr 1fr;gap:17px}.term{background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:22px}.term h2{font-family:var(--sans);font-size:15px;margin:0 0 3px}.term small{font-family:var(--mono);font-size:10px;color:var(--accent)}.term p{font-size:12px;color:var(--ink-2);line-height:1.9;margin-bottom:0}.empty{padding:20px;color:var(--ink-2)}footer{margin:36px 0 0;padding:20px 0 0;display:flex;justify-content:space-between;gap:20px;font-family:var(--sans);font-size:10px;color:var(--ink-3);border-top:1px solid var(--rule)}.sources{display:flex;gap:14px;flex-wrap:wrap}.sources a{color:var(--ink-2);text-decoration:underline}.storage-note{font-size:10px;color:var(--ink-2)}.marker-line{stroke:var(--ink-3);stroke-dasharray:3 4;stroke-width:1}
+@media(min-width:1550px){.main{padding-left:75px;padding-right:75px}.hero{gap:80px}}@media(max-width:1120px){.main{padding:0 30px 35px}.sidebar{width:200px;padding:30px 20px}.main{margin-left:200px}.hero{gap:25px}.lesson-layout{grid-template-columns:minmax(0,1.2fr) minmax(220px,1fr)}h1{font-size:37px}.lesson-card{padding:20px 17px}.answers{grid-template-columns:1fr}.hero-art{padding:19px}}
+@media(max-width:820px){.sidebar{position:relative;width:100%;padding:20px 22px;border-right:0;border-bottom:1px solid var(--rule);display:block}.brand{font-size:31px}.brand-sub{margin:7px 0 15px}.nav-label,.sidebar-bottom{display:none}nav{display:flex;gap:5px;flex-wrap:wrap}nav a{font-size:11px;padding:8px 10px;gap:7px}.main{margin-left:0;padding:0 22px 35px}.topbar{padding:17px 0}.hero{padding:36px 0;grid-template-columns:1.1fr 1fr}h1{font-size:32px}.cards{gap:12px}.lesson-layout{grid-template-columns:1fr}.guide{padding:12px 0}.learn-note{grid-template-columns:1fr;gap:12px}.answers{grid-template-columns:1fr 1fr 1fr}.page-header{padding-top:27px}}
+@media(max-width:560px){.main{padding:0 18px 30px}.sidebar{padding:18px}.topbar>span{max-width:160px}.topbar-right{gap:10px}.hero{grid-template-columns:1fr;gap:30px}.hero h1{font-size:36px}.hero-art{padding:21px}.intro{font-size:13px}.cards{grid-template-columns:1fr}.card-graphic{height:48px;margin-top:10px}.lesson-card h3{margin-top:12px}.section-head{align-items:start}.section-head small{max-width:115px;text-align:right}.lesson-card{padding:20px 22px}.lesson-card p{margin-bottom:15px}.terms{grid-template-columns:1fr}.page-header h1{font-size:30px}.lab{padding:20px 17px}.answers{grid-template-columns:1fr}.quiz{padding:21px}.next{align-items:start;flex-wrap:wrap}.primary{padding:11px 17px}footer{flex-direction:column;gap:9px}.tag{font-size:9px}.formula .equation{font-size:13px}}
+dialog{max-width:400px;width:calc(100% - 36px);border:1px solid var(--rule-2);border-radius:12px;padding:26px;background:var(--surface);color:var(--ink)}dialog::backdrop{background:var(--ink);opacity:.45}dialog h2{font-family:var(--serif);font-size:21px;margin:0 0 12px}dialog p{font-size:13px;color:var(--ink-2)}dialog .actions{justify-content:flex-end}.cancel{border:1px solid var(--rule-2);border-radius:6px;background:var(--surface);color:var(--ink-2);padding:11px 17px;font-size:12px}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">本文へ移動</a>
+<aside class="sidebar">
+<a class="brand" href="#home" aria-label="Folio ホーム">folio<span>.</span></a>
+<div class="brand-sub">金融工学のはじめかた</div>
+<div class="nav-label">LEARNING NOTEBOOK</div>
+<nav aria-label="学習メニュー">
+<a href="#home" data-page="home"><span class="nav-icon">⌂</span>学習ホーム</a>
+<a href="#compound" data-page="compound"><span class="nav-icon">01</span>時間と複利</a>
+<a href="#risk" data-page="risk"><span class="nav-icon">02</span>リスクと分散</a>
+<a href="#options" data-page="options"><span class="nav-icon">03</span>オプションの基本</a>
+<a href="#glossary" data-page="glossary"><span class="nav-icon">Aa</span>ことばの辞典</a>
+</nav>
+<div class="sidebar-bottom"><div class="progress-head"><span>クイズの達成度</span><span id="progress-text">0 / 3</span></div><div class="progress-track" role="progressbar" aria-label="学習の達成度" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div><button class="reset" id="reset">学習記録をリセット</button><p class="side-note">少しずつ、直感を育てよう。<br>記録はこのブラウザに保存されます。</p><p class="storage-note" id="storage-note" role="status"></p></div>
+</aside>
+<main class="main" id="content" tabindex="-1"><header class="topbar"><span>小さな実験から、金融のしくみへ。</span><div class="topbar-right"><span class="tag" id="compact-progress" aria-label="クイズ達成度">0 / 3 学習済み</span><button class="theme" id="theme" aria-label="ダーク表示に切り替える">◐ 表示</button></div></header><div id="page"></div><footer><span>Folio — 数字を動かして、理解を深める。</span><span>学習用の仮定に基づく例 <button class="reset" id="reset-bottom">学習記録をリセット</button></span></footer></main>
+<dialog id="reset-dialog" aria-labelledby="reset-title"><h2 id="reset-title">学習記録をリセット</h2><p>クイズの達成記録を0に戻します。レッスンは引き続き利用できます。</p><div class="actions"><button class="cancel" id="cancel-reset">キャンセル</button><button class="primary" id="confirm-reset">記録をリセットする</button></div></dialog>
+<script>
+const $ = s => document.querySelector(s);
+const format = (n,d=1) => Number(n).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d});
+const key='folio-finance-learning-v1';
+$('.skip').addEventListener('click',e=>{e.preventDefault();$('#content').focus();});
+const state={completed:[],answers:{},principal:100,rate:3,years:10,weight:50,rho:0,kind:'call',spot:1200,strike:1000,premium:100};
+try{const saved=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(saved))state.completed=['compound','risk','options'].filter(x=>saved.includes(x));}catch{ $('#storage-note').textContent='記録を保存できないため、この画面内で達成度を表示します。';}
+const compoundValue=(p,r,t)=>p*Math.pow(1+r/100,t);
+const portfolioRisk=(w,rho)=>20*Math.sqrt(Math.max(0,w*w+(1-w)*(1-w)+2*w*(1-w)*rho));
+const optionPayoff=(kind,s,k)=>Math.max(kind==='call'?s-k:k-s,0);
+function progress(){const n=state.completed.length;$('#progress-text').textContent=n+' / 3';$('#compact-progress').textContent=n+' / 3 学習済み';$('#progress-fill').style.width=n/3*100+'%';$('.progress-track').setAttribute('aria-valuenow',n);}
+function saveProgress(){try{localStorage.setItem(key,JSON.stringify(state.completed));}catch{$('#storage-note').textContent='学習記録はこの画面を開いている間だけ保持されます。';}progress();}
+function resetProgress(){if(state.completed.length)$('#reset-dialog').showModal();}
+$('#cancel-reset').addEventListener('click',()=>$('#reset-dialog').close());
+$('#confirm-reset').addEventListener('click',()=>{state.completed=[];state.answers={};saveProgress();render();$('#reset-dialog').close();});
+$('#reset').addEventListener('click',resetProgress);
+$('#reset-bottom').addEventListener('click',resetProgress);
+$('#theme').addEventListener('click',()=>{const dark=document.documentElement.dataset.theme==='light';document.documentElement.dataset.theme=dark?'dark':'light';$('#theme').setAttribute('aria-label',dark?'ライト表示に切り替える':'ダーク表示に切り替える');});
+const courses=[{id:'compound',n:'01',title:'時間と複利',desc:'利息にも利息がつく。時間が生み出す、小さな違いを見てみよう。',sub:'利率・時間・お金の価値',path:'M5 57 L150 12 M5 57 Q90 56 150 2'},{id:'risk',n:'02',title:'リスクと分散',desc:'値動きの違うものを組み合わせると、全体の揺れはどう変わる？',sub:'リターン・変動・相関',path:'M5 9 Q78 95 150 9 M5 20 L150 20'},{id:'options',n:'03',title:'オプションの基本',desc:'「買う権利」と「売る権利」。価格と損益の関係をつかもう。',sub:'コール・プット・損益',path:'M5 55 L78 55 L145 3 M5 32 L150 32'}];
+function spark(c){return `<svg class="card-graphic" viewBox="0 0 160 65" aria-hidden="true"><path class="grid-line" d="M0 60H155 M0 40H155 M0 20H155"/><path class="path-a" d="${c.path}"/></svg>`;}
+function home(){return `<section class="hero"><div><div class="eyebrow">FINANCE, MADE INTUITIVE</div><h1>お金の動きを、<br><em>理解する。</em></h1><p class="intro">金融工学は、お金の価値と不確実性を<br>数字で考えるための道具。<br>まずは数式よりも、小さな実験から。</p><div class="actions"><a class="primary" href="#compound">最初のレッスンへ <span aria-hidden="true">↗</span></a><a class="text-link" href="#glossary">ことばを調べる</a></div></div><div class="hero-art"><div class="art-title"><span>時間は、お金の味方になる？</span><span class="tag">小さな実験 01</span></div><div class="art-value">100 → 134.4<span style="font-size:12px;letter-spacing:0"> 万円</span></div><div class="art-caption">年利3%で10年間、利息を再投資すると</div>${lineChart(Array.from({length:11},(_,i)=>({x:i,a:compoundValue(100,3,i),b:100*(1+.03*i)})),{min:90,max:140,xmin:0,xmax:10,unit:'万円',xunit:'年',title:'複利と単利の比較：100万円、年利3%、10年間',a:'複利',b:'単利'})}<div class="art-footer"><span class="dot"></span>スライダーを動かして、自分で確かめる。<a href="#compound" aria-label="複利の実験を開く" style="margin-left:auto">↗</a></div></div></section><section class="course"><div class="section-head"><h2>3つの問いから、はじめよう。</h2><small>読む → 動かす → 確かめる</small></div><div class="cards">${courses.map(c=>`<a class="lesson-card" href="#${c.id}"><div class="card-top"><span class="card-num">LESSON ${c.n}</span><span>${state.completed.includes(c.id)?'✓ 学習済み':'入門'}</span></div>${spark(c)}<h3>${c.title}</h3><p>${c.desc}</p><div class="card-bottom"><span>${c.sub}</span><span aria-hidden="true">↗</span></div></a>`).join('')}</div></section><section class="learn-note"><h3>覚えるより、つながりをつかむ。</h3><p>たとえば、金利が変わると将来のお金はどう変わる？ リスクは減らせる？ 金融工学の入口は、こんな身近な問いです。図を動かし、結果を予想し、確かめてみましょう。必要な数式は、気になったときに開けます。</p></section>`;}
+function lineChart(data,o){const W=540,H=245,L=57,R=22,T=25,B=39;const x=v=>L+(v-o.xmin)/(o.xmax-o.xmin)*(W-L-R);const y=v=>H-B-(v-o.min)/(o.max-o.min)*(H-T-B);const d=k=>data.map((p,i)=>(i?'L':'M')+x(p.x).toFixed(2)+' '+y(p[k]).toFixed(2)).join(' ');let grid='';for(let i=0;i<=4;i++){const v=o.min+(o.max-o.min)*i/4;grid+=`<line class="grid-line" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end">${format(v,Number.isInteger(v)?0:1)}</text>`;}for(let i=0;i<=4;i++){const v=o.xmin+(o.xmax-o.xmin)*i/4;grid+=`<text x="${x(v)}" y="${H-19}" text-anchor="middle">${format(v,Number.isInteger(v)?0:1)}</text>`;}const point=o.point?`<line class="marker-line" x1="${x(o.point.x)}" x2="${x(o.point.x)}" y1="${T}" y2="${H-B}"/><circle class="point" cx="${x(o.point.x)}" cy="${y(o.point.a)}" r="6"><title>${o.a}：${format(o.point.a)}${o.unit}</title></circle>`:'';const zero=o.min<0&&o.max>0?`<line class="rule-line" x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}"/>`:'';return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.title}"><title>${o.title}</title><text x="${L}" y="14">${o.unit}</text>${grid}${zero}<path class="path-b" d="${d('b')}"/><path class="path-a" d="${d('a')}"/>${data.map(p=>`<circle cx="${x(p.x)}" cy="${y(p.a)}" r="8" style="fill:var(--series-1);opacity:0" class="hit"><title>${format(p.x)}${o.xunit} / ${o.a} ${format(p.a)}${o.unit} / ${o.b} ${format(p.b)}${o.unit}</title></circle>`).join('')}${point}<text x="${W-R}" y="${H-2}" text-anchor="end">${o.xunit}</text></svg><div class="legend"><span><i></i>${o.a}</span><span><i class="blue"></i>${o.b}</span></div>`;}
+function range(id,label,min,max,step,value,unit){return `<div><div class="control-head"><label for="${id}">${label}</label><output for="${id}" id="${id}-out">${format(value,step<1?1:0)}${unit}</output></div><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${value}"><div class="range-labels"><span>${min}${unit}</span><span>${max}${unit}</span></div></div>`;}
+const lessonCopy={compound:{title:'時間と複利',subtitle:'利息を受け取るだけでなく、その利息にも働いてもらう。',guide:'複利は「利息にも利息がつく」しくみ。',body:'100万円を年利3%で運用すると、1年後は103万円。利息を再投資すれば、2年目は103万円に3%の利息がつきます。単利では、最初の100万円だけに毎年同じ利息がつきます。',key:'まず、期間だけを長くしてみよう。',tip:'利率が同じでも、時間が長くなると単利と複利の差が広がります。利率を0%にすると、どちらも元本のままです。',formula:'将来の金額 = 元本 × (1 + 年利率)<sup>年数</sup>',terms:'年利率は3%なら0.03。1年ごとに利息を再投資し、途中の入出金はないと仮定します。',question:'複利で再投資すると、2年目の利息は何に対して計算される？',answers:['最初の元本だけ','元本と1年目の利息の合計','1年目の利息だけ'],correct:1,feedback:'複利では元本と利息を合わせた金額に、次の利息がつきます。これが、時間とともに差が広がる理由です。',source:'https://www.investor.gov/introduction-investing/investing-basics/save-and-invest/small-savings-add-big-money',sourceName:'SEC Investor.gov：複利'},risk:{title:'リスクと分散',subtitle:'大切なのは、ひとつひとつの値動きと、その組み合わせ。',guide:'「一緒に動くか」が、全体の揺れを変える。',body:'ここではリスクを、1年間のリターンのばらつき（標準偏差）で表します。資産AとBのばらつきは、どちらも20%。同じ方向に動くもの同士より、動き方が違うもの同士を混ぜた方が、全体のばらつきを小さくできる場合があります。',key:'相関を1.0から0.0へ下げてみよう。',tip:'相関1.0は完全に同じ方向、0.0は直線的な連動がない状態、−1.0は完全に逆方向に動く状態です。相関0は「独立」と同じ意味ではありません。',formula:'σ<sub>p</sub> = √[w²σ<sub>A</sub>² + (1−w)²σ<sub>B</sub>² + 2w(1−w)ρσ<sub>A</sub>σ<sub>B</sub>]',terms:'wはAの割合、ρは相関、σは年間リターンの標準偏差。例では両資産のσを20%と仮定。期待リターンは両方5%で、配分を変えても5%です。',question:'値動きが完全に同じ2つの資産を半分ずつ持つと、この例のばらつきは？',answers:['必ずゼロになる','20%のまま変わらない','40%に増える'],correct:1,feedback:'相関が1.0で、それぞれの標準偏差が同じ20%なら、半分ずつ持っても全体の標準偏差は20%です。分散効果は資産の数だけでは決まりません。',source:'https://www.investor.gov/introduction-investing/investing-basics/save-and-invest/diversify-your-investments',sourceName:'SEC Investor.gov：分散投資'},options:{title:'オプションの基本',subtitle:'約束した価格で、買うか売るかを「選べる権利」。',guide:'「権利の価値」と「利益」は違う。',body:'コールは、約束した価格で買う権利。プットは、約束した価格で売る権利です。権利を持つ人は、使わないことも選べます。この権利を買うために支払う代金が、プレミアムです。',key:'満期の価格を動かし、損益が0になる点を探そう。',tip:'コールなら、満期の価格が行使価格を超えると権利を使う価値があります。ただし、プレミアムの支払いを取り戻すまで、損益はマイナスです。プットは価格が下がると権利の価値が増えます。',formula:'コールの損益 = max(満期価格 − 行使価格, 0) − プレミアム<br>プットの損益 = max(行使価格 − 満期価格, 0) − プレミアム',terms:'原資産1単位を対象とする買い手の満期損益。税金、手数料、プレミアムの金利は除外。満期前のオプション価格の評価は、この図では扱いません。',question:'コールの行使価格が1,000円、プレミアムが100円。満期価格が1,050円なら損益は？',answers:['+50円','0円','−50円'],correct:2,feedback:'権利の価値は1,050−1,000＝50円。支払った100円を引くと損益は−50円です。この例で損益が0になる満期価格は1,100円です。',source:'https://www.optionseducation.org/strategies/all-strategies/long-call',sourceName:'OIC：コールの買い'}};
+function lesson(id){const c=lessonCopy[id],i=courses.findIndex(x=>x.id===id),next=courses[i+1];return `<div class="page-header"><a class="back" href="#home">← 学習ホーム</a><div class="eyebrow">LESSON ${courses[i].n} / はじめての金融工学</div><h1>${c.title}</h1><p>${c.subtitle}</p></div><div class="lesson-layout"><div class="lab"><h2>${id==='compound'?'元本は、時間とともにどう育つ？':id==='risk'?'組み合わせると、揺れはどう変わる？':'価格が変わると、損益はどうなる？'}</h2><p class="caption">${id==='compound'?'単利と複利を同じ条件で比べます。':id==='risk'?'年間の標準偏差が20%の資産AとBを混ぜる仮想例。':'コール・プットを買った人の、満期時点の損益。'}</p>${id==='options'?'<div class="segmented" role="group" aria-label="オプションの種類"><button data-kind="call" aria-pressed="'+(state.kind==='call')+'">コール：買う権利</button><button data-kind="put" aria-pressed="'+(state.kind==='put')+'">プット：売る権利</button></div>':''}<div class="metric" id="metric"></div><figure class="figwrap"><div id="chart"></div><figcaption id="chart-caption"></figcaption></figure><div class="controls">${id==='compound'?range('principal','元本',10,300,10,state.principal,'万円')+range('rate','年利率',0,10,.5,state.rate,'%')+range('years','期間',1,30,1,state.years,'年'):id==='risk'?range('weight','資産Aの割合',0,100,5,state.weight,'%')+range('rho','資産AとBの相関',-1,1,.1,state.rho,''):range('spot','満期の原資産価格',0,2000,50,state.spot,'円')+range('strike','行使価格',500,1500,100,state.strike,'円')+range('premium','支払うプレミアム',0,300,10,state.premium,'円')}</div><p class="explain" id="explain"></p></div><article class="guide"><h2>${c.guide}</h2><p>${c.body}</p><div class="keypoint"><b>TRY IT / 小さな実験</b><p>${c.key}</p><p>${c.tip}</p></div><details class="formula"><summary>数式も、少しだけ見てみる</summary><div class="equation">${c.formula}</div><p>${c.terms}</p></details><div class="sources" style="margin-top:23px"><a href="${c.source}" target="_blank" rel="noopener noreferrer" style="font-size:10px">参考：${c.sourceName} ↗</a>${id==='options'?'<a href="https://www.optionseducation.org/strategies/all-strategies/long-put" target="_blank" rel="noopener noreferrer" style="font-size:10px">OIC：プットの買い ↗</a>':''}</div></article></div><section class="quiz" aria-labelledby="quiz-heading"><div class="quiz-label">CHECK YOUR UNDERSTANDING</div><h2 id="quiz-heading">${c.question}</h2><div class="answers">${c.answers.map((a,j)=>`<button class="answer" data-answer="${j}" aria-pressed="${state.answers[id]===j}">${String.fromCharCode(65+j)}. ${a}</button>`).join('')}</div><p class="feedback" id="feedback" role="status"></p></section><div class="next"><span>${state.completed.includes(id)?'✓ このレッスンのクイズに正解しました。':'クイズに正解すると、達成度に記録されます。'}</span><a class="primary" href="#${next?next.id:'home'}">${next?'次へ：'+next.title:'学習ホームに戻る'} <span aria-hidden="true">→</span></a></div>`;}
+function updateLab(id){if(id==='compound'){const end=compoundValue(state.principal,state.rate,state.years),simple=state.principal*(1+state.rate/100*state.years);$('#metric').innerHTML=`${state.years}年後の複利の金額<strong>${format(end)}<span style="font-size:13px"> 万円</span></strong>単利との差 +${format(end-simple)}万円`;$('#chart').innerHTML=lineChart(Array.from({length:state.years+1},(_,i)=>({x:i,a:compoundValue(state.principal,state.rate,i),b:state.principal*(1+state.rate/100*i)})),{min:0,max:Math.ceil(end/10)*10||10,xmin:0,xmax:state.years,unit:'万円',xunit:'年',title:'期間ごとの複利と単利の金額',a:'複利',b:'単利'});$('#chart-caption').textContent=`元本 ${format(state.principal,0)}万円 / 年利 ${format(state.rate)}% / 期間 ${state.years}年`;$('#explain').textContent='年利率は期間中一定、年1回の利息再投資、追加入金なしの計算例です。税金・手数料・インフレは含みません。';}else if(id==='risk'){const w=state.weight/100,v=portfolioRisk(w,state.rho);$('#metric').innerHTML=`組み合わせた資産の年間のばらつき<strong>${format(v)}<span style="font-size:13px"> %</span></strong>資産A ${state.weight}% ＋ 資産B ${100-state.weight}%`;$('#chart').innerHTML=lineChart(Array.from({length:21},(_,i)=>({x:i*5,a:portfolioRisk(i/20,state.rho),b:20})),{min:0,max:24,xmin:0,xmax:100,unit:'%',xunit:'資産Aの割合 (%)',title:'資産Aの配分とポートフォリオの標準偏差',a:'組み合わせの標準偏差',b:'単独資産の標準偏差',point:{x:state.weight,a:v}});$('#chart-caption').textContent=`相関 ${format(state.rho)} / A・Bの年間標準偏差は各20%`;$('#explain').textContent=state.rho===1?'この条件では、完全に同じ方向に動くため、配分を変えてもばらつきは20%のままです。':state.rho===-1&&state.weight===50?'この仮定では、完全に逆方向の値動きが半分ずつ打ち消し合い、ばらつきが0%になります。実際の資産では相関は変化します。':'相関が1.0より小さいと、混ぜることでばらつきが減ります。標準偏差は損失の上限ではなく、分散投資であらゆるリスクがなくなるわけではありません。';}else{const p=optionPayoff(state.kind,state.spot,state.strike),net=p-state.premium,be=state.strike+(state.kind==='call'?state.premium:-state.premium);$('#metric').innerHTML=`${state.kind==='call'?'コール':'プット'}を買った人の満期損益<strong>${net>0?'+':''}${format(net,0)}<span style="font-size:13px"> 円</span></strong>権利の価値 ${format(p,0)}円 − プレミアム ${format(state.premium,0)}円`;const data=Array.from({length:45},(_,i)=>{const s=i*50,pay=optionPayoff(state.kind,s,state.strike);return{x:s,a:pay-state.premium,b:pay};});$('#chart').innerHTML=lineChart(data,{min:-400,max:2000,xmin:0,xmax:2200,unit:'円',xunit:'満期の原資産価格 (円)',title:'原資産の満期価格とオプションの価値および損益',a:'プレミアム込みの損益',b:'権利の価値',point:{x:state.spot,a:net}});$('#chart-caption').textContent=state.premium===0?`プレミアム0円の仮想例。損益がプラスになる境目は${format(be,0)}円。`:`損益が0になる満期価格は ${format(be,0)}円。${state.kind==='call'?'それより上':'それより下'}で損益がプラスになります。`;$('#explain').textContent='原資産1単位の買い手の満期損益を表示します。最大損失は支払ったプレミアム。この図は、満期前の価格の計算や売り手の損益を表すものではありません。';}}
+const terms=[['金融工学','Financial engineering','お金の価値や不確実性を、数学・統計・計算を使って考える分野。価格評価、リスクの測定、商品設計などに使われます。'],['複利','Compound interest','元本だけでなく、これまでの利息にも次の利息がつくしくみ。利息の再投資によって生まれます。'],['リターン','Return','投資金額に対して、どれだけ増えたか・減ったかを示す割合。100円が110円になれば、値上がりによるリターンは10%。'],['リスク','Risk','結果が予想から外れる不確実性。このサイトの分散の実験では、年間リターンのばらつきで測ります。損失の可能性以外も含む広い言葉です。'],['ボラティリティ','Volatility','リターンのばらつきの大きさ。標準偏差で表すことが一般的です。20%という値は、「最大20%しか下がらない」という意味ではありません。'],['相関','Correlation','2つの値がどの程度、直線的に連動するかを表す数値。−1から1の範囲。0であっても、互いに独立とは限りません。'],['分散投資','Diversification','ひとつの資産に集中せず、複数の資産を組み合わせること。どのように連動するかによってリスク低減の効果が変わります。'],['オプション','Option','約束した価格で買う・売ることを選べる権利。買い手は権利を使わなくてもよく、その対価としてプレミアムを支払います。'],['コール','Call option','決められた価格で買う権利。満期の原資産価格が行使価格を超えると、使う価値が生まれます。'],['プット','Put option','決められた価格で売る権利。満期の原資産価格が行使価格を下回ると、使う価値が生まれます。'],['行使価格','Strike price','オプションの権利を使うときに適用される、あらかじめ約束した価格。'],['プレミアム','Premium','オプションを買うために支払う代金。利益を考えるときには、権利の価値からこの費用を差し引きます。']];
+function termCards(q=''){const found=terms.filter(t=>t.join(' ').toLowerCase().includes(q.trim().toLowerCase()));return found.length?found.map(t=>`<article class="term"><h2>${t[0]}</h2><small>${t[1]}</small><p>${t[2]}</p></article>`).join(''):'<p class="empty">一致することばがありません。別のことばで探してみてください。</p>';}
+function glossary(){return `<div class="page-header"><a class="back" href="#home">← 学習ホーム</a><div class="eyebrow">A LITTLE DICTIONARY</div><h1>ことばの辞典</h1><p>はじめて出会うことばも、身近な表現で。学習の途中に立ち寄ってみてください。</p></div><label for="term-search" style="font-size:12px;display:block;margin-bottom:8px">ことばを検索</label><input id="term-search" class="glossary-search" type="search" placeholder="例：リスク、コール、volatility"><div class="terms" id="terms">${termCards()}</div><p class="caption" id="term-count" role="status">12件のことば</p><div class="sources"><a href="https://www.optionseducation.org/optionsoverview/options-basics" target="_blank" rel="noopener noreferrer">参考：OIC オプションの基本 ↗</a><a href="https://www.investor.gov/introduction-investing/investing-basics/save-and-invest/diversify-your-investments" target="_blank" rel="noopener noreferrer">SEC 分散投資 ↗</a></div>`;}
+function quizFeedback(id){const a=state.answers[id],c=lessonCopy[id];if(a===undefined)return;$('#feedback').textContent=(a===c.correct?'✓ 正解です。 ':'もう一度考えてみよう。 ')+c.feedback;}
+let active='home';
+function render(){const p=location.hash.slice(1)||'home';active=['home','compound','risk','options','glossary'].includes(p)?p:'home';document.querySelectorAll('nav a').forEach(a=>{if(a.dataset.page===active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});$('#page').innerHTML=active==='home'?home():active==='glossary'?glossary():lesson(active);document.title=(active==='home'?'Folio':active==='glossary'?'ことばの辞典':lessonCopy[active].title)+'｜金融工学のはじめかた';progress();if(lessonCopy[active]){updateLab(active);document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener('input',()=>{state[el.id]=Number(el.value);const unit=el.id==='principal'?'万円':el.id==='rate'||el.id==='weight'?'%':el.id==='years'?'年':el.id==='rho'?'':'円';$('#'+el.id+'-out').textContent=format(Number(el.value),Number(el.step)<1?1:0)+unit;updateLab(active);}));document.querySelectorAll('[data-kind]').forEach(b=>b.addEventListener('click',()=>{state.kind=b.dataset.kind;document.querySelectorAll('[data-kind]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.kind===state.kind));updateLab(active);}));document.querySelectorAll('[data-answer]').forEach(b=>b.addEventListener('click',()=>{state.answers[active]=Number(b.dataset.answer);document.querySelectorAll('[data-answer]').forEach(x=>x.setAttribute('aria-pressed',x===b));if(state.answers[active]===lessonCopy[active].correct&&!state.completed.includes(active)){state.completed.push(active);saveProgress();$('.next>span').textContent='✓ このレッスンのクイズに正解しました。';}quizFeedback(active);}));quizFeedback(active);}if(active==='glossary')$('#term-search').addEventListener('input',e=>{const q=e.target.value;$('#terms').innerHTML=termCards(q);$('#term-count').textContent=terms.filter(t=>t.join(' ').toLowerCase().includes(q.trim().toLowerCase())).length+'件のことば';});}
+window.addEventListener('hashchange',()=>{render();window.scrollTo({top:0,behavior:'instant'});$('#content').focus({preventScroll:true});});render();
+</script>
+</body>
+</html>
