@@ -1,0 +1,120 @@
+{
+  "schema": "rb-f04-source86-verifier-runtime-and-source-proof-root-summary-v1",
+  "clock_snapshot": {
+    "cpu": 7.512341935,
+    "utc": "2026-10-13T13:00:04.485356+00:00",
+    "wall": 99772.698053017
+  },
+  "this_goal_turn_classification": "progress: actual normal verifier source identity and all86 aliases authenticated, source/proof preserved in bothCAS and independent byte restores verified",
+  "financial_child": {
+    "pid": 65198,
+    "start_ticks": "8610788",
+    "live": true,
+    "restarted": false,
+    "published_receipts": 145,
+    "checkpoint_present": false
+  },
+  "watchdog": {
+    "pid": 71573,
+    "sid": 71573,
+    "live": true,
+    "cap": null,
+    "latest_observation": {
+      "cpu": 7.512341935,
+      "utc": "2026-10-13T13:00:04.485356+00:00",
+      "wall": 99772.698053017
+    }
+  },
+  "actual_verifier_identity": {
+    "canonical": "248dd00fa9da42b9c5d057a03f3cd48470a81d85387fb13ace26ffd73c5f3838",
+    "native": "7db8e73998a04e3061f09d4d3f6451f8e632e9228dfb61f03537bf0e78bcdbe4",
+    "files": 86,
+    "aliases": 86,
+    "real_normal_route_matches_prepared": true
+  },
+  "source_auth_measurement": {
+    "wall_seconds": 4.224399576,
+    "reaped_child_CPU_seconds": 6.808506,
+    "reaped_child_kernel_peak_RSS_bytes": 721518592,
+    "scope": "source metadata only; no saved binder, originalplan/context/check_pilot/financial run"
+  },
+  "evidence": {
+    "normal_source_auth": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-verifier-normal-source-auth-v1.json",
+      "sha256": "04897114e1a365328088139754f765c215e7b6fdaeee72ab26dda1f2e6a5a6b4"
+    },
+    "normal_independent_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-verifier-normal-source-auth-review-v1.json",
+      "sha256": "5375401ba7f6fa6706b54b36585dd3fa578ba3f34094ffc797aebf3c0b94812c"
+    },
+    "source_proof_store": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-verifier-source-proof-CAS-v1-store-receipt.json",
+      "sha256": "f2d8903397bc96a480ca276d53a65b039f80380a49845fa922ba77a83347b6f8"
+    },
+    "source_proof_manifest": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-verifier-source-proof-CAS-v1-manifest.json",
+      "sha256": "3b7a90e476474c0416afa66d928f607bf4118a69bb2573f1dbc40f4b3a6ce4c5"
+    },
+    "cost_gate_map": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-cost-disclosure-gate-map-readonly-v1.json",
+      "sha256": "ba741f3e39391a5d3d0a7946280b9180205bf07d8c3e117fcef9d8bf0ca1ad86"
+    }
+  },
+  "root_byte_restore_verification": [
+    {
+      "role": "primary",
+      "entries_rehashed": 180,
+      "status": "PASS_bytes_only",
+      "receipt": {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-verifier-source-proof-CAS-v1-primary-restore-receipt.json",
+        "sha256": "fc617abb028d97cf9a2b40c816778b00a837f1785b5736acd46c1ae74cb25860"
+      }
+    },
+    {
+      "role": "mirror",
+      "entries_rehashed": 180,
+      "status": "PASS_bytes_only",
+      "receipt": {
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-verifier-source-proof-CAS-v1-mirror-restore-receipt.json",
+        "sha256": "33d193ecc4a5bc49d57f6ccbb1fcb2a09af8d916b967cb7dfa70933ec3e10bc7"
+      }
+    }
+  ],
+  "CAS_scope": {
+    "producer_source_files": 86,
+    "verifier_source_files": 86,
+    "proof_entries": 8,
+    "logical_entries": 180,
+    "logical_bytes": 4318808,
+    "unique_blobs_including_manifest": 96,
+    "unique_bytes_including_manifest": 2687614,
+    "new_presence_bytes_per_store": 1142602,
+    "manifest_ref": "artifact:sha256:3b7a90e476474c0416afa66d928f607bf4118a69bb2573f1dbc40f4b3a6ce4c5",
+    "sourceproof_CAS_wall_seconds": 9.065191769,
+    "financial_raw_or_semantic_restore": false,
+    "original_expense_rows_substituted": false
+  },
+  "source_adoption_approved": false,
+  "actual_saved_launch_approved": false,
+  "financial_qualification": "unknown",
+  "cost_amendment_user_question": "pending; no approval assumed",
+  "cost_or_selection_gates_changed": false,
+  "cost_gate_map_rule": "Only documented observer-loss scopes could be declared under explicit approval; external10/genuine A caps/originalnumeric and selection predicates remain mandatory; oldstrict costs/51 obligation staysunclosed",
+  "full_original_scope": {
+    "pilot": 3138,
+    "main": 396,
+    "cases": 121,
+    "obligations": 51,
+    "N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ]
+  },
+  "production_changes_this_turn": false,
+  "financial_worker_launched_this_turn": false,
+  "full_suites_this_turn": false,
+  "commit_or_push_this_turn": false,
+  "remaining": "native terminal/checkpoint/full saved numerical recovery/cost decision/selection/freeze -> main396 -> fresh/two financial semantic restores -> requiredcosts/3plots/notebook/final3suites/acceptance/main -> #10 -> #11"
+}

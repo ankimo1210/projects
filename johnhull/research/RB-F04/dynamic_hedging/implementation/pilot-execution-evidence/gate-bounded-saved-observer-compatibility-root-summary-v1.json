@@ -1,0 +1,129 @@
+{
+  "schema": "rb-f04-root-existing-saved-observer-compatibility-v1",
+  "recorded_at_UTC": "2026-10-14T01:02:15.278231+00:00",
+  "scope": "read-only source compatibility and existing operational limits; no actual saved execution approval",
+  "references": {
+    "task-5-full-pilot-root-saved-check-observer-v2.py": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-observer-v2.py",
+      "sha256": "74556b15ab3bbbb1dadcd0075d0d7dc761135a0bfcadbe19f86b6ea43446a655",
+      "bytes": 58048
+    },
+    "task-5-full-pilot-root-saved-check-enclosing-v2.py": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "sha256": "c66aa768457bff4930eaef6bb47b6ba85e85017e36f027bc675feef3cdba46fc",
+      "bytes": 9006
+    },
+    "task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-saved-check-enclosing-preflight-v3.py",
+      "sha256": "15c263f2cdc7842504f44a22c4a9030daa4a21c79f46c381a88916baa686433e",
+      "bytes": 9006
+    },
+    "task-5-full-pilot-root-operational-monitor-gate-bounded-active-v1.py": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-gate-bounded-active-v1.py",
+      "sha256": "0b705842cd7b800b0ad7e922da9c38f7db9ff4c1c6f6b033905e3efe3944836f",
+      "bytes": 61986
+    },
+    "task-5-formal-pilot-root-enclosing-observer-gate-bounded-active-v1.py": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observer-gate-bounded-active-v1.py",
+      "sha256": "ee511800e74ce4e8727915f3aa637479b84ef8df68db3fa53e7759ac6015439c",
+      "bytes": 16427
+    },
+    "gate-bounded-saved-check-entry-v1.py": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-entry-v1.py",
+      "sha256": "597c2b9cd09ac8f119e118a942cf6b23b99ea9bd629ca8afb0e3a7677d5731ef",
+      "bytes": 15210
+    },
+    "task-5-formal-pilot-root-operational-resource-prior-v3.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v3.json",
+      "sha256": "145bdf322aacd4e699e297c2a4e747d1a021c43771e4b162783f9eb35a390881",
+      "bytes": 3421
+    },
+    "task-5-formal-pilot-root-operational-resource-prior-v6.json": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v6.json",
+      "sha256": "b9a08a184378925ea4a550c7fbf72976ec9fc779910b4b2398c0ad30e14edf7d",
+      "bytes": 4204
+    }
+  },
+  "findings": [
+    {
+      "source": "task-5-full-pilot-root-saved-check-observer-v2.py",
+      "lines": [
+        1122,
+        1143
+      ],
+      "fact": "uses process-group SIGKILL; cannot directly preserve current owned pidfd/SIGINT-once/cooperative wait contract"
+    },
+    {
+      "source": "task-5-full-pilot-root-saved-check-enclosing-v2.py",
+      "lines": [
+        75,
+        76,
+        92
+      ],
+      "fact": "no session isolation/DEVNULL stdin or cooperative exception wait"
+    },
+    {
+      "source": "task-5-full-pilot-root-saved-check-observer-v2.py",
+      "lines": [
+        625,
+        627,
+        903,
+        905,
+        1006,
+        1013,
+        1019,
+        1162
+      ],
+      "fact": "self --child/live WT API and repeated parent/child plan-input hydration do not match fixed V entry -I/-B/guard SHA and child reader-once contract"
+    },
+    {
+      "source": "task-5-full-pilot-root-saved-check-observer-v2.py",
+      "lines": [
+        22,
+        43,
+        661,
+        725,
+        824,
+        855,
+        868
+      ],
+      "fact": "old source/PID/root and saved guard keys/output prefix are incompatible with current fixed entry"
+    }
+  ],
+  "bounded_repair": "reuse reviewed active owned-child/session/cooperative wait mechanisms in saved monitor/enclosing candidate copies; parent metadata/source byte authentication only; fixed saved entry child owns numerical provenance and once-read contract",
+  "candidate_files": [
+    "gate-bounded-saved-check-monitor-candidate-v1.py",
+    "gate-bounded-saved-check-enclosing-candidate-v1.py"
+  ],
+  "candidate_status": "author implementation requested; unverified at this snapshot",
+  "unchanged_operational_limits": {
+    "wall_limit_seconds": 2592000,
+    "parent_child_enclosing_RSS_bytes_each": 17179869184,
+    "volume_reserve_bytes_each": 10737418240,
+    "distinct_devices": 3,
+    "simultaneous_numerical_workers": 1
+  },
+  "original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "external_cost_scopes": 10,
+    "numerical_selection_and_private_A_caps_changed": false
+  },
+  "ROOT_EXECUTE_AUTHORIZED": false,
+  "active_saved_entry_or_guard_SHA": "unresolved; refuse until actual root binding",
+  "actual_saved_guard_created": false,
+  "source_adoption_approved": false,
+  "financial_API_import_plan_hydrate_raw_decode_hash_calls_in_this_compatibility_review": 0,
+  "live_worker_or_original_files_modified": false,
+  "financial_qualification": "unknown",
+  "financial_acceptance": false,
+  "full_RAM_fit_certified": false,
+  "cost_missingness_exception_adopted": false
+}

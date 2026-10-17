@@ -1,0 +1,84 @@
+{
+  "schema": "rb-f04-root-source-prior-proof-CAS-byte-closure-v1",
+  "recorded_at_UTC": "2026-10-14T00:38:50.246841+00:00",
+  "status": "PASS_BYTES_ONLY",
+  "scope": "immutable source, prior metadata and saved-entry proofs; excludes live financial native/raw/checkpoint",
+  "references": {
+    "manifest": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-preparation-CAS-v1-manifest.json",
+      "sha256": "70feef3e32ef38682d12bb226616da5136be4e8dc2b479a8a94eb4389a9ade5b",
+      "bytes": 97650
+    },
+    "publisher_receipt": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-preparation-CAS-v1-receipt.json",
+      "sha256": "4755a1b39d4b61bbf94d406775a1ab1537577c9c88af3010b9c3ca700f35af89",
+      "bytes": 711521
+    },
+    "primary_restore_report": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-preparation-CAS-v1-primary-restore-report.json",
+      "sha256": "8a8eb2b3c9ccaddfb40b24180cabb74f89cf5b08764effd2c29e1d04a1843826",
+      "bytes": 100548
+    },
+    "mirror_restore_report": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-preparation-CAS-v1-mirror-restore-report.json",
+      "sha256": "e40ffad5d387ed1a0caeaa9f96b36c73b8bd78c5a85054a8bad4fc4d34dea88f",
+      "bytes": 100175
+    },
+    "old184_manifest": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-check-entry-CAS-v1-manifest.json",
+      "sha256": "c150237702fc00b7d1b07e031bcd1807952761c44ddeedf4daa072b8b5c9d189",
+      "bytes": 45805
+    }
+  },
+  "entries": 372,
+  "logical_payload_bytes": 29153582,
+  "maximum_payload_file_bytes": 6429426,
+  "root_independently_checked_original_source_files": 372,
+  "root_independently_checked_restores": {
+    "primary": {
+      "directory": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-preparation-CAS-v1-primary-restore",
+      "all_paths_bytes_sha_service_source_matched": true,
+      "files": 372,
+      "bytes": 29153582,
+      "cross_store_fallback_used": false
+    },
+    "mirror": {
+      "directory": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-preparation-CAS-v1-mirror-restore",
+      "all_paths_bytes_sha_service_source_matched": true,
+      "files": 372,
+      "bytes": 29153582,
+      "cross_store_fallback_used": false
+    }
+  },
+  "namespaces": {
+    "prior-materialized-v8": 128,
+    "producer-gate-bounded": 91,
+    "proof": 57,
+    "saved-check-entry-gate-bounded": 10,
+    "verifier-gate-bounded": 86
+  },
+  "publisher_reported_actual_process_pid": 115041,
+  "publisher_actual_exit_code": 0,
+  "publisher_exit_evidence": "agent observed unified exec session31126 completion exit_code0; ROOT independently verifies serialized receipt and all source/restore bytes",
+  "publisher_own_measured_window_seconds": 40.693756569,
+  "publisher_self_CPU_seconds": 1.57685742,
+  "publisher_final_receipt_and_Windows_tail": null,
+  "physical_new_blob_bytes_or_reuse_attribution": null,
+  "root_byte_recheck_window_before_receipt_seconds": 0.11447105399565771,
+  "root_final_receipt_stdout_exit_tail": null,
+  "source_before_and_after_matches_manifest": true,
+  "old184_manifest_and_entries_preserved": true,
+  "existing_backend_bytes_unchanged": true,
+  "three_distinct_volume_10GiB_reserves_before_after": true,
+  "source_adoption_approved": false,
+  "execute_saved_check": false,
+  "financial_semantic_restore": false,
+  "financial_numerical_calls": 0,
+  "live_financial_raw_or_active_logs_read_hash_decode": 0,
+  "full_financial_phase_cost_closed": false,
+  "original_financial_cost_rows_updated": false,
+  "cost_missingness_exception_adopted": false,
+  "financial_qualification": "unknown",
+  "phase_or_main_accepted": false,
+  "full_completion_proven": false
+}

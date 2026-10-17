@@ -1,0 +1,1013 @@
+{
+  "schema": "rb-f04-user-requested-pilot-interruption-v1",
+  "status": "user_interrupted",
+  "requested_UTC": "2026-10-11T12:11:26.776776+00:00",
+  "authorization": {
+    "source_thread_id": "01a0e09f-8bd4-7252-bfe1-16870a519149",
+    "source_thread_title": "Win Main1",
+    "actual_user_message_id": "01a12ada-604c-75c3-a407-da36a3bc8a86",
+    "actual_user_text": "OK,じゃあいったんJohnHullのセッション止めてやろうか",
+    "verified_via": "read_thread actual userMessage",
+    "purpose": "Pause JohnHull for Ubuntu VHD offline compaction; no new computation, auto-restart or push"
+  },
+  "session_id": 77271,
+  "source_closure_sha256": "30a1dd351af3814eecfcece69f99f8f60a21665e5d957d039bbde71746ffd0af",
+  "source_files_unchanged": 85,
+  "processes_before": [
+    {
+      "pid": 556486,
+      "state": "S",
+      "start_ticks": 10828845,
+      "cmdline": "/home/kazumasa/projects/.venv/bin/python /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observer-source85-v1.py "
+    },
+    {
+      "pid": 556487,
+      "state": "S",
+      "start_ticks": 10828848,
+      "cmdline": "/home/kazumasa/projects/.venv/bin/python /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2.py --guard /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-source85-v1.json "
+    },
+    {
+      "pid": 556488,
+      "state": "R",
+      "start_ticks": 10828867,
+      "cmdline": "/home/kazumasa/projects/.venv/bin/python /home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py --plan /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v6/locked-prior-metadata --inputs /home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs --output /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4 --bounded "
+    }
+  ],
+  "signal_target": 556488,
+  "signal": "SIGINT",
+  "saved_root": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4",
+  "published_receipt_count_before": 139,
+  "last_published_id_before": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:band:Heston:position:width2",
+  "terminal_parent_receipt_before": false,
+  "financial_qualification": "unknown",
+  "phase_complete": false,
+  "main_accepted": false,
+  "resume_or_new_launch_authorized": false,
+  "external10_costs_closed": false,
+  "SIGINT_delivered_UTC": "2026-10-11T12:11:26.777415+00:00",
+  "termination_confirmed_UTC": "2026-10-11T12:18:45.797368+00:00",
+  "end_UTC": "2026-10-11T12:11:39.416116+00:00",
+  "session_exit_code": 1,
+  "child_exit_code": -2,
+  "monitor_exit_code": 3,
+  "termination_method": "Root SIGINT to numerical child only; no SIGTERM/SIGKILL; monitor and enclosing observer exited after child",
+  "processes_after_proc_exists": {
+    "556486": false,
+    "556487": false,
+    "556488": false
+  },
+  "source_closure": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-saved-producer-verifier-current-source-closure-v1.json",
+    "size_bytes": 35893,
+    "sha256": "30a1dd351af3814eecfcece69f99f8f60a21665e5d957d039bbde71746ffd0af"
+  },
+  "source_files_unchanged_after": 85,
+  "original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "N_candidates": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "financial_A_cap_recipe_unchanged": true
+  },
+  "published_receipt_count_after": 139,
+  "last_published_receipt_id_after": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:band:Heston:position:width2",
+  "published_receipts": [
+    {
+      "job_id": "call-current:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/call-current:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "b932aa407e83a3ac841e3e59a797c92f5521e4909f079c29b5467ff36ba524c8"
+    },
+    {
+      "job_id": "call-current:local",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/call-current:local/receipt.json",
+      "size_bytes": 312,
+      "sha256": "0c696c4a589fe366fdf211663cbf53b4d3e3c76c0ed0c242d7954e0c2c0f742a"
+    },
+    {
+      "job_id": "field-current",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/field-current/receipt.json",
+      "size_bytes": 312,
+      "sha256": "2cb9d56e72d9ba8dfc4d47587c5ce11e36c6ada20730fcbd3371664f8ffc86eb"
+    },
+    {
+      "job_id": "independent-table:state00:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state00:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "d613c2a8249be4a1f7e6dd7f6cf0743ad31e25af371a7da218ec7364e5d21486"
+    },
+    {
+      "job_id": "independent-table:state01:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state01:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "759240a1e4094c08e0c0456ed9fb3dd26cd10aaa5570726f4d979722dfd5969a"
+    },
+    {
+      "job_id": "independent-table:state02:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state02:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "359ddb6d68d2d5bbf9adb414288b50a7a1187046ed27512b4ecbda232b7993b0"
+    },
+    {
+      "job_id": "independent-table:state03:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state03:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "015366ec2aac7eaf892a21503cafcfa6e19a453e76cdc387b56d0bbd7c56c8a7"
+    },
+    {
+      "job_id": "independent-table:state04:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state04:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "86055e7a45a604f38a3005ff4cbc400ddaccc6d28e55fb5ab979b47ae29d1efa"
+    },
+    {
+      "job_id": "independent-table:state05:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state05:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "40a98ac63c55e9c2047cc4910d913ba6461112be22dded75d9f06089f8b3e49e"
+    },
+    {
+      "job_id": "independent-table:state06:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state06:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "fc8c0c5865cc4dcf6f8ab61a3d0f9dd37597944c2654059322ef2bed193a0f84"
+    },
+    {
+      "job_id": "independent-table:state07:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state07:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "ad4e4727ceba3931391297dc737f39067d9595ca7b145bc8dc2d45cfeff36959"
+    },
+    {
+      "job_id": "independent-table:state08:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state08:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "b05dd535769c671116459c178b18c9d3d08ca731ce4d60ef7f048e8ca285f067"
+    },
+    {
+      "job_id": "independent-table:state09:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state09:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "f51c3cbbc79d5097f93c9a73532e7f78a032a7e8723a8b08ece422af74475ab0"
+    },
+    {
+      "job_id": "independent-table:state10:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state10:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "40830d5fd4a85ce98c1663c927dbf59a43df8cbc7d0ea952483a342fe4457c05"
+    },
+    {
+      "job_id": "independent-table:state11:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state11:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "845d50bcfbe77a8d3f0e9f955354a22c6b91f96dd7adac2473f1be9b05c1d3e8"
+    },
+    {
+      "job_id": "independent-table:state12:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state12:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "4cdba757151c289212dbcedb8c7cb09aed0d932dc0f86f905619102603e2f038"
+    },
+    {
+      "job_id": "independent-table:state13:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state13:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "245e62443d088858d3e6a39c9682e3bb26e9c76b13df5bc71de7c2a5fea0fdcb"
+    },
+    {
+      "job_id": "independent-table:state14:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state14:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "b9b5f6bf10aeacd12a2022f947ab688ff6e8facd11fb027bac770d3ad6058398"
+    },
+    {
+      "job_id": "independent-table:state15:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state15:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "d088adbcfd8228e6c0c8ffbd226614c44da34216aab48a9e9990d6826d572aa2"
+    },
+    {
+      "job_id": "independent-table:state16:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state16:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "830ab863b8d82c508205797f9c951930f5b29a799a8038059104c5157a81b4c3"
+    },
+    {
+      "job_id": "independent-table:state17:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/independent-table:state17:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "e5db3653bdbc51a8b449e2fb4237015359fc2b3d1a609abdfd46f64ca34770eb"
+    },
+    {
+      "job_id": "market:pilot:Heston:1:N1024",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/market:pilot:Heston:1:N1024/receipt.json",
+      "size_bytes": 312,
+      "sha256": "fd2e42432c504f9a511dade9d7098027510bfde19b342f77732fb1114bf3a28e"
+    },
+    {
+      "job_id": "market:pilot:Heston:2:N1024",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/market:pilot:Heston:2:N1024/receipt.json",
+      "size_bytes": 312,
+      "sha256": "0248a0ed3836341ea4e4b22f640fec394df13b68bdfa9a4120711fc655d9054e"
+    },
+    {
+      "job_id": "market:pilot:local:1:N1024",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/market:pilot:local:1:N1024/receipt.json",
+      "size_bytes": 312,
+      "sha256": "bbb7006bf9e0322e9cfbdf98f98393db254ead12f4095059f05e6349d7ac70ff"
+    },
+    {
+      "job_id": "market:pilot:local:2:N1024",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/market:pilot:local:2:N1024/receipt.json",
+      "size_bytes": 312,
+      "sha256": "0e03fc14fd6b548e6caf8157b9d1a85b3ad9f52e1256b56e801f7e5b3cd99411"
+    },
+    {
+      "job_id": "oracle:state00:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state00:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "b4785c351d7467517e4b9aafbd319c0c31f2a7bf0ecc74ca2fc77cffeabf980f"
+    },
+    {
+      "job_id": "oracle:state01:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state01:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "aceb0d5d4430f8abad22fa4d4b0f09e7aeb49359c86275744dcd4c68a8fc16c4"
+    },
+    {
+      "job_id": "oracle:state02:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state02:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "ada8a83da4859ac39388e10f3569e4375a9426668e2de48f3ceb9857d7de4a28"
+    },
+    {
+      "job_id": "oracle:state03:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state03:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "108a181bfda1ef11ae272cc10d8244149cede3c21160ffcb508a27c24b0088ed"
+    },
+    {
+      "job_id": "oracle:state04:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state04:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "ae460010322fd2a7b56f5281f070457c20a3f45aa8cf8aa5c7c25b2ee4107bc6"
+    },
+    {
+      "job_id": "oracle:state05:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state05:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "0cab3803bd57dcf5f971abb25797eb22535de0661a1bdefc3a7c664046185443"
+    },
+    {
+      "job_id": "oracle:state06:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state06:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "a18b5a4b93c189dccb025b3ed2ae6f2d58ddf9b5bb6f0bf3c5f35537d98e5444"
+    },
+    {
+      "job_id": "oracle:state07:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state07:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "25b6de90aab434c0b4f728a206b75e3d01a7c555a2ed18284698783ebb10e47f"
+    },
+    {
+      "job_id": "oracle:state08:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state08:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "c002c9cbccd20ca61a15a098d087784b75bd4c169724867bdc348613513639da"
+    },
+    {
+      "job_id": "oracle:state09:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state09:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "5ff0b70939e2b54991ee2fa9bc1777a772ec9ed5771344d0566eaf6df99174ce"
+    },
+    {
+      "job_id": "oracle:state10:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state10:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "1f312d17b03e1309f5f38d04c38d1d3dc39bae0a9fd6ebd9161a950cc6aea4af"
+    },
+    {
+      "job_id": "oracle:state11:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state11:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "c99fd3c4011915d35be206fb7283f7ed9eccac04e9ee6041f88a030270498995"
+    },
+    {
+      "job_id": "oracle:state12:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state12:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "54d7613cb94e64d402253e1f0878c71c0b60e946f84fc6b29880c308c8809c90"
+    },
+    {
+      "job_id": "oracle:state13:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state13:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "fec563f646f3ae3348e18456b44540c874ee4c92c3aa15e494293935736376df"
+    },
+    {
+      "job_id": "oracle:state14:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state14:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "5d8bf9c9158841e1f143aeb5896b2b3510244434011950af3e36fd992efeaf61"
+    },
+    {
+      "job_id": "oracle:state15:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state15:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "04f2573494494d1d819ad191f99c047208f5d38d5b209999f3780486e4ba0fd3"
+    },
+    {
+      "job_id": "oracle:state16:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state16:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "4474b8ac7cd12a8099b676dbe625a882b651fb7a5c23c0caaafb54f763121237"
+    },
+    {
+      "job_id": "oracle:state17:Heston:referenceN4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/oracle:state17:Heston:referenceN4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "c8b15a0b9ca09e518ba0b43821947eaa9537887028f711880af2e94456645400"
+    },
+    {
+      "job_id": "premium-current",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/premium-current/receipt.json",
+      "size_bytes": 312,
+      "sha256": "26c1bbab43904efcbb5226b24023321580224db52f69df679cd7430cd367ed7e"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:bump:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:bump:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "d1a8c7bd5286ea61f28fdb13e445f297202243cb071d0ffa71bb1760108b7597"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:0",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:0/receipt.json",
+      "size_bytes": 312,
+      "sha256": "f1dc8f43f481bb2f1cf0af8e817efdf5c4b2c6017a61bc634e1a4d0b950db60d"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "e10076304f4da69eb21462a6c5cad18d379a74f0435fc29f58e7a83bb0227a2a"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:10",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:10/receipt.json",
+      "size_bytes": 312,
+      "sha256": "91807a9218698ee795c5bdce6978a258a8687a96febed5c9ee5f210a765c13a3"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:11",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:11/receipt.json",
+      "size_bytes": 312,
+      "sha256": "deed60f4e95afb03bdf3e298b5cd274f5d650cf744cf23425d3971e95daf74a1"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:2",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:2/receipt.json",
+      "size_bytes": 312,
+      "sha256": "f7c4ed33a7e94fcc8496b1f69a6bb9f7ad66acd55f0f48bd3ebe41a5279c2da2"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:3",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:3/receipt.json",
+      "size_bytes": 312,
+      "sha256": "fdf96f50be46e09efaf2db8d38f8e4d8efe7792a2be1f99001fa1e0d9949d6a6"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:4",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:4/receipt.json",
+      "size_bytes": 312,
+      "sha256": "2cc55d904e81ddbf151f20991a9191232741e5d6384dc9cc5ef015a1d180375d"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:5",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:5/receipt.json",
+      "size_bytes": 312,
+      "sha256": "90dfec12e3cae85506f5f5638e2e8888e77911a826718d3a09de672e76cd84a3"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:6",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:6/receipt.json",
+      "size_bytes": 312,
+      "sha256": "b96464ab74fcfa09935b6ea4d95b5949bd32fcda1b3a36d4776d2f068fd381d8"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:7",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:7/receipt.json",
+      "size_bytes": 312,
+      "sha256": "a782bb5187416ce32463dfc101fa78757970c4d4d1365f7664a6c343886ff1b5"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:8",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:8/receipt.json",
+      "size_bytes": 312,
+      "sha256": "0413a5304362d78cf84ed34b2d8a99ceb681996ac3c1a1fe921cf02082071469"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:date-gate:Heston:9",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:date-gate:Heston:9/receipt.json",
+      "size_bytes": 312,
+      "sha256": "8c29c6c33230262731a3a371dc9b77fdfae5f27dd136e8076a9b14a543b551a6"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:Heston:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "6962b608ff1255136de938304dddceeaf27310e56234e25438a9c44ea82455ef"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:band:local:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "53c54a82012f8adf1d5968f3550dad11f1b816038c51f07ccc9ed867dc586fea"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:Heston:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "b00e170e3077d1c5459abafa235ce41d507ea9497bbeb20a1a3ebcf28b780ca7"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:local:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U1:greek:local:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "22be7bffdb3f41416309f5edb979407e55f8b46fe531536ed5eef7c4f12a977f"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:Heston:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:Heston:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "27737b37b09b8a2ac7d7074887fdef48f7cbe4f2e803f46ba12e4ae2ebfab42e"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:local:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:band:local:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "0391cf09fcacddd3b12ce90febc7c0520c249cbba78a5133068b9fc5424e088b"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:Heston:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:Heston:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "9ca4e9ee1642f86c4f46818d90fcc7f8840a8936979016586fe6270994421c43"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:local:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:Heston:U2:greek:local:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "7a8c17e385198e92deda441715461b34be4951fc39a73b969c80ccfd44262526"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:local:U1:band:Heston:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:Heston:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "69dccda8220a6d6be39c9cef1f8933559ac5e3b5eedc211ead5bc83179e02dbd"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:local:U1:band:local:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:band:local:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "db0505dee9fd2679e94b909f3f93eb3dffcc0707ddea51217b61424d85893d1b"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:local:U1:greek:Heston:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:greek:Heston:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "42cefed68c7c73c707a3491deea135301fe15f1f360b074bac23bedd9b50e1f8"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:local:U1:greek:local:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:local:U1:greek:local:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "20a17704880ffbdc1437533dc89838294243ed1ee7480d33ad517804b8a0cc1a"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:local:U2:band:Heston:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:local:U2:band:Heston:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "d2465b58e2359cbd50ffd46f4d04644771763fa215b78fb6e6f5c154f5c5c4ce"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:local:U2:band:local:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:local:U2:band:local:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "91895c65ca690f2ee7c5c2c302f6feca069e9bf23fcddcd5d872d90ea046a451"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:local:U2:greek:Heston:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:local:U2:greek:Heston:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "af700c0b1e7c756c199df54ee5547f33cef05bdc942510743fe0cbdce62c03e7"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:paired:cell:local:U2:greek:local:SDE",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:paired:cell:local:U2:greek:local:SDE/receipt.json",
+      "size_bytes": 312,
+      "sha256": "bb955f534e4441b127c981ab0dad950cc3741c6757abc8dc242f5967ad7c1698"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:band:Heston:position:width0",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:band:Heston:position:width0/receipt.json",
+      "size_bytes": 312,
+      "sha256": "88595ce10d90fb355f1482a58565a2f793a263e62a68b9fb1a3dfbadfe41c99f"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:band:Heston:position:width1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:band:Heston:position:width1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "aa0e7970eda823a8273bb2fd3b46057fb9a14494fd7334e899e686ddc85a2086"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:band:Heston:position:width2",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:band:Heston:position:width2/receipt.json",
+      "size_bytes": 312,
+      "sha256": "8d0e0c98b847729f8e491dcbcf56a715166356e9fdde891ebed72ae19b233bba"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width0",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width0/receipt.json",
+      "size_bytes": 312,
+      "sha256": "d06be1c4349de20b31dd69309245785174cce49765621873a71bd4c7a419a1e1"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "0a31087a9311d584c7795c105df1ee769ac4971ffe6069e25fea745ba9303471"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width2",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:Heston:position:width2/receipt.json",
+      "size_bytes": 312,
+      "sha256": "cdd756f0e91bea5aa07e3e28f017c63f0f773050a545be7bad51cb5865baa41f"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:local:position:width0",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:local:position:width0/receipt.json",
+      "size_bytes": 312,
+      "sha256": "4d6f19bef75f157ab4ec9055d6726078c73e25104e3cef68a9776a774071ddd8"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:local:position:width1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:local:position:width1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "5e7efe6034f67c5eda34b4da9939d85da933e3539f0a28e00016ceff249f79a6"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:local:position:width2",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:position:cell:Heston:U1:greek:local:position:width2/receipt.json",
+      "size_bytes": 312,
+      "sha256": "98d5f4c522791d12e8e4e96d1eac1f095f71b6fdad93ec45ac4a0f1d02f269ad"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:band:Heston:teacher_N",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:band:Heston:teacher_N/receipt.json",
+      "size_bytes": 312,
+      "sha256": "1972df16db85a1864a38f8f13719c275e28c80f48dde8222311fa96545392517"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:band:local:teacher_N",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:band:local:teacher_N/receipt.json",
+      "size_bytes": 312,
+      "sha256": "003dded5b52b48a9be1605f47b320224a34f453c575c945b61afa737e5df9693"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:greek:Heston:teacher_N",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:greek:Heston:teacher_N/receipt.json",
+      "size_bytes": 312,
+      "sha256": "a49c0b050061d511b9e17458ef36e01f629bf301070ccf86eddade18a4917526"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:greek:local:teacher_N",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U1:greek:local:teacher_N/receipt.json",
+      "size_bytes": 312,
+      "sha256": "0ea47fb07a39fbd875616a6cd37467b887c7098bcae1c452a17dfd1f25e8c55b"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:band:Heston:teacher_N",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:band:Heston:teacher_N/receipt.json",
+      "size_bytes": 312,
+      "sha256": "115b076e335571407524698b90e31688fbe2d5f0c1b77bec21802877119c596b"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:band:local:teacher_N",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:band:local:teacher_N/receipt.json",
+      "size_bytes": 312,
+      "sha256": "64d8611ebcf5a639787d87992211a24dc66e7315c43c34339da7f5f67baf4279"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:greek:Heston:teacher_N",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:greek:Heston:teacher_N/receipt.json",
+      "size_bytes": 312,
+      "sha256": "f7aa3219f4e8de3b6fd76fbfbe5bf3259f5349762330300eaeacc7f29a6f3842"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:greek:local:teacher_N",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_N:cell:Heston:U2:greek:local:teacher_N/receipt.json",
+      "size_bytes": 312,
+      "sha256": "6d53aa84f858c7daec2b765cee0f37f0595b920b451a2ca5253e46303d65f14d"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:band:Heston:teacher_grid",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:band:Heston:teacher_grid/receipt.json",
+      "size_bytes": 312,
+      "sha256": "6ddf1ab0ba38537c3f7b2453d5fad6600268a6abc3567ff8871fb02225354bdb"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:band:local:teacher_grid",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:band:local:teacher_grid/receipt.json",
+      "size_bytes": 312,
+      "sha256": "d7decbd3531d9be8da0ec9acbd2bb2c6b7c423574484ba24d3d2e87dda0efee2"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:greek:Heston:teacher_grid",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:greek:Heston:teacher_grid/receipt.json",
+      "size_bytes": 312,
+      "sha256": "73e9221e90c3e10e06a2e96155be10a361d0974f28a0be94184f97e1429f9a46"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:greek:local:teacher_grid",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U1:greek:local:teacher_grid/receipt.json",
+      "size_bytes": 312,
+      "sha256": "8f22cd39d0132ee57b826545f4029d1d351655b8c29f76912b03b7b82e502e55"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:band:Heston:teacher_grid",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:band:Heston:teacher_grid/receipt.json",
+      "size_bytes": 312,
+      "sha256": "4cd29b27cc9c9ae590f21aaeb3e267c27bc9d8c0e7275d832c3f82541f2f9e31"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:band:local:teacher_grid",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:band:local:teacher_grid/receipt.json",
+      "size_bytes": 312,
+      "sha256": "9f7b9e40888faecb0cf085dac6a1c0b3a0a7fb3d00ff474f222fe2d8fff2ec2c"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:greek:Heston:teacher_grid",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:greek:Heston:teacher_grid/receipt.json",
+      "size_bytes": 312,
+      "sha256": "3aabdba36eb5438a76896a301d0fa1ea74804d94a0e77af4fa67e12e276bbf5e"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:greek:local:teacher_grid",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:refinement:teacher_grid:cell:Heston:U2:greek:local:teacher_grid/receipt.json",
+      "size_bytes": 312,
+      "sha256": "e6d7c49858f086ee8195ba63ad3f25ef2089fe29a2d84995a43ebbde0bf9286b"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:risk:pilot:1:Heston:1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:risk:pilot:1:Heston:1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "3bd946811c3c3e7d53de1cc836c2e971d441f463f38d3fd6d696ed181c150187"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:risk:pilot:1:local:1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:risk:pilot:1:local:1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "f61d15ab3db800492c8a8db770fda520e12d83c40b1868a4ee95c46fb11c3810"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:risk:pilot:2:Heston:0",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:risk:pilot:2:Heston:0/receipt.json",
+      "size_bytes": 312,
+      "sha256": "e3dcac67c3f6d9dd6527c50a4dbf92c7c1f4157c02e954326bb9d322fc565af3"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:risk:pilot:2:Heston:1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:risk:pilot:2:Heston:1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "8410463a8a0abe1ae7663079f42cf5a8ac0a50b0db5a68802c66a4629595eeab"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:risk:pilot:2:local:0",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:risk:pilot:2:local:0/receipt.json",
+      "size_bytes": 312,
+      "sha256": "1ed85eeaf6e349d763f472a3012396497952c06414767768b7f600365ad0e048"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:risk:pilot:2:local:1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:risk:pilot:2:local:1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "ea9448c9717c28ee425da7f288ffc4180f022763f0b1d0c84a7c601cd528df3b"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:risk:teacher_N:Heston:1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:risk:teacher_N:Heston:1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "256e286c6c4e31d647482dd5fa732e636831d249bdd42ee9ddc0fd4172f044ef"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:risk:teacher_grid:Heston:1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:risk:teacher_grid:Heston:1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "dbe24905da7c860e7820decd5e05d271b55795c951df716b1494c96985368918"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state00:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state00:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "7c44111cec2d2c939becefc3b47792df2b1b22c6ec1de6c67faef49059512988"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state01:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state01:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "f071c83128985c568a71721686b40f915ed17f06921abd1cd7317ddba43f165f"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state02:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state02:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "2d17b57ca36a41b784453d1ae7edb4903fe4cfd217345f0e3123e72a48cbd9ee"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state03:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state03:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "25f1f5cd52d89455a02265956f43399260e638defe42864ac15c97bfc9c5696d"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state04:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state04:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "68117144532e8c0c47cc87739c6ee869dbd109a34550544a5f278089bbe4ebd3"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state05:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state05:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "b40aaa2a96c69e75ad7f14a2a604ec233e6fde389876a87e0a17f87948201fb8"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state06:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state06:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "5a50601f390ff7a6dd95ba65f586ad2f768996fb84898f56921e7bea50ef878e"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state07:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state07:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "3477102d13458eedf1c78975cf2e7464ca500903ee40266645def3c76794c0c0"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state08:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state08:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "5c4109fc2d5dd48a2b3b08ca128836ddb5e3d35de222bd798c4e6446f758fd59"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state09:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state09:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "a213c073c03c9303da785c397d3706e24a3631a166f3c349f087d639ccfd1661"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state10:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state10:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "b664684966ae5a5bd2ab9742b0743feec56f27ed668dce079ec7e513505b06d5"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state11:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state11:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "fa465dcba656013bfcc871656d9cbbe5c170e3012c6a21273cf6d6608cbe5569"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state12:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state12:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "e105d3f2e2541e889cb39786e006e05160691da3ad815002da0f6fc22f26c44b"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state13:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state13:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "3e1bf5ffae6b58fdde222f7e8dec66f446fb2e2592db1b7a9d77e5e81c922195"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state14:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state14:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "9a6e855f5fc0783be89afb309b86e98ed48ad522af25d0de249c8da486ee57da"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state15:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state15:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "42497fc4718dd132de8f8b2d34bbde97cb7d04248c7db1cd61efcf52c43c802c"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state16:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state16:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "9b2136db3395aab82c3bd07152d6dd4390ff82b99e1f4cbdbaca4f8f1e5060ad"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:selected-state:state17:Heston",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:selected-state:state17:Heston/receipt.json",
+      "size_bytes": 312,
+      "sha256": "3ec8ce47aa104f5c4c639f0a50b12270311ec704d35a639bc017659ff2c91390"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:validation:Heston:U1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:validation:Heston:U1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "99b03e928866273e6cf5b73104d0bc91c63206c246db887205305c6786309bbc"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:validation:Heston:U2",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:validation:Heston:U2/receipt.json",
+      "size_bytes": 312,
+      "sha256": "6965ef0af7b9d9c80cf8a43e7b666a21cb32ade1fa3afaf15e9c1ff3c70c5f18"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:validation:local:U1",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:validation:local:U1/receipt.json",
+      "size_bytes": 312,
+      "sha256": "2baba5ffe8adfe25346414432dfe88a5780425b66c7bd67277ce966df084bf7f"
+    },
+    {
+      "job_id": "stage:Heston:N1024:coarse:validation:local:U2",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/stage:Heston:N1024:coarse:validation:local:U2/receipt.json",
+      "size_bytes": 312,
+      "sha256": "2fc299ab230d4cbffcb8a9fa72df5385ed5da1d454c0c1797b238980c79b090a"
+    },
+    {
+      "job_id": "teacher-driver:Heston:N1024",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher-driver:Heston:N1024/receipt.json",
+      "size_bytes": 312,
+      "sha256": "76daf44f5c8713b1872ef242564bdb1f6991626f485f2a5ef2eea7a9caa28997"
+    },
+    {
+      "job_id": "teacher-driver:Heston:N4096",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher-driver:Heston:N4096/receipt.json",
+      "size_bytes": 312,
+      "sha256": "b0ab097f9350086a0424f0f7b2fc7ee94285cc5069262e6bdfb0fdba27f4afe4"
+    },
+    {
+      "job_id": "teacher-driver:local:N1024",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher-driver:local:N1024/receipt.json",
+      "size_bytes": 312,
+      "sha256": "6c2acd5fb0eabef6aa8dd773955264938c29cb1b08518387631d5316c045d0ed"
+    },
+    {
+      "job_id": "teacher:Heston:N1024:coarse",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher:Heston:N1024:coarse/receipt.json",
+      "size_bytes": 312,
+      "sha256": "0f488b94f53b8908de4f3f79fd0ff0d320ca96abea801e3c7ab32c4f4b62ce11"
+    },
+    {
+      "job_id": "teacher:Heston:N1024:coarse:raw",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher:Heston:N1024:coarse:raw/receipt.json",
+      "size_bytes": 312,
+      "sha256": "94a54605613d82c812be8f4018ff9789027cf8696a399eb7904bce11bb228b3b"
+    },
+    {
+      "job_id": "teacher:Heston:N1024:high",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher:Heston:N1024:high/receipt.json",
+      "size_bytes": 312,
+      "sha256": "15efb9f69c4392a4f469d26d34ae33c0c0d1211a8865bfd4514f67954571c35b"
+    },
+    {
+      "job_id": "teacher:Heston:N1024:high:raw",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher:Heston:N1024:high:raw/receipt.json",
+      "size_bytes": 312,
+      "sha256": "cf90083e59ba5523bad06be3ff92f64ceaa7dda23c66a4fc60d2b779c765e992"
+    },
+    {
+      "job_id": "teacher:Heston:N4096:coarse",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher:Heston:N4096:coarse/receipt.json",
+      "size_bytes": 312,
+      "sha256": "2a7a3a11e34a8347b88014350f658583d8117a12bdba0373b4173c1f3f7c5643"
+    },
+    {
+      "job_id": "teacher:Heston:N4096:coarse:raw",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher:Heston:N4096:coarse:raw/receipt.json",
+      "size_bytes": 312,
+      "sha256": "49d9a25059d707f1c02bb15ac41d948b8d158778a81da60291c6c33afed90b42"
+    },
+    {
+      "job_id": "teacher:local:N1024:coarse",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher:local:N1024:coarse/receipt.json",
+      "size_bytes": 312,
+      "sha256": "59bdbf7dcf4a966011ce1b7cbb2019d27017d1dd700d0a58ca180a382be1ebff"
+    },
+    {
+      "job_id": "teacher:local:N1024:coarse:raw",
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v4/jobs/teacher:local:N1024:coarse:raw/receipt.json",
+      "size_bytes": 312,
+      "sha256": "2f50238b0f917a3de2b0f1fb64fa093e5df133f902af7034ece75ccd061ad312"
+    }
+  ],
+  "root_direct_entries": [
+    "jobs",
+    "plan",
+    "work"
+  ],
+  "final_report_or_checkpoint_observed_among_root_direct_entries": false,
+  "work_direct_entries": [
+    "teacher-driver:Heston:N1024",
+    "teacher-driver:Heston:N4096",
+    "teacher-driver:local:N1024",
+    "teacher:Heston:N1024:coarse:raw",
+    "teacher:Heston:N1024:high:raw",
+    "teacher:Heston:N4096:coarse:raw",
+    "teacher:local:N1024:coarse:raw"
+  ],
+  "original_monitor_terminal_receipt": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-observation-v4/parent-cost-and-status.json",
+    "size_bytes": 4362,
+    "sha256": "fd99f4911888b87863584a6e104a2426f33c7908cc105c2d0d0a2ecbf396c521"
+  },
+  "original_monitor_status": "unclosed_child_exit",
+  "original_enclosing_terminal_receipt": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observation-v4/parent-cost-and-status.json",
+    "size_bytes": 1546,
+    "sha256": "fec3ec4d4f0144f9f32200204e37ad240cf46d0689655bb704dd44c63994ee1a"
+  },
+  "original_enclosing_status": "terminal_requires_native_and_saved_result_inspection",
+  "outer_observed_cost": {
+    "wall_seconds": 9080.424244328,
+    "parent_CPU_seconds": 0.330450959,
+    "children_CPU_seconds": 9048.913050000001,
+    "child_kernel_peak_RSS_bytes": 10393763840,
+    "scope": "enclosing full monitor source/input/plan checks + all actual native experiment + final monitor receipts; nested job/phase/subclocks not added again",
+    "all_expenses_closed": false,
+    "whole_external10_closed": false,
+    "own_final_receipt_write_stdout_cost": null
+  },
+  "resource_stop_not_requested_by_monitor": true,
+  "observed_volume_reserve_shortfall_bytes": {
+    "C": 0,
+    "F": 0,
+    "WSL": 0
+  },
+  "last_volume_observations": [
+    {
+      "free_bytes": 532976836608,
+      "id": "WSL",
+      "path": "/",
+      "reserve_bytes": 10737418240
+    },
+    {
+      "free_bytes": 31472390144,
+      "id": "C",
+      "path": "/mnt/c",
+      "reserve_bytes": 10737418240
+    },
+    {
+      "free_bytes": 146762366976,
+      "id": "F",
+      "path": "/mnt/f",
+      "reserve_bytes": 10737418240
+    }
+  ],
+  "raw_logs_temporary_and_orphan_files_retained": true,
+  "original_monitor_receipts_not_reclassified_or_rewritten": true,
+  "numeric_saved_verification_of_139_receipts_complete": false,
+  "final_report_absent_does_not_establish_any_financial_PASS": true,
+  "whole_financial_semantic_restores_complete": false,
+  "restart": {
+    "await_explicit_human_resume": true,
+    "automatic_restart_allowed": false,
+    "reuse_existing_v4_output_or_guard_allowed": false,
+    "existing_guard_resume_requested": false,
+    "existing_guard_old_raw_resume_or_relabel_authorized": false,
+    "required_before_new_launch": [
+      "WSL returned after maintenance and original partial/log/cost/source artifacts retained",
+      "Recheck all 85 source hashes and fixed plan/input/protocol/prior/monitor bindings",
+      "Recheck all owned old PIDs absent and C/F/WSL each at least 10 GiB free",
+      "Root bind a new previously nonexistent native output and monitor receipt directory and a new actual launch guard before starting unchanged full roster",
+      "New enclosing observer must refer to the new guard/output/receipt directories and preserve unclosed cost flags"
+    ],
+    "monitor_command_template": "/home/kazumasa/projects/.venv/bin/python /home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v6-v2.py --guard <new separately bound actual launch guard>",
+    "template_is_not_an_authorized_current_command": true,
+    "private_resume_API_is_not_authorized_by_current_guard": true
+  },
+  "uncompleted": [
+    "full 3138-job pilot and saved numerical verification",
+    "teacher selection and freeze",
+    "396 main experiments",
+    "independent fresh numerical check",
+    "C/F full financial semantic restores",
+    "all 10 expense categories and plots/notebook",
+    "phase-end suites, independent final acceptance and main"
+  ],
+  "source_code_modified_this_pause": false,
+  "new_financial_computation_started_this_pause": false,
+  "remote_push_performed_this_pause": false,
+  "main_other_user_changes_touched": false
+}

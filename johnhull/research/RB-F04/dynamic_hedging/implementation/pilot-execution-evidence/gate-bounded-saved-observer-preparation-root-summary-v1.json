@@ -1,0 +1,113 @@
+{
+  "schema": "rb-f04-root-saved-observer-candidate-preparation-v1",
+  "recorded_at_UTC": "2026-10-14T01:22:51.258508+00:00",
+  "scope": "saved-only monitor/enclosing source mechanics, no numerical or execution authority",
+  "status": "PASS_limited_source_preparation_actual_saved_execution_pending",
+  "references": {
+    "monitor": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-monitor-candidate-v1.py",
+      "sha256": "dc89749af97f36f8cb6a2e92584c849637bcbddb10d606a707af5aa422cc84d7",
+      "bytes": 36711
+    },
+    "enclosing": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-enclosing-candidate-v1.py",
+      "sha256": "060e77fdd8826f574a83e3091be1c95cd101ece470ef8cc596f5cc6d92bc082d",
+      "bytes": 17006
+    },
+    "before_fix_enclosing": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-enclosing-candidate-v1-before-closing-fix.py",
+      "sha256": "d9cf847f16d4d36b87f86de6100cbd5b6a99367769e206942f5d79c4d6983711",
+      "bytes": 16953
+    },
+    "entry": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-entry-v1.py",
+      "sha256": "597c2b9cd09ac8f119e118a942cf6b23b99ea9bd629ca8afb0e3a7677d5731ef",
+      "bytes": 15210
+    },
+    "tests": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-monitor-candidate-v2-tests.py",
+      "sha256": "c3cbc95fd7a50d7b93e82c4ecfb8b3c69805e0f22864359eb6bed4436169ee32",
+      "bytes": 33937
+    },
+    "test_result": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-monitor-candidate-v2-tests-result.json",
+      "sha256": "bccaa5c3a804ab631b66ccbac3c588d880fd9109cb9def57126189903f51eedb",
+      "bytes": 436
+    },
+    "author_evidence": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-monitor-candidate-author-evidence-v2.json",
+      "sha256": "1e008348d83c040c40208b36c7147c0463e054a99ef9c99009b5a42f9d73d1a1",
+      "bytes": 4936
+    },
+    "interface": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-monitor-candidate-interface-v2.json",
+      "sha256": "f2408184634eca4686b8db9ad5d57e420569c89a5c0c531524e64abf16c2ae59",
+      "bytes": 4311
+    },
+    "closing_fix_diff": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-enclosing-candidate-v2-closing-fix.diff",
+      "sha256": "c31a608c6de83400fdea79a15090a86c87621712c5251ab2967d5a456310c12f",
+      "bytes": 496
+    },
+    "rejected_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-monitor-independent-review-v1.json",
+      "sha256": "8765365bf68c43de76c11ff1a8c95a5144c6beb716f0f107a9aab792ebf3e683",
+      "bytes": 8628
+    },
+    "fixed_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-monitor-independent-review-v2.json",
+      "sha256": "127c6a58c975e386c3e1cf39cc73a66408fc76cfaeb795872ce2cb1473bfe4d7",
+      "bytes": 9656
+    }
+  },
+  "verified": {
+    "author_tiny_tests": 12,
+    "author_test_seconds": 2.3517313259944785,
+    "author_Ruff_format_in_memory_compile": "PASS 3files",
+    "independent_baseline_source_checks": 37,
+    "independent_owned_scalar_tests": 3,
+    "independent_closing_read_failure_fixtures": 2,
+    "remaining_findings": 0,
+    "exact_closing_fix_bytes_added": 53,
+    "source_bodies_other_than_initialization_unchanged": true,
+    "closing_read_failure_preserves_actual_SHA_None_binding_false_errors_unknown_and_terminal_cost_receipt": true,
+    "existing_active_pidfd_cooperative_wait_SID_DEVNULL_reused": true,
+    "parent_financial_API_plan_input_raw_hydration": 0,
+    "child_contract": "fixed saved entry -I -B --guard --guard-sha256; reader each1/unpack1/context4keys preserved",
+    "actual_live_original_chain_refusal": "author and independent reviewers confirmed fixed CLI refuses original111725/13872289 before guard/source/API/output"
+  },
+  "unchanged_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "external_cost_scopes": 10,
+    "numeric_selection_private_A_caps_changed": false,
+    "wall_limit_seconds": 2592000,
+    "RSS_limit_each_bytes": 17179869184,
+    "distinct_volume_reserve_each_bytes": 10737418240,
+    "simultaneous_numerical_workers": 1
+  },
+  "current_live_active_enclosing_same_closing_pattern": "identified in existing baseline; not changed while current worker runs; preserved as source-scope limitation",
+  "ROOT_EXECUTE_AUTHORIZED": false,
+  "source_adoption_approved": false,
+  "active_saved_entry_guard_monitor_SHA": "None/unresolved; candidate refuses actual launch",
+  "actual_saved_guard_created": false,
+  "actual_terminal_full_raw_latest_checkpoint_authenticated": false,
+  "execute_saved_check": false,
+  "financial_qualification": "unknown",
+  "financial_acceptance": false,
+  "full_saved_completion_proven": false,
+  "actual16GiB_fit_proven": false,
+  "original_financial_cost_rows_updated": false,
+  "cost_missingness_exception_adopted": false,
+  "live_numerical_source_process_changes": 0,
+  "CAS_candidate_package": "pending at this snapshot",
+  "phase_main_accepted": false,
+  "final_receipt_write_stdout_exit_tail": null
+}

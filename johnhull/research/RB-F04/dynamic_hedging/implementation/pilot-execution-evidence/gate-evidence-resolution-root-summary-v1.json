@@ -1,0 +1,70 @@
+{
+  "schema": "rb-f04-gate-evidence-resolution-root-summary-v1",
+  "observed_utc": "2026-10-13T22:44:29.835782+00:00",
+  "cause": "RSS cap during eager candidate-gate evidence argument/raw resolution; dispatch/math-check/write not reached.",
+  "implementation": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+    "bytes": 182402,
+    "sha256": "398295c06286606c573fda24fff32f4b8cdc21c542bd576669295ff67e696039"
+  },
+  "regression_tests": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/deep_hedge_price/tests/test_dynamic_hedging_pilot_saved_storage.py",
+    "bytes": 24082,
+    "sha256": "e7913c41341b909bb5cd94a389e4ed007a4d066ae6c528a356e7b9c82c6d3242"
+  },
+  "red_collection_failure_retained": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source87-gate-evidence-regression-red-v1.json",
+    "bytes": 1903,
+    "sha256": "d456d021645df9dcd8b22ce9b6c3bf041f865ef35d4fac6fc6702ffbd9c5ca1d"
+  },
+  "red_correct_source_paths": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source87-gate-evidence-regression-red-v2.json",
+    "bytes": 4678,
+    "sha256": "f7e5b0aabd93dc5eab8e591e8d749f1ec3e520b313e797db461facd5a24d9e71"
+  },
+  "green_scoped": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-resolution-regression-green-v1.json",
+    "bytes": 932,
+    "sha256": "327645caba58fe96552aeb9850c11a414a0aeb25af2d366627d4d92533dd6cd5"
+  },
+  "independent_review": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-resolution-independent-review-v1.json",
+    "bytes": 31927,
+    "sha256": "88fcb9e56dc03136ed99fecad35fb9a8c44d5137f040b2ec4556f0c82972c3c5"
+  },
+  "stopped_native": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source86-rss-stop-byte-closure-root-summary-v1.json",
+    "bytes": 2889,
+    "sha256": "0090014a819d2785a99cf408829724c9eb841d597c10c91d7fc03c20b0511070"
+  },
+  "scope": {
+    "pilot_jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "teacher_n": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "original_thresholds_selection_A_caps_no_resume_preserved": true
+  },
+  "verification": {
+    "scoped_passed": 37,
+    "independent_pytest_passed": 4,
+    "independent_fixtures_passed": true,
+    "ruff_check": true,
+    "ruff_format_check": true,
+    "scoped_git_diff_check": true
+  },
+  "root_decision": {
+    "limited_source_fix_approved": true,
+    "actual_new_metadata_approved": false,
+    "financial_launch_approved": false,
+    "actual_16gib_fit_proven": false,
+    "full_scope_completion_proven": false,
+    "financial_qualification": "unknown",
+    "cost_amendment_human_answer": "pending"
+  },
+  "next": "Bind a fresh source/prior/metadata/guard at unchanged scope; retain stopped source86/213 records and original unknown costs. Do not resume the old guard or reconstruct checkpoint."
+}

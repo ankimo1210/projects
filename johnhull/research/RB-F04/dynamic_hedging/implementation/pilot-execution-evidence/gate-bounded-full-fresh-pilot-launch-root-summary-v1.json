@@ -1,0 +1,113 @@
+{
+  "schema": "rb-f04-gate-bounded-full-fresh-pilot-launch-root-summary-v1",
+  "created_utc": "2026-10-13T23:51:55.292428+00:00",
+  "actual_final_root_dispatch_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-root-final-financial-dispatch-approval-v1.json",
+    "sha256": "da71b8e0046d470879c15e466f09170b6d6a8ac4cde48c1212c5175b3d3a45a0"
+  },
+  "actual_independent_materialized_plan_decision": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-materialized-prior-v8-decision-v1.json",
+    "sha256": "eed94760ed81bc100289ad3ad9524ea2996a5a452ba49b3b5b91fad406e77409"
+  },
+  "actual_guard": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-gate-bounded-v1.json",
+    "sha256": "e1405ff02fdb94b1bfb5e85400dcd8033d56c24931232e025d71012be74ec992"
+  },
+  "actual_enclosing_launch": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-gate-bounded-launch-v1.json",
+    "sha256": "b905b35fbb7803b2a7966da30d0caa226458eac4ee4673dfe65e017ced812580"
+  },
+  "actual_before_bindings_and_command": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-observation-v6/before-bindings-and-command.json",
+    "sha256": "3b9d64fa09a3627a082bf2e9fae35b43f5aee66236af2e565503bd916de25ada"
+  },
+  "actual_processes": {
+    "enclosing": {
+      "pid": 111722,
+      "start_ticks": "13872268",
+      "state": "S",
+      "PPid": 111720,
+      "sid": 111722,
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-B",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observer-gate-bounded-active-v1.py",
+        "--observe"
+      ]
+    },
+    "monitor": {
+      "pid": 111723,
+      "start_ticks": "13872271",
+      "state": "S",
+      "PPid": 111722,
+      "sid": 111723,
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-B",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-gate-bounded-active-v1.py",
+        "--guard",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-launch-guard-gate-bounded-v1.json"
+      ]
+    },
+    "numerical_child": {
+      "pid": 111725,
+      "start_ticks": "13872289",
+      "state": "R",
+      "PPid": 111723,
+      "sid": 111725,
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-bounded-source-v1/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "--plan",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v8/locked-prior-metadata",
+        "--inputs",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs",
+        "--output",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v6",
+        "--bounded"
+      ]
+    }
+  },
+  "actual_selected_environment": {
+    "PYTHONPATH": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-bounded-source-v1/johnhull/research/RB-F04/dynamic_hedging:/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-bounded-source-v1/johnhull/hullkit/src:/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-bounded-source-v1/deep_hedge_price/src",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "teacher_N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "thresholds": 65,
+    "blocks": 16,
+    "external_costs": 10
+  },
+  "root_verified": {
+    "all4196_independent_actual_metadata_checks_PASS": true,
+    "standard_plan_and_typed_readers_once": true,
+    "normal_all86_actual_alias_origin_spec_SHA": true,
+    "actual_live_PIDs_ticks_SID_PPid_chain_and_argv": true,
+    "actual_snapshot_entry_and_PYTHONPATH": true,
+    "bounded_no_resume_one_numerical_worker": true,
+    "fresh_output_root_v6": true,
+    "old_partial213_and_failure_cost_history_preserved": true,
+    "three_separate_volume_reserves_live_PASS": true
+  },
+  "observation_note": "Recorded PYTHONPATH is a list while /proc environ is a colon string; compare the joined paths. Initial root diagnostic format assertion did not alter/restart/signal the actual worker.",
+  "decision": {
+    "actual_financial_full_fresh_execution_started": true,
+    "actual_full_16GiB_fit_proven": false,
+    "full_scope_completion_proven": false,
+    "financial_qualification": "unknown",
+    "cost_missingness_exception_adopted": false,
+    "main_or_phase_accepted": false
+  },
+  "next": "Observe this exact process chain, preserve original caps and all full obligations; terminal success then full saved checks/selection/freeze/main396/fresh and both financial semantic restores/fees/figures/notebook/final suites/main."
+}

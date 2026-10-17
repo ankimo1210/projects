@@ -22,6 +22,7 @@ _IMPORT_START, _IMPORT_CPU = perf_counter(), process_time()
 if __name__ == "__main__":
     sys.path[:0] = [str(ROOT / "johnhull/hullkit/src"), str(ROOT / "deep_hedge_price/src")]
 
+import _pilot_storage_budget as storage_budget
 import numpy as np
 import run_pilot as pilot
 import run_reference as runner
@@ -2486,6 +2487,7 @@ def save_evaluation_job(directory, row, plan, bindings, resume):
     return reference
 
 
+@storage_budget.bounded_execution
 def run_main_experiment(
     directory, *, inputs, locked_plan, source_root=ROOT, resume=False, input_load_expense=None
 ):

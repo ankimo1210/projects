@@ -1,0 +1,162 @@
+{
+  "schema": "rb-f04-source86-monitor-reattachment-root-summary-v1",
+  "observed_clock": {
+    "cpu": 0.373403301,
+    "utc": "2026-10-13T11:58:49.164175+00:00",
+    "wall": 96097.37687189
+  },
+  "original_financial_child": {
+    "pid": 65198,
+    "start_ticks": "8610788",
+    "exact_cmdline_matches": true,
+    "restarted": false
+  },
+  "watchdog": {
+    "pid": 71573,
+    "sid": 71573,
+    "detached": true,
+    "observation_directory": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-observation-v1",
+    "fresh_progress_observed": true,
+    "latest_observation_snapshot": {
+      "child_proc": {
+        "argv": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+          "--plan",
+          "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v7/locked-prior-metadata",
+          "--inputs",
+          "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs",
+          "--output",
+          "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v5",
+          "--bounded"
+        ],
+        "cpu_seconds_proc": 9971.89,
+        "pgid": 65198,
+        "pid": 65198,
+        "ppid": 1,
+        "sid": 65198,
+        "start_ticks": "8610788",
+        "state": "R",
+        "vm_hwm_bytes_proc": 10244132864
+      },
+      "child_rss_bytes": 6777540608,
+      "clock": {
+        "cpu": 0.373403301,
+        "utc": "2026-10-13T11:58:49.164175+00:00",
+        "wall": 96097.37687189
+      },
+      "elapsed_seconds": 9989.817454635995,
+      "parent_rss_bytes": 29827072,
+      "requested_stop": null,
+      "signal_delivered": false,
+      "volumes": [
+        {
+          "free_bytes": 641912057856,
+          "id": "WSL",
+          "path": "/",
+          "reserve_bytes": 10737418240
+        },
+        {
+          "free_bytes": 303686778880,
+          "id": "C",
+          "path": "/mnt/c",
+          "reserve_bytes": 10737418240
+        },
+        {
+          "free_bytes": 42900914176,
+          "id": "F",
+          "path": "/mnt/f",
+          "reserve_bytes": 10737418240
+        }
+      ]
+    },
+    "prior": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-root-prior-v1.json",
+      "sha256": "f67fce3c17e265f1186fc7ea684beedc52905774bea1c7153ecab53aa8e00137"
+    },
+    "helper_sha256": "9efad5b4517f3fe7efb5e547561583944b271610be7a134559b691d1430a1587"
+  },
+  "evidence": {
+    "monitor_loss": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-source86-monitor-loss-readonly-evidence-v1.json",
+      "sha256": "6741b1c8c97d78ae1ced66955f087438ba421a8b151cade18696e14581343ad8"
+    },
+    "root_launch": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-root-launch-v1.json",
+      "sha256": "6b997c4d6ba453d95fc09ee0d306259a76bbc85a27904a29278cc22194b5c6cb"
+    },
+    "attach_before": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-observation-v1/attachment-before.json",
+      "sha256": "e3686de4952c547c9c3e04f143b1eb121dc37ca9a7b90453d2748d960314b56e"
+    },
+    "focused_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-review-v1.json",
+      "sha256": "241dec50bcde8fea3bab05d57b459fe03f27b24c55343f31d3f6be8d55dca9b1"
+    },
+    "author_focused_checks": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-puremeta-v1.json",
+      "sha256": "aca80f33c643934e1aae06be4c235e517bb7dc42c7839d018ea5ccc9b1e1c431"
+    },
+    "bounded_storage_audit": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-live-storage-readonly-audit-v1.json",
+      "sha256": "358517e1b828a4b931be43fe20f1befc19dd885c03f13702a7065091fce88a35"
+    },
+    "postpilot_readiness": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-postpilot-readiness-readonly-v1.md",
+      "sha256": "dd00f7062479e697e9404621dc6376d754afded6ff262509c6cb1bdae7ce28c9"
+    }
+  },
+  "published_job_receipts_at_observation": 140,
+  "full_original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "main_runs_pending": 396
+  },
+  "unchanged_administrative_limits": {
+    "phase_origin": {
+      "cpu": 0.02697958,
+      "utc": "2026-10-13T09:12:19.346721+00:00",
+      "wall": 86107.559417254
+    },
+    "phase_days": 30,
+    "child_and_observer_RSS_bytes_each": 17179869184,
+    "volume_reserve_bytes_each": 10737418240,
+    "writer_unique_file_allocation_cap_bytes": 32212254720
+  },
+  "administrative_observer_error_policy": "If the observer cannot maintain existing limits/bindings, SIGINT only through authenticated held pidfd; preserve partial/unknown",
+  "storage_snapshot": {
+    "observed_UTC": "2026-10-13T11:45:13.370702+00:00",
+    "published_jobs": 139,
+    "unique_regular_file_allocation_bytes": 3714682880,
+    "directory_allocation_bytes_separate": 20856832,
+    "hardlink_path_allocation_eliminated_bytes": 3700670464,
+    "full_scope_storage_fit": "unknown; partial metadata-only snapshot"
+  },
+  "validation": {
+    "author_tests": 11,
+    "independent_tests": 11,
+    "blocking_findings": 0,
+    "ruff_format_compile": "PASS",
+    "actual_source_plan_inputs_bindings": "PASS before attachment"
+  },
+  "readiness": {
+    "existing_primary_mirror_Store_open_role_marker": "PASS",
+    "financial_semantic_restores": "not executed",
+    "source86_saved_checker_adoption": "pending",
+    "original_source82_PIDs_terminal_bound_helpers": "cannot use directly"
+  },
+  "unknown": {
+    "original_parent_exit_cause": "not established",
+    "original_parent_and_monitor_exit_codes": "unknown; terminal receipts absent",
+    "monitor_gap_volume_samples_and_cost_tails": "unknown",
+    "foreign_child_terminal_exit_code": "unavailable to attach observer; native/saved inspection still required",
+    "financial_qualification": "unknown",
+    "all_10_expenses": "unclosed"
+  },
+  "financial_source_changed_this_turn": false,
+  "financial_producer_launched_this_turn": false,
+  "full_suite_or_financial_saved_replay_this_turn": false,
+  "committed_or_pushed_this_turn": false,
+  "remaining": "Full pilot/native endpoint/saved numerical check/selection/freeze -> main396 -> independent fresh/two financial semantic restores -> all costs/3 figures/notebook/final 3 suites/acceptance/main -> #10 -> #11"
+}

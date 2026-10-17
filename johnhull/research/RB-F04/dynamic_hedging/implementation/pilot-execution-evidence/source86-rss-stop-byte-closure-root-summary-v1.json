@@ -1,0 +1,36 @@
+{
+  "schema": "rb-f04-source86-rss-stop-byte-closure-root-summary-v1",
+  "observed_utc": "2026-10-13T22:33:05.468392+00:00",
+  "stop_summary": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/implementation/pilot-execution-evidence/source86-rss-stop-root-summary-v1.json",
+    "sha256": "0b05b0f0abdd8be1ff30ec564755f4e065273ce30d6973f1f19ad2748eaadcac"
+  },
+  "byte_closure": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-rss-stopped-native-byte-closure-v1.json",
+    "sha256": "fb02ed626cde13c7f1e731dbbfafbc9ed4a286cadd7591bbb832d500b2fbd95a",
+    "bytes": 9433314,
+    "tree_sha256": "ec0634512dca576cb8ec1fdd9f9686ab0bdbbef901855793f920f179856e864f",
+    "stats": {
+      "regular_files": 31482,
+      "unique_inodes": 26418,
+      "logical_path_bytes": 19641627258,
+      "unique_regular_allocated_bytes": 7623491584,
+      "unique_regular_logical_bytes": 7533352080,
+      "wall_seconds": 9.710660562996054,
+      "self_cpu_seconds": 8.86105
+    }
+  },
+  "published_receipts": 213,
+  "checkpoint_exists": false,
+  "financial_qualification": "unknown",
+  "actual_saved_numeric_check_executed": false,
+  "CAS_raw_archive_executed": false,
+  "original_native_and_archived_producer_preserved": true,
+  "working_tree_changed_after_terminal": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+    "archived_sha256": "cf3fc2abe32f1827e98e83b029c874baafb790feedf5073c99072f106e135d95",
+    "candidate_sha256": "398295c06286606c573fda24fff32f4b8cdc21c542bd576669295ff67e696039",
+    "diff": "--- archived-producer\n+++ working-tree-candidate\n@@ -2105,8 +2105,9 @@\n             for k, v in value.items()\n         }\n     if isinstance(value, list):\n-        # Only full saved evidence rows are delayed. Configuration and binding\n-        # lists retain their original list equality and serialization semantics.\n+        # Full evidence rows may embed original arguments or refer to locked\n+        # job arguments. Delay either shape without changing the row itself.\n+        # Configuration and binding lists retain their original list semantics.\n         evidence_rows = bool(value) and all(\n             isinstance(row, dict)\n             and (\n@@ -2116,7 +2117,6 @@\n                     and isinstance(row[\"raw\"], dict)\n                     and set(row[\"raw\"]) == {\"job\"}\n                     and isinstance(row[\"arguments\"], dict)\n-                    and set(row[\"arguments\"]) == {\"job_arguments\"}\n                 )\n             )\n             for row in value\n"
+  },
+  "next": "Complete independent source review, bind a new unchanged-scope source/prior/guard, and verify memory through a separately bound execution; no direct resume or relabeling."
+}

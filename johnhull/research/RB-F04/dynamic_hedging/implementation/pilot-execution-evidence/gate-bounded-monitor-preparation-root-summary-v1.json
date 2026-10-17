@@ -1,0 +1,61 @@
+{
+  "schema": "rb-f04-gate-bounded-monitor-preparation-root-summary-v1",
+  "created_utc": "2026-10-13T23:30:41.344110+00:00",
+  "root": "root",
+  "references": {
+    "monitor_candidate": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-full-pilot-root-operational-monitor-v8.py",
+      "sha256": "b7a6c500ce993731c9e0a5e9d975fd250da850475444eccaa2f335063bfbae3a"
+    },
+    "enclosing_candidate": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-enclosing-observer-gate-bounded-v1.py",
+      "sha256": "7a41e637b76bc6c3aad0dff71d94f22268beab4f4102698b371984e3a3fd550a"
+    },
+    "author_validation": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-monitor-enclosing-candidate-verification-v1.json",
+      "sha256": "a587376c919aabbe258e435f260a8d679ff4678d8f626edd60fe84d589eba113"
+    },
+    "independent_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-monitor-independent-review-v1.json",
+      "sha256": "a0881adb132464f8d60aebe0311ea46fa419d68f72283d3351a2a2e9e3864a1f"
+    },
+    "metadata_observer": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-metadata-root-observer-v5-gate-bounded-candidate-v1.py",
+      "sha256": "3dbfc90bd544cab948d43ebec1d436b6c37393cb223c09f32154b0fb3ec35681"
+    },
+    "metadata_observer_author_validation": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/metadata-observer-gate-bounded-candidate-record-v1.json",
+      "sha256": "0f3610d176349ba6b263598cc39d8dc89e3300571610bae4a824686e2ed8d74e"
+    },
+    "actual_metadata_only_launch": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-metadata-root-detached-launch-gate-bounded-v1/root-launch.json",
+      "sha256": "205525c326709e6df8d5953cd57173efb38f40a9718b5c349c298126129d7375"
+    }
+  },
+  "root_observed": {
+    "metadata_owner_PID": 110273,
+    "metadata_owner_start_ticks": "13725596",
+    "metadata_child_PID": 110274,
+    "candidate_source_SHA_matches": true,
+    "metadata_scope_authentication_PASS": true,
+    "no_SIGKILL_or_group_signal_in_metadata_observer": true,
+    "actual_metadata_launch_detached_with_DEVNULL": true
+  },
+  "verification": {
+    "author_nonfinancial_monitor_tests": 9,
+    "independent_nonfinancial_monitor_tests": 9,
+    "metadata_observer_author_checks": 8,
+    "double_external_signal_wait_escape_fixed": true,
+    "exact_PID_ticks_PPid_argv_pidfd_SIGINT_once_and_actual_reap_verified": true
+  },
+  "decision": {
+    "limited_monitor_candidate_source_and_nonfinancial_mechanics_accepted": true,
+    "actual_full_metadata_complete": false,
+    "actual_materialized_plan_or_launch_guard_approved": false,
+    "financial_launch_approved": false,
+    "actual_full_16GiB_fit_proven": false,
+    "financial_qualification": "unknown",
+    "unknown_costs_or_final_tail_imputed": false
+  },
+  "next": "Inspect metadata-only real terminal and full artifact; independently validate standard-reader full plan before fixing active monitor bindings and any financial launch."
+}

@@ -1,0 +1,173 @@
+{
+  "actual_launch_guard_created": false,
+  "checkpoint_present": false,
+  "commit_and_push_this_turn": false,
+  "cost_amendment_adopted": false,
+  "cost_amendment_user_reply": "pending",
+  "created_utc": "2026-10-13T13:46:39.419747+00:00",
+  "entry_connection": {
+    "check_directory": "fresh_output/checks mandatory",
+    "false_closed_and_unknown_result_preserved": true,
+    "parameters": "same inputs[parameters] object",
+    "standard_saved_checker": true
+  },
+  "entry_source_and_review_refs": {
+    "source86-saved-check-entry-interface-v1.json": {
+      "bytes": 14833,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-check-entry-interface-v1.json",
+      "sha256": "84d898dc9d2fd56dcdbb55fdb8a23946538d3a33f7101a8efc9f0c906fae9c80"
+    },
+    "source86-saved-check-entry-review-v1.json": {
+      "bytes": 4856,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-check-entry-review-v1.json",
+      "sha256": "0c0a990632a0f8edc520d3f5f34ce345447c11d8613f477625d90acfb3195b89"
+    },
+    "source86-saved-check-entry-v1-tests.py": {
+      "bytes": 15583,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-check-entry-v1-tests.py",
+      "sha256": "680b17ca7f97a0bc7dd527876bafd17e4e9c0c46c2dda9c4300bc9cedb84f406"
+    },
+    "source86-saved-check-entry-v1.py": {
+      "bytes": 11954,
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-check-entry-v1.py",
+      "sha256": "afda3b68b11d01f4959a0e0f233a65c83f7da1b25b9e6c4fe05e87ca45fcd09e"
+    }
+  },
+  "execute_saved_check": false,
+  "financial_acceptance": false,
+  "financial_qualification": "unknown",
+  "goal_turn_classification": "progress: entry implemented, three input-validation conditions repaired, root fourteen tests and independent source review completed",
+  "independent_review": {
+    "decision": "approved",
+    "final_experiments": 0,
+    "scope": "minimal_entry_local_input_validation_and_standard_saved_checker_connection_source_only",
+    "unresolved_source_conditions": 0
+  },
+  "latest_watchdog_observation": {
+    "child_proc": {
+      "argv": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+        "--plan",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v7/locked-prior-metadata",
+        "--inputs",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs",
+        "--output",
+        "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v5",
+        "--bounded"
+      ],
+      "cpu_seconds_proc": 16427.35,
+      "pgid": 65198,
+      "pid": 65198,
+      "ppid": 1,
+      "sid": 65198,
+      "start_ticks": "8610788",
+      "state": "R",
+      "vm_hwm_bytes_proc": 10244132864
+    },
+    "child_rss_bytes": 6680399872,
+    "clock": {
+      "cpu": 13.14061748,
+      "utc": "2026-10-13T13:46:39.289980+00:00",
+      "wall": 102567.502677219
+    },
+    "elapsed_seconds": 16459.943259965003,
+    "parent_rss_bytes": 35069952,
+    "requested_stop": null,
+    "signal_delivered": false,
+    "volumes": [
+      {
+        "free_bytes": 641205051392,
+        "id": "WSL",
+        "path": "/",
+        "reserve_bytes": 10737418240
+      },
+      {
+        "free_bytes": 296962646016,
+        "id": "C",
+        "path": "/mnt/c",
+        "reserve_bytes": 10737418240
+      },
+      {
+        "free_bytes": 42898554880,
+        "id": "F",
+        "path": "/mnt/f",
+        "reserve_bytes": 10737418240
+      }
+    ]
+  },
+  "live_detached_watchdog": {
+    "argv": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "-B",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-v1.py",
+      "--prior",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-root-prior-v1.json",
+      "--prior-sha256",
+      "f67fce3c17e265f1186fc7ea684beedc52905774bea1c7153ecab53aa8e00137"
+    ],
+    "pid": 71573,
+    "start_ticks": "9593766",
+    "state": "S"
+  },
+  "live_producer": {
+    "argv": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "--plan",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v7/locked-prior-metadata",
+      "--inputs",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs",
+      "--output",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v5",
+      "--bounded"
+    ],
+    "pid": 65198,
+    "start_ticks": "8610788",
+    "state": "R"
+  },
+  "original_scope": {
+    "main_cells": 396,
+    "pilot_attempts": 51,
+    "pilot_cases": 121,
+    "pilot_jobs": 3138,
+    "teacher_N_candidates": [
+      1024,
+      4096,
+      16384,
+      65536
+    ]
+  },
+  "original_strict_cost_closure_and_all_fifty_one_obligations": "unchanged; not declared PASS",
+  "published_receipts_are_not_numerical_qualification": true,
+  "published_receipts_observed": 149,
+  "remaining": [
+    "actual producer terminal/checkpoint and complete byte closure",
+    "actual saved-only trusted binding/resource/launch guard",
+    "full original numeric and selection checks/freeze",
+    "main396",
+    "fresh financial checks and two financial semantic restores",
+    "original external10 cost scopes, three plots/notebook, final three suites/acceptance/main",
+    "#10 and #11 after #9 decision"
+  ],
+  "root_preapproved": false,
+  "root_verification": {
+    "Ruff_check": "PASS 2 files",
+    "Ruff_format": "PASS 2 files",
+    "actual_financial_checker_or_original_plan_input_raw_reads": 0,
+    "status": "PASS",
+    "stdlib_and_stub_tests": 14,
+    "wall_seconds": 0.053
+  },
+  "schema": "rb-f04-source86-saved-check-entry-preparation-root-summary-v1",
+  "source_adoption_approved": false,
+  "status": "entry_mechanics_source_only_approved; full_pilot_still_running",
+  "this_turn_tracked_changes": "root summary and existing progress docs only; production capacity changes predate this turn",
+  "three_repairs": [
+    "same bounded authenticated JSON bytes used for parsing",
+    "tree accepts regular files and directories only",
+    "latest checkpoint receipt presence and valid hash required"
+  ],
+  "verifier_canonical_sha256": "248dd00fa9da42b9c5d057a03f3cd48470a81d85387fb13ace26ffd73c5f3838",
+  "verifier_native_payload_sha256": "7db8e73998a04e3061f09d4d3f6451f8e632e9228dfb61f03537bf0e78bcdbe4"
+}

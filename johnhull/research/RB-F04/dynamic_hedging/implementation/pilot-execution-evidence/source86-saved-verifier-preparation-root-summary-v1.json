@@ -1,0 +1,114 @@
+{
+  "schema": "rb-f04-source86-saved-verifier-preparation-root-summary-v1",
+  "clock_snapshot": {
+    "cpu": 3.364172788,
+    "utc": "2026-10-13T12:25:00.302417+00:00",
+    "wall": 97668.515115016
+  },
+  "previous_goal_turn_classification": "progress: detached watchdog reattached with live identity/progress and durable records",
+  "this_turn_classification": "progress: source86 isolated readonce verifier prepared and independently verified; cost recovery constraints established; user decision requested",
+  "live_financial_child": {
+    "pid": 65198,
+    "start_ticks": "8610788",
+    "restarted": false,
+    "published_job_receipts": 142
+  },
+  "live_watchdog": {
+    "pid": 71573,
+    "sid": 71573,
+    "latest_progress": {
+      "cpu": 3.364172788,
+      "utc": "2026-10-13T12:25:00.302417+00:00",
+      "wall": 97668.515115016
+    },
+    "administrative_cap": null
+  },
+  "source_candidate": {
+    "root": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-verifier-readonce-candidate-v1",
+    "files": 86,
+    "changed_paths": [
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+    ],
+    "derived_identity": {
+      "basis": "current86 authenticated closure with only checker files/protocol_source SHA replaced; not actual execution-source loaded-alias review",
+      "canonical_sha256": "248dd00fa9da42b9c5d057a03f3cd48470a81d85387fb13ace26ffd73c5f3838",
+      "native_payload_sha256": "7db8e73998a04e3061f09d4d3f6451f8e632e9228dfb61f03537bf0e78bcdbe4",
+      "normal_live_closure_and_loaded_aliases_executed": false
+    },
+    "source_adoption_approved": false,
+    "actual_saved_launch_approved": false
+  },
+  "evidence": {
+    "preparation": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-verifier-readonce-preparation-v1.json",
+      "sha256": "59d6ebb3f5b1dca2ecec5abaddfebd8c56b689d2990473412f7db2dc9a7011ea"
+    },
+    "independent_source_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-verifier-readonce-independent-review-v1.json",
+      "sha256": "3706af65a6c911471d7d069c7fb93d25fd2c57d385c43a5e9d860d677456ca72"
+    },
+    "missing_terminal_cost_audit": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-missing-terminal-cost-recovery-readonly-v1.json",
+      "sha256": "2e139d9010691be0956b85d0d306543990b9042f339da75187284a0167eb7ed4"
+    },
+    "original_exec_handle_audit": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/root-original-session56065-readonly-handle-audit-v1.json",
+      "sha256": "1947da16f1d158dece486f4cd493bbfae1cc5af7de8cb5b02112fe8b4fe6b602"
+    },
+    "costing_proposal": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-costing-amendment-proposal-v1.md",
+      "sha256": "2e54ca3c83f72364418402586b4568d6c819547afd502e5d310810e5117fe341"
+    },
+    "costing_proposal_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-costing-amendment-proposal-review-v1.json",
+      "sha256": "beaa30f704d101c6c208f05c630da3f5f464a7d8d2058e10e9a8aed89a8a8a34"
+    }
+  },
+  "source_verification": {
+    "independent_source_checks": 24,
+    "fresh_scalar_cases": 48,
+    "loaded_copied_module_origins": 73,
+    "compile_files": 86,
+    "ruff_format_files": 6,
+    "critical": 0,
+    "important": 0,
+    "scope": "source/mechanics only; no actual finance/fullRAM/whole-stage timing"
+  },
+  "cost_resolution": {
+    "missing_original_parent_terminal_alone_requires_financial_rerun": false,
+    "native_checkpoint_can_recover_original_numerics_and_precheckpoint_clocks": true,
+    "exact_lost_terminal_tail_measurement_recovered": false,
+    "strict_costs_closed": false,
+    "user_costing_amendment_question_requested": true,
+    "user_reply_received_at_record": false,
+    "amendment_adopted": false,
+    "required_conditions": [
+      "Preserve original strict costs=false/unknown and costs obligation; never claim all original51strict obligations complete under alternative acceptance",
+      "Independently verify every original numeric/selection predicate",
+      "Only explicitly documented observer-loss scopes may be exempt; original external10 current expenses remain mandatory measured"
+    ],
+    "proposal_options": [
+      "approved separate acceptance with loss-cost disclosure and no complete-total-cost/speed superiority claims",
+      "retain strict complete current-cost measurement requirement"
+    ]
+  },
+  "original_full_scope": {
+    "pilot_jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "main_runs": 396,
+    "numerical_thresholds_changed": false,
+    "selection_gates_changed": false,
+    "raw_plan_changed": false
+  },
+  "finance_saved_replay_fullsuite_CAS_or_new_worker_this_turn": false,
+  "live_financial_source_changed_this_turn": false,
+  "commit_or_push_this_turn": false,
+  "remaining": "Native endpoint/full saved numerical checks/cost decision/selection/freeze -> main396 -> fresh/two financial semantic restores -> costs/3plots/notebook/final3suites/acceptance/main -> #10 -> #11"
+}
