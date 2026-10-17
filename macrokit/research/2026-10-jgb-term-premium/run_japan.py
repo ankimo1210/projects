@@ -9,6 +9,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
+import os
 import subprocess
 from collections.abc import Callable
 from datetime import date
@@ -18,7 +20,7 @@ from pathlib import Path
 import numpy as np
 
 from macrokit.store import connect
-from macrokit.termstructure import acm, dns, shadow
+from macrokit.termstructure import acm, decompose, dns, shadow
 from macrokit.termstructure.curve import ZeroPanel, fit_month_ends, zero_panel
 from macrokit.termstructure.decompose import (
     Decomposition,
@@ -51,7 +53,7 @@ def check_hash(config: dict) -> None:
 
 
 def _to_json(value):
-    """Plain Python values for json.dumps: numpy arrays and scalars are converted."""
+    """Plain Python values for json.dumps: numpy values are converted, non-finite floats are None."""
     if isinstance(value, dict):
         return {
             (k.item() if isinstance(k, np.generic) else k): _to_json(v) for k, v in value.items()
@@ -61,7 +63,9 @@ def _to_json(value):
     if isinstance(value, np.ndarray):
         return _to_json(value.tolist())
     if isinstance(value, np.generic):
-        return value.item()
+        return _to_json(value.item())
+    if isinstance(value, float) and not math.isfinite(value):
+        return None
     return value
 
 
@@ -70,6 +74,11 @@ def _interval_or_none(samples, level: float) -> list[float] | None:
     if np.asarray(samples).size == 0:
         return None
     return list(interval(samples, level))
+
+
+def _unpenalised(negloglik: float) -> bool:
+    """False for a penalised optimum: the penalty is 1e12, so half of it is far above any fit."""
+    return bool(np.isfinite(negloglik) and negloglik < 0.5 * shadow.PENALTY)
 
 
 def _attempt(fn: Callable[[], object]):
@@ -100,11 +109,39 @@ def _code_unchanged(since: str, paths: tuple[str, ...] = CODE_PATHS) -> bool:
     )
 
 
+def _check_controls(gates: dict) -> None:
+    """Gates whose negative controls did not fail are uninformative: no run may rest on them."""
+    if gates.get("controls_ok") is not True:
+        raise SystemExit("gates.json controls_ok is not true; the gates are uninformative")
+
+
+def _check_constants(cfg: dict) -> None:
+    """Settings that the code reads from its own constants must match the configuration."""
+    n_starts = (
+        len(shadow.RHO_Q_STARTS) * len(shadow.SIGMA_DIAG_STARTS) * len(shadow.SIGMA_OFFDIAG_STARTS)
+    )
+    checks = {
+        "verdict_band": tuple(cfg["verdict_band"]) == decompose.VERDICT_BAND,
+        "acm.return_months": cfg["acm"]["return_months"] == acm.RETURN_MONTHS.tolist(),
+        "acm.factor_months": cfg["acm"]["factor_months"] == "3..120 step 3"
+        and acm.FACTOR_MONTHS.tolist() == list(range(3, 121, 3)),
+        "shadow.starts": cfg["shadow"]["starts"] == 20 and n_starts == 20,
+        "shadow.forward_months": cfg["shadow"]["forward_months"] == shadow.FORWARD_MONTHS.tolist(),
+    }
+    wrong = [field for field, ok in checks.items() if not ok]
+    if wrong:
+        raise SystemExit(f"config.json differs from the code constants: {', '.join(wrong)}")
+
+
 def freeze() -> None:
     if _dirty("macrokit"):
         raise SystemExit("commit everything under macrokit/ before freezing")
     config = json.loads(CONFIG.read_text())
+    if config.get("sha256") or (HERE / "results.json").exists():
+        raise SystemExit("already frozen; a new configuration is a new study (design §2.4)")
+    _check_constants(config)
     gates = json.loads(GATES.read_text())
+    _check_controls(gates)
     if not _code_unchanged(gates["code_commit"], ("macrokit/src",)):
         raise SystemExit("macrokit/src changed after the gates ran; re-run the gates first")
     config["code_commit"] = _git("rev-parse", "HEAD")
@@ -144,7 +181,7 @@ def _estimate(
         processes,
         cfg["shadow"]["maxiter"],
     )
-    shadow_ok = bool(fit_s.negloglik < shadow.PENALTY)
+    shadow_ok = _unpenalised(fit_s.negloglik)
     out: dict = {
         "decomposition": {},
         "draws": {},
@@ -243,9 +280,10 @@ def _long_acm_shares(panel: ZeroPanel, cfg: dict, t0: date, t1: date) -> dict:
 
 
 def _write_results(results: dict) -> None:
-    (HERE / "results.json").write_text(
-        json.dumps(_to_json(results), indent=2) + "\n", encoding="utf-8"
-    )
+    """Write beside the target and rename, so a reader never sees half a file."""
+    tmp = HERE / "results.json.tmp"
+    tmp.write_text(json.dumps(_to_json(results), indent=2) + "\n", encoding="utf-8")
+    os.replace(tmp, HERE / "results.json")
 
 
 def main() -> None:
@@ -257,11 +295,19 @@ def main() -> None:
     if args.freeze:
         freeze()
         return
+    if args.data_root is None:
+        parser.error("--data-root is required for the run")
+    if (HERE / "results.json").exists():
+        raise SystemExit("results.json exists; the Japanese run happens once (design §2.4)")
     cfg = json.loads(CONFIG.read_text())
     check_hash(cfg)
+    _check_constants(cfg)
     if not _code_unchanged(cfg["code_commit"]) or _dirty(*CODE_PATHS):
         raise SystemExit("code differs from the frozen commit")
     gates = json.loads(GATES.read_text())
+    _check_controls(gates)
+    if gates["code_commit"] != cfg["gates_commit"]:
+        raise SystemExit("gates.json changed after the freeze")
     models = [m for m in cfg["models"] if m in gates["passed_models"]]
 
     con = connect(args.data_root / "macrokit.duckdb")
@@ -320,20 +366,24 @@ def main() -> None:
     forwards = shadow.panel_forwards(panel, np.array(cfg["shadow"]["forward_months"]))
     by_start = []
     for value, theta in zip(fit_s.start_negloglik, fit_s.start_theta, strict=True):
-        if not value < shadow.PENALTY:  # a penalised optimum has no filtered states
-            by_start.append({"negloglik": float(value), "share": None})
-            continue
-        states = shadow.filtered_states(theta, forwards, fit_s.r_lower)
-        e = shadow.expected_short_average(theta, states, fit_s.r_lower, horizon)
-        by_start.append({"negloglik": float(value), "share": float(share_of(e, y, i0, i1))})
+        row: dict = {"negloglik": float(value), "share": None}
+        if _unpenalised(value):  # a penalised optimum has no filtered states
+            try:
+                states = shadow.filtered_states(theta, forwards, fit_s.r_lower)
+                e = shadow.expected_short_average(theta, states, fit_s.r_lower, horizon)
+                row["share"] = float(share_of(e, y, i0, i1))
+            except ValueError as exc:
+                row["error"] = f"{type(exc).__name__}: {exc}"
+        by_start.append(row)
     results["shadow_starts"] = sorted(by_start, key=lambda r: r["negloglik"])
     results["shadow_draws"] = main_run["fits"].get("shadow_draws")
     results["acm_bc_shrink"] = main_run["fits"]["acm_bc_shrink"]
 
     # The main block is complete: write it before anything supplementary can fail.
     _write_results(results)
-    print("MAIN RESULTS")
-    print(json.dumps(_to_json({"verdict": results["verdict"], "main": results["main"]}), indent=2))
+    print("MAIN RESULTS", flush=True)
+    summary = _to_json({"verdict": results["verdict"], "main": results["main"]})
+    print(json.dumps(summary, indent=2), flush=True)
 
     supp: dict = {}
     for n in cfg["supplementary_maturities"]:
