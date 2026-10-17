@@ -98,3 +98,13 @@ def test_loglik_penalises_non_stationary_dynamics():
     values = shadow.loglik(np.vstack([THETA, explosive]), forwards, 0.0)
     assert values[1] == -shadow.PENALTY
     assert np.isfinite(values[0]) and values[0] > -shadow.PENALTY
+
+
+def test_one_degenerate_member_does_not_penalise_the_batch():
+    forwards, _ = _simulated_forwards(50, np.random.default_rng(35))
+    degenerate = THETA.copy()
+    degenerate[22] = -40.0  # omega ~ 4e-18: the innovation matrix is numerically singular
+    alone = shadow.loglik(THETA, forwards, 0.0)
+    values = shadow.loglik(np.vstack([THETA, degenerate]), forwards, 0.0)
+    np.testing.assert_allclose(values[0], alone[0], rtol=1e-12)
+    assert values[1] == -shadow.PENALTY
