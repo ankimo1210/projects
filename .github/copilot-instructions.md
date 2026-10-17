@@ -14,3 +14,6 @@ Key points:
 - Never inspect `_data/`, `_logs/`, `_archive/`, `_scratch/`, generated
   outputs, or heavy binaries (see `.agentignore`).
 - Only `.env.example` is tracked — never commit real secrets.
+- Keep generated data small: estimate size before large runs, store only what
+  cannot be regenerated, and keep untracked data under `_data/<project>/`
+  (see "Large outputs & worktrees" in `AGENTS.md`).

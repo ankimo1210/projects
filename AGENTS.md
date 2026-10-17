@@ -31,6 +31,39 @@ project index is in the root [`README.md`](README.md).
 - Preserve user changes; make the smallest coherent change; ask before
   adding production dependencies or making broad refactors.
 
+## Large outputs & worktrees
+
+Research runs here have produced 100+ GiB of intermediate data that nobody
+needed and that one routine cleanup then destroyed (johnhull RB-F04,
+2026-10-17). Keep data small by design:
+
+- **Estimate before you run.** Before a long or large run, estimate its disk
+  and peak memory (runs × arrays × bytes). If one output root may exceed
+  30 GiB, write the estimate in the project's design/status doc and get the
+  user's approval first. Record the measured size (`du -sh`) when it finishes.
+- **Store what cannot be regenerated, nothing else.** Keep the code commit,
+  seeds, config, input hashes, final results, and verification summaries.
+  Regenerate intermediate arrays deterministically and compare hashes instead
+  of saving them. Record a failed run as a summary (where, why, hashes), not
+  as its raw arrays.
+- **One output root per run.** A root replaced by a newer completed run may
+  be deleted. Do not keep every retry "for the record".
+- Compress (`np.savez_compressed`, Parquet), share identical bytes, and
+  never commit large binaries (pre-commit caps added files at 2 MB). Heavy
+  artifacts that must survive go to the vaults in
+  `docs/decisions/0004-artifact-storage-and-evidence.md`.
+- **Untracked working data lives under `_data/<project>/`**, never inside a
+  worktree or a tool scratch directory such as `.superpowers/` (skills may
+  put small notes there, not outputs).
+- **`git worktree remove` silently deletes gitignored files inside the
+  worktree.** Before removing one, run `git -C <wt> status --ignored --short`
+  and `du -sh <wt>`, move anything needed to `_data/`, and check that no other
+  branch, worktree, or doc references it. Branch containment proves only that
+  tracked files are safe.
+
+johnhull adds research-specific rules in `johnhull/AGENTS.md`
+("研究データの保存方針").
+
 ## Agent instruction files
 
 | Layer | Canonical file | Notes |
