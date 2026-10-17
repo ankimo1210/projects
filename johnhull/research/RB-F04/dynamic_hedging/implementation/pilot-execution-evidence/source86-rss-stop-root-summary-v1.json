@@ -1,0 +1,139 @@
+{
+  "schema": "rb-f04-source86-rss-stop-root-summary-v1",
+  "observed_utc": "2026-10-13T22:19:25.735703+00:00",
+  "terminal": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-observation-v1/terminal.json",
+    "sha256": "02e17a83d690f914ce77009dfafc6ba31e6f3efbceeebee9e02491e17487ebf2",
+    "record": {
+      "bindings_unchanged": true,
+      "clock": {
+        "cpu": 73.098693592,
+        "utc": "2026-10-13T22:16:40.972214+00:00",
+        "wall": 133169.18491245
+      },
+      "exit_code": null,
+      "exit_code_reason": "observer is not original parent; no waitpid",
+      "financial_A_cap_projection": false,
+      "financial_qualification": "unknown",
+      "last_observation": {
+        "child_proc": {
+          "argv": [
+            "/home/kazumasa/projects/.venv/bin/python",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+            "--plan",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v7/locked-prior-metadata",
+            "--inputs",
+            "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs",
+            "--output",
+            "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v5",
+            "--bounded"
+          ],
+          "cpu_seconds_proc": 46975.98,
+          "pgid": 65198,
+          "pid": 65198,
+          "ppid": 1,
+          "sid": 65198,
+          "start_ticks": "8610788",
+          "state": "R",
+          "vm_hwm_bytes_proc": 17238245376
+        },
+        "child_rss_bytes": 14166462464,
+        "clock": {
+          "cpu": 73.026137242,
+          "utc": "2026-10-13T22:16:40.527058+00:00",
+          "wall": 133168.739753841
+        },
+        "elapsed_seconds": 47061.180336586986,
+        "parent_rss_bytes": 35069952,
+        "requested_stop": {
+          "limit_bytes": 17179869184,
+          "metric": "individual_child_rss",
+          "observed_bytes": 17231261696,
+          "observed_clock": {
+            "cpu": 73.02438516,
+            "utc": "2026-10-13T22:16:37.520110+00:00",
+            "wall": 133165.732810685
+          }
+        },
+        "signal_delivered": true,
+        "volumes": [
+          {
+            "free_bytes": 638004228096,
+            "id": "WSL",
+            "path": "/",
+            "reserve_bytes": 10737418240
+          },
+          {
+            "free_bytes": 292823031808,
+            "id": "C",
+            "path": "/mnt/c",
+            "reserve_bytes": 10737418240
+          },
+          {
+            "free_bytes": 42897899520,
+            "id": "F",
+            "path": "/mnt/f",
+            "reserve_bytes": 10737418240
+          }
+        ]
+      },
+      "missing_monitor_gap_costs_and_peaks": "unknown",
+      "next": "root native/saved inspection required; process endpoint is not numerical acceptance",
+      "observer_errors": [],
+      "original_parent_exit_cause": "unknown",
+      "requested_stop": {
+        "limit_bytes": 17179869184,
+        "metric": "individual_child_rss",
+        "observed_bytes": 17231261696,
+        "observed_clock": {
+          "cpu": 73.02438516,
+          "utc": "2026-10-13T22:16:37.520110+00:00",
+          "wall": 133165.732810685
+        }
+      },
+      "schema": "rb-f04-live-pilot-detached-watchdog-terminal-v1",
+      "signal_delivered": true,
+      "status": "unclosed_child_terminal_unknown",
+      "target": {
+        "argv": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+          "--plan",
+          "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v7/locked-prior-metadata",
+          "--inputs",
+          "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs",
+          "--output",
+          "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v5",
+          "--bounded"
+        ],
+        "pid": 65198,
+        "start_ticks": "8610788"
+      }
+    }
+  },
+  "processes_absent": {
+    "65198": true,
+    "71573": true
+  },
+  "native_root": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v5",
+  "published_receipts": 213,
+  "checkpoint_paths": [],
+  "required_scope": {
+    "pilot_jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "teacher_n": [
+      1024,
+      4096,
+      16384,
+      65536
+    ]
+  },
+  "financial_qualification": "unknown",
+  "numeric_saved_check_executed": false,
+  "checkpoint_reconstructed": false,
+  "original_source_plan_input_changed": false,
+  "original_parent_exit_code": "unknown",
+  "whole_costs_and_missing_monitor_gap": "unknown",
+  "next": "Preserve actual closed bytes and investigate candidate-gate memory before a separately bound full-scope execution."
+}

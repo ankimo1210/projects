@@ -1,0 +1,35 @@
+{
+  "schema": "rb-f04-gate-bounded-source-preparation-root-summary-v1",
+  "observed_utc": "2026-10-13T22:49:48.498017+00:00",
+  "source_root": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-bounded-source-v1",
+  "source_identity": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-bounded-source-v1/source-identity.json",
+    "bytes": 36396,
+    "sha256": "883048f696ea1d63678601bc3a2a08127cd69a998114edc1b765960e2c3eca44"
+  },
+  "normal_auth": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-bounded-source-v1/source-normal-auth.json",
+    "bytes": 111536,
+    "sha256": "a56ffc5c2464414484dc7935e654adcf09685773138acc8ce350f775d40bf452"
+  },
+  "preparation": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-bounded-source-v1/source-preparation.json",
+    "bytes": 10292,
+    "sha256": "46c4fbc3ac67ad177eb3d196aa26aadea6bf5144baeba7310800e323e9664c19"
+  },
+  "canonical_sha256": "77a5ed544de20c5ac52a4d68e1b4e5ed7e63a00df6f213360ff901e4e30d600c",
+  "native_sha256": "2f7528ed26b6bf2bbae72be755fc2fc1211f769062353dac00549ad28eca8c0d",
+  "root_verified": {
+    "all86_copy_live_sha_match": true,
+    "only_run_pilot_differs_from_archive": true,
+    "all86_actual_alias_origin_spec_sha_match": true,
+    "normal_identity_matches_prepared": true
+  },
+  "startup_scipy_docs_fixed_seed_rng_calls": 8,
+  "financial_calls": 0,
+  "new_plan_generated": false,
+  "metadata_guard_launch_approved": false,
+  "actual_16gib_fit_proven": false,
+  "financial_qualification": "unknown",
+  "cost_amendment_human_reply": "pending"
+}

@@ -1,0 +1,154 @@
+{
+  "checkpoint_present": false,
+  "commit_and_push_this_turn": false,
+  "cost_amendment_adopted": false,
+  "cost_amendment_user_reply": "pending",
+  "cost_observation_source_proof_only": {
+    "Linux_kernel_peak_RSS_bytes": 22056960,
+    "Linux_self_system_CPU_seconds": 0.121601,
+    "Linux_self_user_CPU_seconds": 0.12384,
+    "measured_wall_seconds": 3.853240744007053,
+    "scope": "owned one-off startup/import/reads/publish/standalone restores/checks/restore receipts; final store-receipt serialization and Windows process-creation tail unknown",
+    "start_UTC": "2026-10-13T13:53:04.218893+00:00",
+    "stop_after_operations_UTC": "2026-10-13T13:53:08.072127+00:00"
+  },
+  "created_utc": "2026-10-13T13:58:00.170899+00:00",
+  "entries": 184,
+  "execute_saved_check": false,
+  "financial_acceptance": false,
+  "financial_qualification": "unknown",
+  "financial_raw_or_plan_input_reads": 0,
+  "goal_turn_classification": "progress: code/proof preservation and two standalone byte restores",
+  "live_producer": {
+    "argv": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/johnhull/research/RB-F04/dynamic_hedging/run_pilot.py",
+      "--plan",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v7/locked-prior-metadata",
+      "--inputs",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-5-fullmixed-prior-budget-candidate-author-v1-typed-inputs",
+      "--output",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-v5",
+      "--bounded"
+    ],
+    "pid": 65198,
+    "start_ticks": "8610788",
+    "state": "R"
+  },
+  "live_watchdog": {
+    "argv": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "-B",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-v1.py",
+      "--prior",
+      "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-live-pilot-detached-watchdog-root-prior-v1.json",
+      "--prior-sha256",
+      "f67fce3c17e265f1186fc7ea684beedc52905774bea1c7153ecab53aa8e00137"
+    ],
+    "pid": 71573,
+    "start_ticks": "9593766",
+    "state": "S"
+  },
+  "logical_bytes": 4366034,
+  "manifest": {
+    "bytes": 45805,
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-check-entry-CAS-v1-manifest.json",
+    "sha256": "c150237702fc00b7d1b07e031bcd1807952761c44ddeedf4daa072b8b5c9d189"
+  },
+  "manifest_artifact_ref": "artifact:sha256:c150237702fc00b7d1b07e031bcd1807952761c44ddeedf4daa072b8b5c9d189",
+  "new_entries": [
+    {
+      "bytes": 11954,
+      "mime": "application/octet-stream",
+      "path": "saved-check-entry/source86-saved-check-entry-v1.py",
+      "ref": "artifact:sha256:afda3b68b11d01f4959a0e0f233a65c83f7da1b25b9e6c4fe05e87ca45fcd09e"
+    },
+    {
+      "bytes": 15583,
+      "mime": "application/octet-stream",
+      "path": "saved-check-entry/source86-saved-check-entry-v1-tests.py",
+      "ref": "artifact:sha256:680b17ca7f97a0bc7dd527876bafd17e4e9c0c46c2dda9c4300bc9cedb84f406"
+    },
+    {
+      "bytes": 14833,
+      "mime": "application/json",
+      "path": "saved-check-entry/source86-saved-check-entry-interface-v1.json",
+      "ref": "artifact:sha256:84d898dc9d2fd56dcdbb55fdb8a23946538d3a33f7101a8efc9f0c906fae9c80"
+    },
+    {
+      "bytes": 4856,
+      "mime": "application/json",
+      "path": "saved-check-entry/source86-saved-check-entry-review-v1.json",
+      "ref": "artifact:sha256:0c0a990632a0f8edc520d3f5f34ce345447c11d8613f477625d90acfb3195b89"
+    }
+  ],
+  "new_publication_each_store": {
+    "blobs": 5,
+    "content_bytes_including_manifest": 93031
+  },
+  "old180_entries_exactly_preserved": true,
+  "original_financial_cost_substitution": false,
+  "original_scope": {
+    "main_cells": 396,
+    "pilot_attempts": 51,
+    "pilot_cases": 121,
+    "pilot_jobs": 3138,
+    "teacher_N_candidates": [
+      1024,
+      4096,
+      16384,
+      65536
+    ]
+  },
+  "original_strict_costs_and_all51_obligations": "preserved; not declared closed or PASS",
+  "previous_manifest": {
+    "bytes": 44831,
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-verifier-source-proof-CAS-v1-manifest.json",
+    "sha256": "3b7a90e476474c0416afa66d928f607bf4118a69bb2573f1dbc40f4b3a6ce4c5"
+  },
+  "published_receipts_are_numerical_qualification": false,
+  "published_receipts_observed": 150,
+  "remaining": [
+    "real producer terminal/checkpoint/full native byte closure",
+    "trusted saved-only binding/resource/launch and full original numeric/selection/freeze",
+    "main396 and independent fresh/two financial semantic restores",
+    "external10/costs/three plots/notebook/final three suites/acceptance/main",
+    "#10 and #11 after #9 decision"
+  ],
+  "resource_reserve_before_after": "WSL/C/F all >=10GiB",
+  "root_independent_verification_scope": "four new files per restored copy plus new manifest/old180 entry equality and all referenced receipt/source hashes",
+  "rootlaunch_approved": false,
+  "schema": "rb-f04-source86-saved-check-entry-CAS-root-summary-v1",
+  "scope": "producer/verifier code and metadata proof bytes only; no financial semantic restore",
+  "source_adoption_approved": false,
+  "standalone_restores": [
+    {
+      "full184_verification": "standard restore and materializer receipt PASS",
+      "receipt_ref": {
+        "bytes": 2531,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-check-entry-CAS-v1-primary-restore-receipt.json",
+        "sha256": "2862d259a6f28bf940d555ede39f844cb29491775f9b8e990fc832ae6b4a88a1"
+      },
+      "role": "primary",
+      "root_independently_verified_new_entries": 4,
+      "root_verification": "all four content lengths/SHA PASS"
+    },
+    {
+      "full184_verification": "standard restore and materializer receipt PASS",
+      "receipt_ref": {
+        "bytes": 2521,
+        "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-check-entry-CAS-v1-mirror-restore-receipt.json",
+        "sha256": "d8ee4a85e6212618dcba44ba6c0e224bfadaf4509614ada9765b601780cfc7bd"
+      },
+      "role": "mirror",
+      "root_independently_verified_new_entries": 4,
+      "root_verification": "all four content lengths/SHA PASS"
+    }
+  ],
+  "standard_store_receipt": {
+    "bytes": 7635,
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-check-entry-CAS-v1-store-receipt.json",
+    "sha256": "ea928191b7632d03768942f7a32058ac54bd6202931c3a74679502a1fe312b91"
+  },
+  "this_turn_production_code_changes": 0
+}

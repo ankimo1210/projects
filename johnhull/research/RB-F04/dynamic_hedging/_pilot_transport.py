@@ -1,7 +1,8 @@
 """Private paged transport for nonteacher pilot payloads.
 
-Content sharing is local to one immutable artifact. Each decoded occurrence is
-independent; byte digests authenticate storage and do not qualify finance.
+Content sharing keeps each artifact self-contained, including exact compressed
+pages reused from published siblings. Each decoded occurrence is independent;
+byte digests authenticate storage and do not qualify finance.
 """
 
 from __future__ import annotations
@@ -26,6 +27,9 @@ SCHEMA = "rb-f04-pilot-typed-dag-v1"
 PAGE_SCHEMA = "rb-f04-pilot-typed-dag-page-v1"
 MAX_PAGE_RAW = 64 * 1024**2
 _FILE_NAMES = {"metadata.json", "arrays.npz", "receipt.json"}
+_SHARED_PAGE_SCOPES = OrderedDict()
+_MAX_SHARED_SCOPES = 64
+_MAX_SHARED_PAGES = 8192
 
 
 def _json(value):
@@ -57,6 +61,62 @@ def _file_roster(directory, directories=()):
         path = directory / name
         if path.is_symlink() or not path.is_dir():
             raise ValueError("invalid artifact page directory")
+
+
+def _shared_pages(parent):
+    """Bound process-local hints; immutable bytes are authenticated on reuse."""
+    if parent not in _SHARED_PAGE_SCOPES:
+        _SHARED_PAGE_SCOPES[parent] = OrderedDict()
+    _SHARED_PAGE_SCOPES.move_to_end(parent)
+    while len(_SHARED_PAGE_SCOPES) > _MAX_SHARED_SCOPES:
+        _SHARED_PAGE_SCOPES.popitem(last=False)
+    return _SHARED_PAGE_SCOPES[parent]
+
+
+def _file_hash(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        while data := stream.read(1024**2):
+            digest.update(data)
+    return digest.hexdigest()
+
+
+def _share_page_npz(path, digest, parent):
+    """Replace only our temporary NPZ with an authenticated sibling hardlink."""
+    pages = _shared_pages(parent)
+    candidate = pages.get(digest)
+    if candidate is None:
+        return
+    link = path.with_name(".arrays-shared.npz")
+    try:
+        candidate = _path(candidate)
+        if not candidate.is_file() or _file_hash(candidate) != digest:
+            pages.pop(digest, None)
+            return
+        os.link(candidate, link)
+        if _file_hash(link) != digest:
+            pages.pop(digest, None)
+            return
+        os.replace(link, path)
+        pages.move_to_end(digest)
+    except (OSError, ValueError):
+        # Missing, altered, symlinked or unsupported siblings never prevent
+        # the ordinary newly written, self-contained artifact from completing.
+        pages.pop(digest, None)
+    finally:
+        if link.exists():
+            link.unlink()
+
+
+def _remember_pages(parent, directory, refs):
+    """Register only pages whose complete artifact was successfully published."""
+    pages = _shared_pages(parent)
+    for ref in refs:
+        digest = ref["receipt"]["arrays_sha256"]
+        pages[digest] = directory / ref["path"] / "arrays.npz"
+        pages.move_to_end(digest)
+    while len(pages) > _MAX_SHARED_PAGES:
+        pages.popitem(last=False)
 
 
 def _array_chunks(array):
@@ -127,8 +187,9 @@ def _write_npy(sink, array):
 
 
 class _PageSink:
-    def __init__(self, directory, kind, limit, protocol):
+    def __init__(self, directory, kind, limit, protocol, parent, after_page):
         self.directory, self.kind, self.limit, self.protocol = directory, kind, limit, protocol
+        self.parent, self.after_page = parent, after_page
         self.buffer = bytearray()
         self.offset = 0
         self.refs = []
@@ -163,6 +224,10 @@ class _PageSink:
             arrays={"blob": np.frombuffer(compressed, dtype=np.uint8)},
             compress=False,
         )
+        path = self.directory / name
+        _share_page_npz(path / "arrays.npz", receipt["arrays_sha256"], self.parent)
+        if self.after_page is not None:
+            self.after_page(path)
         self.refs.append({"path": name, **metadata, "receipt": receipt})
         self.offset += len(self.buffer)
         self.buffer.clear()
@@ -257,7 +322,9 @@ class _Encoder:
             self.active.remove(identity)
 
 
-def write_transport(directory, payload, *, protocol, runner, page_raw_limit=MAX_PAGE_RAW):
+def write_transport(
+    directory, payload, *, protocol, runner, page_raw_limit=MAX_PAGE_RAW, after_page=None
+):
     """Write bounded physical pages, then expose a complete exclusive root."""
     limit = _integer(page_raw_limit, "page raw limit", 1)
     if limit > MAX_PAGE_RAW:
@@ -269,11 +336,13 @@ def write_transport(directory, payload, *, protocol, runner, page_raw_limit=MAX_
     temporary = Path(tempfile.mkdtemp(prefix=f".{directory.name}-transport-", dir=directory.parent))
     reservation = None
     try:
-        array_sink = _PageSink(temporary, "arrays", limit, protocol)
+        array_sink = _PageSink(temporary, "arrays", limit, protocol, directory.parent, after_page)
         encoder = _Encoder(array_sink, runner)
         root_node = encoder.encode(payload)
         array_pages = array_sink.finish()
-        metadata_sink = _PageSink(temporary, "metadata", limit, protocol)
+        metadata_sink = _PageSink(
+            temporary, "metadata", limit, protocol, directory.parent, after_page
+        )
         header = {"root": root_node, "nodes": len(encoder.nodes), "arrays": len(encoder.arrays)}
         records = [["header", header]]
         for record in records:
@@ -298,6 +367,8 @@ def write_transport(directory, payload, *, protocol, runner, page_raw_limit=MAX_
         # after every page has closed successfully.
         index_directory = temporary / ".root-index"
         receipt = protocol.write_artifact(index_directory, metadata=metadata, arrays={})
+        if after_page is not None:
+            after_page(index_directory)
         for name in _FILE_NAMES:
             (index_directory / name).rename(temporary / name)
         index_directory.rmdir()
@@ -310,6 +381,7 @@ def write_transport(directory, payload, *, protocol, runner, page_raw_limit=MAX_
         os.replace(temporary, directory)
         temporary = None
         reservation = None
+        _remember_pages(directory.parent, directory, metadata["pages"])
         return receipt
     finally:
         if reservation is not None and directory.exists():

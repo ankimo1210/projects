@@ -1,9 +1,11 @@
 """Small synthetic transport checks; storage provenance, not finance qualification."""
 
 import copy
+import errno
 import hashlib
 import importlib
 import json
+import shutil
 import sys
 import zlib
 from pathlib import Path
@@ -71,6 +73,166 @@ def test_empty_payload_has_one_metadata_page(tmp_path):
     assert metadata["schema"] == "rb-f04-pilot-typed-dag-v1"
     assert metadata["array_count"] == 0
     assert [page["kind"] for page in metadata["pages"]] == ["metadata"]
+
+
+def _allocated_files(root):
+    files = [p.stat() for p in root.rglob("*") if p.is_file()]
+    unique = {(s.st_dev, s.st_ino): s.st_blocks * 512 for s in files}
+    return sum(s.st_blocks * 512 for s in files), sum(unique.values())
+
+
+def _page_arrays(root, metadata):
+    return [root / ref["path"] / "arrays.npz" for ref in metadata["pages"]]
+
+
+def test_separate_rollouts_share_compressed_pages_without_changing_receipts(tmp_path):
+    common = np.sin(np.arange(131072, dtype=float)).reshape(1024, 128)
+    common.setflags(write=False)
+    payloads = [{"dataset": common, "rollout": np.arange(16.0) + i} for i in range(2)]
+    paths, metadata = [], []
+    original_bytes = None
+    for index, payload in enumerate(payloads):
+        root = tmp_path / f"job{index}"
+        receipt = codec().write_transport(
+            root, payload, protocol=protocol, runner=runner, page_raw_limit=65536
+        )
+        meta, _, actual = protocol.read_artifact(root)
+        recovered, read_receipt = codec().read_transport(
+            root, meta, receipt, protocol=protocol, runner=runner
+        )
+        assert actual == read_receipt == receipt
+        assert runner.payload_digest(recovered) == runner.payload_digest(payload)
+        assert recovered["dataset"].flags.writeable
+        recovered["dataset"][0, 0] = 99
+        assert common[0, 0] == pytest.approx(0)
+        paths.append(root)
+        metadata.append(meta)
+        if index == 0:
+            original_bytes = {
+                p.relative_to(root): p.read_bytes() for p in root.rglob("*") if p.is_file()
+            }
+        else:
+            assert original_bytes == {
+                p.relative_to(paths[0]): p.read_bytes() for p in paths[0].rglob("*") if p.is_file()
+            }
+    first_pages = _page_arrays(paths[0], metadata[0])
+    second_pages = _page_arrays(paths[1], metadata[1])
+    shared = sum(a.samefile(b) for a, b in zip(first_pages, second_pages, strict=True))
+    assert shared >= 16, "common saved dataset pages should not be written twice"
+    repeated, unique = _allocated_files(tmp_path)
+    assert unique < repeated * 0.75, "actual allocated data should reflect page sharing"
+    copied = tmp_path.parent / f"{tmp_path.name}-restored"
+    shutil.copytree(paths[1], copied)
+    shutil.rmtree(paths[0])
+    shutil.rmtree(paths[1])
+    meta, _, receipt = protocol.read_artifact(copied)
+    recovered, _ = codec().read_transport(copied, meta, receipt, protocol=protocol, runner=runner)
+    assert runner.payload_digest(recovered) == runner.payload_digest(payloads[1])
+
+
+@pytest.mark.parametrize("change", ["bytes", "symlink"])
+def test_invalid_shared_page_candidate_does_not_poison_new_artifact(tmp_path, change):
+    payload = {"dataset": np.arange(128.0)}
+    first, metadata, _, _ = write_read(tmp_path, payload)
+    candidate = _page_arrays(first, metadata)[0]
+    if change == "bytes":
+        candidate.write_bytes(b"changed compressed page")
+    else:
+        outside = tmp_path / "outside.npz"
+        candidate.rename(outside)
+        candidate.symlink_to(outside)
+    second = tmp_path / "second"
+    receipt = codec().write_transport(
+        second, payload, protocol=protocol, runner=runner, page_raw_limit=256
+    )
+    second_meta, _, _ = protocol.read_artifact(second)
+    recovered, _ = codec().read_transport(
+        second, second_meta, receipt, protocol=protocol, runner=runner
+    )
+    assert runner.payload_digest(recovered) == runner.payload_digest(payload)
+    assert not candidate.samefile(_page_arrays(second, second_meta)[0])
+
+
+def test_hardlink_unavailable_preserves_normal_saved_pages(tmp_path, monkeypatch):
+    payload = {"dataset": np.arange(128.0)}
+    first, metadata, _, _ = write_read(tmp_path, payload)
+
+    def unavailable(*args, **kwargs):
+        raise OSError(errno.EXDEV, "synthetic unsupported hardlink")
+
+    monkeypatch.setattr(codec().os, "link", unavailable)
+    second = tmp_path / "second"
+    receipt = codec().write_transport(
+        second, payload, protocol=protocol, runner=runner, page_raw_limit=256
+    )
+    second_meta, _, _ = protocol.read_artifact(second)
+    recovered, _ = codec().read_transport(
+        second, second_meta, receipt, protocol=protocol, runner=runner
+    )
+    assert runner.payload_digest(recovered) == runner.payload_digest(payload)
+    assert not _page_arrays(first, metadata)[0].samefile(_page_arrays(second, second_meta)[0])
+
+
+def test_failed_publish_does_not_register_temporary_pages(tmp_path, monkeypatch):
+    module = codec()
+    original_replace = module.os.replace
+
+    def fail_publish(*args):
+        raise OSError("synthetic publish failure")
+
+    monkeypatch.setattr(module.os, "replace", fail_publish)
+    with pytest.raises(OSError, match="publish failure"):
+        module.write_transport(
+            tmp_path / "failed", {"dataset": np.arange(128.0)}, protocol=protocol, runner=runner
+        )
+    assert not module._SHARED_PAGE_SCOPES.get(tmp_path)
+    assert not list(tmp_path.iterdir())
+    monkeypatch.setattr(module.os, "replace", original_replace)
+    _, _, _, recovered = write_read(tmp_path, {"dataset": np.arange(128.0)})
+    np.testing.assert_array_equal(recovered["dataset"], np.arange(128.0))
+
+
+def test_after_page_hook_observes_shared_allocations_before_publish(tmp_path):
+    payload = {"dataset": np.arange(128.0)}
+    first, metadata, _, _ = write_read(tmp_path, payload)
+    second = tmp_path / "second"
+    observed = []
+
+    def observe(page):
+        assert not second.exists(), "capacity check must precede root publication"
+        assert page.is_dir()
+        observed.append((page.name, (page / "arrays.npz").stat().st_ino))
+
+    codec().write_transport(
+        second, payload, protocol=protocol, runner=runner, page_raw_limit=256, after_page=observe
+    )
+    assert observed[-1][0] == ".root-index"
+    assert observed[0][1] == _page_arrays(first, metadata)[0].stat().st_ino
+
+
+def test_after_page_stop_preserves_original_and_does_not_publish(tmp_path):
+    original, metadata, _, _ = write_read(tmp_path, {"dataset": np.arange(128.0)})
+    original_npz = _page_arrays(original, metadata)[0].read_bytes()
+    second = tmp_path / "stopped"
+
+    def stop(page):
+        raise OSError("synthetic administrative capacity stop")
+
+    with pytest.raises(OSError, match="administrative capacity stop"):
+        codec().write_transport(
+            second,
+            {"dataset": np.arange(128.0)},
+            protocol=protocol,
+            runner=runner,
+            page_raw_limit=256,
+            after_page=stop,
+        )
+    assert not second.exists()
+    assert sorted(tmp_path.iterdir()) == [original]
+    assert _page_arrays(original, metadata)[0].read_bytes() == original_npz
+    assert all(
+        "stopped" not in str(path) for path in codec()._SHARED_PAGE_SCOPES[tmp_path].values()
+    )
 
 
 def test_normalization_and_independent_occurrences(tmp_path):

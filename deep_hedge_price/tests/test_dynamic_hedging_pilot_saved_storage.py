@@ -416,6 +416,96 @@ def test_bounded_original_dependency_resolution_preserves_order_values_and_tail(
     assert delayed[-1]["status"] == "unclosed_source_or_solver_defect"
 
 
+def test_bounded_embedded_gate_evidence_is_lazy_and_releases_each_row():
+    reads = []
+    refs = []
+
+    class FreshJobs:
+        def __getitem__(self, identifier):
+            reads.append(identifier)
+            values = np.full(32, int(identifier.split(":")[-1]), dtype=float)
+            refs.append(weakref.ref(values))
+            return {"status": "executed", "raw": {"values": values}}
+
+    specification = [
+        {
+            "id": f"job:{i}",
+            "operation": "call_table",
+            "raw": {"job": f"job:{i}"},
+            "arguments": {
+                "original_values": {"job": f"job:{i}", "path": ["values"]},
+                "controls": {},
+            },
+        }
+        for i in range(4)
+    ]
+    # Preserve embedded arguments rather than replacing them with a locked job's
+    # potentially different controls. Only the loading schedule may change.
+    planned = {
+        f"job:{i}": {"operation": "call_table", "arguments": {"controls": {"delta": 36}}}
+        for i in range(4)
+    }
+    sequence = run_pilot._resolve(
+        specification, {}, FreshJobs(), planned_jobs=planned, bounded=True
+    )
+    assert isinstance(sequence, storage.DeferredSequence)
+    assert reads == [], "bounded gate hydrated evidence before iteration"
+    assert len(sequence) == len(specification)
+    for i in range(len(sequence)):
+        gc.collect()
+        assert all(ref() is None for ref in refs), "previous gate row retained"
+        value = sequence[i]
+        assert value["id"] == f"job:{i}"
+        assert value["operation"] == "call_table"
+        assert value["arguments"]["controls"] == {}
+        assert np.allclose(value["raw"]["values"], np.full(32, float(i)))
+        assert np.allclose(value["arguments"]["original_values"], np.full(32, float(i)))
+        assert reads == [f"job:{j}" for j in range(i + 1) for _ in range(2)]
+        del value
+    gc.collect()
+    assert all(ref() is None for ref in refs)
+
+
+def test_bounded_embedded_gate_evidence_preserves_original_provenance_identity():
+    original = {f"job:{i}": {"raw": {"values": np.arange(8, dtype=float) + i}} for i in range(3)}
+    specification = [
+        {
+            "id": identifier,
+            "operation": "call_table",
+            "arguments": {"controls": {}, "original_n": 1024},
+            "raw": {"job": identifier},
+        }
+        for identifier in original
+    ]
+    eager = run_pilot._resolve(specification, {}, original)
+    delayed = run_pilot._resolve(specification, {}, original, bounded=True)
+    assert isinstance(eager, list)
+    assert isinstance(delayed, storage.DeferredSequence)
+    assert [value["id"] for value in delayed] == list(original)
+    for i, value in enumerate(delayed):
+        assert np.allclose(value["raw"]["values"], np.arange(8, dtype=float) + i)
+        assert value["arguments"] == {"controls": {}, "original_n": 1024}
+    # These hashes bind transport/provenance; numerical values are checked above.
+    assert run_pilot.input_identity(delayed) == run_pilot.input_identity(eager)
+    assert storage.payload_digest(delayed) == original_digest(eager)
+
+
+def test_bounded_embedded_gate_evidence_keeps_mixed_and_empty_lists_eager():
+    original = {"job:0": {"raw": {"values": np.arange(8, dtype=float)}}}
+    evidence = {
+        "id": "job:0",
+        "operation": "call_table",
+        "arguments": {"controls": {}},
+        "raw": {"job": "job:0"},
+    }
+    mixed = [evidence, {"date_index": 0, "job_id": "job:0"}]
+    resolved = run_pilot._resolve(mixed, {}, original, bounded=True)
+    assert isinstance(resolved, list)
+    assert resolved[1] == mixed[1]
+    assert np.allclose(resolved[0]["raw"]["values"], np.arange(8, dtype=float))
+    assert run_pilot._resolve([], {}, original, bounded=True) == []
+
+
 def test_bounded_saved_arithmetic_reads_restored_root_only(tmp_path):
     import check_pilot
 

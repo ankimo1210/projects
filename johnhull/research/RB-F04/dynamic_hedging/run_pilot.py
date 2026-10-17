@@ -9,8 +9,12 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import os
+import shutil
 import sys
+import tempfile
 from collections.abc import Mapping
+from contextlib import contextmanager
 from pathlib import Path
 from time import perf_counter, perf_counter_ns, process_time, process_time_ns
 
@@ -22,6 +26,7 @@ if __name__ == "__main__":
     ]
 
 import _pilot_saved_storage as saved_storage
+import _pilot_storage_budget as storage_budget
 import _pilot_transport as pilot_transport
 import _teacher_storage as teacher_storage
 import numpy as np
@@ -1556,6 +1561,33 @@ def run_closure_job(**arguments):
 CLOSURE_SCHEMA = "rb-f04-pilot-closure-boundaries-v1"
 
 
+@contextmanager
+def _staged_artifact_root(directory):
+    """Publish only a complete writer-owned artifact without replacing another."""
+    directory = Path(directory)
+    if directory.exists():
+        raise FileExistsError(directory)
+    directory.parent.mkdir(parents=True, exist_ok=True)
+    temporary = Path(tempfile.mkdtemp(prefix=f".{directory.name}-staged-", dir=directory.parent))
+    staged = temporary / "artifact"
+    reservation = None
+    try:
+        yield staged
+        directory.mkdir(exist_ok=False)
+        reservation = directory.stat()
+        if any(directory.iterdir()) or directory.stat().st_ino != reservation.st_ino:
+            raise ValueError("artifact destination changed before publish")
+        os.replace(staged, directory)
+        reservation = None
+    finally:
+        if reservation is not None and directory.exists():
+            if directory.stat().st_ino == reservation.st_ino and not any(directory.iterdir()):
+                directory.rmdir()
+        # Only this newly created sibling staging directory is removed.
+        shutil.rmtree(temporary)
+
+
+@storage_budget.atomic_write
 def write_closure_artifact(directory, raw):
     """Bind every original fit/validation/dataset/risk boundary without downsampling."""
     directory = Path(directory)
@@ -1616,11 +1648,14 @@ def write_closure_artifact(directory, raw):
         }
 
     tree = split(raw, ())
-    receipt = protocol.write_artifact(
-        directory, metadata={"schema": CLOSURE_SCHEMA, "tree": tree}, arrays={}
-    )
-    for identifier, path, value in parts:
-        write_pilot_artifact(directory / identifier, {"path": list(path), "value": value})
+    budget = storage_budget.current_budget()
+    with _staged_artifact_root(directory) as staged:
+        receipt = protocol.write_artifact(
+            staged, metadata={"schema": CLOSURE_SCHEMA, "tree": tree}, arrays={}
+        )
+        budget.after_page(staged)
+        for identifier, path, value in parts:
+            write_pilot_artifact(staged / identifier, {"path": list(path), "value": value})
     return receipt
 
 
@@ -1812,6 +1847,7 @@ def run_market_pair_job(
     }
 
 
+@storage_budget.atomic_write
 def write_pilot_artifact(directory, payload):
     """Save every logical value with bounded pages or the fixed teacher recipe.
 
@@ -1820,9 +1856,18 @@ def write_pilot_artifact(directory, payload):
     legacy readers remain available. Byte identities establish provenance only.
     """
     directory = Path(directory)
+    budget = storage_budget.current_budget() or storage_budget.StorageBudget(directory)
+    budget.before_write()
     payload, storage_descriptor = teacher_storage.prepare_teacher(payload)
     if storage_descriptor is None:
-        return pilot_transport.write_transport(directory, payload, protocol=protocol, runner=runner)
+        return pilot_transport.write_transport(
+            directory,
+            payload,
+            protocol=protocol,
+            runner=runner,
+            page_raw_limit=8 * 1024**2,
+            after_page=budget.after_page,
+        )
     arrays = {}
     tree = runner._encode_tree(payload, arrays)
     descriptors, packs = {}, []
@@ -1863,15 +1908,18 @@ def write_pilot_artifact(directory, payload):
     metadata = {"schema": PACK_SCHEMA, "tree": tree, "arrays": descriptors}
     if storage_descriptor is not None:
         metadata["teacher_storage"] = storage_descriptor
-    receipt = protocol.write_artifact(directory, metadata=metadata, arrays={})
-    for index, (values, entries) in enumerate(packs):
-        identifier = f"pack{index:06d}"
-        protocol.write_artifact(
-            directory / identifier,
-            metadata={"schema": PACK_SCHEMA, "part": identifier, "entries": entries},
-            arrays=values,
-            compress=storage_descriptor is not None,
-        )
+    with _staged_artifact_root(directory) as staged:
+        receipt = protocol.write_artifact(staged, metadata=metadata, arrays={})
+        budget.after_page(staged)
+        for index, (values, entries) in enumerate(packs):
+            identifier = f"pack{index:06d}"
+            protocol.write_artifact(
+                staged / identifier,
+                metadata={"schema": PACK_SCHEMA, "part": identifier, "entries": entries},
+                arrays=values,
+                compress=storage_descriptor is not None,
+            )
+            budget.after_page(staged / identifier)
     return receipt
 
 
@@ -2057,8 +2105,9 @@ def _resolve(value, inputs, results, *, planned_jobs=None, bounded=False):
             for k, v in value.items()
         }
     if isinstance(value, list):
-        # Only full saved evidence rows are delayed. Configuration and binding
-        # lists retain their original list equality and serialization semantics.
+        # Full evidence rows may embed original arguments or refer to locked
+        # job arguments. Delay either shape without changing the row itself.
+        # Configuration and binding lists retain their original list semantics.
         evidence_rows = bool(value) and all(
             isinstance(row, dict)
             and (
@@ -2068,7 +2117,6 @@ def _resolve(value, inputs, results, *, planned_jobs=None, bounded=False):
                     and isinstance(row["raw"], dict)
                     and set(row["raw"]) == {"job"}
                     and isinstance(row["arguments"], dict)
-                    and set(row["arguments"]) == {"job_arguments"}
                 )
             )
             for row in value
@@ -4115,6 +4163,7 @@ def validate_locked_plan(plan):
     return candidate
 
 
+@storage_budget.bounded_execution
 def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False, bounded=False):
     """Execute independent jobs after caps; stop on source or solver defects.
 

@@ -14,6 +14,7 @@ import tempfile
 from collections.abc import Mapping, MutableMapping, Sequence
 from pathlib import Path
 
+import _pilot_storage_budget as storage_budget
 import numpy as np
 from hullkit._heston_local_surface import HestonParameters
 
@@ -260,6 +261,7 @@ class SavedChecks(MutableMapping):
     def __init__(self, directory, *, references=(), reader=None):
         self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=True)
+        self.storage_budget = None
         self.references = {r["id"]: r for r in references}
         _require(len(self.references) == len(references), "duplicate saved check reference")
         self.reader = reader
@@ -305,7 +307,11 @@ class SavedChecks(MutableMapping):
         _require(not path.exists(), "saved check artifact is immutable")
         record = {"schema": _CHECK_SCHEMA, "id": key, "value": value}
         digest = payload_digest(record)
-        receipt = write_pilot_artifact(path, record)
+        budget = storage_budget.current_budget() or self.storage_budget
+        if budget is None:
+            budget = self.storage_budget = storage_budget.StorageBudget(self.directory)
+        with storage_budget.storage_scope(budget):
+            receipt = write_pilot_artifact(path, record)
         self.references[key] = {
             "id": key,
             "path": relative,
@@ -325,6 +331,7 @@ class SavedChecks(MutableMapping):
                 allow_nan=False,
             )
             stream.write("\n")
+        budget.record_file(target)
 
     def __delitem__(self, key):
         raise ValueError("saved check value is immutable")

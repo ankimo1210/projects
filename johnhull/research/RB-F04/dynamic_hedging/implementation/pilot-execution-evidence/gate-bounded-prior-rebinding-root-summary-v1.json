@@ -1,0 +1,59 @@
+{
+  "schema": "rb-f04-gate-bounded-prior-rebinding-root-summary-v1",
+  "created_utc": "2026-10-13T23:17:53.074669+00:00",
+  "author": "root",
+  "source_files": 86,
+  "source_identity": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-evidence-bounded-source-v1/source-identity.json",
+    "sha256": "883048f696ea1d63678601bc3a2a08127cd69a998114edc1b765960e2c3eca44"
+  },
+  "source_evidence": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-rebind-evidence-v8.json",
+    "sha256": "15b16a43c2c33e9b9d7eaf539bffebeb3062d6790e82abd33ddcb1c63b01cc7f"
+  },
+  "materializer": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-preparation-v8.py",
+    "sha256": "37b67039b293bf1467cff1b7570a08bd234f9f20edb47af51459fc8eaeb4e0c8"
+  },
+  "author_preparation": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-materializer-candidate-preparation-v1.json",
+    "sha256": "5ab0f4cee2cb49a0ecba381b54ad9cee76fe771b48f0d7a9cd2ad8462b6b27cc"
+  },
+  "author_source_metadata_tests": 19,
+  "independent_full_prior_decision": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/independent-formal-prior-v8-decision-v1.json",
+    "sha256": "44554e4f9fa980f5e517f6bd342e953b9126f9d66eccfd27fce351aee98e6603"
+  },
+  "independent_source_metadata_checks": 43,
+  "root_metadata_only_approval": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-actual-root-approval-v6.json",
+    "sha256": "d662e5b100f2fbe8f4ef406c18ef60fc97f583a0e2b5b986049f0721caf73129"
+  },
+  "operational_resource_prior": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-pilot-root-operational-resource-prior-v6.json",
+    "sha256": "b9a08a184378925ea4a550c7fbf72976ec9fc779910b4b2398c0ad30e14edf7d"
+  },
+  "root_verified": {
+    "actual_limited_source_decision_and_separate_root_approval": true,
+    "all86_current_source_prepared_bytes_and_actual_aliases": true,
+    "actual_rebind_source_evidence_API": true,
+    "all3138_budget_values_unchanged_except_actual_review_SHA": true,
+    "exact18_current_source_recipe_and_helper_bindings": true,
+    "original3138_121_51_all4N_573122caps_2332activations_65thresholds_16blocks_external10": true,
+    "root_approval_source_prior_assembly_resource_preflight": true,
+    "old_failed_roots_raw_unknown_costs_and_no_resume": true
+  },
+  "decision": {
+    "new_full_prior_static_approved": true,
+    "new_metadata_generation_approved": true,
+    "actual_new_full_metadata_generated": false,
+    "actual_materialized_plan_approved": false,
+    "actual_new_launch_guard_approved": false,
+    "financial_launch_approved": false,
+    "actual_full_scope_completion_proven": false,
+    "actual_16GiB_fit_proven": false,
+    "cost_missingness_exception_adopted": false,
+    "financial_qualification": "unknown"
+  },
+  "next": "Generate only full current-source metadata under existing administrative allowance; independently verify actual standard reader and lock before any fresh financial launch."
+}

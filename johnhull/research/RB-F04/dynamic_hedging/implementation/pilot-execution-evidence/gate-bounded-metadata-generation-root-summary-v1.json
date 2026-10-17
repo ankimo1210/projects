@@ -1,0 +1,73 @@
+{
+  "schema": "rb-f04-gate-bounded-metadata-generation-root-summary-v1",
+  "created_utc": "2026-10-13T23:46:10.730202+00:00",
+  "actual_metadata_terminal": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-metadata-root-observation-gate-bounded-v1/parent-cost-and-status.json",
+    "sha256": "e2d2e9a819c297ef58acc6d5a3ff369928767a20156c8ace09f31672eefe719c"
+  },
+  "native_closure": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-actual-metadata-native-closure-v1.json",
+    "sha256": "7b67f4e26ec189ffe33946f1166853ee5c6ed4f5c4be7a4009f4a4eedbc22a6c"
+  },
+  "manifest": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/task-5-formal-prior-lock-materialized-root-v8/manifest.json",
+    "sha256": "cbbe9dd6ed0c031822819df92cc7be119af6ee4b316e31405fca6ec783e6b057"
+  },
+  "root_guard_preflight": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-actual-root-guard-preflight-v1.json",
+    "sha256": "71cbf50913ae8a68c43d6d4bf6db3c840ebb84c0979393d7d0527ac8756d35b9"
+  },
+  "active_enclosing_binding": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-active-enclosing-binding-root-record-v1.json",
+    "sha256": "506ce4f89089cc69f4c127e2cdc91ee316846d33ed36d48f36e4d2432678a6a3"
+  },
+  "F_drvfs_recovery": {
+    "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-guard-F-ENODEV-recovery-root-record-v1.json",
+    "sha256": "7c70d08c11dbcdb9f5bde071adadcc5bf0ced9e4e83272a243e3f558b7d51288"
+  },
+  "actual_generated": {
+    "jobs": 3138,
+    "cases": 121,
+    "obligations": 51,
+    "teacher_N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "literal_cap_options": 573122,
+    "source_files": 86,
+    "native_files": 127,
+    "native_path_bytes": 17078043,
+    "actual_lock_API_validate_and_source_binding": "PASS",
+    "source_before_after_stable": true,
+    "native_roster_size_all_SHA_and_stats_verified": true
+  },
+  "measurement": {
+    "metadata_wall_seconds": 421.75882673298474,
+    "kernel_peak_RSS_bytes": 4355313664,
+    "individual_process_limit_bytes": 17179869184,
+    "metadata_file_bytes_are_not_peak_RSS": true,
+    "administrative_cap": null,
+    "actual_exit_code": 0,
+    "actual_direct_owned_reap": true,
+    "own_final_receipt_write_stdout_cost": null
+  },
+  "root_verification": {
+    "guard_load_and_source_binding_with_actual17MB_metadata": "PASS",
+    "monitor_AST_body_unchanged_except_two_auth_constants": true,
+    "enclosing_AST_body_unchanged_except_four_auth_constants": true,
+    "active_monitor_and_enclosing_ruff_format_compile": "PASS",
+    "F_mount_restored_same_endpoint_no_datafiles_modified": true
+  },
+  "decision": {
+    "actual_metadata_generation_complete": true,
+    "independent_actual_standard_reader_verification_complete": false,
+    "actual_financial_dispatch_started": false,
+    "financial_qualification": "unknown",
+    "actual_full16GiB_financial_fit_proven": false,
+    "cost_exception_adopted": false,
+    "old_partial213_resumed_relabelled_or_checkpoint_synthesized": false
+  },
+  "next": "Finish independent standard-reader full plan and actual alias verification; only then launch one fresh full-scope bounded numerical worker under detached direct-owner monitor."
+}

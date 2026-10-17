@@ -1,0 +1,141 @@
+{
+  "schema": "rb-f04-root-saved-verifier-entry-preparation-v1",
+  "recorded_at_UTC": "2026-10-14T00:28:19.101200+00:00",
+  "scope": "source authentication and saved-entry mechanics preparation only",
+  "status": "PASS_limited_preparation_actual_saved_check_pending",
+  "references": {
+    "normal_source_auth": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-verifier-normal-source-auth-v1.json",
+      "sha256": "58ed5dc14c5259fa979a0cbcd1573a450871b4dd5cf7e3e4e49f6e01754b4fff",
+      "bytes": 165891
+    },
+    "verifier_source_preparation": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-verifier-readonce-source-preparation-record-v1.json",
+      "sha256": "73defdd5367df3565605413bfb59de589a19cb50ae4df62934306864415c8d8a",
+      "bytes": 10206
+    },
+    "verifier_source_independent_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-verifier-source-independent-review-v1.json",
+      "sha256": "3f412d001624fd987c86a87171125334ec2d57f256de28fb4db7398848ea03a0",
+      "bytes": 34338
+    },
+    "entry": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-entry-v1.py",
+      "sha256": "597c2b9cd09ac8f119e118a942cf6b23b99ea9bd629ca8afb0e3a7677d5731ef",
+      "bytes": 15210
+    },
+    "entry_tests": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-entry-v1-tests.py",
+      "sha256": "956a2d82a15c887f28d8abfd18988023bba7cadde6c157242a08ebcf6d5068da",
+      "bytes": 13519
+    },
+    "entry_interface": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-entry-interface-v1.json",
+      "sha256": "80a1277091001ce3b296858e14816a4ac2408b23acbd311fc56575b64ea6a3fa",
+      "bytes": 8172
+    },
+    "entry_author_evidence": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-entry-author-evidence-v1.json",
+      "sha256": "3e176a29f86c0e6642df24b093bddf7c558df05052f34c5a896110a3eb8646ee",
+      "bytes": 4892
+    },
+    "entry_independent_review": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-entry-independent-review-v1.json",
+      "sha256": "85300c5135f5481f3f82ae9d6e21e83bfd83abc4288a8935f78356ba4e5f0ffc",
+      "bytes": 13014
+    },
+    "entry_independent_fixtures": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-entry-independent-fixed-verification-v1.json",
+      "sha256": "cccb8d5da87dff9648771be46d27153f6fc99be890489cc8b1c317b79629de7b",
+      "bytes": 5181
+    },
+    "root_live_cli_refusal": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-entry-root-live-refusal-v1.json",
+      "sha256": "b32976de0a7139cc5df0cf7d3ce715afb77e9e91c0a43d038d35758a49a68fd9",
+      "bytes": 2344
+    },
+    "original_entry": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/source86-saved-check-entry-v1.py",
+      "sha256": "afda3b68b11d01f4959a0e0f233a65c83f7da1b25b9e6c4fe05e87ca45fcd09e",
+      "bytes": 11954
+    },
+    "initial_entry_candidate": {
+      "path": "/home/kazumasa/worktrees/johnhull-storage-codec/.superpowers/sdd/2026-10-10-dynamic-storage-codec/gate-bounded-saved-check-entry-v1-before-review-fix.py",
+      "sha256": "0c6b82387ac510d66aeda88cb7707b43db44d833a5123f8413a5e473b2d593df",
+      "bytes": 14778
+    }
+  },
+  "source": {
+    "producer_runtime_files": 86,
+    "producer_complete_files": 91,
+    "producer_metadata_files": [
+      "source-files-manifest.json",
+      "source-identity.json",
+      "source-normal-auth.json",
+      "source-preparation-pure-metadata-only.json",
+      "source-preparation.json"
+    ],
+    "verifier_complete_runtime_files": 86,
+    "only_P_vs_V_runtime_difference": [
+      "johnhull/research/RB-F04/dynamic_hedging/check_pilot.py"
+    ],
+    "producer_canonical_sha256": "77a5ed544de20c5ac52a4d68e1b4e5ed7e63a00df6f213360ff901e4e30d600c",
+    "producer_native_sha256": "2f7528ed26b6bf2bbae72be755fc2fc1211f769062353dac00549ad28eca8c0d",
+    "verifier_canonical_sha256": "a063fcaa686dce75b65c1011f70c2d8389f2067616cd7e4c301d6d8e5abfaeaf",
+    "verifier_native_sha256": "b2789dac7b9812c5793c073096ed13befe749780777e7e272d996d8cfae366b5",
+    "normal_source_auth_used_real_provider": true,
+    "normal_alias_origin_spec_SHA_count": 86,
+    "independent_source_checks": 28,
+    "independent_small_source_fixtures": 5,
+    "normal_auth_cost": {
+      "normal_auth_and_output_capture_CPU_seconds": 8.952523887,
+      "normal_auth_and_output_capture_wall_seconds": 8.956917399,
+      "post_source_checks_and_report_write_tail_seconds": null,
+      "process_kernel_peak_RSS_bytes": 638218240,
+      "startup_before_window_seconds": null,
+      "whole_expense_closed": false
+    },
+    "startup_docstring_rng_count": 8
+  },
+  "entry": {
+    "author_small_tests": 10,
+    "author_ruff_format_compile": "PASS",
+    "independent_small_checks": 38,
+    "findings": [],
+    "terminal_has_no_schema_or_monitor_SHA_field": true,
+    "fixed_monitor_and_prior_byte_authentication_is_separate": true,
+    "live_fence_checks_exact_3_process_identities_before_any_guard_source_plan_raw_reads": true,
+    "foreign_PID_reuse_is_not_completion_or_cost_evidence": true,
+    "full_P91_vs_runtime86_and_V86_partition_authenticated": true,
+    "retained_once_plan_read_once_typed_read_once_unpack_and_4_key_context": true,
+    "genuine_terminal_complete_raw_latest_checkpoint_and_root_guard_still_required": true
+  },
+  "original_scope": {
+    "jobs": 3138,
+    "cases": 121,
+    "attempts": 51,
+    "N": [
+      1024,
+      4096,
+      16384,
+      65536
+    ],
+    "main_jobs": 396,
+    "external_cost_scopes": 10
+  },
+  "saved_guard_created": false,
+  "execute_saved_check": false,
+  "source_adoption_approved": false,
+  "actual_terminal_or_checkpoint_authenticated": false,
+  "full_saved_completion_proven": false,
+  "actual_16GiB_fit_proven": false,
+  "financial_qualification": "unknown",
+  "financial_acceptance": false,
+  "financial_MC_NN_solver_saved_numeric_calls_in_this_preparation": 0,
+  "live_raw_hash_decode_plan_rehydrate_calls": 0,
+  "cost_missingness_exception_adopted": false,
+  "old213_failure_and_no_checkpoint_preserved": true,
+  "CAS_new_source_prior_proof_save_and_restore": "pending_at_this_snapshot",
+  "phase_main_accepted": false,
+  "commit_push_this_step": false
+}
