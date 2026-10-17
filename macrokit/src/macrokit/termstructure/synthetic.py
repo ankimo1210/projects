@@ -6,12 +6,14 @@ Parameters are fixed constants here; none is calibrated to Japanese data.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date
 
 import numpy as np
 
 from .acm import AcmFit, pricing_recursion
 from .curve import ZeroPanel, month_ends
 from .dns import ns_loadings
+from .shadow import FORWARD_MONTHS, expected_short_average, pack, shadow_forwards, unpack
 from .var import expected_average
 
 
@@ -132,4 +134,56 @@ def dns_dgp(
     expected = expected_average(mu, DNS_PHI, 0.0, short_loading, path, horizon)
     return SyntheticCurve(
         ZeroPanel(month_ends(n_months), months, yields), expected, path @ short_loading
+    )
+
+
+SHADOW_TRUE = pack(
+    rho_q=(0.997, 0.95, 0.8),
+    delta0=1.0,
+    sigma=np.array([[0.15, 0.0, 0.0], [0.05, 0.2, 0.0], [0.0, -0.05, 0.25]]),
+    mu=np.zeros(3),
+    rho=np.diag([0.99, 0.94, 0.8]),
+    omega=0.05,
+)
+
+
+@dataclass(frozen=True)
+class SyntheticShadow:
+    dates: tuple[date, ...]
+    forwards: np.ndarray  # (T, 7) observed one-month forwards at FORWARD_MONTHS
+    yield_pct: np.ndarray  # observed 10-year zero yield
+    expected_pct: np.ndarray  # true E_t, 120 months
+    short_pct: np.ndarray  # true short rate max(r_L, s)
+    states: np.ndarray
+
+
+def shadow_dgp(
+    n_months: int,
+    rng: np.random.Generator,
+    *,
+    r_lower: float = 0.0,
+    theta: np.ndarray = SHADOW_TRUE,
+    burn_in: int = 500,
+    horizon: int = 120,
+) -> SyntheticShadow:
+    p = unpack(theta)
+    mu, rho, chol, omega = p.mu[0], p.rho[0], p.sigma[0], p.omega[0]
+    x = np.linalg.solve(np.eye(3) - rho, mu)
+    shocks = rng.standard_normal((burn_in + n_months, 3)) @ chol.T
+    states = np.empty((n_months, 3))
+    for t in range(burn_in + n_months):
+        x = mu + rho @ x + shocks[t]
+        if t >= burn_in:
+            states[t - burn_in] = x
+    forwards = shadow_forwards(theta, states, r_lower, np.arange(1, horizon + 1))  # n = 1..horizon
+    short = np.maximum(r_lower, p.delta0[0] + states.sum(axis=1))
+    zero = (short + forwards[:, : horizon - 1].sum(axis=1)) / horizon  # mean of n = 0..horizon-1
+    observed = forwards[:, FORWARD_MONTHS - 1] + omega * rng.standard_normal((n_months, 7))
+    return SyntheticShadow(
+        month_ends(n_months),
+        observed,
+        zero + omega * rng.standard_normal(n_months),
+        expected_short_average(theta, states, r_lower, horizon),
+        short,
+        states,
     )

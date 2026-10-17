@@ -16,12 +16,15 @@ broke down numerically after ~70 periods without it.
 
 from __future__ import annotations
 
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 
 import numpy as np
+from scipy.optimize import minimize
 from scipy.special import ndtr
 
 from .curve import ZeroPanel
+from .decompose import Decomposition
 from .var import expected_average
 
 FORWARD_MONTHS = np.array([3, 6, 12, 24, 60, 84, 120])
@@ -230,3 +233,125 @@ def panel_forwards(panel: ZeroPanel, months: np.ndarray = FORWARD_MONTHS) -> np.
     """One-month forwards (annual %) from zero yields: (n+1) y_{n+1} - n y_n."""
     n = np.asarray(months)
     return (n + 1) * panel.columns(n + 1) - n * panel.columns(n)
+
+
+RHO_Q_STARTS = (
+    (0.999, 0.97, 0.85),
+    (0.997, 0.95, 0.7),
+    (0.995, 0.9, 0.5),
+    (0.99, 0.85, 0.6),
+    (0.998, 0.98, 0.9),
+)
+SIGMA_DIAG_STARTS = (0.1, 0.3)
+SIGMA_OFFDIAG_STARTS = (0.0, -0.05)
+OMEGA_START = 0.1
+FD_STEP = 1e-5
+
+
+def default_starts(forwards: np.ndarray) -> np.ndarray:
+    """The 20 fixed starts of design §4.3: P = Q dynamics, delta0 = mean 3-month forward."""
+    delta0 = float(np.mean(forwards[:, 0]))
+    starts = []
+    for rq in RHO_Q_STARTS:
+        for diag in SIGMA_DIAG_STARTS:
+            for off in SIGMA_OFFDIAG_STARTS:
+                sigma = np.diag([diag, diag, diag])
+                sigma[1, 0] = sigma[2, 0] = sigma[2, 1] = off
+                starts.append(pack(rq, delta0, sigma, np.zeros(3), np.diag(rq), OMEGA_START))
+    return np.array(starts)
+
+
+def _objective(theta: np.ndarray, forwards: np.ndarray, r_lower: float) -> tuple[float, np.ndarray]:
+    """Mean negative log-likelihood and its forward-difference gradient, in one batch."""
+    batch = np.vstack([theta, theta + FD_STEP * np.eye(len(theta))])
+    values = -loglik(batch, forwards, r_lower) / len(forwards)
+    return float(values[0]), (values[1:] - values[0]) / FD_STEP
+
+
+def _solve(job: tuple[np.ndarray, np.ndarray, float, int]) -> tuple[np.ndarray, float]:
+    theta0, forwards, r_lower, maxiter = job
+    result = minimize(
+        _objective,
+        theta0,
+        args=(forwards, r_lower),
+        jac=True,
+        method="L-BFGS-B",
+        options={"maxiter": maxiter},
+    )
+    return result.x, float(result.fun) * len(forwards)
+
+
+@dataclass(frozen=True)
+class ShadowFit:
+    theta: np.ndarray
+    negloglik: float  # total over observations
+    start_theta: np.ndarray  # (S, 23) optimum reached from each start
+    start_negloglik: np.ndarray  # (S,)
+    r_lower: float
+
+
+def fit_shadow(
+    forwards: np.ndarray,
+    r_lower: float,
+    starts: np.ndarray,
+    processes: int = 1,
+    maxiter: int = 500,
+) -> ShadowFit:
+    jobs = [(start, forwards, r_lower, maxiter) for start in starts]
+    if processes > 1:
+        with ProcessPoolExecutor(max_workers=processes) as pool:
+            results = list(pool.map(_solve, jobs))
+    else:
+        results = [_solve(job) for job in jobs]
+    thetas = np.array([r[0] for r in results])
+    values = np.array([r[1] for r in results])
+    best = int(np.argmin(values))
+    return ShadowFit(thetas[best], float(values[best]), thetas, values, r_lower)
+
+
+def hessian(
+    theta: np.ndarray, forwards: np.ndarray, r_lower: float, step: float = 1e-4
+) -> np.ndarray:
+    """Central-difference Hessian of the negative log-likelihood, all points in one batch."""
+    size = len(theta)
+    eye = np.eye(size) * step
+    signs = ((1, 1), (1, -1), (-1, 1), (-1, -1))
+    pairs = [(i, j) for i in range(size) for j in range(i, size)]
+    points = np.array([theta + si * eye[i] + sj * eye[j] for i, j in pairs for si, sj in signs])
+    values = -loglik(points, forwards, r_lower).reshape(len(pairs), 4)
+    hess = np.empty((size, size))
+    for (i, j), v in zip(pairs, values, strict=True):
+        hess[i, j] = hess[j, i] = (v[0] - v[1] - v[2] + v[3]) / (4 * step * step)
+    return hess
+
+
+def parameter_draws(
+    theta: np.ndarray, hess: np.ndarray, n_draws: int, rng: np.random.Generator
+) -> tuple[np.ndarray, int]:
+    """Normal draws with covariance inv(H); eigenvalues below 1e-8 * max are floored (counted)."""
+    w, v = np.linalg.eigh(0.5 * (hess + hess.T))
+    floor = 1e-8 * w.max()
+    floored = int((w < floor).sum())
+    cov = (v / np.maximum(w, floor)) @ v.T
+    return rng.multivariate_normal(theta, cov, size=n_draws, method="eigh"), floored
+
+
+def draw_expected(
+    fit: ShadowFit, forwards: np.ndarray, horizon: int, n_draws: int, rng: np.random.Generator
+) -> tuple[np.ndarray, int, int]:
+    """E_t for each accepted parameter draw: (expected (n_ok, T), n_rejected, n_floored)."""
+    draws, floored = parameter_draws(
+        fit.theta, hessian(fit.theta, forwards, fit.r_lower), n_draws, rng
+    )
+    values, states = loglik(draws, forwards, fit.r_lower, return_states=True)
+    ok = values > -PENALTY
+    expected = expected_short_average(draws[ok], states[ok], fit.r_lower, horizon)
+    return expected, int((~ok).sum()), floored
+
+
+def decompose_shadow(
+    fit: ShadowFit, forwards: np.ndarray, panel: ZeroPanel, maturity: int = 120
+) -> Decomposition:
+    states = filtered_states(fit.theta, forwards, fit.r_lower)
+    expected = expected_short_average(fit.theta, states, fit.r_lower, maturity)
+    return Decomposition("shadow", panel.dates, panel.column(maturity), expected)

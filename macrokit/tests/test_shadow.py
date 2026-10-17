@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from scipy.linalg import solve_discrete_lyapunov
 
-from macrokit.termstructure import acm, shadow
+from macrokit.termstructure import acm, shadow, synthetic
 
 THETA = shadow.pack(
     rho_q=(0.997, 0.95, 0.8),
@@ -204,3 +204,54 @@ def test_filtered_states_refuse_a_penalised_member():
     forwards, _ = _simulated_forwards(50, np.random.default_rng(34))
     with pytest.raises(ValueError, match="parameters are penalised"):
         shadow.filtered_states(explosive, forwards, 0.0)
+
+
+def test_default_starts_are_twenty_and_start_at_p_equals_q():
+    starts = shadow.default_starts(np.full((10, 7), 1.5))
+    assert starts.shape == (20, shadow.N_PARAMS)
+    p = shadow.unpack(starts)
+    np.testing.assert_allclose(p.delta0, 1.5)
+    np.testing.assert_allclose(p.rho[:, 0, 0], p.rho_q[:, 0])
+
+
+def test_optimizer_improves_on_a_perturbed_start():
+    syn = synthetic.shadow_dgp(400, np.random.default_rng(41))
+    # Perturb rho_Q, delta0, Sigma and mu only: a +0.05 bump on the P rho leaves the
+    # stationary region (max |eig| 1.09), where the likelihood is flat at -PENALTY.
+    start = synthetic.SHADOW_TRUE.copy()
+    start[:13] += 0.05
+    fit = shadow.fit_shadow(syn.forwards, 0.0, start[None], maxiter=30)
+    before = -shadow.loglik(start, syn.forwards, 0.0)[0]
+    assert before < shadow.PENALTY
+    assert fit.negloglik < before
+    assert fit.start_negloglik.shape == (1,)
+
+
+def test_parameter_draws_follow_the_inverse_hessian_and_floor_bad_directions():
+    hess = np.diag([4.0, 1.0, -1.0])
+    draws, floored = shadow.parameter_draws(np.zeros(3), hess, 20_000, np.random.default_rng(42))
+    assert floored == 1
+    np.testing.assert_allclose(draws[:, :2].var(axis=0), [0.25, 1.0], rtol=0.05)
+
+
+def test_shadow_dgp_shapes_and_bound():
+    syn = synthetic.shadow_dgp(300, np.random.default_rng(43))
+    assert syn.forwards.shape == (300, 7)
+    assert syn.short_pct.min() >= 0.0
+    assert (syn.short_pct == 0.0).any()  # the bound binds somewhere
+    assert syn.expected_pct.shape == syn.yield_pct.shape == (300,)
+
+
+def test_expected_short_average_with_a_non_diagonal_rho_matches_simulation():
+    rng = np.random.default_rng(36)
+    p = shadow.unpack(THETA2)
+    x0 = np.array([-0.8, 0.1, 0.0])
+    horizon, paths = 24, 100_000
+    x = np.broadcast_to(x0, (paths, 3)).copy()
+    total = np.zeros(paths)
+    for _ in range(horizon):
+        total += np.maximum(0.0, p.delta0[0] + x.sum(axis=1))
+        x = p.mu[0] + x @ p.rho[0].T + rng.standard_normal((paths, 3)) @ p.sigma[0].T
+    simulated = (total / horizon).mean()
+    closed = shadow.expected_short_average(THETA2, x0[None], 0.0, horizon)[0]
+    assert closed == pytest.approx(simulated, abs=5e-3)
