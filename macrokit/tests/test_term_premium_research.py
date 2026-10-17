@@ -1,4 +1,7 @@
 import importlib.util
+import json
+import subprocess
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -64,3 +67,143 @@ def test_g1_draws_use_distinct_fixed_seeds(gates):
     assert not np.allclose(first, gates._rng(1, 1).standard_normal(3))
     assert not np.allclose(first, gates._rng(2, 0).standard_normal(3))
     assert not np.allclose(first, gates._rng(1, 0, 1).standard_normal(3))
+
+
+def test_g1_acm_failure_removes_only_the_plain_acm_model(gates):
+    g1 = _report()["g1"] | {"acm": {"pass": False}}
+    assert gates.passed_models(_report(g1=g1)) == ["acm_bc", "shadow", "dns"]
+
+
+def test_g1_dns_failure_removes_only_the_dns_model(gates):
+    g1 = _report()["g1"] | {"dns": {"pass": False}}
+    assert gates.passed_models(_report(g1=g1)) == ["acm", "acm_bc", "shadow"]
+
+
+def _attempt(*, passed=True, one_factor=0.7, shuffled=0.1):
+    return {
+        "corr": 0.9998 if passed else 0.5,
+        "pass": passed,
+        "control_one_factor_corr": one_factor,
+        "control_shuffled_corr": shuffled,
+    }
+
+
+def _controls(*attempts, g1_fails=("acm", "dns", "shadow"), zero_bound_fails=True):
+    return {
+        "g1": {
+            f"{m}_control": {"fails_as_required": m in g1_fails} for m in ("acm", "dns", "shadow")
+        },
+        "g2": {"attempts": list(attempts or [_attempt()]), "pass": True},
+        "g3": {"equality": {"control_fails_as_required": zero_bound_fails}},
+    }
+
+
+def test_controls_that_fail_as_required_are_not_reported(gates):
+    assert gates.controls_not_failing(_controls()) == []
+
+
+@pytest.mark.parametrize("model", ["acm", "dns", "shadow"])
+def test_a_g1_control_that_does_not_fail_is_reported(gates, model):
+    fails = tuple(m for m in ("acm", "dns", "shadow") if m != model)
+    assert gates.controls_not_failing(_controls(g1_fails=fails)) == [f"g1.{model}_control"]
+
+
+def test_g2_controls_that_reach_the_pass_level_are_reported(gates):
+    assert gates.controls_not_failing(_controls(_attempt(one_factor=0.95))) == ["g2.one_factor"]
+    assert gates.controls_not_failing(_controls(_attempt(shuffled=0.99))) == ["g2.shuffled"]
+    both = _controls(_attempt(one_factor=0.97, shuffled=0.96))
+    assert gates.controls_not_failing(both) == ["g2.one_factor", "g2.shuffled"]
+
+
+def test_a_g3_control_that_does_not_fail_is_reported(gates):
+    assert gates.controls_not_failing(_controls(zero_bound_fails=False)) == ["g3.zero_bound"]
+
+
+def test_g2_controls_are_read_from_the_attempt_that_decided_the_gate(gates):
+    failed_first = _attempt(passed=False, one_factor=0.99, shuffled=0.99)
+    # the second attempt passed: the failed first attempt's controls do not count
+    assert gates.controls_not_failing(_controls(failed_first, _attempt())) == []
+    bad_second = _attempt(one_factor=0.97)
+    assert gates.controls_not_failing(_controls(failed_first, bad_second)) == ["g2.one_factor"]
+    # neither passed: the last attempt decides
+    failed_last = _attempt(passed=False, shuffled=0.98)
+    assert gates.controls_not_failing(_controls(failed_first, failed_last)) == ["g2.shuffled"]
+    assert gates.controls_not_failing(_controls(failed_last, _attempt(passed=False))) == []
+
+
+def test_plain_makes_numpy_values_json_serialisable(gates):
+    nested = {
+        "a": {"b": np.bool_(True), "c": np.float64(1.5), "d": np.arange(3), "e": [np.int64(2)]}
+    }
+    expected = {"a": {"b": True, "c": 1.5, "d": [0, 1, 2], "e": [2]}}
+    assert json.loads(json.dumps(gates._plain(nested))) == expected
+
+
+def _git(cwd, *args):
+    base = ["git", "-c", "user.name=t", "-c", "user.email=t@example.com"]
+    out = subprocess.run(
+        [*base, "-c", "commit.gpgsign=false", "-c", "core.hooksPath=/dev/null", *args],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return out.stdout.strip()
+
+
+def test_commit_refuses_uncommitted_changes_under_macrokit(gates, tmp_path, monkeypatch):
+    here = tmp_path / "macrokit/research/study"
+    here.mkdir(parents=True)
+    (here / "gates.py").write_text("a = 1\n")
+    _git(tmp_path, "init", "-q")
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-q", "-m", "init")
+    monkeypatch.setattr(gates, "HERE", here)
+    # untracked files, inside or outside macrokit, do not make the tree dirty
+    (here / "gates.json").write_text("{}\n")
+    (tmp_path / ".superpowers").mkdir()
+    (tmp_path / ".superpowers/note.md").write_text("x\n")
+    assert gates._commit() == _git(tmp_path, "rev-parse", "HEAD")
+    (here / "gates.py").write_text("a = 2\n")
+    with pytest.raises(SystemExit, match="uncommitted changes under macrokit"):
+        gates._commit()
+
+
+def _stub_gates(gates, monkeypatch, tmp_path, *, zero_bound_fails):
+    g1 = {m: {"pass": True} for m in ("acm", "acm_bc", "dns", "shadow")}
+    g1 |= {f"{m}_control": {"fails_as_required": True} for m in ("acm", "dns", "shadow")}
+    g3 = {"equality": {"control_fails_as_required": zero_bound_fails}, "pass": True}
+    monkeypatch.setattr(gates, "HERE", tmp_path)
+    monkeypatch.setattr(gates, "_commit", lambda: "abc123")
+    monkeypatch.setattr(gates, "g4", lambda data_root: {"pass": True})
+    monkeypatch.setattr(gates, "g2", lambda raw: {"attempts": [_attempt()], "pass": True})
+    monkeypatch.setattr(gates, "g3", lambda raw, processes: g3)
+    monkeypatch.setattr(gates, "g1", lambda processes: g1)
+    monkeypatch.setattr(sys, "argv", ["gates.py", "--data-root", str(tmp_path / "data")])
+
+
+def test_main_writes_the_report_and_exits_zero_when_every_control_fails(
+    gates, monkeypatch, tmp_path, capsys
+):
+    _stub_gates(gates, monkeypatch, tmp_path, zero_bound_fails=True)
+    gates.main()
+    report = json.loads((tmp_path / "gates.json").read_text())
+    assert report["controls_ok"] is True
+    assert report["controls_not_failing"] == []
+    assert report["passed_models"] == ["acm", "acm_bc", "shadow", "dns"]
+    assert report["code_commit"] == "abc123"
+    assert report["settings"]["g1_draws"] == gates.G1_DRAWS
+    assert "CONTROLS NOT FAILING" not in capsys.readouterr().out
+
+
+def test_main_keeps_the_report_but_exits_2_when_a_control_does_not_fail(
+    gates, monkeypatch, tmp_path, capsys
+):
+    _stub_gates(gates, monkeypatch, tmp_path, zero_bound_fails=False)
+    with pytest.raises(SystemExit) as stop:
+        gates.main()
+    assert stop.value.code == 2
+    report = json.loads((tmp_path / "gates.json").read_text())
+    assert report["controls_ok"] is False
+    assert report["controls_not_failing"] == ["g3.zero_bound"]
+    assert "CONTROLS NOT FAILING: ['g3.zero_bound']" in capsys.readouterr().out

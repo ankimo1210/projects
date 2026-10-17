@@ -30,13 +30,23 @@ G1_MONTHS = 20_000
 G1_DRAWS = 10  # independent synthetic paths per DGP (spec §9, 2026-10-17)
 WINDOW = 23  # end-July 2024 -> end-June 2026
 TOL_SHARE, TOL_RMSE = 0.05, 0.15  # |mean(s_hat - s)| and median TP RMSE over the G1 draws
+G1_SHADOW_R_LOWER = 0.0  # lower bound of the G1 shadow DGP and of the model fitted to it
+US_R_LOWER = 0.25  # Wu-Xia (2016) US lower bound; the Japanese r_L is −0.10 (config)
+G2_CORR = 0.95  # G2 pass level; a control must stay below it
 MODELS = ("acm", "acm_bc", "shadow", "dns")
 
 
-def _commit() -> str:
+def _git(*args: str) -> str:
     return subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=HERE, capture_output=True, text=True, check=True
+        ["git", *args], cwd=HERE, capture_output=True, text=True, check=True
     ).stdout.strip()
+
+
+def _commit() -> str:
+    """HEAD of the code under test; refuses to run on uncommitted changes under macrokit."""
+    if _git("status", "--porcelain", "--untracked-files=no", "--", ":/macrokit"):
+        raise SystemExit("uncommitted changes under macrokit; commit before running the gates")
+    return _git("rev-parse", "HEAD")
 
 
 def _rng(family: int, draw: int, stream: int = 0) -> np.random.Generator:
@@ -85,19 +95,21 @@ def g1(processes: int) -> dict:
         rows["dns"].append(_draw_score(e_dns, syn.expected_pct, y, i0, i1))
         rows["dns_control"].append(_draw_score(syn.short_pct, syn.expected_pct, y, i0, i1))
 
-        sh = synthetic.shadow_dgp(G1_MONTHS, _rng(3, r), r_lower=0.0)
+        sh = synthetic.shadow_dgp(G1_MONTHS, _rng(3, r), r_lower=G1_SHADOW_R_LOWER)
         i0, i1 = largest_rise_window(sh.yield_pct, WINDOW)
         started = time.perf_counter()
         starts = shadow.default_starts(sh.forwards)
-        fit_sh = shadow.fit_shadow(sh.forwards, 0.0, starts, processes)
-        states = shadow.filtered_states(fit_sh.theta, sh.forwards, 0.0)
-        e_sh = shadow.expected_short_average(fit_sh.theta, states, 0.0, 120)
+        fit_sh = shadow.fit_shadow(sh.forwards, G1_SHADOW_R_LOWER, starts, processes)
+        states = shadow.filtered_states(fit_sh.theta, sh.forwards, G1_SHADOW_R_LOWER)
+        e_sh = shadow.expected_short_average(fit_sh.theta, states, G1_SHADOW_R_LOWER, 120)
         seconds.append(round(time.perf_counter() - started, 1))
         rows["shadow"].append(_draw_score(e_sh, sh.expected_pct, sh.yield_pct, i0, i1))
         rows["shadow_control"].append(
             _draw_score(sh.short_pct, sh.expected_pct, sh.yield_pct, i0, i1)
         )
         print(f"G1 draw {r + 1}/{G1_DRAWS} done (shadow {seconds[-1]} s)", flush=True)
+        scores = {name: rows[name][-1] for name in names}
+        print(f"G1 draw {r + 1} scores {json.dumps(scores)}", flush=True)
     out = {name: _summary(draws) for name, draws in rows.items()}
     out["shadow"]["seconds"] = seconds
     for model in ("acm", "dns", "shadow"):
@@ -139,10 +151,10 @@ def _g2_once(panel: ZeroPanel, reference: dict) -> dict:
         "corr": corr,
         "rmse": rmse,
         "delta_gap": float(delta_gap),
-        "pass": corr >= 0.95 and rmse <= 0.25 and delta_gap <= 0.15,
+        "pass": corr >= G2_CORR and rmse <= 0.25 and delta_gap <= 0.15,
         "control_one_factor_corr": one_factor,
         "control_shuffled_corr": shuffled_corr,
-        "controls_fail_as_required": one_factor < 0.95 and shuffled_corr < 0.95,
+        "controls_fail_as_required": one_factor < G2_CORR and shuffled_corr < G2_CORR,
     }
 
 
@@ -161,8 +173,8 @@ def g2(raw_root: Path) -> dict:
 def g3(raw_root: Path, processes: int) -> dict:
     panel = _us_panel(raw_root, date(1990, 1, 1), date(2022, 2, 28), 121)
     forwards = shadow.panel_forwards(panel)
-    fit = shadow.fit_shadow(forwards, 0.25, shadow.default_starts(forwards), processes)
-    states = shadow.filtered_states(fit.theta, forwards, 0.25)
+    fit = shadow.fit_shadow(forwards, US_R_LOWER, shadow.default_starts(forwards), processes)
+    states = shadow.filtered_states(fit.theta, forwards, US_R_LOWER)
     gaussian = shadow.expected_gaussian_average(fit.theta, states, 120)
     low_gap = float(
         np.abs(shadow.expected_short_average(fit.theta, states, -10.0, 120) - gaussian).max()
@@ -190,13 +202,17 @@ def g3(raw_root: Path, processes: int) -> dict:
         ours, theirs = (np.array(v) for v in zip(*pairs, strict=True))
         corr = float(np.corrcoef(ours, theirs)[0, 1])
         comparison = {"months": len(pairs), "corr": corr, "pass": corr >= 0.9}
+    elif path:  # a published file that overlaps no ZLB month cannot confirm the shadow rate
+        comparison = {"months": 0, "corr": None, "pass": False}
     passed = (
         equality["pass"]
         and equality["control_fails_as_required"]
         and (comparison is None or comparison["pass"])
     )
     return {
+        "r_lower": US_R_LOWER,
         "equality": equality,
+        "wuxia_file": bool(path),
         "wuxia": comparison,
         "negloglik_by_start": sorted(float(v) for v in fit.start_negloglik),
         "pass": passed,
@@ -237,11 +253,34 @@ def passed_models(report: dict) -> list[str]:
     return [m for m in MODELS if ok[m]]
 
 
+def controls_not_failing(report: dict) -> list[str]:
+    """Negative controls that did NOT fail as required (an uninformative gate).
+
+    G2 is judged on the attempt that decided it: the passing one, else the last.
+    """
+    names = [
+        f"g1.{model}_control"
+        for model in ("acm", "dns", "shadow")
+        if not report["g1"][f"{model}_control"]["fails_as_required"]
+    ]
+    attempts = report["g2"]["attempts"]
+    decided = next((a for a in attempts if a["pass"]), attempts[-1])
+    if decided["control_one_factor_corr"] >= G2_CORR:
+        names.append("g2.one_factor")
+    if decided["control_shuffled_corr"] >= G2_CORR:
+        names.append("g2.shuffled")
+    if not report["g3"]["equality"]["control_fails_as_required"]:
+        names.append("g3.zero_bound")
+    return names
+
+
 def _plain(value):
     if isinstance(value, dict):
         return {k: _plain(v) for k, v in value.items()}
     if isinstance(value, list | tuple):
         return [_plain(v) for v in value]
+    if isinstance(value, np.ndarray):
+        return value.tolist()
     if isinstance(value, np.generic):
         return value.item()
     return value
@@ -253,17 +292,34 @@ def main() -> None:
     parser.add_argument("--processes", type=int, default=20)
     args = parser.parse_args()
     raw = args.data_root / "raw"
-    report = {"code_commit": _commit(), "g4": g4(args.data_root)}
-    print("G4", json.dumps(_plain(report["g4"]))[:300], flush=True)
+    report = {
+        "code_commit": _commit(),  # refuses a dirty tree before any gate runs
+        "settings": {
+            "seed": SEED,
+            "g1_months": G1_MONTHS,
+            "g1_draws": G1_DRAWS,
+            "window": WINDOW,
+            "tol_share": TOL_SHARE,
+            "tol_rmse": TOL_RMSE,
+            "g1_shadow_r_lower": G1_SHADOW_R_LOWER,
+        },
+    }
+    report["g4"] = g4(args.data_root)
+    print("G4", json.dumps(_plain(report["g4"])), flush=True)
     report["g2"] = g2(raw)
-    print("G2", report["g2"]["pass"], flush=True)
+    print("G2", json.dumps(_plain(report["g2"])), flush=True)
     report["g3"] = g3(raw, args.processes)
-    print("G3", report["g3"]["pass"], flush=True)
+    print("G3", json.dumps(_plain(report["g3"])), flush=True)
     report["g1"] = g1(args.processes)
     print("G1", {k: v.get("pass") for k, v in report["g1"].items()}, flush=True)
     report["passed_models"] = passed_models(report)
+    report["controls_not_failing"] = controls_not_failing(report)
+    report["controls_ok"] = not report["controls_not_failing"]
     (HERE / "gates.json").write_text(json.dumps(_plain(report), indent=2) + "\n", encoding="utf-8")
     print("passed:", report["passed_models"])
+    if not report["controls_ok"]:
+        print("CONTROLS NOT FAILING:", report["controls_not_failing"], flush=True)
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":
