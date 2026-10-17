@@ -230,7 +230,7 @@ G2 で推定した米国の ACM のパラメーターを生成過程にして、
 - 実行はリポジトリルートから:
   `uv run --no-sync --package macrokit python macrokit/research/2026-10-jgb-term-premium/gates.py --data-root /home/kazumasa/projects/macrokit/data`
 - 依存: macrokit に `scipy` を追加する（2026-10-17 承認済み。ワークスペースでは既に10メンバーが使用）。
-  米国の検証データの読み込みに `xlrd`（.xls）と `openpyxl`（.xlsx）も追加する（どちらもワークスペースで使用済み。承認待ち）。
+  米国の検証データの読み込みに `xlrd`（.xls）と `openpyxl`（.xlsx）も追加する（どちらもワークスペースで使用済み。2026-10-17 承認済み）。
 - 図は作らない（表のみ）。
 
 ### 6.1 Git と保存

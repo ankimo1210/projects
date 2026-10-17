@@ -19,7 +19,7 @@
 - Tests: `cd $WT && $PY -m pytest macrokit/tests -q`. The whole macrokit suite must stay under ~30 s of added time.
 - Lint/format: `cd $WT && /home/kazumasa/projects/.venv/bin/ruff check macrokit && /home/kazumasa/projects/.venv/bin/ruff format --check macrokit`. ruff config is macrokit's (`line-length = 100`, `select = ["E","W","F","I","B","UP","N","RUF"]`); B905 means every `zip()` needs `strict=`; no function calls in argument defaults (B008); no closures over loop variables (B023).
 - Run `uv` only from the repo/worktree root (`cd $WT && uv lock`). Never `uv sync` inside a member directory.
-- Dependencies: `scipy` (approved 2026-10-17). `xlrd` and `openpyxl` are needed for the US validation files and are **pending user approval** — Task 1 Step 1 checks that the approval was given before editing `pyproject.toml`.
+- Dependencies: `scipy`, `xlrd` and `openpyxl` (all approved by the user on 2026-10-17; all already locked for other workspace members).
 - Units: zero yields are continuously compounded **annual percent**; one period is one month; maturities are integer months. ACM works in log prices with the one-month rate in decimal per month (`y/1200`). The shadow-rate model works in annual percent with the convexity factor `1/1200`.
 - Fixed settings come from the spec and must not change after Japanese results exist: window t0 = last data day of July 2024, t1 = last data day of June 2026; estimation 1986-08..2026-06; verdict band [0.35, 0.65]; ACM K = 5, factor maturities 3..120 step 3, return maturities {6, 12, 24, 36, …, 120}; Kilian 1,000 draws; shadow r_L = −0.10 %, forward maturities {3, 6, 12, 24, 60, 84, 120}, 20 starts; DNS λ = 0.0609; intervals 90 % from 1,000 bootstrap draws (500 parameter draws for the shadow model); G1 20,000 months, |ŝ − s| ≤ 0.05 and TP RMSE ≤ 0.10 pt; G2 corr ≥ 0.95, RMSE ≤ 0.25 pt, change gap ≤ 0.15 pt; G3 equality within 1 bp, Wu-Xia corr ≥ 0.9; G4 median par error ≤ 3 bp.
 - Commit messages: English, imperative, no `feat:` prefix (match `git log -- macrokit`), ending with the attribution lines from the session (`Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` and the `Claude-Session:` line).
@@ -54,7 +54,7 @@
 cd /home/kazumasa/projects && git status --short && git worktree add /home/kazumasa/worktrees/jgb-term-premium -b macrokit-term-premium main
 ```
 
-Confirm in the conversation that the user approved adding `xlrd` and `openpyxl` to macrokit. If not approved, stop and ask (Task 4 is the only consumer; the alternative is converting the files by hand with `soffice --headless --convert-to csv`).
+The user approved `scipy`, `xlrd` and `openpyxl` on 2026-10-17.
 
 - [ ] **Step 2: Add the dependencies and relock**
 
