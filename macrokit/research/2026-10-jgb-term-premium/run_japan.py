@@ -81,6 +81,12 @@ def _unpenalised(negloglik: float) -> bool:
     return bool(np.isfinite(negloglik) and negloglik < 0.5 * shadow.PENALTY)
 
 
+def _start_order(row: dict) -> float:
+    """Sort key of a shadow start: ascending negloglik, with None and non-finite values last."""
+    value = row["negloglik"]
+    return value if value is not None and math.isfinite(value) else math.inf
+
+
 def _attempt(fn: Callable[[], object]):
     """fn(), or its error text: a failed supplementary item must not lose the main results."""
     try:
@@ -107,6 +113,12 @@ def _code_unchanged(since: str, paths: tuple[str, ...] = CODE_PATHS) -> bool:
         subprocess.run(["git", "diff", "--quiet", since, "HEAD", "--", *paths], cwd=top).returncode
         == 0
     )
+
+
+def _read_gates() -> tuple[dict, str]:
+    """gates.json parsed, and the sha256 of the exact bytes that were parsed."""
+    raw = GATES.read_bytes()
+    return json.loads(raw), hashlib.sha256(raw).hexdigest()
 
 
 def _check_controls(gates: dict) -> None:
@@ -140,12 +152,13 @@ def freeze() -> None:
     if config.get("sha256") or (HERE / "results.json").exists():
         raise SystemExit("already frozen; a new configuration is a new study (design §2.4)")
     _check_constants(config)
-    gates = json.loads(GATES.read_text())
+    gates, gates_sha256 = _read_gates()
     _check_controls(gates)
     if not _code_unchanged(gates["code_commit"], ("macrokit/src",)):
         raise SystemExit("macrokit/src changed after the gates ran; re-run the gates first")
     config["code_commit"] = _git("rev-parse", "HEAD")
     config["gates_commit"] = gates["code_commit"]
+    config["gates_sha256"] = gates_sha256  # the frozen hash covers the gate results
     config["sha256"] = config_hash(config)
     CONFIG.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
     print("frozen:", config["sha256"])
@@ -304,9 +317,9 @@ def main() -> None:
     _check_constants(cfg)
     if not _code_unchanged(cfg["code_commit"]) or _dirty(*CODE_PATHS):
         raise SystemExit("code differs from the frozen commit")
-    gates = json.loads(GATES.read_text())
+    gates, gates_sha256 = _read_gates()
     _check_controls(gates)
-    if gates["code_commit"] != cfg["gates_commit"]:
+    if gates["code_commit"] != cfg["gates_commit"] or gates_sha256 != cfg.get("gates_sha256"):
         raise SystemExit("gates.json changed after the freeze")
     models = [m for m in cfg["models"] if m in gates["passed_models"]]
 
@@ -375,7 +388,7 @@ def main() -> None:
             except ValueError as exc:
                 row["error"] = f"{type(exc).__name__}: {exc}"
         by_start.append(row)
-    results["shadow_starts"] = sorted(by_start, key=lambda r: r["negloglik"])
+    results["shadow_starts"] = sorted(by_start, key=_start_order)
     results["shadow_draws"] = main_run["fits"].get("shadow_draws")
     results["acm_bc_shrink"] = main_run["fits"]["acm_bc_shrink"]
 

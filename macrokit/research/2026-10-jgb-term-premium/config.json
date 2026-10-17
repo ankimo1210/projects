@@ -18,5 +18,6 @@
   "seeds": {"acm": 20261017, "acm_bc": 20261018, "dns": 20261019, "shadow": 20261020},
   "code_commit": null,
   "gates_commit": null,
+  "gates_sha256": null,
   "sha256": null
 }
