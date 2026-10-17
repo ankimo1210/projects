@@ -40,6 +40,35 @@ def test_simulation_starts_at_x0_and_is_reproducible():
     np.testing.assert_array_equal(a[:, 0], np.broadcast_to(x[0], (4, 2)))
 
 
+def test_simulation_follows_the_var_recursion():
+    mu = np.array([0.3, -0.4])
+    phi = np.array([[0.9, 0.2], [-0.1, 0.7]])
+    x0 = np.array([1.5, -2.0])
+    sim = var.simulate_var1_batch(mu, phi, np.zeros((20, 2)), x0, 3, np.random.default_rng(5))
+    assert sim.shape == (3, 21, 2)
+    for path in sim:
+        s = x0.copy()
+        rows = [s]
+        for _ in range(20):
+            s = mu + phi @ s
+            rows.append(s)
+        np.testing.assert_allclose(path, np.array(rows), rtol=1e-12, atol=1e-12)
+
+
+def test_simulation_adds_the_residual_drawn_for_each_step():
+    mu = np.array([0.3, -0.4])
+    phi = np.array([[0.9, 0.2], [-0.1, 0.7]])
+    x0 = np.array([1.5, -2.0])
+    resid = np.random.default_rng(6).normal(size=(20, 2))
+    sim = var.simulate_var1_batch(mu, phi, resid, x0, 3, np.random.default_rng(7))
+    draws = resid[np.random.default_rng(7).integers(0, 20, size=(3, 20))]
+    for b, path in enumerate(sim):
+        s = x0.copy()
+        for t in range(1, 21):
+            s = mu + phi @ s + draws[b, t - 1]
+            np.testing.assert_allclose(path[t], s, rtol=1e-12, atol=1e-12)
+
+
 def test_expected_average_matches_matrix_powers():
     mu = np.array([0.01, 0.02])
     phi = np.array([[0.95, 0.1], [0.0, 0.8]])
