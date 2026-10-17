@@ -14,7 +14,7 @@ import numpy as np
 
 from .curve import ZeroPanel
 from .decompose import GRID_MONTHS, Decomposition
-from .var import Var1, expected_average, fit_var1
+from .var import Var1, expected_average, fit_var1, fit_var1_batch, max_abs_eig, simulate_var1_batch
 
 FACTOR_MONTHS = GRID_MONTHS
 RETURN_MONTHS = np.array([6, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120])
@@ -111,3 +111,71 @@ def decompose_acm(
     return Decomposition(
         model, panel.dates, panel.column(maturity), fit.expected(maturity, mu, phi)
     )
+
+
+@dataclass(frozen=True)
+class BiasCorrected:
+    mu: np.ndarray
+    phi: np.ndarray
+    shrink: float  # share of the estimated bias removed (1 = all, 0 = none)
+
+
+def shrink_to_stationary(phi: np.ndarray, bias: np.ndarray) -> tuple[np.ndarray, float]:
+    """Kilian (1998): remove the bias, shrinking it in 0.01 steps until stationary."""
+    for step in range(100, -1, -1):
+        shrink = step / 100.0
+        corrected = phi - shrink * bias
+        if max_abs_eig(corrected) < 1.0:
+            return corrected, shrink
+    return phi, 0.0
+
+
+def kilian_correct(
+    x: np.ndarray,
+    var: Var1,
+    n_boot: int,
+    rng: np.random.Generator,
+    max_floats: int = 5_000_000,
+) -> BiasCorrected:
+    """Bootstrap bias correction of phi; mu keeps the sample mean (design §4.2)."""
+    if max_abs_eig(var.phi) >= 1.0:
+        return BiasCorrected(var.mu, var.phi, 0.0)
+    chunk = max(1, max_floats // (len(x) * x.shape[1]))
+    total = np.zeros_like(var.phi)
+    done = 0
+    while done < n_boot:
+        size = min(chunk, n_boot - done)
+        paths = simulate_var1_batch(var.mu, var.phi, var.resid, x[0], size, rng)
+        total += fit_var1_batch(paths)[1].sum(axis=0)
+        done += size
+    bias = total / n_boot - var.phi
+    phi, shrink = shrink_to_stationary(var.phi, bias)
+    mu = (np.eye(len(var.mu)) - phi) @ x.mean(axis=0)
+    return BiasCorrected(mu, phi, shrink)
+
+
+def bootstrap_expected(
+    fit: AcmFit,
+    horizon: int,
+    n_boot: int,
+    rng: np.random.Generator,
+    correction_boot: int = 0,
+) -> np.ndarray:
+    """E_t (annual %) under re-estimated P dynamics, Q held fixed (design §4.1–4.2).
+
+    Residual-bootstrap factor paths, re-estimate (mu, phi), recompute E on the
+    actual factor history. With ``correction_boot`` the bootstrap DGP is the
+    bias-corrected VAR and every re-estimate is bias-corrected again.
+    """
+    if correction_boot:
+        dgp = kilian_correct(fit.factors, fit.var, correction_boot, rng)
+        dgp_mu, dgp_phi = dgp.mu, dgp.phi
+    else:
+        dgp_mu, dgp_phi = fit.var.mu, fit.var.phi
+    paths = simulate_var1_batch(dgp_mu, dgp_phi, fit.var.resid, fit.factors[0], n_boot, rng)
+    mus, phis = fit_var1_batch(paths)
+    if correction_boot:
+        for b in range(n_boot):
+            corrected = kilian_correct(paths[b], fit_var1(paths[b]), correction_boot, rng)
+            mus[b], phis[b] = corrected.mu, corrected.phi
+    return 1200.0 * expected_average(mus, phis, fit.delta0, fit.delta1, fit.factors, horizon)

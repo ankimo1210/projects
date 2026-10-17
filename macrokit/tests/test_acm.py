@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from macrokit.termstructure import acm, synthetic
+from macrokit.termstructure import acm, synthetic, var
 
 
 def test_pricing_recursion_matches_monte_carlo():
@@ -64,3 +64,38 @@ def test_decompose_uses_the_observed_yield():
     dec = acm.decompose_acm(syn.panel, fit)
     np.testing.assert_array_equal(dec.yield_pct, syn.panel.column(120))
     assert dec.model == "acm"
+
+
+def test_kilian_moves_an_ar1_estimate_toward_the_truth():
+    rng = np.random.default_rng(11)
+    raw, corrected = [], []
+    for _ in range(100):
+        x = np.zeros((200, 1))
+        for t in range(1, 200):
+            x[t] = 0.98 * x[t - 1] + rng.normal()
+        fit = var.fit_var1(x)
+        raw.append(fit.phi[0, 0])
+        corrected.append(acm.kilian_correct(x, fit, 300, rng).phi[0, 0])
+    assert abs(np.mean(corrected) - 0.98) < 0.5 * abs(np.mean(raw) - 0.98)
+
+
+def test_shrink_stops_at_the_first_stationary_step():
+    phi, shrink = acm.shrink_to_stationary(np.array([[0.99]]), np.array([[-0.045]]))
+    assert shrink == pytest.approx(0.22)
+    assert phi[0, 0] < 1.0
+
+
+def test_kilian_leaves_a_non_stationary_estimate_alone():
+    x = np.cumsum(np.ones((50, 1)), axis=0)
+    fit = var.Var1(mu=np.array([1.0]), phi=np.array([[1.01]]), resid=np.zeros((49, 1)))
+    out = acm.kilian_correct(x, fit, 10, np.random.default_rng(0))
+    assert out.shrink == 0.0
+    np.testing.assert_array_equal(out.phi, fit.phi)
+
+
+def test_bootstrap_expected_is_centred_on_the_point_estimate():
+    syn = synthetic.affine_dgp(400, np.random.default_rng(12))
+    fit = acm.fit_acm(syn.panel, k=3)
+    draws = acm.bootstrap_expected(fit, 120, 200, np.random.default_rng(13))
+    assert draws.shape == (200, 400)
+    assert abs(np.median(draws[:, -1]) - fit.expected(120)[-1]) < 0.5
