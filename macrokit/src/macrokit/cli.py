@@ -14,6 +14,7 @@ from .expectations import compute as compute_expectations
 from .ingest import default_catalog_root
 from .panel import event_panel
 from .snapshot import save_snapshot
+from .sources.boj_api import BojCallRateAdapter
 from .sources.esri_calendar import EsriCalendarAdapter
 from .sources.esri_gdp import EsriGdpAdapter, EsriGdpError
 from .sources.mof_jgb import MofJgbAdapter
@@ -110,6 +111,32 @@ def rates_command(ctx: click.Context) -> None:
     rows = adapter.parse(payloads, ingested_at=now)
     inserted = insert_rates(con, rows)
     click.echo(f"rates: {len(rows)} rows parsed, {inserted} inserted")
+
+
+@main.command("callrate")
+@click.pass_context
+def callrate_command(ctx: click.Context) -> None:
+    """Ingest the BoJ uncollateralized overnight call rate (daily and monthly average)."""
+    data_root: Path = ctx.obj["data_root"]
+    con = connect(data_root / "macrokit.duckdb")
+    now = datetime.now(UTC)
+    adapter = BojCallRateAdapter()
+
+    payloads = adapter.fetch_raw()
+    for content, url, status, curve in payloads:
+        save_snapshot(
+            data_root / "raw",
+            adapter.source,
+            curve,
+            content,
+            ingested_at=now,
+            url=url,
+            http_status=status,
+            filename=f"{curve}.json",
+        )
+    rows = adapter.parse(payloads, ingested_at=now)
+    inserted = insert_rates(con, rows)
+    click.echo(f"callrate: {len(rows)} rows parsed, {inserted} inserted")
 
 
 @main.group("gdp")
