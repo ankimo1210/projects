@@ -8,7 +8,7 @@ def test_pricing_recursion_matches_monte_carlo():
     rng = np.random.default_rng(5)
     mu = np.array([0.0001, 0.0])
     phi = np.array([[0.97, 0.02], [0.0, 0.9]])
-    chol = np.diag([0.0005, 0.0004])
+    chol = np.diag([0.005, 0.004])
     d0, d1 = 0.002, np.array([1.0, 1.0])
     x0 = np.array([0.001, -0.0005])
     a, b = acm.pricing_recursion(mu, phi, chol @ chol.T, 0.0, d0, d1, 12)
@@ -19,7 +19,8 @@ def test_pricing_recursion_matches_monte_carlo():
         discount += d0 + x @ d1
         x = mu + x @ phi.T + rng.standard_normal((paths, 2)) @ chol.T
     mc = np.log(np.exp(-discount).mean())
-    assert a[12] + b[12] @ x0 == pytest.approx(mc, abs=2e-4)  # ~5 Monte Carlo standard errors
+    # ~5 Monte Carlo standard errors; the convexity term is ~7e-3
+    assert a[12] + b[12] @ x0 == pytest.approx(mc, abs=1.5e-3)
 
 
 def test_without_risk_prices_the_premium_is_a_constant_convexity_term():
@@ -40,14 +41,21 @@ def test_without_risk_prices_the_premium_is_a_constant_convexity_term():
     )
     gap = neutral.fitted_yield(120, risk_neutral=True) - neutral.expected(120)
     assert gap.std() < 1e-10
+    # By Jensen's inequality, convexity puts the zero-risk-price yield below the expected short rate.
+    assert gap.mean() < 0
 
 
 def test_acm_recovers_the_affine_curve_on_a_long_sample():
     syn = synthetic.affine_dgp(5000, np.random.default_rng(7))
     fit = acm.fit_acm(syn.panel, k=3)
     assert np.abs(fit.fitted_yield(120) - syn.panel.column(120)).mean() < 0.03
+    # The RMSE bound is a fixed-draw pin for seed 7. Over seeds 0-29 at T=5000 the median RMSE is
+    # 0.168 and 9 of 30 seeds exceed 0.2: the error is mostly the level error from the sample mean
+    # of the phi=0.99 factor, so a different draw can fail without a bug. The correlation check
+    # below is seed-robust (minimum 0.9973 over 30 seeds).
     rmse = np.sqrt(((fit.expected(120) - syn.expected_pct) ** 2).mean())
     assert rmse < 0.2
+    assert np.corrcoef(fit.expected(120), syn.expected_pct)[0, 1] > 0.99
 
 
 def test_decompose_uses_the_observed_yield():
