@@ -64,6 +64,22 @@ acceptance は `johnhull/scripts/frontier_acceptance.py` がコミット済み�
 - 巻を追加するときは `release_manifest.json` に notebook / portal 図 / semantic tests /
   references を登録し、`make hull-release-check` を通す。
 
+## 研究データの保存方針（`research/`、2026-10-17）
+
+研究の実行（RB-F*）が出すデータの扱い。節受入の画像証跡は従来どおり `docs/EVIDENCE_POLICY.md`（D1）に従う。
+
+- **Git に残すもの:** コードの commit、シード、入力の SHA-256、パラメーター、最終結果、検算サマリー、manifest。
+- **中間配列は既定で保存しない。** 正規乱数・ノードごとの中間値・共分散ブロックなどは、必要なときに固定シードで
+  決定的に再生成し、記録済みの SHA-256 と照合する。独立検算のために保存が必要なら、対象と容量の見積もりを
+  設計書に書いてから保存する。
+- **出力 root は実行1回につき1つ。** 新しい実行が完了したら、置き換えられた古い root は消してよい。
+  失敗した回は配列ではなく、停止位置・原因・ハッシュを書いた要約 JSON で残す。
+- **保存は圧縮し、同じバイト列は共有する。** 出力 root ごとの累計上限（既定 30 GiB）を超える計画は、実行前にユーザーの承認を得る。
+- **Git 管理外の作業データは worktree の中に置かない。** `/home/kazumasa/projects/_data/johnhull/<研究名>/` に置く。
+  worktree を `git worktree remove` すると、中の gitignore 対象のファイルも警告なしに消える
+  （2026-10-17 に RB-F04 の約115 GiB を失った）。
+- 再生成できない最終成果物だけを、ADR 0004 の保管庫（C: 正本・F: 第2コピー）へ移す。
+
 ## ROADMAP の更新
 
 - 節の受入、段階（`ROADMAP.md` の P0–P8）の着手・完了、判断事項（D1–D3 ほか）の決定、計画の変更があったら、
