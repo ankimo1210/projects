@@ -63,6 +63,32 @@ def last_sha(root: Path, source: str, indicator: str) -> str | None:
     return newest
 
 
+def latest_payload(root: Path, source: str, indicator: str) -> Path | None:
+    """Path of the most recently *stored* payload, or None if nothing was stored.
+
+    An unchanged fetch records ``path: null``; the bytes it saw are the last
+    stored file, so that file is still the current content.
+    """
+    manifest = manifest_path(root)
+    if not manifest.exists():
+        return None
+    newest: str | None = None
+    for line in manifest.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue  # a truncated final line, as in last_sha
+        if (
+            record.get("source") == source
+            and record.get("indicator") == indicator
+            and record.get("path")
+        ):
+            newest = record["path"]
+    return root / newest if newest else None
+
+
 def save_snapshot(
     root: Path,
     source: str,
