@@ -137,7 +137,12 @@ def kilian_correct(
     rng: np.random.Generator,
     max_floats: int = 5_000_000,
 ) -> BiasCorrected:
-    """Bootstrap bias correction of phi; mu keeps the sample mean (design §4.2)."""
+    """Bootstrap bias correction of phi (design §4.2).
+
+    For a stationary estimate mu keeps the sample mean; a non-stationary estimate is
+    returned unchanged. ``max_floats`` caps each simulated batch (paths × T × K); peak
+    memory is a few times that.
+    """
     if max_abs_eig(var.phi) >= 1.0:
         return BiasCorrected(var.mu, var.phi, 0.0)
     chunk = max(1, max_floats // (len(x) * x.shape[1]))
