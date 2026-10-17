@@ -423,6 +423,8 @@ def verify(*, require_tracked: bool = False) -> list[Finding]:
                     Finding("validation", f"model-performance disclaimer missing: {validation}")
                 )
         release_files.extend((notebook, validation))
+        if 18 <= item["number"] <= 25:
+            release_files.append(volume / "teaching_notes.json")
         for field in ("semantic_sources", "semantic_tests"):
             paths = item.get(field)
             if not isinstance(paths, list) or not paths:
@@ -533,6 +535,7 @@ def verify(*, require_tracked: bool = False) -> list[Finding]:
         findings.append(Finding("book", "vendored require.js license is missing"))
     for relative, digest in release["vendored_book_assets"].items():
         asset = PROJECT / relative
+        release_files.append(asset)
         if not asset.is_file() or _sha256(asset) != digest:
             findings.append(Finding("book", f"vendored asset digest mismatch: {relative}"))
 

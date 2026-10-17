@@ -1,4 +1,4 @@
-"""Generate and execute artifact-only notebooks for johnhull vol 18--28."""
+"""Generate artifact-only notebooks, including per-volume teaching notes."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ VOLUME_META = {
             ("delta_error", "Delta誤差のmoneyness依存", "line:moneyness"),
             (
                 "violations_unconstrained",
-                "soft loss前後のhard violation",
+                "価格のみの近似器と採用runの無裁定違反",
                 "bar:check_names:violations_constrained",
             ),
             ("analytic_us", "CPU batch latency", "line2:batch_size:mlp_us"),
@@ -63,7 +63,7 @@ VOLUME_META = {
             ),
             (
                 "target_variance",
-                "variance term consistency",
+                "期末期待分散 E[v_T] との整合",
                 "line3:variance_maturity:iv_only_variance:joint_variance",
             ),
         ],
@@ -80,7 +80,7 @@ VOLUME_META = {
                 "walk-forward RV forecast",
                 "line3:test_row:har_ridge_prediction:pca_ridge_prediction",
             ),
-            ("qlike", "forecast metricとblock-bootstrap CI", "bar:model_names:rmse"),
+            ("qlike", "4モデルの予測誤差：QLIKEとRMSE", "bar:model_names:rmse"),
             ("hedge_pnl", "common-path hedge P&L", "histrows:hedge_names"),
             ("economic_pnl", "モデル別ヘッジRMSE（1/5/21日）", "economics"),
         ],
@@ -601,17 +601,30 @@ def build_volume(number: int, *, execute: bool = True) -> Path:
     item = next(item for item in MANIFEST["volumes"] if item["number"] == number)
     meta = VOLUME_META[number]
     volume = PROJECT / "volumes" / item["slug"]
+    notes = None
+    if 18 <= number <= 25:
+        notes = json.loads((volume / "teaching_notes.json").read_text(encoding="utf-8"))
+        figure_keys = {key for key, _, _ in meta["sections"]}
+        if set(notes) != {"overview", "figures", "conclusion"}:
+            raise ValueError(f"volume {number}: invalid teaching-note sections")
+        if set(notes["figures"]) != figure_keys:
+            raise ValueError(f"volume {number}: teaching notes do not match plotted figures")
+        prose = [notes["overview"], notes["conclusion"], *notes["figures"].values()]
+        if any(not isinstance(text, str) or not text.strip() for text in prose):
+            raise ValueError(f"volume {number}: empty teaching notes")
     json_name = next(ref for ref in item["references"] if ref.endswith(".json"))
     npz_name = next(ref for ref in item["references"] if ref.endswith(".npz"))
     metrics = json.loads((volume / json_name).read_text(encoding="utf-8"))
     cells = [
         _md(f"# Vol {number} — {meta['title']}\n\n**問い:** {meta['question']}"),
         _md(
-            "> **核心** — 複雑なモデルは必ず単純baselineとhard checkに並べる。<br>\n"
+            "## この巻で理解すること\n\n" + notes["overview"]
+            if notes
+            else "> **核心** — 複雑なモデルは必ず単純baselineとhard checkに並べる。<br>\n"
             "> **直感** — 平均誤差だけでは、尾部・裁定・cash-flow破綻を隠せる。<br>\n"
             "> **実務** — 再現可能なartifactと明示的な失敗条件をmodel risk管理の単位にする。"
         ),
-        _md(f"## モデルladderと責務\n\n{meta['focus']}"),
+        *([] if notes else [_md(f"## モデルladderと責務\n\n{meta['focus']}")]),
         _md(
             "## Artifact契約とdata policy\n\nこのnotebookはcommitted JSON/NPZだけを読み、学習・download・GPU検出を行わない。"
         ),
@@ -657,7 +670,14 @@ def build_volume(number: int, *, execute: bool = True) -> Path:
     ]
     for key, title, kind in meta["sections"]:
         cells.append(
-            _md(f"## {title}\n\n単一のaggregate scoreではなく、構造別・時間別・stress別に読む。")
+            _md(
+                f"## {title}\n\n"
+                + (
+                    notes["figures"][key]
+                    if notes
+                    else "単一のaggregate scoreではなく、構造別・時間別・stress別に読む。"
+                )
+            )
         )
         cells.append(_code(_plot_code(key, title, kind)))
     if meta.get("verification"):
@@ -695,7 +715,9 @@ def build_volume(number: int, *, execute: bool = True) -> Path:
             ),
             _md(f"## 参考文献\n\n{meta['citations']}"),
             _md(
-                "## まとめ\n\n価格・統計誤差だけでなく、hard constraints、下流risk、計算量、"
+                "## まとめと練習問題\n\n" + notes["conclusion"]
+                if notes
+                else "## まとめ\n\n価格・統計誤差だけでなく、hard constraints、下流risk、計算量、"
                 "data/model limitationsを同じ成果物に固定した。"
             ),
         ]
