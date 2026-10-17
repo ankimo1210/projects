@@ -1,0 +1,15 @@
+"Note: This is not an official Federal Reserve statistical release. Because this is a staff research product and not an official statistical release, it is subject to delay, revision, or methodological changes without advance notice."
+
+Series,Compounding Convention,Mnemonic(s)
+Zero-coupon yield,Continuously Compounded,SVENYXX
+Par yield,Coupon-Equivalent,SVENPYXX
+Instantaneous forward rate,Continuously Compounded,SVENFXX
+One-year forward rate,Coupon-Equivalent,SVEN1FXX
+Parameters,N/A,BETA0 to TAU2
+
+Date,BETA0,BETA1,BETA2,BETA3,SVENY10,TAU1,TAU2
+1961-06-30,4.03014932657583,-1.28678479652187,-1.9466741636327,0,NA,0.493864153178246,-999.99
+1961-07-03,NA,NA,NA,NA,NA,NA,NA
+2024-07-15,2.5,3.0,0.0,6.0,4.0,1.1,18.0
+2024-07-31,2.51475012853092,3.00895987378684,-1.44656249632585e-05,6.28688390241322,4.078,1.14031042499237,17.9148552668668
+2026-06-30,1.77427629201524e-10,4.06996715176281,-461.953317384163,472.557563149139,4.491,12.2529188743714,12.4384407166791
