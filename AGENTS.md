@@ -76,7 +76,9 @@ the root `README.md`.
 
 ### What `make test` covers
 
-`make test` runs only the `testpaths` list in the root `pyproject.toml`, plus
+`make test` runs only the `testpaths` list in the root `pyproject.toml` with
+single-threaded BLAS/OpenMP (`OMP_NUM_THREADS=1` etc., which the johnhull
+research studies require; a bare `pytest` run fails them), plus
 `sde-check` (typecheck + lint + build + node tests for
 `analytics/differential_equation/sde-book`, skipped with a notice when `npm`
 is not on PATH). Python suites outside the uv workspace (WSET, the WSET

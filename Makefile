@@ -55,8 +55,10 @@ fmt:
 fmt-fix:
 	uv run --no-sync ruff format .
 
+# Single-threaded BLAS/OpenMP: the johnhull research studies refuse to run
+# otherwise (determinism), and their own READMEs run them this way.
 test:
-	uv run --no-sync pytest
+	OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 uv run --no-sync pytest
 	@if command -v npm >/dev/null 2>&1; then \
 		$(MAKE) --no-print-directory sde-check; \
 	else \

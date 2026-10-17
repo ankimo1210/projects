@@ -1,0 +1,3 @@
+# Bulk formatting commits; use with: git config blame.ignoreRevsFile .git-blame-ignore-revs
+# ruff format of the workspace outside johnhull and quant-agent-benchmark (2026-10-17)
+88238f01484d6a592654851d380eaad222f299e4
