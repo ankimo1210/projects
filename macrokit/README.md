@@ -45,6 +45,29 @@ uv run --no-sync macrokit gdp panel --out panel.csv    # 公表とレート変�
 全メンバーを editable でインストールするので通常は問題にならないが、通常の wheel
 インストールでは `catalog/` が存在せずエラーになる。
 
+## タームプレミアム分解（2026-10）
+
+日銀レビュー 2026-E-10 の「2024年夏からの10年金利の上昇は、期待金利とタームプレミアムがほぼ同程度」
+という分解を、無料データと別の4モデル（ACM・ACM のバイアス補正・DNS-VAR・シャドーレート）で追試した。
+判定は **`term_premium_dominant`（タームプレミアムが主因）**。ゲートを通った3モデルの期待金利の寄与率が
+0.11・0.16・0.07 で、ほぼ半々とは言えなかった。ただし小標本では補正なしの推定が小さい側に偏る傾向があり、
+設定を変えると寄与率は大きく動く。表・ゲート・限界・再現手順は研究 README に書いてある。
+
+- 研究 README: [`research/2026-10-jgb-term-premium/README.md`](research/2026-10-jgb-term-premium/README.md)
+- 設計書: [`docs/superpowers/specs/2026-10-17-jgb-term-premium-design.md`](../docs/superpowers/specs/2026-10-17-jgb-term-premium-design.md)
+
+この研究で追加した CLI コマンドは2つ（`rates` は既存。2026-08-17 以降の JGB の行を足すのに使った）。
+
+```bash
+uv run --no-sync macrokit callrate    # 日銀 API の無担保コール翌日物（日次と月平均）を取り込む（カーブの最短点）
+uv run --no-sync macrokit us-term     # 米国の検証ファイル（GSW・NY 連銀 ACM・Wu-Xia）を snapshot する（約27 MB）
+```
+
+`us-term` は `data/raw` に snapshot を残すだけで、DuckDB には入れない。コード側は
+`sources/boj_api.py`・`sources/us_term.py`・`termstructure/`（`curve`・`acm`・`shadow`・`dns`・`decompose`・`synthetic`）、
+ゲートと日本の推定は `research/2026-10-jgb-term-premium/` にある。この研究で見つかった制約は
+`docs/known-limitations.md` §9。
+
 ## テスト
 
 ```bash
