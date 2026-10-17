@@ -332,6 +332,13 @@ def _japan_panel():
 
 _MISSING = object()
 GATES_COMMIT = "gates123"
+FREEZE_FIELDS = ("sha256", "code_commit", "gates_commit", "gates_sha256")
+
+
+def _unfrozen_config():
+    """The real settings with the freeze fields cleared, whatever state the real file is in."""
+    config = json.loads((RESEARCH / "config.json").read_text())
+    return config | dict.fromkeys(FREEZE_FIELDS)
 
 
 def _gates(
@@ -346,7 +353,7 @@ def _gates(
 def _setup_japan(run_japan, monkeypatch, tmp_path, gates=None, *, connect=None):
     """A frozen tiny configuration in tmp_path, a synthetic Japanese-like panel, no real data."""
     panel = _japan_panel()
-    cfg = json.loads((RESEARCH / "config.json").read_text())
+    cfg = _unfrozen_config()
     cfg["bias_correction"]["n_boot"] = 20
     cfg["intervals"] |= {"n_boot": 20, "n_draws": 5}
     cfg["shadow"]["maxiter"] = 2
@@ -581,7 +588,7 @@ def _research_repo(tmp_path):
     (tmp_path / "macrokit/src").mkdir()
     (tmp_path / "macrokit/src/module.py").write_text("a = 1\n")
     (here / "run_japan.py").write_text("b = 1\n")
-    (here / "config.json").write_text((RESEARCH / "config.json").read_text())
+    (here / "config.json").write_text(json.dumps(_unfrozen_config(), indent=2) + "\n")
     _git(tmp_path, "init", "-q")
     _git(tmp_path, "add", ".")
     _git(tmp_path, "commit", "-q", "-m", "init")
