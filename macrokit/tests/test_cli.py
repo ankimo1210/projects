@@ -29,6 +29,8 @@ def test_status_runs_against_an_empty_database(tmp_path):
     [
         ["--help"],
         ["rates", "--help"],
+        ["callrate", "--help"],
+        ["us-term", "--help"],
         ["gdp", "--help"],
         ["gdp", "releases", "--help"],
         ["gdp", "vintages", "--help"],
