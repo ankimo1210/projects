@@ -193,3 +193,36 @@ JGB タームプレミアムの追試（`research/2026-10-jgb-term-premium/`、�
   `save_snapshot` は直近の sha256 と違うときだけ新しいファイルを書くので、変更が無ければ増えないが、
   GSW の CSV は FRB が行を足すたびに sha256 が変わるため、更新が入った後の取得ごとに約 17 MB 増えうる。
   `data/raw` に古い版を消す仕組みは無い（2026-10-17 時点の `data` 全体は約 43 MB）。
+- **ACM-BC と DNS の区間のブートストラップが同じシードから始まる。** `run_japan.py` は ACM-BC の外側の
+  ブートストラップに `seeds["acm_bc"] + 1`（= 20261019）を使い、これは `seeds["dns"]` と同じ値。それぞれの区間は
+  単独では有効だが、両者は独立ではない。再実行はしていない。
+- **結果とデータが結びついていない。** `config.json` の SHA-256 が縛るのはコードとゲート結果（`gates_sha256`）で、
+  `market_rates` のデータは縛らない。結果を出した範囲の行数・日付・SHA-256 は、研究 README の「データの指紋」に
+  事後に記録した。
+
+### 未対応の軽微な指摘（2026-10 追試のレビューで保留）
+
+プランの台帳は Git 管理外で消えるので、ここに残す。2026-10-17 時点のコードで一つずつ確かめた。
+
+- `snapshot.latest_payload`: manifest が指すファイルが実在するかを確かめない（消えていてもパスを返す）。
+- `sources/boj_api.parse_series`: 壊れた JSON・`VALUES` の欠落・日付と値の長さの不一致が、`BojApiError` ではなく
+  `JSONDecodeError`・`KeyError`・`ValueError` のまま出る。`fetch_raw` は HTTP が 200 以外のとき、BoJ が返した
+  `MESSAGEID`・`MESSAGE` を捨ててステータスコードだけを報告する。
+- 月平均の `jp_call_on_mavg` の行は月初の日付で入っているので、`market_rates` を読むコードはすべて curve で絞る必要がある。
+  この branch は `expectations.previous_business_day` を `curve = 'jgb'` で絞るよう直した（`5902a223`）。main はマージ前は
+  絞っておらず、共有の `macrokit.duckdb` にはすでにコール翌日物の行があるので、マージ前に main のコードで
+  `gdp expectations` を再実行すると月初の行を営業日として数える。
+- `termstructure/curve.fit_svensson`: `sol.success` を見ず、当てはめに要る点数の下限も無い。`par_yields(0)` と
+  `ZeroPanel.column(0)` は例外にならず、末尾の要素に回り込む。`fit_month_ends` は月の途中で終わる最終月（部分月）を月末として扱う。
+- `sources/us_term.fetch`: 200 ならどんな本文でも snapshot に保存し、形式を確かめない。`parse_wuxia` と `parse_acm` は
+  短い行や脚注の行に対して堅くない（`IndexError`・`ValueError`）。
+- `decompose.verdict`: NaN を含む $s$ は、黙って `model_dependent` になる。
+- `acm.fit_acm`: 発散的な Q 動学を診断せずに返す（日本の主表の推定で、Q の最大固有値は 1.0032）。
+- `acm.bootstrap_expected`（`correction_boot` あり）: 各回の Kilian 補正を逐次で回すので遅い。
+- `termstructure/shadow.py`: `pack` は不正な入力で例外ではなく NaN を返す。単位根の近くで脆い（`_objective` の前進差分の刻みが、
+  非定常に −PENALTY を返す壁をまたぐ）。`ShadowFit` は初期値ごとの成否やメッセージを持たない。`parameter_draws` はヘッセ行列の
+  最大固有値が 0 以下だと、共分散が半正定値にならない。`synthetic.shadow_dgp` は `horizon < 120` で `IndexError`。
+- `research/2026-10-jgb-term-premium/gates.py`: G4 が落ちても G1〜G3 を続けて計算する（短絡しない）。`_commit` は
+  `gates.json` が変更中だと再実行を拒否する。
+- `research/2026-10-jgb-term-premium/run_japan.py`: ゲートを通ったモデルが3つ未満でも、推定を最後まで走らせてから判定不能になる
+  （先に止まらない）。`_dirty` は `--untracked-files=no` なので、`macrokit/src` 配下の未追跡ファイルを見ない。

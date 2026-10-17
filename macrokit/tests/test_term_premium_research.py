@@ -232,6 +232,17 @@ def test_check_hash_accepts_a_frozen_config_and_rejects_an_edit(run_japan):
         run_japan.check_hash(config)
 
 
+def test_the_committed_frozen_files_are_consistent_with_each_other(run_japan):
+    """config.json, gates.json and results.json as committed: the hashes the run checked."""
+    config = json.loads((RESEARCH / "config.json").read_text())
+    run_japan.check_hash(config)  # the same check main() makes before it runs
+    gates_bytes = (RESEARCH / "gates.json").read_bytes()
+    assert config["gates_sha256"] == hashlib.sha256(gates_bytes).hexdigest()
+    results = json.loads((RESEARCH / "results.json").read_text())
+    assert results["config_sha256"] == config["sha256"]
+    assert results["code_commit"] == config["code_commit"]
+
+
 def test_interval_or_none_is_none_for_no_draws_and_a_percentile_band_otherwise(run_japan):
     assert run_japan._interval_or_none(np.empty((0, 5)), 0.90) is None
     assert run_japan._interval_or_none([], 0.90) is None
