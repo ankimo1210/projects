@@ -1,0 +1,5 @@
+dist/
+.sites-runtime/
+.sites-checkout/
+*.tar
+qa/

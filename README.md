@@ -24,7 +24,7 @@
 | small_ma_search | 小型 M&A の調査・実行計画 | [README](small_ma_search/README.md) | 意思決定資料 | aisan_lbo_case | Markdown / HTML |
 | housing-buy-vs-rent | 住宅購入・賃貸・借上社宅の比較 | [README](housing-buy-vs-rent/README.md) | HTML シミュレーター | re_invest_os（別用途の不動産分析） | HTML / JavaScript / Node.js (stdlib) |
 
-### 定量・数学の教材と研究（7件）
+### 定量・数学の教材と研究（8件）
 
 | プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
 |---|---|---|---|---|---|
@@ -35,6 +35,7 @@
 | optimal_execution | 最適執行・板モデル・強化学習の比較 | [README](optimal_execution/README.md) | 独立した研究ラボ | johnhull / market_nn | Python / Jupyter |
 | market_nn | LOB 予測論文の構造再現 | [README](market_nn/README.md) | 研究・合成データ検証 | optimal_execution（関連テーマ） | Python / PyTorch |
 | analytics | 数学・統計・ML の体験型教材群 | [README](analytics/README.md)・[統合ポータル](analytics/report/README.md) | 教材シリーズ | 10冊の Python メンバーと SDE Web 教材 | Python / Jupyter Book / Plotly / TypeScript |
+| finance-learning-site | 日本語の金融工学入門サイト「Folio」（複利・分散・オプション） | [README](finance-learning-site/README.md) | 静的サイト・未配信 | johnhull（入門の前段） | HTML / JavaScript / Node.js (stdlib) |
 
 ### ゲーム・シミュレーター・体験アプリ（13件）
 
