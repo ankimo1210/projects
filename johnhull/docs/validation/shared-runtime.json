@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
   "description": "Book/portal runtime shared by every section. Section acceptance records do not pin these files; rewrite this manifest only after rebuilding the Book and running the release check against the changed runtime.",
-  "recorded_at": "2026-10-17T05:50:09Z",
+  "recorded_at": "2026-10-18T02:00:41Z",
   "checks": [
-    "uv run --no-sync jupyter-book build --all johnhull/book/ (2026-10-17): build succeeded, 154 warnings (153 WARNING, 1 ERROR), the same count as the 2026-10-10 baseline before MathJax was vendored",
-    "node johnhull/scripts/check_book_math.cjs johnhull/book/_build/html (2026-10-17, Chrome for Testing 145.0.7632.6, playwright-core 1.60.0): 31 pages, MathJax 3.2.2 loaded locally on all, 2832 equations typeset, 0 errors, 0 untypeset, 0 external requests, 0 page errors (4 pages contain no math)",
-    "make hull-release-check (2026-10-17, with this manifest): [PASS] johnhull A5--A8 release contract"
+    "T0: jupyter-book build --all: PASS; 154 warnings (153 WARNING, 1 existing ERROR), same as baseline",
+    "T0: check_book_math.cjs: PASS; 31 original pages, MathJax 3.2.2 offline",
+    "T0: make hull-release-check: PASS after manifest bootstrap (t0-refreshed-release.log)"
   ],
-  "note": "MathJax 3.2.2 vendored into book/_static and configured in book/_config.yml with book/_ext/book_runtime.py deduplicating script tags (commit 235603b5). First manifest: the shared runtime is no longer pinned per section.",
+  "note": "T0 empty Ch13 page plus leading reading-guide TOC part. Ledger artifact check has the same 158 pre-existing errors before and after the TOC addition; see READING_GUIDE_STATUS.md.",
   "files": {
     "book/_config.yml": "1e774ba6b0eaeef6a5b83b153daa7c24ee5fd16e4e48715cacfbf62cb3c0a5fd",
     "book/_ext/book_runtime.py": "a90b4eb19e2bae3f52bcb02951115da02301920cd154da133933501526d1641c",
     "book/_static/mathjax-3.2.2-tex-svg-full.js": "a4354ff94fd868aea0cc6eaaa79a57fda0588646fc46ee3700a349ee0a11cbe6",
     "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
-    "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c",
+    "book/_toc.yml": "53f95d641f2136b668c014a39fa21f26e9446d88a821107718607a238f924b53",
     "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210"
   }
 }
