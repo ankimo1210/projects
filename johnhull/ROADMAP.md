@@ -21,14 +21,14 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 110 private modules as of 2026-10-09, including two validated RB-F04 private modules integrated into main. P3–P7 logic, accepted BGM/business models, and completed RB-F07/RB-F05 studies are retained. The catalogue is `MODEL_INDEX.md`; earlier development branches are retained.
 
-## 現在地（2026-10-18、本編完了・読むガイド T1 独立検証後の修正）
+## 現在地（2026-10-19、本編完了・読むガイド T2 着手）
 
 **説明拡充：** [章ごとに読むガイド](docs/READING_GUIDE_PLAN_2026-10-18.md)の§7の1〜3を本人が承認。
 `codex/reading-guide`（main `7f668a39` から分離）の初稿e491b454をClaudeが独立検証し、§2の指摘を修正した。
 α/T/p*・単位・CRRの導出・用語・危機時の観測値・丸めの説明と検査道具を整えた。修正版の数値44 tests・2幅の表示と390px目視・lint・Book・共有runtime・通常releaseはPASS。
-全体testは11,907 passed / 76 skipped、SDEのtypecheck・lint・build・12 testsもPASS。tracked releaseはcommit後に確認し最終報告へ記す。
+全体testは11,907 passed / 76 skipped、SDEのtypecheck・lint・build・12 testsもPASS。8e3cbe9dのcommit後のtracked releaseもPASS。
 台帳artifact検査はClaudeが基点と同じ158エラーと確認した記録を保持し、今回は再実行・修正しない。既存証跡の全面的な鮮度を承認したとは扱わない。
-修正差分のClaude再検証と分量・文体の読後判断を待ち、T2・B1以降は停止。mainへのmergeとmainのpushはしない（作業branchは初稿e491b454までpush済み、今回の修正はpushしない）。
+修正8e3cbe9dはClaudeの再検証を通過し、ユーザーの読後判断も完了。2026-10-19の指示によりmain a115b2cbまでを作業branchへ取り込み、T2（用語集・全モデル地図・章間のつながり・パイロット改訂）に着手する。T3は影響の測定だけ行い、T2の報告後に停止する。mainへのmergeとpushはしない（作業branchは初稿e491b454までpush済み、以後は未push）。
 既存 notebook・補足教材・節台帳と本編の受入件数は変更しない。[作業状態と検証](docs/READING_GUIDE_STATUS.md)。
 
 **プロジェクトの状態（2026-10-17、ユーザー確認）：完了。** Hull 11e全37章・306節、Beyond Hull（vol13–28）、研究RB-F07・RB-F05（3本）・RB-F08・RB-F06・RB-F04 v1が完了しmain統合済み。RB-F04動的ヘッジは軽量版（問い1）のみ完了し、本研究（問い2・3、2商品ヘッジ、NN）はユーザー判断で保留。`make test`全通過・release gate PASS。`research_profiles.json` の候補や多曲線リスク・増分XVAは未承認の候補で、完了条件に含めない。
@@ -54,7 +54,8 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 110 priv
 
 `done`・`accepted`・PASSは宣言した計算・再現性・integrationの範囲を示し、市場性能の承認ではない。
 教材改善（2026-10-10）：vol18–25全8巻の説明拡充を完了。各巻の導入・用語と数式・計算手順・33図の読み方・練習問題を `teaching_notes.json` に保存し、NotebookとBookへ反映した。説明を実装・reference配列と照合し、vol18–28の全11Notebook再実行検査、関連16 tests、ruff/format、release gateをPASS。Bookを全ページ再生成し、8巻の数式と33図・横はみ出しなしをブラウザ確認した。数式表示の既存MathJaxをローカル同梱し、重複読込を防止、本編2ページでも数式表示を確認。全体buildの従来診断154件（WARNING153・ERROR1）は旧設定との比較で完全一致し、追加8巻の診断は0件。計算・reference成果物、研究ロードマップと本編受入件数は変更していない。
-説明拡充（2026-10-18、実行はSol、独立検証はClaude）：Hull本編を章ごとに読むガイドのT0・T1を実施し、初稿の独立検証後の修正・指定検査まで完了。既存notebook・補足教材・台帳は変更しない。[計画](docs/READING_GUIDE_PLAN_2026-10-18.md)。
+説明拡充（2026-10-18。実行は Sol、merge 前の独立検証は Claude）：Hull本編37章を章ごとに読むガイドをBookに足す。§7の1〜3は推奨どおり決定。T0とT1は完了した。パイロット（Ch13・Ch8）はbranch `codex/reading-guide` にあり、未統合。修正 8e3cbe9d は、Claudeの[再検証](docs/READING_GUIDE_REVIEW_2026-10-18.md)（2026-10-18）で受け取れると判断された（任意の指摘7件）。ユーザーはパイロットを読み、この形で進めると決めた（2026-10-18、「とにかく章の発展、ストーリーを大事にして」）。計画にストーリーの規則を足し、訳語はBook本体に揃える（[訳語の決定](docs/READING_GUIDE_TERMS_2026-10-18.md)）。T2は用語集・モデル地図・パイロットの改訂。モデル地図は `MODEL_INDEX.md` の全モデルを載せる対話的な図にし、一般的なストーリーにはHull以外の出典も使う。T3（2026-10-19、ユーザー）では、既存notebookの描画と準備のコードをBookのページから消し（ソースには残す）、「ギリシャ文字」を「グリークス」に直す。次はSolがT2を行う。既存notebook・補足教材・台帳は変えない。[計画](docs/READING_GUIDE_PLAN_2026-10-18.md)。
+ウェブアプリ（2026-10-18 設計、ユーザー承認、未着手）：Book・補足教材・計算機（最初は二項木）をブラウザで使えるようにする。今は本人だけ（Cloudflare Pages＋Access）、将来公開。計算は Pyodide で hullkit をそのまま動かす。実装は Sol（読むガイドの修正の後）、merge 前の独立検証は Claude。[設計](docs/superpowers/specs/2026-10-18-hull-web-app-design.md)。
 共有ランタイムの一括検査（2026-10-17、ユーザー承認）：MathJax同梱で `book/_config.yml`・`book/_ext/book_runtime.py`・`book/_static` が変わり、全節の受入記録が固定したハッシュと一致しなくなっていた（`make test` で9件失敗）。Book設定・拡張・静的アセット・portal CSSを全節共通の「共有ランタイム」とし、節ごとの記録では比較せず `docs/validation/shared-runtime.json` で一括検査する方式へ変更した（[証跡方針](docs/EVIDENCE_POLICY.md)）。過去の記録ファイルは書き換えていない。検査：Book全ページ再ビルド成功・警告154件（10-10と同数）、全31ページで数式2,832個がローカルのMathJax 3.2.2で描画・エラー/外部通信0、release gate PASS、台帳検査PASS。各節の画面の再撮影はしていない。受入件数（全306節）は不変。
 §33.2のstrike/date/MC規約、§36.4の会計/ESO条件不足による原典未再現値は保持する。
 fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画像・両保管庫復元を統合時に再実施したとは主張しない。
@@ -127,7 +128,8 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 本編に畳む（RB-F02→P1、RB-F03→P3、R11・§19.14・RB-H16→P4）、章の受入後のコラム、研究トラック（同時1本）、johnhull の外。
 研究トラック #1 は RB-F07。研究の置き場は `research/<RB-ID>/`、計算は hullkit の非公開モジュールに決定した（2026-09-27 本人承認。公開 API 昇格は別承認）。
 2026-10-09に[較正込み市場クオートGreeksのDML](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)を推奨し、[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)を作成。続く完遂指示を受け、`research/RB-F07/quote_dml/` のprivate実験から着手した。既存F07/F05 v1と従来の後続研究を保持する。
-説明拡充（2026-10-18）：[章ごとに読むガイド](docs/READING_GUIDE_PLAN_2026-10-18.md)。§7の1〜3は本人承認済み。T0は影響実測済み（基準FAILを区別）、T1パイロット（Ch13・Ch8）は初稿のClaude独立検証後の修正・指定検査まで完了し停止。T2用語集・B1–B6は停止。次は修正差分のClaude再検証とユーザーの読後判断で、受入件数は変えない。[提出物・計測・検証](docs/READING_GUIDE_STATUS.md)。
+説明拡充（2026-10-18）：[章ごとに読むガイド](docs/READING_GUIDE_PLAN_2026-10-18.md)。T0 影響の実測 → T1 パイロット（Ch13・Ch8、完了・未統合）→ T2 用語集・モデル地図・章どうしのつながり・パイロットの改訂 → T3 既存notebookの表示の整理 → B1–B6。§7 はすべて決定済み（2026-10-18〜19）。T2 の後（T3 の影響の見積もりを含む）と B1 の後は、ユーザーの確認で止める。受入件数は変えない。
+T0の基準FAILを区別した実測とT1の修正・指定検査の記録は[提出物・計測・検証](docs/READING_GUIDE_STATUS.md)に保持する。2026-10-19にmain a115b2cbを取り込みT2に着手。T3は影響見積もりのみ、T3・B1以降の実装は今回行わない。
 
 ### 研究ロードマップの実行（2026-10-09）
 
@@ -152,6 +154,8 @@ execution/cross-impact、LLM、利用権未確認の実データは既存計画�
 **実装再開は、johnhull に必要な保管庫と作業分離が整った時点**とし、ワークスペース全工程の完了は待たない。
 M15 は D1-preflight の完了後に実施し、2026-09-28 に受入。M16（§27.7）も同日に受入。M17（§27.8）は2026-09-29 に受入し、P1 を完了した（RB-F02 の推定経路と評価経路の分離を含む。上界の実装は拡張のまま）。M18（§26.1 Packages）で P2 に入り、M19（§26.2 永久アメリカン）も同日に受入。M20（§26.3 非標準アメリカン）は2026-09-30に受入。M21（§26.4 ギャップ）とM22（§26.5 フォワード・スタート）、M23（§26.6 Cliquet）、M24（§26.7 Compound）は2026-10-01に受入。M25（§26.8 Chooser）は2026-10-03に受入しP2を完了。M26（§28.1 市場リスクの価格）は同日受入・main統合済み。M27（§28.2 複数状態変数）も同日に受入しP3は2/37、独立最終レビューと修正後検証、main統合/push済み。M28（§28.3）は2026-10-04受入、P3 3/37。独立最終レビューI1修正済み、main統合/push済み。M29（§28.4）は受入、P3 4/37、独立レビューCritical0/Important0、Minor3記録。main統合・push済み。M30 §28.5はmain統合/push済み、P3 5/37。本人の2026-10-04指示で§28.6以降はロジック先行、章末まとめ受入。ロジック36/37をcodex/p3-logicへpush済み、§33.2は原典入力不足で保留。Ch28の§28.6–28.8をD3共通設定ツールで受入しP3 8/37、受入を保留しP4（Ch10–21）のロジックを先行する。RB-F07 v1・RB-F05 digital v1は2026-10-07に実装・独立検証・レビューを完了しmainへ反映。[準備文書](docs/prep/README.md)は292節・65出典・設計等9本を完成し、構造検査と独立レビューを終えた。出典は支持23件・部分確認42件で、性能の独立再現とは区別する。
 金利編は [P3設計](docs/prep/design/P3_DESIGN.md)でHW/BKの本文範囲と独立参照の条件を整理した。R11の原典成績は利息・割引を除外する規約で再現でき、現行の資金繰り計算を誤りとみなして置換しない。
+
+ウェブアプリ（2026-10-18 設計）：[設計](docs/superpowers/specs/2026-10-18-hull-web-app-design.md)。W0 試作と実測 → W1 二項木の計算機とサイトの組み立て → W2 非公開の配信（Access を先にかけてから中身を配信）→ W3 以降は別計画（ガイド統合後の再配信・計算機の追加・一般公開の判断）。実装計画はこれから作る。
 
 ## 可視化 & 深掘り(A1–A4) — 完了 (2026-06-14)
 
