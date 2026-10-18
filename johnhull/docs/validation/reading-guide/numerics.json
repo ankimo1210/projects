@@ -1,0 +1,78 @@
+{
+  "scope": "Reading-guide pilot Ch13 and Ch8. Inputs, printed values and unrounded values are distinguished. Page numbers refer to Hull 11e Global Edition; PDF physical and printed pages agree for these chapters.",
+  "date": "2026-10-18",
+  "verification": "Existing tests only; no pricing code, notebook or section ledger is changed. The file paths below are relative to johnhull/.",
+  "chapters": {
+    "13": [
+      {
+        "guide_sections": ["13.1", "13.2"],
+        "source_pages": [288, 289, 290, 291, 292, 293, 294],
+        "ledger_requirements": ["D13.1-01", "D13.1-02", "D13.2-01", "D13.2-02"],
+        "inputs": {"S0_USD": 20, "up_USD": 22, "down_USD": 18, "K_USD": 21, "T_years": 0.25, "r_continuous_per_year": 0.04, "u": 1.1, "d": 0.9, "physical_drift_per_year": 0.10},
+        "guide_values": {"up_payoff_USD": 1, "down_payoff_USD": 0, "delta_shares_per_option": 0.25, "hedged_terminal_USD": 4.5, "stock_cost_USD": 5, "printed_hedged_PV_USD": 4.455, "printed_call_USD": 0.545, "printed_Q_up_probability": 0.5503, "printed_P_up_probability": 0.6266, "printed_option_required_continuous_return_percent_per_year": 55.96},
+        "tests": ["hullkit/tests/test_trees.py::test_one_step_call_hull_13_1_global_edition", "hullkit/tests/test_binomial_foundations_replication.py", "hullkit/tests/test_binomial_foundations_measures.py::test_hull_physical_probability_and_55_96_percent_option_return"]
+      },
+      {
+        "guide_sections": ["13.3", "13.6"],
+        "source_pages": [294, 295, 296, 297, 299, 300],
+        "ledger_requirements": ["D13.3-01", "D13.3-02", "D13.6-01"],
+        "inputs": {"S0_USD": 20, "K_USD": 21, "T_years": 0.5, "dt_years": 0.25, "steps": 2, "r_continuous_per_year": 0.04, "u": 1.1, "d": 0.9},
+        "guide_values": {"terminal_stock_USD_descending": [24.2, 19.8, 16.2], "terminal_call_payoff_USD_descending": [3.2, 0, 0], "printed_up_node_USD": 1.7433, "down_node_USD": 0, "printed_root_USD": 0.9497, "printed_deltas_root_up_down": [0.4358, 0.7273, 0]},
+        "tests": ["hullkit/tests/test_trees.py::test_two_step_call_hull_fig_13_4_global_edition", "hullkit/tests/test_binomial_foundations_states.py", "hullkit/tests/test_binomial_foundations_deltas.py"]
+      },
+      {
+        "guide_sections": ["13.4", "13.5"],
+        "source_pages": [297, 298, 299],
+        "ledger_requirements": ["D13.4-01", "D13.5-01"],
+        "inputs": {"S0_USD": 50, "K_USD": 52, "T_years": 2, "dt_years": 1, "r_continuous_per_year": 0.05, "steps": 2, "u": 1.2, "d": 0.8, "printed_Q_up_probability": 0.6282},
+        "guide_values": {"terminal_stock_USD_descending": [72, 48, 32], "terminal_put_payoff_USD_descending": [0, 4, 20], "intermediate_stock_USD": [60, 40], "printed_european_children_USD": [1.4147, 9.4636], "printed_european_root_USD": 4.1923, "unrounded_european_root_USD_6dp": 4.192654, "down_node_exercise_USD": 12, "initial_exercise_USD": 2, "printed_american_root_USD": 5.0894, "unrounded_american_root_USD_6dp": 5.089632},
+        "rounding": "Printed p=0.6282 reproduces the printed European tree. American printed root also uses printed child=1.4147. The unrounded risk-neutral probability produces different last digits; the guide labels both results.",
+        "tests": ["hullkit/tests/test_binomial_foundations_put.py", "hullkit/tests/test_binomial_foundations_stopping.py", "hullkit/tests/test_trees.py::test_american_put_hull_fig_13_8"]
+      },
+      {
+        "guide_sections": ["13.8", "13.10"],
+        "source_pages": [302, 303, 304],
+        "ledger_requirements": ["D13.8-01", "D13.10-01"],
+        "inputs": {"S0_USD": 50, "K_USD": 52, "r_continuous_per_year": 0.05, "sigma_per_sqrt_year": 0.30, "T_years": 2},
+        "guide_values": {"two_step_dt_years": 1, "printed_u": 1.3499, "printed_d": 0.7408, "printed_a": 1.0513, "printed_p": 0.5097, "two_step_american_USD_2dp": 7.43, "steps": [2, 5, 500], "printed_american_prices_USD": [7.428, 7.671, 7.47], "printed_500_step_european_USD": 6.76, "printed_BSM_european_USD": 6.76},
+        "tests": ["hullkit/tests/test_binomial_foundations_crr.py", "hullkit/tests/test_binomial_foundations_derivagem.py", "hullkit/tests/test_hull_pins_options.py::test_derivagem_american_put_section_13_10"]
+      },
+      {
+        "guide_sections": ["13.9"],
+        "source_pages": [303],
+        "ledger_requirements": ["D13.9-01", "D13.9-02"],
+        "guide_values": {"steps": 30, "terminal_states": 31, "paths_expression": "2**30"},
+        "tests": ["hullkit/tests/test_binomial_foundations_convergence.py::test_hull_five_step_coefficients_and_thirty_step_state_count"]
+      },
+      {
+        "guide_sections": ["13.11"],
+        "source_pages": [304, 305, 306, 307, 308],
+        "ledger_requirements": ["D13.11-01", "D13.11-02", "D13.11-03"],
+        "inputs_index": {"S0_points": 810, "K_points": 800, "r_per_year": 0.05, "q_per_year": 0.02, "sigma_per_sqrt_year": 0.20, "T_years": 0.5, "steps": 2, "exercise": "European call"},
+        "inputs_currency": {"USD_per_foreign_unit": 0.61, "K_USD_per_foreign_unit": 0.60, "r_domestic_per_year": 0.05, "r_foreign_per_year": 0.07, "sigma_per_sqrt_year": 0.12, "T_years": 0.25, "steps": 3, "exercise": "American call"},
+        "inputs_futures": {"F0_quote_units": 31, "K_quote_units": 30, "r_per_year": 0.05, "sigma_per_sqrt_year": 0.30, "T_years": 0.75, "steps": 3, "risk_neutral_growth_factor": 1, "exercise": "American put"},
+        "guide_values": {"printed_index_points": 53.39, "printed_currency_USD_per_foreign_unit": 0.019, "printed_futures_quote_units": 2.84},
+        "tests": ["hullkit/tests/test_hull_pins_options.py::test_example_13_1_index_call_two_step_tree", "hullkit/tests/test_hull_pins_options.py::test_example_13_2_currency_american_call_three_step_tree", "hullkit/tests/test_hull_pins_options.py::test_example_13_3_futures_american_put_three_step_tree"]
+      }
+    ],
+    "8": [
+      {
+        "guide_sections": ["8.1"],
+        "source_pages": [202, 203, 204, 205],
+        "ledger_requirements": ["D8.1-01", "D8.1-02", "D8.1-03"],
+        "inputs": {"assets_USD": 100000000, "ABS_senior_mezzanine_equity_USD": [80000000, 15000000, 5000000], "ABS_senior_mezzanine_equity_fractions": [0.80, 0.15, 0.05], "CDO_senior_mezzanine_equity_fractions_of_ABS_mezzanine": [0.65, 0.25, 0.10], "illustrated_asset_loss_fraction": 0.10},
+        "guide_values": {"asset_loss_USD": 10000000, "ABS_equity_loss_USD": 5000000, "ABS_mezzanine_loss_USD": 5000000, "ABS_mezzanine_loss_fraction_exact": "1/3", "printed_ABS_mezzanine_loss_percent": 33.3, "printed_CDO_mezzanine_loss_percent": 93.3, "AAA_fraction_of_original_assets_percent": 89.75, "printed_approximate_AAA_percent": 90, "CDO_equity_plus_mezzanine_percent_of_CDO": 35, "CDO_senior_attachment_percent_of_original_assets": 10.25},
+        "assumptions": "Identical loss fraction across the underlying ABS pools; principal-loss allocation only; neither a default-probability calculation nor validation of an AAA rating.",
+        "tests": ["hullkit/tests/test_securitization_foundations_waterfall.py::test_source_all_sixteen_values_and_seven_relations", "hullkit/tests/test_securitization_foundations_waterfall.py::test_independent_dollar_losses_and_payment_priority"]
+      }
+    ]
+  },
+  "non_example_numbers": [
+    {"guide": "ch13", "value": "1979", "meaning": "Publication year, not a market/calculation input", "source": "GE pp.288,308, references to Cox/Ross/Rubinstein and Rendleman/Bartter"},
+    {"guide": "both", "meaning": "Edition, chapter/section/figure/page labels and the confirmation date are source locators; 0/1/proportionality and integer counts inside symbolic formulas are definitions, not additional numerical experiments."}
+  ],
+  "symbolic_verification": {
+    "13.7": {"source_pages": [300, 301, 302], "tests": ["hullkit/tests/test_binomial_foundations_moments.py"]},
+    "13.appendix": {"source_pages": [312, 313, 314, 315], "tests": ["hullkit/tests/test_binomial_foundations_tails.py"]}
+  }
+}

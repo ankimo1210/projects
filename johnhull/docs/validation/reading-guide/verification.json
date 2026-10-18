@@ -1,0 +1,552 @@
+{
+  "recorded_at_utc": "2026-10-18T02:38:53.792121+00:00",
+  "scope": "T0 and two T1 pilots only. T2/B1-B6 not started. No merge or push.",
+  "base_commit": "7f668a39af1d9e9b2e91e4c191f74b8b788c2c8a",
+  "branch": "codex/reading-guide",
+  "t0_commit": "00b7f44d",
+  "source_pdf_sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482",
+  "character_count_method": "Unicode Han/kana: U+3040-30FF and U+3400-9FFF. Counts headings and prose; excludes Latin letters, digits, Japanese comma/full stop, ASCII formula markup and whitespace; retains symbols within the kana block such as the middle dot. Raw source non-whitespace counts are also provided. Ch13 has 25 source pages excluding exercises pp.309-311; Ch8 has 12.",
+  "timing_usage_scope": "First-draft sampling intervals only. Shared source preparation, environment setup, waiting, later edits and full regression are excluded. Token deltas include re-used context; they are not money or a completed-chapter cost estimate.",
+  "chapters": {
+    "13": {
+      "path": "book/notebooks/guide/ch13.md",
+      "sha256": "277d9dff7b3b55d82991b6f788d2589f14e15cdfc84fbd0b34bb00618bf96b56",
+      "japanese_characters": 10266,
+      "source_non_whitespace_characters": 14470,
+      "source_pages_excluding_exercises": 25,
+      "draft_segment_start_utc": "2026-10-18T01:35:41.2925697Z",
+      "draft_segment_end_utc": "2026-10-18T01:39:48.1941740Z",
+      "draft_segment_seconds": 246.902,
+      "draft_segment_token_usage": {
+        "input_tokens": 1192632,
+        "cached_input_tokens": 1190528,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 14447,
+        "reasoning_output_tokens": 1975,
+        "total_tokens": 1207079
+      }
+    },
+    "08": {
+      "path": "book/notebooks/guide/ch08.md",
+      "sha256": "e717119a2bbb57edc569e3e2391305af301fd8a698258b538b18f09e129a3d9c",
+      "japanese_characters": 5969,
+      "source_non_whitespace_characters": 8275,
+      "source_pages_excluding_exercises": 12,
+      "draft_segment_start_utc": "2026-10-18T01:39:48.1941740Z",
+      "draft_segment_end_utc": "2026-10-18T01:42:40.2283703Z",
+      "draft_segment_seconds": 172.034,
+      "draft_segment_token_usage": {
+        "input_tokens": 1287098,
+        "cached_input_tokens": 1281024,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 9671,
+        "reasoning_output_tokens": 1714,
+        "total_tokens": 1296769
+      }
+    }
+  },
+  "protected_source_changes": [],
+  "inventory_validation": {
+    "test_locators": 20,
+    "all_test_nodes_and_ledger_requirement_ids_exist": true
+  },
+  "numerics": {
+    "started_at": "2026-10-18T01:59:28.705546+00:00",
+    "seconds": 2.03,
+    "command": [
+      "uv",
+      "run",
+      "--no-sync",
+      "--package",
+      "hullkit",
+      "pytest",
+      "-q",
+      "johnhull/hullkit/tests/test_binomial_foundations_convergence.py::test_hull_five_step_coefficients_and_thirty_step_state_count",
+      "johnhull/hullkit/tests/test_binomial_foundations_crr.py",
+      "johnhull/hullkit/tests/test_binomial_foundations_deltas.py",
+      "johnhull/hullkit/tests/test_binomial_foundations_derivagem.py",
+      "johnhull/hullkit/tests/test_binomial_foundations_measures.py::test_hull_physical_probability_and_55_96_percent_option_return",
+      "johnhull/hullkit/tests/test_binomial_foundations_moments.py",
+      "johnhull/hullkit/tests/test_binomial_foundations_put.py",
+      "johnhull/hullkit/tests/test_binomial_foundations_replication.py",
+      "johnhull/hullkit/tests/test_binomial_foundations_states.py",
+      "johnhull/hullkit/tests/test_binomial_foundations_stopping.py",
+      "johnhull/hullkit/tests/test_binomial_foundations_tails.py",
+      "johnhull/hullkit/tests/test_hull_pins_options.py::test_derivagem_american_put_section_13_10",
+      "johnhull/hullkit/tests/test_hull_pins_options.py::test_example_13_1_index_call_two_step_tree",
+      "johnhull/hullkit/tests/test_hull_pins_options.py::test_example_13_2_currency_american_call_three_step_tree",
+      "johnhull/hullkit/tests/test_hull_pins_options.py::test_example_13_3_futures_american_put_three_step_tree",
+      "johnhull/hullkit/tests/test_securitization_foundations_waterfall.py::test_independent_dollar_losses_and_payment_priority",
+      "johnhull/hullkit/tests/test_securitization_foundations_waterfall.py::test_source_all_sixteen_values_and_seven_relations",
+      "johnhull/hullkit/tests/test_trees.py::test_american_put_hull_fig_13_8",
+      "johnhull/hullkit/tests/test_trees.py::test_one_step_call_hull_13_1_global_edition",
+      "johnhull/hullkit/tests/test_trees.py::test_two_step_call_hull_fig_13_4_global_edition",
+      "--junitxml=/home/kazumasa/projects/_data/johnhull/reading-guide/numerics-tests.xml"
+    ],
+    "exit_code": 0
+  },
+  "source_review": {
+    "kind": "author review against the full relevant GE text and rendered pp.205/298",
+    "independent_review": "Pending Claude, per user instruction"
+  },
+  "readability_review": {
+    "author_review": "Paragraph logic, first-use terms/units, rounding, allocation denominators, notation reuse and source-period/current-period boundaries checked",
+    "user_decision": "Pending pilot reading; no later batch started"
+  },
+  "browser": {
+    "playwright": "1.56.0",
+    "chromium": "145.0.7632.6",
+    "checked_at": "2026-10-18T02:38:47.329Z",
+    "results": [
+      {
+        "chapter": "08",
+        "title": "第8章　証券化と金融危機：リスクは、誰のところへ移ったのか",
+        "width": 1280,
+        "document_width": 1280,
+        "mathjax": "3.2.2",
+        "rendered": 6,
+        "math_errors": 0,
+        "raw_math": 0,
+        "math_overflow": [],
+        "local_links": 21,
+        "bad_links": [],
+        "external": [],
+        "errors": [],
+        "html_sha256": "2f3125ce937ced47697c66896383510a9ea568f44b8ab417eab49fbbd9cfab6e",
+        "screenshots": [
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch08-1280-full.png",
+            "sha256": "dab716d49bd37bf1def4f391585de80b2959f94a4355d559c7e6bbea129b7fcd"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch08-1280-top.png",
+            "sha256": "f3d81244524feb976cd2564a0415a4a1f37b3ca30af665bfd22f32eea257d7ca"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch08-1280-math.png",
+            "sha256": "199081af73c9371ac6f360af26e553c2222fee5f2fb2c49d94219b289c37e664"
+          }
+        ]
+      },
+      {
+        "chapter": "13",
+        "title": "第13章　二項木：予測を置かずに、値段をつける",
+        "width": 1280,
+        "document_width": 1280,
+        "mathjax": "3.2.2",
+        "rendered": 115,
+        "math_errors": 0,
+        "raw_math": 0,
+        "math_overflow": [],
+        "local_links": 29,
+        "bad_links": [],
+        "external": [],
+        "errors": [],
+        "html_sha256": "66270d1ca835bfb69a6de1fedaa7dc92bebbed3ee8d3297de4900b3ee1daa78a",
+        "screenshots": [
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch13-1280-full.png",
+            "sha256": "b935845a66b3900c6f09e42c13dbc9fa01dcd0126b03136a1b07cb8c44b81d6e"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch13-1280-top.png",
+            "sha256": "154bdf613231ac577dc50b3dec9644d85c574b10214402f030d62f21e701fe52"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch13-1280-math.png",
+            "sha256": "3cb1886b23c413269b9707cba5e09193813500529245d74a706415c6fabfe169"
+          }
+        ]
+      },
+      {
+        "chapter": "08",
+        "title": "第8章　証券化と金融危機：リスクは、誰のところへ移ったのか",
+        "width": 390,
+        "document_width": 390,
+        "mathjax": "3.2.2",
+        "rendered": 6,
+        "math_errors": 0,
+        "raw_math": 0,
+        "math_overflow": [],
+        "local_links": 21,
+        "bad_links": [],
+        "external": [],
+        "errors": [],
+        "html_sha256": "2f3125ce937ced47697c66896383510a9ea568f44b8ab417eab49fbbd9cfab6e",
+        "screenshots": [
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch08-390-full.png",
+            "sha256": "67ef16c89c67aa2c82ba283a4a270f1b6b8f3562966ccc5f45e97a66938ee9ff"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch08-390-top.png",
+            "sha256": "255934a8410c864a735de4e12efe2b5295fa39f8f0238c1ef02ce57e68835423"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch08-390-math.png",
+            "sha256": "268fca1880b97d0cfdf251a695cc87994b1724227cb1fe041adf6117c1b10c5d"
+          }
+        ]
+      },
+      {
+        "chapter": "13",
+        "title": "第13章　二項木：予測を置かずに、値段をつける",
+        "width": 390,
+        "document_width": 390,
+        "mathjax": "3.2.2",
+        "rendered": 115,
+        "math_errors": 0,
+        "raw_math": 0,
+        "math_overflow": [],
+        "local_links": 29,
+        "bad_links": [],
+        "external": [],
+        "errors": [],
+        "html_sha256": "66270d1ca835bfb69a6de1fedaa7dc92bebbed3ee8d3297de4900b3ee1daa78a",
+        "screenshots": [
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch13-390-full.png",
+            "sha256": "a74fc87edf92bd4c2431b17f789e80a919fae4073669f0614bc6895061d26473"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch13-390-top.png",
+            "sha256": "653736f7d16dfde95837c2707a643439350cdc72778075ef337d48d52d2a06db"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch13-390-math.png",
+            "sha256": "34457e2e631362349fdb9bea9a32b6242ff970372e4c0ff88718a8eae96fd4bf"
+          }
+        ]
+      }
+    ]
+  },
+  "browser_verifier_sha256": "1b5555757cb7b6d46cad46699e642fb78187d3e9d0d21a8011151cffe50d8b3d",
+  "layout_regression": {
+    "red_log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-guide-width-red.log",
+    "red_log_sha256": "0df73f0ebb695d36eff0efd3f2c3d09ae9ee0a4b987a374c9387753d3a500fe4",
+    "green_log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-guide-width-green.log",
+    "green_log_sha256": "48bab2fa723d048885b01fccaaca4194ed785928bfac74ed6e9fcd63226808bd",
+    "red_exit_code": 1,
+    "green_exit_code": 0,
+    "fix": "Four Ch13 display equations split into aligned lines; unchanged arithmetic and numerical inputs. The verifier now checks MathJax inner scroll width as well as outer/document width.",
+    "additional_screenshot": {
+      "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/screenshots/ch13-390-last-equation.png",
+      "sha256": "64e0aeffad84be90d421931feb4e4f4ce77c340dd0e95f5c12314a3854f74dd6"
+    }
+  },
+  "original_notebook_articles": [
+    {
+      "page": "00_overview.html",
+      "article_equal": false,
+      "baseline_article_sha256": "d810b954531981d5b2a109d1d6167b89ff93a6b8606989f6a20aaad52364836c",
+      "final_article_sha256": "b0c22e8c3fe651706a3af127a1e56aab76dc96e10ac47333c159ee145671eb76"
+    },
+    {
+      "page": "01_foundations.html",
+      "article_equal": true,
+      "baseline_article_sha256": "30a1a4ae4c9ddeb56d86c506a17fcfb7d071a2f44026380bdc3864b030059631",
+      "final_article_sha256": "30a1a4ae4c9ddeb56d86c506a17fcfb7d071a2f44026380bdc3864b030059631"
+    },
+    {
+      "page": "02_options_basics.html",
+      "article_equal": true,
+      "baseline_article_sha256": "aefccfaa075d7d22e849cb8130ffceb43fafed99ff60c805701060440dfff3a9",
+      "final_article_sha256": "aefccfaa075d7d22e849cb8130ffceb43fafed99ff60c805701060440dfff3a9"
+    },
+    {
+      "page": "03_greeks.html",
+      "article_equal": true,
+      "baseline_article_sha256": "0bc5b8e8e8fbe980f572ef067c3d39f3f6b56f1717af85ee2ab7d5a0eaaae2b0",
+      "final_article_sha256": "0bc5b8e8e8fbe980f572ef067c3d39f3f6b56f1717af85ee2ab7d5a0eaaae2b0"
+    },
+    {
+      "page": "04_futures_rates.html",
+      "article_equal": true,
+      "baseline_article_sha256": "a1d517c5d0524606e3c0af948d7848a7ca7c74951d417464b442bd589db30e48",
+      "final_article_sha256": "a1d517c5d0524606e3c0af948d7848a7ca7c74951d417464b442bd589db30e48"
+    },
+    {
+      "page": "05_vol_smile.html",
+      "article_equal": true,
+      "baseline_article_sha256": "88bfe1e7e3ab23c8891aa54d7e8a3b428c2c3242f62b8643b9cd9bf31ef46d8b",
+      "final_article_sha256": "88bfe1e7e3ab23c8891aa54d7e8a3b428c2c3242f62b8643b9cd9bf31ef46d8b"
+    },
+    {
+      "page": "06_numerical.html",
+      "article_equal": true,
+      "baseline_article_sha256": "f1b369240169b903b797f29d0154284b86fcfd801a0cb5f2ae60b65e572551e4",
+      "final_article_sha256": "f1b369240169b903b797f29d0154284b86fcfd801a0cb5f2ae60b65e572551e4"
+    },
+    {
+      "page": "07_swaps.html",
+      "article_equal": true,
+      "baseline_article_sha256": "6462f3c07a5e1d930d0aedf58eee01aa96003c62732ec8f7a84b05f63d5f5a82",
+      "final_article_sha256": "6462f3c07a5e1d930d0aedf58eee01aa96003c62732ec8f7a84b05f63d5f5a82"
+    },
+    {
+      "page": "08_risk_var.html",
+      "article_equal": true,
+      "baseline_article_sha256": "3c75cb6207ed3e2beb3a25e6d89664438f1f0e60fa3437c1159e07c3eddd2f7d",
+      "final_article_sha256": "3c75cb6207ed3e2beb3a25e6d89664438f1f0e60fa3437c1159e07c3eddd2f7d"
+    },
+    {
+      "page": "09_credit_xva.html",
+      "article_equal": true,
+      "baseline_article_sha256": "ec515db5debb4f9eb9452fc72efb870836a68f324cc1718d675ef867f099dfd0",
+      "final_article_sha256": "ec515db5debb4f9eb9452fc72efb870836a68f324cc1718d675ef867f099dfd0"
+    },
+    {
+      "page": "10_exotics.html",
+      "article_equal": true,
+      "baseline_article_sha256": "d1daa0e9a1372e1f14d5c94ed381f633d6a495a76ac7c4f72be6be2b8558bee5",
+      "final_article_sha256": "d1daa0e9a1372e1f14d5c94ed381f633d6a495a76ac7c4f72be6be2b8558bee5"
+    },
+    {
+      "page": "11_ir_options.html",
+      "article_equal": true,
+      "baseline_article_sha256": "d4f468f4ad22ab0c8d73976cf235f4c40939791015f9b2c9bac93bbae6a0b369",
+      "final_article_sha256": "d4f468f4ad22ab0c8d73976cf235f4c40939791015f9b2c9bac93bbae6a0b369"
+    },
+    {
+      "page": "12_qualitative_summary.html",
+      "article_equal": true,
+      "baseline_article_sha256": "1f589b4ce58ec976ccb55218b0529f977b1ccf1f6330eabfe0bb7f625f444bb9",
+      "final_article_sha256": "1f589b4ce58ec976ccb55218b0529f977b1ccf1f6330eabfe0bb7f625f444bb9"
+    },
+    {
+      "page": "13_stochastic_calculus.html",
+      "article_equal": true,
+      "baseline_article_sha256": "f6aa4d8d133fd8116f5f3588f39b43f08c152440810cba9a883b8c27993ab1d9",
+      "final_article_sha256": "f6aa4d8d133fd8116f5f3588f39b43f08c152440810cba9a883b8c27993ab1d9"
+    },
+    {
+      "page": "14_stoch_vol_fourier.html",
+      "article_equal": true,
+      "baseline_article_sha256": "859d7ada14a1f57ad321eaedc2595e1e0ece3ccffeca08e16c24ab4e3b899f8b",
+      "final_article_sha256": "859d7ada14a1f57ad321eaedc2595e1e0ece3ccffeca08e16c24ab4e3b899f8b"
+    },
+    {
+      "page": "15_advanced_numerics.html",
+      "article_equal": true,
+      "baseline_article_sha256": "736ad671d35ba1fad12ab65b34cd0e1948ef10bc0f244275e2c09a37a63ba742",
+      "final_article_sha256": "736ad671d35ba1fad12ab65b34cd0e1948ef10bc0f244275e2c09a37a63ba742"
+    },
+    {
+      "page": "15_bsm_ch15.html",
+      "article_equal": true,
+      "baseline_article_sha256": "140a8aed5fe45fcc3cd1f3b922773c811bcffb3ca3049e9bf0f48aafab2876a3",
+      "final_article_sha256": "140a8aed5fe45fcc3cd1f3b922773c811bcffb3ca3049e9bf0f48aafab2876a3"
+    },
+    {
+      "page": "16_xva_credit.html",
+      "article_equal": true,
+      "baseline_article_sha256": "98254b8547aca42b7beba49ce4bc2503c672e5c907e531a472dd7ac2b87f09c2",
+      "final_article_sha256": "98254b8547aca42b7beba49ce4bc2503c672e5c907e531a472dd7ac2b87f09c2"
+    },
+    {
+      "page": "17_capstone.html",
+      "article_equal": true,
+      "baseline_article_sha256": "e1f2dde6e3169927e46d598e8875de91990bcbd17ef432ee3cb1cd7c19c38bd7",
+      "final_article_sha256": "e1f2dde6e3169927e46d598e8875de91990bcbd17ef432ee3cb1cd7c19c38bd7"
+    },
+    {
+      "page": "18_ml_surrogates.html",
+      "article_equal": true,
+      "baseline_article_sha256": "571666761f666a64d90418292b06da6cbeff266ee0fbc9b9f88df7ceb8f36a5c",
+      "final_article_sha256": "571666761f666a64d90418292b06da6cbeff266ee0fbc9b9f88df7ceb8f36a5c"
+    },
+    {
+      "page": "19_inverse_surfaces.html",
+      "article_equal": true,
+      "baseline_article_sha256": "c5a12647c3dba937583b0d26b727d8bfcc8acbaa5dd0316ad368d7a4041cc8fb",
+      "final_article_sha256": "c5a12647c3dba937583b0d26b727d8bfcc8acbaa5dd0316ad368d7a4041cc8fb"
+    },
+    {
+      "page": "20_surface_dynamics.html",
+      "article_equal": true,
+      "baseline_article_sha256": "aeba8d189321163f164b18c25281aaf971f3317b112b27f24256dfbf19f4bb22",
+      "final_article_sha256": "aeba8d189321163f164b18c25281aaf971f3317b112b27f24256dfbf19f4bb22"
+    },
+    {
+      "page": "21_spx_vix.html",
+      "article_equal": true,
+      "baseline_article_sha256": "45e223eeb73b038b756fdf2b01b96c9ed56d16195b5665724e7a77e72d1d27a6",
+      "final_article_sha256": "45e223eeb73b038b756fdf2b01b96c9ed56d16195b5665724e7a77e72d1d27a6"
+    },
+    {
+      "page": "22_zero_dte.html",
+      "article_equal": true,
+      "baseline_article_sha256": "ac6db129efc7b874663f770700ca1af32d92b0d5dfb9cff108d2e645c2a0a3ab",
+      "final_article_sha256": "ac6db129efc7b874663f770700ca1af32d92b0d5dfb9cff108d2e645c2a0a3ab"
+    },
+    {
+      "page": "23_rfr_post_libor.html",
+      "article_equal": true,
+      "baseline_article_sha256": "b3a067a006b275034d3eefc8ae9f7ccd539feea81cd6d0f9563d74cf375322b5",
+      "final_article_sha256": "b3a067a006b275034d3eefc8ae9f7ccd539feea81cd6d0f9563d74cf375322b5"
+    },
+    {
+      "page": "24_crypto_market_structure.html",
+      "article_equal": true,
+      "baseline_article_sha256": "041bb1904f7c781a69f8baa3c094cbde73eb8edb4266c7c3314b5c40b01d512e",
+      "final_article_sha256": "041bb1904f7c781a69f8baa3c094cbde73eb8edb4266c7c3314b5c40b01d512e"
+    },
+    {
+      "page": "25_climate_energy.html",
+      "article_equal": true,
+      "baseline_article_sha256": "b5c6344a356642d1484f053b636c0f8e607fd8e2536c714bf742e9b02166feb4",
+      "final_article_sha256": "b5c6344a356642d1484f053b636c0f8e607fd8e2536c714bf742e9b02166feb4"
+    },
+    {
+      "page": "26_inflation_jgbi.html",
+      "article_equal": true,
+      "baseline_article_sha256": "6a69e08a0ca9bd4a34ec27dfcb9b0ae3fd2ecae3585695fc2fc0e155da864e33",
+      "final_article_sha256": "6a69e08a0ca9bd4a34ec27dfcb9b0ae3fd2ecae3585695fc2fc0e155da864e33"
+    },
+    {
+      "page": "27_risk_desk.html",
+      "article_equal": true,
+      "baseline_article_sha256": "b3a86d87082d62404fd2672f1ca3e4e2cfc450eb639db0b94939555da433eeda",
+      "final_article_sha256": "b3a86d87082d62404fd2672f1ca3e4e2cfc450eb639db0b94939555da433eeda"
+    },
+    {
+      "page": "28_credit_desk.html",
+      "article_equal": true,
+      "baseline_article_sha256": "6d3042ecc728fa5596921b2f18902c420a2642f1d27945f28d1220a5d66334de",
+      "final_article_sha256": "6d3042ecc728fa5596921b2f18902c420a2642f1d27945f28d1220a5d66334de"
+    },
+    {
+      "page": "31_ir_models.html",
+      "article_equal": true,
+      "baseline_article_sha256": "2434c480570df38865f633384de147b7f9cdc49c9e3b5eaf8722cb5f60506e85",
+      "final_article_sha256": "2434c480570df38865f633384de147b7f9cdc49c9e3b5eaf8722cb5f60506e85"
+    }
+  ],
+  "regression": {
+    "checks": [
+      {
+        "phase": "t1-initial",
+        "name": "build",
+        "command": "uv run --no-sync jupyter-book build --all johnhull/book/",
+        "start_utc": "2026-10-18T02:11:15.359841+00:00",
+        "seconds": 9.26,
+        "exit_code": 0,
+        "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-initial-build.log",
+        "log_sha256": "07647442652b4492412725c9b3382d90c6d1d8a7a598209bf5b627b89754f20c"
+      },
+      {
+        "phase": "t1-initial",
+        "name": "math",
+        "command": "node johnhull/scripts/check_book_math.cjs johnhull/book/_build/html",
+        "start_utc": "2026-10-18T02:11:24.617246+00:00",
+        "seconds": 24.63,
+        "exit_code": 0,
+        "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-initial-math.log",
+        "log_sha256": "d4c50b7856ef923ba68c4591a5fcfcd200e2a1d9f6dbd2bde12c0b9e1732abd9"
+      },
+      {
+        "phase": "t1-initial",
+        "name": "lint",
+        "command": "make lint",
+        "start_utc": "2026-10-18T02:11:49.243175+00:00",
+        "seconds": 0.12,
+        "exit_code": 0,
+        "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-initial-lint.log",
+        "log_sha256": "76da1ecb6915d382effa87006d8dc5228c0ffa0433401afaa7eb652f6f64aa4e"
+      },
+      {
+        "phase": "t1-bootstrap",
+        "name": "release",
+        "command": "make hull-release-check",
+        "start_utc": "2026-10-18T02:12:05.987868+00:00",
+        "seconds": 16.54,
+        "exit_code": 0,
+        "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-bootstrap-release.log",
+        "log_sha256": "caa4d349daf36c71dcac9d5ef036a228ef61c0bee9ffa025d2257c762a125cd2"
+      },
+      {
+        "phase": "t1-final",
+        "name": "runtime",
+        "command": "uv run --no-sync --package hullkit python johnhull/scripts/shared_runtime.py --check",
+        "start_utc": "2026-10-18T02:13:04.333548+00:00",
+        "seconds": 0.05,
+        "exit_code": 0,
+        "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-final-runtime.log",
+        "log_sha256": "69ef18fd021017db3f94c9835564f2d2c00d5cfb60fa6555971823bbcacdd5cc"
+      },
+      {
+        "phase": "t1-final",
+        "name": "ledger",
+        "command": "uv run --no-sync --package hullkit python johnhull/scripts/verify_section_ledger.py --check-artifacts",
+        "start_utc": "2026-10-18T02:13:04.380374+00:00",
+        "seconds": 44.24,
+        "exit_code": 1,
+        "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-final-ledger.log",
+        "log_sha256": "1cb3f81e3f6273de18845b300fc74e00c2913822495d7154052bfce8d076faba"
+      },
+      {
+        "phase": "t1-final",
+        "name": "test",
+        "command": "make test",
+        "start_utc": "2026-10-18T02:13:48.617206+00:00",
+        "seconds": 1119.41,
+        "exit_code": 0,
+        "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-final-test.log",
+        "log_sha256": "7c7c541054a207fb849bddcd2dac18f062154b253946171eeb8ebf83addf42d6"
+      },
+      {
+        "phase": "t1-post-layout",
+        "name": "build",
+        "command": "uv run --no-sync jupyter-book build --all johnhull/book/",
+        "start_utc": "2026-10-18T02:27:15.856706+00:00",
+        "seconds": 10.68,
+        "exit_code": 0,
+        "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-post-layout-build.log",
+        "log_sha256": "f197e862217c3dc2cabbcf43331315b70c949fd2af9a796c9be43a1138d70013"
+      },
+      {
+        "phase": "t1-post-layout",
+        "name": "math",
+        "command": "node johnhull/scripts/check_book_math.cjs johnhull/book/_build/html",
+        "start_utc": "2026-10-18T02:27:26.534650+00:00",
+        "seconds": 27.34,
+        "exit_code": 0,
+        "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-post-layout-math.log",
+        "log_sha256": "d4c50b7856ef923ba68c4591a5fcfcd200e2a1d9f6dbd2bde12c0b9e1732abd9"
+      },
+      {
+        "phase": "t1-post-layout",
+        "name": "release",
+        "command": "make hull-release-check",
+        "start_utc": "2026-10-18T02:27:53.873355+00:00",
+        "seconds": 18.12,
+        "exit_code": 0,
+        "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs/t1-post-layout-release.log",
+        "log_sha256": "caa4d349daf36c71dcac9d5ef036a228ef61c0bee9ffa025d2257c762a125cd2"
+      }
+    ],
+    "full_test_completed": true,
+    "full_test_exit_code": 0,
+    "pytest_summary": [
+      "========= 11907 passed, 76 skipped, 36 warnings in 1102.62s (0:18:22) =========="
+    ],
+    "failures": []
+  },
+  "strict_artifact_gate": {
+    "exit_code": 1,
+    "baseline_error_count": 158,
+    "final_error_count": 158,
+    "added_error_messages": [],
+    "removed_error_messages": [],
+    "full_error_list": "t0.json: ledger_artifacts.errors",
+    "limit": "Equal error messages do not prove equality of whole HTML. Existing notebook article DOMs and sources are checked separately. Legacy records still pin pre-vendoring MathJax assets/old full HTML; no ledger or historical evidence is rewritten."
+  },
+  "storage": {
+    "new_output_root": "/home/kazumasa/projects/_data/johnhull/reading-guide",
+    "du_shx": "320M\t/home/kazumasa/projects/_data/johnhull/reading-guide",
+    "observed_before_removing_regenerable_fixtures": "1.4G",
+    "estimate_before_runs": "<4 GiB additional output and <4 GiB peak RAM",
+    "note": "du -x excludes the read-only F: mount; its existing vault is not new output."
+  },
+  "raw_logs_root": "/home/kazumasa/projects/_data/johnhull/reading-guide/logs"
+}

@@ -1,19 +1,20 @@
 {
   "schema_version": 1,
   "description": "Book/portal runtime shared by every section. Section acceptance records do not pin these files; rewrite this manifest only after rebuilding the Book and running the release check against the changed runtime.",
-  "recorded_at": "2026-10-18T02:00:41Z",
+  "recorded_at": "2026-10-18T02:13:04Z",
   "checks": [
-    "T0: jupyter-book build --all: PASS; 154 warnings (153 WARNING, 1 existing ERROR), same as baseline",
-    "T0: check_book_math.cjs: PASS; 31 original pages, MathJax 3.2.2 offline",
-    "T0: make hull-release-check: PASS after manifest bootstrap (t0-refreshed-release.log)"
+    "uv run --no-sync jupyter-book build --all johnhull/book/ (T1): PASS, 154 existing warnings (153 WARNING, 1 ERROR), zero added",
+    "node johnhull/scripts/check_book_math.cjs johnhull/book/_build/html (T1): PASS, 31 pages, MathJax 3.2.2 offline",
+    "node johnhull/scripts/check_reading_guides.cjs (T1): PASS, Ch8/Ch13 at 1280px and 390px, local links and math/width/network/page checks",
+    "make hull-release-check (T1 bootstrap manifest): PASS"
   ],
-  "note": "T0 empty Ch13 page plus leading reading-guide TOC part. Ledger artifact check has the same 158 pre-existing errors before and after the TOC addition; see READING_GUIDE_STATUS.md.",
+  "note": "Reading-guide pilot Ch8 and Ch13 in leading Book TOC part. Existing notebook/supplement/ledger sources unchanged; pre-existing strict artifact failures are reported separately.",
   "files": {
     "book/_config.yml": "1e774ba6b0eaeef6a5b83b153daa7c24ee5fd16e4e48715cacfbf62cb3c0a5fd",
     "book/_ext/book_runtime.py": "a90b4eb19e2bae3f52bcb02951115da02301920cd154da133933501526d1641c",
     "book/_static/mathjax-3.2.2-tex-svg-full.js": "a4354ff94fd868aea0cc6eaaa79a57fda0588646fc46ee3700a349ee0a11cbe6",
     "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
-    "book/_toc.yml": "53f95d641f2136b668c014a39fa21f26e9446d88a821107718607a238f924b53",
+    "book/_toc.yml": "2610c8d70152d2746341d90cba3bb3eec18823515baaa6f7d9652f8dfd7ce9f4",
     "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210"
   }
 }
