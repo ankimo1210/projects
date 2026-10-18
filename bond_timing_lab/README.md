@@ -10,7 +10,7 @@
 
 ## データと期間
 
-| データ | 中身 | 取得 |
+| データ | 中身 | 取得（日本時間） |
 |---|---|---|
 | GSW（FRB `feds200628.csv`） | Svensson のパラメーター（日次）。日ごとに、公表されている最長の年限で打ち切る | macrokit の snapshot（2026-10-17 取得、2026-10-09 まで） |
 | DTB3（FRED） | 3か月物 T-bill の割引利回り（日次）。月末の値を債券換算利回りにし、翌月の現金とする | 2026-10-19 |
@@ -19,6 +19,7 @@
 | ETF（yfinance） | TLT・IEF（2002-07-30〜）、BIL（2007-05-30〜）の配当込み終値。G0 と補足の表だけに使う | 2026-10-19 |
 
 - 生データは `/home/kazumasa/projects/_data/bond_timing_lab/raw/`（Git の外、約 89 MB）。macrokit の `save_snapshot` で、SHA-256・URL・取得時刻を manifest に残している。
+- 記録した結果は、すべて 2026-10-18 17:16 UTC に取った生データ（GSW は 2026-10-17 09:10 UTC）で出した。どの生データかは [results/inputs.json](results/inputs.json) にある（SHA-256・取得時刻・URL・保存先）。
 - 期間は判断の月で数える（判断 t のリターンは t+1 の月）。
 
 | 名前 | 判断の月 | 使い方 |
@@ -175,3 +176,5 @@ $PY -m bond_timing.cli run oos-b         # 1回だけ（2回目は --rerun-reaso
 $PY -m bond_timing.cli report            # results/summary.md
 $PY -m pytest -c bond_timing_lab/pyproject.toml bond_timing_lab/tests -q
 ```
+
+- `snapshot` を取り直すと、FRED-MD・DTB3・ETF などが更新され、結果も変わる。`$PY -m bond_timing.cli inputs` で今の生データを results/inputs.json に書き出し、`git diff` で記録と比べれば、同じ生データかどうか分かる。これから回す結果の JSON には、`meta.inputs` に生データの SHA-256 が入る。
