@@ -4,6 +4,9 @@
 format: jb-book
 root: notebooks/00_overview
 parts:
+  - caption: Hull 11e を章ごとに読む
+    chapters:
+      - file: notebooks/guide/ch13
   - caption: コア — Hull 11e 既刊ボリューム
     chapters:
       - file: notebooks/01_foundations
