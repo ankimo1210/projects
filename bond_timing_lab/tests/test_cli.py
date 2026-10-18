@@ -1,4 +1,5 @@
 import json
+import subprocess
 
 import numpy as np
 import pandas as pd
@@ -55,3 +56,18 @@ def test_results_serialise_numpy_values_and_periods(tmp_path):
         "c": [1, 2],
         "d": True,
     }
+
+
+def test_meta_ignores_result_files(tmp_path, monkeypatch):
+    lab = tmp_path / "lab"
+    (lab / "results").mkdir(parents=True)
+    git = ["git", "-C", str(lab), "-c", "user.name=t", "-c", "user.email=t@example.invalid"]
+    subprocess.run(["git", "init", "-q", str(lab)], check=True)
+    (lab / "code.py").write_text("x = 1\n")
+    subprocess.run([*git, "add", "code.py"], check=True)
+    subprocess.run([*git, "-c", "commit.gpgsign=false", "commit", "-qm", "init"], check=True)
+    monkeypatch.setattr(cli, "LAB", lab)
+    (lab / "results" / "g0.json").write_text("{}")
+    assert cli.meta()["dirty"] is False
+    (lab / "code.py").write_text("x = 2\n")
+    assert cli.meta()["dirty"] is True

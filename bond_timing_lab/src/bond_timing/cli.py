@@ -70,7 +70,7 @@ def meta() -> dict:
     return {
         "ran_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "git_commit": _git("rev-parse", "HEAD"),
-        "dirty": bool(_git("status", "--porcelain", "--", ".")),
+        "dirty": bool(_git("status", "--porcelain", "--", ".", ":(exclude)results")),
         "prereg_commit": _git("log", "-1", "--format=%H", "--", "PREREG.md"),
     }
 
