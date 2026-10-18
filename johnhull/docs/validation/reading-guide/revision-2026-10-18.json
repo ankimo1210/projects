@@ -1,0 +1,701 @@
+{
+  "recorded_at_utc": "2026-10-18T08:22:42.809712+00:00",
+  "scope": "Review section 2, N1-N20 only. N18 is recorded as a future runtime-write requirement. Optional Basel schedule sentence omitted. T2/B1-B6, merge and push not performed.",
+  "branch": "codex/reading-guide",
+  "revision_base_commit": "e491b454bb88b64bc419df6dbc581034e6a6aea1",
+  "original_base_commit": "7f668a39af1d9e9b2e91e4c191f74b8b788c2c8a",
+  "review": {
+    "main_commit": "6c2daf2cc06d777fecf2b6930a91a3854ba687f4",
+    "path_read": "/home/kazumasa/projects/johnhull/docs/READING_GUIDE_REVIEW_2026-10-18.md",
+    "sha256": "c08fb360751c1dae4b71d586091f64370c2adef28aaddda95d41065c872e1fe4",
+    "main_not_merged": true,
+    "revision_independent_review": "Pending Claude re-review and user reading decision."
+  },
+  "source_review": {
+    "source_pdf_sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482",
+    "method": "Read the relevant GE page images at 300 dpi; Greek alpha, mu, sigma and p-star checked visually, not inferred from pdftotext.",
+    "page_images": [
+      {
+        "printed_page": 204,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-204.png",
+        "sha256": "5dda572328a6c2739e415d4102988cf1312cc349bfe523ed297c7fb2ff8f1936"
+      },
+      {
+        "printed_page": 205,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-205.png",
+        "sha256": "8a538b64c282e7e9891188738cc693df23b703eac775fd5e06660fa2d1aa3d19"
+      },
+      {
+        "printed_page": 206,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-206.png",
+        "sha256": "709915a5d235c8a97723fa7c2dc55774e46a4cf4f306ce58928f3e0112c6daa0"
+      },
+      {
+        "printed_page": 208,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-208.png",
+        "sha256": "b738147b94ba2da6006c75e2540ab1cf019a3dc836dcc2b60d13d46cd7edbe83"
+      },
+      {
+        "printed_page": 209,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-209.png",
+        "sha256": "86efd790bf7a935278014898e070f48547bd4d1fd2ca64667a997f5c49e33c7d"
+      },
+      {
+        "printed_page": 210,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-210.png",
+        "sha256": "0b9c316350ced5b435194244df488fb30daa973a3b9dd9b512bfcd17f667c6e9"
+      },
+      {
+        "printed_page": 291,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-291.png",
+        "sha256": "e89adfa74c40cc783d4d05c6369008e10cfa50f94a753b74d1edf2f547ee9f40"
+      },
+      {
+        "printed_page": 292,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-292.png",
+        "sha256": "e914022ceb0950941830565282db3db6d952691afe7b79ec63ab44417eb493e7"
+      },
+      {
+        "printed_page": 293,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-293.png",
+        "sha256": "e1a92cf4155bd1c4a826da11b8f6b8700e9db76322f2473cb10fab93f29866de"
+      },
+      {
+        "printed_page": 294,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-294.png",
+        "sha256": "0e6c967ce77e21a912e92f4dafdc1bb14230ed810d9b9d0382e6d620f2b9e634"
+      },
+      {
+        "printed_page": 297,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-297.png",
+        "sha256": "9b9f2410973aeb2910431b5bb8ccc9fccbf4e0cb869c750a2695e84a7d83100a"
+      },
+      {
+        "printed_page": 298,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-298.png",
+        "sha256": "69be80d1ea1e461d85e75fe59538f9677c1d7e83dbc6b97c6423168716089ba7"
+      },
+      {
+        "printed_page": 299,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-299.png",
+        "sha256": "98ef098882a3966bfdfaed032645750a89e014649da72ad3621ffd088a98866f"
+      },
+      {
+        "printed_page": 300,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-300.png",
+        "sha256": "d649c7c22f04549967bba05bb29496d9a2d61100af337dd8ed82ba6560700d6d"
+      },
+      {
+        "printed_page": 301,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-301.png",
+        "sha256": "93f9951b7c8af67c613278764f313be14f6c57ad9c1ae9dac5deabc92cc6dc5a"
+      },
+      {
+        "printed_page": 303,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-303.png",
+        "sha256": "e685399ca31855145c1b556be5ed3c788eb17174dc1d3aaa53335cdb9e4b0c89"
+      },
+      {
+        "printed_page": 304,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-304.png",
+        "sha256": "26ce430f7296872f0e11d9a3849780a551e637cf1421d882b6a8aa266116adc6"
+      },
+      {
+        "printed_page": 307,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-307.png",
+        "sha256": "e55f70e8f159a5db01e034386598bada3c99728ddbcaef0cce8fc9890a704fa1"
+      },
+      {
+        "printed_page": 312,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-312.png",
+        "sha256": "29ec52af3df1b4250eef1b28de43e05e19f2f101ed6e26ba548afc5dd8af11ad"
+      },
+      {
+        "printed_page": 313,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-313.png",
+        "sha256": "5bf2c84977026357a35bad3e019e78946c0064fd25dcacdd188483ced87cf89c"
+      },
+      {
+        "printed_page": 314,
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/source/ge-314.png",
+        "sha256": "73a1227298d4479e81de962355d2cbbf719233ae78ba697e41d37e0b0d1bc6ac"
+      }
+    ],
+    "N15_primary_source": {
+      "url": "https://www.bis.org/publications/201904-consultation-consolidated-basel-framework",
+      "title": "Consolidated Basel Framework",
+      "publication_date": "2019-04-09",
+      "series": "Consultative",
+      "checked_on": "2026-10-18"
+    },
+    "public_output_limit": "No extracted original prose, source page images or reproduced source tables are added to Git."
+  },
+  "changes": [
+    {
+      "ids": [
+        "N1",
+        "N2",
+        "N4",
+        "N5",
+        "N8"
+      ],
+      "summary": "Alpha boundary distinguished from a; one-period T before multi-step delta-t; delta units; physical p-star; zero-cost futures and a=1."
+    },
+    {
+      "ids": [
+        "N3",
+        "N7"
+      ],
+      "summary": "Put transition described as this guide reading approach; unsupported even/odd oscillation statement removed."
+    },
+    {
+      "ids": [
+        "N6",
+        "N9",
+        "N10"
+      ],
+      "summary": "Mean and variance matching and first-order CRR derivation; first-use definitions; rounding discussion consolidated."
+    },
+    {
+      "ids": [
+        "N11",
+        "N12",
+        "N13",
+        "N14",
+        "N15"
+      ],
+      "summary": "Subprime/ARM/teaser terms, ABX/TABX and historical spreads, thin BBB layer; consultation link title and target corrected."
+    },
+    {
+      "ids": [
+        "N16",
+        "N17",
+        "N19",
+        "N20"
+      ],
+      "summary": "Overview order and prior branch push clarified; output directory required; display-only overflow limitation documented; exact 89.75 identity distinguished from the approximate test pin."
+    },
+    {
+      "ids": [
+        "N18"
+      ],
+      "summary": "Next runtime write must record commit and timestamp for each check; runtime manifest remains unchanged in this revision."
+    }
+  ],
+  "character_counts": {
+    "methods": {
+      "han_kana_source": "Same as initial pilot: count source Unicode U+3040-30FF or U+3400-9FFF, including headings and kana-block symbols; excludes Japanese comma/full stop, Latin letters, digits and other characters.",
+      "han_kana_plus_punctuation_visible": "From article.bd-article in the saved Sphinx HTML, remove .math (inline and display), a.headerlink, script and style. Count Han/kana as above plus Unicode category P punctuation. Includes headings, source-page labels and visible link text. Excludes markup, link destinations and CSS-generated list markers.",
+      "visible_non_whitespace_excluding_math": "Use the same article text after removing math and headerlinks; count all remaining Unicode code points except whitespace, including Latin letters, digits, symbols and punctuation. CSS-generated list markers are excluded."
+    },
+    "chapters": {
+      "13": {
+        "source_path": "book/notebooks/guide/ch13.md",
+        "source_sha256": "2d5b8ec5bfcfd15ab752e5d1d4529c31f0c1cb7637db586231ab7a2a8fe1dca3",
+        "html_sha256": "008522b0da3aa5752427321a92cfd385509fddede17d24f34bf9edc6a02c49d0",
+        "han_kana_source": 10330,
+        "han_kana_plus_punctuation_visible": 11359,
+        "visible_non_whitespace_excluding_math": 12582,
+        "raw_source_non_whitespace_supplementary": 14901,
+        "visible_text_sha256": "4724c1d097a5a0429d24d9c3e863094ec3d203782605d0c2a4c5119be049f0bf"
+      },
+      "08": {
+        "source_path": "book/notebooks/guide/ch08.md",
+        "source_sha256": "44e587fd2dc117cefe2caa9c04d15eac0b5e644e17d8f8ca2d76cce952e0fa67",
+        "html_sha256": "dc29f3a32387c131948064314708626aa0f80e084cd09c16972f494be82df5e9",
+        "han_kana_source": 5989,
+        "han_kana_plus_punctuation_visible": 6634,
+        "visible_non_whitespace_excluding_math": 7752,
+        "raw_source_non_whitespace_supplementary": 8566,
+        "visible_text_sha256": "485b1caef4d16cb7a89714b9841b5543d99bb064081fc82b34850fc3c52bc138"
+      }
+    },
+    "script_sha256": "2604425c08496e84ac3ab92bf93a0b75dfd92258ac027d71db3be7e4f24a5f5d"
+  },
+  "exact_arithmetic": {
+    "AAA_percent": "89.75",
+    "expression": "80 + 15 * 0.65",
+    "thin_BBB_layer": [
+      {
+        "underlying_loss_fraction": "0.04",
+        "tranche_loss_fraction": "0"
+      },
+      {
+        "underlying_loss_fraction": "0.05",
+        "tranche_loss_fraction": "0"
+      },
+      {
+        "underlying_loss_fraction": "0.055",
+        "tranche_loss_fraction": "0.5"
+      },
+      {
+        "underlying_loss_fraction": "0.06",
+        "tranche_loss_fraction": "1"
+      },
+      {
+        "underlying_loss_fraction": "0.07",
+        "tranche_loss_fraction": "1"
+      }
+    ]
+  },
+  "numerical_test_result": "44 passed; historical source observations are not validated by pricing tests.",
+  "environment": {
+    "hullkit_import": "/home/kazumasa/worktrees/reading-guide/johnhull/hullkit/src/hullkit/__init__.py",
+    "environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "TZ": null
+    },
+    "revision_base": "e491b454bb88b64bc419df6dbc581034e6a6aea1",
+    "main_at_check": "6c2daf2cc06d777fecf2b6930a91a3854ba687f4",
+    "protected_paths_checked": [
+      "johnhull/volumes",
+      "johnhull/notebooks",
+      "johnhull/interest_rate_models",
+      "johnhull/hullkit",
+      "johnhull/report",
+      "johnhull/docs/lessons",
+      "johnhull/docs/section_ledger.json",
+      "johnhull/docs/validation/shared-runtime.json",
+      "johnhull/book/_toc.yml",
+      "johnhull/scripts/verify_section_ledger.py",
+      "johnhull/scripts/evidence_fingerprint.py",
+      "johnhull/docs/validation/reading-guide/t0.json",
+      "johnhull/docs/validation/reading-guide/verification.json"
+    ],
+    "protected_source_changes": [],
+    "initial_guide_html_preserved_sha256": {
+      "13": "66270d1ca835bfb69a6de1fedaa7dc92bebbed3ee8d3297de4900b3ee1daa78a",
+      "08": "2f3125ce937ced47697c66896383510a9ea568f44b8ab417eab49fbbd9cfab6e"
+    }
+  },
+  "checks_at_precommit_cutoff": [
+    {
+      "phase": "quick",
+      "name": "numerics",
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "--package",
+        "hullkit",
+        "pytest",
+        "-q",
+        "johnhull/hullkit/tests/test_binomial_foundations_convergence.py::test_hull_five_step_coefficients_and_thirty_step_state_count",
+        "johnhull/hullkit/tests/test_binomial_foundations_crr.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_deltas.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_derivagem.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_measures.py::test_hull_physical_probability_and_55_96_percent_option_return",
+        "johnhull/hullkit/tests/test_binomial_foundations_moments.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_put.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_replication.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_states.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_stopping.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_tails.py",
+        "johnhull/hullkit/tests/test_hull_pins_options.py::test_derivagem_american_put_section_13_10",
+        "johnhull/hullkit/tests/test_hull_pins_options.py::test_example_13_1_index_call_two_step_tree",
+        "johnhull/hullkit/tests/test_hull_pins_options.py::test_example_13_2_currency_american_call_three_step_tree",
+        "johnhull/hullkit/tests/test_hull_pins_options.py::test_example_13_3_futures_american_put_three_step_tree",
+        "johnhull/hullkit/tests/test_securitization_foundations_waterfall.py::test_independent_dollar_losses_and_payment_priority",
+        "johnhull/hullkit/tests/test_securitization_foundations_waterfall.py::test_source_all_sixteen_values_and_seven_relations",
+        "johnhull/hullkit/tests/test_trees.py::test_american_put_hull_fig_13_8",
+        "johnhull/hullkit/tests/test_trees.py::test_one_step_call_hull_13_1_global_edition",
+        "johnhull/hullkit/tests/test_trees.py::test_two_step_call_hull_fig_13_4_global_edition",
+        "--junitxml=/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/numerics-tests.xml"
+      ],
+      "started_at_utc": "2026-10-18T07:54:23.137806+00:00",
+      "seconds": 2.636,
+      "exit_code": 0,
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/logs/quick-numerics.log",
+      "log_sha256": "8773024735b4f9f62485d9c9b3570cbda10b5c3b21495cb0a0cebec8b395fdfa",
+      "passed": true
+    },
+    {
+      "phase": "quick",
+      "name": "guard-unset",
+      "command": [
+        "node",
+        "johnhull/scripts/check_reading_guides.cjs"
+      ],
+      "started_at_utc": "2026-10-18T07:54:25.774329+00:00",
+      "seconds": 0.025,
+      "exit_code": 1,
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/logs/quick-guard-unset.log",
+      "log_sha256": "68bf2b4a2ae55556b38c1801e2094842fd889d20964e211f9ea299e26fb56f35",
+      "expected_nonzero_exit": true,
+      "expected_message_found": true,
+      "passed": true
+    },
+    {
+      "phase": "quick",
+      "name": "guard-blank",
+      "command": [
+        "node",
+        "johnhull/scripts/check_reading_guides.cjs"
+      ],
+      "started_at_utc": "2026-10-18T07:54:25.800085+00:00",
+      "seconds": 0.02,
+      "exit_code": 1,
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/logs/quick-guard-blank.log",
+      "log_sha256": "eda49f587aaa5bfb2b84f0bc2eef8cb9573eea75f7781be06d88419768b306ef",
+      "expected_nonzero_exit": true,
+      "expected_message_found": true,
+      "passed": true
+    },
+    {
+      "phase": "fullbuild",
+      "name": "build",
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "jupyter-book",
+        "build",
+        "--all",
+        "--path-output",
+        "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/book",
+        "johnhull/book/"
+      ],
+      "started_at_utc": "2026-10-18T07:54:25.847720+00:00",
+      "seconds": 10.683,
+      "exit_code": 0,
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/logs/fullbuild-build.log",
+      "log_sha256": "45a691ca5df97c8dc7210b24a5a5a9e475dc9bfa3949e4dcaf3c4efd94be9210",
+      "passed": true
+    },
+    {
+      "phase": "final-presentation",
+      "name": "math",
+      "command": [
+        "node",
+        "johnhull/scripts/check_book_math.cjs",
+        "johnhull/book/_build/html"
+      ],
+      "started_at_utc": "2026-10-18T07:56:14.996747+00:00",
+      "seconds": 27.722,
+      "exit_code": 0,
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/logs/final-presentation-math.log",
+      "log_sha256": "d4c50b7856ef923ba68c4591a5fcfcd200e2a1d9f6dbd2bde12c0b9e1732abd9",
+      "passed": true
+    },
+    {
+      "phase": "final-presentation",
+      "name": "guides",
+      "command": [
+        "node",
+        "johnhull/scripts/check_reading_guides.cjs"
+      ],
+      "started_at_utc": "2026-10-18T07:56:42.719365+00:00",
+      "seconds": 5.361,
+      "exit_code": 0,
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/logs/final-presentation-guides.log",
+      "log_sha256": "6abad5750ca4ef50b284ff1ea9ab141c8414ee70f684278c831436cbf78a289a",
+      "passed": true
+    },
+    {
+      "phase": "final-presentation",
+      "name": "runtime",
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "--package",
+        "hullkit",
+        "python",
+        "johnhull/scripts/shared_runtime.py",
+        "--check"
+      ],
+      "started_at_utc": "2026-10-18T07:56:48.080598+00:00",
+      "seconds": 0.048,
+      "exit_code": 0,
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/logs/final-presentation-runtime.log",
+      "log_sha256": "69ef18fd021017db3f94c9835564f2d2c00d5cfb60fa6555971823bbcacdd5cc",
+      "passed": true
+    },
+    {
+      "phase": "final-presentation",
+      "name": "lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "started_at_utc": "2026-10-18T07:56:48.129345+00:00",
+      "seconds": 0.058,
+      "exit_code": 0,
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/logs/final-presentation-lint.log",
+      "log_sha256": "76da1ecb6915d382effa87006d8dc5228c0ffa0433401afaa7eb652f6f64aa4e",
+      "passed": true
+    },
+    {
+      "phase": "pre-commit",
+      "name": "release-working",
+      "command": [
+        "make",
+        "hull-release-check"
+      ],
+      "started_at_utc": "2026-10-18T08:04:01.978116+00:00",
+      "seconds": 17.692,
+      "exit_code": 0,
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/logs/pre-commit-release-working.log",
+      "log_sha256": "caa4d349daf36c71dcac9d5ef036a228ef61c0bee9ffa025d2257c762a125cd2",
+      "passed": true
+    },
+    {
+      "phase": "full-regression",
+      "name": "test",
+      "command": [
+        "make",
+        "test"
+      ],
+      "started_at_utc": "2026-10-18T08:00:52.538909+00:00",
+      "seconds": 1149.649,
+      "exit_code": 0,
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/logs/full-regression-test.log",
+      "log_sha256": "ffb9ea1a26d8d95e2736bf2ca08533b0eaa0e3b042c4fe45047638fd5979a029",
+      "passed": true
+    }
+  ],
+  "full_test_summary": "========= 11907 passed, 76 skipped, 36 warnings in 1132.99s (0:18:52) ==========",
+  "sde_checks_in_make_test": "Typecheck, lint, build and 12 node tests passed.",
+  "book_diagnostics": {
+    "WARNING_labels": 153,
+    "ERROR_labels": 1,
+    "total": 154,
+    "guide_diagnostics": 0,
+    "baseline_ERROR": "15_bsm_ch15.ipynb:10005: Document or section may not begin with a transition."
+  },
+  "browser": {
+    "playwright": "1.56.0",
+    "chromium": "145.0.7632.6",
+    "checked_at": "2026-10-18T07:56:48.071Z",
+    "results": [
+      {
+        "chapter": "08",
+        "title": "第8章　証券化と金融危機：リスクは、誰のところへ移ったのか",
+        "width": 1280,
+        "document_width": 1280,
+        "mathjax": "3.2.2",
+        "rendered": 8,
+        "math_errors": 0,
+        "raw_math": 0,
+        "math_overflow": [],
+        "local_links": 21,
+        "bad_links": [],
+        "external": [],
+        "errors": [],
+        "html_sha256": "dc29f3a32387c131948064314708626aa0f80e084cd09c16972f494be82df5e9",
+        "screenshots": [
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch08-1280-full.png",
+            "sha256": "c2319ab66bc080f6a3d855972ade13dcbf1b4a689e5850754d2124d2b936f3f6"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch08-1280-top.png",
+            "sha256": "f3d81244524feb976cd2564a0415a4a1f37b3ca30af665bfd22f32eea257d7ca"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch08-1280-math.png",
+            "sha256": "199081af73c9371ac6f360af26e553c2222fee5f2fb2c49d94219b289c37e664"
+          }
+        ]
+      },
+      {
+        "chapter": "13",
+        "title": "第13章　二項木：予測を置かずに、値段をつける",
+        "width": 1280,
+        "document_width": 1280,
+        "mathjax": "3.2.2",
+        "rendered": 133,
+        "math_errors": 0,
+        "raw_math": 0,
+        "math_overflow": [],
+        "local_links": 30,
+        "bad_links": [],
+        "external": [],
+        "errors": [],
+        "html_sha256": "008522b0da3aa5752427321a92cfd385509fddede17d24f34bf9edc6a02c49d0",
+        "screenshots": [
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch13-1280-full.png",
+            "sha256": "f787c11b8c6a351c6768efd68821dcc5126d214ae5e78870073f4d99533f7d27"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch13-1280-top.png",
+            "sha256": "5661d487e468a0434e93447edc37c5202288b39e33b469745cb6133e19d47d3d"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch13-1280-math.png",
+            "sha256": "0a76b7dd87c18fb670a2f353d423517667b4c307ed3ec753c381110a29bd50ef"
+          }
+        ]
+      },
+      {
+        "chapter": "08",
+        "title": "第8章　証券化と金融危機：リスクは、誰のところへ移ったのか",
+        "width": 390,
+        "document_width": 390,
+        "mathjax": "3.2.2",
+        "rendered": 8,
+        "math_errors": 0,
+        "raw_math": 0,
+        "math_overflow": [],
+        "local_links": 21,
+        "bad_links": [],
+        "external": [],
+        "errors": [],
+        "html_sha256": "dc29f3a32387c131948064314708626aa0f80e084cd09c16972f494be82df5e9",
+        "screenshots": [
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch08-390-full.png",
+            "sha256": "516b7cffbb9611d9bca1db6c3902e5c1b2b38514180fa19d852cb0e62374171a"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch08-390-top.png",
+            "sha256": "255934a8410c864a735de4e12efe2b5295fa39f8f0238c1ef02ce57e68835423"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch08-390-math.png",
+            "sha256": "268fca1880b97d0cfdf251a695cc87994b1724227cb1fe041adf6117c1b10c5d"
+          }
+        ]
+      },
+      {
+        "chapter": "13",
+        "title": "第13章　二項木：予測を置かずに、値段をつける",
+        "width": 390,
+        "document_width": 390,
+        "mathjax": "3.2.2",
+        "rendered": 133,
+        "math_errors": 0,
+        "raw_math": 0,
+        "math_overflow": [],
+        "local_links": 30,
+        "bad_links": [],
+        "external": [],
+        "errors": [],
+        "html_sha256": "008522b0da3aa5752427321a92cfd385509fddede17d24f34bf9edc6a02c49d0",
+        "screenshots": [
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch13-390-full.png",
+            "sha256": "33a7269ec56f51825b661b24e0e287e6bfab767e4b134def18bf76ec76dfcaad"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch13-390-top.png",
+            "sha256": "483fa824c72c30ba57f4dab3c002b5219ebf7aaee6d49b6677784eadc432b847"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/final-presentation/screenshots/ch13-390-math.png",
+            "sha256": "1c761cfde80fa977e94bf7d353971de6ef2f36c9c10d1d49201902835ec81f99"
+          }
+        ]
+      }
+    ]
+  },
+  "visual_review_390": {
+    "inspection": [
+      {
+        "chapter": "13",
+        "width": 390,
+        "inline_overflow": [],
+        "screenshots": [
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/visual-final/ch13-390-mean-variance.png",
+            "sha256": "a3ad08e4943d5497094c0b2ea68fc918a0800dc4cad9874e080a9e88966c723c"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/visual-final/ch13-390-crr-width.png",
+            "sha256": "783a7c07eef8564bd01e1bde96108c48e944e90e6ca9f4bb0a52022eeb8bf0ea"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/visual-final/ch13-390-alpha-boundary.png",
+            "sha256": "54f7a080558e8c4aac808726c8ad3ae9b0a7cf39efda92cffebc401e36822905"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/visual-final/ch13-390-rounding.png",
+            "sha256": "9715de60ead73ba8d04193952645918d92d7d54499317eb50d61d7a70f1a932f"
+          }
+        ]
+      },
+      {
+        "chapter": "08",
+        "width": 390,
+        "inline_overflow": [],
+        "screenshots": [
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/visual-final/ch08-390-arm.png",
+            "sha256": "dfcf3f56cc2dc6803bfe2db9807430eafd96582a94955c86d57ffc8c8b3f352a"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/visual-final/ch08-390-abx-tabx.png",
+            "sha256": "eb85deda86fa5ccb6e5462b80a932586d827d7b858d5baf90c85c6c5017d9f80"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/visual-final/ch08-390-spreads.png",
+            "sha256": "2d6c2de2e238a2aae9586eda86cbb866779cad069efe2dfade9c12c741822afc"
+          },
+          {
+            "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/visual-final/ch08-390-thin-bbb.png",
+            "sha256": "2a0b20c048d357bed9f41823a4a67792cd88cb4379555b0516520ea08ceba44e"
+          }
+        ]
+      }
+    ],
+    "manual_review": "All eight targeted screenshots inspected: mean/variance, CRR width, alpha, rounding, ARM, ABX/TABX, spreads, thin BBB. No clipped mathematics."
+  },
+  "original_notebook_articles": {
+    "pages_checked": 31,
+    "unchanged": 30,
+    "changed": [
+      "00_overview.html"
+    ],
+    "limit": "Navigation and whole HTML can change; this is an article-only comparison against the preserved initial-pilot build."
+  },
+  "protected_source_changes": [],
+  "known_baseline_issues": {
+    "strict_artifact_gate": "Not rerun or modified in this revision. Claude independently found the same 158 errors at the original base and initial pilot: 89 whole-HTML digests and 69 D1 fingerprint errors (book_assets only). No acceptance freshness or merge approval is claimed.",
+    "book_ERROR": "Existing diagnostic preserved; build exits 0 despite its ERROR label.",
+    "general_story_source_scope": "Unchanged; expansion beyond Hull remains a user reading decision."
+  },
+  "non_adopted_attempts": [
+    {
+      "record": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/presentation-checks.json",
+      "reason": "Ran against the initial build before the bind-mount switch; excluded. Adopt final-presentation results only."
+    },
+    {
+      "record": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/visual/inspection.json",
+      "reason": "An extra inline probe used clientWidth on inline elements (zero by DOM definition) and produced false positives. Replaced task-local probe with SVG/container bounding boxes; no product layout change."
+    },
+    {
+      "record": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/regression-checks.json",
+      "reason": "Precommit --require-tracked rejected the intentionally changed overview versus HEAD. Ordinary release passed; the tracked variant must run after committing."
+    }
+  ],
+  "post_commit_validation": {
+    "status_at_record_cutoff": "Run after commit because overview must match HEAD.",
+    "command": "make hull-release-check HULL_RELEASE_FLAGS=--require-tracked",
+    "result_record": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/post-commit-checks.json",
+    "result_also_reported_in_final_response": true
+  },
+  "timing_usage": {
+    "request_started_at_utc": "2026-10-18T07:43:05.455Z",
+    "precommit_record_cutoff_utc": "2026-10-18T08:21:26.9950258Z",
+    "latest_stored_usage_counter_utc": "2026-10-18T08:20:41.965Z",
+    "elapsed_seconds": 2301.54,
+    "token_usage_delta": {
+      "input_tokens": 16399192,
+      "cached_input_tokens": 16124544,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 81219,
+      "reasoning_output_tokens": 45265,
+      "total_tokens": 16480411,
+      "non_cached_input_tokens": 274648
+    },
+    "scope": "Whole correction request through the precommit record cutoff, including source review, editing, tooling, waiting and regression. Uses this chat cumulative counters before the user request and at cutoff. Subsequent commit, tracked-release check and final response are excluded. Tokens are not a charge estimate."
+  },
+  "storage": {
+    "output_root": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20",
+    "du_shx": "314M",
+    "estimated_before_checks": "Below 0.5 GiB output, below 4 GiB sequential verification peak memory. No research arrays regenerated."
+  }
+}

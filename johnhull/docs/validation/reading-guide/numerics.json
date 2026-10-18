@@ -1,7 +1,7 @@
 {
   "scope": "Reading-guide pilot Ch13 and Ch8. Inputs, printed values and unrounded values are distinguished. Page numbers refer to Hull 11e Global Edition; PDF physical and printed pages agree for these chapters.",
   "date": "2026-10-18",
-  "verification": "Existing tests only; no pricing code, notebook or section ledger is changed. The file paths below are relative to johnhull/.",
+  "verification": "Existing reference tests plus exact arithmetic checks recorded in revision-2026-10-18.json; no pricing code, notebook or section ledger is changed. Historical observations are checked against GE page images, not pricing tests. The file paths below are relative to johnhull/.",
   "chapters": {
     "13": [
       {
@@ -63,11 +63,45 @@
         "inputs": {"assets_USD": 100000000, "ABS_senior_mezzanine_equity_USD": [80000000, 15000000, 5000000], "ABS_senior_mezzanine_equity_fractions": [0.80, 0.15, 0.05], "CDO_senior_mezzanine_equity_fractions_of_ABS_mezzanine": [0.65, 0.25, 0.10], "illustrated_asset_loss_fraction": 0.10},
         "guide_values": {"asset_loss_USD": 10000000, "ABS_equity_loss_USD": 5000000, "ABS_mezzanine_loss_USD": 5000000, "ABS_mezzanine_loss_fraction_exact": "1/3", "printed_ABS_mezzanine_loss_percent": 33.3, "printed_CDO_mezzanine_loss_percent": 93.3, "AAA_fraction_of_original_assets_percent": 89.75, "printed_approximate_AAA_percent": 90, "CDO_equity_plus_mezzanine_percent_of_CDO": 35, "CDO_senior_attachment_percent_of_original_assets": 10.25},
         "assumptions": "Identical loss fraction across the underlying ABS pools; principal-loss allocation only; neither a default-probability calculation nor validation of an AAA rating.",
+        "exact_derived_value": {
+          "name": "AAA_fraction_of_original_assets_percent",
+          "expression": "80 + 15 * 0.65 = 89.75",
+          "basis": "80 percent senior ABS plus 65 percent of the 15 percent ABS mezzanine principal; GE pp.204-205, Figure 8.3. Exact arithmetic identity, not an independently observed or calibrated value.",
+          "test_limit": "test_source_all_sixteen_values_and_seven_relations checks approximately 90 with absolute tolerance 0.5; it does not pin 89.75 exactly.",
+          "verification": "Rechecked with decimal arithmetic; see revision-2026-10-18.json."
+        },
         "tests": ["hullkit/tests/test_securitization_foundations_waterfall.py::test_source_all_sixteen_values_and_seven_relations", "hullkit/tests/test_securitization_foundations_waterfall.py::test_independent_dollar_losses_and_payment_priority"]
+      },
+      {
+        "guide_sections": ["8.3"],
+        "source_pages": [210],
+        "inputs": {"underlying_loss_fraction": "L", "attachment_fraction": "0.05", "detachment_fraction": "0.06", "tranche_width_fraction": "0.01"},
+        "guide_values": {"tranche_loss_fraction": "min(1, max(0, (L - 0.05) / 0.01))", "loss_below_attachment": 0, "loss_above_detachment": 1},
+        "verification": "Loss-allocation identity derived from the GE example's 5-6 percent layer; decimal arithmetic checks below, at and above its boundaries are recorded in revision-2026-10-18.json. No new pricing API or historical default-probability estimate.",
+        "tests": []
       }
     ]
   },
   "non_example_numbers": [
+    {
+      "guide": "ch08", "guide_section": "8.2", "source_pages": [206],
+      "values": {"typical_teaser_rate_percent_about": 6, "subsequent_LIBOR_tenor_months": 6, "subsequent_spread_percentage_points": 6},
+      "meaning": "Typical historical ARM conditions described by GE: about 6 percent initially, then six-month LIBOR plus 6 percentage points; not current loan terms.",
+      "verification": "GE p.206 page image, 300 dpi."
+    },
+    {
+      "guide": "ch08", "guide_section": "8.2", "source_pages": [208],
+      "values": {"ABX_original_BBB_value_loss_percent_end_2007_about": 80, "ABX_original_BBB_value_loss_percent_mid_2009_about": 97, "TABX_original_AAA_value_loss_percent_end_2007_about": 80, "TABX_original_AAA_value_mid_2009": "essentially worthless"},
+      "meaning": "Historical index observations reported by GE. ABX tracks ABS tranches; TABX tracks ABS CDO tranches formed from BBB ABS tranches. Not mortgage principal losses or default probabilities.",
+      "verification": "GE p.208 page image, 300 dpi."
+    },
+    {
+      "guide": "ch08", "guide_section": "8.2", "source_pages": [209],
+      "values": {"LIBOR_OIS_tenor_months": 3, "LIBOR_OIS_spread_bp_briefly_in_October_2008": 364, "TED_Eurodollar_deposit_and_Treasury_tenor_months": 3, "TED_normal_spread_bp": [30, 50], "TED_spread_bp_in_October_2008": ">450"},
+      "meaning": "Historical spreads described by GE, not current observations. TED is the three-month Eurodollar deposit rate minus the three-month Treasury rate.",
+      "verification": "GE p.209 page image, 300 dpi."
+    },
+    {"guide": "ch08", "value": "1 bp = 0.01 percentage point", "meaning": "Definition of the basis-point unit used for the GE p.209 observations; a unit conversion, not an additional numerical experiment."},
     {"guide": "ch13", "value": "1979", "meaning": "Publication year, not a market/calculation input", "source": "GE pp.288,308, references to Cox/Ross/Rubinstein and Rendleman/Bartter"},
     {"guide": "both", "meaning": "Edition, chapter/section/figure/page labels and the confirmation date are source locators; 0/1/proportionality and integer counts inside symbolic formulas are definitions, not additional numerical experiments."}
   ],

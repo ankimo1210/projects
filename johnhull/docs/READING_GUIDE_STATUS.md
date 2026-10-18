@@ -6,7 +6,7 @@
 
 既存の notebook・節別補足教材・節台帳を変更せず、Book に独自の日本語解説を追加する。
 今回は T0 の影響実測と T1 の Ch13・Ch8 だけを扱う。ユーザーの読後判断と Claude の独立検証を待ち、T2・B1–B6 には進まない。
-main への merge・push は行わない。
+main への merge と main の push はしない（作業branchは初稿e491b454までpush済み）。今回の修正はpushしない。
 
 ## 判断と作業環境
 
@@ -24,7 +24,7 @@ main への merge・push は行わない。
 | 段 | 状態 | 完了条件・次の操作 |
 |---|---|---|
 | T0 | 影響の実測済み | 新規の台帳エラーなし。基準からのartifact検査FAILを保持。全体testは環境整備後の残1件の再検査まで実施 |
-| T1 | 本文作成・自己検査済み、ここで停止 | Ch13・Ch8をBookへ反映。数値44 tests・2幅の表示・lint・全体test・releaseを確認。本人の読後判断とClaudeの独立検証待ち |
+| T1 | 独立検証の指摘修正・指定検査済み、ここで停止 | §2の修正をBookへ反映。数値44 tests・2幅の表示・目視・lint・共有runtime・通常release・全体testを確認。commit後にtracked releaseを確認し、修正差分の再検証と本人の読後判断を待つ |
 | T2・B1–B6 | 停止 | パイロット読後のユーザー判断後、別途着手する |
 
 ## 検証・引き継ぎ
@@ -48,7 +48,7 @@ main への merge・push は行わない。
 環境由来の失敗は、repo内に置いたpytest一時保存先、ローカル参照ファイルの不足、`.venv` の入口不足だった。
 pytest固有の一時領域は通常設定に戻し、ガイドの作業データは上記データrootへ保存する。
 
-### T1 の提出物と計測
+### T1 初稿の提出物と計測（e491b454）
 
 | 章 | ソース | 和文の文字数 | 対象原典頁 | 初稿区間の時間 | 初稿区間の出力tokens |
 |---|---|---:|---:|---:|---:|
@@ -91,13 +91,57 @@ TOC追加により既存ページのナビゲーションHTMLは変わる。元�
 
 最終Book・最小の表示画像・ログを外部データrootに保持する。再生成可能な分離プレビューと初回testの一時fixtureは削除した。
 `du -shx /home/kazumasa/projects/_data/johnhull/reading-guide` は整理後 **319M**（整理前の観測は1.4G）。読取専用のF:マウントは `-x` で除外し、既存保管庫の容量を新規出力へ数えていない。
-mainへのmerge・pushは行わず、worktreeと外部データをパイロット読後判断・独立検証まで残す。
+mainへのmergeとmainのpushはしない（作業branchは初稿e491b454までpush済み）。worktreeと外部データを修正差分の再検証・パイロット読後判断まで残す。
+
+## 独立検証後の修正（2026-10-18）
+
+指示書はmain `6c2daf2c` の `johnhull/docs/READING_GUIDE_REVIEW_2026-10-18.md` を指定パスから全文読了。
+mainの変更は取り込まず、`codex/reading-guide` のe491b454から§2を修正した。
+
+| 指摘 | 修正・扱い |
+|---|---|
+| N1・N2・N4・N5・N8 | 付録の境界をαへ訂正し、aとの別記号を明記。原典の1期間はT、デルタの分子の単位はオプション1単位あたりのドル。現実確率p*と、先物のa=1の理由を補足 |
+| N3・N7 | プットへ移る理由はガイドの読み方として書き、原典の意図としない。GE第13章にない偶数・奇数段の振動の説明を削除 |
+| N6・N9・N10 | 平均・分散からCRRの枝幅へ進む導出と初出語の定義を追加。丸めの注意を「数値の読み方」へ集約 |
+| N11–N15 | subprime・ARM・teaser rate、ABX/TABX、LIBOR–OIS/TED、薄いBBB層の具体例を補足。BISのリンクを2019年4月の市中協議文書の名称・URLへ訂正 |
+| N16・N17・N19・N20 | overviewの章順、push済み範囲の記録を訂正。表示検査の出力先を必須化しdisplay数式だけを幅検査する制限を明記。89.75%の恒等式と既存テストの許容差を区別 |
+| N18 | 次回runtime更新時に各検査のcommit・時刻を残す要件をREADMEへ記録。今回manifestは変更しない |
+
+変更した原典の頁・記号・歴史的数値はGE PDFの300dpi画像で照合し、画像は新しい外部出力rootだけに保存する。
+新しい歴史的数値を `numerics.json` の `non_example_numbers` へ登録し、89.75%と損失5〜6%のBBB層は十進数で検算した。
+任意のBaselの日程の一文は追加していない。指示書§3のstrict gate、bsm15のERROR、一般的なストーリーの出典の範囲は変更していない。
+
+### 修正版の文字数
+
+| 章 | ①従来方式（漢字・かな） | ②和文＋約物 | ③数式を除く可視文字 |
+|---|---:|---:|---:|
+| Ch13 | 10,330 | 11,359 | 12,582 |
+| Ch8 | 5,989 | 6,634 | 7,752 |
+
+①の原典1頁あたりはCh13約413字、Ch8約499字。①は初稿と同じUnicode範囲でソースを数える。
+②③は生成HTMLのarticle本文からinline/display数式と見出しリンク記号を除き、②は漢字・かな＋UnicodeカテゴリーP、③は英数字・記号を含む空白以外を数える。
+見出し・頁参照・リンクの表示文は含み、記法・URL・CSS生成のリスト番号は含めない。詳細と対象ファイルの指紋は [修正検証記録](validation/reading-guide/revision-2026-10-18.json)。
+
+### 修正後の検査・計測
+
+数値44 tests、出力先未指定/空白の停止確認、全Book build、既存31ページのMathJax、新規2章の1280px/390px検査、390pxの目視、共有runtime整合、lintはPASS。
+通常releaseはPASS。全体testは11,907 passed / 76 skipped / 36 warnings、exit 0（pytest 1,132.99秒、make全体1,149.649秒）。SDEのtypecheck・lint・build・12 testsもPASS。
+Bookは153 WARNING＋既存1 ERRORの計154件で従来と同じ。ガイド由来の警告は0。元の30 notebookのarticle DOMは初稿の生成物と一致する。
+strict gateは今回は再実行せず、Claudeが基点と同じと確認した158件を保持する。
+releaseの`--require-tracked`は修正中のoverviewとHEADの差で停止するため、最終commit後に実行し、`post-commit-checks.json`と最終報告へ結果を残す。
+初稿の検証JSON・ログ・画像は保持し、新しい検査出力は `/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/` へ保存する。
+Bookのbind mountは今回の `book/_build` へ切り替え、以前の `reading-guide/build/` は保持した。今回の容量実測は修正検証記録の `storage.du_shx` に残す。
+
+修正依頼の受領からcommit前の記録締切りまで **2,301.540秒（38分22秒）**。原典照合・編集・道具の調整・待ち時間・回帰を含む。
+使用量は入力 **16,399,192 tokens**（キャッシュ再利用16,124,544、再利用外274,648）、出力 **81,219 tokens**。
+このchatの累積カウンタの差分で、料金ではない。記録締切りは2026-10-18 17:21:26 JST、最後に保存された使用量カウンタは17:20:41 JST。
+締切り後の記録整理・commit・tracked release・最終応答は含めない。初稿だけの計測と区別し、残章の費用へこの値だけで外挿しない。
 
 ## 引き継ぎと未完了
 
 - 基点 `7f668a39`、ブランチ `codex/reading-guide`。着手記録 `a30ace0e`、T0実測 `00b7f44d`。パイロット提出は本ファイルを含む同ブランチの最新commit（最終報告にcommit IDを記す）。
 - 変更は新規ガイド2章、BookのTOCとoverview、共有runtime manifest、表示検査器、数値・検証・進捗文書。既存notebook・補足教材・hullkit・台帳の差分は0。
-- Claudeへ：計画§4、上の原典照合表・数値一覧・`t0.json`・`verification.json` を基に、主張・数値・GE頁・翻訳類似性・初学者の読みやすさ・基準から残るartifact検査FAILを独立確認する。
+- Claudeへ：初稿e491b454の独立検証は完了。今回の差分、数値一覧と修正検証記録を基に§2の修正を再検証する。基準から残るartifact検査FAILの判断は指示書§3に保持する。
 - 本人へ：2章の分量・文体・型を読んで判断する。**その判断までT2・B1–B6へ進まない。** 全37章ガイドの完成・節受入の更新・統合承認は行っていない。
 
 原典PDFと抽出本文は新たに公開する成果物へ含めない。ガイドは節順を道標にした独自解説とし、原典の図表や連続した訳文は再掲しない。

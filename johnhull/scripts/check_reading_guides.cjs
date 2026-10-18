@@ -1,16 +1,18 @@
 // Re-run from the worktree root after `make hull-book`.
 // source /home/kazumasa/projects/_data/johnhull/reading-guide/env.sh
+// export READING_GUIDE_OUTPUT_DIR=/path/to/new/verification-output
 // node johnhull/scripts/check_reading_guides.cjs
 const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL, fileURLToPath } = require('node:url');
 const crypto = require('node:crypto');
 const assert = require('node:assert/strict');
+const output = process.env.READING_GUIDE_OUTPUT_DIR;
+assert(output && output.trim(), 'Set READING_GUIDE_OUTPUT_DIR to a new verification directory; existing evidence must not be overwritten.');
 const modulePath = process.env.PLAYWRIGHT_MODULE;
 assert.equal(require(path.join(modulePath, 'package.json')).version, '1.56.0');
 const { chromium } = require(modulePath);
 const project = path.resolve(process.env.READING_GUIDE_PROJECT || 'johnhull');
-const output = process.env.READING_GUIDE_OUTPUT_DIR || '/home/kazumasa/projects/_data/johnhull/reading-guide';
 const results = [];
 let browserVersion;
 const sha = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
