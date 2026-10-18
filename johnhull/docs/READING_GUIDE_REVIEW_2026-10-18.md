@@ -80,3 +80,31 @@
 - 文字数を記録と同じ方法で数え直す。約物を含めた数と、数式を除いた可視文字の数も添える。作業時間と使用量も記録する。
 - `ROADMAP.md` の「現在地」と `READING_GUIDE_STATUS.md` を同じ commit で更新する。
 - merge と push はしない。修正を終えたら止めて報告する。Claude が差分を再検証し、そのあとユーザーが修正版を読んで分量と文体を決める。T2・B1 以降には進まない。
+
+## 5. 修正 8e3cbe9d の再検証（2026-10-18、Claude）
+
+- 対象：e491b454..8e3cbe9d（9ファイル）。結論は「受け取れる」。N1〜N20 は対応済みで、N18 は次の `shared_runtime.py --write` の要件として記録されている。重大な指摘はなく、残ったのは任意の7件だけ。
+- 出力：`/home/kazumasa/projects/_data/johnhull/reading-guide/review-claude-20261018-r2/`（Git 管理外）。
+- 再実行した検査は §4 の全項目。
+  - numerics の参照テストは 44 passed。
+  - Book 全ビルドは exit 0。警告は前回と同じ 153 WARNING と ERROR 1件で、ガイド由来は0。実装者の生成物と397ファイルが byte で一致した。
+  - `check_book_math.cjs` は PASS。
+  - `check_reading_guides.cjs` は PASS（新しい出力先、1280・390px）。描画数式は Ch13 133・Ch8 8。
+  - 390px での目視、`shared_runtime.py --check`、release `--require-tracked`、`make lint` も PASS。
+  - `make test` は 11,907 passed / 76 skipped。
+- 文字数は記録と一致した。3通りの数え方で Ch13 が 10,330／11,359／12,582、Ch8 が 5,989／6,634／7,752。
+  - 原典1頁あたりにすると、①（和文のみ）で Ch13 は約413字、Ch8 は約499字。
+  - ②（約物を含む）では Ch8 が約553字で、目安の上限を超える。
+- 読後判断（ユーザー、2026-10-18）：この形で進める。訳語は [READING_GUIDE_TERMS_2026-10-18.md](READING_GUIDE_TERMS_2026-10-18.md) に合わせて直す。
+
+### T2 でパイロットを改訂するときに直すこと
+
+Ch8 は分量の目安の上限付近にある。足す分は、筋に要らない細部を削って釣り合わせてよい（計画 §4）。
+
+1. `ch13.md:136`（GE pp.300–301）：左辺の展開 $x^2+x^4/12+r\Delta t\,x^2-r^2\Delta t^2+\cdots$ を1式示し、$x^2$ 以外の項が $\Delta t^2$ 以上の大きさだと書く。
+2. `ch13.md:127–134`（GE p.300、式13.12）：原典は分散を収益率 $u-1$・$d-1$ で書いている。各状態から同じ1を引いても分散は変わらない、と一句足す。
+3. `ch13.md:89`：§13.10 の6.76ドルと、§13.8 の倍率に先回りしている。§13.10（`:169`）から「表示桁の読み方は §13.4」と戻れるようにする（計画 §4 のストーリーの規則）。
+4. `ch08.md:72`（GE p.209）：bp の定義を LIBOR–OIS の文より前へ移す。ユーロダラー預金を「米国外の銀行に預けた米ドル預金」と説明する。
+5. `ch08.md:60`（GE p.206）：ティーザー金利の期間「当初2〜3年」を書き、`numerics.json` の p.206 の項に足す。
+6. `ch08.md:60`・`:72`（計画 §4 の時点の規則）：LIBOR が今は公表されていないことを、確認日つきで一文書く。FCA によれば、米ドル LIBOR のパネルは2023-06-30に終わった。最後まで残った合成の米ドル LIBOR（1・3・6か月）も、2024-09-30が最後の公表だった。出典は [LIBOR transition](https://www.fca.org.uk/markets/libor-transition) と [The US dollar LIBOR panel has now ceased](https://www.fca.org.uk/news/news-stories/us-dollar-libor-panel-has-now-ceased)（Claude が2026-10-18に確認）。
+7. `ch08.md:82`（GE p.210）：「比べても」を「比べると」にする。
