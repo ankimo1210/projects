@@ -161,7 +161,7 @@ R²oos（10年ゼロの rx12、過去平均に対して）：ols_p -47.81%、ols
 
 ## 再現手順
 
-すべて `/home/kazumasa/worktrees/bond-timing`（または merge 後の `/home/kazumasa/projects`）から。共有の venv を使い、`uv sync` はしない。
+すべて `/home/kazumasa/projects` から、ルートの共有 venv で回す（`uv sync --all-packages` で lab も入る）。
 
 ```bash
 PY="env PYTHONPATH=bond_timing_lab/src:macrokit/src OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /home/kazumasa/projects/.venv/bin/python -P"
