@@ -512,6 +512,11 @@ dependencies = [
     { name = "yfinance" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.1" },
@@ -525,6 +530,9 @@ requires-dist = [
     { name = "threadpoolctl", specifier = ">=3.1" },
     { name = "yfinance", specifier = ">=0.2.50" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "cachetools"

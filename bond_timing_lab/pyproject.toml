@@ -23,6 +23,9 @@ dependencies = [
 [project.scripts]
 bond-timing = "bond_timing.cli:main"
 
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
 [tool.uv.sources]
 macrokit = { workspace = true }
 
