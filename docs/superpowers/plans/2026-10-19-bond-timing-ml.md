@@ -710,6 +710,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date
+from itertools import pairwise
 
 import numpy as np
 import pandas as pd
@@ -790,7 +791,7 @@ def daily_synthetic_returns(curve: GswCurve, n_months: int, start: date) -> pd.S
     days = [d for d in sorted(curve.days, key=lambda d: d.obs_date) if d.obs_date >= start]
     years = n_months / 12.0
     values, index = [], []
-    for prev, day in zip(days[:-1], days[1:], strict=True):
+    for prev, day in pairwise(days):
         tau = (day.obs_date - prev.obs_date).days / 365.25
         bought = curve.zeros([prev], [n_months])[0, 0]
         sold = curve.zeros([day], [12.0 * (years - tau)])[0, 0]
@@ -875,37 +876,37 @@ from bond_timing.pit import (
 )
 
 
-def P(text: str) -> pd.Period:
+def month(text: str) -> pd.Period:
     return pd.Period(text, "M")
 
 
 def test_r1_rejects_rows_after_the_decision():
-    check_observed([P("2000-01"), P("2000-02")], P("2000-02"))
+    check_observed([month("2000-01"), month("2000-02")], month("2000-02"))
     with pytest.raises(LookaheadError):
-        check_observed([P("2000-01"), P("2000-03")], P("2000-02"))
+        check_observed([month("2000-01"), month("2000-03")], month("2000-02"))
 
 
 def test_r1_rejects_a_vintage_not_yet_published():
-    check_vintage(P("2000-05"), P("2000-06"))
-    for vintage in (P("2000-06"), P("2000-07")):
+    check_vintage(month("2000-05"), month("2000-06"))
+    for vintage in (month("2000-06"), month("2000-07")):
         with pytest.raises(LookaheadError):
-            check_vintage(vintage, P("2000-06"))
+            check_vintage(vintage, month("2000-06"))
 
 
 def test_r2_keeps_only_completed_targets():
     starts = pd.period_range("1990-01", "2000-12", freq="M")
-    assert training_starts(starts, P("2000-12"), 12).max() == P("1999-12")
-    assert training_starts(starts, P("2000-12"), 1).max() == P("2000-11")
+    assert training_starts(starts, month("2000-12"), 12).max() == month("1999-12")
+    assert training_starts(starts, month("2000-12"), 1).max() == month("2000-11")
 
 
 def test_r2_check_rejects_an_unrealized_target():
     with pytest.raises(LookaheadError):
-        check_targets_complete(pd.PeriodIndex([P("2000-01")]), P("2000-06"), 12)
+        check_targets_complete(pd.PeriodIndex([month("2000-01")]), month("2000-06"), 12)
 
 
 def test_v0_mode_keeps_unrealized_targets():
     starts = pd.period_range("1990-01", "2000-12", freq="M")
-    assert training_starts(starts, P("2000-12"), 12, complete=False).max() == P("2000-11")
+    assert training_starts(starts, month("2000-12"), 12, complete=False).max() == month("2000-11")
 
 
 def test_r3_embargo_leaves_h_months_between_fitting_and_validation():
@@ -923,13 +924,13 @@ def test_r3_without_embargo_uses_every_earlier_row():
 
 def test_r3_check_rejects_an_overlap():
     with pytest.raises(LookaheadError):
-        check_embargo(pd.PeriodIndex([P("1999-01")]), pd.PeriodIndex([P("1999-06")]), 12)
+        check_embargo(pd.PeriodIndex([month("1999-01")]), pd.PeriodIndex([month("1999-06")]), 12)
 
 
 def test_r4_rejects_a_transform_fitted_past_the_window():
-    check_fit_window(pd.PeriodIndex([P("1999-01")]), P("1999-01"))
+    check_fit_window(pd.PeriodIndex([month("1999-01")]), month("1999-01"))
     with pytest.raises(LookaheadError):
-        check_fit_window(pd.PeriodIndex([P("1999-01"), P("1999-03")]), P("1999-02"))
+        check_fit_window(pd.PeriodIndex([month("1999-01"), month("1999-03")]), month("1999-02"))
 ```
 
 - [ ] **Step 2: Run it to see it fail**
@@ -1084,19 +1085,19 @@ Transform:,2
 """
 
 
-def P(text: str) -> pd.Period:
+def month(text: str) -> pd.Period:
     return pd.Period(text, "M")
 
 
 def test_parse_reads_codes_dates_and_blanks():
-    v = parse_vintage(P("2000-05"), VINTAGE)
+    v = parse_vintage(month("2000-05"), VINTAGE)
     assert v.tcodes == {"AAA": 1, "BBB": 2, "CCC": 4, "DDD": 5, "EEE": 6, "FFF": 7, "GGG": 3}
     assert list(v.levels.index.astype(str)) == ["2000-01", "2000-02", "2000-03", "2000-04"]
-    assert np.isnan(v.levels.loc[P("2000-04"), "AAA"])
+    assert np.isnan(v.levels.loc[month("2000-04"), "AAA"])
 
 
 def test_every_tcode_matches_a_hand_calculation():
-    t = parse_vintage(P("2000-05"), VINTAGE).transformed
+    t = parse_vintage(month("2000-05"), VINTAGE).transformed
     np.testing.assert_allclose(t["AAA"], [1, 2, 4, np.nan])
     np.testing.assert_allclose(t["BBB"], [np.nan, 2, 3, 4])
     np.testing.assert_allclose(t["CCC"], np.log([100, 110, 121, 133.1]))
@@ -1110,10 +1111,10 @@ def test_every_tcode_matches_a_hand_calculation():
 
 
 def test_member_names_from_both_archives():
-    assert member_vintage("Historical FRED-MD Vintages Final/1999-08.csv") == P("1999-08")
-    assert member_vintage("FRED-MD_2024m03.csv") == P("2024-03")
-    assert member_vintage("FRED-MD-2025m05.csv") == P("2025-05")
-    assert member_vintage("2017-02.csv") == P("2017-02")
+    assert member_vintage("Historical FRED-MD Vintages Final/1999-08.csv") == month("1999-08")
+    assert member_vintage("FRED-MD_2024m03.csv") == month("2024-03")
+    assert member_vintage("FRED-MD-2025m05.csv") == month("2025-05")
+    assert member_vintage("2017-02.csv") == month("2017-02")
     assert member_vintage("Historical FRED-MD Vintages Final/ReadMe.pdf") is None
 
 
@@ -1123,35 +1124,35 @@ def test_zip_vintages_keys_every_csv_member():
         archive.writestr("Final/2000-05.csv", VINTAGE)
         archive.writestr("FRED-MD_2024m03.csv", LATER)
         archive.writestr("Final/ReadMe.pdf", b"%PDF")
-    assert sorted(zip_vintages(buffer.getvalue())) == [P("2000-05"), P("2024-03")]
+    assert sorted(zip_vintages(buffer.getvalue())) == [month("2000-05"), month("2024-03")]
 
 
 def test_real_time_view_keeps_each_series_lag():
-    source = RealTimeMacro({P("2000-05"): parse_vintage(P("2000-05"), VINTAGE)}.__getitem__)
-    view = source.view(P("2000-06"))
+    source = RealTimeMacro({month("2000-05"): parse_vintage(month("2000-05"), VINTAGE)}.__getitem__)
+    view = source.view(month("2000-06"))
     lags = dict(zip(view.names, view.lags, strict=True))
     assert lags == {"AAA": 3, "BBB": 2, "CCC": 2, "DDD": 3, "EEE": 2, "FFF": 3, "GGG": 2}
-    rows = pd.PeriodIndex([P("2000-05"), P("2000-06")])
-    history = source.history(P("2000-06"), view, rows)
+    rows = pd.PeriodIndex([month("2000-05"), month("2000-06")])
+    history = source.history(month("2000-06"), view, rows)
     np.testing.assert_allclose(history[:, view.names.index("BBB")], [3, 4])
-    assert source.edge(P("2000-06"), view)[view.names.index("AAA")] == 4
+    assert source.edge(month("2000-06"), view)[view.names.index("AAA")] == 4
 
 
 def test_series_lagging_more_than_six_months_are_left_out():
-    source = RealTimeMacro({P("2000-09"): parse_vintage(P("2000-09"), VINTAGE)}.__getitem__)
-    assert source.view(P("2000-10")).names == ("BBB", "CCC", "EEE", "GGG")  # lag 6 kept, 7 not
-    source = RealTimeMacro({P("2000-10"): parse_vintage(P("2000-10"), VINTAGE)}.__getitem__)
-    assert source.view(P("2000-11")).names == ()
+    source = RealTimeMacro({month("2000-09"): parse_vintage(month("2000-09"), VINTAGE)}.__getitem__)
+    assert source.view(month("2000-10")).names == ("BBB", "CCC", "EEE", "GGG")  # lag 6 kept, 7 not
+    source = RealTimeMacro({month("2000-10"): parse_vintage(month("2000-10"), VINTAGE)}.__getitem__)
+    assert source.view(month("2000-11")).names == ()
 
 
 def test_edge_falls_back_and_marks_missing_series():
     vintages = {
-        P("2000-05"): parse_vintage(P("2000-05"), VINTAGE),
-        P("2000-06"): parse_vintage(P("2000-06"), LATER),
+        month("2000-05"): parse_vintage(month("2000-05"), VINTAGE),
+        month("2000-06"): parse_vintage(month("2000-06"), LATER),
     }
     source = RealTimeMacro(vintages.__getitem__)
-    view = source.view(P("2000-06"))
-    edge = source.edge(P("2000-07"), view)
+    view = source.view(month("2000-06"))
+    edge = source.edge(month("2000-07"), view)
     assert np.isnan(edge[view.names.index("AAA")])
     assert edge[view.names.index("BBB")] == 4  # 2000-05 is blank; 2000-04 is the latest
     assert edge.shape == (len(view.names),)
@@ -1160,20 +1161,20 @@ def test_edge_falls_back_and_marks_missing_series():
 def test_real_time_source_never_reads_the_decision_month_vintage():
     source = RealTimeMacro({}.__getitem__)
     with pytest.raises(KeyError):
-        source.view(P("2000-06"))
+        source.view(month("2000-06"))
     with pytest.raises(LookaheadError):
-        source._frame_at(P("2000-06"), P("2000-06"))
+        source._frame_at(month("2000-06"), month("2000-06"))
 
 
 def test_final_and_panel_sources():
-    final = FinalMacro(parse_vintage(P("2019-02"), VINTAGE))
-    view = final.view(P("2000-03"))
+    final = FinalMacro(parse_vintage(month("2019-02"), VINTAGE))
+    view = final.view(month("2000-03"))
     assert set(view.lags) == {0}
-    assert final.edge(P("2000-03"), view)[view.names.index("BBB")] == 3
+    assert final.edge(month("2000-03"), view)[view.names.index("BBB")] == 3
     panel = PanelMacro(pd.DataFrame({"x": [1.0, 2.0, 3.0]}, index=pd.period_range("2000-01", periods=3, freq="M")))
-    pview = panel.view(P("2000-03"))
+    pview = panel.view(month("2000-03"))
     assert pview.lags == (2,)
-    assert panel.edge(P("2000-03"), pview)[0] == 1.0
+    assert panel.edge(month("2000-03"), pview)[0] == 1.0
 ```
 
 - [ ] **Step 2: Run it to see it fail**
@@ -2566,7 +2567,7 @@ from bond_timing.models import ModelSpec, grid, ladder
 from bond_timing.pit import LookaheadError
 
 
-def P(text: str) -> pd.Period:
+def month(text: str) -> pd.Period:
     return pd.Period(text, "M")
 
 
@@ -2589,7 +2590,7 @@ def test_cost_is_charged_only_in_switch_months():
     excess = pd.Series(0.01, index=pd.period_range("2000-02", periods=6, freq="M"))
     r = strategy_returns(weights, excess, cost_bp=2.0)
     np.testing.assert_allclose(r.to_numpy(), [0.01, 0.01, -0.0002, 0.0, 0.0098, 0.01])
-    assert r.index[0] == P("2000-02")
+    assert r.index[0] == month("2000-02")
 
 
 def test_always_hold_equals_the_instrument():
@@ -2627,12 +2628,12 @@ def test_fractional_weights_are_clipped():
 
 def test_build_tasks_skips_thin_years():
     yields, targets = panel()
-    window = (P("1975-01"), P("1980-12"))
+    window = (month("1975-01"), month("1980-12"))
     tasks = build_tasks(
         yields, targets, None, refit_years=range(1975, 1981), window=window, horizon=12, rules=REAL_TIME
     )
     assert [str(t.refit) for t in tasks] == ["1978-01", "1979-01", "1980-01"]
-    assert tasks[0].starts.max() == P("1977-01") and len(tasks[0].starts) == 66
+    assert tasks[0].starts.max() == month("1977-01") and len(tasks[0].starts) == 66
     with pytest.raises(ValueError):
         build_tasks(yields, targets, None, refit_years=[1980], window=window, horizon=12, rules=V0)
 
@@ -2644,7 +2645,7 @@ def test_forecasts_recover_a_linear_signal():
         targets,
         None,
         refit_years=range(1980, 1991),
-        window=(P("1980-01"), P("1990-12")),
+        window=(month("1980-01"), month("1990-12")),
         horizon=12,
         rules=REAL_TIME,
     )
@@ -2658,7 +2659,7 @@ def test_forecasts_recover_a_linear_signal():
 def test_fixed_params_survive_a_json_round_trip():
     yields, targets = panel()
     tasks = build_tasks(
-        yields, targets, None, refit_years=[1985], window=(P("1985-01"), P("1985-12")), horizon=12,
+        yields, targets, None, refit_years=[1985], window=(month("1985-01"), month("1985-12")), horizon=12,
         rules=REAL_TIME,
     )
     spec = ModelSpec("tiny", "P", "mlp", grid(hidden_layer_sizes=((3,),), alpha=(1e-4, 1e-2)), 1)
@@ -2675,7 +2676,7 @@ def test_fit_task_refuses_a_target_that_ends_after_the_refit():
     starts = pd.period_range("1974-01", "1979-07", freq="M")
     decisions = pd.period_range("1980-01", periods=2, freq="M")
     task = RefitTask(
-        refit=P("1980-01"),
+        refit=month("1980-01"),
         decisions=decisions,
         starts=starts,
         Y=yields.reindex(starts).to_numpy(),
@@ -3338,7 +3339,7 @@ from bond_timing.data.store import store_bytes
 from bond_timing.study import load_vintage_payloads, macro_pc1
 
 
-def P(text: str) -> pd.Period:
+def month(text: str) -> pd.Period:
     return pd.Period(text, "M")
 
 
@@ -3355,8 +3356,8 @@ def test_vintage_payloads_merge_both_archives_and_monthly_files(tmp_path):
     store_bytes(tmp_path, "fredmd", "hist_2015_2025", archive({"FRED-MD_2024m03.csv": b"b"}), url="u", filename="b.zip")
     store_bytes(tmp_path, "fredmd", "monthly_2026-01", b"c", url="u", filename="c.csv")
     payloads = load_vintage_payloads(tmp_path)
-    assert list(payloads) == [P("1999-08"), P("2024-03"), P("2026-01")]
-    assert payloads[P("2026-01")] == b"c"
+    assert list(payloads) == [month("1999-08"), month("2024-03"), month("2026-01")]
+    assert payloads[month("2026-01")] == b"c"
 
 
 def test_macro_pc1_is_lagged_signed_and_scaled():
@@ -3370,7 +3371,7 @@ def test_macro_pc1_is_lagged_signed_and_scaled():
         },
         index=index,
     )
-    vintage = Vintage(P("1995-01"), levels, {name: 1 for name in levels.columns})
+    vintage = Vintage(month("1995-01"), levels, {name: 1 for name in levels.columns})
     z = macro_pc1(vintage, index[2], index[-1])
     assert z.index[0] == index[2] and z.index[-1] == index[-1]
     lead = z.shift(-2).dropna()
@@ -3448,7 +3449,7 @@ def write(results, name: str, payload: dict) -> None:
 
 
 def test_stage_order_is_enforced(tmp_path):
-    with pytest.raises(cli.StageError, match="dev.json"):
+    with pytest.raises(cli.StageError, match=r"dev\.json"):
         cli.check_ready("g1", tmp_path, prereg_commit="abc")
     write(tmp_path, "dev", {"p1": "slope"})
     with pytest.raises(cli.StageError, match="PREREG"):
