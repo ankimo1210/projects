@@ -1,20 +1,19 @@
 {
   "schema_version": 1,
   "description": "Book/portal runtime shared by every section. Section acceptance records do not pin these files; rewrite this manifest only after rebuilding the Book and running the release check against the changed runtime.",
-  "recorded_at": "2026-10-18T02:13:04Z",
+  "recorded_at": "2026-10-18T17:14:00Z",
   "checks": [
-    "uv run --no-sync jupyter-book build --all johnhull/book/ (T1): PASS, 154 existing warnings (153 WARNING, 1 ERROR), zero added",
-    "node johnhull/scripts/check_book_math.cjs johnhull/book/_build/html (T1): PASS, 31 pages, MathJax 3.2.2 offline",
-    "node johnhull/scripts/check_reading_guides.cjs (T1): PASS, Ch8/Ch13 at 1280px and 390px, local links and math/width/network/page checks",
-    "make hull-release-check (T1 bootstrap manifest): PASS"
+    "{\"command\": [\"uv\", \"run\", \"--no-sync\", \"jupyter-book\", \"build\", \"--all\", \"johnhull/book/\"], \"commit\": \"d040c960060c8126aecb2fe1fce06af04e5dd211\", \"dirty\": true, \"start\": \"2026-10-18T17:12:27.436912+00:00\", \"end\": \"2026-10-18T17:12:36.127936+00:00\", \"seconds\": 8.691038362012478, \"source_snapshot_sha256\": \"253bd82dc8b2e21fc0a6d1b7d7960663e50c0de924339dd67370f7fee608a363\", \"log\": \"/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/book-all-eof.log\", \"result\": \"PASS\"}",
+    "{\"command\": [\"node\", \"johnhull/scripts/check_book_math.cjs\", \"johnhull/book/_build/html\"], \"commit\": \"d040c960060c8126aecb2fe1fce06af04e5dd211\", \"dirty\": true, \"start\": \"2026-10-18T17:07:02.535985+00:00\", \"end\": \"2026-10-18T17:07:22.716062+00:00\", \"seconds\": 20.18008978900616, \"source_snapshot_sha256\": \"b8ec8e8e10d17cbc08372b4db90c874aa346d7691eca93eeb9ed5ff649c6f06f\", \"log\": \"/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/math-handoff.log\", \"result\": \"PASS\"}",
+    "{\"command\": [\"make\", \"hull-release-check\"], \"commit\": \"d040c960060c8126aecb2fe1fce06af04e5dd211\", \"dirty\": true, \"start\": \"2026-10-18T17:13:26.331018+00:00\", \"end\": \"2026-10-18T17:13:39.771702+00:00\", \"seconds\": 13.440694554010406, \"source_snapshot_sha256\": \"253bd82dc8b2e21fc0a6d1b7d7960663e50c0de924339dd67370f7fee608a363\", \"log\": \"/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/release-eof.log\", \"result\": \"PASS\"}"
   ],
-  "note": "Reading-guide pilot Ch8 and Ch13 in leading Book TOC part. Existing notebook/supplement/ledger sources unchanged; pre-existing strict artifact failures are reported separately.",
+  "note": "T2 adds glossary/models to the Book TOC; all other shared runtime bytes are unchanged. Each check names its actual precommit checkout, UTC interval and source snapshot. A seed manifest containing only completed Book/math checks permits the release check; the final manifest adds that successful release run. No historical section record is rewritten.",
   "files": {
     "book/_config.yml": "1e774ba6b0eaeef6a5b83b153daa7c24ee5fd16e4e48715cacfbf62cb3c0a5fd",
     "book/_ext/book_runtime.py": "a90b4eb19e2bae3f52bcb02951115da02301920cd154da133933501526d1641c",
     "book/_static/mathjax-3.2.2-tex-svg-full.js": "a4354ff94fd868aea0cc6eaaa79a57fda0588646fc46ee3700a349ee0a11cbe6",
     "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
-    "book/_toc.yml": "2610c8d70152d2746341d90cba3bb3eec18823515baaa6f7d9652f8dfd7ce9f4",
+    "book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
     "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210"
   }
 }

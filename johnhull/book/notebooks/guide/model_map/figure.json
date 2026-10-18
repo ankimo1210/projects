@@ -1,0 +1,2172 @@
+{
+  "data": [
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#8d5a10",
+        "dash": "dash",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "pricing",
+          "pricing"
+        ]
+      },
+      "mode": "lines",
+      "name": "極限・近似",
+      "showlegend": false,
+      "text": "極限・近似：CRR 二項ツリー → ブラック＝ショールズ＝マートン。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": true,
+      "x": [
+        8,
+        0
+      ],
+      "y": [
+        0,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#8d5a10",
+        "dash": "dash",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "pricing",
+          "pricing"
+        ]
+      },
+      "mode": "lines",
+      "name": "極限・近似",
+      "showlegend": false,
+      "text": "極限・近似：GBM モンテカルロ評価 → ブラック＝ショールズ＝マートン。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": true,
+      "x": [
+        0,
+        0
+      ],
+      "y": [
+        -3,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#8d5a10",
+        "dash": "dash",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "pricing",
+          "pricing"
+        ]
+      },
+      "mode": "lines",
+      "name": "極限・近似",
+      "showlegend": false,
+      "text": "極限・近似：有限差分法と安定性 → ブラック＝ショールズ＝マートン。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": true,
+      "x": [
+        8,
+        0
+      ],
+      "y": [
+        -3,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "pricing",
+          "pricing"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：指数・通貨オプション → ブラック＝ショールズ＝マートン。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": true,
+      "x": [
+        0,
+        0
+      ],
+      "y": [
+        -15,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "rates",
+          "rates"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：キャリーによる先渡価格 → Black の市場モデル。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        36,
+        36
+      ],
+      "y": [
+        -33,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "volatility",
+          "pricing"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：時間依存ボラティリティ → ブラック＝ショールズ＝マートン。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        18,
+        0
+      ],
+      "y": [
+        -3,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "volatility",
+          "pricing"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：CEV → ブラック＝ショールズ＝マートン。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        18,
+        0
+      ],
+      "y": [
+        0,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "volatility",
+          "pricing"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：Merton ジャンプ拡散 → ブラック＝ショールズ＝マートン。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        22,
+        0
+      ],
+      "y": [
+        0,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#8d5a10",
+        "dash": "dash",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "volatility",
+          "pricing"
+        ]
+      },
+      "mode": "lines",
+      "name": "極限・近似",
+      "showlegend": false,
+      "text": "極限・近似：バリアンス・ガンマ → ブラック＝ショールズ＝マートン。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        14,
+        0
+      ],
+      "y": [
+        -3,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "volatility",
+          "volatility"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：Heston 確率ボラティリティ → 時間依存ボラティリティ。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        14,
+        18
+      ],
+      "y": [
+        -6,
+        -3
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "volatility",
+          "pricing"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：Heston 確率ボラティリティ → ブラック＝ショールズ＝マートン。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        14,
+        0
+      ],
+      "y": [
+        -6,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "volatility",
+          "volatility"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：IV とスマイルの軸 → Dupire 局所ボラティリティ。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        14,
+        18
+      ],
+      "y": [
+        0,
+        -6
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "volatility",
+          "pricing"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：Dupire 局所ボラティリティ → ブラック＝ショールズ＝マートン。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        18,
+        0
+      ],
+      "y": [
+        -6,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "volatility",
+          "volatility"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：IV とスマイルの軸 → 価格から読む確率密度。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        14,
+        22
+      ],
+      "y": [
+        0,
+        -6
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "volatility",
+          "volatility"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：SSVI の総分散面 → IV とスマイルの軸。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        14,
+        14
+      ],
+      "y": [
+        -12,
+        0
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "risk",
+          "risk"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：GARCH 分散 → EWMA 分散・共分散。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        56,
+        64
+      ],
+      "y": [
+        -6,
+        -3
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "risk",
+          "beyond"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：EWMA 分散・共分散 → 古典的な変動予測。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        64,
+        70
+      ],
+      "y": [
+        -3,
+        -9
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "rates",
+          "rates"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：Hull–White 一因子 → Ho–Lee。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        36,
+        28
+      ],
+      "y": [
+        -3,
+        -6
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "rates",
+          "rates"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：Hull–White 一因子 → Vasicek 短期金利。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        36,
+        28
+      ],
+      "y": [
+        -3,
+        -15
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#23734d",
+        "dash": "solid",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "rates",
+          "rates"
+        ]
+      },
+      "mode": "lines",
+      "name": "特殊な場合",
+      "showlegend": false,
+      "text": "特殊な場合：HJM → Hull–White 一因子。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        28,
+        36
+      ],
+      "y": [
+        -24,
+        -3
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "rates",
+          "rates"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：債券とゼロ曲線 → Hull–White 一因子。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        28,
+        36
+      ],
+      "y": [
+        0,
+        -3
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "rates",
+          "rates"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：債券とゼロ曲線 → LIBOR 市場モデル。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        28,
+        32
+      ],
+      "y": [
+        0,
+        -24
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "credit",
+          "credit"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：ハザード曲線 → 単一名 CDS。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        46,
+        50
+      ],
+      "y": [
+        0,
+        -3
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "credit",
+          "credit"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：Vasicek 信用損失とコピュラ → CDO・第 k デフォルトと相関。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        42,
+        42
+      ],
+      "y": [
+        -3,
+        -6
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "credit",
+          "credit"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：証券化の損失配分 → CDO・第 k デフォルトと相関。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        42,
+        42
+      ],
+      "y": [
+        0,
+        -6
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "beyond",
+          "beyond"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：誤差つきの教師データ → 価格サロゲートと DML。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        70,
+        70
+      ],
+      "y": [
+        0,
+        -3
+      ]
+    },
+    {
+      "hoverinfo": "skip",
+      "line": {
+        "color": "#3659a6",
+        "dash": "dot",
+        "width": 1.5
+      },
+      "meta": {
+        "groups": [
+          "pricing",
+          "beyond"
+        ]
+      },
+      "mode": "lines",
+      "name": "入力・較正",
+      "showlegend": false,
+      "text": "入力・較正：ブラック＝ショールズ＝マートン → 誤差つきの教師データ。条件と出典は下の関係表を参照してください。",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        0,
+        70
+      ],
+      "y": [
+        0,
+        0
+      ]
+    },
+    {
+      "customdata": [
+        "bsm",
+        "cash-dividends",
+        "crr",
+        "mc",
+        "lsm",
+        "fd",
+        "strategies",
+        "delta-hedge",
+        "brownian",
+        "euler",
+        "girsanov",
+        "variance-reduction",
+        "mc-greeks",
+        "contract-cashflows",
+        "employee-options",
+        "index-currency",
+        "convertible",
+        "asian",
+        "barrier",
+        "two-asset",
+        "digital",
+        "lookback",
+        "basket",
+        "shout",
+        "exchange",
+        "variance-swap",
+        "static-barrier",
+        "packages",
+        "perpetual-option",
+        "scheduled-option",
+        "gap",
+        "forward-start",
+        "cliquet",
+        "compound",
+        "chooser"
+      ],
+      "hoverinfo": "text",
+      "hovertext": [
+        "ブラック＝ショールズ＝マートン：標準的なヨーロピアン契約の基準価格。",
+        "既知の現金配当：配当をまたぐ株式オプションの行使判断。",
+        "CRR 二項ツリー：アメリカンの早期行使、BSM との収束比較。",
+        "GBM モンテカルロ評価：経路依存商品や解析式のない期待値。",
+        "最小二乗 MC と行使方策：多因子・経路依存契約の早期行使。",
+        "有限差分法と安定性：バニラ、早期行使、ほかの数値法との独立比較。",
+        "オプション戦略と複製：スプレッド、ストラドル、元本保護商品の仕組み。",
+        "デルタ・ヘッジとグリークス：価格変化の説明と動的ヘッジ。",
+        "ウィーナー過程と伊藤の補題：株価 SDE と複製 PDE の準備。",
+        "オイラー＝丸山法：解析的に経路を作れない SDE の基礎。",
+        "確率測度の変更：P/Q の切替えとニュメレール変更。",
+        "分散減少と準 MC：高価な経路評価の精度改善。",
+        "MC のグリークス：シミュレーションによるヘッジ量の計算。",
+        "契約の受払いと会計：先渡・オプション・ヘッジの最初の整理。",
+        "従業員オプション：報酬としてのオプション評価。",
+        "指数・通貨オプション：指数保険や通貨ヘッジ。",
+        "デフォルト可能な転換社債ツリー：信用と株式の両方に依存する転換社債。",
+        "平均価格・平均行使価格オプション：平均を使うアジアン契約。",
+        "バリア・オプション：ノックイン・ノックアウト契約。",
+        "二資産のツリー：二資産の最大値や交換の権利。",
+        "バイナリ・オプション：条件付き支払い、ギャップ等の分解。",
+        "ルックバック・オプション：過去の極値を参照する契約。",
+        "正のバスケットの近似：複数資産のバスケット・オプション。",
+        "一回シャウトする権利：途中で利益水準を確保する契約。",
+        "交換オプションと比率測度：一方の資産を他方へ交換する権利。",
+        "バリアンス・ボラティリティ・スワップ：実現分散・ボラティリティを交換する契約。",
+        "バリアの静的複製：動的売買を減らすバリアのヘッジ。",
+        "レンジ先渡しと後払いの権利：通貨のレンジ先渡し、ブレークフォワード。",
+        "永久アメリカン・オプション：行使境界の原理と長満期の比較基準。",
+        "非標準の行使日程：ワラントや限られた日程での行使。",
+        "ギャップ・オプション：トリガーと決済価格が異なる契約。",
+        "フォワード・スタート：後日開始する ATM コール。",
+        "単純なクリケット：原典の単純な株価リセット契約。",
+        "複合オプション：オプションを買う・売る権利。",
+        "単純なチューザー：後でコールかプットかを選ぶ権利。"
+      ],
+      "marker": {
+        "color": "#3659a6",
+        "line": {
+          "color": "white",
+          "width": 1
+        },
+        "size": 17
+      },
+      "meta": {
+        "group": "pricing"
+      },
+      "mode": "markers+text",
+      "name": "BSM・二項ツリー・数値手法",
+      "showlegend": false,
+      "text": [
+        "ブラック＝ショールズ…",
+        "既知の現金配当",
+        "CRR 二項ツリー",
+        "GBM モンテカルロ…",
+        "最小二乗 MC と行…",
+        "有限差分法と安定性",
+        "オプション戦略と複製",
+        "デルタ・ヘッジとグリ…",
+        "ウィーナー過程と伊藤…",
+        "オイラー＝丸山法",
+        "確率測度の変更",
+        "分散減少と準 MC",
+        "MC のグリークス",
+        "契約の受払いと会計",
+        "従業員オプション",
+        "指数・通貨オプション",
+        "デフォルト可能な転換…",
+        "平均価格・平均行使価…",
+        "バリア・オプション",
+        "二資産のツリー",
+        "バイナリ・オプション",
+        "ルックバック・オプシ…",
+        "正のバスケットの近似",
+        "一回シャウトする権利",
+        "交換オプションと比率…",
+        "バリアンス・ボラティ…",
+        "バリアの静的複製",
+        "レンジ先渡しと後払い…",
+        "永久アメリカン・オプ…",
+        "非標準の行使日程",
+        "ギャップ・オプション",
+        "フォワード・スタート",
+        "単純なクリケット",
+        "複合オプション",
+        "単純なチューザー"
+      ],
+      "textfont": {
+        "size": 12
+      },
+      "textposition": "bottom center",
+      "type": "scatter",
+      "visible": true,
+      "x": [
+        0,
+        4,
+        8,
+        0,
+        4,
+        8,
+        0,
+        4,
+        8,
+        0,
+        4,
+        8,
+        0,
+        4,
+        8,
+        0,
+        4,
+        8,
+        0,
+        4,
+        8,
+        0,
+        4,
+        8,
+        0,
+        4,
+        8,
+        0,
+        4,
+        8,
+        0,
+        4,
+        8,
+        0,
+        4
+      ],
+      "y": [
+        0,
+        0,
+        0,
+        -3,
+        -3,
+        -3,
+        -6,
+        -6,
+        -6,
+        -9,
+        -9,
+        -9,
+        -12,
+        -12,
+        -12,
+        -15,
+        -15,
+        -15,
+        -18,
+        -18,
+        -18,
+        -21,
+        -21,
+        -21,
+        -24,
+        -24,
+        -24,
+        -27,
+        -27,
+        -27,
+        -30,
+        -30,
+        -30,
+        -33,
+        -33
+      ]
+    },
+    {
+      "customdata": [
+        "implied-vol",
+        "cev",
+        "merton-jump",
+        "variance-gamma",
+        "time-vol",
+        "vol-mixing",
+        "heston",
+        "local-vol",
+        "density",
+        "cos",
+        "sabr",
+        "normal-sabr",
+        "ssvi",
+        "convex-projection"
+      ],
+      "hoverinfo": "text",
+      "hovertext": [
+        "IV とスマイルの軸：市場価格を比較する共通の表示。",
+        "CEV：価格水準で変動が変わるスマイルの例。",
+        "Merton ジャンプ拡散：突発的な価格変動とスマイル。",
+        "バリアンス・ガンマ：連続拡散とは違う尖りと裾を持つ価格モデル。",
+        "時間依存ボラティリティ：満期ごとに異なる総分散の表現。",
+        "Hull–White の分散混合：平均分散にランダム性がある価格の理解。",
+        "Heston 確率ボラティリティ：レバレッジ効果を含むスマイル。",
+        "Dupire 局所ボラティリティ：現在のバニラ価格面を再価格するモデル。",
+        "価格から読む確率密度：スマイルの背後にある評価分布の理解。",
+        "COS フーリエ評価：Heston 等の多数のヨーロピアン価格。",
+        "SABR：金利等のスマイルのパラメーター表示。",
+        "正規型・シフト SABR：負金利を含むスマイルの教材。",
+        "SSVI の総分散面：滑らかなスマイル面の構築。",
+        "コール価格の凸射影：ノイズを含む価格面の整形。"
+      ],
+      "marker": {
+        "color": "#8d5a10",
+        "line": {
+          "color": "white",
+          "width": 1
+        },
+        "size": 17
+      },
+      "meta": {
+        "group": "volatility"
+      },
+      "mode": "markers+text",
+      "name": "ボラティリティ：局所・確率・ジャンプ",
+      "showlegend": false,
+      "text": [
+        "IV とスマイルの軸",
+        "CEV",
+        "Merton ジャン…",
+        "バリアンス・ガンマ",
+        "時間依存ボラティリテ…",
+        "Hull–White…",
+        "Heston 確率ボ…",
+        "Dupire 局所ボ…",
+        "価格から読む確率密度",
+        "COS フーリエ評価",
+        "SABR",
+        "正規型・シフト SA…",
+        "SSVI の総分散面",
+        "コール価格の凸射影"
+      ],
+      "textfont": {
+        "size": 12
+      },
+      "textposition": "bottom center",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        14,
+        18,
+        22,
+        14,
+        18,
+        22,
+        14,
+        18,
+        22,
+        14,
+        18,
+        22,
+        14,
+        18
+      ],
+      "y": [
+        0,
+        0,
+        0,
+        -3,
+        -3,
+        -3,
+        -6,
+        -6,
+        -6,
+        -9,
+        -9,
+        -9,
+        -12,
+        -12
+      ]
+    },
+    {
+      "customdata": [
+        "zero-curve",
+        "swaps",
+        "black76",
+        "rfr",
+        "bachelier",
+        "hull-white",
+        "ho-lee",
+        "inflation-cashflows",
+        "jgbi",
+        "jarrow-yildirim",
+        "ir-hedging",
+        "convexity",
+        "timing",
+        "quanto",
+        "short-rate-pde",
+        "vasicek-rate",
+        "cir-rate",
+        "rendleman-bartter",
+        "short-rate-measure",
+        "rate-estimation",
+        "two-factor-rates",
+        "forward-vol",
+        "rate-tree",
+        "outside-hedge",
+        "hjm",
+        "lmm",
+        "mortgage",
+        "nonstandard-legs",
+        "compounding-swaps",
+        "cross-currency",
+        "equity-swaps",
+        "embedded-swaps",
+        "other-swaps",
+        "forward-measure",
+        "futures-market",
+        "forward-carry",
+        "rate-futures"
+      ],
+      "hoverinfo": "text",
+      "hovertext": [
+        "債券とゼロ曲線：債券・FRA・スワップ評価の共通入力。",
+        "金利・通貨スワップ：固定・変動の交換と通貨の調達。",
+        "Black の市場モデル：市場ボラの表示とヨーロピアン金利オプション。",
+        "翌日物 RFR の複利：後決め複利のクーポンと旧指標からの読み替え。",
+        "Bachelier の正規型オプション：正規ボラで表示する金利オプション。",
+        "Hull–White 一因子：曲線に合わせた金利オプション、Bermudan の比較基準。",
+        "Ho–Lee：Hull–White の平均回帰なしの比較。",
+        "CPI とインフレ・スワップ：インフレ連動のクーポンとスワップ。",
+        "物価連動国債と償還フロア：日本の物価連動国債の仕組みを読む教材。",
+        "Jarrow–Yildirim インフレモデル：CPI オプションとインフレ連動商品の評価。",
+        "金利オプションの感応度：キャップやスワップションのヘッジ。",
+        "利回りの凸性調整：CMS 等の利回りに連動する支払い。",
+        "支払時点の調整：前払い・後払いなどの決済時点の違い。",
+        "クオント調整：通貨を固定した外国資産への支払い。",
+        "短期金利による割引と PDE：短期金利モデル全体の評価原理。",
+        "Vasicek 短期金利：均衡型モデルの基礎と長短金利の動き。",
+        "CIR 短期金利：正値金利を意識した均衡型モデル。",
+        "Rendleman–Bartter 短期金利：均衡型短期金利の仮定の比較。",
+        "短期金利の P と Q：観測した金利モデルを価格評価へ移す場面。",
+        "短期金利の時系列推定：P の推定と Q の較正の違いを学ぶ教材。",
+        "二因子ガウス金利：曲線の複数の変動方向。",
+        "フォワード金利の変動：短期金利モデルと市場のボラ表示の比較。",
+        "曲線に合わせた金利ツリー：金利商品の途中行使。",
+        "モデル外の金利リスク：価格モデルが表さないリスク方向の把握。",
+        "HJM：曲線全体の動学と債券オプション。",
+        "LIBOR 市場モデル：市場のキャップ等と金利の相関構造。",
+        "住宅ローンと CMO の受払い：MBS の金利リスクと繰上返済。",
+        "非標準のスワップ・レッグ：償還型・変則日程のスワップ。",
+        "複利スワップ：利息を繰り延べて複利で払う契約。",
+        "クロスカレンシー・スワップ：異通貨の資金と受払の交換。",
+        "株式スワップ：株式の収益と金利の交換。",
+        "スワップ内の選択権：解約可能スワップと金利条件付きクーポン。",
+        "商品・変動元本のスワップ：標準 IRS に収まらないスワップ契約。",
+        "フォワード測度での評価：債券・金利オプションの市場モデルへの橋渡し。",
+        "先物の値洗いと証拠金：先物の仕組みと会計。",
+        "キャリーによる先渡価格：株式・通貨・商品の先渡と先物。",
+        "金利先物とデュレーション・ヘッジ：債券・短期金利先物によるヘッジ。"
+      ],
+      "marker": {
+        "color": "#23734d",
+        "line": {
+          "color": "white",
+          "width": 1
+        },
+        "size": 17
+      },
+      "meta": {
+        "group": "rates"
+      },
+      "mode": "markers+text",
+      "name": "金利：曲線・短期金利・HJM・LMM",
+      "showlegend": false,
+      "text": [
+        "債券とゼロ曲線",
+        "金利・通貨スワップ",
+        "Black の市場モ…",
+        "翌日物 RFR の複…",
+        "Bachelier …",
+        "Hull–White…",
+        "Ho–Lee",
+        "CPI とインフレ・…",
+        "物価連動国債と償還フ…",
+        "Jarrow–Yil…",
+        "金利オプションの感応…",
+        "利回りの凸性調整",
+        "支払時点の調整",
+        "クオント調整",
+        "短期金利による割引と…",
+        "Vasicek 短期…",
+        "CIR 短期金利",
+        "Rendleman–…",
+        "短期金利の P と …",
+        "短期金利の時系列推定",
+        "二因子ガウス金利",
+        "フォワード金利の変動",
+        "曲線に合わせた金利ツ…",
+        "モデル外の金利リスク",
+        "HJM",
+        "LIBOR 市場モデ…",
+        "住宅ローンと CMO…",
+        "非標準のスワップ・レ…",
+        "複利スワップ",
+        "クロスカレンシー・ス…",
+        "株式スワップ",
+        "スワップ内の選択権",
+        "商品・変動元本のスワ…",
+        "フォワード測度での評…",
+        "先物の値洗いと証拠金",
+        "キャリーによる先渡価…",
+        "金利先物とデュレーシ…"
+      ],
+      "textfont": {
+        "size": 12
+      },
+      "textposition": "bottom center",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28,
+        32,
+        36,
+        28
+      ],
+      "y": [
+        0,
+        0,
+        0,
+        -3,
+        -3,
+        -3,
+        -6,
+        -6,
+        -6,
+        -9,
+        -9,
+        -9,
+        -12,
+        -12,
+        -12,
+        -15,
+        -15,
+        -15,
+        -18,
+        -18,
+        -18,
+        -21,
+        -21,
+        -21,
+        -24,
+        -24,
+        -24,
+        -27,
+        -27,
+        -27,
+        -30,
+        -30,
+        -30,
+        -33,
+        -33,
+        -33,
+        -36
+      ]
+    },
+    {
+      "customdata": [
+        "securitization",
+        "hazard",
+        "merton-default",
+        "credit-copula",
+        "xva",
+        "cds",
+        "cdo",
+        "creditmetrics"
+      ],
+      "hoverinfo": "text",
+      "hovertext": [
+        "証券化の損失配分：損失がどこへ届くかの理解。",
+        "ハザード曲線：信用曲線と単一名 CDS 評価の入力。",
+        "Merton 構造型デフォルト：企業価値と株式・信用のつながり。",
+        "Vasicek 信用損失とコピュラ：多数の借り手が同時に傷むリスク。",
+        "エクスポージャと XVA：CVA/DVA/FVA と取引の増分リスク。",
+        "単一名 CDS：信用リスクの移転、曲線の較正。",
+        "CDO・第 k デフォルトと相関：トランシェ、バスケット CDS、base/compound correlation。",
+        "CreditMetrics：格下げも含めた信用 VaR。"
+      ],
+      "marker": {
+        "color": "#8b4484",
+        "line": {
+          "color": "white",
+          "width": 1
+        },
+        "size": 17
+      },
+      "meta": {
+        "group": "credit"
+      },
+      "mode": "markers+text",
+      "name": "信用：構造型・強度型・コピュラ・XVA",
+      "showlegend": false,
+      "text": [
+        "証券化の損失配分",
+        "ハザード曲線",
+        "Merton 構造型…",
+        "Vasicek 信用…",
+        "エクスポージャと X…",
+        "単一名 CDS",
+        "CDO・第 k デフ…",
+        "CreditMetr…"
+      ],
+      "textfont": {
+        "size": 12
+      },
+      "textposition": "bottom center",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        42,
+        46,
+        50,
+        42,
+        46,
+        50,
+        42,
+        46
+      ],
+      "y": [
+        0,
+        0,
+        0,
+        -3,
+        -3,
+        -3,
+        -6,
+        -6
+      ]
+    },
+    {
+      "customdata": [
+        "var-es",
+        "var-backtest",
+        "tail-risk",
+        "risk-allocation",
+        "pnl-explain",
+        "ewma",
+        "garch",
+        "futures-hedging",
+        "market-risk-price",
+        "mishap-statistics"
+      ],
+      "hoverinfo": "text",
+      "hovertext": [
+        "VaR と期待ショートフォール：市場損失の集約と比較。",
+        "VaR バックテスト：リスク予測を事後に点検する方法。",
+        "FHS と EVT の裾：非正規のリスク量とストレス。",
+        "リスク量の分解：リスク限度や資本の配賦。",
+        "損益の説明とリミット：デスクの損益説明と限度の監視。",
+        "EWMA 分散・共分散：変動の変化に追随するリスク推定。",
+        "GARCH 分散：長期水準への復帰を持つ分散予測。",
+        "最小分散の先物ヘッジ：ベーシス・リスク、株価指数のベータ・ヘッジ。",
+        "リスクの市場価格：P の期待収益と Q の評価の接続。",
+        "連勝と集中の算術：偶然の好成績と分散したつもりの集中を見分ける入口。"
+      ],
+      "marker": {
+        "color": "#a34136",
+        "line": {
+          "color": "white",
+          "width": 1
+        },
+        "size": 17
+      },
+      "meta": {
+        "group": "risk"
+      },
+      "mode": "markers+text",
+      "name": "リスク計量：VaR・EWMA・GARCH",
+      "showlegend": false,
+      "text": [
+        "VaR と期待ショー…",
+        "VaR バックテスト",
+        "FHS と EVT …",
+        "リスク量の分解",
+        "損益の説明とリミット",
+        "EWMA 分散・共分…",
+        "GARCH 分散",
+        "最小分散の先物ヘッジ",
+        "リスクの市場価格",
+        "連勝と集中の算術"
+      ],
+      "textfont": {
+        "size": 12
+      },
+      "textposition": "bottom center",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        56,
+        60,
+        64,
+        56,
+        60,
+        64,
+        56,
+        60,
+        64,
+        56
+      ],
+      "y": [
+        0,
+        0,
+        0,
+        -3,
+        -3,
+        -3,
+        -6,
+        -6,
+        -6,
+        -9
+      ]
+    },
+    {
+      "customdata": [
+        "teacher-data",
+        "hard-validation",
+        "dataset-artifacts",
+        "pricing-surrogate",
+        "soft-penalty",
+        "ablation",
+        "two-step-calibration",
+        "teacher-surfaces",
+        "walk-forward",
+        "classical-forecast",
+        "neural-forecast",
+        "forecast-metrics",
+        "feature-diagnostics",
+        "deep-hedging",
+        "pdv",
+        "rough-kernel",
+        "quintic-ou",
+        "joint-spx-vix",
+        "polynomial-surrogate",
+        "variance-clock",
+        "event-variance",
+        "sv-jump-teacher",
+        "perpetual-funding",
+        "liquidation",
+        "amm",
+        "carbon",
+        "weather",
+        "commodity",
+        "ppa",
+        "schwartz-moon",
+        "real-options"
+      ],
+      "hoverinfo": "text",
+      "hovertext": [
+        "誤差つきの教師データ：価格近似を学習する前のデータ作り。",
+        "無裁定の事後検証：サロゲートの結果を受け取る前の点検。",
+        "固定したデータと参照成果物：再現可能な学習・教材の配布。",
+        "価格サロゲートと DML：高価な教師を繰り返し呼ぶ場面の近似。",
+        "ソフトな無裁定制約：学習精度と制約違反の比較。",
+        "条件をそろえた比較：サロゲートの改善がどこから来たかの検証。",
+        "サロゲートを使う二段階較正：価格計算の高い較正。",
+        "Heston・SABR・rBergomi の教師面：面からモデルを識別する教材。",
+        "時系列分割と前処理：リークを防ぐ変動予測の比較。",
+        "古典的な変動予測：ニューラル予測の前に置く基準。",
+        "ニューラル時系列予測：変動予測の挑戦モデル。",
+        "予測指標と不確実性：予測手法の差を評価する場面。",
+        "特徴・attention の診断：学習した時系列モデルの点検。",
+        "深層ヘッジと共通経路の比較：価格誤差だけでなく損益と費用で意思決定を見る教材。",
+        "経路依存ボラティリティ：過去の動きと現在のボラの関係。",
+        "前方分散と rough Heston カーネル：SPX/VIX のモデル構成を学ぶ入口。",
+        "quintic OU ボラティリティ：柔軟なボラティリティ形状の教師。",
+        "SPX/VIX の共同目的関数：株価と分散の両側からモデルを制約する教材。",
+        "二次サロゲートと範囲外判定：軽量な基準価格近似。",
+        "取引時間と分散時計：超短期満期の時間の扱い。",
+        "予定イベントとジャンプ分散：イベントを含む当日満期の教材。",
+        "確率ボラ＋ジャンプの超短期教師：短い満期での教師比較。",
+        "無期限先物の funding：満期のない先物と現物とのつながり。",
+        "証拠金・清算の連鎖：暗号資産市場の清算と価格参照リスク。",
+        "AMM と LVR：流動性供給者が引き受ける選択のリスク。",
+        "排出枠オプション：排出枠市場のモデル仮定の比較。",
+        "気温・度日とベーシス・リスク：天候デリバティブと地域の違い。",
+        "商品・エネルギーの契約とモデル：エネルギー契約から天候・保険への橋渡し。",
+        "再生可能電力 PPA：数量・shape・profile リスクのある買電契約。",
+        "Schwartz–Moon の事業価値：事業価値と不確実な成長。",
+        "撤退・拡張のリアル・オプション：事業の柔軟性を固定した投資計画から分ける場面。"
+      ],
+      "marker": {
+        "color": "#4c6575",
+        "line": {
+          "color": "white",
+          "width": 1
+        },
+        "size": 17
+      },
+      "meta": {
+        "group": "beyond"
+      },
+      "mode": "markers+text",
+      "name": "Beyond Hull：学習・新市場・事業",
+      "showlegend": false,
+      "text": [
+        "誤差つきの教師データ",
+        "無裁定の事後検証",
+        "固定したデータと参照…",
+        "価格サロゲートと D…",
+        "ソフトな無裁定制約",
+        "条件をそろえた比較",
+        "サロゲートを使う二段…",
+        "Heston・SAB…",
+        "時系列分割と前処理",
+        "古典的な変動予測",
+        "ニューラル時系列予測",
+        "予測指標と不確実性",
+        "特徴・attenti…",
+        "深層ヘッジと共通経路…",
+        "経路依存ボラティリテ…",
+        "前方分散と roug…",
+        "quintic OU…",
+        "SPX/VIX の共…",
+        "二次サロゲートと範囲…",
+        "取引時間と分散時計",
+        "予定イベントとジャン…",
+        "確率ボラ＋ジャンプの…",
+        "無期限先物の fun…",
+        "証拠金・清算の連鎖",
+        "AMM と LVR",
+        "排出枠オプション",
+        "気温・度日とベーシス…",
+        "商品・エネルギーの契…",
+        "再生可能電力 PPA",
+        "Schwartz–M…",
+        "撤退・拡張のリアル・…"
+      ],
+      "textfont": {
+        "size": 12
+      },
+      "textposition": "bottom center",
+      "type": "scatter",
+      "visible": false,
+      "x": [
+        70,
+        74,
+        78,
+        70,
+        74,
+        78,
+        70,
+        74,
+        78,
+        70,
+        74,
+        78,
+        70,
+        74,
+        78,
+        70,
+        74,
+        78,
+        70,
+        74,
+        78,
+        70,
+        74,
+        78,
+        70,
+        74,
+        78,
+        70,
+        74,
+        78,
+        70
+      ],
+      "y": [
+        0,
+        0,
+        0,
+        -3,
+        -3,
+        -3,
+        -6,
+        -6,
+        -6,
+        -9,
+        -9,
+        -9,
+        -12,
+        -12,
+        -12,
+        -15,
+        -15,
+        -15,
+        -18,
+        -18,
+        -18,
+        -21,
+        -21,
+        -21,
+        -24,
+        -24,
+        -24,
+        -27,
+        -27,
+        -27,
+        -30
+      ]
+    }
+  ],
+  "layout": {
+    "annotations": [
+      {
+        "arrowcolor": "#8d5a10",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 8,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": true,
+        "x": 0,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#8d5a10",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 0,
+        "axref": "x",
+        "ay": -3,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": true,
+        "x": 0,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#8d5a10",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 8,
+        "axref": "x",
+        "ay": -3,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": true,
+        "x": 0,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 0,
+        "axref": "x",
+        "ay": -15,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": true,
+        "x": 0,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 36,
+        "axref": "x",
+        "ay": -33,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 36,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 18,
+        "axref": "x",
+        "ay": -3,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 0,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 18,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 0,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 22,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 0,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#8d5a10",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 14,
+        "axref": "x",
+        "ay": -3,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 0,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 14,
+        "axref": "x",
+        "ay": -6,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 18,
+        "xref": "x",
+        "y": -3,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 14,
+        "axref": "x",
+        "ay": -6,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 0,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 14,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 18,
+        "xref": "x",
+        "y": -6,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 18,
+        "axref": "x",
+        "ay": -6,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 0,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 14,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 22,
+        "xref": "x",
+        "y": -6,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 14,
+        "axref": "x",
+        "ay": -12,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 14,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 56,
+        "axref": "x",
+        "ay": -6,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 64,
+        "xref": "x",
+        "y": -3,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 64,
+        "axref": "x",
+        "ay": -3,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 70,
+        "xref": "x",
+        "y": -9,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 36,
+        "axref": "x",
+        "ay": -3,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 28,
+        "xref": "x",
+        "y": -6,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 36,
+        "axref": "x",
+        "ay": -3,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 28,
+        "xref": "x",
+        "y": -15,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#23734d",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 28,
+        "axref": "x",
+        "ay": -24,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 36,
+        "xref": "x",
+        "y": -3,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 28,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 36,
+        "xref": "x",
+        "y": -3,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 28,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 32,
+        "xref": "x",
+        "y": -24,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 46,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 50,
+        "xref": "x",
+        "y": -3,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 42,
+        "axref": "x",
+        "ay": -3,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 42,
+        "xref": "x",
+        "y": -6,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 42,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 42,
+        "xref": "x",
+        "y": -6,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 70,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 70,
+        "xref": "x",
+        "y": -3,
+        "yref": "y"
+      },
+      {
+        "arrowcolor": "#3659a6",
+        "arrowhead": 3,
+        "arrowsize": 1.3,
+        "arrowwidth": 1.3,
+        "ax": 0,
+        "axref": "x",
+        "ay": 0,
+        "ayref": "y",
+        "showarrow": true,
+        "standoff": 12,
+        "startstandoff": 12,
+        "text": "",
+        "visible": false,
+        "x": 70,
+        "xref": "x",
+        "y": 0,
+        "yref": "y"
+      }
+    ],
+    "autosize": true,
+    "dragmode": "pan",
+    "font": {
+      "color": "#222222",
+      "family": "sans-serif"
+    },
+    "height": 600,
+    "hovermode": "closest",
+    "margin": {
+      "b": 35,
+      "l": 25,
+      "r": 25,
+      "t": 20
+    },
+    "paper_bgcolor": "white",
+    "plot_bgcolor": "white",
+    "xaxis": {
+      "visible": false
+    },
+    "yaxis": {
+      "visible": false
+    }
+  }
+}

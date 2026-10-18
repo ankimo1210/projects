@@ -1,0 +1,2192 @@
+{
+  "date": "2026-10-19",
+  "measured_at": "2026-10-18T16:54:29.957675+00:00",
+  "checkout": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+  "status": "Estimate only; no notebook/builder/ledger/evidence changes made for T3",
+  "method": "AST import-only plus lexical presentation/setup candidates; metadata simulated in memory only. Mixed cells need human classification and builder splitting in T3; counts are a conservative candidate scenario.",
+  "totals": {
+    "notebooks": 30,
+    "code_cells": 541,
+    "candidate_cells": 388,
+    "plot_candidates": 363,
+    "changed_notebooks": 29
+  },
+  "candidate_warning": "388 is the conservative candidate scenario, including mixed calculation/presentation cells. It is not the final remove-input cell count.",
+  "d1_sections": [
+    {
+      "section": "26.1",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.8 パッケージ（§26.1、GE pp.614–615）",
+      "level": 3,
+      "old_slice_sha256": "21b29c701cfd7ba8ccade34dae505c9a17a0f67b852ae395752f03111467bac9",
+      "proposed_slice_sha256": "7e5554328368071ecdc596418ccbae10be8e24c7dab4d890d4a3e32084303638",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.2",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.9 永久アメリカン・コールとプット（§26.2、GE pp.615–616）",
+      "level": 3,
+      "old_slice_sha256": "5abdecacf0bd8057398cbe135821f8dbcc6ab47e8902306aa71a07998393635e",
+      "proposed_slice_sha256": "2c66cff0142827ab479fdd4fadc977fed1f93171f81ba69e0900d1bd561b10a2",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.3",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.10 非標準アメリカン・オプション（§26.3、GE p.616）",
+      "level": 3,
+      "old_slice_sha256": "d5403bff682857dd5dade3052d14d69fdda53767488bc3ad0338411e9658127f",
+      "proposed_slice_sha256": "dafd32490063bf4c466c546a065f3f28a52bfde10e9e798a934f5680fb1ebc21",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.9",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "3. バリア・オプション（§26.9、GE pp.620–622）",
+      "level": 2,
+      "old_slice_sha256": "a29a7cdc4d900e6c33a3ec41a1bb1f74cfc52776cbd57287688a283a13f9a1d5",
+      "proposed_slice_sha256": "58352edda411bd275819d9b84876be1ffd28a356d97d0011ed67587b5f3edb8b",
+      "viewports": [
+        [
+          1440,
+          1000
+        ]
+      ],
+      "portal_figures": 1
+    },
+    {
+      "section": "26.10",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "2. バイナリ・オプション（§26.10）",
+      "level": 2,
+      "old_slice_sha256": "d8f94ea741cfc385b4b92179da19e136ecfdc562cd9446506e89dd478684765d",
+      "proposed_slice_sha256": "c0b5a45f9183fd788d3dc008e8fa1814040148e7e72b3dc74c14b826b969bdc7",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.11",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.1 ルックバック・オプション（§26.11）",
+      "level": 3,
+      "old_slice_sha256": "6e221b92379ce2bc5000f9c287cdcaaa72ad9510bfacb29a5d97e3afb933443b",
+      "proposed_slice_sha256": "9436d4c21fc89859fba43295e0879f6c92aea0e918e659f5f560c718ab45ff23",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.12",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.2 シャウト・オプション（§26.12）",
+      "level": 3,
+      "old_slice_sha256": "3437e80c8481278a62197c61d91285518b063b680034f7fb687c39018c704708",
+      "proposed_slice_sha256": "5fda6162b3ba4d4e8886447fe75646724e65758e6150ea714459ecfd0d360df9",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.13",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.3 アジアン・オプション（§26.13）",
+      "level": 3,
+      "old_slice_sha256": "73e24f2a6d68d531ecf904173b064f31640bb1b117c00c92aa892e4a986c24a5",
+      "proposed_slice_sha256": "eede86e7f922b496390b7f4b64ae74cb9d38db802d8d95cbd837f05a3ede31fe",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.14",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.4 交換オプション（§26.14、GE pp.627–628）",
+      "level": 3,
+      "old_slice_sha256": "ef92cd1ffda8ee8667e6652ecc8368e7cf0747784b85084aa1050261214f7987",
+      "proposed_slice_sha256": "ec969bae9d5b53d1685b115830bf65383d52a9d7d5308779d1bac6ff29c37b75",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.15",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.5 レインボーとバスケット（§26.15、GE pp.628–629）",
+      "level": 3,
+      "old_slice_sha256": "97924e009b280594387946e52eec63d25f3ac60f80ae44af6ad7dba37a8f9552",
+      "proposed_slice_sha256": "08949747594ec3b9bfe0704ae53e62540faf3472de7347e9ca60a9ed5cf35a57",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.16",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.6 ボラティリティ・スワップとバリアンス・スワップ（§26.16、GE pp.629–632）",
+      "level": 3,
+      "old_slice_sha256": "60ca28d8052a6c3f2683e4b4ffd6e4a0fd7a345452572ed4d66d7155e54a3b97",
+      "proposed_slice_sha256": "ddaa3618721e8fd75a8bb1b07d8a9512f121f72bf8d10a28c67cbd4e7db35835",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.17",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.7 静的オプション複製（§26.17）",
+      "level": 3,
+      "old_slice_sha256": "6546ae7c99567e1dab634186de75eeec91f43dd68bd3a296faf71a85c6c50b3c",
+      "proposed_slice_sha256": "512099d0232ebbd200c27874976331f44d8eeee905db78bcbb7b44a2dae6e10b",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "27.1",
+      "notebook": "volumes/06_numerical_methods/numerical.ipynb",
+      "heading": "7. Black–Scholes–Merton 以外のモデル（§27.1）",
+      "level": 2,
+      "old_slice_sha256": "38509e9b43db661e4f63ba242bbb2ac8d6c959a762530e44786da8f6ce351538",
+      "proposed_slice_sha256": "bc7261be39538b5da2f8f0e9aef5bfbcc17960a2dc8bf6671fe19caf4fab4b5b",
+      "viewports": [
+        [
+          1440,
+          1000
+        ],
+        [
+          1000,
+          1000
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "27.2",
+      "notebook": "volumes/06_numerical_methods/numerical.ipynb",
+      "heading": "8. 確率ボラティリティ・モデル（§27.2）",
+      "level": 2,
+      "old_slice_sha256": "e7e817799d01ddfaca7e9d1ea9982bf204e429580ead825d461d5e6f94c6ef3b",
+      "proposed_slice_sha256": "4b98a862893ff9707ce080b57b76b3ceb9935c038c4fad79df2d4ad7b87f343c",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "27.3",
+      "notebook": "volumes/06_numerical_methods/numerical.ipynb",
+      "heading": "9. IVF（局所ボラティリティ）モデル（§27.3）",
+      "level": 2,
+      "old_slice_sha256": "8a0ad6f694fe8aa09cfc0ccf12c6ed9f7a686dc1088fa848c6f1085ddce15dfb",
+      "proposed_slice_sha256": "e6e2e007116a4fee0578a594f488dd446d5786ce29a02b77ee65113187240dda",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "27.4",
+      "notebook": "volumes/06_numerical_methods/numerical.ipynb",
+      "heading": "10. 転換社債（§27.4）",
+      "level": 2,
+      "old_slice_sha256": "082d43ec6f119b3308661835a263db5c516d591e406276be86a4bc67cc116960",
+      "proposed_slice_sha256": "f4254728fd38f1ddfa3d338e84787e8fdc570e8a2514889dc0fd4c5436459ce4",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "27.5",
+      "notebook": "volumes/06_numerical_methods/numerical.ipynb",
+      "heading": "11. 経路依存デリバティブ（§27.5）",
+      "level": 2,
+      "old_slice_sha256": "9735272db26cc56f563748bf6a03fdbebdb0b4077741b521d1237c1a68866147",
+      "proposed_slice_sha256": "a3400a9cfbf270794deda38c5e45d57bbbfdb41ae36e1db11c75fcb1fa411449",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "27.6",
+      "notebook": "volumes/06_numerical_methods/numerical.ipynb",
+      "heading": "12. バリア・オプションのツリー評価（§27.6）",
+      "level": 2,
+      "old_slice_sha256": "2e58fb874917d54e1a8df8c0bfb59b6ef53f1f72246d289189ddf6f16cbe408e",
+      "proposed_slice_sha256": "f8a443f9de68458c4a6084ef82b19d0a1fee58162e4cde675b5c44b7cc4a1d3c",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "27.7",
+      "notebook": "volumes/06_numerical_methods/numerical.ipynb",
+      "heading": "13. 相関のある二資産のオプション（§27.7）",
+      "level": 2,
+      "old_slice_sha256": "33d430334be6e72c033ea91d6d67a5c8cbebb85a0da2dd25ce4633d36f7e7ab4",
+      "proposed_slice_sha256": "76674d389a1e8f7892a117dc911e65d77e626f17ba1f258fdedaada95ef902bb",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "27.8",
+      "notebook": "volumes/06_numerical_methods/numerical.ipynb",
+      "heading": "14. モンテカルロ法とアメリカン・オプション（§27.8）",
+      "level": 2,
+      "old_slice_sha256": "4987a4aa1fa5cd3bb72ebe341ebe5b9980459eaf1dfdadc588142a044f5de2ac",
+      "proposed_slice_sha256": "d3f6625df66dd21e125c432688463fd7cf73e83609f91b83f4c9d1abb7a28520",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.4",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.11 ギャップ・オプション（§26.4、GE p.617）",
+      "level": 3,
+      "old_slice_sha256": "4fb39e531b2e1130ef9070965d0eff82fb91773b5942a63960ad35113bc73128",
+      "proposed_slice_sha256": "bd97461ea9b04b286ff986b737e4c1e79ecc02cdff644f358a655fe6e1573f18",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.5",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.12 フォワード・スタート・オプション（§26.5、GE p.618）",
+      "level": 3,
+      "old_slice_sha256": "550f07b41f43d3343eef5846958b717bc58a40dd855183f796bace54d1ebd7dc",
+      "proposed_slice_sha256": "40eabd01fe5cf715401a318170360b0aa8faf66a8533a980ac79a2d2c0fd3ac2",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.6",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.13 Cliquet：strikeのresetと各期の支払（§26.6、GE p.618）",
+      "level": 3,
+      "old_slice_sha256": "e810c0d53b264ec8ba82f09e84ffb1811e3aef0e2a0b784f5fe8d91789453863",
+      "proposed_slice_sha256": "605cc426d998e25d7159d4e715195693706c3e4d5463b3758c1f1efbcca3dca6",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.7",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.14 コンパウンド・オプション：二つの行使日（§26.7、GE pp.618–619）",
+      "level": 3,
+      "old_slice_sha256": "53c19124af007fb606b515113be98f5306953f1e79fb9081738be175823d1206",
+      "proposed_slice_sha256": "9c6556346a47e37b093ef5d6871d42dc19fc39cc7423a5da22c43830a7e98f7e",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "26.8",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "4.15 Chooser：後からcallかputを選ぶ（§26.8、GE pp.619–620）",
+      "level": 3,
+      "old_slice_sha256": "1564fee13c7a7dba93f86dd9b0362b9cce48297b984141b9e166208865ecc64f",
+      "proposed_slice_sha256": "facc800401c50adc19cc1ad03e38133e8a50abca3ba574c741b271716f30ce8d",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "28.1",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "6. 市場リスクの価格 λ（§28.1）",
+      "level": 2,
+      "old_slice_sha256": "e47cf6f4f6085d5e98a79e97dc589ef17002842313afb63c3dae982932ca3990",
+      "proposed_slice_sha256": "6d6c0eeebdbd8bcd47518f10ea25fb085995c7a83d9ff462bac3b0769f1c28a2",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "28.2",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "6A. 複数状態変数（§28.2）",
+      "level": 2,
+      "old_slice_sha256": "fa9fef8c7cd874be8c60b6939780d5a886821d68fcee08ad4e92226988c5da6e",
+      "proposed_slice_sha256": "06d41b23e4c6d54a1067c2bead7ecc7ae923e4240605550bdbb1debd08c69fa2",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "28.3",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "6B. マルチンゲール（§28.3）",
+      "level": 2,
+      "old_slice_sha256": "1b05594bed20f3eb1304c9d48eb4ddc1a51f5690f0ca9b1bf4272cb2b650d3ba",
+      "proposed_slice_sha256": "e11689ca51b238c21c80bd447864d9d6072e7d69ccdf00817e09c468bda77563",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "28.4",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "6C. ニュメレールの選択（§28.4）",
+      "level": 2,
+      "old_slice_sha256": "3568ccad43b02507d3d03d37570208bca0d2259693164f95714d70960e5c87a1",
+      "proposed_slice_sha256": "c338602ba030d86fd08fcd7f2e55e58a455275a793b491c08d008519ae99912e",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "28.5",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "6D. 複数因子への拡張（§28.5）",
+      "level": 2,
+      "old_slice_sha256": "902cf17303361157cbc61286fe13e76b990f39b1d37a4b1d59f3f7a7afbdd995",
+      "proposed_slice_sha256": "5b5c0c67223d0cfa18b7ae5b1b5484c81dd80411b8de77b89e542edaf28c8b0a",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 4
+    },
+    {
+      "section": "28.6",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "6E. Blackのモデルを測度から再訪（§28.6）",
+      "level": 2,
+      "old_slice_sha256": "0f56872aab3ddb58d26a59c1cce97aeda44b3619daa40fe7bdc7b8dc04f9ac44",
+      "proposed_slice_sha256": "b41a8b479c4bbb73f34c5ac9aeb181e30b1eb7506f1c06beba4d3d5eced42f2d",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 2
+    },
+    {
+      "section": "28.7",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "6F. 一つの資産を別の資産と交換（§28.7）",
+      "level": 2,
+      "old_slice_sha256": "9e6d81b9a435db3412df9f2be80757559b3ade502bdeaaba39e8f6ae10892608",
+      "proposed_slice_sha256": "227f69f5d284c131381870fc24a5bc63dedb85dfb77d8971608a119170a92ad9",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 2
+    },
+    {
+      "section": "28.8",
+      "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+      "heading": "6G. ニュメレール変更の共分散補正（§28.8）",
+      "level": 2,
+      "old_slice_sha256": "e310362af1d4b0d5c66abc3cdcfafda02218c84d36ebea253a81993718ca335e",
+      "proposed_slice_sha256": "ca8af47fce4a8a55fdb130f84ab0ae05426be4c513b901269a5a9f291e3db622",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "portal_figures": 2
+    }
+  ],
+  "d1_count": 33,
+  "d1_records": [
+    "docs/validation/p8-2026-10-07/section-26-1/d1pf-26.1-20261006T225318Z-redraw-827c48575ec947328bcc11541dafb025.json",
+    "docs/validation/p8-2026-10-07/section-26-10/d1pf-26.10-20261006T225421Z-redraw-6239ee0f91274f3d83fe4721d05464a3.json",
+    "docs/validation/p8-2026-10-07/section-26-11/d1pf-26.11-20261006T230014Z-redraw-52c3c5a00516464b91b7a53e1d0c8525.json",
+    "docs/validation/p8-2026-10-07/section-26-12/d1pf-26.12-20261006T225427Z-redraw-77558c7649904e7596ed18518e1cd896.json",
+    "docs/validation/p8-2026-10-07/section-26-13/d1pf-26.13-20261006T225436Z-redraw-9854fb1054254e5490081b4883d6e4a5.json",
+    "docs/validation/p8-2026-10-07/section-26-14/d1pf-26.14-20261006T225451Z-redraw-ed0489e3c6eb4b8595b1073f72b025bb.json",
+    "docs/validation/p8-2026-10-07/section-26-15/d1pf-26.15-20261006T225500Z-redraw-4cc778bcfcad445d953c4ee809954ea3.json",
+    "docs/validation/p8-2026-10-07/section-26-16/d1pf-26.16-20261006T225553Z-redraw-378714ee8c674976be84c3f9ce424600.json",
+    "docs/validation/p8-2026-10-07/section-26-17/d1pf-26.17-20261006T225553Z-redraw-9af171b60aa34f99ab28c5a5a60ea0b4.json",
+    "docs/validation/p8-2026-10-07/section-26-2/d1pf-26.2-20261006T225318Z-redraw-cf777fea25554ecbb46a1833e91dd908.json",
+    "docs/validation/p8-2026-10-07/section-26-3/d1pf-26.3-20261006T225318Z-redraw-2993644982ad4c478ed8006c996a425c.json",
+    "docs/validation/p8-2026-10-07/section-26-4/d1pf-26.4-20261006T225318Z-redraw-f5cbc4bde69b433cbb4de44db59284cf.json",
+    "docs/validation/p8-2026-10-07/section-26-5/d1pf-26.5-20261006T225349Z-redraw-9c264c6067e84aa09476923b7d3b3814.json",
+    "docs/validation/p8-2026-10-07/section-26-6/d1pf-26.6-20261006T225349Z-redraw-a301bd13f5344bd48e60b10f401c2cda.json",
+    "docs/validation/p8-2026-10-07/section-26-7/d1pf-26.7-20261006T225349Z-redraw-44cd20db4d644056af75b976190b7fff.json",
+    "docs/validation/p8-2026-10-07/section-26-8/d1pf-26.8-20261006T225352Z-redraw-1b30bb2d90794275b5f0bf38e56dedd9.json",
+    "docs/validation/p8-2026-10-07/section-26-9/d1pf-26.9-20261006T225421Z-redraw-5cb6811c138c485292418c2399a5da32.json",
+    "docs/validation/p8-2026-10-07/section-27-1/d1pf-27.1-20261006T225606Z-redraw-725611a433704a1a8d73ebe5f952df9d.json",
+    "docs/validation/p8-2026-10-07/section-27-2/d1pf-27.2-20261006T225610Z-redraw-8a3669fcc4dd4f38b2692a327196ea8b.json",
+    "docs/validation/p8-2026-10-07/section-27-3/d1pf-27.3-20261006T225625Z-redraw-6df349c800dd4afeba2806d1faf7678b.json",
+    "docs/validation/p8-2026-10-07/section-27-4/d1pf-27.4-20261006T225633Z-redraw-4b010aa11bcb450ca7a9f6f17c07e3f0.json",
+    "docs/validation/p8-2026-10-07/section-27-5/d1pf-27.5-20261006T225634Z-redraw-8d061b0cdee74fef84cc2aa561083a30.json",
+    "docs/validation/p8-2026-10-07/section-27-6/d1pf-27.6-20261006T225643Z-redraw-f1ddcd81abce4f31815d54e48843180b.json",
+    "docs/validation/p8-2026-10-07/section-27-7/d1pf-27.7-20261006T225651Z-redraw-3f364bd6650f41f8b41a0c53c652fbd9.json",
+    "docs/validation/p8-2026-10-07/section-27-8/d1pf-27.8-20261006T225653Z-redraw-b0459335695e4943983b0d0a60517691.json",
+    "docs/validation/p8-2026-10-07/section-28-1/d1pf-28.1-20261006T225702Z-redraw-17c975c06e104bac8cddd6ea52acdaf7.json",
+    "docs/validation/p8-2026-10-07/section-28-2/d1pf-28.2-20261006T225711Z-redraw-d9a57adc0c004ab79c291c34a7f9189b.json",
+    "docs/validation/p8-2026-10-07/section-28-3/d1pf-28.3-20261006T225711Z-redraw-79d47985d63f4491bf06e740c2ce2885.json",
+    "docs/validation/p8-2026-10-07/section-28-4/d1pf-28.4-20261006T225712Z-redraw-fcabc94c852347e4aa5133b74b16cc83.json",
+    "docs/validation/p8-2026-10-07/section-28-5/d1pf-28.5-20261006T225734Z-redraw-9b179a198784446d82bfe35691b47eb7.json",
+    "docs/validation/p8-2026-10-07/section-28-6/d1pf-28.6-20261006T225743Z-redraw-19b68db17d6d4594be684707c4b048b4.json",
+    "docs/validation/p8-2026-10-07/section-28-7/d1pf-28.7-20261006T225743Z-redraw-cd5ddb2f484a4c33bc3345cbe932c4ef.json",
+    "docs/validation/p8-2026-10-07/section-28-8/d1pf-28.8-20261006T225753Z-redraw-3c223d8aa70642859bc2b2458716a192.json"
+  ],
+  "ledger_book_hash_sections": [
+    {
+      "section": "1.1",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        }
+      ]
+    },
+    {
+      "section": "1.2",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        }
+      ]
+    },
+    {
+      "section": "1.3",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        }
+      ]
+    },
+    {
+      "section": "1.4",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        }
+      ]
+    },
+    {
+      "section": "1.5",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        }
+      ]
+    },
+    {
+      "section": "1.6",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        }
+      ]
+    },
+    {
+      "section": "1.7",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        }
+      ]
+    },
+    {
+      "section": "1.8",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        }
+      ]
+    },
+    {
+      "section": "1.9",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        }
+      ]
+    },
+    {
+      "section": "1.10",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "artifact": "book/_build/html/notebooks/12_qualitative_summary.html"
+        }
+      ]
+    },
+    {
+      "section": "26.1",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-1/d1pf-26.1-20261006T225318Z-redraw-827c48575ec947328bcc11541dafb025.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-1/d1pf-26.1-20261006T225318Z-redraw-827c48575ec947328bcc11541dafb025.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.2",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-2/d1pf-26.2-20261006T225318Z-redraw-cf777fea25554ecbb46a1833e91dd908.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-2/d1pf-26.2-20261006T225318Z-redraw-cf777fea25554ecbb46a1833e91dd908.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.3",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-3/d1pf-26.3-20261006T225318Z-redraw-2993644982ad4c478ed8006c996a425c.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-3/d1pf-26.3-20261006T225318Z-redraw-2993644982ad4c478ed8006c996a425c.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.4",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-4/d1pf-26.4-20261006T225318Z-redraw-f5cbc4bde69b433cbb4de44db59284cf.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-4/d1pf-26.4-20261006T225318Z-redraw-f5cbc4bde69b433cbb4de44db59284cf.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.5",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-5/d1pf-26.5-20261006T225349Z-redraw-9c264c6067e84aa09476923b7d3b3814.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-5/d1pf-26.5-20261006T225349Z-redraw-9c264c6067e84aa09476923b7d3b3814.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.6",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-6/d1pf-26.6-20261006T225349Z-redraw-a301bd13f5344bd48e60b10f401c2cda.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-6/d1pf-26.6-20261006T225349Z-redraw-a301bd13f5344bd48e60b10f401c2cda.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.7",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-7/d1pf-26.7-20261006T225349Z-redraw-44cd20db4d644056af75b976190b7fff.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-7/d1pf-26.7-20261006T225349Z-redraw-44cd20db4d644056af75b976190b7fff.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.8",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-8/d1pf-26.8-20261006T225352Z-redraw-1b30bb2d90794275b5f0bf38e56dedd9.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-8/d1pf-26.8-20261006T225352Z-redraw-1b30bb2d90794275b5f0bf38e56dedd9.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.9",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-9/d1pf-26.9-20261006T225421Z-redraw-5cb6811c138c485292418c2399a5da32.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-9/d1pf-26.9-20261006T225421Z-redraw-5cb6811c138c485292418c2399a5da32.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.10",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-10/d1pf-26.10-20261006T225421Z-redraw-6239ee0f91274f3d83fe4721d05464a3.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-10/d1pf-26.10-20261006T225421Z-redraw-6239ee0f91274f3d83fe4721d05464a3.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.11",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-11/d1pf-26.11-20261006T230014Z-redraw-52c3c5a00516464b91b7a53e1d0c8525.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-11/d1pf-26.11-20261006T230014Z-redraw-52c3c5a00516464b91b7a53e1d0c8525.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.12",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-12/d1pf-26.12-20261006T225427Z-redraw-77558c7649904e7596ed18518e1cd896.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-12/d1pf-26.12-20261006T225427Z-redraw-77558c7649904e7596ed18518e1cd896.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.13",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-13/d1pf-26.13-20261006T225436Z-redraw-9854fb1054254e5490081b4883d6e4a5.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-13/d1pf-26.13-20261006T225436Z-redraw-9854fb1054254e5490081b4883d6e4a5.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.14",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-14/d1pf-26.14-20261006T225451Z-redraw-ed0489e3c6eb4b8595b1073f72b025bb.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-14/d1pf-26.14-20261006T225451Z-redraw-ed0489e3c6eb4b8595b1073f72b025bb.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.15",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-15/d1pf-26.15-20261006T225500Z-redraw-4cc778bcfcad445d953c4ee809954ea3.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-15/d1pf-26.15-20261006T225500Z-redraw-4cc778bcfcad445d953c4ee809954ea3.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.16",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-16/d1pf-26.16-20261006T225553Z-redraw-378714ee8c674976be84c3f9ce424600.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-16/d1pf-26.16-20261006T225553Z-redraw-378714ee8c674976be84c3f9ce424600.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "26.17",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-17/d1pf-26.17-20261006T225553Z-redraw-9af171b60aa34f99ab28c5a5a60ea0b4.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-26-17/d1pf-26.17-20261006T225553Z-redraw-9af171b60aa34f99ab28c5a5a60ea0b4.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "27.1",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-1/d1pf-27.1-20261006T225606Z-redraw-725611a433704a1a8d73ebe5f952df9d.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-1/d1pf-27.1-20261006T225606Z-redraw-725611a433704a1a8d73ebe5f952df9d.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        }
+      ]
+    },
+    {
+      "section": "27.2",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-2/d1pf-27.2-20261006T225610Z-redraw-8a3669fcc4dd4f38b2692a327196ea8b.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-2/d1pf-27.2-20261006T225610Z-redraw-8a3669fcc4dd4f38b2692a327196ea8b.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        }
+      ]
+    },
+    {
+      "section": "27.3",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-3/d1pf-27.3-20261006T225625Z-redraw-6df349c800dd4afeba2806d1faf7678b.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-3/d1pf-27.3-20261006T225625Z-redraw-6df349c800dd4afeba2806d1faf7678b.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        }
+      ]
+    },
+    {
+      "section": "27.4",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-4/d1pf-27.4-20261006T225633Z-redraw-4b010aa11bcb450ca7a9f6f17c07e3f0.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-4/d1pf-27.4-20261006T225633Z-redraw-4b010aa11bcb450ca7a9f6f17c07e3f0.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        }
+      ]
+    },
+    {
+      "section": "27.5",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-5/d1pf-27.5-20261006T225634Z-redraw-8d061b0cdee74fef84cc2aa561083a30.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-5/d1pf-27.5-20261006T225634Z-redraw-8d061b0cdee74fef84cc2aa561083a30.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        }
+      ]
+    },
+    {
+      "section": "27.6",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-6/d1pf-27.6-20261006T225643Z-redraw-f1ddcd81abce4f31815d54e48843180b.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-6/d1pf-27.6-20261006T225643Z-redraw-f1ddcd81abce4f31815d54e48843180b.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        }
+      ]
+    },
+    {
+      "section": "27.7",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-7/d1pf-27.7-20261006T225651Z-redraw-3f364bd6650f41f8b41a0c53c652fbd9.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-7/d1pf-27.7-20261006T225651Z-redraw-3f364bd6650f41f8b41a0c53c652fbd9.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        }
+      ]
+    },
+    {
+      "section": "27.8",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-8/d1pf-27.8-20261006T225653Z-redraw-b0459335695e4943983b0d0a60517691.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-27-8/d1pf-27.8-20261006T225653Z-redraw-b0459335695e4943983b0d0a60517691.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/06_numerical.html"
+        }
+      ]
+    },
+    {
+      "section": "28.1",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-1/d1pf-28.1-20261006T225702Z-redraw-17c975c06e104bac8cddd6ea52acdaf7.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-1/d1pf-28.1-20261006T225702Z-redraw-17c975c06e104bac8cddd6ea52acdaf7.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "28.2",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-2/d1pf-28.2-20261006T225711Z-redraw-d9a57adc0c004ab79c291c34a7f9189b.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-2/d1pf-28.2-20261006T225711Z-redraw-d9a57adc0c004ab79c291c34a7f9189b.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "28.3",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-3/d1pf-28.3-20261006T225711Z-redraw-79d47985d63f4491bf06e740c2ce2885.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-3/d1pf-28.3-20261006T225711Z-redraw-79d47985d63f4491bf06e740c2ce2885.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "28.4",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-4/d1pf-28.4-20261006T225712Z-redraw-fcabc94c852347e4aa5133b74b16cc83.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-4/d1pf-28.4-20261006T225712Z-redraw-fcabc94c852347e4aa5133b74b16cc83.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "28.5",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-5/d1pf-28.5-20261006T225734Z-redraw-9b179a198784446d82bfe35691b47eb7.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-5/d1pf-28.5-20261006T225734Z-redraw-9b179a198784446d82bfe35691b47eb7.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "28.6",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-6/d1pf-28.6-20261006T225743Z-redraw-19b68db17d6d4594be684707c4b048b4.json",
+          "evidence_key": "numerical",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-6/d1pf-28.6-20261006T225743Z-redraw-19b68db17d6d4594be684707c4b048b4.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-6/d1pf-28.6-20261006T225743Z-redraw-19b68db17d6d4594be684707c4b048b4.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "28.7",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-7/d1pf-28.7-20261006T225743Z-redraw-cd5ddb2f484a4c33bc3345cbe932c4ef.json",
+          "evidence_key": "numerical",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-7/d1pf-28.7-20261006T225743Z-redraw-cd5ddb2f484a4c33bc3345cbe932c4ef.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-7/d1pf-28.7-20261006T225743Z-redraw-cd5ddb2f484a4c33bc3345cbe932c4ef.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    },
+    {
+      "section": "28.8",
+      "references": [
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-8/d1pf-28.8-20261006T225753Z-redraw-3c223d8aa70642859bc2b2458716a192.json",
+          "evidence_key": "numerical",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-8/d1pf-28.8-20261006T225753Z-redraw-3c223d8aa70642859bc2b2458716a192.json",
+          "evidence_key": "browser_run",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        },
+        {
+          "record": "docs/validation/p8-2026-10-07/section-28-8/d1pf-28.8-20261006T225753Z-redraw-3c223d8aa70642859bc2b2458716a192.json",
+          "evidence_key": "chapter_check",
+          "artifact": "book/_build/html/notebooks/10_exotics.html"
+        }
+      ]
+    }
+  ],
+  "ledger_book_hash_section_count": 43,
+  "ledger_book_hash_reference_count": 89,
+  "ledger_book_html_pages": [
+    "book/_build/html/notebooks/06_numerical.html",
+    "book/_build/html/notebooks/10_exotics.html",
+    "book/_build/html/notebooks/12_qualitative_summary.html"
+  ],
+  "nested_notebook_source_hash_sections": [
+    {
+      "section": "1.1",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/numerical-check.json",
+          "evidence_key": "numerical",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        }
+      ]
+    },
+    {
+      "section": "1.2",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/numerical-check.json",
+          "evidence_key": "numerical",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        }
+      ]
+    },
+    {
+      "section": "1.3",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/numerical-check.json",
+          "evidence_key": "numerical",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        }
+      ]
+    },
+    {
+      "section": "1.4",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/numerical-check.json",
+          "evidence_key": "numerical",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        }
+      ]
+    },
+    {
+      "section": "1.5",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/numerical-check.json",
+          "evidence_key": "numerical",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        }
+      ]
+    },
+    {
+      "section": "1.6",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/numerical-check.json",
+          "evidence_key": "numerical",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        }
+      ]
+    },
+    {
+      "section": "1.7",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/numerical-check.json",
+          "evidence_key": "numerical",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        }
+      ]
+    },
+    {
+      "section": "1.8",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/numerical-check.json",
+          "evidence_key": "numerical",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        }
+      ]
+    },
+    {
+      "section": "1.9",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/numerical-check.json",
+          "evidence_key": "numerical",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        }
+      ]
+    },
+    {
+      "section": "1.10",
+      "references": [
+        {
+          "record": "docs/validation/chapter-01/numerical-check.json",
+          "evidence_key": "numerical",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/browser-check.json",
+          "evidence_key": "browser",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        },
+        {
+          "record": "docs/validation/chapter-01/acceptance-check.json",
+          "evidence_key": "integration",
+          "source": "volumes/12_qualitative_summary/qualitative_summary.ipynb"
+        }
+      ]
+    }
+  ],
+  "direct_notebook_source_hash_references": [
+    {
+      "section": "1.1",
+      "key": "notebook",
+      "path": "volumes/12_qualitative_summary/qualitative_summary.ipynb",
+      "kind": "source",
+      "sha256": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2"
+    },
+    {
+      "section": "1.2",
+      "key": "notebook",
+      "path": "volumes/12_qualitative_summary/qualitative_summary.ipynb",
+      "kind": "source",
+      "sha256": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2"
+    },
+    {
+      "section": "1.3",
+      "key": "notebook",
+      "path": "volumes/12_qualitative_summary/qualitative_summary.ipynb",
+      "kind": "source",
+      "sha256": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2"
+    },
+    {
+      "section": "1.4",
+      "key": "notebook",
+      "path": "volumes/12_qualitative_summary/qualitative_summary.ipynb",
+      "kind": "source",
+      "sha256": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2"
+    },
+    {
+      "section": "1.5",
+      "key": "notebook",
+      "path": "volumes/12_qualitative_summary/qualitative_summary.ipynb",
+      "kind": "source",
+      "sha256": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2"
+    },
+    {
+      "section": "1.6",
+      "key": "notebook",
+      "path": "volumes/12_qualitative_summary/qualitative_summary.ipynb",
+      "kind": "source",
+      "sha256": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2"
+    },
+    {
+      "section": "1.7",
+      "key": "notebook",
+      "path": "volumes/12_qualitative_summary/qualitative_summary.ipynb",
+      "kind": "source",
+      "sha256": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2"
+    },
+    {
+      "section": "1.8",
+      "key": "notebook",
+      "path": "volumes/12_qualitative_summary/qualitative_summary.ipynb",
+      "kind": "source",
+      "sha256": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2"
+    },
+    {
+      "section": "1.9",
+      "key": "notebook",
+      "path": "volumes/12_qualitative_summary/qualitative_summary.ipynb",
+      "kind": "source",
+      "sha256": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2"
+    },
+    {
+      "section": "1.10",
+      "key": "notebook",
+      "path": "volumes/12_qualitative_summary/qualitative_summary.ipynb",
+      "kind": "source",
+      "sha256": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2"
+    },
+    {
+      "section": "26.1",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.2",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.3",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.4",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.5",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.6",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.7",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.8",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.9",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.10",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.11",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.12",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.13",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.14",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.15",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.16",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "26.17",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "27.1",
+      "key": "notebook",
+      "path": "volumes/06_numerical_methods/numerical.ipynb",
+      "kind": "source",
+      "sha256": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a"
+    },
+    {
+      "section": "27.2",
+      "key": "notebook",
+      "path": "volumes/06_numerical_methods/numerical.ipynb",
+      "kind": "source",
+      "sha256": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a"
+    },
+    {
+      "section": "27.3",
+      "key": "notebook",
+      "path": "volumes/06_numerical_methods/numerical.ipynb",
+      "kind": "source",
+      "sha256": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a"
+    },
+    {
+      "section": "27.4",
+      "key": "notebook",
+      "path": "volumes/06_numerical_methods/numerical.ipynb",
+      "kind": "source",
+      "sha256": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a"
+    },
+    {
+      "section": "27.5",
+      "key": "notebook",
+      "path": "volumes/06_numerical_methods/numerical.ipynb",
+      "kind": "source",
+      "sha256": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a"
+    },
+    {
+      "section": "27.6",
+      "key": "notebook",
+      "path": "volumes/06_numerical_methods/numerical.ipynb",
+      "kind": "source",
+      "sha256": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a"
+    },
+    {
+      "section": "27.7",
+      "key": "notebook",
+      "path": "volumes/06_numerical_methods/numerical.ipynb",
+      "kind": "source",
+      "sha256": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a"
+    },
+    {
+      "section": "27.8",
+      "key": "notebook",
+      "path": "volumes/06_numerical_methods/numerical.ipynb",
+      "kind": "source",
+      "sha256": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a"
+    },
+    {
+      "section": "28.1",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "28.2",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "28.3",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "28.4",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    },
+    {
+      "section": "28.5",
+      "key": "notebook",
+      "path": "volumes/10_exotics_martingales/exotics.ipynb",
+      "kind": "source",
+      "sha256": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+    }
+  ],
+  "direct_notebook_source_hash_section_count": 40,
+  "image_baseline": {
+    "image_count": {
+      "book": 270,
+      "portal": 248
+    },
+    "image_bytes": {
+      "book": 13129000,
+      "portal": 8470054
+    },
+    "total_image_count": 518,
+    "total_image_bytes": 21599054,
+    "warning": "Historical image payload is a sizing baseline, not a prediction of new unique store bytes or verified image equality. T3 must rerender and measure."
+  },
+  "historical_check_seconds": {
+    "browser": 782.73,
+    "runtime_probe": 291.69,
+    "pytest": 157.79
+  },
+  "historical_check_seconds_sum": 1232.21,
+  "images_per_record": [
+    {
+      "section": "26.1",
+      "record": "docs/validation/p8-2026-10-07/section-26-1/d1pf-26.1-20261006T225318Z-redraw-827c48575ec947328bcc11541dafb025.json",
+      "images": 16,
+      "bytes": 509487,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.10",
+      "record": "docs/validation/p8-2026-10-07/section-26-10/d1pf-26.10-20261006T225421Z-redraw-6239ee0f91274f3d83fe4721d05464a3.json",
+      "images": 18,
+      "bytes": 1287881,
+      "surface": {
+        "book": 10,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.11",
+      "record": "docs/validation/p8-2026-10-07/section-26-11/d1pf-26.11-20261006T230014Z-redraw-52c3c5a00516464b91b7a53e1d0c8525.json",
+      "images": 18,
+      "bytes": 1301878,
+      "surface": {
+        "book": 10,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.12",
+      "record": "docs/validation/p8-2026-10-07/section-26-12/d1pf-26.12-20261006T225427Z-redraw-77558c7649904e7596ed18518e1cd896.json",
+      "images": 18,
+      "bytes": 1350469,
+      "surface": {
+        "book": 10,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.13",
+      "record": "docs/validation/p8-2026-10-07/section-26-13/d1pf-26.13-20261006T225436Z-redraw-9854fb1054254e5490081b4883d6e4a5.json",
+      "images": 18,
+      "bytes": 1387220,
+      "surface": {
+        "book": 10,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.14",
+      "record": "docs/validation/p8-2026-10-07/section-26-14/d1pf-26.14-20261006T225451Z-redraw-ed0489e3c6eb4b8595b1073f72b025bb.json",
+      "images": 18,
+      "bytes": 1482187,
+      "surface": {
+        "book": 10,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.15",
+      "record": "docs/validation/p8-2026-10-07/section-26-15/d1pf-26.15-20261006T225500Z-redraw-4cc778bcfcad445d953c4ee809954ea3.json",
+      "images": 18,
+      "bytes": 1295066,
+      "surface": {
+        "book": 10,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.16",
+      "record": "docs/validation/p8-2026-10-07/section-26-16/d1pf-26.16-20261006T225553Z-redraw-378714ee8c674976be84c3f9ce424600.json",
+      "images": 20,
+      "bytes": 1904867,
+      "surface": {
+        "book": 12,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.17",
+      "record": "docs/validation/p8-2026-10-07/section-26-17/d1pf-26.17-20261006T225553Z-redraw-9af171b60aa34f99ab28c5a5a60ea0b4.json",
+      "images": 16,
+      "bytes": 375486,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.2",
+      "record": "docs/validation/p8-2026-10-07/section-26-2/d1pf-26.2-20261006T225318Z-redraw-cf777fea25554ecbb46a1833e91dd908.json",
+      "images": 16,
+      "bytes": 509537,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.3",
+      "record": "docs/validation/p8-2026-10-07/section-26-3/d1pf-26.3-20261006T225318Z-redraw-2993644982ad4c478ed8006c996a425c.json",
+      "images": 16,
+      "bytes": 326803,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.4",
+      "record": "docs/validation/p8-2026-10-07/section-26-4/d1pf-26.4-20261006T225318Z-redraw-f5cbc4bde69b433cbb4de44db59284cf.json",
+      "images": 16,
+      "bytes": 538589,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.5",
+      "record": "docs/validation/p8-2026-10-07/section-26-5/d1pf-26.5-20261006T225349Z-redraw-9c264c6067e84aa09476923b7d3b3814.json",
+      "images": 16,
+      "bytes": 481959,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.6",
+      "record": "docs/validation/p8-2026-10-07/section-26-6/d1pf-26.6-20261006T225349Z-redraw-a301bd13f5344bd48e60b10f401c2cda.json",
+      "images": 16,
+      "bytes": 373236,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.7",
+      "record": "docs/validation/p8-2026-10-07/section-26-7/d1pf-26.7-20261006T225349Z-redraw-44cd20db4d644056af75b976190b7fff.json",
+      "images": 16,
+      "bytes": 505902,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.8",
+      "record": "docs/validation/p8-2026-10-07/section-26-8/d1pf-26.8-20261006T225352Z-redraw-1b30bb2d90794275b5f0bf38e56dedd9.json",
+      "images": 16,
+      "bytes": 456055,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "26.9",
+      "record": "docs/validation/p8-2026-10-07/section-26-9/d1pf-26.9-20261006T225421Z-redraw-5cb6811c138c485292418c2399a5da32.json",
+      "images": 10,
+      "bytes": 370699,
+      "surface": {
+        "book": 8,
+        "portal": 2
+      }
+    },
+    {
+      "section": "27.1",
+      "record": "docs/validation/p8-2026-10-07/section-27-1/d1pf-27.1-20261006T225606Z-redraw-725611a433704a1a8d73ebe5f952df9d.json",
+      "images": 16,
+      "bytes": 487040,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "27.2",
+      "record": "docs/validation/p8-2026-10-07/section-27-2/d1pf-27.2-20261006T225610Z-redraw-8a3669fcc4dd4f38b2692a327196ea8b.json",
+      "images": 20,
+      "bytes": 705388,
+      "surface": {
+        "book": 10,
+        "portal": 10
+      }
+    },
+    {
+      "section": "27.3",
+      "record": "docs/validation/p8-2026-10-07/section-27-3/d1pf-27.3-20261006T225625Z-redraw-6df349c800dd4afeba2806d1faf7678b.json",
+      "images": 16,
+      "bytes": 413577,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "27.4",
+      "record": "docs/validation/p8-2026-10-07/section-27-4/d1pf-27.4-20261006T225633Z-redraw-4b010aa11bcb450ca7a9f6f17c07e3f0.json",
+      "images": 16,
+      "bytes": 407715,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "27.5",
+      "record": "docs/validation/p8-2026-10-07/section-27-5/d1pf-27.5-20261006T225634Z-redraw-8d061b0cdee74fef84cc2aa561083a30.json",
+      "images": 16,
+      "bytes": 319907,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "27.6",
+      "record": "docs/validation/p8-2026-10-07/section-27-6/d1pf-27.6-20261006T225643Z-redraw-f1ddcd81abce4f31815d54e48843180b.json",
+      "images": 16,
+      "bytes": 651535,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "27.7",
+      "record": "docs/validation/p8-2026-10-07/section-27-7/d1pf-27.7-20261006T225651Z-redraw-3f364bd6650f41f8b41a0c53c652fbd9.json",
+      "images": 16,
+      "bytes": 637764,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "27.8",
+      "record": "docs/validation/p8-2026-10-07/section-27-8/d1pf-27.8-20261006T225653Z-redraw-b0459335695e4943983b0d0a60517691.json",
+      "images": 16,
+      "bytes": 594569,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "28.1",
+      "record": "docs/validation/p8-2026-10-07/section-28-1/d1pf-28.1-20261006T225702Z-redraw-17c975c06e104bac8cddd6ea52acdaf7.json",
+      "images": 16,
+      "bytes": 468555,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "28.2",
+      "record": "docs/validation/p8-2026-10-07/section-28-2/d1pf-28.2-20261006T225711Z-redraw-d9a57adc0c004ab79c291c34a7f9189b.json",
+      "images": 16,
+      "bytes": 385991,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "28.3",
+      "record": "docs/validation/p8-2026-10-07/section-28-3/d1pf-28.3-20261006T225711Z-redraw-79d47985d63f4491bf06e740c2ce2885.json",
+      "images": 16,
+      "bytes": 429907,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "28.4",
+      "record": "docs/validation/p8-2026-10-07/section-28-4/d1pf-28.4-20261006T225712Z-redraw-fcabc94c852347e4aa5133b74b16cc83.json",
+      "images": 16,
+      "bytes": 443825,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "28.5",
+      "record": "docs/validation/p8-2026-10-07/section-28-5/d1pf-28.5-20261006T225734Z-redraw-9b179a198784446d82bfe35691b47eb7.json",
+      "images": 16,
+      "bytes": 419506,
+      "surface": {
+        "book": 8,
+        "portal": 8
+      }
+    },
+    {
+      "section": "28.6",
+      "record": "docs/validation/p8-2026-10-07/section-28-6/d1pf-28.6-20261006T225743Z-redraw-19b68db17d6d4594be684707c4b048b4.json",
+      "images": 8,
+      "bytes": 257719,
+      "surface": {
+        "book": 4,
+        "portal": 4
+      }
+    },
+    {
+      "section": "28.7",
+      "record": "docs/validation/p8-2026-10-07/section-28-7/d1pf-28.7-20261006T225743Z-redraw-cd5ddb2f484a4c33bc3345cbe932c4ef.json",
+      "images": 8,
+      "bytes": 269745,
+      "surface": {
+        "book": 4,
+        "portal": 4
+      }
+    },
+    {
+      "section": "28.8",
+      "record": "docs/validation/p8-2026-10-07/section-28-8/d1pf-28.8-20261006T225753Z-redraw-3c223d8aa70642859bc2b2458716a192.json",
+      "images": 8,
+      "bytes": 248990,
+      "surface": {
+        "book": 4,
+        "portal": 4
+      }
+    }
+  ],
+  "input_sha256": {
+    "docs/section_ledger.json": "a351d46f9dc0e95aa6476537d6b605d8d97122945dbbd4df1a8d703ff1c06e13",
+    "scripts/evidence_dependencies.json": "bbbfbf79526584fba10425c0278af8e38ce23e8ee95c862d759d35a4575c86f8",
+    "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32"
+  },
+  "private_inventory": {
+    "estimate_t3.py": "bdfef757dc54b6f07f718b030fd90e59ffa027bf9e8500ba50ab4e66503b083e",
+    "t3_budget.py": "d00137807218cdc8da9c8076470ac2afd3d53892d03903635533fe59f5e5b7e5",
+    "t3-impact-inventory.json": "85039e4eb85a96b0cdd39af6c9ee1e6f31817b7a7844135798c08bbf16fe5eb7",
+    "t3-render-budget.json": "0d9ad8b8e3b5a895aec278957fd8ad964871fecc0b4367e2c9abe0acecd4c0f0"
+  }
+}

@@ -6,6 +6,8 @@ root: notebooks/00_overview
 parts:
   - caption: Hull 11e を章ごとに読む
     chapters:
+      - file: notebooks/guide/glossary
+      - file: notebooks/guide/models
       - file: notebooks/guide/ch08
       - file: notebooks/guide/ch13
   - caption: コア — Hull 11e 既刊ボリューム

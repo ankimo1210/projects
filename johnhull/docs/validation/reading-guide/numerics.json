@@ -1,7 +1,7 @@
 {
   "scope": "Reading-guide pilot Ch13 and Ch8. Inputs, printed values and unrounded values are distinguished. Page numbers refer to Hull 11e Global Edition; PDF physical and printed pages agree for these chapters.",
-  "date": "2026-10-18",
-  "verification": "Existing reference tests plus exact arithmetic checks recorded in revision-2026-10-18.json; no pricing code, notebook or section ledger is changed. Historical observations are checked against GE page images, not pricing tests. The file paths below are relative to johnhull/.",
+  "date": "2026-10-19",
+  "verification": "Existing reference tests plus exact arithmetic checks recorded in revision-2026-10-18.json and t2-2026-10-19.json; no pricing code, notebook or section ledger is changed. Historical observations are checked against GE page images or the named primary source, not pricing tests. The file paths below are relative to johnhull/.",
   "chapters": {
     "13": [
       {
@@ -85,9 +85,9 @@
   "non_example_numbers": [
     {
       "guide": "ch08", "guide_section": "8.2", "source_pages": [206],
-      "values": {"typical_teaser_rate_percent_about": 6, "subsequent_LIBOR_tenor_months": 6, "subsequent_spread_percentage_points": 6},
-      "meaning": "Typical historical ARM conditions described by GE: about 6 percent initially, then six-month LIBOR plus 6 percentage points; not current loan terms.",
-      "verification": "GE p.206 page image, 300 dpi."
+      "values": {"initial_teaser_period_years": [2, 3], "typical_teaser_rate_percent_about": 6, "subsequent_LIBOR_tenor_months": 6, "subsequent_spread_percentage_points": 6},
+      "meaning": "Typical historical ARM conditions described by GE: two or three initial years, about 6 percent initially, then six-month LIBOR plus 6 percentage points; not current loan terms.",
+      "verification": "GE p.206 page image; initial period rechecked for T2 on 2026-10-19."
     },
     {
       "guide": "ch08", "guide_section": "8.2", "source_pages": [208],
@@ -103,10 +103,12 @@
     },
     {"guide": "ch08", "value": "1 bp = 0.01 percentage point", "meaning": "Definition of the basis-point unit used for the GE p.209 observations; a unit conversion, not an additional numerical experiment."},
     {"guide": "ch13", "value": "1979", "meaning": "Publication year, not a market/calculation input", "source": "GE pp.288,308, references to Cox/Ross/Rubinstein and Rendleman/Bartter"},
-    {"guide": "both", "meaning": "Edition, chapter/section/figure/page labels and the confirmation date are source locators; 0/1/proportionality and integer counts inside symbolic formulas are definitions, not additional numerical experiments."}
+    {"guide": "ch08 and glossary", "values": {"USD_LIBOR_bank_panel_end": "2023-06-30", "last_synthetic_USD_LIBOR_publication": "2024-09-30"}, "sources": ["https://www.fca.org.uk/news/news-stories/us-dollar-libor-panel-has-now-ceased", "https://www.fca.org.uk/markets/libor-transition"], "checked_on": "2026-10-19", "meaning": "Historical cessation dates, separately labelled from the GE loan and spread observations."},
+    {"guide": "ch08", "value": "2008-04-10", "source": "https://www.federalreserve.gov/newsevents/speech/bernanke20080410a.htm", "checked_on": "2026-10-19", "meaning": "Date of Bernanke's primary-source speech on originate-to-distribute incentives; not a pricing input."},
+    {"guide": "all", "meaning": "Edition, chapter/section/figure/page labels and confirmation dates are source locators; 0/1/proportionality, distribution parameters and integer counts inside symbolic formulas are definitions, not additional numerical experiments. The model map has no new worked numerical examples; its 27 structural relations and sources are in model_map.json."}
   ],
   "symbolic_verification": {
-    "13.7": {"source_pages": [300, 301, 302], "tests": ["hullkit/tests/test_binomial_foundations_moments.py"]},
+    "13.7": {"source_pages": [300, 301, 302], "tests": ["hullkit/tests/test_binomial_foundations_moments.py"], "T2": "The return-variance and multiplier-variance forms agree after subtracting a common 1. The displayed Taylor terms x^2 + x^4/12 + r*dt*x^2 - r^2*dt^2 are rechecked independently with rational polynomial arithmetic in t2-2026-10-19.json."},
     "13.appendix": {"source_pages": [312, 313, 314, 315], "tests": ["hullkit/tests/test_binomial_foundations_tails.py"]}
   }
 }

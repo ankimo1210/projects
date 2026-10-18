@@ -1,4 +1,4 @@
-# 読むガイド：パイロットの検証資料
+# 読むガイド：T0–T2 の検証資料
 
 計画：[2026-10-18 の計画](../../READING_GUIDE_PLAN_2026-10-18.md)。
 進捗・検査結果・時間・使用量・停止条件は [READING_GUIDE_STATUS.md](../../READING_GUIDE_STATUS.md) を正本とする。
@@ -6,7 +6,7 @@
 
 ## 原典との照合範囲
 
-以下は**実装者による照合**。初稿e491b454はClaudeが独立検証済みで、下記の修正差分はClaudeの再検証待ち。
+以下は**実装者による照合**。初稿e491b454と修正8e3cbe9dはClaudeが独立検証済み。T2の追加・改訂差分はClaudeの独立検証待ち。
 対象は Hull 第11版 Global Edition。今回の範囲では PDF の物理頁と印刷頁が一致する。
 抽出本文と PDF の描画画像は公開ファイルに含めず、外部データ領域に保持する。
 
@@ -48,7 +48,7 @@ Ch8の現在側の補足は、2026-10-18に確認した [BCBS憲章](https://www
 ②和文＋約物は、生成HTMLのarticle本文からinline・displayの数式と見出しのリンク記号を除き、同範囲の文字とUnicodeカテゴリーPの約物を数える。
 ③数式を除く可視文字は、②と同じ本文の空白以外すべて（英数字・記号を含む）を数える。
 ②③は見出し・頁参照・リンクの表示文を含み、MyST/HTML記法・URL・CSSで付くリスト番号は含めない。
-値・対象ソースとHTMLのSHA-256・再計数スクリプトのSHA-256は `revision-2026-10-18.json` に残す。
+値・対象ソースとHTMLのSHA-256・再計数スクリプトのSHA-256は、T1が `revision-2026-10-18.json`、T2が [t2-2026-10-19.json](t2-2026-10-19.json) にある。
 
 ## 環境と再実行
 
@@ -85,7 +85,7 @@ pytest自体が管理する一時ファイルは、保存先がGit内でない�
 worktreeを撤去する際には、通常のignoredファイル・容量・参照先の確認に加えて、これらのマウントを先に解除する。
 外部の生成物や原典抽出を削除せず、読後判断と独立検証が終わるまでworktreeと検証データを残す。
 
-## 独立レビュー後の修正
+## T1 独立レビュー後の修正（履歴）
 
 Claudeの指示書はmain `6c2daf2c` の `johnhull/docs/READING_GUIDE_REVIEW_2026-10-18.md`。
 このbranchへmainの変更は取り込まず、指定されたパスから全文を読んで§2を修正した。
@@ -99,3 +99,32 @@ N18は次回の共有runtime更新時の要件として保持する。T2など�
 各検査に対象commitと実行時刻を記録する。今回 `shared-runtime.json`・`_toc.yml` は変更しない。
 `--require-tracked` はoverviewがHEADと一致していることを要求するため、最終commit後に実行する。
 この記録の締切り後の結果は、今回の出力rootの `post-commit-checks.json` と最終報告に残す。
+
+## T2 の追加と検査（2026-10-19）
+
+main a115b2cbまでを `codex/reading-guide` へ取り込み、merge commit d040c960でROADMAPの両側の内容を保持した。T2は用語集・モデル地図・overviewの章間地図・Ch8/Ch13の改訂。既存notebook・補足教材・台帳・過去の検証JSON・受入検証器は変更していない。T3は [影響見積もり](t3-impact-2026-10-19.md) だけで、実装していない。
+
+- 正本：`book/notebooks/guide/model_map.json`。索引§1–14・P3/P4の実測178行を135カードへ対応。27本の関係に式の条件と出典、12行の問いの早見表を付けた。インフラ§15とRB-F*研究は除く。
+- 生成物：`models.md`、`model_map/figure.json`、`figure.html`、`runtime.html`。生成器の `--check` は書込みせずbyteの鮮度を検査する。Bookの節アンカー・portalの検査を完全に行うには、そのHTMLを先に生成しておく。
+- plotly.py 6.9.0 / Plotly.js 3.7.0。JS全文はgzip（mtime=0）＋base64でページ内に同梱し、既存依存のまま追加インストールはしない。DecompressionStreamが必要な図と、JSなしでも読める本文を併置した。ライセンスは `model_map/LICENSE.plotly`。生成HTMLは **2,294,253 bytes**（図のJS込み、Book共通ファイルは別）。追加ファイルは各2 MB未満。
+- 新規鮮度テスト20件：索引行の網羅、図とカードの一致、生成byte、無効な関係・空の説明・切れた参照の拒否を確認する。数値の44既存テストと、§13.7の有理係数による展開の独立検算も別に行う。
+- 新規ブラウザ検査：6系統、拡大、実際のクリック/タップによるカード移動、選択欄、MathJax・ローカル参照・通信・エラー・幅、JSなしの135カードを1280/390pxで確認する。既存31ページの数式検査とパイロット2章の検査も保持する。本文・数式は390pxの画像でも点検する。
+- 数値・頁・記号はGE PDFと照合。カードの読む場所は130節の抽出本文を位置確認に使い、式の記号・特殊化の条件は22頁のページ画像も読んだ。PDF画像・抽出本文はGitに含めない。原典の連続した訳文や図表の再掲は行わない。Hull以外の9出典と確認日はT2の検証JSONに記録する。
+
+新しい出力rootは `/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/`。Bookの `_build` はその `book/_build` へのbind mountへ切り替え、T0/T1/Claudeの過去の出力を保持した。各検査の生ログ、UTC開始/終了・実際のcheckout commit・未コミット差分を含むソース指紋は同rootの `*-check.json` にある。
+読むときの入口はworktree側の `johnhull/book/_build/html/notebooks/guide/models.html`（用語集は `glossary.html`）。このパスから開くと、同じcheckoutの `MODEL_INDEX.md` と `report/site` への相対リンクも、ブラウザ検査時と同じ配置で使える。
+
+```bash
+source /home/kazumasa/projects/_data/johnhull/reading-guide/env.sh
+cd /home/kazumasa/worktrees/reading-guide
+uv run --no-sync --package hullkit python johnhull/scripts/build_model_map.py --check
+uv run --no-sync --package hullkit pytest -q johnhull/report/tests/test_model_map.py
+export MODEL_MAP_OUTPUT_DIR=/home/kazumasa/projects/_data/johnhull/reading-guide/new-map-review-output
+node johnhull/scripts/check_model_map.cjs
+```
+
+編集時は `model_map.json` を直し、生成器を `--write` で回してからBookを生成し、上の検査を行う。出力先は実行ごとに新しくする。章ガイドを足したら、モデルカードの読む場所とoverviewの両方向のつながりを更新する。
+
+TOC追加に伴う共有runtime更新では、Book全生成・全数式・releaseの各検査に対象commit・UTC時刻・ソース指紋を記録した（N18）。manifest自身の不一致でreleaseが停止する循環は、完了済みBook/数式検査だけを記したseed manifestで一度検査し、その成功結果を最終manifestへ記録する順序で処理した。各検査は最終commit前の実際のcheckoutを示し、未コミット状態を隠していない。
+
+strict gateは今回も158エラー（HTML89・旧指紋69）、受入306件のまま。既存のbsm15のERROR表示1件と153 WARNINGも保持した。これらを修復した、あるいは全受入証跡が最新になったとは扱わない。T2の主張と読みやすさについての独立レビューはClaudeへ引き継ぐ。

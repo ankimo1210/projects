@@ -1,0 +1,2553 @@
+{
+  "date": "2026-10-19",
+  "phase": "T2",
+  "branch": "codex/reading-guide",
+  "merged_main": "a115b2cb90b16e1104da19679d35948fe3a9dc99",
+  "merge_commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+  "main_ref_at_measurement": "3f82a444b79058c6fb4f06290dd3a6632c2ba349",
+  "main_note": "main advanced during this task in another checkout. Only the requested a115b2cb was merged into this branch; this task did not update main or push.",
+  "implementation_commit": "Commit containing this file, ROADMAP and READING_GUIDE_STATUS; final response and post-commit check identify its hash.",
+  "status": "Implementation and author verification complete; Claude independent review and user acceptance pending. T3/B1 implementation, main integration and pushes are stopped.",
+  "scope": {
+    "catalogue_rows": 178,
+    "cards": 135,
+    "relations": 27,
+    "questions": 12,
+    "group_counts": {
+      "pricing": 35,
+      "volatility": 14,
+      "rates": 37,
+      "credit": 8,
+      "risk": 10,
+      "beyond": 31
+    },
+    "excluded": "MODEL_INDEX section 15 infrastructure and RB-F* research",
+    "binomial_translation": "二項ツリー"
+  },
+  "checks": {
+    "math-handoff": {
+      "command": [
+        "node",
+        "johnhull/scripts/check_book_math.cjs",
+        "johnhull/book/_build/html"
+      ],
+      "start": "2026-10-18T17:07:02.535985+00:00",
+      "end": "2026-10-18T17:07:22.716062+00:00",
+      "seconds": 20.18008978900616,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "e3c3ea06e8e6013cf76f8ca077c931fef285462bfce4b400dcb191f6fce3ee2f",
+      "source_snapshot": {
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "5d80642661c855b9bfdefc611a93a27944c247b41857e3d9d147df88756a81ba",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "cf6f84746fdc7641589e3025c51ed297a895ecf3bcf1ff668adfa087278256f9",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "796a3478c69d9558f9d0224b4def5b00b8b185abf0696146600eb3016556129e",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "cf7254ebe21ec33ae6ef5c7f371f5eaab74ad217cd25588071351bf663bb75ba",
+        "johnhull/docs/validation/shared-runtime.json": "c78aedb29c19161720accb0e739a3cf8770c36d12ceaad0090755ce504b30a06",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "838ab8e832c99c0b0a99db1059cf3de1db769511b718f2ca9051dbb6f6d6d346",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "b8ec8e8e10d17cbc08372b4db90c874aa346d7691eca93eeb9ed5ff649c6f06f",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/math-handoff.log"
+    },
+    "guides-accepted": {
+      "command": [
+        "node",
+        "johnhull/scripts/check_reading_guides.cjs"
+      ],
+      "start": "2026-10-18T16:36:37.223491+00:00",
+      "end": "2026-10-18T16:36:41.754164+00:00",
+      "seconds": 4.530676305002999,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "ba558693bae9d8dca1b614eb6bdcbf2fc2c38aaa9774bd509428551c407b0a3e",
+      "source_snapshot": {
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "854fdc19411dca41cc9be45b45671d0d535369862404ef298c240086c94b4b00",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "b6fec035d0cf3d73f2abb57f1a87bbb18615dbe2546db1381b1b9567713a21c2",
+        "johnhull/book/notebooks/guide/model_map.json": "bd96a1d7982ac10897a44f51b27b416aa73f4b2f09a61d4296d824746b25f5b7",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "866d3fb3ff1beb401c633efb6af61f051aedf716b742dfc46078aad89d4ef564",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "f27148e3c72daccb42092dedb5097f46cffea54fe4fed55d75fbf0822cf1c512",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "27e981a893af197fcdb5e3403b60e4b5db5c24cdfa57e1ff25bfda3219ff8b72",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "94fd8f2964f1ded1438f08a0f8c2b2379df2f27dd25bc51fd834e9a49e9fa015",
+        "johnhull/docs/validation/shared-runtime.json": "59de63bfc7825489b46a32c2a04480fa27983256664979f378620489a8e13bc5",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "838ab8e832c99c0b0a99db1059cf3de1db769511b718f2ca9051dbb6f6d6d346",
+        "johnhull/scripts/check_model_map.cjs": "4d41d0c0424e9ac8da44552fcbf8c98161186e76973a3a8112f095073c7c9a83"
+      },
+      "source_snapshot_sha256": "ae0bcbb6c3732329ad290ae75a68d3074beabb0067d0a8cca661aee857ce6631",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/guides-accepted.log"
+    },
+    "numerics-ready": {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "--package",
+        "hullkit",
+        "pytest",
+        "-q",
+        "--tb=short",
+        "johnhull/hullkit/tests/test_binomial_foundations_convergence.py::test_hull_five_step_coefficients_and_thirty_step_state_count",
+        "johnhull/hullkit/tests/test_binomial_foundations_crr.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_deltas.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_derivagem.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_measures.py::test_hull_physical_probability_and_55_96_percent_option_return",
+        "johnhull/hullkit/tests/test_binomial_foundations_moments.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_put.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_replication.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_states.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_stopping.py",
+        "johnhull/hullkit/tests/test_binomial_foundations_tails.py",
+        "johnhull/hullkit/tests/test_hull_pins_options.py::test_derivagem_american_put_section_13_10",
+        "johnhull/hullkit/tests/test_hull_pins_options.py::test_example_13_1_index_call_two_step_tree",
+        "johnhull/hullkit/tests/test_hull_pins_options.py::test_example_13_2_currency_american_call_three_step_tree",
+        "johnhull/hullkit/tests/test_hull_pins_options.py::test_example_13_3_futures_american_put_three_step_tree",
+        "johnhull/hullkit/tests/test_securitization_foundations_waterfall.py::test_independent_dollar_losses_and_payment_priority",
+        "johnhull/hullkit/tests/test_securitization_foundations_waterfall.py::test_source_all_sixteen_values_and_seven_relations",
+        "johnhull/hullkit/tests/test_trees.py::test_american_put_hull_fig_13_8",
+        "johnhull/hullkit/tests/test_trees.py::test_one_step_call_hull_13_1_global_edition",
+        "johnhull/hullkit/tests/test_trees.py::test_two_step_call_hull_fig_13_4_global_edition"
+      ],
+      "start": "2026-10-18T16:27:10.436253+00:00",
+      "end": "2026-10-18T16:27:12.192293+00:00",
+      "seconds": 1.7560547009925358,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "1cf2e3630e17970ff3122d1b3ea2af761a4702abb77a2716fb786b31f69596e2",
+      "source_snapshot": {
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "1268246e9ce09bf5eeff0f0f4263697979497552d372ece077865e313dbba03f",
+        "johnhull/book/notebooks/guide/ch08.md": "956ce8adace527781067f80e69f6992dd7637af6e04c61dd481603889707c42c",
+        "johnhull/book/notebooks/guide/ch13.md": "d293ab051e0bdf07c3bef9a324e85a02e990bed8f282ea9fcb924a5216e71c17",
+        "johnhull/book/notebooks/guide/glossary.md": "c4fc58b49295a39473d4c7fceca27a19e5379980a424fe31f9dec4573d4fa563",
+        "johnhull/book/notebooks/guide/model_map.json": "bd96a1d7982ac10897a44f51b27b416aa73f4b2f09a61d4296d824746b25f5b7",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "5d6994224f04fc0c2660dbf1e4c69cb9c8ba636c40bd2d5b7f7a1f2cf2a69af1",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/shared-runtime.json": "bd57adc051875a56c5b064e51eef11cec1b0c2bd9aa154603331ce8eadb5eb7b",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "802d083e5b19255e6c760f477c339d0b47bdfdd14070863c5b13e5d42cc1e707",
+        "johnhull/scripts/check_model_map.cjs": "4d41d0c0424e9ac8da44552fcbf8c98161186e76973a3a8112f095073c7c9a83"
+      },
+      "source_snapshot_sha256": "5ca90f4f51c3bee6bfcdb6726470c05bf2c1e204546b0675f34d56a3f5d84fc7",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/numerics-ready.log"
+    },
+    "test-confirm": {
+      "command": [
+        "make",
+        "test"
+      ],
+      "start": "2026-10-18T16:49:43.200833+00:00",
+      "end": "2026-10-18T17:06:02.965958+00:00",
+      "seconds": 979.7651408079837,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "e3c3ea06e8e6013cf76f8ca077c931fef285462bfce4b400dcb191f6fce3ee2f",
+      "source_snapshot": {
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "bd96a1d7982ac10897a44f51b27b416aa73f4b2f09a61d4296d824746b25f5b7",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "866d3fb3ff1beb401c633efb6af61f051aedf716b742dfc46078aad89d4ef564",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "27e981a893af197fcdb5e3403b60e4b5db5c24cdfa57e1ff25bfda3219ff8b72",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "94fd8f2964f1ded1438f08a0f8c2b2379df2f27dd25bc51fd834e9a49e9fa015",
+        "johnhull/docs/validation/shared-runtime.json": "c78aedb29c19161720accb0e739a3cf8770c36d12ceaad0090755ce504b30a06",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "838ab8e832c99c0b0a99db1059cf3de1db769511b718f2ca9051dbb6f6d6d346",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "3d9d16b4de3a7fe2f43f4ffb54311fc14ab859243ea10e6fff2a8c123710d179",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/test-confirm.log"
+    },
+    "ledger-final": {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "--package",
+        "hullkit",
+        "python",
+        "johnhull/scripts/verify_section_ledger.py",
+        "--check-artifacts"
+      ],
+      "start": "2026-10-18T17:08:02.693904+00:00",
+      "end": "2026-10-18T17:08:37.163467+00:00",
+      "seconds": 34.46957265899982,
+      "exit_code": 1,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "e3c3ea06e8e6013cf76f8ca077c931fef285462bfce4b400dcb191f6fce3ee2f",
+      "source_snapshot": {
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "5d80642661c855b9bfdefc611a93a27944c247b41857e3d9d147df88756a81ba",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "cf6f84746fdc7641589e3025c51ed297a895ecf3bcf1ff668adfa087278256f9",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "796a3478c69d9558f9d0224b4def5b00b8b185abf0696146600eb3016556129e",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "cf7254ebe21ec33ae6ef5c7f371f5eaab74ad217cd25588071351bf663bb75ba",
+        "johnhull/docs/validation/shared-runtime.json": "c78aedb29c19161720accb0e739a3cf8770c36d12ceaad0090755ce504b30a06",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "838ab8e832c99c0b0a99db1059cf3de1db769511b718f2ca9051dbb6f6d6d346",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "b8ec8e8e10d17cbc08372b4db90c874aa346d7691eca93eeb9ed5ff649c6f06f",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/ledger-final.log"
+    },
+    "book-all-eof": {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "jupyter-book",
+        "build",
+        "--all",
+        "johnhull/book/"
+      ],
+      "start": "2026-10-18T17:12:27.436912+00:00",
+      "end": "2026-10-18T17:12:36.127936+00:00",
+      "seconds": 8.691038362012478,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "6edadbfeac1372f8e87d484353de10be0e4559c1486c7c987d38b640cd26204c",
+      "source_snapshot": {
+        "johnhull/ROADMAP.md": "1465a5faef9f22aa90e57c1c2ede921c894a18925fd396e2001802ba102247cc",
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "5d80642661c855b9bfdefc611a93a27944c247b41857e3d9d147df88756a81ba",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "c53539bbf047558e19af1e89527594f6a258c0973fd16ab1faf41eb58652e6ba",
+        "johnhull/docs/READING_GUIDE_STATUS.md": "6d24f593ab88d3392fc2be19d73457dd6d7a6bbae03319f2e3a75d6fe0709063",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t2-2026-10-19.json": "832f9e0c00657877859f33c6eeb3b0eaf549cf644fac0457ea3bce5c594fcb66",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "796a3478c69d9558f9d0224b4def5b00b8b185abf0696146600eb3016556129e",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "cf7254ebe21ec33ae6ef5c7f371f5eaab74ad217cd25588071351bf663bb75ba",
+        "johnhull/docs/validation/shared-runtime.json": "e374e0d6230d14b55a2f1a08105ff40bf6f5cf3604504088620c3ccfa1b3f5fb",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "bf7bbe4a0cee1fcd05f5f30a240a98f0cc1fe716af51f098ad78cf7d0ccbc367",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "253bd82dc8b2e21fc0a6d1b7d7960663e50c0de924339dd67370f7fee608a363",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/book-all-eof.log"
+    },
+    "map-check-eof": {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "--package",
+        "hullkit",
+        "python",
+        "johnhull/scripts/build_model_map.py",
+        "--check"
+      ],
+      "start": "2026-10-18T17:11:58.128035+00:00",
+      "end": "2026-10-18T17:12:00.659713+00:00",
+      "seconds": 2.5316899039899,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "6edadbfeac1372f8e87d484353de10be0e4559c1486c7c987d38b640cd26204c",
+      "source_snapshot": {
+        "johnhull/ROADMAP.md": "1465a5faef9f22aa90e57c1c2ede921c894a18925fd396e2001802ba102247cc",
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "5d80642661c855b9bfdefc611a93a27944c247b41857e3d9d147df88756a81ba",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "c53539bbf047558e19af1e89527594f6a258c0973fd16ab1faf41eb58652e6ba",
+        "johnhull/docs/READING_GUIDE_STATUS.md": "6d24f593ab88d3392fc2be19d73457dd6d7a6bbae03319f2e3a75d6fe0709063",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t2-2026-10-19.json": "832f9e0c00657877859f33c6eeb3b0eaf549cf644fac0457ea3bce5c594fcb66",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "796a3478c69d9558f9d0224b4def5b00b8b185abf0696146600eb3016556129e",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "cf7254ebe21ec33ae6ef5c7f371f5eaab74ad217cd25588071351bf663bb75ba",
+        "johnhull/docs/validation/shared-runtime.json": "e374e0d6230d14b55a2f1a08105ff40bf6f5cf3604504088620c3ccfa1b3f5fb",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "bf7bbe4a0cee1fcd05f5f30a240a98f0cc1fe716af51f098ad78cf7d0ccbc367",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "253bd82dc8b2e21fc0a6d1b7d7960663e50c0de924339dd67370f7fee608a363",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/map-check-eof.log"
+    },
+    "model-tests-eof": {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "--package",
+        "hullkit",
+        "pytest",
+        "-q",
+        "johnhull/report/tests/test_model_map.py",
+        "--tb=short"
+      ],
+      "start": "2026-10-18T17:12:00.660750+00:00",
+      "end": "2026-10-18T17:12:27.435890+00:00",
+      "seconds": 26.775153410009807,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "6edadbfeac1372f8e87d484353de10be0e4559c1486c7c987d38b640cd26204c",
+      "source_snapshot": {
+        "johnhull/ROADMAP.md": "1465a5faef9f22aa90e57c1c2ede921c894a18925fd396e2001802ba102247cc",
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "5d80642661c855b9bfdefc611a93a27944c247b41857e3d9d147df88756a81ba",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "c53539bbf047558e19af1e89527594f6a258c0973fd16ab1faf41eb58652e6ba",
+        "johnhull/docs/READING_GUIDE_STATUS.md": "6d24f593ab88d3392fc2be19d73457dd6d7a6bbae03319f2e3a75d6fe0709063",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t2-2026-10-19.json": "832f9e0c00657877859f33c6eeb3b0eaf549cf644fac0457ea3bce5c594fcb66",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "796a3478c69d9558f9d0224b4def5b00b8b185abf0696146600eb3016556129e",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "cf7254ebe21ec33ae6ef5c7f371f5eaab74ad217cd25588071351bf663bb75ba",
+        "johnhull/docs/validation/shared-runtime.json": "e374e0d6230d14b55a2f1a08105ff40bf6f5cf3604504088620c3ccfa1b3f5fb",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "bf7bbe4a0cee1fcd05f5f30a240a98f0cc1fe716af51f098ad78cf7d0ccbc367",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "253bd82dc8b2e21fc0a6d1b7d7960663e50c0de924339dd67370f7fee608a363",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/model-tests-eof.log"
+    },
+    "lint-eof": {
+      "command": [
+        "make",
+        "lint"
+      ],
+      "start": "2026-10-18T17:12:36.128967+00:00",
+      "end": "2026-10-18T17:12:36.211082+00:00",
+      "seconds": 0.08212884599925019,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "6edadbfeac1372f8e87d484353de10be0e4559c1486c7c987d38b640cd26204c",
+      "source_snapshot": {
+        "johnhull/ROADMAP.md": "1465a5faef9f22aa90e57c1c2ede921c894a18925fd396e2001802ba102247cc",
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "5d80642661c855b9bfdefc611a93a27944c247b41857e3d9d147df88756a81ba",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "c53539bbf047558e19af1e89527594f6a258c0973fd16ab1faf41eb58652e6ba",
+        "johnhull/docs/READING_GUIDE_STATUS.md": "6d24f593ab88d3392fc2be19d73457dd6d7a6bbae03319f2e3a75d6fe0709063",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t2-2026-10-19.json": "832f9e0c00657877859f33c6eeb3b0eaf549cf644fac0457ea3bce5c594fcb66",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "796a3478c69d9558f9d0224b4def5b00b8b185abf0696146600eb3016556129e",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "cf7254ebe21ec33ae6ef5c7f371f5eaab74ad217cd25588071351bf663bb75ba",
+        "johnhull/docs/validation/shared-runtime.json": "e374e0d6230d14b55a2f1a08105ff40bf6f5cf3604504088620c3ccfa1b3f5fb",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "bf7bbe4a0cee1fcd05f5f30a240a98f0cc1fe716af51f098ad78cf7d0ccbc367",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "253bd82dc8b2e21fc0a6d1b7d7960663e50c0de924339dd67370f7fee608a363",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/lint-eof.log"
+    },
+    "map-browser-eof": {
+      "command": [
+        "node",
+        "johnhull/scripts/check_model_map.cjs"
+      ],
+      "start": "2026-10-18T17:13:18.877074+00:00",
+      "end": "2026-10-18T17:13:26.330000+00:00",
+      "seconds": 7.452933190012118,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "6edadbfeac1372f8e87d484353de10be0e4559c1486c7c987d38b640cd26204c",
+      "source_snapshot": {
+        "johnhull/ROADMAP.md": "1465a5faef9f22aa90e57c1c2ede921c894a18925fd396e2001802ba102247cc",
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "5d80642661c855b9bfdefc611a93a27944c247b41857e3d9d147df88756a81ba",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "c53539bbf047558e19af1e89527594f6a258c0973fd16ab1faf41eb58652e6ba",
+        "johnhull/docs/READING_GUIDE_STATUS.md": "6d24f593ab88d3392fc2be19d73457dd6d7a6bbae03319f2e3a75d6fe0709063",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t2-2026-10-19.json": "832f9e0c00657877859f33c6eeb3b0eaf549cf644fac0457ea3bce5c594fcb66",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "796a3478c69d9558f9d0224b4def5b00b8b185abf0696146600eb3016556129e",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "cf7254ebe21ec33ae6ef5c7f371f5eaab74ad217cd25588071351bf663bb75ba",
+        "johnhull/docs/validation/shared-runtime.json": "e374e0d6230d14b55a2f1a08105ff40bf6f5cf3604504088620c3ccfa1b3f5fb",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "bf7bbe4a0cee1fcd05f5f30a240a98f0cc1fe716af51f098ad78cf7d0ccbc367",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "253bd82dc8b2e21fc0a6d1b7d7960663e50c0de924339dd67370f7fee608a363",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/map-browser-eof.log"
+    },
+    "release-eof": {
+      "command": [
+        "make",
+        "hull-release-check"
+      ],
+      "start": "2026-10-18T17:13:26.331018+00:00",
+      "end": "2026-10-18T17:13:39.771702+00:00",
+      "seconds": 13.440694554010406,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "6edadbfeac1372f8e87d484353de10be0e4559c1486c7c987d38b640cd26204c",
+      "source_snapshot": {
+        "johnhull/ROADMAP.md": "1465a5faef9f22aa90e57c1c2ede921c894a18925fd396e2001802ba102247cc",
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "5d80642661c855b9bfdefc611a93a27944c247b41857e3d9d147df88756a81ba",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "c53539bbf047558e19af1e89527594f6a258c0973fd16ab1faf41eb58652e6ba",
+        "johnhull/docs/READING_GUIDE_STATUS.md": "6d24f593ab88d3392fc2be19d73457dd6d7a6bbae03319f2e3a75d6fe0709063",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t2-2026-10-19.json": "832f9e0c00657877859f33c6eeb3b0eaf549cf644fac0457ea3bce5c594fcb66",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "796a3478c69d9558f9d0224b4def5b00b8b185abf0696146600eb3016556129e",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "cf7254ebe21ec33ae6ef5c7f371f5eaab74ad217cd25588071351bf663bb75ba",
+        "johnhull/docs/validation/shared-runtime.json": "e374e0d6230d14b55a2f1a08105ff40bf6f5cf3604504088620c3ccfa1b3f5fb",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "bf7bbe4a0cee1fcd05f5f30a240a98f0cc1fe716af51f098ad78cf7d0ccbc367",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "253bd82dc8b2e21fc0a6d1b7d7960663e50c0de924339dd67370f7fee608a363",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/release-eof.log"
+    },
+    "runtime-eof": {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "--package",
+        "hullkit",
+        "python",
+        "johnhull/scripts/shared_runtime.py",
+        "--check"
+      ],
+      "start": "2026-10-18T17:14:00.739612+00:00",
+      "end": "2026-10-18T17:14:00.825250+00:00",
+      "seconds": 0.08564114998443983,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "987ca6364a9559221bdfc18a105739dbaa10af486c49075af3b3f55a4162974f",
+      "source_snapshot": {
+        "johnhull/ROADMAP.md": "1465a5faef9f22aa90e57c1c2ede921c894a18925fd396e2001802ba102247cc",
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "5d80642661c855b9bfdefc611a93a27944c247b41857e3d9d147df88756a81ba",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "c53539bbf047558e19af1e89527594f6a258c0973fd16ab1faf41eb58652e6ba",
+        "johnhull/docs/READING_GUIDE_STATUS.md": "6d24f593ab88d3392fc2be19d73457dd6d7a6bbae03319f2e3a75d6fe0709063",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t2-2026-10-19.json": "832f9e0c00657877859f33c6eeb3b0eaf549cf644fac0457ea3bce5c594fcb66",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "796a3478c69d9558f9d0224b4def5b00b8b185abf0696146600eb3016556129e",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "cf7254ebe21ec33ae6ef5c7f371f5eaab74ad217cd25588071351bf663bb75ba",
+        "johnhull/docs/validation/shared-runtime.json": "ddfa451d0ef3387c6b368f9c457ee2db12e5b728f6e480190f40de0788732c81",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "bf7bbe4a0cee1fcd05f5f30a240a98f0cc1fe716af51f098ad78cf7d0ccbc367",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "d2d7101063b1a46ddfc1dcb8db9ed540ed20cdb49f373a0d3b60db9aff60f3a2",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/runtime-eof.log"
+    }
+  },
+  "verification_1_to_6": {
+    "1": "Author checked GE source locations, page images for mathematical symbols and primary external sources; Claude independent review is pending.",
+    "2": "44 existing numerical tests, rational Taylor expansion check; numerics.json separates inputs, printed values, exact arithmetic and historical dates.",
+    "3": "Author reviewed first-use terms, units, section transitions, question/tools/answer/limits and all seven optional review points. Independent beginner review and user judgment pending.",
+    "4": "Full Book, original 31-page MathJax, guide 1280/390, map/glossary/overview 1280/390, real pointer/touch, table inner widths, no JS cards, local links, no external requests; screenshots reviewed.",
+    "5": "lint, full single-thread-BLAS make test, ordinary release and shared runtime pass. Historical strict ledger gate remains FAIL with the same 158 errors.",
+    "6": "ROADMAP current/remaining work and READING_GUIDE_STATUS are updated in this same implementation commit."
+  },
+  "full_suite": {
+    "passed": 11927,
+    "skipped": 76,
+    "sde_node_tests": 12,
+    "summaries": [
+      "========== 11927 passed, 76 skipped, 36 warnings in 969.48s (0:16:09) =========="
+    ],
+    "source_change_limit": "Guide prose/links were finalized during the first full run. Pricing code, original notebooks and Python tests were unchanged. Guide/generator/browser-test sources were frozen before the confirming full run; afterwards, one static-replication card changed the wording from 節点数 to 照合点. The CLI, 20 freshness tests, Book/math and browser checks were repeated after that editorial change. The staged whitespace check then caught one surplus EOF blank line in generated models.md. The generator now normalizes EOF; CLI/20 freshness tests/Book/browser/lint/release were rechecked."
+  },
+  "initial_full_run": {
+    "check": {
+      "command": [
+        "make",
+        "test"
+      ],
+      "start": "2026-10-18T16:21:46.440316+00:00",
+      "end": "2026-10-18T16:48:01.370524+00:00",
+      "seconds": 1574.930229146994,
+      "exit_code": 2,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "47c37e0f0a1469f5980f6a6eaa0859d7c7cec00f9c9553b24f05551c1c0a133c",
+      "source_snapshot": {
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "b87465584c70745f20693d16855bc016114a8bd274f1eb02a223868943e75b33",
+        "johnhull/book/notebooks/guide/ch08.md": "956ce8adace527781067f80e69f6992dd7637af6e04c61dd481603889707c42c",
+        "johnhull/book/notebooks/guide/ch13.md": "d293ab051e0bdf07c3bef9a324e85a02e990bed8f282ea9fcb924a5216e71c17",
+        "johnhull/book/notebooks/guide/glossary.md": "8c15a213004b58b8c9d5ab730c5eaf825f0278f2d9c2cdb387316352622475f4",
+        "johnhull/book/notebooks/guide/model_map.json": "5e4d7a5cf460bf1d63262a5e3458cbf584d0e3a285625106b9f3099101744b9c",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "8ac884f5e051a7bd64b5101e1d5cb362142783ec9a47c45ae2d043f0de930e71",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/shared-runtime.json": "bd57adc051875a56c5b064e51eef11cec1b0c2bd9aa154603331ce8eadb5eb7b",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "802d083e5b19255e6c760f477c339d0b47bdfdd14070863c5b13e5d42cc1e707",
+        "johnhull/scripts/check_model_map.cjs": "4d41d0c0424e9ac8da44552fcbf8c98161186e76973a3a8112f095073c7c9a83"
+      },
+      "source_snapshot_sha256": "d3efcd671288b28ae92f268534796d8feab7c5de10fe804b51a5bb8083fd478f",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/test-final.log"
+    },
+    "passed": 11926,
+    "skipped": 76,
+    "failed": 1,
+    "failure": "rates_volatility_model/tests/test_notebook_executes.py::test_notebook_executes_without_errors: CellTimeoutError after 600 seconds, execution count 33, synthetic vol-cube cell 0a5c8427.",
+    "recheck": {
+      "command": [
+        "uv",
+        "run",
+        "--no-sync",
+        "pytest",
+        "-q",
+        "rates_volatility_model/tests/test_notebook_executes.py",
+        "--tb=short"
+      ],
+      "start": "2026-10-18T16:48:55.118095+00:00",
+      "end": "2026-10-18T16:49:04.208366+00:00",
+      "seconds": 9.090280595992226,
+      "exit_code": 0,
+      "commit": "d040c960060c8126aecb2fe1fce06af04e5dd211",
+      "dirty": true,
+      "tracked_diff_sha256": "e3c3ea06e8e6013cf76f8ca077c931fef285462bfce4b400dcb191f6fce3ee2f",
+      "source_snapshot": {
+        "johnhull/book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+        "johnhull/book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+        "johnhull/book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "johnhull/book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "johnhull/book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+        "johnhull/book/notebooks/guide/model_map.json": "bd96a1d7982ac10897a44f51b27b416aa73f4b2f09a61d4296d824746b25f5b7",
+        "johnhull/book/notebooks/guide/model_map/LICENSE.plotly": "21f6aa1d008b92b3f06763dbdcc72dc58fc1dc4ce546c27d6bad3d54f418c7d0",
+        "johnhull/book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+        "johnhull/book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+        "johnhull/book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+        "johnhull/book/notebooks/guide/models.md": "866d3fb3ff1beb401c633efb6af61f051aedf716b742dfc46078aad89d4ef564",
+        "johnhull/docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+        "johnhull/docs/validation/reading-guide/README.md": "adb84532ae03239f3eb53ce32bf6eb41a779acb7c7e5a4242a722387b0be3994",
+        "johnhull/docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.json": "27e981a893af197fcdb5e3403b60e4b5db5c24cdfa57e1ff25bfda3219ff8b72",
+        "johnhull/docs/validation/reading-guide/t3-impact-2026-10-19.md": "94fd8f2964f1ded1438f08a0f8c2b2379df2f27dd25bc51fd834e9a49e9fa015",
+        "johnhull/docs/validation/shared-runtime.json": "c78aedb29c19161720accb0e739a3cf8770c36d12ceaad0090755ce504b30a06",
+        "johnhull/report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+        "johnhull/scripts/build_model_map.py": "838ab8e832c99c0b0a99db1059cf3de1db769511b718f2ca9051dbb6f6d6d346",
+        "johnhull/scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e"
+      },
+      "source_snapshot_sha256": "3d9d16b4de3a7fe2f43f4ffb54311fc14ab859243ea10e6fff2a8c123710d179",
+      "log": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/logs/notebook-recheck-isolated.log"
+    },
+    "source_sha256": {
+      "rates_volatility_model/tests/test_notebook_executes.py": "ebf0dccc124549ee927b27eb44368339cdec09b81e43a55f61b8865f958ca992",
+      "rates_volatility_model/rates_volatility_models.ipynb": "a718dec08a57eacde1594e942a78c94764141dc831a4bede5d690bdafaa755a6"
+    },
+    "source_same_as_main": true,
+    "source_changes_since_T1": [],
+    "cause": "Unknown; isolated rerun passed in about 9 seconds. No source changes or timeout relaxation."
+  },
+  "build_diagnostics": {
+    "WARNING": 153,
+    "ERROR": 1
+  },
+  "historical_strict_gate": {
+    "result": "FAIL",
+    "errors": 158,
+    "html_hash_errors": 89,
+    "fingerprint_errors": 69,
+    "delta_from_T0": 0,
+    "accepted_sections": 306
+  },
+  "counts": {
+    "methods": {
+      "han_kana_source": "Same as initial pilot: count source Unicode U+3040-30FF or U+3400-9FFF, including headings and kana-block symbols; excludes Japanese comma/full stop, Latin letters, digits and other characters.",
+      "han_kana_plus_punctuation_visible": "From article.bd-article in the saved Sphinx HTML, remove .math (inline and display), a.headerlink, script and style. Count Han/kana as above plus Unicode category P punctuation. Includes headings, source-page labels and visible link text. Excludes markup, link destinations and CSS-generated list markers.",
+      "visible_non_whitespace_excluding_math": "Use the same article text after removing math and headerlinks; count all remaining Unicode code points except whitespace, including Latin letters, digits, symbols and punctuation. CSS-generated list markers are excluded."
+    },
+    "chapters": {
+      "13": {
+        "source_path": "book/notebooks/guide/ch13.md",
+        "source_sha256": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+        "html_sha256": "489d3ed6ede1203ef23943f1a3439b4fdf14604fa77ac65f2c10483ebfb1999c",
+        "han_kana_source": 10861,
+        "han_kana_plus_punctuation_visible": 11939,
+        "visible_non_whitespace_excluding_math": 13186,
+        "raw_source_non_whitespace_supplementary": 15988,
+        "visible_text_sha256": "b5f19d4fefa0a5439cac5ad94ff99ae1db37307dd91aa6c653295d21a13dd2de",
+        "source_pages_count": 25,
+        "per_page": {
+          "han_kana_source": 434.44,
+          "han_kana_plus_punctuation_visible": 477.56,
+          "visible_non_whitespace_excluding_math": 527.44
+        }
+      },
+      "08": {
+        "source_path": "book/notebooks/guide/ch08.md",
+        "source_sha256": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+        "html_sha256": "7045b93a13373564833c2213b5029549903362388ba8b604da6f7d52fe6240be",
+        "han_kana_source": 6642,
+        "han_kana_plus_punctuation_visible": 7357,
+        "visible_non_whitespace_excluding_math": 8617,
+        "raw_source_non_whitespace_supplementary": 9761,
+        "visible_text_sha256": "031fb0fee5a6f72ec5a318b0b81967a5fc7e7fc62f0b563b4d1340a7cf60040a",
+        "source_pages_count": 12,
+        "per_page": {
+          "han_kana_source": 553.5,
+          "han_kana_plus_punctuation_visible": 613.08,
+          "visible_non_whitespace_excluding_math": 718.08
+        }
+      }
+    },
+    "script_sha256": "2604425c08496e84ac3ab92bf93a0b75dfd92258ac027d71db3be7e4f24a5f5d"
+  },
+  "algebra": {
+    "status": "PASS",
+    "expression": "exp(r*dt)*(exp(x)+exp(-x))-1-exp(2*r*dt)",
+    "order": "Keep weighted degree <=4 with weight(x)=1 and weight(dt)=2",
+    "coefficients": {
+      "(2, 0, 0)": "1",
+      "(4, 0, 0)": "1/12",
+      "(2, 1, 1)": "1",
+      "(0, 2, 2)": "-1"
+    },
+    "interpretation": "x^2 + x^4/12 + r*dt*x^2 - r^2*dt^2; all but x^2 have dt^2 order when x~sqrt(dt)."
+  },
+  "browser": {
+    "map": {
+      "checkedAt": "2026-10-18T17:13:26.231Z",
+      "playwright": "1.56.0",
+      "chromium": "145.0.7632.6",
+      "noJsCards": 135,
+      "results": [
+        {
+          "filename": "guide/models.html",
+          "documentWidth": 1280,
+          "width": 1280,
+          "mathVersion": "3.2.2",
+          "mathErrors": 0,
+          "rawMath": 0,
+          "mathOverflow": [],
+          "tableOverflow": [],
+          "modelError": null,
+          "badLinks": [],
+          "external": [],
+          "errors": [],
+          "interactions": [
+            {
+              "group": "pricing",
+              "visibleCards": 35
+            },
+            {
+              "group": "volatility",
+              "visibleCards": 14
+            },
+            {
+              "group": "rates",
+              "visibleCards": 37
+            },
+            {
+              "group": "credit",
+              "visibleCards": 8
+            },
+            {
+              "group": "risk",
+              "visibleCards": 10
+            },
+            {
+              "group": "beyond",
+              "visibleCards": 31
+            }
+          ],
+          "htmlBytes": 2294253
+        },
+        {
+          "filename": "guide/glossary.html",
+          "documentWidth": 1280,
+          "width": 1280,
+          "mathVersion": "3.2.2",
+          "mathErrors": 0,
+          "rawMath": 0,
+          "mathOverflow": [],
+          "tableOverflow": [],
+          "modelError": null,
+          "badLinks": [],
+          "external": [],
+          "errors": [],
+          "interactions": [],
+          "htmlBytes": 53777
+        },
+        {
+          "filename": "00_overview.html",
+          "documentWidth": 1280,
+          "width": 1280,
+          "mathVersion": "3.2.2",
+          "mathErrors": 0,
+          "rawMath": 0,
+          "mathOverflow": [],
+          "tableOverflow": [],
+          "modelError": null,
+          "badLinks": [],
+          "external": [],
+          "errors": [],
+          "interactions": [],
+          "htmlBytes": 39048
+        },
+        {
+          "filename": "guide/models.html",
+          "documentWidth": 390,
+          "width": 390,
+          "mathVersion": "3.2.2",
+          "mathErrors": 0,
+          "rawMath": 0,
+          "mathOverflow": [],
+          "tableOverflow": [],
+          "modelError": null,
+          "badLinks": [],
+          "external": [],
+          "errors": [],
+          "interactions": [
+            {
+              "group": "pricing",
+              "visibleCards": 35
+            },
+            {
+              "group": "volatility",
+              "visibleCards": 14
+            },
+            {
+              "group": "rates",
+              "visibleCards": 37
+            },
+            {
+              "group": "credit",
+              "visibleCards": 8
+            },
+            {
+              "group": "risk",
+              "visibleCards": 10
+            },
+            {
+              "group": "beyond",
+              "visibleCards": 31
+            }
+          ],
+          "htmlBytes": 2294253
+        },
+        {
+          "filename": "guide/glossary.html",
+          "documentWidth": 390,
+          "width": 390,
+          "mathVersion": "3.2.2",
+          "mathErrors": 0,
+          "rawMath": 0,
+          "mathOverflow": [],
+          "tableOverflow": [],
+          "modelError": null,
+          "badLinks": [],
+          "external": [],
+          "errors": [],
+          "interactions": [],
+          "htmlBytes": 53777
+        },
+        {
+          "filename": "00_overview.html",
+          "documentWidth": 390,
+          "width": 390,
+          "mathVersion": "3.2.2",
+          "mathErrors": 0,
+          "rawMath": 0,
+          "mathOverflow": [],
+          "tableOverflow": [],
+          "modelError": null,
+          "badLinks": [],
+          "external": [],
+          "errors": [],
+          "interactions": [],
+          "htmlBytes": 39048
+        }
+      ]
+    },
+    "guide": {
+      "playwright": "1.56.0",
+      "chromium": "145.0.7632.6",
+      "checked_at": "2026-10-18T16:36:41.748Z",
+      "results": [
+        {
+          "chapter": "08",
+          "title": "第8章　証券化と金融危機：リスクは、誰のところへ移ったのか",
+          "width": 1280,
+          "document_width": 1280,
+          "mathjax": "3.2.2",
+          "rendered": 8,
+          "math_errors": 0,
+          "raw_math": 0,
+          "math_overflow": [],
+          "local_links": 24,
+          "bad_links": [],
+          "external": [],
+          "errors": [],
+          "html_sha256": "7045b93a13373564833c2213b5029549903362388ba8b604da6f7d52fe6240be",
+          "screenshots": [
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch08-1280-full.png",
+              "sha256": "fe9b64f4de9aa9ebe5006e94baa0271e5ffa29c0b8103de4a27ecabe3da5deed"
+            },
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch08-1280-top.png",
+              "sha256": "4f88f2bca24df57b59bfec72819913ffc1e410613bdcf98bba782ffb8654fe29"
+            },
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch08-1280-math.png",
+              "sha256": "fa8aa048d48ca2f865f1c6f27d480ba88f6a5dd4d57de3fb3510585fd5ad6247"
+            }
+          ]
+        },
+        {
+          "chapter": "13",
+          "title": "第13章　二項ツリー：株価を予想せずに、値段を決める",
+          "width": 1280,
+          "document_width": 1280,
+          "mathjax": "3.2.2",
+          "rendered": 140,
+          "math_errors": 0,
+          "raw_math": 0,
+          "math_overflow": [],
+          "local_links": 34,
+          "bad_links": [],
+          "external": [],
+          "errors": [],
+          "html_sha256": "489d3ed6ede1203ef23943f1a3439b4fdf14604fa77ac65f2c10483ebfb1999c",
+          "screenshots": [
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch13-1280-full.png",
+              "sha256": "2fe3fefeef5111a6bbd5a19855bddcb1a49c9b2be9c144fcd7f8b2f8c657d02a"
+            },
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch13-1280-top.png",
+              "sha256": "7b359c477f679bfc9b72f47c6709a443d6cf732e2e44063ea54e1868dce73e12"
+            },
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch13-1280-math.png",
+              "sha256": "533413308edcfbbae94f60c2191af02fb421eeb1ef002ee9b06e4b71d9860705"
+            }
+          ]
+        },
+        {
+          "chapter": "08",
+          "title": "第8章　証券化と金融危機：リスクは、誰のところへ移ったのか",
+          "width": 390,
+          "document_width": 390,
+          "mathjax": "3.2.2",
+          "rendered": 8,
+          "math_errors": 0,
+          "raw_math": 0,
+          "math_overflow": [],
+          "local_links": 24,
+          "bad_links": [],
+          "external": [],
+          "errors": [],
+          "html_sha256": "7045b93a13373564833c2213b5029549903362388ba8b604da6f7d52fe6240be",
+          "screenshots": [
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch08-390-full.png",
+              "sha256": "ad8ca8aab7cfd4cfa9d38b23bb7f9da9b86e9959b53232c09dc7ba36d34cd8d2"
+            },
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch08-390-top.png",
+              "sha256": "7678c658810ed122194dc1ede799578e819cf51802fc781df794c6741b7160e3"
+            },
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch08-390-math.png",
+              "sha256": "aebb4311a5f80316273eaab5068bd27b1751a3a87690f040a93cf8209959de75"
+            }
+          ]
+        },
+        {
+          "chapter": "13",
+          "title": "第13章　二項ツリー：株価を予想せずに、値段を決める",
+          "width": 390,
+          "document_width": 390,
+          "mathjax": "3.2.2",
+          "rendered": 140,
+          "math_errors": 0,
+          "raw_math": 0,
+          "math_overflow": [],
+          "local_links": 34,
+          "bad_links": [],
+          "external": [],
+          "errors": [],
+          "html_sha256": "489d3ed6ede1203ef23943f1a3439b4fdf14604fa77ac65f2c10483ebfb1999c",
+          "screenshots": [
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch13-390-full.png",
+              "sha256": "ab3329ebdfdff510910763b9a950877eee5dd26fcc3423a9b94b52b9b75d9602"
+            },
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch13-390-top.png",
+              "sha256": "dea2cb5851e1d586c5a5520a2fc5acea465e508d4445360ef134c68aedceb7d7"
+            },
+            {
+              "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/guide-browser-accepted/screenshots/ch13-390-math.png",
+              "sha256": "5eae7e89ed4b1b10af0bb2ebc59d954f6747dfbc685c7c203e37c4bfaa1e951a"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "original_article_dom": {
+    "notebooks": 30,
+    "changed": [],
+    "prior": {
+      "22_zero_dte.html": "ac6db129efc7b874663f770700ca1af32d92b0d5dfb9cff108d2e645c2a0a3ab",
+      "23_rfr_post_libor.html": "b3a067a006b275034d3eefc8ae9f7ccd539feea81cd6d0f9563d74cf375322b5",
+      "03_greeks.html": "0bc5b8e8e8fbe980f572ef067c3d39f3f6b56f1717af85ee2ab7d5a0eaaae2b0",
+      "09_credit_xva.html": "ec515db5debb4f9eb9452fc72efb870836a68f324cc1718d675ef867f099dfd0",
+      "31_ir_models.html": "2434c480570df38865f633384de147b7f9cdc49c9e3b5eaf8722cb5f60506e85",
+      "21_spx_vix.html": "45e223eeb73b038b756fdf2b01b96c9ed56d16195b5665724e7a77e72d1d27a6",
+      "10_exotics.html": "d1daa0e9a1372e1f14d5c94ed381f633d6a495a76ac7c4f72be6be2b8558bee5",
+      "17_capstone.html": "e1f2dde6e3169927e46d598e8875de91990bcbd17ef432ee3cb1cd7c19c38bd7",
+      "19_inverse_surfaces.html": "c5a12647c3dba937583b0d26b727d8bfcc8acbaa5dd0316ad368d7a4041cc8fb",
+      "14_stoch_vol_fourier.html": "859d7ada14a1f57ad321eaedc2595e1e0ece3ccffeca08e16c24ab4e3b899f8b",
+      "13_stochastic_calculus.html": "f6aa4d8d133fd8116f5f3588f39b43f08c152440810cba9a883b8c27993ab1d9",
+      "16_xva_credit.html": "98254b8547aca42b7beba49ce4bc2503c672e5c907e531a472dd7ac2b87f09c2",
+      "15_advanced_numerics.html": "736ad671d35ba1fad12ab65b34cd0e1948ef10bc0f244275e2c09a37a63ba742",
+      "04_futures_rates.html": "a1d517c5d0524606e3c0af948d7848a7ca7c74951d417464b442bd589db30e48",
+      "20_surface_dynamics.html": "aeba8d189321163f164b18c25281aaf971f3317b112b27f24256dfbf19f4bb22",
+      "11_ir_options.html": "d4f468f4ad22ab0c8d73976cf235f4c40939791015f9b2c9bac93bbae6a0b369",
+      "08_risk_var.html": "3c75cb6207ed3e2beb3a25e6d89664438f1f0e60fa3437c1159e07c3eddd2f7d",
+      "02_options_basics.html": "aefccfaa075d7d22e849cb8130ffceb43fafed99ff60c805701060440dfff3a9",
+      "05_vol_smile.html": "88bfe1e7e3ab23c8891aa54d7e8a3b428c2c3242f62b8643b9cd9bf31ef46d8b",
+      "27_risk_desk.html": "b3a86d87082d62404fd2672f1ca3e4e2cfc450eb639db0b94939555da433eeda",
+      "28_credit_desk.html": "6d3042ecc728fa5596921b2f18902c420a2642f1d27945f28d1220a5d66334de",
+      "12_qualitative_summary.html": "1f589b4ce58ec976ccb55218b0529f977b1ccf1f6330eabfe0bb7f625f444bb9",
+      "07_swaps.html": "6462f3c07a5e1d930d0aedf58eee01aa96003c62732ec8f7a84b05f63d5f5a82",
+      "25_climate_energy.html": "b5c6344a356642d1484f053b636c0f8e607fd8e2536c714bf742e9b02166feb4",
+      "06_numerical.html": "f1b369240169b903b797f29d0154284b86fcfd801a0cb5f2ae60b65e572551e4",
+      "26_inflation_jgbi.html": "6a69e08a0ca9bd4a34ec27dfcb9b0ae3fd2ecae3585695fc2fc0e155da864e33",
+      "24_crypto_market_structure.html": "041bb1904f7c781a69f8baa3c094cbde73eb8edb4266c7c3314b5c40b01d512e",
+      "01_foundations.html": "30a1a4ae4c9ddeb56d86c506a17fcfb7d071a2f44026380bdc3864b030059631",
+      "18_ml_surrogates.html": "571666761f666a64d90418292b06da6cbeff266ee0fbc9b9f88df7ceb8f36a5c",
+      "15_bsm_ch15.html": "140a8aed5fe45fcc3cd1f3b922773c811bcffb3ca3049e9bf0f48aafab2876a3"
+    },
+    "current": {
+      "22_zero_dte.html": "ac6db129efc7b874663f770700ca1af32d92b0d5dfb9cff108d2e645c2a0a3ab",
+      "23_rfr_post_libor.html": "b3a067a006b275034d3eefc8ae9f7ccd539feea81cd6d0f9563d74cf375322b5",
+      "03_greeks.html": "0bc5b8e8e8fbe980f572ef067c3d39f3f6b56f1717af85ee2ab7d5a0eaaae2b0",
+      "09_credit_xva.html": "ec515db5debb4f9eb9452fc72efb870836a68f324cc1718d675ef867f099dfd0",
+      "31_ir_models.html": "2434c480570df38865f633384de147b7f9cdc49c9e3b5eaf8722cb5f60506e85",
+      "21_spx_vix.html": "45e223eeb73b038b756fdf2b01b96c9ed56d16195b5665724e7a77e72d1d27a6",
+      "10_exotics.html": "d1daa0e9a1372e1f14d5c94ed381f633d6a495a76ac7c4f72be6be2b8558bee5",
+      "17_capstone.html": "e1f2dde6e3169927e46d598e8875de91990bcbd17ef432ee3cb1cd7c19c38bd7",
+      "19_inverse_surfaces.html": "c5a12647c3dba937583b0d26b727d8bfcc8acbaa5dd0316ad368d7a4041cc8fb",
+      "14_stoch_vol_fourier.html": "859d7ada14a1f57ad321eaedc2595e1e0ece3ccffeca08e16c24ab4e3b899f8b",
+      "13_stochastic_calculus.html": "f6aa4d8d133fd8116f5f3588f39b43f08c152440810cba9a883b8c27993ab1d9",
+      "16_xva_credit.html": "98254b8547aca42b7beba49ce4bc2503c672e5c907e531a472dd7ac2b87f09c2",
+      "15_advanced_numerics.html": "736ad671d35ba1fad12ab65b34cd0e1948ef10bc0f244275e2c09a37a63ba742",
+      "04_futures_rates.html": "a1d517c5d0524606e3c0af948d7848a7ca7c74951d417464b442bd589db30e48",
+      "20_surface_dynamics.html": "aeba8d189321163f164b18c25281aaf971f3317b112b27f24256dfbf19f4bb22",
+      "11_ir_options.html": "d4f468f4ad22ab0c8d73976cf235f4c40939791015f9b2c9bac93bbae6a0b369",
+      "08_risk_var.html": "3c75cb6207ed3e2beb3a25e6d89664438f1f0e60fa3437c1159e07c3eddd2f7d",
+      "02_options_basics.html": "aefccfaa075d7d22e849cb8130ffceb43fafed99ff60c805701060440dfff3a9",
+      "05_vol_smile.html": "88bfe1e7e3ab23c8891aa54d7e8a3b428c2c3242f62b8643b9cd9bf31ef46d8b",
+      "27_risk_desk.html": "b3a86d87082d62404fd2672f1ca3e4e2cfc450eb639db0b94939555da433eeda",
+      "28_credit_desk.html": "6d3042ecc728fa5596921b2f18902c420a2642f1d27945f28d1220a5d66334de",
+      "12_qualitative_summary.html": "1f589b4ce58ec976ccb55218b0529f977b1ccf1f6330eabfe0bb7f625f444bb9",
+      "07_swaps.html": "6462f3c07a5e1d930d0aedf58eee01aa96003c62732ec8f7a84b05f63d5f5a82",
+      "25_climate_energy.html": "b5c6344a356642d1484f053b636c0f8e607fd8e2536c714bf742e9b02166feb4",
+      "06_numerical.html": "f1b369240169b903b797f29d0154284b86fcfd801a0cb5f2ae60b65e572551e4",
+      "26_inflation_jgbi.html": "6a69e08a0ca9bd4a34ec27dfcb9b0ae3fd2ecae3585695fc2fc0e155da864e33",
+      "24_crypto_market_structure.html": "041bb1904f7c781a69f8baa3c094cbde73eb8edb4266c7c3314b5c40b01d512e",
+      "01_foundations.html": "30a1a4ae4c9ddeb56d86c506a17fcfb7d071a2f44026380bdc3864b030059631",
+      "18_ml_surrogates.html": "571666761f666a64d90418292b06da6cbeff266ee0fbc9b9f88df7ceb8f36a5c",
+      "15_bsm_ch15.html": "140a8aed5fe45fcc3cd1f3b922773c811bcffb3ca3049e9bf0f48aafab2876a3"
+    },
+    "note": "Compares article DOM only; shared navigation and whole-file hashes can change."
+  },
+  "source_sha256": {
+    "book/_toc.yml": "c41ddcb9d3a964d409f99307177ec2162cd4c8065cd96962905e999d3d571f43",
+    "book/notebooks/00_overview.md": "09100f25cb1799100fd8c1b61b15fcc981d1ad47e21ef8a70badcd326500ad42",
+    "book/notebooks/guide/glossary.md": "52147932104283da6ddecb86303cb5a928b4d4eacaa0b9764b613a6a5019881a",
+    "book/notebooks/guide/ch08.md": "cef437f5e51b42878f541dc8a8e958f77e084f9764c470175522716ff233333b",
+    "book/notebooks/guide/ch13.md": "15fe709052498f8b251249b3cb3ece0c8c00b695ac845c86340194718cadda75",
+    "book/notebooks/guide/model_map.json": "5d80642661c855b9bfdefc611a93a27944c247b41857e3d9d147df88756a81ba",
+    "book/notebooks/guide/models.md": "c53539bbf047558e19af1e89527594f6a258c0973fd16ab1faf41eb58652e6ba",
+    "book/notebooks/guide/model_map/figure.json": "0cee283954522367d063e6edf395cbd1d6097bfef38524e894d82073db44af0b",
+    "book/notebooks/guide/model_map/figure.html": "1d13b065c893fbc8efc74bed738c36389786c637b0fe94bcba0e21da04f4523d",
+    "book/notebooks/guide/model_map/runtime.html": "a4ba683f73f689376636d8333ca523c9257fae40dec268f682b05635ad5513b8",
+    "scripts/build_model_map.py": "bf7bbe4a0cee1fcd05f5f30a240a98f0cc1fe716af51f098ad78cf7d0ccbc367",
+    "scripts/check_model_map.cjs": "0720cd8cd04b3f52407364a79897323d02853d4a91efd7d57ea45135f7d7c49e",
+    "report/tests/test_model_map.py": "74a359d6837aed32bba109ca1b9d7b765f9f4ba334b6351c72d3827512778a8c",
+    "docs/READING_GUIDE_TERMS_2026-10-18.md": "a72e284e4febe289612c530109a46b2e25776c47f15653ca1a84806fc79ce4af",
+    "docs/validation/reading-guide/numerics.json": "cb9fe2175257e9e3be1237528caf234b549b3c94e3d28f3c2f8207df2d07a704",
+    "docs/validation/shared-runtime.json": "ddfa451d0ef3387c6b368f9c457ee2db12e5b728f6e480190f40de0788732c81"
+  },
+  "source_review": {
+    "ge_pdf_sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482",
+    "ge_section_locators": [
+      {
+        "section": "1.3",
+        "pages": [
+          28,
+          30
+        ],
+        "heading_found": true,
+        "text_sha256": "f10300e4da06839d3ead2e6a1fe13a0fa169f919bdffc60b7aa9503389edc830"
+      },
+      {
+        "section": "2.4",
+        "pages": [
+          51,
+          54
+        ],
+        "heading_found": true,
+        "text_sha256": "e84c612d47adffc85d95329ec8ddb1bdecdb2f6b6b29a3006bc3985bf0023bdc"
+      },
+      {
+        "section": "3.1",
+        "pages": [
+          70,
+          72
+        ],
+        "heading_found": true,
+        "text_sha256": "34f4257f09eb62379276a4b508fcfdb90d33c29d1e33b8105c66e2f4a7e4a3e2"
+      },
+      {
+        "section": "3.3",
+        "pages": [
+          75,
+          79
+        ],
+        "heading_found": true,
+        "text_sha256": "6af2a061471c7b28a40acbfdbebf5df0bb44627ad3eddff7acdc741bc67df28a"
+      },
+      {
+        "section": "4.5",
+        "pages": [
+          104,
+          105
+        ],
+        "heading_found": true,
+        "text_sha256": "61b4faab037b025e5dbf9a6aedd28f1e8ef90fd22db79fd0bfbcc00761dfd9a0"
+      },
+      {
+        "section": "4.6",
+        "pages": [
+          105,
+          106
+        ],
+        "heading_found": true,
+        "text_sha256": "6f00cb7d7e867f43e4c3b3619d0c12d14c1c7c8ecbba5ed0131aa61a1232d0d2"
+      },
+      {
+        "section": "4.7",
+        "pages": [
+          106,
+          108
+        ],
+        "heading_found": true,
+        "text_sha256": "62c9c49fc6f7c9ffada7ba90fa9f4bbc8535814871a0889b99822bc7d9494d65"
+      },
+      {
+        "section": "4.8",
+        "pages": [
+          109,
+          110
+        ],
+        "heading_found": true,
+        "text_sha256": "af8ce80164fd34666b043f5aaa026fe207cb41ab33ffd006c3a5481a3ccccee1"
+      },
+      {
+        "section": "5.4",
+        "pages": [
+          127,
+          130
+        ],
+        "heading_found": true,
+        "text_sha256": "9a0d3cea5f8544dd9bf0b73ce76ae1471b352c7be0de4a3c24dcdd7a34f8f6ff"
+      },
+      {
+        "section": "6.1",
+        "pages": [
+          152,
+          154
+        ],
+        "heading_found": true,
+        "text_sha256": "0f40f9be19f73e5ba6411358236fcaa1ff14edb480909e807b4bdfc939500436"
+      },
+      {
+        "section": "7.6",
+        "pages": [
+          183,
+          185
+        ],
+        "heading_found": true,
+        "text_sha256": "d100b7b05819daf4469c12d566e407a49bf0b5507b94d32adeabf8745bd12f64"
+      },
+      {
+        "section": "7.9",
+        "pages": [
+          190,
+          192
+        ],
+        "heading_found": true,
+        "text_sha256": "4b9bb494e30894b7c8318033f56ab87a60e70c936648e466bc0cee6b82e53a8c"
+      },
+      {
+        "section": "8.1",
+        "pages": [
+          201,
+          205
+        ],
+        "heading_found": true,
+        "text_sha256": "18a339e660135ac5caf92ac551bd80f75ec265e9c8e812a02b96990bbd5d74e3"
+      },
+      {
+        "section": "9.1",
+        "pages": [
+          216,
+          219
+        ],
+        "heading_found": true,
+        "text_sha256": "fa18657ab4ff6b4b7000cfc63dda253f70810d6f7ec0bad444a0a785b68b4703"
+      },
+      {
+        "section": "10.1",
+        "pages": [
+          227,
+          229
+        ],
+        "heading_found": true,
+        "text_sha256": "d3a0914a2c3ebab88bdab4c6e8279eacf34d4159e773dd014cd1eff2090791b5"
+      },
+      {
+        "section": "11.3",
+        "pages": [
+          252,
+          254
+        ],
+        "heading_found": true,
+        "text_sha256": "7405d4188614914366ed89ead8b5daae6c9d0fe6afa9c8e93da773431e95b535"
+      },
+      {
+        "section": "11.7",
+        "pages": [
+          262,
+          263
+        ],
+        "heading_found": true,
+        "text_sha256": "26174c398b254b0236a3cce92b906729145f257b0fb30d6ec9d976308079efeb"
+      },
+      {
+        "section": "12.1",
+        "pages": [
+          268,
+          270
+        ],
+        "heading_found": true,
+        "text_sha256": "21043502eeb0b82b55a36bfd6510ba123dae14b8893db988a7a833e63ab29cf8"
+      },
+      {
+        "section": "13.1",
+        "pages": [
+          288,
+          292
+        ],
+        "heading_found": true,
+        "text_sha256": "12f5126da06a390a3efaeab36e099e95d02d263c74e396fb6fa36d0d056760be"
+      },
+      {
+        "section": "13.7",
+        "pages": [
+          300,
+          302
+        ],
+        "heading_found": true,
+        "text_sha256": "02f3a0409b014af6cf3aac00dec4e4669239f34eb949aab66b31182b0a84d283"
+      },
+      {
+        "section": "13.appendix",
+        "pages": [
+          312,
+          315
+        ],
+        "heading_found": true,
+        "text_sha256": "0071c1a08755062b6ca703356c9e294983edc1d697e9041485f10ede087e7bee"
+      },
+      {
+        "section": "14.2",
+        "pages": [
+          317,
+          322
+        ],
+        "heading_found": true,
+        "text_sha256": "e0c86ec969863cedc90e1189a5abebe89d6b161cc419bc27c88e7cab50842524"
+      },
+      {
+        "section": "14.6",
+        "pages": [
+          327,
+          328
+        ],
+        "heading_found": true,
+        "text_sha256": "b2268756446f68fb5c1f9196e9c9166fb4febc6e3863608c16409dc50cff42aa"
+      },
+      {
+        "section": "15.6",
+        "pages": [
+          348,
+          351
+        ],
+        "heading_found": true,
+        "text_sha256": "c866e5db67b92d98b94710088b3b2fc3454306b0b4803d63e51f9b69a3eec7d9"
+      },
+      {
+        "section": "15.7",
+        "pages": [
+          351,
+          352
+        ],
+        "heading_found": true,
+        "text_sha256": "457894a6b35d8fa003e66de2cd730595fb1b7bc7ee3ce4cbe343338ed4f1d985"
+      },
+      {
+        "section": "15.8",
+        "pages": [
+          352,
+          355
+        ],
+        "heading_found": true,
+        "text_sha256": "43cf50355dde113609ccbdbce0cdb6bb193a2298f64d23ca3f4405387ad60a67"
+      },
+      {
+        "section": "15.12",
+        "pages": [
+          360,
+          363
+        ],
+        "heading_found": true,
+        "text_sha256": "cee8d7797993544b6da5bb85c6aa5f050ff80473c94c819f1d877b0b6918f39b"
+      },
+      {
+        "section": "16.1",
+        "pages": [
+          371,
+          372
+        ],
+        "heading_found": true,
+        "text_sha256": "32e6b0f84f8a3ca9f23e55ef507b6e6eea63dff062f05cc2be01d1e43ff2a18e"
+      },
+      {
+        "section": "16.4",
+        "pages": [
+          375,
+          379
+        ],
+        "heading_found": true,
+        "text_sha256": "8c953015dc5896d762b1148209a08db7e733fb1c8ec902aead70ef8a31522239"
+      },
+      {
+        "section": "17.1",
+        "pages": [
+          384,
+          386
+        ],
+        "heading_found": true,
+        "text_sha256": "fcac9894a5fb75f12ba49e741476a6e866c0390ebc444018f5ba8e24b35f97b2"
+      },
+      {
+        "section": "17.3",
+        "pages": [
+          389,
+          391
+        ],
+        "heading_found": true,
+        "text_sha256": "46cce859c3a1a192fc3253c60cbffe9edcb6188c978a644681ac0acf55c3ae05"
+      },
+      {
+        "section": "18.7",
+        "pages": [
+          408,
+          409
+        ],
+        "heading_found": true,
+        "text_sha256": "aae2586c60da5270285f9cb459cf16662f2f2219280a74a4f481ba45955c1d8b"
+      },
+      {
+        "section": "19.4",
+        "pages": [
+          421,
+          427
+        ],
+        "heading_found": true,
+        "text_sha256": "1320d1c0b9e8f7eb2c0629aea1018df14dbf1ab92c92db15a815156148fde86c"
+      },
+      {
+        "section": "20.1",
+        "pages": [
+          451,
+          452
+        ],
+        "heading_found": true,
+        "text_sha256": "67422325c21a77556dfec175833c48ebc5633796c46547d20bc26557c60aee17"
+      },
+      {
+        "section": "20.4",
+        "pages": [
+          458,
+          458
+        ],
+        "heading_found": true,
+        "text_sha256": "ba156758bbb71721749476e4850144844f9d1468a3e4abc6cddeb10da6a9b982"
+      },
+      {
+        "section": "20.5",
+        "pages": [
+          458,
+          460
+        ],
+        "heading_found": true,
+        "text_sha256": "0f9c0fa2afc33ed9ee635c2dd6a110f9e2080cb3da71619a73af34285251ab32"
+      },
+      {
+        "section": "20.appendix",
+        "pages": [
+          467,
+          469
+        ],
+        "heading_found": true,
+        "text_sha256": "6af96fe7d43f87f8d2c23e50d542f86f56706c1380149086bd224ed5d711261e"
+      },
+      {
+        "section": "21.1",
+        "pages": [
+          470,
+          477
+        ],
+        "heading_found": true,
+        "text_sha256": "5f0810a9d88381f10b481de7146d52cb6121a8875786b984d6f5ec30ddcfc5ad"
+      },
+      {
+        "section": "21.5",
+        "pages": [
+          488,
+          489
+        ],
+        "heading_found": true,
+        "text_sha256": "88c4368d16d297721decd63ccaad5d43a968745b49a914a8551258b55211a7e1"
+      },
+      {
+        "section": "21.6",
+        "pages": [
+          489,
+          495
+        ],
+        "heading_found": true,
+        "text_sha256": "c82a9b27aead0f2dc3eba7dd4982080fd4b7fb55865df03cba53ef8450fb1f2c"
+      },
+      {
+        "section": "21.7",
+        "pages": [
+          495,
+          498
+        ],
+        "heading_found": true,
+        "text_sha256": "01fe0f33435d11add0397eef0ca0cd679b180740d0d7c35a6f96fbabebda57a8"
+      },
+      {
+        "section": "21.8",
+        "pages": [
+          498,
+          508
+        ],
+        "heading_found": true,
+        "text_sha256": "964891c1c0c3b7d131aa6d77dc0b153fea6d463d4df7ea95a0ca53a6067aa043"
+      },
+      {
+        "section": "22.1",
+        "pages": [
+          514,
+          517
+        ],
+        "heading_found": true,
+        "text_sha256": "936a8aa2d02fcf7754652a1d46fc8c15a57ae5e5a06f10c9a5fdc6c25edc2414"
+      },
+      {
+        "section": "22.2",
+        "pages": [
+          517,
+          521
+        ],
+        "heading_found": true,
+        "text_sha256": "667c86886c54d6e9c1a66df38696948988145c9549dfcc15f02143466b6f7521"
+      },
+      {
+        "section": "22.5",
+        "pages": [
+          530,
+          533
+        ],
+        "heading_found": true,
+        "text_sha256": "8f44822ffef6b60f324114ff83a6659a060b49ef4c62485b61785852eb6806c4"
+      },
+      {
+        "section": "22.8",
+        "pages": [
+          534,
+          534
+        ],
+        "heading_found": true,
+        "text_sha256": "3a6dad32bbfb7b0d70c9ab32a89eb1068d96d3561fbab3ef6756ae1dbfa8efa3"
+      },
+      {
+        "section": "23.1",
+        "pages": [
+          542,
+          544
+        ],
+        "heading_found": true,
+        "text_sha256": "a74722c2bcbe7bdb6e93741d17064b04a3f901ca7d204e8fd74d630bd8803941"
+      },
+      {
+        "section": "23.2",
+        "pages": [
+          544,
+          546
+        ],
+        "heading_found": true,
+        "text_sha256": "f727592515f8dcb10cc30eb38af715b79d71f88b7a7d046c0bd71557cd268022"
+      },
+      {
+        "section": "23.3",
+        "pages": [
+          546,
+          547
+        ],
+        "heading_found": true,
+        "text_sha256": "141368abb4c46a3b611464c0aec7aeeb42e9de422e22222e6fa2bbffe77cc9a9"
+      },
+      {
+        "section": "23.5",
+        "pages": [
+          548,
+          553
+        ],
+        "heading_found": true,
+        "text_sha256": "efc55b2929cec5f6d9ac416119fca2fb42066ee7b88754c1983cff4e6d982a5f"
+      },
+      {
+        "section": "23.6",
+        "pages": [
+          553,
+          556
+        ],
+        "heading_found": true,
+        "text_sha256": "71634185e2192b12690d03a7ca2cc231282c85a67900e51e90f273672aff96d3"
+      },
+      {
+        "section": "24.4",
+        "pages": [
+          564,
+          566
+        ],
+        "heading_found": true,
+        "text_sha256": "f08f3b29414e7406fad67420072b11677e4563b4a7feea657ed93e022599112e"
+      },
+      {
+        "section": "24.6",
+        "pages": [
+          570,
+          571
+        ],
+        "heading_found": true,
+        "text_sha256": "866e965d460b8896b59824c0353c3bd91528705186ea882c56c9d29893ddebca"
+      },
+      {
+        "section": "24.7",
+        "pages": [
+          571,
+          577
+        ],
+        "heading_found": true,
+        "text_sha256": "8fecd83490c220d708179c26ef2eddbf01c13e6355a7a5eb9ebcea6faca7a7b8"
+      },
+      {
+        "section": "24.8",
+        "pages": [
+          577,
+          580
+        ],
+        "heading_found": true,
+        "text_sha256": "bf8930fc4876f23787710352adeb0cc5261f95b8d3d45a8ae1fdd28997d35741"
+      },
+      {
+        "section": "24.9",
+        "pages": [
+          580,
+          582
+        ],
+        "heading_found": true,
+        "text_sha256": "3190d80e249cc86f4dbad5a82d5e694bff309de0f08626a824f998115b2dc8db"
+      },
+      {
+        "section": "25.2",
+        "pages": [
+          591,
+          595
+        ],
+        "heading_found": true,
+        "text_sha256": "e2cb31d5cab1b95fc05271b56e2f0288a6d970401b47409c802c166478aa13c5"
+      },
+      {
+        "section": "25.5",
+        "pages": [
+          597,
+          597
+        ],
+        "heading_found": true,
+        "text_sha256": "7df0eb50351e47bccf71771033f491e8b0fd92f469676791648c992ff59ec908"
+      },
+      {
+        "section": "25.6",
+        "pages": [
+          597,
+          597
+        ],
+        "heading_found": true,
+        "text_sha256": "7df0eb50351e47bccf71771033f491e8b0fd92f469676791648c992ff59ec908"
+      },
+      {
+        "section": "25.8",
+        "pages": [
+          599,
+          601
+        ],
+        "heading_found": true,
+        "text_sha256": "be494979bbe9851e809916574576df259aa6206efb49c726d1c3d7eaa361d771"
+      },
+      {
+        "section": "25.10",
+        "pages": [
+          601,
+          608
+        ],
+        "heading_found": true,
+        "text_sha256": "a5698dca971d77217fdd89afdecdd1dcc96b8a0ef3f884c1c60921a34b0c474a"
+      },
+      {
+        "section": "25.11",
+        "pages": [
+          608,
+          610
+        ],
+        "heading_found": true,
+        "text_sha256": "5a852883263ec1ea189cb5e5862abd17416b9eecc0dc17911b263a7e1c2ce568"
+      },
+      {
+        "section": "26.1",
+        "pages": [
+          614,
+          615
+        ],
+        "heading_found": true,
+        "text_sha256": "7fb202d91cebf1945b7776c10b33c3867f5d7b41c12338a52e899f3b68fb0e69"
+      },
+      {
+        "section": "26.2",
+        "pages": [
+          615,
+          616
+        ],
+        "heading_found": true,
+        "text_sha256": "abfcc1f1d8a5102646bb2fb8f121e0249e0376644b381e3130b0c8368a3b143c"
+      },
+      {
+        "section": "26.3",
+        "pages": [
+          616,
+          616
+        ],
+        "heading_found": true,
+        "text_sha256": "a43cd9a864d40cc4c7a0be929f8e064958853a8fe71302f12883b1f7b1c13949"
+      },
+      {
+        "section": "26.4",
+        "pages": [
+          617,
+          617
+        ],
+        "heading_found": true,
+        "text_sha256": "19a1c0393ecf9d8eb3efe7f3094f8ffbd1f3f74e45bcfb15aa78845f9e89031f"
+      },
+      {
+        "section": "26.5",
+        "pages": [
+          618,
+          618
+        ],
+        "heading_found": true,
+        "text_sha256": "9776198588df58093f6f32842acaf8b89b272eccd8dcd73ccad92d77a479a7dc"
+      },
+      {
+        "section": "26.6",
+        "pages": [
+          618,
+          618
+        ],
+        "heading_found": true,
+        "text_sha256": "9776198588df58093f6f32842acaf8b89b272eccd8dcd73ccad92d77a479a7dc"
+      },
+      {
+        "section": "26.7",
+        "pages": [
+          618,
+          619
+        ],
+        "heading_found": true,
+        "text_sha256": "3bdbd03d0d3bfacb078efb4a40836396e112d5493a520ac0dd6bd3c2c52c14cd"
+      },
+      {
+        "section": "26.8",
+        "pages": [
+          619,
+          620
+        ],
+        "heading_found": true,
+        "text_sha256": "e235e51babc0ba32675d72fe8ffe1b72abc0bee1bfd47e9a890fde9c081ee7b5"
+      },
+      {
+        "section": "26.9",
+        "pages": [
+          620,
+          622
+        ],
+        "heading_found": true,
+        "text_sha256": "5d56f592e53081f03b203e9c78a8ab4af7b3b17d6f70dc93c081a25305f3c44e"
+      },
+      {
+        "section": "26.10",
+        "pages": [
+          622,
+          623
+        ],
+        "heading_found": true,
+        "text_sha256": "4c2edd24e02b74f6ac019a8a4f4a284a3fab5ba6d3f164be9500aad69ca9c45d"
+      },
+      {
+        "section": "26.11",
+        "pages": [
+          623,
+          625
+        ],
+        "heading_found": true,
+        "text_sha256": "b72e1466c60687cb972922959e0e143350b61188c3d2ce0c664e749f87fbfe51"
+      },
+      {
+        "section": "26.12",
+        "pages": [
+          625,
+          626
+        ],
+        "heading_found": true,
+        "text_sha256": "6f6248ef85e76e8a9bda70913678350205cfd9c43e3fc3f010a9fa1a0cdec9fa"
+      },
+      {
+        "section": "26.13",
+        "pages": [
+          626,
+          627
+        ],
+        "heading_found": true,
+        "text_sha256": "844f9c7021b992f14c028278c534c4137d3e88292f592e86a9764e9c903df989"
+      },
+      {
+        "section": "26.14",
+        "pages": [
+          627,
+          628
+        ],
+        "heading_found": true,
+        "text_sha256": "51f9af9af39e29784a7161f435ee78d5598335c1e07ae9cfdf7035138dee82de"
+      },
+      {
+        "section": "26.15",
+        "pages": [
+          628,
+          629
+        ],
+        "heading_found": true,
+        "text_sha256": "1cd776d3dec400445a8fe1910a7db02909e83d8df5207f632a2adb2de10e57f1"
+      },
+      {
+        "section": "26.16",
+        "pages": [
+          629,
+          632
+        ],
+        "heading_found": true,
+        "text_sha256": "2b3be64bf39dbc57490bf16458ffe84d7db836c397a398acfe3fdd0ed03b2b05"
+      },
+      {
+        "section": "26.17",
+        "pages": [
+          632,
+          634
+        ],
+        "heading_found": true,
+        "text_sha256": "242c4223a7efd058250b38641c985ed30abc75a8d56de9f13b389a73bf44b1b9"
+      },
+      {
+        "section": "27.1",
+        "pages": [
+          641,
+          646
+        ],
+        "heading_found": true,
+        "text_sha256": "90533dbc46a3afa44c9284d984c6268fc886d35924fbdbc338e2866d9ea4373f"
+      },
+      {
+        "section": "27.2",
+        "pages": [
+          646,
+          649
+        ],
+        "heading_found": true,
+        "text_sha256": "bb8a561cbd560eabb53fcb625344d36caed4d6b53970cba487d06b8d734865c3"
+      },
+      {
+        "section": "27.3",
+        "pages": [
+          649,
+          650
+        ],
+        "heading_found": true,
+        "text_sha256": "92b32d20d980a035a5b908770c5d59321a7cb14d38834a67fb02188272a5d260"
+      },
+      {
+        "section": "27.4",
+        "pages": [
+          650,
+          653
+        ],
+        "heading_found": true,
+        "text_sha256": "5d589236429b4b95934dde6837fa08d3c1a2e1f9aaeed0946337ef320ac5013a"
+      },
+      {
+        "section": "27.5",
+        "pages": [
+          653,
+          656
+        ],
+        "heading_found": true,
+        "text_sha256": "688839bb5dc4dcb2f7aa8bfa170019826abf15a8e300c0b16c458beefbd0b362"
+      },
+      {
+        "section": "27.6",
+        "pages": [
+          656,
+          658
+        ],
+        "heading_found": true,
+        "text_sha256": "729087e2cd96fc75045a92fe5a377beb0f4d5cbbe000719bbcd50321c3c6e3ef"
+      },
+      {
+        "section": "27.7",
+        "pages": [
+          658,
+          661
+        ],
+        "heading_found": true,
+        "text_sha256": "8ece6e95cee7fd929f69ca4da0b09cdd4c6b56fa541a3e4967a9b744d5e9e071"
+      },
+      {
+        "section": "27.8",
+        "pages": [
+          660,
+          665
+        ],
+        "heading_found": true,
+        "text_sha256": "7fce82de143117a4ed44f3955baa80e6f653cbc216be4d685916baf596ea4c24"
+      },
+      {
+        "section": "28.1",
+        "pages": [
+          671,
+          674
+        ],
+        "heading_found": true,
+        "text_sha256": "669e14ed56d0fb5775eb1af03d2b4947557a861153c06070be14b54328c32296"
+      },
+      {
+        "section": "28.2",
+        "pages": [
+          674,
+          675
+        ],
+        "heading_found": true,
+        "text_sha256": "cb3793230efbd1561e7470164b19ea0ddf6f73e1f014ba7d99e80d3e1c8010b6"
+      },
+      {
+        "section": "28.6",
+        "pages": [
+          680,
+          681
+        ],
+        "heading_found": true,
+        "text_sha256": "cf5499803147d14fe7d53ba0cbef674a09747253b694375403735c3223f8a553"
+      },
+      {
+        "section": "28.7",
+        "pages": [
+          681,
+          682
+        ],
+        "heading_found": true,
+        "text_sha256": "8a9c40dd22e85227eb8dd4d7169af1471e5696abf15aa9bc8698d67c79de8ece"
+      },
+      {
+        "section": "28.8",
+        "pages": [
+          682,
+          684
+        ],
+        "heading_found": true,
+        "text_sha256": "bbe9987890d3de40237f011edbed08107c8412e9cf5ddf810f7bd2a1202f5f6f"
+      },
+      {
+        "section": "29.1",
+        "pages": [
+          688,
+          692
+        ],
+        "heading_found": true,
+        "text_sha256": "a351950a03a1150c43304a5d08af4feacf6db3eac0787bcd3ec22a433a662414"
+      },
+      {
+        "section": "29.2",
+        "pages": [
+          693,
+          699
+        ],
+        "heading_found": true,
+        "text_sha256": "ba0d0bd4f307dbc942bb414a1ff859f2bed0e09d0ab6f141b3148d53570d9058"
+      },
+      {
+        "section": "29.3",
+        "pages": [
+          699,
+          702
+        ],
+        "heading_found": true,
+        "text_sha256": "6bbf4bb27b1015cf7f2df8fb763a8c440ae98ef88cb908e822b3a89679a2907a"
+      },
+      {
+        "section": "29.4",
+        "pages": [
+          703,
+          703
+        ],
+        "heading_found": true,
+        "text_sha256": "fa4e8365994c1915750b6ec4c59a46394ad8601272f2ee7148331cb0984111b4"
+      },
+      {
+        "section": "30.1",
+        "pages": [
+          707,
+          710
+        ],
+        "heading_found": true,
+        "text_sha256": "b23a2aea9f14f2bffe144cea4bd1aa2c3faecb3446e1ec790d0021e34e3b67fd"
+      },
+      {
+        "section": "30.2",
+        "pages": [
+          710,
+          711
+        ],
+        "heading_found": true,
+        "text_sha256": "e9464de957fbfd3f4d0cd120613c8712f04404d2938a1ab02ee7cc744d9de601"
+      },
+      {
+        "section": "30.3",
+        "pages": [
+          711,
+          714
+        ],
+        "heading_found": true,
+        "text_sha256": "9ef0532c82fb60d301f2265fd9cc9b3063390dae98cb302a7c63d26efabe9b66"
+      },
+      {
+        "section": "31.1",
+        "pages": [
+          719,
+          721
+        ],
+        "heading_found": true,
+        "text_sha256": "6521558c504b4687c3bcc10f482b965ce71c8de231769490e77cdf576a2be7cf"
+      },
+      {
+        "section": "31.2",
+        "pages": [
+          721,
+          726
+        ],
+        "heading_found": true,
+        "text_sha256": "697ef699f3cc23058c343c6fef17c19e823419583bf7f0e1164652dd22c4e596"
+      },
+      {
+        "section": "31.3",
+        "pages": [
+          726,
+          727
+        ],
+        "heading_found": true,
+        "text_sha256": "a0e267c6dd4849924aeb29131de1ac2218ef1e832119161a030062378799186c"
+      },
+      {
+        "section": "31.4",
+        "pages": [
+          727,
+          728
+        ],
+        "heading_found": true,
+        "text_sha256": "c25b2ed767279687f12fd6c89374cd3025caf8277485e966855c3ab136416495"
+      },
+      {
+        "section": "31.5",
+        "pages": [
+          728,
+          728
+        ],
+        "heading_found": true,
+        "text_sha256": "b11ffa88c7b5c5eac37efb31f740d8f9faeb8bf3389c7af7066a1e58c6718bb1"
+      },
+      {
+        "section": "32.1",
+        "pages": [
+          732,
+          736
+        ],
+        "heading_found": true,
+        "text_sha256": "a7d05a8d7d7d96faf091a07e4b8f830451503919a502e1f14fe7fbd915dc4cbd"
+      },
+      {
+        "section": "32.2",
+        "pages": [
+          736,
+          737
+        ],
+        "heading_found": true,
+        "text_sha256": "2e7d01ed76149da5803b51aa06af9f6469d5e1f50cc6fd4dd73c98a782cce44d"
+      },
+      {
+        "section": "32.3",
+        "pages": [
+          737,
+          738
+        ],
+        "heading_found": true,
+        "text_sha256": "12d16547562767da685fc259a0f74fd6814fbb13245ab778424c3744b04ca67f"
+      },
+      {
+        "section": "32.4",
+        "pages": [
+          738,
+          740
+        ],
+        "heading_found": true,
+        "text_sha256": "a9300d78fb25f458fa505e1ebcd1bba3441fc6ae9a8385dd97f93add1db402f5"
+      },
+      {
+        "section": "32.5",
+        "pages": [
+          740,
+          750
+        ],
+        "heading_found": true,
+        "text_sha256": "86d139f23af0a146a30ac1d8ce8e62682932e1eb27d47ae06df8d8f74ba2a912"
+      },
+      {
+        "section": "32.6",
+        "pages": [
+          749,
+          751
+        ],
+        "heading_found": true,
+        "text_sha256": "6ad02ab66a3b6c71b1e5a0f957e6482841069b9905be4e8625b7fdef89a255ff"
+      },
+      {
+        "section": "32.7",
+        "pages": [
+          751,
+          752
+        ],
+        "heading_found": true,
+        "text_sha256": "8734d498225be8998daacbaa85d2349a922a1bbf4de4db93744aded8a982ec50"
+      },
+      {
+        "section": "33.1",
+        "pages": [
+          755,
+          758
+        ],
+        "heading_found": true,
+        "text_sha256": "3350292ac0199f4e418afa7e83f2b8e1770c9931cb54a9ea5cfeb94e1ae60f22"
+      },
+      {
+        "section": "33.2",
+        "pages": [
+          758,
+          768
+        ],
+        "heading_found": true,
+        "text_sha256": "34c4bc7a3d30f64d50aa6763f30e640f981a4b3422bd0e6117fbb56afcc4c84c"
+      },
+      {
+        "section": "33.3",
+        "pages": [
+          768,
+          770
+        ],
+        "heading_found": true,
+        "text_sha256": "a2109f35ffdf7c91456a78e2fc75ed28754c32666147e7948515f54ba4c69278"
+      },
+      {
+        "section": "34.1",
+        "pages": [
+          773,
+          775
+        ],
+        "heading_found": true,
+        "text_sha256": "3c172b87876f6e587f26b6d456968997ab7ec391b41c9d24f5366600adb98e2e"
+      },
+      {
+        "section": "34.2",
+        "pages": [
+          775,
+          776
+        ],
+        "heading_found": true,
+        "text_sha256": "a417041a190e6ce637ba00c095eb1a2d43653120622c40cfcf8d63e3b75b65db"
+      },
+      {
+        "section": "34.3",
+        "pages": [
+          776,
+          777
+        ],
+        "heading_found": true,
+        "text_sha256": "648eef02556dc3ec79daff389770b9aa0a20433d5fb8fe642b3d3570ec63719d"
+      },
+      {
+        "section": "34.4",
+        "pages": [
+          777,
+          779
+        ],
+        "heading_found": true,
+        "text_sha256": "1083c782be6bf59dcf5c146ba28a8d5cb0fec206e64ea8870cb8dfee225cda40"
+      },
+      {
+        "section": "34.5",
+        "pages": [
+          779,
+          781
+        ],
+        "heading_found": true,
+        "text_sha256": "f50b01c99f98a57a07c196a47e961b81f04db816b7573fa99965b3a30745aadf"
+      },
+      {
+        "section": "34.6",
+        "pages": [
+          781,
+          782
+        ],
+        "heading_found": true,
+        "text_sha256": "d3f3323cf0485171b40785efcf6693a8a35cc0679ea07b2923a26a162b47a66a"
+      },
+      {
+        "section": "35.3",
+        "pages": [
+          787,
+          789
+        ],
+        "heading_found": true,
+        "text_sha256": "189801eb1b6c8d2e8736ad15bc4ef4e1f7acc867b3b7b380a3e211bbc9b2794d"
+      },
+      {
+        "section": "35.4",
+        "pages": [
+          789,
+          795
+        ],
+        "heading_found": true,
+        "text_sha256": "b5ebe024136466fcd6c5e76ae0aade5ea4bdb406d43e87003167c1c906d00b26"
+      },
+      {
+        "section": "35.5",
+        "pages": [
+          795,
+          796
+        ],
+        "heading_found": true,
+        "text_sha256": "0fde36e7635adedc8c95589ed978584aebd3a8a21183ad500c4c28bf1e4ac49d"
+      },
+      {
+        "section": "35.6",
+        "pages": [
+          796,
+          797
+        ],
+        "heading_found": true,
+        "text_sha256": "53c2a76e29cff239bff4ab016260798a8c4f587c851de3b8d3b81d7e2e58de6e"
+      },
+      {
+        "section": "35.7",
+        "pages": [
+          797,
+          798
+        ],
+        "heading_found": true,
+        "text_sha256": "af58bcf92396cc2fc77446f63ca278aa5dc1e8cbd2b8d848ad23c752af98333c"
+      },
+      {
+        "section": "35.8",
+        "pages": [
+          798,
+          799
+        ],
+        "heading_found": true,
+        "text_sha256": "0078c0de2c70ba0b0d3a7ef5594fc5a15315e1640ebf44ad1dbbbdec56e11dbd"
+      },
+      {
+        "section": "36.1",
+        "pages": [
+          802,
+          803
+        ],
+        "heading_found": true,
+        "text_sha256": "33e06f2b62caf7fe0e16e55f56e80d9e8423504434607776a36539a506dcbebb"
+      },
+      {
+        "section": "36.4",
+        "pages": [
+          806,
+          807
+        ],
+        "heading_found": true,
+        "text_sha256": "6f0e915e31cb9c04188d748ac4cdb469d086c622baa3253f88d17e7422d32f09"
+      },
+      {
+        "section": "36.5",
+        "pages": [
+          806,
+          813
+        ],
+        "heading_found": true,
+        "text_sha256": "3eb99ab20040de4a11c36992ea58ae501163788c0334a4d9bebd891a11b30022"
+      },
+      {
+        "section": "37.1",
+        "pages": [
+          815,
+          819
+        ],
+        "heading_found": true,
+        "text_sha256": "b028abf554b0c798ee247941f00931dca4316225f9ed8bd13fb1a2d689070b9a"
+      }
+    ],
+    "ge_page_images_reviewed": [
+      {
+        "page": 206,
+        "sha256": "d872487f2c5958161681b959c07dda7951109bccd29c3a9fa2fbccd380069ba1",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-206.png"
+      },
+      {
+        "page": 209,
+        "sha256": "1d3fb472594e5041ba11b2001a8a349f5e13834762cb3656069d8c6eb3ce518e",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-209.png"
+      },
+      {
+        "page": 300,
+        "sha256": "65fa1b37f34fdfd3dab79705b1cb5bba1c1791dbf3acd631ad324a0c3b66e344",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-300.png"
+      },
+      {
+        "page": 301,
+        "sha256": "9d1289acbb380e2de83d487bffdeb0353a6aa7f5b10b7613be86bbfa500261cd",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-301.png"
+      },
+      {
+        "page": 313,
+        "sha256": "07f6d195c7e88a3854bbecc1a4bbbfdc9b0ff8a568db616add1893d1bc8e1364",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-313.png"
+      },
+      {
+        "page": 467,
+        "sha256": "9267556735afe8dcb7cdc83e13a6fd5d99a80f51d888a66ad1b8c88a06539051",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-467.png"
+      },
+      {
+        "page": 544,
+        "sha256": "c1128ec23d62d52f22a2bf053ea1bc3f264afede35c7ddb99875c9d0f02d8193",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-544.png"
+      },
+      {
+        "page": 546,
+        "sha256": "2773594279b10417b986906f469bf7a681d8363fcb384c0b0547135de2b4c1ef",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-546.png"
+      },
+      {
+        "page": 602,
+        "sha256": "818ed8fd38273e96cbdc814a63cd051b69aa7b554eb80d7e75a6c4a476fb53bc",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-602.png"
+      },
+      {
+        "page": 603,
+        "sha256": "e88ce8c1b9bd59f57efeb966d373d9a4bd915a904d81f1188acaf14db436b1e0",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-603.png"
+      },
+      {
+        "page": 641,
+        "sha256": "974836af6f838ace23adaf550744663539a6c00e4f9d0f28b778bd0d9d7c42cc",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-641.png"
+      },
+      {
+        "page": 642,
+        "sha256": "64e72d1391dfccbca8503bdcbbb547234d605ada3aa8b87bc833f4818dbf7135",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-642.png"
+      },
+      {
+        "page": 644,
+        "sha256": "5c1921e8d50f5257c785982721603b7e662ce9ca09536d8a3a9d29e3ad5cbcf8",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-644.png"
+      },
+      {
+        "page": 645,
+        "sha256": "95962d27cd09f9814ac3a07ec3e52ab1db3d9a327a6367dee3955a2465c6f919",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-645.png"
+      },
+      {
+        "page": 647,
+        "sha256": "81c40b082e92f9da17abcd23a69dc730701ea1b5f31d6990ff25b83fa3627712",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-647.png"
+      },
+      {
+        "page": 649,
+        "sha256": "560fa83ac989109ad54b54b5de7c55cf9f9fc74324ad2ac639606b556839fbfb",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-649.png"
+      },
+      {
+        "page": 650,
+        "sha256": "62e9e0e0cf28431189a8f46598ab71bb5888828677bcab8268932059046ab87f",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-650.png"
+      },
+      {
+        "page": 733,
+        "sha256": "39502a5feb80ec0fc4ec48e90821f7b7c070a833f2fd092d0b4f9da2220b7285",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-733.png"
+      },
+      {
+        "page": 734,
+        "sha256": "04327004e15f5bd423ca41c1bd2d22363c73ee217aeb067078399587397b2166",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-734.png"
+      },
+      {
+        "page": 757,
+        "sha256": "af0fd8b4d5e9149e568b5001d15d8126491c64ad2719de386f62d98804434458",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-757.png"
+      },
+      {
+        "page": 758,
+        "sha256": "3d46bc3134b790ac26a4fd11f63252a3ddc2ec459f1a9763b3dbae29320ca395",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-758.png"
+      },
+      {
+        "page": 759,
+        "sha256": "be4a15ffae58e85726f457ddc37c12a7863f9dc4ba398ddeef8d7aa94dab9e5a",
+        "path": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019/source/ge-759.png"
+      }
+    ],
+    "external": [
+      {
+        "title": "Cox–Ross–Rubinstein (1979), Option Pricing: A Simplified Approach",
+        "url": "https://bpb-us-w2.wpmucdn.com/u.osu.edu/dist/7/36891/files/2017/07/CRR79-1yy8av8.pdf",
+        "claim": "Ch13 story: discrete replication, BSM limit and early exercise; sections 1, 5 and 6.",
+        "checked_on": "2026-10-19"
+      },
+      {
+        "title": "Bernanke, 10 April 2008 speech",
+        "url": "https://www.federalreserve.gov/newsevents/speech/bernanke20080410a.htm",
+        "claim": "Ch8 story: originate-to-distribute incentives and lending volume/quality.",
+        "checked_on": "2026-10-19"
+      },
+      {
+        "title": "FCA, LIBOR transition",
+        "url": "https://www.fca.org.uk/markets/libor-transition",
+        "claim": "Final synthetic USD LIBOR publication: 30 September 2024; historical examples are distinguished from current publication.",
+        "checked_on": "2026-10-19"
+      },
+      {
+        "title": "FCA, The US dollar LIBOR panel has now ceased",
+        "url": "https://www.fca.org.uk/news/news-stories/us-dollar-libor-panel-has-now-ceased",
+        "claim": "Bank panel ceased on 30 June 2023.",
+        "checked_on": "2026-10-19"
+      },
+      {
+        "title": "BCBS Charter",
+        "url": "https://www.bis.org/committees/bcbs/charter",
+        "claim": "Existing Ch8 statement: standards do not themselves have legal force; no country-specific current implementation claim.",
+        "checked_on": "2026-10-19"
+      },
+      {
+        "title": "BCBS, Consolidated Basel Framework consultation, April 2019",
+        "url": "https://www.bis.org/publications/201904-consultation-consolidated-basel-framework",
+        "claim": "Existing Ch8 reference: draft consolidation/consultation, not a new claim about current national law. Rechecked title and date in T2.",
+        "checked_on": "2026-10-19"
+      },
+      {
+        "title": "Heston (1993), A Closed-Form Solution for Options with Stochastic Volatility",
+        "url": "https://finance.martinsewell.com/stylized-facts/volatility/Heston1993.pdf",
+        "claim": "Model relations: variance SDE, section 1, printed pages 328–329, equations 1–4. Physical PDF pages 3–4 reviewed as images.",
+        "checked_on": "2026-10-19"
+      },
+      {
+        "title": "Gatheral–Jacquier, Arbitrage-free SVI volatility surfaces",
+        "url": "https://arxiv.org/pdf/1204.0646",
+        "claim": "Model relation: total implied variance and conversion to IV; Notations and section 4. Date label refers to 2013 revision/2014 publication.",
+        "checked_on": "2026-10-19"
+      },
+      {
+        "title": "Huge–Savine (2020), Differential Machine Learning",
+        "url": "https://arxiv.org/pdf/2005.02347",
+        "claim": "Model relations: price/derivative training labels; section 1 and Appendix 1.",
+        "checked_on": "2026-10-19"
+      }
+    ],
+    "copyright": "No extracted source prose or page images are committed. Cards and guide are original explanations, not serial translations."
+  },
+  "t3_estimate": "t3-impact-2026-10-19.md and .json; no T3 modifications",
+  "corrections_during_validation": [
+    "New Book build mount initially had root ownership; only the exact new output directory was chowned. Earlier outputs are preserved.",
+    "Fixed Plotly family visibility booleans, line hover interception and this page's installed-theme ScrollSpy target. No shared runtime script/config/CSS changed.",
+    "Split the long Dupire formula for 390px, selected actual Book subsection links manually, and verified Greek symbols from page images.",
+    "Full log recount found 10 MyST cross-document-label warnings. One-label probe reduced them to 9; ref roles removed all 10. Final diagnostics return to 153 WARNING + existing 1 ERROR.",
+    "Added inner-table overflow checking; it rejected the 420px glossary symbol table in a 358px area. Rewording the theta explanation removed the unnecessary wide inline equation.",
+    "Staged diff check rejected the extra EOF blank line in the new generated Markdown; normalized generation and repeated the relevant checks."
+  ],
+  "protection": {
+    "base_commit": "d040c960",
+    "paths": [
+      "johnhull/hullkit",
+      "johnhull/volumes",
+      "johnhull/notebooks",
+      "johnhull/interest_rate_models",
+      "johnhull/report/report_builder",
+      "johnhull/docs/section_ledger.json",
+      "johnhull/docs/SECTION_LEDGER.md",
+      "johnhull/scripts/evidence_fingerprint.py",
+      "johnhull/scripts/verify_section_ledger.py",
+      "johnhull/scripts/evidence_dependencies.json"
+    ],
+    "differences": [],
+    "old_evidence": "No previous T0/T1/Claude evidence files rewritten. Shared runtime manifest and numerics are the explicitly authorized current summaries."
+  },
+  "measurement": {
+    "requested_at": "2026-10-18T15:19:26.017Z",
+    "cutoff": "2026-10-18T17:09:18.6640188+00:00",
+    "counter_at": "2026-10-18T17:09:05.521Z",
+    "elapsed_seconds": 6592.647018,
+    "tokens": {
+      "input_tokens": 42957143,
+      "cached_input_tokens": 42236544,
+      "output_tokens": 226097,
+      "reasoning_output_tokens": 103643,
+      "total_tokens": 43183240,
+      "uncached_input_tokens": 720599
+    },
+    "scope": "One T2 batch: source verification, authoring, tool fixes, checks and waiting included. Cumulative counters for this chat, not billing; excludes work after cutoff and final response."
+  },
+  "storage": {
+    "root": "/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019",
+    "du_shx": "396M\t/home/kazumasa/projects/_data/johnhull/reading-guide/t2-20261019",
+    "estimate": "Less than 1 GiB additional disk and 4 GiB sequential peak memory; no training/new arrays.",
+    "resource_sample": {
+      "at": "2026-10-18T16:43:47.679961+00:00",
+      "processes": [
+        {
+          "pid": "3412701",
+          "ppid": "3412700",
+          "elapsed_s": "1321",
+          "cpu_percent": "0.0",
+          "rss_kib": "19052",
+          "command": "python"
+        },
+        {
+          "pid": "3412888",
+          "ppid": "3412701",
+          "elapsed_s": "1321",
+          "cpu_percent": "0.0",
+          "rss_kib": "2556",
+          "command": "make"
+        },
+        {
+          "pid": "3412893",
+          "ppid": "3412890",
+          "elapsed_s": "1321",
+          "cpu_percent": "60.4",
+          "rss_kib": "3661120",
+          "command": "pytest"
+        },
+        {
+          "pid": "3434933",
+          "ppid": "3412893",
+          "elapsed_s": "858",
+          "cpu_percent": "0.0",
+          "rss_kib": "13524",
+          "command": "python3"
+        },
+        {
+          "pid": "3437693",
+          "ppid": "3412893",
+          "elapsed_s": "687",
+          "cpu_percent": "0.0",
+          "rss_kib": "40052",
+          "command": "python3"
+        },
+        {
+          "pid": "3447634",
+          "ppid": "3412893",
+          "elapsed_s": "359",
+          "cpu_percent": "1.2",
+          "rss_kib": "1084872",
+          "command": "python3"
+        },
+        {
+          "pid": "3452961",
+          "ppid": "3452960",
+          "elapsed_s": "10",
+          "cpu_percent": "0.2",
+          "rss_kib": "19048",
+          "command": "python"
+        },
+        {
+          "pid": "3453408",
+          "ppid": "3453407",
+          "elapsed_s": "0",
+          "cpu_percent": "100",
+          "rss_kib": "12600",
+          "command": "python3"
+        }
+      ],
+      "rss_kib_sum": 4852824,
+      "note": "Point-in-time RSS sum of the Python/pytest/make processes during the full test, including concurrent verification helpers. Shared pages can be double-counted; not measured peak memory."
+    },
+    "old_Book_preserved": "/home/kazumasa/projects/_data/johnhull/reading-guide/revision-20261018-n1-n20/book/_build"
+  },
+  "post_commit": "Run make hull-release-check HULL_RELEASE_FLAGS=--require-tracked after committing; result is kept in this new external root and final report."
+}
