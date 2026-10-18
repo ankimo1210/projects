@@ -21,7 +21,12 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 110 private modules as of 2026-10-09, including two validated RB-F04 private modules integrated into main. P3–P7 logic, accepted BGM/business models, and completed RB-F07/RB-F05 studies are retained. The catalogue is `MODEL_INDEX.md`; earlier development branches are retained.
 
-## 現在地（2026-10-17、プロジェクト完了・RB-F04本研究のみ保留）
+## 現在地（2026-10-18、本編完了・読むガイド T0 着手）
+
+**説明拡充：** [章ごとに読むガイド](docs/READING_GUIDE_PLAN_2026-10-18.md)の§7の1〜3を本人が承認。
+`codex/reading-guide`（main `7f668a39` から分離）で T0 の影響実測に着手する。
+今回は T1 の Ch13・Ch8 で停止し、分量・文体の読後判断と Claude の独立検証を待つ。
+既存 notebook・補足教材・節台帳と本編の受入件数は変更しない。[作業状態と検証](docs/READING_GUIDE_STATUS.md)。
 
 **プロジェクトの状態（2026-10-17、ユーザー確認）：完了。** Hull 11e全37章・306節、Beyond Hull（vol13–28）、研究RB-F07・RB-F05（3本）・RB-F08・RB-F06・RB-F04 v1が完了しmain統合済み。RB-F04動的ヘッジは軽量版（問い1）のみ完了し、本研究（問い2・3、2商品ヘッジ、NN）はユーザー判断で保留。`make test`全通過・release gate PASS。`research_profiles.json` の候補や多曲線リスク・増分XVAは未承認の候補で、完了条件に含めない。
 
@@ -119,7 +124,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 本編に畳む（RB-F02→P1、RB-F03→P3、R11・§19.14・RB-H16→P4）、章の受入後のコラム、研究トラック（同時1本）、johnhull の外。
 研究トラック #1 は RB-F07。研究の置き場は `research/<RB-ID>/`、計算は hullkit の非公開モジュールに決定した（2026-09-27 本人承認。公開 API 昇格は別承認）。
 2026-10-09に[較正込み市場クオートGreeksのDML](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)を推奨し、[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)を作成。続く完遂指示を受け、`research/RB-F07/quote_dml/` のprivate実験から着手した。既存F07/F05 v1と従来の後続研究を保持する。
-説明拡充（2026-10-18 計画案）：[章ごとに読むガイド](docs/READING_GUIDE_PLAN_2026-10-18.md)。T0 影響の実測 → T1 パイロット（Ch13・Ch8）→ B1–B6。着手前に §7 の5項目を決める。受入件数は変えない。
+説明拡充（2026-10-18 着手）：[章ごとに読むガイド](docs/READING_GUIDE_PLAN_2026-10-18.md)。§7の1〜3は本人承認済み。T0 影響実測 → T1 パイロット（Ch13・Ch8）で停止する。T2 用語集・B1–B6 はパイロット読後の判断待ち。merge 前に Claude が独立検証し、受入件数は変えない。
 
 ### 研究ロードマップの実行（2026-10-09）
 
