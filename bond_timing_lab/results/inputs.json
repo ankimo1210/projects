@@ -1,0 +1,110 @@
+{
+ "etf/BIL": {
+  "sha256": "8713f929cafce9aab6421509f830d418d14322bf514091c4eeded6621d3c1498",
+  "ingested_at": "2026-10-18T17:16:31.078659+00:00",
+  "url": "yfinance:BIL",
+  "path": "etf/BIL/2026-10-18/8713f929cafc-BIL.csv"
+ },
+ "etf/IEF": {
+  "sha256": "0d27234c6dffa6b852d564c4133498ef4cd21ba413e388f027fb18cc578bc847",
+  "ingested_at": "2026-10-18T17:16:30.847963+00:00",
+  "url": "yfinance:IEF",
+  "path": "etf/IEF/2026-10-18/0d27234c6dff-IEF.csv"
+ },
+ "etf/TLT": {
+  "sha256": "95e0545e4b6ab04315b00b431d95ca9ac455aafab743d6120ee5271db203cfdb",
+  "ingested_at": "2026-10-18T17:16:30.415687+00:00",
+  "url": "yfinance:TLT",
+  "path": "etf/TLT/2026-10-18/95e0545e4b6a-TLT.csv"
+ },
+ "fred/DTB3": {
+  "sha256": "d9392b1d5214f5c3bfd70a7b2b47ff1f5a04fb3e2a456abc0af96a6470c3a387",
+  "ingested_at": "2026-10-18T17:16:21.808337+00:00",
+  "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3",
+  "path": "fred/DTB3/2026-10-18/d9392b1d5214-DTB3.csv"
+ },
+ "fred/TB3MS": {
+  "sha256": "631bc444a8c5370c3a2df12f484a67ae7b9a68c00fe8a33215895fb49c8cc08c",
+  "ingested_at": "2026-10-18T17:16:22.127562+00:00",
+  "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=TB3MS",
+  "path": "fred/TB3MS/2026-10-18/631bc444a8c5-TB3MS.csv"
+ },
+ "fredmd/hist_1999_2014": {
+  "sha256": "3434963f26fbf1aa2e6ff06fd43e1f7b2318ab1a529fa38ac28762f84736a9bb",
+  "ingested_at": "2026-10-18T17:16:22.930518+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/historical_fred-md.zip",
+  "path": "fredmd/hist_1999_2014/2026-10-18/3434963f26fb-hist_1999_2014.zip"
+ },
+ "fredmd/hist_2015_2025": {
+  "sha256": "7cf486e5f7fe6142fa47f78dedbb290111cfdd0ff6ac2273400110103271e41e",
+  "ingested_at": "2026-10-18T17:16:23.394677+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/historical-vintages-of-fred-md-2015-01-to-2025-12.zip",
+  "path": "fredmd/hist_2015_2025/2026-10-18/7cf486e5f7fe-hist_2015_2025.zip"
+ },
+ "fredmd/monthly_2026-01": {
+  "sha256": "c74addecd3279b928ab3a968fdc328ec4ada5cb02c98afa98e1ce406207091df",
+  "ingested_at": "2026-10-18T17:16:24.146610+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/monthly/2026-01-md.csv",
+  "path": "fredmd/monthly_2026-01/2026-10-18/c74addecd327-2026-01-md.csv"
+ },
+ "fredmd/monthly_2026-02": {
+  "sha256": "618fa325fdf4e2d8ec186050e064c99d53d2cfb8f331c4f3966c60b5e17334bd",
+  "ingested_at": "2026-10-18T17:16:24.700489+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/monthly/2026-02-md.csv",
+  "path": "fredmd/monthly_2026-02/2026-10-18/618fa325fdf4-2026-02-md.csv"
+ },
+ "fredmd/monthly_2026-03": {
+  "sha256": "630110f3e4ab8a0555453621b829b44dcb6e8694ce10ca9061673f1d123ec205",
+  "ingested_at": "2026-10-18T17:16:25.006994+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/monthly/2026-03-md.csv",
+  "path": "fredmd/monthly_2026-03/2026-10-18/630110f3e4ab-2026-03-md.csv"
+ },
+ "fredmd/monthly_2026-04": {
+  "sha256": "5d1b4008d3b4d5cb14883c395e8d1d80750b8b0a4f301e24c91f3f6710621663",
+  "ingested_at": "2026-10-18T17:16:25.601878+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/monthly/2026-04-md.csv",
+  "path": "fredmd/monthly_2026-04/2026-10-18/5d1b4008d3b4-2026-04-md.csv"
+ },
+ "fredmd/monthly_2026-05": {
+  "sha256": "2221763e2bac69955723110c06bc5c39df200a0de246116ca768f50de88ef4d0",
+  "ingested_at": "2026-10-18T17:16:25.974518+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/monthly/2026-05-md.csv",
+  "path": "fredmd/monthly_2026-05/2026-10-18/2221763e2bac-2026-05-md.csv"
+ },
+ "fredmd/monthly_2026-06": {
+  "sha256": "0003e85e0bbf56537223e0beed9bf579e3b13a9f260e366d2d33c6fa7d8662cf",
+  "ingested_at": "2026-10-18T17:16:26.249539+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/monthly/2026-06-md.csv",
+  "path": "fredmd/monthly_2026-06/2026-10-18/0003e85e0bbf-2026-06-md.csv"
+ },
+ "fredmd/monthly_2026-07": {
+  "sha256": "cf4a3ea21d90ced696df323870025eae7d8512fd6bbf508cc64792318493682f",
+  "ingested_at": "2026-10-18T17:16:26.713662+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/monthly/2026-07-md.csv",
+  "path": "fredmd/monthly_2026-07/2026-10-18/cf4a3ea21d90-2026-07-md.csv"
+ },
+ "fredmd/monthly_2026-08": {
+  "sha256": "32ee2e5d14e3ea6e808b4da2d514efed2688f8f3575bbf624827de42c69ec011",
+  "ingested_at": "2026-10-18T17:16:27.167385+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/monthly/2026-08-md.csv",
+  "path": "fredmd/monthly_2026-08/2026-10-18/32ee2e5d14e3-2026-08-md.csv"
+ },
+ "fredmd/monthly_2026-09": {
+  "sha256": "d6e239038afbdbf4667c2a63c13c942817bc196fedab4355cd7e0d353ecdd65d",
+  "ingested_at": "2026-10-18T17:16:27.686535+00:00",
+  "url": "https://www.stlouisfed.org/-/media/project/frbstl/stlouisfed/research/fred-md/monthly/2026-09-md.csv",
+  "path": "fredmd/monthly_2026-09/2026-10-18/d6e239038afb-2026-09-md.csv"
+ },
+ "liuwu/monthly": {
+  "sha256": "d71a9503b42158be6baabff38dd9308fd7288827ebc7f6e4992802fa431c4049",
+  "ingested_at": "2026-10-18T17:16:29.910031+00:00",
+  "url": "https://docs.google.com/spreadsheets/d/1-wmStGZHLx55dSYi3gQK2vb3F8dMw_Nb/export?format=xlsx",
+  "path": "liuwu/monthly/2026-10-18/d71a9503b421-liuwu_monthly.xlsx"
+ },
+ "us_term/gsw": {
+  "sha256": "7286435090933f0df1dcaeb15629f3a9129c083baee4c42ae5df03d0bb89335c",
+  "ingested_at": "2026-10-17T09:10:08.906322+00:00",
+  "url": "https://www.federalreserve.gov/data/yield-curve-tables/feds200628.csv",
+  "path": "us_term/gsw/2026-10-17/728643509093-feds200628.csv"
+ }
+}

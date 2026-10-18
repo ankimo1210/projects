@@ -18,6 +18,8 @@ import click
 import numpy as np
 import pandas as pd
 
+from .data.store import MACROKIT_RAW, RAW_ROOT
+
 LAB = Path(__file__).resolve().parents[2]
 RESULTS = LAB / "results"
 RUNNERS = {
@@ -66,12 +68,36 @@ def _git(*args: str) -> str:
     return done.stdout.strip()
 
 
+def input_records(raw_root: Path, macrokit_root: Path) -> dict[str, dict]:
+    """The stored payload each input reads now: the newest manifest record with a path, for every
+    indicator of the bond-timing store and for macrokit's us_term/gsw."""
+    records: dict[str, dict] = {}
+    for root, wanted in ((raw_root, None), (macrokit_root, {("us_term", "gsw")})):
+        manifest = root / "manifest.jsonl"
+        if not manifest.exists():
+            continue
+        for line in manifest.read_text(encoding="utf-8").splitlines():
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue  # a blank or truncated line, as in macrokit.snapshot
+            key = (record.get("source"), record.get("indicator"))
+            if record.get("path") and (wanted is None or key in wanted):
+                records[f"{key[0]}/{key[1]}"] = {
+                    name: record.get(name) for name in ("sha256", "ingested_at", "url", "path")
+                }
+    return dict(sorted(records.items()))
+
+
 def meta() -> dict:
     return {
         "ran_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "git_commit": _git("rev-parse", "HEAD"),
         "dirty": bool(_git("status", "--porcelain", "--", ".", ":(exclude)results")),
         "prereg_commit": _git("log", "-1", "--format=%H", "--", "PREREG.md"),
+        "inputs": {
+            key: record["sha256"] for key, record in input_records(RAW_ROOT, MACROKIT_RAW).items()
+        },
     }
 
 
@@ -160,6 +186,16 @@ def run(stage: str, workers: int, rerun_reason: str | None) -> None:
             (RESULTS / "oos_b.lock").unlink(missing_ok=True)  # nothing was seen; allow a clean run
         raise
     click.echo(write_result(name, {**extra, **result}, RESULTS, run_meta))
+
+
+@main.command()
+def inputs() -> None:
+    """Write results/inputs.json: the stored payload (SHA-256, fetch time, URL) of every input."""
+    RESULTS.mkdir(parents=True, exist_ok=True)
+    path = RESULTS / "inputs.json"
+    records = input_records(RAW_ROOT, MACROKIT_RAW)
+    path.write_text(json.dumps(records, indent=1) + "\n", encoding="utf-8")
+    click.echo(path)
 
 
 @main.command()

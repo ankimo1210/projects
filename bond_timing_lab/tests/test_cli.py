@@ -1,3 +1,4 @@
+import hashlib
 import json
 import subprocess
 
@@ -5,6 +6,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from bond_timing import cli
+from bond_timing.data.store import store_bytes
 
 
 def write(results, name: str, payload: dict) -> None:
@@ -67,7 +69,22 @@ def test_meta_ignores_result_files(tmp_path, monkeypatch):
     subprocess.run([*git, "add", "code.py"], check=True)
     subprocess.run([*git, "-c", "commit.gpgsign=false", "commit", "-qm", "init"], check=True)
     monkeypatch.setattr(cli, "LAB", lab)
+    monkeypatch.setattr(cli, "RAW_ROOT", tmp_path / "raw")
+    monkeypatch.setattr(cli, "MACROKIT_RAW", tmp_path / "macrokit")
     (lab / "results" / "g0.json").write_text("{}")
     assert cli.meta()["dirty"] is False
     (lab / "code.py").write_text("x = 2\n")
     assert cli.meta()["dirty"] is True
+
+
+def test_input_records_name_the_payloads_the_study_reads(tmp_path):
+    raw, macrokit = tmp_path / "raw", tmp_path / "macrokit"
+    store_bytes(raw, "fred", "DTB3", b"old", url="u", filename="DTB3.csv")
+    store_bytes(raw, "fred", "DTB3", b"new", url="u", filename="DTB3.csv")
+    store_bytes(raw, "etf", "TLT", b"t", url="u", filename="TLT.csv")
+    store_bytes(macrokit, "us_term", "gsw", b"g", url="u", filename="gsw.csv")
+    store_bytes(macrokit, "us_term", "wuxia", b"w", url="u", filename="wuxia.xlsx")
+    records = cli.input_records(raw, macrokit)
+    assert set(records) == {"fred/DTB3", "etf/TLT", "us_term/gsw"}
+    assert records["fred/DTB3"]["sha256"] == hashlib.sha256(b"new").hexdigest()
+    assert cli.input_records(tmp_path / "none", tmp_path / "none") == {}
