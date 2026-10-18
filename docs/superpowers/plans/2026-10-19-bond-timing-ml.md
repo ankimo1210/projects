@@ -4117,6 +4117,8 @@ Expected: the printed hash is what `meta.prereg_commit` shows in every later res
 
 ### Task 15: G1 synthetic-world checks
 
+> **Amended 2026-10-19 (user decision before PREREG):** a power check showed that even an oracle cannot meet the W2 bar under the CER test, so G1 gates on W0 only and W2 is reported with detection counts and a power table (oracle and a perfect-feature regression at planted multiples 1, 2, 3 and 6; PREREG §4). The committed `g1.py` and `test_g1.py` on the branch supersede the blocks below; `report.py` (Task 19) shows the extra keys.
+
 **Files:**
 - Create: `bond_timing_lab/src/bond_timing/g1.py`
 - Test: `bond_timing_lab/tests/test_g1.py`
