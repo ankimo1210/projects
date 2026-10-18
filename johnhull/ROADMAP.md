@@ -46,7 +46,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 110 priv
 
 `done`・`accepted`・PASSは宣言した計算・再現性・integrationの範囲を示し、市場性能の承認ではない。
 教材改善（2026-10-10）：vol18–25全8巻の説明拡充を完了。各巻の導入・用語と数式・計算手順・33図の読み方・練習問題を `teaching_notes.json` に保存し、NotebookとBookへ反映した。説明を実装・reference配列と照合し、vol18–28の全11Notebook再実行検査、関連16 tests、ruff/format、release gateをPASS。Bookを全ページ再生成し、8巻の数式と33図・横はみ出しなしをブラウザ確認した。数式表示の既存MathJaxをローカル同梱し、重複読込を防止、本編2ページでも数式表示を確認。全体buildの従来診断154件（WARNING153・ERROR1）は旧設定との比較で完全一致し、追加8巻の診断は0件。計算・reference成果物、研究ロードマップと本編受入件数は変更していない。
-説明拡充の計画案（2026-10-18、未着手。実行は Sol、merge 前の独立検証は Claude）：Hull本編37章を章ごとに読むガイドをBookに足す案。既存notebook・補足教材・台帳は変えない。[計画案](docs/READING_GUIDE_PLAN_2026-10-18.md)。
+説明拡充（2026-10-18。実行は Sol、merge 前の独立検証は Claude）：Hull本編37章を章ごとに読むガイドをBookに足す。§7の1〜3は推奨どおり決定。T0は完了し、T1のパイロット（Ch13・Ch8）はbranch `codex/reading-guide` で作成済み（読後判断待ち、未統合）。Claudeの独立検証（2026-10-18）は、統合前に付録の記号の誤り1件と読みやすさの修正を求めた。T2を用語集とモデル地図（モデルの一覧・カード・関係図）に広げた（2026-10-18、ユーザー）。既存notebook・補足教材・台帳は変えない。[計画](docs/READING_GUIDE_PLAN_2026-10-18.md)。
 共有ランタイムの一括検査（2026-10-17、ユーザー承認）：MathJax同梱で `book/_config.yml`・`book/_ext/book_runtime.py`・`book/_static` が変わり、全節の受入記録が固定したハッシュと一致しなくなっていた（`make test` で9件失敗）。Book設定・拡張・静的アセット・portal CSSを全節共通の「共有ランタイム」とし、節ごとの記録では比較せず `docs/validation/shared-runtime.json` で一括検査する方式へ変更した（[証跡方針](docs/EVIDENCE_POLICY.md)）。過去の記録ファイルは書き換えていない。検査：Book全ページ再ビルド成功・警告154件（10-10と同数）、全31ページで数式2,832個がローカルのMathJax 3.2.2で描画・エラー/外部通信0、release gate PASS、台帳検査PASS。各節の画面の再撮影はしていない。受入件数（全306節）は不変。
 §33.2のstrike/date/MC規約、§36.4の会計/ESO条件不足による原典未再現値は保持する。
 fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画像・両保管庫復元を統合時に再実施したとは主張しない。
@@ -119,7 +119,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 本編に畳む（RB-F02→P1、RB-F03→P3、R11・§19.14・RB-H16→P4）、章の受入後のコラム、研究トラック（同時1本）、johnhull の外。
 研究トラック #1 は RB-F07。研究の置き場は `research/<RB-ID>/`、計算は hullkit の非公開モジュールに決定した（2026-09-27 本人承認。公開 API 昇格は別承認）。
 2026-10-09に[較正込み市場クオートGreeksのDML](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)を推奨し、[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)を作成。続く完遂指示を受け、`research/RB-F07/quote_dml/` のprivate実験から着手した。既存F07/F05 v1と従来の後続研究を保持する。
-説明拡充（2026-10-18 計画案）：[章ごとに読むガイド](docs/READING_GUIDE_PLAN_2026-10-18.md)。T0 影響の実測 → T1 パイロット（Ch13・Ch8）→ B1–B6。着手前に §7 の5項目を決める。受入件数は変えない。
+説明拡充（2026-10-18）：[章ごとに読むガイド](docs/READING_GUIDE_PLAN_2026-10-18.md)。T0 影響の実測 → T1 パイロット（Ch13・Ch8、読後判断待ち）→ T2 用語集とモデル地図 → B1–B6。T2 の前に §7 の6・7を決める。受入件数は変えない。
 
 ### 研究ロードマップの実行（2026-10-09）
 
