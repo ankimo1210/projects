@@ -73,3 +73,24 @@ def _history(
 @pytest.fixture
 def yf_history():
     return _history
+
+
+def _panel(open_, close, *, volume=None, dividends=None, splits=None, adj_close=None, sector=None):
+    """A ``baskets.Panel`` from frames that share an index and columns."""
+    from sector_leadlag.baskets import Panel
+
+    zeros = close * 0.0
+    return Panel(
+        open=open_,
+        close=close,
+        adj_close=close if adj_close is None else adj_close,
+        volume=zeros + 1000.0 if volume is None else volume,
+        dividends=zeros if dividends is None else dividends,
+        splits=zeros if splits is None else splits,
+        sector=pd.Series(1, index=close.columns) if sector is None else sector,
+    )
+
+
+@pytest.fixture
+def make_panel():
+    return _panel
