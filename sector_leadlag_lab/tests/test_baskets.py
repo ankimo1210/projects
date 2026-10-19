@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -8,6 +10,7 @@ from sector_leadlag.baskets import (
     h2_picks,
     liquidity_weights,
     open_to_close,
+    opening_gap,
     price_close_to_close,
     quoted,
     top_equal_weights,
@@ -46,6 +49,16 @@ def test_overnight_and_daily_returns_add_the_dividend_going_ex(make_panel):
     assert close_to_close(panel)["a"].iloc[1] == pytest.approx(0.01)
     assert price_close_to_close(panel)["a"].iloc[1] == pytest.approx(-0.02)
     assert np.isnan(close_to_open(panel)["a"].iloc[0])
+
+
+def test_a_jump_hides_the_returns_from_the_previous_close_only(make_panel):
+    panel = make_panel(frame([100, 49, 50, 51]), frame([100, 50, 51, 52]))
+    jumped = replace(panel, breaks=frame([0, 1, 0, 0]) > 0)
+    for returns in (close_to_open, close_to_close, price_close_to_close, opening_gap):
+        assert returns(jumped)["a"].isna().tolist() == [True, True, False, False]
+        assert returns(panel)["a"].isna().tolist() == [True, False, False, False]
+    pd.testing.assert_frame_equal(open_to_close(jumped), open_to_close(panel))
+    assert jumped.window(DAYS[1], DAYS[2]).breaks["a"].tolist() == [True, False]
 
 
 def test_a_day_without_trades_has_no_return(make_panel):
