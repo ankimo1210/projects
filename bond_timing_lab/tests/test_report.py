@@ -36,3 +36,26 @@ def test_render_shows_the_g1_counts_and_power_table(tmp_path):
     text = render(tmp_path)
     assert "| P1 | 0 | 3 | 9 |" in text
     assert "| 1 | 12 / 2（6.10%） | 0 / 0（2.10%） |" in text
+
+
+def test_render_shows_the_monthly_decomposition_and_its_reading(tmp_path):
+    table = {"ols_p": {"avg": -0.3}, "nn_fm": {"avg": 0.25}}
+    payload = {name: table for name in ("V0m_liuwu", "V0m_gsw", "V1m_liuwu", "V1m_gsw")}
+    payload["reading"] = {
+        "v0m": 0.25,
+        "v1m": 0.05,
+        "v0_annual": -0.14,
+        "reproduces": True,
+        "leak_gap": 0.2,
+        "leak_large": True,
+        "dilution": 0.39,
+        "dilution_large": True,
+        "reading": "leak_explains_paper",
+    }
+    payload["meta"] = {"git_commit": "x"}
+    (tmp_path / "decompose_monthly.json").write_text(json.dumps(payload))
+    text = render(tmp_path)
+    assert "## 毎月推定し直した分解" in text
+    assert "| V1m_gsw | -30.00% | 25.00% |" in text
+    assert "20.00ポイント" in text and "39.00ポイント" in text
+    assert "`leak_explains_paper`" in text

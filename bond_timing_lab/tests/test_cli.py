@@ -32,6 +32,20 @@ def test_oos_a_requires_prereg_and_a_passed_g1(tmp_path):
     assert set(cli.check_ready("oos-a", tmp_path, prereg_commit="abc")) == {"dev", "g1"}
 
 
+def test_monthly_decomposition_waits_for_the_verdict(tmp_path):
+    write(tmp_path, "decompose", {"V0_liuwu": {}})
+    with pytest.raises(cli.StageError, match=r"oos_b\.json"):
+        cli.check_ready("decompose-monthly", tmp_path, prereg_commit="abc")
+    write(tmp_path, "oos_b", {"verdict": "no_usable_signal"})
+    with pytest.raises(cli.StageError, match="PREREG"):
+        cli.check_ready("decompose-monthly", tmp_path, prereg_commit="")
+    assert set(cli.check_ready("decompose-monthly", tmp_path, prereg_commit="abc")) == {
+        "decompose",
+        "oos_b",
+    }
+    assert cli.RUNNERS["decompose-monthly"][1] == "run_monthly_decomposition"
+
+
 def test_oos_b_runs_once_without_a_reason(tmp_path):
     assert cli.oos_b_target(tmp_path, None) == ("oos_b", {})
     cli.take_lock(tmp_path, "abc123")

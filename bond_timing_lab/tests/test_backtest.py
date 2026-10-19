@@ -153,3 +153,22 @@ def test_fit_task_refuses_a_target_that_ends_after_the_refit():
     )
     with pytest.raises(LookaheadError):
         fit_task(task, ladder()["ols_p"])
+
+
+def test_monthly_refits_give_each_decision_its_own_fit():
+    yields, targets = panel()
+    window = (month("1985-01"), month("1986-12"))
+    common = {"refit_years": range(1985, 1987), "window": window, "horizon": 12}
+    monthly = build_tasks(yields, targets, None, rules=REAL_TIME, refit_every=1, **common)
+    assert [t.refit for t in monthly] == list(pd.period_range(*window, freq="M"))
+    assert all(list(t.decisions) == [t.refit] for t in monthly)
+    assert all(t.starts.max() == t.refit - 12 for t in monthly)
+    leaky = build_tasks(
+        yields, targets, None, rules=V0, refit_every=1, full_end=month("1990-12"), **common
+    )
+    assert all(t.starts.max() == t.refit - 1 for t in leaky)
+    quarterly = build_tasks(yields, targets, None, rules=REAL_TIME, refit_every=3, **common)
+    assert [t.refit.month for t in quarterly] == [1, 4, 7, 10] * 2
+    assert all(len(t.decisions) == 3 for t in quarterly)
+    with pytest.raises(ValueError, match="divide 12"):
+        build_tasks(yields, targets, None, rules=REAL_TIME, refit_every=5, **common)

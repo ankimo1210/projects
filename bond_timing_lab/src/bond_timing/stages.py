@@ -71,6 +71,7 @@ def forecast(
     fixed: Mapping | None = None,
     yields: pd.DataFrame | None = None,
     full_end: pd.Period | None = None,
+    refit_every: int = 12,
 ) -> Forecasts:
     specs = ladder(nn_seeds)
     tasks = build_tasks(
@@ -82,6 +83,7 @@ def forecast(
         horizon=horizon,
         rules=rules,
         full_end=full_end,
+        refit_every=refit_every,
     )
     return run_forecasts(tasks, [specs[name] for name in models], workers=workers, fixed=fixed)
 

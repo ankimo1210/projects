@@ -118,20 +118,41 @@ def _oos_a(oos_a: dict) -> list[str]:
     return lines
 
 
-def _decompose(decompose: dict) -> list[str]:
-    settings = [name for name in decompose if name != "meta"]
-    models = list(decompose[settings[0]])
+def _r2_rows(title: str, tables: dict) -> list[str]:
+    settings = [name for name in tables if name not in ("meta", "reading")]
+    models = list(tables[settings[0]])
     lines = [
-        "## 見かけの予測力の分解（満期平均の R²oos）",
+        title,
         "",
         "| 設定 | " + " | ".join(models) + " |",
         "|---" * (len(models) + 1) + "|",
     ]
     for name in settings:
         lines.append(
-            f"| {name} | " + " | ".join(_pct(decompose[name][m]["avg"]) for m in models) + " |"
+            f"| {name} | " + " | ".join(_pct(tables[name][m]["avg"]) for m in models) + " |"
         )
     return [*lines, ""]
+
+
+def _decompose(decompose: dict) -> list[str]:
+    return _r2_rows("## 見かけの予測力の分解（満期平均の R²oos）", decompose)
+
+
+def _points(x: float) -> str:
+    return f"{100 * x:.2f}ポイント"
+
+
+def _decompose_monthly(monthly: dict) -> list[str]:
+    r = monthly["reading"]
+    return [
+        *_r2_rows("## 毎月推定し直した分解（満期平均の R²oos、PREREG §5）", monthly),
+        f"読み方（Liu–Wu の nn_fm）：V0m_liuwu は {_pct(r['v0m'])}（再現の基準は 20%）。"
+        f"V0m_liuwu − V1m_liuwu は {_points(r['leak_gap'])}（基準は10ポイント）。"
+        f"年1回の V0_liuwu（{_pct(r['v0_annual'])}）との差は {_points(r['dilution'])}。",
+        "",
+        f"判定：`{r['reading']}`",
+        "",
+    ]
 
 
 def _g3(g3: dict) -> list[str]:
@@ -166,6 +187,7 @@ def render(results: Path) -> str:
         ("decompose", _decompose),
         ("g3", _g3),
         ("oos_b", _oos_b),
+        ("decompose_monthly", _decompose_monthly),
     ):
         data = _load(results, name)
         if data:
