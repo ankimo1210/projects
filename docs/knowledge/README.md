@@ -16,3 +16,4 @@
 - [写真アーカイブ](photo-archive/README.md) — Windows の写真保存を F: へ集約する仕組み・テスト・[進捗](photo-archive/STATUS.md)
 - [ディスク容量の整理（2026-10-11）](2026-10-11-disk-cleanup.md) — 整理候補・退避と削除の結果・保護した作業・WSL圧縮が残る理由
 - [Claude 利用上限の API 料金相当額（2026-10-17）](2026-10-17-claude-usage-api-equivalent.md) — Max 5x の5時間枠・週枠の実測換算、使用率ログと[集計スクリプト](claude-usage/)、推定の条件と再測定
+- [yfinance の日本株・業種 ETF のデータの誤り（2026-10-19）](2026-10-19-yfinance-japan-data-errors.md) — NEXT FUNDS の配当の日付のずれ・1629.T の分割と価格の誤り・8303 の配当・行の欠けと、その見つけ方
