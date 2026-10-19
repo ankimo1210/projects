@@ -70,19 +70,28 @@ def build_tasks(
     rules: Rules,
     train_start: pd.Period = TRAIN_START,
     full_end: pd.Period | None = None,
+    refit_every: int = 12,
 ) -> list[RefitTask]:
+    """One task per refit: every `refit_every` months from January (12 = each January, 1 = every
+    month), forecasting the decisions until the next refit."""
     if not rules.in_window and full_end is None:
         raise ValueError("full-sample transforms (R4 off) need full_end")
+    if refit_every < 1 or 12 % refit_every:
+        raise ValueError(f"refit_every must divide 12, got {refit_every}")
     usable = targets.dropna().index.intersection(yields.dropna().index)
     usable = usable[usable >= train_start].sort_values()
     full_rows = None
     if not rules.in_window:
         full_rows = yields.dropna().index
         full_rows = full_rows[(full_rows >= train_start) & (full_rows <= full_end)]
+    refits = [
+        pd.Period(f"{year}-{first:02d}", "M")
+        for year in refit_years
+        for first in range(1, 13, refit_every)
+    ]
     tasks = []
-    for year in refit_years:
-        t = pd.Period(f"{year}-01", "M")
-        decisions = pd.period_range(t, t + 11, freq="M")
+    for t in refits:
+        decisions = pd.period_range(t, t + refit_every - 1, freq="M")
         decisions = decisions[(decisions >= window[0]) & (decisions <= window[1])]
         decisions = decisions[yields.reindex(decisions).notna().all(axis=1).to_numpy()]
         if len(decisions) == 0:

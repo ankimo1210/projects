@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
+import pytest
 from bond_timing.backtest import Forecasts
-from bond_timing.decomposition import SETTINGS, r2_table
+from bond_timing.decomposition import MONTHLY_SETTINGS, SETTINGS, monthly_reading, r2_table
 
 
 def test_r2_table_scores_each_maturity_and_the_average():
@@ -24,3 +25,31 @@ def test_settings_add_one_rule_at_a_time():
     assert rules["V2"].embargo and rules["V2"].in_window and not rules["V2"].real_time_macro
     assert all(vars(rules["V3"]).values())
     assert SETTINGS["V3"][1] == "realtime" and SETTINGS["V2"][1] == "final"
+
+
+def test_monthly_settings_mirror_the_annual_ones():
+    assert MONTHLY_SETTINGS["V0m_liuwu"] == SETTINGS["V0_liuwu"]
+    assert MONTHLY_SETTINGS["V0m_gsw"] == SETTINGS["V0_gsw"]
+    assert MONTHLY_SETTINGS["V1m_gsw"] == SETTINGS["V1"]
+    assert MONTHLY_SETTINGS["V1m_liuwu"] == ("liuwu", *SETTINGS["V1"][1:])
+
+
+def nn(avg: float) -> dict:
+    return {"nn_fm": {"avg": avg}}
+
+
+@pytest.mark.parametrize(
+    ("v0m", "v1m", "reading"),
+    [
+        (0.25, 0.05, "leak_explains_paper"),
+        (0.25, 0.20, "reproduced_without_leak"),
+        (-0.10, -0.30, "leak_partial"),
+        (0.05, 0.00, "leak_not_explaining"),
+    ],
+)
+def test_monthly_reading_follows_prereg_section_5(v0m, v1m, reading):
+    out = monthly_reading({"V0m_liuwu": nn(v0m), "V1m_liuwu": nn(v1m)}, {"V0_liuwu": nn(-0.14)})
+    assert out["reading"] == reading
+    assert out["leak_gap"] == pytest.approx(v0m - v1m)
+    assert out["dilution"] == pytest.approx(v0m + 0.14)
+    assert out["dilution_large"] == (v0m + 0.14 >= 0.10)

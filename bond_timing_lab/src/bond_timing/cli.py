@@ -30,6 +30,7 @@ RUNNERS = {
     "decompose": ("bond_timing.decomposition", "run_decomposition"),
     "g3": ("bond_timing.g3", "run_g3"),
     "oos-b": ("bond_timing.oos_b", "run_oos_b"),
+    "decompose-monthly": ("bond_timing.decomposition", "run_monthly_decomposition"),
 }
 REQUIRES = {
     "g0": (),
@@ -39,8 +40,9 @@ REQUIRES = {
     "decompose": ("oos_a",),
     "g3": ("oos_a",),
     "oos-b": ("dev", "oos_a", "g3"),
+    "decompose-monthly": ("decompose", "oos_b"),  # PREREG §5: after the verdict of record
 }
-NEEDS_PREREG = ("g1", "oos-a", "decompose", "g3", "oos-b")
+NEEDS_PREREG = ("g1", "oos-a", "decompose", "g3", "oos-b", "decompose-monthly")
 
 
 class StageError(click.ClickException):
