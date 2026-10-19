@@ -31,6 +31,7 @@ class Panel:
     dividends: pd.DataFrame
     splits: pd.DataFrame
     sector: pd.Series  # column -> sector code 1-17
+    breaks: pd.DataFrame | None = None  # corrected data: days after a jump in the close (C1)
 
     def window(self, start: pd.Timestamp, end: pd.Timestamp) -> Panel:
         rows = slice(start, end)
@@ -42,11 +43,18 @@ class Panel:
             self.dividends.loc[rows],
             self.splits.loc[rows],
             self.sector,
+            None if self.breaks is None else self.breaks.loc[rows],
         )
 
 
 def traded(panel: Panel) -> pd.DataFrame:
     return panel.volume.fillna(0.0) > 0
+
+
+def _from_previous_close(panel: Panel, returns: pd.DataFrame) -> pd.DataFrame:
+    """A return from the previous close: kept on days with trades and no jump (C1) before them."""
+    valid = traded(panel) if panel.breaks is None else traded(panel) & ~panel.breaks
+    return returns.where(valid)
 
 
 def open_to_close(panel: Panel) -> pd.DataFrame:
@@ -56,17 +64,22 @@ def open_to_close(panel: Panel) -> pd.DataFrame:
 def close_to_open(panel: Panel) -> pd.DataFrame:
     """Overnight: today's open plus a dividend going ex today, over the previous close."""
     previous = panel.close.shift(1)
-    return ((panel.open + panel.dividends.fillna(0.0)) / previous - 1.0).where(traded(panel))
+    return _from_previous_close(panel, (panel.open + panel.dividends.fillna(0.0)) / previous - 1.0)
 
 
 def close_to_close(panel: Panel) -> pd.DataFrame:
     previous = panel.close.shift(1)
-    return ((panel.close + panel.dividends.fillna(0.0)) / previous - 1.0).where(traded(panel))
+    return _from_previous_close(panel, (panel.close + panel.dividends.fillna(0.0)) / previous - 1.0)
 
 
 def price_close_to_close(panel: Panel) -> pd.DataFrame:
     """Close over the previous close, without the dividend: how a price index moves (design §9)."""
-    return (panel.close / panel.close.shift(1) - 1.0).where(traded(panel))
+    return _from_previous_close(panel, panel.close / panel.close.shift(1) - 1.0)
+
+
+def opening_gap(panel: Panel) -> pd.DataFrame:
+    """The open over the previous close, without the dividend (the corrected data's C4 and C6)."""
+    return _from_previous_close(panel, panel.open / panel.close.shift(1) - 1.0)
 
 
 def quoted(panel: Panel) -> tuple[pd.DataFrame, pd.DataFrame]:
