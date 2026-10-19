@@ -43,6 +43,7 @@ members = [
     "timesfm_lab",
     "rates_volatility_model",
     "bond_timing_lab",
+    "sector_leadlag_lab",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -130,6 +131,7 @@ known-third-party = ["jp_llm_lab"]
 # (S0, K, T, r, sigma, ...). Allow PEP-8 naming exceptions there.
 "rates_volatility_model/**/*.py" = ["N803", "N806", "N816", "E741"]
 "bond_timing_lab/**/*.py" = ["N803", "N806", "N816", "E741"]
+"sector_leadlag_lab/**/*.py" = ["N803", "N806", "N816", "E741"]
 "johnhull/**/*.py" = ["N803", "N806", "N816", "E741"]
 "quantkit/**/*.py" = ["N803", "N806", "N812", "N816", "E741"]
 "optimal_execution/**/*.py" = ["N803", "N806", "N816", "E741"]
@@ -211,6 +213,7 @@ testpaths = [
     "timesfm_lab/tests",
     "rates_volatility_model/tests",
     "bond_timing_lab/tests",
+    "sector_leadlag_lab/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
