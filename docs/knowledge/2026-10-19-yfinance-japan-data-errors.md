@@ -29,5 +29,5 @@ sector_leadlag_lab（候補12）の G0 のデータの検査と最終レビュ�
 
 ## 扱い
 
-- sector_leadlag_lab では、事前登録（設計書 §6・§11）に従ってどれも直さずに判定し、影響する日を README に書いた（`/home/kazumasa/projects/sector_leadlag_lab/README.md` の「限界」）。
+- sector_leadlag_lab では、事前登録（設計書 §6・§14）に従ってどれも直さずに判定し、影響する日を README に書いた（`/home/kazumasa/projects/sector_leadlag_lab/README.md` の「限界」）。
 - 生データは `/home/kazumasa/projects/_data/sector_leadlag_lab/raw/`（manifest に SHA-256）。yfinance の値はあとから変わることがあるので、同じ値かどうかは manifest で確かめる。
