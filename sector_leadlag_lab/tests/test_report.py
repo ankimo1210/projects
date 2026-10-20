@@ -96,3 +96,13 @@ def test_the_decomposition_shows_the_record_before_the_corrected_value(tmp_path,
     cli.write_result("diagnostics", d, tmp_path, {})
     text = render_corrected(results, tmp_path)
     assert f"| ETF | C2O | {100 * kept:.2f}%／12.34% |" in text
+
+
+def test_the_records_summary_renders_as_committed():
+    committed = (cli.RESULTS / "summary.md").read_text(encoding="utf-8")
+    assert render(cli.RESULTS) == committed
+
+
+def test_the_corrected_summary_renders_as_committed():
+    committed = (cli.CORRECTED / "summary.md").read_text(encoding="utf-8")
+    assert render_corrected(cli.RESULTS, cli.CORRECTED) == committed
