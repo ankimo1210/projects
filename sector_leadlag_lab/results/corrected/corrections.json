@@ -1,0 +1,3422 @@
+{
+ "meta": {
+  "ran_at": "2026-10-20T02:36:44+00:00",
+  "git_commit": "6ff48115cd025010c1ab555c04b7a47480ea4cb4",
+  "dirty": false,
+  "prereg_commit": "ef6cfcab1792ada239eb0f57d845ed2c6bb03687",
+  "prereg_committed_at": "2026-10-19T15:01:51+09:00",
+  "main_a_commit": "",
+  "inputs_digest": "25d13c1187bb5226556df83fc6b071569513467e5e452b648240eaf07934b49f",
+  "inputs_count": 520,
+  "data": "corrected"
+ },
+ "counts": {
+  "C2": {
+   "etf": 53
+  },
+  "C1": {
+   "etf": 3,
+   "stock": 6
+  },
+  "C4": {
+   "stock": 47
+  },
+  "C5": {
+   "etf": 1,
+   "stock": 12
+  },
+  "C6": {
+   "etf": 238
+  },
+  "C3": {
+   "etf": 16
+  }
+ },
+ "missing_known": [],
+ "changes": [
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2009-07-07",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2009-08-05",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2009-08-13",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2009-09-09",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2009-09-10",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2009-09-17",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2009-09-07",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2009-07-17",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2009-09-07",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2009-09-09",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2009-07-07",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2009-07-08",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2009-07-23",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2009-07-29",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2009-09-07",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2009-10-08",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2009-07-03",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2009-07-13",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2009-07-30",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2009-08-04",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2009-08-06",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2009-09-10",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2009-09-11",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2009-09-18",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2009-09-29",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2009-10-13",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2009-07-03",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2009-07-16",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2009-07-28",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2009-08-17",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2009-09-07",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2009-09-10",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2009-09-14",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2009-10-14",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2009-07-02",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2009-07-17",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2009-08-12",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2009-09-11",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2009-09-30",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2009-10-13",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2009-10-14",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2009-07-09",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2009-07-13",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2009-08-18",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2009-09-07",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2009-09-07",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2009-09-17",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2009-10-14",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2009-07-10",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2009-07-28",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2009-08-11",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2009-08-28",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C2",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2009-09-02",
+   "field": "open",
+   "before": 0.0,
+   "after": null
+  },
+  {
+   "rule": "C1",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2015-01-05",
+   "field": "returns",
+   "before": 0.001975177278924815,
+   "after": null
+  },
+  {
+   "rule": "C1",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2026-03-30",
+   "field": "returns",
+   "before": 0.001966735966053051,
+   "after": null
+  },
+  {
+   "rule": "C1",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2026-04-01",
+   "field": "returns",
+   "before": 525.100078909843,
+   "after": null
+  },
+  {
+   "rule": "C1",
+   "kind": "stock",
+   "series": "8227.T",
+   "date": "2026-02-18",
+   "field": "returns",
+   "before": 0.33635264963768113,
+   "after": null
+  },
+  {
+   "rule": "C1",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2023-09-27",
+   "field": "returns",
+   "before": 19771264.63902788,
+   "after": null
+  },
+  {
+   "rule": "C1",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2025-12-18",
+   "field": "returns",
+   "before": 3.253796186023972e-08,
+   "after": null
+  },
+  {
+   "rule": "C1",
+   "kind": "stock",
+   "series": "9201.T",
+   "date": "2010-01-13",
+   "field": "returns",
+   "before": 0.1891891891891892,
+   "after": null
+  },
+  {
+   "rule": "C1",
+   "kind": "stock",
+   "series": "9201.T",
+   "date": "2010-01-20",
+   "field": "returns",
+   "before": 0.4,
+   "after": null
+  },
+  {
+   "rule": "C1",
+   "kind": "stock",
+   "series": "9201.T",
+   "date": "2012-09-19",
+   "field": "returns",
+   "before": 1915.0,
+   "after": null
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "1925.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 86.0,
+   "after": 43.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "2002.T",
+   "date": "2013-09-26",
+   "field": "dividends",
+   "before": 9.090909,
+   "after": 8.264462727272727
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "2127.T",
+   "date": "2014-03-27",
+   "field": "dividends",
+   "before": 2.5,
+   "after": 0.8333333333333334
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "2206.T",
+   "date": "2014-09-26",
+   "field": "dividends",
+   "before": 10.0,
+   "after": 20.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "2282.T",
+   "date": "2018-03-28",
+   "field": "dividends",
+   "before": 17.666668,
+   "after": 35.333336
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "2433.T",
+   "date": "2013-09-26",
+   "field": "dividends",
+   "before": 45.0,
+   "after": 4.5
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "3038.T",
+   "date": "2018-10-29",
+   "field": "dividends",
+   "before": 16.25,
+   "after": 8.125
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "3626.T",
+   "date": "2020-03-30",
+   "field": "dividends",
+   "before": 20.0,
+   "after": 6.666666666666667
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "3769.T",
+   "date": "2018-09-26",
+   "field": "dividends",
+   "before": 58.0,
+   "after": 29.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "417A.T",
+   "date": "2026-03-30",
+   "field": "dividends",
+   "before": 97.5,
+   "after": 19.5
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "4307.T",
+   "date": "2015-09-28",
+   "field": "dividends",
+   "before": 12.121212,
+   "after": 11.019283636363635
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "4403.T",
+   "date": "2017-09-27",
+   "field": "dividends",
+   "before": 3.333333,
+   "after": 6.666666
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "5232.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 60.0,
+   "after": 20.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "5334.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 105.0,
+   "after": 52.5
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "5393.T",
+   "date": "2018-09-26",
+   "field": "dividends",
+   "before": 5.333333,
+   "after": 10.666666
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "5401.T",
+   "date": "2025-09-29",
+   "field": "dividends",
+   "before": 60.0,
+   "after": 12.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "5471.T",
+   "date": "2017-09-27",
+   "field": "dividends",
+   "before": 1.2,
+   "after": 11.999999999999998
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "5706.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 140.0,
+   "after": 14.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "6146.T",
+   "date": "2023-03-30",
+   "field": "dividends",
+   "before": 211.33333,
+   "after": 70.44444333333333
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "6368.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 110.0,
+   "after": 22.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "6501.T",
+   "date": "2018-09-26",
+   "field": "dividends",
+   "before": 1.6,
+   "after": 8.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "6586.T",
+   "date": "2017-03-29",
+   "field": "dividends",
+   "before": 41.0,
+   "after": 20.5
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "6592.T",
+   "date": "2014-12-26",
+   "field": "dividends",
+   "before": 16.375,
+   "after": 8.1875
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "6674.T",
+   "date": "2018-09-26",
+   "field": "dividends",
+   "before": 15.0,
+   "after": 75.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "6702.T",
+   "date": "2018-09-26",
+   "field": "dividends",
+   "before": 0.7,
+   "after": 6.999999999999999
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "6724.T",
+   "date": "2015-03-27",
+   "field": "dividends",
+   "before": 40.0,
+   "after": 20.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "6869.T",
+   "date": "2014-03-27",
+   "field": "dividends",
+   "before": 5.5,
+   "after": 2.75
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "6920.T",
+   "date": "2013-06-26",
+   "field": "dividends",
+   "before": 10.75,
+   "after": 5.375
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "7013.T",
+   "date": "2017-09-27",
+   "field": "dividends",
+   "before": 0.428571,
+   "after": 4.28571
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "7282.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 85.0,
+   "after": 17.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "7532.T",
+   "date": "2015-06-26",
+   "field": "dividends",
+   "before": 0.75,
+   "after": 0.375
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "7988.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 56.0,
+   "after": 28.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "8035.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 384.0,
+   "after": 76.8
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "8111.T",
+   "date": "2018-03-28",
+   "field": "dividends",
+   "before": 14.166667,
+   "after": 7.0833335
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "8136.T",
+   "date": "2024-03-28",
+   "field": "dividends",
+   "before": 2.9,
+   "after": 0.9666666666666667
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "8282.T",
+   "date": "2018-03-28",
+   "field": "dividends",
+   "before": 33.0,
+   "after": 16.5
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "8316.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 90.0,
+   "after": 45.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "8354.T",
+   "date": "2018-09-26",
+   "field": "dividends",
+   "before": 8.5,
+   "after": 42.5
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "8377.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 75.0,
+   "after": 7.5
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "8766.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 122.5,
+   "after": 8.166666666666666
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "9001.T",
+   "date": "2017-09-27",
+   "field": "dividends",
+   "before": 3.5,
+   "after": 17.5
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "9021.T",
+   "date": "2024-03-28",
+   "field": "dividends",
+   "before": 42.25,
+   "after": 21.125
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "9065.T",
+   "date": "2026-09-29",
+   "field": "dividends",
+   "before": 129.0,
+   "after": 25.8
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "9404.T",
+   "date": "2012-09-26",
+   "field": "dividends",
+   "before": 90.0,
+   "after": 9.0
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "9616.T",
+   "date": "2024-03-28",
+   "field": "dividends",
+   "before": 16.5,
+   "after": 8.25
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "9697.T",
+   "date": "2024-03-28",
+   "field": "dividends",
+   "before": 21.5,
+   "after": 10.75
+  },
+  {
+   "rule": "C4",
+   "kind": "stock",
+   "series": "9861.T",
+   "date": "2013-08-28",
+   "field": "dividends",
+   "before": 1000.0,
+   "after": 10.0
+  },
+  {
+   "rule": "C5",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2015-07-15",
+   "field": "dividends",
+   "before": 1385.0,
+   "after": 2.7356205313108686
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2011-03-29",
+   "field": "dividends",
+   "before": 200000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2012-03-28",
+   "field": "dividends",
+   "before": 200000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2013-03-27",
+   "field": "dividends",
+   "before": 200000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2014-03-27",
+   "field": "dividends",
+   "before": 200000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2015-03-27",
+   "field": "dividends",
+   "before": 200000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2016-03-29",
+   "field": "dividends",
+   "before": 200000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2017-03-29",
+   "field": "dividends",
+   "before": 200000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2018-03-28",
+   "field": "dividends",
+   "before": 200000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2020-03-30",
+   "field": "dividends",
+   "before": 200000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2021-03-30",
+   "field": "dividends",
+   "before": 240000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2022-03-30",
+   "field": "dividends",
+   "before": 240000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C5",
+   "kind": "stock",
+   "series": "8303.T",
+   "date": "2023-03-30",
+   "field": "dividends",
+   "before": 240000000.0,
+   "after": 0.0
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1629.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2013-07-12",
+   "field": "dividend_date",
+   "before": "2013-07-12",
+   "after": "2013-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2014-07-15",
+   "field": "dividend_date",
+   "before": "2014-07-15",
+   "after": "2014-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2015-07-15",
+   "field": "dividend_date",
+   "before": "2015-07-15",
+   "after": "2015-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2016-07-15",
+   "field": "dividend_date",
+   "before": "2016-07-15",
+   "after": "2016-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2017-07-14",
+   "field": "dividend_date",
+   "before": "2017-07-14",
+   "after": "2017-07-12"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2018-07-13",
+   "field": "dividend_date",
+   "before": "2018-07-13",
+   "after": "2018-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2019-07-12",
+   "field": "dividend_date",
+   "before": "2019-07-12",
+   "after": "2019-07-10"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2020-07-15",
+   "field": "dividend_date",
+   "before": "2020-07-15",
+   "after": "2020-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2021-07-15",
+   "field": "dividend_date",
+   "before": "2021-07-15",
+   "after": "2021-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2022-07-15",
+   "field": "dividend_date",
+   "before": "2022-07-15",
+   "after": "2022-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2023-07-14",
+   "field": "dividend_date",
+   "before": "2023-07-14",
+   "after": "2023-07-13"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2024-07-12",
+   "field": "dividend_date",
+   "before": "2024-07-12",
+   "after": "2024-07-11"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2025-07-15",
+   "field": "dividend_date",
+   "before": "2025-07-15",
+   "after": "2025-07-14"
+  },
+  {
+   "rule": "C6",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2026-07-15",
+   "field": "dividend_date",
+   "before": "2026-07-15",
+   "after": "2026-07-14"
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1617.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1618.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1619.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1620.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1621.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1622.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1623.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1624.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1625.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1626.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1627.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1628.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1630.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1631.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1632.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  },
+  {
+   "rule": "C3",
+   "kind": "etf",
+   "series": "1633.T",
+   "date": "2025-10-24",
+   "field": "row",
+   "before": null,
+   "after": null
+  }
+ ]
+}
