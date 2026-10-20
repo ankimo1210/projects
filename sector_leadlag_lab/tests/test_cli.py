@@ -10,6 +10,7 @@ from click.testing import CliRunner
 from sector_leadlag import cli
 from sector_leadlag import g0 as g0_module
 from sector_leadlag import main as main_module
+from sector_leadlag import report as report_module
 from sector_leadlag import study as study_module
 from sector_leadlag.corrections import KNOWN
 from sector_leadlag.data.store import store_bytes
@@ -209,6 +210,22 @@ def test_a_corrected_run_writes_only_under_results_corrected(tmp_path, monkeypat
     assert written["pass"] and written["meta"]["data"] == "corrected"
     assert len(written["meta"]["corrections_sha256"]) == 64
     assert sorted(path.name for path in record.iterdir()) == before
+
+
+def test_the_corrected_report_writes_only_under_results_corrected(tmp_path, monkeypatch):
+    record = tmp_path / "results"
+    corrected = record / "corrected"
+    corrected.mkdir(parents=True)
+    (record / "summary.md").write_text("the record\n", encoding="utf-8")
+    monkeypatch.setattr(cli, "RESULTS", record)
+    monkeypatch.setattr(cli, "CORRECTED", corrected)
+    monkeypatch.setattr(
+        report_module, "render_corrected", lambda rec, cor: f"{rec.name} beside {cor.name}\n"
+    )
+    out = CliRunner().invoke(cli.main, ["report", "--data", "corrected"])
+    assert out.exit_code == 0, out.output
+    assert (record / "summary.md").read_text(encoding="utf-8") == "the record\n"
+    assert (corrected / "summary.md").read_text(encoding="utf-8") == "results beside corrected\n"
 
 
 def test_corrected_meta_reads_section_5_from_the_committed_prereg(tmp_path, monkeypatch):

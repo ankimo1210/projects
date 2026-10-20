@@ -354,7 +354,7 @@ $SLL run main-a --data corrected    # 約12秒
 $SLL run main-b --data corrected    # 約6秒。1回だけ（results/corrected/main_b.lock）
 $SLL run diagnostics --data corrected   # 約9秒
 $SLL report --data corrected        # results/corrected/summary.md
-$PY -m pytest -c sector_leadlag_lab/pyproject.toml sector_leadlag_lab/tests -q   # 123 passed, 1 skipped
+$PY -m pytest -c sector_leadlag_lab/pyproject.toml sector_leadlag_lab/tests -q   # 126 passed, 1 skipped
 ```
 
 - 直したデータのどの段も、生データが記録の本番 B と同じ snapshot であること、PREREG §5 が記録の本番 B のあとに commit されていること、`results/corrected/corrections.json` が既知の誤りの確認に通り、いまの規則の一覧と同じことを求める。
