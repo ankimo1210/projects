@@ -123,7 +123,9 @@ def test_a_split_day_dividend_left_in_pre_split_units_is_divided(make_panel):
 
 @pytest.mark.parametrize(
     ("dividend", "opening"),
-    [(20, 980), (40, 960)],  # the history says D is right; the drop says D is right
+    # D = 20 is the previous dividend, though the 1% fall fits D/(kP): only the drop says divide.
+    # D = 40 is twice the previous dividend, though the 4% fall fits D/P: only the history does.
+    [(20, 990), (40, 960)],
 )
 def test_a_split_day_dividend_stays_unless_history_and_drop_both_say_divide(
     make_panel, dividend, opening
@@ -171,6 +173,16 @@ def test_a_dividend_still_above_the_close_after_the_jump_becomes_zero(make_panel
     panel, _ = with_breaks(make_panel(close, close, dividends=frame([0, 0, 0, 900])))
     fixed, _ = oversized_dividends(panel)
     assert fixed.dividends["a"].iloc[3] == 0.0  # 900 × 60/200 = 270 is still above 60
+
+
+def test_a_dividend_above_the_close_follows_the_latest_jump_before_it(make_panel):
+    # a: a down jump on day 2 and an up jump on day 6, after the dividend on day 4
+    # b: two down jumps, on days 2 and 3; the later one (÷100) applies
+    close = frame([30000, 60, 60, 60, 60, 20000], [30000, 600, 6, 6, 6, 6])
+    dividends = frame([0, 0, 0, 1500, 0, 0], [0, 0, 0, 500, 0, 0])
+    panel, _ = with_breaks(make_panel(close, close, dividends=dividends))
+    fixed, _ = oversized_dividends(panel)
+    assert fixed.dividends.iloc[3].tolist() == [3.0, 5.0]  # 1500 × 60/30000; 500 × 6/600
 
 
 def _etfs(make_panel, opens):
