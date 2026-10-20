@@ -9,7 +9,7 @@
 今回すべてを実行検証したという意味ではありません。
 個人データを扱うものも、ここではツールの目的と公開文書だけを案内します。
 
-### 市場・投資・意思決定（11件）
+### 市場・投資・意思決定（12件）
 
 | プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
 |---|---|---|---|---|---|
@@ -22,6 +22,7 @@
 | labor_ai_quadrant | 人手不足と AI 代替可能性の業種分析 | [README](labor_ai_quadrant/README.md) | 分析レポート | 市場分析基盤（接続候補） | Python / Plotly |
 | timesfm_lab | 時系列基盤モデルと古典手法の比較 | [README](timesfm_lab/README.md) | 研究ベンチ | quantkit（関連テーマ） | Python / PyTorch |
 | bond_timing_lab | 米国債を持つか現金にするかのシグナルを時点の規則つきで検証（Bianchi ら 2021 の追試） | [README](bond_timing_lab/README.md) | 研究成果（判定 no_usable_signal） | macrokit（GSW・FRED-MD）/ quantkit（関連テーマ） | Python / scikit-learn |
+| sector_leadlag_lab | 前夜の米国の業種リターンで日本の業種の寄付→引けを当てるシグナルを反証し、売買に使えるかを検証（中川ら・廣橋ら 2026 の追試） | [README](sector_leadlag_lab/README.md) | 研究成果（判定 usable、直したデータでは verdict_data_dependent。2026-10-20 に閉じた） | bond_timing_lab（同じ研究候補の一覧）/ [yfinance の誤り](docs/knowledge/2026-10-19-yfinance-japan-data-errors.md) | Python / pandas |
 | small_ma_search | 小型 M&A の調査・実行計画 | [README](small_ma_search/README.md) | 意思決定資料 | aisan_lbo_case | Markdown / HTML |
 | housing-buy-vs-rent | 住宅購入・賃貸・借上社宅の比較 | [README](housing-buy-vs-rent/README.md) | HTML シミュレーター | re_invest_os（別用途の不動産分析） | HTML / JavaScript / Node.js (stdlib) |
 
@@ -155,7 +156,7 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 
 - 対応プラットフォーム: **WSL2 (Ubuntu) を主**とし、ネイティブ Windows (PowerShell) と macOS でも動作（差分は下記セットアップ参照）
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
-  - workspace メンバー（正は root `pyproject.toml` の `[tool.uv.workspace]`）: `agent-profiler`, `JHRMBS`, `gto`, `market-research`, `nbody-gpu`, `line_backup`, `akinator`, `health`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `rates_volatility_model`, `jp_llm_lab`, `labor_ai_quadrant`, `macrokit`, `timesfm_lab`, `bond_timing_lab`, `market_nn`, `portfolio-analyzer`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
+  - workspace メンバー（正は root `pyproject.toml` の `[tool.uv.workspace]`）: `agent-profiler`, `JHRMBS`, `gto`, `market-research`, `nbody-gpu`, `line_backup`, `akinator`, `health`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `rates_volatility_model`, `jp_llm_lab`, `labor_ai_quadrant`, `macrokit`, `timesfm_lab`, `bond_timing_lab`, `sector_leadlag_lab`, `market_nn`, `portfolio-analyzer`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
   - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` / `WSET` / `My Tianjin` は Xcode (Swift)、`ts-rosetta` / `b737-ops-sim` / `monster_gate` は pnpm、`pokemon` は npm、`eagle` は Rust (cargo) + npm、`notebooks` / `models` / `kaggle` は env 管理なし、`shortest_path` / `interactive-email-demo` は依存なし（前者は `PYTHONPATH=shortest_path/src` で実行）
   - `WSET/wset_l3_question_corpus` は**ワークスペース外の独立 uv プロジェクト**（自前の `pyproject.toml` / `uv.lock`）。root の `uv sync --all-packages` では依存が入らないので、そのディレクトリで個別に sync する（詳細は同 README）
 - AI コラボ前提（Claude Code / Codex / Copilot）。エージェント向け規約の正本は各階層の `AGENTS.md`（`CLAUDE.md` は取り込むだけ。階層構成は `AGENTS.md` の「Agent instruction files」）
