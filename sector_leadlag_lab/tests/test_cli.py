@@ -1,3 +1,4 @@
+import hashlib
 import json
 import subprocess
 from types import SimpleNamespace
@@ -8,6 +9,7 @@ import pytest
 from click.testing import CliRunner
 from sector_leadlag import cli
 from sector_leadlag import g0 as g0_module
+from sector_leadlag import main as main_module
 from sector_leadlag import study as study_module
 from sector_leadlag.corrections import KNOWN
 from sector_leadlag.data.store import store_bytes
@@ -231,3 +233,124 @@ def test_corrected_meta_reads_section_5_from_the_committed_prereg(tmp_path, monk
     assert not cli.corrected_meta()["prereg_has_section_5"]  # written, not committed
     commit("PREREG.md", "## 4. x\n## 5. y\n")
     assert cli.corrected_meta()["prereg_has_section_5"]
+    commit("results/main_a.json", "{}")
+    assert not cli.corrected_meta()["main_a_commit"]  # the record's main A does not count
+    (lab / "results" / "corrected").mkdir()
+    commit("results/corrected/main_a.json", "{}")
+    assert cli.corrected_meta()["main_a_commit"]
+
+
+def _main_b_lab(tmp_path, monkeypatch):
+    record = tmp_path / "results"
+    corrected = record / "corrected"
+    corrected.mkdir(parents=True)
+    write(record, "main_b", {"meta": {"inputs_digest": "d"}, "verdict": "usable"})
+    (record / "main_b.lock").write_text("record lock\n")
+    write(corrected, "g0", {"pass": True})
+    write(corrected, "main_a", {"robust": True})
+    write(corrected, "corrections", {"missing_known": [], "changes": [CHANGE]})
+    monkeypatch.setattr(cli, "RESULTS", record)
+    monkeypatch.setattr(cli, "CORRECTED", corrected)
+    monkeypatch.setattr(cli, "corrected_meta", lambda: dict(CORRECTED_META))
+    loads = []
+
+    def load(corrected=False):
+        loads.append(corrected)
+        return SimpleNamespace(corrections=(CHANGE,))
+
+    monkeypatch.setattr(study_module, "load_study", load)
+    monkeypatch.setattr(main_module, "run_main_b", lambda study, prior: {"verdict": "usable"})
+    return SimpleNamespace(record=record, corrected=corrected, loads=loads)
+
+
+def _corrected_main_b(*args):
+    return CliRunner().invoke(cli.main, ["run", "main-b", "--data", "corrected", *args])
+
+
+def test_a_failed_corrections_gate_leaves_no_lock(tmp_path, monkeypatch):
+    lab = _main_b_lab(tmp_path, monkeypatch)
+    write(lab.corrected, "corrections", {"missing_known": [], "changes": []})
+    out = _corrected_main_b()
+    assert out.exit_code == 1 and "does not match the rules" in out.output
+    assert lab.loads == [True]  # the corrected study loaded before the gate
+    assert not (lab.corrected / "main_b.lock").exists()
+    assert (lab.record / "main_b.lock").read_text() == "record lock\n"
+
+
+def test_a_corrected_main_b_runs_once_in_its_own_folder(tmp_path, monkeypatch):
+    lab = _main_b_lab(tmp_path, monkeypatch)
+    kept = (lab.record / "main_b.json").read_text()
+    out = _corrected_main_b()
+    assert out.exit_code == 0, out.output
+    assert (lab.corrected / "main_b.lock").exists()
+    written = json.loads((lab.corrected / "main_b.json").read_text(encoding="utf-8"))
+    stored = (lab.corrected / "corrections.json").read_bytes()
+    assert written["meta"]["corrections_sha256"] == hashlib.sha256(stored).hexdigest()
+    again = _corrected_main_b()
+    assert again.exit_code == 1 and "main B already ran" in again.output
+    assert _corrected_main_b("--rerun-reason", "x").exit_code == 0
+    assert (lab.corrected / "main_b_rerun_1.json").exists()
+    assert (lab.record / "main_b.json").read_text() == kept
+    assert (lab.record / "main_b.lock").read_text() == "record lock\n"
+    assert sorted(path.name for path in lab.record.iterdir()) == [
+        "corrected",
+        "main_b.json",
+        "main_b.lock",
+    ]
+
+
+def test_a_failed_corrected_main_b_removes_only_its_own_lock(tmp_path, monkeypatch):
+    lab = _main_b_lab(tmp_path, monkeypatch)
+
+    def fail(study, prior):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(main_module, "run_main_b", fail)
+    out = _corrected_main_b()
+    assert out.exit_code == 1 and isinstance(out.exception, RuntimeError)
+    assert not (lab.corrected / "main_b.lock").exists()
+    assert (lab.record / "main_b.lock").read_text() == "record lock\n"
+
+
+def test_the_corrected_gates_run_in_order_before_the_study_loads(tmp_path, monkeypatch):
+    lab = _main_b_lab(tmp_path, monkeypatch)
+    monkeypatch.setattr(cli, "corrected_meta", lambda: {**CORRECTED_META, "main_a_commit": ""})
+    out = _corrected_main_b()
+    assert out.exit_code == 1 and "commit results/main_a.json before main B" in out.output
+    (lab.corrected / "main_a.json").unlink()
+    no_section = {**CORRECTED_META, "prereg_has_section_5": False}
+    monkeypatch.setattr(cli, "corrected_meta", lambda: dict(no_section))
+    out = _corrected_main_b()
+    assert out.exit_code == 1 and "PREREG.md §5 and commit it first" in out.output
+    monkeypatch.setattr(cli, "corrected_meta", lambda: {**no_section, "inputs_digest": "e"})
+    out = _corrected_main_b()
+    assert out.exit_code == 1 and "snapshot of the record" in out.output
+    assert lab.loads == []
+    assert not (lab.corrected / "main_b.lock").exists()
+
+
+def test_a_record_main_b_loads_the_record_and_takes_the_records_lock(tmp_path, monkeypatch):
+    lab = _main_b_lab(tmp_path, monkeypatch)
+    (lab.record / "main_b.lock").unlink()
+    write(lab.record, "g0", {"pass": True})
+    write(lab.record, "main_a", {"robust": True})
+    monkeypatch.setattr(cli, "meta", lambda results="results": {**META, "git_commit": "abc"})
+    out = CliRunner().invoke(cli.main, ["run", "main-b"])
+    assert out.exit_code == 0, out.output
+    assert lab.loads == [False]
+    assert (lab.record / "main_b.lock").exists()
+    written = json.loads((lab.record / "main_b.json").read_text(encoding="utf-8"))
+    assert "data" not in written["meta"] and "corrections_sha256" not in written["meta"]
+    assert sorted(path.name for path in lab.corrected.iterdir()) == [
+        "corrections.json",
+        "g0.json",
+        "main_a.json",
+    ]
+
+
+def test_the_corrections_command_needs_the_records_snapshot(tmp_path, monkeypatch):
+    _, corrected = _corrected_lab(tmp_path, monkeypatch)
+    monkeypatch.setattr(cli, "meta", lambda results="results": {**META, "inputs_digest": "e"})
+    out = CliRunner().invoke(cli.main, ["corrections"])
+    assert out.exit_code == 1 and "snapshot of the record" in out.output
+    assert not (corrected / "corrections.json").exists()
