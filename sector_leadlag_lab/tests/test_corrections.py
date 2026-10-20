@@ -1,12 +1,18 @@
+from dataclasses import replace
+
 import numpy as np
 import pandas as pd
 import pytest
 from sector_leadlag import baskets as bk
 from sector_leadlag.corrections import (
     close_ratio,
+    late_etf_dividends,
+    market_move,
     missing_rows,
+    oversized_dividends,
     scale_breaks,
     signal_returns,
+    split_day_dividends,
     with_breaks,
     zero_opens,
 )
@@ -94,3 +100,109 @@ def test_without_dividends_the_signal_side_is_the_records(make_panel):
     panel, _ = with_breaks(make_panel(close, close))
     record = close / close.shift(1) - 1
     pd.testing.assert_frame_equal(signal_returns(panel, DAYS), record, check_freq=False)
+
+
+def _split_day(make_panel, *, dividend, opening):
+    """A stock with a 1:2 split on day 4 that also goes ex a dividend that day."""
+    close = frame([1000, 1000, 1000, 1000, 1000, 1000])
+    return make_panel(
+        frame([1000, 1000, 1000, opening, 1000, 1000]),
+        close,
+        dividends=frame([0, 20, 0, dividend, 0, 0]),
+        splits=frame([0, 0, 0, 2, 0, 0]),
+    )
+
+
+def test_a_split_day_dividend_left_in_pre_split_units_is_divided(make_panel):
+    market = pd.Series(0.0, index=DAYS)
+    # D = 40 is twice the previous dividend, and the open fell 2% (D/(kP)), not 4% (D/P)
+    fixed, changes = split_day_dividends(_split_day(make_panel, dividend=40, opening=980), market)
+    assert fixed.dividends["a"].iloc[3] == 20.0
+    assert [(c.rule, c.before, c.after) for c in changes] == [("C4", 40.0, 20.0)]
+
+
+@pytest.mark.parametrize(
+    ("dividend", "opening"),
+    [(20, 980), (40, 960)],  # the history says D is right; the drop says D is right
+)
+def test_a_split_day_dividend_stays_unless_history_and_drop_both_say_divide(
+    make_panel, dividend, opening
+):
+    market = pd.Series(0.0, index=DAYS)
+    panel = _split_day(make_panel, dividend=dividend, opening=opening)
+    fixed, changes = split_day_dividends(panel, market)
+    assert fixed.dividends["a"].iloc[3] == dividend and changes == []
+
+
+def test_a_split_day_dividend_stays_without_trades_or_an_earlier_dividend(make_panel):
+    market = pd.Series(0.0, index=DAYS)
+    panel = _split_day(make_panel, dividend=40, opening=980)
+    quiet = replace(panel, volume=frame([5, 5, 5, 0, 5, 5]))  # no drop to measure
+    first = replace(panel, dividends=frame([0, 0, 0, 40, 0, 0]))  # no dividend before it
+    for case in (quiet, first):
+        fixed, changes = split_day_dividends(case, market)
+        assert fixed.dividends["a"].iloc[3] == 40.0 and changes == []
+
+
+def test_the_drop_of_a_split_day_dividend_is_measured_against_the_market(make_panel):
+    # every stock opened 2% lower: the 2% fall is the market, so D/P = 4% no longer fits
+    market = pd.Series(-0.02, index=DAYS)
+    fixed, _ = split_day_dividends(_split_day(make_panel, dividend=40, opening=960), market)
+    assert fixed.dividends["a"].iloc[3] == 20.0
+
+
+def test_a_dividend_above_the_close_follows_the_last_down_jump(make_panel):
+    close = frame(
+        [30000, 60, 60, 60, 60, 60], [100, 100, 100, 100, 100, 100], [100, 300, 300, 300, 300, 300]
+    )
+    dividends = frame([0, 0, 0, 1500, 0, 0], [0, 0, 0, 5e8, 0, 0], [0, 0, 0, 500, 0, 0])
+    panel, _ = with_breaks(make_panel(close, close, dividends=dividends))
+    fixed, changes = oversized_dividends(panel)
+    assert fixed.dividends.iloc[3].tolist() == [3.0, 0.0, 0.0]  # ÷500; no jump; the jump was up
+    assert [(c.column, c.before, c.after) for c in changes] == [
+        ("a", 1500.0, 3.0),
+        ("b", 5e8, 0.0),
+        ("c", 500.0, 0.0),
+    ]
+
+
+def test_a_dividend_still_above_the_close_after_the_jump_becomes_zero(make_panel):
+    close = frame([200, 60, 60, 60])
+    panel, _ = with_breaks(make_panel(close, close, dividends=frame([0, 0, 0, 900])))
+    fixed, _ = oversized_dividends(panel)
+    assert fixed.dividends["a"].iloc[3] == 0.0  # 900 × 60/200 = 270 is still above 60
+
+
+def _etfs(make_panel, opens):
+    close = pd.DataFrame(100.0, index=DAYS, columns=[1, 2])
+    open_ = pd.DataFrame(opens, index=DAYS, columns=[1, 2], dtype=float)
+    dividends = pd.DataFrame(0.0, index=DAYS, columns=[1, 2])
+    dividends.iloc[4] = [3.0, 2.0]  # recorded on day 5
+    return make_panel(open_, close, dividends=dividends)
+
+
+def test_late_etf_dividends_move_to_the_lowest_opening_day(make_panel):
+    opens = [[100, 100], [100, 100], [97, 98], [100, 100], [100, 100], [100, 100]]
+    market = pd.Series(0.0, index=DAYS)
+    fixed, changes = late_etf_dividends(_etfs(make_panel, opens), market)
+    assert fixed.dividends.iloc[2].tolist() == [3.0, 2.0]  # both move to day 3
+    assert fixed.dividends.iloc[4].tolist() == [0.0, 0.0]
+    assert [(c.column, c.before, c.after) for c in changes] == [
+        (1, "2026-01-09", "2026-01-07"),
+        (2, "2026-01-09", "2026-01-07"),
+    ]
+
+
+def test_an_etf_dividend_stays_when_its_own_day_opens_lowest(make_panel):
+    opens = [[100, 100], [100, 100], [99, 100], [100, 100], [97, 98], [100, 100]]
+    market = pd.Series(0.0, index=DAYS)
+    fixed, changes = late_etf_dividends(_etfs(make_panel, opens), market)
+    assert fixed.dividends.iloc[4].tolist() == [3.0, 2.0] and changes == []
+
+
+def test_the_market_move_is_the_median_overnight_return_with_dividends(make_panel):
+    close = frame([100, 100], [100, 100], [100, 100])
+    stocks = make_panel(
+        frame([100, 98], [100, 99], [100, 101]), close, dividends=frame([0, 2], [0, 0], [0, 0])
+    )
+    assert market_move(stocks).iloc[1] == pytest.approx(0.0)  # 0%, -1% and +1%
