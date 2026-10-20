@@ -74,3 +74,31 @@ def test_the_corrected_study_applies_the_rules(tmp_path, listing_bytes, yf_histo
     assert list(study.etf_c2c().index) == [pd.Timestamp(d) for d in (DATES[0], DATES[1], DATES[3])]
     assert study.stocks.breaks.loc["2026-01-07", "7203"]
     pd.testing.assert_frame_equal(study.us_returns(), record.us_returns())
+
+
+def test_the_corrected_study_carries_its_etf_panel_and_hides_a_us_jump(
+    tmp_path, listing_bytes, yf_history
+):
+    rows = [("7203", 6, "TOPIX Core30")]
+    store_bytes(tmp_path, "jpx", "data_j", listing_bytes(rows), url="u", filename="data_j.xlsx")
+    for ticker in yf.US_SECTORS:
+        if ticker != "XLK":
+            _store_prices(tmp_path, ticker, yf_history, tz="America/New_York")
+    _store_closes(tmp_path, "XLK", yf_history, [100.0, 100.0, 300.0, 300.0])  # no split
+    for ticker in [*ETF_TICKERS, "7203.T"]:
+        _store_prices(tmp_path, ticker, yf_history)
+    record = load_study(tmp_path)
+    study = load_study(tmp_path, corrected=True)
+    assert [(c["rule"], c["kind"], c["series"], c["date"]) for c in study.corrections] == [
+        ("C1", "us", "XLK", "2026-01-07")
+    ]
+    assert record.etf.breaks is None
+    assert study.etf.breaks is not None and not study.etf.breaks.to_numpy().any()
+    assert study.us_breaks.to_numpy().sum() == 1 and study.us_breaks.loc["2026-01-07", "XLK"]
+    assert record.us_returns().loc["2026-01-07", "XLK"] == 2.0
+    hidden = study.us_returns()
+    assert pd.isna(hidden.loc["2026-01-07", "XLK"])
+    assert hidden.loc["2026-01-08", "XLK"] == 0.0
+    pd.testing.assert_frame_equal(
+        hidden.drop(columns="XLK"), record.us_returns().drop(columns="XLK")
+    )
