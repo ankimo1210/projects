@@ -5,9 +5,13 @@ import pandas as pd
 import pytest
 from sector_leadlag import baskets as bk
 from sector_leadlag.corrections import (
+    KNOWN,
     close_ratio,
+    correct,
+    counts,
     late_etf_dividends,
     market_move,
+    missing_known,
     missing_rows,
     oversized_dividends,
     scale_breaks,
@@ -218,3 +222,42 @@ def test_the_market_move_is_the_median_overnight_return_with_dividends(make_pane
         frame([100, 98], [100, 99], [100, 101]), close, dividends=frame([0, 2], [0, 0], [0, 0])
     )
     assert market_move(stocks).iloc[1] == pytest.approx(0.0)  # 0%, -1% and +1%
+
+
+def test_the_rules_change_nothing_in_a_world_without_errors(decayed_world):
+    w = decayed_world
+    us = w.us_adj
+    fixed = correct(w.etf, w.stocks, us, us * 0.0)
+    assert fixed.changes == [] and fixed.signal_days.equals(w.jp_days)
+    pd.testing.assert_frame_equal(fixed.signal, w.etf_c2c(), check_freq=False)
+    for returns in (bk.close_to_open, bk.close_to_close, bk.open_to_close):
+        pd.testing.assert_frame_equal(returns(fixed.stocks), returns(w.stocks))
+        pd.testing.assert_frame_equal(returns(fixed.etf), returns(w.etf))
+    assert counts(fixed.changes) == {rule: {} for rule in ("C2", "C1", "C4", "C5", "C6", "C3")}
+
+
+def test_known_errors_that_no_rule_changed_are_reported():
+    change = {"rule": "C1", "kind": "etf", "series": "1629.T", "date": "2015-01-05"}
+    missing = missing_known([change])
+    assert len(missing) == len(KNOWN) - 1
+    assert missing[0]["label"].startswith("1629.T: prices at 1/500")
+    assert missing[0]["found"] == 0
+    complete = [
+        {"rule": k.rule, "kind": k.kind, "series": k.series or "x", "date": k.date or "d"}
+        for k in KNOWN
+        for _ in range(k.count)
+    ]
+    assert missing_known(complete) == []
+
+
+def test_the_rules_run_in_the_designs_order(make_panel):
+    etf_close = pd.DataFrame({1: [100.0, 300.0, 300.0]}, index=DAYS[:3])
+    etf = make_panel(pd.DataFrame({1: [100.0, 0.0, 300.0]}, index=DAYS[:3]), etf_close)
+    stocks = make_panel(frame([100, 300, 300]), frame([100, 300, 300]))
+    us = pd.DataFrame({"XLK": [10.0, 10.0, 10.0]}, index=DAYS[:3])
+    fixed = correct(etf, stocks, us, us * 0.0)
+    assert [(c["rule"], c["kind"], c["series"]) for c in fixed.changes] == [
+        ("C2", "etf", "1617.T"),
+        ("C1", "etf", "1617.T"),
+        ("C1", "stock", "a.T"),
+    ]
