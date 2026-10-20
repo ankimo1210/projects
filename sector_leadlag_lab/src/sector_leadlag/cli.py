@@ -1,9 +1,14 @@
-"""Command line: ``sector-leadlag snapshot``, ``run STAGE``, ``inputs`` and ``report``.
+"""Command line: ``sector-leadlag snapshot``, ``run STAGE``, ``inputs``, ``corrections``, ``report``.
 
 The stage order of design §3.5 is enforced here. Every stage needs a committed PREREG.md; main A
 also needs passed G0 and G1 and a PREREG commit made after G1 ran (the chosen pairing and the
 G1 result are written into it first). Main B needs main A's result committed, and runs once (a
 lock file); a rerun needs a reason and never replaces the verdict of record.
+
+``--data corrected`` reruns the stages on the corrected data of PREREG §5 (design 2026-10-20) into
+results/corrected/, under the same gates and three more: the stored inputs are the record's
+snapshot, PREREG.md has §5 committed after the record's main B, and results/corrected/
+corrections.json passed the known-error check and lists exactly the changes the rules make.
 """
 
 from __future__ import annotations
@@ -23,6 +28,8 @@ from .data.store import RAW_ROOT, manifest_records
 
 LAB = Path(__file__).resolve().parents[2]
 RESULTS = LAB / "results"
+CORRECTED = RESULTS / "corrected"
+DATA = ("record", "corrected")
 RUNNERS = {
     "g0": ("sector_leadlag.g0", "run_g0"),
     "g1": ("sector_leadlag.g1", "run_g1"),
@@ -71,7 +78,8 @@ def inputs_digest(root: Path) -> tuple[str, int]:
     return hashlib.sha256(lines.encode()).hexdigest(), len(records)
 
 
-def meta() -> dict:
+def meta(results: str = "results") -> dict:
+    """What a result was computed from; ``results`` is its folder, relative to the lab."""
     digest, count = inputs_digest(RAW_ROOT)
     return {
         "ran_at": datetime.now(UTC).isoformat(timespec="seconds"),
@@ -79,9 +87,28 @@ def meta() -> dict:
         "dirty": bool(_git("status", "--porcelain", "--", ".", ":(exclude)results")),
         "prereg_commit": _git("log", "-1", "--format=%H", "--", "PREREG.md"),
         "prereg_committed_at": _git("log", "-1", "--format=%cI", "--", "PREREG.md"),
-        "main_a_commit": _git("log", "-1", "--format=%H", "--", "results/main_a.json"),
+        "main_a_commit": _git("log", "-1", "--format=%H", "--", f"{results}/main_a.json"),
         "inputs_digest": digest,
         "inputs_count": count,
+    }
+
+
+def corrected_meta() -> dict:
+    """``meta`` of a result on the corrected data, with what its gates need."""
+    run_meta = meta("results/corrected")
+    prereg = (
+        _git("show", f"{run_meta['prereg_commit']}:./PREREG.md")
+        if run_meta["prereg_commit"]
+        else ""
+    )
+    return {
+        **run_meta,
+        "data": "corrected",
+        "prereg_has_section_5": any(line.startswith("## 5.") for line in prereg.splitlines()),
+        "record_main_b_commit": _git("log", "-1", "--format=%H", "--", "results/main_b.json"),
+        "record_main_b_committed_at": _git(
+            "log", "-1", "--format=%cI", "--", "results/main_b.json"
+        ),
     }
 
 
@@ -122,6 +149,41 @@ def check_ready(stage: str, results: Path, run_meta: dict) -> dict[str, dict]:
     return prior
 
 
+def check_snapshot(run_meta: dict, record: Path) -> None:
+    """The corrected data must come from the snapshot of the record's verdict (design §4)."""
+    stored = read_result("main_b", record)["meta"]["inputs_digest"]
+    if run_meta["inputs_digest"] != stored:
+        raise StageError(
+            "the stored inputs are not the snapshot of the record's main B; correct that snapshot"
+        )
+
+
+def check_prereg_section(run_meta: dict) -> None:
+    """Every stage on corrected data needs PREREG §5, committed after the record's main B."""
+    if not run_meta["prereg_has_section_5"]:
+        raise StageError("write the corrected-data rules into PREREG.md §5 and commit it first")
+    record = run_meta["record_main_b_committed_at"]
+    prereg = datetime.fromisoformat(run_meta["prereg_committed_at"])
+    if not record or prereg <= datetime.fromisoformat(record):
+        raise StageError("commit PREREG.md §5 after the record's results/main_b.json")
+
+
+def plain(value):
+    """``value`` as it reads back from a results file."""
+    return json.loads(json.dumps(value, default=_json_default))
+
+
+def check_corrections(changes: tuple[dict, ...], results: Path) -> str:
+    """corrections.json passed the known-error check and lists exactly ``changes``; its SHA-256."""
+    path = results / "corrections.json"
+    stored = read_result("corrections", results)
+    if stored["missing_known"]:
+        raise StageError(f"{path} failed the known-error check; fix the rules first")
+    if stored["changes"] != plain(list(changes)):
+        raise StageError(f"{path} does not match the rules; run `sector-leadlag corrections` again")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def main_b_target(results: Path, rerun_reason: str | None) -> tuple[str, dict]:
     lock = results / "main_b.lock"
     if not lock.exists():
@@ -160,26 +222,57 @@ def snapshot() -> None:
 @main.command()
 @click.argument("stage", type=click.Choice(list(RUNNERS)))
 @click.option("--rerun-reason", default=None, help="Required to run main-b a second time.")
-def run(stage: str, rerun_reason: str | None) -> None:
-    """Run one stage and write results/<stage>.json."""
+@click.option(
+    "--data",
+    type=click.Choice(DATA),
+    default="record",
+    help="corrected: rerun on the corrected data of PREREG §5 into results/corrected/.",
+)
+def run(stage: str, rerun_reason: str | None, data: str) -> None:
+    """Run one stage and write results/<stage>.json (or results/corrected/<stage>.json)."""
     from .study import load_study
 
-    run_meta = meta()
-    prior = check_ready(stage, RESULTS, run_meta)
+    corrected = data == "corrected"
+    results = CORRECTED if corrected else RESULTS
+    run_meta = corrected_meta() if corrected else meta()
+    if corrected:
+        check_snapshot(run_meta, RESULTS)
+        check_prereg_section(run_meta)
+    prior = check_ready(stage, results, run_meta)
     name, extra = stage.replace("-", "_"), {}
     if stage == "main-b":
-        name, extra = main_b_target(RESULTS, rerun_reason)
-        if name == "main_b":
-            take_lock(RESULTS, run_meta["git_commit"])
+        name, extra = main_b_target(results, rerun_reason)
+    study = load_study(corrected=corrected)
+    if corrected:
+        run_meta["corrections_sha256"] = check_corrections(study.corrections, CORRECTED)
+    if name == "main_b":
+        take_lock(results, run_meta["git_commit"])
     module, function = RUNNERS[stage]
     runner = getattr(importlib.import_module(module), function)
     try:
-        result = runner(load_study(), prior)
+        result = runner(study, prior)
     except BaseException:
         if name == "main_b":
-            (RESULTS / "main_b.lock").unlink(missing_ok=True)  # nothing was seen; allow a clean run
+            (results / "main_b.lock").unlink(missing_ok=True)  # nothing was seen; allow a clean run
         raise
-    click.echo(write_result(name, {**extra, **result}, RESULTS, run_meta))
+    click.echo(write_result(name, {**extra, **result}, results, run_meta))
+
+
+@main.command()
+def corrections() -> None:
+    """Apply the rules of PREREG §5 and write results/corrected/corrections.json (no stage)."""
+    from .corrections import counts, missing_known
+    from .study import load_study
+
+    run_meta = {**meta("results/corrected"), "data": "corrected"}
+    check_snapshot(run_meta, RESULTS)
+    changes = list(load_study(corrected=True).corrections)
+    missing = missing_known(changes)
+    result = {"counts": counts(changes), "missing_known": missing, "changes": changes}
+    click.echo(write_result("corrections", result, CORRECTED, run_meta))
+    if missing:
+        labels = "; ".join(item["label"] for item in missing)
+        raise StageError(f"no rule changed these known errors (design §3): {labels}")
 
 
 @main.command()
@@ -192,12 +285,17 @@ def inputs() -> None:
 
 
 @main.command()
-def report() -> None:
-    """Write results/summary.md from the results JSON."""
-    from .report import render
+@click.option("--data", type=click.Choice(DATA), default="record")
+def report(data: str) -> None:
+    """Write results/summary.md, or results/corrected/summary.md beside the record."""
+    from .report import render, render_corrected
 
-    path = RESULTS / "summary.md"
-    path.write_text(render(RESULTS), encoding="utf-8")
+    if data == "corrected":
+        path = CORRECTED / "summary.md"
+        path.write_text(render_corrected(RESULTS, CORRECTED), encoding="utf-8")
+    else:
+        path = RESULTS / "summary.md"
+        path.write_text(render(RESULTS), encoding="utf-8")
     click.echo(path)
 
 
