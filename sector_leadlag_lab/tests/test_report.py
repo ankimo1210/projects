@@ -76,5 +76,23 @@ def test_a_changed_verdict_names_the_conditions_that_changed(tmp_path, results):
         "main_b", {**b, "verdict": "real_not_usable", "evidence": evidence}, tmp_path, {}
     )
     text = render_corrected(results, tmp_path)
+    assert "**`verdict_data_dependent`**：直したデータの判定は `real_not_usable`" in text
     assert "直したデータの判定は `real_not_usable`（記録は `usable`）。" in text
-    assert "変わった条件：④（本番 B で1と2が正）。" in text
+    assert "変わった条件：④（本番 B で1と2がどちらも正）。" in text
+
+
+def test_a_corrected_run_that_stopped_at_g1_depends_on_the_data(tmp_path, results):
+    (tmp_path / "g0.json").write_text((results / "g0.json").read_text("utf-8"))
+    g1 = json.loads((results / "g1.json").read_text(encoding="utf-8"))
+    cli.write_result("g1", {**g1, "pass": False}, tmp_path, {})
+    text = render_corrected(results, tmp_path)
+    assert "**`verdict_data_dependent`**：直したデータでは G1 が不合格で止まった。" in text
+
+
+def test_the_decomposition_shows_the_record_before_the_corrected_value(tmp_path, results):
+    d = json.loads((results / "diagnostics.json").read_text(encoding="utf-8"))
+    kept = d["decomposition"]["etf"]["c2o"]["a"]
+    d["decomposition"]["etf"]["c2o"]["a"] = 0.1234
+    cli.write_result("diagnostics", d, tmp_path, {})
+    text = render_corrected(results, tmp_path)
+    assert f"| ETF | C2O | {100 * kept:.2f}%／12.34% |" in text

@@ -31,12 +31,12 @@ STAGES = ("g0", "g1", "main_a", "main_b", "diagnostics")
 CONDITIONS: tuple[tuple[str, Callable[[dict], bool]], ...] = (
     ("G0 の再現", lambda e: e["replicated"]),
     (
-        "①（H1 が有意で、本番 B の係数が正）",
+        "①（H1 が有意で、本番 B のバスケットの係数が正）",
         lambda e: e["h1_p"] < ALPHA and e["beta_b_period_b"] > 0,
     ),
-    ("②（H2 の1と2が有意）", lambda e: e["h2_p_cash"] < ALPHA and e["h2_p_spread"] < ALPHA),
-    ("③（費用と元手を変えても符号が同じ）", lambda e: e["robust"]),
-    ("④（本番 B で1と2が正）", lambda e: e["b_mean_cash"] > 0 and e["b_mean_spread"] > 0),
+    ("②（H2 の1と2がどちらも有意）", lambda e: e["h2_p_cash"] < ALPHA and e["h2_p_spread"] < ALPHA),
+    ("③（費用と元手を変えても本番 A の1と2の符号が同じ）", lambda e: e["robust"]),
+    ("④（本番 B で1と2がどちらも正）", lambda e: e["b_mean_cash"] > 0 and e["b_mean_spread"] > 0),
 )
 SIGNAL_LABELS = {
     "pca_lambda0": "正則化なしの PCA（λ=0）",
