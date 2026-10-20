@@ -8,16 +8,19 @@ Design 2026-10-20 §3. Every rule is a pure function of the panels on their trad
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, replace
+from collections.abc import Callable
+from dataclasses import asdict, dataclass, replace
 
 import numpy as np
 import pandas as pd
 
 from . import baskets as bk
 from .baskets import Panel
+from .data import jpx
 
 JUMP = 2.0  # C1: a close over twice, or under half, the previous row's close
 LOOKBACK = 2  # C6: the recorded day and the ETF's two rows before it
+RULES = ("C2", "C1", "C4", "C5", "C6", "C3")  # C7 changes how the signal is built, not a value
 
 
 @dataclass(frozen=True)
@@ -178,3 +181,124 @@ def late_etf_dividends(
                 Change("C6", column, day, "dividend_date", str(day.date()), str(target.date()))
             )
     return replace(etf, dividends=dividends), changes
+
+
+@dataclass(frozen=True)
+class Corrected:
+    etf: Panel
+    stocks: Panel
+    us_breaks: pd.DataFrame  # US days after a jump in the close (C1)
+    signal_days: pd.DatetimeIndex  # the Japanese days the signal's rows may use (C3)
+    signal: pd.DataFrame  # the signal's Japanese side on those days (C7)
+    changes: list[dict]
+
+
+def _record(change: Change, kind: str, name: Callable[[object], str]) -> dict:
+    return {
+        "rule": change.rule,
+        "kind": kind,
+        "series": name(change.column),
+        "date": str(change.day.date()),
+        "field": change.field,
+        "before": change.before,
+        "after": change.after,
+    }
+
+
+def correct(
+    etf: Panel, stocks: Panel, us_close: pd.DataFrame, us_splits: pd.DataFrame
+) -> Corrected:
+    """Every rule in the design's order. ``us_close`` and ``us_splits`` are on the US days."""
+    found: list[tuple[str, Change]] = []
+
+    def kept(kind: str, result: tuple[Panel, list[Change]]) -> Panel:
+        panel, changes = result
+        found.extend((kind, change) for change in changes)
+        return panel
+
+    etf = kept("etf", zero_opens(etf))
+    stocks = kept("stock", zero_opens(stocks))
+    etf = kept("etf", with_breaks(etf))
+    stocks = kept("stock", with_breaks(stocks))
+    us_breaks = scale_breaks(us_close, us_splits)
+    found.extend(("us", change) for change in _jump_changes(us_close, us_breaks))
+    market = market_move(stocks)
+    etf = kept("etf", split_day_dividends(etf, market))
+    stocks = kept("stock", split_day_dividends(stocks, market))
+    etf = kept("etf", oversized_dividends(etf))
+    stocks = kept("stock", oversized_dividends(stocks))
+    etf = kept("etf", late_etf_dividends(etf, market))
+    gaps = missing_rows(etf.close)
+    found.extend(("etf", Change("C3", c, day, "row", None, None)) for day, c in _cells(gaps))
+    days = etf.close.index[~gaps.any(axis=1).to_numpy()]
+    names = {
+        "etf": lambda k: jpx.ETF_TICKERS[int(k) - 1],
+        "stock": jpx.stock_ticker,
+        "us": str,
+    }
+    order = {rule: i for i, rule in enumerate(RULES)}
+    records = [
+        _record(change, kind, names[kind])
+        for kind, change in sorted(found, key=lambda item: order[item[1].rule])
+    ]
+    return Corrected(etf, stocks, us_breaks, days, signal_returns(etf, days), records)
+
+
+@dataclass(frozen=True)
+class Known:
+    label: str  # the row of design §2
+    rule: str
+    kind: str
+    series: str | None  # None: any series of the kind
+    date: str | None  # None: any date
+    count: int  # changes needed
+
+
+KNOWN = (
+    Known("1629.T: the unrecorded split of 2015-01-05", "C1", "etf", "1629.T", "2015-01-05", 1),
+    Known("1629.T: prices at 1/500 from 2026-03-30", "C1", "etf", "1629.T", "2026-03-30", 1),
+    Known("1629.T: prices back on 2026-04-01", "C1", "etf", "1629.T", "2026-04-01", 1),
+    Known(
+        "1629.T: the dividend of 2015-07-15 per pre-split unit",
+        "C5",
+        "etf",
+        "1629.T",
+        "2015-07-15",
+        1,
+    ),
+    Known("16 ETFs without a row on 2025-10-24", "C3", "etf", None, "2025-10-24", 16),
+    Known("ETF dividends dated late (17 ETFs, 2013-2026)", "C6", "etf", None, None, 238),
+    Known("ETF opens of 0 in 2009", "C2", "etf", None, None, 53),
+    Known("8303.T: dividends of 200-240 million yen", "C5", "stock", "8303.T", None, 12),
+    Known("9861.T: the split-day dividend of 2013", "C4", "stock", "9861.T", "2013-08-28", 1),
+    Known("5401.T: the split-day dividend of 2025", "C4", "stock", "5401.T", "2025-09-29", 1),
+    Known("8766.T: the split-day dividend of 2026", "C4", "stock", "8766.T", "2026-09-29", 1),
+    Known(
+        "8227.T: the 1:3 split price before its record", "C1", "stock", "8227.T", "2026-02-18", 1
+    ),
+)
+
+
+def missing_known(changes: list[dict], known: tuple[Known, ...] = KNOWN) -> list[dict]:
+    """The known errors that their rule did not change (design §3: stop and report them)."""
+    out = []
+    for item in known:
+        found = sum(
+            change["rule"] == item.rule
+            and change["kind"] == item.kind
+            and item.series in (None, change["series"])
+            and item.date in (None, change["date"])
+            for change in changes
+        )
+        if found < item.count:
+            out.append({**asdict(item), "found": found})
+    return out
+
+
+def counts(changes: list[dict]) -> dict[str, dict[str, int]]:
+    """How many changes each rule made, by kind of series."""
+    out: dict[str, dict[str, int]] = {rule: {} for rule in RULES}
+    for change in changes:
+        by_kind = out[change["rule"]]
+        by_kind[change["kind"]] = by_kind.get(change["kind"], 0) + 1
+    return out
