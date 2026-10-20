@@ -1,5 +1,6 @@
 import pytest
 from sector_leadlag.main import ROBUSTNESS, SCENARIOS, run_main_a, run_main_b
+from sector_leadlag.study import with_corrections
 
 G0 = {"selected": "lagged", "pass": True}
 
@@ -36,3 +37,12 @@ def test_costs_lower_the_cash_strategy_but_not_the_spread(decayed):
 def test_a_lead_in_the_etfs_only_is_etf_only(etf_only_world):
     _, b = _verdict(etf_only_world)
     assert b["verdict"] == "etf_only"
+
+
+def test_the_corrected_verdict_of_a_world_without_errors_is_the_records(decayed_world, decayed):
+    w = decayed_world
+    fixed = with_corrections(w, w.us_adj, w.us_adj * 0.0)
+    assert fixed.corrections == ()
+    a, b = _verdict(fixed)
+    assert b["verdict"] == decayed[1]["verdict"] == "usable"
+    assert a["h1"] == decayed[0]["h1"] and a["h2"] == decayed[0]["h2"]
