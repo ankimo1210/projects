@@ -2084,7 +2084,7 @@ def _resolve(value, inputs, results, *, planned_jobs=None, bounded=False):
             planned_jobs is not None and identifier in planned_jobs,
             "prior original job arguments required",
         )
-        if results[identifier]["status"] != "executed":
+        if _recorded_status(results, identifier) != "executed":
             if planned_jobs[identifier]["operation"] != "teacher_selection":
                 return None
             # A completed selector may exceed its cap after inspecting original work.
@@ -2127,11 +2127,26 @@ def _resolve(value, inputs, results, *, planned_jobs=None, bounded=False):
                 lambda i: _resolve(
                     value[i], inputs, results, planned_jobs=planned_jobs, bounded=True
                 ),
+                # Planned IDs; the reader rejects a decoded row with another ID.
+                identifiers=[
+                    row["job_record"] if set(row) == {"job_record"} else row["id"] for row in value
+                ],
             )
         return [
             _resolve(v, inputs, results, planned_jobs=planned_jobs, bounded=bounded) for v in value
         ]
     return value
+
+
+def _recorded_status(results, identifier):
+    """Job status without decoding its raw payload when the row was saved in this run.
+
+    RecordedJobs references are built from the exact row written (or the authenticated
+    row read on resume) by this process; other mappings still read the full row.
+    """
+    if isinstance(results, saved_storage.RecordedJobs):
+        return results.references[identifier]["status"]
+    return results[identifier]["status"]
 
 
 def _dependency_ids(value):
@@ -3922,7 +3937,6 @@ def teacher_activation_decision(
         planned_jobs=planned_jobs,
         bounded=isinstance(results, saved_storage.ReferenceJobs),
     )
-    key = (identifier, input_identity(previous["raw"]), input_identity(arguments))
     from check_pilot import _teacher_verification_guard, calculate_teacher_candidate_gate
 
     memo_begin, memo_cpu = perf_counter_ns(), process_time_ns()
@@ -3932,6 +3946,10 @@ def teacher_activation_decision(
         verification_context=verification_context,
         artifact_context=artifact_context,
     )
+    # content_sha256 is input_identity({"arguments": ..., "raw": ...}), a digest of
+    # both component identities, so it keys the same entries as hashing each again
+    # without another full pass over every deferred evidence row.
+    key = (identifier, guard["content_sha256"])
     reused = key in cache
     if not reused:
         calculated = calculate_teacher_candidate_gate(
@@ -4207,7 +4225,7 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False,
             }
     measured_jobs = []
     activation_cache = {}
-    from check_pilot import _new_teacher_verification_context
+    from check_pilot import _new_teacher_verification_context, _progress
 
     verification_context = (
         _new_teacher_verification_context(
@@ -4229,7 +4247,8 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False,
     else:
         results = {}
     events = []
-    for job in locked_plan["jobs"]:
+    job_count = len(locked_plan["jobs"])
+    for position, job in enumerate(locked_plan["jobs"], start=1):
         if bounded:
             # Release the preceding full job before reading or running another.
             row = raw = arguments = selection_inspection = None
@@ -4296,6 +4315,7 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False,
                     artifact_context=activation_artifact_context,
                 )
             continue
+        _progress(f"job {position}/{job_count} start {job['id']} ({job['operation']})")
         begin_ns, cpu_ns = perf_counter_ns(), process_time_ns()
         measured_jobs.append(job["id"])
         common = {
@@ -4347,11 +4367,16 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False,
                 row["artifact_path"] = str(path)
                 results[job["id"]] = row
             events.append({"job": job["id"], "status": row["status"], "plan_sha256": plan_digest})
+            _progress(
+                f"job {position}/{job_count} {row['status']} {job['id']} "
+                f"({(perf_counter_ns() - begin_ns) / 1e9:.1f}s)"
+            )
             continue
         dependencies = _dependency_ids(job["arguments"])
         _require(dependencies <= set(results), "missing prior job dependency")
         blocked = any(
-            results[i]["status"] != "executed" for i in _numeric_dependency_ids(job["arguments"])
+            _recorded_status(results, i) != "executed"
+            for i in _numeric_dependency_ids(job["arguments"])
         )
         if blocked:
             raw = _dependency_cap_raw(job, dependencies, results)
@@ -4383,6 +4408,10 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False,
                 row["artifact_path"] = str(path)
                 results[job["id"]] = row
             events.append({"job": job["id"], "status": row["status"], "plan_sha256": plan_digest})
+            _progress(
+                f"job {position}/{job_count} {row['status']} {job['id']} "
+                f"({(perf_counter_ns() - begin_ns) / 1e9:.1f}s)"
+            )
             continue
         try:
             arguments = _resolve(
@@ -4544,6 +4573,10 @@ def run_pilot(directory, *, inputs, locked_plan, source_root=ROOT, resume=False,
             row["artifact_path"] = str(path)
             results[job["id"]] = row
         events.append({"job": job["id"], "status": row["status"], "plan_sha256": plan_digest})
+        _progress(
+            f"job {position}/{job_count} {row['status']} {job['id']} "
+            f"({(perf_counter_ns() - begin_ns) / 1e9:.1f}s)"
+        )
         if row["status"] == "unclosed_source_or_solver_defect":
             break
     if bounded:
