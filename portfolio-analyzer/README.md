@@ -6,6 +6,7 @@
 ## 投資テーマの調査記録
 
 - [AI投資・利益の質・キオクシアの評価（2026-09-22）](docs/2026-09-22-ai-investment-research.md)
+- [AIバブルの定量研究仕様（2026-10-21）](docs/2026-10-21-ai-bubble-research-design.md)・[段階別の実行計画](docs/superpowers/plans/2026-10-21-ai-bubble-research.md)・[データと結果（V・F・S の判定表）](docs/ai-bubble/README.md)
 
 公開資料に基づく論点と検証方法を記録しています。個人の保有額・配分を含むレポートは
 `data/*.private.*` に保存し、Git管理の調査文書とは分けます。

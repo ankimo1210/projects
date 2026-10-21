@@ -1,0 +1,340 @@
+{
+  "version": 1,
+  "registered_at": "2026-10-21T11:00:00+09:00",
+  "as_of_utc": "2026-10-21T00:00:00Z",
+  "seed": 20261021,
+  "universe": {
+    "rank_by": "market_cap_usd_at_as_of",
+    "max_issuers": 40,
+    "must_include": [
+      "ORCL",
+      "CRWV"
+    ],
+    "layers": [
+      {
+        "id": "buyers",
+        "label": "買い手（クラウド・プラットフォーム）",
+        "candidates": [
+          "MSFT",
+          "AMZN",
+          "GOOGL",
+          "META",
+          "ORCL"
+        ],
+        "take": 5
+      },
+      {
+        "id": "design",
+        "label": "設計（演算・通信半導体）",
+        "candidates": [
+          "NVDA",
+          "AVGO",
+          "AMD",
+          "MRVL"
+        ],
+        "take": 3
+      },
+      {
+        "id": "fab_memory",
+        "label": "製造・メモリ",
+        "candidates": [
+          "TSM",
+          "MU",
+          "285A.T"
+        ],
+        "take": 3
+      },
+      {
+        "id": "equipment",
+        "label": "装置・テスト",
+        "candidates": [
+          "ASML",
+          "AMAT",
+          "LRCX",
+          "KLAC",
+          "8035.T",
+          "6857.T",
+          "TER",
+          "6146.T"
+        ],
+        "take": 6
+      },
+      {
+        "id": "dc_network_power",
+        "label": "データセンター・ネットワーク・電力",
+        "candidates": [
+          "ANET",
+          "VRT",
+          "CRWV"
+        ],
+        "take": 3
+      }
+    ],
+    "selected": {
+      "buyers": [
+        "MSFT",
+        "AMZN",
+        "GOOGL",
+        "META",
+        "ORCL"
+      ],
+      "design": [
+        "NVDA",
+        "AVGO",
+        "AMD"
+      ],
+      "fab_memory": [
+        "TSM",
+        "MU",
+        "285A.T"
+      ],
+      "equipment": [
+        "ASML",
+        "LRCX",
+        "AMAT",
+        "KLAC",
+        "6857.T",
+        "8035.T"
+      ],
+      "dc_network_power": [
+        "ANET",
+        "VRT",
+        "CRWV"
+      ]
+    },
+    "selection_record": {
+      "selected_at": "2026-10-21",
+      "run": "20261021T0000Z-r20261021T015659Z",
+      "file": "public/universe.json",
+      "share_counts": "issuer filings carried through later splits to the basis of the split-adjusted closes; multi-class SEC filers by diluted weighted average; 6146.T and 285A.T from yfinance",
+      "closest_margins": {
+        "design": "AMD 872.9bn vs MRVL 210.8bn",
+        "equipment": "8035.T 144.6bn vs TER 52.6bn"
+      }
+    }
+  },
+  "discount_rate": {
+    "rule": "local_10y_plus_us_implied_erp",
+    "us_10y": {
+      "source": "US Treasury daily par yield curve, column '10 Yr'",
+      "pick": "latest_on_or_before_as_of"
+    },
+    "jp_10y": {
+      "source": "財務省 国債金利情報, column '10年'",
+      "pick": "latest_on_or_before_as_of"
+    },
+    "erp": {
+      "source": "Damodaran ERPbymonth.xlsx",
+      "column": "ERP (T12 m with sustainable payout)",
+      "pick": "latest_start_of_month_on_or_before_as_of"
+    },
+    "beta": "not_estimated",
+    "grid": {
+      "T": [
+        5,
+        10
+      ],
+      "r": [
+        0.06,
+        0.08,
+        0.1,
+        0.12,
+        0.14
+      ],
+      "g_inf": [
+        0.02,
+        0.03,
+        0.04
+      ]
+    }
+  },
+  "valuation": {
+    "T": 10,
+    "g_inf": 0.03,
+    "ronic": {
+      "central": "r_j+0.05",
+      "optimistic": "roic_ttm",
+      "stress": "r_j"
+    },
+    "sales_to_capital": "ttm",
+    "sales_to_capital_sensitivity": 0.25,
+    "v_band": 0.1,
+    "v_band_display": [
+      0.0,
+      0.2
+    ],
+    "irr_bounds": [
+      "g_inf+0.01",
+      0.3
+    ]
+  },
+  "valuation_details": {
+    "registered_at": "2026-10-21, before any V result was computed",
+    "ev_observed": "close x shares (issuer count on the split basis of the closes) + debt + finance lease liabilities - cash - short-term investments - long-term marketable debt securities - long-term investments; US GAAP operating lease liabilities stay out (their cost is inside operating income), IFRS 16 lease liabilities are debt; non-controlling interests are not adjusted",
+    "long_term_investments": "investments whose returns sit outside operating income are netted from EV and left out of invested capital: a total tag (LongTermInvestments, else OtherLongTermInvestments), else equity securities at fair value + without a readily determinable fair value (or their combined tag) + equity-method investments; EV without this netting is shown as a sensitivity (amended 2026-10-21 before any V result: the first registration assumed them small, but they are 34-131bn USD at Amazon, Alphabet, NVIDIA and Meta)",
+    "finance_leases_untagged_at_balance_date": "zero, flagged with the latest earlier value",
+    "debt": "first complete recipe of fundamentals.DEBT_RECIPES at the balance date, plus short-term borrowings and commercial paper",
+    "ebit": "operating income of the trailing twelve months; where it is not tagged, revenue - cost of revenue - R&D - SG&A",
+    "tax": "straight line from the trailing effective rate (income tax / pretax within 0-35%; 決算短信 IFRS: pretax less net income; a filer that does not tag pretax income: net income + income tax) in year 1 to the statutory rate in year T; the terminal year at the statutory rate",
+    "statutory_tax": {
+      "US": 0.25,
+      "JP": 0.3064
+    },
+    "reinvestment_when_sales_fall": 0.0,
+    "stress_without_two_year_decline": "sales flat in years 1-2",
+    "optimistic_ronic_when_roic_not_above_g_inf": "r_j+0.05",
+    "solver_bounds": {
+      "g0": [
+        -0.5,
+        3.0
+      ],
+      "target_margin": [
+        -0.5,
+        0.95
+      ]
+    },
+    "base_rates": "literature distributions not obtainable (2026-10-21): V history comparison reported as データ不足"
+  },
+  "scenarios": {
+    "g0": "revenue_yoy_ttm",
+    "phi": {
+      "central": 0.6,
+      "optimistic": 0.85,
+      "stress": 0.6
+    },
+    "stress_revenue_shock": {
+      "years": [
+        1,
+        2
+      ],
+      "value": "worst_consecutive_2y_revenue_change_in_own_history",
+      "min_history_years": 10
+    },
+    "margin": {
+      "central": "linear_from_ttm_to_own_average_by_year_5",
+      "optimistic": "hold_ttm",
+      "stress": "own_minimum_in_years_1_2_then_linear_to_own_average_by_year_5",
+      "average_min_quarters": 20
+    },
+    "consistency_check": "sign(buyers_capex_change) vs sign(design+fab_memory+equipment revenue change)"
+  },
+  "funding": {
+    "quarters": 8,
+    "new_financing": false
+  },
+  "funding_details": {
+    "registered_at": "2026-10-21, before any F result was computed",
+    "start_cash": "cash + short-term investments at the latest balance date (long-term marketable securities and investments excluded)",
+    "operating_cf": "trailing four-quarter operating cash flow / 4, moved by the change in NOPAT from its trailing level along the Task 2 central and stress paths (year 1 in quarters 1-4, year 2 in quarters 5-8)",
+    "investment": "trailing four-quarter capital expenditure / 4 every quarter (investment continues); committed purchase obligations are shown, not added (they are paid through capital expenditure or operating payments)",
+    "debt_principal": "the latest maturity schedule known at the as-of time: remainder of the fiscal year and the next twelve months over quarters 1-4, year two over quarters 5-8 (a schedule older than the balance date is used as is when it is not older than the latest fiscal-year end; a schedule last tagged before that is stale and treated as missing, amended after the first F results); without a schedule, the current portion over quarters 1-4 and the rest in quarter 5, or all debt in quarter 1 where the split is not tagged (worst case for the window); commercial paper and short-term borrowings in quarter 1 (no rollover)",
+    "lease_payments": "finance lease (IFRS 16 lease) payments due in years one and two spread the same way (the same staleness condition); without a schedule, the current portion over quarters 1-4 and the rest in quarter 5",
+    "excluded": "dividends and buybacks (discretionary), new equity or debt (none), undrawn credit lines",
+    "unevaluated": "no trailing operating cash flow or capital expenditure, or a shortfall that appears only under the worst-case maturity assumption",
+    "timing_sensitivity": "each year's principal in its first quarter",
+    "obsolescence_sensitivity": "capital expenditure x 1.25 in the funding path; depreciation x 1.5 (useful life 6 to 4 years) on the operating margin",
+    "boundary": "the multiple of operating cash flow at which the deepest central shortfall is zero; the operating margin at which cash flow after capital expenditure is zero (NOPAT moves cash flow one for one)",
+    "concentration": "only disclosed values; companyfacts carries no customer dimensions, so concentration is not collected unless read from a filing"
+  },
+  "s_history": {
+    "industries": "French 49 Industry Portfolios, value-weighted monthly, excluding 'Other'",
+    "market": "F-F Research Data Factors: Mkt-RF + RF",
+    "min_firms": 10,
+    "primary": {
+      "raw_24m": 1.0,
+      "net_24m": 1.0,
+      "raw_60m": 0.5,
+      "net_method": "difference_of_cumulative_returns"
+    },
+    "net_method_sensitivity": "compounded_monthly_excess",
+    "secondary": [
+      {
+        "id": "old_rule",
+        "raw_24m": 1.0,
+        "net_24m": 0.5,
+        "raw_60m": null
+      },
+      {
+        "id": "t50",
+        "raw_24m": 0.5,
+        "net_24m": 0.5,
+        "raw_60m": 0.5
+      },
+      {
+        "id": "t150",
+        "raw_24m": 1.5,
+        "net_24m": 1.5,
+        "raw_60m": 0.5
+      }
+    ],
+    "crash": {
+      "drawdown": -0.4,
+      "window_months": 24
+    },
+    "episode_gap_months": 24,
+    "gsy_check": {
+      "runup_window": [
+        "1928-01",
+        "2012-03"
+      ],
+      "episodes": 40,
+      "crashes": 21,
+      "unconditional_window": [
+        "1928-01",
+        "2013-12"
+      ],
+      "unconditional": 0.14
+    },
+    "bootstrap": {
+      "unit": "calendar_year_of_episode_start",
+      "reps": 1999,
+      "seed": 20261021
+    },
+    "s_weaken_net24_quantile": 0.75,
+    "predictive_min_clusters_per_split": 10,
+    "jp_sic": {
+      "6857.T": 3825,
+      "8035.T": 3559,
+      "285A.T": 3674,
+      "basis": "no EDGAR SIC: the code of the product line, as the US peer (Teradyne; Lam Research and ASML; Micron); fixed in code before the first S computation, written here after it"
+    }
+  },
+  "portfolio": {
+    "ai_exposure": {
+      "group": "issuer",
+      "theme": "AIサプライチェーン"
+    },
+    "coverage_target": 0.9,
+    "stress_discount_rate_shift": 0.02,
+    "stress_discount_rate_shift_basis": "Damodaran annual implied ERP 2.05% (end-1999) -> 4.10% (end-2002)",
+    "fx_shocks": [
+      -0.1,
+      0.1
+    ],
+    "fx_display": [
+      -0.2,
+      0.2
+    ],
+    "episodes": [
+      {
+        "id": "dotcom",
+        "label": "ITバブル崩壊",
+        "start": "2000-03-24",
+        "end": "2002-10-09"
+      },
+      {
+        "id": "gfc",
+        "label": "需要崩落の類例",
+        "start": "2007-10-09",
+        "end": "2009-03-09"
+      },
+      {
+        "id": "rates2022",
+        "label": "金利上昇と半導体の下落",
+        "start": "2021-11-19",
+        "end": "2022-10-12"
+      }
+    ],
+    "proxy_rule": "semiconductor ETF -> SOX; US large-cap growth ETF -> NASDAQ-100; US energy ETF -> its own history from 1998-12; Japanese equity ETF/stock -> Nikkei 225 (or own history when listed); USD assets -> USD/JPY (Fed H.10); per-holding map is private"
+  }
+}

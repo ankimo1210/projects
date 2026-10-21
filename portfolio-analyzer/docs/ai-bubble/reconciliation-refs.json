@@ -1,0 +1,1692 @@
+[
+ {
+  "issuer_id": "NVDA",
+  "metric": "revenue",
+  "period_start": "2026-04-27",
+  "period_end": "2026-07-26",
+  "value": 96221000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027",
+  "source_note": "NVIDIA press release 2026-08-26, GAAP tables ($ millions)"
+ },
+ {
+  "issuer_id": "NVDA",
+  "metric": "operating_income",
+  "period_start": "2026-04-27",
+  "period_end": "2026-07-26",
+  "value": 63734000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027",
+  "source_note": "NVIDIA press release 2026-08-26, GAAP tables ($ millions)"
+ },
+ {
+  "issuer_id": "NVDA",
+  "metric": "net_income",
+  "period_start": "2026-04-27",
+  "period_end": "2026-07-26",
+  "value": 59688000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027",
+  "source_note": "NVIDIA press release 2026-08-26, GAAP tables ($ millions)"
+ },
+ {
+  "issuer_id": "NVDA",
+  "metric": "eps_diluted",
+  "period_start": "2026-04-27",
+  "period_end": "2026-07-26",
+  "value": 2.46,
+  "rounding": 0.01,
+  "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027",
+  "source_note": "NVIDIA press release 2026-08-26, GAAP tables ($ millions)"
+ },
+ {
+  "issuer_id": "NVDA",
+  "metric": "operating_cf",
+  "period_start": "2026-01-26",
+  "period_end": "2026-07-26",
+  "value": 74421000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027",
+  "source_note": "NVIDIA press release 2026-08-26, GAAP tables ($ millions); six months"
+ },
+ {
+  "issuer_id": "NVDA",
+  "metric": "capex",
+  "period_start": "2026-01-26",
+  "period_end": "2026-07-26",
+  "value": 4434000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027",
+  "source_note": "NVIDIA press release 2026-08-26, GAAP tables ($ millions); six months, property, equipment and intangibles"
+ },
+ {
+  "issuer_id": "NVDA",
+  "metric": "cash",
+  "period_start": "2026-07-26",
+  "period_end": "2026-07-26",
+  "value": 22443000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027",
+  "source_note": "NVIDIA press release 2026-08-26, GAAP tables ($ millions)"
+ },
+ {
+  "issuer_id": "MSFT",
+  "metric": "revenue",
+  "period_start": "2025-07-01",
+  "period_end": "2026-06-30",
+  "value": 331839000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
+  "source_note": "Microsoft FY26 Q4 press release 2026-07-29, income and cash flow statements ($ millions; read via WebFetch, www.sec.gov and curl refused)"
+ },
+ {
+  "issuer_id": "MSFT",
+  "metric": "operating_income",
+  "period_start": "2025-07-01",
+  "period_end": "2026-06-30",
+  "value": 155237000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
+  "source_note": "Microsoft FY26 Q4 press release 2026-07-29, income and cash flow statements ($ millions; read via WebFetch, www.sec.gov and curl refused)"
+ },
+ {
+  "issuer_id": "MSFT",
+  "metric": "net_income",
+  "period_start": "2025-07-01",
+  "period_end": "2026-06-30",
+  "value": 133749000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
+  "source_note": "Microsoft FY26 Q4 press release 2026-07-29, income and cash flow statements ($ millions; read via WebFetch, www.sec.gov and curl refused)"
+ },
+ {
+  "issuer_id": "MSFT",
+  "metric": "eps_diluted",
+  "period_start": "2025-07-01",
+  "period_end": "2026-06-30",
+  "value": 17.95,
+  "rounding": 0.01,
+  "source_url": "https://microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
+  "source_note": "Microsoft FY26 Q4 press release 2026-07-29, income and cash flow statements ($ millions; read via WebFetch, www.sec.gov and curl refused)"
+ },
+ {
+  "issuer_id": "MSFT",
+  "metric": "operating_cf",
+  "period_start": "2025-07-01",
+  "period_end": "2026-06-30",
+  "value": 182935000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
+  "source_note": "Microsoft FY26 Q4 press release 2026-07-29, income and cash flow statements ($ millions; read via WebFetch, www.sec.gov and curl refused)"
+ },
+ {
+  "issuer_id": "MSFT",
+  "metric": "capex",
+  "period_start": "2025-07-01",
+  "period_end": "2026-06-30",
+  "value": 115948000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
+  "source_note": "Microsoft FY26 Q4 press release 2026-07-29, income and cash flow statements ($ millions; read via WebFetch, www.sec.gov and curl refused); additions to property and equipment, finance leases excluded"
+ },
+ {
+  "issuer_id": "MSFT",
+  "metric": "cash",
+  "period_start": "2026-06-30",
+  "period_end": "2026-06-30",
+  "value": 20935000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://microsoft.com/en-us/investor/earnings/fy-2026-q4/press-release-webcast",
+  "source_note": "Microsoft FY26 Q4 press release 2026-07-29, income and cash flow statements ($ millions; read via WebFetch, www.sec.gov and curl refused)"
+ },
+ {
+  "issuer_id": "ORCL",
+  "metric": "revenue",
+  "period_start": "2026-06-01",
+  "period_end": "2026-08-31",
+  "value": 19345000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.placera.se/pressmeddelanden/oracle-announces-q1-results-driven-by-triple-digit-growth-in-cloud-infrastructure-revenues-20260910",
+  "source_note": "Oracle Q1 FY27 press release 2026-09-10 (PR Newswire copy; oracle.com refused automated reads), $ millions"
+ },
+ {
+  "issuer_id": "ORCL",
+  "metric": "operating_income",
+  "period_start": "2026-06-01",
+  "period_end": "2026-08-31",
+  "value": 6728000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.placera.se/pressmeddelanden/oracle-announces-q1-results-driven-by-triple-digit-growth-in-cloud-infrastructure-revenues-20260910",
+  "source_note": "Oracle Q1 FY27 press release 2026-09-10 (PR Newswire copy; oracle.com refused automated reads), $ millions"
+ },
+ {
+  "issuer_id": "ORCL",
+  "metric": "net_income",
+  "period_start": "2026-06-01",
+  "period_end": "2026-08-31",
+  "value": 4760000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.placera.se/pressmeddelanden/oracle-announces-q1-results-driven-by-triple-digit-growth-in-cloud-infrastructure-revenues-20260910",
+  "source_note": "Oracle Q1 FY27 press release 2026-09-10 (PR Newswire copy; oracle.com refused automated reads), $ millions; before preferred dividends (available to common 4,679)"
+ },
+ {
+  "issuer_id": "ORCL",
+  "metric": "eps_diluted",
+  "period_start": "2026-06-01",
+  "period_end": "2026-08-31",
+  "value": 1.56,
+  "rounding": 0.01,
+  "source_url": "https://www.placera.se/pressmeddelanden/oracle-announces-q1-results-driven-by-triple-digit-growth-in-cloud-infrastructure-revenues-20260910",
+  "source_note": "Oracle Q1 FY27 press release 2026-09-10 (PR Newswire copy; oracle.com refused automated reads), $ millions"
+ },
+ {
+  "issuer_id": "ORCL",
+  "metric": "operating_cf",
+  "period_start": "2026-06-01",
+  "period_end": "2026-08-31",
+  "value": 23103000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.placera.se/pressmeddelanden/oracle-announces-q1-results-driven-by-triple-digit-growth-in-cloud-infrastructure-revenues-20260910",
+  "source_note": "Oracle Q1 FY27 press release 2026-09-10 (PR Newswire copy; oracle.com refused automated reads), $ millions"
+ },
+ {
+  "issuer_id": "ORCL",
+  "metric": "capex",
+  "period_start": "2026-06-01",
+  "period_end": "2026-08-31",
+  "value": 28499000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.placera.se/pressmeddelanden/oracle-announces-q1-results-driven-by-triple-digit-growth-in-cloud-infrastructure-revenues-20260910",
+  "source_note": "Oracle Q1 FY27 press release 2026-09-10 (PR Newswire copy; oracle.com refused automated reads), $ millions"
+ },
+ {
+  "issuer_id": "ORCL",
+  "metric": "cash",
+  "period_start": "2026-08-31",
+  "period_end": "2026-08-31",
+  "value": 36369000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.placera.se/pressmeddelanden/oracle-announces-q1-results-driven-by-triple-digit-growth-in-cloud-infrastructure-revenues-20260910",
+  "source_note": "Oracle Q1 FY27 press release 2026-09-10 (PR Newswire copy; oracle.com refused automated reads), $ millions"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "revenue",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 367473000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2026_1Q.pdf",
+  "source_note": "要約四半期連結損益計算書 p7 (百万円)"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "operating_income",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 189990000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2026_1Q.pdf",
+  "source_note": "要約四半期連結損益計算書 p7"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "pretax_income",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 234082000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2026_1Q.pdf",
+  "source_note": "要約四半期連結損益計算書 p7"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "net_income_parent",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 174780000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2026_1Q.pdf",
+  "source_note": "要約四半期連結損益計算書 p7"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "total_assets",
+  "period_start": "2026-06-30",
+  "period_end": "2026-06-30",
+  "value": 1514652000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2026_1Q.pdf",
+  "source_note": "要約四半期連結財政状態計算書 p6"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "equity_parent",
+  "period_start": "2026-06-30",
+  "period_end": "2026-06-30",
+  "value": 1042642000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2026_1Q.pdf",
+  "source_note": "要約四半期連結財政状態計算書 p6"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "revenue",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": 1128610000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2025_FN.pdf",
+  "source_note": "連結損益計算書 p8 (百万円)"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "operating_income",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": 499120000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2025_FN.pdf",
+  "source_note": "連結損益計算書 p8"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "net_income_parent",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": 375353000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2025_FN.pdf",
+  "source_note": "連結損益計算書 p8"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "operating_cf",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": 335182000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2025_FN.pdf",
+  "source_note": "連結キャッシュ・フロー計算書 p10"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "investing_cf",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": -34552000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2025_FN.pdf",
+  "source_note": "連結キャッシュ・フロー計算書 p10"
+ },
+ {
+  "issuer_id": "6857.T",
+  "metric": "cash_end",
+  "period_start": "2026-03-31",
+  "period_end": "2026-03-31",
+  "value": 339966000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.advantest.com/document/ja/investors/ir-library/result/J_FR_FY2025_FN.pdf",
+  "source_note": "連結キャッシュ・フロー計算書 p10"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2015-04-01",
+  "period_end": "2016-03-31",
+  "value": 663948000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2016-04-01",
+  "period_end": "2017-03-31",
+  "value": 799719000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2017-04-01",
+  "period_end": "2018-03-31",
+  "value": 1130728000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2018-04-01",
+  "period_end": "2019-03-31",
+  "value": 1278240000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2019-04-01",
+  "period_end": "2020-03-31",
+  "value": 1127286000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2020-04-01",
+  "period_end": "2021-03-31",
+  "value": 1399102000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2021-04-01",
+  "period_end": "2022-03-31",
+  "value": 2003805000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2022-04-01",
+  "period_end": "2023-03-31",
+  "value": 2209025000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2023-04-01",
+  "period_end": "2024-03-31",
+  "value": 1830527000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2024-04-01",
+  "period_end": "2025-03-31",
+  "value": 2431568000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "revenue",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": 2443533000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 5 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2015-04-01",
+  "period_end": "2016-03-31",
+  "value": 116788000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2016-04-01",
+  "period_end": "2017-03-31",
+  "value": 155697000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2017-04-01",
+  "period_end": "2018-03-31",
+  "value": 281172000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2018-04-01",
+  "period_end": "2019-03-31",
+  "value": 310571000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2019-04-01",
+  "period_end": "2020-03-31",
+  "value": 237292000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2020-04-01",
+  "period_end": "2021-03-31",
+  "value": 320685000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2021-04-01",
+  "period_end": "2022-03-31",
+  "value": 599271000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2022-04-01",
+  "period_end": "2023-03-31",
+  "value": 617723000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2023-04-01",
+  "period_end": "2024-03-31",
+  "value": 456263000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2024-04-01",
+  "period_end": "2025-03-31",
+  "value": 697319000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_income",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": 624936000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 9 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2015-04-01",
+  "period_end": "2016-03-31",
+  "value": 119399000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2016-04-01",
+  "period_end": "2017-03-31",
+  "value": 157549000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2017-04-01",
+  "period_end": "2018-03-31",
+  "value": 280737000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2018-04-01",
+  "period_end": "2019-03-31",
+  "value": 321662000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2019-04-01",
+  "period_end": "2020-03-31",
+  "value": 244979000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2020-04-01",
+  "period_end": "2021-03-31",
+  "value": 322103000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2021-04-01",
+  "period_end": "2022-03-31",
+  "value": 601724000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2022-04-01",
+  "period_end": "2023-03-31",
+  "value": 625185000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2023-04-01",
+  "period_end": "2024-03-31",
+  "value": 463185000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2024-04-01",
+  "period_end": "2025-03-31",
+  "value": 707727000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "ordinary_income",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": 630338000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 12 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2015-04-01",
+  "period_end": "2016-03-31",
+  "value": 77891000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2016-04-01",
+  "period_end": "2017-03-31",
+  "value": 115208000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2017-04-01",
+  "period_end": "2018-03-31",
+  "value": 204371000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2018-04-01",
+  "period_end": "2019-03-31",
+  "value": 248228000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2019-04-01",
+  "period_end": "2020-03-31",
+  "value": 185206000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2020-04-01",
+  "period_end": "2021-03-31",
+  "value": 242941000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2021-04-01",
+  "period_end": "2022-03-31",
+  "value": 437076000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2022-04-01",
+  "period_end": "2023-03-31",
+  "value": 471584000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2023-04-01",
+  "period_end": "2024-03-31",
+  "value": 363963000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2024-04-01",
+  "period_end": "2025-03-31",
+  "value": 544133000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "net_income_parent",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": 574454000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-2 row 20 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2016-03-31",
+  "period_end": "2016-03-31",
+  "value": 793367000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2017-03-31",
+  "period_end": "2017-03-31",
+  "value": 957447000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2018-03-31",
+  "period_end": "2018-03-31",
+  "value": 1202796000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2019-03-31",
+  "period_end": "2019-03-31",
+  "value": 1257627000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2020-03-31",
+  "period_end": "2020-03-31",
+  "value": 1278495000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2021-03-31",
+  "period_end": "2021-03-31",
+  "value": 1425364000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2022-03-31",
+  "period_end": "2022-03-31",
+  "value": 1894457000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2023-03-31",
+  "period_end": "2023-03-31",
+  "value": 2311594000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2024-03-31",
+  "period_end": "2024-03-31",
+  "value": 2456462000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2025-03-31",
+  "period_end": "2025-03-31",
+  "value": 2625981000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "total_assets",
+  "period_start": "2026-03-31",
+  "period_end": "2026-03-31",
+  "value": 2860997000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 31 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2016-03-31",
+  "period_end": "2016-03-31",
+  "value": 564239000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2017-03-31",
+  "period_end": "2017-03-31",
+  "value": 645999000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2018-03-31",
+  "period_end": "2018-03-31",
+  "value": 771509000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2019-03-31",
+  "period_end": "2019-03-31",
+  "value": 888117000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2020-03-31",
+  "period_end": "2020-03-31",
+  "value": 829692000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2021-03-31",
+  "period_end": "2021-03-31",
+  "value": 1024562000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2022-03-31",
+  "period_end": "2022-03-31",
+  "value": 1347048000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2023-03-31",
+  "period_end": "2023-03-31",
+  "value": 1599524000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2024-03-31",
+  "period_end": "2024-03-31",
+  "value": 1760180000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2025-03-31",
+  "period_end": "2025-03-31",
+  "value": 1855209000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "equity_total",
+  "period_start": "2026-03-31",
+  "period_end": "2026-03-31",
+  "value": 2069996000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-1 row 62 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2015-04-01",
+  "period_end": "2016-03-31",
+  "value": 69398000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2016-04-01",
+  "period_end": "2017-03-31",
+  "value": 136948000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2017-04-01",
+  "period_end": "2018-03-31",
+  "value": 186582000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2018-04-01",
+  "period_end": "2019-03-31",
+  "value": 189572000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2019-04-01",
+  "period_end": "2020-03-31",
+  "value": 253117000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2020-04-01",
+  "period_end": "2021-03-31",
+  "value": 145888000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2021-04-01",
+  "period_end": "2022-03-31",
+  "value": 283387000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2022-04-01",
+  "period_end": "2023-03-31",
+  "value": 426270000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2023-04-01",
+  "period_end": "2024-03-31",
+  "value": 434720000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2024-04-01",
+  "period_end": "2025-03-31",
+  "value": 582174000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "operating_cf",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": 539732000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 13 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2015-04-01",
+  "period_end": "2016-03-31",
+  "value": -150013000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2016-04-01",
+  "period_end": "2017-03-31",
+  "value": -28893000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2017-04-01",
+  "period_end": "2018-03-31",
+  "value": -11833000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2018-04-01",
+  "period_end": "2019-03-31",
+  "value": -84033000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2019-04-01",
+  "period_end": "2020-03-31",
+  "value": 15951000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2020-04-01",
+  "period_end": "2021-03-31",
+  "value": -18274000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2021-04-01",
+  "period_end": "2022-03-31",
+  "value": -55632000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2022-04-01",
+  "period_end": "2023-03-31",
+  "value": -41756000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2023-04-01",
+  "period_end": "2024-03-31",
+  "value": -125148000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2024-04-01",
+  "period_end": "2025-03-31",
+  "value": -169609000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "investing_cf",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": -96492000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 23 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2015-04-01",
+  "period_end": "2016-03-31",
+  "value": -138600000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2016-04-01",
+  "period_end": "2017-03-31",
+  "value": -39380000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2017-04-01",
+  "period_end": "2018-03-31",
+  "value": -82549000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2018-04-01",
+  "period_end": "2019-03-31",
+  "value": -129761000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2019-04-01",
+  "period_end": "2020-03-31",
+  "value": -250374000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2020-04-01",
+  "period_end": "2021-03-31",
+  "value": -114525000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2021-04-01",
+  "period_end": "2022-03-31",
+  "value": -167256000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2022-04-01",
+  "period_end": "2023-03-31",
+  "value": -256534000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2023-04-01",
+  "period_end": "2024-03-31",
+  "value": -325012000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2024-04-01",
+  "period_end": "2025-03-31",
+  "value": -388836000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "financing_cf",
+  "period_start": "2025-04-01",
+  "period_end": "2026-03-31",
+  "value": -425359000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 29 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2016-03-31",
+  "period_end": "2016-03-31",
+  "value": 95638000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2017-03-31",
+  "period_end": "2017-03-31",
+  "value": 164366000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2018-03-31",
+  "period_end": "2018-03-31",
+  "value": 257877000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2019-03-31",
+  "period_end": "2019-03-31",
+  "value": 232634000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2020-03-31",
+  "period_end": "2020-03-31",
+  "value": 247959000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2021-03-31",
+  "period_end": "2021-03-31",
+  "value": 265993000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2022-03-31",
+  "period_end": "2022-03-31",
+  "value": 335648000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2023-03-31",
+  "period_end": "2023-03-31",
+  "value": 472471000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2024-03-31",
+  "period_end": "2024-03-31",
+  "value": 461608000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2025-03-31",
+  "period_end": "2025-03-31",
+  "value": 485072000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "8035.T",
+  "metric": "cash_end",
+  "period_start": "2026-03-31",
+  "period_end": "2026-03-31",
+  "value": 505414000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.tel.co.jp/ir/library/db/negqvb0000000ey6-att/db2026.xlsx",
+  "source_note": "IR データブック db2026.xlsx, sheet 1-4 row 34 (百万円)"
+ },
+ {
+  "issuer_id": "AMZN",
+  "metric": "revenue",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 200606000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results",
+  "source_note": "Amazon press release 2026-07-30, statements of operations ($ millions); 10-Q filed 2026-07-31"
+ },
+ {
+  "issuer_id": "AMZN",
+  "metric": "net_income",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 62647000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://ir.aboutamazon.com/news-release/news-release-details/2026/Amazon-com-Announces-Second-Quarter-Results",
+  "source_note": "Amazon press release 2026-07-30, statements of operations ($ millions); 10-Q filed 2026-07-31"
+ },
+ {
+  "issuer_id": "GOOGL",
+  "metric": "revenue",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 119796000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
+  "source_note": "Alphabet earnings release 2026-07-22, income statement ($ millions); 10-Q filed 2026-07-23"
+ },
+ {
+  "issuer_id": "GOOGL",
+  "metric": "net_income",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 112193000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://s206.q4cdn.com/479360582/files/doc_financials/2026/q2/2026q2-alphabet-earnings-release.pdf",
+  "source_note": "Alphabet earnings release 2026-07-22, income statement ($ millions); 10-Q filed 2026-07-23"
+ },
+ {
+  "issuer_id": "META",
+  "metric": "revenue",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 60801000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026050596/meta-06302026xexhibit991.htm",
+  "source_note": "Meta press release 2026-07-29 (8-K ex. 99.1, $ millions); 10-Q filed 2026-07-30"
+ },
+ {
+  "issuer_id": "META",
+  "metric": "net_income",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 15848000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.sec.gov/Archives/edgar/data/0001326801/000162828026050596/meta-06302026xexhibit991.htm",
+  "source_note": "Meta press release 2026-07-29 (8-K ex. 99.1, $ millions); 10-Q filed 2026-07-30"
+ },
+ {
+  "issuer_id": "AVGO",
+  "metric": "revenue",
+  "period_start": "2026-05-04",
+  "period_end": "2026-08-02",
+  "value": 29591000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.sec.gov/Archives/edgar/data/0001730168/000173016826000076/avgo-08022026x8kxex99.htm",
+  "source_note": "Broadcom press release 2026-09-02 (8-K ex. 99, $ millions); 10-Q filed 2026-09-10; net income tagged as ProfitLoss"
+ },
+ {
+  "issuer_id": "AVGO",
+  "metric": "net_income",
+  "period_start": "2026-05-04",
+  "period_end": "2026-08-02",
+  "value": 13088000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.sec.gov/Archives/edgar/data/0001730168/000173016826000076/avgo-08022026x8kxex99.htm",
+  "source_note": "Broadcom press release 2026-09-02 (8-K ex. 99, $ millions); 10-Q filed 2026-09-10; net income tagged as ProfitLoss"
+ },
+ {
+  "issuer_id": "AMD",
+  "metric": "revenue",
+  "period_start": "2026-03-29",
+  "period_end": "2026-06-27",
+  "value": 11536000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://ir.amd.com/news-events/press-releases/detail/1295/amd-reports-second-quarter-2026-financial-results",
+  "source_note": "AMD press release 2026-08-04, statements of operations ($ millions); 10-Q filed 2026-08-05"
+ },
+ {
+  "issuer_id": "AMD",
+  "metric": "net_income",
+  "period_start": "2026-03-29",
+  "period_end": "2026-06-27",
+  "value": 2297000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://ir.amd.com/news-events/press-releases/detail/1295/amd-reports-second-quarter-2026-financial-results",
+  "source_note": "AMD press release 2026-08-04, statements of operations ($ millions); 10-Q filed 2026-08-05"
+ },
+ {
+  "issuer_id": "MU",
+  "metric": "revenue",
+  "period_start": "2025-08-29",
+  "period_end": "2026-09-03",
+  "value": 133188000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.sec.gov/Archives/edgar/data/0000723125/000072312526000018/a2026q4ex991-pressrelease.htm",
+  "source_note": "Micron press release 2026-09-30 (8-K ex. 99.1, fiscal year, $ millions; Q4 revenue 54,229 and net income 37,701 also match the derived quarter); 10-K filed 2026-10-09"
+ },
+ {
+  "issuer_id": "MU",
+  "metric": "net_income",
+  "period_start": "2025-08-29",
+  "period_end": "2026-09-03",
+  "value": 84969000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www.sec.gov/Archives/edgar/data/0000723125/000072312526000018/a2026q4ex991-pressrelease.htm",
+  "source_note": "Micron press release 2026-09-30 (8-K ex. 99.1, fiscal year, $ millions; Q4 revenue 54,229 and net income 37,701 also match the derived quarter); 10-K filed 2026-10-09"
+ },
+ {
+  "issuer_id": "LRCX",
+  "metric": "revenue",
+  "period_start": "2025-06-30",
+  "period_end": "2026-06-28",
+  "value": 23232690000.0,
+  "rounding": 1000.0,
+  "source_url": "https://www.sec.gov/Archives/edgar/data/0000707549/000070754926000033/lrcx_exhibitx991xq4x2026.htm",
+  "source_note": "Lam Research press release 2026-07-29 (8-K ex. 99.1, twelve months, $ thousands; June quarter 6,722,238 and 2,277,282 also match the derived quarter); 10-K filed 2026-08-07"
+ },
+ {
+  "issuer_id": "LRCX",
+  "metric": "net_income",
+  "period_start": "2025-06-30",
+  "period_end": "2026-06-28",
+  "value": 7265396000.0,
+  "rounding": 1000.0,
+  "source_url": "https://www.sec.gov/Archives/edgar/data/0000707549/000070754926000033/lrcx_exhibitx991xq4x2026.htm",
+  "source_note": "Lam Research press release 2026-07-29 (8-K ex. 99.1, twelve months, $ thousands; June quarter 6,722,238 and 2,277,282 also match the derived quarter); 10-K filed 2026-08-07"
+ },
+ {
+  "issuer_id": "AMAT",
+  "metric": "revenue",
+  "period_start": "2026-04-27",
+  "period_end": "2026-07-26",
+  "value": 9115000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://mfn.se/all/a/applied-materials/applied-materials-announces-third-quarter-2026-results-d0531ab2",
+  "source_note": "Applied Materials press release 2026-08-13 (GlobeNewswire copy; the company site answers 403), statements of operations ($ millions); 10-Q filed 2026-08-20"
+ },
+ {
+  "issuer_id": "AMAT",
+  "metric": "net_income",
+  "period_start": "2026-04-27",
+  "period_end": "2026-07-26",
+  "value": 2538000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://mfn.se/all/a/applied-materials/applied-materials-announces-third-quarter-2026-results-d0531ab2",
+  "source_note": "Applied Materials press release 2026-08-13 (GlobeNewswire copy; the company site answers 403), statements of operations ($ millions); 10-Q filed 2026-08-20"
+ },
+ {
+  "issuer_id": "KLAC",
+  "metric": "revenue",
+  "period_start": "2025-07-01",
+  "period_end": "2026-06-30",
+  "value": 13579476000.0,
+  "rounding": 1000.0,
+  "source_url": "https://www.sec.gov/Archives/edgar/data/0000319201/000031920126000024/exhibit991earningsrelease7.htm",
+  "source_note": "KLA press release 2026-07-28 (8-K ex. 99.1, twelve months, $ thousands; June quarter 3,657,556 and 1,363,059 also match the derived quarter); 10-K filed 2026-08-06"
+ },
+ {
+  "issuer_id": "KLAC",
+  "metric": "net_income",
+  "period_start": "2025-07-01",
+  "period_end": "2026-06-30",
+  "value": 4830771000.0,
+  "rounding": 1000.0,
+  "source_url": "https://www.sec.gov/Archives/edgar/data/0000319201/000031920126000024/exhibit991earningsrelease7.htm",
+  "source_note": "KLA press release 2026-07-28 (8-K ex. 99.1, twelve months, $ thousands; June quarter 3,657,556 and 1,363,059 also match the derived quarter); 10-K filed 2026-08-06"
+ },
+ {
+  "issuer_id": "ANET",
+  "metric": "revenue",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 3035700000.0,
+  "rounding": 100000.0,
+  "source_url": "https://s21.q4cdn.com/861911615/files/doc_news/Arista-Networks-Inc--Reports-Second-Quarter-2026-Financial-Results-2026.pdf",
+  "source_note": "Arista press release 2026-08-04, statements of operations ($ millions, one decimal); 10-Q filed 2026-08-05"
+ },
+ {
+  "issuer_id": "ANET",
+  "metric": "net_income",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 1212900000.0,
+  "rounding": 100000.0,
+  "source_url": "https://s21.q4cdn.com/861911615/files/doc_news/Arista-Networks-Inc--Reports-Second-Quarter-2026-Financial-Results-2026.pdf",
+  "source_note": "Arista press release 2026-08-04, statements of operations ($ millions, one decimal); 10-Q filed 2026-08-05"
+ },
+ {
+  "issuer_id": "VRT",
+  "metric": "revenue",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 3274000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://s205.q4cdn.com/554782763/files/doc_financials/2026/q2/Vertiv-Second-Quarter-2026-Earnings-Release.pdf",
+  "source_note": "Vertiv earnings release 2026-07-29 (net sales $ millions; net income $ millions, one decimal); 10-Q filed 2026-07-29"
+ },
+ {
+  "issuer_id": "VRT",
+  "metric": "net_income",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 497800000.0,
+  "rounding": 100000.0,
+  "source_url": "https://s205.q4cdn.com/554782763/files/doc_financials/2026/q2/Vertiv-Second-Quarter-2026-Earnings-Release.pdf",
+  "source_note": "Vertiv earnings release 2026-07-29 (net sales $ millions; net income $ millions, one decimal); 10-Q filed 2026-07-29"
+ },
+ {
+  "issuer_id": "CRWV",
+  "metric": "revenue",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 2575000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Reports-Strong-Second-Quarter-2026-Results/default.aspx",
+  "source_note": "CoreWeave press release 2026-08-11, statements of operations ($ millions); 10-Q filed 2026-08-12"
+ },
+ {
+  "issuer_id": "CRWV",
+  "metric": "net_income",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": -626000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Reports-Strong-Second-Quarter-2026-Results/default.aspx",
+  "source_note": "CoreWeave press release 2026-08-11, statements of operations ($ millions); 10-Q filed 2026-08-12"
+ },
+ {
+  "issuer_id": "285A.T",
+  "metric": "revenue",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 1767117000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www2.jpx.co.jp/disc/285A0/140120260731505265.pdf",
+  "source_note": "キオクシア 決算短信 2026-07-31 (PDF, p.1 and p.10, 百万円) against the rows read from its inline XBRL twin"
+ },
+ {
+  "issuer_id": "285A.T",
+  "metric": "net_income_parent",
+  "period_start": "2026-04-01",
+  "period_end": "2026-06-30",
+  "value": 842165000000.0,
+  "rounding": 1000000.0,
+  "source_url": "https://www2.jpx.co.jp/disc/285A0/140120260731505265.pdf",
+  "source_note": "キオクシア 決算短信 2026-07-31 (PDF, p.1 and p.10, 百万円) against the rows read from its inline XBRL twin"
+ }
+]
