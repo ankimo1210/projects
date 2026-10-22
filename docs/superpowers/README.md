@@ -148,6 +148,12 @@
 | 2026-07-14 | 仕様 | [cpp_algo_lab 設計書](specs/2026-07-14-cpp-algo-lab-design.md) |
 | 2026-07-14 | 計画 | [cpp_algo_lab Phase 1 (Foundation + Sorting) Implementation Plan](plans/2026-07-14-cpp-algo-lab-phase1.md) |
 
+## virtual-tryon（仮称・未着手）
+
+| 日付 | 種別 | 文書 |
+|---|---|---|
+| 2026-10-19 | 仕様 | [服の写真を自分の全身に着せるアプリ 検討メモ（設計前）](specs/2026-10-19-virtual-tryon-notes.md) |
+
 ## autostock（退避済み）
 
 | 日付 | 種別 | 文書 |
