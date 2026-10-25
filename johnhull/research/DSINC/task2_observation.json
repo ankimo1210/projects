@@ -1,0 +1,76 @@
+{
+  "status": "task2_smoke_not_formal_acceptance",
+  "contract": {
+    "strike": 1.0,
+    "expiry": 0.5,
+    "domestic_rate": 0.05,
+    "foreign_rate": 0.02
+  },
+  "model": {
+    "kind": "three_halves",
+    "kappa": 20.0,
+    "theta": 0.04,
+    "xi": 4.0,
+    "rho": -0.5,
+    "v0": 0.04
+  },
+  "config": {
+    "n_time": 100,
+    "n_var": 160,
+    "log_var_bounds": [
+      -8.517193191416238,
+      0.6931471805599453
+    ],
+    "chi": 0.5,
+    "panels": [
+      0.0,
+      2.0,
+      5.0,
+      10.0,
+      20.0,
+      40.0,
+      80.0,
+      160.0,
+      320.0,
+      640.0
+    ],
+    "points_per_panel": 12,
+    "root_width": 0.1,
+    "root_max_width": 0.3,
+    "root_x_tol": 1e-10,
+    "root_residual_tol": 1e-08,
+    "root_maxiter": 60
+  },
+  "spots": [
+    0.9,
+    1,
+    1.1
+  ],
+  "european": [
+    0.10255734341300579,
+    0.04722426297956636,
+    0.019104661425227466
+  ],
+  "printed_european": [
+    0.102557,
+    0.047224,
+    0.019105
+  ],
+  "differences": [
+    3.4341300579610046e-07,
+    2.6297956635945585e-07,
+    -3.385747725341559e-07
+  ],
+  "setup_seconds": 3.957121945999461,
+  "european_seconds": 0.28399902500132157,
+  "elapsed_seconds": 4.241109340999174,
+  "peak_rss_bytes": 164708352,
+  "diagnostics": {
+    "propagator_bytes": 44236800,
+    "max_peclet": 14.380295580774147,
+    "zero_frequency_min_entry": -0.03158157430448863,
+    "zero_frequency_row_error": 3.885780586188048e-15,
+    "scheme_nonmonotone": true
+  },
+  "source_sha256": "2363fff7d282ec60c283c387a8c524d888a368084bf6a1be9bf922f5550f922a"
+}

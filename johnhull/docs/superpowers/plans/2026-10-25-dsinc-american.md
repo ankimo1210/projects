@@ -10,7 +10,7 @@
 
 **Spec:** [2026-10-25-dsinc-american-design.md](../specs/2026-10-25-dsinc-american-design.md)
 
-**状態:** 2026-10-25、ユーザーの「進めて」により実装へ移行。Task 1完了、Task 2から継続。研究IDはDSINCで、既存RB-F*の計画を置換しない。Opus承認後、論文の印刷値（Table 3(b)のEuropean、Table 4のEEP・N=200）を照合対象に追加した（[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)の「Opus承認後の追加照合と変更」）。
+**状態:** 2026-10-25、ユーザーの「進めて」により実装へ移行。Tasks 1–2完了、Task 3から継続。研究IDはDSINCで、既存RB-F*の計画を置換しない。Opus承認後、論文の印刷値（Table 3(b)のEuropean、Table 4のEEP・N=200）を照合対象に追加した（[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)の「Opus承認後の追加照合と変更」）。
 
 ## Global Constraints
 
@@ -76,12 +76,12 @@
 - `build_propagators(contract: PutContract, model: VarianceModel, config: SpectralConfig) -> Propagators`。Propagatorsはcomplex128行列、周波数・重み・格子・dt・入力hash・setup secondsを持つprivate dataclass。
 - `european_put(contract: PutContract, model: VarianceModel, spots: ndarray, config: SpectralConfig, *, propagators: Propagators | None=None) -> ndarray`。最終価格をzetaでnot-a-knot CubicSpline補間し、格子外なら拒否する。
 
-- [ ] RED: `test_constant_variance_fourier_mode` で定数分散fixtureの伝播を解析的なexpと比較（atol=1e-11）。`test_zero_frequency_preserves_one`、`test_reciprocal_variance_cir_mean` で3/2の独立CIR条件付平均を比較する。後者は160/240/320点の共通v0=.04、tau=.5、E[1/v_tau]=exp(-.8*tau)/.04+45*(1-exp(-.8*tau))、観測次数1.5〜2.5・最細相対誤差<=1e-4。
-- [ ] RED: `test_heston_european_against_existing_cf` はkappa2,theta=v0=.04,xi=.2,rho=-.5,rd=.05,rf=.02,T=.5、3spotで価格/K差<=2e-5。既存APIは `heston_price(spot,strike,rate,expiry,v0,reversion,long_run,vol_of_variance,rho,dividend_yield=0.0,*,kind='call',terms=1024,truncation=30.0)`、kind='put'とdividend_yield=rfを明示する。上流のFeller違反例をこの制御へ流用しない。
-- [ ] RED: `test_positive_damping_residue_and_sign` はBSM正規密度の独立数値積分fixtureを使い、留数なし・符号反転mutantをrejectする。`test_neumann_ghost_rows` は端の一次微分0/二次微分2倍、`test_common_generator_for_models` はa,b以外の共通経路を固定。`test_offset_and_cubic_interpolation` は解析曲線と±h/2の価格変化を比較する。
-- [ ] RED: `test_invalid_damping_or_grid` はchi∉(0,1)、非昇順panels、n_time<1、v0範囲外を拒否。`test_propagator_contract_mismatch` はrd/rf/T/model/gridのいずれかが違うcacheを拒否する。
-- [ ] Run `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_dsinc_spectral.py`、FAIL確認後に実装する。n_varは節点数、中心差分＋ghost反射Neumann、`scipy.linalg.expm`、正周波数Gauss–Legendre、Eq.(61)。割引は価格側で一度だけ。Pe、exp(A_0*dt)の最小成分・行和を記録し、非単調なら独立検算/細分で影響を確認できるまで認定しない。
-- [ ] 同テストとTask 1をPASSにし、source/数学対応表を `research/DSINC/README.md` に加える。S0でT=.5のEuropean 3spotsを計算し、Table 3(b)とsmoke比較する（正式判定はTask 5のpaper_match）。setup/queryの計時を分離し、dense行列の同時保持量を計測する。必要ならcommit。
+- [x] RED: `test_constant_variance_fourier_mode` で定数分散fixtureの伝播を解析的なexpと比較（atol=1e-11）。`test_zero_frequency_preserves_one`、`test_reciprocal_variance_cir_mean` で3/2の独立CIR条件付平均を比較する。後者は160/240/320点の共通v0=.04、tau=.5、E[1/v_tau]=exp(-.8*tau)/.04+45*(1-exp(-.8*tau))、観測次数1.5〜2.5・最細相対誤差<=1e-4。
+- [x] RED: `test_heston_european_against_existing_cf` はkappa2,theta=v0=.04,xi=.2,rho=-.5,rd=.05,rf=.02,T=.5、3spotで価格/K差<=2e-5。既存APIは `heston_price(spot,strike,rate,expiry,v0,reversion,long_run,vol_of_variance,rho,dividend_yield=0.0,*,kind='call',terms=1024,truncation=30.0)`、kind='put'とdividend_yield=rfを明示する。上流のFeller違反例をこの制御へ流用しない。
+- [x] RED: `test_positive_damping_residue_and_sign` はBSM正規密度の独立数値積分fixtureを使い、留数なし・符号反転mutantをrejectする。`test_neumann_ghost_rows` は端の一次微分0/二次微分2倍、`test_common_generator_for_models` はa,b以外の共通経路を固定。`test_offset_and_cubic_interpolation` は解析曲線と±h/2の価格変化を比較する。
+- [x] RED: `test_invalid_damping_or_grid` はchi∉(0,1)、非昇順panels、n_time<1、v0範囲外を拒否。`test_propagator_contract_mismatch` はrd/rf/T/model/gridのいずれかが違うcacheを拒否する。
+- [x] Run `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_dsinc_spectral.py`、FAIL確認後に実装する。n_varは節点数、中心差分＋ghost反射Neumann、`scipy.linalg.expm`、正周波数Gauss–Legendre、Eq.(61)。割引は価格側で一度だけ。Pe、exp(A_0*dt)の最小成分・行和を記録し、非単調なら独立検算/細分で影響を確認できるまで認定しない。
+- [x] 同テストとTask 1をPASSにし、source/数学対応表を `research/DSINC/README.md` に加える。S0でT=.5のEuropean 3spotsを計算し、Table 3(b)とsmoke比較する（正式判定はTask 5のpaper_match）。setup/queryの計時を分離し、dense行列の同時保持量を計測する。必要ならcommit。
 
 ## Task 3: 独立3/2 finite-difference参照
 

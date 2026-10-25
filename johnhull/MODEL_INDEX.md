@@ -379,6 +379,8 @@ synthetic-data method demonstrations, not market-performance claims.
 
 ## DSINC research: American put reproduction (in progress)
 
+Fixed-frequency path: `hullkit._dsinc_spectral:frequency_rule`, `hullkit._dsinc_spectral:variance_grid`, `hullkit._dsinc_spectral:frequency_generator`, `hullkit._dsinc_spectral:build_propagators`, `hullkit._dsinc_spectral:european_put`, `hullkit._dsinc_spectral:Propagators`. Shared Heston/3/2 operator, ghost Neumann ends, positive-strip residue and input-bound transforms; independent constant-variance density integral, CIR moment, Heston CF and grid-offset controls in test_dsinc_spectral.py. American implementation remains pending.
+
 | Module | Contracts | Verification |
 |---|---|---|
 | `hullkit._dsinc_types` | Private `hullkit._dsinc_types:PutContract`, `hullkit._dsinc_types:VarianceModel`, `hullkit._dsinc_types:SpectralConfig`, `hullkit._dsinc_types:PricingFailure`, `hullkit._dsinc_types:PricingResult` | Validated units/domain and frozen inputs; test_dsinc_baseline.py. Fixed-source Heston observers live in research/DSINC; neither baseline observations nor these types certify numerical accuracy. |
