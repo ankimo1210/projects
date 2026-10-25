@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-25",
+  "status": "complete_with_nonreproduction",
+  "scientific_result": "not_reproduced",
+  "main_executed": false,
+  "review": {
+    "requested": "opus",
+    "actual": "claude-opus-5-5",
+    "R0": "REVISE",
+    "R1": "APPROVE",
+    "critical": 0,
+    "important": 0,
+    "optional_minors_reported": 5,
+    "one_optional_test_added": true,
+    "rerun_conditions_satisfied": true
+  },
+  "tests": {
+    "full_hullkit_report": {
+      "passed": "7822",
+      "skipped": "6",
+      "warnings": "2",
+      "seconds": "467.50",
+      "epoch": "before review guard fixes",
+      "log_sha256": "08e152c4d9b68f48a59ca7fe94bd7b0952f18bb1b49e8937566d96c0ec949e58"
+    },
+    "post_review_scoped": {
+      "passed": 1024,
+      "seconds": 32.73,
+      "files": "five DSINC suites plus docstrings/model_index",
+      "log_sha256": "4b4ec1a46196f0216ae594d11602eceffe550708777e4939c2b9fbd7e83fc08e"
+    },
+    "ruff": "12 owned Python files check/format PASS"
+  },
+  "release": {
+    "passed": false,
+    "reason": "15 generated portal HTML missing in isolated worktree",
+    "baseline_script_identical": true,
+    "baseline_same_failure": true,
+    "site_rebuilt": false
+  },
+  "pilot": {
+    "jobs": 33,
+    "failures": 11,
+    "charged_wall_seconds": 200.29378389201156,
+    "peak_rss_bytes": 641482752,
+    "two_pilots_total_seconds": 401.53694493703006,
+    "all_jobs_within_180s_2GiB": true,
+    "measured_bytes_with_figures": 3403485
+  },
+  "replay": {
+    "source_hashes": "PASS",
+    "artifact_hashes": "PASS",
+    "derived_paper_reference_boundaries": "PASS",
+    "roster_input_hashes": "PASS",
+    "main_ineligible_refusal": "PASS"
+  },
+  "rerun": {
+    "input_hashes_equal": 33,
+    "price_vectors_bit_equal": 33,
+    "npz_hashes_equal": 32,
+    "failed_node_sets_equal": true,
+    "status_label_changes": []
+  },
+  "sources": {
+    "johnhull/research/DSINC/run.py": "11ed3d1579340a15ae1aea3d928714e6c04f258a1929d8e1c5440f1ed4e0a7dd",
+    "johnhull/research/DSINC/plot.py": "42b4c6851d5dd98cb7f77496365f14f2d0ea17c27fe5ead14069e924a0aa33f5",
+    "johnhull/research/DSINC/reference_fd.py": "4724d26a181caa8102516033bb5b04310bd79b1fc7b7041c0514431dc8406a73",
+    "johnhull/research/DSINC/heston_baseline.py": "f5a5df89e6df3fa1e15d921c4524574247498a60af077b8a23f164b284a82592",
+    "johnhull/research/DSINC/cases.json": "2f0deabe2d055f5c0829fb0353f78035f7e16e9c8ef53c37eb6fe9ca289647c6",
+    "johnhull/research/DSINC/upstream_manifest.json": "3fc69f52424c4a24745762a0da7e90a563c34e440d6d9a2075a1ed31d165032d",
+    "johnhull/research/DSINC/upstream/dsinc_pricer.py": "7ce004ae819252e98cc287c06acc74be6ee57216d2ab09aac8b49f1f66fae927",
+    "johnhull/research/DSINC/upstream/fd_adi_pricer.py": "535d8da63827be1eb977312042e52204d2cf863a57219b1217bdd534fbf8b12c",
+    "johnhull/research/DSINC/upstream/benchmark.py": "35eba4f34f2690091518e2e3e801d317d54f8ee1ec5e155e0e8334d1ebd89a35",
+    "johnhull/research/DSINC/upstream/LICENSE": "028d0ca606b35b691ec82fda12fae43370bee49548a37f3f8b97ce15dbb7202b",
+    "johnhull/hullkit/src/hullkit/_dsinc_types.py": "c732c8fb6011ed6da0cc411b7ec400810cbe63c36635b12eb9249931090152a3",
+    "johnhull/hullkit/src/hullkit/_dsinc_spectral.py": "2363fff7d282ec60c283c387a8c524d888a368084bf6a1be9bf922f5550f922a",
+    "johnhull/hullkit/src/hullkit/_dsinc_american.py": "7b89511adc6a27b72498b016fe22a0de96d02b6ad515cba858561efcec7f165e"
+  },
+  "artifacts": {
+    "pilot_summary.json": "3f6e83ea594bc266105753fcd04e3457eae328f961a726cfdfda076007cd1d92",
+    "freeze_manifest.json": "7bcca346cbdbec2b113a05df0df544d563911d7e4cef2a60bccac9bbce41ae46",
+    "diagnostic_evidence.npz": "6fe324ba8760a501c2c9443e8fbebd0a9a7e559a9a80cc7571a3dd98c3897f25",
+    "root_scan_diagnostics.json": "67fc07506b2a908b9c242e6a23239ee1abd23bd4e9a4ac497bfd5e4681b9bd5a",
+    "figures/boundary.png": "a5eb5c2df27c68ad93d8af24ae9a28f1e0e149183599cf2147fff4bcf16dfdc0",
+    "figures/price_cost.png": "f2113ff642c18b5839b31a31952ad6f355729586ee0189e4f3eb8acbd3588b8f",
+    "figures/sensitivity.png": "38be6dfcaec733b8b1ca5ae6ce9e8dad5ef10068ab342ba0c4569b93e10a9234"
+  },
+  "storage": {
+    "replaced_pilot_removed": true,
+    "previous_hash_costs_kept_in": "pilot_summary.json:rerun_verification",
+    "no_propagator_or_full_fd_surface_saved": true,
+    "du_sh_pilot": "3.6M",
+    "du_sh_all_evidence": "6.6M"
+  },
+  "docs": {
+    "local_links_resolve": 146,
+    "trailing_whitespace": false
+  }
+}

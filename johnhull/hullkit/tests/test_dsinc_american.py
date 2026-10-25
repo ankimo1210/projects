@@ -151,6 +151,19 @@ def test_success_records_narrow_bracket_and_residual():
     assert record["bracket"][1] - record["bracket"][0] <= cfg.root_x_tol
 
 
+def test_sampled_crossing_with_zero_endpoint_has_specific_failure():
+    def residual(x, node):
+        output = -x - 0.02345
+        for width in (0.1, 0.2, 0.3):
+            output[np.isclose(x, -width, atol=1e-14, rtol=0)] = 0
+        return output
+
+    roots, diagnostic = _american().local_boundary(residual, np.array([0.0]), _config())
+    assert np.isnan(roots[0])
+    assert diagnostic["nodes"][0]["sampled_sign_changes"] == 1
+    assert diagnostic["statuses"] == ["endpoint_not_bracketed"]
+
+
 def test_failure_records_whole_time_slice(monkeypatch):
     am = _american()
     calls = []

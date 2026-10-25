@@ -1,0 +1,4700 @@
+{
+  "schema": 1,
+  "eligible": false,
+  "pilot_path": "/home/kazumasa/projects/_data/johnhull/DSINC/implementation-2026-10-25/pilot-final",
+  "pilot_sha256": "16e790841344246a2b1c7b7006cf4eb4c0b760012ea03f3ec5a2296c624068bb",
+  "sources": {
+    "johnhull/research/DSINC/run.py": "11ed3d1579340a15ae1aea3d928714e6c04f258a1929d8e1c5440f1ed4e0a7dd",
+    "johnhull/research/DSINC/plot.py": "42b4c6851d5dd98cb7f77496365f14f2d0ea17c27fe5ead14069e924a0aa33f5",
+    "johnhull/research/DSINC/reference_fd.py": "4724d26a181caa8102516033bb5b04310bd79b1fc7b7041c0514431dc8406a73",
+    "johnhull/research/DSINC/heston_baseline.py": "f5a5df89e6df3fa1e15d921c4524574247498a60af077b8a23f164b284a82592",
+    "johnhull/research/DSINC/cases.json": "2f0deabe2d055f5c0829fb0353f78035f7e16e9c8ef53c37eb6fe9ca289647c6",
+    "johnhull/research/DSINC/upstream_manifest.json": "3fc69f52424c4a24745762a0da7e90a563c34e440d6d9a2075a1ed31d165032d",
+    "johnhull/research/DSINC/upstream/dsinc_pricer.py": "7ce004ae819252e98cc287c06acc74be6ee57216d2ab09aac8b49f1f66fae927",
+    "johnhull/research/DSINC/upstream/fd_adi_pricer.py": "535d8da63827be1eb977312042e52204d2cf863a57219b1217bdd534fbf8b12c",
+    "johnhull/research/DSINC/upstream/benchmark.py": "35eba4f34f2690091518e2e3e801d317d54f8ee1ec5e155e0e8334d1ebd89a35",
+    "johnhull/research/DSINC/upstream/LICENSE": "028d0ca606b35b691ec82fda12fae43370bee49548a37f3f8b97ce15dbb7202b",
+    "johnhull/hullkit/src/hullkit/_dsinc_types.py": "c732c8fb6011ed6da0cc411b7ec400810cbe63c36635b12eb9249931090152a3",
+    "johnhull/hullkit/src/hullkit/_dsinc_spectral.py": "2363fff7d282ec60c283c387a8c524d888a368084bf6a1be9bf922f5550f922a",
+    "johnhull/hullkit/src/hullkit/_dsinc_american.py": "7b89511adc6a27b72498b016fe22a0de96d02b6ad515cba858561efcec7f165e"
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "thread_policy": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "float_bytes": 8,
+    "complex_bytes": 16
+  },
+  "thresholds": {
+    "paper": 6e-06,
+    "price": 2e-05,
+    "refinement": 5e-06,
+    "root": 1e-08,
+    "coverage": 0.9
+  },
+  "budgets": {
+    "job_seconds": 180,
+    "job_bytes": 2147483648,
+    "pilot_seconds": 600,
+    "main_seconds": 1800,
+    "output_bytes": 52428800,
+    "safety_factor": 2
+  },
+  "roster": [
+    {
+      "id": "T0.5:S0",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S1",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S2",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 320,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0,
+          2560.0
+        ],
+        "points_per_panel": 16,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S0:time",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S0:variance",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S0:panel",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 16,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S0:cutoff",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S0:chi_low",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.25,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S0:chi_high",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.75,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S0:domain",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 184,
+        "log_var_bounds": [
+          -9.212313219489912,
+          1.3882672086336196
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S0:offset_low",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.546156525919308,
+          0.6641838460568755
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S0:offset_high",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.488229856913168,
+          0.722110515063015
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S1:time",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S1:variance",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 320,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S1:panel",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 16,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S1:cutoff",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0,
+          2560.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S1:chi_low",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.25,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S1:chi_high",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.75,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S1:domain",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 276,
+        "log_var_bounds": [
+          -9.210858993489758,
+          1.3868129826334652
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S1:offset_low",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.53646168591828,
+          0.673878686057903
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:S1:offset_high",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.497924696914197,
+          0.7124156750619876
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T0.5:ref:european:base",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T0.5:ref:european:n_x:241",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 241,
+        "n_var": 151,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T0.5:ref:european:n_x:961",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 961,
+        "n_var": 151,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T0.5:ref:european:n_var:101",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 101,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T0.5:ref:european:n_var:201",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 201,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T0.5:ref:european:n_time:150",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 150,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T0.5:ref:european:n_time:600",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T0.5:ref:european:domain",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 961,
+        "n_var": 151,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -2.4,
+          2.4
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T0.5:paper:coarse:european",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 241,
+        "n_var": 101,
+        "n_time": 150,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T0.5:paper:fine:european",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 201,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T0.5:ref:american:base",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T0.5:ref:american:n_x:241",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 241,
+        "n_var": 151,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T0.5:ref:american:n_x:961",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 961,
+        "n_var": 151,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T0.5:ref:american:n_var:101",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 101,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T0.5:ref:american:n_var:201",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 201,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T0.5:ref:american:n_time:150",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 150,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T0.5:ref:american:n_time:600",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T0.5:ref:american:domain",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 961,
+        "n_var": 151,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -2.4,
+          2.4
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T0.5:paper:coarse:american",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 241,
+        "n_var": 101,
+        "n_time": 150,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T0.5:paper:fine:american",
+      "method": "fd",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 201,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T1:S0",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S1",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S2",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 800,
+        "n_var": 320,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0,
+          2560.0
+        ],
+        "points_per_panel": 16,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S0:time",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S0:variance",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S0:panel",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 16,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S0:cutoff",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S0:chi_low",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.25,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S0:chi_high",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.75,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S0:domain",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 184,
+        "log_var_bounds": [
+          -9.212313219489912,
+          1.3882672086336196
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S0:offset_low",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.546156525919308,
+          0.6641838460568755
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S0:offset_high",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.488229856913168,
+          0.722110515063015
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S1:time",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 800,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S1:variance",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 320,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S1:panel",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 16,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S1:cutoff",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0,
+          2560.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S1:chi_low",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.25,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S1:chi_high",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.75,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S1:domain",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 276,
+        "log_var_bounds": [
+          -9.210858993489758,
+          1.3868129826334652
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S1:offset_low",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.53646168591828,
+          0.673878686057903
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:S1:offset_high",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.497924696914197,
+          0.7124156750619876
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      }
+    },
+    {
+      "id": "T1:ref:european:base",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T1:ref:european:n_x:241",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 241,
+        "n_var": 151,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T1:ref:european:n_x:961",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 961,
+        "n_var": 151,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T1:ref:european:n_var:101",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 101,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T1:ref:european:n_var:201",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 201,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T1:ref:european:n_time:300",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T1:ref:european:n_time:1200",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 1200,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T1:ref:european:domain",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 961,
+        "n_var": 151,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -2.4,
+          2.4
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T1:paper:coarse:european",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 241,
+        "n_var": 101,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T1:paper:fine:european",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 201,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "exercise": "european"
+      }
+    },
+    {
+      "id": "T1:ref:american:base",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T1:ref:american:n_x:241",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 241,
+        "n_var": 151,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T1:ref:american:n_x:961",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 961,
+        "n_var": 151,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T1:ref:american:n_var:101",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 101,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T1:ref:american:n_var:201",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 201,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T1:ref:american:n_time:300",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T1:ref:american:n_time:1200",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 151,
+        "n_time": 1200,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T1:ref:american:domain",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 961,
+        "n_var": 151,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -2.4,
+          2.4
+        ],
+        "log_var_bounds": [
+          -11.512925464970229,
+          2.0794415416798357
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T1:paper:coarse:american",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 241,
+        "n_var": 101,
+        "n_time": 300,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T1:paper:fine:american",
+      "method": "fd",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_x": 481,
+        "n_var": 201,
+        "n_time": 600,
+        "log_spot_bounds": [
+          -1.2,
+          1.2
+        ],
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "exercise": "american"
+      }
+    },
+    {
+      "id": "T0.5:S0:timing0",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S0",
+      "timing_role": "warmup"
+    },
+    {
+      "id": "T0.5:S0:timing1",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S0",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T0.5:S0:timing2",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S0",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T0.5:S0:timing3",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 100,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S0",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T0.5:S1:timing0",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S1",
+      "timing_role": "warmup"
+    },
+    {
+      "id": "T0.5:S1:timing1",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S1",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T0.5:S1:timing2",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S1",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T0.5:S1:timing3",
+      "method": "spectral",
+      "case_id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S1",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T1:S0:timing0",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S0",
+      "timing_role": "warmup"
+    },
+    {
+      "id": "T1:S0:timing1",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S0",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T1:S0:timing2",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S0",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T1:S0:timing3",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 200,
+        "n_var": 160,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S0",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T1:S1:timing0",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S1",
+      "timing_role": "warmup"
+    },
+    {
+      "id": "T1:S1:timing1",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S1",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T1:S1:timing2",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S1",
+      "timing_role": "measurement"
+    },
+    {
+      "id": "T1:S1:timing3",
+      "method": "spectral",
+      "case_id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "settings": {
+        "n_time": 400,
+        "n_var": 240,
+        "log_var_bounds": [
+          -8.517193191416238,
+          0.6931471805599453
+        ],
+        "chi": 0.5,
+        "panels": [
+          0.0,
+          2.0,
+          5.0,
+          10.0,
+          20.0,
+          40.0,
+          80.0,
+          160.0,
+          320.0,
+          640.0,
+          1280.0
+        ],
+        "points_per_panel": 12,
+        "root_width": 0.1,
+        "root_max_width": 0.3,
+        "root_x_tol": 1e-10,
+        "root_residual_tol": 1e-08,
+        "root_maxiter": 60
+      },
+      "condition": "selected:S1",
+      "timing_role": "measurement"
+    }
+  ],
+  "selection": "first qualifying adjacent pair, coarse side, three spots jointly",
+  "preflight": {
+    "eligible": false,
+    "reasons": [
+      "paper_mismatch_or_missing",
+      "reference_not_converged",
+      "boundary_not_validated",
+      "solver_failures",
+      "coefficients_unmeasured"
+    ],
+    "failed_job_ids": [
+      "T0.5:S0",
+      "T0.5:S0:time",
+      "T0.5:S0:variance",
+      "T0.5:S0:panel",
+      "T0.5:S0:cutoff",
+      "T0.5:S0:chi_low",
+      "T0.5:S0:chi_high",
+      "T0.5:S0:domain",
+      "T0.5:S0:offset_low",
+      "T0.5:S0:offset_high",
+      "T1:S0"
+    ],
+    "reference": {
+      "supported": false,
+      "checks": [
+        {
+          "style": "european",
+          "axis": "n_x",
+          "changes": [
+            2.672238250238379e-05,
+            6.6737337934830165e-06
+          ],
+          "supported": false
+        },
+        {
+          "style": "european",
+          "axis": "n_var",
+          "changes": [
+            7.450549116688743e-07,
+            2.593577845960704e-07
+          ],
+          "supported": true
+        },
+        {
+          "style": "european",
+          "axis": "n_time",
+          "changes": [
+            1.9045233543013573e-07,
+            4.761205808778701e-08
+          ],
+          "supported": true
+        },
+        {
+          "style": "european",
+          "axis": "domain",
+          "change": 3.81084053202585e-14,
+          "supported": true
+        },
+        {
+          "style": "american",
+          "axis": "n_x",
+          "changes": [
+            3.0397567608267395e-05,
+            7.738357201560186e-06
+          ],
+          "supported": false
+        },
+        {
+          "style": "american",
+          "axis": "n_var",
+          "changes": [
+            1.838560853728577e-06,
+            6.656124053455725e-07
+          ],
+          "supported": true
+        },
+        {
+          "style": "american",
+          "axis": "n_time",
+          "changes": [
+            1.41217185455067e-06,
+            5.1875783775579e-07
+          ],
+          "supported": true
+        },
+        {
+          "style": "american",
+          "axis": "domain",
+          "change": 9.020562075079397e-17,
+          "supported": true
+        }
+      ],
+      "interpretation": "axis-wise empirical changes; not rigorous error bounds"
+    },
+    "cost_prediction": {
+      "measured": false,
+      "jobs": [],
+      "total_seconds": null,
+      "reason": "coefficients_unmeasured"
+    }
+  },
+  "digest": "637896b91b9290b01aef0a0c26b3b9dd68471f12cbbc41481f7d00e4ff95b7f8"
+}

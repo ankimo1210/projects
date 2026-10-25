@@ -1,0 +1,50 @@
+{
+  "source": "saved S0 257-point residual_scan; no new solver run",
+  "zero_tolerance": 1e-08,
+  "artifact_sha256": "196b58d5806cff80559457fb9419f236196221783340751012e0379d2a91408b",
+  "nodes": [
+    {
+      "variance_node": 0,
+      "variance": 0.00019999999999999985,
+      "sampled_sign_changes": 3,
+      "sign_change_intervals": [
+        [
+          -0.009765625,
+          -0.009374999999999994
+        ],
+        [
+          -0.006640624999999997,
+          -0.0062500000000000056
+        ],
+        [
+          -0.001953125,
+          -0.0015624999999999944
+        ]
+      ],
+      "max_residual": 0.00016475206901733763,
+      "min_residual": -0.0005958016177555203
+    },
+    {
+      "variance_node": 80,
+      "variance": 0.020587737016055426,
+      "sampled_sign_changes": 1,
+      "sign_change_intervals": [
+        [
+          -0.023046874999999994,
+          -0.022656250000000003
+        ]
+      ],
+      "max_residual": 3.991674783676569e-05,
+      "min_residual": -0.004048816478747441
+    },
+    {
+      "variance_node": 159,
+      "variance": 2.0,
+      "sampled_sign_changes": 0,
+      "sign_change_intervals": [],
+      "max_residual": -0.004929837870493281,
+      "min_residual": -0.03529061456509841
+    }
+  ],
+  "interpretation": "sampled crossings, not continuous-root uniqueness or an identified error source"
+}

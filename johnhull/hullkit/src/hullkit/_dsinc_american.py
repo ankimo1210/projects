@@ -121,6 +121,7 @@ def local_boundary(
                 status = "wrong_orientation"
                 break
             if not (values[0] > 0 > values[-1] and len(changes) == 1):
+                status = "endpoint_not_bracketed" if len(changes) == 1 else "missing_sign_change"
                 continue
             index = changes[0]
             lo, hi = xs[nonzero[index]], xs[nonzero[index + 1]]

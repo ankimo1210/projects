@@ -10,7 +10,7 @@
 
 **Spec:** [2026-10-25-dsinc-american-design.md](../specs/2026-10-25-dsinc-american-design.md)
 
-**状態:** 2026-10-25、ユーザーの「進めて」により実装へ移行。Tasks 1–2完了、Task 3から継続。研究IDはDSINCで、既存RB-F*の計画を置換しない。Opus承認後、論文の印刷値（Table 3(b)のEuropean、Table 4のEEP・N=200）を照合対象に追加した（[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)の「Opus承認後の追加照合と変更」）。
+**状態:** 2026-10-25、ユーザーの「進めて」により実装へ移行。Tasks 1–4とpilot停止判定を完了。Opus実装レビューR1はAPPROVE、最終pilot再実行の同一性も確認済み。mainは未実行。研究IDはDSINCで、既存RB-F*の計画を置換しない。Opus承認後、論文の印刷値（Table 3(b)のEuropean、Table 4のEEP・N=200）を照合対象に追加した（[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)の「Opus承認後の追加照合と変更」）。
 
 ## Global Constraints
 
@@ -124,15 +124,17 @@
 - 各slotはcase_id、方式、全設定、状態、raw正規化/生価格、EEP、root diagnostics、setup/EU/AM/query/total seconds、RSS、source/input hash、失敗理由を持つ。JSONにNaNを出さず、失敗値はnullと理由。
 - `plot.py --results <run-root>/results.json --output <run-root>/figures` は保存結果だけで3図を描く。
 
-- [ ] RED: `test_every_original_slot_is_accounted`、`test_main_requires_frozen_pilot`、`test_timeout_and_memory_are_failures`、`test_setup_included_in_total_cost`、`test_hash_mismatch_rejected`、`test_result_replay_from_small_artifacts` を作る。`test_reproduction_requires_both_gates` はpaper_match（American・European・T=1 ATMの全anchor）とindependent_validatedの両方を必要とし、T=1非ATMのnot_availableを保持する。`test_frozen_ladder_no_posthoc_tuning` は未宣言設定と都合のよい段の選別を拒否する。費用テストは速度をassertしない。
-- [ ] Run `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_dsinc_runner.py`、FAIL確認後にbudget付きsubprocess runnerを実装する。
-- [ ] pilotはHeston 1件と3/2 T=.5を使い、個別refinement・領域・damping・Delta bumpを調べる。T=1のFD fine American（3spots一括）も費用測定する。S0時間倍（cutoff固定）とTable 4のN=200列の差、EEPとTable 4のEEP列の差を診断列に残す（停止条件にしない）。10分合計/1process180秒・2GiBを超えたら中止。Heston全11件は予算内の場合のみ準備結果として保持する。
-- [ ] 設定、source、閾値、roster、予算、S0/S1/S2とFD軸別ladder、採用候補Sjごとの個別感度ジョブ・最初の合格した隣接対の粗い側を選ぶ規則をfreeze。SjはS0またはS1、S2は検算用。同一満期の3spotsで最大差を判定する。設計§6のジョブ別予測式/係数を保存し、1job180秒超、合計30分超、係数未測定、reference未収束、spectral paper_mismatch、境界未成立ならmainへ進まない。FD文献差は診断だけ。許容差や予算を自動緩和しない。
-- [ ] mainは各満期3spotsを一括で解き、ladderの全段と個別gateを保存する。採用候補Sj自身を起点に時間・分散・パネル点数・cutoff・chi・領域・offsetの各感度を調べ、全価格差/K<=5e-6を確認する。S0のpilotだけでS1を認定しない。cold setupとwarm queryを分け、spectralだけ1 warmup+3測定、FDは1回測定。FDの速度分布や統計的優位は主張しない。準備・収束探索費用も別会計にする。
-- [ ] 価格誤差vs費用、境界、個別refinement/chiの3図を描いて目視する。境界比較mask・失敗件数・誤差の単位・探索費用を表示する。
-- [ ] 保存は最終価格・境界・設定・hash・検算要約だけ。`du -sh <run-root>` とraw byte数を記録。中間伝播/全FD面を残さず、小artifactから再計算してhash/semanticを照合する。
-- [ ] pytestには小さいfixtureだけを置き、DSINC単体suiteは60秒を目標にする。フル格子の収束・文献照合・費用検証はbudget付きrunnerで行う。Run局所suiteと `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests`（BLAS/OpenMP 1 thread）。ruff/formatは追加変更した自作Pythonのみでupstream/は除外。MODEL_INDEX/docstring guardを含める。既存由来の失敗とする前に基点比較する。本編の図全面再受入は行わない。
-- [ ] fresh独立reviewを受け、重大/重要指摘を修正して再検証する。READMEへ達成/未達、全6件の結果、費用、採否、未検証範囲を記し、ROADMAPを証拠に整合させる。公開、push、deployはこの計画では承認されていない。
+- [x] RED: `test_every_original_slot_is_accounted`、`test_main_requires_frozen_pilot`、`test_timeout_and_memory_are_failures`、`test_setup_included_in_total_cost`、`test_hash_mismatch_rejected`、`test_result_replay_from_small_artifacts` を作る。`test_reproduction_requires_both_gates` はpaper_match（American・European・T=1 ATMの全anchor）とindependent_validatedの両方を必要とし、T=1非ATMのnot_availableを保持する。`test_frozen_ladder_no_posthoc_tuning` は未宣言設定と都合のよい段の選別を拒否する。費用テストは速度をassertしない。
+- [x] Run `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_dsinc_runner.py`、FAIL確認後にbudget付きsubprocess runnerを実装する。
+- [x] pilotはHeston 1件と3/2 T=.5を使い、個別refinement・領域・damping・Delta bumpを調べる。T=1のFD fine American（3spots一括）も費用測定する。S0時間倍（cutoff固定）とTable 4のN=200列の差、EEPとTable 4のEEP列の差を診断列に残す（停止条件にしない）。10分合計/1process180秒・2GiBを超えたら中止。Heston全11件は予算内の場合のみ準備結果として保持する。
+- [x] 設定、source、閾値、roster、予算、S0/S1/S2とFD軸別ladder、採用候補Sjごとの個別感度ジョブ・最初の合格した隣接対の粗い側を選ぶ規則をfreeze。SjはS0またはS1、S2は検算用。同一満期の3spotsで最大差を判定する。設計§6のジョブ別予測式/係数を保存し、1job180秒超、合計30分超、係数未測定、reference未収束、spectral paper_mismatch、境界未成立ならmainへ進まない。FD文献差は診断だけ。許容差や予算を自動緩和しない。
+- [x] **mainはpilot不合格により実行しない判断を完了**。以下のmain計算内容は未実施のまま保持する。mainは各満期3spotsを一括で解き、ladderの全段と個別gateを保存する。採用候補Sj自身を起点に時間・分散・パネル点数・cutoff・chi・領域・offsetの各感度を調べ、全価格差/K<=5e-6を確認する。S0のpilotだけでS1を認定しない。cold setupとwarm queryを分け、spectralだけ1 warmup+3測定、FDは1回測定。FDの速度分布や統計的優位は主張しない。準備・収束探索費用も別会計にする。
+- [x] 価格誤差vs費用、境界、個別refinement/chiの3図を描いて目視する。境界比較mask・失敗件数・誤差の単位・探索費用を表示する。
+- [x] 保存は最終価格・境界・設定・hash・検算要約だけ。`du -sh <run-root>` とraw byte数を記録。中間伝播/全FD面を残さず、小artifactから再計算してhash/semanticを照合する。
+- [x] pytestには小さいfixtureだけを置き、DSINC単体suiteは60秒を目標にする。フル格子の収束・文献照合・費用検証はbudget付きrunnerで行う。Run局所suiteと `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests`（BLAS/OpenMP 1 thread）。ruff/formatは追加変更した自作Pythonのみでupstream/は除外。MODEL_INDEX/docstring guardを含める。既存由来の失敗とする前に基点比較する。本編の図全面再受入は行わない。
+- [x] fresh独立reviewを受け、重大/重要指摘を修正して再検証する。READMEへ達成/未達、全6件の結果、費用、採否、未検証範囲を記し、ROADMAPを証拠に整合させる。公開、push、deployはこの計画では承認されていない。
+
+実績: 最終pilot33job/200.294秒/境界失敗11、2pilot合計401.537秒。全33input/価格・全32NPZ・失敗集合が一致。full7822PASS/6skipは是正前、是正後関連1024PASS。releaseは基点と同じ生成HTML不足FAIL。Opus R1はAPPROVE/重要0、条件の再実行一致も完了。詳細は[結果](../../../research/DSINC/RESULTS.md)。
 
 ## 実装前レビューと次の判断
 

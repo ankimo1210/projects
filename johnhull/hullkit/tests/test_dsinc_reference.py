@@ -132,6 +132,12 @@ def test_fd_geometry_mask_and_time_map():
     assert edge["reasons"]["near_x_edge"] == 3
     invalid = replace(base, boundary_valid=np.zeros((7, 4), dtype=bool))
     assert ref.boundary_comparison(times, z, boundary, invalid)["coverage"] == 0
+    dense_times = np.linspace(0, 1, 7)
+    dense_boundary = np.full((7, 3), -0.25)
+    dense_boundary[3, 1] = np.nan
+    nonfinite = ref.boundary_comparison(dense_times, z, dense_boundary, base)
+    assert nonfinite["coverage"] >= 0.9
+    assert nonfinite["accepted"] is False  # Coverage cannot hide numerical failure.
 
 
 def test_fd_time_budget_failure():

@@ -1,11 +1,11 @@
 # DSINC American put reproduction
 
-2026-10-25。実装中。市場データを使わない、privateな数値検証研究。
+2026-10-25。ローカルv1の実装・検証終了。**Americanは未再現・不採用、mainは停止。** [全6ケース・費用・採否](RESULTS.md)。市場データを使わないprivateな数値検証研究。
 
 ## 現在の状態
 
 - Task 1: 入力型、固定上流、監査adapterの単体テスト30件と索引/docstring guardを実装。Heston先頭ケースの予算付き観測と無改変版cross-checkまで完了。
-- Task 2: 固定周波数Europeanまで実装・制御検証済み。Task 3の独立FDまで実装・基礎検証済み。Task 4のEEP/境界も実装。S0は複数根で停止し、Task 5の会計・最終検証を残すで、American研究を再現済みとは扱わない。
+- Task 2: 固定周波数Europeanまで実装・制御検証済み。Task 3の独立FDまで実装・基礎検証済み。Task 4のEEP/境界も実装。S0は複数根で停止し、Task 5の33job pilotはmain不可を判定。Opus最終APPROVEと再実行同一性/是正後関連1024PASSを確認済み。American研究を再現済みとは扱わない。
 - 上流コードの観測はすべて `accepted=false`。fallbackやfloorが無くても、独立な収束・精度検証の代用にはしない。
 
 ## 入力と出典
@@ -80,3 +80,23 @@ Eq.(57)のterminal半重みと正減衰のEEP留数、Eq.(58)だけのdt*g/4を�
 定数分散の解析伝播によるAmericanはCRR4000と2e-5*K以内、strike同次性・spot順・接触領域を検査した。T=.1の3/2 interior-domain制御は独立FDの価格2e-5*K・境界bracket±2dx・coverage条件を満たした。これをS0の再現認定に流用しない。
 
 S0のT=.5/N100は最初の逆向き時間slice(n=99)でmultiple_roots22/160、ok138/160。N200ではmultiple_roots44/160、ok116/160だった。残差走査が複数の符号変化を検出したため、設計どおり全sliceを記録して停止し、失敗境界は伝播していない。価格・EEPは未計算で、印刷価格との一致も未確認。波数打切りと低分散の影響は候補だが、原因確定・root選別・許容差の緩和は行っていない。小観測はtask4_observation.json、全statusは_data rootにある。
+
+
+## 再実行CLI
+
+WSLでmonorepo/worktree rootから、共有venvをno-syncで使い、このworktreeのhullkit/srcをPYTHONPATH先頭にする。出力はprimaryの_data以下の新しい空rootを指定する。
+
+```bash
+export UV_PROJECT_ENVIRONMENT=/home/kazumasa/projects/.venv
+export PYTHONPATH=/home/kazumasa/worktrees/dsinc-american/johnhull/hullkit/src:/home/kazumasa/worktrees/dsinc-american/deep_hedge_price/src:/home/kazumasa/worktrees/dsinc-american/johnhull/report
+export PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
+uv run --no-sync python johnhull/research/DSINC/run.py --phase pilot --output /home/kazumasa/projects/_data/johnhull/DSINC/<new-run>/pilot
+uv run --no-sync python johnhull/research/DSINC/run.py --replay /home/kazumasa/projects/_data/johnhull/DSINC/<new-run>/pilot
+uv run --no-sync python johnhull/research/DSINC/plot.py --results /home/kazumasa/projects/_data/johnhull/DSINC/<new-run>/pilot/results.json --output /home/kazumasa/projects/_data/johnhull/DSINC/<new-run>/pilot/figures
+```
+
+mainには--manifestが必要で、現行のineligible freezeでは拒否する。README/RESULTSの文書更新は数値source hashに含めず、実行コード変更はreplayで拒否する。
+
+Opusの初回実装レビューは重要4点（main replayの採否再計算、終了時RSS/wall判定、import先とのhash一致、EU/AM/EEPの相殺検出）。回帰テストで再現して是正し、R1 APPROVEを確認済み。元のpilotの数値結果は変えていないが、source hashを保つため最終コードでpilotを再実行し、33入力/価格と32NPZのbit一致を確認した。
+
+Opus R1はAPPROVE、残存Critical/Important0。最終pilotの同一性照合を条件に承認し、その条件を満たした。[実装レビュー記録](../../docs/superpowers/reviews/2026-10-25-dsinc-american-implementation-opus.md)。runtime固定はPython/NumPy/SciPy版とworkerで実際に検査するthread環境変数までで、BLAS実装/版や他のhullkit全体のhashは固定していない。

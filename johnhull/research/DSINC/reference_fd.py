@@ -378,8 +378,12 @@ def assess_refinement(results, tolerance=5e-6):
     }
 
 
-def boundary_comparison(spectral_times, spectral_z, spectral_boundary, reference):
+def boundary_comparison(
+    spectral_times, spectral_z, spectral_boundary, reference, *, coverage_threshold=0.9
+):
     """Compare brackets only at integer-mapped times and selected variances."""
+    if not 0 < coverage_threshold <= 1:
+        raise ValueError("coverage threshold must lie in (0,1]")
     ns, nf = len(spectral_times) - 1, reference.config.n_time
     if ns < 1 or reference.contract.expiry <= 0:
         return {"target_count": 0, "coverage": 0.0, "accepted": False, "reasons": {}}
@@ -446,6 +450,10 @@ def boundary_comparison(spectral_times, spectral_z, spectral_boundary, reference
         "outside_count": outside,
         "max_distance": max_distance,
         "dx": dx,
-        "accepted": total > 0 and coverage >= 0.9 and outside == 0,
+        "accepted": total > 0
+        and coverage >= coverage_threshold
+        and outside == 0
+        and reasons["nonfinite_spectral"] == 0,
+        "numerical_failure": reasons["nonfinite_spectral"] > 0,
         "reasons": reasons,
     }
