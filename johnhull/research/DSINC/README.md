@@ -5,7 +5,7 @@
 ## 現在の状態
 
 - Task 1: 入力型、固定上流、監査adapterの単体テスト30件と索引/docstring guardを実装。Heston先頭ケースの予算付き観測と無改変版cross-checkまで完了。
-- Task 2: 固定周波数Europeanまで実装・制御検証済み。Task 3の独立FDまで実装・基礎検証済み。Tasks 4–5は未着手で、American研究を再現済みとは扱わない。
+- Task 2: 固定周波数Europeanまで実装・制御検証済み。Task 3の独立FDまで実装・基礎検証済み。Task 4のEEP/境界も実装。S0は複数根で停止し、Task 5の会計・最終検証を残すで、American研究を再現済みとは扱わない。
 - 上流コードの観測はすべて `accepted=false`。fallbackやfloorが無くても、独立な収束・精度検証の代用にはしない。
 
 ## 入力と出典
@@ -71,3 +71,12 @@ zero-frequency伝播の最小成分は-.03158、max Pe=14.38、行和誤差3.9e-
 European smokeのpaper fineは{.102552411,.047215339,.019098937}、DSINCとの差は最大8.924e-6*K。広い独立分散領域[log(1e-5),log8]ではx481→961の最大変化6.674e-6*Kで、正式referenceの5e-6基準は未達。x領域のh固定倍拡大は最大1.35e-13*K差だった。これはEuropeanの準備観測で、American主実験への移行承認ではない。主実験の停止条件はTask 5で機械判定する。
 
 観測10jobは計23.6秒程度、最大peak RSS約489 MB。小結果はtask3_observation.json。全FD面を保存しない。時間上限は内部検査と観測用外部subprocessの両方で監視した。
+
+
+## Task 4: American境界の停止
+
+Eq.(57)のterminal半重みと正減衰のEEP留数、Eq.(58)だけのdt*g/4を別々に検査した。local_boundaryはresidual(x,node)を受け、scanを64点ずつ処理する。prepare_americanでboundary/Q/Gを一度解き、PreparedAmerican.priceが本当のquery-only評価を行う。新しい公開APIは追加していない。
+
+定数分散の解析伝播によるAmericanはCRR4000と2e-5*K以内、strike同次性・spot順・接触領域を検査した。T=.1の3/2 interior-domain制御は独立FDの価格2e-5*K・境界bracket±2dx・coverage条件を満たした。これをS0の再現認定に流用しない。
+
+S0のT=.5/N100は最初の逆向き時間slice(n=99)でmultiple_roots22/160、ok138/160。N200ではmultiple_roots44/160、ok116/160だった。残差走査が複数の符号変化を検出したため、設計どおり全sliceを記録して停止し、失敗境界は伝播していない。価格・EEPは未計算で、印刷価格との一致も未確認。波数打切りと低分散の影響は候補だが、原因確定・root選別・許容差の緩和は行っていない。小観測はtask4_observation.json、全statusは_data rootにある。

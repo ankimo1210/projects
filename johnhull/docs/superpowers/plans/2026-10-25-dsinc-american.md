@@ -104,16 +104,16 @@
 
 **Interfaces:**
 - Consumes Task 1/2。`payoff_transform(omega: ndarray, chi: float, boundary: ndarray, contract: PutContract) -> ndarray`。
-- `local_boundary(residual: Callable[[ndarray],ndarray], predictor: ndarray, config: SpectralConfig) -> tuple[ndarray,dict]`。
+- `local_boundary(residual: Callable[[ndarray,int],ndarray], predictor: ndarray, config: SpectralConfig) -> tuple[ndarray,dict]`。
 - `american_put(contract: PutContract, model: VarianceModel, spots: ndarray, config: SpectralConfig, *, propagators: Propagators | None=None) -> PricingResult`。
 - 境界/EEPの構造化失敗はPricingFailureとしてrunnerへ渡す。T=0はexact payoffと空の境界（shape=(0,0)）を返し、その例外形を明示する。
 
-- [ ] RED: `test_time_quadrature_terminal_half_weight` と `test_boundary_endpoint_correction_only_at_root` は2段階の明示和を使い、dt半重み・dt*g/4の欠落/二重付与を検出する。`test_positive_strip_residue_in_eep` は独立な短時間fixtureで検算する。
-- [ ] RED: `test_root_missing_sign_change_fails`、`test_root_nonfinite_fails`、`test_root_maxiter_fails`、`test_root_orientation_and_multiple_roots` は失敗codeと全node分母をassert。`test_contact_interior_not_selected` は平坦contact/ノイズ/逆向き/複数根のfixtureを使う。`test_failure_records_whole_time_slice` は失敗時刻の全node状態を埋め、より早い時刻をnot_runとし、Qを更新しない。
-- [ ] RED: `test_maturity_exact_payoff`、`test_spot_order_and_strike_homogeneity`、`test_exercise_region_and_bounds`、`test_boundary_matches_independent_fd` を固定する。価格は設計の2e-5*K、境界はFDの細分に追随する隣接2cell基準。
-- [ ] Run `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_dsinc_american.py`、FAIL確認後にEq.(57),(58)を実装する。
-- [ ] GREEN: RはEq.(58)左辺−右辺の価格/K残差。予測値pに対し[p-w,min(0,p+w)]、w=.1,.2,.3の順、R(lo)>0>R(hi)を必須にする。走査の零近傍はabs(R)<=root_residual_tol、設計のomega_maxに応じた走査点数で符号変化を数え、曖昧なcontactや多重根を拒否する。二分最大60回、x幅1e-10、abs(R)<=1e-8。失敗時刻の全node記録後に停止する。v0境界・値のzeta補間、初期行使領域判定とcontinuation評価を区別する。
-- [ ] Run Tasks 1–4のテスト、T=.5の3ケースを初期設定と時間倍で比較する。ここでは文献値をsmokeとして確認し、正式な再現判定はTask 5のS0 paper_matchと独立gateで行う。必要ならcommit。
+- [x] RED: `test_time_quadrature_terminal_half_weight` と `test_boundary_endpoint_correction_only_at_root` は2段階の明示和を使い、dt半重み・dt*g/4の欠落/二重付与を検出する。`test_positive_strip_residue_in_eep` は独立な短時間fixtureで検算する。
+- [x] RED: `test_root_missing_sign_change_fails`、`test_root_nonfinite_fails`、`test_root_maxiter_fails`、`test_root_orientation_and_multiple_roots` は失敗codeと全node分母をassert。`test_contact_interior_not_selected` は平坦contact/ノイズ/逆向き/複数根のfixtureを使う。`test_failure_records_whole_time_slice` は失敗時刻の全node状態を埋め、より早い時刻をnot_runとし、Qを更新しない。
+- [x] RED: `test_maturity_exact_payoff`、`test_spot_order_and_strike_homogeneity`、`test_exercise_region_and_bounds`、`test_boundary_matches_independent_fd` を固定する。価格は設計の2e-5*K、境界はFDの細分に追随する隣接2cell基準。
+- [x] Run `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_dsinc_american.py`、FAIL確認後にEq.(57),(58)を実装する。
+- [x] GREEN: RはEq.(58)左辺−右辺の価格/K残差。予測値pに対し[p-w,min(0,p+w)]、w=.1,.2,.3の順、R(lo)>0>R(hi)を必須にする。走査の零近傍はabs(R)<=root_residual_tol、設計のomega_maxに応じた走査点数で符号変化を数え、曖昧なcontactや多重根を拒否する。二分最大60回、x幅1e-10、abs(R)<=1e-8。失敗時刻の全node記録後に停止する。v0境界・値のzeta補間、初期行使領域判定とcontinuation評価を区別する。
+- [x] Run Tasks 1–4のテスト、T=.5の3ケースを初期設定と時間倍で比較する。ここでは文献値をsmokeとして確認し、正式な再現判定はTask 5のS0 paper_matchと独立gateで行う。必要ならcommit。
 
 ## Task 5: 予算付きpilot・固定main・費用/図・最終レビュー
 
