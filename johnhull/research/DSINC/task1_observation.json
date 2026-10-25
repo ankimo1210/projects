@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "status": "observational_baseline_not_certified",
+  "accepted": false,
+  "contract": {
+    "strike": 100.0,
+    "expiry": 0.25,
+    "domestic_rate": 0.03,
+    "foreign_rate": 0.025
+  },
+  "model": {
+    "kind": "heston",
+    "kappa": 0.5,
+    "theta": 0.6,
+    "xi": 0.8,
+    "rho": -0.4,
+    "v0": 0.5
+  },
+  "spot": 100.0,
+  "dsinc_values": [
+    13.663323749009605,
+    13.68539281343333,
+    0.02206906442372476
+  ],
+  "fd_values": [
+    13.662246412148702,
+    13.68389587372356
+  ],
+  "printed_reference_differences": {
+    "european_ie": 2.3749009605111837e-05,
+    "american_ie": 0.010492813433330639,
+    "european_fd": 0.0011464121487030354,
+    "american_fd": 0.00019587372356077992
+  },
+  "audit_counts": {
+    "dsinc": {
+      "boundary": 240
+    },
+    "fd": {
+      "penalty_iteration": 100
+    }
+  },
+  "boundary_branches": {
+    "local_brentq": 240
+  },
+  "fd_iteration_nonconvergence": 7,
+  "settings": {
+    "dsinc": {
+      "K": 100.0,
+      "Nom": 600,
+      "Nt": 16,
+      "Nv": 16,
+      "S": 100.0,
+      "T": 0.25,
+      "kappa": 0.5,
+      "mode": "partial",
+      "om_max": 180.0,
+      "rd": 0.03,
+      "rf": 0.025,
+      "rho": -0.4,
+      "sigma": 0.8,
+      "theta": 0.6,
+      "v0": 0.5
+    },
+    "fd": {
+      "B": 0.0,
+      "K": 100.0,
+      "N": 100,
+      "Smax_mult": 8.0,
+      "T2": 0.25,
+      "Vmax": 5.0,
+      "kappa": 0.5,
+      "m1": 200,
+      "policy": 1,
+      "pp_maxiter": 100,
+      "rd": 0.03,
+      "rf": 0.025,
+      "rho": -0.4,
+      "rho_AM": 1000000000.0,
+      "theta": 0.6,
+      "theta_mcs": 0.3333333333333333,
+      "xi": 0.8
+    }
+  },
+  "timings": {
+    "dsinc": {
+      "setup_seconds": 0.017146054000477307,
+      "american_seconds": 0.8431728029991064,
+      "european_seconds": 9.898300049826503e-05,
+      "query_seconds": null
+    },
+    "fd": {
+      "setup_seconds": 0.018032296999081154,
+      "european_seconds": 0.20775861400034046,
+      "american_seconds": 5.522769061000872,
+      "query_seconds": 0.0012512299999798415
+    }
+  },
+  "versions": {
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]"
+  },
+  "source_sha256": {
+    "johnhull/research/DSINC/heston_baseline.py": "f5a5df89e6df3fa1e15d921c4524574247498a60af077b8a23f164b284a82592",
+    "johnhull/research/DSINC/upstream_manifest.json": "3fc69f52424c4a24745762a0da7e90a563c34e440d6d9a2075a1ed31d165032d",
+    "johnhull/hullkit/src/hullkit/_dsinc_types.py": "c732c8fb6011ed6da0cc411b7ec400810cbe63c36635b12eb9249931090152a3"
+  },
+  "input_sha256": "b114972d64e08a760b8deec8b16bb02b9c6e227afa951096bbf243882c92415f",
+  "peak_rss_bytes": 153743360,
+  "budget": {
+    "wall_limit_seconds": 180,
+    "rss_limit_bytes": 2147483648,
+    "estimated_peak_bytes": 644245094,
+    "status": "completed",
+    "elapsed_seconds": 7.141991758999211,
+    "observed_peak_rss_bytes": 152367104,
+    "returncode": 0
+  },
+  "unmodified_crosscheck": {
+    "raw_dsinc": [
+      13.663323749009605,
+      13.68539281343333,
+      0.02206906442372476
+    ],
+    "raw_fd": [
+      13.662246412148702,
+      13.68389587372356
+    ],
+    "observer_max_difference": 0.0,
+    "seconds": 6.764177643999574,
+    "peak_rss_bytes": 150298624
+  },
+  "warnings": {
+    "count": 0,
+    "examples": []
+  }
+}

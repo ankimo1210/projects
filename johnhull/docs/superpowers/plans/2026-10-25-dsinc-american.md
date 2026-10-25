@@ -10,7 +10,7 @@
 
 **Spec:** [2026-10-25-dsinc-american-design.md](../specs/2026-10-25-dsinc-american-design.md)
 
-**状態:** 2026-10-25、実装未着手。ユーザー指示は本プラン作成とOpusレビューまで。以下のcheckboxは実装時に更新する。研究IDはDSINCで、既存RB-F*の計画を置換しない。Opus承認後、論文の印刷値（Table 3(b)のEuropean、Table 4のEEP・N=200）を照合対象に追加した（[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)の「Opus承認後の追加照合と変更」）。
+**状態:** 2026-10-25、ユーザーの「進めて」により実装へ移行。Task 1完了、Task 2から継続。研究IDはDSINCで、既存RB-F*の計画を置換しない。Opus承認後、論文の印刷値（Table 3(b)のEuropean、Table 4のEEP・N=200）を照合対象に追加した（[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)の「Opus承認後の追加照合と変更」）。
 
 ## Global Constraints
 
@@ -58,12 +58,12 @@
 - `PricingResult(european: ndarray, american: ndarray, early_exercise_premium: ndarray, times: ndarray, log_variances: ndarray, log_boundary: ndarray, diagnostics: dict)`。spot軸は入力順、boundaryは(n_time+1,n_var)。
 - `run_heston_baseline(contract: PutContract, model: VarianceModel, spots: ndarray, *, dsinc_settings: dict, fd_settings: dict) -> dict`。結果はraw値、全実設定、fallback/非finite/penalty上限、初期化・EU・AM・query計時を含む。
 
-- [ ] RED: `test_baseline_parameter_mapping` で異なる入力キーの写像をassert、kappa=.5を両方式へ固定する。`test_source_hash_mismatch` はbyte改竄を拒否。`test_unknown_or_nonfinite_input` と `test_upstream_fallback_is_not_certified` で失敗を保持する。`test_upstream_raw_values_and_branches` は局所root/広域scan/min-residual、clip・非finite置換、EEP/価格の下限処理、penalty反復上限の各分岐を強制する。
-- [ ] Run: `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_dsinc_baseline.py`。新機能未実装のためFAILを確認する。
-- [ ] GREEN: 固定commitの4ファイルを取得して原文保持し、SHA-256/ライセンスを記録。実行時取得をしないadapterをimportlibで作り、benchmark.pyをimportしない。上流helperを研究サブクラスの観測版へ写して分岐・加工前後・penalty終了理由を記録し、同じ入力の無改変版と値が一致することをassertする。上流原本は変更しない。
-- [ ] 設計§5/6のpaper anchorをcases.jsonへ転記する。T=.5のAmerican { .107601,.048662,.019499 }、FD coarse { .107575,.048618,.019469 }、fine { .107593,.048648,.019490 }、T=1 ATM spectral .063668/FD fine .063658。Table 3(b)のT=.5 European { .102557,.047224,.019105 }（spectral＝閉形式Eq.(31)）、Table 4のEEP { .005044,.001438,.000394 }とDSINC N=200 { .107599,.048660,.019497 }も転記する。出典表、設定、丸め桁、not_availableも保存し、T=1全体を論文外と扱わない。
-- [ ] Run同コマンド、`test_docstrings.py` / `test_model_index.py`。PASS後、Hestonの最初の1ケースのみを予算付きpilotで実行し、上流印刷参照13.6633/13.6749等との差を記録する。精度未達でも原因を残してM0観測を完了できるが、受入済み価格器とは呼ばない。
-- [ ] 必要ならタスク単位でcommit。新private型をMODEL_INDEXに登録し、ROADMAPへ実装開始の事実を反映する。
+- [x] RED: `test_baseline_parameter_mapping` で異なる入力キーの写像をassert、kappa=.5を両方式へ固定する。`test_source_hash_mismatch` はbyte改竄を拒否。`test_unknown_or_nonfinite_input` と `test_upstream_fallback_is_not_certified` で失敗を保持する。`test_upstream_raw_values_and_branches` は局所root/広域scan/min-residual、clip・非finite置換、EEP/価格の下限処理、penalty反復上限の各分岐を強制する。
+- [x] Run: `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_dsinc_baseline.py`。新機能未実装のためFAILを確認する。
+- [x] GREEN: 固定commitの4ファイルを取得して原文保持し、SHA-256/ライセンスを記録。実行時取得をしないadapterをimportlibで作り、benchmark.pyをimportしない。上流helperを研究サブクラスの観測版へ写して分岐・加工前後・penalty終了理由を記録し、同じ入力の無改変版と値が一致することをassertする。上流原本は変更しない。
+- [x] 設計§5/6のpaper anchorをcases.jsonへ転記する。T=.5のAmerican { .107601,.048662,.019499 }、FD coarse { .107575,.048618,.019469 }、fine { .107593,.048648,.019490 }、T=1 ATM spectral .063668/FD fine .063658。Table 3(b)のT=.5 European { .102557,.047224,.019105 }（spectral＝閉形式Eq.(31)）、Table 4のEEP { .005044,.001438,.000394 }とDSINC N=200 { .107599,.048660,.019497 }も転記する。出典表、設定、丸め桁、not_availableも保存し、T=1全体を論文外と扱わない。
+- [x] Run同コマンド、`test_docstrings.py` / `test_model_index.py`。PASS後、Hestonの最初の1ケースのみを予算付きpilotで実行し、上流印刷参照13.6633/13.6749等との差を記録する。精度未達でも原因を残してM0観測を完了できるが、受入済み価格器とは呼ばない。
+- [x] 必要ならタスク単位でcommit。新private型をMODEL_INDEXに登録し、ROADMAPへ実装開始の事実を反映する。
 
 ## Task 2: 固定周波数伝播とEuropean価格
 
@@ -138,4 +138,4 @@
 
 このプランと設計をOpusに渡し、数学の符号・境界選択・独立参照・許容差・メモリ見積もり・範囲の過不足をレビューする。指摘は証拠と突合して文書へ反映し、再レビュー結果とレビュー対象hashを記録する。
 
-本ターンはここまで。実装開始の指示が来るまでは研究コードの追加・上流コードの組込み・本計算へ進まない。
+2026-10-25の後続指示「進めて」によりローカル実装は承認済み。公開・push・mergeの承認には含めない。

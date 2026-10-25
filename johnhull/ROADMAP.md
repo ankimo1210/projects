@@ -23,7 +23,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 110 priv
 
 ## 現在地（2026-10-17、プロジェクト完了・RB-F04本研究のみ保留）
 
-追加研究の準備（2026-10-25）：DSINCによるAmerican putの[設計](docs/superpowers/specs/2026-10-25-dsinc-american-design.md)と[実装計画](docs/superpowers/plans/2026-10-25-dsinc-american.md)を作成し、Opus（実モデルclaude-opus-5-5）のレビュー3回と文書是正を完了した。最終APPROVE、残存Critical/Important 0、任意Minor 2。承認後、論文の印刷値（Table 3(b)のEuropean、Table 4のEEP・N=200）を照合対象に追加した（gateを厳しくする方向、Opus再レビューなし）。[レビュー記録](docs/superpowers/reviews/2026-10-25-dsinc-american-opus.md)。対象はHeston版の監査と定数係数3/2モデルの数値再現。依頼範囲は計画・レビューまでで、実装と本計算は未着手。本編の完了状態とRB-F04本研究の保留は維持する。
+追加研究の準備（2026-10-25）：DSINCによるAmerican putの[設計](docs/superpowers/specs/2026-10-25-dsinc-american-design.md)と[実装計画](docs/superpowers/plans/2026-10-25-dsinc-american.md)を作成し、Opus（実モデルclaude-opus-5-5）のレビュー3回と文書是正を完了した。最終APPROVE、残存Critical/Important 0、任意Minor 2。承認後、論文の印刷値（Table 3(b)のEuropean、Table 4のEEP・N=200）を照合対象に追加した（gateを厳しくする方向、Opus再レビューなし）。[レビュー記録](docs/superpowers/reviews/2026-10-25-dsinc-american-opus.md)。対象はHeston版の監査と定数係数3/2モデルの数値再現。本計算は未着手。本編の完了状態とRB-F04本研究の保留は維持する。 後続指示「進めて」で実装へ移行。codex/dsinc-americanのTask 1（型・上流固定・監査）を完了し、この履歴に保存した。Heston観測7.14秒/153.7 MB、無改変版との差0、印刷IE Americanとの差+.0104928を保持。次はTask 2。実装差分は本コミットへ収録し、未コミットの実装変更はなし。
 
 **プロジェクトの状態（2026-10-17、ユーザー確認）：完了。** Hull 11e全37章・306節、Beyond Hull（vol13–28）、研究RB-F07・RB-F05（3本）・RB-F08・RB-F06・RB-F04 v1が完了しmain統合済み。RB-F04動的ヘッジは軽量版（問い1）のみ完了し、本研究（問い2・3、2商品ヘッジ、NN）はユーザー判断で保留。`make test`全通過・release gate PASS。`research_profiles.json` の候補や多曲線リスク・増分XVAは未承認の候補で、完了条件に含めない。
 
@@ -117,7 +117,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 
 ### 本編の外の研究・拡張（本編の完了条件に含めない）
 
-DSINC（2026-10-25、新規計画）：設計・実装計画のOpusレビューと是正は完了（最終APPROVE）。実装開始の指示後にHeston監査→固定周波数European→独立3/2 FD→American境界→予算付きpilot/mainの順で進める。[実装計画](docs/superpowers/plans/2026-10-25-dsinc-american.md)。spectral文献照合と独立検証を分け、採用段での感度と予算をfreezeする。市場データ・SABR・本編サイトへの組込みはv1範囲外で、従来の研究完了条件には追加しない。
+DSINC（2026-10-25、新規計画）：設計・実装計画のOpusレビューと是正は完了（最終APPROVE）。ローカル実装承認済みでHeston監査は完了。次は固定周波数European→独立3/2 FD→American境界→予算付きpilot/mainの順で進める。[実装計画](docs/superpowers/plans/2026-10-25-dsinc-american.md)。spectral文献照合と独立検証を分け、採用段での感度と予算をfreezeする。市場データ・SABR・本編サイトへの組込みはv1範囲外で、従来の研究完了条件には追加しない。
 
 [研究バックログ計画](docs/superpowers/plans/2026-09-27-research-backlog.md)（2026-09-27）は、
 外部の[提案書](docs/RESEARCH_HANDOFF_2026-09-27.md)にある 94 件を次の4つに振り分けた：

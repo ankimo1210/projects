@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "units": {
+    "time": "years",
+    "rates": "continuous annual rates",
+    "v0_theta": "annual variance rate",
+    "anchors": "price / strike"
+  },
+  "paper": {
+    "url": "https://arxiv.org/html/2610.28847v1",
+    "version": "v1",
+    "date": "2026-10-20",
+    "table_precision": 6
+  },
+  "s0": {
+    "n_var": 160,
+    "n_time_per_year": 200,
+    "chi": 0.5,
+    "log_var_bounds": [
+      -8.517193191416238,
+      0.6931471805599453
+    ],
+    "panels": [
+      0,
+      2,
+      5,
+      10,
+      20,
+      40,
+      80,
+      160,
+      320,
+      640
+    ],
+    "points_per_panel": 12
+  },
+  "heston_baselines": [
+    {
+      "id": "heston_paper",
+      "contract": {
+        "strike": 100,
+        "expiry": 0.25,
+        "domestic_rate": 0.03,
+        "foreign_rate": 0.025
+      },
+      "model": {
+        "kind": "heston",
+        "kappa": 0.5,
+        "theta": 0.6,
+        "xi": 0.8,
+        "rho": -0.4,
+        "v0": 0.5
+      },
+      "spots": [
+        100
+      ],
+      "upstream_printed": {
+        "european_ie": 13.6633,
+        "american_ie": 13.6749,
+        "european_fd": 13.6611,
+        "american_fd": 13.6837
+      }
+    },
+    {
+      "id": "heston_benchmark_v0.0625",
+      "contract": {
+        "strike": 10,
+        "expiry": 0.25,
+        "domestic_rate": 0.1,
+        "foreign_rate": 0
+      },
+      "model": {
+        "kind": "heston",
+        "kappa": 5,
+        "theta": 0.16,
+        "xi": 0.9,
+        "rho": 0.1,
+        "v0": 0.0625
+      },
+      "spots": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "upstream_printed": {
+        "american": [
+          2,
+          1.1076,
+          0.5199,
+          0.2135,
+          0.082
+        ]
+      }
+    },
+    {
+      "id": "heston_benchmark_v0.25",
+      "contract": {
+        "strike": 10,
+        "expiry": 0.25,
+        "domestic_rate": 0.1,
+        "foreign_rate": 0
+      },
+      "model": {
+        "kind": "heston",
+        "kappa": 5,
+        "theta": 0.16,
+        "xi": 0.9,
+        "rho": 0.1,
+        "v0": 0.25
+      },
+      "spots": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "upstream_printed": {
+        "american": [
+          2.0785,
+          1.3336,
+          0.7959,
+          0.4482,
+          0.2427
+        ]
+      }
+    }
+  ],
+  "primary_groups": [
+    {
+      "id": "three_halves_T05",
+      "contract": {
+        "strike": 1,
+        "expiry": 0.5,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "paper_anchors": {
+        "american": [
+          0.107601,
+          0.048662,
+          0.019499
+        ],
+        "european": [
+          0.102557,
+          0.047224,
+          0.019105
+        ]
+      },
+      "diagnostics": {
+        "eep": [
+          0.005044,
+          0.001438,
+          0.000394
+        ],
+        "american_time_doubled": [
+          0.107599,
+          0.04866,
+          0.019497
+        ],
+        "fd_coarse": [
+          0.107575,
+          0.048618,
+          0.019469
+        ],
+        "fd_fine": [
+          0.107593,
+          0.048648,
+          0.01949
+        ]
+      },
+      "source": {
+        "european": "Table 3(b), Eq.31 closed-form agreement",
+        "american": "Table 4, N=100",
+        "diagnostics": "Table 4"
+      }
+    },
+    {
+      "id": "three_halves_T1",
+      "contract": {
+        "strike": 1,
+        "expiry": 1,
+        "domestic_rate": 0.05,
+        "foreign_rate": 0.02
+      },
+      "model": {
+        "kind": "three_halves",
+        "kappa": 20,
+        "theta": 0.04,
+        "xi": 4,
+        "rho": -0.5,
+        "v0": 0.04
+      },
+      "spots": [
+        0.9,
+        1,
+        1.1
+      ],
+      "paper_anchors": {
+        "american": [
+          null,
+          0.063668,
+          null
+        ],
+        "european": [
+          null,
+          null,
+          null
+        ]
+      },
+      "diagnostics": {
+        "fd_fine": [
+          null,
+          0.063658,
+          null
+        ]
+      },
+      "source": {
+        "american": "Table 9, N=200",
+        "missing": "off-ATM prices not printed"
+      }
+    }
+  ]
+}

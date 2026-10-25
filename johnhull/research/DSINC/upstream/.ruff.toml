@@ -1,0 +1,3 @@
+# Immutable third-party sources; see ../upstream_manifest.json.
+exclude = ["*.py"]
+force-exclude = true
