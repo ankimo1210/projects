@@ -5,7 +5,7 @@
 ## 現在の状態
 
 - Task 1: 入力型、固定上流、監査adapterの単体テスト30件と索引/docstring guardを実装。Heston先頭ケースの予算付き観測と無改変版cross-checkまで完了。
-- Task 2: 固定周波数Europeanまで実装・制御検証済み。Tasks 3–5は未着手で、American研究を再現済みとは扱わない。
+- Task 2: 固定周波数Europeanまで実装・制御検証済み。Task 3の独立FDまで実装・基礎検証済み。Tasks 4–5は未着手で、American研究を再現済みとは扱わない。
 - 上流コードの観測はすべて `accepted=false`。fallbackやfloorが無くても、独立な収束・精度検証の代用にはしない。
 
 ## 入力と出典
@@ -60,3 +60,14 @@ zero-frequency伝播の最小成分は-.03158、max Pe=14.38、行和誤差3.9e-
 厳しいBSM積分テストの1e-10基準には各パネル24点を使用する。12/16/24点の最大誤差は4.09e-8/3.44e-11/6.8e-16。論文S0の12点と6e-6 gateは変更していない。最終価格のv0評価はzeta方向のnot-a-knot CubicSpline、外挿なし。cacheは全契約/モデル/格子にbindする。
 
 小結果はtask2_observation.json。中間のmatrixやFD面は保存しない。European APIの評価時間にはterminal-vector伝播を含み、query-onlyの時間とは呼ばない。
+
+
+## Task 3: 独立FD
+
+作用素をx,zetaのSDEから別導出し、中心差分・Neumann ghost・短い次元の内側配置・Rannacher 4 half-steps→CNを実装した。Americanは[Ikonen–Toivanen splitting](https://doi.org/10.1016/j.aml.2004.06.010)で障害条件を処理する。lambda、payoff gap、相補性と分割後の離散方程式欠損は別々に保存する。Europeanのpayoff未満や負のpredictorもraw診断として残す。
+
+基礎10テストはSDE作用・独立BSM/CRR・障害条件・不等比分散細分の観測次数・境界bracket/mask・時間/RSS予算を検査する。BSM fixtureのx801/1001/1601点誤差は5.845e-6/3.756e-6/1.493e-6で二次的に減少したため、5e-6基準を維持してfixtureを1001点とした。自己比較で精度を認定しない。
+
+European smokeのpaper fineは{.102552411,.047215339,.019098937}、DSINCとの差は最大8.924e-6*K。広い独立分散領域[log(1e-5),log8]ではx481→961の最大変化6.674e-6*Kで、正式referenceの5e-6基準は未達。x領域のh固定倍拡大は最大1.35e-13*K差だった。これはEuropeanの準備観測で、American主実験への移行承認ではない。主実験の停止条件はTask 5で機械判定する。
+
+観測10jobは計23.6秒程度、最大peak RSS約489 MB。小結果はtask3_observation.json。全FD面を保存しない。時間上限は内部検査と観測用外部subprocessの両方で監視した。

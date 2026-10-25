@@ -1,0 +1,306 @@
+{
+  "purpose": "European-only FD smoke; not a converged independent reference",
+  "source_sha256": "6e516c8cea59fc4fa2ca3f1ca23e24ff3c213fe118510841a2b2f5acf9e15905",
+  "observations": [
+    {
+      "job": "paper_coarse",
+      "status": "completed",
+      "wall_seconds": 1.0566191770012665,
+      "peak_rss_bytes": 183660544,
+      "prices": [
+        0.10253793506297522,
+        0.04718843370763614,
+        0.019080914384056312
+      ],
+      "diagnostics": {
+        "ordering": "z_fast",
+        "estimated_bytes": 64692520,
+        "lu_bytes": 31574632,
+        "minimum_payoff_gap": -0.02166310277940897,
+        "minimum_lambda": 0.0,
+        "max_complementarity": 0.0,
+        "positive_lambda_count": 0,
+        "positive_time_value_count": 8498,
+        "max_equation_defect": 1.1977085989656189e-11,
+        "predictor_minimum": -0.0006344001591063983,
+        "projected_node_steps": 0,
+        "setup_seconds": 0.08398974599913345,
+        "solve_seconds": 0.44351981499858084,
+        "query_seconds": 0.001857306000601966,
+        "total_seconds": 0.529367232000368,
+        "peak_rss_bytes": 186331136,
+        "interpolation": "cubic zeta then cubic log-spot, no extrapolation"
+      }
+    },
+    {
+      "job": "paper_fine",
+      "status": "completed",
+      "wall_seconds": 6.693435805002082,
+      "peak_rss_bytes": 480284672,
+      "prices": [
+        0.1025524109194623,
+        0.04721533926576415,
+        0.01909893681899374
+      ],
+      "diagnostics": {
+        "ordering": "z_fast",
+        "estimated_bytes": 489097320,
+        "lu_bytes": 170161652,
+        "minimum_payoff_gap": -0.021678147293393346,
+        "minimum_lambda": 0.0,
+        "max_complementarity": 0.0,
+        "positive_lambda_count": 0,
+        "positive_time_value_count": 33739,
+        "max_equation_defect": 7.23492377119328e-11,
+        "predictor_minimum": 1.0173342557270888e-248,
+        "projected_node_steps": 0,
+        "setup_seconds": 0.8428286650014343,
+        "solve_seconds": 5.339457011999912,
+        "query_seconds": 0.005388067998865154,
+        "total_seconds": 6.187674182001501,
+        "peak_rss_bytes": 489021440,
+        "interpolation": "cubic zeta then cubic log-spot, no extrapolation"
+      }
+    },
+    {
+      "job": "wide_base",
+      "status": "completed",
+      "wall_seconds": 1.0073730580006668,
+      "peak_rss_bytes": 183369728,
+      "prices": [
+        0.10253835034722467,
+        0.047188442981532845,
+        0.019080188809416813
+      ],
+      "diagnostics": {
+        "ordering": "z_fast",
+        "estimated_bytes": 64692520,
+        "lu_bytes": 31574632,
+        "minimum_payoff_gap": -0.02166311529460785,
+        "minimum_lambda": 0.0,
+        "max_complementarity": 0.0,
+        "positive_lambda_count": 0,
+        "positive_time_value_count": 7530,
+        "max_equation_defect": 5.5708326840431255e-11,
+        "predictor_minimum": -0.002442801461451555,
+        "projected_node_steps": 0,
+        "setup_seconds": 0.09056348900048761,
+        "solve_seconds": 0.4152272989995254,
+        "query_seconds": 0.001845828999648802,
+        "total_seconds": 0.5076368200025172,
+        "peak_rss_bytes": 186126336,
+        "interpolation": "cubic zeta then cubic log-spot, no extrapolation"
+      }
+    },
+    {
+      "job": "wide_x481",
+      "status": "completed",
+      "wall_seconds": 1.8619815629972436,
+      "peak_rss_bytes": 259551232,
+      "prices": [
+        0.1025530297904219,
+        0.04721516561588028,
+        0.019097607542563462
+      ],
+      "diagnostics": {
+        "ordering": "z_fast",
+        "estimated_bytes": 129655720,
+        "lu_bytes": 66341152,
+        "minimum_payoff_gap": -0.021678139418427556,
+        "minimum_lambda": 0.0,
+        "max_complementarity": 0.0,
+        "positive_lambda_count": 0,
+        "positive_time_value_count": 15033,
+        "max_equation_defect": 1.4268231041114632e-10,
+        "predictor_minimum": -0.0012470149127647456,
+        "projected_node_steps": 0,
+        "setup_seconds": 0.17492556700017303,
+        "solve_seconds": 1.1830927860028169,
+        "query_seconds": 0.0034868079965235665,
+        "total_seconds": 1.361505646000296,
+        "peak_rss_bytes": 264941568,
+        "interpolation": "cubic zeta then cubic log-spot, no extrapolation"
+      }
+    },
+    {
+      "job": "wide_x961",
+      "status": "completed",
+      "wall_seconds": 3.320656883002812,
+      "peak_rss_bytes": 410386432,
+      "prices": [
+        0.1025567026034674,
+        0.04722183941119078,
+        0.019101962504317272
+      ],
+      "diagnostics": {
+        "ordering": "z_fast",
+        "estimated_bytes": 259582120,
+        "lu_bytes": 135209992,
+        "minimum_payoff_gap": -0.021685653690391993,
+        "minimum_lambda": 0.0,
+        "max_complementarity": 0.0,
+        "positive_lambda_count": 0,
+        "positive_time_value_count": 30021,
+        "max_equation_defect": 6.069988955914596e-10,
+        "predictor_minimum": -0.000576592383247472,
+        "projected_node_steps": 0,
+        "setup_seconds": 0.354692614000669,
+        "solve_seconds": 2.416667989000416,
+        "query_seconds": 0.0056428169991704635,
+        "total_seconds": 2.7770038250018843,
+        "peak_rss_bytes": 421429248,
+        "interpolation": "cubic zeta then cubic log-spot, no extrapolation"
+      }
+    },
+    {
+      "job": "wide_v151",
+      "status": "completed",
+      "wall_seconds": 1.5099140009988332,
+      "peak_rss_bytes": 228880384,
+      "prices": [
+        0.10253792373767145,
+        0.0471884334915777,
+        0.019080934228691896
+      ],
+      "diagnostics": {
+        "ordering": "z_fast",
+        "estimated_bytes": 140025320,
+        "lu_bytes": 52237980,
+        "minimum_payoff_gap": -0.021663115294453306,
+        "minimum_lambda": 0.0,
+        "max_complementarity": 0.0,
+        "positive_lambda_count": 0,
+        "positive_time_value_count": 11221,
+        "max_equation_defect": 6.429168308841327e-11,
+        "predictor_minimum": -0.0024427498833100134,
+        "projected_node_steps": 0,
+        "setup_seconds": 0.1898393119990942,
+        "solve_seconds": 0.795585823001602,
+        "query_seconds": 0.0025772249973670114,
+        "total_seconds": 0.9880026079990785,
+        "peak_rss_bytes": 233410560,
+        "interpolation": "cubic zeta then cubic log-spot, no extrapolation"
+      }
+    },
+    {
+      "job": "wide_v201",
+      "status": "completed",
+      "wall_seconds": 2.3140891879993433,
+      "peak_rss_bytes": 282345472,
+      "prices": [
+        0.10253777338322613,
+        0.04718842920642774,
+        0.01908119371498994
+      ],
+      "diagnostics": {
+        "ordering": "z_fast",
+        "estimated_bytes": 244038120,
+        "lu_bytes": 77590484,
+        "minimum_payoff_gap": -0.021663115294259905,
+        "minimum_lambda": 0.0,
+        "max_complementarity": 0.0,
+        "positive_lambda_count": 0,
+        "positive_time_value_count": 14912,
+        "max_equation_defect": 7.300204885041239e-11,
+        "predictor_minimum": -0.0024426792769374444,
+        "projected_node_steps": 0,
+        "setup_seconds": 0.38459590800266596,
+        "solve_seconds": 1.4129616760001227,
+        "query_seconds": 0.0034860489977290854,
+        "total_seconds": 1.8010438450000947,
+        "peak_rss_bytes": 288280576,
+        "interpolation": "cubic zeta then cubic log-spot, no extrapolation"
+      }
+    },
+    {
+      "job": "wide_t300",
+      "status": "completed",
+      "wall_seconds": 1.5097550960017543,
+      "peak_rss_bytes": 183754752,
+      "prices": [
+        0.10253840971387677,
+        0.047188633617334635,
+        0.019080333331438794
+      ],
+      "diagnostics": {
+        "ordering": "z_fast",
+        "estimated_bytes": 64692520,
+        "lu_bytes": 31574356,
+        "minimum_payoff_gap": -0.021663131103335953,
+        "minimum_lambda": 0.0,
+        "max_complementarity": 0.0,
+        "positive_lambda_count": 0,
+        "positive_time_value_count": 7530,
+        "max_equation_defect": 3.927702607597894e-11,
+        "predictor_minimum": -0.002442909686333442,
+        "projected_node_steps": 0,
+        "setup_seconds": 0.10746861300140154,
+        "solve_seconds": 0.8649427349992038,
+        "query_seconds": 0.0017553309990034904,
+        "total_seconds": 0.9741669230024854,
+        "peak_rss_bytes": 186183680,
+        "interpolation": "cubic zeta then cubic log-spot, no extrapolation"
+      }
+    },
+    {
+      "job": "wide_t600",
+      "status": "completed",
+      "wall_seconds": 2.415339145998587,
+      "peak_rss_bytes": 184594432,
+      "prices": [
+        0.10253842455557739,
+        0.047188681275258146,
+        0.019080369461456873
+      ],
+      "diagnostics": {
+        "ordering": "z_fast",
+        "estimated_bytes": 64692520,
+        "lu_bytes": 31562464,
+        "minimum_payoff_gap": -0.021663135059186045,
+        "minimum_lambda": 0.0,
+        "max_complementarity": 0.0,
+        "positive_lambda_count": 0,
+        "positive_time_value_count": 7530,
+        "max_equation_defect": 3.8188119333426584e-11,
+        "predictor_minimum": -0.0024429367426985807,
+        "projected_node_steps": 0,
+        "setup_seconds": 0.1143515980002121,
+        "solve_seconds": 1.7915691320013138,
+        "query_seconds": 0.001885556001070654,
+        "total_seconds": 1.9078067160007777,
+        "peak_rss_bytes": 187162624,
+        "interpolation": "cubic zeta then cubic log-spot, no extrapolation"
+      }
+    },
+    {
+      "job": "wide_domain",
+      "status": "completed",
+      "wall_seconds": 1.8626140170017607,
+      "peak_rss_bytes": 260173824,
+      "prices": [
+        0.10253835034735952,
+        0.04718844298159099,
+        0.01908018880944541
+      ],
+      "diagnostics": {
+        "ordering": "z_fast",
+        "estimated_bytes": 129655720,
+        "lu_bytes": 66341116,
+        "minimum_payoff_gap": -0.023778366996962674,
+        "minimum_lambda": 0.0,
+        "max_complementarity": 0.0,
+        "positive_lambda_count": 0,
+        "positive_time_value_count": 11899,
+        "max_equation_defect": 5.834976946061943e-11,
+        "predictor_minimum": -0.002442801461451449,
+        "projected_node_steps": 0,
+        "setup_seconds": 0.20399352299864404,
+        "solve_seconds": 1.1151723750008387,
+        "query_seconds": 0.003379453999514226,
+        "total_seconds": 1.3225456199979817,
+        "peak_rss_bytes": 265732096,
+        "interpolation": "cubic zeta then cubic log-spot, no extrapolation"
+      }
+    }
+  ]
+}

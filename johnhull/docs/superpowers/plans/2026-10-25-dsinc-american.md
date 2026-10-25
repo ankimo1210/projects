@@ -91,12 +91,12 @@
 - `FDConfig(n_x: int, n_var: int, n_time: int, log_spot_bounds: tuple[float,float], log_var_bounds: tuple[float,float], exercise: Literal['european','american'])`。
 - `reference_put(contract: PutContract, model: VarianceModel, spots: ndarray, config: FDConfig) -> FDResult`。モデルはthree_halvesのみ。FDResultは価格、x/zeta格子、抽出境界brackets、最小payoff gap、補完性診断、計時・RSSを持つ。入力型だけ共有し、spectral/境界モジュールをimportしない。
 
-- [ ] RED: `test_fd_generator_from_three_halves_sde` は多項式/指数test functionへの作用を手計算式と比較し、混合項rho*xi*vの係数・割引符号を固定する。
-- [ ] RED: `test_fd_constant_variance_control` は独立定数分散fixtureを既存BSM/CRRと比較（European価格/K<=5e-6、American<=2e-5）。`test_fd_obstacle_and_complementarity` は接触・継続領域の相補性を確認する。
-- [ ] RED: `test_fd_refinement_and_domain_expansion` は小さな3/2ケースで軸別3解像度とh固定の領域拡大を比較し、未収束ならreferenceをunsupportedにする。`test_fd_geometry_mask_and_time_map` は整数indexの共通時刻、lambdaを用いた接触、FD bracketのzeta線形補間、x端4セルmask、90%coverageを固定する。`test_fd_time_budget_failure` は未計算点を成功値で埋めない。
-- [ ] Run `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_dsinc_reference.py`、FAILを確認する。
-- [ ] GREEN: 設計§5の2D作用素を直接導出し、短い次元を内側に並べ、Rannacher 4 half-steps→CN＋Ikonen–Toivanen splitting。European左端はmax(K*exp(-rd*tau)-S_min*exp(-rf*tau),0)、American左端は有限領域近似payoff。lambda/gap/離散残差を返す。テスト用定数分散fixtureの生成はモデルSDEと分離する。
-- [ ] テストPASS後、T=.5の3spotsについてEuropeanをTask 2と比較する。paper設定FDのTable 4照合と、広い独立分散領域[log(1e-5),log8]の参照収束を分ける。軸別水準と領域拡大は設計§6に従い、3軸同時の巨大LUを作らない。価格補間もspot位置を変えて検査する。必要ならcommit。
+- [x] RED: `test_fd_generator_from_three_halves_sde` は多項式/指数test functionへの作用を手計算式と比較し、混合項rho*xi*vの係数・割引符号を固定する。
+- [x] RED: `test_fd_constant_variance_control` は独立定数分散fixtureを既存BSM/CRRと比較（European価格/K<=5e-6、American<=2e-5）。`test_fd_obstacle_and_complementarity` は接触・継続領域の相補性を確認する。
+- [x] RED: `test_fd_refinement_and_domain_expansion` は小さな3/2ケースで軸別3解像度とh固定の領域拡大を比較し、未収束ならreferenceをunsupportedにする。`test_fd_geometry_mask_and_time_map` は整数indexの共通時刻、lambdaを用いた接触、FD bracketのzeta線形補間、x端4セルmask、90%coverageを固定する。`test_fd_time_budget_failure` は未計算点を成功値で埋めない。
+- [x] Run `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_dsinc_reference.py`、FAILを確認する。
+- [x] GREEN: 設計§5の2D作用素を直接導出し、短い次元を内側に並べ、Rannacher 4 half-steps→CN＋Ikonen–Toivanen splitting。European左端はmax(K*exp(-rd*tau)-S_min*exp(-rf*tau),0)、American左端は有限領域近似payoff。lambda/gap/離散残差を返す。テスト用定数分散fixtureの生成はモデルSDEと分離する。
+- [x] テストPASS後、T=.5の3spotsについてEuropeanをTask 2と比較する。paper設定FDのTable 4照合と、広い独立分散領域[log(1e-5),log8]の参照収束を分ける。軸別水準と領域拡大は設計§6に従い、3軸同時の巨大LUを作らない。価格補間もspot位置を変えて検査する。必要ならcommit。
 
 ## Task 4: EEP recursionと局所行使境界
 
