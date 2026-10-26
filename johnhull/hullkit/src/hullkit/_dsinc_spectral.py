@@ -25,7 +25,7 @@ from ._dsinc_types import PutContract, SpectralConfig, VarianceModel, canonical_
 
 _LOG_V0_SLACK = 1e-12  # log v0 may sit this far outside the grid ends (roundoff of log(exp(z)))
 _NONMONOTONE_ENTRY = -1e-10  # a zero-frequency propagator entry below this is a negative weight
-_FLUSH_BELOW = 1e-200  # smaller parts cannot move a price; subnormal ones slow the batched matmul
+_FLUSH_BELOW = 1e-200  # smaller parts cannot move a price; their products would go subnormal
 
 
 def frequency_rule(config: SpectralConfig) -> tuple[np.ndarray, np.ndarray]:
@@ -218,9 +218,11 @@ def build_propagators(
     ``n_var`` nodes that replaces the model coefficients (``variance`` is then the node ``v`` in
     ``A_k``); the tag records their hash.  The expiry must be positive: at ``T = 0`` the payoff is
     exact and no propagator exists.  One ``scipy.linalg.expm`` per frequency, no loop over matrix
-    entries.  Real and imaginary parts of ``expm`` below ``1e-200`` in magnitude are set to exactly
-    0 in place: they cannot move a price at double precision and, as subnormal numbers, they slow
-    the batched matmul of the recursion.  NaN and infinity are not touched.
+    entries.  Real and imaginary parts of ``expm`` below ``1e-200`` in magnitude (``_FLUSH_BELOW``)
+    are set to exactly 0 in place: they cannot move a price at double precision, and keeping them
+    would let their products in the batched matmul of the recursion go subnormal, which is slow.
+    Most of them are normal numbers between about 1e-308 and 1e-200; only some are subnormal
+    themselves.  NaN and infinity are not touched.
     """
     started = time.perf_counter()
     if contract.expiry <= 0.0:
@@ -351,9 +353,10 @@ def european_put(
     exp((chi - i omega_j) x) E_j / (s_j (1 + s_j))]`` where ``E_j = M_j^N 1`` and ``x = log(S/K)``;
     the result is interpolated to ``v0`` by :func:`interpolate_at_variance`.  ``spots`` must be a
     1-D array of finite positive values and ``v0`` must lie inside the variance grid, both checked
-    before any propagator is built.  Given ``propagators`` they are checked against the inputs;
-    they do not depend on the strike.  At ``T = 0`` the exact payoff ``max(1 - S/K, 0)`` is
-    returned without propagating.  Violated price bounds are not clipped.
+    before any propagator is built.  Given ``propagators`` they are checked against the inputs,
+    also at ``T = 0``, where none exist and a passed object is therefore rejected with
+    ``ValueError``; they do not depend on the strike.  At ``T = 0`` the exact payoff
+    ``max(1 - S/K, 0)`` is returned without propagating.  Violated price bounds are not clipped.
     """
     spot_array = _spot_array(spots)
     z = variance_grid(config)

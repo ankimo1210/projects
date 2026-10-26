@@ -140,11 +140,14 @@ class SpectralConfig:
     ``log_var_bounds``; ``chi`` in ``(0, 1)`` is the damping; ``panels`` are the
     Gauss-Legendre panel edges (start at 0, strictly increasing) with
     ``points_per_panel`` nodes each.  ``root_widths`` are the strictly increasing
-    half-widths of the boundary brackets, tried in order until a node shows a sign
-    change; the default ends in a reserve of 0.5 that only the nodes without one up to
-    0.3 reach (deviation D-6).  ``root_x_tol``, ``root_residual_tol`` and
-    ``root_maxiter`` stop the bisection, and ``crossing`` picks the ``upper`` or
-    ``lower`` positive-to-negative crossing.  Lists are stored as float tuples.
+    half-widths of the boundary brackets, tried in order.  A node stops at the first width
+    where its bracket is usable (``R(lo) > tol`` and ``R(hi) < -tol`` for the boundary
+    residual ``R`` and ``tol = root_residual_tol``), shows the wrong orientation or has a
+    non-finite end; only the remaining nodes go on to the next width, so the default's last
+    width 0.5 only reaches the nodes still undecided after 0.3 (deviation D-6).
+    ``root_x_tol``, ``root_residual_tol`` and ``root_maxiter`` stop the bisection, and
+    ``crossing`` picks the ``upper`` or ``lower`` positive-to-negative crossing.  Lists are
+    stored as float tuples.
     """
 
     n_time: int
@@ -237,7 +240,10 @@ class PricingResult:
     ``boundary_status`` the ``int8`` ``BOUNDARY_STATUS`` codes of the same shape.  At
     ``T = 0`` the payoff is exact and ``times`` and ``log_variances`` have shape
     ``(0,)`` and both boundary arrays ``(0, 0)``.  ``diagnostics`` holds only
-    JSON-serializable scalars and lists.
+    JSON-serializable scalars and lists.  The generated ``==`` and ``hash`` do not work on the
+    array fields (``==`` raises ``ValueError`` when it has to compare distinct arrays of more
+    than one element, ``hash`` raises ``TypeError``); compare results with ``canonical_digest``
+    or ``numpy.array_equal`` per field.
     """
 
     european: np.ndarray

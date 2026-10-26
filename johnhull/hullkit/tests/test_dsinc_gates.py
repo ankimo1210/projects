@@ -156,10 +156,21 @@ def test_level_selection_does_not_adopt_a_level_that_fails_the_bounds(gates):
     s1_calm = {name: level(0.1 + 4e-6) for name in SENSITIVITIES}
     levels = {"S0": level(0.1), "S1": level(0.1 + 4e-6), "S2": level(0.1 + 4.5e-6)}
     both_run = {"S0": calm, "S1": s1_calm}
-    # S0 passes the three checks: without bounds it is adopted, as before
-    assert gates.select_level(levels, ref, both_run, TH)["adopted"] == "S0"
+    # S0 passes the three checks: without bounds it is adopted, as before, and no verdict is kept
+    plain = gates.select_level(levels, ref, both_run, TH)
+    assert plain["adopted"] == "S0"
+    assert plain["checks"]["S0"]["bounds"] is None and plain["checks"]["S1"]["bounds"] is None
     inside = gates.select_level(levels, ref, both_run, TH, bounds={"S0": True, "S1": True})
     assert inside["adopted"] == "S0" and inside["checks"]["S0"]["bounds"] is True
+    from_numpy = {"S0": np.True_, "S1": np.False_}  # NumPy bools are read as bools
+    numpy_bools = gates.select_level(levels, ref, both_run, TH, bounds=from_numpy)
+    assert numpy_bools["adopted"] == "S0" and numpy_bools["checks"]["S0"]["bounds"] is True
+    assert numpy_bools["checks"]["S1"]["bounds"] is False
+    for name, bad in (("S0", {"pass": True}), ("S1", 1), ("S0", "yes")):  # not a bool, not None
+        with pytest.raises(ValueError, match=name):
+            gates.select_level(
+                levels, ref, both_run, TH, bounds={"S0": True, "S1": True} | {name: bad}
+            )
     out = gates.select_level(levels, ref, both_run, TH, bounds={"S0": False, "S1": True})
     assert (out["adopted"], out["status"]) == ("S1", "adopted")
     s0 = out["checks"]["S0"]

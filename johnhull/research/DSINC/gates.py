@@ -217,7 +217,7 @@ def select_level(
     sensitivities: dict[str, dict[str, dict[str, np.ndarray]] | None],
     thresholds: dict,
     *,
-    bounds: dict[str, bool] | None = None,
+    bounds: dict[str, bool | None] | None = None,
 ) -> dict:
     """Adopt the coarse side of the first passing S0/S1 pair (S2 is only a neighbour).
 
@@ -227,20 +227,24 @@ def select_level(
     when the level's sensitivities were not run.  Candidates are judged in the order S0, S1, each
     against the next level.  A candidate passes when, over every spot and quantity, the largest
     |level - next level| is <= ``adjacent``, the largest |level - reference| is <= ``independent``
-    and the largest |variant - level| of every sensitivity is <= ``sensitivity``.  A missing result
-    (None, or a non-finite price) fails the check it enters.  The first passing candidate is
-    adopted.  Otherwise the status is ``not_achieved_budget`` if some candidate passed the adjacent
-    and independent checks but its sensitivities were not run, else ``not_achieved``.
+    and the largest |variant - level| of every sensitivity is <= ``sensitivity``, and, when
+    ``bounds`` is given, the level is inside the bounds.  A missing result (None, or a non-finite
+    price) fails the check it enters.  The first passing candidate is adopted.  Otherwise the
+    status is ``not_achieved_budget`` if some candidate passed the adjacent and independent checks
+    (and is inside the bounds, if they are judged) but its sensitivities were not run, else
+    ``not_achieved``.
 
     ``bounds`` (deviation D-7) maps S0 and S1 to whether the level's own prices keep the
-    no-arbitrage bounds at every spot it priced.  When it is given, a candidate passes only if its
-    entry is True (False, None and an absent level fail it) and a candidate outside the bounds is
-    never pending.  With ``bounds=None`` the bounds are not judged.
+    no-arbitrage bounds at every spot it priced.  With ``bounds=None`` the bounds are not judged.
+    Otherwise a level is inside the bounds only if its entry is True; False, None and an absent
+    level put it outside, where it neither passes nor is pending.  An entry for S0 or S1 that is
+    neither a bool (Python or NumPy) nor None is a ValueError naming the level.
 
     Returns ``{adopted, status, checks}``; ``checks[level]`` holds ``adjacent``, ``independent`` and
     ``sensitivity`` (the largest differences, None if unavailable), the per-variant
-    ``sensitivities`` (None if not run), ``bounds`` (the verdict used, None if not judged),
-    ``passed`` and ``pending`` (adjacent and independent passed, sensitivities not run).
+    ``sensitivities`` (None if not run), ``bounds`` (True or False as judged, None if ``bounds``
+    was not given), ``passed`` (all the checks above) and ``pending`` (adjacent, independent and
+    bounds passed, sensitivities not run).
     """
     checks: dict[str, dict] = {}
     adopted = None
@@ -260,7 +264,10 @@ def select_level(
         near = adjacent is not None and adjacent <= thresholds["adjacent"]
         close = independent is not None and independent <= thresholds["independent"]
         calm = sensitivity is not None and sensitivity <= thresholds["sensitivity"]
-        inside = bounds is None or bounds.get(name) is True
+        verdict = None if bounds is None else bounds.get(name)
+        if verdict is not None and not isinstance(verdict, bool | np.bool_):
+            raise ValueError(f"bounds[{name!r}] must be a bool or None, got {verdict!r}")
+        inside = bounds is None or bool(verdict)
         checks[name] = {
             "adjacent": adjacent,
             "independent": independent,
