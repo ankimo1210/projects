@@ -1,5 +1,6 @@
 """DSINC runner: slot accounting, budgets, freeze checks, replay, export and figures."""
 
+import hashlib
 import importlib.util
 import json
 import os
@@ -435,6 +436,10 @@ def test_boundary_gate_receives_the_recorded_root_residual(run, tmp_path):
         "pricing_failure", None, failure="maxiter"
     )  # no residual is recorded, the failed roots decide
     assert failed["status"] == "fail" and failed["reasons"] == ["root_failure_in_window"]
+    # an ok solve without a usable residual fails the criterion, it does not skip it
+    for unusable in (None, float("nan")):
+        silent = judged("ok", unusable)
+        assert silent["status"] == "fail" and silent["reasons"] == ["root_residual_exceeds_limit"]
 
 
 def test_selection_builds_the_sensitivity_dict_from_all_protocol_names(run, tmp_path):
@@ -488,3 +493,66 @@ def test_selection_builds_the_sensitivity_dict_from_all_protocol_names(run, tmp_
     )  # a variant that ran and failed is a failed check, not a wait
     assert failed["adopted"] is None and failed["checks"]["S0"]["sensitivities"]["chi_0.75"] is None
     assert not failed["checks"]["S0"]["passed"] and not failed["checks"]["S0"]["pending"]
+
+
+def test_freeze_is_bound_to_the_source_files_of_the_pilot(run, tmp_path, monkeypatch):
+    protocol, cases = run.load_protocol(), run.load_cases()
+    roster = run.build_roster(protocol, "main")
+    source = tmp_path / "source.py"
+    source.write_text("x = 1\n")
+    monkeypatch.setattr(run, "SOURCE_FILES", (str(source),))
+    (tmp_path / "pilot").mkdir()
+    summary = run.evaluate("pilot", [], tmp_path / "pilot", protocol, cases)
+    assert summary["source_sha256"] == {str(source): hashlib.sha256(b"x = 1\n").hexdigest()}
+    passing = summary | {"all_pass": True}
+    run.make_freeze_manifest(protocol, passing, estimates(roster, 1.0))  # the pilot's own files
+    results = run.write_results(tmp_path / "pilot", "pilot", [], protocol, cases)
+    # the replay compares the hashes too and agrees while nothing has changed
+    assert run.replay(results)["match"]
+    source.write_text("x = 2\n")  # the code is edited after the pilot
+    with pytest.raises(ValueError, match="source"):
+        run.make_freeze_manifest(protocol, passing, estimates(roster, 1.0))
+    assert any("source_sha256" in line for line in run.replay(results)["differences"])
+
+
+def test_launcher_exceptions_and_reported_memory_are_recorded_per_job(run, tmp_path):
+    reports = {
+        "raises": OSError("no space left on device"),
+        "error_big": {"status": "error", "reason": "boom", "maxrss_bytes": 3 * 2**30},
+        "failure_big": {"status": "pricing_failure", "reason": "roots", "maxrss_bytes": 3 * 2**30},
+        "error_small": {"status": "error", "reason": "boom", "maxrss_bytes": 10},
+        "fine": {"status": "ok", "prices": {"american": [1.0]}, "maxrss_bytes": 10},
+    }
+
+    def launcher(job, root, timeout):
+        report = reports[job["job_id"]]
+        if isinstance(report, Exception):
+            raise report
+        return report
+
+    roster = [fixture_job(name) for name in reports]
+    records = run.execute_roster(roster, tmp_path / "root", BUDGET, launcher=launcher)
+    statuses = [r["status"] for r in records]
+    assert statuses == ["error", "memory_exceeded", "memory_exceeded", "error", "ok"]
+    assert "OSError" in records[0]["reason"] and "no space left" in records[0]["reason"]
+    # the launcher's own status stays visible in the reason of an over-limit job
+    assert records[1]["prices"] is None and "'error'" in records[1]["reason"]
+    assert "'pricing_failure'" in records[2]["reason"] and records[3]["reason"] == "boom"
+    saved = json.loads((tmp_path / "root/records.json").read_text())
+    assert len(saved) == len(roster)  # every job is accounted
+
+
+def test_nonmonotone_scheme_is_decided_from_the_recorded_entry_and_the_protocol(run, tmp_path):
+    protocol, cases = run.load_protocol(), run.load_cases()
+    base = job_of(run.build_roster(protocol, "main"), "spectral", "S0", "base", 0.5)
+
+    def effect(entry, flag, limit=protocol["thresholds"]["nonmonotone_min_entry"]):
+        generator = {"zero_frequency_min_entry": entry, "scheme_nonmonotone": flag}
+        mine = record_of(base, diagnostics={"max_root_residual": 1e-11, "generator": generator})
+        used = protocol | {"thresholds": protocol["thresholds"] | {"nonmonotone_min_entry": limit}}
+        return run.evaluate("main", [mine], tmp_path, used, cases)["nonmonotone_effect"]["0.5"]
+
+    # below the limit whatever flag was recorded (and nothing validates it here)
+    assert effect(-2e-10, False) == "unsupported"
+    assert effect(-5e-11, True) == "not_recorded"  # above the limit: the scheme is monotone
+    assert effect(-5e-10, False, limit=-1e-9) == "not_recorded"  # the limit comes from the protocol

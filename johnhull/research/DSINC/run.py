@@ -139,6 +139,11 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def _source_hashes() -> dict[str, str]:
+    """Return the sha256 of every file of ``SOURCE_FILES`` as it is now, by repo-relative name."""
+    return {entry: _sha256(REPO / entry) for entry in SOURCE_FILES}
+
+
 # ---------------------------------------------------------------------------------------------
 # Roster: protocol.json -> jobs
 # ---------------------------------------------------------------------------------------------
@@ -463,23 +468,25 @@ def _unrun(job: dict, status: str, reason: str) -> dict:
 def _record(job: dict, raw: dict, wall_seconds: float, budget: dict) -> dict:
     """Return the record of a job the launcher ran: its status, prices and the launcher's ``raw``.
 
-    The launcher's status stands, except that an ``ok`` job is ``memory_exceeded`` if its reported
-    peak RSS is over the limit and ``nonfinite`` if a price is not finite; prices are kept for
-    ``ok`` jobs only.
+    The launcher's status stands, except that a job whose reported peak RSS is over the limit is
+    ``memory_exceeded`` whatever the launcher said (its reason names that status) and an ``ok``
+    job is ``nonfinite`` if a price is not finite; prices are kept for ``ok`` jobs only.
     """
     status, reason = raw.get("status"), raw.get("reason")
     if status not in LAUNCH_STATUSES:
         status, reason = "error", f"the launcher reported the status {raw.get('status')!r}"
+    peak = raw.get("maxrss_bytes")
+    if peak is not None and peak > budget["job_rss_bytes"]:
+        reason = (
+            f"peak RSS {peak} bytes is over the limit of {budget['job_rss_bytes']} bytes "
+            f"(the launcher reported {raw.get('status')!r})"
+        )
+        status = "memory_exceeded"
     prices = None
     if status == "ok":
-        peak = raw.get("maxrss_bytes")
-        if peak is not None and peak > budget["job_rss_bytes"]:
-            status = "memory_exceeded"
-            reason = f"peak RSS {peak} bytes is over the limit of {budget['job_rss_bytes']} bytes"
-        else:
-            prices, problem = _price_check(raw.get("prices"))
-            if prices is None:
-                status, reason = "nonfinite", problem
+        prices, problem = _price_check(raw.get("prices"))
+        if prices is None:
+            status, reason = "nonfinite", problem
     clean = _jsonable(raw)
     return job | {
         "status": status,
@@ -511,7 +518,8 @@ def execute_roster(
     ``should_run(job, records)`` says so (else ``not_run_condition``) and its ``estimate_seconds``
     fits what is left (else ``not_run_budget``).  Otherwise ``launcher(job, root, timeout)`` runs
     it with ``timeout = min(job_wall_seconds, left)``; its return value is kept as ``raw`` and the
-    record status follows ``_record``.  Nothing is retried and no budget is added.
+    record status follows ``_record``.  An exception from the launcher is that job's ``error``
+    record and the roster goes on.  Nothing is retried and no budget is added.
     """
     root = Path(root)
     if root.exists() and any(root.iterdir()):
@@ -538,8 +546,15 @@ def execute_roster(
             records.append(_unrun(job, "not_run_budget", reason))
         else:
             began = clock()
-            raw = launcher(job, root, min(budget["job_wall_seconds"], left))
-            records.append(_record(job, raw, clock() - began, budget))
+            try:
+                raw = launcher(job, root, min(budget["job_wall_seconds"], left))
+                record = _record(job, raw, clock() - began, budget)
+            except Exception as error:  # an unexpected failure is this job's record, not the end
+                reason = f"the launcher failed with {type(error).__name__}: {error}"
+                record = _record(
+                    job, {"status": "error", "reason": reason}, clock() - began, budget
+                )
+            records.append(record)
         write_json(root / "records.json", records)
     return records
 
@@ -953,7 +968,9 @@ class _Evaluation:
         """Return the boundary gate of a level's base solve against the dedicated fine-time FD.
 
         The arrays of a ``pricing_failure`` base solve are judged too: its failed roots are what
-        the gate's ``root_failure_in_window`` reports (its ``max_root_residual`` is None).
+        the gate's ``root_failure_in_window`` reports (its ``max_root_residual`` is None).  An
+        ``ok`` solve always records the residual, so a missing or non-finite one fails the
+        gate's residual criterion instead of switching it off.
         """
         spectral = self.by_id.get(_job_id("spectral", level, "base", expiry))
         if spectral is not None and spectral["status"] not in ("ok", "pricing_failure"):
@@ -977,6 +994,9 @@ class _Evaluation:
         dx = (high - low) / (primary["config"]["n_x"] - 1)
         rules = self.thresholds["boundary"]
         diagnostics = spectral["diagnostics"] or {}
+        residual = diagnostics.get("max_root_residual")
+        if spectral["status"] == "ok" and residual is None:  # saved NaN and infinity are None
+            residual = math.nan
         verdict = self.gates.boundary_gate(
             spectral_log_var=mine["log_variances"],
             spectral_boundary=mine["log_boundary"],
@@ -987,7 +1007,7 @@ class _Evaluation:
             fd_dx=dx,
             fd_x_bounds=(low, high),
             thresholds=rules,
-            max_root_residual=diagnostics.get("max_root_residual"),
+            max_root_residual=residual,
         )
         return verdict | {
             "level": level,
@@ -1195,7 +1215,12 @@ class _Evaluation:
         return {"spectral": spectral, "fd": fd, "timing": timing}
 
     def pilot_verdicts(self) -> dict:
-        """Return the pilot's verdicts, the main-job estimates and ``all_pass`` (see Task 7)."""
+        """Return the pilot's verdicts, the main-job estimates and ``all_pass`` (see Task 7).
+
+        ``source_sha256`` holds the hashes of ``SOURCE_FILES`` at the pilot: the freeze refuses a
+        pilot whose files are not the current ones, and a replay of the pilot's results compares
+        them too (it matches while the files are unchanged).
+        """
         th = self.thresholds
         short = self.expiries[0]
         key = str(short)
@@ -1230,6 +1255,7 @@ class _Evaluation:
             "checks": checks,
             "all_pass": all(checks.values()),
             "protocol_digest": _digest(self.protocol),
+            "source_sha256": _source_hashes(),
             "paper_match": paper["match"],
             "paper_diagnostics": paper["diagnostics"],
             "fd_reference": {key: reference},
@@ -1294,7 +1320,8 @@ class _Evaluation:
             flagged = (self.record("spectral", judged, "base", expiry) or {}).get(
                 "diagnostics"
             ) or {}
-            if (flagged.get("generator") or {}).get("scheme_nonmonotone"):
+            smallest = (flagged.get("generator") or {}).get("zero_frequency_min_entry")
+            if smallest is not None and smallest < self.thresholds["nonmonotone_min_entry"]:
                 holds = price and boundary["status"] == "pass" and paper["match"]["pass"]
                 effect = "confirmed" if holds else "unsupported"
             else:
@@ -1379,17 +1406,23 @@ def evaluate(phase: str, records: list[dict], root: Path, protocol: dict, cases:
 def make_freeze_manifest(protocol: dict, pilot_summary: dict, estimates: list[dict]) -> dict:
     """Freeze the main run: the protocol, the source hashes, the roster with its estimates.
 
-    ValueError unless the pilot passed (``all_pass``) with this protocol (``protocol_digest``),
-    the estimates cover exactly the main roster, none is unmeasured, none is above
-    ``job_wall_seconds`` and the always-run jobs add up to at most ``main_seconds``.  The manifest
-    carries the sha256 of the protocol, the cases and every file of ``SOURCE_FILES``, copies of the
-    thresholds and the budget, the roster (each job with ``estimate_seconds``), the estimates with
-    their formulas and coefficients, the hash of the pilot summary and its own ``manifest_sha256``.
+    ValueError unless the pilot passed (``all_pass``) with this protocol (``protocol_digest``) and
+    these source files (its ``source_sha256``, which every pilot summary carries, equals the
+    current hashes of ``SOURCE_FILES``), the estimates cover exactly the main roster, none is
+    unmeasured, none is above ``job_wall_seconds`` and the always-run jobs add up to at most
+    ``main_seconds``.  The manifest carries the sha256 of the protocol, the cases and every file
+    of ``SOURCE_FILES``, copies of the thresholds and the budget, the roster (each job with
+    ``estimate_seconds``), the estimates with their formulas and coefficients, the hash of the
+    pilot summary and its own ``manifest_sha256``.
     """
     if not pilot_summary.get("all_pass"):
         raise ValueError("the pilot did not pass (all_pass is not true): nothing is frozen")
     if pilot_summary.get("protocol_digest") != _digest(protocol):
         raise ValueError("the pilot ran with a different protocol (protocol_digest differs)")
+    sources, ran = _source_hashes(), pilot_summary.get("source_sha256")
+    if ran is not None and ran != sources:  # a hand-built summary has none to compare
+        changed = sorted(name for name in sources | ran if sources.get(name) != ran.get(name))
+        raise ValueError(f"the source files changed after the pilot ({changed}): run it again")
     roster = build_roster(protocol, "main")
     problem = _estimate_problem(roster, estimates, protocol["budget"])
     if problem:
@@ -1399,7 +1432,7 @@ def make_freeze_manifest(protocol: dict, pilot_summary: dict, estimates: list[di
         "schema": "DSINC-freeze-v1",
         "protocol_sha256": _sha256(HERE / "protocol.json"),
         "cases_sha256": _sha256(HERE / protocol["cases_file"]),
-        "source_sha256": {entry: _sha256(REPO / entry) for entry in SOURCE_FILES},
+        "source_sha256": sources,
         "thresholds": protocol["thresholds"],
         "budget": protocol["budget"],
         "roster": [job | {"estimate_seconds": given[job["job_id"]]["seconds"]} for job in roster],
@@ -1428,8 +1461,9 @@ def verify_freeze(path: Path) -> dict:
         raise ValueError("freeze mismatch: the cases file changed after the freeze")
     if set(manifest["source_sha256"]) != set(SOURCE_FILES):
         raise ValueError("freeze mismatch: the list of source files differs from SOURCE_FILES")
+    current = _source_hashes()
     for entry, digest in manifest["source_sha256"].items():
-        if _sha256(REPO / entry) != digest:
+        if current[entry] != digest:
             raise ValueError(f"freeze mismatch: the source file {entry} changed after the freeze")
     if manifest["thresholds"] != protocol["thresholds"] or manifest["budget"] != protocol["budget"]:
         raise ValueError(
