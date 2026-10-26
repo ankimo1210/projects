@@ -20,6 +20,7 @@ spots are S/K.
 """
 
 import math
+from collections.abc import Mapping
 from itertools import pairwise
 
 import numpy as np
@@ -237,8 +238,9 @@ def select_level(
     ``bounds`` (deviation D-7) maps S0 and S1 to whether the level's own prices keep the
     no-arbitrage bounds at every spot it priced.  With ``bounds=None`` the bounds are not judged.
     Otherwise a level is inside the bounds only if its entry is True; False, None and an absent
-    level put it outside, where it neither passes nor is pending.  An entry for S0 or S1 that is
-    neither a bool (Python or NumPy) nor None is a ValueError naming the level.
+    level put it outside, where it neither passes nor is pending.  A ``bounds`` that is not a
+    mapping is a ValueError, and so is an entry for S0 or S1 that is neither a bool (Python or
+    NumPy) nor None, which names the level.
 
     Returns ``{adopted, status, checks}``; ``checks[level]`` holds ``adjacent``, ``independent`` and
     ``sensitivity`` (the largest differences, None if unavailable), the per-variant
@@ -246,6 +248,8 @@ def select_level(
     was not given), ``passed`` (all the checks above) and ``pending`` (adjacent, independent and
     bounds passed, sensitivities not run).
     """
+    if bounds is not None and not isinstance(bounds, Mapping):
+        raise ValueError(f"bounds must be a mapping of level to bool or None, got {bounds!r}")
     checks: dict[str, dict] = {}
     adopted = None
     for name, partner in pairwise(LEVELS):

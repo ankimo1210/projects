@@ -171,6 +171,9 @@ def test_level_selection_does_not_adopt_a_level_that_fails_the_bounds(gates):
             gates.select_level(
                 levels, ref, both_run, TH, bounds={"S0": True, "S1": True} | {name: bad}
             )
+    for not_a_mapping in ([True, True], True, "S0"):  # a bounds that is not a mapping
+        with pytest.raises(ValueError, match="bounds must be a mapping"):
+            gates.select_level(levels, ref, both_run, TH, bounds=not_a_mapping)
     out = gates.select_level(levels, ref, both_run, TH, bounds={"S0": False, "S1": True})
     assert (out["adopted"], out["status"]) == ("S1", "adopted")
     s0 = out["checks"]["S0"]

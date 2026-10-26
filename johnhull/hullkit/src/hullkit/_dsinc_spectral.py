@@ -25,7 +25,10 @@ from ._dsinc_types import PutContract, SpectralConfig, VarianceModel, canonical_
 
 _LOG_V0_SLACK = 1e-12  # log v0 may sit this far outside the grid ends (roundoff of log(exp(z)))
 _NONMONOTONE_ENTRY = -1e-10  # a zero-frequency propagator entry below this is a negative weight
-_FLUSH_BELOW = 1e-200  # smaller parts cannot move a price; their products would go subnormal
+# Propagator parts below this cannot move a price, and they slow the batched matmul of the
+# recursion: the subnormal ones (below 2.2e-308) directly, the normal ones above that through
+# products that go subnormal.  See build_propagators.
+_FLUSH_BELOW = 1e-200
 
 
 def frequency_rule(config: SpectralConfig) -> tuple[np.ndarray, np.ndarray]:
@@ -219,10 +222,12 @@ def build_propagators(
     ``A_k``); the tag records their hash.  The expiry must be positive: at ``T = 0`` the payoff is
     exact and no propagator exists.  One ``scipy.linalg.expm`` per frequency, no loop over matrix
     entries.  Real and imaginary parts of ``expm`` below ``1e-200`` in magnitude (``_FLUSH_BELOW``)
-    are set to exactly 0 in place: they cannot move a price at double precision, and keeping them
-    would let their products in the batched matmul of the recursion go subnormal, which is slow.
-    Most of them are normal numbers between about 1e-308 and 1e-200; only some are subnormal
-    themselves.  NaN and infinity are not touched.
+    are set to exactly 0 in place: they cannot move a price at double precision, and they slow the
+    batched matmul of the recursion.  The subnormal ones (below about 2.2e-308) slow it directly
+    and give about two thirds of the saving; the normal ones between about 2.2e-308 and 1e-200
+    slow it through products that go subnormal, which is the rest.  By count, 94 % of the non-zero
+    parts set to 0 in the S0 propagators at ``T = .5`` are normal and 6 % subnormal.  NaN and
+    infinity are not touched.
     """
     started = time.perf_counter()
     if contract.expiry <= 0.0:
