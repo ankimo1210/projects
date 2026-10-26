@@ -231,3 +231,16 @@ def test_s0_european_matches_table_3b():
 def test_zero_expiry_european_is_the_payoff():
     got = european_put(replace(CONTRACT, expiry=0.0), THREE_HALVES, SPOTS, config(n_var=8))
     np.testing.assert_array_equal(got, np.maximum(1.0 - SPOTS, 0.0))
+
+
+def test_propagator_parts_below_1e_200_are_stored_as_exact_zeros():
+    cfg = config(n_var=120, panels=(0.0, 2.0), points_per_panel=1)  # one frequency, omega = 1
+    prop = build_propagators(CONTRACT, THREE_HALVES, cfg)
+    k = -prop.omega[0] - 1j * cfg.chi
+    raw = expm(prop.dt * frequency_generator(CONTRACT, THREE_HALVES, variance_grid(cfg), k))
+    tiny_real, tiny_imag = np.abs(raw.real) < 1e-200, np.abs(raw.imag) < 1e-200
+    # the far off-diagonal tails of expm(dt A_k) are nonzero but below 1e-200: the flush has work
+    assert np.count_nonzero(raw.real[tiny_real]) + np.count_nonzero(raw.imag[tiny_imag]) > 0
+    flushed = raw.copy()
+    flushed.real[tiny_real], flushed.imag[tiny_imag] = 0.0, 0.0
+    np.testing.assert_array_equal(prop.matrices[0], flushed)

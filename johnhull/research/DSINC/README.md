@@ -37,6 +37,8 @@
 
 独自の選択による差は、論文の印刷値への照合基準（|差|/K≤6e-6）の中で説明する。D-1は設計からの逸脱として承認済みの規則で、根拠は[実施計画の§1](../../docs/superpowers/plans/2026-10-25-dsinc-american.md)に記録している。
 
+伝播行列は、expmの直後に実部・虚部の絶対値が1e-200未満の成分を0にして保存する（独自の選択）。この大きさの成分は倍精度の価格に影響せず、subnormalのまま残すとEEP再帰の一括matmulが遅くなるため。S0・S1・S2のT=0.5と1のどれでも、0化の有無で価格・節点境界・状態・診断の全出力がビット一致し、S2のT=1のwallは97.8秒から76.2秒になった。
+
 ## 再実行
 
 WSLの対象checkout rootから共有venvを使う（単一スレッド）。
@@ -47,4 +49,4 @@ export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_TH
 /home/kazumasa/projects/.venv/bin/python -m pytest -q johnhull/hullkit/tests/test_dsinc_types.py johnhull/hullkit/tests/test_dsinc_spectral.py
 ```
 
-`test_dsinc_spectral.py`は21件で約15秒かかる。pilot・freeze・main・replayのrunnerは実装後にここへ追記する。
+`test_dsinc_spectral.py`は22件で約15秒かかる。pilot・freeze・main・replayのrunnerは実装後にここへ追記する。

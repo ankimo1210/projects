@@ -25,6 +25,7 @@ from ._dsinc_types import PutContract, SpectralConfig, VarianceModel, canonical_
 
 _LOG_V0_SLACK = 1e-12  # log v0 may sit this far outside the grid ends (roundoff of log(exp(z)))
 _NONMONOTONE_ENTRY = -1e-10  # a zero-frequency propagator entry below this is a negative weight
+_FLUSH_BELOW = 1e-200  # smaller parts cannot move a price; subnormal ones slow the batched matmul
 
 
 def frequency_rule(config: SpectralConfig) -> tuple[np.ndarray, np.ndarray]:
@@ -148,7 +149,8 @@ class Propagators:
     """One-step propagators ``expm(dt * A_k)`` at every reflected frequency, bound to their inputs.
 
     ``matrices[j]`` is ``expm(dt * A_k)`` for ``k = -omega[j] - i*chi`` on the ``log_variances``
-    grid (``variance`` holds the node variances used in ``A_k``), ``dt = T / n_time``.
+    grid (``variance`` holds the node variances used in ``A_k``), ``dt = T / n_time``, with parts
+    below ``1e-200`` in magnitude stored as 0 (see :func:`build_propagators`).
     ``coefficients_tag`` is ``"model"`` or ``"fixture:<sha256 of the four coefficient arrays>"``
     and ``digest`` binds the risk-free rates, the expiry, the model, the config and the tag (the
     strike is not bound).  ``setup_seconds`` is the build wall time and ``nbytes`` the size of
@@ -216,7 +218,9 @@ def build_propagators(
     ``n_var`` nodes that replaces the model coefficients (``variance`` is then the node ``v`` in
     ``A_k``); the tag records their hash.  The expiry must be positive: at ``T = 0`` the payoff is
     exact and no propagator exists.  One ``scipy.linalg.expm`` per frequency, no loop over matrix
-    entries.
+    entries.  Real and imaginary parts of ``expm`` below ``1e-200`` in magnitude are set to exactly
+    0 in place: they cannot move a price at double precision and, as subnormal numbers, they slow
+    the batched matmul of the recursion.  NaN and infinity are not touched.
     """
     started = time.perf_counter()
     if contract.expiry <= 0.0:
@@ -250,7 +254,10 @@ def build_propagators(
             contract.foreign_rate,
             model.rho,
         )
-        matrices[j] = expm(dt * generator)
+        block = expm(dt * generator)
+        block.real[np.abs(block.real) < _FLUSH_BELOW] = 0.0  # NaN and inf compare False: kept
+        block.imag[np.abs(block.imag) < _FLUSH_BELOW] = 0.0
+        matrices[j] = block
     return Propagators(
         omega=_read_only(omega),
         weights=_read_only(weights),
