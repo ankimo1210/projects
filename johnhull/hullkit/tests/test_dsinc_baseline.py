@@ -1,5 +1,7 @@
 """Pinned upstream Heston DSINC/FD code: provenance, input mapping and observed branches."""
 
+import ast
+import difflib
 import hashlib
 import importlib.util
 import json
@@ -255,3 +257,52 @@ def test_out_of_scope_rates_are_rejected(baseline):
             dsinc_settings={"Nv": 6, "Nt": 8, "Nom": 120},
             fd_settings=TINY_FD,
         )
+
+
+def test_copied_methods_match_the_pinned_upstream(baseline):
+    """Without the lines ending in '# audit', each of the 7 audit copies is the upstream method."""
+    for name in ("dsinc_pricer", "fd_adi_pricer"):
+        baseline.load_upstream(name)  # raises unless the bytes match the manifest sha256
+    source = (ROOT / "heston_baseline.py").read_text().splitlines()
+    copies = ast.parse("\n".join(line for line in source if not line.rstrip().endswith("# audit")))
+    copied = {  # (upstream file, upstream class, audit class): the methods copied from it
+        ("dsinc_pricer.py", "DSINCPut", "_DSINCAudit"): (
+            "_safe",
+            "_solve_boundary",
+            "_heston_cf",
+            "_european_value",
+            "_final_eep",
+            "price",
+        ),
+        ("fd_adi_pricer.py", "HestonFDSolver", "_FDAudit"): ("_policy_iteration",),
+    }
+
+    def method(tree, class_name, name):
+        owner = next(
+            n for n in ast.walk(tree) if isinstance(n, ast.ClassDef) and n.name == class_name
+        )
+        return next(n for n in owner.body if isinstance(n, ast.FunctionDef) and n.name == name)
+
+    for (file, upstream_class, audit_class), names in copied.items():
+        upstream = ast.parse((baseline.UPSTREAM_DIR / file).read_bytes())
+        for name in names:
+            original, copy = (
+                method(upstream, upstream_class, name),
+                method(copies, audit_class, name),
+            )
+            if name == "_safe":
+                # The one known difference: a staticmethod upstream, an instance method in the
+                # copy (it counts on self).  Applied to the upstream node, so the comparison of
+                # every method stays exact.
+                assert [ast.unparse(d) for d in original.decorator_list] == ["staticmethod"]
+                original.decorator_list = []
+                original.args.args.insert(0, ast.arg(arg="self"))
+            assert ast.dump(copy) == ast.dump(original), "\n".join(
+                difflib.unified_diff(
+                    ast.unparse(original).splitlines(),
+                    ast.unparse(copy).splitlines(),
+                    f"upstream {upstream_class}.{name}",
+                    f"copy {audit_class}.{name}",
+                    lineterm="",
+                )
+            )
