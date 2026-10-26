@@ -201,6 +201,16 @@ def test_boundary_gate_rejects_multiple_crossings_and_unconverged_fd(gates):
     assert out["status"] == "fail" and out["fd_shift_cells"] == pytest.approx(2.0)
 
 
+def test_boundary_gate_checks_the_recorded_root_residual(gates):
+    case = boundary_case()
+    for residual in (None, 5e-9, 1e-8):  # not given, or at or below root_residual: no failure
+        assert gates.boundary_gate(**case, max_root_residual=residual)["status"] == "pass"
+    over = gates.boundary_gate(**case, max_root_residual=2e-8)
+    assert over["status"] == "fail" and "root_residual_exceeds_limit" in over["reasons"]
+    unreadable = gates.boundary_gate(**case, max_root_residual=float("nan"))
+    assert unreadable["status"] == "fail" and "root_residual_exceeds_limit" in unreadable["reasons"]
+
+
 def test_bounds_check_reports_raw_violations(gates):
     spots = np.array([0.9, 1.0, 1.1])
     contract = {"domestic_rate": 0.05, "foreign_rate": 0.02, "expiry": 0.5}

@@ -324,6 +324,7 @@ def boundary_gate(
     fd_dx: float,
     fd_x_bounds: tuple[float, float],
     thresholds: dict,
+    max_root_residual: float | None = None,
 ) -> dict:
     """Compare the spectral exercise boundary with the dedicated fine-time FD (deviations D-1, D-4).
 
@@ -340,12 +341,15 @@ def boundary_gate(
     ``geometry_invalid``; the deviation of the others is max(0, lo - x*, x* - hi) in cells of dx.
 
     ``fail`` if any spectral node in the window has status multiple_crossings (D-1), or no root
-    (any status but single, multiple_crossings, terminal, or a non-finite x*; the solver accepts a
-    root only with |R| <= root_residual_tol and records maxiter otherwise, so this carries the
-    residual criterion, and masks never hide it), or a deviation above ``max_cells`` cells, or the
-    FD is not confirmed: the largest edge shift against ``fd_check`` exceeds ``fd_shift_cells``
-    (plus 1e-9) or a node has contact in only one grid.  Otherwise ``unsupported`` if there is no
-    target or the valid share of the targets is below ``coverage``, else ``pass``.
+    (any status but single, multiple_crossings, terminal, or a non-finite x*; the solver records
+    maxiter when a root misses |R| <= root_residual_tol, and masks never hide it), or, when
+    ``max_root_residual`` (the largest |R| at the roots, as the spectral solve's diagnostics record
+    it) is given, a value that is not finite or above ``root_residual`` (reason
+    ``root_residual_exceeds_limit``; None leaves this criterion off), or a deviation above
+    ``max_cells`` cells, or the FD is not confirmed: the largest edge shift against ``fd_check``
+    exceeds ``fd_shift_cells`` (plus 1e-9) or a node has contact in only one grid.  Otherwise
+    ``unsupported`` if there is no target or the valid share of the targets is below ``coverage``,
+    else ``pass``.
 
     Returns ``{status, coverage, valid, targets, max_deviation_cells, fd_shift_cells,
     multiple_in_window, reasons}``; the two cell values are None when nothing was compared.
@@ -408,6 +412,10 @@ def boundary_gate(
         failures.append("multiple_crossings_in_window")
     if root_failures:
         failures.append("root_failure_in_window")
+    if max_root_residual is not None:
+        residual = float(_floats("max_root_residual", max_root_residual, 0, finite=False))
+        if not (math.isfinite(residual) and residual <= thresholds["root_residual"]):
+            failures.append("root_residual_exceeds_limit")
     if max_deviation is not None and max_deviation > thresholds["max_cells"]:
         failures.append("deviation_exceeds_limit")
     if fd_shift is not None and fd_shift > thresholds["fd_shift_cells"] + FD_SHIFT_SLACK:
