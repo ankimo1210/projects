@@ -1,0 +1,44 @@
+{
+  "schema": "DSINC-protocol-v1",
+  "cases_file": "cases.json",
+  "contract": {"strike": 1.0, "domestic_rate": 0.05, "foreign_rate": 0.02},
+  "model": {"kind": "three_halves", "kappa": 20.0, "theta": 0.04, "xi": 4.0, "rho": -0.5, "v0": 0.04},
+  "expiries": [0.5, 1.0],
+  "spots": [0.9, 1.0, 1.1],
+  "delta_bumps": [0.001, 0.0005, 0.00025],
+  "boundary_scan_spots": {"start": 0.70, "stop": 0.95, "count": 126},
+  "spectral": {
+    "log_var_bounds": [-8.517193191416238, 0.6931471805599453],
+    "chi": 0.5,
+    "base_panels": [0, 2, 5, 10, 20, 40, 80, 160, 320, 640],
+    "levels": {
+      "S0": {"steps_per_year": 200, "n_var": 160, "cutoff": 640, "points_per_panel": 12},
+      "S1": {"steps_per_year": 400, "n_var": 240, "cutoff": 1280, "points_per_panel": 12},
+      "S2": {"steps_per_year": 800, "n_var": 320, "cutoff": 2560, "points_per_panel": 16}
+    },
+    "var_ladder": [160, 240, 320],
+    "candidates": ["S0", "S1"],
+    "conditional_candidates": ["S1"],
+    "sensitivities": ["crossing_lower", "time_x2", "time_x2_cutoff_x2", "var_next", "points_plus4", "cutoff_x2",
+                      "chi_0.25", "chi_0.75", "domain_expand", "offset_plus_half", "offset_minus_half"]
+  },
+  "fd": {
+    "log_spot_bounds": [-1.2, 1.2],
+    "paper": {"log_var_bounds": [-8.517193191416238, 0.6931471805599453], "grids": [[241, 101, 300], [481, 201, 600]]},
+    "independent": {"log_var_bounds": [-11.512925464970229, 2.0794415416798357], "base": [241, 101, 300],
+                    "x": [241, 481, 961, 1921], "var": [101, 151, 201], "time": [300, 600, 1200],
+                    "domain": {"log_spot_bounds": [-2.4, 2.4], "n_x": 481}},
+    "boundary": {"log_var_bounds": [-11.512925464970229, 2.0794415416798357], "primary": [961, 101, 1200], "check": [961, 101, 600]}
+  },
+  "thresholds": {
+    "paper_match": 6e-6, "independent": 2e-5, "adjacent": 5e-6, "sensitivity": 5e-6,
+    "reference_final_change": 5e-6, "reference_resolution": 5e-7, "reference_order_range": [1.0, 3.0],
+    "bounds": 2e-5, "nonmonotone_min_entry": -1e-10,
+    "boundary": {"time_window": [0.1, 0.9], "variance_window": [0.01, 0.16], "edge_cells": 4, "coverage": 0.9,
+                 "max_cells": 2.0, "fd_shift_cells": 1.0, "root_residual": 1e-8}
+  },
+  "budget": {"job_wall_seconds": 180, "job_rss_bytes": 2147483648, "pilot_seconds": 600, "main_seconds": 1800,
+             "estimate_factor": 2.0, "timing_warmup": 1, "timing_repeats": 3,
+             "thread_variables": ["OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"]},
+  "storage": {"run_root": "/home/kazumasa/projects/_data/johnhull/DSINC", "target_bytes": 52428800, "export_file_bytes": 2000000}
+}
