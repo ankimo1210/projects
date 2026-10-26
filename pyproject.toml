@@ -108,6 +108,8 @@ extend-exclude = [
     # agentic-setup is a verbatim backup of the live ~/.claude and ~/.codex;
     # it is synced by copying, never edited here.
     "agentic-setup",
+    # Verbatim copy of the pinned upstream commit: reformatting would change what is audited.
+    "johnhull/research/DSINC/upstream",
 ]
 
 [tool.ruff.lint]

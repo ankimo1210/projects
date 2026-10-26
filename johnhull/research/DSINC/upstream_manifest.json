@@ -1,0 +1,13 @@
+{
+  "repository": "https://github.com/rakhymzhan11/DSINC-AMERICAN-HESTON",
+  "commit": "20cfb802673b0a792984d25e1f45cd09d37e8c07",
+  "license": "MIT",
+  "copyright_line": "Copyright (c) 2026 <COPYRIGHT HOLDER>",
+  "files": {
+    "dsinc_pricer.py": {"git_blob": "33d4d6a78f63d89025786fe75a774d565ba5a9dc", "sha256": "7ce004ae819252e98cc287c06acc74be6ee57216d2ab09aac8b49f1f66fae927", "bytes": 15973},
+    "fd_adi_pricer.py": {"git_blob": "3518f6b1979f7856f1c9825ba37446e7849b6e85", "sha256": "535d8da63827be1eb977312042e52204d2cf863a57219b1217bdd534fbf8b12c", "bytes": 18243},
+    "benchmark.py": {"git_blob": "59b7f490942b7099abf1a90c0987f1c08603416a", "sha256": "35eba4f34f2690091518e2e3e801d317d54f8ee1ec5e155e0e8334d1ebd89a35", "bytes": 3294},
+    "LICENSE": {"git_blob": "04fabfeb16dba4d1179fe3337d27be15019b50a9", "sha256": "028d0ca606b35b691ec82fda12fae43370bee49548a37f3f8b97ce15dbb7202b", "bytes": 1075}
+  },
+  "import_policy": "load dsinc_pricer.py and fd_adi_pricer.py by file path after the sha256 check; never import benchmark.py; never modify sys.path"
+}

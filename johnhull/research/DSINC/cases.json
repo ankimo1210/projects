@@ -1,0 +1,40 @@
+{
+  "schema": "DSINC-cases-v1",
+  "three_halves_paper": {
+    "source": "arXiv:2610.28847v1 Section 5.4-5.5, Tables 3(b), 4, 9",
+    "parameters": {"rd": 0.05, "rf": 0.02, "strike": 1.0, "kappa": 20.0, "theta": 0.04, "xi": 4.0, "rho": -0.5, "v0": 0.04},
+    "spots": [0.9, 1.0, 1.1],
+    "units": "price/K",
+    "rounding": 1e-6,
+    "T0.5": {
+      "american_n100": [0.107601, 0.048662, 0.019499],
+      "european": [0.102557, 0.047224, 0.019105],
+      "eep": [0.005044, 0.001438, 0.000394],
+      "american_n200": [0.107599, 0.048660, 0.019497],
+      "fd_coarse": [0.107575, 0.048618, 0.019469],
+      "fd_fine": [0.107593, 0.048648, 0.019490]
+    },
+    "T1": {"american_atm": 0.063668, "fd_fine_atm": 0.063658, "non_atm": "not_available"},
+    "roles": {
+      "gate": ["T0.5.american_n100", "T0.5.european", "T1.american_atm"],
+      "diagnostic": ["T0.5.eep", "T0.5.american_n200", "T0.5.fd_coarse", "T0.5.fd_fine", "T1.fd_fine_atm", "T1.non_atm"]
+    }
+  },
+  "heston_upstream": {
+    "source": "upstream benchmark.py at commit 20cfb802 (transcribed, not imported)",
+    "units": "raw price",
+    "cases": [
+      {"case_id": "H00", "S": 100.0, "K": 100.0, "T": 0.25, "rd": 0.03, "rf": 0.025, "theta": 0.6, "xi": 0.8, "rho": -0.4, "v0": 0.5, "kappa": 0.5, "reference": {"ie_european": 13.6633, "ie_american": 13.6749, "fd_european": 13.6611, "fd_american": 13.6837}},
+      {"case_id": "HT-v0.0625-S8", "S": 8.0, "K": 10.0, "T": 0.25, "rd": 0.1, "rf": 0.0, "theta": 0.16, "xi": 0.9, "rho": 0.1, "v0": 0.0625, "kappa": 5.0, "reference": {"american": 2.0000}},
+      {"case_id": "HT-v0.0625-S9", "S": 9.0, "K": 10.0, "T": 0.25, "rd": 0.1, "rf": 0.0, "theta": 0.16, "xi": 0.9, "rho": 0.1, "v0": 0.0625, "kappa": 5.0, "reference": {"american": 1.1076}},
+      {"case_id": "HT-v0.0625-S10", "S": 10.0, "K": 10.0, "T": 0.25, "rd": 0.1, "rf": 0.0, "theta": 0.16, "xi": 0.9, "rho": 0.1, "v0": 0.0625, "kappa": 5.0, "reference": {"american": 0.5199}},
+      {"case_id": "HT-v0.0625-S11", "S": 11.0, "K": 10.0, "T": 0.25, "rd": 0.1, "rf": 0.0, "theta": 0.16, "xi": 0.9, "rho": 0.1, "v0": 0.0625, "kappa": 5.0, "reference": {"american": 0.2135}},
+      {"case_id": "HT-v0.0625-S12", "S": 12.0, "K": 10.0, "T": 0.25, "rd": 0.1, "rf": 0.0, "theta": 0.16, "xi": 0.9, "rho": 0.1, "v0": 0.0625, "kappa": 5.0, "reference": {"american": 0.0820}},
+      {"case_id": "HT-v0.25-S8", "S": 8.0, "K": 10.0, "T": 0.25, "rd": 0.1, "rf": 0.0, "theta": 0.16, "xi": 0.9, "rho": 0.1, "v0": 0.25, "kappa": 5.0, "reference": {"american": 2.0785}},
+      {"case_id": "HT-v0.25-S9", "S": 9.0, "K": 10.0, "T": 0.25, "rd": 0.1, "rf": 0.0, "theta": 0.16, "xi": 0.9, "rho": 0.1, "v0": 0.25, "kappa": 5.0, "reference": {"american": 1.3336}},
+      {"case_id": "HT-v0.25-S10", "S": 10.0, "K": 10.0, "T": 0.25, "rd": 0.1, "rf": 0.0, "theta": 0.16, "xi": 0.9, "rho": 0.1, "v0": 0.25, "kappa": 5.0, "reference": {"american": 0.7959}},
+      {"case_id": "HT-v0.25-S11", "S": 11.0, "K": 10.0, "T": 0.25, "rd": 0.1, "rf": 0.0, "theta": 0.16, "xi": 0.9, "rho": 0.1, "v0": 0.25, "kappa": 5.0, "reference": {"american": 0.4482}},
+      {"case_id": "HT-v0.25-S12", "S": 12.0, "K": 10.0, "T": 0.25, "rd": 0.1, "rf": 0.0, "theta": 0.16, "xi": 0.9, "rho": 0.1, "v0": 0.25, "kappa": 5.0, "reference": {"american": 0.2427}}
+    ]
+  }
+}
