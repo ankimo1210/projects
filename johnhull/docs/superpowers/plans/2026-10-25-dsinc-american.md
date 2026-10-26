@@ -8,9 +8,9 @@
 
 **Tech Stack:** Python ≥3.12、既存のNumPy 2.4.6 / SciPy 1.17.1（依存は追加しない）、pytest、Matplotlib（図のみ）。float64/complex128、CPU 1 thread。
 
-**Spec:** [2026-10-25-dsinc-american-design.md](../specs/2026-10-25-dsinc-american-design.md)。本計画は設計からの逸脱D-1〜D-5を提案する（§1）。
+**Spec:** [2026-10-25-dsinc-american-design.md](../specs/2026-10-25-dsinc-american-design.md)。本計画は設計からの逸脱D-1〜D-7を記録する（§1。D-6・D-7はpilotが判断点で止まった後に追加した）。
 
-**状態（2026-10-26）:** 計画を全面改訂した。旧版は概要版で、Opus承認時のsha256は677bfdb2…、承認後の追記版は2ba13c82…。実装は未着手。D-1〜D-5は2026-10-26にユーザーが承認した（改訂版のOpus再レビューなし）。設計本文への反映はTask 1で行う。実行方法はsubagent-driven。[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)。
+**状態（2026-10-27）:** 計画を2026-10-26に全面改訂した。旧版は概要版で、Opus承認時のsha256は677bfdb2…、承認後の追記版は2ba13c82…。D-1〜D-5は2026-10-26にユーザーが承認した（改訂版のOpus再レビューなし）。設計本文への反映はTask 1で行った。実装は2026-10-26に始まり、Task 1〜6は完了した。Task 7のpilotは2026-10-26に判断点で止まった（`mandatory_jobs_ok`だけが落ち、S0のdomain_expandが根のbracket幅の外で`missing_sign_change`になった。S0のT=1ではboundsも不合格）。ユーザーは2026-10-27にD-6・D-7を承認し、実装した（Task 7R）。次はpilotのやり直しで、freezeとmainは未着手。実行方法はsubagent-driven。[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)。
 
 ## 0. 計画前に確かめたこと
 
@@ -92,6 +92,20 @@
   - 条件付きのジョブは、推定がその時点の残り予算に収まるときだけ走らせる。収まらなければ`not_achieved_budget`として記録する。
   - 予算と許容差は自動では増やさない。
 - 影響: 予算gateの適用対象が変わる。ジョブを選ぶ規則は事前に固定する。
+
+### D-6 根を探す幅に予備の0.5を足す
+
+- 設計§4: [p−.1, min(0,p+.1)]→幅.2→幅.3の順にbracketを作り、幅.3までで符号変化がなければ`missing_sign_change`で失敗にする。Task 1は`SpectralConfig.root_widths`の既定値を`(0.1, 0.2, 0.3)`とした。D-6はこの既定値を置き換える（Task 1の本文のコードとテストは書き換えない）。
+- 証拠（2026-10-26のpilot）: S0の`domain_expand`（分散格子を両側に12節点ずつ広げ、上端v≈4.0）が、T=.5の最初の逆向きstep（t=.495）で、上端5節点（index 179〜183、v 3.18〜4.01）の`missing_sign_change`により止まった。満期の境界x*=0から始まるbracket[−w, 0]に対し、これらの節点のx*は−0.30〜−0.32にある。幅.5を足した作業用の再計算（リポジトリは変更していない）では、5節点とも`single`、根の残差2.4e-11、S0 baseとの価格差は主3 spotで≤2.2e-10。pilotの他のspectral 14ジョブは、すべて.3までで根が見つかっている。
+- 提案（2026-10-27にユーザーが承認）: `root_widths`の既定値を`(0.1, 0.2, 0.3, 0.5)`にする。他の既定値は変えない。走査の刻み`scan_spacing`は`root_widths[0]`を使うので変わらない。幅は小さい順に試し、見つかった節点はそこで確定する（`_dsinc_american.py`の`for half_width in config.root_widths`のloop）。.5は、.3までで`missing_sign_change`になる節点にしか効かない。.3までの幅で符号変化が見つかる節点は従来と同じbracketを採るので、結果は変わらない。
+- 影響: 失敗の範囲が狭まる（緩和）。bracketを選んだ後の走査・交差の数え方・二分法の許容は従来と同じ。閾値と予算は変えない。
+
+### D-7 上下界を通らない段は採用しない
+
+- 設計§6: 最初の隣接差≤5e-6、独立FD差≤2e-5、個別感度gate成立を満たす粗い側を採用する。上下界（American≥European、American≥payoff、American≤K、許容2e-5。§2の独立gate）は、採用した後の価格検証（`independent_validated`）でだけ見ていた。
+- 証拠（pilotの検査項目ではない）: S0のT=1では、走査点S/K≈0.8でAmerican−payoffの最小が−2.36e-5で、許容2e-5を超える（Task 5で測り、2026-10-26のpilotも同じ値）。同じT=1で、S1は−8.3e-6、S2は−4.8e-6（Task 5の実測、走査126点）。T=.5のS0は−1.54e-5で通る。従来の規則ではT=1でS0が採用されて価格検証が不合格になり、S0が採用されるのでS1のT=1の感度は走らない（D-5）。§2の独立gateには上下界が含まれており、段の採用もその読みに揃える。
+- 提案（2026-10-27にユーザーが承認）: `gates.select_level(levels, reference, sensitivities, thresholds, *, bounds=None)`とする。`bounds`は段名（S0, S1）→その段の上下界の合否（bool）のdictで、与えられたとき、候補の段の値がTrueでなければ（False・欠落・None）その候補は不合格にする。結果は`checks[level]["bounds"]`に残す。予算で感度が未実行の段を待たせる扱い（`not_achieved_budget`）は従来どおりで、上下界で落ちた候補は待たせない。`bounds=None`なら従来どおり。runnerのmainでは、各満期でS0・S1のbase jobが価格を出した全spot（主3＋bump 18＋走査126の147点）に`gates.bounds_check`を適用し、その`pass`を`bounds`として渡す。base jobが価格を出していない段はFalse。条件付きジョブの判定（`condition_met`が読む途中の選択）も同じ規則で作る。
+- 影響: 厳格化（採用の条件が増える）。許容2e-5は変えない。pilotのestimatesでは、T=.5でS0、T=1でS1を採用した場合の必須と条件付きの合計は約1733秒（予算1800秒）。条件付きジョブは、その時点の残り予算に収まる見積もりのときだけ走る（D-5、変更なし）。
 
 ## 2. Global Constraints
 

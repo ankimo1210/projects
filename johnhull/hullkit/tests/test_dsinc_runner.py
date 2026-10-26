@@ -362,13 +362,28 @@ def job_of(roster, method, level, variant, expiry):
     )
 
 
+def put_surface(job, shift=0.0):
+    """European, American and EEP prices of a made-up put (rd = .05, rf = .02) at the spots of ``job``.
+
+    The European price is 0.005 above its lower bound and the American price 0.005 above both the
+    European price and the payoff, so every no-arbitrage margin is at least 0.005.  ``shift`` moves
+    the three quantities together.
+    """
+    spots = np.asarray(job["spots"], dtype=float)
+    expiry = job["expiry"]
+    lower = np.maximum(np.exp(-0.05 * expiry) - spots * np.exp(-0.02 * expiry), 0.0)
+    european = lower + 0.005
+    american = np.maximum(european, 1.0 - spots) + 0.005
+    return {
+        "european": (european + shift).tolist(),
+        "american": (american + shift).tolist(),
+        "eep": (american - european + shift).tolist(),
+    }
+
+
 def record_of(job, status="ok", shift=0.0, diagnostics=None, arrays=None):
-    """The record of ``job`` as the runner saves it: prices only when ok, the other fields as the solver left them."""
-    prices = (
-        {q: [0.05 + shift] * len(job["spots"]) for q in ("european", "american", "eep")}
-        if status == "ok"
-        else None
-    )
+    """The record of ``job`` as the runner saves it: ``put_surface`` prices only when ok, the other fields as the solver left them."""
+    prices = put_surface(job, shift) if status == "ok" else None
     return job | {
         "status": status,
         "reason": None if status == "ok" else status,
@@ -493,6 +508,65 @@ def test_selection_builds_the_sensitivity_dict_from_all_protocol_names(run, tmp_
     )  # a variant that ran and failed is a failed check, not a wait
     assert failed["adopted"] is None and failed["checks"]["S0"]["sensitivities"]["chi_0.75"] is None
     assert not failed["checks"]["S0"]["passed"] and not failed["checks"]["S0"]["pending"]
+
+
+def test_selection_does_not_adopt_a_level_whose_scan_point_breaks_the_bounds(run, tmp_path):
+    protocol, cases = run.load_protocol(), run.load_cases()
+    names, limits = protocol["spectral"]["sensitivities"], protocol["thresholds"]
+    roster = [job for job in run.build_roster(protocol, "main") if job["expiry"] == 0.5]
+    inputs = [j for j in roster if j["role"] in ("ladder", "reference", "sensitivity")]
+    s0_base = job_of(roster, "spectral", "S0", "base", 0.5)
+    s1_base = job_of(roster, "spectral", "S1", "base", 0.5)
+    scan = s0_base["spots"].index(0.8)  # a boundary-scan spot, not one of the three main spots
+
+    def shift_of(job):  # the levels differ by 1e-7, a sensitivity from its level by up to 1.1e-6
+        if job["role"] == "sensitivity":
+            return 1e-7 * (names.index(job["variant"]) + 1)
+        return {"S0": 0.0, "S1": 1e-7, "S2": 2e-7}.get(job["level"], 0.0)  # FD: the S0 surface
+
+    def judged(*, broken, s1_run, s1_priced=True):
+        """Evaluate the records at T = .5 before (or after) the S1 sensitivities have run."""
+        found = []
+        for job in inputs:
+            if not s1_run and (job["role"], job["level"]) == ("sensitivity", "S1"):
+                continue  # a conditional job that has not run yet has no record
+            status = "ok" if s1_priced or job["job_id"] != s1_base["job_id"] else "timeout"
+            found.append(record_of(job, status, shift_of(job)))
+        if broken:  # American 3e-5 below the payoff at S/K = .8, where the tolerance is 2e-5
+            mine = next(r for r in found if r["job_id"] == s0_base["job_id"])
+            mine["prices"]["american"][scan] = 1.0 - 0.8 - 3e-5
+        return run.evaluate("main", found, tmp_path, protocol, cases)
+
+    verdicts = judged(broken=False, s1_run=False)
+    selection = verdicts["selections"]["0.5"]
+    assert verdicts["bounds"]["0.5"]["S0"]["pass"] and selection["adopted"] == "S0"
+    assert not run.condition_met("S0_not_adopted:T0.5", {"0.5": selection})
+
+    verdicts = judged(broken=True, s1_run=False)
+    selection, bounds = verdicts["selections"]["0.5"], verdicts["bounds"]["0.5"]
+    low = bounds["S0"]
+    assert not low["pass"] and bounds["S1"]["pass"]  # only the payoff margin of S0 is out
+    assert low["american_minus_payoff_min"] == pytest.approx(-3e-5)
+    assert low["american_minus_payoff_min_spot"] == 0.8 and low["american_minus_european_min"] > 0
+    assert selection["adopted"] is None and selection["status"] == "not_achieved_budget"
+    s0, s1 = selection["checks"]["S0"], selection["checks"]["S1"]
+    assert s0["bounds"] is False and not s0["passed"] and not s0["pending"]
+    assert all(s0[key] <= limits[key] for key in ("adjacent", "independent", "sensitivity"))
+    assert s1["bounds"] is True and s1["pending"]  # S1 waits for the sensitivities it has not run
+    assert not verdicts["independent_validated"]["0.5"]["price"]
+    # so the conditional jobs of S1 are due, and the timing repeats of S0 are not
+    assert run.condition_met("S0_not_adopted:T0.5", {"0.5": selection})
+    assert not run.condition_met("adopted:S0:T0.5", {"0.5": selection})
+
+    verdicts = judged(broken=True, s1_run=True)
+    selection = verdicts["selections"]["0.5"]
+    assert selection["adopted"] == "S1" and selection["status"] == "adopted"
+    assert verdicts["independent_validated"]["0.5"]["price"]
+    assert run.condition_met("adopted:S1:T0.5", {"0.5": selection})
+
+    # a level whose base solve gave no prices has no bounds verdict, which fails it
+    checks = judged(broken=False, s1_run=True, s1_priced=False)["selections"]["0.5"]["checks"]
+    assert checks["S0"]["bounds"] is True and checks["S1"]["bounds"] is False
 
 
 def test_freeze_is_bound_to_the_source_files_of_the_pilot(run, tmp_path, monkeypatch):

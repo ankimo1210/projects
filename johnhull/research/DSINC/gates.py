@@ -12,8 +12,9 @@ spots are S/K.
   order on the actual step sizes, ``axis_convergence`` judges one refinement axis,
   ``fd_reference`` adds the finest-level correction of every axis to the base grid and
   ``reference_verdict`` demands every axis and the domain test.
-* Level choice (``select_level``): the coarse side of the first S0/S1 pair that passes the
-  adjacent, independent and sensitivity checks; S2 is only a neighbour.
+* Level choice (``select_level``, deviation D-7): the coarse side of the first S0/S1 pair that
+  passes the adjacent, independent and sensitivity checks and keeps the no-arbitrage bounds; S2 is
+  only a neighbour.
 * Boundary (``boundary_gate``, deviations D-1 and D-4), bounds, the paper's printed values, cost
   estimates, the reproduction label and the central-difference Delta.
 """
@@ -215,6 +216,8 @@ def select_level(
     reference: dict[str, np.ndarray],
     sensitivities: dict[str, dict[str, dict[str, np.ndarray]] | None],
     thresholds: dict,
+    *,
+    bounds: dict[str, bool] | None = None,
 ) -> dict:
     """Adopt the coarse side of the first passing S0/S1 pair (S2 is only a neighbour).
 
@@ -229,10 +232,15 @@ def select_level(
     adopted.  Otherwise the status is ``not_achieved_budget`` if some candidate passed the adjacent
     and independent checks but its sensitivities were not run, else ``not_achieved``.
 
+    ``bounds`` (deviation D-7) maps S0 and S1 to whether the level's own prices keep the
+    no-arbitrage bounds at every spot it priced.  When it is given, a candidate passes only if its
+    entry is True (False, None and an absent level fail it) and a candidate outside the bounds is
+    never pending.  With ``bounds=None`` the bounds are not judged.
+
     Returns ``{adopted, status, checks}``; ``checks[level]`` holds ``adjacent``, ``independent`` and
     ``sensitivity`` (the largest differences, None if unavailable), the per-variant
-    ``sensitivities`` (None if not run), ``passed`` and ``pending`` (adjacent and independent
-    passed, sensitivities not run).
+    ``sensitivities`` (None if not run), ``bounds`` (the verdict used, None if not judged),
+    ``passed`` and ``pending`` (adjacent and independent passed, sensitivities not run).
     """
     checks: dict[str, dict] = {}
     adopted = None
@@ -252,13 +260,15 @@ def select_level(
         near = adjacent is not None and adjacent <= thresholds["adjacent"]
         close = independent is not None and independent <= thresholds["independent"]
         calm = sensitivity is not None and sensitivity <= thresholds["sensitivity"]
+        inside = bounds is None or bounds.get(name) is True
         checks[name] = {
             "adjacent": adjacent,
             "independent": independent,
             "sensitivity": sensitivity,
             "sensitivities": per_variant,
-            "passed": bool(near and close and calm),
-            "pending": bool(near and close and per_variant is None),
+            "bounds": None if bounds is None else inside,
+            "passed": bool(near and close and calm and inside),
+            "pending": bool(near and close and inside and per_variant is None),
         }
         if adopted is None and checks[name]["passed"]:
             adopted = name

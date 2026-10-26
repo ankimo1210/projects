@@ -150,6 +150,35 @@ def test_level_selection_takes_the_coarse_side_of_the_first_passing_pair(gates):
     )  # one spot decides
 
 
+def test_level_selection_does_not_adopt_a_level_that_fails_the_bounds(gates):
+    ref = level(0.1)
+    calm = {name: level(0.1 + 1e-6) for name in SENSITIVITIES}
+    s1_calm = {name: level(0.1 + 4e-6) for name in SENSITIVITIES}
+    levels = {"S0": level(0.1), "S1": level(0.1 + 4e-6), "S2": level(0.1 + 4.5e-6)}
+    both_run = {"S0": calm, "S1": s1_calm}
+    # S0 passes the three checks: without bounds it is adopted, as before
+    assert gates.select_level(levels, ref, both_run, TH)["adopted"] == "S0"
+    inside = gates.select_level(levels, ref, both_run, TH, bounds={"S0": True, "S1": True})
+    assert inside["adopted"] == "S0" and inside["checks"]["S0"]["bounds"] is True
+    out = gates.select_level(levels, ref, both_run, TH, bounds={"S0": False, "S1": True})
+    assert (out["adopted"], out["status"]) == ("S1", "adopted")
+    s0 = out["checks"]["S0"]
+    assert s0["bounds"] is False and not s0["passed"]
+    assert s0["adjacent"] == pytest.approx(4e-6) and s0["sensitivity"] == pytest.approx(1e-6)
+    for unjudged in ({"S1": True}, {"S0": None, "S1": True}):  # missing or None fails like False
+        assert gates.select_level(levels, ref, both_run, TH, bounds=unjudged)["adopted"] == "S1"
+    outside = gates.select_level(levels, ref, both_run, TH, bounds={"S0": False, "S1": False})
+    assert (outside["adopted"], outside["status"]) == (None, "not_achieved")
+    # a level outside the bounds does not wait for its sensitivities, a level inside does
+    unrun = {"S0": None, "S1": None}
+    waiting = gates.select_level(levels, ref, unrun, TH, bounds={"S0": False, "S1": True})
+    assert waiting["status"] == "not_achieved_budget"
+    assert not waiting["checks"]["S0"]["pending"] and waiting["checks"]["S1"]["pending"]
+    none_left = gates.select_level(levels, ref, unrun, TH, bounds={"S0": False, "S1": False})
+    assert none_left["status"] == "not_achieved"
+    assert not any(check["pending"] for check in none_left["checks"].values())
+
+
 def boundary_case(dx=0.0025):
     spec_z = np.linspace(math.log(2e-4), math.log(2.0), 160)
     fd_z = np.linspace(math.log(1e-5), math.log(8.0), 101)

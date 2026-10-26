@@ -140,7 +140,9 @@ class SpectralConfig:
     ``log_var_bounds``; ``chi`` in ``(0, 1)`` is the damping; ``panels`` are the
     Gauss-Legendre panel edges (start at 0, strictly increasing) with
     ``points_per_panel`` nodes each.  ``root_widths`` are the strictly increasing
-    half-widths of the boundary brackets, ``root_x_tol``, ``root_residual_tol`` and
+    half-widths of the boundary brackets, tried in order until a node shows a sign
+    change; the default ends in a reserve of 0.5 that only the nodes without one up to
+    0.3 reach (deviation D-6).  ``root_x_tol``, ``root_residual_tol`` and
     ``root_maxiter`` stop the bisection, and ``crossing`` picks the ``upper`` or
     ``lower`` positive-to-negative crossing.  Lists are stored as float tuples.
     """
@@ -151,7 +153,7 @@ class SpectralConfig:
     chi: float
     panels: tuple[float, ...]
     points_per_panel: int
-    root_widths: tuple[float, ...] = (0.1, 0.2, 0.3)
+    root_widths: tuple[float, ...] = (0.1, 0.2, 0.3, 0.5)
     root_x_tol: float = 1e-10
     root_residual_tol: float = 1e-8
     root_maxiter: int = 60

@@ -30,7 +30,7 @@ def test_paper_inputs_are_accepted():
     VarianceModel(**MODEL)
     VarianceModel("heston", kappa=2.0, theta=0.04, xi=0.2, rho=-0.5, v0=0.04)
     config = s0()
-    assert config.root_widths == (0.1, 0.2, 0.3) and config.crossing == "upper"
+    assert config.root_widths == (0.1, 0.2, 0.3, 0.5) and config.crossing == "upper"
     assert (config.root_x_tol, config.root_residual_tol, config.root_maxiter) == (1e-10, 1e-8, 60)
 
 

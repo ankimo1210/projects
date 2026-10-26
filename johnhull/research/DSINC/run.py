@@ -1306,15 +1306,16 @@ class _Evaluation:
                 level: self.main_prices(self.record("spectral", level, "base", expiry))
                 for level in LEVELS
             }
+            bounds = {level: self.bounds(level, expiry) for level in LEVELS}
             selection = self.gates.select_level(
                 levels,
                 self.reference_arrays(reference),
                 {level: self.sensitivity_inputs(level, expiry) for level in CANDIDATES},
                 self.thresholds,
+                bounds={level: bool((bounds[level] or {}).get("pass")) for level in CANDIDATES},
             )
             adopted = selection["adopted"]
             judged = adopted or CANDIDATES[0]  # S0 is the level shown when nothing is adopted
-            bounds = {level: self.bounds(level, expiry) for level in LEVELS}
             boundary = self.boundary(judged, expiry)
             price = bool(adopted and reference["converged"] and (bounds[adopted] or {}).get("pass"))
             flagged = (self.record("spectral", judged, "base", expiry) or {}).get(
@@ -1379,7 +1380,8 @@ def evaluate(phase: str, records: list[dict], root: Path, protocol: dict, cases:
 
     ``pilot``: the paper match, the T=.5 FD reference, S0 against it, the T=.5 boundary gate, the
     ``crossing_lower`` sensitivity, diagnostics, the cost estimate of every main job, the
-    ``protocol_digest`` and ``all_pass``.  ``main``: per expiry the level selection, the FD
+    ``protocol_digest`` and ``all_pass``.  ``main``: per expiry the level selection (a level whose
+    base solve breaks the bounds at any spot it priced is not adopted, deviation D-7), the FD
     reference, bounds, boundary gate, ``independent_validated``, ``nonmonotone_effect`` and
     Deltas, then the paper match, ``reproduction_label``, the cost tables and ``exports`` (the
     relative paths of the arrays to publish).  ``fixture``: the job count by status and every
