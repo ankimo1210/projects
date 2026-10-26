@@ -382,3 +382,9 @@ synthetic-data method demonstrations, not market-performance claims.
 | Module | Contracts | Verification |
 |---|---|---|
 | `hullkit._sabr_identifiability` | Private `hullkit._sabr_identifiability:sabr_vols`, `hullkit._sabr_identifiability:scaled_jacobian`, `hullkit._sabr_identifiability:jacobian_diagnostics`, `hullkit._sabr_identifiability:fit_smile` | Scaled a/rho/nu bounded TRF, full three-direction rectangular SVD, exact nu-zero derivative columns, preserved failed solver/call diagnostics; test_sabr_identifiability.py. RB-F06 main 102 datasets/4398 fits, independent Hagan/Black and 918 multi-step Jacobians, SLSQP/870-slice checks, both-store replay and saved-artifact three figures; independently approved teaching diagnostics; weak directions and original failures retained; no exact SABR/dynamics/global identifiability/coverage guarantee |
+
+## DSINC research: American put by fixed-frequency spectral recursion
+
+| Module | Contracts | Verification |
+|---|---|---|
+| `hullkit._dsinc_types` | Private `hullkit._dsinc_types:PutContract`, `hullkit._dsinc_types:VarianceModel`, `hullkit._dsinc_types:SpectralConfig`, `hullkit._dsinc_types:PricingFailure`, `hullkit._dsinc_types:PricingResult`, `hullkit._dsinc_types:canonical_digest` | v1 input scope (rd>rf>=0, 3/2 true martingale rho*xi<=kappa+xi^2/2), ValueError on invalid inputs, fixed boundary status codes and structured failures; test_dsinc_types.py; research/DSINC/ in progress |

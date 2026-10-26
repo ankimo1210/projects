@@ -1,6 +1,6 @@
 # DSINCによるAmerican putの数値再現 — 設計
 
-更新日: 2026-10-25（JST）。状態: **計画・Opusレビューの対象。実装と本計算は未着手**。Opus承認後、§5/§6に論文Table 3(b)/4の印刷値を照合対象として追加した（[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)の「Opus承認後の追加照合と変更」）。2026-10-26、[実装計画](../plans/2026-10-25-dsinc-american.md)を完全版に改訂し、§4〜§6からの逸脱D-1〜D-5を提案した（計画の§1）。D-1〜D-5は2026-10-26にユーザーが承認した。本文への反映は計画のTask 1で行う。
+更新日: 2026-10-26（JST）。状態: **実装開始（branch `claude/dsinc-american`）。Task 1（入力型）完了。D-1〜D-5は2026-10-26に承認。本計算は未着手**。Opus承認後、§5/§6に論文Table 3(b)/4の印刷値を照合対象として追加した（[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)の「Opus承認後の追加照合と変更」）。2026-10-26、[実装計画](../plans/2026-10-25-dsinc-american.md)を完全版に改訂し、§4〜§6からの逸脱D-1〜D-5を提案した（計画の§1。根拠の実測もそちら）。D-1〜D-5は同日ユーザーが承認し、本文の§4〜§6へ反映した（計画のTask 1。反映箇所は「逸脱D-n」と明記）。改訂版のOpus再レビューはない。
 
 ## 1. 目的と承認範囲
 
@@ -61,7 +61,7 @@ EuropeanはEq.(61)、EEPの蓄積はEq.(57)、境界はEq.(58)に対応させる
 
 中央差分は低分散で非単調になりうる。Pe、実周波数0の伝播行列の最小成分と行和誤差を保存し、正値性を理論保証したとは表現しない。負成分が-1e-10未満ならscheme_nonmonotoneを記録し、分散細分・領域/offset感度と独立FDの全価格gateで影響を確認できなければunsupportedとする。
 
-境界は各時刻・分散節点で求める。残差R(x)はEq.(58)の左辺から右辺を引いた無次元量（価格をKで割った残差）と定義する。次時点の境界pを予測値とし、[p-.1,min(0,p+.1)]→幅.2→幅.3の順に候補を作り、put向きのR(lo)>0>R(hi)を必須にする。各候補はm=max(65,ceil(2*omega_max*(hi-lo)/pi)+1)点で走査し、許容零近傍をまとめた符号変化を数える。逆向き、複数の符号変化、曖昧な零の平坦部はそれぞれwrong_orientation/multiple_roots/ambiguous_contactで失敗とする。これはサンプル上の診断であり、連続関数のrootの一意性証明ではない。走査費用も予算に含める。
+境界は各時刻・分散節点で求める。残差R(x)はEq.(58)の左辺から右辺を引いた無次元量（価格をKで割った残差）と定義する。次時点の境界pを予測値とし、[p-.1,min(0,p+.1)]→幅.2→幅.3の順に候補を作り、put向きのR(lo)>0>R(hi)を必須にする。各候補はm=max(65,ceil(2*omega_max*(hi-lo)/pi)+1)点で走査し、許容零近傍をまとめた符号変化を数える。逆向き、符号変化なし、曖昧な零の平坦部はそれぞれwrong_orientation/missing_sign_change/ambiguous_contactで失敗とする。ambiguous_contactは|R|<=root_residual_tolの走査点が2点以上続く場合に限り、交差点上の零が1点だけなら交差として扱う。bracket内に複数の符号変化があっても失敗にはしない（逸脱D-1）。putの行使域はx<=x*なので、x*を残差Rが正である最上位の点、つまり最上位の+→−交差と定義し、状態をmultiple_crossingsとして記録する。S0のT=.5では16,000 node-stepのうち58件でbracket内に交差が3つあり、失敗にすると最初のstepで止まるためである。歯止めは二つ置く。(i) 最下位の交差を選ぶ個別感度crossing_lowerを、他の感度と同じ5e-6のgateにする（§6）。(ii) 境界照合の窓（§5）の中にmultiple_crossingsが1点でもあれば、境界gateをFAILにする。これはサンプル上の診断であり、連続関数のrootの一意性証明ではない。走査費用も予算に含める。
 
 二分法は最大60回、x幅<=1e-10かつabs(R)<=1e-8。sign change無し、非finite、最大反復も構造化したPricingFailureとする。min-residual点への置換や広範囲の最初のrootへの移動はしない。失敗時刻では全分散節点を最後まで処理してstatus配列を埋め、それからケースを停止する。さらに早い時刻はnot_runとして保持し、失敗境界でQを更新しない。走査はnode/候補xの小ブロックで行い、scan数×n_var×n_omegaの巨大配列を一括保持しない。独立FDの接触領域・時間方向整合も照合する。
 
@@ -78,13 +78,13 @@ L V=(r_d-r_f-v/2)V_x+
 
 四つのimplicit Euler half-stepsのRannacher起動後にCN、American制約はIkonen–Toivanen splittingを用いる。American左端のpayoffと右端0は有限領域の近似で、高分散の全行で正しい境界とは主張しない。European左端はmax(K*exp(-rd*tau)-S_min*exp(-rf*tau),0)。分散端はNeumann。接触はlambda>1e-10*Kかつabs(V-payoff)<=1e-8*Kで判定し、乗数・payoff gap・離散方程式の残差を保存する。境界条件の誤差は格子幅を固定した領域拡大で別測定する。
 
-paper設定照合用FDと独立正当性用FDを区別する。前者は論文の領域/格子、後者の分散領域は[log(1e-5),log(8)]から始め、spectralと同じ端の誤差を共有しない。未知数は短い次元を内側に並べる。全軸同時の第3細分は行わず、xのみ、分散のみ、tのみの各3水準で観測収束を調べる。二次外挿は観測次数が整合した軸についてだけ診断に使い、参照の保証誤差とは呼ばない。
+paper設定照合用FDと独立正当性用FDを区別する。前者は論文の領域/格子、後者の分散領域は[log(1e-5),log(8)]から始め、spectralと同じ端の誤差を共有しない。未知数は短い次元を内側に並べる。全軸同時の第3細分は行わず、xのみ、分散のみ、tのみの軸別に観測収束を調べる（水準は§6。x軸は4水準）。参照値と収束の判定は、設計では未定義だったため次のように定める（逸脱D-3）。参照値は、基準B=(241,101,300*T)と各軸の最細水準から P_ref = P_B + Σ_軸(P_軸の最細水準 − P_B) とする。各軸は、最終差<=5e-6で、かつ (a) 最終差<=5e-7（基準の1/10で、判定を動かさない大きさ）、または (b) 変化が縮小し（|最終差|<|前の差|）観測次数が[1,3]に入る、のどちらかを満たせば収束とする。分散軸は最終の変化が基準の1/20以下と小さく、観測次数が5.3/5.0/1.7とばらつくため(a)を置く。領域を広げたときの差も<=5e-6とする。次数は、等比でない刻みhについては根を解いて求める。二次外挿は観測次数が整合した軸についてだけ診断に使い、参照の保証誤差とは呼ばない。
 
 独立制御は、(i) 既存Heston European CF/COS、(ii) 定数分散作用素の解析的伝播＋BSM/CRR、(iii) 3/2のu=1/vがCIRとなることからの解析的条件付平均、(iv) 独立FD。Heston制御はkappa=2,theta=v0=.04,xi=.2,rho=-.5,rd=.05,rf=.02,T=.5、S/K={.9,1,1.1}とし、Feller条件を満たす。既存heston_priceのdividend_yieldとCRR/BSMのqが利用できることは準備時にsignatureで確認した。
 
 CIR平均の制御はn_var={160,240,320}で共通v0=.04へ3次補間し、観測次数1.5〜2.5と最細格子の相対誤差<=1e-4を調べる。元の絶対誤差1e-4基準は撤回した。原点に近い節点での準備計算では絶対誤差が約.001975/.000888/.000529となり、旧基準が不適切なことを確認した。この小さな制御計算を研究pricerの実装済みとは扱わない。
 
-文献再現と独立正当性は別gateにする。paper_matchは必ずS0（n_var160、n_time=200*T、108周波数、chi=.5）のspectral値を、Table 4の3/2 American 3spots、Table 3(b)の3/2 European 3spots {.102557,.047224,.019105}（論文ではspectralと閉形式Eq.(31)が6桁一致）、Table 9のT=1,ATM=.063668に比較し、絶対差/K<=6e-6（丸め分1e-6＋事前宣言差5e-6）で判定する。Table 4のEEP列{.005044,.001438,.000394}（=American−European）は不一致をEuropean側とEEP側に切り分ける診断列とし、gateに二重計上しない。Table 4のDSINC N=200列{.107599,.048660,.019497}はS0の時間倍（cutoff固定）と同じ設定なので、pilotの差を診断列に残し、停止条件にしない。Task 4のsmokeを経てTask 5で正式判定し、超過はpaper_mismatchとして停止・レビューする。許容差を自動緩和しない。T=1非ATM2点は印刷価格がないためnot_available。FDと論文のcoarse/fine値の差は別の診断列とし、端/補間などの離散化の同一性が未確認なので6e-6の停止条件に含めない。再現済みの主張は、宣言したspectral文献照合と下記独立gateの両方が成立した範囲に限定する。
+文献再現と独立正当性は別gateにする。paper_matchは必ずS0（n_var160、n_time=200*T、108周波数、chi=.5）のspectral値を、Table 4の3/2 American 3spots、Table 3(b)の3/2 European 3spots {.102557,.047224,.019105}（論文ではspectralと閉形式Eq.(31)が6桁一致）、Table 9のT=1,ATM=.063668に比較し、絶対差/K<=6e-6（丸め分1e-6＋事前宣言差5e-6）で判定する。Table 4のEEP列{.005044,.001438,.000394}（=American−European）は不一致をEuropean側とEEP側に切り分ける診断列とし、gateに二重計上しない。Table 4のDSINC N=200列{.107599,.048660,.019497}はS0の時間倍（cutoff固定）と同じ設定なので、pilotの差を診断列に残し、停止条件にしない。Task 3/5のsmokeを経てTask 7で正式判定し、超過はpaper_mismatchとして停止・レビューする。許容差を自動緩和しない。T=1非ATM2点は印刷価格がないためnot_available。FDと論文のcoarse/fine値の差は別の診断列とし、端/補間などの離散化の同一性が未確認なので6e-6の停止条件に含めない。再現済みの主張は、宣言したspectral文献照合と下記独立gateの両方が成立した範囲に限定する。
 
 実装時のsource対応表に、パネル端・節点数・時間格子は論文由来、ghost端の具体化・初期分散補間・root走査は独自選択、と明示する。独自選択による差も上記の文献照合基準の中で説明する。
 
@@ -93,7 +93,7 @@ v1の提案値は次の通り。pilotで達成性と費用を確認して主実�
 - 主価格: 6ケースすべてで `abs(P_spectral-P_reference)/K <= 2e-5`、reference最終細分差<=5e-6、spectralの個別細分差<=5e-6。EEPも同じ絶対精度で評価し、小EEPの相対精度を主張しない。
 - American>=European、American>=payoff、American<=Kは許容差2e-5*K。違反のraw値を保存し、許容差を超えたらFAIL。Europeanの上下界・strike homogeneityも確認する。
 - chi=.25,.5,.75、周波数cutoff、パネル節点数、分散領域・節点数、時間刻みを一軸ずつ変える。時間細分時はcutoff固定の検査とcutoff拡大を伴う検査を分ける。
-- 行使境界: 時刻indexの整数交差条件j*N_fd=k*N_spectralを満たす共通時刻に限り、t/T∈[.1,.9]、v∈[.01,.16]を比較対象にする。FDの接触/継続bracketの両端をzetaで線形補間してspectral節点へ写す。bracketが取れない、またはFD/spectral境界がx端から4セル以内ならgeometry_invalidとして理由つきでmaskし、事前対象の有効coverageが90%未満なら境界gateをunsupportedにする。有効点ではspectral境界がFD bracketから2*dx以内（dxは比較に採用した収束確認済みFD格子の幅）、価値一致残差<=1e-8。maskはroot計算の失敗を除く手段にしない。
+- 行使境界: 時刻indexの整数交差条件j*N_fd=k*N_spectralを満たす共通時刻に限り、t/T∈[.1,.9]、v∈[.01,.16]を比較対象にする。FDの接触/継続bracketの両端をzetaで線形補間してspectral節点へ写す。bracketが取れない、またはFD/spectral境界がx端から4セル以内ならgeometry_invalidとして理由つきでmaskし、事前対象の有効coverageが90%未満なら境界gateをunsupportedにする。有効点ではspectral境界がFD bracketから2*dx以内、価値一致残差<=1e-8。maskはroot計算の失敗を除く手段にしない。窓の中にmultiple_crossingsが1点でもあれば、境界gateはFAILとする（逸脱D-1、§4）。境界gateのFDは、専用の細かい時間刻みで走らせる（逸脱D-4）。独立FDと同じ広い分散領域でAmerican FD (961,101,1200*T)を主、(961,101,600*T)を確認用とし、x∈[-1.2,1.2]なのでdx=.0025、許容は2*dx=.005。窓の中で確認用との接触端の差が1セル以下なら「収束確認済み」とする。比較する時刻は、上記の整数交差条件を満たす時刻だけ。FD (961,101,300*T)とS0の比較では、FDの時間方向の遅れで最大の外れが.0092（3.7dx）に達したが、時間刻みを600/1200/2400*Tにすると最大の外れは.0047/.00257/.00114で2dx以内に入る。
 - Deltaは両方式とも最終価格のspot bump/K={1e-3,5e-4,2.5e-4}で抽出する。FDは価格補間後に同じbumpを使う。数値を報告する診断であり、Delta/Gammaの正式PASSや精度認定はv1の完了条件にしない。
 - すべて元ケース数、非finite、root失敗、時間切れ、予算超過を記録し、失敗を除いた平均だけを表示しない。
 
@@ -101,17 +101,17 @@ v1の提案値は次の通り。pilotで達成性と費用を確認して主実�
 
 Heston準備比較は上流benchmarkの1+10ケースを入力表に転記し、pilotは最初の1ケースのみ。印刷参照の差とfallbackを観測し、既定設定の精度を保証しない。新方式のEuropean制御にはまず同じモデルでS/K=.9,1,1.1を使う。
 
-3/2主ケースはrd=.05,rf=.02,K=1,kappa=20,theta=v0=.04,xi=4,rho=-.5、T={.5,1}×S/K={.9,1,1.1}の6件。paper Table 4のT=.5, N=100のAmerican値{.107601,.048662,.019499}はTask 4でsmokeとして確認し、Task 5でS0のpaper_matchに使う。Table 3(b)のEuropean値も同様に、Task 2でsmoke、Task 5でpaper_matchに使う。
+3/2主ケースはrd=.05,rf=.02,K=1,kappa=20,theta=v0=.04,xi=4,rho=-.5、T={.5,1}×S/K={.9,1,1.1}の6件。paper Table 4のT=.5, N=100のAmerican値{.107601,.048662,.019499}はTask 5でsmokeとして確認し、Task 7でS0のpaper_matchに使う。Table 3(b)のEuropean値も同様に、Task 3でsmoke、Task 7でpaper_matchに使う。
 
 初期spectral設定S0はn_var=160,n_time=200*T、zeta∈[log(.0002),log(2)]、chi=.5、パネル端{0,2,5,10,20,40,80,160,320,640}、各12点。価格選択ladderはS1=(240,400*T,cutoff1280,各12点)、S2=(320,800*T,cutoff2560,各16点)。追加cutoffは末尾へ順に倍のパネルを足す。S0→S1→S2以外を主計算で追加しない。最初の隣接差<=5e-6、独立FD差<=2e-5、個別感度gate成立を満たす粗い側Sjを採用する。採用はS0またはS1で、S2は上限側の検算用。同一満期の3spotsの最大差で一段を選び、spotごとに段を選別しない。どの隣接対も通らなければ未達。全段・準備費用を保存する。
 
-pilotの個別感度はS0起点。mainでは採用候補Sj自身を起点に、時間倍・次の分散段（160→240、240→320）・各パネル点数+4・cutoff倍・chi=.25/.75・領域拡大・offset±h/2を一軸ずつ評価し、各価格差/K<=5e-6を正式な個別gateにする。Sjが不合格なら次の隣接対へ進み、予算内に合格段がなければ未達。領域はh固定で両側ceil(log(2)/h)節点ずつ追加。S0のpilotだけでS1の安定性を認定しない。scheme_nonmonotoneの影響確認も、この全個別gate・文献gate・独立FD gate・境界gateの成立を意味する。mainの各候補に必要な全ジョブをfreezeし、全軸の直積sweepはしない。
+pilotの個別感度はS0起点。mainでは採用候補Sj自身を起点に、時間倍・次の分散段（160→240、240→320）・各パネル点数+4・cutoff倍・chi=.25/.75・領域拡大・offset±h/2・crossing_lower（最下位の交差を選ぶ。逸脱D-1、§4）を一軸ずつ評価し、各価格差/K<=5e-6を正式な個別gateにする。Sjが不合格なら次の隣接対へ進み、予算内に合格段がなければ未達。領域はh固定で両側ceil(log(2)/h)節点ずつ追加。S0のpilotだけでS1の安定性を認定しない。scheme_nonmonotoneの影響確認も、この全個別gate・文献gate・独立FD gate・境界gateの成立を意味する。mainの各候補に必要な全ジョブをfreezeし、全軸の直積sweepはしない。ただしS1候補の個別感度は、その満期でS0が採用されなかった場合だけ実行する条件付きジョブとし、この規則をfreezeに含める（逸脱D-5）。必ず走るジョブに入れると、naive実装の見積もりが2倍則で約55分になり、30分を超えるためである。
 
-paper照合FDはx∈[-1.2,1.2]、(nx,nv,nt)=(241,101,300*T)→(481,201,600*T)、分散領域はpaper設定。独立FDは上記の広い分散領域で同じ節点数から始め、軸別にx={241,481,961}、分散={101,151,201}、nt={300*T,600*T,1200*T}を他軸固定で調べる。分散の不等比細分は実際のhで観測次数をfitし、均等2倍と仮定しない。x領域拡大は[-2.4,2.4]にhを保って節点追加する。実行する全構成と順番をfreezeに含め、参照精度・予算が成立しなければ主計算を止める。
+paper照合FDはx∈[-1.2,1.2]、(nx,nv,nt)=(241,101,300*T)→(481,201,600*T)、分散領域はpaper設定。独立FDは上記の広い分散領域で同じ節点数から始め、軸別にx={241,481,961,1921}、分散={101,151,201}、nt={300*T,600*T,1200*T}を他軸固定で調べる（逸脱D-2）。xを3水準にすると、T=.5のAmericanで481→961の変化が[5.2e-6, 7.6e-6, 4.7e-6]で、3点のうち2点が基準の5e-6を超えるため1921を足す（961→1921は[9.0e-7, 1.9e-6, 1.2e-6]で、観測次数は2.5/2.0/2.0）。x軸の次数は最後の3水準から求める。x=1921のAmericanはT=.5で5.7秒、T=1で11.5秒（実測）。分散の不等比細分は実際のhで観測次数をfitし、均等2倍と仮定しない。x領域拡大は[-2.4,2.4]にhを保って節点追加する。実行する全構成と順番をfreezeに含め、参照精度・予算が成立しなければ主計算を止める。
 
-単一CPU core、float64/complex128。OPENBLAS_NUM_THREADS=OMP_NUM_THREADS=MKL_NUM_THREADS=NUMEXPR_NUM_THREADS=1。上限単位は「1方式×1満期×1設定を解き、3spotをまとめて返すsolver subprocess」でwall 180秒/peak RSS 2 GiB。spotを別caseとして同じsolveを繰り返さない。pilot合計10分、主実験合計30分を停止予算とする。pilotにT=1のFD fine Americanの費用測定を含める。推定全費用が30分を超える場合も主計算へ進まない。
+単一CPU core、float64/complex128。OPENBLAS_NUM_THREADS=OMP_NUM_THREADS=MKL_NUM_THREADS=NUMEXPR_NUM_THREADS=1。上限単位は「1方式×1満期×1設定を解き、3spotをまとめて返すsolver subprocess」でwall 180秒/peak RSS 2 GiB。spotを別caseとして同じsolveを繰り返さない。pilot合計10分、主実験合計30分を停止予算とする。pilotにT=1のFD fine Americanの費用測定（x=1921と境界gate用の主FD。実測はT=1でそれぞれ11.5秒と18秒）を含める。必ず走るジョブの推定費用が30分を超える場合も主計算へ進まない。この30分の推定gateは必ず走るジョブにだけ適用し、条件付きジョブには適用しない（逸脱D-5）。
 
-反復計時は選定後のspectralだけ1 warmup+3測定とし、FDは1回のsolveの実測値とする。FDの速度分布や統計的速度優位を主張しない。cold setupとwarm queryを分け、FDもsetupを除かない。計時の反復数を含むjob rosterと予算をfreezeする。見積もりは同じ構成の実測があればその2倍、未測定spectralはpilotのsetup*(Nw比)*(Nv比)^3＋solve*(Nt比)*(Nw比)*(Nv比)^2*(走査点数比)の2倍、FDはpilotからLU∝nodes*bandwidth^2、step∝Nt*nodes*bandwidthを使って2倍の余裕を取る。係数と式をmanifestへ記録し、係数未測定、1job予測180秒超、合計30分超ならmainへ進まない。これは予測であって保証ではなく、実行中にも上限を監視する。
+反復計時は選定後のspectralだけ1 warmup+3測定とし（どの段が採用されるかはmainの途中で決まるため、この採用段の計時4本も条件付きジョブとする。逸脱D-5）、FDは1回のsolveの実測値とする。FDの速度分布や統計的速度優位を主張しない。cold setupとwarm queryを分け、FDもsetupを除かない。計時の反復数を含むjob rosterと予算をfreezeする。見積もりは同じ構成の実測があればその2倍、未測定spectralはpilotのsetup*(Nw比)*(Nv比)^3＋solve*(Nt比)*(Nw比)*(Nv比)^2*(走査点数比)の2倍、FDはpilotからLU∝nodes*bandwidth^2、step∝Nt*nodes*bandwidthを使って2倍の余裕を取る。係数と式をmanifestへ記録し、係数未測定、1job予測180秒超（条件付きも含む）、必ず走るジョブの合計30分超ならmainへ進まない。条件付きジョブは、推定がその時点の残り予算に収まるときだけ走らせ、収まらなければnot_achieved_budgetとして記録する（逸脱D-5）。予算と許容差は自動では増やさない。これは予測であって保証ではなく、実行中にも上限を監視する。
 
 密な伝播行列の見積もりは108*160^2*16=44,236,800 bytes（約42.2 MiB）、240節点で約94.9 MiB。二つの解像度を同時保持せず、FDのsparse LU fill-inもpilotで測る。保存は結果・境界・設定・入力/コードhash・計時・検算要約だけで、目標50 MiB以下。伝播行列、全時点のFD面、中間配列は保存しない。
 
