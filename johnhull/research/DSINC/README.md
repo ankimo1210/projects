@@ -2,7 +2,7 @@
 
 進捗と判定は[ROADMAPの現在地](../../ROADMAP.md)が正。設計は[設計](../../docs/superpowers/specs/2026-10-25-dsinc-american-design.md)、実装の順序とAPIは[実施計画](../../docs/superpowers/plans/2026-10-25-dsinc-american.md)。
 
-状態（2026-10-27）：mainを実行済み。`reproduction_label`は`constrained`。論文の印刷値への照合（paper_match）は通った。独立FDへの価格の検証（price）はT=.5だけが成立し（S0を採用）、T=1は採用段がない（`not_achieved`）ので成立しない。境界gateは両満期でpassだが、T=1は採用段がないので再現済みの範囲に数えない。独立レビューは受けた（判定は With fixes。致命的な指摘は0件）。指摘への対応は[REVIEW.md](REVIEW.md)に記録した。結果は[結果](#結果)。
+状態（2026-10-27）：mainを実行済み。`reproduction_label`は`constrained`。論文の印刷値への照合（paper_match）は通った。独立FDへの価格の検証（price）はT=.5だけが成立し（S0を採用）、T=1は採用段がない（`not_achieved`）ので成立しない。境界gateは両満期でpassだが、T=1は採用段がないので再現済みの範囲に数えない。独立レビューは受けた（判定は With fixes。致命的な指摘は0件）。指摘への対応は[REVIEW.md](REVIEW.md)に記録した。2026-10-27にmainへ統合した。T=1は`constrained`のまま確定し、D-8（S1の1パネルの点数を増やす案）は後で別の作業として扱う。結果は[結果](#結果)。
 
 ## 目的と範囲
 
