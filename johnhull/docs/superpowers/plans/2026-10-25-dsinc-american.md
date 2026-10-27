@@ -10,7 +10,7 @@
 
 **Spec:** [2026-10-25-dsinc-american-design.md](../specs/2026-10-25-dsinc-american-design.md)。本計画は設計からの逸脱D-1〜D-7を記録する（§1。D-6・D-7はpilotが判断点で止まった後に追加した）。
 
-**状態（2026-10-27）:** 計画を2026-10-26に全面改訂した。旧版は概要版で、Opus承認時のsha256は677bfdb2…、承認後の追記版は2ba13c82…。D-1〜D-5は2026-10-26にユーザーが承認した（改訂版のOpus再レビューなし）。設計本文への反映はTask 1で行った。実装は2026-10-26に始まり、Task 1〜6は完了した。Task 7のpilotは2026-10-26に判断点で止まった（`mandatory_jobs_ok`だけが落ち、S0のdomain_expandが根のbracket幅の外で`missing_sign_change`になった。S0のT=1ではboundsも不合格）。ユーザーは2026-10-27にD-6・D-7を承認し、実装した（Task 7R）。次はpilotのやり直しで、freezeとmainは未着手。実行方法はsubagent-driven。[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)。
+**状態（2026-10-27）:** 計画を2026-10-26に全面改訂した。旧版は概要版で、Opus承認時のsha256は677bfdb2…、承認後の追記版は2ba13c82…。D-1〜D-5は2026-10-26にユーザーが承認した（改訂版のOpus再レビューなし）。設計本文への反映はTask 1で行った。実装は2026-10-26に始まり、Task 1〜6は完了した。Task 7のpilotは2026-10-26に判断点で止まった（`mandatory_jobs_ok`だけが落ち、S0のdomain_expandが根のbracket幅の外で`missing_sign_change`になった。S0のT=1ではboundsも不合格）。ユーザーは2026-10-27にD-6・D-7を承認し、実装した（Task 7R）。pilotは2026-10-27にやり直して通り（UTC 2026-10-26 23:53のrun、42件すべてok）、mainのprotocolをfreezeした（Task 7は完了）。mainは2026-10-27に実行した（88件、783秒。T=.5はS0を採用、T=1は採用段なし、`reproduction_label`は`constrained`）。次は独立レビュー（Task 8のStep 6）。実行方法はsubagent-driven。[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)。
 
 ## 0. 計画前に確かめたこと
 
