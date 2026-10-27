@@ -7,7 +7,9 @@ Only ``results.json`` and the arrays it points to are read; nothing is solved or
 * ``exercise_boundary.png``: the exercise boundary of the judged spectral level against the FD
   bracket of the dedicated fine-time run, with the masked nodes and the failure counts.
 * ``refinement_stability.png``: the difference of every sensitivity, of the next level and of the
-  FD reference from a level's base solve, with the limits of the gates.
+  FD reference from a level's base solve, with the limits of the gates.  A check that ran but gave
+  no price is a grey cross on the left edge, named with its job status; sensitivities that were
+  not run have no marker and are named in the legend only.
 
 Usage: ``python plot.py --results RUN/results.json --output DIR``.
 """
@@ -23,11 +25,31 @@ import numpy as np
 from hullkit._dsinc_types import BOUNDARY_STATUS, FAILURE_CODES
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
+from matplotlib.ticker import FuncFormatter, LogLocator, NullLocator
 
 BLUE, ORANGE, GREEN, RED, GRAY = "#1f77b4", "#d95f02", "#1b9e77", "#c0392b", "#555555"
 EXPIRY_COLORS = (BLUE, ORANGE)
-VARIANCE_COLORS = ((0.01, GREEN), (0.04, BLUE), (0.16, ORANGE))  # variances drawn in the boundary
+# Variances the boundary is drawn at: the grid node nearest to each value (the label gives the node).
+VARIANCE_COLORS = ((0.01, GREEN), (0.04, BLUE), (0.16, ORANGE))
 DISPLAY_FLOOR = 1e-10  # smaller differences are drawn on the left edge of the stability figure
+LOG_TICKS = (1.0, 2.0, 3.0, 5.0)  # labelled ticks of a log axis, times each power of ten
+NO_PRICE = {"color": GRAY, "ms": 9, "mew": 2}  # the grey cross of a check that gave no price
+
+
+def _tick_text(value: float, _position: int | None = None) -> str:
+    """A tick value without zero padding of the exponent: 0.5, 20, 2e-6."""
+    text = f"{value:g}"
+    if "e" in text:
+        mantissa, exponent = text.split("e")
+        text = f"{mantissa}e{int(exponent)}"
+    return text
+
+
+def _label_log_axis(axis) -> None:
+    """Label a log axis at 1, 2, 3 and 5 times each power of ten, so that values can be read off."""
+    axis.set_major_locator(LogLocator(base=10.0, subs=LOG_TICKS))
+    axis.set_minor_locator(NullLocator())
+    axis.set_major_formatter(FuncFormatter(_tick_text))
 
 
 def _new_figure(width: float, height: float) -> Figure:
@@ -126,7 +148,7 @@ def _price_error_cost(verdicts: dict, limits: dict) -> Figure:
         ax.text(
             0.005,
             limits[key],
-            f"{label} {limits[key]:g}",
+            f"{label} {_tick_text(limits[key])}",
             transform=ax.get_yaxis_transform(),
             ha="left",
             va="bottom",
@@ -135,10 +157,12 @@ def _price_error_cost(verdicts: dict, limits: dict) -> Figure:
         )
     ax.set_xscale("log")
     ax.set_yscale("log")
+    _label_log_axis(ax.xaxis)
+    _label_log_axis(ax.yaxis)
     ax.set_xlabel("solver time, setup + solve [s]")
     ax.set_ylabel("max |price - FD reference| / K   (European, American, EEP)")
     ax.set_title("Price error against cost at S/K = 0.9, 1.0, 1.1")
-    ax.grid(True, which="both", alpha=0.25)
+    ax.grid(True, which="major", alpha=0.25)
     if ax.get_legend_handles_labels()[0]:  # nothing is drawn when no error could be measured
         ax.legend(fontsize=8, loc="best")
     _footnote(figure, verdicts)
@@ -199,10 +223,12 @@ def _boundary_panel(
     multiple_label = "multiple crossings (topmost kept)"
     for v, color in VARIANCE_COLORS:
         column = int(np.argmin(np.abs(spectral_z - math.log(v))))
+        node = math.exp(float(spectral_z[column]))  # the grid node that is drawn, not v itself
         mine = star[:, column]
         fd_low = _edge_at_variance(edge, fd_z, float(spectral_z[column]))
         ax.fill_between(t_fd, np.exp(fd_low), np.exp(fd_low + dx), color=color, alpha=0.4, lw=0)
-        ax.plot(t_spec, np.exp(mine), color=color, lw=1.4, label=f"spectral, v = {v:g}")
+        label = f"spectral, v ≈ {node:.4f} (node nearest {v:g})"
+        ax.plot(t_spec, np.exp(mine), color=color, lw=1.4, label=label)
         fd_here, own = fd_low[common * n_fd // n_spec], mine[common]
         masked = (
             ~np.isfinite(fd_here)
@@ -301,6 +327,9 @@ def _refinement_stability(verdicts: dict, limits: dict) -> Figure:
         if value is not None
     ]
     right = max([1e-4, *(3 * value for value in values)])
+    statuses = {  # why a job that ran gave no price, by job id
+        entry["job_id"]: entry["status"] for entry in verdicts["accounting"].get("not_ok", [])
+    }
     for ax, (expiry, selection) in zip(axes, expiries, strict=True):
         for position, (_, kind) in enumerate(rows):  # one dashed line over the rows of a limit
             ax.plot(
@@ -311,6 +340,7 @@ def _refinement_stability(verdicts: dict, limits: dict) -> Figure:
                 lw=1,
                 label="limit of the row" if position == 0 else None,
             )
+        failed: dict[str, None] = {}  # why a check has no price, in order of appearance
         for level, marker, color, shift in (("S0", "o", BLUE, -0.12), ("S1", "s", ORANGE, 0.12)):
             check = selection["checks"][level]
             found = (check["sensitivities"] or {}) | {
@@ -318,9 +348,16 @@ def _refinement_stability(verdicts: dict, limits: dict) -> Figure:
                 "FD reference (independent)": check["independent"],
             }
             ax.plot([], [], marker, color=color, label=f"{level} base solve")
+            if not check["sensitivities"]:  # not run: nothing is drawn, only the legend says so
+                ax.plot([], [], " ", label=f"{level} sensitivities not run")
             for position, (name, kind) in enumerate(rows):
-                value = found.get(name)
-                if value is None:
+                if name not in found:
+                    continue
+                value = found[name]
+                if value is None:  # it ran but gave no price: a grey cross on the left edge
+                    status = statuses.get(f"spectral-{level}-{name}-T{expiry}")
+                    failed[f"no price ({status})" if status else "no value"] = None
+                    ax.plot([DISPLAY_FLOOR], [position + shift], "x", clip_on=False, **NO_PRICE)
                     continue
                 x, y = max(value, DISPLAY_FLOOR), position + shift
                 ax.plot(
@@ -336,13 +373,17 @@ def _refinement_stability(verdicts: dict, limits: dict) -> Figure:
                     ax.plot([x], [y], "o", mfc="none", mec=RED, ms=13, mew=1.5, clip_on=False)
         ax.plot([], [], "o", mfc="none", mec=RED, ms=10, mew=1.5, label="above its limit")
         ax.plot([], [], "o", mfc="white", mec=GRAY, label=f"at most {DISPLAY_FLOOR:g}, on the edge")
+        for text in failed:
+            ax.plot([], [], "x", label=text, **NO_PRICE)
         ax.set_xscale("log")
         ax.set_xlim(DISPLAY_FLOOR, right)
         ax.set_ylim(len(rows) + 2.0, -0.5)  # the empty rows below hold the legend
         ax.set_yticks(range(len(rows)), [name for name, _ in rows], fontsize=8)
         ax.set_xlabel("max |difference| / K")
-        adopted = selection["adopted"] or "none"
-        ax.set_title(f"T = {expiry}: adopted {adopted} ({selection['status']})")
+        if selection["adopted"]:
+            ax.set_title(f"T = {expiry}: adopted {selection['adopted']}")
+        else:
+            ax.set_title(f"T = {expiry}: none adopted ({selection['status']})")
         ax.grid(True, axis="x", which="both", alpha=0.25)
         ax.legend(fontsize=7.5, loc="lower left", ncol=2, framealpha=0.92)
     _footnote(figure, verdicts)
@@ -383,6 +424,7 @@ SENSITIVITIES = (
     "crossing_lower", "time_x2", "time_x2_cutoff_x2", "var_next", "points_plus4", "cutoff_x2",
     "chi_0.25", "chi_0.75", "domain_expand", "offset_plus_half", "offset_minus_half",
 )  # fmt: skip
+FAILED_SENSITIVITIES = ("crossing_lower", "time_x2")  # the S1 variants without a price at T = 1
 COSTS = (("S0", 3.9e-6, 3.8, 1.2), ("S1", 4.4e-6, 11.1, 6.7), ("S2", 4.9e-6, 29.8, 22.4))  # fmt: skip
 X_GRIDS = (("base", 8.0e-5, 0.2, 0.5), ("x481", 2.5e-5, 0.6, 1.4), ("x961", 7.0e-6, 1.4, 3.0), ("x1921", 1.5e-6, 3.1, 5.6))  # fmt: skip
 
@@ -434,8 +476,9 @@ def synthetic_results(tmp: Path) -> Path:
     """Write a minimal main ``results.json`` and its arrays under ``tmp`` and return its path.
 
     The numbers are made up (a square-root boundary, a few differences and times): they exercise
-    the figure code, with masked nodes, multiple crossings, a failing sensitivity and a pending
-    level, and say nothing about a real run.
+    the figure code, with masked nodes, multiple crossings, a sensitivity above its limit, two S1
+    variants that gave no price and S1 sensitivities that were not run, and say nothing about a
+    real run.
     """
     tmp = Path(tmp)
     (tmp / "arrays").mkdir(parents=True, exist_ok=True)
@@ -445,6 +488,10 @@ def synthetic_results(tmp: Path) -> Path:
         sensitivities |= {"crossing_lower": 0.0, "chi_0.75": 3e-6 * scale * scale}
         adopted = "S0" if scale == 1 else None
         key = str(expiry)
+        s1_sensitivities = None  # the S1 variants run only where S0 does not pass
+        if scale == 2:
+            s1_sensitivities = {n: 2e-6 * (i % 3 + 0.5) for i, n in enumerate(SENSITIVITIES)}
+            s1_sensitivities |= dict.fromkeys(FAILED_SENSITIVITIES)
         s0 = {
             "adjacent": 1.6e-6 * scale,
             "independent": 3.9e-6 * scale,
@@ -457,13 +504,13 @@ def synthetic_results(tmp: Path) -> Path:
             "adjacent": 6.0e-7,
             "independent": 4.4e-6,
             "sensitivity": None,
-            "sensitivities": None,
+            "sensitivities": s1_sensitivities,
             "passed": False,
-            "pending": scale == 2,
+            "pending": scale == 1,
         }
         verdicts["selections"][key] = {
             "adopted": adopted,
-            "status": "adopted" if adopted else "not_achieved_budget",
+            "status": "adopted" if adopted else "not_achieved",
             "checks": {"S0": s0, "S1": s1},
         }
         verdicts["costs"][key] = {
@@ -487,7 +534,18 @@ def synthetic_results(tmp: Path) -> Path:
         }
         verdicts["boundary"][key] = _synthetic_boundary(tmp, expiry, 3 * (scale - 1))
     verdicts |= {
-        "accounting": {"jobs": 88, "status_counts": {"ok": 58, "not_run_condition": 30}},
+        "accounting": {
+            "jobs": 88,
+            "status_counts": {"ok": 58, "not_run_condition": 28, "pricing_failure": 2},
+            "not_ok": [
+                {
+                    "job_id": f"spectral-S1-{name}-T1.0",
+                    "reason": "made up",
+                    "status": "pricing_failure",
+                }
+                for name in FAILED_SENSITIVITIES
+            ],
+        },
         "reproduction_label": "synthetic",
     }
     results = {

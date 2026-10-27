@@ -354,6 +354,46 @@ def test_plot_draws_three_figures_from_saved_results(tmp_path):
     assert all(p.stat().st_size > 10_000 for p in paths)
 
 
+def test_stability_figure_tells_a_failed_check_from_sensitivities_not_run(tmp_path):
+    plot = load(PLOT, "dsinc_plot_labels_tests")
+    saved = json.loads(plot.synthetic_results(tmp_path).read_text())
+    figure = plot._refinement_stability(saved["verdicts"], saved["thresholds"])
+    left, right = figure.axes
+    legends = [[text.get_text() for text in ax.get_legend().get_texts()] for ax in (left, right)]
+    assert [left.get_title(), right.get_title()] == [
+        "T = 0.5: adopted S0",
+        "T = 1.0: none adopted (not_achieved)",
+    ]
+    assert "S1 sensitivities not run" in legends[0]  # not run: named in the legend, no marker
+    assert not any("no price" in text for text in legends[0])
+    assert "no price (pricing_failure)" in legends[1]  # ran without a price: a grey cross
+    assert not any("not run" in text for text in legends[1])
+    rows = [text.get_text() for text in right.get_yticklabels()]
+    crosses = [line for line in right.lines if line.get_marker() == "x" and len(line.get_xdata())]
+    assert sorted(line.get_ydata()[0] for line in crosses) == pytest.approx(
+        sorted(rows.index(name) + 0.12 for name in ("crossing_lower", "time_x2"))  # the S1 rows
+    )
+
+
+def test_boundary_and_cost_figures_label_what_they_draw(tmp_path):
+    plot = load(PLOT, "dsinc_plot_axes_tests")
+    saved = json.loads(plot.synthetic_results(tmp_path).read_text())
+    verdicts = saved["verdicts"]
+    figure = plot._exercise_boundary(verdicts, saved["thresholds"]["boundary"], tmp_path)
+    with np.load(tmp_path / verdicts["boundary"]["0.5"]["arrays"]["spectral"]) as stored:
+        z = stored["log_variances"]
+    wanted = [v for v, _ in plot.VARIANCE_COLORS]  # the nominal variances 0.01, 0.04, 0.16
+    nodes = [float(np.exp(z[np.argmin(np.abs(z - np.log(v)))])) for v in wanted]
+    labels = [text.get_text() for text in figure.axes[0].get_legend().get_texts()]
+    drawn = [float(s.split("≈")[1].split()[0]) for s in labels if s.startswith("spectral")]
+    assert drawn == pytest.approx(nodes, abs=5e-5)  # the grid node that is drawn ...
+    assert max(abs(n - v) for n, v in zip(nodes, wanted, strict=True)) > 1e-4  # ... is not v
+    cost = plot._price_error_cost(verdicts, saved["thresholds"]).axes[0]
+    for axis, (low, high) in ((cost.xaxis, cost.get_xlim()), (cost.yaxis, cost.get_ylim())):
+        ticks = [t for t in axis.get_majorticklocs() if low <= t <= high]
+        assert len(ticks) >= 4  # enough labelled ticks to read a value off a log axis
+
+
 def job_of(roster, method, level, variant, expiry):
     return next(
         j
