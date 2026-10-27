@@ -368,6 +368,8 @@ def test_stability_figure_tells_a_failed_check_from_sensitivities_not_run(tmp_pa
     assert not any("no price" in text for text in legends[0])
     assert "no price (pricing_failure)" in legends[1]  # ran without a price: a grey cross
     assert not any("not run" in text for text in legends[1])
+    drawn = [line for line in left.lines if line.get_marker() == "x" and len(line.get_xdata())]
+    assert not drawn  # nothing at T = 0.5 ran without a price: sensitivities not run get no cross
     rows = [text.get_text() for text in right.get_yticklabels()]
     crosses = [line for line in right.lines if line.get_marker() == "x" and len(line.get_xdata())]
     assert sorted(line.get_ydata()[0] for line in crosses) == pytest.approx(
@@ -392,6 +394,33 @@ def test_boundary_and_cost_figures_label_what_they_draw(tmp_path):
     for axis, (low, high) in ((cost.xaxis, cost.get_xlim()), (cost.yaxis, cost.get_ylim())):
         ticks = [t for t in axis.get_majorticklocs() if low <= t <= high]
         assert len(ticks) >= 4  # enough labelled ticks to read a value off a log axis
+
+
+def test_figure_orders_do_not_depend_on_the_key_order_of_saved_results(tmp_path):
+    plot = load(PLOT, "dsinc_plot_order_tests")
+    saved = json.loads(plot.synthetic_results(tmp_path).read_text())
+    protocol = json.loads((PLOT.parent / "protocol.json").read_text())
+    sensitivities = protocol["spectral"]["sensitivities"]
+    assert list(plot.SENSITIVITIES) == sensitivities  # the rows follow the protocol
+    text = json.dumps(saved, sort_keys=True)  # run.py saves results.json with sorted keys
+    ladder = [f"independent-{name}" for name, *_ in plot.X_GRIDS]  # base, x481, x961, x1921
+    for hook in (dict, lambda pairs: dict(reversed(pairs))):  # keys ascending, then descending
+        loaded = json.loads(text, object_pairs_hook=hook)
+        verdicts, limits = loaded["verdicts"], loaded["thresholds"]
+        assert list(verdicts["costs"]["0.5"]["fd"]) != ladder  # the saved order is not the ladder
+        cost = plot._price_error_cost(verdicts, limits).axes[0]
+        lines = {line.get_label(): line for line in cost.lines}
+        for scale, expiry in ((1, "0.5"), (2, "1.0")):
+            fd, spectral = lines[f"FD x grid, T = {expiry}"], lines[f"spectral, T = {expiry}"]
+            assert list(fd.get_xdata()) == pytest.approx([s + t for _, _, s, t in plot.X_GRIDS])
+            assert list(fd.get_ydata()) == pytest.approx([e * scale for _, e, _, _ in plot.X_GRIDS])
+            assert list(spectral.get_xdata()) == pytest.approx(
+                [scale * (s + t) for _, _, s, t in plot.COSTS]  # S0, S1, S2
+            )
+            assert list(spectral.get_ydata()) == pytest.approx([e for _, e, _, _ in plot.COSTS])
+        stability = plot._refinement_stability(verdicts, limits).axes[0]
+        rows = [label.get_text() for label in stability.get_yticklabels()]
+        assert rows == [*sensitivities, "next level (adjacent)", "FD reference (independent)"]
 
 
 def job_of(roster, method, level, variant, expiry):

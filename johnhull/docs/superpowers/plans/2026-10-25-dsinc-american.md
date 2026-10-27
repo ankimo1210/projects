@@ -10,7 +10,7 @@
 
 **Spec:** [2026-10-25-dsinc-american-design.md](../specs/2026-10-25-dsinc-american-design.md)。本計画は設計からの逸脱D-1〜D-7を記録する（§1。D-6・D-7はpilotが判断点で止まった後に追加した）。
 
-**状態（2026-10-27）:** 計画を2026-10-26に全面改訂した。旧版は概要版で、Opus承認時のsha256は677bfdb2…、承認後の追記版は2ba13c82…。D-1〜D-5は2026-10-26にユーザーが承認した（改訂版のOpus再レビューなし）。設計本文への反映はTask 1で行った。実装は2026-10-26に始まり、Task 1〜6は完了した。Task 7のpilotは2026-10-26に判断点で止まった（`mandatory_jobs_ok`だけが落ち、S0のdomain_expandが根のbracket幅の外で`missing_sign_change`になった。S0のT=1ではboundsも不合格）。ユーザーは2026-10-27にD-6・D-7を承認し、実装した（Task 7R）。pilotは2026-10-27にやり直して通り（UTC 2026-10-26 23:53のrun、42件すべてok）、mainのprotocolをfreezeした（Task 7は完了）。mainは2026-10-27に実行した（88件、jobのwall合計781.8秒。T=.5はS0を採用、T=1は採用段なし、`reproduction_label`は`constrained`）。次は独立レビュー（Task 8のStep 6）。実行方法はsubagent-driven。[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)。
+**状態（2026-10-27）:** 計画を2026-10-26に全面改訂した。旧版は概要版で、Opus承認時のsha256は677bfdb2…、承認後の追記版は2ba13c82…。D-1〜D-5は2026-10-26にユーザーが承認した（改訂版のOpus再レビューなし）。設計本文への反映はTask 1で行った。実装は2026-10-26に始まり、Task 1〜6は完了した。Task 7のpilotは2026-10-26に判断点で止まった（`mandatory_jobs_ok`だけが落ち、S0のdomain_expandが根のbracket幅の外で`missing_sign_change`になった。S0のT=1ではboundsも不合格）。ユーザーは2026-10-27にD-6・D-7を承認し、実装した（Task 7R）。pilotは2026-10-27にやり直して通り（UTC 2026-10-26 23:53のrun、42件すべてok）、mainのprotocolをfreezeした（Task 7は完了）。mainは2026-10-27に実行した（88件、jobのwall合計781.8秒。T=.5はS0を採用、T=1は採用段なし、`reproduction_label`は`constrained`）。独立レビュー（Task 8のStep 6）は2026-10-27に受け、判定はWith fixes（致命的な指摘は0件）で、指摘は同日のコミットで直すか記録した（[REVIEW.md](../../../research/DSINC/REVIEW.md)）。次はユーザーによる統合の判断（Step 8）。任意で、T=1のためのD-8（S1の1パネルの点数を増やし、pilot→freeze→mainをやり直す案）がある。実行方法はsubagent-driven。[レビュー記録](../reviews/2026-10-25-dsinc-american-opus.md)。
 
 ## 0. 計画前に確かめたこと
 
@@ -105,7 +105,7 @@
 - 設計§6: 最初の隣接差≤5e-6、独立FD差≤2e-5、個別感度gate成立を満たす粗い側を採用する。上下界は`gates.bounds_check`の5つで、American≥European、American≥payoff、American≤K、Europeanの下限max(e^{−rd·T}−(S/K)e^{−rf·T}, 0)と上限e^{−rd·T}。これらは、採用した後の価格検証（`independent_validated`）でだけ見ていた。許容は`protocol.json`の`thresholds.bounds`（2e-5·K）で、`bounds_check`が5つすべてに適用する。設計§5の94行目と計画§2が2e-5を述べているのは、3つのAmerican側（American≥European、American≥payoff、American≤K）だけである。計画のTask 6は`select_level(levels, reference, sensitivities, thresholds)`を`bounds`なしの形で定め、そのテストもこの形で書いた。D-7はこれを置き換える（Task 6の本文のシグネチャとテストは書き換えない）。
 - 証拠（pilotの検査項目ではない）: S0のT=1では、走査点S/K≈0.8でAmerican−payoffの最小が−2.36e-5で、許容2e-5を超える（Task 5で測り、2026-10-26のpilotも同じ値）。同じT=1で、S1は−8.3e-6、S2は−4.8e-6（Task 5の実測、走査126点）。T=.5のS0は−1.54e-5で通る。従来の規則ではT=1でS0が採用されて価格検証が不合格になり、S0が採用されるのでS1のT=1の感度は走らない（D-5）。計画§2の独立gateには上下界が含まれており、段の採用もその読みに揃える。
 - 提案（2026-10-27にユーザーが承認）: `gates.select_level(levels, reference, sensitivities, thresholds, *, bounds=None)`とする。`bounds`は段名（S0, S1）→その段の上下界の合否（bool）のdictで、与えられたとき、候補の段の値がTrueでなければ（False・欠落・None）その候補は不合格にする。結果は`checks[level]["bounds"]`に残す。予算で感度が未実行の段を待たせる扱い（`not_achieved_budget`）は従来どおりで、上下界で落ちた候補は待たせない。`bounds=None`なら従来どおり。runnerのmainでは、各満期でS0・S1のbase jobが価格を出した全spot（主3＋bump 18＋走査126の147点）に`gates.bounds_check`を適用し、その`pass`を`bounds`として渡す。base jobが価格を出していない段はFalse。条件付きジョブの判定（`condition_met`が読む途中の選択）も同じ規則で作る。
-- 実装の細部（Task 7Rのレビューで2026-10-27に追加した。ユーザーが承認した内容には含まれない）: `select_level`は、`bounds`が与えられてmappingでなければ、またS0・S1の値がbool（`numpy.bool_`を含む）でもNoneでもなければ、ValueErrorにする（`gates.py`の規則：解釈できない引数はValueError）。欠落とNoneは従来どおり不合格にする。
+- 実装の細部（Task 7Rのレビューで2026-10-27に追加した。ユーザーが承認した内容には含まれない）: `select_level`は、`bounds`が与えられてmappingでなければ、またS0・S1の値がbool（`numpy.bool_`を含む）でもNoneでもなければ、ValueErrorにする（`gates.py`の規則：解釈できない引数はValueError）。欠落とNoneは、直前の提案の規則（False・欠落・Noneは不合格）どおり不合格にする。
 - 影響: 厳格化（採用の条件が増える）。許容2e-5は変えない。pilotのestimatesでは、T=.5でS0、T=1でS1を採用した場合の必須と条件付きの合計は約1733秒（予算1800秒）。条件付きジョブは、その時点の残り予算に収まる見積もりのときだけ走る（D-5、変更なし）。
 
 ## 2. Global Constraints
@@ -1227,7 +1227,7 @@ def premium_with_boundary(contract: PutContract, propagators: Propagators, log_b
 def american_put(contract, model, spots, config, *, propagators: Propagators | None = None) -> PricingResult
 ```
 
-`scan_spacing`の刻みδは、設計§4のm点則（各bracketでm=max(65, ceil(2ω_max(hi−lo)/π)+1)点）より常に細かい。hi−lo≥root_widths[0]かつω_max≤panels[−1]なので、(hi−lo)/(m−1)≥δになる。
+`scan_spacing`の刻みδは、設計§4のm点則（各bracketでm=max(65, ceil(2ω_max(hi−lo)/π)+1)点、刻み(hi−lo)/(m−1)）より常に細かいわけではない。S0はδ=root_widths[0]/64で、m点則の刻み以下になり、影響を受けない。S1・S2はδ=π/(2·panels[−1])で、ceilの切り上げが効く：最初のbracket（半幅.1）が0で切られてhi−loが.1をわずかに超えると、m点則の刻みがδを下回り、δのほうが粗くなる。粗くなる割合は、ω_maxをcutoffとしてS1で最大1.22%、S2で最大0.61%（最上位の節点をω_maxとするとS1で0.75%、S2で0.35%）。コード（`_dsinc_american.py:116-121`）は凍結済みで変えない。既知の点として[REVIEW.md](../../../research/DSINC/REVIEW.md)に記録した。
 
 `PricingResult.diagnostics`のkey:
 - `boundary_status`（"ok"または"not_applicable"）、`status_counts`、`multiple_crossings_max_variance`、`max_crossing_spread`、`scan_spacing`、`max_root_residual`

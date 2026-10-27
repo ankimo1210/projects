@@ -1,9 +1,13 @@
 """Draw the three DSINC figures from the saved results of a main run.
 
 Only ``results.json`` and the arrays it points to are read; nothing is solved or re-judged here.
+``results.json`` is saved with sorted keys, so no order is taken from a saved dict: the lines and
+rows are put in their order here (the ladders of the cost figure, the protocol order of the
+sensitivities).
 
 * ``price_error_cost.png``: the largest price difference to the FD reference against the solver
-  time, for the spectral levels and the finite-difference x grids (log-log, price/K).
+  time, for the spectral levels S0, S1, S2 and the finite-difference x grids (the base grid, then
+  481, 961 and 1921 nodes), log-log, price/K.
 * ``exercise_boundary.png``: the exercise boundary of the judged spectral level against the FD
   bracket of the dedicated fine-time run, with the masked nodes and the failure counts.
 * ``refinement_stability.png``: the difference of every sensitivity, of the next level and of the
@@ -17,6 +21,7 @@ Usage: ``python plot.py --results RUN/results.json --output DIR``.
 import argparse
 import json
 import math
+import re
 import sys
 import textwrap
 from pathlib import Path
@@ -34,6 +39,12 @@ VARIANCE_COLORS = ((0.01, GREEN), (0.04, BLUE), (0.16, ORANGE))
 DISPLAY_FLOOR = 1e-10  # smaller differences are drawn on the left edge of the stability figure
 LOG_TICKS = (1.0, 2.0, 3.0, 5.0)  # labelled ticks of a log axis, times each power of ten
 NO_PRICE = {"color": GRAY, "ms": 9, "mew": 2}  # the grey cross of a check that gave no price
+# The sensitivities in the order of protocol.json (spectral.sensitivities): the rows of the
+# stability figure.  A saved results.json lists them alphabetically.
+SENSITIVITIES = (
+    "crossing_lower", "time_x2", "time_x2_cutoff_x2", "var_next", "points_plus4", "cutoff_x2",
+    "chi_0.25", "chi_0.75", "domain_expand", "offset_plus_half", "offset_minus_half",
+)  # fmt: skip
 
 
 def _tick_text(value: float, _position: int | None = None) -> str:
@@ -84,6 +95,26 @@ def _solver_seconds(row: dict) -> float:
     return (row["setup_seconds"] or 0.0) + (row["solve_seconds"] or 0.0)
 
 
+def _numbered(rows: dict, pattern: str) -> dict:
+    """The rows whose name matches ``pattern`` (one group of digits), by ascending number."""
+    numbers = {name: int(m.group(1)) for name in rows if (m := re.fullmatch(pattern, name))}
+    return {name: rows[name] for name in sorted(numbers, key=numbers.__getitem__)}
+
+
+def _ladders(costs: dict) -> tuple[dict, dict]:
+    """The cost rows of one expiry as two ladders, coarse to fine, in the order a line is drawn.
+
+    The spectral levels come as S0, S1, S2 and the FD x grids as the base grid, then by the number
+    of x nodes (481, 961, 1921).  The dicts of a saved ``results.json`` are in key order, which
+    would join the x grids as base, 1921, 481, 961.
+    """
+    base = {name: row for name, row in costs["fd"].items() if name == "independent-base"}
+    return (
+        _numbered(costs["spectral"], r"S(\d+)"),
+        base | _numbered(costs["fd"], r"independent-x(\d+)"),
+    )
+
+
 def _price_error_cost(verdicts: dict, limits: dict) -> Figure:
     """Price error against solver time: the spectral levels and the FD x grids, per expiry."""
     figure = _new_figure(8.4, 5.6)
@@ -91,13 +122,9 @@ def _price_error_cost(verdicts: dict, limits: dict) -> Figure:
     marked = False
     for index, (expiry, costs) in enumerate(_by_expiry(verdicts["costs"])):
         color = EXPIRY_COLORS[index % len(EXPIRY_COLORS)]
-        x_grids = {
-            name: row
-            for name, row in costs["fd"].items()
-            if name == "independent-base" or name.startswith("independent-x")
-        }
+        levels, x_grids = _ladders(costs)
         for family, rows, marker, line in (
-            ("spectral", costs["spectral"], "o", "-"),
+            ("spectral", levels, "o", "-"),
             ("FD x grid", x_grids, "s", "--"),
         ):
             points = [
@@ -311,7 +338,9 @@ def _refinement_stability(verdicts: dict, limits: dict) -> Figure:
     """The difference of every sensitivity, of the next level and of the reference, with the limits."""
     expiries = _by_expiry(verdicts["selections"])
     checks = [check for _, selection in expiries for check in selection["checks"].values()]
-    names = dict.fromkeys(name for check in checks for name in check["sensitivities"] or {})
+    present = {name for check in checks for name in check["sensitivities"] or {}}
+    names = [name for name in SENSITIVITIES if name in present]
+    names += sorted(present - set(names))  # a sensitivity the protocol does not list goes last
     rows = [(name, "sensitivity") for name in names]
     rows += [("next level (adjacent)", "adjacent"), ("FD reference (independent)", "independent")]
     figure = _new_figure(6.6 * len(expiries), 6.0)
@@ -420,10 +449,6 @@ def draw(results_path: Path, out_dir: Path) -> list[Path]:
     return paths
 
 
-SENSITIVITIES = (
-    "crossing_lower", "time_x2", "time_x2_cutoff_x2", "var_next", "points_plus4", "cutoff_x2",
-    "chi_0.25", "chi_0.75", "domain_expand", "offset_plus_half", "offset_minus_half",
-)  # fmt: skip
 FAILED_SENSITIVITIES = ("crossing_lower", "time_x2")  # the S1 variants without a price at T = 1
 COSTS = (("S0", 3.9e-6, 3.8, 1.2), ("S1", 4.4e-6, 11.1, 6.7), ("S2", 4.9e-6, 29.8, 22.4))  # fmt: skip
 X_GRIDS = (("base", 8.0e-5, 0.2, 0.5), ("x481", 2.5e-5, 0.6, 1.4), ("x961", 7.0e-6, 1.4, 3.0), ("x1921", 1.5e-6, 3.1, 5.6))  # fmt: skip

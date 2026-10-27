@@ -2,7 +2,7 @@
 
 進捗と判定は[ROADMAPの現在地](../../ROADMAP.md)が正。設計は[設計](../../docs/superpowers/specs/2026-10-25-dsinc-american-design.md)、実装の順序とAPIは[実施計画](../../docs/superpowers/plans/2026-10-25-dsinc-american.md)。
 
-状態（2026-10-27）：mainを実行済み。`reproduction_label`は`constrained`。論文の印刷値への照合（paper_match）は通った。独立FDへの価格の検証（price）はT=.5だけが成立し（S0を採用）、T=1は採用段がない（`not_achieved`）ので成立しない。境界gateは両満期でpassだが、T=1は採用段がないので再現済みの範囲に数えない。独立レビューはこの後に受ける。結果は[結果](#結果)。
+状態（2026-10-27）：mainを実行済み。`reproduction_label`は`constrained`。論文の印刷値への照合（paper_match）は通った。独立FDへの価格の検証（price）はT=.5だけが成立し（S0を採用）、T=1は採用段がない（`not_achieved`）ので成立しない。境界gateは両満期でpassだが、T=1は採用段がないので再現済みの範囲に数えない。独立レビューは受けた（判定は With fixes。致命的な指摘は0件）。指摘への対応は[REVIEW.md](REVIEW.md)に記録した。結果は[結果](#結果)。
 
 ## 目的と範囲
 
@@ -23,6 +23,7 @@
 - [`gates.py`](gates.py)：判定の純関数。[`run.py`](run.py)：protocolからjobを作り、予算つきのsubprocessで走らせ、判定・照合・書き出しをするrunner。[`plot.py`](plot.py)：図。
 - [`protocol.json`](protocol.json)：設定・閾値・予算。[`cases.json`](cases.json)：論文の印刷値と上流Hestonの入力。[`freeze_manifest.json`](freeze_manifest.json)：mainの固定。[`pilot_summary.json`](pilot_summary.json)：freezeの元になったpilot。
 - [`heston_baseline.py`](heston_baseline.py)と[`upstream/`](upstream/)：上流Hestonの監査。原本は固定commitのまま変えない。
+- [`REVIEW.md`](REVIEW.md)：独立レビューの判定、指摘への対応、修正しない既知の項目、T=1への道。
 
 ## 方法と出典
 
@@ -42,7 +43,7 @@ EEPと境界（`_dsinc_american`）は、t_n=nT/Nの台形則（t_Nは半重み�
 
 独立FD（`reference_fd.py`）は、x,ζのSDEから直接組む。Rannacher起動のあとCN、AmericanはIkonen–Toivanenのsplittingを使う。参照値は、基準格子B=(241,101,300T)に、x・分散・時間の各軸の最細水準の補正を足して作る（D-3）。領域を広げたときの差も検査する。
 
-検算はDSINC全体で137件（`test_dsinc_*.py`：types 33、baseline 17、spectral 22、reference 11、american 18、gates 15、runner 21）。[`test_dsinc_spectral.py`](../../hullkit/tests/test_dsinc_spectral.py)には、Itô係数、定数分散で作用素がBSMの指数に一致すること、1/vのCIR平均（二次の収束）、既存のHeston特性関数価格、χ=.25/.5/.75でのBSM、v0格子の半セルずらし、Table 3(b)のEuropean 3点（許容6e-6）を置いた。
+検算はDSINC全体で138件（`test_dsinc_*.py`：types 33、baseline 17、spectral 22、reference 11、american 18、gates 15、runner 22）。[`test_dsinc_spectral.py`](../../hullkit/tests/test_dsinc_spectral.py)には、Itô係数、定数分散で作用素がBSMの指数に一致すること、1/vのCIR平均（二次の収束）、既存のHeston特性関数価格、χ=.25/.5/.75でのBSM、v0格子の半セルずらし、Table 3(b)のEuropean 3点（許容6e-6）を置いた。
 
 | 区分 | 項目 |
 |---|---|
@@ -51,7 +52,7 @@ EEPと境界（`_dsinc_american`）は、t_n=nT/Nの台形則（t_Nは半重み�
 
 独自の選択による差は、論文の印刷値への照合基準（|差|/K≤6e-6）の中で説明する。mainで測った差は最大3.4e-7で、この基準の内側にある。D-1・D-6・D-7は設計からの逸脱として承認済みの規則で、根拠は[実施計画の§1](../../docs/superpowers/plans/2026-10-25-dsinc-american.md)に記録している。D-6は`root_widths`を0.1・0.2・0.3・0.5とする。幅は小さい順に試し、符号変化が見つかった節点はそこで確定するので、0.5が効くのは0.3までで符号変化がない節点だけで、他の節点の結果は変わらない。D-7は、価格を出した全spot（主3点・Deltaのbump・境界の走査点）で上下界（許容2e-5）を通らない段を採用しない規則である。最初のpilotでS0のT=1がAmerican−payoff −2.36e-5（S/K=.8）で外れたため、2026-10-27に承認して加えた。
 
-伝播行列は、expmの直後に実部・虚部の絶対値が1e-200未満の成分を0にして保存する（独自の選択）。この大きさの成分は倍精度の価格に影響せず、残すとEEP再帰の一括matmulが遅くなるため。遅くなる原因は二つある：subnormalの成分（約2.2e-308未満）そのものと、約2.2e-308〜1e-200のnormalな成分が作る、subnormalになる積。0にする非零の成分は、個数ではS0のT=0.5でnormalが94%、subnormalが6%である。S1のT=0.5の`american_put`で`_FLUSH_BELOW`を実行時に差し替え、順序を変えて測った再帰の時間は、0化なしで6.8秒前後、subnormalの成分だけ0にして5.4秒前後、1e-200未満を0にして約4.8秒だった。節約の約3分の2がsubnormalの成分そのもの、残りがnormalな成分による。S0・S1・S2のT=0.5と1のどれでも、0化の有無で価格・節点境界・状態・診断の全出力がビット一致し、S2のT=1のwallは97.8秒から76.2秒になった。
+伝播行列は、expmの直後に実部・虚部の絶対値が1e-200未満の成分を0に置き換え、以後の計算にはこの行列を使う（独自の選択。ディスクへの保存の話ではない）。この大きさの成分は倍精度の価格に影響せず、残すとEEP再帰の一括matmulが遅くなるため。遅くなる原因は二つある：subnormalの成分（約2.2e-308未満）そのものと、約2.2e-308〜1e-200のnormalな成分が作る、subnormalになる積。以下の個数・時間・一致の確認は作業用の計測（記録なし）で、run rootにもリポジトリにも残っていない。0にする非零の成分は、個数ではS0のT=0.5でnormalが94%、subnormalが6%である。S1のT=0.5の`american_put`で`_FLUSH_BELOW`を実行時に差し替え、順序を変えて測った再帰の時間は、0化なしで6.8秒前後、subnormalの成分だけ0にして5.4秒前後、1e-200未満を0にして約4.8秒だった。節約の約3分の2がsubnormalの成分そのもの、残りがnormalな成分による。S0・S1・S2のT=0.5と1のどれでも、0化の有無で価格・節点境界・状態とタイミング以外の診断がビット一致し（独立レビューはS0のT=.5と1で再確認した）、S2のT=1のwallは97.8秒から76.2秒になった。mainの記録でのS2のT=1のwallは78.1秒（`spectral-S2-base-T1.0`）である。
 
 ## 判定の規則
 
@@ -74,14 +75,14 @@ EEPと境界（`_dsinc_american`）は、t_n=nT/Nの台形則（t_Nは半重み�
 
 ## 結果
 
-mainは2026-10-27に実行した（run id `main-20261027T001446Z`、88件。jobのwallの合計は781.8秒（`results.json`の`accounting.wall_seconds`）、runnerの経過時間は783秒（実行ログの`main: 88 jobs in 783 s`））。freezeはmanifest_sha256 `d3685d179da77af2abb2d935ce26d050d27d5e5b26cf5a7ad07901438f809d37`で、`results.json`の`freeze_sha256`と一致する。freezeは、2026-10-26 UTC 23:53のpilot（42件すべてok）から作った。最初のpilot（2026-10-26）は`mandatory_jobs_ok`が落ちて止まり、D-6・D-7を承認してから取り直した。run rootはGit管理外の`/home/kazumasa/projects/_data/johnhull/DSINC/main-20261027T001446Z/`で、19,848,472 bytes（18.9 MiB、180ファイル。目標50 MiB以下）。`run.py replay`は`{"match": true, "differences": []}`だった。研究ディレクトリへは、[`results/`](results/)（`results.json` 768,324 bytes、境界の配列4本、sha256つきの`manifest.json`）と[`figures/`](figures/)を書き出した。各ファイルは2,000,000 bytes以下。以下の数値は`results.json`の`verdicts`と`records`、`pilot_summary.json`から転記した。節点の位置とt=0の境界は、run rootに記録した配列（`arrays/*.npz`）から読んだ。
+mainは2026-10-27に実行した（run id `main-20261027T001446Z`、88件。jobのwallの合計は781.8秒（`results.json`の`accounting.wall_seconds`）。runnerが画面に出した経過時間は783秒だったが、記録には残っていない）。freezeはmanifest_sha256 `d3685d179da77af2abb2d935ce26d050d27d5e5b26cf5a7ad07901438f809d37`で、`results.json`の`freeze_sha256`と一致する。freezeは、2026-10-26 UTC 23:53のpilot（42件すべてok）から作った。最初のpilot（2026-10-26）は`mandatory_jobs_ok`が落ちて止まり、D-6・D-7を承認してから取り直した。run rootはGit管理外の`/home/kazumasa/projects/_data/johnhull/DSINC/main-20261027T001446Z/`で、19,848,472 bytes（18.9 MiB、180ファイル。目標50 MiB以下）。`run.py replay`は`{"match": true, "differences": []}`だった。研究ディレクトリへは、[`results/`](results/)（`results.json` 768,324 bytes、境界の配列4本、sha256つきの`manifest.json`）と[`figures/`](figures/)を書き出した。各ファイルは2,000,000 bytes以下。以下の数値は`results.json`の`verdicts`と`records`、`pilot_summary.json`から転記した。節点の位置とt=0の境界は、run rootに記録した配列（`arrays/*.npz`）から読んだ。「T=1が未達になる理由」の表と、「未検証の範囲」の上下界の変種の値は、`records.json`の診断と価格から計算した（上下界は`gates.bounds_check`を記録の価格に当てた）。
 
 ### 判定の要約
 
 | 項目 | T=.5 | T=1 |
 |---|---|---|
 | 採用段（`selections.adopted`） | S0 | なし（`not_achieved`） |
-| 採用しなかった理由 | — | S0は上下界で不合格（D-7）。S1は感度2本のjobが失敗して判定できない |
+| 採用しなかった理由 | — | S0は上下界で不合格（D-7）。S1は感度2本のjobが失敗して判定できない（背景は「T=1が未達になる理由」） |
 | price（`independent_validated`） | true | false |
 | 境界gate | pass（S0） | pass（S0。採用段ではない） |
 | `nonmonotone_effect` | confirmed | unsupported |
@@ -181,7 +182,7 @@ T=1（採用段なし。S0とS1の値は参考で、検証済みとは言わな�
 | 感度の最大 |  | 2.23e-6 | 2.11e-6 | なし（2本に値がない） |
 | 判定 |  | 採用 | 不採用（上下界） | 不採用（感度の判定なし） |
 
-T=.5はS0を採用した。S0は4つの検査をすべて通った。S1は隣の段との差8.88e-7、参照との差1.73e-6で上下界も通るが、S0が先に採用されたので感度は走らせていない（条件付きの11件は`not_run_condition`）。
+T=.5はS0を採用した。S0は4つの検査をすべて通った。S1は隣の段との差8.88e-7、参照との差1.73e-6で上下界も通るが、S0が先に採用されたので感度は走らせていない（条件付きの11件は`not_run_condition`）。S0の上下界のpassは、American−payoffの最小-1.54e-5と許容-2e-5の差、0.46e-5の余裕で通ったものである。この余裕は分散格子の位置と時間刻みで変わる（「未検証の範囲」の「境界近傍のspotでの補間誤差」）。
 
 T=1は採用段がない（`not_achieved`）。
 
@@ -192,6 +193,28 @@ T=1は採用段がない（`not_achieved`）。
   - 失敗した節点はどちらも分散が小さい側（crossing_lowerはv=2.0e-4〜1.87e-3、time_x2はv=4.7e-4）で、境界gateの窓（v∈[.01,.16]）の外にある。S1のbase solveがmultiple_crossingsを出す領域（下の「境界gate」）と同じ低分散側である。1節点でも根が取れなければ、その時刻の全体を失敗として記録し、価格を出さない。
   - 値がない検査は不合格として扱うので、S1の感度のgateは判定できず、S1は採用されない。この2本の合否は不明で、S1が感度のgateを通るとは言えない。
 - S2は採用の候補ではない。
+
+#### T=1が未達になる理由（S1の周波数求積）
+
+T=1が未達なのは、凍結した規則の下での正しい判定である。規則を緩めて通すことはしない。背景にあるのは、S1の周波数求積である。S1はcutoff 1280で、パネル[640,1280]を12点のGauss–Legendreで積分する（[設計](../../docs/superpowers/specs/2026-10-25-dsinc-american-design.md)の§6、`protocol.json`の`spectral.levels.S1`）。S0の最後のパネルは[320,640]（12点）、S2は[640,1280]と[1280,2560]を16点で積分する。
+
+分散が小さい節点では、高い周波数の成分が1歩でほとんど減衰しない。1歩の減衰はほぼe^{−vΔtω²/2}（vは分散、Δtは時間刻み）で、最小の分散節点（v=2.0e-4）・S1のΔt=1/400ではω=640でも0.903である。v=0.04では1.3e-9になる。減衰が効かないので、求積の雑音が残差R_nに残り、前の時刻の境界pから0.1ほど離れたbracketの端で、符号や交差の数が崩れる。雑音の大きさの計測は[REVIEW.md](REVIEW.md)にある。`records.json`から読めるのは、次の対応である。
+
+| job | 1パネルの点数 | [640,1280]のパネル | 多重交差の節点数 | 交差の距離の最大 |
+| --- | --- | --- | --- | --- |
+| S0 base | 12 | なし | 58 | 0.0078 |
+| S0 cutoff_x2 | 12 | あり（12点） | 45 | 0.291 |
+| S1 base（T=1） | 12 | あり（12点） | 6,491 | 0.293 |
+| S1 points_plus4（T=1） | 16 | あり（16点） | 96 | 0.098 |
+| S2 base（T=1） | 16 | あり（16点） | 10,399 | 0.099 |
+
+交差の距離は、最上位と最下位の交差のxの距離（`max_crossing_spread`）。S0 baseとS0 cutoff_x2はT=.5でも同じ値である。S0 cutoff_x2は、S0に12点の[640,1280]のパネルを足しただけで、距離が0.0078から0.291になる。価格には出ない（感度cutoff_x2の差はT=.5で5.2e-15、T=1で1.8e-14）。okのspectral job 41件のうち、距離が0.29になる14件は、すべて12点の[640,1280]のパネルを持つ。このパネルを持つ14件の距離は、すべて0.29（0.291〜0.293）である。それ以外の27件の最大は0.099（S2 base）だった。
+
+T=1のS1とS2のAmerican価格の差は、S/K=1.1で1.62e-6（1.615e-6）。S1を16点にしたjob（points_plus4）ではS2との差が6.0e-7になり、1.01e-6が消える。
+
+S1の感度で落ちた2本（`crossing_lower`、`time_x2`）は、どちらも低分散側の節点で根探しが失敗した。レビュアーは、凍結したモジュールを使い、1パネルの点数だけを変えてこの2本を作業用に再計算した（記録なし）。24点と48点では2本とも完走した。手順と値は[REVIEW.md](REVIEW.md)の「レビュー時の作業用の計測（記録なし）」にある。run rootの記録ではないので、判定には使っていない。
+
+T=1を達成するには、S1の1パネルの点数を増やす（D-8、案）。設計§6のS1の設定を変えるので、新しい逸脱になり、ユーザーの承認が要る。承認された場合は、pilot→freeze→mainをやり直す。根探しの規則や閾値を変えて通す方法は取らない。16点・24点のS1がT=1の全gateを通るかは確かめていない。レビュアーが再計算したのは、失敗した2本とbaseだけである。
 
 閾値・規則・コードは変えておらず、再実行もしていない。
 
@@ -261,7 +284,7 @@ T=1は採用段がないので、どちらの満期もS0の境界を判定した
 
 ![価格誤差と費用](figures/price_error_cost.png)
 
-`figures/price_error_cost.png`：横軸はsetup+solveの時間［s、対数］、縦軸はreferenceとの最大差/K［対数、European・American・EEPの最大、S/K=.9, 1, 1.1］。両軸とも、1・2・3・5の倍数に目盛りの値を付けた。実線がspectralのS0・S1・S2、破線の□がFDのx格子（base、481、961、1921）。青がT=.5、橙がT=1。緑の輪が採用段（T=.5のS0）で、T=1には輪がない。破線は独立gateの上限2e-5、点線は隣の段・感度の上限5e-6。FDの点は、referenceがFDの最細水準を含むため、独立な誤差ではない。下の注記に88件の内訳（63 ok、23 not_run_condition、2 pricing_failure）と`reproduction_label`が出る。
+`figures/price_error_cost.png`：横軸はsetup+solveの時間［s、対数］、縦軸はreferenceとの最大差/K［対数、European・American・EEPの最大、S/K=.9, 1, 1.1］。両軸とも、1・2・3・5の倍数に目盛りの値を付けた。実線がspectralのS0・S1・S2の順、破線の□がFDのx格子で、base、481、961、1921（x節点数の昇順）の順に結ぶ。青がT=.5、橙がT=1。緑の輪が採用段（T=.5のS0）で、T=1には輪がない。破線は独立gateの上限2e-5、点線は隣の段・感度の上限5e-6。FDの点は、referenceがFDの最細水準を含むため、独立な誤差ではない。下の注記に88件の内訳（状態名の順に23 not_run_condition、63 ok、2 pricing_failure）と`reproduction_label`が出る。
 
 ![行使境界](figures/exercise_boundary.png)
 
@@ -269,18 +292,25 @@ T=1は採用段がないので、どちらの満期もS0の境界を判定した
 
 ![細分と感度](figures/refinement_stability.png)
 
-`figures/refinement_stability.png`：左がT=.5、右がT=1。横軸は最大差/K［対数］、行は11の感度、隣の段、FD参照。青い●がS0、橙の■がS1。破線が各行の上限（感度と隣の段は5e-6、FD参照は2e-5）。左端の白抜きは1e-10以下の値。上限を超えた点には赤い輪が付くが、この実行では出ない。値がない点は2通りに描き分ける。T=1のS1のcrossing_lowerとtime_x2は、jobが走って価格が出なかった（`pricing_failure`）ので、左端に灰色の×を置き、凡例に「no price (pricing_failure)」と書く。T=.5のS1の感度は、S0が先に採用されて走らせなかった（`not_run_condition`）ので、印を付けず、凡例に「S1 sensitivities not run」とだけ書く。そのため、T=.5のS1には隣の段とFD参照の2行だけがある。タイトルは、左が「T = 0.5: adopted S0」、右が「T = 1.0: none adopted (not_achieved)」。この図には上下界の検査は出ない（T=1のS0が採用されない理由は上下界）。
+`figures/refinement_stability.png`：左がT=.5、右がT=1。横軸は最大差/K［対数］、行は11の感度（protocolの順：crossing_lowerからoffset_minus_halfまで）、隣の段、FD参照。青い●がS0、橙の■がS1。破線が各行の上限（感度と隣の段は5e-6、FD参照は2e-5）。左端の白抜きは1e-10以下の値。上限を超えた点には赤い輪が付くが、この実行では出ない。値がない点は2通りに描き分ける。T=1のS1のcrossing_lowerとtime_x2は、jobが走って価格が出なかった（`pricing_failure`）ので、左端に灰色の×を置き、凡例に「no price (pricing_failure)」と書く。T=.5のS1の感度は、S0が先に採用されて走らせなかった（`not_run_condition`）ので、印を付けず、凡例に「S1 sensitivities not run」とだけ書く。そのため、T=.5のS1には隣の段とFD参照の2行だけがある。タイトルは、左が「T = 0.5: adopted S0」、右が「T = 1.0: none adopted (not_achieved)」。この図には上下界の検査は出ない（T=1のS0が採用されない理由は上下界）。
 
 ### 未検証の範囲
 
 - 市場での妥当性：市場データも較正も使っていない。パラメータは論文の1組（κ=20、θ=v0=.04、ξ=4、ρ=−.5、rd=.05、rf=.02、K=1）に固定した。
 - 他のモデルと入力：定数係数3/2以外、他のパラメータ・満期・spotは見ていない。Hestonは検算用の作用素と上流の監査に使っただけで、Heston版のAmerican価格の認定はしていない。
-- T=1：採用段がなく、価格の検証は成立しない（`price: false`）。境界gateはS0の境界でpassだが、採用段がないので再現済みには数えない。paper_matchはATM 1点（S0）だけである。
-- Deltaの精度認定：診断として数値を出しただけで、認定しない。T=.5で、spectral S0とFD x=1921のAmerican Delta（bump 1e-3の中心差分）は、spectralが[-0.768451, -0.420739, -0.185847]、FDが[-0.768504, -0.420767, -0.185861]で、差（spectral−FD）は+5.3e-5 / +2.8e-5 / +1.4e-5。bumpを5e-4、2.5e-4にすると、S/K=.9のFDは-0.768847、-0.769006と動き（3つのbumpの幅5.0e-4）、spectralの幅は4.1e-7だった。原因の切り分けはしていない。T=1は採用段がないのでspectralのDeltaを出していない。
+- T=1：採用段がなく、価格の検証は成立しない（`price: false`）。境界gateはS0の境界でpassだが、採用段がないので再現済みには数えない。paper_matchはATM 1点（S0）だけである。採用段がないのは、S0が上下界で落ち、S1の感度2本のjobが根探しで失敗したため。後者の背景はS1の求積で、凍結した規則の下での判定は正しい。T=1を達成するにはS1の点数を変える新しい逸脱（D-8、案）が要り、ユーザーの承認とpilot→freeze→mainのやり直しが前提になる（「T=1が未達になる理由」）。
+- Deltaの精度認定：診断として数値を出しただけで、認定しない。T=.5で、spectral S0とFD x=1921のAmerican Delta（bump 1e-3の中心差分）は、spectralが[-0.768451, -0.420739, -0.185847]、FDが[-0.768504, -0.420767, -0.185861]で、差（spectral−FD）は+5.3e-5 / +2.8e-5 / +1.4e-5。bumpを5e-4、2.5e-4にすると、S/K=.9のFDは-0.768847、-0.769006と動き（3つのbumpの幅5.0e-4）、spectralの幅は4.1e-7だった。S/K=1と1.1では、3つのbumpの幅はspectralが2.0e-6と2.0e-6、FDが2.0e-6と2.0e-6で、同じ大きさである。原因の切り分けはしていない。T=1は採用段がないのでspectralのDeltaを出していない。
 - 境界近傍のspotでの補間誤差：上下界の最悪点は、t=0の行使境界のすぐ近くにある。t=0の境界は、節点の値をv=v0へ線形補間して約0.833（T=.5）と約0.802（T=1）で、American−payoffの最悪点は0.832（T=.5）と0.800〜0.802（T=1）。大きさはS0が-1.54e-5（T=.5）・-2.36e-5（T=1）、S1が-9.23e-6・-8.28e-6、S2が-5.37e-6・-4.75e-6で、段とともに小さくなる。原因は、v0への補間が行使節点と継続節点を混ぜることだと、[実施計画のReview Focus 1](../../docs/superpowers/plans/2026-10-25-dsinc-american.md)が述べている（T=.5）。T=1も最悪点が境界の位置にあり、同じ仕組みと見ているが、切り分けてはいない。主3 spot（S/K=.9, 1, 1.1）は境界から離れている。境界の近くのspotについては、走査点（S/K 0.70〜0.95の126点）の上下界を見ただけで、独立FDとの価格の比較はしていない。
+
+  D-7は上下界を各段のbase jobにだけ当てる。S0のT=.5の変種にも、記録の価格（147 spot）へ`gates.bounds_check`を当てると、結果は格子の位置で動く。
+  - 分散格子をh/2（半セル）ずらすoffset_plus_halfとoffset_minus_halfは、どちらもAmerican−payoffの最小が-2.606e-5（S/K=0.834）で、許容2e-5を超える。baseは-1.539e-5（S/K=0.832）で通る。
+  - 半セルずらすと、S/K=0.834のAmerican価格は2.26e-5動く。感度gateは主3 spotだけを見るので、この2本の差はoffset_plus_halfで5.29e-10、offset_minus_halfで5.76e-10にとどまる。
+  - 時間刻みを半分にするtime_x2では、最小が-7.10e-6（T=.5）・-1.30e-5（T=1）で、おおよそ半分になる。points_plus4では変わらない（T=.5で-1.539e-5）。分散節点を240にするvar_next（T=.5）は-1.88e-5で、許容との差は1.2e-6である。
+  - T=1のS0の不採用（-2.36e-5）も同じ依存を持つ。time_x2（-1.30e-5）とvar_next（-1.76e-5）では許容を通る。
+  - したがって、T=.5のS0がD-7を通った余裕は0.46e-5で、v0への補間だけでなく、分散格子の位置と時間刻みにも依存する。採用の判定は変わらない（D-7はbase jobに当てる規則で、baseは通る）。
 - referenceの精度：referenceの最終細分差は最大のx軸で1.4〜1.9e-6で、これより小さい誤差は分解できない。
 - 非単調な中心差分：正値性は保証していない（M₀の最小成分−0.0316）。確認できたのは、T=.5の採用段がgateを通った範囲に限る。
-- 多重交差：窓の外で最上位の交差を採った（S0は58節点、S1のbase solveはT=.5で3,371節点、T=1で6,491節点）。根の一意性は証明していない。S1ではS0より多く、最上位と最下位の交差のxの距離も大きい（最大0.293、S0は0.0078）が、最上位を採る規則（D-1）の影響は調べていない。
+- 多重交差：窓の外で最上位の交差を採った（S0は58節点、S1のbase solveはT=.5で3,371節点、T=1で6,491節点）。根の一意性は証明していない。S1ではS0より多く、最上位と最下位の交差のxの距離も大きい（最大0.293、S0は0.0078）。この差は、S1の12点の[640,1280]のパネルの求積に伴う（「T=1が未達になる理由」の表）。最上位を採る規則（D-1）の影響は、S0では確かめた：最下位の交差を選ぶ感度crossing_lowerの価格差は、T=.5・T=1とも0である。S1では確かめていない：T=1のcrossing_lowerはjobが失敗し、T=.5ではS1の感度を走らせていない。
 
 ## 再実行
 
@@ -292,7 +322,7 @@ export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_TH
 PY=/home/kazumasa/projects/.venv/bin/python
 DATA=/home/kazumasa/projects/_data/johnhull/DSINC
 
-# テスト（DSINCの137件）
+# テスト（DSINCの138件）
 $PY -m pytest -q johnhull/hullkit/tests/test_dsinc_*.py
 
 # pilot（約5分）→ freeze → main（約13分）。run rootは新規で、Git管理外の$DATAに置く
