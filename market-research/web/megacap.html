@@ -313,6 +313,12 @@ section{padding:0;margin-top:24px;scroll-margin-top:20px}
 .vbar-track{height:7px;border-radius:2px;background:var(--surface-2);overflow:hidden}
 .vbar-fill{display:block;height:100%;background:var(--series-2);border-radius:2px;min-width:0}
 .vbar-row.selected .vbar-fill{background:var(--series-1)}
+.vbar-track.clipped{position:relative}
+.vbar-track.clipped::after{content:"";position:absolute;right:7px;top:0;bottom:0;width:3px;background:var(--surface);transform:skewX(-25deg)}
+.basis-split{display:inline-grid;gap:1px;color:var(--accent);font-size:var(--text-caption);line-height:1.5}
+.cell-note{display:block;font-size:var(--text-caption);color:var(--ink-3);line-height:1.3}
+.mark{color:var(--accent);margin-left:2px}
+.event-tag.alert{background:var(--accent);color:var(--surface)}
 .vbar-row.selected .vbar-label{color:var(--accent);font-weight:600}
 .vbar-value{text-align:right}
 .bar-note{font-size:var(--text-caption);color:var(--ink-3);padding:0 22px 15px;margin:0;line-height:1.8}
@@ -333,7 +339,8 @@ section{padding:0;margin-top:24px;scroll-margin-top:20px}
 .calendar-list{padding:0 22px 9px}
 .calendar-event{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-top:1px solid var(--rule)}
 .event-left{display:flex;align-items:center;gap:12px}
-.date-tile{min-width:39px;display:grid;text-align:center;border:1px solid var(--rule);border-radius:6px;padding:5px 6px;font:500 17px var(--mono);line-height:1.3}
+.date-tile{min-width:39px;flex:none;display:grid;text-align:center;border:1px solid var(--rule);border-radius:6px;padding:5px 6px;font:500 17px var(--mono);line-height:1.3}
+.date-tile small{white-space:nowrap}
 .date-tile small{font:var(--text-caption) var(--mono);color:var(--ink-3)}
 .event-name{font-size:var(--text-label);font-weight:700}
 .event-name button{border:0;padding:0;background:transparent;font:inherit}
@@ -398,7 +405,7 @@ footer{margin-top:28px;padding-top:16px;display:flex;justify-content:space-betwe
     <div class="filter-tools"><input type="search" class="search" id="search" placeholder="銘柄・企業名を検索" aria-label="銘柄・企業名を検索"><label class="watch-filter"><input type="checkbox" id="watch-only">ウォッチのみ</label></div>
    </div>
    <div class="table-scroll" tabindex="0" aria-label="銘柄比較表。横スクロールできます"><table id="comparison-table" aria-label="銘柄比較"><thead id="table-head"></thead><tbody id="table-body"></tbody></table></div>
-   <div class="table-foot"><span id="table-scope"></span><span>TTM = 直近4四半期 · B = 10億 · — = 未取得／算出不可</span></div>
+   <div class="table-foot"><span id="table-scope"></span><span>TTM = 連続する直近の完全な4四半期 · B = 10億 · — = 未取得／算出不可</span></div>
   </div>
 
   <section id="prices" class="visual-grid" aria-label="株価とバリュエーション比較">
@@ -424,7 +431,7 @@ footer{margin-top:28px;padding-top:16px;display:flex;justify-content:space-betwe
     </div>
    </div>
    <div class="panel">
-    <div class="panel-head"><div><h2>次の決算</h2><p class="panel-sub">情報提供元の予定 · 米国東部の日付</p></div><span class="badge">IRで要確認</span></div>
+    <div class="panel-head"><div><h2>次の決算</h2><p class="panel-sub">提供元の予定 · 米国東部時間（ET）</p></div><span class="badge">IRで要確認</span></div>
     <div id="calendar" class="calendar-list"></div><p class="bar-note" id="calendar-note"></p>
    </div>
   </section>
@@ -433,12 +440,13 @@ footer{margin-top:28px;padding-top:16px;display:flex;justify-content:space-betwe
    <details class="definitions" id="definitions"><summary>指標の定義・データの出典<span class="micro">METHOD & SOURCES</span></summary>
     <p>株価・財務・アナリスト予想・決算予定はYahoo Financeをyfinance経由で取得します。価格時点・各社の取得時刻・決算期末は異なります。保存HTMLは取得時点のスナップショットです。四半期実績と予想値を分けて表示し、閲覧だけでは外部通信しません。</p>
     <dl class="definition-grid">
-     <div><dt>PER（TTM） / 予想PER</dt><dd>株価 ÷ 提供元のTTM EPS / 株価 ÷ 提供元のforward EPS。EPSが正の場合だけ算出。forward EPSの対象期間・調整方法は提供元に従います。</dd></div>
-     <div><dt>PBR / PSR / EV・EBITDA</dt><dd>PBR = 株価 ÷ 提供元の1株当たり簿価（BPS）。PSR = 時価総額 ÷ 売上TTM。EV・EBITDAは提供元の倍率。非正の分母は算出不可。株価と財務の通貨が不明または異なる場合は通貨をまたぐ倍率を算出しません。</dd></div>
-     <div><dt>売上・利益・営業CF・設備投資・FCF</dt><dd>連続した直近4四半期を合計。1期でも不足すればTTMを表示しません。設備投資は支出の絶対額、FCF = 営業CF − 設備投資。利益率は同期間の利益 ÷ 売上。FCF利回り = FCF TTM ÷ 時価総額。</dd></div>
-     <div><dt>現預金等 / ネットキャッシュ / 自己資本比率</dt><dd>最新四半期末の現金・現金同等物・短期投資。ネットキャッシュ = 現預金等 − 有利子負債。自己資本比率 = 株主資本 ÷ 総資産。D/E = 有利子負債 ÷ 正の株主資本。ROEは提供元の値です。</dd></div>
-     <div><dt>株価・騰落率・比較範囲</dt><dd>上部は通常取引の提供価格と前営業日終値比。チャートは配当調整なしの日足Close。日足の当日分は未確定の場合があります。期間騰落率は表示範囲の最初と最後の日足Closeで算出。合計・中央値・CSVは検索とウォッチ条件を共通適用し、中央値は算出可能な値だけを使用します。</dd></div>
-     <div><dt>決算期・決算予定・欠損</dt><dd>各社の決算年度は異なるため、四半期は実際の期末日で表示。次回予定は確定日時ではなく、提供元の範囲を表示。取得失敗時は以前の値を元の取得時刻のまま保持し、旧データと表示します。AlphabetはGOOGLのみを追跡し、GOOGを二重計上しません。</dd></div>
+     <div><dt>PER（TTM） / 予想PER</dt><dd>株価 ÷ 提供元のTTM EPS / 株価 ÷ 提供元のforward EPS。EPSが正の場合だけ算出。予想PERには予想EPSの対象会計年度（FY年/月）を表示し、提供元の年度別予想と一致しなければ「年度不明」。各社の決算月が違うため対象期間はそろいません。予想は提供元のコンセンサスで、GAAPのTTM EPSと調整基準が異なる場合があります。† は純利益TTMが営業利益TTMを上回る銘柄で、投資評価益など営業外損益によりPERが低く見えます。§ は提供元のTTM EPSが報告済み四半期EPSの4期合計と一致しない銘柄です。</dd></div>
+     <div><dt>PBR / PSR / EV・EBITDA</dt><dd>PBR = 株価 ÷ 提供元の1株当たり簿価（BPS）。PSR = 時価総額 ÷ 売上TTM。EV・EBITDAは提供元の倍率。非正の分母は算出不可。株価と財務の通貨が不明または異なる場合は通貨をまたぐ倍率を算出しません。‡ は時価総額の株数（時価総額 ÷ 株価）とEPSの株数（純利益TTM ÷ EPS、同じ期末の場合）が5%超異なる銘柄で、PSR・FCF利回りとPERの株数基準がそろいません。</dd></div>
+     <div><dt>売上・利益・営業CF・設備投資・FCF</dt><dd>連続する直近の完全な4四半期を合計。提供元が新しい四半期を一部項目だけ（EPSのみ等）で掲載している場合はその期を除き、TTMの期末と除いた期を表示します。完全な4四半期がなければTTMを表示しません。設備投資は支出の絶対額、FCF = 営業CF − 設備投資。利益率は同期間の利益 ÷ 売上。FCF利回り = FCF TTM ÷ 時価総額。</dd></div>
+     <div><dt>現預金等 / ネットキャッシュ / 自己資本比率</dt><dd>主要4項目がそろう最新四半期末の現金・現金同等物・短期投資。借入金・リース = 提供元のTotal Debt（ファイナンス・リース等のリース債務を含み、範囲は企業により異なる）。ネットキャッシュ = 現預金等 − 借入金・リース。自己資本比率 = 株主資本 ÷ 総資産。D/E = 借入金・リース ÷ 正の株主資本。ROEは提供元の値です。</dd></div>
+     <div><dt>基準期末</dt><dd>指標ごとの元データの期末。EPS = PER、BPS = PBR・EV/EBITDA・ROE（提供元の最新四半期）、損益 = PSR・利益率、CF = FCF利回り、BS = ネットキャッシュ・自己資本比率・D/E。EPSの期末は四半期EPSの合計が提供元TTM EPSと一致する期で判定します。期末が異なる場合は比較表に並べて表示します。</dd></div>
+     <div><dt>株価・騰落率・比較範囲</dt><dd>上部は通常取引の提供価格と前営業日終値比。チャートは配当調整なしの日足Close。日足の当日分は未確定の場合があります。期間騰落率は表示範囲の最初と最後の日足Closeで算出。合計・中央値・CSVは検索とウォッチ条件を共通適用し、中央値は算出可能な値だけを使用します。倍率比較のバーは中央値の3倍で打ち切り、超過分は≫で示します。</dd></div>
+     <div><dt>決算期・決算予定・鮮度</dt><dd>各社の決算年度は異なるため、四半期は実際の期末日で表示。決算予定は提供元のearningsTimestampを米国東部時間で表示し、寄り前/引け後と、推定か確定かを示します（yfinanceのcalendarの日付は日本時間に変換されて1日ずれるため使いません）。取得後に発表時刻を過ぎた銘柄は「発表済み・要更新」、取得から24時間以上たったデータは経過時間を表示します。一部の取得だけ失敗した場合はその部分だけ前回値を前回の取得時刻付きで、全部失敗した場合は以前の値を「旧データ」として表示します。AlphabetはGOOGLのみを追跡し、GOOGを二重計上しません。</dd></div>
     </dl>
     <p>PBRは会計上の簿価との比較です。自社株買いや無形資産の扱いによって、企業間の倍率の意味は変わります。<a href="https://pages.stern.nyu.edu/~adamodar/New_Home_Page/definitions.html" target="_blank" rel="noopener noreferrer">指標定義の参考：NYU Stern / Aswath Damodaran</a> · <a href="https://ranaroussi.github.io/yfinance/reference/yfinance.financials.html" target="_blank" rel="noopener noreferrer">取得API</a></p>
     <div id="source-grid" class="source-grid"></div>
@@ -452,9 +460,22 @@ footer{margin-top:28px;padding-top:16px;display:flex;justify-content:space-betwe
 <script>
 "use strict";
 (() => {
+// DOM-free helpers between the markers are exercised in node by tests/test_megacap_server.py.
+/* tracker-logic:start */
+const valid = n => typeof n === "number" && Number.isFinite(n);
+function median(values){const a=values.filter(valid).sort((a,b)=>a-b);return a.length?(a[Math.floor((a.length-1)/2)]+a[Math.ceil((a.length-1)/2)])/2:null;}
+function snapshotAge(iso,now){if(!iso)return null;const hours=Math.max(0,(now-Date.parse(iso))/36e5);return {hours,stale:hours>=24,text:hours<1?"1時間以内":hours<24?Math.floor(hours)+"時間前":Math.floor(hours/24)+"日前"};}
+// needs_refresh: an event passed after this company's data was fetched · upcoming: next event not yet passed · reported: last event passed before the fetch
+function earningsState(c,now){const e=(c&&c.earnings)||{},fetched=c&&c.fetched_at?Date.parse(c.fetched_at):null;const events=[e.previous,e].filter(x=>x&&x.timestamp).map(x=>({event:x,at:Date.parse(x.timestamp),until:Date.parse(x.window_end||x.timestamp)}));if(!events.length)return {kind:"none",at:null,event:null};const fresh=events.find(x=>x.until<=now&&fetched!==null&&x.until>fetched);if(fresh)return {kind:"needs_refresh",at:fresh.at,event:fresh.event};const next=events.find(x=>x.until>now);if(next)return {kind:"upcoming",at:next.at,event:next.event};const last=events.reduce((a,b)=>b.at>a.at?b:a);return {kind:"reported",at:last.at,event:last.event};}
+// Bars share one zero-based scale capped at 3x the median, so one outlier cannot flatten the rest.
+function barScale(values){const a=values.filter(valid).map(Math.abs).filter(v=>v>0);if(!a.length)return {cap:1};const max=Math.max(...a);return {cap:a.length>=3?Math.min(max,median(a)*3):max};}
+function barWidth(v,scale){return valid(v)?Math.min(Math.abs(v),scale.cap)/scale.cap*100:0;}
+function barClipped(v,scale){return valid(v)&&Math.abs(v)>scale.cap;}
+const BASIS_KEYS=[["eps","EPS"],["provider","BPS"],["income_ttm","損益"],["cashflow_ttm","CF"],["balance","BS"]];
+function basisGroups(c){const groups=new Map();for(const [key,label] of BASIS_KEYS){const d=c&&c.basis&&c.basis[key];if(d){if(!groups.has(d))groups.set(d,[]);groups.get(d).push(label);}}return [...groups.entries()].sort((a,b)=>b[0].localeCompare(a[0]));}
+/* tracker-logic:end */
 const $ = id => document.getElementById(id);
 const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const valid = n => typeof n === "number" && Number.isFinite(n);
 const number = (n,d=1) => valid(n) ? n.toLocaleString("en-US", {minimumFractionDigits:d,maximumFractionDigits:d}) : "—";
 const pct = (n,signed=false) => valid(n) ? (signed && n>0 ? "+" : "")+number(n*100,1)+"%" : "—";
 const multiple = n => valid(n) ? number(n,1)+"×" : "—";
@@ -485,46 +506,67 @@ if(presentation.sortDir===-1)state.sortDir=-1;
 if(["pe_ttm","pe_forward","pb","fcf_yield"].includes(presentation.barMetric))state.barMetric=presentation.barMetric;
 const theme=storage.get("megacap-theme",null); if(theme==="light"||theme==="dark") document.documentElement.dataset.theme=theme;
 const statusNames={ok:"取得済み",partial:"一部欠損",stale:"旧データ",unavailable:"未取得"};
-const companyValue=(c,key)=>key==="name"?c.symbol:key==="period"?c.income_period_end:c.metrics[key];
+const oldestBasis=c=>{const g=basisGroups(c);return g.length?g.at(-1)[0]:c.income_period_end||null;};
+const companyValue=(c,key)=>key==="name"?c.symbol:key==="period"?oldestBasis(c):c.metrics[key];
+const SESSIONS={before_open:"寄り前",after_close:"引け後",during_market:"取引時間中"};
+function eventWhen(e){if(!e||!e.date_et)return "—";const day=shortDate(e.date_et),range=e.end_date_et&&e.end_date_et!==e.date_et?day+'〜'+shortDate(e.end_date_et):day;return range+(e.time_et&&e.is_estimate===false?' '+e.time_et+' ET':'')+(e.session?' '+SESSIONS[e.session]:'')+(e.is_estimate?' · 推定（時刻未定）':e.is_estimate===false?' · 提供元で確定':'');}
+function markers(c,key){const f=c.flags||{};let m="";if(f.net_income_exceeds_operating&&["pe_ttm","net_income_ttm"].includes(key))m+="†";if(f.eps_mismatch&&key==="pe_ttm")m+="§";if(valid(f.share_count_gap)&&Math.abs(f.share_count_gap)>0.05&&["ps","fcf_yield"].includes(key))m+="‡";return m;}
+function basisText(c){return basisGroups(c).map(([d,labels])=>labels.join("・")+" "+d).join(" / ")||"基準期末未取得";}
 const definitions={
- pe_ttm:"株価 ÷ 提供元のTTM EPS。EPSが正の場合だけ算出",pe_forward:"株価 ÷ 提供元のforward EPS。期間・調整は提供元に従う",pb:"株価 ÷ 提供元のBPS。BPSが正の場合だけ算出",ps:"時価総額 ÷ 直近4四半期の売上高",ev_ebitda:"提供元の企業価値 / EBITDA倍率",roe:"提供元のROE。株主資本の規模や自社株買いにも左右される",fcf_yield:"直近4四半期のFCF ÷ 時価総額",revenue_ttm:"連続する直近4四半期の売上高",net_income_ttm:"連続する直近4四半期の株主帰属純利益",operating_margin:"営業利益TTM ÷ 売上TTM",fcf_ttm:"営業CFから設備投資支出を控除した直近4四半期の合計",net_cash:"最新四半期末の現預金等（短期投資を含む）− 有利子負債",equity_ratio:"最新四半期末の株主資本 ÷ 総資産",debt_equity:"最新四半期末の有利子負債 ÷ 株主資本（正の場合）",period:"損益計算書の最新四半期末。各社の会計年度は異なる"};
+ pe_ttm:"株価 ÷ 提供元のTTM EPS。EPSが正の場合だけ算出",pe_forward:"株価 ÷ 提供元のforward EPS。期間・調整は提供元に従う",pb:"株価 ÷ 提供元のBPS。BPSが正の場合だけ算出",ps:"時価総額 ÷ 直近4四半期の売上高",ev_ebitda:"提供元の企業価値 / EBITDA倍率",roe:"提供元のROE。株主資本の規模や自社株買いにも左右される",fcf_yield:"直近4四半期のFCF ÷ 時価総額",revenue_ttm:"連続する直近4四半期の売上高",net_income_ttm:"連続する直近4四半期の株主帰属純利益",operating_margin:"営業利益TTM ÷ 売上TTM",fcf_ttm:"営業CFから設備投資支出を控除した直近4四半期の合計",net_cash:"最新の完全なBSの現預金等（短期投資を含む）− 借入金・リース債務（提供元Total Debt）",equity_ratio:"最新の完全なBSの株主資本 ÷ 総資産",debt_equity:"借入金・リース債務（提供元Total Debt） ÷ 株主資本（正の場合）",period:"指標ごとの元データの期末。EPS=PER、BPS=PBR・EV/EBITDA・ROE（提供元の最新四半期）、損益=PSR・利益率、CF=FCF利回り、BS=ネット現金等。異なる場合は複数行で表示。並べ替えは最も古い期末"};
 const columns={
- valuation:[{key:"pe_ttm",label:"PER (TTM)",type:"multiple"},{key:"pe_forward",label:"予想PER",type:"multiple"},{key:"pb",label:"PBR",type:"multiple"},{key:"ps",label:"PSR",type:"multiple"},{key:"ev_ebitda",label:"EV/EBITDA",type:"multiple"},{key:"roe",label:"ROE¹",type:"pct"},{key:"fcf_yield",label:"FCF利回り",type:"pct"},{key:"period",label:"財務期末",type:"date"}],
- financial:[{key:"revenue_ttm",label:"売上 TTM",type:"money"},{key:"net_income_ttm",label:"純利益 TTM",type:"money"},{key:"operating_margin",label:"営業利益率",type:"pct"},{key:"operating_cf_ttm",label:"営業CF TTM",type:"money"},{key:"capex_ttm",label:"設備投資 TTM",type:"money"},{key:"fcf_ttm",label:"FCF TTM",type:"money"},{key:"net_cash",label:"ネット現金",type:"money"},{key:"equity_ratio",label:"自己資本比率",type:"pct"},{key:"debt_equity",label:"D/E",type:"multiple"},{key:"period",label:"財務期末",type:"date"}]
+ valuation:[{key:"pe_ttm",label:"PER (TTM)",type:"multiple"},{key:"pe_forward",label:"予想PER",type:"multiple"},{key:"pb",label:"PBR",type:"multiple"},{key:"ps",label:"PSR",type:"multiple"},{key:"ev_ebitda",label:"EV/EBITDA",type:"multiple"},{key:"roe",label:"ROE¹",type:"pct"},{key:"fcf_yield",label:"FCF利回り",type:"pct"},{key:"period",label:"基準期末",type:"basis"}],
+ financial:[{key:"revenue_ttm",label:"売上 TTM",type:"money"},{key:"net_income_ttm",label:"純利益 TTM",type:"money"},{key:"operating_margin",label:"営業利益率",type:"pct"},{key:"operating_cf_ttm",label:"営業CF TTM",type:"money"},{key:"capex_ttm",label:"設備投資 TTM",type:"money"},{key:"fcf_ttm",label:"FCF TTM",type:"money"},{key:"net_cash",label:"ネット現金",type:"money"},{key:"equity_ratio",label:"自己資本比率",type:"pct"},{key:"debt_equity",label:"D/E",type:"multiple"},{key:"period",label:"基準期末",type:"basis"}]
 };
 function companies(){return snapshot.companies.filter(c=>(!state.watchOnly||state.watch.has(c.symbol))&&(!state.query||(c.symbol+" "+c.name).toLowerCase().includes(state.query.toLowerCase())));}
 function sortedCompanies(){return companies().slice().sort((a,b)=>{const x=companyValue(a,state.sortKey),y=companyValue(b,state.sortKey);if(x==null&&y==null)return a.symbol.localeCompare(b.symbol);if(x==null)return 1;if(y==null)return -1;return (typeof x==="string"?x.localeCompare(y):x-y)*state.sortDir;});}
 function selectedCompany(){return companies().find(c=>c.symbol===state.selected)||null;}
-function metricFormat(n,col,c){return col.type==="multiple"?multiple(n):col.type==="pct"?pct(n):col.type==="money"?money(n,c.financial_currency,true):shortDate(n);}
+function basisCell(c){const g=basisGroups(c);if(!g.length)return shortDate(c.income_period_end);if(g.length===1)return shortDate(g[0][0]);return '<span class="basis-split">'+g.map(([d,labels])=>'<span>'+esc(labels.join("・"))+' '+shortDate(d)+'</span>').join("")+'</span>';}
+function metricFormat(n,col,c){
+ if(col.type==="basis")return basisCell(c);
+ let text=col.type==="multiple"?multiple(n):col.type==="pct"?pct(n):col.type==="money"?money(n,c.financial_currency,true):shortDate(n);
+ const fw=c.forward_eps||{},fy=fw.fiscal_year_end,approx=valid(fw.gap)&&Math.abs(fw.gap)>0.01;
+ if(col.key==="pe_forward"&&valid(n))text+='<small class="cell-note">'+(fy?(approx?'≈':'')+'FY'+esc(fy.slice(2).replace("-","/")):'年度不明')+'</small>';
+ const mark=valid(n)?markers(c,col.key):"";
+ return text+(mark?'<sup class="mark">'+mark+'</sup>':"");
+}
 function notice(text){$("notice").textContent=text;$("notice").hidden=!text;}
 function sourceLink(url,label){return '<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+label+' ↗</a>';}
-function median(values){const a=values.filter(valid).sort((a,b)=>a-b);return a.length?(a[Math.floor((a.length-1)/2)]+a[Math.ceil((a.length-1)/2)])/2:null;}
 function summaryCard(label,tag,value,note){return '<div class="summary-card"><div class="summary-label">'+label+'<span>'+tag+'</span></div><span class="summary-value">'+value+'</span><div class="summary-note">'+esc(note)+'</div></div>';}
 function renderSummary(){
  const list=companies(),capRows=list.filter(c=>c.currency==="USD"&&valid(c.metrics.market_cap));
  const pe=list.map(c=>c.metrics.pe_ttm).filter(valid),pb=list.map(c=>c.metrics.pb).filter(valid);
- const events=upcoming(list),next=events[0];
- $("summary").innerHTML=summaryCard("時価総額 合計","USD",capRows.length?money(capRows.reduce((s,c)=>s+c.metrics.market_cap,0)):"—",'USDの取得値 '+capRows.length+'/'+list.length+'社')+summaryCard("PER 中央値","TTM",valid(median(pe))?number(median(pe),1)+'<small>倍</small>':"—",'算出可能な '+pe.length+'/'+list.length+'社')+summaryCard("PBR 中央値","BOOK",valid(median(pb))?number(median(pb),1)+'<small>倍</small>':"—",'算出可能な '+pb.length+'/'+list.length+'社')+summaryCard("次の決算予定","SCHEDULE",next?next.date.slice(5).replace("-","/"):"—",next?next.company.name+' · 提供元予定':"次回予定を確認できません");
+ const next=calendarEvents(list,Date.now()).filter(x=>x.state.kind==="upcoming")[0],ne=next&&next.state.event;
+ $("summary").innerHTML=summaryCard("時価総額 合計","USD",capRows.length?money(capRows.reduce((s,c)=>s+c.metrics.market_cap,0)):"—",'USDの取得値 '+capRows.length+'/'+list.length+'社')+summaryCard("PER 中央値","TTM",valid(median(pe))?number(median(pe),1)+'<small>倍</small>':"—",'算出可能な '+pe.length+'/'+list.length+'社')+summaryCard("PBR 中央値","BOOK",valid(median(pb))?number(median(pb),1)+'<small>倍</small>':"—",'算出可能な '+pb.length+'/'+list.length+'社')+summaryCard("次の決算予定","SCHEDULE · ET",next?ne.date_et.slice(5).replace("-","/"):"—",next?next.company.name+' · '+(ne.is_estimate?'推定':ne.session?SESSIONS[ne.session]:'提供元予定'):"次回予定を確認できません");
  $("company-count").textContent=list.length+" / 7 COMPANIES · USD";
 }
 function renderCards(){
  const list=companies();
- $("company-grid").innerHTML=list.length?list.map(c=>'<div class="company-card '+(c.symbol===state.selected?"selected":"")+'"><button class="company-select" data-select="'+c.symbol+'" aria-pressed="'+(c.symbol===state.selected)+'" title="'+esc(c.name+' / 株価 '+quoteDate(c.quote.as_of)+' / 取得 '+fetchedDate(c.fetched_at))+'"><span class="ticker">'+c.symbol+'</span><span class="company-name">'+c.name+'</span><span class="card-price">'+priceFormat(c.quote.price,c.currency)+'</span><span class="card-change '+deltaClass(c.quote.change_pct)+'">'+pct(c.quote.change_pct,true)+'</span>'+(c.fetch_status!=="ok"?'<span class="small-state">'+statusNames[c.fetch_status]+'</span>':"")+'</button><button class="star" data-watch="'+c.symbol+'" aria-label="'+c.name+'をウォッチ'+(state.watch.has(c.symbol)?"から解除":"に登録")+'" aria-pressed="'+state.watch.has(c.symbol)+'">'+(state.watch.has(c.symbol)?"★":"☆")+'</button></div>').join(""):'<div class="empty-state">該当する銘柄がありません</div>';
+ $("company-grid").innerHTML=list.length?list.map(c=>'<div class="company-card '+(c.symbol===state.selected?"selected":"")+'"><button class="company-select" data-select="'+c.symbol+'" aria-pressed="'+(c.symbol===state.selected)+'" title="'+esc(c.name+' / 株価 '+quoteDate(c.quote.as_of)+' / 取得 '+fetchedDate(c.fetched_at))+'"><span class="ticker">'+c.symbol+'</span><span class="company-name">'+c.name+'</span><span class="card-price">'+priceFormat(c.quote.price,c.currency)+'</span><span class="card-change '+deltaClass(c.quote.change_pct)+'">'+pct(c.quote.change_pct,true)+'</span>'+cardState(c)+'</button><button class="star" data-watch="'+c.symbol+'" aria-label="'+c.name+'をウォッチ'+(state.watch.has(c.symbol)?"から解除":"に登録")+'" aria-pressed="'+state.watch.has(c.symbol)+'">'+(state.watch.has(c.symbol)?"★":"☆")+'</button></div>').join(""):'<div class="empty-state">該当する銘柄がありません</div>';
 }
+function cardState(c){const parts=[];if(c.fetch_status!=="ok")parts.push(statusNames[c.fetch_status]);if(earningsState(c,Date.now()).kind==="needs_refresh")parts.push("発表済み・要更新");return parts.length?'<span class="small-state">'+parts.join(" · ")+'</span>':"";}
 function metricTooltip(c,col){
  let result=definitions[col.key]||({operating_cf_ttm:"連続する直近4四半期の営業キャッシュフロー",capex_ttm:"連続する直近4四半期の設備投資支出（絶対額）"}[col.key])||"";
+ if(col.key==="period")return result+' / '+basisText(c);
  if(companyValue(c,col.key)==null){
   const d=col.key==="pe_ttm"?c.metrics.eps_ttm:col.key==="pe_forward"?c.metrics.eps_forward:col.key==="pb"?c.metrics.book_value_per_share:null;
   result+=" / "+(valid(d)&&d<=0?"分母がゼロまたは負のため算出不可":"未取得・期間不足・通貨不一致などにより算出不可");
  }
- return result+' / 損益期末 '+(c.income_period_end||"未取得")+' / CF期末 '+(c.cashflow_period_end||"未取得")+' / BS期末 '+(c.balance_period_end||"未取得");
+ const basis=c.metric_basis&&c.metric_basis[col.key],mark=markers(c,col.key),fy=c.forward_eps&&c.forward_eps.fiscal_year_end;
+ if(basis)result+=' / 基準期末 '+basis;
+ const fgap=c.forward_eps&&c.forward_eps.gap;
+ if(col.key==="pe_forward")result+=' / 対象 '+(fy?fy+'に終わる会計年度の予想EPS'+(valid(fgap)&&Math.abs(fgap)>0.01?'（提供元forward EPSは同年度の予想と'+pct(fgap,true)+'差。最も近い年度と推定）':''):'会計年度不明（提供元の年度別予想と一致せず）');
+ if(mark.includes("†"))result+=' / † 純利益TTMが営業利益TTMを上回る（投資評価益など営業外損益でPERが低く見える）';
+ if(mark.includes("‡"))result+=' / ‡ 時価総額の株数がEPSの株数と'+pct(c.flags.share_count_gap,true)+'異なる';
+ if(mark.includes("§"))result+=' / § '+((c.notes||[]).find(n=>n.includes("一致しません"))||"提供元TTM EPSが四半期EPSの合計と一致しない");
+ return result+' / 損益TTM期末 '+(c.income_period_end||"未取得")+' / CF TTM期末 '+(c.cashflow_period_end||"未取得")+' / BS期末 '+(c.balance_period_end||"未取得");
 }
 function renderTable(){
  const cols=[{key:"name",label:"企業",type:"name"},...columns[state.view]];
  $("table-head").innerHTML='<tr>'+cols.map(col=>'<th scope="col" aria-sort="'+(state.sortKey===col.key?(state.sortDir===1?"ascending":"descending"):"none")+'"><button data-sort="'+col.key+'" title="'+esc(definitions[col.key]||"企業名で並べ替え")+'">'+col.label+(state.sortKey===col.key?'<span class="sort-arrow">'+(state.sortDir===1?"↑":"↓")+'</span>':"")+'</button></th>').join("")+'</tr>';
  const list=sortedCompanies();
  $("table-body").innerHTML=list.length?list.map(c=>'<tr data-select="'+c.symbol+'" class="'+(c.symbol===state.selected?"is-selected":"")+'"><td><button class="table-company" data-select="'+c.symbol+'" aria-label="'+c.name+'の詳細を表示"><span class="company-monogram">'+c.name[0]+'</span><span><b>'+c.symbol+'</b><small>'+c.name+'</small></span></button></td>'+columns[state.view].map(col=>{const v=companyValue(c,col.key);return '<td title="'+esc(metricTooltip(c,col))+'"'+(valid(v)&&v<0?' class="negative"':"")+'>'+metricFormat(v,col,c)+'</td>';}).join("")+'</tr>').join(""):'<tr><td colspan="'+cols.length+'" class="empty-state">表示対象がありません。検索またはウォッチ条件を変更してください。</td></tr>';
- $("table-scope").textContent=list.length+'社を表示'+(state.view==="valuation"?' · ¹ ROEは提供元の値':' · 金額は各社の財務通貨');
+ $("table-scope").textContent=list.length+'社を表示'+(state.view==="valuation"?' · ¹ ROEは提供元の値 · † 純利益TTM＞営業利益TTM · ‡ 時価総額とEPSの株数差5%超 · § 提供元TTM EPSが四半期EPS合計と不一致':' · 金額は各社の財務通貨 · 負債は提供元Total Debt（リース債務を含む） · † 純利益TTM＞営業利益TTM');
  $("comparison-sub").textContent=state.view==="valuation"?"株価と提供元EPS/BPSから算出。各指標の見出しで並べ替え":"金額は10億単位。損益・CFはTTM、資産・負債は最新四半期末";
  document.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===state.view)));
 }
@@ -565,12 +607,13 @@ function renderPrice(){
  $("price-window").innerHTML=shortDate(data[0].date)+' → '+shortDate(data.at(-1).date)+' <span class="'+deltaClass(change)+'">'+pct(change,true)+'</span>';
 }
 function renderBars(){
- const rows=companies(),key=state.barMetric,isPct=key==="fcf_yield",values=rows.map(c=>c.metrics[key]).filter(valid),max=Math.max(...values.map(Math.abs),1e-12);
- $("valuation-bars").innerHTML=rows.length?rows.map(c=>{const v=c.metrics[key];return '<button class="vbar-row '+(c.symbol===state.selected?"selected":"")+'" data-select="'+c.symbol+'" title="'+esc(metricTooltip(c,{key}))+'"><span class="vbar-label">'+c.symbol+'</span><span class="vbar-track"><span class="vbar-fill" style="width:'+(valid(v)?Math.abs(v)/max*100:0)+'%"></span></span><span class="vbar-value '+(valid(v)&&v<0?"negative":"")+'">'+(isPct?pct(v):multiple(v))+'</span></button>';}).join(""):'<div class="empty-state">表示対象がありません</div>';
- $("bar-note").textContent=isPct?"FCF TTM / 時価総額。バーは絶対値、負値は数値の符号で表示。":"ゼロを起点に共通スケールで表示。赤字EPS・非正のBPSや未取得は空欄。倍率だけで割安・割高を判定しません。";
+ const rows=companies(),key=state.barMetric,isPct=key==="fcf_yield",scale=barScale(rows.map(c=>c.metrics[key])),fmt=isPct?pct:multiple;
+ const clipped=rows.filter(c=>barClipped(c.metrics[key],scale));
+ $("valuation-bars").innerHTML=rows.length?rows.map(c=>{const v=c.metrics[key],cut=barClipped(v,scale);return '<button class="vbar-row '+(c.symbol===state.selected?"selected":"")+'" data-select="'+c.symbol+'" title="'+esc(metricTooltip(c,{key}))+'"><span class="vbar-label">'+c.symbol+'</span><span class="vbar-track'+(cut?" clipped":"")+'"><span class="vbar-fill" style="width:'+barWidth(v,scale)+'%"></span></span><span class="vbar-value '+(valid(v)&&v<0?"negative":"")+'">'+(cut?"≫":"")+fmt(v)+'</span></button>';}).join(""):'<div class="empty-state">表示対象がありません</div>';
+ $("bar-note").textContent=(isPct?"FCF TTM / 時価総額。バーは絶対値、負値は数値の符号で表示。":"ゼロを起点に共通スケールで表示。赤字EPS・非正のBPSや未取得は空欄。倍率だけで割安・割高を判定しません。")+(clipped.length?" 目盛りは中央値の3倍（"+fmt(scale.cap)+"）で打ち切り、"+clipped.map(c=>c.symbol).join("・")+"は超過（≫・切れ目付き）。":"");
 }
 function quarterChart(root,rows,keys,names,currency){
- root.replaceChildren();const data=rows.slice(0,5).reverse();
+ root.replaceChildren();const data=rows.filter(r=>keys.some(k=>valid(r[k]))).slice(0,5).reverse();
  const values=data.flatMap(d=>keys.map(k=>d[k])).filter(valid).map(v=>v/1e9);
  if(!values.length){root.innerHTML='<div class="chart-empty">四半期データがありません</div>';return;}
  const W=plotWidth(root),H=174,L=42,R=12,T=13,B=30,w=W-L-R,h=H-T-B;
@@ -583,38 +626,42 @@ function quarterChart(root,rows,keys,names,currency){
 }
 function renderFinancials(){
  const c=selectedCompany();$("financial-title").textContent=c?c.name+" の財務":"財務の推移";$("financial-symbol").textContent=c?c.symbol:"—";
- $("financial-subtitle").textContent=c?'BS期末 '+shortDate(c.balance_period_end)+' · 損益期末 '+shortDate(c.income_period_end)+' · '+(c.financial_currency||"通貨未取得"):"表示する銘柄がありません";
+ $("financial-subtitle").textContent=c?'BS期末 '+shortDate(c.balance_period_end)+' · 損益TTM期末 '+shortDate(c.income_period_end)+' · CF TTM期末 '+shortDate(c.cashflow_period_end)+' · '+(c.financial_currency||"通貨未取得"):"表示する銘柄がありません";
  $("ir-link").hidden=!c;if(c)$("ir-link").href=c.sources.ir;
- const m=c?.metrics||{},cur=c?.financial_currency||"USD";
- const items=[['営業利益率 TTM',pct(m.operating_margin),'売上・利益は同期間'],['自己資本比率',pct(m.equity_ratio),'最新四半期末'],['現預金等',money(m.cash,cur),'短期投資を含む'],['有利子負債',money(m.debt,cur),'最新四半期末']];
+ const m=c?.metrics||{},cur=c?.financial_currency||"USD",bsEnd=c?'BS '+shortDate(c.balance_period_end):'';
+ const items=[['営業利益率 TTM',pct(m.operating_margin),c?'損益TTM '+shortDate(c.income_period_end)+'期まで':''],['自己資本比率',pct(m.equity_ratio),bsEnd],['現預金等',money(m.cash,cur),'短期投資を含む · '+bsEnd],['借入金・リース',money(m.debt,cur),(valid(m.lease_obligations)?'うちリース '+money(m.lease_obligations,cur):'提供元Total Debt（リース含む）')+' · '+bsEnd]];
  $("financial-stats").innerHTML=items.map(([label,value,note])=>'<div class="financial-stat"><small>'+label+'</small><b>'+value+'</b><div class="asof">'+note+'</div></div>').join("");
  quarterChart($("income-chart"),c?.income_quarters||[],["revenue","net_income"],["売上高","純利益"],cur);
  quarterChart($("cashflow-chart"),c?.cashflow_quarters||[],["operating_cf","fcf"],["営業CF","フリーCF"],cur);
 }
 function todayNY(){const p=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());const v=Object.fromEntries(p.map(x=>[x.type,x.value]));return v.year+"-"+v.month+"-"+v.day;}
-function upcoming(list){const today=todayNY();return list.map(c=>({company:c,date:(c.earnings?.dates||[]).find(d=>d>=today)})).filter(x=>x.date).sort((a,b)=>a.date.localeCompare(b.date)||a.company.symbol.localeCompare(b.company.symbol));}
+function calendarEvents(list,now){const order={upcoming:0,needs_refresh:1,reported:2};return list.map(c=>({company:c,state:earningsState(c,now)})).filter(x=>x.state.kind!=="none").sort((a,b)=>order[a.state.kind]-order[b.state.kind]||(a.state.kind==="upcoming"?a.state.at-b.state.at:b.state.at-a.state.at)||a.company.symbol.localeCompare(b.company.symbol));}
+function eventTag(kind,e,today){if(kind==="needs_refresh")return ['alert','発表済み・要更新'];if(kind==="reported")return ['','発表済み（取得前）'];const days=Math.round((Date.parse(e.date_et)-Date.parse(today))/864e5);return [days<=7?'soon':'',days<0?'予定期間中':days===0?'本日':days+'日後'];}
 function renderCalendar(){
- const list=companies(),events=upcoming(list),today=todayNY();
- $("calendar").innerHTML=events.length?events.map(({company:c,date})=>{const days=Math.round((Date.parse(date)-Date.parse(today))/864e5),dates=(c.earnings.dates||[]).filter(d=>d>=today);return '<div class="calendar-event"><div class="event-left"><div class="date-tile"><small>'+date.slice(5,7)+'月</small>'+date.slice(8)+'</div><div><div class="event-name"><button data-select="'+c.symbol+'">'+c.symbol+' <span class="muted">'+c.name+'</span></button></div><div class="event-meta">'+(dates.length>1?shortDate(dates[0])+'〜'+shortDate(dates.at(-1)):'提供元予定 · 時刻未確認')+'</div></div></div><span class="event-tag '+(days<=7?"soon":"")+'">'+(days===0?"本日":days+"日後")+'</span></div>';}).join(""):'<div class="chart-empty">次回の決算予定を確認できません</div>';
+ const list=companies(),events=calendarEvents(list,Date.now()),today=todayNY();
+ $("calendar").innerHTML=events.length?events.map(({company:c,state})=>{const e=state.event,[tagClass,tag]=eventTag(state.kind,e,today);return '<div class="calendar-event"><div class="event-left"><div class="date-tile"><small>'+e.date_et.slice(5,7)+'月</small>'+e.date_et.slice(8)+'</div><div><div class="event-name"><button data-select="'+c.symbol+'">'+c.symbol+' <span class="muted">'+c.name+'</span></button></div><div class="event-meta">'+esc(eventWhen(e))+(state.kind==="upcoming"?'':' · 次回予定は提供元未掲載')+'</div></div></div><span class="event-tag '+tagClass+'">'+tag+'</span></div>';}).join(""):'<div class="chart-empty">次回の決算予定を確認できません</div>';
  const missing=list.filter(c=>!events.some(e=>e.company.symbol===c.symbol)).map(c=>c.symbol);
- $("calendar-note").textContent="予定は変更される場合があります。確定日時は各社の公式IRで確認してください。"+(missing.length?" 予定未確認: "+missing.join(" / "):"");
+ $("calendar-note").textContent="日時は提供元（Yahoo Finance）の予定を米国東部時間で表示。予定は変更される場合があり、確定日時は各社の公式IRで確認してください。「発表済み・要更新」は取得後に発表された銘柄で、表示中の株価・財務は発表前の値です。"+(missing.length?" 予定未掲載: "+missing.join(" / "):"");
 }
 function renderSources(){
- $("source-grid").innerHTML=snapshot.companies.map(c=>'<div class="source-item"><strong>'+c.symbol+'</strong> <span class="muted">'+statusNames[c.fetch_status]+'</span><br>'+sourceLink(c.sources.quote,"株価")+sourceLink(c.sources.statistics,"指標")+sourceLink(c.sources.income,"損益")+sourceLink(c.sources.balance,"BS")+sourceLink(c.sources.cashflow,"CF")+sourceLink(c.sources.ir,"公式IR")+'<div class="fetched">取得 '+fetchedDate(c.fetched_at)+'<br>価格 '+quoteDate(c.quote.as_of)+'<br>損益 '+shortDate(c.income_period_end)+' / CF '+shortDate(c.cashflow_period_end)+(c.errors.length?'<br>'+esc(c.errors.join(" / ")):"")+'</div></div>').join("");
+ $("source-grid").innerHTML=snapshot.companies.map(c=>'<div class="source-item"><strong>'+c.symbol+'</strong> <span class="muted">'+statusNames[c.fetch_status]+'</span><br>'+sourceLink(c.sources.quote,"株価")+sourceLink(c.sources.statistics,"指標")+sourceLink(c.sources.income,"損益")+sourceLink(c.sources.balance,"BS")+sourceLink(c.sources.cashflow,"CF")+sourceLink(c.sources.ir,"公式IR")+'<div class="fetched">取得 '+fetchedDate(c.fetched_at)+'<br>価格 '+quoteDate(c.quote.as_of)+'<br>基準期末 '+esc(basisText(c))+'<br>決算 '+esc(eventWhen(c.earnings))+(c.earnings&&c.earnings.previous?' / 前回 '+esc(eventWhen(c.earnings.previous)):'')+((c.notes||[]).length?'<br>'+esc(c.notes.join(" / ")):"")+(c.errors.length?'<br>'+esc(c.errors.join(" / ")):"")+'</div></div>').join("");
 }
 function renderFreshness(){
- const rows=snapshot.companies,ok=rows.filter(c=>c.fetch_status==="ok").length,partial=rows.filter(c=>c.fetch_status==="partial").length;
- $("snapshot-status").textContent=rows.length?'保存データ · '+(ok+partial)+'/'+rows.length+'社取得'+(partial?'（一部欠損 '+partial+'社）':'')+' · '+fetchedDate(snapshot.attempted_at):"データ未取得";
- $("status-dot").style.background=ok===rows.length&&rows.length?"var(--series-2)":"var(--accent)";
- $("footer-freshness").textContent='最終更新試行 '+fetchedDate(snapshot.attempted_at)+' · Yahoo Finance / yfinance';
- const issues=rows.filter(c=>c.fetch_status!=="ok");
- if(!rows.length)notice('データがありません。ローカルサーバーで「データ更新」を押すか、CLIの --refresh で取得してください。');
- else if(issues.length)notice(issues.map(c=>c.symbol+': '+statusNames[c.fetch_status]+'（'+c.errors.join(' / ')+'）').join(' · '));
- else notice("");
+ const rows=snapshot.companies,now=Date.now(),ok=rows.filter(c=>c.fetch_status==="ok").length,partial=rows.filter(c=>c.fetch_status==="partial").length;
+ const age=snapshotAge(snapshot.attempted_at,now),announced=rows.filter(c=>earningsState(c,now).kind==="needs_refresh");
+ $("snapshot-status").textContent=rows.length?'保存データ · '+(ok+partial)+'/'+rows.length+'社取得'+(partial?'（一部欠損 '+partial+'社）':'')+' · '+fetchedDate(snapshot.attempted_at)+(age?'（'+age.text+'）':''):"データ未取得";
+ $("status-dot").style.background=ok===rows.length&&rows.length&&!(age&&age.stale)&&!announced.length?"var(--series-2)":"var(--accent)";
+ $("footer-freshness").textContent='最終更新試行 '+fetchedDate(snapshot.attempted_at)+(age?'（'+age.text+'）':'')+' · Yahoo Finance / yfinance';
+ const messages=[],issues=rows.filter(c=>c.fetch_status!=="ok");
+ if(!rows.length)messages.push('データがありません。ローカルサーバーで「データ更新」を押すか、CLIの --refresh で取得してください。');
+ if(announced.length)messages.push('取得後に決算発表: '+announced.map(c=>c.symbol+'（'+eventWhen(earningsState(c,now).event)+'）').join(' / ')+'。表示中の株価・財務は発表前の値です。データ更新が必要です');
+ if(age&&age.stale)messages.push('取得から'+age.text.replace("前","")+'経過しています');
+ if(issues.length)messages.push(issues.map(c=>c.symbol+': '+statusNames[c.fetch_status]+'（'+c.errors.join(' / ')+'）').join(' · '));
+ notice(messages.join(' · '));
 }
 function render(){const list=companies();if(!list.some(c=>c.symbol===state.selected))state.selected=list[0]?.symbol||null;renderSummary();renderCards();renderTable();renderPrice();renderBars();renderFinancials();renderCalendar();renderSources();}
 function download(name,text,type){const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function csv(){const cols=columns[state.view],header=["Symbol","Company",...cols.map(c=>c.label+(c.type==="pct"?' (%)':c.type==="money"?' (bn)':'')),"QuoteCurrency","FinancialCurrency","IncomePeriodEnd","CashflowPeriodEnd","BalancePeriodEnd","FetchedAt","PriceAt","FetchStatus"],rows=sortedCompanies().map(c=>[c.symbol,c.name,...cols.map(col=>{const v=companyValue(c,col.key);return v==null?'':col.type==="pct"?v*100:col.type==="money"?v/1e9:v;}),c.currency,c.financial_currency,c.income_period_end,c.cashflow_period_end,c.balance_period_end,c.fetched_at,c.quote.as_of,c.fetch_status]);const quote=v=>'"'+String(v??"").replaceAll('"','""')+'"';download('megacap-'+state.view+'-'+todayNY()+'.csv','\uFEFF'+[header,...rows].map(row=>row.map(quote).join(',')).join('\r\n'),'text/csv;charset=utf-8');}
+function csv(){const now=Date.now(),cols=columns[state.view],header=["Symbol","Company",...cols.map(c=>c.label+(c.type==="pct"?' (%)':c.type==="money"?' (bn)':c.type==="basis"?' (oldest)':'')),"QuoteCurrency","FinancialCurrency","EpsBasisEnd","ProviderBasisEnd","IncomeTtmEnd","CashflowTtmEnd","BalanceEnd","ForwardEpsFiscalYearEnd","NetIncomeExceedsOperating","ShareCountGap","EarningsTimestampUTC","EarningsDateET","EarningsTimeET","EarningsSession","EarningsIsEstimate","EarningsState","FetchedAt","PriceAt","FetchStatus"],rows=sortedCompanies().map(c=>{const b=c.basis||{},e=earningsState(c,now).event||{},f=c.flags||{};return [c.symbol,c.name,...cols.map(col=>{const v=companyValue(c,col.key);return v==null?'':col.type==="pct"?v*100:col.type==="money"?v/1e9:v;}),c.currency,c.financial_currency,b.eps,b.provider,c.income_period_end,c.cashflow_period_end,c.balance_period_end,c.forward_eps?.fiscal_year_end,f.net_income_exceeds_operating,f.share_count_gap,e.timestamp,e.date_et,e.time_et,e.session,e.is_estimate,earningsState(c,now).kind,c.fetched_at,c.quote.as_of,c.fetch_status];});const quote=v=>'"'+String(v??"").replaceAll('"','""')+'"';download('megacap-'+state.view+'-'+todayNY()+'.csv','\uFEFF'+[header,...rows].map(row=>row.map(quote).join(',')).join('\r\n'),'text/csv;charset=utf-8');}
 document.addEventListener("click",e=>{
  const watch=e.target.closest("[data-watch]");if(watch){const s=watch.dataset.watch;state.watch.has(s)?state.watch.delete(s):state.watch.add(s);storage.set("megacap-watch",[...state.watch]);render();return;}
  const select=e.target.closest("[data-select]");if(select){state.selected=select.dataset.select;render();return;}
@@ -635,6 +682,8 @@ document.querySelectorAll('.rail nav a').forEach(a=>a.addEventListener('click',(
 let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{renderPrice();renderFinancials();},60);});
 $("search").value=state.query;$("watch-only").checked=state.watchOnly;$("bar-metric").value=state.barMetric;
 renderFreshness();render();
+// Age and 発表済み・要更新 depend on the viewer's clock, so re-evaluate while the page stays open.
+setInterval(()=>{renderFreshness();renderSummary();renderCards();renderCalendar();},300000);
 })();
 </script>
 </body>
