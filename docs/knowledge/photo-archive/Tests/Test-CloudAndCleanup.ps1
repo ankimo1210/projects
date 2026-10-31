@@ -138,3 +138,59 @@ Test-Case 'T24' 'Unchanged daily inputs reuse metadata without making extra arch
         Assert-Equal 1 @(Get-ChildItem -LiteralPath (Join-Path $f.Destination 'media') -File -Recurse).Count
     } finally {Remove-TestArchiveFixture $f}
 }
+Test-Case 'T11' 'Daily backfill can save new files with a one-GiB free-space reserve' {
+    $f=New-TestArchiveFixture
+    try {
+        $null=New-TestFile $f.Sync 'recent.jpg' 'recent-photo-payload'
+        $null=Set-TestCloudAdapters $f
+        $f.Config.reserve_f_bytes=1073741824L
+        $baseline=Join-Path $f.State 'baseline.json'
+        [IO.File]::WriteAllText($baseline,'[]')
+        $f.Config | Add-Member -NotePropertyName backfill_baseline_path -NotePropertyValue $baseline
+        $f.Adapters.Volume={param($Path) [pscustomobject]@{volume_id='fixture-volume';disk_id='fixture-disk';free_bytes=2147483648L;cluster_bytes=131072L}}
+        $result=Invoke-ICloudPhotoArchive -Config $f.Config -Adapters $f.Adapters
+        Assert-Equal 1 $result.Copied
+        Assert-Equal 'SnapshotVerified' $result.Status
+        Assert-Equal 'recent-photo-payload' ([IO.File]::ReadAllText((Join-Path $f.Sync 'recent.jpg')))
+    } finally {Remove-TestArchiveFixture $f}
+}
+Test-Case 'T11' 'Daily backfill budgets temporary storage before selecting a partial wave' {
+    $f=New-TestArchiveFixture
+    try {
+        $null=New-TestFile $f.Sync 'first.jpg' ('a'*1048576)
+        $null=New-TestFile $f.Sync 'second.jpg' ('b'*1048576)
+        $null=Set-TestCloudAdapters $f
+        $f.Config.reserve_f_bytes=1073741824L
+        $baseline=Join-Path $f.State 'baseline.json'
+        [IO.File]::WriteAllText($baseline,'[]')
+        $f.Config | Add-Member -NotePropertyName backfill_baseline_path -NotePropertyValue $baseline
+        $f.Adapters.Volume={param($Path) [pscustomobject]@{volume_id='fixture-volume';disk_id='fixture-disk';free_bytes=1145044992L;cluster_bytes=131072L}}
+        $result=Invoke-ICloudPhotoArchive -Config $f.Config -Adapters $f.Adapters
+        Assert-Equal 1 $result.Copied
+        Assert-Equal 1 $result.RetainCapacity
+        Assert-Equal 'PendingIncomplete' $result.Status
+        Assert-Equal 1 @(Get-ChildItem -LiteralPath (Join-Path $f.Destination 'media') -File -Recurse).Count
+        Assert-Equal 1048576L (Get-Item -LiteralPath (Join-Path $f.Sync 'first.jpg')).Length
+        Assert-Equal 1048576L (Get-Item -LiteralPath (Join-Path $f.Sync 'second.jpg')).Length
+    } finally {Remove-TestArchiveFixture $f}
+}
+Test-Case 'T11' 'An oversized video does not block a smaller new photo in the same daily wave' {
+    $f=New-TestArchiveFixture
+    try {
+        $null=New-TestFile $f.Sync 'recent.jpg' 'fits'
+        $null=New-TestFile $f.Sync 'oversized.mov' ('v'*4194304)
+        $null=Set-TestCloudAdapters $f
+        $f.Config.reserve_f_bytes=1073741824L
+        $baseline=Join-Path $f.State 'baseline.json'
+        [IO.File]::WriteAllText($baseline,'[]')
+        $f.Config | Add-Member -NotePropertyName backfill_baseline_path -NotePropertyValue $baseline
+        $f.Adapters.Volume={param($Path) [pscustomobject]@{volume_id='fixture-volume';disk_id='fixture-disk';free_bytes=1143996416L;cluster_bytes=131072L}}
+        $result=Invoke-ICloudPhotoArchive -Config $f.Config -Adapters $f.Adapters
+        Assert-Equal 1 $result.Copied
+        Assert-Equal 1 $result.RetainCapacity
+        $saved=@(Get-ChildItem -LiteralPath (Join-Path $f.Destination 'media') -File -Recurse)
+        Assert-Equal 1 $saved.Count
+        Assert-Equal 'fits' ([IO.File]::ReadAllText($saved[0].FullName))
+        Assert-Equal 4194304L (Get-Item -LiteralPath (Join-Path $f.Sync 'oversized.mov')).Length
+    } finally {Remove-TestArchiveFixture $f}
+}

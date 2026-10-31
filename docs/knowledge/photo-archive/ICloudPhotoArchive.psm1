@@ -68,7 +68,8 @@ function Invoke-ICloudPhotoArchive($Config,[hashtable]$Adapters=@{},[switch]$For
                 if($changed){0}else{1}
             }})
             $media=Get-PhotoBoundVolume $Config $Config.archive_root $Adapters
-            $copyBudget=[Math]::Max(0L,$media.free_bytes-[long]$Config.reserve_f_bytes-8589934592L)
+            # The planner also budgets the selected wave's directories and staging.
+            $copyBudget=[Math]::Max(0L,$media.free_bytes-[long]$Config.reserve_f_bytes)
         }
         $plan=New-PhotoMigrationPlan -Config $Config -FileRecords $rows -Assets $assets -DestinationIndex $index.assets -Adapters $Adapters -CopyBudgetBytes $copyBudget -DestinationStatCache $destinationCache
         $receipt=Invoke-PhotoPlan -Config $Config -Plan $plan -Adapters $Adapters -KnownSourceCache $sourceCache -DestinationStatCache $destinationCache

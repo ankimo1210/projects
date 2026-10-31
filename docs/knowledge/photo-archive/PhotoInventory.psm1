@@ -80,7 +80,7 @@ function Read-ArchiveConfig([string]$ConfigPath,[switch]$Recovery) {
     $config=Get-Content -LiteralPath $ConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
     if ($config.archive_id -like 'fixture-*') { throw 'FixtureConfigForbidden' }
     if ($config.schema_version -ne 2 -or $config.auto_cleanup -ne $false) { throw 'UnsupportedConfig' }
-    if ($config.retention_days -lt 7 -or $config.reserve_c_bytes -lt 34359738368L -or $config.reserve_f_bytes -lt 34359738368L -or $config.hash_workers -lt 1 -or $config.hash_workers -gt 2 -or $config.download_timeout_seconds -gt 600 -or $config.download_timeout_seconds -le 0 -or $config.download_retries -gt 1) { throw 'UnsafeConfig' }
+    if ($config.retention_days -lt 7 -or $config.reserve_c_bytes -lt 34359738368L -or $config.reserve_f_bytes -lt 1073741824L -or $config.hash_workers -lt 1 -or $config.hash_workers -gt 2 -or $config.download_timeout_seconds -gt 600 -or $config.download_timeout_seconds -le 0 -or $config.download_retries -gt 1) { throw 'UnsafeConfig' }
     if($Recovery){Assert-PhotoRecoveryBindings $config | Out-Null}else{Assert-ArchiveBindings $config | Out-Null}
     return $config
 }
@@ -364,7 +364,8 @@ function New-PhotoMigrationPlan($Config,[object[]]$FileRecords,[object[]]$Assets
     $volume=Assert-ArchiveBindings $Config $Adapters
     $actions=[Collections.Generic.List[object]]::new();$dispositions=[Collections.Generic.List[object]]::new();$ids=@{};$existing=@{}
     foreach($entry in $DestinationIndex){$existing[$entry.asset_id]=$entry}
-    $mediaBytes=0L;$largestAsset=0L
+    $reuseIds=@{};foreach($asset in $Assets){if($existing.ContainsKey($asset.asset_id)){$reuseIds[$asset.asset_id]=$true}}
+    $mediaBytes=0L;$largestAsset=0L;$copyAssetCount=0
     foreach($asset in $Assets) {
         $readable=@($asset.components | Where-Object {$_.file.read_status -ne 'Available' -or $_.file.sha256 -notmatch '^[a-f0-9]{64}$'}).Count -eq 0
         foreach($component in $asset.components){Get-PhotoSourcePath $Config $component.file | Out-Null}
@@ -395,10 +396,17 @@ function New-PhotoMigrationPlan($Config,[object[]]$FileRecords,[object[]]$Assets
                     if(-not(Test-PhotoCachedFile $path $component.sha256 $DestinationStatCache) -and (Get-PhotoSha256 $path) -cne $component.sha256){throw 'ExistingAssetChanged'}
                 }
                 $operation='Reuse'
-            } elseif($mediaBytes+$assetBytes -gt $CopyBudgetBytes) {
-                foreach($component in $asset.components){$dispositions.Add([pscustomobject]@{source=$component.file;operation='Retain';asset_id=$asset.asset_id;reason='RetainCapacity'})}
-                continue
-            } else { $mediaBytes+=$assetBytes;if($assetBytes -gt $largestAsset){$largestAsset=$assetBytes} }
+            } else {
+                # Reserve directory space for reuse actions even if they appear later.
+                $candidateDirectories=[long](($reuseIds.Count+$copyAssetCount+1)*3+8)*$volume.cluster_bytes
+                $candidateStaging=[Math]::Max($largestAsset,$assetBytes)
+                $candidateNeeded=$mediaBytes+$assetBytes+$candidateDirectories+67108864L+$candidateStaging+[long]$Config.reserve_f_bytes
+                if($mediaBytes+$assetBytes -gt $CopyBudgetBytes -or ($CopyBudgetBytes -lt [long]::MaxValue -and $candidateNeeded -gt $volume.free_bytes)) {
+                    foreach($component in $asset.components){$dispositions.Add([pscustomobject]@{source=$component.file;operation='Retain';asset_id=$asset.asset_id;reason='RetainCapacity'})}
+                    continue
+                }
+                $mediaBytes+=$assetBytes;$largestAsset=$candidateStaging;$copyAssetCount++
+            }
             $action=[pscustomobject]@{action_id=[guid]::NewGuid().ToString('N');asset_id=$asset.asset_id;operation=$operation;association_status=$asset.association_status;capture_date_raw=$asset.capture_date_raw;capture_offset=$asset.capture_offset;capture_subsec_raw=(Get-PhotoField $asset 'capture_subsec_raw');capture_utc=(Get-PhotoField $asset 'capture_utc');date_confidence=(Get-PhotoField $asset 'date_confidence' 'unknown');date_source=$asset.date_source;components=$components}
             $ids[$asset.asset_id]=$action;$actions.Add($action)
         } else {
