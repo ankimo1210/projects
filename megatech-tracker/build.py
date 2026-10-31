@@ -37,6 +37,7 @@ COMPANIES = [
     ("MU", "Micron", "ai"),
     ("AMD", "AMD", "ai"),
     ("ORCL", "Oracle", "ai"),
+    ("INTC", "Intel", "ai"),
 ]
 # Who pays for AI data centers, and who sells them the chips.
 PAYERS = ("MSFT", "GOOGL", "AMZN", "META", "ORCL")

@@ -35,6 +35,7 @@ COMPANIES = {
     "MU": 723125,
     "AMD": 2488,
     "ORCL": 1341439,
+    "INTC": 50863,
 }
 INDEX = "^GSPC"
 SPY_URL = (

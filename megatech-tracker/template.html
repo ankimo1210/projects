@@ -100,19 +100,25 @@ function nextOf(c) {
   if (c.next_earnings && (!last || c.next_earnings > last.date)) return {date: c.next_earnings, done: false, estimate: c.next_earnings_estimate};
   return last ? {date: last.date, done: true} : null;
 }
-const OKU = 1e8;
+const MILLION = 1e6;
 
 /* ---------- formatting ---------- */
 const MINUS = "−";
 const sgn = v => (v > 0 ? "+" : v < 0 ? MINUS : "");
 const fmtPct = (v, n = 1) => v == null ? "—" : sgn(v) + Math.abs(v * 100).toFixed(n) + "%";
 const fmtShare = (v, n = 1) => v == null ? "—" : (v * 100).toFixed(n) + "%";
-const fmtOku = v => v == null ? "—" : (v < 0 ? MINUS : "") + Math.round(Math.abs(v) / OKU).toLocaleString("ja-JP");
+const fmtMillion = v => v == null ? "—" : (v < 0 ? MINUS : "") + Math.round(Math.abs(v) / MILLION).toLocaleString("en-US");
+// Market cap always reads in trillion dollars so a cross-company column (the
+// comparison table) doesn't mix units the way the adaptive fmtMoney would.
+const fmtCap = v => v == null ? "—" : (v < 0 ? MINUS : "") + (Math.abs(v) / 1e12).toFixed(2) + " trillion ドル";
 const fmtMoney = v => {
   if (v == null) return "—";
-  const a = Math.abs(v);
-  if (a >= 1e12) return (v < 0 ? MINUS : "") + (a / 1e12).toFixed(2) + "兆ドル";
-  return fmtOku(v) + "億ドル";
+  const a = Math.abs(v), sign = v < 0 ? MINUS : "";
+  // Billion is the natural middle step so a near-trillion figure (payer capex)
+  // reads as "691.0 billion" instead of an unwieldy 6-digit million count.
+  if (a >= 1e12) return sign + (a / 1e12).toFixed(2) + " trillion ドル";
+  if (a >= 1e9) return sign + (a / 1e9).toFixed(1) + " billion ドル";
+  return fmtMillion(v) + " million ドル";
 };
 const fmtX = v => v == null ? "—" : v.toFixed(1) + "倍";
 const fmtPrice = v => v == null ? "—" : "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -331,7 +337,7 @@ const legend = items => `<div class="legend">${items.map(([name, color, kind]) =
   `<span><i class="${kind === "sq" ? "sq" : ""}" style="background:${color}${kind === "dash" ? ";background:none;border-top:2px dashed " + color + ";height:0" : ""}"></i>${esc(name)}</span>`).join("")}</div>`;
 // "2026年4–6月" -> "26/4–6"; "2025年12月–2026年2月" -> "25/12–2"
 const qShort = label => label ? label.replace(/^(\d{4})年(\d+)月?–(?:\d{4}年)?(\d+)月$/, (_, y, a, b) => `${y.slice(2)}/${a}–${b}`) : "";
-const yfmtOku = v => fmtOku(v);
+const yfmtMillion = v => fmtMillion(v);
 const yfmtPct = v => (v * 100).toFixed(0) + "%";
 
 function seasonInfo() {
@@ -421,14 +427,14 @@ function renderOverview(v) {
   const cols = [
     ["name", "会社", "l"], ["price", "株価"], ["chg_1d", "前日比"], ["ret_ytd", "年初来"], ["ret_1y", "1年"],
     ["market_cap", "時価総額"], ["spy_weight", "S&P 500 比率"], ["rev_yoy", "売上の伸び（前年比）"], ["op_margin_ttm", "営業利益率"],
-    ["capex_rev_ttm", "設備投資÷売上"], ["fcf_ttm", "FCF（億ドル）"], ["net_cash", "純現金（億ドル）"],
+    ["capex_rev_ttm", "設備投資÷売上"], ["fcf_ttm", "FCF（million ドル）"], ["net_cash", "純現金（million ドル）"],
     ["per_ntm", "予想PER"], ["per_ttm", "実績PER"], ["next_earnings", "次の決算"],
   ];
   const cell = (c, k) => ({
     name: `${sw(c.ticker)}<b>${c.ticker}</b><span class="sub">${esc(c.name)}</span>`, price: fmtPrice(c.price), chg_1d: fmtPct(c.chg_1d),
-    ret_ytd: fmtPct(c.ret_ytd), ret_1y: fmtPct(c.ret_1y), market_cap: fmtMoney(c.market_cap), spy_weight: fmtShare(c.spy_weight),
+    ret_ytd: fmtPct(c.ret_ytd), ret_1y: fmtPct(c.ret_1y), market_cap: fmtCap(c.market_cap), spy_weight: fmtShare(c.spy_weight),
     rev_yoy: `${fmtPct(c.rev_yoy)}<span class="sub">${esc(c.latest_quarter)}</span>`, op_margin_ttm: fmtShare(c.op_margin_ttm),
-    capex_rev_ttm: fmtShare(c.capex_rev_ttm), fcf_ttm: fmtOku(c.fcf_ttm), net_cash: fmtOku(c.net_cash),
+    capex_rev_ttm: fmtShare(c.capex_rev_ttm), fcf_ttm: fmtMillion(c.fcf_ttm), net_cash: fmtMillion(c.net_cash),
     per_ntm: fmtX(c.per_ntm), per_ttm: fmtX(c.per_ttm), next_earnings: nextCell(c),
   })[k];
   function nextCell(c) {
@@ -571,8 +577,8 @@ function renderWorld(v) {
     <p class="lead">${D.companies.length}社が市場全体に占める重さと、AI データセンターのお金の流れ。払う側は ${names(W.payers)}、受け取る側は ${names(W.sellers)}。</p>
     <div class="strip">
       <div><span class="k">S&amp;P 500 に占める比率・Mag7</span><span class="v a">${fmtShare(W.share_now_mag7)}</span><span class="n">${D.companies.length}社では ${fmtShare(W.share_now_all)}。SPY の保有比率（${D.asof.spy}）</span></div>
-      <div><span class="k">${D.companies.length}社の時価総額</span><span class="v">${(W.market_cap_all / 1e12).toFixed(1)}<small>兆ドル</small></span><span class="n">Mag7 は ${(W.market_cap_mag7 / 1e12).toFixed(1)}兆ドル（${D.asof.prices}）</span></div>
-      <div><span class="k">払う側${payN}社の設備投資・直近1年</span><span class="v">${fmtOku(W.payer_capex_ttm)}<small>億ドル</small></span><span class="n">各社の直近4四半期の合計${lacking.length ? `（${names(lacking)} は4四半期がそろわず除いた）` : ""}</span></div>
+      <div><span class="k">${D.companies.length}社の時価総額</span><span class="v">${(W.market_cap_all / 1e12).toFixed(1)}<small> trillion ドル</small></span><span class="n">Mag7 は ${(W.market_cap_mag7 / 1e12).toFixed(1)} trillion ドル（${D.asof.prices}）</span></div>
+      <div><span class="k">払う側${payN}社の設備投資・直近1年</span><span class="v">${fmtMoney(W.payer_capex_ttm)}</span><span class="n">各社の直近4四半期の合計${lacking.length ? `（${names(lacking)} は4四半期がそろわず除いた）` : ""}</span></div>
       <div><span class="k">設備投資 ÷ 営業CF・${payN}社</span><span class="v b">${W.payer_ocf_ttm ? fmtShare(W.payer_capex_ttm / W.payer_ocf_ttm, 0) : "—"}</span><span class="n">稼いだ現金のうち設備に回した割合</span></div>
     </div></section>`));
 
@@ -604,18 +610,18 @@ function renderWorld(v) {
   const skipped = dropped(q => q.payers_complete, pay, W.payers);
   const skipped2 = dropped(q => q.payers_complete && q.sellers_complete, both, [...W.payers, ...W.sellers]);
   const f2 = h(`<figure><p class="figtitle">払う側${W.payers.length}社の設備投資と営業キャッシュフロー</p>
-    <p class="figsub">四半期・億ドル。${W.payers.length}社がそろった四半期のみ。Oracle は6–8月期などを近い暦四半期に寄せた</p>
+    <p class="figsub">四半期・ million ドル。${W.payers.length}社がそろった四半期のみ。Oracle は6–8月期などを近い暦四半期に寄せた</p>
     ${legend([["設備投資", "var(--series-1)"], ["営業CF", "var(--series-2)"]])}
     <div id="capex"></div><figcaption><b>Fig 5</b>${skipped}設備投資は有形固定資産の取得（現金）。ファイナンスリースは含まない。</figcaption></figure>`);
   const f3 = h(`<figure><p class="figtitle">払う側の設備投資と受け取る側の売上</p>
-    <p class="figsub">四半期・億ドル。受け取る側は ${names(W.sellers)} の売上の合計。決算期のずれは近い暦四半期に寄せた</p>
+    <p class="figsub">四半期・ million ドル。受け取る側は ${names(W.sellers)} の売上の合計。決算期のずれは近い暦四半期に寄せた</p>
     ${legend([[`払う側${W.payers.length}社の設備投資`, "var(--series-1)"], [`受け取る側${W.sellers.length}社の売上`, "var(--series-2)"]])}
     <div id="sellers"></div><figcaption><b>Fig 6</b>${skipped2}受け取る側の売上は AI 以外（ゲーム用 GPU、パソコン向けメモリ、VMware のソフトなど）も含む。</figcaption></figure>`);
   g.append(f2, f3);
   const gs = h(`<section style="padding-top:0"></section>`); gs.append(g); v.append(gs);
   const qchart = (host, Wd, qs, series, tip) => {
     const qticks = qs.map((q, i) => [i, q.q.slice(2).replace("Q", "/Q")]).filter((_, i) => i % 4 === (qs.length - 1) % 4);
-    lineChart(host, Wd, {x: qs.map((_, i) => i), xticks: qticks, height: 260, yZero: true, yfmt: yfmtOku, rightPad: 16, series, tip});
+    lineChart(host, Wd, {x: qs.map((_, i) => i), xticks: qticks, height: 260, yZero: true, yfmt: yfmtMillion, rightPad: 16, series, tip});
   };
   chart(f2.querySelector("#capex"), (host, Wd) => qchart(host, Wd, pay,
     [{name: "設備投資", values: pay.map(q => q.capex), color: "var(--series-1)"}, {name: "営業CF", values: pay.map(q => q.ocf), color: "var(--series-2)"}],
@@ -625,10 +631,10 @@ function renderWorld(v) {
     i => `${both[i].q}\n払う側の設備投資   ${fmtMoney(both[i].capex)}\n受け取る側の売上   ${fmtMoney(both[i].sales)}`));
 
   const rows = D.companies.map(c => `<tr class="go" data-t="${c.ticker}"><td class="l">${sw(c.ticker)}<b>${c.ticker}</b><span class="sub">${esc(c.latest_quarter)}まで</span></td>
-    <td class="num">${fmtOku(c.ocf_ttm)}</td><td class="num">${fmtOku(c.capex_ttm)}</td>
-    <td class="num">${c.ocf_ttm && c.capex_ttm != null ? fmtShare(c.capex_ttm / c.ocf_ttm, 0) : "—"}</td><td class="num">${fmtOku(c.fcf_ttm)}</td>
-    <td class="num">${fmtOku(c.returns_ttm)}</td><td class="num">${fmtOku(c.debt_change_1y)}</td><td class="num">${fmtOku(c.net_cash)}</td></tr>`).join("");
-  const t = h(`<section><div class="head"><h2>お金の出入り（直近4四半期・億ドル）</h2></div><div class="tw"><table>
+    <td class="num">${fmtMillion(c.ocf_ttm)}</td><td class="num">${fmtMillion(c.capex_ttm)}</td>
+    <td class="num">${c.ocf_ttm && c.capex_ttm != null ? fmtShare(c.capex_ttm / c.ocf_ttm, 0) : "—"}</td><td class="num">${fmtMillion(c.fcf_ttm)}</td>
+    <td class="num">${fmtMillion(c.returns_ttm)}</td><td class="num">${fmtMillion(c.debt_change_1y)}</td><td class="num">${fmtMillion(c.net_cash)}</td></tr>`).join("");
+  const t = h(`<section><div class="head"><h2>お金の出入り（直近4四半期・ million ドル）</h2></div><div class="tw"><table>
     <thead><tr><th class="l">会社</th><th>営業CF</th><th>設備投資</th><th>設備投資÷営業CF</th><th>FCF</th><th>株主還元</th><th>借入の増減（1年）</th><th>純現金</th></tr></thead>
     <tbody>${rows}</tbody></table></div>
     <p class="caveat">株主還元 = 自社株買い＋配当。借入の増減は四半期末の借入残高の1年前との差（社債・CP など、リースを除く）。自社株買いは買い戻し枠による分だけで、株式報酬の源泉徴収のための買い取りは含まない。</p></section>`);
@@ -643,7 +649,7 @@ function renderCompany(v, c) {
   v.append(h(`<section><div class="head"><h2>${sw(c.ticker)}${esc(c.name)}（${c.ticker}）</h2></div>
     <div class="strip">
       <div><span class="k">株価（${D.asof.prices}）</span><span class="v">${fmtPrice(c.price)}</span><span class="n">前日比 ${fmtPct(c.chg_1d)} ・ 年初来 ${fmtPct(c.ret_ytd)}</span></div>
-      <div><span class="k">時価総額</span><span class="v">${c.market_cap == null ? "—" : `${(c.market_cap / 1e12).toFixed(2)}<small>兆ドル</small>`}</span><span class="n">S&amp;P 500 の ${fmtShare(c.spy_weight)}</span></div>
+      <div><span class="k">時価総額</span><span class="v">${c.market_cap == null ? "—" : `${(c.market_cap / 1e12).toFixed(2)}<small> trillion ドル</small>`}</span><span class="n">S&amp;P 500 の ${fmtShare(c.spy_weight)}</span></div>
       <div><span class="k">予想PER / 実績PER</span><span class="v a">${fmtX(c.per_ntm)}</span><span class="n">実績 ${fmtX(c.per_ttm)} ・ 今後12か月の予想EPS ${c.eps_ntm == null ? "—" : "$" + c.eps_ntm}</span></div>
       <div><span class="k">次の決算</span><span class="v">${nextTxt}</span><span class="n">最新の四半期 ${esc(c.latest_quarter)}</span></div>
     </div></section>`));
@@ -667,31 +673,31 @@ function renderCompany(v, c) {
   const cats = q.map(r => qShort(r.label));
   const g = h(`<div class="grid2"></div>`);
   const fig = (title, sub, leg, id, cap) => h(`<figure><p class="figtitle">${title}</p><p class="figsub">${sub}</p>${leg || ""}<div id="${id}"></div>${cap ? `<figcaption>${cap}</figcaption>` : ""}</figure>`);
-  const fRev = fig("売上", "四半期・億ドル。棒にカーソルで前年比", "", "c-rev");
+  const fRev = fig("売上", "四半期・ million ドル。棒にカーソルで前年比", "", "c-rev");
   const fOpm = fig("営業利益率", "四半期", "", "c-opm");
-  const fCf = fig("営業CFと設備投資", "四半期・億ドル", legend([["営業CF", "var(--series-2)"], ["設備投資", "var(--series-1)"]]), "c-cf");
-  const fRet = fig("株主還元", "四半期・億ドル", legend([["自社株買い", "var(--series-1)", "sq"], ["配当", "var(--series-2)", "sq"]]), "c-ret");
-  const fBs = fig("現金と借入", "四半期末・億ドル", legend([["現金と有価証券", "var(--series-2)"], ["借入", "var(--series-1)"]]), "c-bs");
+  const fCf = fig("営業CFと設備投資", "四半期・ million ドル", legend([["営業CF", "var(--series-2)"], ["設備投資", "var(--series-1)"]]), "c-cf");
+  const fRet = fig("株主還元", "四半期・ million ドル", legend([["自社株買い", "var(--series-1)", "sq"], ["配当", "var(--series-2)", "sq"]]), "c-ret");
+  const fBs = fig("現金と借入", "四半期末・ million ドル", legend([["現金と有価証券", "var(--series-2)"], ["借入", "var(--series-1)"]]), "c-bs");
   const fPer = fig("実績PER", `週次・倍。直近4四半期が赤字の週は線を切る。今の予想PER（今後12か月）は ${fmtX(c.per_ntm)}`, "", "c-per");
   g.append(fRev, fOpm, fCf, fRet, fBs, fPer);
   const gs = h(`<section style="padding-top:0"></section>`); gs.append(g); v.append(gs);
   const qx = q.map((_, i) => i), qt = q.map((r, i) => [i, cats[i]]).filter((_, i) => i % 4 === (q.length - 1) % 4);
-  chart(fRev.querySelector("#c-rev"), (host, W) => barChart(host, W, {cats, yfmt: yfmtOku,
+  chart(fRev.querySelector("#c-rev"), (host, W) => barChart(host, W, {cats, yfmt: yfmtMillion,
     series: [{name: "売上", values: q.map(r => r.revenue), color: "var(--series-1)"}],
     tip: i => `${q[i].label}\n売上 ${fmtMoney(q[i].revenue)}\n前年比 ${fmtPct(q[i].rev_yoy)}`}));
   chart(fOpm.querySelector("#c-opm"), (host, W) => lineChart(host, W, {x: qx, xticks: qt, height: 240, yZero: true, yfmt: yfmtPct, rightPad: 16,
     series: [{name: "営業利益率", values: q.map(r => r.op_margin), color: "var(--series-1)"}],
     tip: i => `${q[i].label}\n営業利益率 ${fmtShare(q[i].op_margin)}\n営業利益 ${fmtMoney(q[i].operating_income)}`}));
-  chart(fCf.querySelector("#c-cf"), (host, W) => lineChart(host, W, {x: qx, xticks: qt, height: 240, yZero: true, yfmt: yfmtOku, rightPad: 16,
+  chart(fCf.querySelector("#c-cf"), (host, W) => lineChart(host, W, {x: qx, xticks: qt, height: 240, yZero: true, yfmt: yfmtMillion, rightPad: 16,
     series: [{name: "営業CF", values: q.map(r => r.ocf), color: "var(--series-2)"}, {name: "設備投資", values: q.map(r => r.capex), color: "var(--series-1)"}],
     tip: i => `${q[i].label}\n営業CF   ${fmtMoney(q[i].ocf)}\n設備投資 ${fmtMoney(q[i].capex)}\nFCF      ${fmtMoney(q[i].fcf)}`}));
   chart(fRet.querySelector("#c-ret"), (host, W) => {
     if (!q.some(r => r.buybacks || r.dividends)) { host.append(h(`<p class="muted">この期間に自社株買いと配当はない。</p>`)); return; }
-    barChart(host, W, {cats, stacked: true, yfmt: yfmtOku,
+    barChart(host, W, {cats, stacked: true, yfmt: yfmtMillion,
       series: [{name: "自社株買い", values: q.map(r => r.buybacks), color: "var(--series-1)"}, {name: "配当", values: q.map(r => r.dividends), color: "var(--series-2)"}],
       tip: i => `${q[i].label}\n自社株買い ${fmtMoney(q[i].buybacks)}\n配当       ${fmtMoney(q[i].dividends)}`});
   });
-  chart(fBs.querySelector("#c-bs"), (host, W) => lineChart(host, W, {x: qx, xticks: qt, height: 240, yZero: true, yfmt: yfmtOku, rightPad: 16,
+  chart(fBs.querySelector("#c-bs"), (host, W) => lineChart(host, W, {x: qx, xticks: qt, height: 240, yZero: true, yfmt: yfmtMillion, rightPad: 16,
     series: [{name: "現金と有価証券", values: q.map(r => r.liquid), color: "var(--series-2)"}, {name: "借入", values: q.map(r => r.debt), color: "var(--series-1)"}],
     tip: i => `${q[i].label}\n現金と有価証券 ${fmtMoney(q[i].liquid)}\n借入           ${fmtMoney(q[i].debt)}`}));
   chart(fPer.querySelector("#c-per"), (host, W) => {
@@ -734,10 +740,10 @@ function renderCompany(v, c) {
     <p class="caveat">予想は取得のたびに保存した Yahoo の平均で、決算の 8-K の提出より前の最後の保存を使う（保存は ${D.asof.consensus_from || "—"} から。保存日は日本時間）。実績は 10-Q／10-K が SEC に出てから入る。</p></section>`));
 
   const recent = [...q].reverse().slice(0, 12);
-  const qrows = recent.map(r => `<tr><td class="l">${esc(r.label)}</td><td class="num">${fmtOku(r.revenue)}</td><td class="num">${fmtPct(r.rev_yoy)}</td>
-    <td class="num">${fmtShare(r.op_margin)}</td><td class="num">${fmtOku(r.net_income)}</td><td class="num">${r.eps != null ? r.eps.toFixed(2) : "—"}</td><td class="num">${fmtOku(r.ocf)}</td><td class="num">${fmtOku(r.capex)}</td>
-    <td class="num">${fmtOku(r.fcf)}</td><td class="num">${fmtOku(r.buybacks)}</td><td class="num">${fmtOku(r.dividends)}</td><td class="num">${fmtOku(r.liquid)}</td><td class="num">${fmtOku(r.debt)}</td></tr>`).join("");
-  v.append(h(`<section><div class="head"><h2>四半期の数字（億ドル）</h2></div><div class="tw"><table>
+  const qrows = recent.map(r => `<tr><td class="l">${esc(r.label)}</td><td class="num">${fmtMillion(r.revenue)}</td><td class="num">${fmtPct(r.rev_yoy)}</td>
+    <td class="num">${fmtShare(r.op_margin)}</td><td class="num">${fmtMillion(r.net_income)}</td><td class="num">${r.eps != null ? r.eps.toFixed(2) : "—"}</td><td class="num">${fmtMillion(r.ocf)}</td><td class="num">${fmtMillion(r.capex)}</td>
+    <td class="num">${fmtMillion(r.fcf)}</td><td class="num">${fmtMillion(r.buybacks)}</td><td class="num">${fmtMillion(r.dividends)}</td><td class="num">${fmtMillion(r.liquid)}</td><td class="num">${fmtMillion(r.debt)}</td></tr>`).join("");
+  v.append(h(`<section><div class="head"><h2>四半期の数字（million ドル）</h2></div><div class="tw"><table>
     <thead><tr><th class="l">四半期</th><th>売上</th><th>前年比</th><th>営業利益率</th><th>純利益</th><th>EPS（ドル）</th><th>営業CF</th><th>設備投資</th><th>FCF</th><th>自社株買い</th><th>配当</th><th>現金と有価証券</th><th>借入</th></tr></thead>
     <tbody>${qrows}</tbody></table></div>
     <p class="caveat">SEC EDGAR の XBRL から。第4四半期とキャッシュフローの各四半期は、年度・累計の数字から差し引きで出した。EPS は希薄化後で、今日の株式数の基準にそろえた（第4四半期は純利益 ÷ 年間と第1〜3四半期の株式数から逆算した第4四半期の株式数）。事業別の売上はまだ入っていない（SEC の書類本体の解析が要る）。${c.notes.map(esc).join("")}</p></section>`));
