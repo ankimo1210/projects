@@ -110,15 +110,15 @@ const fmtShare = (v, n = 1) => v == null ? "—" : (v * 100).toFixed(n) + "%";
 const fmtMillion = v => v == null ? "—" : (v < 0 ? MINUS : "") + Math.round(Math.abs(v) / MILLION).toLocaleString("en-US");
 // Market cap always reads in trillion dollars so a cross-company column (the
 // comparison table) doesn't mix units the way the adaptive fmtMoney would.
-const fmtCap = v => v == null ? "—" : (v < 0 ? MINUS : "") + (Math.abs(v) / 1e12).toFixed(2) + " trillion ドル";
+const fmtCap = v => v == null ? "—" : (v < 0 ? MINUS : "") + (Math.abs(v) / 1e12).toFixed(2) + "Tドル";
 const fmtMoney = v => {
   if (v == null) return "—";
   const a = Math.abs(v), sign = v < 0 ? MINUS : "";
   // Billion is the natural middle step so a near-trillion figure (payer capex)
-  // reads as "691.0 billion" instead of an unwieldy 6-digit million count.
-  if (a >= 1e12) return sign + (a / 1e12).toFixed(2) + " trillion ドル";
-  if (a >= 1e9) return sign + (a / 1e9).toFixed(1) + " billion ドル";
-  return fmtMillion(v) + " million ドル";
+  // reads as "691.0Bドル" instead of an unwieldy 6-digit million count.
+  if (a >= 1e12) return sign + (a / 1e12).toFixed(2) + "Tドル";
+  if (a >= 1e9) return sign + (a / 1e9).toFixed(1) + "Bドル";
+  return fmtMillion(v) + "Mドル";
 };
 const fmtX = v => v == null ? "—" : v.toFixed(1) + "倍";
 const fmtPrice = v => v == null ? "—" : "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -427,7 +427,7 @@ function renderOverview(v) {
   const cols = [
     ["name", "会社", "l"], ["price", "株価"], ["chg_1d", "前日比"], ["ret_ytd", "年初来"], ["ret_1y", "1年"],
     ["market_cap", "時価総額"], ["spy_weight", "S&P 500 比率"], ["rev_yoy", "売上の伸び（前年比）"], ["op_margin_ttm", "営業利益率"],
-    ["capex_rev_ttm", "設備投資÷売上"], ["fcf_ttm", "FCF（million ドル）"], ["net_cash", "純現金（million ドル）"],
+    ["capex_rev_ttm", "設備投資÷売上"], ["fcf_ttm", "FCF（Mドル）"], ["net_cash", "純現金（Mドル）"],
     ["per_ntm", "予想PER"], ["per_ttm", "実績PER"], ["next_earnings", "次の決算"],
   ];
   const cell = (c, k) => ({
@@ -577,7 +577,7 @@ function renderWorld(v) {
     <p class="lead">${D.companies.length}社が市場全体に占める重さと、AI データセンターのお金の流れ。払う側は ${names(W.payers)}、受け取る側は ${names(W.sellers)}。</p>
     <div class="strip">
       <div><span class="k">S&amp;P 500 に占める比率・Mag7</span><span class="v a">${fmtShare(W.share_now_mag7)}</span><span class="n">${D.companies.length}社では ${fmtShare(W.share_now_all)}。SPY の保有比率（${D.asof.spy}）</span></div>
-      <div><span class="k">${D.companies.length}社の時価総額</span><span class="v">${(W.market_cap_all / 1e12).toFixed(1)}<small> trillion ドル</small></span><span class="n">Mag7 は ${(W.market_cap_mag7 / 1e12).toFixed(1)} trillion ドル（${D.asof.prices}）</span></div>
+      <div><span class="k">${D.companies.length}社の時価総額</span><span class="v">${(W.market_cap_all / 1e12).toFixed(1)}<small>Tドル</small></span><span class="n">Mag7 は ${(W.market_cap_mag7 / 1e12).toFixed(1)}Tドル（${D.asof.prices}）</span></div>
       <div><span class="k">払う側${payN}社の設備投資・直近1年</span><span class="v">${fmtMoney(W.payer_capex_ttm)}</span><span class="n">各社の直近4四半期の合計${lacking.length ? `（${names(lacking)} は4四半期がそろわず除いた）` : ""}</span></div>
       <div><span class="k">設備投資 ÷ 営業CF・${payN}社</span><span class="v b">${W.payer_ocf_ttm ? fmtShare(W.payer_capex_ttm / W.payer_ocf_ttm, 0) : "—"}</span><span class="n">稼いだ現金のうち設備に回した割合</span></div>
     </div></section>`));
@@ -610,11 +610,11 @@ function renderWorld(v) {
   const skipped = dropped(q => q.payers_complete, pay, W.payers);
   const skipped2 = dropped(q => q.payers_complete && q.sellers_complete, both, [...W.payers, ...W.sellers]);
   const f2 = h(`<figure><p class="figtitle">払う側${W.payers.length}社の設備投資と営業キャッシュフロー</p>
-    <p class="figsub">四半期・ million ドル。${W.payers.length}社がそろった四半期のみ。Oracle は6–8月期などを近い暦四半期に寄せた</p>
+    <p class="figsub">四半期・Mドル。${W.payers.length}社がそろった四半期のみ。Oracle は6–8月期などを近い暦四半期に寄せた</p>
     ${legend([["設備投資", "var(--series-1)"], ["営業CF", "var(--series-2)"]])}
     <div id="capex"></div><figcaption><b>Fig 5</b>${skipped}設備投資は有形固定資産の取得（現金）。ファイナンスリースは含まない。</figcaption></figure>`);
   const f3 = h(`<figure><p class="figtitle">払う側の設備投資と受け取る側の売上</p>
-    <p class="figsub">四半期・ million ドル。受け取る側は ${names(W.sellers)} の売上の合計。決算期のずれは近い暦四半期に寄せた</p>
+    <p class="figsub">四半期・Mドル。受け取る側は ${names(W.sellers)} の売上の合計。決算期のずれは近い暦四半期に寄せた</p>
     ${legend([[`払う側${W.payers.length}社の設備投資`, "var(--series-1)"], [`受け取る側${W.sellers.length}社の売上`, "var(--series-2)"]])}
     <div id="sellers"></div><figcaption><b>Fig 6</b>${skipped2}受け取る側の売上は AI 以外（ゲーム用 GPU、パソコン向けメモリ、VMware のソフトなど）も含む。</figcaption></figure>`);
   g.append(f2, f3);
@@ -634,7 +634,7 @@ function renderWorld(v) {
     <td class="num">${fmtMillion(c.ocf_ttm)}</td><td class="num">${fmtMillion(c.capex_ttm)}</td>
     <td class="num">${c.ocf_ttm && c.capex_ttm != null ? fmtShare(c.capex_ttm / c.ocf_ttm, 0) : "—"}</td><td class="num">${fmtMillion(c.fcf_ttm)}</td>
     <td class="num">${fmtMillion(c.returns_ttm)}</td><td class="num">${fmtMillion(c.debt_change_1y)}</td><td class="num">${fmtMillion(c.net_cash)}</td></tr>`).join("");
-  const t = h(`<section><div class="head"><h2>お金の出入り（直近4四半期・ million ドル）</h2></div><div class="tw"><table>
+  const t = h(`<section><div class="head"><h2>お金の出入り（直近4四半期・Mドル）</h2></div><div class="tw"><table>
     <thead><tr><th class="l">会社</th><th>営業CF</th><th>設備投資</th><th>設備投資÷営業CF</th><th>FCF</th><th>株主還元</th><th>借入の増減（1年）</th><th>純現金</th></tr></thead>
     <tbody>${rows}</tbody></table></div>
     <p class="caveat">株主還元 = 自社株買い＋配当。借入の増減は四半期末の借入残高の1年前との差（社債・CP など、リースを除く）。自社株買いは買い戻し枠による分だけで、株式報酬の源泉徴収のための買い取りは含まない。</p></section>`);
@@ -649,7 +649,7 @@ function renderCompany(v, c) {
   v.append(h(`<section><div class="head"><h2>${sw(c.ticker)}${esc(c.name)}（${c.ticker}）</h2></div>
     <div class="strip">
       <div><span class="k">株価（${D.asof.prices}）</span><span class="v">${fmtPrice(c.price)}</span><span class="n">前日比 ${fmtPct(c.chg_1d)} ・ 年初来 ${fmtPct(c.ret_ytd)}</span></div>
-      <div><span class="k">時価総額</span><span class="v">${c.market_cap == null ? "—" : `${(c.market_cap / 1e12).toFixed(2)}<small> trillion ドル</small>`}</span><span class="n">S&amp;P 500 の ${fmtShare(c.spy_weight)}</span></div>
+      <div><span class="k">時価総額</span><span class="v">${c.market_cap == null ? "—" : `${(c.market_cap / 1e12).toFixed(2)}<small>Tドル</small>`}</span><span class="n">S&amp;P 500 の ${fmtShare(c.spy_weight)}</span></div>
       <div><span class="k">予想PER / 実績PER</span><span class="v a">${fmtX(c.per_ntm)}</span><span class="n">実績 ${fmtX(c.per_ttm)} ・ 今後12か月の予想EPS ${c.eps_ntm == null ? "—" : "$" + c.eps_ntm}</span></div>
       <div><span class="k">次の決算</span><span class="v">${nextTxt}</span><span class="n">最新の四半期 ${esc(c.latest_quarter)}</span></div>
     </div></section>`));
@@ -673,11 +673,11 @@ function renderCompany(v, c) {
   const cats = q.map(r => qShort(r.label));
   const g = h(`<div class="grid2"></div>`);
   const fig = (title, sub, leg, id, cap) => h(`<figure><p class="figtitle">${title}</p><p class="figsub">${sub}</p>${leg || ""}<div id="${id}"></div>${cap ? `<figcaption>${cap}</figcaption>` : ""}</figure>`);
-  const fRev = fig("売上", "四半期・ million ドル。棒にカーソルで前年比", "", "c-rev");
+  const fRev = fig("売上", "四半期・Mドル。棒にカーソルで前年比", "", "c-rev");
   const fOpm = fig("営業利益率", "四半期", "", "c-opm");
-  const fCf = fig("営業CFと設備投資", "四半期・ million ドル", legend([["営業CF", "var(--series-2)"], ["設備投資", "var(--series-1)"]]), "c-cf");
-  const fRet = fig("株主還元", "四半期・ million ドル", legend([["自社株買い", "var(--series-1)", "sq"], ["配当", "var(--series-2)", "sq"]]), "c-ret");
-  const fBs = fig("現金と借入", "四半期末・ million ドル", legend([["現金と有価証券", "var(--series-2)"], ["借入", "var(--series-1)"]]), "c-bs");
+  const fCf = fig("営業CFと設備投資", "四半期・Mドル", legend([["営業CF", "var(--series-2)"], ["設備投資", "var(--series-1)"]]), "c-cf");
+  const fRet = fig("株主還元", "四半期・Mドル", legend([["自社株買い", "var(--series-1)", "sq"], ["配当", "var(--series-2)", "sq"]]), "c-ret");
+  const fBs = fig("現金と借入", "四半期末・Mドル", legend([["現金と有価証券", "var(--series-2)"], ["借入", "var(--series-1)"]]), "c-bs");
   const fPer = fig("実績PER", `週次・倍。直近4四半期が赤字の週は線を切る。今の予想PER（今後12か月）は ${fmtX(c.per_ntm)}`, "", "c-per");
   g.append(fRev, fOpm, fCf, fRet, fBs, fPer);
   const gs = h(`<section style="padding-top:0"></section>`); gs.append(g); v.append(gs);
@@ -743,7 +743,7 @@ function renderCompany(v, c) {
   const qrows = recent.map(r => `<tr><td class="l">${esc(r.label)}</td><td class="num">${fmtMillion(r.revenue)}</td><td class="num">${fmtPct(r.rev_yoy)}</td>
     <td class="num">${fmtShare(r.op_margin)}</td><td class="num">${fmtMillion(r.net_income)}</td><td class="num">${r.eps != null ? r.eps.toFixed(2) : "—"}</td><td class="num">${fmtMillion(r.ocf)}</td><td class="num">${fmtMillion(r.capex)}</td>
     <td class="num">${fmtMillion(r.fcf)}</td><td class="num">${fmtMillion(r.buybacks)}</td><td class="num">${fmtMillion(r.dividends)}</td><td class="num">${fmtMillion(r.liquid)}</td><td class="num">${fmtMillion(r.debt)}</td></tr>`).join("");
-  v.append(h(`<section><div class="head"><h2>四半期の数字（million ドル）</h2></div><div class="tw"><table>
+  v.append(h(`<section><div class="head"><h2>四半期の数字（Mドル）</h2></div><div class="tw"><table>
     <thead><tr><th class="l">四半期</th><th>売上</th><th>前年比</th><th>営業利益率</th><th>純利益</th><th>EPS（ドル）</th><th>営業CF</th><th>設備投資</th><th>FCF</th><th>自社株買い</th><th>配当</th><th>現金と有価証券</th><th>借入</th></tr></thead>
     <tbody>${qrows}</tbody></table></div>
     <p class="caveat">SEC EDGAR の XBRL から。第4四半期とキャッシュフローの各四半期は、年度・累計の数字から差し引きで出した。EPS は希薄化後で、今日の株式数の基準にそろえた（第4四半期は純利益 ÷ 年間と第1〜3四半期の株式数から逆算した第4四半期の株式数）。事業別の売上はまだ入っていない（SEC の書類本体の解析が要る）。${c.notes.map(esc).join("")}</p></section>`));
