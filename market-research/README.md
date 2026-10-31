@@ -12,6 +12,12 @@
 
 ## 起動（WSL、リポジトリルートから）
 
+**Mag7の株価・決算・PER/PBR・財務をHTMLで比較する場合:**
+[メガテック・トラッカー](docs/MEGACAP_TRACKER.md)を追加しました。
+`uv run --no-sync python market-research/scripts/megacap_tracker.py --refresh` で起動し、
+`http://localhost:8767` で閲覧できます。保存HTMLはサーバー不要で閲覧可能です。
+以下は既存Streamlit画面の起動手順です。
+
 ```bash
 uv sync --package market-research --group dev
 uv run --no-sync market-research demo --json

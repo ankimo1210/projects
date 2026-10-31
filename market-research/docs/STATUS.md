@@ -1,6 +1,6 @@
 # market-research 開発状況
 
-更新日: 2026-10-01
+更新日: 2026-10-27
 基準: [工程2の統合仕様](../../docs/superpowers/specs/2026-09-27-market-research-design.md)、
 [工程3の初期計画](../../docs/superpowers/plans/2026-09-27-market-research-core.md)、
 [価格取得・保存計画](../../docs/superpowers/plans/2026-09-27-market-data-ingestion.md)、
@@ -22,6 +22,23 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 | 工程3b 実データと保存 | main `7b7cbd1b` へ取込み済み | 4価格provider、ALFRED/ESRI/MoF/e-Stat/SEC、manifestと時点別読取、日米株の自動カレンダー。認証元のライブ疎通は残り |
 | 工程3c 分析機能 | 初版完了、main 6fbd93ca | 品質付き指標・3値スクリーナー・basket・公式指数の明示出典照合・円換算の仮想リスク・マクロ/財務表示、PIT履歴からのzero/mean/ridge/tree比較、Mag7固定例、5ノート、合成runのHTMLと不変保存を実装。7画面の代表操作はAppTestで確認。実providerの網羅、保存データの研究run永続化、ノート分析を一括HTMLへ載せる機能は残る |
 | 工程3d 連携・切替 | 初版完了、main 6fbd93ca | [初版の受入記録](STAGE3_ACCEPTANCE.md)にQ09–Q13と旧engine差分を記録。旧3件は工程4で退避、quantkit・macrokitは独立継続。共有uv環境の最終同期後、従来の日次レポートをメールなし・一時出力で実行しHTML 2件を確認 |
+
+## メガテック・トラッカー（2026-10-27）
+
+目標: Mag7の株価・決算・PER/PBRと財務状況をローカルHTMLで比較する。
+完了条件: 実データの明示取得、欠損/時点/期間の表示、比較と銘柄詳細、自己完結HTML保存、操作・描画・既存回帰の確認。
+[実装計画](../../docs/superpowers/plans/2026-10-27-megacap-tracker.md)と[使い方・指標定義](MEGACAP_TRACKER.md)。
+
+| 状態 | 内容・根拠 |
+|---|---|
+| 完了 | 依存追加なしのHTML/JS、yfinance取得・小さなJSON保存、localhostサーバー、明示更新、検索/ソート/ウォッチ、価格/四半期チャート、決算予定、営業CF・設備投資TTMを含むCSV/オフラインHTML保存。既存7画面・CLIは変更なし。 |
+| 検証済み | member suite **337件成功**（変更前317＋新規20）。Ruff check/format、JS syntax、git diff --check成功。実データ7社、ブラウザで絞込み・数値ソート・営業CF/設備投資CSV・保存HTMLの条件復元・ウォッチ空状態・キーボード・明暗・390px幅・更新を確認。JSエラーなし。描画を目視し、狭幅の目盛りを修正。Windows側localhostへのHTTP 200と保存HTMLの存在も確認。 |
+| レビュー反映済み | 独立レビューの2件を再現テストでRED→GREEN：null値だけの非空info応答でも旧価格・取得時刻を保持、営業CF/設備投資TTMを財務表・CSVに追加。最終回帰成功。 |
+| データ制約 | AMZNの最新四半期売上が取得元で欠損。売上TTM/PSR等は空欄で品質表示。決算予定は提供元予定で、公式確定時刻との自動照合は行わない。 |
+
+保存先は `_data/market-research/megacap-tracker/` の1セット。実測JSON 106,940 bytes、可読性更新後の自己完結HTML 173,210 bytes、初版と可読性比較のQA証拠込み4,698,406 bytes（約4.5MiB）。公開・通知・定時処理の変更なし。実装上の残課題なし。取得元の欠損と予定日の未確定性は画面で明示。
+
+**共通テンプレート可読性の更新（同日）:** `docs/templates/claude-report/` の補助文字・文字用アクセント・罫線を強め、12/13/14/16pxの文字サイズ変数を追加。トラッカーへ最新版を再埋込みし、9–11pxの補助文字とSVG目盛りを12px以上、表は14px・見出し13pxへ変更。カード上の補助文字コントラストはlight約3.7→6.2:1、dark約3.7→6.6:1。明暗×1440/390pxでコントラスト・実表示サイズ・検索/財務切替・横溢れを確認し、関連13テストが成功。取得済みデータを使って保存HTMLを再生成。価格・財務の計算処理とデータ取得は変更していない。
 
 ## 不動産市場の国際比較・地価調査（2026-10-01更新）
 
