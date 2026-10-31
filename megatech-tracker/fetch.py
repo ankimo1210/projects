@@ -9,7 +9,7 @@ import json
 import sys
 import time
 import urllib.request
-from datetime import date, datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -43,10 +43,21 @@ SPY_URL = (
 )
 
 
+def _settled(t: datetime) -> datetime:
+    """The last 16:30 New York time at or before `t`: that day's close is final."""
+    t = t.astimezone(NY)
+    cut = t.replace(hour=16, minute=30, second=0, microsecond=0)
+    return cut if t >= cut else cut - timedelta(days=1)
+
+
 def _fresh(path: Path, refresh: bool) -> bool:
+    # A file stays fresh until the next New York close settles. A Japan calendar
+    # day would keep a bar fetched mid-session, or a fetch made just before an
+    # after-the-close release, until midnight in Tokyo.
     if refresh or not path.exists():
         return False
-    return date.fromtimestamp(path.stat().st_mtime) == date.today()
+    fetched = datetime.fromtimestamp(path.stat().st_mtime, NY)
+    return _settled(fetched) == _settled(datetime.now(NY))
 
 
 def _get(url: str, agent: str) -> bytes:
@@ -89,9 +100,13 @@ def _current_quarter(rows: list[dict]) -> dict | None:
 
 
 def record_consensus(ticker: str, path: Path) -> None:
-    """Append the current-quarter consensus in `path`, stamped with the file's time."""
+    """Append the current-quarter consensus in `path`, stamped with when it was fetched."""
     y = json.loads(path.read_text())
-    taken = datetime.fromtimestamp(path.stat().st_mtime).astimezone().isoformat(timespec="seconds")
+    # Files written before the stamp existed fall back to their time on disk,
+    # which a copy without -p would reset.
+    taken = y.get("fetched") or datetime.fromtimestamp(path.stat().st_mtime).astimezone().isoformat(
+        timespec="seconds"
+    )
     if (ticker, taken) in _recorded():
         return
     history = y.get("earnings_history") or []
@@ -156,6 +171,7 @@ def fetch_yahoo(refresh: bool) -> None:
             "earnings_estimate": _frame_json(t.earnings_estimate),
             "revenue_estimate": _frame_json(t.revenue_estimate),
             "splits": [[str(d.date()), float(r)] for d, r in t.splits.items()],
+            "fetched": datetime.now().astimezone().isoformat(timespec="seconds"),
         }
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=1))
         record_consensus(ticker, path)

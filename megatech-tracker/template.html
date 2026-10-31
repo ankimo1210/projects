@@ -352,13 +352,16 @@ function seasonBanner() {
 const PERIODS = [["1m", "1か月"], ["3m", "3か月"], ["ytd", "年初来"], ["1y", "1年"], ["5y", "5年"]];
 function periodStart(key) {
   const last = new Date(ms(D.prices.dates[D.prices.dates.length - 1]));
-  const d = new Date(last);
-  if (key === "1m") d.setUTCMonth(d.getUTCMonth() - 1);
-  else if (key === "3m") d.setUTCMonth(d.getUTCMonth() - 3);
-  else if (key === "ytd") { d.setUTCMonth(0); d.setUTCDate(1); d.setUTCDate(0); }
-  else if (key === "1y") d.setUTCFullYear(d.getUTCFullYear() - 1);
-  else return 0;
-  return +d;
+  // Months back keep the day, capped at the month's end (Oct 31 -> Sep 30, not Oct 1).
+  const back = k => {
+    const y = last.getUTCFullYear(), m = last.getUTCMonth() - k;
+    return Date.UTC(y, m, Math.min(last.getUTCDate(), new Date(Date.UTC(y, m + 1, 0)).getUTCDate()));
+  };
+  if (key === "1m") return back(1);
+  if (key === "3m") return back(3);
+  if (key === "ytd") return Date.UTC(last.getUTCFullYear(), 0, 0);
+  if (key === "1y") return back(12);
+  return 0;
 }
 // The base is the last close on or before the period start, as in the table's returns.
 function sliceFrom(key) {
@@ -441,9 +444,11 @@ function renderOverview(v) {
   const thead = tsec.querySelector("thead"), tbody = tsec.querySelector("tbody");
   const paint = () => {
     const {key, dir} = STATE.sort;
+    // The results column shows nextOf(), so it sorts on that date; blanks go last.
+    const val = (c, k) => k === "name" ? c.ticker : k === "next_earnings" ? (nextOf(c) || {}).date : c[k];
     const rows = [...D.companies].sort((a, b) => {
-      const x = key === "name" ? a.ticker : a[key], y = key === "name" ? b.ticker : b[key];
-      if (x == null) return 1; if (y == null) return -1;
+      const x = val(a, key), y = val(b, key);
+      if (x == null || y == null) return (x == null) - (y == null);
       return (x > y ? 1 : x < y ? -1 : 0) * dir;
     });
     thead.innerHTML = "<tr>" + cols.map(([k, l, cls]) => `<th class="sort ${cls || ""} ${k === key ? "on" : ""}" data-k="${k}">${l}${k === key ? (dir < 0 ? " ↓" : " ↑") : ""}</th>`).join("") + "</tr>";
@@ -479,11 +484,16 @@ function renderSeason(v) {
     const name = `<td class="l">${sw(c.ticker)}<b>${c.ticker}</b><span class="sub">${esc(c.name)}</span></td>`;
     if (r.reported) {
       const e = r.event;
+      // The 8-K is in; the reaction waits for the next session's close.
+      const rx = e.move == null
+        ? `<td class="num muted" colspan="2" style="text-align:center">翌日の取引待ち</td>`
+        : `<td class="num">${fmtPct(e.move)}</td><td class="num">${fmtPct(e.vs_index)}</td>`;
+      const why = r.check_missing === "unmatched" ? "四半期を特定できず" : "保存の前に発表";
       return `<tr class="go" data-t="${c.ticker}">${name}
         <td class="l">${fmtMD(e.date)} 引け後<span class="sub">発表済み・${esc(r.label || e.quarter || "")}</span></td>
-        <td class="num">${fmtPct(e.move)}</td><td class="num">${fmtPct(e.vs_index)}</td>
-        <td class="num">${qr ? `${fmtMoney(qr.revenue)}<span class="sub">前年比 ${fmtPct(qr.rev_yoy)}</span>` : "<span class='muted'>10-Q 待ち</span>"}</td>
-        <td class="num">${consensusCell(k, `<span class="muted">—</span><span class="sub">保存の前に発表</span>`)}</td>
+        ${rx}
+        <td class="num">${qr ? `${fmtMoney(qr.revenue)}<span class="sub">前年比 ${fmtPct(qr.rev_yoy)}</span>` : `<span class="muted">${r.filing} 待ち</span>`}</td>
+        <td class="num">${consensusCell(k, `<span class="muted">—</span><span class="sub">${why}</span>`)}</td>
         <td class="num">${k && k.surprise != null ? `<b>${fmtPct(k.surprise)}</b>` : "—"}</td>
         <td class="num">${qr ? fmtShare(qr.op_margin) : "—"}</td>
         <td class="num">${qr && qr.eps != null ? "$" + qr.eps.toFixed(2) : "—"}</td></tr>`;
@@ -497,24 +507,32 @@ function renderSeason(v) {
       <td class="num">${consensusCell(k, `${fmtMoney(re.avg)}<span class="sub">今日の予想</span>`)}</td>
       <td class="num muted">—</td><td class="num muted">—</td><td class="num muted">—</td></tr>`;
   }).join("");
-  const missed = order.filter(r => r.reported && !r.check).map(r => CO[r.ticker].name);
+  const named = why => order.filter(r => r.reported && r.check_missing === why).map(r => CO[r.ticker].name).join("・");
+  const early = named("before_saving"), unmatched = named("unmatched");
   const t = h(`<section style="padding-top:8px"><div class="tw"><table>
     <thead><tr><th class="l">会社</th><th class="l">発表</th><th>翌日の株価</th><th>S&amp;P 500 との差</th><th>売上（SEC）</th><th>発表前の売上予想</th><th>予想との差</th><th>営業利益率</th><th>GAAP EPS（参考）</th></tr></thead>
     <tbody>${rowsHtml}</tbody></table></div>
-    <p class="caveat">売上の予想は Yahoo のアナリスト予想の平均。取得のたびに保存し、発表前の最後の保存と SEC に出た実績を比べる（保存は 2026-10-27 から）。${missed.length ? missed.join("・") + " は保存を始める前に発表したため、今回は差を出せない。" : ""}予定日は Yahoo のもので、会社が日付を発表する前は推定のため、Nasdaq の予定と数日ずれることがある。EPS は一時的な損益の扱いが会社ごとに違い、Yahoo の実績も GAAP と調整後が混ざるため、予想との差は出さない。GAAP EPS は SEC の希薄化後 EPS で、今日の株式数の基準にそろえた。</p></section>`);
+    <p class="caveat">売上の予想は Yahoo のアナリスト予想の平均。取得のたびに保存し、決算の 8-K の提出より前の最後の保存と SEC に出た実績を比べる（保存は ${D.asof.consensus_from || "—"} から。保存日は日本時間）。${early ? early + " は保存を始める前に発表したため、差を出せない。" : ""}${unmatched ? unmatched + " は発表前の保存はあるが、前年同期の売上が SEC の数字と合わず、予想の四半期を特定できなかった。" : ""}翌日の株価は、発表の翌営業日の終値が出てから入る。予定日は Yahoo のもので、会社が日付を発表する前は推定のため、Nasdaq の予定と数日ずれることがある。EPS は一時的な損益の扱いが会社ごとに違い、Yahoo の実績も GAAP と調整後が混ざるため、予想との差は出さない。GAAP EPS は SEC の希薄化後 EPS で、今日の株式数の基準にそろえた（第4四半期は純利益 ÷ 年間と第1〜3四半期の株式数から逆算した第4四半期の株式数）。</p></section>`);
   t.querySelector("tbody").addEventListener("click", e => { const tr = e.target.closest("tr[data-t]"); if (tr) location.hash = "co/" + tr.dataset.t; });
   v.append(t);
 
+  // SEC's list of recent filings holds about 1,000 of them, which covers fewer
+  // years for companies with many insider forms; the shorter histories say so.
+  const most = Math.max(...D.companies.map(c => c.events.length));
+  const short = D.companies.filter(c => c.events.length && c.events.length < most)
+    .map(c => `${c.name} は ${c.events[0].date.slice(0, 4)}年${+c.events[0].date.slice(5, 7)}月`);
+  const waiting = D.companies.filter(c => c.events.some(e => e.session == null && e.date >= D.asof.prices)).map(c => c.name);
   const f = h(`<section><div class="head"><h2>決算翌日の株価の反応</h2></div>
     <figure><p class="figtitle">決算の翌営業日に、S&amp;P 500 と比べて何%動いたか</p>
-    <p class="figsub">1点が1回の決算。大きい点が最新。Alphabet と Meta は SEC の一覧の都合で 2023〜2024 年以降のみ。</p>
+    <p class="figsub">1点が1回の決算。大きい点が最新。${short.length ? short.join("、") + "以降のみ（SEC の一覧の都合）。" : ""}${waiting.length ? waiting.join("・") + " の今回の決算は翌日の取引待ち。" : ""}</p>
     <div id="strip"></div><figcaption><b>Fig 3</b>右ほど決算を好感、左ほど失望。幅が広い会社ほど決算で大きく動く。</figcaption></figure></section>`);
   v.append(f);
   chart(f.querySelector("#strip"), (host, W) => {
     const rows = D.companies, rh = 34, gh = 26, m = {l: 64, r: 20, t: 4, b: 28};
     const H = m.t + m.b + rows.length * rh + D.groups.length * gh, iw = W - m.l - m.r;
+    const done = c => c.events.filter(e => e.vs_index != null);
     let lo = 0, hi = 0;
-    rows.forEach(c => c.events.forEach(e => { lo = Math.min(lo, e.vs_index); hi = Math.max(hi, e.vs_index); }));
+    rows.forEach(c => done(c).forEach(e => { lo = Math.min(lo, e.vs_index); hi = Math.max(hi, e.vs_index); }));
     const ticks = niceTicks(lo, hi, 6); lo = ticks[0]; hi = ticks[ticks.length - 1];
     const X = v => m.l + (v - lo) / (hi - lo) * iw;
     const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img"});
@@ -529,8 +547,9 @@ function renderSeason(v) {
       g.tickers.forEach(t => {
         const c = CO[t], y = y0 + rh / 2;
         svg.append(txt(m.l - 12, y + 4, c.ticker, {"text-anchor": "end", fill: "var(--ink-2)"}));
-        c.events.forEach((e, i) => {
-          const latest = i === c.events.length - 1;
+        const evs = done(c);
+        evs.forEach((e, i) => {
+          const latest = i === evs.length - 1;
           const dot = el("circle", {cx: X(e.vs_index), cy: y, r: latest ? 7 : 4.5, fill: CAT[c.ticker],
             stroke: latest ? "var(--ink)" : "var(--surface)", "stroke-width": latest ? 1.5 : 2, opacity: latest ? 1 : 0.6});
           bind(dot, `${c.ticker} ${e.date}（${e.quarter || "—"}）\n株価 ${fmtPct(e.move)}\nS&P 500 との差 ${fmtPct(e.vs_index)}`);
@@ -547,20 +566,20 @@ function renderWorld(v) {
   const W = D.world, names = ts => ts.map(t => CO[t].name).join("・");
   const both = W.flows.filter(q => q.payers_complete && q.sellers_complete).slice(-20);
   const pay = W.flows.filter(q => q.payers_complete).slice(-20);
-  const lastQ = W.flows[W.flows.length - 1];
+  const payN = W.payer_ttm_have.length, lacking = W.payers.filter(t => !W.payer_ttm_have.includes(t));
   v.append(h(`<section><div class="head"><h2>世界の中のメガテック</h2></div>
     <p class="lead">${D.companies.length}社が市場全体に占める重さと、AI データセンターのお金の流れ。払う側は ${names(W.payers)}、受け取る側は ${names(W.sellers)}。</p>
     <div class="strip">
       <div><span class="k">S&amp;P 500 に占める比率・Mag7</span><span class="v a">${fmtShare(W.share_now_mag7)}</span><span class="n">${D.companies.length}社では ${fmtShare(W.share_now_all)}。SPY の保有比率（${D.asof.spy}）</span></div>
       <div><span class="k">${D.companies.length}社の時価総額</span><span class="v">${(W.market_cap_all / 1e12).toFixed(1)}<small>兆ドル</small></span><span class="n">Mag7 は ${(W.market_cap_mag7 / 1e12).toFixed(1)}兆ドル（${D.asof.prices}）</span></div>
-      <div><span class="k">払う側${W.payers.length}社の設備投資・直近1年</span><span class="v">${fmtOku(W.payer_capex_ttm)}<small>億ドル</small></span><span class="n">各社の直近4四半期の合計</span></div>
-      <div><span class="k">設備投資 ÷ 営業CF・${W.payers.length}社</span><span class="v b">${fmtShare(W.payer_capex_ttm / W.payer_ocf_ttm, 0)}</span><span class="n">稼いだ現金のうち設備に回した割合</span></div>
+      <div><span class="k">払う側${payN}社の設備投資・直近1年</span><span class="v">${fmtOku(W.payer_capex_ttm)}<small>億ドル</small></span><span class="n">各社の直近4四半期の合計${lacking.length ? `（${names(lacking)} は4四半期がそろわず除いた）` : ""}</span></div>
+      <div><span class="k">設備投資 ÷ 営業CF・${payN}社</span><span class="v b">${W.payer_ocf_ttm ? fmtShare(W.payer_capex_ttm / W.payer_ocf_ttm, 0) : "—"}</span><span class="n">稼いだ現金のうち設備に回した割合</span></div>
     </div></section>`));
 
   const f1 = h(`<section><figure><p class="figtitle">S&amp;P 500 に占める比率（推定、10年）</p>
-    <p class="figsub">週次。今日の SPY の保有比率を起点に、各社と指数の値動き・株式数の変化で過去に戻した推定値</p>
+    <p class="figsub">週次。SPY の保有比率（${D.asof.spy}）を起点に、各社と指数の値動き・株式数の変化で前後に延ばした推定値</p>
     ${legend([["Mag7", "var(--series-1)"], [`${D.companies.length}社`, "var(--series-2)"]])}
-    <div id="share"></div><figcaption><b>Fig 4</b>指数の除数や浮動株比率の変化は入っていないため、過去ほど誤差が大きい。今日の値だけが実測。</figcaption></figure></section>`);
+    <div id="share"></div><figcaption><b>Fig 4</b>指数の除数や浮動株比率の変化は入っていないため、起点から離れるほど誤差が大きい。${D.asof.spy} の値だけが実測。</figcaption></figure></section>`);
   v.append(f1);
   chart(f1.querySelector("#share"), (host, Wd) => {
     const a = W.share_series_mag7, b = W.share_series_all, x = a.map(r => ms(r[0]));
@@ -572,9 +591,18 @@ function renderWorld(v) {
   });
 
   const g = h(`<div class="grid2"></div>`);
-  const partial = (done, ts) => !done ? `最新の ${lastQ.q} は ${ts.filter(t => lastQ.have.includes(t)).join("・") || "どこも"} だけ発表済みのため省いた。` : "";
-  const skipped = lastQ ? partial(lastQ.payers_complete, W.payers) : "";
-  const skipped2 = lastQ ? partial(lastQ.payers_complete && lastQ.sellers_complete, [...W.payers, ...W.sellers]) : "";
+  // Every quarter the chart leaves out from its first one on, not only the latest
+  // (in December the Q3 sellers still wait for Broadcom while Q4 has begun).
+  const dropped = (ok, shown, ts) => {
+    const from = shown.length ? shown[0].q : "";
+    const out = W.flows.filter(q => q.q >= from && !ok(q)).map(q => {
+      const lack = ts.filter(t => !q.have.includes(t));
+      return `${q.q}（${lack.length ? names(lack) + " がまだ" : "数字の欠けがある"}）`;
+    });
+    return out.length ? `${out.join("、")}は${ts.length}社がそろわないため省いた。` : "";
+  };
+  const skipped = dropped(q => q.payers_complete, pay, W.payers);
+  const skipped2 = dropped(q => q.payers_complete && q.sellers_complete, both, [...W.payers, ...W.sellers]);
   const f2 = h(`<figure><p class="figtitle">払う側${W.payers.length}社の設備投資と営業キャッシュフロー</p>
     <p class="figsub">四半期・億ドル。${W.payers.length}社がそろった四半期のみ。Oracle は6–8月期などを近い暦四半期に寄せた</p>
     ${legend([["設備投資", "var(--series-1)"], ["営業CF", "var(--series-2)"]])}
@@ -598,7 +626,7 @@ function renderWorld(v) {
 
   const rows = D.companies.map(c => `<tr class="go" data-t="${c.ticker}"><td class="l">${sw(c.ticker)}<b>${c.ticker}</b><span class="sub">${esc(c.latest_quarter)}まで</span></td>
     <td class="num">${fmtOku(c.ocf_ttm)}</td><td class="num">${fmtOku(c.capex_ttm)}</td>
-    <td class="num">${c.ocf_ttm ? fmtShare(c.capex_ttm / c.ocf_ttm, 0) : "—"}</td><td class="num">${fmtOku(c.fcf_ttm)}</td>
+    <td class="num">${c.ocf_ttm && c.capex_ttm != null ? fmtShare(c.capex_ttm / c.ocf_ttm, 0) : "—"}</td><td class="num">${fmtOku(c.fcf_ttm)}</td>
     <td class="num">${fmtOku(c.returns_ttm)}</td><td class="num">${fmtOku(c.debt_change_1y)}</td><td class="num">${fmtOku(c.net_cash)}</td></tr>`).join("");
   const t = h(`<section><div class="head"><h2>お金の出入り（直近4四半期・億ドル）</h2></div><div class="tw"><table>
     <thead><tr><th class="l">会社</th><th>営業CF</th><th>設備投資</th><th>設備投資÷営業CF</th><th>FCF</th><th>株主還元</th><th>借入の増減（1年）</th><th>純現金</th></tr></thead>
@@ -615,8 +643,8 @@ function renderCompany(v, c) {
   v.append(h(`<section><div class="head"><h2>${sw(c.ticker)}${esc(c.name)}（${c.ticker}）</h2></div>
     <div class="strip">
       <div><span class="k">株価（${D.asof.prices}）</span><span class="v">${fmtPrice(c.price)}</span><span class="n">前日比 ${fmtPct(c.chg_1d)} ・ 年初来 ${fmtPct(c.ret_ytd)}</span></div>
-      <div><span class="k">時価総額</span><span class="v">${(c.market_cap / 1e12).toFixed(2)}<small>兆ドル</small></span><span class="n">S&amp;P 500 の ${fmtShare(c.spy_weight)}</span></div>
-      <div><span class="k">予想PER / 実績PER</span><span class="v a">${fmtX(c.per_ntm)}</span><span class="n">実績 ${fmtX(c.per_ttm)} ・ 今後12か月の予想EPS $${c.eps_ntm ?? "—"}</span></div>
+      <div><span class="k">時価総額</span><span class="v">${c.market_cap == null ? "—" : `${(c.market_cap / 1e12).toFixed(2)}<small>兆ドル</small>`}</span><span class="n">S&amp;P 500 の ${fmtShare(c.spy_weight)}</span></div>
+      <div><span class="k">予想PER / 実績PER</span><span class="v a">${fmtX(c.per_ntm)}</span><span class="n">実績 ${fmtX(c.per_ttm)} ・ 今後12か月の予想EPS ${c.eps_ntm == null ? "—" : "$" + c.eps_ntm}</span></div>
       <div><span class="k">次の決算</span><span class="v">${nextTxt}</span><span class="n">最新の四半期 ${esc(c.latest_quarter)}</span></div>
     </div></section>`));
 
@@ -630,7 +658,7 @@ function renderCompany(v, c) {
     const i0 = sliceFrom(STATE.coPeriod), dates = D.prices.dates.slice(i0), vals = D.prices[c.ticker].slice(i0);
     lineChart(host, W, {x: dates.map(ms), height: 300, yfmt: v => "$" + v.toFixed(0), rightPad: 16,
       series: [{name: c.ticker, values: vals, color: CAT[c.ticker], width: 2}],
-      markers: c.events.map(e => ({x: ms(e.date), text: `${e.date} 決算（${e.quarter || "—"}）\n翌日 ${fmtPct(e.move)}（S&P 500 との差 ${fmtPct(e.vs_index)}）`})),
+      markers: c.events.map(e => ({x: ms(e.date), text: `${e.date} 決算（${e.quarter || "—"}）\n${e.move == null ? "翌日の取引待ち" : `翌日 ${fmtPct(e.move)}（S&P 500 との差 ${fmtPct(e.vs_index)}）`}`})),
       tip: i => `${dates[i]}\n${fmtPrice(vals[i])}`});
   });
   paintChips();
@@ -644,7 +672,7 @@ function renderCompany(v, c) {
   const fCf = fig("営業CFと設備投資", "四半期・億ドル", legend([["営業CF", "var(--series-2)"], ["設備投資", "var(--series-1)"]]), "c-cf");
   const fRet = fig("株主還元", "四半期・億ドル", legend([["自社株買い", "var(--series-1)", "sq"], ["配当", "var(--series-2)", "sq"]]), "c-ret");
   const fBs = fig("現金と借入", "四半期末・億ドル", legend([["現金と有価証券", "var(--series-2)"], ["借入", "var(--series-1)"]]), "c-bs");
-  const fPer = fig("実績PER", `週次・倍。今の予想PER（今後12か月）は ${fmtX(c.per_ntm)}`, "", "c-per");
+  const fPer = fig("実績PER", `週次・倍。直近4四半期が赤字の週は線を切る。今の予想PER（今後12か月）は ${fmtX(c.per_ntm)}`, "", "c-per");
   g.append(fRev, fOpm, fCf, fRet, fBs, fPer);
   const gs = h(`<section style="padding-top:0"></section>`); gs.append(g); v.append(gs);
   const qx = q.map((_, i) => i), qt = q.map((r, i) => [i, cats[i]]).filter((_, i) => i % 4 === (q.length - 1) % 4);
@@ -668,10 +696,10 @@ function renderCompany(v, c) {
     tip: i => `${q[i].label}\n現金と有価証券 ${fmtMoney(q[i].liquid)}\n借入           ${fmtMoney(q[i].debt)}`}));
   chart(fPer.querySelector("#c-per"), (host, W) => {
     const s = c.per_series;
-    if (!s.length) { host.append(h(`<p class="muted">利益が赤字の期間しかなく、PER を出せない。</p>`)); return; }
+    if (!s.some(r => r[1] != null)) { host.append(h(`<p class="muted">利益が赤字の期間しかなく、PER を出せない。</p>`)); return; }
     lineChart(host, W, {x: s.map(r => ms(r[0])), height: 240, yZero: true, yfmt: v => v.toFixed(0), rightPad: 16,
       series: [{name: "実績PER", values: s.map(r => r[1]), color: "var(--series-1)"}],
-      tip: i => `${s[i][0]}\n実績PER ${fmtX(s[i][1])}`});
+      tip: i => `${s[i][0]}\n実績PER ${s[i][1] == null ? "なし（直近4四半期が赤字）" : fmtX(s[i][1])}`});
   });
 
   // Yahoo's actual is GAAP for some companies and adjusted for others; the SEC figure says which.
@@ -686,6 +714,11 @@ function renderCompany(v, c) {
     <td class="num">${fmtMoney(k.estimate)}<span class="sub">${fmtMD(k.taken)} 時点・${k.analysts ?? "—"}人</span></td>
     <td class="num">${fmtMoney(k.revenue)}</td><td class="num">${k.surprise != null ? `<b>${fmtPct(k.surprise)}</b>` : "—"}</td></tr>`).join("");
   const per = {"0q": "今の四半期", "+1q": "次の四半期", "0y": "今期", "+1y": "来期"};
+  // Yahoo keeps a reported quarter as its current one for a while after the release.
+  const eq = c.estimate_quarter;
+  const current = !eq ? "「今の四半期」は Yahoo が次に発表されると見ている四半期。"
+    : eq.released ? `「今の四半期」は ${esc(eq.label)}。発表済みだが、Yahoo がまだ次の四半期に切り替えていない。`
+    : `「今の四半期」は ${esc(eq.label)}（まだ発表されていない最初の四半期）。`;
   const er = (c.estimates.eps || []).map(r => {
     const rv = (c.estimates.revenue || []).find(x => x.period === r.period) || {};
     return `<tr><td class="l">${per[r.period] || r.period}</td><td class="num">${r.avg != null ? r.avg.toFixed(2) : "—"}</td><td class="num">${fmtPct(r.growth)}</td><td class="num">${fmtMoney(rv.avg)}</td><td class="num">${fmtPct(rv.growth)}</td><td class="num">${r.numberOfAnalysts ?? "—"}</td></tr>`;
@@ -694,11 +727,11 @@ function renderCompany(v, c) {
     <div><div class="head"><h2>EPS：実績と予想</h2></div><div class="tw"><table><thead><tr><th class="l">四半期</th><th>実績（Yahoo）</th><th>予想</th><th>差</th><th>GAAP（SEC）</th><th class="l">実績の基準</th></tr></thead><tbody>${eh}</tbody></table></div>
       <p class="caveat">Yahoo の直近4四半期。Yahoo の実績は会社によって GAAP と調整後（株式報酬などを除く）が混ざる。「実績の基準」は SEC の GAAP EPS と 1セント以内で一致すれば GAAP。差は Yahoo の実績 ÷ 予想で、一時的な投資損益が入ると大きく振れる。</p></div>
     <div><div class="head"><h2>市場予想</h2></div><div class="tw"><table><thead><tr><th class="l">期間</th><th>EPS</th><th>前年比</th><th>売上</th><th>前年比</th><th>人数</th></tr></thead><tbody>${er}</tbody></table></div>
-      <p class="caveat">Yahoo のアナリスト予想の平均。「今の四半期」はまだ発表されていない最初の四半期。</p></div>
+      <p class="caveat">Yahoo のアナリスト予想の平均。${current}</p></div>
   </div></section>`));
   v.append(h(`<section><div class="head"><h2>売上：発表前の予想と実績</h2></div>
     ${rc ? `<div class="tw"><table><thead><tr><th class="l">四半期</th><th class="l">発表</th><th>発表前の予想</th><th>実績（SEC）</th><th>予想との差</th></tr></thead><tbody>${rc}</tbody></table></div>` : `<p class="muted">まだ保存した予想がない。</p>`}
-    <p class="caveat">予想は取得のたびに保存した Yahoo の平均で、発表前の最後の保存を使う（保存は 2026-10-27 から）。実績は 10-Q／10-K が SEC に出てから入る。</p></section>`));
+    <p class="caveat">予想は取得のたびに保存した Yahoo の平均で、決算の 8-K の提出より前の最後の保存を使う（保存は ${D.asof.consensus_from || "—"} から。保存日は日本時間）。実績は 10-Q／10-K が SEC に出てから入る。</p></section>`));
 
   const recent = [...q].reverse().slice(0, 12);
   const qrows = recent.map(r => `<tr><td class="l">${esc(r.label)}</td><td class="num">${fmtOku(r.revenue)}</td><td class="num">${fmtPct(r.rev_yoy)}</td>
@@ -707,7 +740,7 @@ function renderCompany(v, c) {
   v.append(h(`<section><div class="head"><h2>四半期の数字（億ドル）</h2></div><div class="tw"><table>
     <thead><tr><th class="l">四半期</th><th>売上</th><th>前年比</th><th>営業利益率</th><th>純利益</th><th>EPS（ドル）</th><th>営業CF</th><th>設備投資</th><th>FCF</th><th>自社株買い</th><th>配当</th><th>現金と有価証券</th><th>借入</th></tr></thead>
     <tbody>${qrows}</tbody></table></div>
-    <p class="caveat">SEC EDGAR の XBRL から。第4四半期とキャッシュフローの各四半期は、年度・累計の数字から差し引きで出した。EPS は希薄化後で、今日の株式数の基準にそろえた（第4四半期は純利益 ÷ 株式数）。事業別の売上はまだ入っていない（SEC の書類本体の解析が要る）。${c.notes.map(esc).join("")}</p></section>`));
+    <p class="caveat">SEC EDGAR の XBRL から。第4四半期とキャッシュフローの各四半期は、年度・累計の数字から差し引きで出した。EPS は希薄化後で、今日の株式数の基準にそろえた（第4四半期は純利益 ÷ 年間と第1〜3四半期の株式数から逆算した第4四半期の株式数）。事業別の売上はまだ入っていない（SEC の書類本体の解析が要る）。${c.notes.map(esc).join("")}</p></section>`));
 }
 
 /* ---------- router ---------- */
@@ -732,7 +765,7 @@ document.getElementById("foot").innerHTML = `<b style="font-family:var(--mono);l
   <li>決算の数字: SEC EDGAR の XBRL（companyfacts）。四半期報告書が出るまで、発表直後の四半期は入らない。</li>
   <li>株価・市場予想: Yahoo Finance（終値・アナリスト予想の平均）。決算日: 発表済みは SEC の 8-K（項目 2.02、引け後の提出）、予定は Yahoo（ニューヨークの日付）。</li>
   <li>S&amp;P 500 に占める比率: State Street の SPY 保有比率（${D.asof.spy}）。過去の推移は推定。</li>
-  <li>2026-10-28 の照合: 株価は Nasdaq と全日付で一致（差 0.04% 以内）。直近6四半期の財務は Yahoo と一致（現金・借入は会社ごとの定義の違いを除く）。決算日と翌日の反応は Nasdaq と一致。</li></ul>`;
+  <li>2026-10-28 の照合: 株価は Nasdaq と全日付で一致（差 0.04% 以内）。直近6四半期の財務は Yahoo と一致（現金・借入は会社ごとの定義の違いを除く）。決算日と翌日の反応は Nasdaq と一致。2026-10-31 の追加照合: 10/20〜10/30 の株価は Nasdaq と一致。MSFT・GOOGL・AMZN・META の7–9月期の売上・営業利益・純利益・EPS は決算発表（8-K）と一致。</li></ul>`;
 addEventListener("hashchange", () => { route(); scrollTo(0, 0); });
 route();
 </script>

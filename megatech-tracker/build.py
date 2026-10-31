@@ -105,8 +105,14 @@ def load(name: str):
 
 
 def merged(cf: dict, concepts: list[str], unit: str, *, duration: bool) -> dict:
-    """(start, end) -> latest-filed fact, with the first filing date kept."""
+    """(start, end) -> latest-filed fact, with its filing history and first filing date.
+
+    The first tag that reports a period gives its value; the first filing date
+    spans every tag, since filers re-tag old periods (Alphabet moved its
+    revenue to Revenues in 2025, which made 2023 look first filed in 2026).
+    """
     out: dict = {}
+    first: dict = {}
     for concept in concepts:
         node = cf["facts"].get("us-gaap", {}).get(concept)
         best: dict = {}
@@ -114,17 +120,19 @@ def merged(cf: dict, concepts: list[str], unit: str, *, duration: bool) -> dict:
             if it.get("form") not in PERIODIC or ("start" in it) != duration:
                 continue
             key = (it.get("start"), it["end"])
+            first[key] = min(first.get(key, it["filed"]), it["filed"])
             cur = best.get(key)
             if cur is None:
-                best[key] = {**it, "first_filed": it["filed"], "concept": concept}
+                best[key] = {**it, "concept": concept, "history": [(it["filed"], it["val"])]}
                 continue
-            first = min(cur["first_filed"], it["filed"])
+            cur["history"].append((it["filed"], it["val"]))
             if it["filed"] > cur["filed"]:
-                best[key] = {**it, "first_filed": first, "concept": concept}
-            else:
-                cur["first_filed"] = first
+                best[key] = {**it, "concept": concept, "history": cur["history"]}
         for key, it in best.items():
             out.setdefault(key, it)
+    for key, it in out.items():
+        it["first_filed"] = first[key]
+        it["history"].sort()
     return out
 
 
@@ -145,9 +153,15 @@ def quarterly_flows(facts: dict) -> dict:
         for (e0, n0, a), (e1, n1, b) in pairwise(rows):
             if 80 <= n1 - n0 <= 100:
                 start = (d(e0) + timedelta(days=1)).isoformat()
+                # A later filing can restate the shorter period before any filing
+                # re-presents the longer one (Alphabet's 2025 buybacks); take the
+                # shorter one as it stood when the longer one was filed.
+                short = a["val"]
+                if a["filed"] > b["filed"]:
+                    short = next((v for f, v in reversed(a["history"]) if f <= b["filed"]), short)
                 derived[e1] = (
                     start,
-                    b["val"] - a["val"],
+                    b["val"] - short,
                     max(a["filed"], b["filed"]),
                     max(a["first_filed"], b["first_filed"]),
                 )
@@ -172,14 +186,14 @@ def split_factor(splits: list, filed: str) -> float:
 def diluted_shares(cf: dict, splits: list) -> dict:
     """end -> diluted weighted shares on today's basis (quarter facts, else annual)."""
     m = merged(cf, ["WeightedAverageNumberOfDilutedSharesOutstanding"], "shares", duration=True)
-    q, a = {}, {}
+    q, a, days = {}, {}, {}
     for (s, e), it in m.items():
         n = (d(e) - d(s)).days + 1
         value = it["val"] * split_factor(splits, it["filed"])
         if 80 <= n <= 100:
-            q[e] = value
+            q[e], days[e] = value, n
         elif 350 <= n <= 380:
-            a[e] = value
+            a[(s, e)] = value
     eps = merged(cf, ["EarningsPerShareDiluted"], "USD/shares", duration=True)
     ni = merged(cf, ["NetIncomeLoss"], "USD", duration=True)
     implied = {}
@@ -188,7 +202,26 @@ def diluted_shares(cf: dict, splits: list) -> dict:
         if 80 <= n <= 100 and key in ni and it["val"]:
             # Alphabet tags diluted shares only per share class before 2023.
             implied[key[1]] = ni[key]["val"] / (it["val"] / split_factor(splits, it["filed"]))
-    return {**implied, **a, **q}
+            days.setdefault(key[1], n)
+    quarters = {**implied, **q}
+    profit = quarterly_flows(merged(cf, FLOWS["net_income"], "USD", duration=True))
+    # A year's average count weights its quarters by days, so the fourth quarter's
+    # is what the year leaves after the first three. The year's own average runs
+    # about 1% above it at Apple, which buys back steadily. A loss quarter reports
+    # its basic count as diluted, off the year's basis (Broadcom, fiscal 2024), so
+    # such years keep the year's average. Checked against the 10-Ks' own Q4 EPS
+    # (to 2020) and Yahoo's GAAP actuals: 74 of 78 within $0.015, against 69.
+    q4 = {}
+    for (s, e), year in a.items():
+        inside = [x for x in quarters if s < x < e]
+        if e in q or len(inside) != 3:
+            continue
+        if any(profit[x][1] < 0 for x in [*inside, e] if x in profit):
+            continue
+        total = (d(e) - d(s)).days + 1
+        rest = total - sum(days[x] for x in inside)
+        q4[e] = (year * total - sum(quarters[x] * days[x] for x in inside)) / rest
+    return {**implied, **{e: v for (_, e), v in a.items()}, **q4, **q}
 
 
 def gaap_eps(cf: dict, splits: list) -> dict:
@@ -235,7 +268,9 @@ def company_quarters(cf: dict, splits: list) -> list[dict]:
                 continue
             v = flows[k].get(e)
             row[k] = v[1] if v else None
-            if v:
+            # The quarter is out when its revenue and profit are: buybacks and
+            # dividends are often first tagged a year later, as comparatives.
+            if v and k == "net_income":
                 row["available"] = max(row["available"], v[3])
         cash = inst["cash"].get(e)
         row["liquid"] = (
@@ -367,14 +402,14 @@ def ttm(rows: list[dict], key: str, i: int | None = None) -> float | None:
 # ------------------------------------------------------------ market data
 
 
-def earnings_events(sub: dict) -> list[str]:
-    """Dates of after-the-close results releases (8-K item 2.02, 15:55–20:30 New York).
+def earnings_events(sub: dict) -> list[tuple[str, str]]:
+    """(New York date, acceptance time) of after-the-close results releases.
 
-    Tesla also furnishes its delivery numbers under 2.02, before the open; the
-    time window keeps those out.
+    8-K item 2.02 accepted 15:55–20:30 New York. Tesla also furnishes its
+    delivery numbers under 2.02, before the open; the time window keeps those out.
     """
     rec = sub["filings"]["recent"]
-    out = set()
+    out: dict = {}
     for form, items, stamp in zip(
         rec["form"], rec["items"], rec["acceptanceDateTime"], strict=True
     ):
@@ -382,19 +417,22 @@ def earnings_events(sub: dict) -> list[str]:
             continue
         t = datetime.fromisoformat(stamp.replace("Z", "+00:00")).astimezone(NY)
         if time(15, 55) <= t.time() <= time(20, 30):
-            out.add(t.date().isoformat())
-    return sorted(out)
+            day = t.date().isoformat()
+            out[day] = min(out.get(day, t), t)
+    return [(day, t.isoformat()) for day, t in sorted(out.items())]
 
 
-def reaction(px: pd.Series, spx: pd.Series, day: str):
+def reaction(px: pd.Series, spx: pd.Series, day: str) -> dict | None:
+    """The next session's move after a release; None until that session has closed."""
     before = px.index[px.index <= pd.Timestamp(day)]
     after = px.index[px.index > pd.Timestamp(day)]
     if len(before) == 0 or len(after) == 0:
         return None
     a, b = before[-1], after[0]
     r = float(px[b] / px[a] - 1)
-    m = float(spx[b] / spx[a] - 1)
-    return {"date": day, "session": b.date().isoformat(), "move": r, "vs_index": r - m}
+    idx = spx.reindex([a, b])
+    m = None if idx.isna().any() else float(idx.iloc[1] / idx.iloc[0] - 1)
+    return {"session": b.date().isoformat(), "move": r, "vs_index": None if m is None else r - m}
 
 
 def spy_weights() -> tuple[dict, str]:
@@ -418,47 +456,68 @@ def consensus_history() -> dict[str, list[dict]]:
                 r = json.loads(line)
                 out.setdefault(r["ticker"], []).append(r)
     for snaps in out.values():
-        snaps.sort(key=lambda r: r["taken"])
+        # by the instant, not the string: a fetch from another time zone writes
+        # another offset, and "…T01:00+00:00" sorts before "…T08:00+09:00"
+        snaps.sort(key=lambda r: datetime.fromisoformat(r["taken"]))
     return out
 
 
-def revenue_checks(rows: list[dict], events: list[dict], snaps: list[dict]) -> list[dict]:
-    """Each quarter's revenue against the last consensus saved before its release.
+def estimate_quarter(rows: list[dict], events: list[dict], rev: dict | None, on: date):
+    """The quarter a Yahoo quarterly revenue estimate is for, with its release once out.
 
-    A snapshot names its quarter only through the year-ago revenue, which
+    An estimate names its quarter only through the year-ago revenue, which
     pins down the quarter one year earlier in the SEC rows. Only quarters that
     can be a year-ago quarter are searched: older ones can repeat the figure.
     """
+    ago = (rev or {}).get("yearAgoRevenue")
+    base = next(
+        (
+            r
+            for r in rows
+            if ago
+            and r["revenue"]
+            and 200 <= (on - d(r["end"])).days <= 460
+            and abs(r["revenue"] / ago - 1) < 0.002
+        ),
+        None,
+    )
+    if base is None:
+        return None
+    start = (d(base["start"]) + timedelta(days=364)).isoformat()
+    end = d(base["end"]) + timedelta(days=364)
+    row = next((r for r in rows if abs((d(r["end"]) - end).days) <= 10), None)
+    return {
+        "base_end": base["end"],
+        "row": row,
+        "label": row["label"] if row else quarter_label(start, end.isoformat()),
+        "end": row["end"] if row else end.isoformat(),
+        "cal_q": row["cal_q"] if row else cal_quarter(start, end.isoformat()),
+        "release": next((e for e in events if 0 < (d(e["date"]) - end).days <= 75), None),
+    }
+
+
+def revenue_checks(rows: list[dict], events: list[dict], snaps: list[dict]) -> list[dict]:
+    """Each quarter's revenue against the last consensus saved before its release."""
     by_end: dict = {}
     for snap in snaps:
         rev = snap.get("revenue") or {}
-        ago = rev.get("yearAgoRevenue")
         taken = datetime.fromisoformat(snap["taken"])
-        base = next(
-            (
-                r
-                for r in rows
-                if ago
-                and r["revenue"]
-                and 200 <= (taken.date() - d(r["end"])).days <= 460
-                and abs(r["revenue"] / ago - 1) < 0.002
-            ),
-            None,
-        )
-        if base is None or rev.get("avg") is None:
+        q = estimate_quarter(rows, events, rev, taken.date())
+        if q is None or rev.get("avg") is None:
             continue
-        start = d(base["start"]) + timedelta(days=364)
-        end = d(base["end"]) + timedelta(days=364)
-        row = next((r for r in rows if abs((d(r["end"]) - end).days) <= 10), None)
-        release = next((e["date"] for e in events if 0 < (d(e["date"]) - end).days <= 75), None)
-        if release and taken >= datetime.combine(d(release), time(16, 0), NY):
+        ev, row = q["release"], q["row"]
+        # The wire release goes out minutes before its 8-K is accepted, and no
+        # after-the-close release comes before the close itself.
+        if ev and taken >= min(
+            datetime.fromisoformat(ev["accepted"]), datetime.combine(d(ev["date"]), time(16, 0), NY)
+        ):
             continue
         eps = snap.get("eps") or {}
-        by_end[base["end"]] = {
-            "label": row["label"] if row else quarter_label(start.isoformat(), end.isoformat()),
-            "end": row["end"] if row else end.isoformat(),
-            "cal_q": row["cal_q"] if row else cal_quarter(start.isoformat(), end.isoformat()),
-            "release": release,
+        by_end[q["base_end"]] = {
+            "label": q["label"],
+            "end": q["end"],
+            "cal_q": q["cal_q"],
+            "release": ev["date"] if ev else None,
             "taken": taken.astimezone(JST).date().isoformat(),
             "estimate": rev["avg"],
             "analysts": rev.get("numberOfAnalysts"),
@@ -493,9 +552,23 @@ def _r(v, n=4):
 # ------------------------------------------------------------------- build
 
 
+def closes(path: Path) -> pd.DataFrame:
+    """Daily closes, without a last row that is incomplete or from a session still open.
+
+    yfinance can return the last day before every column is in, and during the
+    session it returns that session's bar so far; neither is a close.
+    """
+    prices = pd.read_csv(path, index_col=0, parse_dates=True).sort_index().dropna(how="all")
+    full = prices.notna().all(axis=1)
+    prices = prices.loc[: full[full].index[-1]]
+    fetched = datetime.fromtimestamp(path.stat().st_mtime, NY)
+    if prices.index[-1].date() == fetched.date() and fetched.time() < time(16, 30):
+        prices = prices.iloc[:-1]
+    return prices
+
+
 def build() -> dict:
-    prices = pd.read_csv(RAW / "prices.csv", index_col=0, parse_dates=True).sort_index()
-    prices = prices.dropna(how="all")
+    prices = closes(RAW / "prices.csv")
     spx = prices["^GSPC"].dropna()
     asof = prices.index[-1]
     today = datetime.now(JST).date()
@@ -516,16 +589,28 @@ def build() -> dict:
         # the same item a day or two after the close, sometimes after hours, do not.
         ends = [*(r["end"] for r in rows), (d(rows[-1]["end"]) + timedelta(days=91)).isoformat()]
         events = []
-        for day in earnings_events(sub):
+        for day, accepted in earnings_events(sub):
             closed = [e for e in ends if 5 <= (d(day) - d(e)).days <= 75]
-            rx = reaction(px, spx, day) if closed else None
-            if rx is None:
+            if not closed:
                 continue
             row = next((r for r in rows if r["end"] == closed[-1]), None)
-            rx["quarter"] = row["label"] if row else None
-            events.append(rx)
+            if row:
+                quarter = row["label"]
+            elif closed[-1] == ends[-1]:
+                # out before its 10-Q: the quarter after the last one in the SEC facts
+                quarter = quarter_label(
+                    (d(rows[-1]["end"]) + timedelta(days=1)).isoformat(), ends[-1]
+                )
+            else:
+                quarter = None
+            # A release counts from its 8-K; the reaction waits for the next close.
+            rx = reaction(px, spx, day) or {"session": None, "move": None, "vs_index": None}
+            events.append({"date": day, "accepted": accepted, **rx, "quarter": quarter})
 
-        checks = revenue_checks(rows, events, history.get(ticker, []))
+        snaps = history.get(ticker, [])
+        checks = revenue_checks(rows, events, snaps)
+        current = next((r for r in y["revenue_estimate"] if r.get("period") == "0q"), None)
+        now_q = estimate_quarter(rows, events, current, today)
 
         # trailing P/E through time: price over TTM diluted EPS known at that date
         eps_steps = []
@@ -538,8 +623,10 @@ def build() -> dict:
         per_series = []
         for t, p in weekly.items():
             known = [e for at, e in eps_steps if at <= t]
-            if known and known[-1] > 0:
-                per_series.append([t.date().isoformat(), _r(p / known[-1], 2)])
+            if known:
+                # A loss-making TTM has no P/E; None breaks the line instead of bridging it.
+                per = _r(p / known[-1], 2) if known[-1] > 0 else None
+                per_series.append([t.date().isoformat(), per])
         eps_ttm = eps_steps[-1][1] if eps_steps else None
 
         annual_ends = [
@@ -547,7 +634,17 @@ def build() -> dict:
             for (s, e) in merged(cf, FLOWS["revenue"], "USD", duration=True)
             if 350 <= (d(e) - d(s)).days + 1 <= 380
         ]
-        fy0_end = d(max(annual_ends)) + timedelta(days=364)
+        # the fiscal year after the last 10-K in the SEC facts
+        fy_end = d(max(annual_ends)) + timedelta(days=364)
+        # Yahoo moves its current year on once the fourth quarter is reported,
+        # before the 10-K reaches the SEC facts (a week or more for Broadcom,
+        # Micron and Oracle); its own last reported quarter says when.
+        reported = [
+            r["quarter"][:10] for r in y["earnings_history"] if r.get("epsActual") is not None
+        ]
+        fy0_end = fy_end
+        if reported and d(max(reported)) >= fy_end - timedelta(days=10):
+            fy0_end += timedelta(days=364)
         eps_ntm = ntm_eps(y["earnings_estimate"], fy0_end, today)
 
         last = rows[-1]
@@ -574,6 +671,16 @@ def build() -> dict:
                 "yahoo_forward_pe": _r(info.get("forwardPE"), 2),
                 "next_earnings": (y.get("next_earnings") or {}).get("date"),
                 "next_earnings_estimate": (y.get("next_earnings") or {}).get("estimate"),
+                "fiscal_year_end": fy_end.isoformat(),
+                "consensus_from": snaps[0]["taken"] if snaps else None,
+                # Yahoo keeps a reported quarter as its current one for a while.
+                "estimate_quarter": None
+                if now_q is None
+                else {
+                    "label": now_q["label"],
+                    "end": now_q["end"],
+                    "released": now_q["release"] is not None,
+                },
                 "latest_quarter": last["label"],
                 "latest_end": last["end"],
                 "rev_yoy": _r(last["rev_yoy"]),
@@ -609,11 +716,14 @@ def build() -> dict:
             }
         )
 
+    saved = [datetime.fromisoformat(s["taken"]) for snaps in history.values() for s in snaps]
     return {
         "asof": {
             "prices": asof.date().isoformat(),
             "spy": spy_asof,
             "built": datetime.now(JST).strftime("%Y-%m-%d %H:%M JST"),
+            # first consensus snapshot, Japan date as shown with each snapshot
+            "consensus_from": min(saved).astimezone(JST).date().isoformat() if saved else None,
         },
         "groups": [
             {"key": k, "name": n, "tickers": [t for t, _, g in COMPANIES if g == k]}
@@ -621,7 +731,7 @@ def build() -> dict:
         ],
         "companies": companies,
         "prices": price_block(prices, asof),
-        "world": world_block(companies, prices, weights, asof),
+        "world": world_block(companies, prices, weights, asof, spy_asof),
         "season": season_block(companies, today),
     }
 
@@ -634,7 +744,9 @@ def price_block(prices: pd.DataFrame, asof) -> dict:
     return out
 
 
-def world_block(companies: list[dict], prices: pd.DataFrame, weights: dict, asof) -> dict:
+def world_block(
+    companies: list[dict], prices: pd.DataFrame, weights: dict, asof, spy_asof: str
+) -> dict:
     p = prices[prices.index >= asof - pd.DateOffset(years=10)].ffill()
     weekly = week_ends(p).dropna()
     mag7 = [c for c in companies if c["group"] == "mag7"]
@@ -660,36 +772,43 @@ def world_block(companies: list[dict], prices: pd.DataFrame, weights: dict, asof
             }
         )
     payers = [c for c in companies if c["ticker"] in PAYERS]
+    # a payer without both twelve-month figures would put capex over a larger OCF
+    counted = [c for c in payers if c["capex_ttm"] is not None and c["ocf_ttm"] is not None]
     return {
         "share_now_mag7": _r(sum(weights[c["ticker"]] for c in mag7)),
         "share_now_all": _r(sum(weights.values())),
-        "share_series_mag7": index_share(mag7, p, weekly, weights),
-        "share_series_all": index_share(companies, p, weekly, weights),
+        "share_series_mag7": index_share(mag7, p, weekly, weights, spy_asof),
+        "share_series_all": index_share(companies, p, weekly, weights, spy_asof),
         "market_cap_mag7": sum(c["market_cap"] or 0 for c in mag7),
         "market_cap_all": sum(c["market_cap"] or 0 for c in companies),
         "payers": list(PAYERS),
         "sellers": list(SELLERS),
-        "payer_capex_ttm": sum(c["capex_ttm"] or 0 for c in payers),
-        "payer_ocf_ttm": sum(c["ocf_ttm"] or 0 for c in payers),
+        "payer_ttm_have": [c["ticker"] for c in counted],
+        "payer_capex_ttm": sum(c["capex_ttm"] for c in counted),
+        "payer_ocf_ttm": sum(c["ocf_ttm"] for c in counted),
         "flows": flows,
     }
 
 
-def index_share(companies: list[dict], p: pd.DataFrame, weekly: pd.DataFrame, weights: dict):
-    """Weekly S&P 500 share of a set of companies, rolled back from today's SPY weights.
+def index_share(
+    companies: list[dict], p: pd.DataFrame, weekly: pd.DataFrame, weights: dict, spy_asof: str
+):
+    """Weekly S&P 500 share of a set of companies, rolled from the SPY weights.
 
-    w_i(t) = w_i(now) * [P_i(t) S_i(t) / P_i(now) S_i(now)] / [SPX(t) / SPX(now)].
+    w_i(t) = w_i(0) * [P_i(t) S_i(t) / P_i(0) S_i(0)] / [SPX(t) / SPX(0)], where 0 is
+    the last close on or before the holdings date (later closes roll it forward).
     Ignores index divisor and float changes, so it is an estimate.
     """
-    spx_now = float(p["^GSPC"].iloc[-1])
+    ref = p.index[p.index <= pd.Timestamp(spy_asof)][-1]
+    spx_ref = float(p.loc[ref, "^GSPC"])
     share = pd.Series(0.0, index=weekly.index)
     for c in companies:
         full = _all_shares(c["ticker"])
-        shares = full.reindex(weekly.index.union(full.index)).sort_index().ffill().bfill()
-        shares = shares.reindex(weekly.index)
-        now = float(p[c["ticker"]].iloc[-1]) * shares.iloc[-1]
-        mc_ratio = (weekly[c["ticker"]] * shares) / now
-        share += weights[c["ticker"]] * (mc_ratio / (weekly["^GSPC"] / spx_now)).fillna(0)
+        span = weekly.index.union(full.index).union([ref])
+        shares = full.reindex(span).sort_index().ffill().bfill()
+        cap = float(p.loc[ref, c["ticker"]]) * shares.loc[ref]
+        mc_ratio = (weekly[c["ticker"]] * shares.reindex(weekly.index)) / cap
+        share += weights[c["ticker"]] * (mc_ratio / (weekly["^GSPC"] / spx_ref)).fillna(0)
     return [[t.date().isoformat(), _r(v)] for t, v in share.items()]
 
 
@@ -729,6 +848,14 @@ def season_block(companies: list[dict], today: date) -> dict:
         else:
             end = d(qs[-1]["end"]) + timedelta(days=91)
         event = next((e for e in c["events"] if 0 < (d(e["date"]) - end).days <= 75), None)
+        missing = None
+        if event and not check:
+            # no snapshot saved before the 8-K, or none whose year-ago revenue names
+            # this quarter (a restated year-ago figure can miss the 0.2% match)
+            first = c["consensus_from"]
+            accepted = datetime.fromisoformat(event["accepted"])
+            early = first is None or datetime.fromisoformat(first) >= accepted
+            missing = "before_saving" if early else "unmatched"
         rows.append(
             {
                 "ticker": c["ticker"],
@@ -737,10 +864,12 @@ def season_block(companies: list[dict], today: date) -> dict:
                 "label": row["label"] if row else check["label"] if check else None,
                 # SEC numbers lag the press release until the 10-Q/10-K is filed.
                 "in_sec": row is not None,
+                "filing": "10-K" if abs((end - d(c["fiscal_year_end"])).days) <= 10 else "10-Q",
                 "end": row["end"] if row else None,
                 "next": None if event else c["next_earnings"],
                 "next_estimate": None if event else c["next_earnings_estimate"],
                 "check": check,
+                "check_missing": missing,
             }
         )
     label = f"{q_end.year}年{q_end.month - 2}–{q_end.month}月期"
