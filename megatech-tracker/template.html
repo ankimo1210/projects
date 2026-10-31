@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>メガテック・トラッカー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Public+Sans:wght@400;500;700&family=Zen+Old+Mincho:wght@700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/*__TOKENS__*/
+
+/* ---------- tracker: denser than a report ---------- */
+body{line-height:1.7;padding:0 24px 80px}
+.wrap{max-width:1240px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px 24px;flex-wrap:wrap;padding:34px 0 14px}
+.top h1{font-size:clamp(26px,3.2vw,36px);margin:6px 0 0}
+.asof{font-family:var(--mono);font-size:var(--text-caption);color:var(--ink-3);text-align:right;line-height:1.8}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;position:sticky;top:0;z-index:5;
+  background:var(--ground);padding:10px 0;border-bottom:1px solid var(--rule)}
+nav.tabs a{font-size:var(--text-small);text-decoration:none;color:var(--ink-2);padding:5px 13px;
+  border-radius:var(--r-chip);border:1px solid var(--rule-2)}
+nav.tabs a.co{font-family:var(--mono);font-size:var(--text-label);padding:5px 10px}
+nav.tabs a.on{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+nav.tabs .gap{width:10px}
+section{padding:34px 0 0}
+h2{font-size:clamp(21px,2.3vw,27px)}
+.lead{color:var(--ink-2);margin:8px 0 0;max-width:var(--measure)}
+figure{margin:18px 0 0;padding:20px 22px 14px}
+.figsub{margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid2 figure{margin-top:16px}
+@media (max-width:900px){.grid2{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.chip{font-family:var(--mono);font-size:var(--text-label);line-height:1.6;padding:2px 10px;border:1px solid var(--rule-2);
+  border-radius:var(--r-chip);background:none;color:var(--ink-2);cursor:pointer}
+.chip.on{border-color:var(--ink);color:var(--ink);font-weight:600}
+.chip i{display:inline-block;width:14px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.banner{display:block;margin:22px 0 0;padding:14px 18px;background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);color:var(--ink);text-decoration:none;font-size:var(--text-small)}
+.banner b{font-weight:700}
+.banner .go{color:var(--accent);white-space:nowrap}
+.strip{margin-top:20px}
+.strip .v{font-size:30px;margin-top:8px}
+.strip .v small{font-size:15px;font-weight:600;margin-left:4px}
+.tw{margin-top:18px}
+table{font-size:var(--text-label)}
+th,td{padding:8px 10px}
+th{white-space:normal;line-height:1.4;vertical-align:bottom}
+td.l,th.l{text-align:left}
+td .sub{display:block;font-size:var(--text-caption);color:var(--ink-3);line-height:1.4}
+tr.go{cursor:pointer}
+tr.go:hover td{background:var(--surface-3)}
+th.sort{cursor:pointer;user-select:none}
+th.sort.on{color:var(--ink)}
+.muted{color:var(--ink-3)}
+.caveat{font-size:var(--text-label);color:var(--ink-3);line-height:1.75;margin:10px 0 0;max-width:880px}
+.note{max-width:none}
+footer{margin-top:56px}
+footer li{margin:6px 0;padding-left:16px}
+footer ul{max-width:none;margin:8px 0}
+footer li::before{top:.9em;width:6px}
+.hit{cursor:crosshair}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:baseline}
+.sw.o{border-radius:50%}
+.chip i.o{width:9px;height:9px;border-radius:50%}
+nav.tabs a.co .sw{width:8px;height:8px;margin-right:5px}
+nav.tabs a.co.on .sw{box-shadow:0 0 0 1.5px var(--ground)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow"><b>MEGATECH TRACKER</b><span>試作</span></div>
+      <h1>メガテックと AI 半導体の決算と株価</h1>
+    </div>
+    <div class="asof" id="asof"></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <main id="view"></main>
+  <footer id="foot"></footer>
+</div>
+<div id="tip" role="status"></div>
+
+<script id="data" type="application/json">/*__DATA__*/null</script>
+<script>
+"use strict";
+const D = JSON.parse(document.getElementById("data").textContent);
+const CO = Object.fromEntries(D.companies.map(c => [c.ticker, c]));
+// Color follows the company: its slot in its group, in the template's validated
+// categorical order. Eleven companies outrun eight colors, so each group gets
+// its own chart and the second group's swatches are round.
+const CAT = {}, ROUND = {};
+D.groups.forEach((g, gi) => g.tickers.forEach((t, i) => { CAT[t] = `var(--cat-${i + 1})`; ROUND[t] = gi > 0; }));
+const sw = t => `<i class="sw${ROUND[t] ? " o" : ""}" style="background:${CAT[t]}"></i>`;
+// The next results date, or the last one when Yahoo has not moved on yet.
+function nextOf(c) {
+  const last = c.events[c.events.length - 1];
+  if (c.next_earnings && (!last || c.next_earnings > last.date)) return {date: c.next_earnings, done: false, estimate: c.next_earnings_estimate};
+  return last ? {date: last.date, done: true} : null;
+}
+const OKU = 1e8;
+
+/* ---------- formatting ---------- */
+const MINUS = "−";
+const sgn = v => (v > 0 ? "+" : v < 0 ? MINUS : "");
+const fmtPct = (v, n = 1) => v == null ? "—" : sgn(v) + Math.abs(v * 100).toFixed(n) + "%";
+const fmtShare = (v, n = 1) => v == null ? "—" : (v * 100).toFixed(n) + "%";
+const fmtOku = v => v == null ? "—" : (v < 0 ? MINUS : "") + Math.round(Math.abs(v) / OKU).toLocaleString("ja-JP");
+const fmtMoney = v => {
+  if (v == null) return "—";
+  const a = Math.abs(v);
+  if (a >= 1e12) return (v < 0 ? MINUS : "") + (a / 1e12).toFixed(2) + "兆ドル";
+  return fmtOku(v) + "億ドル";
+};
+const fmtX = v => v == null ? "—" : v.toFixed(1) + "倍";
+const fmtPrice = v => v == null ? "—" : "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const fmtMD = s => s ? (+s.slice(5, 7)) + "/" + (+s.slice(8, 10)) : "—";
+const ms = s => Date.parse(s + "T00:00:00Z");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+/* ---------- DOM & SVG helpers (from the claude-report skeleton) ---------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+const CSSATTR = new Set(["fill", "stroke", "font-family"]);
+const el = (t, a = {}) => {
+  const e = document.createElementNS(SVGNS, t);
+  for (const k in a) {
+    const v = String(a[k]);
+    if (CSSATTR.has(k) && v.indexOf("var(") >= 0) e.style.setProperty(k, v); else e.setAttribute(k, a[k]);
+  }
+  return e;
+};
+const txt = (x, y, s, a = {}) => { const t = el("text", {x, y, "font-size": 12, ...a}); t.textContent = s; return t; };
+const h = html => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+
+const tip = document.getElementById("tip");
+function showTip(text, e) {
+  tip.textContent = text; tip.style.opacity = 1;
+  const w = tip.offsetWidth, hh = tip.offsetHeight;
+  let x = e.clientX + 14, y = e.clientY - hh - 12;
+  if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+  if (y < 8) y = e.clientY + 18;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+const hideTip = () => { tip.style.opacity = 0; };
+function bind(node, text) {
+  node.addEventListener("pointerenter", e => showTip(text, e));
+  node.addEventListener("pointermove", e => showTip(text, e));
+  node.addEventListener("pointerleave", hideTip);
+  node.classList.add("hit");
+}
+
+/* ---------- charts ---------- */
+let DRAWS = [];
+function chart(host, draw) {
+  const run = () => { host.innerHTML = ""; draw(host, Math.max(320, host.clientWidth)); };
+  DRAWS.push(run); run();
+  return run;
+}
+let resizeTimer;
+addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => DRAWS.forEach(f => f()), 150); });
+
+function niceTicks(lo, hi, n = 4) {
+  if (!(hi > lo)) hi = lo + (Math.abs(lo) || 1);
+  const step0 = (hi - lo) / n, mag = Math.pow(10, Math.floor(Math.log10(step0))), err = step0 / mag;
+  const step = (err >= 7.5 ? 10 : err >= 3.5 ? 5 : err >= 1.5 ? 2 : 1) * mag;
+  const out = [];
+  for (let v = Math.floor(lo / step) * step; v <= Math.ceil(hi / step) * step + step * 1e-9; v += step) out.push(+v.toFixed(10));
+  return out;
+}
+function timeTicks(t0, t1) {
+  const days = (t1 - t0) / 864e5, out = [];
+  const d = new Date(t0); d.setUTCDate(1); d.setUTCHours(0, 0, 0, 0);
+  if (days <= 45) {
+    const w = new Date(t0); w.setUTCHours(0, 0, 0, 0);
+    while (w.getUTCDay() !== 1) w.setUTCDate(w.getUTCDate() + 1);
+    for (; +w <= t1; w.setUTCDate(w.getUTCDate() + 7)) out.push([+w, (w.getUTCMonth() + 1) + "/" + w.getUTCDate()]);
+    return out;
+  }
+  const every = days <= 120 ? 1 : days <= 420 ? 3 : 12;
+  if (every === 12) d.setUTCMonth(0);
+  for (; +d <= t1; d.setUTCMonth(d.getUTCMonth() + every)) {
+    if (+d < t0) continue;
+    const m = d.getUTCMonth() + 1;
+    out.push([+d, every === 12 ? String(d.getUTCFullYear()) : (m === 1 ? d.getUTCFullYear() + "/1" : m + "月")]);
+  }
+  return out;
+}
+
+/* Line chart. cfg: {x:[ms], series:[{name,values,color,width,dash,opacity,label}], yfmt,
+   height, yZero, ref, tip(i), markers:[{x, text}], rightPad} */
+function lineChart(host, W, cfg) {
+  const H = cfg.height || 280, m = {l: 58, r: cfg.rightPad ?? 70, t: 14, b: cfg.markers ? 40 : 28};
+  const xs = cfg.x, n = xs.length, iw = W - m.l - m.r, ih = H - m.t - m.b;
+  let lo = Infinity, hi = -Infinity;
+  for (const s of cfg.series) for (const v of s.values) if (v != null && isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+  if (cfg.yZero) lo = Math.min(lo, 0);
+  if (cfg.ref != null) { lo = Math.min(lo, cfg.ref); hi = Math.max(hi, cfg.ref); }
+  const ticks = niceTicks(lo, hi, 4); lo = ticks[0]; hi = ticks[ticks.length - 1];
+  const x0 = xs[0], x1 = xs[n - 1];
+  const X = v => m.l + (x1 === x0 ? iw / 2 : (v - x0) / (x1 - x0) * iw);
+  const Y = v => m.t + (1 - (v - lo) / (hi - lo)) * ih;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": cfg.label || ""});
+  for (const t of ticks) {
+    svg.append(el("line", {x1: m.l, x2: m.l + iw, y1: Y(t), y2: Y(t), stroke: "var(--grid)", "stroke-width": 1}));
+    svg.append(txt(m.l - 8, Y(t) + 4, cfg.yfmt(t), {"text-anchor": "end", fill: "var(--ink-3)"}));
+  }
+  if (cfg.ref != null) svg.append(el("line", {x1: m.l, x2: m.l + iw, y1: Y(cfg.ref), y2: Y(cfg.ref), stroke: "var(--rule-2)", "stroke-width": 1}));
+  const xt = cfg.xticks ? cfg.xticks : timeTicks(x0, x1);
+  for (const [v, lab] of xt) {
+    const px = X(v), anchor = px > m.l + iw - 24 ? "end" : px < m.l + 24 ? "start" : "middle";
+    svg.append(txt(px, H - (cfg.markers ? 22 : 8), lab, {"text-anchor": anchor, fill: "var(--ink-3)"}));
+  }
+  const labels = [];
+  for (const s of cfg.series) {
+    let d = "", pen = false, lastI = -1;
+    s.values.forEach((v, i) => {
+      if (v == null || !isFinite(v)) { pen = false; return; }
+      d += (pen ? "L" : "M") + X(xs[i]).toFixed(1) + "," + Y(v).toFixed(1); pen = true; lastI = i;
+    });
+    svg.append(el("path", {d, fill: "none", stroke: s.color, "stroke-width": s.width || 2, "stroke-dasharray": s.dash || "none",
+      "stroke-linejoin": "round", "stroke-linecap": "round", opacity: s.opacity ?? 1}));
+    if (s.label && lastI >= 0) labels.push({y: Y(s.values[lastI]), x: X(xs[lastI]), text: s.label, strong: s.strong, key: s.swatch ? s.color : null, dash: s.dash, opacity: s.opacity ?? 1});
+  }
+  // direct labels at the right end, pushed apart so they never collide
+  labels.sort((a, b) => a.y - b.y);
+  for (let i = 1; i < labels.length; i++) labels[i].y = Math.max(labels[i].y, labels[i - 1].y + 15);
+  for (const L of labels) {
+    if (L.key && L.dash) svg.append(el("line", {x1: L.x + 6, x2: L.x + 17, y1: L.y, y2: L.y, stroke: L.key, "stroke-width": 2, "stroke-dasharray": "3 2"}));
+    else if (L.key) svg.append(el("circle", {cx: L.x + 12, cy: L.y, r: 4, fill: L.key, opacity: L.opacity}));
+    svg.append(txt(L.x + (L.key ? 20 : 8), L.y + 4, L.text, {fill: L.strong ? "var(--ink)" : "var(--ink-2)", "font-weight": L.strong ? 600 : 400}));
+  }
+  if (cfg.markers) {
+    for (const mk of cfg.markers) {
+      if (mk.x < x0 || mk.x > x1) continue;
+      const cx = X(mk.x), y = m.t + ih + 6;
+      const p = el("path", {d: `M${cx - 5},${y + 9}L${cx},${y}L${cx + 5},${y + 9}Z`, fill: "var(--ink-3)"});
+      const hit = el("rect", {x: cx - 8, y: y - 2, width: 16, height: 14, fill: "transparent"});
+      bind(hit, mk.text);
+      svg.append(p, hit);
+    }
+  }
+  if (cfg.tip) {
+    const cross = el("line", {y1: m.t, y2: m.t + ih, stroke: "var(--ink-3)", "stroke-width": 1, opacity: 0});
+    const dots = cfg.series.filter(s => s.dot !== false).map(s => { const c = el("circle", {r: 4, fill: s.color, stroke: "var(--surface)", "stroke-width": 2, opacity: 0}); return [s, c]; });
+    const over = el("rect", {x: m.l, y: m.t, width: iw, height: ih, fill: "transparent"});
+    over.classList.add("hit");
+    over.addEventListener("pointermove", e => {
+      const r = svg.getBoundingClientRect(), px = (e.clientX - r.left) * (W / r.width);
+      const target = x0 + (px - m.l) / iw * (x1 - x0);
+      let a = 0, b = n - 1;
+      while (b - a > 1) { const mid = (a + b) >> 1; if (xs[mid] < target) a = mid; else b = mid; }
+      const i = Math.abs(xs[a] - target) <= Math.abs(xs[b] - target) ? a : b;
+      cross.setAttribute("x1", X(xs[i])); cross.setAttribute("x2", X(xs[i])); cross.setAttribute("opacity", 1);
+      for (const [s, c] of dots) {
+        const v = s.values[i];
+        if (v == null) { c.setAttribute("opacity", 0); continue; }
+        c.setAttribute("cx", X(xs[i])); c.setAttribute("cy", Y(v)); c.setAttribute("opacity", s.opacity ?? 1);
+      }
+      showTip(cfg.tip(i), e);
+    });
+    over.addEventListener("pointerleave", () => { cross.setAttribute("opacity", 0); dots.forEach(([, c]) => c.setAttribute("opacity", 0)); hideTip(); });
+    svg.append(cross, ...dots.map(([, c]) => c), over);
+  }
+  host.append(svg);
+}
+
+/* Bar chart over categories. cfg: {cats, series:[{name,values,color}], stacked, yfmt, tip(i), height} */
+function barChart(host, W, cfg) {
+  const H = cfg.height || 240, m = {l: 58, r: 12, t: 12, b: 28};
+  const n = cfg.cats.length, iw = W - m.l - m.r, ih = H - m.t - m.b;
+  let lo = 0, hi = 0;
+  for (let i = 0; i < n; i++) {
+    if (cfg.stacked) {
+      let pos = 0, neg = 0;
+      for (const s of cfg.series) { const v = s.values[i] || 0; if (v >= 0) pos += v; else neg += v; }
+      hi = Math.max(hi, pos); lo = Math.min(lo, neg);
+    } else for (const s of cfg.series) { const v = s.values[i]; if (v != null) { hi = Math.max(hi, v); lo = Math.min(lo, v); } }
+  }
+  const ticks = niceTicks(lo, hi, 4); lo = ticks[0]; hi = ticks[ticks.length - 1];
+  const Y = v => m.t + (1 - (v - lo) / (hi - lo)) * ih;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img"});
+  for (const t of ticks) {
+    svg.append(el("line", {x1: m.l, x2: m.l + iw, y1: Y(t), y2: Y(t), stroke: t === 0 ? "var(--rule-2)" : "var(--grid)", "stroke-width": 1}));
+    svg.append(txt(m.l - 8, Y(t) + 4, cfg.yfmt(t), {"text-anchor": "end", fill: "var(--ink-3)"}));
+  }
+  const band = iw / n, k = cfg.stacked ? 1 : cfg.series.length;
+  const bw = Math.max(2, Math.min(28, (band * 0.72 - 2 * (k - 1)) / k));
+  const every = Math.ceil(n / Math.max(1, Math.floor(iw / 64)));
+  // rounded only at the data end; square at the baseline
+  const bar = (x, y0, y1, w, color) => {
+    const top = Math.min(y0, y1), bot = Math.max(y0, y1), r = Math.min(4, w / 2, bot - top);
+    const d = y1 < y0
+      ? `M${x},${bot}V${top + r}Q${x},${top} ${x + r},${top}H${x + w - r}Q${x + w},${top} ${x + w},${top + r}V${bot}Z`
+      : `M${x},${top}V${bot - r}Q${x},${bot} ${x + r},${bot}H${x + w - r}Q${x + w},${bot} ${x + w},${bot - r}V${top}Z`;
+    return el("path", {d, fill: color});
+  };
+  for (let i = 0; i < n; i++) {
+    const cx = m.l + band * (i + 0.5);
+    const g = el("g");
+    if (cfg.stacked) {
+      let pos = 0;
+      const live = cfg.series.filter(s => (s.values[i] || 0) > 0);
+      live.forEach((s, j) => {
+        const v = s.values[i];
+        const gap = pos > 0 ? 2 : 0;
+        const y0 = Y(pos) - gap, y1 = Y(pos + v);
+        if (y0 - y1 > 0.5) g.append(j === live.length - 1 ? bar(cx - bw / 2, y0, y1, bw, s.color) : el("rect", {x: cx - bw / 2, y: y1, width: bw, height: y0 - y1, fill: s.color}));
+        pos += v;
+      });
+    } else {
+      cfg.series.forEach((s, j) => {
+        const v = s.values[i];
+        if (v == null) return;
+        const x = cx - (k * bw + 2 * (k - 1)) / 2 + j * (bw + 2);
+        g.append(bar(x, Y(0), Y(v), bw, s.color));
+      });
+    }
+    const hit = el("rect", {x: cx - band / 2, y: m.t, width: band, height: ih, fill: "transparent"});
+    if (cfg.tip) bind(hit, cfg.tip(i));
+    g.append(hit);
+    svg.append(g);
+    if (i % every === (n - 1) % every) svg.append(txt(cx, H - 8, cfg.cats[i], {"text-anchor": "middle", fill: "var(--ink-3)"}));
+  }
+  host.append(svg);
+}
+
+/* ---------- shared pieces ---------- */
+const legend = items => `<div class="legend">${items.map(([name, color, kind]) =>
+  `<span><i class="${kind === "sq" ? "sq" : ""}" style="background:${color}${kind === "dash" ? ";background:none;border-top:2px dashed " + color + ";height:0" : ""}"></i>${esc(name)}</span>`).join("")}</div>`;
+// "2026年4–6月" -> "26/4–6"; "2025年12月–2026年2月" -> "25/12–2"
+const qShort = label => label ? label.replace(/^(\d{4})年(\d+)月?–(?:\d{4}年)?(\d+)月$/, (_, y, a, b) => `${y.slice(2)}/${a}–${b}`) : "";
+const yfmtOku = v => fmtOku(v);
+const yfmtPct = v => (v * 100).toFixed(0) + "%";
+
+function seasonInfo() {
+  const rows = D.season.rows;
+  const done = rows.filter(r => r.reported).length;
+  const next = rows.filter(r => !r.reported && r.next).sort((a, b) => a.next.localeCompare(b.next));
+  return {done, next, total: rows.length};
+}
+function seasonBanner() {
+  const s = seasonInfo();
+  if (!s.next.length && s.done === 0) return document.createTextNode("");
+  const soon = s.next.slice(0, 4).map(r => `${r.ticker} ${fmtMD(r.next)}`).join("、");
+  return h(`<a class="banner" href="#season">決算シーズン（${D.season.label}）: <b>${s.done}/${s.total}社 発表済み</b>
+    ${soon ? "・ 次は " + soon : ""} <span class="go">→ 決算シーズンへ</span></a>`);
+}
+
+/* ---------- views ---------- */
+const PERIODS = [["1m", "1か月"], ["3m", "3か月"], ["ytd", "年初来"], ["1y", "1年"], ["5y", "5年"]];
+function periodStart(key) {
+  const last = new Date(ms(D.prices.dates[D.prices.dates.length - 1]));
+  const d = new Date(last);
+  if (key === "1m") d.setUTCMonth(d.getUTCMonth() - 1);
+  else if (key === "3m") d.setUTCMonth(d.getUTCMonth() - 3);
+  else if (key === "ytd") { d.setUTCMonth(0); d.setUTCDate(1); d.setUTCDate(0); }
+  else if (key === "1y") d.setUTCFullYear(d.getUTCFullYear() - 1);
+  else return 0;
+  return +d;
+}
+// The base is the last close on or before the period start, as in the table's returns.
+function sliceFrom(key) {
+  const t = periodStart(key);
+  let i = 0;
+  while (i < D.prices.dates.length - 1 && ms(D.prices.dates[i + 1]) <= t) i++;
+  return i;
+}
+const STATE = {period: "1y", focus: {}, sort: {key: "market_cap", dir: -1}, coPeriod: "1y"};
+
+function renderOverview(v) {
+  v.append(seasonBanner());
+  const sec = h(`<section>
+    <div class="head"><h2>株価の推移</h2></div>
+    <p class="lead">期間の初日 = 100。会社名を押すとその線を強調し、もう一度押すと戻る。点線は S&amp;P 500。</p>
+    <div class="chips" id="periods" style="margin-top:14px"></div></section>`);
+  v.append(sec);
+  const periods = sec.querySelector("#periods");
+  const paintPeriods = () => { periods.innerHTML = PERIODS.map(([k, l]) => `<button class="chip ${STATE.period === k ? "on" : ""}" data-k="${k}">${l}</button>`).join(""); };
+  const redraws = D.groups.map((g, gi) => {
+    const cos = g.tickers.map(t => CO[t]);
+    const f = h(`<figure><p class="figtitle">${esc(g.name)}と S&amp;P 500</p>
+      <p class="figsub">${gi ? "色の並びは上の図と同じだが別の会社（表やタブでは丸い印）。" : "終値（配当を含まない株価）。"}</p>
+      <div class="chips"></div><div></div>
+      <figcaption><b>Fig ${gi + 1}</b>線にカーソルを当てると、その日の各社の値が出る。</figcaption></figure>`);
+    sec.append(f);
+    const names = f.querySelector(".chips"), host = f.querySelector(".chips + div");
+    const paintNames = () => {
+      names.innerHTML = cos.map(c => `<button class="chip ${STATE.focus[g.key] === c.ticker ? "on" : ""}" data-t="${c.ticker}"><i class="${ROUND[c.ticker] ? "o" : ""}" style="background:${CAT[c.ticker]}"></i>${c.ticker}</button>`).join("")
+        + `<span class="chip" style="cursor:default"><i style="background:none;border-top:2px dashed var(--ink-2);height:0"></i>S&amp;P 500</span>`;
+    };
+    const redraw = chart(host, (host, W) => {
+      const focus = STATE.focus[g.key];
+      const i0 = sliceFrom(STATE.period), dates = D.prices.dates.slice(i0), x = dates.map(ms);
+      const norm = key => { const s = D.prices[key].slice(i0), b = s[0]; return s.map(v => v == null || !b ? null : v / b * 100); };
+      const series = cos.map(c => {
+        const on = focus === c.ticker, vals = norm(c.ticker), last = vals[vals.length - 1];
+        return {name: c.ticker, values: vals, color: CAT[c.ticker], width: on ? 3 : 1.75, swatch: true,
+          opacity: focus && !on ? 0.25 : 1, label: `${c.ticker} ${fmtPct(last / 100 - 1, 0)}`, strong: on, dot: on || !focus};
+      });
+      series.sort((a, b) => (a.name === focus) - (b.name === focus));
+      const spx = norm("SPX");
+      series.push({name: "S&P 500", values: spx, color: "var(--ink-2)", width: 2, dash: "6 4", swatch: true, label: `S&P ${fmtPct(spx[spx.length - 1] / 100 - 1, 0)}`, dot: false});
+      lineChart(host, W, {x, series, height: gi ? 300 : 360, ref: 100, rightPad: 104, yfmt: v => v.toFixed(0),
+        tip: i => {
+          const rows = cos.map(c => [c.ticker, series.find(s => s.name === c.ticker).values[i]]).filter(r => r[1] != null).sort((a, b) => b[1] - a[1]);
+          return dates[i] + "\n" + rows.map(([t, v]) => `${t.padEnd(6)}${fmtPct(v / 100 - 1)}`).join("\n") + `\nS&P   ${fmtPct(spx[i] / 100 - 1)}`;
+        }});
+    });
+    paintNames();
+    names.addEventListener("click", e => { const t = e.target.closest("[data-t]"); if (!t) return; STATE.focus[g.key] = STATE.focus[g.key] === t.dataset.t ? null : t.dataset.t; paintNames(); redraw(); });
+    return redraw;
+  });
+  paintPeriods();
+  periods.addEventListener("click", e => { const k = e.target.closest("[data-k]"); if (!k) return; STATE.period = k.dataset.k; paintPeriods(); redraws.forEach(r => r()); });
+
+  const cols = [
+    ["name", "会社", "l"], ["price", "株価"], ["chg_1d", "前日比"], ["ret_ytd", "年初来"], ["ret_1y", "1年"],
+    ["market_cap", "時価総額"], ["spy_weight", "S&P 500 比率"], ["rev_yoy", "売上の伸び（前年比）"], ["op_margin_ttm", "営業利益率"],
+    ["capex_rev_ttm", "設備投資÷売上"], ["fcf_ttm", "FCF（億ドル）"], ["net_cash", "純現金（億ドル）"],
+    ["per_ntm", "予想PER"], ["per_ttm", "実績PER"], ["next_earnings", "次の決算"],
+  ];
+  const cell = (c, k) => ({
+    name: `${sw(c.ticker)}<b>${c.ticker}</b><span class="sub">${esc(c.name)}</span>`, price: fmtPrice(c.price), chg_1d: fmtPct(c.chg_1d),
+    ret_ytd: fmtPct(c.ret_ytd), ret_1y: fmtPct(c.ret_1y), market_cap: fmtMoney(c.market_cap), spy_weight: fmtShare(c.spy_weight),
+    rev_yoy: `${fmtPct(c.rev_yoy)}<span class="sub">${esc(c.latest_quarter)}</span>`, op_margin_ttm: fmtShare(c.op_margin_ttm),
+    capex_rev_ttm: fmtShare(c.capex_rev_ttm), fcf_ttm: fmtOku(c.fcf_ttm), net_cash: fmtOku(c.net_cash),
+    per_ntm: fmtX(c.per_ntm), per_ttm: fmtX(c.per_ttm), next_earnings: nextCell(c),
+  })[k];
+  function nextCell(c) {
+    const n = nextOf(c);
+    if (!n) return "—";
+    return fmtMD(n.date) + (n.done ? `<span class="sub">発表済み</span>` : n.estimate ? `<span class="sub">未確定</span>` : "");
+  }
+  const tsec = h(`<section><div class="head"><h2>${D.companies.length}社を同じ物差しで</h2></div>
+    <p class="lead">売上の伸びは直近の四半期の前年同期比。利益率・設備投資・FCF は直近4四半期の合計から。行を押すと企業カルテへ。見出しを押すと並べ替え。</p>
+    <div class="tw"><table><thead></thead><tbody></tbody></table></div>
+    <p class="caveat">予想PER = 株価 ÷ 今後12か月の予想EPS（Yahoo のアナリスト予想を、今期と来期の残り期間で按分）。実績PER = 株価 ÷（直近4四半期の純利益 ÷ 希薄化後株式数）。純現金 = 現金と有価証券 − 借入（リースを除く）。</p></section>`);
+  v.append(tsec);
+  const thead = tsec.querySelector("thead"), tbody = tsec.querySelector("tbody");
+  const paint = () => {
+    const {key, dir} = STATE.sort;
+    const rows = [...D.companies].sort((a, b) => {
+      const x = key === "name" ? a.ticker : a[key], y = key === "name" ? b.ticker : b[key];
+      if (x == null) return 1; if (y == null) return -1;
+      return (x > y ? 1 : x < y ? -1 : 0) * dir;
+    });
+    thead.innerHTML = "<tr>" + cols.map(([k, l, cls]) => `<th class="sort ${cls || ""} ${k === key ? "on" : ""}" data-k="${k}">${l}${k === key ? (dir < 0 ? " ↓" : " ↑") : ""}</th>`).join("") + "</tr>";
+    tbody.innerHTML = rows.map(c => `<tr class="go" data-t="${c.ticker}">` + cols.map(([k, , cls]) => `<td class="${cls || "num"}">${cell(c, k)}</td>`).join("") + "</tr>").join("");
+  };
+  paint();
+  thead.addEventListener("click", e => { const th = e.target.closest("[data-k]"); if (!th) return; const k = th.dataset.k; STATE.sort = {key: k, dir: STATE.sort.key === k ? -STATE.sort.dir : -1}; paint(); });
+  tbody.addEventListener("click", e => { const tr = e.target.closest("tr[data-t]"); if (tr) location.hash = "co/" + tr.dataset.t; });
+}
+
+// Companies whose season quarter is not the calendar quarter itself.
+function offCycle() {
+  const months = D.season.label.replace(/^\d+年|期$/g, "");
+  const offs = D.season.rows.filter(r => r.label && !D.season.label.startsWith(r.label))
+    .map(r => `${CO[r.ticker].name} ${r.label.replace(/^\d+年/, "")}`);
+  return offs.length ? `決算期がずれる会社は、期の中ほどが${months}に入る四半期を対象にする（${offs.join("、")}）。` : "";
+}
+function renderSeason(v) {
+  const s = seasonInfo();
+  v.append(h(`<section><div class="head"><h2>${D.season.label}の決算シーズン</h2></div>
+    <p class="lead"><b>${s.done}/${s.total}社 発表済み</b>。発表済みの会社は実績と翌日の株価の反応、まだの会社は市場予想を出す。${offCycle()}</p></section>`));
+  const order = [...D.season.rows].sort((a, b) => {
+    const ka = a.reported ? "0" + a.event.date : "1" + (a.next || "9"), kb = b.reported ? "0" + b.event.date : "1" + (b.next || "9");
+    return ka.localeCompare(kb);
+  });
+  const est = (c, p, kind) => (c.estimates[kind] || []).find(r => r.period === p);
+  const consensusCell = (k, fallback) => k
+    ? `${fmtMoney(k.estimate)}<span class="sub">${fmtMD(k.taken)} 時点・${k.analysts ?? "—"}人</span>`
+    : fallback;
+  const rowsHtml = order.map(r => {
+    const c = CO[r.ticker], k = r.check;
+    const qr = r.in_sec ? c.quarters.find(x => x.end === r.end) : null;
+    const name = `<td class="l">${sw(c.ticker)}<b>${c.ticker}</b><span class="sub">${esc(c.name)}</span></td>`;
+    if (r.reported) {
+      const e = r.event;
+      return `<tr class="go" data-t="${c.ticker}">${name}
+        <td class="l">${fmtMD(e.date)} 引け後<span class="sub">発表済み・${esc(r.label || e.quarter || "")}</span></td>
+        <td class="num">${fmtPct(e.move)}</td><td class="num">${fmtPct(e.vs_index)}</td>
+        <td class="num">${qr ? `${fmtMoney(qr.revenue)}<span class="sub">前年比 ${fmtPct(qr.rev_yoy)}</span>` : "<span class='muted'>10-Q 待ち</span>"}</td>
+        <td class="num">${consensusCell(k, `<span class="muted">—</span><span class="sub">保存の前に発表</span>`)}</td>
+        <td class="num">${k && k.surprise != null ? `<b>${fmtPct(k.surprise)}</b>` : "—"}</td>
+        <td class="num">${qr ? fmtShare(qr.op_margin) : "—"}</td>
+        <td class="num">${qr && qr.eps != null ? "$" + qr.eps.toFixed(2) : "—"}</td></tr>`;
+    }
+    const re = est(c, "0q", "revenue") || {};
+    const when = r.next ? `${fmtMD(r.next)} 予定<span class="sub">${r.next_estimate ? "未確定（Yahoo）" : "Yahoo の予定・引け後"}</span>` : "—";
+    return `<tr class="go" data-t="${c.ticker}">${name}
+      <td class="l">${when}</td>
+      <td class="num muted">—</td><td class="num muted">—</td>
+      <td class="num muted">—</td>
+      <td class="num">${consensusCell(k, `${fmtMoney(re.avg)}<span class="sub">今日の予想</span>`)}</td>
+      <td class="num muted">—</td><td class="num muted">—</td><td class="num muted">—</td></tr>`;
+  }).join("");
+  const missed = order.filter(r => r.reported && !r.check).map(r => CO[r.ticker].name);
+  const t = h(`<section style="padding-top:8px"><div class="tw"><table>
+    <thead><tr><th class="l">会社</th><th class="l">発表</th><th>翌日の株価</th><th>S&amp;P 500 との差</th><th>売上（SEC）</th><th>発表前の売上予想</th><th>予想との差</th><th>営業利益率</th><th>GAAP EPS（参考）</th></tr></thead>
+    <tbody>${rowsHtml}</tbody></table></div>
+    <p class="caveat">売上の予想は Yahoo のアナリスト予想の平均。取得のたびに保存し、発表前の最後の保存と SEC に出た実績を比べる（保存は 2026-10-27 から）。${missed.length ? missed.join("・") + " は保存を始める前に発表したため、今回は差を出せない。" : ""}予定日は Yahoo のもので、会社が日付を発表する前は推定のため、Nasdaq の予定と数日ずれることがある。EPS は一時的な損益の扱いが会社ごとに違い、Yahoo の実績も GAAP と調整後が混ざるため、予想との差は出さない。GAAP EPS は SEC の希薄化後 EPS で、今日の株式数の基準にそろえた。</p></section>`);
+  t.querySelector("tbody").addEventListener("click", e => { const tr = e.target.closest("tr[data-t]"); if (tr) location.hash = "co/" + tr.dataset.t; });
+  v.append(t);
+
+  const f = h(`<section><div class="head"><h2>決算翌日の株価の反応</h2></div>
+    <figure><p class="figtitle">決算の翌営業日に、S&amp;P 500 と比べて何%動いたか</p>
+    <p class="figsub">1点が1回の決算。大きい点が最新。Alphabet と Meta は SEC の一覧の都合で 2023〜2024 年以降のみ。</p>
+    <div id="strip"></div><figcaption><b>Fig 3</b>右ほど決算を好感、左ほど失望。幅が広い会社ほど決算で大きく動く。</figcaption></figure></section>`);
+  v.append(f);
+  chart(f.querySelector("#strip"), (host, W) => {
+    const rows = D.companies, rh = 34, gh = 26, m = {l: 64, r: 20, t: 4, b: 28};
+    const H = m.t + m.b + rows.length * rh + D.groups.length * gh, iw = W - m.l - m.r;
+    let lo = 0, hi = 0;
+    rows.forEach(c => c.events.forEach(e => { lo = Math.min(lo, e.vs_index); hi = Math.max(hi, e.vs_index); }));
+    const ticks = niceTicks(lo, hi, 6); lo = ticks[0]; hi = ticks[ticks.length - 1];
+    const X = v => m.l + (v - lo) / (hi - lo) * iw;
+    const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img"});
+    for (const t of ticks) {
+      svg.append(el("line", {x1: X(t), x2: X(t), y1: m.t + gh - 6, y2: H - m.b, stroke: t === 0 ? "var(--rule-2)" : "var(--grid)", "stroke-width": 1}));
+      svg.append(txt(X(t), H - 8, fmtPct(t, 0), {"text-anchor": "middle", fill: "var(--ink-3)"}));
+    }
+    let y0 = m.t;
+    D.groups.forEach(g => {
+      svg.append(txt(8, y0 + 16, g.name, {fill: "var(--ink-3)", "font-weight": 600}));
+      y0 += gh;
+      g.tickers.forEach(t => {
+        const c = CO[t], y = y0 + rh / 2;
+        svg.append(txt(m.l - 12, y + 4, c.ticker, {"text-anchor": "end", fill: "var(--ink-2)"}));
+        c.events.forEach((e, i) => {
+          const latest = i === c.events.length - 1;
+          const dot = el("circle", {cx: X(e.vs_index), cy: y, r: latest ? 7 : 4.5, fill: CAT[c.ticker],
+            stroke: latest ? "var(--ink)" : "var(--surface)", "stroke-width": latest ? 1.5 : 2, opacity: latest ? 1 : 0.6});
+          bind(dot, `${c.ticker} ${e.date}（${e.quarter || "—"}）\n株価 ${fmtPct(e.move)}\nS&P 500 との差 ${fmtPct(e.vs_index)}`);
+          svg.append(dot);
+        });
+        y0 += rh;
+      });
+    });
+    host.append(svg);
+  });
+}
+
+function renderWorld(v) {
+  const W = D.world, names = ts => ts.map(t => CO[t].name).join("・");
+  const both = W.flows.filter(q => q.payers_complete && q.sellers_complete).slice(-20);
+  const pay = W.flows.filter(q => q.payers_complete).slice(-20);
+  const lastQ = W.flows[W.flows.length - 1];
+  v.append(h(`<section><div class="head"><h2>世界の中のメガテック</h2></div>
+    <p class="lead">${D.companies.length}社が市場全体に占める重さと、AI データセンターのお金の流れ。払う側は ${names(W.payers)}、受け取る側は ${names(W.sellers)}。</p>
+    <div class="strip">
+      <div><span class="k">S&amp;P 500 に占める比率・Mag7</span><span class="v a">${fmtShare(W.share_now_mag7)}</span><span class="n">${D.companies.length}社では ${fmtShare(W.share_now_all)}。SPY の保有比率（${D.asof.spy}）</span></div>
+      <div><span class="k">${D.companies.length}社の時価総額</span><span class="v">${(W.market_cap_all / 1e12).toFixed(1)}<small>兆ドル</small></span><span class="n">Mag7 は ${(W.market_cap_mag7 / 1e12).toFixed(1)}兆ドル（${D.asof.prices}）</span></div>
+      <div><span class="k">払う側${W.payers.length}社の設備投資・直近1年</span><span class="v">${fmtOku(W.payer_capex_ttm)}<small>億ドル</small></span><span class="n">各社の直近4四半期の合計</span></div>
+      <div><span class="k">設備投資 ÷ 営業CF・${W.payers.length}社</span><span class="v b">${fmtShare(W.payer_capex_ttm / W.payer_ocf_ttm, 0)}</span><span class="n">稼いだ現金のうち設備に回した割合</span></div>
+    </div></section>`));
+
+  const f1 = h(`<section><figure><p class="figtitle">S&amp;P 500 に占める比率（推定、10年）</p>
+    <p class="figsub">週次。今日の SPY の保有比率を起点に、各社と指数の値動き・株式数の変化で過去に戻した推定値</p>
+    ${legend([["Mag7", "var(--series-1)"], [`${D.companies.length}社`, "var(--series-2)"]])}
+    <div id="share"></div><figcaption><b>Fig 4</b>指数の除数や浮動株比率の変化は入っていないため、過去ほど誤差が大きい。今日の値だけが実測。</figcaption></figure></section>`);
+  v.append(f1);
+  chart(f1.querySelector("#share"), (host, Wd) => {
+    const a = W.share_series_mag7, b = W.share_series_all, x = a.map(r => ms(r[0]));
+    const va = a.map(r => r[1]), vb = b.map(r => r[1]);
+    lineChart(host, Wd, {x, height: 280, yZero: true, yfmt: yfmtPct, rightPad: 96,
+      series: [{name: "Mag7", values: va, color: "var(--series-1)", width: 2, label: `Mag7 ${fmtShare(va[va.length - 1])}`},
+               {name: `${D.companies.length}社`, values: vb, color: "var(--series-2)", width: 2, label: `${D.companies.length}社 ${fmtShare(vb[vb.length - 1])}`}],
+      tip: i => `${a[i][0]}\nMag7      ${fmtShare(va[i])}\n${D.companies.length}社     ${fmtShare(vb[i])}`});
+  });
+
+  const g = h(`<div class="grid2"></div>`);
+  const partial = (done, ts) => !done ? `最新の ${lastQ.q} は ${ts.filter(t => lastQ.have.includes(t)).join("・") || "どこも"} だけ発表済みのため省いた。` : "";
+  const skipped = lastQ ? partial(lastQ.payers_complete, W.payers) : "";
+  const skipped2 = lastQ ? partial(lastQ.payers_complete && lastQ.sellers_complete, [...W.payers, ...W.sellers]) : "";
+  const f2 = h(`<figure><p class="figtitle">払う側${W.payers.length}社の設備投資と営業キャッシュフロー</p>
+    <p class="figsub">四半期・億ドル。${W.payers.length}社がそろった四半期のみ。Oracle は6–8月期などを近い暦四半期に寄せた</p>
+    ${legend([["設備投資", "var(--series-1)"], ["営業CF", "var(--series-2)"]])}
+    <div id="capex"></div><figcaption><b>Fig 5</b>${skipped}設備投資は有形固定資産の取得（現金）。ファイナンスリースは含まない。</figcaption></figure>`);
+  const f3 = h(`<figure><p class="figtitle">払う側の設備投資と受け取る側の売上</p>
+    <p class="figsub">四半期・億ドル。受け取る側は ${names(W.sellers)} の売上の合計。決算期のずれは近い暦四半期に寄せた</p>
+    ${legend([[`払う側${W.payers.length}社の設備投資`, "var(--series-1)"], [`受け取る側${W.sellers.length}社の売上`, "var(--series-2)"]])}
+    <div id="sellers"></div><figcaption><b>Fig 6</b>${skipped2}受け取る側の売上は AI 以外（ゲーム用 GPU、パソコン向けメモリ、VMware のソフトなど）も含む。</figcaption></figure>`);
+  g.append(f2, f3);
+  const gs = h(`<section style="padding-top:0"></section>`); gs.append(g); v.append(gs);
+  const qchart = (host, Wd, qs, series, tip) => {
+    const qticks = qs.map((q, i) => [i, q.q.slice(2).replace("Q", "/Q")]).filter((_, i) => i % 4 === (qs.length - 1) % 4);
+    lineChart(host, Wd, {x: qs.map((_, i) => i), xticks: qticks, height: 260, yZero: true, yfmt: yfmtOku, rightPad: 16, series, tip});
+  };
+  chart(f2.querySelector("#capex"), (host, Wd) => qchart(host, Wd, pay,
+    [{name: "設備投資", values: pay.map(q => q.capex), color: "var(--series-1)"}, {name: "営業CF", values: pay.map(q => q.ocf), color: "var(--series-2)"}],
+    i => `${pay[i].q}\n設備投資 ${fmtMoney(pay[i].capex)}\n営業CF   ${fmtMoney(pay[i].ocf)}\n比率     ${fmtShare(pay[i].capex / pay[i].ocf, 0)}`));
+  chart(f3.querySelector("#sellers"), (host, Wd) => qchart(host, Wd, both,
+    [{name: "設備投資", values: both.map(q => q.capex), color: "var(--series-1)"}, {name: "売上", values: both.map(q => q.sales), color: "var(--series-2)"}],
+    i => `${both[i].q}\n払う側の設備投資   ${fmtMoney(both[i].capex)}\n受け取る側の売上   ${fmtMoney(both[i].sales)}`));
+
+  const rows = D.companies.map(c => `<tr class="go" data-t="${c.ticker}"><td class="l">${sw(c.ticker)}<b>${c.ticker}</b><span class="sub">${esc(c.latest_quarter)}まで</span></td>
+    <td class="num">${fmtOku(c.ocf_ttm)}</td><td class="num">${fmtOku(c.capex_ttm)}</td>
+    <td class="num">${c.ocf_ttm ? fmtShare(c.capex_ttm / c.ocf_ttm, 0) : "—"}</td><td class="num">${fmtOku(c.fcf_ttm)}</td>
+    <td class="num">${fmtOku(c.returns_ttm)}</td><td class="num">${fmtOku(c.debt_change_1y)}</td><td class="num">${fmtOku(c.net_cash)}</td></tr>`).join("");
+  const t = h(`<section><div class="head"><h2>お金の出入り（直近4四半期・億ドル）</h2></div><div class="tw"><table>
+    <thead><tr><th class="l">会社</th><th>営業CF</th><th>設備投資</th><th>設備投資÷営業CF</th><th>FCF</th><th>株主還元</th><th>借入の増減（1年）</th><th>純現金</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    <p class="caveat">株主還元 = 自社株買い＋配当。借入の増減は四半期末の借入残高の1年前との差（社債・CP など、リースを除く）。自社株買いは買い戻し枠による分だけで、株式報酬の源泉徴収のための買い取りは含まない。</p></section>`);
+  t.querySelector("tbody").addEventListener("click", e => { const tr = e.target.closest("tr[data-t]"); if (tr) location.hash = "co/" + tr.dataset.t; });
+  v.append(t);
+}
+
+function renderCompany(v, c) {
+  const q = c.quarters;
+  const n = nextOf(c);
+  const nextTxt = !n ? "—" : fmtMD(n.date) + (n.done ? "<small>発表済み</small>" : n.estimate ? "<small>未確定</small>" : "<small>引け後</small>");
+  v.append(h(`<section><div class="head"><h2>${sw(c.ticker)}${esc(c.name)}（${c.ticker}）</h2></div>
+    <div class="strip">
+      <div><span class="k">株価（${D.asof.prices}）</span><span class="v">${fmtPrice(c.price)}</span><span class="n">前日比 ${fmtPct(c.chg_1d)} ・ 年初来 ${fmtPct(c.ret_ytd)}</span></div>
+      <div><span class="k">時価総額</span><span class="v">${(c.market_cap / 1e12).toFixed(2)}<small>兆ドル</small></span><span class="n">S&amp;P 500 の ${fmtShare(c.spy_weight)}</span></div>
+      <div><span class="k">予想PER / 実績PER</span><span class="v a">${fmtX(c.per_ntm)}</span><span class="n">実績 ${fmtX(c.per_ttm)} ・ 今後12か月の予想EPS $${c.eps_ntm ?? "—"}</span></div>
+      <div><span class="k">次の決算</span><span class="v">${nextTxt}</span><span class="n">最新の四半期 ${esc(c.latest_quarter)}</span></div>
+    </div></section>`));
+
+  const f = h(`<section><figure><p class="figtitle">株価</p><p class="figsub">ドル・終値。▲ は決算発表（引け後）。▲ にカーソルを当てると翌日の反応</p>
+    <div class="chips" id="cop"></div><div id="cprice"></div>
+    <figcaption><b>Fig 1</b>決算日は SEC への 8-K 提出（項目 2.02）から。</figcaption></figure></section>`);
+  v.append(f);
+  const chips = f.querySelector("#cop");
+  const paintChips = () => { chips.innerHTML = PERIODS.map(([k, l]) => `<button class="chip ${STATE.coPeriod === k ? "on" : ""}" data-k="${k}">${l}</button>`).join(""); };
+  const redraw = chart(f.querySelector("#cprice"), (host, W) => {
+    const i0 = sliceFrom(STATE.coPeriod), dates = D.prices.dates.slice(i0), vals = D.prices[c.ticker].slice(i0);
+    lineChart(host, W, {x: dates.map(ms), height: 300, yfmt: v => "$" + v.toFixed(0), rightPad: 16,
+      series: [{name: c.ticker, values: vals, color: CAT[c.ticker], width: 2}],
+      markers: c.events.map(e => ({x: ms(e.date), text: `${e.date} 決算（${e.quarter || "—"}）\n翌日 ${fmtPct(e.move)}（S&P 500 との差 ${fmtPct(e.vs_index)}）`})),
+      tip: i => `${dates[i]}\n${fmtPrice(vals[i])}`});
+  });
+  paintChips();
+  chips.addEventListener("click", e => { const k = e.target.closest("[data-k]"); if (!k) return; STATE.coPeriod = k.dataset.k; paintChips(); redraw(); });
+
+  const cats = q.map(r => qShort(r.label));
+  const g = h(`<div class="grid2"></div>`);
+  const fig = (title, sub, leg, id, cap) => h(`<figure><p class="figtitle">${title}</p><p class="figsub">${sub}</p>${leg || ""}<div id="${id}"></div>${cap ? `<figcaption>${cap}</figcaption>` : ""}</figure>`);
+  const fRev = fig("売上", "四半期・億ドル。棒にカーソルで前年比", "", "c-rev");
+  const fOpm = fig("営業利益率", "四半期", "", "c-opm");
+  const fCf = fig("営業CFと設備投資", "四半期・億ドル", legend([["営業CF", "var(--series-2)"], ["設備投資", "var(--series-1)"]]), "c-cf");
+  const fRet = fig("株主還元", "四半期・億ドル", legend([["自社株買い", "var(--series-1)", "sq"], ["配当", "var(--series-2)", "sq"]]), "c-ret");
+  const fBs = fig("現金と借入", "四半期末・億ドル", legend([["現金と有価証券", "var(--series-2)"], ["借入", "var(--series-1)"]]), "c-bs");
+  const fPer = fig("実績PER", `週次・倍。今の予想PER（今後12か月）は ${fmtX(c.per_ntm)}`, "", "c-per");
+  g.append(fRev, fOpm, fCf, fRet, fBs, fPer);
+  const gs = h(`<section style="padding-top:0"></section>`); gs.append(g); v.append(gs);
+  const qx = q.map((_, i) => i), qt = q.map((r, i) => [i, cats[i]]).filter((_, i) => i % 4 === (q.length - 1) % 4);
+  chart(fRev.querySelector("#c-rev"), (host, W) => barChart(host, W, {cats, yfmt: yfmtOku,
+    series: [{name: "売上", values: q.map(r => r.revenue), color: "var(--series-1)"}],
+    tip: i => `${q[i].label}\n売上 ${fmtMoney(q[i].revenue)}\n前年比 ${fmtPct(q[i].rev_yoy)}`}));
+  chart(fOpm.querySelector("#c-opm"), (host, W) => lineChart(host, W, {x: qx, xticks: qt, height: 240, yZero: true, yfmt: yfmtPct, rightPad: 16,
+    series: [{name: "営業利益率", values: q.map(r => r.op_margin), color: "var(--series-1)"}],
+    tip: i => `${q[i].label}\n営業利益率 ${fmtShare(q[i].op_margin)}\n営業利益 ${fmtMoney(q[i].operating_income)}`}));
+  chart(fCf.querySelector("#c-cf"), (host, W) => lineChart(host, W, {x: qx, xticks: qt, height: 240, yZero: true, yfmt: yfmtOku, rightPad: 16,
+    series: [{name: "営業CF", values: q.map(r => r.ocf), color: "var(--series-2)"}, {name: "設備投資", values: q.map(r => r.capex), color: "var(--series-1)"}],
+    tip: i => `${q[i].label}\n営業CF   ${fmtMoney(q[i].ocf)}\n設備投資 ${fmtMoney(q[i].capex)}\nFCF      ${fmtMoney(q[i].fcf)}`}));
+  chart(fRet.querySelector("#c-ret"), (host, W) => {
+    if (!q.some(r => r.buybacks || r.dividends)) { host.append(h(`<p class="muted">この期間に自社株買いと配当はない。</p>`)); return; }
+    barChart(host, W, {cats, stacked: true, yfmt: yfmtOku,
+      series: [{name: "自社株買い", values: q.map(r => r.buybacks), color: "var(--series-1)"}, {name: "配当", values: q.map(r => r.dividends), color: "var(--series-2)"}],
+      tip: i => `${q[i].label}\n自社株買い ${fmtMoney(q[i].buybacks)}\n配当       ${fmtMoney(q[i].dividends)}`});
+  });
+  chart(fBs.querySelector("#c-bs"), (host, W) => lineChart(host, W, {x: qx, xticks: qt, height: 240, yZero: true, yfmt: yfmtOku, rightPad: 16,
+    series: [{name: "現金と有価証券", values: q.map(r => r.liquid), color: "var(--series-2)"}, {name: "借入", values: q.map(r => r.debt), color: "var(--series-1)"}],
+    tip: i => `${q[i].label}\n現金と有価証券 ${fmtMoney(q[i].liquid)}\n借入           ${fmtMoney(q[i].debt)}`}));
+  chart(fPer.querySelector("#c-per"), (host, W) => {
+    const s = c.per_series;
+    if (!s.length) { host.append(h(`<p class="muted">利益が赤字の期間しかなく、PER を出せない。</p>`)); return; }
+    lineChart(host, W, {x: s.map(r => ms(r[0])), height: 240, yZero: true, yfmt: v => v.toFixed(0), rightPad: 16,
+      series: [{name: "実績PER", values: s.map(r => r[1]), color: "var(--series-1)"}],
+      tip: i => `${s[i][0]}\n実績PER ${fmtX(s[i][1])}`});
+  });
+
+  // Yahoo's actual is GAAP for some companies and adjusted for others; the SEC figure says which.
+  const gaapFor = day => q.find(r => Math.abs(ms(r.end) - ms(day)) <= 10 * 864e5);
+  const eh = c.eps_history.map(r => {
+    const g = gaapFor(r.quarter.slice(0, 10)), ge = g ? g.eps : null;
+    const basis = ge == null || r.epsActual == null ? "—" : Math.abs(r.epsActual - ge) < 0.015 ? "GAAP" : "調整後など";
+    return `<tr><td class="l">${g ? esc(g.label) : r.quarter.slice(0, 7)}</td><td class="num">${r.epsActual ?? "—"}</td><td class="num">${r.epsEstimate != null ? r.epsEstimate.toFixed(2) : "—"}</td>
+      <td class="num">${fmtPct(r.surprisePercent)}</td><td class="num">${ge != null ? ge.toFixed(2) : "—"}</td><td class="l">${basis}</td></tr>`;
+  }).join("");
+  const rc = [...c.revenue_checks].reverse().map(k => `<tr><td class="l">${esc(k.label)}</td><td class="l">${k.release ? fmtMD(k.release) : "未発表"}</td>
+    <td class="num">${fmtMoney(k.estimate)}<span class="sub">${fmtMD(k.taken)} 時点・${k.analysts ?? "—"}人</span></td>
+    <td class="num">${fmtMoney(k.revenue)}</td><td class="num">${k.surprise != null ? `<b>${fmtPct(k.surprise)}</b>` : "—"}</td></tr>`).join("");
+  const per = {"0q": "今の四半期", "+1q": "次の四半期", "0y": "今期", "+1y": "来期"};
+  const er = (c.estimates.eps || []).map(r => {
+    const rv = (c.estimates.revenue || []).find(x => x.period === r.period) || {};
+    return `<tr><td class="l">${per[r.period] || r.period}</td><td class="num">${r.avg != null ? r.avg.toFixed(2) : "—"}</td><td class="num">${fmtPct(r.growth)}</td><td class="num">${fmtMoney(rv.avg)}</td><td class="num">${fmtPct(rv.growth)}</td><td class="num">${r.numberOfAnalysts ?? "—"}</td></tr>`;
+  }).join("");
+  v.append(h(`<section><div class="grid2">
+    <div><div class="head"><h2>EPS：実績と予想</h2></div><div class="tw"><table><thead><tr><th class="l">四半期</th><th>実績（Yahoo）</th><th>予想</th><th>差</th><th>GAAP（SEC）</th><th class="l">実績の基準</th></tr></thead><tbody>${eh}</tbody></table></div>
+      <p class="caveat">Yahoo の直近4四半期。Yahoo の実績は会社によって GAAP と調整後（株式報酬などを除く）が混ざる。「実績の基準」は SEC の GAAP EPS と 1セント以内で一致すれば GAAP。差は Yahoo の実績 ÷ 予想で、一時的な投資損益が入ると大きく振れる。</p></div>
+    <div><div class="head"><h2>市場予想</h2></div><div class="tw"><table><thead><tr><th class="l">期間</th><th>EPS</th><th>前年比</th><th>売上</th><th>前年比</th><th>人数</th></tr></thead><tbody>${er}</tbody></table></div>
+      <p class="caveat">Yahoo のアナリスト予想の平均。「今の四半期」はまだ発表されていない最初の四半期。</p></div>
+  </div></section>`));
+  v.append(h(`<section><div class="head"><h2>売上：発表前の予想と実績</h2></div>
+    ${rc ? `<div class="tw"><table><thead><tr><th class="l">四半期</th><th class="l">発表</th><th>発表前の予想</th><th>実績（SEC）</th><th>予想との差</th></tr></thead><tbody>${rc}</tbody></table></div>` : `<p class="muted">まだ保存した予想がない。</p>`}
+    <p class="caveat">予想は取得のたびに保存した Yahoo の平均で、発表前の最後の保存を使う（保存は 2026-10-27 から）。実績は 10-Q／10-K が SEC に出てから入る。</p></section>`));
+
+  const recent = [...q].reverse().slice(0, 12);
+  const qrows = recent.map(r => `<tr><td class="l">${esc(r.label)}</td><td class="num">${fmtOku(r.revenue)}</td><td class="num">${fmtPct(r.rev_yoy)}</td>
+    <td class="num">${fmtShare(r.op_margin)}</td><td class="num">${fmtOku(r.net_income)}</td><td class="num">${r.eps != null ? r.eps.toFixed(2) : "—"}</td><td class="num">${fmtOku(r.ocf)}</td><td class="num">${fmtOku(r.capex)}</td>
+    <td class="num">${fmtOku(r.fcf)}</td><td class="num">${fmtOku(r.buybacks)}</td><td class="num">${fmtOku(r.dividends)}</td><td class="num">${fmtOku(r.liquid)}</td><td class="num">${fmtOku(r.debt)}</td></tr>`).join("");
+  v.append(h(`<section><div class="head"><h2>四半期の数字（億ドル）</h2></div><div class="tw"><table>
+    <thead><tr><th class="l">四半期</th><th>売上</th><th>前年比</th><th>営業利益率</th><th>純利益</th><th>EPS（ドル）</th><th>営業CF</th><th>設備投資</th><th>FCF</th><th>自社株買い</th><th>配当</th><th>現金と有価証券</th><th>借入</th></tr></thead>
+    <tbody>${qrows}</tbody></table></div>
+    <p class="caveat">SEC EDGAR の XBRL から。第4四半期とキャッシュフローの各四半期は、年度・累計の数字から差し引きで出した。EPS は希薄化後で、今日の株式数の基準にそろえた（第4四半期は純利益 ÷ 株式数）。事業別の売上はまだ入っていない（SEC の書類本体の解析が要る）。${c.notes.map(esc).join("")}</p></section>`));
+}
+
+/* ---------- router ---------- */
+function renderTabs(key) {
+  const main = [["overview", "一覧"], ["season", "決算シーズン"], ["world", "世界の中のメガテック"]];
+  document.getElementById("tabs").innerHTML = main.map(([k, l]) => `<a href="#${k}" class="${key === k ? "on" : ""}">${l}</a>`).join("")
+    + D.groups.map(g => `<span class="gap"></span>` + g.tickers.map(t => `<a class="co ${key === "co/" + t ? "on" : ""}" href="#co/${t}">${sw(t)}${t}</a>`).join("")).join("");
+}
+function route() {
+  let key = location.hash.slice(1) || "overview";
+  if (key.startsWith("co/") && !CO[key.slice(3)]) key = "overview";
+  renderTabs(key);
+  DRAWS = []; hideTip();
+  const v = document.getElementById("view"); v.innerHTML = "";
+  if (key === "season") renderSeason(v);
+  else if (key === "world") renderWorld(v);
+  else if (key.startsWith("co/")) renderCompany(v, CO[key.slice(3)]);
+  else renderOverview(v);
+}
+document.getElementById("asof").innerHTML = `株価 ${D.asof.prices} 終値<br>作成 ${D.asof.built}`;
+document.getElementById("foot").innerHTML = `<b style="font-family:var(--mono);letter-spacing:.1em">データと定義</b><ul>
+  <li>決算の数字: SEC EDGAR の XBRL（companyfacts）。四半期報告書が出るまで、発表直後の四半期は入らない。</li>
+  <li>株価・市場予想: Yahoo Finance（終値・アナリスト予想の平均）。決算日: 発表済みは SEC の 8-K（項目 2.02、引け後の提出）、予定は Yahoo（ニューヨークの日付）。</li>
+  <li>S&amp;P 500 に占める比率: State Street の SPY 保有比率（${D.asof.spy}）。過去の推移は推定。</li>
+  <li>2026-10-28 の照合: 株価は Nasdaq と全日付で一致（差 0.04% 以内）。直近6四半期の財務は Yahoo と一致（現金・借入は会社ごとの定義の違いを除く）。決算日と翌日の反応は Nasdaq と一致。</li></ul>`;
+addEventListener("hashchange", () => { route(); scrollTo(0, 0); });
+route();
+</script>
+</body>
+</html>
