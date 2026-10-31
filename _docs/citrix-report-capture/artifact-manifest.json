@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-31",
+  "distribution": "private-local-only",
+  "source": "User-authorized capture of a remotely displayed document.",
+  "redistribution": "Not cleared for public redistribution. The content stays outside Git.",
+  "original_generation_commit": null,
+  "original_generation_note": "Original PDF predates Git tracking; verify its stored bytes using this manifest.",
+  "rebuild_script": "_docs/citrix-report-capture/images_to_pdf.py",
+  "rebuild_script_sha256": "8db2fcafedda3e6fc63a694f8ef18d9013f664c6d5e74e7a7ed0dbd783635030",
+  "original_python": "3.12.14",
+  "packages": {
+    "pillow": "12.3.0",
+    "reportlab": "4.4.9",
+    "pypdf": "6.10.0"
+  },
+  "capture": {
+    "images": 17,
+    "pixels": [
+      1982,
+      1395
+    ],
+    "overlapping": true
+  },
+  "pdf": {
+    "pages": 17,
+    "page_size": "A4 landscape",
+    "lossless_images_verified": 17,
+    "poppler_rendered_pages": 17,
+    "ocr": false
+  },
+  "restore": "Extract the separate handoff ZIP, then run images_to_pdf.py --verify-only --artifact-root private_artifacts.",
+  "files": [
+    {
+      "path": "research_report.pdf",
+      "bytes": 25372539,
+      "sha256": "321ad86981dd66acfde729b8cd9dfae760cfff9a96c353a33c980cd003773a61",
+      "reference": "artifact:sha256:321ad86981dd66acfde729b8cd9dfae760cfff9a96c353a33c980cd003773a61",
+      "mime": "application/pdf"
+    },
+    {
+      "path": "research_report_screenshots/index.html",
+      "bytes": 5654,
+      "sha256": "1180841428c2aeadb4fdf7a9c80421f7da810c038dd24f729c351c2aa0368be9",
+      "reference": "artifact:sha256:1180841428c2aeadb4fdf7a9c80421f7da810c038dd24f729c351c2aa0368be9",
+      "mime": "text/html"
+    },
+    {
+      "path": "research_report_screenshots/report_001.png",
+      "bytes": 1412719,
+      "sha256": "7048d71c5b388269e5b4e8750024b7a26ab48ca19fc6c7a052036fe11cef77be",
+      "reference": "artifact:sha256:7048d71c5b388269e5b4e8750024b7a26ab48ca19fc6c7a052036fe11cef77be",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_002.png",
+      "bytes": 1422501,
+      "sha256": "49485dec39c6fa12741ec1518518f8358280128467b2ffc37675c6f5e16f61bf",
+      "reference": "artifact:sha256:49485dec39c6fa12741ec1518518f8358280128467b2ffc37675c6f5e16f61bf",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_003.png",
+      "bytes": 1072871,
+      "sha256": "2acdfcb5aae4bf6df791077c05288d0b16c8d547933e4d160cf6c1ee350f3ee5",
+      "reference": "artifact:sha256:2acdfcb5aae4bf6df791077c05288d0b16c8d547933e4d160cf6c1ee350f3ee5",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_004.png",
+      "bytes": 1094449,
+      "sha256": "916cb9aee0dc6fa7b57a70a3b5b162e1964cde2f3a80d1c062da71b76f5cb764",
+      "reference": "artifact:sha256:916cb9aee0dc6fa7b57a70a3b5b162e1964cde2f3a80d1c062da71b76f5cb764",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_005.png",
+      "bytes": 1194359,
+      "sha256": "7f369a60d1220fa572ea4ed63a3651e0b59402db85d842a12a6c3c36d0a6f0e9",
+      "reference": "artifact:sha256:7f369a60d1220fa572ea4ed63a3651e0b59402db85d842a12a6c3c36d0a6f0e9",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_006.png",
+      "bytes": 1326185,
+      "sha256": "14630275fffe5e5f87df1e00d6877863dc226b4e664499e10f54fa8610312047",
+      "reference": "artifact:sha256:14630275fffe5e5f87df1e00d6877863dc226b4e664499e10f54fa8610312047",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_007.png",
+      "bytes": 1355866,
+      "sha256": "d57e1e1bc87af835df197b6e2c397a96b63da846393782b691518e8688ff47f5",
+      "reference": "artifact:sha256:d57e1e1bc87af835df197b6e2c397a96b63da846393782b691518e8688ff47f5",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_008.png",
+      "bytes": 1328491,
+      "sha256": "7ffd300e233f372d7cc7eaefce91ee6b7d8bdfb70e6e4c4c81706b2cc6a12e2c",
+      "reference": "artifact:sha256:7ffd300e233f372d7cc7eaefce91ee6b7d8bdfb70e6e4c4c81706b2cc6a12e2c",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_009.png",
+      "bytes": 1144037,
+      "sha256": "04d977c44c0206e8042574a99e773f8215c9e60a673560e3e0549955465376bf",
+      "reference": "artifact:sha256:04d977c44c0206e8042574a99e773f8215c9e60a673560e3e0549955465376bf",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_010.png",
+      "bytes": 1216935,
+      "sha256": "605f8682083a2ed129e2b6520eb12549266cd8c86cd93c1e34f3c21701372468",
+      "reference": "artifact:sha256:605f8682083a2ed129e2b6520eb12549266cd8c86cd93c1e34f3c21701372468",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_011.png",
+      "bytes": 1194683,
+      "sha256": "87bd21fd8aa83b47acf4399adc7681a110b7109c38a76cc6b81b86abc9e6f01c",
+      "reference": "artifact:sha256:87bd21fd8aa83b47acf4399adc7681a110b7109c38a76cc6b81b86abc9e6f01c",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_012.png",
+      "bytes": 1291877,
+      "sha256": "bdd73b3346d44f143d347dfa77446d52e3c0b3c0afe5ba41125bbf86af356d98",
+      "reference": "artifact:sha256:bdd73b3346d44f143d347dfa77446d52e3c0b3c0afe5ba41125bbf86af356d98",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_013.png",
+      "bytes": 1496107,
+      "sha256": "d5523b457851a3269056d742dedb60e54e3bc6044b1c5a6e9600c02d0a6a8f0a",
+      "reference": "artifact:sha256:d5523b457851a3269056d742dedb60e54e3bc6044b1c5a6e9600c02d0a6a8f0a",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_014.png",
+      "bytes": 1899180,
+      "sha256": "074340d2aa8eab7b81c795689eb481842298879837e612e1da9f0be55b33cda6",
+      "reference": "artifact:sha256:074340d2aa8eab7b81c795689eb481842298879837e612e1da9f0be55b33cda6",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_015.png",
+      "bytes": 1920273,
+      "sha256": "b2235ef31ff1b31b28b242a7907f5ebbfcd70d5814d56b39021d3c3ab09efdfa",
+      "reference": "artifact:sha256:b2235ef31ff1b31b28b242a7907f5ebbfcd70d5814d56b39021d3c3ab09efdfa",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_016.png",
+      "bytes": 1211045,
+      "sha256": "b80fde2f8981d2002ad04e60d085713ab2aa3bf1c60dcc2c8e4c786b5c7c29dd",
+      "reference": "artifact:sha256:b80fde2f8981d2002ad04e60d085713ab2aa3bf1c60dcc2c8e4c786b5c7c29dd",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    },
+    {
+      "path": "research_report_screenshots/report_017.png",
+      "bytes": 918214,
+      "sha256": "656b5c4571a850df3eb095887e159b4d8bc0cbb722484a85c7c385680731be80",
+      "reference": "artifact:sha256:656b5c4571a850df3eb095887e159b4d8bc0cbb722484a85c7c385680731be80",
+      "mime": "image/png",
+      "width": 1982,
+      "height": 1395
+    }
+  ]
+}
