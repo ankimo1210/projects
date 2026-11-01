@@ -78,6 +78,14 @@ final class RegionMapUITests: XCTestCase {
         ]
         // Nearby regions are exposed by a named cluster menu; the list exposes all ten.
         let marker = app.descendants(matching: .any)["regionMap.marker.france_bordeaux"]
+        if !marker.exists {
+            let cluster = app.descendants(matching: .any).matching(NSPredicate(
+                format: "identifier BEGINSWITH %@ AND identifier CONTAINS %@",
+                "regionMap.cluster.", "france_bordeaux"
+            )).firstMatch
+            XCTAssertTrue(cluster.waitForExistence(timeout: 5))
+            cluster.tap()
+        }
         XCTAssertTrue(marker.waitForExistence(timeout: 5))
         marker.tap()
         let preview = app.descendants(matching: .any)["atlas.selected.france_bordeaux"]

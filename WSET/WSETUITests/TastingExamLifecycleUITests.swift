@@ -66,7 +66,7 @@ final class TastingExamLifecycleUITests: XCTestCase {
     }
 
     private func openTastingTab(in app: XCUIApplication) {
-        let tab = app.tabBars.buttons["テイスティング"]
+        let tab = app.tabBars.buttons["ノート"]
         XCTAssertTrue(tab.waitForExistence(timeout: 20))
         tab.tap()
     }

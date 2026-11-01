@@ -389,6 +389,7 @@ struct RegionDetailView: View {
                                 }
                             }.padding(.top, 12)
                         }
+                        .accessibilityElement(children: .contain)
                         .accessibilityIdentifier("atlas.relatedQuestions")
                     }
                 }
@@ -397,6 +398,7 @@ struct RegionDetailView: View {
             .background(AppTheme.paper)
             .navigationTitle("産地詳細")
             .navigationBarTitleDisplayMode(.inline)
+            .accessibilityElement(children: .contain)
             .accessibilityIdentifier("regionMap.detail.\(region.id)")
             .navigationDestination(isPresented: $showingSession) {
                 StudySessionView(questions: sessionQuestions)

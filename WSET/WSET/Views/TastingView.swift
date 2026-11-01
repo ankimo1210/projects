@@ -50,6 +50,7 @@ struct TastingView: View {
                                 .font(.caption.weight(.semibold))
                                 .foregroundStyle(.tertiary)
                         }
+                        .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("tasting.exam.entry")
@@ -128,6 +129,9 @@ struct TastingView: View {
 #if DEBUG
         guard !didSeedUITestData else { return }
         didSeedUITestData = true
+        if ProcessInfo.processInfo.arguments.contains("-UITestResetTastingExamDraft") {
+            TastingExamDraftStore.shared.clear()
+        }
         if ProcessInfo.processInfo.arguments.contains("-UITestSeedTastingExamDraft") {
             var snapshot = TastingExamSnapshot(startedAt: .now.addingTimeInterval(-300))
             snapshot.wineOne.draft.wineName = "破棄前のワイン"

@@ -1,0 +1,26 @@
+[
+  {
+    "file": "01-explore-map.png",
+    "width": 2064,
+    "height": 2752,
+    "sha256": "781d9bb42cefaf125f6f5bd126369ffe3c52eb50a099363692d97efb37fa8396"
+  },
+  {
+    "file": "02-bordeaux-atlas.png",
+    "width": 2064,
+    "height": 2752,
+    "sha256": "47ad44984cb568ee65e887e22718605b4a00634750e36f7a333d27ba0afe85c3"
+  },
+  {
+    "file": "03-study.png",
+    "width": 2064,
+    "height": 2752,
+    "sha256": "6fc039eb3737ec0a69f8dba371c9943e250278dbde6ef6d35cdf0f43ac64a956"
+  },
+  {
+    "file": "04-tasting-exam.png",
+    "width": 2064,
+    "height": 2752,
+    "sha256": "f84ca238ba67aeb4aa8e7a03c69d172e3722d2b634d644e5d6b6e3761eed1a92"
+  }
+]

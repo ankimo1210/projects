@@ -123,6 +123,7 @@ struct AtlasExplorerContent: View {
                     .aspectRatio(document.aspectRatio, contentMode: .fit)
                     .frame(maxWidth: 520)
                     .frame(maxWidth: .infinity)
+                    .accessibilityElement(children: .contain)
                     .accessibilityIdentifier("atlas.map")
 
                     Text("丸印は産地の代表位置です。数字の集合マーカーから産地を選べます。境界線は産地の法的範囲を示しません。")
@@ -144,6 +145,7 @@ struct AtlasExplorerContent: View {
                         }
                         .padding(16)
                         .background(AppTheme.surface, in: RoundedRectangle(cornerRadius: 20))
+                        .accessibilityElement(children: .contain)
                         .accessibilityIdentifier("atlas.selected.\(selectedRegion.id)")
                     }
                 } else {
@@ -156,6 +158,7 @@ struct AtlasExplorerContent: View {
                                 AtlasRegionSummary(region: region, photoHeight: 140)
                                     .padding(16)
                                     .background(AppTheme.surface, in: RoundedRectangle(cornerRadius: 20))
+                                    .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
                             .accessibilityIdentifier("regionMap.list.\(region.id)")
@@ -167,6 +170,7 @@ struct AtlasExplorerContent: View {
                                 AtlasRegionSummary(region: region, photoHeight: 140)
                                     .padding(16)
                                     .background(AppTheme.surface, in: RoundedRectangle(cornerRadius: 20))
+                                    .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
                             .accessibilityIdentifier("regionMap.list.\(region.id)")
@@ -264,6 +268,7 @@ struct QuestionRegionLinksView: View {
                             .accessibilityIdentifier("question.region.\(match.region.id)")
                         }
                     }
+                    .accessibilityElement(children: .contain)
                     .accessibilityIdentifier("question.regions")
                 }
             }

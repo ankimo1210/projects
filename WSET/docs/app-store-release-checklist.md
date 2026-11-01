@@ -76,4 +76,4 @@ xcodebuild test -project WSET.xcodeproj -scheme WSET \
 - [x] Small Business Programの対象条件を確認し、関連アカウントなし・基準額以内として申請。2026-08-15にAppleが承認し、手数料率は15%（メール `Welcome to the App Store Small Business Program.`）
 - [x] 日本語スクリーンショット、説明文、サポートURLを用意
 - [x] App Store Connectで「このバージョンをリリース」を実行（2026-08-23、API経由。`PENDING_DEVELOPER_RELEASE`→`READY_FOR_SALE`）
-- [ ] 日本のApp Store製品ページで、説明・スクリーンショット・サポートURL・IAP価格¥1,500の表示を確認（反映まで最大24時間）
+- [x] 日本のApp Store製品ページで、説明・スクリーンショット・サポートURL・IAP価格の表示を確認（2026-09-25、現在のIAP価格は¥5,000。App Store Connectの日本向け価格スケジュールと公開ページの表示が一致）

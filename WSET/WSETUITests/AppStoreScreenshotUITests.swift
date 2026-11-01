@@ -11,6 +11,7 @@ final class AppStoreScreenshotUITests: XCTestCase {
             "-UITestProEntitlement",
             "-UITestInMemoryStore",
             "-UITestSeedTastingComparison",
+            "-UITestResetTastingExamDraft",
         ]
         app.launch()
 
@@ -59,6 +60,19 @@ final class AppStoreScreenshotUITests: XCTestCase {
         XCTAssertTrue(app.buttons["paywall.purchase"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.buttons["paywall.purchase"].label, "¥1,500で買い切り")
         capture("iap-review-paywall")
+    }
+
+    func testCaptureAtlasDetail() {
+        let app = XCUIApplication()
+        app.launchArguments += ["-UITestProEntitlement", "-UITestInMemoryStore"]
+        app.launch()
+
+        XCTAssertTrue(app.navigationBars["CruNote"].waitForExistence(timeout: 20))
+        app.segmentedControls["atlas.displayMode"].buttons["一覧"].tap()
+        app.descendants(matching: .any)["regionMap.list.france_bordeaux"].tap()
+        XCTAssertTrue(app.navigationBars["産地詳細"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.descendants(matching: .any)["atlas.photo.france_bordeaux"].exists)
+        capture("03-atlas-detail")
     }
 
     private func capture(_ name: String) {
