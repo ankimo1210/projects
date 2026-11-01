@@ -1,8 +1,10 @@
 # Claude 利用上限の API 料金相当額
 
-確認日: 2026-10-17（日本時間）。プランは Claude Max 5x。
-Claude Code（Opus 5.5、effort xhigh）の実測では、**5時間枠は約60 USD**（54〜63 USD）、
-**週枠は暫定で約270〜440 USD**が API 料金相当額の目安だった。
+確認日: 2026-10-17（日本時間）、2026-10-19 に再検証。プランは Claude Max 5x。
+Claude Code（Opus 5.5、effort xhigh）の使用率の傾きからは **5時間枠は約60 USD**（54〜63 USD）、
+**週枠は暫定で約270〜440 USD**と出たが、どちらも過小推定とみられる。
+この Mac の会話記録だけで、上限に達しないまま **88 USD**（9-05）と **128 USD**（8-29）を使った
+5時間枠があった（下の「2026-10-19 の再検証」）。5時間枠は少なくとも約90 USD と考える。
 サブスクの請求額や、公式のドル建て上限を示す数値ではない。
 
 ## 観測結果
@@ -51,6 +53,38 @@ Claude Code（Opus 5.5、effort xhigh）の実測では、**5時間枠は約60 U
 10%から15%の区間は、思考を含む出力90,593トークン（1.93 USD）の1回の呼び出しが大半を占め、
 API料金のわりに使用率が速く増えた。出力の多い作業ほど、上限のドル換算は小さくなる可能性がある。
 1ポイント刻みの区間は丸めの影響が大きいため、上の推定には区間全体の傾きを使った。
+
+## 2026-10-19 の再検証
+
+使用率の記録がない期間も含め、この Mac の会話記録（2026-07-25 以降）を5時間ごとに集計し、
+上限到達のメッセージ（`You've hit your session limit · resets …`）と突き合わせた。
+
+| 5時間枠（日本時間） | この Mac の消費 | 上限 |
+|---|---:|---|
+| 09-05 12:50〜17:50 | $88.08 | 未到達 |
+| 08-29 11:52〜16:46 | $128.00 | 未到達 |
+| 09-05 07:50〜12:50 | $58.07 | 11:32 に到達 |
+| 09-18 07:30〜07:55 | $13.50 | 07:55 に到達 |
+
+- 09-05 12:50〜17:50 は、直前のメッセージの `resets 12:50pm` と 12:50 の利用から窓の始点が決まる。
+  この Mac だけで88 USD 使って到達していないので、当時の5時間枠は88 USD より大きい。
+- 08-29 は前夜21時以降この Mac の利用がなく、11:52 始点の1つの窓とみられる。
+  ほかの端末が先に窓を開けていれば、2つの窓にまたがる。
+- 09-05 午前と 09-18 は、この Mac の消費が少ないまま到達しており、同じ時間に Windows など
+  別の端末でも使っていたと考えられる。
+- 10-17 の測定も同じ理由で過小と考える。測定区間に別の端末で使っていれば使用率だけが進み、
+  1ポイントあたりの金額が小さく出る。10-17〜18 には、この Mac の消費が2.65 USD の間に
+  週枠が2%から25%に増えており、別の端末の利用が大きい。
+- 週枠の暫定値は5時間枠の推定に比を掛けたものなので、同じく過小になる。
+
+モデル構成は 08-29 が Opus 5 と Fable 5、09-05 午後が Opus 5・Fable 5.1・Sonnet 5 で、
+10-17（Opus 5.5 のみ）と異なる。モデルごとの枠の重み付けは非公開なので比較は近似になる。
+08〜09月も Max 5x だったかは未確認。
+
+```bash
+python3 docs/knowledge/claude-usage/api_cost.py 2026-09-05T03:50:00Z 2026-09-05T08:50:00Z
+python3 docs/knowledge/claude-usage/api_cost.py 2026-09-04T22:50:00Z 2026-09-05T03:50:00Z
+```
 
 ## 計算方法と検証
 
@@ -110,11 +144,14 @@ python3 docs/knowledge/claude-usage/api_cost.py 2026-10-17T02:10:00Z 2026-10-17T
 
 再測定では、数日ふつうに使ってから `analyze_log.py` を実行し、週枠も同じリセット期間内の
 最初と最後の変化点で直接求める。使用率が十分に増えた複数区間で値が近いことを確認する。
+Windows でも Claude Code を使うので、同じ statusline のログと `api_cost.py` を Windows でも動かして
+両端末の消費を合算するか、1台だけで使う5時間枠で測る。
 会話本文、認証情報、アカウントIDは共有ノートや Git に保存しない。
 
 ## 公式情報
 
 - [Claude API の料金表](https://platform.claude.com/docs/en/about-claude/pricing)
+- [Higher usage limits and a SpaceX compute deal](https://www.anthropic.com/news/higher-limits-spacex)（2026-05-06、Claude Code の5時間枠を2倍に）
 - [Max プランとは](https://support.claude.com/en/articles/11049741-what-is-the-max-plan)
 - [利用上限の仕組み](https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work)
 - [Pro / Max プランでの Claude Code](https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-or-max-plan)
