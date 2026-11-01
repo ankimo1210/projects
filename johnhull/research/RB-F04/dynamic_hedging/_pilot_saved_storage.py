@@ -28,10 +28,19 @@ def _require(condition, message):
 
 
 class DeferredSequence(Sequence):
-    """Read an ordered logical sequence without retaining returned payloads."""
+    """Read an ordered logical sequence without retaining returned payloads.
 
-    def __init__(self, length, load):
+    identifiers optionally declares each item's planned ID so an index can be
+    built without decoding; every access still checks the decoded ID.
+    """
+
+    def __init__(self, length, load, *, identifiers=None):
+        _require(
+            identifiers is None or len(identifiers) == length,
+            "deferred identifier roster length differs",
+        )
         self.length, self.load = length, load
+        self.identifiers = None if identifiers is None else tuple(identifiers)
 
     def __len__(self):
         return self.length
@@ -39,7 +48,13 @@ class DeferredSequence(Sequence):
     def __getitem__(self, index):
         if isinstance(index, slice):
             indices = range(self.length)[index]
-            return DeferredSequence(len(indices), lambda i: self.load(indices[i]))
+            return DeferredSequence(
+                len(indices),
+                lambda i: self.load(indices[i]),
+                identifiers=None
+                if self.identifiers is None
+                else [self.identifiers[i] for i in indices],
+            )
         if index < 0:
             index += self.length
         if not 0 <= index < self.length:
@@ -347,12 +362,18 @@ class IndexedRows(Mapping):
     def __init__(self, rows):
         self.rows = rows
         self.indices = {}
+        declared = getattr(rows, "identifiers", None)
         for index in range(len(rows)):
-            row = rows[index]
-            identifier = row["id"]
+            if declared is None:
+                row = rows[index]
+                identifier = row["id"]
+                del row
+            else:
+                # Planned IDs avoid decoding every row here; __getitem__ still
+                # rejects any decoded row whose ID differs.
+                identifier = declared[index]
             _require(identifier not in self.indices, "duplicate delayed stage row")
             self.indices[identifier] = index
-            del row
 
     def __contains__(self, key):
         return key in self.indices
