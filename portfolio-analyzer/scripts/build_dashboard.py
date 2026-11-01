@@ -21,6 +21,7 @@ from portfolio_analyzer import (
     manifest_html,
     validate_portfolio,
 )
+from portfolio_analyzer.private_storage import data_dir
 
 DEFAULT_REFERENCE = PROJECT_ROOT / "data/analysis_reference.private.json"
 DEFAULT_FACTOR_RISK = PROJECT_ROOT / "data/factor_estimates.json"
@@ -29,16 +30,21 @@ TOKENS_CSS = WORKSPACE_ROOT / "docs/templates/claude-report/tokens.css"
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
+    private = data_dir(PROJECT_ROOT)
     parser.add_argument(
         "--input",
         type=Path,
-        default=PROJECT_ROOT / "data/portfolio.private.json",
+        default=private / "portfolio.private.json",
         help="portfolio JSON snapshot",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=PROJECT_ROOT / "dist/portfolio-dashboard.html",
+        default=(
+            PROJECT_ROOT / "dist/portfolio-dashboard.html"
+            if private == PROJECT_ROOT / "data"
+            else private.parent / "reports/portfolio-dashboard.html"
+        ),
         help="self-contained dashboard HTML",
     )
     parser.add_argument(

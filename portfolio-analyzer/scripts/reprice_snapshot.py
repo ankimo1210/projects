@@ -34,6 +34,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from portfolio_analyzer import dcplan
 from portfolio_analyzer.mtm import bar_is_final
+from portfolio_analyzer.private_storage import data_dir
 
 FX_SYMBOL = "JPY=X"
 PRICE_DECIMALS = Decimal("0.0001")
@@ -237,7 +238,8 @@ def reprice(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     root = Path(__file__).resolve().parents[1]
-    parser.add_argument("--input", default=str(root / "data" / "portfolio.private.json"))
+    private = data_dir(root)
+    parser.add_argument("--input", default=str(private / "portfolio.private.json"))
     parser.add_argument(
         "--output", default=None, help="default: data/portfolio-<as-of>.private.json"
     )
@@ -245,12 +247,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lookback-days", type=int, default=30)
     parser.add_argument(
         "--dc-holding",
-        default=str(root / "data" / "dc-holding.private.json"),
+        default=str(private / "dc-holding.private.json"),
         help="the DC plan's anchor and its fund's price CSV (skipped when missing)",
     )
     parser.add_argument(
         "--dc-transactions",
-        default=str(root / "data" / "dc-transactions.private.tsv"),
+        default=str(private / "dc-transactions.private.tsv"),
         help="the DC plan's trade history as pasted from its site",
     )
     return parser.parse_args()

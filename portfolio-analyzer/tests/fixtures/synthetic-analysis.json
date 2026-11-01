@@ -1,0 +1,597 @@
+{
+  "reference_name": "架空の回帰テスト用モデル",
+  "as_of": "2026-08-14",
+  "factor_definitions": {
+    "株式全体": "架空サンプルの市場βショック。",
+    "日本株": "架空サンプルの日本株単独ショック。",
+    "情報技術": "架空サンプルの情報技術超過ショック。",
+    "日本金利": "架空サンプルの日本金利ショック。",
+    "海外金利": "架空の単位ショック",
+    "不動産": "架空の単位ショック",
+    "エネルギー": "架空の単位ショック",
+    "円高": "架空の単位ショック",
+    "IT装置": "架空の単位ショック",
+    "IT需要側": "架空の単位ショック"
+  },
+  "mutually_exclusive_factor_sets": [
+    [
+      "株式全体",
+      "日本株"
+    ]
+  ],
+  "policy": {
+    "status": "synthetic",
+    "limits": [
+      {
+        "id": "single_position_max",
+        "label": "架空の広い上限・下限",
+        "metric": "largest_position_ratio",
+        "operator": "<=",
+        "threshold": 1,
+        "note": "架空サンプル"
+      },
+      {
+        "id": "sector_min",
+        "label": "架空の広い上限・下限",
+        "metric": "sector_effective_count",
+        "operator": ">=",
+        "threshold": 1,
+        "note": "架空サンプル"
+      },
+      {
+        "id": "drawdown_max",
+        "label": "架空の広い上限・下限",
+        "metric": "worst_compound_drawdown",
+        "operator": "<=",
+        "threshold": 1,
+        "note": "架空サンプル"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "synthetic_reference",
+      "label": "架空サンプルの参照値"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "synthetic_single_1",
+      "label": "株式全体 -10%",
+      "shocks": {
+        "株式全体": -0.1
+      },
+      "assumption": "架空の線形ショック"
+    },
+    {
+      "id": "technology_down_20",
+      "label": "情報技術 -20%",
+      "shocks": {
+        "情報技術": -0.2
+      },
+      "assumption": "情報技術部分だけが20%下落"
+    },
+    {
+      "id": "synthetic_single_3",
+      "label": "日本金利 +100bp",
+      "shocks": {
+        "日本金利": 0.01
+      },
+      "assumption": "架空の線形ショック"
+    },
+    {
+      "id": "compound_sample",
+      "label": "複合: 株式-8%・IT超過-10%",
+      "kind": "compound",
+      "shocks": {
+        "株式全体": -0.08,
+        "情報技術": -0.1
+      },
+      "assumption": "架空サンプルの複合ショック"
+    },
+    {
+      "id": "synthetic_single_0",
+      "label": "不動産 -20%",
+      "shocks": {
+        "不動産": -0.2
+      },
+      "assumption": "架空の線形ショック"
+    },
+    {
+      "id": "synthetic_single_2",
+      "label": "海外金利 +100bp",
+      "shocks": {
+        "海外金利": 0.01
+      },
+      "assumption": "架空の線形ショック"
+    },
+    {
+      "id": "synthetic_single_4",
+      "label": "円10%上昇（外貨バスケット）",
+      "shocks": {
+        "円高": -0.1
+      },
+      "assumption": "架空の線形ショック"
+    },
+    {
+      "id": "synthetic_compound_0",
+      "label": "A1 複合: スタグフレーション型（株安＋金利上昇）",
+      "kind": "compound",
+      "shocks": {
+        "株式全体": -0.2,
+        "日本金利": 0.01,
+        "海外金利": 0.01,
+        "不動産": -0.2
+      },
+      "assumption": "架空データ"
+    },
+    {
+      "id": "synthetic_compound_1",
+      "label": "A2 複合: 台湾サプライチェーン混乱",
+      "kind": "compound",
+      "shocks": {
+        "株式全体": -0.1,
+        "IT装置": -0.3
+      },
+      "assumption": "架空データ"
+    },
+    {
+      "id": "synthetic_compound_2",
+      "label": "A3 複合: 円高ショック大（介入・金利差収斂）",
+      "kind": "compound",
+      "shocks": {
+        "円高": -0.2
+      },
+      "assumption": "架空データ"
+    },
+    {
+      "id": "synthetic_compound_3",
+      "label": "A4 複合: AI決算失望",
+      "kind": "compound",
+      "shocks": {
+        "情報技術": -0.25
+      },
+      "assumption": "架空データ"
+    },
+    {
+      "id": "synthetic_compound_4",
+      "label": "A5 複合: 原油供給ショック",
+      "kind": "compound",
+      "shocks": {
+        "株式全体": -0.2,
+        "日本金利": 0.01,
+        "海外金利": 0.01,
+        "不動産": -0.2,
+        "エネルギー": 0.3
+      },
+      "assumption": "架空データ"
+    },
+    {
+      "id": "synthetic_compound_5",
+      "label": "B1 複合: capex消化（AI需要は継続、装置だけ調整）",
+      "kind": "compound",
+      "shocks": {
+        "IT装置": -0.3
+      },
+      "assumption": "架空データ"
+    },
+    {
+      "id": "synthetic_compound_6",
+      "label": "B3 複合: capex再加速（見立てが当たる側）",
+      "kind": "compound",
+      "shocks": {
+        "IT装置": 0.2
+      },
+      "assumption": "架空データ"
+    },
+    {
+      "id": "synthetic_history_0",
+      "label": "架空の履歴 1",
+      "kind": "historical",
+      "shocks": {
+        "株式全体": -0.1
+      },
+      "assumption": "実測値ではないテスト用入力"
+    },
+    {
+      "id": "synthetic_history_1",
+      "label": "架空の履歴 2",
+      "kind": "historical",
+      "shocks": {
+        "株式全体": -0.1
+      },
+      "assumption": "実測値ではないテスト用入力"
+    },
+    {
+      "id": "synthetic_history_2",
+      "label": "架空の履歴 3",
+      "kind": "historical",
+      "shocks": {
+        "株式全体": -0.1
+      },
+      "assumption": "実測値ではないテスト用入力"
+    },
+    {
+      "id": "synthetic_history_3",
+      "label": "架空の履歴 4",
+      "kind": "historical",
+      "shocks": {
+        "株式全体": -0.1
+      },
+      "assumption": "実測値ではないテスト用入力"
+    },
+    {
+      "id": "synthetic_history_4",
+      "label": "架空の履歴 5",
+      "kind": "historical",
+      "shocks": {
+        "株式全体": -0.1
+      },
+      "assumption": "実測値ではないテスト用入力"
+    },
+    {
+      "id": "linear_single_0",
+      "label": "株式全体 -20%",
+      "shocks": {
+        "株式全体": -0.2
+      },
+      "assumption": "架空の独立ショック"
+    },
+    {
+      "id": "linear_single_1",
+      "label": "日本金利 +50bp",
+      "shocks": {
+        "日本金利": 0.005
+      },
+      "assumption": "架空の独立ショック"
+    },
+    {
+      "id": "linear_single_2",
+      "label": "海外金利 +50bp",
+      "shocks": {
+        "海外金利": 0.005
+      },
+      "assumption": "架空の独立ショック"
+    },
+    {
+      "id": "linear_single_3",
+      "label": "不動産 -10%",
+      "shocks": {
+        "不動産": -0.1
+      },
+      "assumption": "架空の独立ショック"
+    }
+  ],
+  "events": [
+    {
+      "id": "sample_event",
+      "date": "2026-09-01",
+      "label": "架空サンプルの決算イベント",
+      "scenario_id": "compound_sample",
+      "note": "eventsはdate・label必須、scenario_idは登録済みシナリオIDのみ"
+    }
+  ],
+  "instruments": [
+    {
+      "symbol": "JP_EQ",
+      "label": "国内株式インデックス",
+      "as_of": "2026-08-14",
+      "source_ids": [
+        "synthetic_reference"
+      ],
+      "note": "架空データ",
+      "exposures": [
+        {
+          "group": "sector",
+          "category": "情報技術",
+          "weight": 0.3
+        },
+        {
+          "group": "sector",
+          "category": "資本財・サービス",
+          "weight": 0.3
+        },
+        {
+          "group": "sector",
+          "category": "金融",
+          "weight": 0.2
+        },
+        {
+          "group": "sector",
+          "category": "その他・未分類株式",
+          "weight": 0.2,
+          "mapped": false
+        },
+        {
+          "group": "issuer",
+          "category": "Sample Technology",
+          "weight": 0.25,
+          "theme": "サンプルテーマ",
+          "chain_role": "製造装置",
+          "business_mix": {
+            "検査装置": 0.7,
+            "受託製造": 0.3
+          }
+        },
+        {
+          "group": "issuer",
+          "category": "Sample Industrials",
+          "weight": 0.2,
+          "chain_role": "需要側"
+        }
+      ],
+      "factor_loadings": {
+        "株式全体": 1,
+        "日本株": 1,
+        "情報技術": 0.3,
+        "IT装置": 0.2
+      }
+    },
+    {
+      "symbol": "BALANCED",
+      "label": "バランスファンド",
+      "as_of": "2026-08-14",
+      "source_ids": [
+        "synthetic_reference"
+      ],
+      "note": "架空データ",
+      "exposures": [
+        {
+          "group": "sector",
+          "category": "情報技術",
+          "weight": 0.15
+        },
+        {
+          "group": "sector",
+          "category": "資本財・サービス",
+          "weight": 0.15
+        },
+        {
+          "group": "asset",
+          "category": "日本債券",
+          "weight": 0.5
+        },
+        {
+          "group": "asset",
+          "category": "現金等",
+          "weight": 0.2
+        }
+      ],
+      "factor_loadings": {
+        "株式全体": 0.5,
+        "日本株": 0.3,
+        "情報技術": 0.15,
+        "日本金利": -3.25,
+        "海外金利": -1,
+        "不動産": 0.1
+      }
+    },
+    {
+      "symbol": "SMH",
+      "label": "架空 SMH",
+      "as_of": "2026-08-14",
+      "source_ids": [
+        "synthetic_reference"
+      ],
+      "note": "保有状況とは無関係の架空データ",
+      "factor_loadings": {
+        "株式全体": 1.2,
+        "情報技術": 1,
+        "IT装置": 0.7,
+        "円高": 1
+      },
+      "exposures": [
+        {
+          "group": "sector",
+          "category": "情報技術",
+          "weight": 1
+        },
+        {
+          "group": "issuer",
+          "category": "Advantest",
+          "weight": 0.4,
+          "theme": "AIサプライチェーン",
+          "chain_role": "半導体製造・検査装置"
+        },
+        {
+          "group": "issuer",
+          "category": "Tokyo Electron",
+          "weight": 0.35,
+          "theme": "AIサプライチェーン",
+          "chain_role": "半導体製造・検査装置"
+        },
+        {
+          "group": "issuer",
+          "category": "Sample Logic",
+          "weight": 0.25,
+          "theme": "AIサプライチェーン",
+          "chain_role": "ロジック半導体"
+        }
+      ],
+      "valuation": {
+        "pe": 20,
+        "basis": "架空の評価",
+        "basis_kind": "trailing",
+        "as_of": "2026-08-14",
+        "quality": "estimated",
+        "method": "架空データ",
+        "note": "公開テスト専用"
+      }
+    },
+    {
+      "symbol": "QQQ",
+      "label": "架空 QQQ",
+      "as_of": "2026-08-14",
+      "source_ids": [
+        "synthetic_reference"
+      ],
+      "note": "保有状況とは無関係の架空データ",
+      "factor_loadings": {
+        "株式全体": 1.1,
+        "情報技術": 0.8,
+        "IT需要側": 0.6,
+        "円高": 1
+      },
+      "exposures": [
+        {
+          "group": "sector",
+          "category": "情報技術",
+          "weight": 0.8
+        },
+        {
+          "group": "sector",
+          "category": "金融",
+          "weight": 0.2
+        },
+        {
+          "group": "issuer",
+          "category": "Sample Platform",
+          "weight": 0.25,
+          "theme": "AIサプライチェーン",
+          "chain_role": "需要側プラットフォーム"
+        },
+        {
+          "group": "issuer",
+          "category": "Sample Diversified",
+          "weight": 0.75,
+          "theme": "架空の別テーマ",
+          "chain_role": "その他"
+        }
+      ],
+      "valuation": {
+        "pe": 25,
+        "basis": "架空の評価",
+        "basis_kind": "trailing",
+        "as_of": "2026-08-14",
+        "quality": "estimated",
+        "method": "架空データ",
+        "note": "公開テスト専用"
+      }
+    },
+    {
+      "symbol": "1475",
+      "label": "架空 1478",
+      "as_of": "2026-08-14",
+      "source_ids": [
+        "synthetic_reference"
+      ],
+      "note": "保有状況とは無関係の架空データ",
+      "factor_loadings": {
+        "株式全体": 1,
+        "情報技術": 1,
+        "IT装置": 0.8
+      },
+      "exposures": [
+        {
+          "group": "sector",
+          "category": "情報技術",
+          "weight": 1
+        },
+        {
+          "group": "issuer",
+          "category": "Advantest",
+          "weight": 0.6,
+          "theme": "AIサプライチェーン",
+          "chain_role": "半導体製造・検査装置"
+        },
+        {
+          "group": "issuer",
+          "category": "Tokyo Electron",
+          "weight": 0.4,
+          "theme": "AIサプライチェーン",
+          "chain_role": "半導体製造・検査装置"
+        }
+      ],
+      "valuation": {
+        "pe": 10,
+        "basis": "架空の評価",
+        "basis_kind": "forward",
+        "as_of": "2026-08-14",
+        "quality": "estimated",
+        "method": "架空データ",
+        "note": "公開テスト専用"
+      }
+    },
+    {
+      "symbol": "1329",
+      "label": "架空 1577",
+      "as_of": "2026-08-14",
+      "source_ids": [
+        "synthetic_reference"
+      ],
+      "note": "保有状況とは無関係の架空データ",
+      "factor_loadings": {
+        "株式全体": 1,
+        "情報技術": 1,
+        "IT装置": 0.8
+      },
+      "exposures": [
+        {
+          "group": "sector",
+          "category": "情報技術",
+          "weight": 1
+        },
+        {
+          "group": "issuer",
+          "category": "Advantest",
+          "weight": 0.6,
+          "theme": "AIサプライチェーン",
+          "chain_role": "半導体製造・検査装置"
+        },
+        {
+          "group": "issuer",
+          "category": "Tokyo Electron",
+          "weight": 0.4,
+          "theme": "AIサプライチェーン",
+          "chain_role": "半導体製造・検査装置"
+        }
+      ],
+      "valuation": {
+        "pe": 10,
+        "basis": "架空の評価",
+        "basis_kind": "forward",
+        "as_of": "2026-08-14",
+        "quality": "estimated",
+        "method": "架空データ",
+        "note": "公開テスト専用"
+      }
+    },
+    {
+      "symbol": "XLE",
+      "label": "架空 XLE",
+      "as_of": "2026-08-14",
+      "source_ids": [
+        "synthetic_reference"
+      ],
+      "note": "保有状況とは無関係の架空データ",
+      "factor_loadings": {
+        "株式全体": 1,
+        "エネルギー": 1,
+        "円高": 1
+      },
+      "exposures": [
+        {
+          "group": "sector",
+          "category": "エネルギー",
+          "weight": 1
+        },
+        {
+          "group": "issuer",
+          "category": "Sample Energy",
+          "weight": 1,
+          "theme": "架空エネルギー",
+          "chain_role": "その他"
+        }
+      ],
+      "valuation": {
+        "pe": 15,
+        "basis": "架空の評価",
+        "basis_kind": "forward",
+        "as_of": "2025-01-01",
+        "quality": "stale",
+        "method": "架空データ",
+        "note": "公開テスト専用"
+      }
+    }
+  ]
+}

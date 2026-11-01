@@ -49,6 +49,7 @@ from portfolio_analyzer.ai_bubble.valuation import (
     scenario_paths,
     value_company,
 )
+from portfolio_analyzer.private_storage import data_dir
 
 PROJECT = Path(__file__).resolve().parent.parent
 PREREG = PROJECT / "docs" / "ai-bubble" / "prereg.json"
@@ -1213,7 +1214,7 @@ def _history_summary(report: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-HOLDINGS = PROJECT / "data" / "mtm-history.private.jsonl"
+HOLDINGS = data_dir(PROJECT) / "mtm-history.private.jsonl"
 REFERENCE = PROJECT / "data" / "analysis_reference.private.json"
 H10_URL = "https://www.federalreserve.gov/releases/h10/hist/dat00_ja.htm"
 # Issuer names in the fund look-through of the analysis reference.

@@ -9,6 +9,8 @@
 
 | 日付 | 種別 | 文書 |
 |---|---|---|
+| 2026-11-01 | 仕様 | [認証情報・実資産データの Drive 分離 — 設計](specs/2026-11-01-private-data-drive-extraction-design.md) |
+| 2026-11-01 | 計画 | [Private Data Drive Extraction Implementation Plan](plans/2026-11-01-private-data-drive-extraction.md) |
 | 2026-09-28 | 仕様 | [次の統合候補の個別調査](specs/2026-09-28-next-consolidation-candidates.md) |
 | 2026-09-27 | 計画 | [ワークスペース整理計画](plans/2026-09-27-workspace-cleanup.md) |
 

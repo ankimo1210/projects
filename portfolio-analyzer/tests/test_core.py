@@ -21,20 +21,14 @@ from portfolio_analyzer import (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-PRIVATE_DATA = PROJECT_ROOT / "data/portfolio.private.json"
+FIXTURES = Path(__file__).with_name("fixtures")
+SYNTHETIC_DATA = FIXTURES / "synthetic-portfolio.json"
+SYNTHETIC_REFERENCE = FIXTURES / "synthetic-analysis.json"
+SYNTHETIC_PROPOSAL = FIXTURES / "synthetic-proposal.json"
 EXAMPLE_DATA = PROJECT_ROOT / "data/portfolio.example.json"
-PRIVATE_REFERENCE = PROJECT_ROOT / "data/analysis_reference.private.json"
-PRIVATE_PROPOSAL = PROJECT_ROOT / "data/rebalancing-proposal.private.json"
 EXAMPLE_REFERENCE = PROJECT_ROOT / "data/analysis_reference.example.json"
 EXAMPLE_PROPOSAL = PROJECT_ROOT / "data/rebalancing-proposal.example.json"
 FACTOR_ESTIMATES = PROJECT_ROOT / "data/factor_estimates.json"
-PRIVATE_DATA_ONLY = pytest.mark.skipif(
-    not PRIVATE_DATA.is_file(), reason="private portfolio snapshot is not available"
-)
-PRIVATE_ANALYSIS_ONLY = pytest.mark.skipif(
-    not (PRIVATE_DATA.is_file() and PRIVATE_REFERENCE.is_file()),
-    reason="private portfolio analysis inputs are not available",
-)
 
 
 def test_position_limits_and_top_five_merge_symbols_across_accounts() -> None:
@@ -207,56 +201,50 @@ def test_position_value_reconciliation_rejects_silent_drift() -> None:
     assert any(issue.startswith("account total mismatch:") for issue in issues)
 
 
-@PRIVATE_DATA_ONLY
-def test_private_total_matches_three_accounts() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
+def test_synthetic_total_matches_three_accounts() -> None:
+    portfolio = load_portfolio(SYNTHETIC_DATA)
     total = sum((account.total_value_jpy for account in portfolio.accounts), Decimal())
-    assert total == Decimal("48298433")
+    assert total == Decimal("4000000")
 
 
-@PRIVATE_DATA_ONLY
-def test_private_data_keeps_estimates_and_reconciliation_visible() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
+def test_synthetic_data_keeps_estimates_and_reconciliation_visible() -> None:
+    portfolio = load_portfolio(SYNTHETIC_DATA)
     statuses = {position.value_status for position in portfolio.positions}
     assert statuses == {"exact", "estimated", "reconciliation"}
-    assert sum(position.value_status == "estimated" for position in portfolio.positions) == 3
+    assert sum(position.value_status == "estimated" for position in portfolio.positions) == 2
     assert sum(position.value_status == "reconciliation" for position in portfolio.positions) == 1
 
 
-@PRIVATE_DATA_ONLY
 def test_artifact_reconciles_summary_and_account_rows() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
     artifact = build_artifact(portfolio, generated_at="2026-08-15T00:00:00+00:00")
     datasets = artifact["snapshot"]["datasets"]
     all_summary = next(row for row in datasets["summary"] if row["scope"] == "すべて")
     all_accounts = [row for row in datasets["account_allocation"] if row["scope"] == "すべて"]
-    assert all_summary["total_value_jpy"] == pytest.approx(48_298_433)
-    assert sum(row["market_value_jpy"] for row in all_accounts) == pytest.approx(48_298_433)
+    assert all_summary["total_value_jpy"] == pytest.approx(4_000_000)
+    assert sum(row["market_value_jpy"] for row in all_accounts) == pytest.approx(4_000_000)
 
 
-@PRIVATE_DATA_ONLY
 def test_cash_and_foreign_currency_ratios_are_data_backed() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
     artifact = build_artifact(portfolio, generated_at="2026-08-15T00:00:00+00:00")
     summary = next(
         row for row in artifact["snapshot"]["datasets"]["summary"] if row["scope"] == "すべて"
     )
-    assert summary["cash_ratio"] == pytest.approx(9_420_854.55 / 48_298_433)
-    assert summary["foreign_currency_ratio"] == pytest.approx(12_651_147.44 / 48_298_433)
+    assert summary["cash_ratio"] == pytest.approx(100_000 / 4_000_000)
+    assert summary["foreign_currency_ratio"] == pytest.approx(2_550_000 / 4_000_000)
 
 
-@PRIVATE_DATA_ONLY
 def test_stress_scenarios_are_ordered_by_severity() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
     artifact = build_artifact(portfolio, generated_at="2026-08-15T00:00:00+00:00")
     rows = [row for row in artifact["snapshot"]["datasets"]["stress"] if row["scope"] == "すべて"]
     impacts = {row["scenario"]: row["impact_jpy"] for row in rows}
     assert impacts["深いリスクオフ"] < impacts["株式20%下落"] < impacts["軽い調整"] < 0
 
 
-@PRIVATE_DATA_ONLY
 def test_filter_targets_every_scoped_dataset() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
     artifact = build_artifact(portfolio, generated_at="2026-08-15T00:00:00+00:00")
     dataset_names = set(artifact["snapshot"]["datasets"])
     filter_spec = artifact["manifest"]["filters"][0]
@@ -417,10 +405,9 @@ def test_sample_valuation_keeps_provider_pe_separate_and_reports_coverage() -> N
     assert "mixed_basis_pe" not in summary
 
 
-@PRIVATE_ANALYSIS_ONLY
-def test_private_reference_exposes_valuation_freshness() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+def test_synthetic_reference_exposes_valuation_freshness() -> None:
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     artifact = build_artifact(
         portfolio,
         analysis_reference=reference,
@@ -441,19 +428,16 @@ def test_private_reference_exposes_valuation_freshness() -> None:
         for row in artifact["snapshot"]["datasets"]["valuation_detail"]
         if row["scope"] == "すべて" and row["quality"] == "要更新"
     }
-    assert stale_positions == set()
-    # Every ETF is reconstructed from holdings (QQQ/SMH because the providers
-    # block fetches, 1329/1475 to stay current between factsheets), so all four
-    # are flagged 推定 even though their as-of dates are the freshest.
+    assert stale_positions == {"XLE"}
+    # Synthetic ETF valuation rows are estimated; the energy row is stale.
     for etf in ("QQQ", "SMH", "1329", "1475"):
         assert qualities[etf] == "推定", etf
-    assert qualities["XLE"] == "現行"
+    assert qualities["XLE"] == "要更新"
 
 
-@PRIVATE_ANALYSIS_ONLY
-def test_private_risk_model_exposes_compound_and_lookthrough_risk() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+def test_synthetic_risk_model_exposes_compound_and_lookthrough_risk() -> None:
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     artifact = build_artifact(
         portfolio,
         analysis_reference=reference,
@@ -472,19 +456,15 @@ def test_private_risk_model_exposes_compound_and_lookthrough_risk() -> None:
         if row["scope"] == "すべて"
     }
 
-    assert summary["position_effective_count"] == pytest.approx(6.8636, rel=1e-4)
-    # 1329 / 1475 rebuilt from their full holdings on 2026-09-16: their unclassified
-    # industries (14.8% / 26.1%) are now sectors, and Advantest's weights fell
-    # (3.0001, 0.17661 and 0.16588 before).
-    assert summary["sector_effective_count"] == pytest.approx(3.0310, rel=1e-4)
-    assert summary["policy_breach_count"] == 4
-    assert impacts["株式全体 -10%"] == pytest.approx(-0.07934, rel=1e-4)
-    assert impacts["円10%上昇（外貨バスケット）"] == pytest.approx(-0.05323, rel=1e-4)
-    assert summary["worst_compound_drawdown"] == pytest.approx(0.17648, rel=1e-4)
-    # Legacy marginal betas do not calibrate measured excess-return factors.
+    assert summary["position_effective_count"] == pytest.approx(3_450**2 / 3_212_500)
+    assert 1 < summary["sector_effective_count"] < summary["position_effective_count"]
+    assert summary["policy_breach_count"] == 0
+    assert impacts["株式全体 -20%"] == pytest.approx(-0.17875)
+    assert impacts["円10%上昇（外貨バスケット）"] == pytest.approx(-0.06375)
+    assert 0 < summary["worst_compound_drawdown"] < 1
     assert summary["worst_historical_drawdown"] is None
     assert summary["measured_factor_reason"]
-    assert issuers["Advantest"] == pytest.approx(0.16522, rel=1e-4)
+    assert issuers["Advantest"] == pytest.approx(0.18)
     smh_market_loading = next(
         row["loading"]
         for row in datasets["factor_loadings"]
@@ -492,13 +472,12 @@ def test_private_risk_model_exposes_compound_and_lookthrough_risk() -> None:
         and row["position"].startswith("SMH ·")
         and row["factor"] == "株式全体"
     )
-    assert smh_market_loading == pytest.approx(1.9)
+    assert smh_market_loading == pytest.approx(1.2)
 
 
-@PRIVATE_ANALYSIS_ONLY
 def test_phase_a_scenarios_are_registered_and_linear_in_their_components() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     artifact = build_artifact(
         portfolio,
         analysis_reference=reference,
@@ -519,13 +498,12 @@ def test_phase_a_scenarios_are_registered_and_linear_in_their_components() -> No
     ):
         assert label in impacts
 
-    # A1 shocks equity -10%, JGB +75bp, foreign rates +50bp, real estate -10%.
-    # Each component must equal the matching single-factor scenario, scaled linearly.
+    # Reconstruct the synthetic compound shock from independent components.
     expected_a1 = (
-        impacts["株式全体 -10%"]
-        + impacts["日本金利 +100bp"] * 0.75
-        + impacts["海外金利 +100bp"] * 0.5
-        + impacts["不動産 -20%"] * 0.5
+        impacts["株式全体 -20%"]
+        + impacts["日本金利 +50bp"] * 2
+        + impacts["海外金利 +50bp"] * 2
+        + impacts["不動産 -10%"] * 2
     )
     assert impacts["A1 複合: スタグフレーション型（株安＋金利上昇）"] == pytest.approx(expected_a1)
     # A5 lifts energy, so the oil sleeve must offset part of the equity and rate damage.
@@ -535,10 +513,9 @@ def test_phase_a_scenarios_are_registered_and_linear_in_their_components() -> No
     )
 
 
-@PRIVATE_ANALYSIS_ONLY
 def test_replayed_history_is_tracked_separately_from_hand_set_scenarios() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     artifact = build_artifact(
         portfolio,
         analysis_reference=reference,
@@ -697,10 +674,9 @@ def test_reverse_stress_appears_only_when_measured_risk_is_supplied() -> None:
     assert "reverse_stress" in with_risk["snapshot"]["datasets"]
 
 
-@PRIVATE_ANALYSIS_ONLY
 def test_reverse_stress_reproduces_each_policy_drawdown_limit() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     risk = load_factor_risk(FACTOR_ESTIMATES)
     artifact = build_artifact(
         portfolio,
@@ -784,10 +760,9 @@ def test_replay_is_empty_without_a_stored_series() -> None:
     assert replay_returns({"a": Decimal("100")}, risk, Decimal("1000")) == []
 
 
-@PRIVATE_ANALYSIS_ONLY
 def test_tail_and_hedge_monitors_are_reported_together() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     risk = load_factor_risk(FACTOR_ESTIMATES)
     artifact = build_artifact(
         portfolio,
@@ -807,10 +782,9 @@ def test_tail_and_hedge_monitors_are_reported_together() -> None:
     assert summary["stock_bond_correlation"] == pytest.approx(monitor[-1]["stock_bond_correlation"])
 
 
-@PRIVATE_ANALYSIS_ONLY
 def test_theme_exposure_aggregates_one_bet_across_products() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     artifact = build_artifact(
         portfolio,
         analysis_reference=reference,
@@ -826,7 +800,7 @@ def test_theme_exposure_aggregates_one_bet_across_products() -> None:
     }
 
     assert theme["theme"] == "AIサプライチェーン"
-    assert theme["issuer_count"] > 10
+    assert theme["issuer_count"] == 4
     # The theme spans several products, so it must exceed its largest single issuer.
     assert theme["market_value_jpy"] > max(issuers.values())
     assert summary["largest_theme_ratio"] == pytest.approx(theme["portfolio_weight"])
@@ -931,9 +905,8 @@ def test_axis_tags_outside_the_issuer_layer_are_rejected() -> None:
     assert any("chain_role" in issue and "JP_EQ" in issue for issue in issues)
 
 
-@PRIVATE_ANALYSIS_ONLY
 def test_value_chain_factors_nest_inside_the_sector_factor() -> None:
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     smh = reference.instruments["SMH"].factor_loadings
     qqq = reference.instruments["QQQ"].factor_loadings
 
@@ -946,10 +919,9 @@ def test_value_chain_factors_nest_inside_the_sector_factor() -> None:
     assert "IT装置" not in qqq
 
 
-@PRIVATE_ANALYSIS_ONLY
 def test_equipment_only_shock_is_invisible_to_the_sector_factor_alone() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     artifact = build_artifact(
         portfolio,
         analysis_reference=reference,
@@ -968,10 +940,9 @@ def test_equipment_only_shock_is_invisible_to_the_sector_factor_alone() -> None:
     assert impacts["B3 複合: capex再加速（見立てが当たる側）"] > 0
 
 
-@PRIVATE_ANALYSIS_ONLY
-def test_private_chain_roles_split_the_ai_theme_by_value_chain() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+def test_synthetic_chain_roles_split_the_ai_theme_by_value_chain() -> None:
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     artifact = build_artifact(
         portfolio,
         analysis_reference=reference,
@@ -988,29 +959,27 @@ def test_private_chain_roles_split_the_ai_theme_by_value_chain() -> None:
     assert "Advantest" in equipment["issuers"]
     assert "Tokyo Electron" in equipment["issuers"]
     # The whole point of the split: the capex receivers dwarf the capex payers.
-    assert equipment["portfolio_weight"] > 10 * roles["需要側プラットフォーム"]["portfolio_weight"]
+    assert equipment["portfolio_weight"] > 2 * roles["需要側プラットフォーム"]["portfolio_weight"]
     assert equipment["portfolio_weight"] > roles["ロジック半導体"]["portfolio_weight"]
 
 
-@PRIVATE_DATA_ONLY
 def test_dc_account_pnl_is_arithmetically_reconciled_but_caveated() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
+    portfolio = load_portfolio(SYNTHETIC_DATA)
     artifact = build_artifact(portfolio, generated_at="2026-08-15T00:00:00+00:00")
     dc = next(
         row
         for row in artifact["snapshot"]["datasets"]["account_allocation"]
-        if row["scope"] == "すべて" and row["account"] == "DC口座"
+        if row["scope"] == "すべて" and row["account"] == "サンプル DC"
     )
 
-    assert dc["implied_cost_basis_jpy"] == pytest.approx(5_129_000)
-    assert dc["unrealized_return"] == pytest.approx(0.489148, rel=1e-5)
+    assert dc["implied_cost_basis_jpy"] == pytest.approx(475_000)
+    assert dc["unrealized_return"] == pytest.approx(25_000 / 475_000)
     assert "元画面未確認" in dc["quality_note"]
 
 
-@PRIVATE_ANALYSIS_ONLY
-def test_private_valuation_is_split_by_basis() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
+def test_synthetic_valuation_is_split_by_basis() -> None:
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
     artifact = build_artifact(
         portfolio,
         analysis_reference=reference,
@@ -1020,30 +989,18 @@ def test_private_valuation_is_split_by_basis() -> None:
         row for row in artifact["snapshot"]["datasets"]["summary"] if row["scope"] == "すべて"
     )
 
-    # Pinned to the reference as of 2026-09-11. forward_pe moved from 23.4029
-    # when 6857, 7532 and XLE were repriced against their current forecasts;
-    # trailing_pe moved from 38.7205 when QQQ and SMH were replaced by
-    # reconstructions from their full holdings, and again from 36.4074 when
-    # 1329 and 1475 followed (every ETF is now a holdings reconstruction
-    # validated against the provider's own figure to within +2.6%), which
-    # leaves no position on the provider basis. 26.5041 moved to 26.5133 when 1329
-    # and 1475's look-through gained their cash rows (less equity to weight).
-    assert summary["trailing_pe"] == pytest.approx(26.5133, rel=1e-4)
-    assert summary["forward_pe"] == pytest.approx(21.1163, rel=1e-4)
+    assert summary["trailing_pe"] == pytest.approx(2_250_000 / (1_500_000 / 20 + 750_000 / 25))
+    assert summary["forward_pe"] == pytest.approx(12.5)
     assert summary["provider_pe"] is None
     assert summary["trailing_valuation_coverage_ratio"] > 0.45
     assert summary["forward_valuation_coverage_ratio"] < 0.41
     assert summary["provider_valuation_coverage_ratio"] == 0.0
 
 
-@pytest.mark.skipif(
-    not (PRIVATE_DATA.is_file() and PRIVATE_REFERENCE.is_file() and PRIVATE_PROPOSAL.is_file()),
-    reason="private proposal inputs are not available",
-)
-def test_private_proposal_is_reproducible_and_tax_caveated() -> None:
-    portfolio = load_portfolio(PRIVATE_DATA)
-    reference = load_analysis_reference(PRIVATE_REFERENCE)
-    proposal = apply_proposal(portfolio, PRIVATE_PROPOSAL)
+def test_synthetic_proposal_is_reproducible_and_tax_caveated() -> None:
+    portfolio = load_portfolio(SYNTHETIC_DATA)
+    reference = load_analysis_reference(SYNTHETIC_REFERENCE)
+    proposal = apply_proposal(portfolio, SYNTHETIC_PROPOSAL)
     artifact = build_artifact(
         portfolio,
         analysis_reference=reference,
@@ -1055,9 +1012,9 @@ def test_private_proposal_is_reproducible_and_tax_caveated() -> None:
     smh_trade = next(row for row in proposal.trade_details if row["symbol"] == "SMH")
 
     assert validate_portfolio(proposal.portfolio) == []
-    assert comparison["実効セクター数"]["after"] > 4
-    assert comparison["暫定ルール超過"]["after"] == 2
-    assert smh_trade["native_realized_gain_estimate"] == pytest.approx(-174)
+    assert comparison["実効セクター数"]["after"] > comparison["実効セクター数"]["before"]
+    assert comparison["暫定ルール超過"]["after"] == 0
+    assert smh_trade["native_realized_gain_estimate"] == pytest.approx(-400)
     assert "円換算取得原価は未確認" in smh_trade["tax_status"]
 
 

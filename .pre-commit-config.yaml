@@ -23,6 +23,11 @@ repos:
   # `make fmt` cannot drift to different ruff versions.
   - repo: local
     hooks:
+      - id: api-secrets
+        name: API credentials (values withheld)
+        entry: uv run --no-sync python agentic-setup/check_api_secrets.py
+        language: system
+        types: [text]
       - id: ruff
         name: ruff
         entry: uv run --no-sync ruff check --fix --force-exclude

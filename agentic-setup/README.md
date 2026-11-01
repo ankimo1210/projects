@@ -12,6 +12,10 @@
 実際に使われているのは `~/.claude/` と `~/.codex/`。ここを編集しても
 何も起きない。変更したら下の「同期」に従って手で反映する。
 
+`api_keys.py`・`setup_api_keys.ps1`・`check_api_secrets.py` は、この場所を
+原本とする起動・登録・公開前検査の補助。実キーは含めない。利用手順と端末ごとの
+配置は [非公開APIキーの共有](../docs/knowledge/private-data-storage.md) を参照。
+
 ## 中身
 
 | パス | 実体の位置 | 役割 |

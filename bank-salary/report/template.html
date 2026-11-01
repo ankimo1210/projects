@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Morgan Stanley、Goldman Sachs、JPMorgan Chase、Bank of America、Citi のNY求人と公開給与レンジを探索するレポート。">
+<title>NY銀行求人・公開給与レンジ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Public+Sans:wght@400;500;700&family=Zen+Old+Mincho:wght@700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>__TOKENS__
+__CSS__</style>
+</head>
+<body>
+<div class="wrap">
+<header class="mast">
+  <div class="topline"><div class="eyebrow"><span>NEW YORK · PUBLIC JOB POSTINGS</span><b>__DATE__ SNAPSHOT</b></div><div class="tools"><button id="themeButton">表示テーマ切替</button><button id="printReport">印刷</button></div></div>
+  <h1>公開給与レンジを比べる<span class="sub">Morgan Stanley · Goldman Sachs · JPMorgan Chase · Bank of America · Citi</span></h1>
+  <p class="lede">会社・部門・サブ部門・職種を絞り、求人ごとの金額とレンジの広さを探れます。<strong>給与期間が未記載の金額を区別</strong>し、年額候補を含める参考比較と、年額が確認できる範囲を切り替えられます。</p>
+  <div class="strip">
+    <div><span class="k">収集した求人</span><span class="v" id="totalJobs">—</span><span class="n">NY州を勤務地に含む全職種</span></div>
+    <div><span class="k">給与を取得した求人</span><span class="v" id="salaryJobs">—</span><span class="n">複数勤務地・職位の記載を保持</span></div>
+    <div><span class="k">期間が未記載の給与行</span><span class="v a" id="unknownPct">—</span><span class="n" id="unknownCount">—</span></div>
+    <div><span class="k">原文の確認が必要</span><span class="v" id="reviewJobs">—</span><span class="n">誤記等を補正せず、集計から除外</span></div>
+  </div>
+</header>
+
+<section class="overview" aria-labelledby="overviewTitle">
+  <div class="head"><h2 id="overviewTitle">給与の公開状況と、比較できる範囲</h2></div>
+  <div class="summary-copy"><p>金額は広く取得できていますが、<strong>期間未記載の行が大半</strong>です。JPMとCitiの給与欄には年額・時給の区別がないため、会社をまたぐ比較では仮定を明示します。職種や職位の構成が異なるので、同じ条件に絞って確認してください。</p></div>
+  <div class="chart-grid">
+    <figure><p class="figtitle">会社ごとの給与取得状況</p><p class="figsub">求人件数。原文要確認を含む給与あり／未記載・抽出不可</p><div class="scroll chart" id="coverageChart" data-label="会社別の求人件数と給与取得状況"></div><figcaption><span class="inline-stat">MS <b id="coverage-MS">—</b></span><span class="inline-stat">GS <b id="coverage-GS">—</b></span><span class="inline-stat">JPM <b id="coverage-JPM">—</b></span><span class="inline-stat">BOFA <b id="coverage-BOFA">—</b></span><span class="inline-stat">CITI <b id="coverage-CITI">—</b></span><span class="muted">灰色は未記載等、細いアクセントは原文要確認。</span></figcaption></figure>
+    <figure><p class="figtitle">給与期間の記載状況</p><p class="figsub">各社の全給与行に占める割合。NY以外の勤務地の併記を含む</p><div class="legend"><span><i class="sq" style="background:var(--series-2)"></i>年額明記</span><span><i class="sq" style="background:var(--series-1)"></i>時給明記</span><span><i class="sq" style="background:var(--surface-2)"></i>期間未記載等</span></div><div class="scroll chart" id="unitsChart" data-label="会社別の給与期間の記載割合"></div><figcaption>単位が確認できない金額は、推測で年俸・時給へ変換していません。</figcaption></figure>
+  </div>
+</section>
+
+<section id="analysis" aria-labelledby="analysisTitle">
+  <div class="head"><h2 id="analysisTitle">条件をそろえて、金額を探る</h2><button class="quiet" id="resetFilters">条件をリセット</button></div>
+  <div class="filter-panel">
+    <fieldset class="company-filters"><legend>会社</legend><label><input type="checkbox" data-company-filter="MS" checked><span class="company-label" data-company="MS">Morgan Stanley</span></label><label><input type="checkbox" data-company-filter="GS" checked><span class="company-label" data-company="GS">Goldman Sachs</span></label><label><input type="checkbox" data-company-filter="JPM" checked><span class="company-label" data-company="JPM">JPMorgan Chase</span></label><label><input type="checkbox" data-company-filter="BOFA" checked><span class="company-label" data-company="BOFA">Bank of America</span></label><label><input type="checkbox" data-company-filter="CITI" checked><span class="company-label" data-company="CITI">Citi</span></label></fieldset>
+    <div class="filter-grid">
+      <label>部門<select id="businessDepartment"><option value="all">すべての部門</option></select></label>
+      <label>サブ部門<select id="businessSubdepartment"><option value="all">すべてのサブ部門</option></select></label>
+      <label>職種<select id="occupation"><option value="all">すべての職種</option></select></label>
+      <label class="wide-field">給与の表示モード<select id="mode"><option value="scenario">年額候補を含める（仮定あり・参考比較）</option><option value="year">年額が明記された行のみ</option><option value="hour">時給が明記された行のみ</option><option value="unknown">期間未記載の金額すべて（原額）</option><option value="small">期間未記載・上限$1,000未満（原額）</option></select></label>
+      <label id="thresholdWrap">年額候補へ含める下限（USD）<input id="threshold" type="number" min="1000" step="5000" value="20000"></label>
+      <label>募集区分（タイトル等から分類）<select id="program"><option value="professional">学生向け候補を除く</option><option value="student">学生向け候補のみ</option><option value="all">すべて</option></select></label>
+      <label>大分類（従来のタイトル分類）<select id="family"><option value="all">すべて</option></select></label>
+      <label>職位語（タイトルから分類）<select id="rank"><option value="all">すべて</option></select></label>
+      <label>給与の取得状態<select id="status"><option value="all">すべて</option><option value="available">給与記載あり</option><option value="missing">給与なし・抽出不可</option><option value="review">原文要確認の求人</option></select></label>
+      <label class="wide-field">タイトル・分類・勤務地・求人IDで検索<input id="query" type="search" placeholder="例: 債券部、トレーダー、Quantitative、210640571" autocomplete="off"></label>
+    </div>
+    <div class="toggle-row"><label><input id="nyOnly" type="checkbox" checked>NY向けの金額に絞る（適用地域未記載のNY求人を含む）</label><label><input id="includeUnspecifiedPay" type="checkbox">基本給と未明記の給与も含める</label></div>
+    <p class="classification-note">部門＝所属する機能・分野、サブ部門＝部門内の担当領域、職種＝担当する役割。技術職は支援先の商品と分けてTechnologyに分類します。公開情報に基づく分析用分類で、判断できない項目は「未分類」です。</p>
+  </div>
+  <div class="assumption-note" role="status"><span class="pill" id="viewLabel">—</span><p id="modeNote">—</p></div>
+  <p class="filter-summary" id="activeScope">—</p>
+  <div class="strip analysis-strip">
+    <div><span class="k">集計対象の求人</span><span class="v" id="selectedJobs">—</span></div>
+    <div><span class="k">ユニークな掲載レンジ</span><span class="v" id="selectedRanges">—</span></div>
+    <div><span class="k">期間を仮定した行</span><span class="v a" id="assumedShare">—</span><span class="n" id="assumedDetail">—</span></div>
+    <div><span class="k">レンジ幅率の中央値</span><span class="v" id="rangeWidth">—</span><span class="n">幅 ÷ レンジ中点</span></div>
+  </div>
+  <figure><p class="figtitle">掲載レンジの中点は、どこに分布するか</p><p class="chart-mode" id="boxMode">—</p><p class="figsub">中点 =（下限＋上限）÷2。箱は25–75百分位、中央の線は中央値、細線は最小–最大</p><div class="legend" id="boxLegend"></div><div class="scroll chart" id="boxChart" data-label="会社別の掲載レンジ中点の箱ひげ図"></div><figcaption>各求人内で同一金額の重複を除き、異なる勤務地・職位の金額は別レンジとして数えます。5行未満の会社は点を表示します。図の中点は公開レンジの要約値です。</figcaption></figure>
+  <div class="tw"><table id="comparisonTable"><caption>選択条件における会社別の数値。下限・中点・上限はそれぞれの中央値</caption><thead><tr><th>会社</th><th>求人</th><th>レンジ</th><th>下限</th><th>中点</th><th>上限</th><th>幅率</th><th>期間仮定</th></tr></thead><tbody id="comparisonBody"></tbody></table></div>
+  <figure><p class="figtitle">同じ金額帯に、どれだけのレンジがあるか</p><p class="chart-mode" id="distributionMode">—</p><p class="figsub">レンジ中点の分布。会社ごとのレンジ総数を100%として比較</p><div class="legend" id="distributionLegend"></div><div class="scroll chart" id="distributionChart" data-label="掲載レンジ中点の会社別ヒストグラム"></div><figcaption>会社の求人数の差に影響されにくい、各社内の割合を表示しています。棒に触れると実数と割合を確認できます。</figcaption></figure>
+  <figure><div class="head"><p class="figtitle">分類をそろえると、掲載金額はどう見えるか</p><label class="breakdown-control">比較する分類<select id="breakdown"><option value="rank">職位語</option><option value="department">部門</option><option value="subdepartment">サブ部門</option><option value="occupation">職種</option></select></label></div><p class="chart-mode" id="rankMode">—</p><p class="figsub">各セルはレンジ中点の中央値。セルを選ぶと、その会社・分類へ絞り込み</p><div class="tw heat-wrap"><table class="heat-table"><thead><tr><th id="breakdownHeading">タイトルの職位語</th><th>Morgan Stanley</th><th>Goldman Sachs</th><th>JPMorgan Chase</th><th>Bank of America</th><th>Citi</th></tr></thead><tbody id="rankBody"></tbody></table></div><figcaption>色は表示中の中央値の大小を表します。5行未満は色を付けず「少数」と表示。同じ分類でも、各社の職責・等級・構成が一致するとは限りません。</figcaption></figure>
+</section>
+
+<section aria-labelledby="jobsTitle">
+  <div class="head"><h2 id="jobsTitle">求人と原文を確認する</h2><button id="downloadCSV" class="primary">選択した給与行をCSVへ</button></div>
+  <div class="table-tools"><label><input id="showAll" type="checkbox">集計条件外・給与なしの求人も一覧に表示</label><label>並び順<select id="sort"><option value="high">レンジ中点が大きい順</option><option value="low">レンジ中点が小さい順</option><option value="name">会社・タイトル順</option><option value="recent">掲載日が新しい順</option></select></label></div>
+  <p class="muted" id="tableCount">—</p>
+  <div class="tw job-table-wrap"><table class="jobs-table"><thead><tr><th>会社</th><th>タイトル・職位語</th><th>部門</th><th>サブ部門</th><th>職種</th><th>原文の金額（USD）</th><th>給与期間</th><th>出典</th></tr></thead><tbody id="jobsBody"></tbody></table></div>
+  <div class="pagination"><button id="prevPage">前へ</button><span id="pageLabel">—</span><button id="nextPage">次へ</button></div>
+  <p class="small muted">一覧は1行＝ユニークな掲載レンジ。条件外の求人は1行だけ補います。タイトルを選ぶと分類の根拠と勤務地別給与の全記載を表示します。CSVには3分類・分類根拠・元の給与期間・仮定の有無を残します。</p>
+</section>
+
+<section aria-labelledby="limitsTitle">
+  <div class="head"><h2 id="limitsTitle">使える範囲と、まだ確認できないこと</h2></div>
+  <div class="col"><ul><li>取得時点で公開されていたNY州を勤務地に含む求人です。募集人数や実際の採用提示額を示すデータではありません。</li><li>賞与・株式報酬・コミッションを加算していません。GS Campus等の給与種別が未明記の行は、初期設定では比較から除外しています。</li><li>GSの通常検索サイト（Higher）は取得できず、全採用経路の網羅性は未確認です。MSの補助一覧（Eightfold）は表示総数と一意なID数が一致しません。BofAの学生向け募集（別システム）は対象外です。CitiはWorkdayの公開サイトと検索ページをrobots.txtが禁じているため、jobs.citi.comのNY州の勤務地ページと求人ページだけを読み、給与は主勤務地の1レンジだけが記載されています。</li><li>会社間の職種・職位構成を統計的に調整していません。部門・サブ部門・職種は公開情報からの分析用分類で、公式な組織の再現ではありません。職位語はタイトルの明示語です。このレポートは1回の取得を対象とし、推移は評価していません。</li></ul></div>
+  <details><summary>集計定義・分類ルール・公式出典</summary><div class="source-panel">
+    <h3>集計と仮定</h3><p>全体状況は取得回の全<span id="scopeJobCount">—</span>求人が分母で、上部フィルターから独立しています。給与の比較では、原文要確認・USD以外・上下逆転や非正値を常に除外。NY絞り込み時は地域欄にNY・New York等を含む行と、適用地域欄が空のNY求人を対象にします。同一求人の下限・上限・期間・給与種別が同じものは1行とし、異なる金額は合成しません。</p><p>参考比較の年額候補は「年額明記」または「期間未記載かつ下限が入力した基準以上」です。入力基準は分析用の仮定で、年額の確認にはなりません。元の期間は保持しています。中央値は線形補間による50百分位。幅率は（上限−下限）÷中点×100です。</p>
+    <h3>部門・サブ部門・職種の分類</h3><p>部門は、支援先の商品・金融業務よりも所属する機能を優先します。Software Engineer・Engineering Lead・Technical Lead等の明示職種、公開された技術職カテゴリ、本文のTechnology divisionの所属記載はTechnologyとして扱います。たとえばEquity Trading Software Engineerは「Technology / 株式・デリバティブ技術 / エンジニア・開発」です。投資銀行やリサーチの担当業種としてTechnologyが出てくる場合は技術部門に移しません。技術職以外はタイトル・公開部門を優先し、不足する場合だけ本文の明示的な職務紹介や公開職務カテゴリを参照します。会社全体の事業紹介や連携先は担当職種の根拠に使いません。CIB・AWM等の広い公開区分しか分からない場合は横断分類、情報が不足する項目は未分類とします。サブ部門は担当する商品・事業・技術領域を比較するためのラベルで、正式な組織階層の再現ではありません。根拠原文は求人詳細と選択CSVで確認できます。</p><p id="classificationCoverage"></p>
+    <h3>タイトルの補助分類</h3><p>職位語はMD・ED・SVP・VP・Director・AVP・Associate・Analyst・Senior/Lead等の明示語で分類し、EDとVP、SVPとVPが併記された求人は複数職位とします。従来の大分類は支店・リテール、リスク・コンプラ・監査、技術・データ・クオンツ、投資銀行・マーケッツ、資産運用・WM、業務・財務・管理、その他の順にタイトル語を照合します。新しい職種とは独立した補助分類です。学生向け候補はintern・summer・campus・graduate・new analyst/associate、卒業年度付きのFull Time Analyst/Associate等のタイトルまたは公開カテゴリから判定します。いずれも各社の公式な横断分類ではありません。</p>
+    <h3>公式一覧の照合記録</h3><div class="tw"><table><thead><tr><th>公開ソース</th><th>表示総数</th><th>取得した一意ID</th><th>状態と制限</th></tr></thead><tbody id="sourceList"></tbody></table></div><p>初回収集（2026-10-31）のMS Workdayは348件取得。後続ページが総件数を0として省略する挙動への対応後、再確認時点では347件で一致し、未取得のNY求人は見つかりませんでした。初回のEightfoldの追加確認でも表示件数の不整合は解消していません。求人の公開状態は取得中にも変わります。</p>
+    <p><a href="https://ms.wd5.myworkdayjobs.com/External" target="_blank" rel="noopener noreferrer">MS Workday ↗</a> · <a href="https://morganstanley.eightfold.ai/careers" target="_blank" rel="noopener noreferrer">MS Eightfold ↗</a> · <a href="https://hdpc.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/LateralHiring/jobs" target="_blank" rel="noopener noreferrer">GS Lateral ↗</a> · <a href="https://hdpc.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CampusHiring/jobs" target="_blank" rel="noopener noreferrer">GS Campus ↗</a> · <a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/jobs" target="_blank" rel="noopener noreferrer">JPM ↗</a> · <a href="https://careers.bankofamerica.com/en-us/job-search" target="_blank" rel="noopener noreferrer">BofA careers ↗</a> · <a href="https://ghr.wd1.myworkdayjobs.com/Lateral-US" target="_blank" rel="noopener noreferrer">BofA Workday ↗</a> · <a href="https://jobs.citi.com/location/new-york-jobs/287/6252001-5128638/3" target="_blank" rel="noopener noreferrer">Citi ↗</a></p>
+    <h3>再現するための記録</h3><p>原本: jobs.sqlite / run __RUN__。取得期間: __START__ ～ __END__ JST。取得範囲の状態: __RUNSTATE__。データのSHA-256とこのHTMLの元データはページ内に保持しています。SQLiteの求人観測は変更せず、このレポート用に読み取り専用で抽出しています。</p><pre class="sql">SELECT j.company, j.requisition_id, o.job_json, s.*
+FROM run_jobs r JOIN jobs j ON j.id=r.job_id
+JOIN observations o ON o.id=r.observation_id
+LEFT JOIN salary_ranges s ON s.observation_id=o.id
+WHERE r.run_id=__RUN__;</pre>
+  </div></details>
+</section>
+<footer>NY銀行求人・公開給与レンジ · __DATE__ 時点<br>分析用の原文データを内蔵。フィルター・グラフ・CSV出力はオフラインでも利用できます。</footer>
+</div>
+<dialog id="jobDialog"><div class="dialog-head"><div><p class="eyebrow">JOB SOURCE</p><h2 id="dialogTitle"></h2></div><button id="closeDialog" autofocus>閉じる</button></div><p id="dialogMeta" class="small muted"></p><p id="dialogLocations" class="small"></p><p><a id="dialogLink" target="_blank" rel="noopener noreferrer">公式求人を開く ↗</a></p><div id="dialogClassification"></div><div id="dialogData"></div></dialog>
+<div id="tip" role="status" aria-live="polite"></div>
+<script type="application/json" id="snapshot">__DATA__</script>
+<script>__JS__</script>
+</body></html>

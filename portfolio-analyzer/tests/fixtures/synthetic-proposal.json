@@ -1,0 +1,13 @@
+{
+  "proposal_name": "架空の売却案",
+  "assumptions": [
+    "架空入力・実際の売買とは無関係"
+  ],
+  "trades": [
+    {
+      "account_id": "sample_global",
+      "symbol": "SMH",
+      "quantity_delta": -20
+    }
+  ]
+}

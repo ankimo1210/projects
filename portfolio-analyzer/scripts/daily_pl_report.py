@@ -50,6 +50,7 @@ from portfolio_analyzer import (  # noqa: E402
     risk,
 )
 from portfolio_analyzer import timeseries as ts  # noqa: E402
+from portfolio_analyzer.private_storage import data_dir  # noqa: E402
 
 TOKENS_CSS = PROJECT_ROOT.parent / "docs" / "templates" / "claude-report" / "tokens.css"
 TZ = ZoneInfo("Asia/Tokyo")
@@ -264,14 +265,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("--snapshot", default=str(PROJECT_ROOT / "data" / "portfolio.private.json"))
-    parser.add_argument("--ledger", default=str(PROJECT_ROOT / "data" / "ibkr-ledger.private.json"))
-    parser.add_argument(
-        "--transactions", default=str(PROJECT_ROOT / "data" / "ibkr-transactions.private.csv")
-    )
+    private = data_dir(PROJECT_ROOT)
+    parser.add_argument("--snapshot", default=str(private / "portfolio.private.json"))
+    parser.add_argument("--ledger", default=str(private / "ibkr-ledger.private.json"))
+    parser.add_argument("--transactions", default=str(private / "ibkr-transactions.private.csv"))
     parser.add_argument(
         "--jp-transactions",
-        default=str(PROJECT_ROOT / "data" / "securities-transactions.private.csv"),
+        default=str(private / "securities-transactions.private.csv"),
         help="the domestic broker's trade history, used for that account's cost basis",
     )
     parser.add_argument(
@@ -279,23 +279,26 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--dc-holding",
-        default=str(PROJECT_ROOT / "data" / "dc-holding.private.json"),
+        default=str(private / "dc-holding.private.json"),
         help="the DC plan's anchor (units and contributions on a day) and its fund's price CSV",
     )
     parser.add_argument(
         "--dc-transactions",
-        default=str(PROJECT_ROOT / "data" / "dc-transactions.private.tsv"),
+        default=str(private / "dc-transactions.private.tsv"),
         help="the DC plan's trade history as pasted from its site",
     )
-    parser.add_argument(
-        "--history", default=str(PROJECT_ROOT / "data" / "mtm-history.private.jsonl")
-    )
+    parser.add_argument("--history", default=str(private / "mtm-history.private.jsonl"))
     parser.add_argument(
         "--reference",
         default=str(PROJECT_ROOT / "data" / "analysis_reference.private.json"),
         help="look-through, factor loadings, scenarios, limits and episodes for the risk section",
     )
-    parser.add_argument("--out-dir", default=str(PROJECT_ROOT / "dist" / "pl-daily"))
+    default_output = (
+        PROJECT_ROOT / "dist/pl-daily"
+        if private == PROJECT_ROOT / "data"
+        else private.parent / "reports/pl-daily"
+    )
+    parser.add_argument("--out-dir", default=str(default_output))
     parser.add_argument(
         "--copy-to", default=None, help="also copy the two HTML files here (e.g. a Windows folder)"
     )

@@ -9,7 +9,8 @@
 - [AIバブルの定量研究仕様（2026-10-21）](docs/2026-10-21-ai-bubble-research-design.md)・[段階別の実行計画](docs/superpowers/plans/2026-10-21-ai-bubble-research.md)・[データと結果（V・F・S の判定表）](docs/ai-bubble/README.md)
 
 公開資料に基づく論点と検証方法を記録しています。個人の保有額・配分を含むレポートは
-`data/*.private.*` に保存し、Git管理の調査文書とは分けます。
+レポ外のDriveまたは通常ローカルコピーに保存します。
+[実データの保存先とWindows・Macの初回設定](docs/private-data.md)を参照してください。
 
 ## 現在できること
 
@@ -41,9 +42,14 @@
 
 ## すぐに見る
 
+公開の架空サンプル:
+
 ```bash
 cd /home/kazumasa/projects
-uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dashboard.py
+uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dashboard.py \
+  --input portfolio-analyzer/data/portfolio.example.json \
+  --reference portfolio-analyzer/data/analysis_reference.example.json \
+  --output portfolio-analyzer/dist/portfolio-dashboard.html
 ```
 
 記録済みのリバランス案も比較する場合:
@@ -116,7 +122,7 @@ uv run --no-sync python portfolio-analyzer/scripts/daily_pl_report.py \
 ```
 
 出力は `dist/pl-daily/pl-<基準日>.html` と `dist/pl-daily/latest.html`（既定はダーク配色、右上で切替）、
-履歴は `data/mtm-history.private.jsonl`（1 日 1 行、同じ基準日は上書き）。構成は上から
+履歴は `<private-data>/mtm-history.private.jsonl`（1 日 1 行、同じ基準日は上書き）。構成は上から
 
 - **ヘッドライン**: 総資産、日次損益、含み損益（原価既知分）、期間損益（全口座・入金控除後、既定 365 日）、
   開設来損益（実現・配当込み）、資金加重リターン（対象口座を併記）と期間内の最大ドローダウン
@@ -166,7 +172,7 @@ HTML冒頭には基準日より古い価格の注意を表示。一般データ�
     前日の評価額だけが欠ける場合、現在の税額は計算し、日次税引後損益を未計算にします。
 - NAV・累計損益・期間損益・開設来損益・日次損益・損益の内訳は **3 口座の合計**（`timeseries.AccountSeries` を
   `combine`）。各口座の日次系列は
-  - 海外証券口座: `data/ibkr-transactions.private.csv` を日次で再生（`timeseries.replay`）。履歴 CSV の最終日より
+  - 海外証券口座: `<private-data>/ibkr-transactions.private.csv` を日次で再生（`timeseries.replay`）。履歴 CSV の最終日より
     後の取引は反映されないので、取引したら CSV を差し替えて `ingest_ibkr_transactions.py` も再実行してください。
   - 国内証券口座: 取引 CSV を日次で再生（`jpbroker.account_paths`）。現金は受渡金額の累積（入金 − 買い ＋ 売り ＋ 配当）、
     NAV ＝ 現金 ＋ Σ数量 × 終値、入金は `入金(振込)` の累積。手数料は取得原価に含むので「費用」は 0。
@@ -186,9 +192,9 @@ HTML冒頭には基準日より古い価格の注意を表示。一般データ�
   DC 口座＝下記）。現金・調整額は据え置きです。
 - DC 口座（ハッピーエイジング40）は運用会社の日次 CSV（`https://www.sompo-am.co.jp/fund/0885/data.csv`、
   1 万口あたりの基準価額）で評価します。数量は **万口**、平均取得も 1 万口あたり。
-  - `data/dc-holding.private.json`: DC サイト「現在の資産状況」のある日の残高数量と拠出金累計（基準点）。
+  - `<private-data>/dc-holding.private.json`: DC サイト「現在の資産状況」のある日の残高数量と拠出金累計（基準点）。
     原価は拠出金累計で、商品別の「購入金額」は使いません（過去のスイッチング益を含むため）。
-  - `data/dc-transactions.private.tsv`: DC サイトの取引履歴をそのまま貼ったもの（タブ区切り、見出しの
+  - `<private-data>/dc-transactions.private.tsv`: DC サイトの取引履歴をそのまま貼ったもの（タブ区切り、見出しの
     折り返しや繰り返しは読み飛ばす）。基準点より後の掛金で数量・原価を進め、前の掛金で過去へ戻します。
     **毎月の掛金が入ったら履歴を貼り足してください**（貼らないと数量が基準点のまま）。
   - CSV が取れない日は DC の現在NAVをスナップショットで据え置き、履歴の全口座集計と全体リスクは未計算と理由を表示します。
@@ -603,16 +609,30 @@ $$
 
 ## データを更新する
 
-実データは次の2ファイルに保存します。どちらも Git の対象外です。
+実ポジション・残高・取引履歴は、[端末設定](docs/private-data.md)で指定した外部
+ディレクトリに置きます。以下の `$PRIVATE_DATA` はそのパスです。bashならレポの
+ルートで次のように取得できます（キーや金額は表示しません）:
+
+```bash
+PRIVATE_DATA="$(uv run --no-sync python -c 'from pathlib import Path; from portfolio_analyzer.private_storage import data_dir; print(data_dir(Path("portfolio-analyzer").resolve()))')"
+```
+
+未設定の公開チェックアウトでは従来の `data/` を使用します。
+`analysis_reference.private.json` などのモデル設定は今回の移管対象に含めていません。
+
+主要な実入力・個人設定は次のとおりです。実ファイルはいずれもGitの対象外です。
 
 | ファイル | 内容 | 公開用サンプル |
 |---|---|---|
-| `data/portfolio.private.json` | 口座・保有明細・評価額 | `data/portfolio.example.json` |
+| `<private-data>/portfolio.private.json` | 口座・保有明細・評価額 | `data/portfolio.example.json` |
 | `data/analysis_reference.private.json` | セクター・発行体、ファクター、PER、方針、出典 | `data/analysis_reference.example.json` |
 | `data/rebalancing-proposal.private.json` | 売買数量と固定価格による比較案 | `data/rebalancing-proposal.example.json` |
-| `data/ibkr-transactions.private.csv` | 証券会社の取引履歴（入力） | なし |
-| `data/ibkr-ledger.private.json` | 取引履歴から逆算した台帳（出力） | なし |
-| `data/securities-transactions.private.csv` | 国内証券会社の取引履歴（入力・cp932） | なし |
+| `<private-data>/ibkr-transactions.private.csv` | 証券会社の取引履歴（入力） | なし |
+| `<private-data>/ibkr-ledger.private.json` | 取引履歴から逆算した台帳（出力） | なし |
+| `<private-data>/securities-transactions.private.csv` | 国内証券会社の取引履歴（入力・cp932） | なし |
+| `<private-data>/dc-holding.private.json` | DC残高の基準点 | なし |
+| `<private-data>/dc-transactions.private.tsv` | DC掛金履歴 | なし |
+| `<private-data>/mtm-history.private.jsonl` | 時価・損益の履歴 | なし |
 
 各保有明細の `value_status` は次のいずれかです。
 
@@ -642,7 +662,7 @@ uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dash
 ```bash
 uv run --package portfolio-analyzer python portfolio-analyzer/scripts/reprice_snapshot.py
 uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dashboard.py \
-  --input portfolio-analyzer/data/portfolio-<基準日>.private.json
+  --input "$PRIVATE_DATA/portfolio-<基準日>.private.json"
 ```
 
 読むときの前提が3つあります。
@@ -652,8 +672,8 @@ uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dash
    評価額の精度が落ちたわけではありません
 2. **時価の無いものは据え置きです。** 円現金（相場では動かないので `exact` のまま）と
    残高調整は元の日付の値のままで、理由は `source_note` に残ります。DC口座のファンドは日次レポートと
-   同じく、運用会社の基準価額（`--as-of` 以前の最新）× 保有口数（`data/dc-holding.private.json` の残高に
-   `data/dc-transactions.private.tsv` の掛金を足した万口）で洗い替え、口座損益は評価額 − 拠出金累計に
+   同じく、運用会社の基準価額（`--as-of` 以前の最新）× 保有口数（`<private-data>/dc-holding.private.json` の残高に
+   `<private-data>/dc-transactions.private.tsv` の掛金を足した万口）で洗い替え、口座損益は評価額 − 拠出金累計に
    します。基準価額の CSV が取れないときだけ据え置きます
 3. **市場ごとに基準日がずれます。** 日本株は当日終値でも、米国株は前営業日までしか
    取れないことがあります。取引時間中のその日の足は途中の価格なので使わず、前の終値にします
@@ -689,12 +709,12 @@ uv run --package portfolio-analyzer python portfolio-analyzer/scripts/ishares_lo
 ```bash
 uv run --package portfolio-analyzer python \
   portfolio-analyzer/scripts/ingest_ibkr_transactions.py \
-  --snapshot portfolio-analyzer/data/portfolio-<基準日>.private.json
+  --snapshot "$PRIVATE_DATA/portfolio-<基準日>.private.json"
 
 uv run --package portfolio-analyzer python \
   portfolio-analyzer/scripts/build_dashboard.py \
-  --input portfolio-analyzer/data/portfolio-<基準日>-with-cost.private.json \
-  --ledger portfolio-analyzer/data/ibkr-ledger.private.json
+  --input "$PRIVATE_DATA/portfolio-<基準日>-with-cost.private.json" \
+  --ledger "$PRIVATE_DATA/ibkr-ledger.private.json"
 ```
 
 **書き戻す前に数量を突き合わせます。** 台帳から再生した建玉とスナップショットの数量が
@@ -707,7 +727,7 @@ uv run --package portfolio-analyzer python \
 「原価なし」になっていました。`src/portfolio_analyzer/jpbroker.py` が証券会社の
 取引履歴CSV（cp932・「商品分類,約定日,受渡日,銘柄,取引,…」）を読んで、`ibkr` と同じ形の
 台帳を組み立てます。日次レポートは `--jp-transactions`（既定
-`data/securities-transactions.private.csv`）があれば自動で読み、`--jp-account`（既定
+`<private-data>/securities-transactions.private.csv`）があれば自動で読み、`--jp-account`（既定
 `securities`）の口座に当てます。
 
 この書式に固有の扱いが3つあります。
@@ -792,16 +812,11 @@ uv run --no-sync ruff check portfolio-analyzer
 portfolio-analyzer/
 ├── data/
 │   ├── portfolio.example.json   # 架空サンプル（Git管理）
-│   ├── portfolio.private.json   # 個人データ（Git対象外）
-│   ├── portfolio-<基準日>.private.json  # 時価で洗い替えた版
 │   ├── factor_estimates.json    # 実測β・共分散（Git管理）
 │   ├── analysis_reference.example.json
 │   ├── analysis_reference.private.json
 │   ├── rebalancing-proposal.example.json
 │   ├── rebalancing-proposal.private.json
-│   ├── ibkr-transactions.private.csv    # 取引履歴（Git対象外）
-│   ├── ibkr-ledger.private.json         # 逆算した台帳（Git対象外）
-│   ├── securities-transactions.private.csv  # 国内口座の取引履歴（Git対象外）
 │   └── rebalancing-note.private.md
 ├── docs/
 │   └── rebalancing-note-template.md

@@ -82,3 +82,9 @@ Thumbs.db
 !/**/outputs/**
 /_scratch/outputs/
 labor_ai_quadrant/reports/
+
+# Secret exclusions must follow the outputs re-inclusion above.
+.env
+.env.*
+*.env
+!.env.example

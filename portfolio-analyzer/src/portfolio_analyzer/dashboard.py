@@ -839,7 +839,7 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
 <div class="cards" id="charts-end">{cards}</div>
 
 <ul class="notes">{notes}</ul>
-<footer>ポジション data/portfolio.private.json · 取引履歴 data/ibkr-transactions.private.csv · 株価/為替 yfinance 終値（USD 建ては USD/JPY で円換算）· スクリプト portfolio-analyzer/scripts/daily_pl_report.py</footer>
+<footer>ポジション・取引履歴：端末に設定した非公開入力 · 株価/為替 yfinance 終値（USD 建ては USD/JPY で円換算）· スクリプト portfolio-analyzer/scripts/daily_pl_report.py</footer>
 </div>
 <div id="tip" role="status"></div>
 <script id="data" type="application/json">{payload}</script>

@@ -7,6 +7,11 @@ setlocal
 set OUTDIR=%USERPROFILE%\Documents\pl-daily
 if not exist "%OUTDIR%" mkdir "%OUTDIR%"
 echo [%date% %time%] start >> "%OUTDIR%\run.log"
+rem Installed locally by the private-data setup; only shared input files are refreshed.
+if exist "%USERPROFILE%\.local\bin\private-inputs-sync.cmd" (
+  call "%USERPROFILE%\.local\bin\private-inputs-sync.cmd" >> "%OUTDIR%\run.log" 2>&1
+  if errorlevel 1 exit /b 1
+)
 wsl.exe -d Ubuntu -u kazumasa -- bash -lc "cd /home/kazumasa/projects && if [ -f ~/.config/pl-daily.env ]; then set -a; . ~/.config/pl-daily.env; set +a; fi; /home/kazumasa/.local/bin/uv run --no-sync python portfolio-analyzer/scripts/daily_pl_report.py --copy-to '/mnt/c/Users/%USERNAME%/Documents/pl-daily' %* \${PL_MAIL_TO:+--email \$PL_MAIL_TO}" >> "%OUTDIR%\run.log" 2>&1
 echo [%date% %time%] exit %ERRORLEVEL% >> "%OUTDIR%\run.log"
 endlocal

@@ -25,10 +25,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from portfolio_analyzer import ibkr  # noqa: E402
+from portfolio_analyzer.private_storage import data_dir  # noqa: E402
 
 DEFAULT_ACCOUNT = "global_broker"
-DEFAULT_TRANSACTIONS = PROJECT_ROOT / "data/ibkr-transactions.private.csv"
-DEFAULT_LEDGER = PROJECT_ROOT / "data/ibkr-ledger.private.json"
+DEFAULT_TRANSACTIONS = data_dir(PROJECT_ROOT) / "ibkr-transactions.private.csv"
+DEFAULT_LEDGER = data_dir(PROJECT_ROOT) / "ibkr-ledger.private.json"
 NON_MARKET_SYMBOLS = {"CASH_JPY", "RECONCILIATION"}
 # Same bar as core.validate_portfolio: snapshots store rounded position values.
 TOLERANCE_JPY = 1.0
